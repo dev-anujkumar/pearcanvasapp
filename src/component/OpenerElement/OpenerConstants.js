@@ -11,7 +11,8 @@ export const getOpenerContent = (textSemantics, type, titleText) => {
     if(textSemantics && textSemantics.length > 0 && titleText) {
         let contentData = textSemantics.filter(data => data.type === type)[0]
         let contentNumberData = textSemantics.filter(data => data.type === "number")[0]
-        switch(type){
+        let contentLabelData = textSemantics[0]
+         switch(type){
             case "label":
                 if(contentData){
                     dataToReturn = titleText.substring(contentData.charStart, contentData.charEnd)
@@ -32,7 +33,28 @@ export const getOpenerContent = (textSemantics, type, titleText) => {
                 if(contentNumberData){
                     dataToReturn = titleText.substring(contentNumberData.charEnd + 1).trimLeft()
                 }
+                else if(contentLabelData && !contentData){
+                    dataToReturn = titleText.substring(contentLabelData.charEnd + 1).trimLeft()
+                }
                 break;      
+        }
+    } else if ((textSemantics == undefined || textSemantics.length === 0) && titleText) {
+        switch (type) {
+            case "label":
+                dataToReturn = "No Label"
+                break;
+            case "number":
+                dataToReturn = ''
+                break;
+            case "title":
+            default:
+                dataToReturn = titleText
+                break;
+        }
+    }
+    else if ((textSemantics == undefined || textSemantics.length === 0) && (titleText === "")){
+        if(type ===  "label"){
+            dataToReturn = "No Label"
         }
     }
 

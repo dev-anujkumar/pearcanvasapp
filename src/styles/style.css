@@ -269,6 +269,18 @@ P.paragraphNumeroUnoIndentLevel1, P.paragraphNumeroUnoIndentLevel2, P.paragraphN
     padding: 0px;
 }
 
+.paragraphNumeroUnoIndentLevel1 {
+    padding-left: 40px !important;
+}
+
+.paragraphNumeroUnoIndentLevel2 {
+    padding-left: 80px !important;
+}
+
+.paragraphNumeroUnoIndentLevel3 {
+    padding-left: 120px !important;
+}
+
 .learningobjectivedropdown li:hover {
     background: #D9E9FF;
     cursor: pointer;

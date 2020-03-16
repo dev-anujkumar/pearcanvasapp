@@ -93,13 +93,23 @@ class ListButtonDropPortal extends Component {
                                     }
                                 }
                             )
+                          
+                        }else if (element.type === "showhide"){
+                            element.interactivedata[this.props.showHideObj.showHideType].find(
+                                    (nselement) => {
+                                        let isMatched = false
+                                        if (nselement.id === activeElement.elementId) {
+                                            isMatched = nselement.type === 'element-list'
+                                            isMatched && (listElement = nselement)
+                                        }}
+                            )
                         }
                         return isMatched
                     });
                 let counter = listElement.elementdata && listElement.elementdata.startNumber
                 if(!isNaN(parseInt(counter)))
                 {
-                    counter = parseInt(counter) + 1
+                    counter = parseInt(counter) // parseInt(counter) + 1 // issues with migrated projects // earlier default by 0
                 }
                 this.startValue = counter || null
                 this.selectedOption = listElement.subtype || null;
@@ -134,7 +144,8 @@ ListButtonDropPortal.propTypes = {
 
 const mapStateToProps = (state) => {
     return {
-        activeElement: state.appStore.activeElement
+        activeElement: state.appStore.activeElement,
+        showHideObj:state.appStore.showHideObj
     };
 };
 

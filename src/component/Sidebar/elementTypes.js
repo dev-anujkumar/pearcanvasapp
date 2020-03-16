@@ -268,146 +268,146 @@ export default {
             toolbar: ['assetpopover','decreaseindent','glossary'],
             enum: 'BLOCK_CODE_EDITOR',
             subtype: {
-                'secondary-blockcode-language-Default': {
+                'secondary-blockcode-language-default': {
                     text: 'Select',
                     labelText: 'BCE',
                     enum: 'SELECT'
                 },
-                'secondary-blockcode-language-C++': {
+                'secondary-blockcode-language-c++': {
                     text: 'C++',
                     labelText: 'BCE',
                     enum: 'C_PLUS'
                 },
-                'secondary-blockcode-language-Java': {
+                'secondary-blockcode-language-java': {
                     text: 'Java',
                     labelText: 'BCE',
                     enum: 'JAVA'
                 },
-                'secondary-blockcode-language-C': {
+                'secondary-blockcode-language-c': {
                     text: 'C',
                     labelText: 'BCE',
                     enum: 'C'
                 },
-                'secondary-blockcode-language-Python': {
+                'secondary-blockcode-language-python': {
                     text: 'Python',
                     labelText: 'BCE',
                     enum: 'PYTHON'
                 },
-                'secondary-blockcode-language-Javascript': {
+                'secondary-blockcode-language-javascript': {
                     text: 'Javascript',
                     labelText: 'BCE',
                     enum: 'JAVA_SCRIPT'
                 },
-                'secondary-blockcode-language-HTML': {
+                'secondary-blockcode-language-html': {
                     text: 'HTML',
                     labelText: 'BCE',
                     enum: 'HTML'
                 },
-                'secondary-blockcode-language-CSS': {
+                'secondary-blockcode-language-css': {
                     text: 'CSS',
                     labelText: 'BCE',
                     enum: 'CSS'
                 },
-                'secondary-blockcode-language-Apache': {
+                'secondary-blockcode-language-apache': {
                     text: 'Apache',
                     labelText: 'BCE',
                     enum: 'APACHE'
                 },
-                'secondary-blockcode-language-C#': {
+                'secondary-blockcode-language-c#': {
                     text: 'C#',
                     labelText: 'BCE',
                     enum: 'C_SHARP'
                 },
-                'secondary-blockcode-language-JSON': {
+                'secondary-blockcode-language-json': {
                     text: 'JSON',
                     labelText: 'BCE',
                     enum: 'JSON'
                 },
-                'secondary-blockcode-language-Makefile': {
+                'secondary-blockcode-language-makefile': {
                     text: 'Makefile',
                     labelText: 'BCE',
                     enum: 'MAKE_FILE'
                 },
-                'secondary-blockcode-language-Kotlin': {
+                'secondary-blockcode-language-kotlin': {
                     text: 'Kotlin',
                     labelText: 'BCE',
                     enum: 'KOTLIN'
                 },
-                'secondary-blockcode-language-R': {
+                'secondary-blockcode-language-r': {
                     text: 'R',
                     labelText: 'BCE',
                     enum: 'R'
                 },
-                'secondary-blockcode-language-Perl': {
+                'secondary-blockcode-language-perl': {
                     text: 'Perl',
                     labelText: 'BCE',
                     enum: 'PERL'
                 },
-                'secondary-blockcode-language-PHP': {
+                'secondary-blockcode-language-php': {
                     text: 'PHP',
                     labelText: 'BCE',
                     enum: 'PHP'
                 },
-                'secondary-blockcode-language-GO': {
+                'secondary-blockcode-language-go': {
                     text: 'GO',
                     labelText: 'BCE',
                     enum: 'GO'
                 },
-                'secondary-blockcode-language-Ruby': {
+                'secondary-blockcode-language-ruby': {
                     text: 'Ruby',
                     labelText: 'BCE',
                     enum: 'RUBY'
                 },
-                'secondary-blockcode-language-Lisp': {
+                'secondary-blockcode-language-lisp': {
                     text: 'Lisp',
                     labelText: 'BCE',
                     enum: 'LISP'
                 },
-                'secondary-blockcode-language-Objective_C': {
+                'secondary-blockcode-language-objective-c': {
                     text: 'Objective C',
                     labelText: 'BCE',
                     enum: 'OBJECTIVE_C'
                 },
-                'secondary-blockcode-language-Scala': {
+                'secondary-blockcode-language-scala': {
                     text: 'Scala',
                     labelText: 'BCE',
                     enum: 'SCALA'
                 },
-                'secondary-blockcode-language-Shell_Session': {
+                'secondary-blockcode-language-shell_session': {
                     text: 'Shell Session',
                     labelText: 'BCE',
                     enum: 'SHELL_SESSION'
                 },
-                'secondary-blockcode-language-SQL': {
+                'secondary-blockcode-language-sql': {
                     text: 'SQL',
                     labelText: 'BCE',
                     enum: 'SQL'
                 },
-                'secondary-blockcode-language-Swift': {
+                'secondary-blockcode-language-swift': {
                     text: 'Swift',
                     labelText: 'BCE',
                     enum: 'SWIFT'
                 },
-                'secondary-blockcode-language-XML': {
+                'secondary-blockcode-language-xml': {
                     text: 'XML',
                     labelText: 'BCE',
                     enum: 'XML'
                 },
-                'secondary-blockcode-language-Matlab': {
+                'secondary-blockcode-language-matlab': {
                     text: 'Matlab',
                     labelText: 'BCE',
                     enum: 'MATLAB'
                 },
-                'secondary-blockcode-language-GLSL': {
+                'secondary-blockcode-language-glsl': {
                     text: 'GLSL',
                     labelText: 'BCE',
                     enum: 'GLSL'
                 },
-                'secondary-blockcode-language-SML': {
+                'secondary-blockcode-language-sml': {
                     text: 'SML',
                     labelText: 'BCE',
                     enum: 'SML'
-                },
+                }
             }
         },
         'primary-editor-table-equation': {
@@ -581,16 +581,21 @@ export default {
             toolbar:['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag'],
             enum: '',		
             subtype: {		
-                'secondary-single-assessment-cite': {		
-                    text: 'CITE',		
+                'secondary-single-assessment-cite': {
+                    text: 'CITE',
                     labelText: 'Qu',
                     enum: 'SINGLE_ASSESSMENT_CITE'
-                },		
-                'secondary-single-assessment-tdx': {		
-                    text: 'TDX',		
+                },
+                'secondary-single-assessment-tdx': {
+                    text: 'TDX',
                     labelText: 'Qu',
-                    enum: 'SINGLE_ASSESSMENT_TDX'		
-                }		
+                    enum: 'SINGLE_ASSESSMENT_TDX'
+                },
+                'secondary-single-assessment-puf': {
+                    text: 'PUF',
+                    labelText: 'Qu',
+                    enum: 'SINGLE_ASSESSMENT_PUF'
+                }
             }		
         },
         'primary-assessment-slate' : {

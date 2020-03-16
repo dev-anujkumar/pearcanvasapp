@@ -71,3 +71,8 @@ export const LIST_TYPE_MAPPINGS = {
         tag: 'OL'
     }
 }
+
+
+/****************SlateTagDropdown************************ */ 
+export const ASSESSMENT_ITEM = 'assessmentItem';
+export const ASSESSMENT_ITEM_TDX = 'tdxAssessmentItem';

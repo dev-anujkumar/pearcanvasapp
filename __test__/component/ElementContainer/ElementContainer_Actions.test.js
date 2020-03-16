@@ -8,7 +8,7 @@ import * as actions from '../../../src/component/ElementContainer/ElementContain
 import { slateLevelData, newslateData, addNewComment,addNewCommentAside, slateLevelAsideData,addNewCommentOnAsideElement,newSlateAsideDataComment, deleteElement, slateLevelDataAside, newslateDataAside ,newslateAsideData} from "../../../fixtures/slateTestingData"
 import axios from 'axios';
 
-import { ADD_COMMENT, ADD_NEW_COMMENT, AUTHORING_ELEMENT_CREATED, AUTHORING_ELEMENT_UPDATE, SET_OLD_IMAGE_PATH} from '../../../src/constants/Action_Constants';
+import { ADD_COMMENT, ADD_NEW_COMMENT, AUTHORING_ELEMENT_CREATED, AUTHORING_ELEMENT_UPDATE, SET_OLD_IMAGE_PATH,CREATE_SHOW_HIDE_ELEMENT} from '../../../src/constants/Action_Constants';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
@@ -589,5 +589,193 @@ describe('Tests ElementContainer Actions', () => {
             });
             // expect(store.getActions()).toEqual(expectedActions);
         })
+
+
     });
+
+    describe('testing------- CREATE SHOW HIDE ELEMENT ------action', () => {
+        xit('testing------- CREATE SHOW HIDE ELEMENT------action', () => {
+            let store = mockStore(() => initialState);
+            let elementId = "urn:pearson:work:32e659c2-e0bb-46e8-9605-b8433aa3836c";
+            let type = "show";
+            let index = "0-1-1";
+            let parentContentUrn  = "urn:pearson:manifest:1aa555b9-8fa4-480e-a6b2-40c46315a8eb";
+            let cb = jest.fn();
+            moxios.wait(() => {
+                const request = moxios.requests.mostRecent();
+                request.respondWith({
+                    status: 200,
+                    response: {}
+                });
+            });
+
+          //  delete slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].tcm;
+            const expectedActions = [{
+                type: CREATE_SHOW_HIDE_ELEMENT,
+                payload: slateLevelData
+            }];
+
+            
+            return store.dispatch(actions.createShowHideElement(elementId, type, index,parentContentUrn,cb)).then(() => {
+                expect(cb).toBeCalled();
+                 expect(store.getActions()).toEqual(expectedActions);
+            });
+            
+        })
+     /*    xit('testing------- Update Element Aside------action', () => {
+            let store = mockStore(() => initialState);
+            let contentUrn="urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464";
+            global.currentSlateData = {
+                status: 'approved'
+            }
+    
+            moxios.wait(() => {
+                const request = moxios.requests.mostRecent();
+                request.respondWith({
+                    status: 200,
+                    response: {}
+                });
+            });
+
+            slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].parentType = "element-aside";
+            slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].slateEntity = "urn:pearson:entity:920e1d14-236e-4882-9a7c-d9d067795d75";
+            slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].projectURN = "urn:pearson:distributable:3e872df6-834c-45f5-b5c7-c7b525fab1ef";
+            slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].slateEntity = "urn:pearson:entity:920e1d14-236e-4882-9a7c-d9d067795d75";
+            const expectedActions = [{
+                type: AUTHORING_ELEMENT_UPDATE,
+                payload: slateLevelData
+            }];
+    
+            let  parentUrn= {
+                manifestUrn:"urn:pearson:manifest:8a49e877-144a-4750-92d2-81d5188d8e0b",
+                elementType:"element-aside"
+            }
+
+            let asideData = {
+                type:"element-aside",
+                id:"urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0d",
+            };
+    
+            const updatedData = {
+                "id": "urn:pearson:manifest:8a49e877-144a-4750-92d2-81d5188d8e0b",
+                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                "type": "element-aside",
+                "subtype": "sidebar",
+                "designtype": "asideSidebar02",
+                "elementdata": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest",
+                    "frontmatter": [ ],
+                    "bodymatter": [
+                        {
+                            "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0d",
+                            "type": "element-authoredtext",
+                            "subtype": "",
+                            "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                            "elementdata": {
+                                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                "text": ""
+                            },
+                            "html": {
+                                "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                            },
+                            "comments": false,
+                            "tcm": true,
+                            "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                            "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+                        }
+                    ],
+                "backmatter": [ ]
+                },
+                "contentUrn": "urn:pearson:entity:2b489c98-5e61-46d8-967c-6354b28e3679",
+                "versionUrn": "urn:pearson:manifest:591b8d42-7966-4337-912d-0635e328dfb2"
+            }
+
+            // return store.dispatch(actions.updateElement(updatedData, 0, asideData, contentUrn)).then(() => {
+            return store.dispatch(actions.updateElement(updatedData, "1-0", parentUrn, asideData)).then(() => {
+                delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[1].html;
+                delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[1].projectURN;
+                delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[1].slateEntity;
+                delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[1].parentType;
+                delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[1].tcm;
+                store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[1].elementdata = updatedData.elementdata;
+                // console.log('payload:::', store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[1].elementdata);
+                // console.log('payload:::', expectedActions[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[1].elementdata);
+                // expect(store.getActions()).toEqual(expectedActions);
+            });
+        }) */
+/*         it('testing------- Update Figure Data single index------action', () => {
+            let store = mockStore(() => initialState);
+            let elementId = "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a";
+    
+            const expectedActions = [{
+                type: SET_OLD_IMAGE_PATH,
+                payload: {}
+            },
+            {
+                type: AUTHORING_ELEMENT_UPDATE,
+                payload: {}
+            }];
+    
+            moxios.wait(() => {
+                const request = moxios.requests.mostRecent();
+                request.respondWith({
+                    status: 200,
+                    response: 200
+                });
+            });
+    
+            store.dispatch(actions.updateFigureData({}, 2, elementId));
+            // expect(store.getActions()).toEqual(expectedActions);
+        })
+        it('testing------- Update Figure Data double index------action', () => {
+            let store = mockStore(() => initialState);
+            let elementId = "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a";
+    
+            const expectedActions = [{
+                type: SET_OLD_IMAGE_PATH,
+                payload: {}
+            },
+            {
+                type: AUTHORING_ELEMENT_UPDATE,
+                payload: {}
+            }];
+    
+            moxios.wait(() => {
+                const request = moxios.requests.mostRecent();
+                request.respondWith({
+                    status: 200,
+                    response: 200
+                });
+            });
+    
+            store.dispatch(actions.updateFigureData({}, "1-0", elementId));
+            // expect(store.getActions()).toEqual(expectedActions);
+        })
+        it('testing------- Table Editor Data------action', () => {
+            let store = mockStore(() => initialState);
+            let elementId = "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a";
+    
+            const expectedActions = [{
+                type: AUTHORING_ELEMENT_UPDATE,
+                payload: {}
+            }];
+    
+            moxios.wait(() => {
+                const request = moxios.requests.mostRecent();
+                request.respondWith({
+                    status: 200,
+                    response: 200
+                });
+            });
+    
+            return store.dispatch(actions.getTableEditorData(elementId)).then(() => {
+                
+            });
+            // expect(store.getActions()).toEqual(expectedActions);
+        })
+ */
+
+    });
+
+   
 });

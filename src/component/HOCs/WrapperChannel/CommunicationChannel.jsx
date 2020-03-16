@@ -193,14 +193,20 @@ function WithWrapperCommunication(WrappedComponent) {
                         showBlocker: false
                     });
                  break;
-                case 'slatePreview':
-                    this.props.publishContent('slatePreview');
+                 case 'slatePreview':
+                    if(!config.savingInProgress){
+                        this.props.publishContent('slatePreview');
+                    }
                     break;
                 case 'projectPreview':
-                    this.props.publishContent('projectPreview');
+                    if(!config.savingInProgress){
+                        this.props.publishContent('projectPreview');
+                    }
                     break;
                 case 'getSlateLockStatus' :
-                    this.releaseLockAndRedirect()
+                    if(!config.savingInProgress){
+                        this.releaseLockAndRedirect()
+                    }
                     break;
                 case 'logout':
                     this.releaseLockAndLogout()
@@ -397,6 +403,7 @@ function WithWrapperCommunication(WrappedComponent) {
                 }
                 this.props.fetchAudioNarrationForContainer(slateData)  
                 this.props.fetchSlateData(message.node.containerUrn,config.slateEntityURN, config.page,'');
+                config.savingInProgress = false
                 this.props.setSlateType(config.slateType);
                 this.props.setSlateEntity(config.slateEntityURN);
                 this.props.setSlateParent(message.node.nodeParentLabel);
@@ -467,7 +474,7 @@ function WithWrapperCommunication(WrappedComponent) {
                 try{
                     let status = {
                         slateLocked : response.isLocked,
-                        userInfo : response.userId    
+                        userInfo : response.userId.replace(/.*\(|\)/gi, '')
                     }
                     if(userName.toLowerCase() === status.userInfo.toLowerCase()) {
                         status.slateLocked = false;

@@ -5,7 +5,7 @@
 // IMPORT - Plugins //
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
-import { AssessmentSlateData } from './AssessmentSlateData.jsx';
+import AssessmentSlateData from './AssessmentSlateData.jsx';
 import { showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';
 import { c2AssessmentModule } from './../../js/c2_assessment_module';
 import { utils } from '../../js/utils';
@@ -79,6 +79,17 @@ export class AssessmentSlateCanvas extends Component {
         showTocBlocker();
         disableHeader(true);
         this.updateAssessment(pufObj.id, "", pufObj.title, assessmentType , pufObj.usagetype, 'insert');
+    }
+    addCiteTdxAssessment = (citeTdxObj, activeAssessmentType) => {
+        let assessmentType = activeAssessmentType === FULL_ASSESSMENT_CITE ? "cite" : "tdx";
+        // let usagetype="Quiz"
+        // let usage = document.getElementsByClassName('slate_assessment_metadata_dropdown_label')[0];
+        // if(usage){
+        //     usagetype=usage.innerText;
+        // }
+        showTocBlocker();
+        disableHeader(true);
+        this.updateAssessment(citeTdxObj.id, "", citeTdxObj.title, assessmentType , citeTdxObj.usageType, 'insert');
     }
 
     /***
@@ -219,6 +230,7 @@ export class AssessmentSlateCanvas extends Component {
                     learningTemplateLabel = {this.state.learningTemplateLabel}
                     setSlateParent={this.props.setSlateParent}
                     setSlateEntity={this.props.setSlateEntity}
+                    addCiteTdxAssessment={this.addCiteTdxAssessment}
                     />
                 <TinyMceEditor
                     slateLockInfo={this.props.slateLockInfo}

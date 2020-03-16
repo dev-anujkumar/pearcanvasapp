@@ -1,6 +1,7 @@
 import axios from 'axios'
 import config from '../../config/config';
 import { SET_SLATE_LOCK_STATUS, SET_LOCK_FLAG } from '../../constants/Action_Constants'
+import store from './../../appstore/store';
 
 /**
  * Action Creator
@@ -8,7 +9,7 @@ import { SET_SLATE_LOCK_STATUS, SET_LOCK_FLAG } from '../../constants/Action_Con
  * @param {*} projectUrn Project URN
  * @param {*} slateId Slate manifest URN
  */
-export const getSlateLockStatus = (projectUrn, slateId) => (dispatch, getState) => { 
+export const getSlateLockStatus = (projectUrn, slateId) => (dispatch) => { 
     if(config.isSlateLockChecked){
         return false;
     }
@@ -16,58 +17,20 @@ export const getSlateLockStatus = (projectUrn, slateId) => (dispatch, getState) 
     
     return axios.get(url)
         .then((res) => {
-            if (!res.data.isLocked)
-                config.isSlateLockChecked = true;
-
-            /**
-             * [PCAT-5745] - User Name instead of peroot id to be displayed when User Owns a lock on a slate,
-             * Get user info based on lockedby userid
-             */
-            // TO DO : intentionally false condition given
-            if (false) { // if (res.data.isLocked) {
-                axios.get(`${config.JAVA_API_URL}v2/dashboard/userInfo/users/${res.data.userId}?userName=${res.data.userId}`, {
-                    headers: {
-                        "Content-Type": "application/json",
-                        "PearsonSSOSession": config.ssoToken
-                    }
-                }).then((response) => {
-                    let userInfo = response.data;
-                    dispatch({
-                        type: SET_SLATE_LOCK_STATUS,
-                        payload: {
-                            ...res.data,
-                            userFirstName: userInfo.firstName,
-                            userLastName: userInfo.lastName
-                        }
-                    })
-                })
-                .catch(err => {
-                    console.log('axios Error', err);
-                })
-            }
-            else {
-                dispatch({
-                    type: SET_SLATE_LOCK_STATUS,
-                    payload: {
-                        ...res.data,
-                        userFirstName: "",
-                        userLastName: ""
-                    }
-                })
-            }
-        })
-        .catch((err) => {
-            // For local testing purpose
-            /* dispatch({
+            config.isSlateLockChecked = res.data.isLocked;
+            dispatch({
                 type: SET_SLATE_LOCK_STATUS,
                 payload: {
-                    isLocked: true,
-                    timestamp: "",
-                    userId: "abcd"
+                    ...res.data,
+                    userFirstName: "",
+                    userLastName: ""
                 }
-            }) */
+            })
         })
-} 
+        .catch((err) => {
+            console.log("%c Slate lock status API failed","background: black; color: white", err)
+        })
+}
 
 /**
  * This is a normal function which retrieves the lock status of a slate
@@ -94,8 +57,8 @@ export const getSlateLockStatus = (projectUrn, slateId) => (dispatch, getState) 
  * @param {*} slateId Slate manifest URN
  * @param {*} lockDuration Lock duration
  */
-export const setSlateLock = (projectUrn, slateId, lockDuration) => (dispatch, getState) => {
-    let url =`${config.LOCK_API_BASE_URL}/locks/typ/setlock`
+export const setSlateLock = (projectUrn, slateId, lockDuration) => (dispatch) => {
+    let url = `${config.LOCK_API_BASE_URL}/locks/typ/setlock`
 
     let data = {
         projectUrn,
@@ -105,11 +68,10 @@ export const setSlateLock = (projectUrn, slateId, lockDuration) => (dispatch, ge
     return axios.post(url, data)
         .then((res) => {
             config.releaseCallCount = 0
-            console.log("API call successful. Slate lock status>>>>",res.data.slateStatus)
             dispatch({
                 type : SET_LOCK_FLAG,
                 payload : true
-            }) 
+            })
         })
         .catch((err) => {
             console.log("error from set slate>>>>",err)
@@ -122,7 +84,7 @@ export const setSlateLock = (projectUrn, slateId, lockDuration) => (dispatch, ge
   * @param {*} projectUrn Project URN
   * @param {*} slateId Slate manifest URN
   */
-export const releaseSlateLock = (projectUrn, slateId) => (dispatch, getState) => {
+export const releaseSlateLock = (projectUrn, slateId) => (dispatch) => {
     let url = `${config.LOCK_API_BASE_URL}/locks/typ/releaselock`
     let data = {
        projectUrn,
@@ -154,6 +116,10 @@ export const releaseSlateLockWithCallback = (projectUrn, slateId, callback) =>{
     }
     return axios.post(url, data)
        .then((res) => {
+           store.dispatch({
+               type: SET_LOCK_FLAG,
+               payload: false
+           })
             if(callback){
                 callback(res.data)
             }
@@ -170,7 +136,7 @@ export const releaseSlateLockWithCallback = (projectUrn, slateId, callback) =>{
  * Sets a flag after slate is locked 
  * @param {*} inLockPeriod tells whether the slate is in lock period or not
  */
-export const setLockPeriodFlag = (inLockPeriod) => (dispatch, getState) => {
+export const setLockPeriodFlag = (inLockPeriod) => (dispatch) => {
     dispatch({
         type : SET_LOCK_FLAG,
         payload : inLockPeriod

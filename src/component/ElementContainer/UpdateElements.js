@@ -1,6 +1,9 @@
 import elementTypeConstant from './ElementConstants'
 import elementTypes from './../Sidebar/elementTypes';
 import config from '../../config/config';
+import { duration } from 'moment';
+import { matchHTMLwithRegex } from '../../constants/utility.js'
+import store from '../../appstore/store'
 
 let indivisualData = {
     schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
@@ -65,12 +68,12 @@ export const generateCommonFigureData = (index, previousElementData, elementType
             footnotes : []
         },
         html : {
-            captions: captionHTML.match(/(<p.*?>.*?<\/p>)/g)?captionHTML:`<p>${captionHTML}</p>`,
-            credits: creditsHTML.match(/(<p.*?>.*?<\/p>)/g)?creditsHTML:`<p>${creditsHTML}</p>`,
+            captions: matchHTMLwithRegex(captionHTML)?captionHTML:`<p>${captionHTML}</p>`,
+            credits: matchHTMLwithRegex(creditsHTML)?creditsHTML:`<p>${creditsHTML}</p>`,
             footnotes : previousElementData.html.footnotes || {},
             glossaryentries : previousElementData.html.glossaryentries || {},
-            subtitle: subtitleHTML.match(/(<p.*?>.*?<\/p>)/g)?subtitleHTML:`<p>${subtitleHTML}</p>`,
-            title: titleHTML.match(/(<p.*?>.*?<\/p>)/g)?titleHTML:`<p>${titleHTML}</p>`,
+            subtitle: matchHTMLwithRegex(subtitleHTML)?subtitleHTML:`<p>${subtitleHTML}</p>`,
+            title: matchHTMLwithRegex(titleHTML)?titleHTML:`<p>${titleHTML}</p>`,
             postertext: "",
             text: ""
         },
@@ -135,10 +138,10 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
             footnotes : [ ]
         },
         html : {
-            captions: captionHTML.match(/(<p.*?>.*?<\/p>)/g)?captionHTML:`<p>${captionHTML}</p>`,
-            credits: creditsHTML.match(/(<p.*?>.*?<\/p>)/g)?creditsHTML:`<p>${creditsHTML}</p>`,
-            subtitle: subtitleHTML.match(/(<p.*?>.*?<\/p>)/g)?subtitleHTML:`<p>${subtitleHTML}</p>`,
-            title: titleHTML.match(/(<p.*?>.*?<\/p>)/g)?titleHTML:`<p>${titleHTML}</p>`,
+            captions: matchHTMLwithRegex(captionHTML)?captionHTML:`<p>${captionHTML}</p>`,
+            credits: matchHTMLwithRegex(creditsHTML)?creditsHTML:`<p>${creditsHTML}</p>`,
+            subtitle: matchHTMLwithRegex(subtitleHTML)?subtitleHTML:`<p>${subtitleHTML}</p>`,
+            title: matchHTMLwithRegex(titleHTML)?titleHTML:`<p>${titleHTML}</p>`,
             footnotes : previousElementData.html.footnotes || {},
             glossaryentries : previousElementData.html.glossaryentries || {},
             postertext: "",
@@ -154,7 +157,8 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
         let pdfPosterTextDOM = document.getElementById(`cypress-${index}-2`)
         let posterTextHTML = pdfPosterTextDOM ? pdfPosterTextDOM.innerHTML : ""
         let posterText = pdfPosterTextDOM ? pdfPosterTextDOM.innerText : ""
-        data.html.postertext = posterTextHTML
+        let pdfPosterTextHTML = posterTextHTML.match(/(<p.*?>.*?<\/p>)/g)?posterTextHTML:`<p>${posterTextHTML}</p>`
+        data.html.postertext = pdfPosterTextHTML
         data.figuredata.postertext = {
             schema : "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
             text : posterText,
@@ -201,6 +205,7 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
     
         preformattedText = preformattedText.replace(/&lt;/g, "<")
         preformattedText = preformattedText.replace(/&gt;/g, ">")
+        preformattedText = preformattedText.trimEnd();
 
     let data = {
         ...previousElementData,
@@ -224,12 +229,12 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
             footnotes : [ ]
         },
         html : {
-            captions: captionHTML.match(/(<p.*?>.*?<\/p>)/g)?captionHTML:`<p>${captionHTML}</p>`,
-            credits: creditsHTML.match(/(<p.*?>.*?<\/p>)/g)?creditsHTML:`<p>${creditsHTML}</p>`,
+            captions: matchHTMLwithRegex(captionHTML)?captionHTML:`<p>${captionHTML}</p>`,
+            credits: matchHTMLwithRegex(creditsHTML)?creditsHTML:`<p>${creditsHTML}</p>`,
             footnotes : previousElementData.html.footnotes || {},
             glossaryentries : previousElementData.html.glossaryentries || {},
-            subtitle: subtitleHTML.match(/(<p.*?>.*?<\/p>)/g)?subtitleHTML:`<p>${subtitleHTML}</p>` ,
-            title: titleHTML.match(/(<p.*?>.*?<\/p>)/g)?titleHTML:`<p>${titleHTML}</p>`,
+            subtitle: matchHTMLwithRegex(subtitleHTML)?subtitleHTML:`<p>${subtitleHTML}</p>` ,
+            title: matchHTMLwithRegex(titleHTML)?titleHTML:`<p>${titleHTML}</p>`,
             postertext: "",
             tableasHTML: "",
             text: ""
@@ -314,12 +319,12 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
             }
         },
         html : {
-            captions: captionHTML.match(/(<p.*?>.*?<\/p>)/g)?captionHTML:`<p>${captionHTML}</p>`,
-            credits: creditsHTML.match(/(<p.*?>.*?<\/p>)/g)?creditsHTML:`<p>${creditsHTML}</p>`,
+            captions: matchHTMLwithRegex(captionHTML)?captionHTML:`<p>${captionHTML}</p>`,
+            credits: matchHTMLwithRegex(creditsHTML)?creditsHTML:`<p>${creditsHTML}</p>`,
             footnotes : previousElementData.html.footnotes || {},
             glossaryentries : previousElementData.html.glossaryentries || {},
-            subtitle: subtitleHTML.match(/(<p.*?>.*?<\/p>)/g)?subtitleHTML:`<p>${subtitleHTML}</p>` ,
-            title: titleHTML.match(/(<p.*?>.*?<\/p>)/g)?titleHTML:`<p>${titleHTML}</p>`,
+            subtitle: matchHTMLwithRegex(subtitleHTML)?subtitleHTML:`<p>${subtitleHTML}</p>` ,
+            title: matchHTMLwithRegex(titleHTML)?titleHTML:`<p>${titleHTML}</p>`,
             postertext: "",
             tableasHTML: "",
             text: textHTML.match(/<p>/g) ? textHTML:`<p>${textHTML}</p>`
@@ -338,34 +343,46 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
  * @param {*} primaryOption 
  * @param {*} secondaryOption 
  */
-export const generateAssessmentData = (index, previousElementData, elementType, primaryOption, secondaryOption)=>{
-    let assessmentNodeSelector =`div[data-id='${previousElementData.id}'] figure.figureAssessment `;
-    let assessmenttitle = document.querySelector(assessmentNodeSelector+'#single_assessment_title').innerText; //PCAT-6828 fixed
-    // let assessmenttitle = document.getElementById('single_assessment_title').innerText;
-    let assessmenttTitleHTML = `<p>${assessmenttitle}</p>`
-    let dataToSend = {...previousElementData,
-        inputType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
+export const generateAssessmentData = (index, previousElementData, elementType, primaryOption, secondaryOption) => {
+    let assessmentNodeSelector = `div[data-id='${previousElementData.id}'] figure.figureAssessment `;
+    let assessmenttitle = document.querySelector(assessmentNodeSelector + '#single_assessment_title').innerText; //PCAT-6828 fixed
+    let assessmentId = document.querySelector(assessmentNodeSelector + 'div.singleAssessmentIdInfo').innerText;
+    let isPuf = previousElementData && previousElementData.figuredata && previousElementData.figuredata.elementdata && previousElementData.figuredata.elementdata.assessmentformat === "puf";
+    let getAsid = '';
+
+    if (isPuf) {
+        assessmenttitle = assessmenttitle.split(':')[1];
+    }
+
+    let assessmenttTitleHTML = `<p>${assessmenttitle}</p>`;
+    let dataToSend = {
+        ...previousElementData,
+        inputType: elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
         html: {
             title: assessmenttTitleHTML
-        }}
-        
+        }
+    }
+
     dataToSend.figuredata.elementdata;
+    if (isPuf) {
+        getAsid = assessmentId.split(' ')[2];
+    } else {
+        getAsid = assessmentId.split(' ')[1];
+        let assessmentItemId = document.querySelector(assessmentNodeSelector + 'div.singleAssessmentItemIdInfo').innerText;
+        let getAsItemid = assessmentItemId.split(' ')[2];
+        dataToSend.figuredata.elementdata.assessmentitemid = getAsItemid ? getAsItemid : "";
+    }
 
-    let assessmentId = document.querySelector(assessmentNodeSelector+'div.singleAssessmentIdInfo').innerText;
-    let getAsid=assessmentId.split(' ')[1];
     dataToSend.figuredata.elementdata.assessmentid = getAsid ? getAsid : "";
+    dataToSend.figuredata.id = getAsid ? getAsid : "";                             //PCAT-6792 fixes
+    dataToSend.figuredata.elementdata.posterimage.imageid = getAsid ? getAsid : ""; //PCAT-6792 fixes
 
-    let assessmentItemId = document.querySelector(assessmentNodeSelector+'div.singleAssessmentItemIdInfo').innerText;
-    let getAsItemid=assessmentItemId.split(' ')[2];
-    dataToSend.figuredata.elementdata.assessmentitemid = getAsItemid ? getAsItemid : "";
-
-    let usageType = document.querySelector(assessmentNodeSelector+'span.singleAssessment_Dropdown_currentLabel').innerText;
+    let usageType = document.querySelector(assessmentNodeSelector + 'span.singleAssessment_Dropdown_currentLabel').innerText;
     dataToSend.figuredata.elementdata.usagetype = usageType;
     dataToSend.inputSubType = usageType.toUpperCase().replace(" ", "_").replace("-", "_");
 
     return dataToSend;
 }
-
 /**
  * Data preparation for assessment slate
  * @param {*} index 
@@ -396,13 +413,14 @@ export const generateAssessmentSlateData = (index, previousElementData, elementT
  * @param {*} index 
  * @param {*} containerContext 
  */
-export const createUpdatedData = (type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext,parentElement,showHideType) => {
+export const createUpdatedData = (type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext,parentElement,showHideType,asideData) => {
     let dataToReturn = {}
     switch (type){
         case elementTypeConstant.AUTHORED_TEXT:
         case elementTypeConstant.LEARNING_OBJECTIVE_ITEM:
         case elementTypeConstant.BLOCKFEATURE:
         case elementTypeConstant.ELEMENT_LIST:
+            tinyMCE.$(node).find('.blockquote-hidden').remove();
             let { innerHTML, innerText } = node;
             dataToReturn = {
                 ...previousElementData,
@@ -414,16 +432,17 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                     footnotes : previousElementData.html.footnotes || {},
                     glossaryentries : previousElementData.html.glossaryentries || {},
                 },
-                inputType : parentElement && (parentElement.type == "popup" || parentElement.type == "showhide") ? "AUTHORED_TEXT" :elementTypes[elementType][primaryOption]['enum'],
+                inputType : parentElement && (parentElement.type === "popup" || parentElement.type === "showhide" && previousElementData.type === "element-authoredtext") ? "AUTHORED_TEXT" : elementTypes[elementType][primaryOption]['enum'],
                 inputSubType : parentElement && parentElement.type == "popup" ? "NA" : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
                 slateUrn: parentElement && (parentElement.type === "showhide" || parentElement.type === "popup") ? parentElement.id: config.slateManifestURN  
             }
+            
             if(parentElement && parentElement.type === "popup"){
                 dataToReturn.popupEntityUrn = parentElement.contentUrn;
-                if(parentElement.popupdata["formatted-title"]["id"] === previousElementData.id){
+                if(parentElement.popupdata["formatted-title"] && parentElement.popupdata["formatted-title"]["id"] === previousElementData.id){
                     dataToReturn.updatePopupElementField = "formattedTitle";
                 } 
-                else if(parentElement.popupdata["formatted-subtitle"]["id"] === previousElementData.id){
+                else if(parentElement.popupdata["formatted-subtitle"] && parentElement.popupdata["formatted-subtitle"]["id"] === previousElementData.id){
                     dataToReturn.updatePopupElementField = "formattedSubtitle";
                 }
                 else if(parentElement.popupdata["postertextobject"][0]["id"] === previousElementData.id){
@@ -462,6 +481,7 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                         dataToReturn = generateCommonFigureDataAT(index, previousElementData, elementType, primaryOption, secondaryOption)
                         break;
                 }
+                
                 break;
             
         case elementTypeConstant.ELEMENT_ASIDE:
@@ -486,6 +506,16 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
             break;
     }
     dataToReturn.slateUrn = config.slateManifestURN;
+    if (previousElementData.status == "approved") {
+        let parentData = store.getState().appStore.slateLevelData;
+        if (config.isPopupSlate && parentData[config.slateManifestURN].status === "approved") {
+            dataToReturn.parentEntityId = config.slateEntityURN;
+        } else if (asideData && asideData.contentUrn) {
+            dataToReturn.parentEntityId = asideData.contentUrn;
+        } else if (parentElement && parentElement.type === "showhide" && showHideType && parentElement.contentUrn) {
+            dataToReturn.parentEntityId = parentElement.contentUrn;
+        }
+    }
     dataToReturn = { ...dataToReturn, index: index.toString().split('-')[index.toString().split('-').length - 1] }
     return dataToReturn
 }

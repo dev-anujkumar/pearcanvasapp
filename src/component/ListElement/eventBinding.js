@@ -58,8 +58,9 @@ export const positionListDrop = (event) => {
 /**
  * bindKeyDownEvent | binds keydown event on editor instance and handles various scenarios
  */
-export const bindKeyDownEvent = (editor, e, element) => {
+export const bindKeyDownEvent = (editor, e, element,showHideCallback) => {
     const anchorNode = editor.selection.getSel().anchorNode;
+    const newNode = anchorNode.closest('div.showHide');
     // let isOnlyMathmlFlag = false;
     const _selRange = editor.selection.getRng(true);
     const isMultilineSelection = _selRange.startContainer !== _selRange.endContainer;
@@ -124,10 +125,17 @@ export const bindKeyDownEvent = (editor, e, element) => {
                         prohibitEventBubling(e);
                         return false;
                     }
+                    
                     prohibitEventBubling(e);
                     /** case - remove last created blank list row before creating new paragraph */
                     if (editor.targetElm.querySelectorAll('li').length > 1) {
                         anchorNode && anchorNode.remove();
+                    }
+                
+                    if(newNode)
+                    {
+                        showHideCallback()
+                        return false
                     }
                     createNewParagraphElement(e, editor);
                     return false;
@@ -518,7 +526,7 @@ const isFullRangeSelected = (editor) => {
 
 const getListClassTypeAndTreeLvl = (element) => {
     let olClass = "disc", listType = "ul"
-    if (element.subtype && element.subtype !== "disc") {
+    if (element && element.subtype && element.subtype !== "disc") {
         listType = "ol";
         olClass = element.subtype
     }

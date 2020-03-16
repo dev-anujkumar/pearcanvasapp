@@ -18,7 +18,7 @@ export const EditorConfig = {
         'strikethrough' : {inline : 's', exact : true},
         'underline' : {inline : 'u', exact : true},
         removeformat: [
-            { selector: 'abbr,dfn,a,strong,em,s,u,sub,sup,code,span', remove: 'all',split: true, expand: false }
+            { selector: 'abbr,dfn,a,strong,em,s,u,sub,sup,code,span', remove: 'all',split: true, expand: false, deep: true }
           ]
     },
     toolbar: 'bold italic underline strikethrough removeformat indent outdent Footnote Glossary customListButton customUoListButton tinyMcewirisformulaEditor tinyMcewirisformulaEditorChemistry code superscript subscript charmap undo redo assetPopoverIcon slateTag ',

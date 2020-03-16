@@ -31,7 +31,8 @@ import {
     CLOSE_POPUP_SLATE,
     CREATE_SHOW_HIDE_ELEMENT,
     SET_PARENT_ASIDE_DATA,
-    DELETE_SHOW_HIDE_ELEMENT
+    DELETE_SHOW_HIDE_ELEMENT,
+    SET_PARENT_SHOW_DATA
 } from '../constants/Action_Constants';
 
 /**
@@ -52,7 +53,8 @@ const INITIAL_STATE = {
     oldImage: "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
     showHideId: "",
     parentUrn: {},
-    asideData: {}
+    asideData: {},
+    showHideObj:{}
 };
 
 const INITIAL_ACTION = {
@@ -176,6 +178,11 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
                 ...state,
                 parentUrn: action.payload.parentUrn,
                 asideData: action.payload.asideData
+            }
+        case SET_PARENT_SHOW_DATA:
+            return {
+                ...state,
+                showHideObj: action.payload.showHideObj
             }
         // case DELETE_SHOW_HIDE_ELEMENT:
         //     return {

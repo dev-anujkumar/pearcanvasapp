@@ -1,31 +1,17 @@
 
 import { showTocBlocker, hideTocBlocker, disableHeader } from './toggleLoader'
-
+import { sendDataToIframe } from '../constants/utility.js'
+import config_object1 from '../config/config';
 const configOBJ = require('./../config/config');
 let config_object = configOBJ.default;
 const authModule = { GET_SSO_TOKEN: function () { return config_object.ssoToken } };
 const tab_visibility = '{"audio" : true,"image": true,"other":true,"video": true,"epsUrl":true,"defaulttab":"search"}';
 var uname = config_object['userId'];
 const renderderedTagSelector = '#c2-modal';
-
 const WRAPPER_URL = `${config_object.WRAPPER_URL}`;
-const CMDS_APIKEY = config_object['CMDS_APIKEY'];
-const CMDS_DATA_ENDPOINT = config_object['CMDS_DATA_ENDPOINT'];
-const CMDS_SCHEMA_ENDPOINT = config_object['CMDS_SCHEMA_ENDPOINT'];
-const CMDS_DATABASE = config_object['CMDS_DATABASE'];
-/* const CMIS_US_REPO = config_object['CMIS_US_REPO'];
-const CMIS_UK_REPO = config_object['CMIS_UK_REPO'];
-const CMIS_USAWS_REPO = config_object['CMIS_USAWS_REPO']; */
-const EPS_API = config_object['EPS_API'];
-const CMIS_REPO = config_object['CMIS_REPO'].toString();
-
-/* if (CMIS_US_REPO && CMIS_US_REPO != "") list.push({'repo' : CMIS_US_REPO, 'repoName':'US'});
-if (CMIS_USAWS_REPO && CMIS_USAWS_REPO != "") list.push({'repo' : CMIS_USAWS_REPO, 'repoName':'AWS US'});
-if (CMIS_UK_REPO && CMIS_UK_REPO != "" ) list.push({'repo': CMIS_UK_REPO, 'repoName':'UK'}); */            //code for future need
-
-var patternBroker = PatternBroker.default;
-var patternProductLink = PatternProductLink.default;
-var patternAddAnAsset = PatternAddAnAsset.default;
+var patternBroker;
+var patternProductLink;
+var patternAddAnAsset;
 var productLink;
 var addAnAsset = {};
 var addAnAssetConfig = {};
@@ -40,18 +26,16 @@ var libConfig = {
         'Accept': 'application/ld+json',
         'X-Roles-Test': 'ContentMetadataEditor',
         'Prefer': 'annotation=true',
-        'Apikey': CMDS_APIKEY,
-        'x-apikey': CMDS_APIKEY,
+        'Apikey': config_object1.CMDS_APIKEY,
+        'x-apikey': config_object1.CMDS_APIKEY,
         'PearsonSSOSession': authModule.GET_SSO_TOKEN(),
         'X-PearsonSSOSession': authModule.GET_SSO_TOKEN()
     },
-    'database': CMDS_DATABASE,
-    'server': CMDS_DATA_ENDPOINT,
-    'taxonomyserver': CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
+    'database': config_object1.CMDS_DATABASE,
+    'server': config_object1.CMDS_DATA_ENDPOINT,
+    'taxonomyserver': config_object1.CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
     'userId': uname || config_object['userId']
 };
-
-patternBroker.setup(libConfig);
 
 export const c2MediaModule = {
     addAnAsset: addAnAsset,
@@ -61,6 +45,10 @@ export const c2MediaModule = {
     },
 
     AddanAssetCallBack: function (data, callback) {
+		patternBroker = PatternBroker.default;
+        patternProductLink = PatternProductLink.default;
+        patternAddAnAsset = PatternAddAnAsset.default;
+        patternBroker.setup(libConfig);
         var uniqueID = data.nodeRef && data.nodeRef.split('/')[3];
         var assetType = data.mimetype && data.mimetype.split('/')[0];
         data['uniqueID'] = uniqueID;
@@ -142,13 +130,16 @@ export const c2MediaModule = {
     },
 
     launchAssetBrowser: function (product, server, repo, callback) {
-
+		patternBroker = PatternBroker.default;
+        patternProductLink = PatternProductLink.default;
+        patternAddAnAsset = PatternAddAnAsset.default;
+        patternBroker.setup(libConfig);
         let productRef = product;
         let serverRef = server;
 
         if (addAnAsset && addAnAsset.unmount) {
             addAnAsset.unmount();
-        }
+        }        
 
         var libConfig = {
             'locale': 'en_US',
@@ -157,14 +148,14 @@ export const c2MediaModule = {
                 'Accept': 'application/ld+json',
                 'X-Roles-Test': 'ContentMetadataEditor',
                 'Prefer': 'annotation=true',
-                'Apikey': CMDS_APIKEY,
-                'x-apikey': CMDS_APIKEY,
+                'Apikey': config_object1.CMDS_APIKEY,
+                'x-apikey': config_object1.CMDS_APIKEY,
                 'PearsonSSOSession': authModule.GET_SSO_TOKEN(),
                 'X-PearsonSSOSession': authModule.GET_SSO_TOKEN()
             },
-            'database': CMDS_DATABASE,
-            'server': CMDS_DATA_ENDPOINT,
-            'taxonomyserver': CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
+            'database': config_object1.CMDS_DATABASE,
+            'server': config_object1.CMDS_DATA_ENDPOINT,
+            'taxonomyserver': config_object1.CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
             'userId': uname || config_object['userId']
         };
 
@@ -176,7 +167,7 @@ export const c2MediaModule = {
         addAnAssetConfig.tabVisibility = tab_visibility;
 
         addAnAssetConfig['cmis'] = '{"wURN":false}';
-        addAnAssetConfig['epsserver'] = EPS_API;
+        addAnAssetConfig['epsserver'] = config_object1.EPS_API;
         addAnAssetConfig.imagePreview = '{"imagePreview":true}';
         addAnAssetConfig.register = 'some-register';  // YS
         addAnAssetConfig.showdescription = 'true';  // YS
@@ -195,7 +186,7 @@ export const c2MediaModule = {
 
             showTocBlocker();
             disableHeader(true);
-            window.parent.postMessage({ 'type': 'hideToc', 'message': {} }, WRAPPER_URL);
+            sendDataToIframe({ 'type': 'hideToc', 'message': {} });
 
             //alfresco toc issue
             var targetNode = document.getElementsByClassName('overlay-0-0 overlayLittle-0-1')[0];
@@ -247,19 +238,24 @@ export const c2MediaModule = {
         disableHeader(true);
         showTocBlocker();
         addAnAssetConfig.nodeRef = '';//185fca35-4215-43bf-bf9d-11375903b2b4';
-        window.parent.postMessage({ 'type': 'hideToc', 'message': {} }, WRAPPER_URL);
+        sendDataToIframe({ 'type': 'hideToc', 'message': {} });
         if (addAnAssetConfig.nodeRef !== undefined && addAnAssetConfig.nodeRef !== '') {
             this.launchAssetBrowser(addAnAssetConfig.nodeRef);
 
         } else {
 
+            patternBroker = PatternBroker.default;
+            patternProductLink = PatternProductLink.default;
+            patternAddAnAsset = PatternAddAnAsset.default;
+            patternBroker.setup(libConfig);
+
             if (productLink && productLink.unmount) {
                 productLink.unmount();
             }
-
+            let CMIS_REPO=config_object1.CMIS_REPO;
             if (CMIS_REPO !== undefined && CMIS_REPO !== null && CMIS_REPO !== '') {
                 // try{
-                const cmisRepo = JSON.parse(CMIS_REPO);
+                const cmisRepo = CMIS_REPO;
                 if (cmisRepo.length > 0) {
                     const canWeProceedWithPL = this.validateRegistries(cmisRepo);
                     if (canWeProceedWithPL) {
@@ -270,14 +266,14 @@ export const c2MediaModule = {
                                 'Accept': 'application/ld+json',
                                 'X-Roles-Test': 'ContentMetadataEditor',
                                 'Prefer': 'annotation=true',
-                                'Apikey': CMDS_APIKEY,
-                                'x-apikey': CMDS_APIKEY,
+                                'Apikey': config_object1.CMDS_APIKEY,
+                                'x-apikey': config_object1.CMDS_APIKEY,
                                 'PearsonSSOSession': authModule.GET_SSO_TOKEN(),
                                 'X-PearsonSSOSession': authModule.GET_SSO_TOKEN()
                             },
-                            'database': CMDS_DATABASE,
-                            'server': CMDS_DATA_ENDPOINT,
-                            'taxonomyserver': CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
+                            'database': config_object1.CMDS_DATABASE,
+                            'server': config_object1.CMDS_DATA_ENDPOINT,
+                            'taxonomyserver': config_object1.CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
                             'userId': uname || config_object['userId']
                         };
                         var productLinkConfig = { 'selector': renderderedTagSelector };
