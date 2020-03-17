@@ -1,12 +1,17 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { mount } from 'enzyme';
 import Interactive from '../../../src/component/ElementInteractive';
 import config from '../../../src/config/config';
+import { Provider } from 'react-redux';
+import configureMockStore from 'redux-mock-store';
 import { Interactivefpo , InteractiveFlashcards, Interactive3party, Interactivepdf, InteractiveWeblink,
     InteractivePopupWeblink, InteractiveTable,InteractiveShowHide,InteractivePopWindow,Interactivegraph
     ,Interactivesimulation,Interactivesurvey,Interactivetimeline,Interactivehotspot,Interactiveaccountingtable,
     Interactivefillinblank,Interactivegalleryimage,Interactivegalleryvideo,Interactivevideomcq,Interactivemcq , InteractiveGuidedExample} from '../../../fixtures/ElementInteractiveTesting.js'
+import thunk from 'redux-thunk';
+const middlewares = [thunk];
+const mockStore = configureMockStore(middlewares);
+const store = mockStore({});
 jest.mock('../../../src/component/tinyMceEditor.js', () => {
     return function () {
         return (<div>null</div>)
@@ -233,7 +238,7 @@ describe('Testing Interactive element component', () => {
             spytogglePopup.mockClear()
         })    
     })
-    xdescribe('Testing Element interactive - C2 Interactive Media Handling Functions', () => {
+    describe('Testing Element interactive - C2 Interactive Media Handling Functions', () => {
         let type = "figure";
         let props = {
             slateLockInfo: {
@@ -253,7 +258,7 @@ describe('Testing Interactive element component', () => {
             showBlocker: jest.fn()
         };
 
-        const elementInteractive = mount(<Interactive type={type} model={Interactivefpo} index="1" {...props} />);
+        const elementInteractive = mount(<Provider store={store}><Interactive type={type} model={Interactivefpo} index="1" {...props} /></Provider>);
         let elementInteractiveInstance = elementInteractive.find('Interactive').instance();
         it('onClick-default case', () => {
             const e = {
@@ -305,7 +310,7 @@ describe('Testing Interactive element component', () => {
                 handleFocus: jest.fn(),
                 accessDenied: jest.fn(),
             };
-            const elementInteractive = mount(<Interactive type={type} model={Interactivefpo} index="1" {...props} />);
+            const elementInteractive = mount(<Provider store={store}><Interactive type={type} model={Interactivefpo} index="1" {...props} /></Provider>);
             let elementInteractiveInstance = elementInteractive.find('Interactive').instance();
             const spyhandleC2MediaClick = jest.spyOn(elementInteractiveInstance, 'handleC2MediaClick')
             elementInteractiveInstance.handleC2MediaClick({ target: { tagName: 'b' } })
@@ -315,7 +320,7 @@ describe('Testing Interactive element component', () => {
             spyhandleC2MediaClick.mockClear()
         })
         describe('Test-Alfresco Data Handling', () => {
-            const elementInteractive = mount(<Interactive type={type} model={Interactivefpo} index="1" {...props} />);
+            const elementInteractive = mount(<Provider store={store}><Interactive type={type} model={Interactivefpo} index="1" {...props} /></Provider>);
             let elementInteractiveInstance = elementInteractive.find('Interactive').instance();
             const spydataFromAlfresco = jest.spyOn(elementInteractiveInstance, 'dataFromAlfresco')
             it('Test- if case workflow -smartLinkType-3rd Party Interactive', () => {
@@ -434,7 +439,7 @@ describe('Testing Interactive element component', () => {
             })
         })
         describe('Test-Alfresco Data Handling', () => {
-            const elementInteractive = mount(<Interactive type={type} model={Interactivefpo} index="1" {...props} />);
+            const elementInteractive = mount(<Provider store={store}><Interactive type={type} model={Interactivefpo} index="1" {...props} /></Provider>);
             let elementInteractiveInstance = elementInteractive.find('Interactive').instance();
             const spyhandleC2InteractiveClick = jest.spyOn(elementInteractiveInstance, 'handleC2InteractiveClick')
             it('Test- if case workflow -smartLinkType-3rd Party Interactive', () => {
@@ -506,7 +511,7 @@ describe('Testing Interactive element component', () => {
             userCount: 0,
             'x-prsn-user-id': " ",
         }
-        const elementInteractive = mount(<Interactive type={type} model={Interactivefpo} index="1" {...props} />);
+        const elementInteractive = mount(<Provider store={store}><Interactive type={type} model={Interactivefpo} index="1" {...props} /></Provider>);
         let elementInteractiveInstance = elementInteractive.find('Interactive').instance();
 
         it('handleC2MediaClick-default case', () => {
@@ -573,7 +578,7 @@ describe('Testing Interactive element component', () => {
                 accessDenied: jest.fn(),
                 showBlocker: jest.fn()
             };
-            const elementInteractive = mount(<Interactive type={type} model={Interactivefpo} index="1" {...props} />);
+            const elementInteractive = mount(<Provider store={store}><Interactive type={type} model={Interactivefpo} index="1" {...props} /></Provider>);
             let elementInteractiveInstance = elementInteractive.find('Interactive').instance();
             const spyhandleC2MediaClick = jest.spyOn(elementInteractiveInstance, 'handleC2MediaClick')
             const e = {
@@ -612,7 +617,7 @@ describe('Testing Interactive element component', () => {
             accessDenied: jest.fn(),
             showBlocker: jest.fn()
         };
-        const elementInteractive = mount(<Interactive type={type} model={Interactivefpo} index="1" {...props} />);
+        const elementInteractive = mount(<Provider store={store}><Interactive type={type} model={Interactivefpo} index="1" {...props} /></Provider>);
         let elementInteractiveInstance = elementInteractive.find('Interactive').instance();
 
         it('handleC2InteractiveClick-default case', () => {
@@ -641,7 +646,7 @@ describe('Testing Interactive element component', () => {
             accessDenied: jest.fn(),
             showBlocker: jest.fn()
         };
-        const elementInteractive = mount(<Interactive type={type} model={Interactivefpo} index="1" {...props} />);
+        const elementInteractive = mount(<Provider store={store}><Interactive type={type} model={Interactivefpo} index="1" {...props} /></Provider>);
         let elementInteractiveInstance = elementInteractive.find('Interactive').instance();
         const spydataFromAlfresco = jest.spyOn(elementInteractiveInstance, 'dataFromAlfresco')
         it('Test- if case workflow -smartLinkType-3rd Party Interactive', () => {
