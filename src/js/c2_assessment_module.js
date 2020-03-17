@@ -15,27 +15,6 @@ let _interactivePattern = {};
 let _interactivePatternConfig = {};
 var uname = config_object['userId'];
 
-/*Configure the library*/
-var libConfig = {
-  'locale': 'en_US',
-  'headers': {
-    'Content-Type': 'application/json',
-    'Accept': 'application/ld+json',
-    'X-Roles-Test': 'ContentMetadataEditor',
-    'Prefer': 'annotation=true',
-    'Apikey': config_object1.CMDS_APIKEY,
-    'X-APIKey': config_object1.CMDS_APIKEY,
-    'PearsonSSOSession': authModule.GET_SSO_TOKEN(),
-    'X-PearsonSSOSession': authModule.GET_SSO_TOKEN(),
-    'Authorization': config_object1.CMDS_AUTHORIZATION
-  },
-  'database': config_object1.CMDS_DATABASE,
-  'server': config_object1.CMDS_DATA_ENDPOINT,
-  'taxonomyserver': config_object1.CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
-  'userId': uname || config_object['userId']
-};
-
-//patternBroker.setup(libConfig);
 
 export const c2AssessmentModule = {
   searchAndSelectonSave: function (data) {
