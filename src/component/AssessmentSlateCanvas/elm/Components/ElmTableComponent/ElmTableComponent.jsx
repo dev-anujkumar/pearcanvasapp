@@ -76,42 +76,28 @@ class ElmTableComponent extends Component {
 
     renderTableData = (currentProps) => {
         const { errFlag, elmData, elmItemData, elmLoading, itemErrorFlag } = currentProps.elmReducer;
-        if ((!errFlag && elmData) && !elmItemData) {
-            console.log(1111111111)
-            let data = JSON.stringify(elmData)
+        let data = JSON.stringify(elmData)
+        if (((!errFlag && elmData) && !elmItemData)|| (this.state.openedFrom == "singleAssessment" && !itemErrorFlag && !errFlag && elmLoading)) {
             if(data.includes(config.parentContainerUrn)){
-                console.log(2424242424224)
                 this.filterData(false, config.parentContainerUrn, elmData);
             }else{
-                console.log(36363636363636)
                 this.filterData(false, config.projectUrn, elmData);
             }
-            // this.filterData(false, config.parentContainerUrn, elmData);
         }
         else if (!itemErrorFlag && elmItemData && elmLoading==false) {
-            console.log(222222222222)
-            console.log("config.parentContainerUrn",config.parentContainerUrn)
             this.filterData(true, config.parentContainerUrn,elmItemData)
-        }else if(this.state.openedFrom == "singleAssessment" && !itemErrorFlag && !errFlag && elmLoading){
-            console.log(33333333333)
-            console.log("config.parentContainerUrn",config.parentContainerUrn)
-            //this.filterData(false,config.parentContainerUrn, elmData);
-            let data = JSON.stringify(elmData)
-            if(data.includes(config.parentContainerUrn)){
-                console.log(616161616161161161)
-                this.filterData(false, config.parentContainerUrn, elmData);
-            }else{
-                console.log(717171717171717171)
-                this.filterData(false, config.projectUrn, elmData);
-            }
-        }else if(this.state.openedFrom == "slateAssessment" && !errFlag && elmLoading){
-            console.log(44444444444)
-            console.log("config.parentContainerUrn",config.parentContainerUrn)
+        }
+        // else if(this.state.openedFrom == "singleAssessment" && !itemErrorFlag && !errFlag && elmLoading){
+        //     if(data.includes(config.parentContainerUrn)){
+        //         this.filterData(false, config.parentContainerUrn, elmData);
+        //     }else{
+        //         this.filterData(false, config.projectUrn, elmData);
+        //     }
+        // }
+        else if(this.state.openedFrom == "slateAssessment" && !errFlag && elmLoading){
             this.filterData(false,config.parentContainerUrn, elmData);
         }               
         else {
-            console.log(5555555555)
-            console.log("config.parentContainerUrn",config.parentContainerUrn)
             this.filterData(false,this.state.currentUrn, elmData);
         }
     }
@@ -126,13 +112,10 @@ class ElmTableComponent extends Component {
         this.preparedData = [];
         this.setState({ addFlag: false, isActive: null });
         if (urn === parentUrn) {
-            console.log(121212121212121)
             this.getResourcefromFilterData(getItems, apiData)
         }
         else if (apiData.contents) {
             apiData = apiData.contents;
-            console.log(apiData)
-            console.log(3434343434343434)
             apiData.frontMatter && apiData.frontMatter.forEach((data) => {
                 this.filterSubData(data, urn, parentUrn, getItems)
             })
@@ -147,7 +130,6 @@ class ElmTableComponent extends Component {
             })
         }
         else if (!(apiData.contents || this.preparedData.length)) {
-            console.log(565656565656565656)
             this.getResourcefromFilterData(getItems, apiData)
         }
     }
@@ -161,18 +143,14 @@ class ElmTableComponent extends Component {
     filterSubData = (data, urn, parentUrn, getItems) => {
 
         if (data.versionUrn === urn) {
-            console.log(8989898989898989898)
             return this.getResourcefromFilterData(getItems, data, parentUrn)
         }
         else {
             if (data.contents){
-            console.log(7866676767)
                 this.filterData(getItems, urn, data, data.versionUrn)
             }
             else
             {
-                console.log(1100000000000)
-                // this.filterData(getItems, this.state.currentUrn, data)
                 return;
             }
                 
