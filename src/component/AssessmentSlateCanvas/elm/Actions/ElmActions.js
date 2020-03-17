@@ -29,7 +29,7 @@ export const insertElmResourceAction = (assessmentType) => (dispatch) => {
             payload: {
                 data: [],
                 errFlag: true,
-                apiStatus: error.response.status,
+                apiStatus: "404",
                 elmLoading:false
             }
         })

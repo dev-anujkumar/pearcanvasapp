@@ -18,7 +18,6 @@ class ElmTableComponent extends Component {
         this.state = {
             tableValue: [],
             isActive: null,
-            newActive:false,
             addFlag: false,
             currentUrn: this.props.elmReducer.elmData.versionUrn,
             parentUrn: null,
@@ -75,18 +74,41 @@ class ElmTableComponent extends Component {
     */
 
     renderTableData = (currentProps) => {
-        const {errFlag,elmData,elmItemData,elmLoading,itemErrorFlag} = currentProps.elmReducer;
-        if((!errFlag && elmData) && !elmItemData) {
-            this.filterData(false,config.parentContainerUrn, elmData);
+        const { errFlag, elmData, elmItemData, elmLoading, itemErrorFlag } = currentProps.elmReducer;
+        if ((!errFlag && elmData) && !elmItemData) {
+            let containerURN = config.parentContainerUrn;
+            console.log(11111111111)
+            console.log("config.parentContainerUrn", config.parentContainerUrn)
+            console.log("this.state.currentUrn", this.state.currentUrn)
+
+            // if (Object.values(elmData).indexOf(config.parentContainerUrn) > -1) {
+            //     console.log('has test1');
+                this.filterData(false, containerURN, elmData);
+                if(Object.values(elmData).indexOf(config.parentContainerUrn) < 0 && this.preparedData.length == 0) {
+                    console.log('aaa');
+                    this.getResourcefromFilterData(false, elmData, this.state.currentUrn);
+                }
+            // } else {
+            //     console.log('has test2');
+            //     this.filterData(false, this.state.currentUrn, elmData);
+            // }
         }
         else if (!itemErrorFlag && elmItemData && elmLoading==false) {
+            console.log(222222222222)
+            console.log("config.parentContainerUrn",config.parentContainerUrn)
             this.filterData(true, config.parentContainerUrn,elmItemData)
         }else if(this.state.openedFrom == "singleAssessment" && !itemErrorFlag && !errFlag && elmLoading){
+            console.log(33333333333)
+            console.log("config.parentContainerUrn",config.parentContainerUrn)
             this.filterData(false,config.parentContainerUrn, elmData);
         }else if(this.state.openedFrom == "slateAssessment" && !errFlag && elmLoading){
+            console.log(44444444444)
+            console.log("config.parentContainerUrn",config.parentContainerUrn)
             this.filterData(false,config.parentContainerUrn, elmData);
         }               
         else {
+            console.log(5555555555)
+            console.log("config.parentContainerUrn",config.parentContainerUrn)
             this.filterData(false,this.state.currentUrn, elmData);
         }
     }
@@ -101,26 +123,30 @@ class ElmTableComponent extends Component {
         this.preparedData = [];
         this.setState({ addFlag: false, isActive: null });
         if (urn === parentUrn) {
+            console.log(121212121212121)
             this.getResourcefromFilterData(getItems, apiData)
         }
         else if (apiData.contents) {
             apiData = apiData.contents;
-
+            console.log(apiData)
+            console.log(3434343434343434)
             apiData.frontMatter && apiData.frontMatter.forEach((data) => {
-                this.filterSubData(data, urn, parentUrn, getItems)
+                // this.filterSubData(data, urn, parentUrn, getItems)
             })
 
             apiData.bodyMatter && apiData.bodyMatter.forEach((data) => {
-                this.filterSubData(data, urn, parentUrn, getItems)
+                // this.filterSubData(data, urn, parentUrn, getItems)
+                this.filterData(getItems, urn, data, parentUrn)
             })
 
             apiData.backMatter && apiData.backMatter.forEach((data) => {
-                this.filterSubData(data, urn, parentUrn, getItems)
+                // this.filterSubData(data, urn, parentUrn, getItems)
             })
         }
-        else if (!(apiData.contents || this.preparedData.length)) {
-            this.getResourcefromFilterData(getItems, apiData)
-        }
+        // else if (!(apiData.contents || this.preparedData.length)) {
+        //     console.log(565656565656565656)
+        //     this.getResourcefromFilterData(getItems, apiData)
+        // }
     }
 
     /*** @description - Function to check if api data's versionUrn is same as current urn
@@ -132,13 +158,21 @@ class ElmTableComponent extends Component {
     filterSubData = (data, urn, parentUrn, getItems) => {
 
         if (data.versionUrn === urn) {
+            console.log(8989898989898989898)
             return this.getResourcefromFilterData(getItems, data, parentUrn)
         }
         else {
-            if (data.contents)
+            if (data.contents){
+            console.log(7866676767)
                 this.filterData(getItems, urn, data, data.versionUrn)
+            }
             else
-                return;
+            {
+                console.log(1100000000000)
+                // this.filterData(getItems, this.state.currentUrn, data)
+                // return;
+            }
+                
         }
     }
 
@@ -334,8 +368,7 @@ class ElmTableComponent extends Component {
         */
     toggleActive = (i) => {
             this.setState({
-                isActive: i,
-                newActive:!this.state.newActive,
+                isActive: i
             });
 
     }
@@ -348,19 +381,9 @@ class ElmTableComponent extends Component {
     setElmTableJsx = (item, index, openedFrom) => {
         let elmTableBody,
             elmIcon = item.type == "assessment" ? elmAssessmentItem : singleAssessmentItemIcon;
-        let tableRowClass =""
-        tableRowClass=`row-class ${this.state.isActive === index  ? 'select' : 'not-select'}`
-        console.log("item.type",item.type)
-        console.log("tableRowClass",tableRowClass)
-        console.log("i",this.state.isActive)
-        console.log("true val",this.state.newActive)
         if ((item.type == "assessment" || item.type == "assessmentitem") && item.urn.includes("work")) {
             elmTableBody = <tbody key={index}>
-                <tr className={`row-class ${this.state.isActive === index ? 'select':'not-select'}`}
-                    // ${this.state.openItemTable==false && this.state.isActive === index ? 
-                    // 'select' : this.state.openItemTable==true && !this.state.newActive ? 'select':
-                    // 'not-select'}`} 
-                    onClick={() => this.toggleActive(index)}>
+                <tr className={`row-class ${this.state.isActive === index ? 'select':'not-select'}`} onClick={() => this.toggleActive(index)}>
                     <td className='td-class' key={index} onClick={() => this.handleClickAssessment(item, item.type, openedFrom)}>
                         <span className="elmAssessmentItem-icon">{elmIcon}</span>
                         <b className="elm-text-assesment">{item.assessmentTitle ? item.assessmentTitle : item.urn}</b>
