@@ -998,7 +998,8 @@ export class TinyMceEditor extends Component {
             selectedText = '<'+selectedTag.toLocaleLowerCase()+'>'+selectedText+'</'+selectedTag.toLocaleLowerCase()+'>'
         }
         let insertionText = '<span id="asset-popover-attacher">' + selectedText + '</span>';
-        editor.insertContent(insertionText);
+        // editor.insertContent(insertionText);
+        editor.selection.setContent(insertionText);
         customEvent.subscribe('assetPopoverSave', () => {
             this.handleBlur(null, true);
             customEvent.unsubscribe('assetPopoverSave');
