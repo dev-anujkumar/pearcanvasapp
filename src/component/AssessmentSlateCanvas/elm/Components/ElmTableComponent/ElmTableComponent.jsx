@@ -9,6 +9,7 @@ import ElmError from '../ElmError';
 import ElmFooter from '../ElmFooter'
 import { FULL_ASSESSMENT_PUF, PUF } from '../../../AssessmentSlateConstants.js'
 import { elmAssessmentItem, elmSortUp, elmSortDown, elmNavigateBack, singleAssessmentItemIcon } from './../../../../../images/ElementButtons/ElementButtons.jsx';
+import { objectExpression } from '@babel/types';
 
 
 /*** @description - ElmTable is a class based component to store ELM assessments in tabular form*/
@@ -76,22 +77,16 @@ class ElmTableComponent extends Component {
     renderTableData = (currentProps) => {
         const { errFlag, elmData, elmItemData, elmLoading, itemErrorFlag } = currentProps.elmReducer;
         if ((!errFlag && elmData) && !elmItemData) {
-            let containerURN = config.parentContainerUrn;
-            console.log(11111111111)
-            console.log("config.parentContainerUrn", config.parentContainerUrn)
-            console.log("this.state.currentUrn", this.state.currentUrn)
-
-            // if (Object.values(elmData).indexOf(config.parentContainerUrn) > -1) {
-            //     console.log('has test1');
-                this.filterData(false, containerURN, elmData);
-                if(Object.values(elmData).indexOf(config.parentContainerUrn) < 0 && this.preparedData.length == 0) {
-                    console.log('aaa');
-                    this.getResourcefromFilterData(false, elmData, this.state.currentUrn);
-                }
-            // } else {
-            //     console.log('has test2');
-            //     this.filterData(false, this.state.currentUrn, elmData);
-            // }
+            console.log(1111111111)
+            let data = JSON.stringify(elmData)
+            if(data.includes(config.parentContainerUrn)){
+                console.log(2424242424224)
+                this.filterData(false, config.parentContainerUrn, elmData);
+            }else{
+                console.log(36363636363636)
+                this.filterData(false, config.projectUrn, elmData);
+            }
+            // this.filterData(false, config.parentContainerUrn, elmData);
         }
         else if (!itemErrorFlag && elmItemData && elmLoading==false) {
             console.log(222222222222)
@@ -100,7 +95,15 @@ class ElmTableComponent extends Component {
         }else if(this.state.openedFrom == "singleAssessment" && !itemErrorFlag && !errFlag && elmLoading){
             console.log(33333333333)
             console.log("config.parentContainerUrn",config.parentContainerUrn)
-            this.filterData(false,config.parentContainerUrn, elmData);
+            //this.filterData(false,config.parentContainerUrn, elmData);
+            let data = JSON.stringify(elmData)
+            if(data.includes(config.parentContainerUrn)){
+                console.log(616161616161161161)
+                this.filterData(false, config.parentContainerUrn, elmData);
+            }else{
+                console.log(717171717171717171)
+                this.filterData(false, config.projectUrn, elmData);
+            }
         }else if(this.state.openedFrom == "slateAssessment" && !errFlag && elmLoading){
             console.log(44444444444)
             console.log("config.parentContainerUrn",config.parentContainerUrn)
@@ -131,22 +134,22 @@ class ElmTableComponent extends Component {
             console.log(apiData)
             console.log(3434343434343434)
             apiData.frontMatter && apiData.frontMatter.forEach((data) => {
-                // this.filterSubData(data, urn, parentUrn, getItems)
+                this.filterSubData(data, urn, parentUrn, getItems)
             })
 
             apiData.bodyMatter && apiData.bodyMatter.forEach((data) => {
-                // this.filterSubData(data, urn, parentUrn, getItems)
-                this.filterData(getItems, urn, data, parentUrn)
+                this.filterSubData(data, urn, parentUrn, getItems)
+                //this.filterData(getItems, urn, data, parentUrn)
             })
 
             apiData.backMatter && apiData.backMatter.forEach((data) => {
-                // this.filterSubData(data, urn, parentUrn, getItems)
+                this.filterSubData(data, urn, parentUrn, getItems)
             })
         }
-        // else if (!(apiData.contents || this.preparedData.length)) {
-        //     console.log(565656565656565656)
-        //     this.getResourcefromFilterData(getItems, apiData)
-        // }
+        else if (!(apiData.contents || this.preparedData.length)) {
+            console.log(565656565656565656)
+            this.getResourcefromFilterData(getItems, apiData)
+        }
     }
 
     /*** @description - Function to check if api data's versionUrn is same as current urn
@@ -170,7 +173,7 @@ class ElmTableComponent extends Component {
             {
                 console.log(1100000000000)
                 // this.filterData(getItems, this.state.currentUrn, data)
-                // return;
+                return;
             }
                 
         }
