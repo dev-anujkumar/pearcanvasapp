@@ -1,5 +1,6 @@
 const INITIAL_STATE = {
-    isLoading:true
+    isLoading:true,
+    elmLoading:true,
 }
 
 const INITIAL_ACTION = {
@@ -14,7 +15,8 @@ export default function reducer (state = INITIAL_STATE, action = INITIAL_ACTION)
                ...state,
                elmData : action.payload.data,
                errFlag : action.payload.errFlag,
-               apiStatus : action.payload.apiStatus
+               apiStatus : action.payload.apiStatus,
+            //    elmLoading: action.payload.elmLoading
             }
         case 'GET_ELM_ITEMS':
             return {
@@ -28,6 +30,11 @@ export default function reducer (state = INITIAL_STATE, action = INITIAL_ACTION)
             return {
                 ...state,
                 isLoading: action.payload.isLoading
+            }
+        case 'SET_ELM_LOADING_TRUE':
+            return {
+                ...state,
+                elmLoading: action.payload.elmLoading
             }
         default:
             return state

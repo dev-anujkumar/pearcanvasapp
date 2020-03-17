@@ -4,7 +4,7 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import './../../../styles/AssessmentSlateCanvas/elm/RootElmComponent.css';
-import { insertElmResourceAction, fetchAssessmentItem } from './Actions/ElmActions';
+import { insertElmResourceAction, fetchAssessmentItem ,setElmLoader } from './Actions/ElmActions';
 import ElmHeader from './Components/ElmHeader';
 import ElmTableComponent from './Components/ElmTableComponent';
 
@@ -16,6 +16,7 @@ const RootElmSingleAssessment = (props) => {
 
     useEffect(() => {
         setElmResourceApiData({})
+        setHidePopup(true)
         props.elmResource(props.activeAssessmentType);
     },[])
 
@@ -54,6 +55,7 @@ const RootElmSingleAssessment = (props) => {
                         fetchAssessmentItem={props.fetchAssessmentItem}
                         activeAssessmentType={props.activeAssessmentType}
                         setItemParentUrn={props.setItemParentUrn}
+                        setElmLoader={props.setElmLoader}
                     />}
             </div>
         </div>

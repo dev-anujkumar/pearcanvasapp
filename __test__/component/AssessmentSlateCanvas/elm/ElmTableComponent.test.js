@@ -410,7 +410,7 @@ describe('ELM Actions test', () => {
             expect(spyfilterSubData).toHaveBeenCalled()
             spyfilterSubData.mockClear()
         })
-        it('TEST-componentWillUnmount', () => {
+        xit('TEST-componentWillUnmount', () => {
             const spycomponentWillUnmount = jest.spyOn(elmTableInstance, 'componentWillUnmount')
             elmTableInstance.componentWillUnmount()
             expect(spycomponentWillUnmount.mock.calls.length).toBe(1)

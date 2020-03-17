@@ -6,7 +6,7 @@ import axios from 'axios';
  * This action creator is used to fetch ELM resources added to the project
  */
 export const insertElmResourceAction = (assessmentType) => (dispatch) => {
-    
+    dispatch({ type: 'SET_ELM_LOADING_TRUE', payload: { elmLoading: true } });
     let url =`${assessmentType === FULL_ASSESSMENT_PUF ?`${config.ELM_ENDPOINT}`:`${config.LERNOSITY_ENDPOINT}`}v2/${config.projectUrn}/alignments/resources`;
     return axios.get(url, {
           headers:  {
@@ -19,7 +19,8 @@ export const insertElmResourceAction = (assessmentType) => (dispatch) => {
             payload: {
                 data: res.data,
                 errFlag: false,
-                apiStatus: "200"
+                apiStatus: "200",
+                elmLoading:false
             }
         })
     }).catch((error) => {
@@ -28,7 +29,8 @@ export const insertElmResourceAction = (assessmentType) => (dispatch) => {
             payload: {
                 data: [],
                 errFlag: true,
-                apiStatus: error.response.status
+                apiStatus: error.response.status,
+                elmLoading:false
             }
         })
     })
@@ -39,6 +41,7 @@ export const insertElmResourceAction = (assessmentType) => (dispatch) => {
  */
 export const fetchAssessmentItem = (assessmentId) => (dispatch) => {
     dispatch({ type: 'SET_LOADING_TRUE', payload: { isLoading: true } });
+    dispatch({ type: 'SET_ELM_LOADING_TRUE', payload: { elmLoading: false } });
     let url = `${config.REACT_APP_API_URL}v1/slate/assessment/${assessmentId}/items`;
     return axios.get(url, {
         headers: {

@@ -40,7 +40,7 @@ describe('ELM Actions test', () => {
             });
         });
         return store.dispatch(selectActions.insertElmResourceAction('Full Assessment PUF')).then(() => {
-            const { type, payload } = store.getActions()[0];
+            const { type, payload } = store.getActions()[1];
             expect(type).toBe('GET_ELM_RESOURCES');
             expect(payload.errFlag).toBe(false);
             expect(payload.apiStatus).toBe("200");
@@ -72,7 +72,7 @@ describe('ELM Actions test', () => {
             });
         });
         return store.dispatch(selectActions.insertElmResourceAction('Learnosity')).then(() => {
-            const { type, payload } = store.getActions()[0];
+            const { type, payload } = store.getActions()[1];
             expect(type).toBe('GET_ELM_RESOURCES');
             expect(payload.errFlag).toBe(false);
             expect(payload.apiStatus).toBe("200");
@@ -88,7 +88,7 @@ describe('ELM Actions test', () => {
             });
         });
         return store.dispatch(selectActions.insertElmResourceAction('Learnosity')).catch((error) => {
-            const { type, payload } = store.getActions()[0];
+            const { type, payload } = store.getActions()[1];
             expect(type).toBe('GET_ELM_RESOURCES');
             expect(payload.errFlag).toBe(true);
             expect(payload.apiStatus).toBe(error.response.status);
@@ -121,7 +121,7 @@ describe('ELM Actions- fetchAssessmentItem test', () => {
             });
         });
         return store.dispatch(selectActions.fetchAssessmentItem('urn:pearson:work:fec602d2-315e-4681-ad21-c954e927fbab')).then(() => {
-            const { type, payload } = store.getActions()[1];
+            const { type, payload } = store.getActions()[2];
             expect(type).toBe('GET_ELM_ITEMS');
             expect(payload.errFlag).toBe(false);
             expect(payload.apiStatus).toBe("200");
@@ -137,7 +137,7 @@ describe('ELM Actions- fetchAssessmentItem test', () => {
             });
         });
         return store.dispatch(selectActions.fetchAssessmentItem('urn:pearson:work:fec602d2-315e-4681-ad21-c954e927fbab')).then(() => {            
-            const { type, payload } = store.getActions()[1];
+            const { type, payload } = store.getActions()[2];
             expect(type).toBe('GET_ELM_ITEMS');
             expect(payload.apiStatus).toBe("404");
         })

@@ -10,6 +10,7 @@ import ElmFooter from '../ElmFooter'
 import { FULL_ASSESSMENT_PUF, PUF } from '../../../AssessmentSlateConstants.js'
 import { elmAssessmentItem, elmSortUp, elmSortDown, elmNavigateBack, singleAssessmentItemIcon } from './../../../../../images/ElementButtons/ElementButtons.jsx';
 
+
 /*** @description - ElmTable is a class based component to store ELM assessments in tabular form*/
 class ElmTableComponent extends Component {
     constructor(props) {
@@ -17,6 +18,7 @@ class ElmTableComponent extends Component {
         this.state = {
             tableValue: [],
             isActive: null,
+            newActive:false,
             addFlag: false,
             currentUrn: this.props.elmReducer.elmData.versionUrn,
             parentUrn: null,
@@ -30,7 +32,6 @@ class ElmTableComponent extends Component {
             openedFrom: this.setOpenedFrom() || ""
         };
         this.preparedData = [];
-        this.timer = null;
         this.setSort();
         
     }
@@ -46,17 +47,11 @@ class ElmTableComponent extends Component {
 
     }
 
-    componentDidUpdate(prevProps, prevState) {
+    componentDidUpdate(prevProps) {
         if ((prevProps.elmReducer.elmItemData != this.props.elmReducer.elmItemData) ||
             (prevProps.elmReducer.elmData != this.props.elmReducer.elmData)) {
             let _self = this;
             _self.renderTableData(this.props);
-        }
-    }
-
-    componentWillUnmount() {
-        if (this.timer) {
-            clearTimeout(this.timer);
         }
     }
 
@@ -78,19 +73,23 @@ class ElmTableComponent extends Component {
     /*** @description - This function is to render elm table data
      * @param currentProps- props
     */
-    renderTableData = (currentProps) => {
-        if ((!currentProps.elmReducer.errFlag && currentProps.elmReducer.elmData) && !currentProps.elmReducer.elmItemData) {
-            this.filterData(false, config.parentContainerUrn, currentProps.elmReducer.elmData);
-        } else if (!currentProps.elmReducer.itemErrorFlag && currentProps.elmReducer.elmItemData) {
-            this.filterData(true, this.state.currentUrn, currentProps.elmReducer.elmItemData)
-        }
-        this.timer = setTimeout(() => {
-            if (!this.state.tableValue.length) {
-                this.getResourcefromFilterData(false, currentProps.elmReducer.elmData,config.parentContainerUrn);
-            }
-        }, 0)
-    }
 
+    renderTableData = (currentProps) => {
+        const {errFlag,elmData,elmItemData,elmLoading,itemErrorFlag} = currentProps.elmReducer;
+        if((!errFlag && elmData) && !elmItemData) {
+            this.filterData(false,config.parentContainerUrn, elmData);
+        }
+        else if (!itemErrorFlag && elmItemData && elmLoading==false) {
+            this.filterData(true, config.parentContainerUrn,elmItemData)
+        }else if(this.state.openedFrom == "singleAssessment" && !itemErrorFlag && !errFlag && elmLoading){
+            this.filterData(false,config.parentContainerUrn, elmData);
+        }else if(this.state.openedFrom == "slateAssessment" && !errFlag && elmLoading){
+            this.filterData(false,config.parentContainerUrn, elmData);
+        }               
+        else {
+            this.filterData(false,this.state.currentUrn, elmData);
+        }
+    }
 
     /*** @description - This function is to filter table data based on parameters
          * @param getItems - check for type of data |true=assessment-item data|false- elm-resouces data     
@@ -157,7 +156,7 @@ class ElmTableComponent extends Component {
                         if (assessments && assessments.title && assessments.title.en) {
                             title = assessments.title.en
                         }
-                        this.preparedData.push({ "type": "assessment", "urn": assessments.urn, "assessmentTitle": title, "parentUrn": parentUrn, previousUrn: data.versionUrn }) // "assessment" is added as type for resources where type-key is missing
+                        this.preparedData.push({ "type": assessments.type? assessments.type:"assessment", "urn": assessments.urn, "assessmentTitle": title, "parentUrn": parentUrn, previousUrn: data.versionUrn }) // "assessment" is added as type for resources where type-key is missing
                     })
                 }
             })
@@ -333,10 +332,12 @@ class ElmTableComponent extends Component {
     /*** @description - This function is to toggle the current row selected
          * @param i- index of the row
         */
-    toggleActive = i => {
-        this.setState({
-            isActive: i
-        });
+    toggleActive = (i) => {
+            this.setState({
+                isActive: i,
+                newActive:!this.state.newActive,
+            });
+
     }
 
     /*** @description - Function to render Table structure 
@@ -347,10 +348,19 @@ class ElmTableComponent extends Component {
     setElmTableJsx = (item, index, openedFrom) => {
         let elmTableBody,
             elmIcon = item.type == "assessment" ? elmAssessmentItem : singleAssessmentItemIcon;
-
+        let tableRowClass =""
+        tableRowClass=`row-class ${this.state.isActive === index  ? 'select' : 'not-select'}`
+        console.log("item.type",item.type)
+        console.log("tableRowClass",tableRowClass)
+        console.log("i",this.state.isActive)
+        console.log("true val",this.state.newActive)
         if ((item.type == "assessment" || item.type == "assessmentitem") && item.urn.includes("work")) {
             elmTableBody = <tbody key={index}>
-                <tr className={`row-class ${this.state.isActive === index ? 'select' : 'not-select'}`} onClick={() => this.toggleActive(index)}>
+                <tr className={`row-class ${this.state.isActive === index ? 'select':'not-select'}`}
+                    // ${this.state.openItemTable==false && this.state.isActive === index ? 
+                    // 'select' : this.state.openItemTable==true && !this.state.newActive ? 'select':
+                    // 'not-select'}`} 
+                    onClick={() => this.toggleActive(index)}>
                     <td className='td-class' key={index} onClick={() => this.handleClickAssessment(item, item.type, openedFrom)}>
                         <span className="elmAssessmentItem-icon">{elmIcon}</span>
                         <b className="elm-text-assesment">{item.assessmentTitle ? item.assessmentTitle : item.urn}</b>
@@ -385,7 +395,7 @@ class ElmTableComponent extends Component {
     };
 
     render() {
-        const { isLoading } = this.props.elmReducer;
+        const { isLoading, elmLoading } = this.props.elmReducer;
         {
             if (this.props.elmReducer.errFlag == true) {
                 return <ElmError elmErrorProps={this.elmErrorProps} />
@@ -398,7 +408,7 @@ class ElmTableComponent extends Component {
                             <p className="title-header">{this.state.parentTitle}</p>
                         </div>
                         <div className='main-div'>
-                            {(this.state.openItemTable == true && isLoading == true) ? <div className="elm-loader"></div> : ""}
+                            {(this.state.openItemTable == true && isLoading == true)? <div className="elm-loader"></div> : ""}
                             {(!this.props.elmReducer.itemErrorFlag && this.props.elmReducer.itemApiStatus != 200 && this.state.openItemTable == true && isLoading == false) ?
                                 <ElmError elmErrorProps={this.elmErrorProps} itemErrorStatus={this.props.elmReducer.itemApiStatus}/>
                                 :
