@@ -9,7 +9,6 @@ import TinyMceEditor from "../tinyMceEditor";
 // import { showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader'
 import config from '../../config/config';
 import '../../styles/ElementShowHide/ElementShowHide.css'
-import { deleteShowHideUnit } from "../ElementContainer/ElementContainer_Actions.js"
 import ListElement from '../ListElement'
 import ElementContainerContext from '../ElementContainer/ElementContainerContext.js'
 const ShowHideTinyMce = (props) => {
@@ -19,10 +18,8 @@ const ShowHideTinyMce = (props) => {
         openGlossaryFootnotePopUp,
         handleFocus,
         handleBlur,
-        index,
         elementId,
         element,
-        model,
         slateLockInfo,
         onListSelect,
         glossaryFootnoteValue,
