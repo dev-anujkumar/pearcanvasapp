@@ -79,3 +79,7 @@ position: relative;
 .divAssessment{
        max-width:auto!important ;
 }
+
+.puf-assessment-id{
+    display: none;
+}
