@@ -6,7 +6,8 @@ import ElmHeader from './Components/ElmHeader';
 import ElmTable from './Components/ElmTable';
 import { connect } from 'react-redux';
 import './../../../styles/AssessmentSlateCanvas/elm/RootElmComponent.css';
-import elmResourceAction from './Actions';
+// import elmResourceAction from './Actions';
+import { insertElmResourceAction } from './Actions/ElmActions';
 class RootElmComponent extends Component {
   constructor(props) {
     super(props);
@@ -63,7 +64,7 @@ class RootElmComponent extends Component {
 }
 
 const mapActionToProps = {
-  elmResource: elmResourceAction,
+  elmResource: insertElmResourceAction,
 }
 
 const mapStateToProps = (state) => {
