@@ -510,8 +510,13 @@ export class TinyMceEditor extends Component {
                 }
                 this.lastContent = activeElement.innerHTML;
 
-                if (activeElement.nodeName === "CODE" && !activeElement.innerText.trim()) {
-                    activeElement.innerHTML = '<br/>';
+                if (activeElement.nodeName === "CODE") {
+                    let key = e.keyCode || e.which;
+                    if (!activeElement.innerText.trim()) {
+                        activeElement.innerHTML = '<br/>';
+                    } else if (key === 13) {
+                        activeElement.append(' ')
+                    }
                 }
             }
         });
@@ -809,7 +814,7 @@ export class TinyMceEditor extends Component {
         let testElement = document.createElement('div');
         testElement.innerHTML = args.content;
         if (testElement.innerText.trim().length) {
-            args.content = testElement.innerText;
+            args.content = testElement.innerText.replace(/</g, "&lt;").replace(/>/g, "&gt;");
         } else {
             args.content = tinymce.activeEditor.selection.getContent();
         }
