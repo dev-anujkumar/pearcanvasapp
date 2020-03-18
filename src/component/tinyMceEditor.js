@@ -816,7 +816,7 @@ export class TinyMceEditor extends Component {
         let testElement = document.createElement('div');
         testElement.innerHTML = args.content;
         if (testElement.innerText.trim().length) {
-            args.content = testElement.innerText;
+            args.content = testElement.innerText.replace(/</g, "&lt;").replace(/>/g, "&gt;");
         } else {
             args.content = tinymce.activeEditor.selection.getContent();
         }
