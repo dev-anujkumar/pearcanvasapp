@@ -2150,6 +2150,31 @@ export const mockELMResponse = {
     }
 }
 
+export const mockElmItemResponse = {
+    "items": [
+        {
+            "versionUrn": "urn:pearson:work:f0360d39-0f02-40c0-8a34-9d59869cbf38",
+            "entityUrn": "urn:pearson:entity:a263fa6c-747c-4438-a26c-2488797fd112",
+            "name": "MCQ-5. The Chemical World The properties of water molecules could help understand all of the following EXCEPT: 24QQ3N7TAS",
+            "dateModified": "2020-02-12T00:29:19.271Z",
+            "taxonomicTypes": [
+                "puf"
+            ],
+            "modifiedBy": ""
+        },
+        {
+            "versionUrn": "urn:pearson:work:b275351b-527d-4d23-8f36-746651e7d20a",
+            "entityUrn": "urn:pearson:entity:b1df64f2-5be1-4670-85de-cea2b39f6eef",
+            "name": "Test",
+            "dateModified": "2020-02-12T10:26:52.066Z",
+            "taxonomicTypes": [
+                "puf"
+            ],
+            "modifiedBy": ""
+        }
+    ]
+}
+
 export const DefaultSlateData = {
     "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e": {
         "contentUrn": "urn:pearson:entity:c8240c45-ba81-4a8a-8f9e-32b68108eb4e",

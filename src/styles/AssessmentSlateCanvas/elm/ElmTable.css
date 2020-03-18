@@ -164,6 +164,7 @@
  .elm-error-div{
   text-align: center;
   margin-top: 5%;
+  min-height: 315px;
  }
  .elm-error-line{
   margin-top: 2%;
