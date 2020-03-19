@@ -32,7 +32,7 @@ const INITIAL_ACTION = {
     payload: {}
 }
 
-export default function reducer (state = INITIAL_STATE, action = INITIAL_ACTION) {
+export default function learningToolReducer (state = INITIAL_STATE, action = INITIAL_ACTION) {
     switch (action.type) {
         case LT_TYPE_FILTER_SELECTED :
             return {

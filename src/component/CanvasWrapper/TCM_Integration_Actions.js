@@ -5,6 +5,7 @@ import store from '../../appstore/store'
 import { checkSlateLock } from '../../js/slateLockUtility'
 
 export const loadTrackChanges = (elementId) => {
+    var interval;
     let slateLockInfo = store.getState().slateLockReducer.slateLockInfo;
     if (!checkSlateLock(slateLockInfo)) {
         let slateData = store.getState().appStore.slateLevelData;
@@ -51,7 +52,6 @@ export const loadTrackChanges = (elementId) => {
         let currentProjectEntityUrn = config.projectEntityUrn;
         let TCMurl = config.TCM_DASHBOARD_UI_URL;
         var trackChange = function(event) {
-            var interval;
             var postmsg = function(win) {
                 win.postMessage({ "slateTitle": currentSlateTitle, "eURN": currentElementId, "dURN": currentProjectUrn, "sURN": currentSlateUrn, "indexOfElements": list, "entityURN": currentProjectEntityUrn }, TCMurl);
             };            

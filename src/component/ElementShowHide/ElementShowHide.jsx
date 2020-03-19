@@ -5,10 +5,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types'
-import TinyMceEditor from "../tinyMceEditor";
 import config from '../../config/config';
 import '../../styles/ElementShowHide/ElementShowHide.css'
-import { deleteShowHideUnit } from "../ElementContainer/ElementContainer_Actions.js"
 import ElementContainerContext from '../ElementContainer/ElementContainerContext.js'
 import ShowHideTinyMce from './ShowHideTinyMce.jsx'
 import { hasReviewerRole } from '../../constants/utility.js'

@@ -327,9 +327,9 @@ function updateLOInStore(updatedData, versionedData, getState, dispatch) {
     let parentData = getState().appStore.slateLevelData;
     let newslateData = JSON.parse(JSON.stringify(parentData));
     if(versionedData){
-        let _slateObject = Object.values(newslateData)[0];
-    let { contents: _slateContent } = _slateObject;
-    let { bodymatter: _slateBodyMatter } = _slateContent;
+        //let _slateObject = Object.values(newslateData)[0];   can be removed after regression testing
+    //let { contents: _slateContent } = _slateObject;
+    //let { bodymatter: _slateBodyMatter } = _slateContent;
     for(let i = 0; i < updatedData.loIndex.length; i++){
         newslateData[config.slateManifestURN].contents.bodymatter[i].id = versionedData.metaDataAnchorID[i];
     }
@@ -353,7 +353,37 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
     let { contents: _slateContent } = _slateObject;
     let { bodymatter: _slateBodyMatter } = _slateContent;
     let elementId = updatedData.id;
-    if(!versionedData) {
+    if(versionedData){
+        if (updatedData && updatedData.pageNumberRef) {
+            versionedData.pageNumberRef = updatedData.pageNumberRef
+        }
+        let indexes = elementIndex && elementIndex.length > 0 ? elementIndex.split('-') : 0;
+            if(asideData && asideData.type == 'element-aside'){
+                asideData.indexes = indexes;
+                if(indexes.length === 2 || indexes.length === 3){
+                    dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:asideData.id, asideData.contentUrn, 0, asideData));
+                // }else if(indexes.length === 3){
+                //     dispatch(fetchSlateData(asideData.id,asideData.contentUrn, 0, asideData));
+                }
+            } 
+            else if(parentElement && parentElement.type === "popup" && updatedData.popupEntityUrn && (updatedData.updatePopupElementField || updatedData.section === "postertextobject") ){
+                dispatch(fetchSlateData(updatedData.slateUrn, updatedData.slateEntity, 0)); }
+            else if(parentElement && parentElement.type === "showhide"){
+                parentElement.indexes =elementIndex;
+                dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:parentElement.id, parentElement.contentUrn, 0, parentElement)); 
+            }
+            else {
+                elementIndex = indexes.length == 2 ?indexes[0] : elementIndex
+                newslateData[config.slateManifestURN].contents.bodymatter[elementIndex] = versionedData;
+            }
+        return dispatch({
+            type: AUTHORING_ELEMENT_UPDATE,
+            payload: {
+                slateLevelData: newslateData
+            }
+        })
+    }
+    else {
         _slateBodyMatter = _slateBodyMatter.map(element => {
             if (element.id === elementId) {
                
@@ -536,42 +566,13 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                 slateLevelData: newslateData
             }
         })
-    } else if(versionedData){
-        if (updatedData && updatedData.pageNumberRef) {
-            versionedData.pageNumberRef = updatedData.pageNumberRef
-        }
-        let indexes = elementIndex && elementIndex.length > 0 ? elementIndex.split('-') : 0;
-            if(asideData && asideData.type == 'element-aside'){
-                asideData.indexes = indexes;
-                if(indexes.length === 2 || indexes.length === 3){
-                    dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:asideData.id, asideData.contentUrn, 0, asideData));
-                // }else if(indexes.length === 3){
-                //     dispatch(fetchSlateData(asideData.id,asideData.contentUrn, 0, asideData));
-                }
-            } 
-            else if(parentElement && parentElement.type === "popup" && updatedData.popupEntityUrn && (updatedData.updatePopupElementField || updatedData.section === "postertextobject") ){
-                dispatch(fetchSlateData(updatedData.slateUrn, updatedData.slateEntity, 0)); }
-            else if(parentElement && parentElement.type === "showhide"){
-                parentElement.indexes =elementIndex;
-                dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:parentElement.id, parentElement.contentUrn, 0, parentElement)); 
-            }
-            else {
-                elementIndex = indexes.length == 2 ?indexes[0] : elementIndex
-                newslateData[config.slateManifestURN].contents.bodymatter[elementIndex] = versionedData;
-            }
-        return dispatch({
-            type: AUTHORING_ELEMENT_UPDATE,
-            payload: {
-                slateLevelData: newslateData
-            }
-        })
-    }
+    } 
     //diret dispatching in store
 }
 
 export const updateFigureData = (figureData, elementIndex, elementId, cb) => (dispatch, getState) => {
     let parentData = getState().appStore.slateLevelData,
-        element,
+        //element,
         index = elementIndex;
     const newParentData = JSON.parse(JSON.stringify(parentData));
     let newBodymatter = newParentData[config.slateManifestURN].contents.bodymatter;
@@ -580,10 +581,10 @@ export const updateFigureData = (figureData, elementIndex, elementId, cb) => (di
         if (newBodymatter[index].versionUrn == elementId) {
             if (newBodymatter[index].figuretype === "assessment") {
                 newBodymatter[index].figuredata['elementdata'] = figureData
-                element = newBodymatter[index]
+                //element = newBodymatter[index]
             } else {
                 newBodymatter[index].figuredata = figureData
-                element = newBodymatter[index]
+                //element = newBodymatter[index]
             }
         }
     } else {
@@ -594,10 +595,10 @@ export const updateFigureData = (figureData, elementIndex, elementId, cb) => (di
             if (condition.versionUrn == elementId) {
                 if (newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuretype === "assessment") {
                     newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata['elementdata'] = figureData
-                    element = newBodymatter[index]
+                    //element = newBodymatter[index]
                 } else {
                     newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata = figureData
-                    element = condition
+                    //element = condition
                 }
             }
         } else if (indexesLen == 3) {
@@ -605,10 +606,10 @@ export const updateFigureData = (figureData, elementIndex, elementId, cb) => (di
             if (condition.versionUrn == elementId) {
                 if (newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuretype === "assessment") {
                     newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata['elementdata'] = figureData
-                    element = condition
+                    //element = condition
                 } else {
                     newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata = figureData
-                    element = condition
+                    //element = condition
                 }
 
             }
