@@ -5,7 +5,6 @@ import PropTypes from 'prop-types'
 // IMPORT - Assets //
 import './../../styles/ElementSingleAssessment/ElementSingleAssessment.css';
 import { dropdownArrow } from './../../images/ElementButtons/ElementButtons.jsx';
-import PopUp from './../PopUp';
 import { connect } from 'react-redux';
 import { c2AssessmentModule } from './../../js/c2_assessment_module';
 import { utils } from '../../js/utils';
@@ -116,18 +115,18 @@ static getDerivedStateFromProps(nextProps, prevState) {
     }
 
     launchAssetBrowserCallBack = (assessmentData) => {
-        let id = assessmentData['id'] ? assessmentData['id'] : assessmentData.assessmentData['id'];
-        let itemID = assessmentData['itemID'];
-        let title = assessmentData['title'] ? assessmentData['title']: null ;
-        let assessmentFormat;
-        if (assessmentData['itemsData'] && assessmentData['itemsData']['taxonomicType'] && assessmentData['itemsData']['taxonomicType'][0] && typeof assessmentData['itemsData']['taxonomicType'][0] === 'string') {
-            assessmentFormat = utils.getTaxonomicFormat(assessmentData['itemsData']['taxonomicType'][0]);
-        } else if (assessmentData['assessmentData'] && assessmentData['assessmentData']['taxonomicType'] && assessmentData['assessmentData']['taxonomicType'][0] && typeof assessmentData['assessmentData']['taxonomicType'][0] === 'string') {
-            assessmentFormat = utils.getTaxonomicFormat(assessmentData['assessmentData']['taxonomicType'][0]);
-        } else {
-            assessmentFormat = "";
-            this.props.openCustomPopup("There was an error loading asset due to malformed 'taxonomicType' data.  Please contact the helpdesk and reference id: " + id);
-        }
+        // let id = assessmentData['id'] ? assessmentData['id'] : assessmentData.assessmentData['id'];
+        // let itemID = assessmentData['itemID'];
+        // let title = assessmentData['title'] ? assessmentData['title']: null ;
+        // let assessmentFormat;
+        // if (assessmentData['itemsData'] && assessmentData['itemsData']['taxonomicType'] && assessmentData['itemsData']['taxonomicType'][0] && typeof assessmentData['itemsData']['taxonomicType'][0] === 'string') {
+        //     assessmentFormat = utils.getTaxonomicFormat(assessmentData['itemsData']['taxonomicType'][0]);
+        // } else if (assessmentData['assessmentData'] && assessmentData['assessmentData']['taxonomicType'] && assessmentData['assessmentData']['taxonomicType'][0] && typeof assessmentData['assessmentData']['taxonomicType'][0] === 'string') {
+        //     assessmentFormat = utils.getTaxonomicFormat(assessmentData['assessmentData']['taxonomicType'][0]);
+        // } else {
+        //     assessmentFormat = "";
+        //     this.props.openCustomPopup("There was an error loading asset due to malformed 'taxonomicType' data.  Please contact the helpdesk and reference id: " + id);
+        // }
         this.setState({assessmentId: id,assessmentItemId : itemID, assessmentTitle: title},
             ()=>{
                 this.saveAssessment();

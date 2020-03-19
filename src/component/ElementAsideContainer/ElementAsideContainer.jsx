@@ -62,7 +62,7 @@ class ElementAsideContainer extends Component {
             if (_containerData !== null && _containerData !== undefined) {
                 if (Object.values(_containerData).length > 0) {
                     let { id: _containerId, type: _containerType, contents: _contents, elementdata: _elementData } = _containerData;
-                    let { title: _slateTitle, bodymatter: _bodyMatter } = _contents || _elementData;
+                    let { bodymatter: _bodyMatter } = _contents || _elementData;
                     let { index } = this.props
                     let parentUrn = {
                         manifestUrn: _containerId,
@@ -126,7 +126,7 @@ class ElementAsideContainer extends Component {
                                 }}
                                 ref={(c) => {
                                     if (c) {
-                                        let sortable = c.sortable;
+                                        //let sortable = c.sortable;
                                     }
                                 }}
                                 tag="div"
@@ -224,7 +224,7 @@ class ElementAsideContainer extends Component {
                     }}
                     ref={(c) => {
                         if (c) {
-                            let sortable = c.sortable;
+                            //let sortable = c.sortable;
                         }
                     }}
                     tag="div"
@@ -327,7 +327,7 @@ class ElementAsideContainer extends Component {
                     }}
                     ref={(c) => {
                         if (c) {
-                            let sortable = c.sortable;
+                            //let sortable = c.sortable;
                         }
                     }}
                     tag="div"

@@ -119,8 +119,6 @@ export class TinyMceEditor extends Component {
                         //     this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
                         //     this.naturalWidth && this.setAttribute('width', this.naturalWidth)
                         // }) 
-                        let showHideType = this.props.showHideType || null
-                        showHideType = showHideType === "revel" ? "postertextobject" : showHideType
                         if(!config.savingInProgress){
                             if(this.props.element.type === "popup" && !this.props.currentElement){
                                 this.props.createPopupUnit(this.props.popupField, null, this.props.index, this.props.element) 

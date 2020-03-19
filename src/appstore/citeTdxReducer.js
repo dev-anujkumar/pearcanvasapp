@@ -14,7 +14,7 @@ const INITIAL_ACTION = {
     payload: {}
 }
 
-export default function reducer (state = INITIAL_STATE, action = INITIAL_ACTION) {
+export default function citeTdxReducer (state = INITIAL_STATE, action = INITIAL_ACTION) {
     switch(action.type){
         case 'GET_CITE_RESOURCES' :
             return {
