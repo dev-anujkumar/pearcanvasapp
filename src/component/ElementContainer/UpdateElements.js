@@ -1,7 +1,6 @@
 import elementTypeConstant from './ElementConstants'
 import elementTypes from './../Sidebar/elementTypes';
 import config from '../../config/config';
-import { duration } from 'moment';
 import { matchHTMLwithRegex } from '../../constants/utility.js'
 import store from '../../appstore/store'
 

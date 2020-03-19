@@ -385,13 +385,13 @@ class ElementContainer extends Component {
     }
 
     figureDifferenceAudioVideo = (index, previousElementData) => {
-        let newAudioVideoId = ""
-        if (previousElementData.figuretype === "audio") {
-            newAudioVideoId = previousElementData.figuredata.audio && previousElementData.figuredata.audio.path || ""
-        }
-        else {
-            newAudioVideoId = previousElementData.figuredata.videos[0].path
-        }
+        // let newAudioVideoId = ""  can be removed after regression testing
+        // if (previousElementData.figuretype === "audio") {
+        //     newAudioVideoId = previousElementData.figuredata.audio && previousElementData.figuredata.audio.path || ""
+        // }
+        // else {
+        //     newAudioVideoId = previousElementData.figuredata.videos[0].path
+        // }
         let titleDOM = document.getElementById(`cypress-${index}-0`),
             subtitleDOM = document.getElementById(`cypress-${index}-1`),
             captionDOM = document.getElementById(`cypress-${index}-2`),

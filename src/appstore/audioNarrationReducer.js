@@ -27,7 +27,7 @@ const INITIAL_ACTION = {
  * @param {string} action 
  */
 
-export default function reducer (state = INITIAL_STATE, action = INITIAL_ACTION) {
+export default function audioNarrationReducer (state = INITIAL_STATE, action = INITIAL_ACTION) {
   switch (action.type) {
 
     case ADD_AUDIO_NARRATION: {

@@ -18,16 +18,14 @@ const INITIAL_ACTION = {
  * @param {string} action 
  */
 
-export default function reducer (state = INITIAL_STATE, action = INITIAL_ACTION) {
-  switch (action.type) {
-    case ERROR_POPUP: {
-      return {
-        ...state,
-        ...action.payload
-      }
+export default function errorPopupReducer(state = INITIAL_STATE, action = INITIAL_ACTION) {
+  if (action.type === ERROR_POPUP) {
+    return {
+      ...state,
+      ...action.payload
     }
-    default:
-      return state
+  } else {
+    return state
   }
 }
 

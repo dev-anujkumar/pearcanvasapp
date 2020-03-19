@@ -44,8 +44,6 @@ ajax.send = function (url, callback, method, data, contentType, sync, pubApiKey)
         if (x.readyState === 4) {
             IF_MATCH = x.getResponseHeader("ETag");
             callback(x.status, x.responseText);
-            if (this.status == 201) {
-            }
         }
     };
 

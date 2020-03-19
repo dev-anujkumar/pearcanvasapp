@@ -18,7 +18,7 @@ const INITIAL_ACTION = {
     payload: {}
 }
 
-export default function reducer (state = INITIAL_STATE, action = INITIAL_ACTION) {
+export default function assetPopoverReducer (state = INITIAL_STATE, action = INITIAL_ACTION) {
     switch (action.type) {
         case 'TOGGLE_APO_SEARCH': {              //Toggle APO search
             return {
