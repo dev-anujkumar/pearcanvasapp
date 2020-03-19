@@ -127,3 +127,18 @@ export const filterCiteTdxData = (assessmentType, assessmentTitle, filterUUID) =
         })
     })
 }
+
+export function getMCQGuidedData(workUrn) {
+    try {
+        let responseData = axios.get(`${config.ASSESSMENT_ENDPOINT}assessmentitem/v2/${workUrn}/content`,
+            {
+                headers: {
+                    "PearsonSSOSession": config.ssoToken,
+                }
+            });
+
+        return responseData
+    } catch (err) {
+        console.log('Error in get assessment data', err)
+    }
+}
