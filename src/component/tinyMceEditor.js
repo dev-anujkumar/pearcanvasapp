@@ -972,11 +972,13 @@ export class TinyMceEditor extends Component {
      */
     saveContent = () => {
         const { glossaryFootnoteValue } = this.props;
-        let { elementType, glossaryfootnoteid, type, elementSubType } = glossaryFootnoteValue;
+        let { elementType, glossaryfootnoteid, type, elementSubType, glossaryTermText } = glossaryFootnoteValue;
         let typeWithPopup = this.props.element ? this.props.element.type : "";
         let term = null;
         let definition = null;
-        term = document.querySelector('#glossary-editor > div > p') && `<p>${document.querySelector('#glossary-editor > div > p').innerHTML}</p>` || "<p></p>"
+        let termText = glossaryTermText.replace(/^(\ |&nbsp;|&#160;)+|(\ |&nbsp;|&#160;)+$/g, '&nbsp;');
+        // term = document.querySelector('#glossary-editor > div > p') && `<p>${document.querySelector('#glossary-editor > div > p').innerHTML}</p>` || "<p></p>"
+        term = `<p>${termText}</p>` || "<p></p>"
         definition = document.querySelector('#glossary-editor-attacher > div > p') && `<p>${document.querySelector('#glossary-editor-attacher > div > p').innerHTML}</p>` || "<p><br/></p>"
         term = term.replace(/<br data-mce-bogus="1">/g, "")
         definition = definition.replace(/<br data-mce-bogus="1">/g, "")
