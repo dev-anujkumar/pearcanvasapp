@@ -16,7 +16,7 @@ import axios from 'axios';
 import { hasReviewerRole } from '../../constants/utility.js';
 import RootCiteTdxComponent from '../AssessmentSlateCanvas/assessmentCiteTdx/RootCiteTdxComponent.jsx';
 import RootSingleAssessmentComponent from '../AssessmentSlateCanvas/singleAssessmentCiteTdx/RootSingleAssessmentComponent.jsx'
-import  {setCurrentCiteTdx, setCurrentInnerCiteTdx}  from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
+import  {setCurrentCiteTdx, setCurrentInnerCiteTdx, getMCQGuidedData}  from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
 import { connect } from 'react-redux';
 import { sendDataToIframe } from './../../constants/utility.js';
 
@@ -438,7 +438,7 @@ class Interactive extends React.Component {
                 </figure>
                 <p className="paragraphWidgetShowHideCredit"></p>
             </div>
-        }else if(context === 'video-mcq' || context === 'mcq' || context === "guided-example") {
+        }else if(context === 'video-mcq' || context === 'mcq' || context === "guided-example" ) {
             jsx = <div className={divImage} resource="">
                 <figure className={figureImage} resource="">
                     <header>
@@ -754,7 +754,7 @@ class Interactive extends React.Component {
         });
     }
 
-    addCiteTdxAssessment = (citeTdxObj, parentPageNo=1) => {
+    addCiteTdxAssessment = async(citeTdxObj, parentPageNo=1) => {
         showTocBlocker();
         disableHeader(true);
         if(citeTdxObj.slateType === "singleSlateAssessment"){
@@ -767,19 +767,39 @@ class Interactive extends React.Component {
         }
         else{
             let itemId = citeTdxObj.singleAssessmentID.versionUrn ? citeTdxObj.singleAssessmentID.versionUrn : "";
+            let interactiveData ={};
             let tempInteractiveType = citeTdxObj.singleAssessmentID.taxonomicTypes ?String.prototype.toLowerCase.apply(citeTdxObj.singleAssessmentID.taxonomicTypes).split(","):"cite-interactive-video-with-interactive";
             tempInteractiveType = utils.getTaxonomicType(tempInteractiveType);
+            if(tempInteractiveType === 'video-mcq' || tempInteractiveType === 'guided-example'){
+               await getMCQGuidedData(itemId).then((responseData) => {
+                    if(responseData && responseData['data'] && responseData['data']["thumbnail"]){
+                        interactiveData['imageId'] = responseData['data']["thumbnail"]['id'];
+                        interactiveData['path'] = responseData['data']["thumbnail"]['src'];
+                        interactiveData['alttext'] = responseData['data']["thumbnail"]['alt'];
+                    }
+                })
+            }
+            let posterImage = {};
+            posterImage['imageid'] = interactiveData['imageId'] ? interactiveData['imageId'] : '';
+            posterImage['path'] = interactiveData['path'] ? interactiveData['path'] : '';
+            let alttext = interactiveData['alttext'] ? interactiveData['alttext'] : '';
             let that = this;
-            that.setState({itemID : itemId
-               })
+           
                let figureData = {
                    schema: "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
                    interactiveid: citeTdxObj.singleAssessmentID.versionUrn,
                    interactivetype: tempInteractiveType,
                    interactiveformat: "mmi"
                }
+            if(tempInteractiveType === 'video-mcq' || tempInteractiveType === 'guided-example'){
+                figureData.posterimage = posterImage;
+                figureData.alttext = alttext;  
+                
+            }
+            that.setState({itemID : itemId,
+                imagePath:posterImage.path 
+               })
           
-           
                that.props.updateFigureData(figureData, that.props.index, that.props.elementId,()=>{               
                    that.props.handleFocus("updateFromC2");
                    setTimeout(()=>{
