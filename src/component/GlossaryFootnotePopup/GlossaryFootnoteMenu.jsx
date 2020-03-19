@@ -112,10 +112,19 @@ class GlossaryFootnoteMenu extends React.Component {
             let { elementWorkId, elementType, glossaryfootnoteid, type, elementSubType, typeWithPopup} = glossaryFootnoteValue;
             let term = null;
             let definition = null;
-            term = document.querySelector('#glossary-editor > div > p') && `${document.querySelector('#glossary-editor > div > p').innerHTML}` || "<p></p>"
-            definition = document.querySelector('#glossary-editor-attacher > div > p') && `${document.querySelector('#glossary-editor-attacher > div > p').innerHTML}` || "<p></p>"
-            term = term.match(/<p>/g) ? term.replace(/<br data-mce-bogus="1">/g, "") : `<p>${term.replace(/<br data-mce-bogus="1">/g, "")}</p>`
-            definition = definition.match(/<p>/g) ? definition.replace(/<br data-mce-bogus="1">/g, "") : `<p>${definition.replace(/<br data-mce-bogus="1">/g, "")}</p>`
+            let defaultValue = document.createElement('p')
+            term = document.querySelector('#glossary-editor > div > p') || defaultValue;
+            tinymce.$(term).find('[data-mce-bogus]').each(function () {
+                let innerHtml = this.innerHTML;
+                this.outerHTML = innerHtml;
+            })
+            definition = document.querySelector('#glossary-editor-attacher > div > p') || defaultValue;
+            tinymce.$(definition).find('[data-mce-bogus]').each(function () {
+                let innerHtml = this.innerHTML;
+                this.outerHTML = innerHtml;
+            })
+            term = term.innerHTML.match(/<p>/g) ? term.innerHTML.replace(/<br data-mce-bogus="1">/g, "") : `<p>${term.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}</p>`
+            definition = definition.innerHTML.match(/<p>/g) ? definition.innerHTML.replace(/<br data-mce-bogus="1">/g, "") : `<p>${definition.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}</p>`
             term = this.replaceUnwantedtags(term)
             definition = this.replaceUnwantedtags(definition)
             if(this.glossaryFootnoteDifference(term, definition, this.props.glossaryFootNoteCurrentValue.glossaryContentText, this.props.glossaryFootNoteCurrentValue.footnoteContentText, glossaryFootnoteValue.type.toLowerCase())){
