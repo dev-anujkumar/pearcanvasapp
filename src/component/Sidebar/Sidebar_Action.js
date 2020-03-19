@@ -241,7 +241,10 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             else{
                 sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
             }
-            return false;
+            /**
+             * PCAT-6929 : Renumbering of List element creates a new version but doesn't reorder the List numbering in element
+             */
+            // return false;
         }
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
         config.conversionInProcess = false
