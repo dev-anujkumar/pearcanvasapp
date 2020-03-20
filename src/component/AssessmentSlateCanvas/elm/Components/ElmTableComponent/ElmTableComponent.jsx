@@ -171,7 +171,9 @@ class ElmTableComponent extends Component {
                         if (assessments && assessments.title && assessments.title.en) {
                             title = assessments.title.en
                         }
-                        this.preparedData.push({ "type": assessments.type? assessments.type:"assessment", "urn": assessments.urn, "assessmentTitle": title, "parentUrn": parentUrn, previousUrn: data.versionUrn }) // "assessment" is added as type for resources where type-key is missing
+                        if(assessments && assessments.type && assessments.type !="assessmentItem"){
+                            this.preparedData.push({ "type": assessments.type? assessments.type:"assessment", "urn": assessments.urn, "assessmentTitle": title, "parentUrn": parentUrn, previousUrn: data.versionUrn }) // "assessment" is added as type for resources where type-key is missing
+                        }
                     })
                 }
             })
