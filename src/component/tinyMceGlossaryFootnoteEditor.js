@@ -232,6 +232,24 @@ export class ReactEditor extends React.Component {
     }
   }
 
+  setGlossaryFootnoteTerm = (id, glossaryNode, footnoteNode) => {
+    if(id === "glossary-0"){
+      this.termtext = glossaryNode && glossaryNode.innerHTML;
+    }
+    else if(id === "footnote-0"){
+      this.termtext = footnoteNode && footnoteNode.innerHTML;
+    }
+  }
+
+  setGlossaryFootnoteNode = (id, glossaryNode, footnoteNode) => {
+    if(id === "glossary-0" && glossaryNode && this.termtext){
+      glossaryNode.innerHTML = this.termtext;
+    }
+    else if(id === "footnote-0" && footnoteNode && this.termtext){
+      footnoteNode.innerHTML = this.termtext;
+    }
+  }
+  
   componentDidMount() {
     let _isEditorPlaced = false;
     for (let i = tinymce.editors.length - 1; i > -1; i--) {
@@ -243,12 +261,12 @@ export class ReactEditor extends React.Component {
     if (!_isEditorPlaced) {
       this.editorRef.current.focus();
       this.editorConfig.selector = '#' + this.editorRef.current.id;
-      this.termtext = document.getElementById('glossary-0')&&document.getElementById('glossary-0').innerHTML;
+      let glossaryNode = document.getElementById('glossary-0')
+      let footnoteNode = document.getElementById('footnote-0')
+      this.setGlossaryFootnoteTerm(this.props.id, glossaryNode, footnoteNode)      
       tinymce.init(this.editorConfig).then((d) => {
         this.handlePlaceholer();
-        if(this.termtext){
-          document.getElementById('glossary-0').innerHTML=this.termtext;
-        }
+        this.setGlossaryFootnoteNode(this.props.id, glossaryNode, footnoteNode)
       });
     }
   }
@@ -262,9 +280,9 @@ export class ReactEditor extends React.Component {
       }
     }
     this.handlePlaceholer()
-    if(this.termtext){
-      document.getElementById('glossary-0').innerHTML=this.termtext;
-    }
+    let glossaryNode = document.getElementById('glossary-0')
+    let footnoteNode = document.getElementById('footnote-0')
+    this.setGlossaryFootnoteNode(this.props.id, glossaryNode, footnoteNode)
   }
 
   componentWillMount() {
@@ -334,7 +352,7 @@ export class ReactEditor extends React.Component {
 
   render() {
     let propsGlossaryFootNoteCurrentValue = this.props.glossaryFootNoteCurrentValue && this.props.glossaryFootNoteCurrentValue.replace(/&nbsp;/g, ' ');
-    let glossaryFootNoteCurrentValue = tinyMCE.$(propsGlossaryFootNoteCurrentValue).length ? (tinyMCE.$(propsGlossaryFootNoteCurrentValue))[0].innerHTML : propsGlossaryFootNoteCurrentValue;
+    let glossaryFootNoteCurrentValue = (propsGlossaryFootNoteCurrentValue && tinyMCE.$(propsGlossaryFootNoteCurrentValue).length) ? (tinyMCE.$(propsGlossaryFootNoteCurrentValue))[0].innerHTML : propsGlossaryFootNoteCurrentValue;
     glossaryFootNoteCurrentValue = glossaryFootNoteCurrentValue && glossaryFootNoteCurrentValue.replace(/^(\ |&nbsp;|&#160;)+|(\ |&nbsp;|&#160;)+$/g, '&nbsp;');
     
     return (

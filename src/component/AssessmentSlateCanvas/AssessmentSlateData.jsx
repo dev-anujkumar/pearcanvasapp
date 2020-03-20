@@ -6,7 +6,8 @@ import config from '../../config/config';
 import './../../styles/AssessmentSlateCanvas/AssessmentSlateCanvas.css';
 import { showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';
 import { assessmentUsageType, assessmentType, FULL_ASSESSMENT_PUF, LEARNING_APP_TYPE, LEARNOSITY, LEARNING_TEMPLATE, PUF, FULL_ASSESSMENT_CITE, FULL_ASSESSMENT_TDX  } from './AssessmentSlateConstants.js';
-import RootElmComponent from './elm/RootElmComponent.jsx';
+// import RootElmComponent from './elm/RootElmComponent.jsx';
+import RootElmSingleAssessment from '../AssessmentSlateCanvas/elm/RootElmSingleComponent.jsx';
 import RootCiteTdxComponent from './assessmentCiteTdx/RootCiteTdxComponent.jsx';
 import LearningTool from './learningTool/learningTool.jsx';
 import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
@@ -344,7 +345,7 @@ import { connect } from 'react-redux';
             changeTypeValue="Change assessment";
         }
         if ((this.state.activeAssessmentType === FULL_ASSESSMENT_PUF || this.state.activeAssessmentType === LEARNOSITY) && this.state.showElmComponent === true) {
-            return <RootElmComponent activeAssessmentType={this.state.activeAssessmentType} closeElmWindow = {()=>this.closeElmWindow()} addPufFunction = {this.addPufAssessment}  openedFrom = {'slateAssessment'} usageTypeMetadata = {this.state.activeAssessmentUsageType} assessmentType = {this.state.activeAssessmentType}/>
+            return <RootElmSingleAssessment activeAssessmentType={this.state.activeAssessmentType} closeElmWindow = {()=>this.closeElmWindow()} addPufFunction = {this.addPufAssessment} activeUsageType = {this.state.activeAssessmentUsageType}/>
         }
         if ((this.state.activeAssessmentType === FULL_ASSESSMENT_CITE || this.state.activeAssessmentType === FULL_ASSESSMENT_TDX) && this.state.showCiteTdxComponent === true) {
             return <RootCiteTdxComponent activeAssessmentType={this.state.activeAssessmentType} openedFrom = {'slateAssessment'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.activeAssessmentType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAssessmentUsageType} parentPageNo={this.state.parentPageNo} isReset={this.state.isReset} resetPage={this.resetPage} AssessmentSearchTitle={this.AssessmentSearchTitle} searchTitle={this.state.searchTitle} filterUUID={this.state.filterUUID} />

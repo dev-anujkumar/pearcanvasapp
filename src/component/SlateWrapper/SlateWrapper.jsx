@@ -244,7 +244,7 @@ class SlateWrapper extends Component {
                 // if (Object.values(_slateData).length > 0) {
                     // let _slateObject = Object.values(_slateData)[0];
                     let _slateObject = _slateData[config.slateManifestURN];
-                    let { type: _slateType, contents: _slateContent } = _slateObject;
+                    let { contents: _slateContent } = _slateObject;
                     let title = {
                         text: this.props.slateTitleUpdated
                     }
@@ -285,7 +285,7 @@ class SlateWrapper extends Component {
                     let _slateObject = _slateData[config.slateManifestURN];
                     let _slateContent = _slateObject.contents
                     let { id: _slateId, type: _slateType } = _slateObject;
-                    let { title: _slateTitle, bodymatter: _slateBodyMatter } = _slateContent
+                    let { bodymatter: _slateBodyMatter } = _slateContent
                     this['cloneCOSlateControlledSource_' + random] = this.renderElement(_slateBodyMatter, config.slateType, this.props.slateLockInfo)
                     let _context = this;
                     return (
@@ -333,7 +333,7 @@ class SlateWrapper extends Component {
                                     }}
                                     ref={(c) => {
                                         if (c) {
-                                            let sortable = c.sortable;
+                                            //let sortable = c.sortable;
                                         }
                                     }}
                                     tag="div"

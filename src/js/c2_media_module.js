@@ -91,7 +91,7 @@ export const c2MediaModule = {
                 data['frenchsubtitle'] = patternBroker.extract(data, patternBroker.items.AddAnAsset['french subtitle'] ? patternBroker.items.AddAnAsset['french subtitle'] : '');
                 let mobileVal = patternBroker.extract(data, patternBroker.items.AddAnAsset['Smart Link optimizedMobileVal'] ? patternBroker.items.AddAnAsset['Smart Link optimizedMobileVal'] : '');
                 if (mobileVal) {
-                    let optimizedValue = false;
+                    let optimizedValue;
                     if (mobileVal.toLowerCase() === 'yes') {
                         optimizedValue = true
                     }

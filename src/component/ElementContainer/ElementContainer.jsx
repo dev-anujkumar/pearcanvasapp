@@ -313,8 +313,8 @@ class ElementContainer extends Component {
             previousElementData.figuredata.interactivetype === "web-link") {
             let pdfPosterTextDOM = document.getElementById(`cypress-${index}-2`)
             let posterTextHTML = pdfPosterTextDOM ? pdfPosterTextDOM.innerHTML : ""
-            posterTextHTML = posterTextHTML=== "" ? "" : matchHTMLwithRegex(posterTextHTML) ? posterTextHTML : `<p>${posterTextHTML}</p>`
-            posterTextHTML = (posterTextHTML? this.removeClassesFromHtml(posterTextHTML) : "")
+            posterTextHTML = posterTextHTML.match(/(<p.*?>.*?<\/p>)/g)?posterTextHTML:`<p>${posterTextHTML}</p>`
+            
             // if(titleHTML !== previousElementData.html.title ||
             //     subtitleHTML !== previousElementData.html.subtitle || 
             //     captionHTML !== previousElementData.html.captions ||
@@ -330,7 +330,7 @@ class ElementContainer extends Component {
                 subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
                 captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
                 creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
-                posterTextHTML !== (previousElementData.html.postertext ? this.removeClassesFromHtml(previousElementData.html.postertext) : "") ||
+                posterTextHTML !== this.removeClassesFromHtml(previousElementData.html.postertext.match(/(<p.*?>.*?<\/p>)/g)?previousElementData.html.postertext:`<p>${previousElementData.html.postertext}</p>`) ||
                 this.props.oldImage !== newInteractiveid
             );
         }
@@ -385,13 +385,13 @@ class ElementContainer extends Component {
     }
 
     figureDifferenceAudioVideo = (index, previousElementData) => {
-        let newAudioVideoId = ""
-        if (previousElementData.figuretype === "audio") {
-            newAudioVideoId = previousElementData.figuredata.audio && previousElementData.figuredata.audio.path || ""
-        }
-        else {
-            newAudioVideoId = previousElementData.figuredata.videos[0].path
-        }
+        // let newAudioVideoId = ""  can be removed after regression testing
+        // if (previousElementData.figuretype === "audio") {
+        //     newAudioVideoId = previousElementData.figuredata.audio && previousElementData.figuredata.audio.path || ""
+        // }
+        // else {
+        //     newAudioVideoId = previousElementData.figuredata.videos[0].path
+        // }
         let titleDOM = document.getElementById(`cypress-${index}-0`),
             subtitleDOM = document.getElementById(`cypress-${index}-1`),
             captionDOM = document.getElementById(`cypress-${index}-2`),
@@ -482,6 +482,7 @@ class ElementContainer extends Component {
                 html =html.replace(/(\r\n|\n|\r)/gm, '')                
                 let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
                 previousElementData.html.text= previousElementData.html.text.replace(/<br data-mce-bogus="1">/g, "<br>").replace(/(\r\n|\n|\r)/gm, '');
+                previousElementData.html.text = previousElementData.html.text.replace(/data-mce-bogus="all"/g, '')
                 if (html && previousElementData.html && (this.replaceUnwantedtags(html) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate) && !assetPopoverPopupIsVisible && !config.savingInProgress) {
                     dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDiv, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,parentElement,showHideType, asideData)
                     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
@@ -573,6 +574,9 @@ class ElementContainer extends Component {
                     tinyMCE.$(currentListNode).find('ol').removeAttr('data-mce-style');
                     currentListNode.innerHTML = currentListNode.innerHTML.replace(/counter-increment:section/g, "counter-increment: section")
                     let nodehtml = currentListNode.innerHTML;
+                    for (let i = 0; i < tinyMCE.$(currentListNode).find('li').length; i++) {
+                        tinyMCE.$(currentListNode).find('li')[i].innerHTML = tinyMCE.$(currentListNode).find('li')[i].innerHTML.replace(/^\s+|\s+$/g, '&nbsp;');
+                    }                    
                     if (nodehtml && previousElementData.html && (this.replaceUnwantedtags(nodehtml) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate && !config.savingInProgress)) {
                         dataToSend = createUpdatedData(previousElementData.type, previousElementData, currentListNode, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, showHideType,undefined)
                         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })

@@ -119,8 +119,6 @@ export class TinyMceEditor extends Component {
                         //     this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
                         //     this.naturalWidth && this.setAttribute('width', this.naturalWidth)
                         // }) 
-                        let showHideType = this.props.showHideType || null
-                        showHideType = showHideType === "revel" ? "postertextobject" : showHideType
                         if(!config.savingInProgress){
                             if(this.props.element.type === "popup" && !this.props.currentElement){
                                 this.props.createPopupUnit(this.props.popupField, null, this.props.index, this.props.element) 
@@ -512,8 +510,13 @@ export class TinyMceEditor extends Component {
                 }
                 this.lastContent = activeElement.innerHTML;
 
-                if (activeElement.nodeName === "CODE" && !activeElement.innerText.trim()) {
-                    activeElement.innerHTML = '<br/>';
+                if (activeElement.nodeName === "CODE") {
+                    let key = e.keyCode || e.which;
+                    if (!activeElement.innerText.trim()) {
+                        activeElement.innerHTML = '<br/>';
+                    } else if (key === 13) {
+                        activeElement.append(' ')
+                    }
                 }
             }
         });
@@ -811,7 +814,7 @@ export class TinyMceEditor extends Component {
         let testElement = document.createElement('div');
         testElement.innerHTML = args.content;
         if (testElement.innerText.trim().length) {
-            args.content = testElement.innerText;
+            args.content = testElement.innerText.replace(/</g, "&lt;").replace(/>/g, "&gt;");
         } else {
             args.content = tinymce.activeEditor.selection.getContent();
         }
@@ -967,11 +970,13 @@ export class TinyMceEditor extends Component {
      */
     saveContent = () => {
         const { glossaryFootnoteValue } = this.props;
-        let { elementType, glossaryfootnoteid, type, elementSubType } = glossaryFootnoteValue;
+        let { elementType, glossaryfootnoteid, type, elementSubType, glossaryTermText } = glossaryFootnoteValue;
         let typeWithPopup = this.props.element ? this.props.element.type : "";
         let term = null;
         let definition = null;
-        term = document.querySelector('#glossary-editor > div > p') && `<p>${document.querySelector('#glossary-editor > div > p').innerHTML}</p>` || "<p></p>"
+        let termText = glossaryTermText.replace(/^(\ |&nbsp;|&#160;)+|(\ |&nbsp;|&#160;)+$/g, '&nbsp;');
+        // term = document.querySelector('#glossary-editor > div > p') && `<p>${document.querySelector('#glossary-editor > div > p').innerHTML}</p>` || "<p></p>"
+        term = `<p>${termText}</p>` || "<p></p>"
         definition = document.querySelector('#glossary-editor-attacher > div > p') && `<p>${document.querySelector('#glossary-editor-attacher > div > p').innerHTML}</p>` || "<p><br/></p>"
         term = term.replace(/<br data-mce-bogus="1">/g, "")
         definition = definition.replace(/<br data-mce-bogus="1">/g, "")
@@ -998,7 +1003,8 @@ export class TinyMceEditor extends Component {
             selectedText = '<'+selectedTag.toLocaleLowerCase()+'>'+selectedText+'</'+selectedTag.toLocaleLowerCase()+'>'
         }
         let insertionText = '<span id="asset-popover-attacher">' + selectedText + '</span>';
-        editor.insertContent(insertionText);
+        // editor.insertContent(insertionText);
+        editor.selection.setContent(insertionText);
         customEvent.subscribe('assetPopoverSave', () => {
             this.handleBlur(null, true);
             customEvent.unsubscribe('assetPopoverSave');
@@ -1417,7 +1423,11 @@ export class TinyMceEditor extends Component {
              * Using timeout - init tinymce instance only when default events stack becomes empty
              */
             currentTarget.focus();
+            let termText = document.getElementById(currentTarget.id)&&document.getElementById(currentTarget.id).innerHTML;
             tinymce.init(this.editorConfig).then(() => { 
+                if(termText) {
+                    document.getElementById(currentTarget.id).innerHTML = termText;
+                   }
                 if(clickedX!==0&&clickedY!==0){
                     tinymce.activeEditor.selection.placeCaretAt(clickedX,clickedY) //Placing exact cursor position on clicking.
                 }
@@ -1435,7 +1445,7 @@ export class TinyMceEditor extends Component {
         }
         /**
          * case - continuing with toggling glossary & footnote popup
-         */
+         */      
         let timeoutInstance = setTimeout(() => {
             clearTimeout(timeoutInstance);
             tinymce.init(this.editorConfig).then((d) => {
@@ -1499,6 +1509,12 @@ export class TinyMceEditor extends Component {
             let innerHtml = this.innerHTML;
             this.outerHTML = innerHtml;
         })
+        while (tinymce.$('[data-mce-bogus]:not(#sel-mce_0)').length) {
+            tinymce.$('[data-mce-bogus]:not(#sel-mce_0)').each(function () {
+                let innerHtml = this.innerHTML;
+                this.outerHTML = innerHtml;
+            })
+        }
         tinyMCE.$('.Wirisformula').each(function () {
             this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
             this.naturalWidth && this.setAttribute('width', this.naturalWidth)

@@ -13,16 +13,14 @@ const INITIAL_ACTION = {
 }
 
 export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
-    switch(action.type){
-        case OPEN_GLOSSARY_FOOTNOTE:
-            return {
-                ...state,
-                glossaryFootnoteValue: action.payload.glossaaryFootnoteValue,
-                glossaryFootNoteCurrentValue : action.payload.glossaryFootNoteCurrentValue,
-                elementIndex :  action.payload.elementIndex
-            }
-
-        default:
-            return state;
+    if (action.type === OPEN_GLOSSARY_FOOTNOTE) {
+        return {
+            ...state,
+            glossaryFootnoteValue: action.payload.glossaaryFootnoteValue,
+            glossaryFootNoteCurrentValue: action.payload.glossaryFootNoteCurrentValue,
+            elementIndex: action.payload.elementIndex
+        }
+    } else {
+        return state;
     }
 }

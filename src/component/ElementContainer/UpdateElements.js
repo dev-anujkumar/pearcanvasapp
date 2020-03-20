@@ -1,7 +1,6 @@
 import elementTypeConstant from './ElementConstants'
 import elementTypes from './../Sidebar/elementTypes';
 import config from '../../config/config';
-import { duration } from 'moment';
 import { matchHTMLwithRegex } from '../../constants/utility.js'
 import store from '../../appstore/store'
 
@@ -368,10 +367,11 @@ export const generateAssessmentData = (index, previousElementData, elementType, 
         getAsid = assessmentId.split(' ')[2];
     } else {
         getAsid = assessmentId.split(' ')[1];
+    }
         let assessmentItemId = document.querySelector(assessmentNodeSelector + 'div.singleAssessmentItemIdInfo').innerText;
         let getAsItemid = assessmentItemId.split(' ')[2];
         dataToSend.figuredata.elementdata.assessmentitemid = getAsItemid ? getAsItemid : "";
-    }
+    
 
     dataToSend.figuredata.elementdata.assessmentid = getAsid ? getAsid : "";
     dataToSend.figuredata.id = getAsid ? getAsid : "";                             //PCAT-6792 fixes
