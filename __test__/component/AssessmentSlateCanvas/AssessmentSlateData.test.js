@@ -46,11 +46,12 @@ let initialState = {
         learningTypeSelected:""
     }
 };
-xdescribe('Testing Assessment Slate Data component', () => {
-    const assessmentSlate = mount(<AssessmentSlateData isLOExist={jest.fn()} />)
+describe('Testing Assessment Slate Data component', () => {
+    let store = mockStore(initialState);
+    const assessmentSlate = mount(<Provider store={store}><AssessmentSlateData isLOExist={jest.fn()} /></Provider>)
     let assessmentSlateDataInstance = assessmentSlate.find('AssessmentSlateData').instance();
     it('render Assessment Slate Data component without crashing ', () => {
-        const assessmentSlate = mount(<AssessmentSlateData isLOExist={jest.fn()} model={assessmentSlateDefault}/>)
+        const assessmentSlate = mount(<Provider store={store}><AssessmentSlateData isLOExist={jest.fn()} model={assessmentSlateDefault}/></Provider>)
         expect(assessmentSlate).toHaveLength(1);
         let assessmentSlateDataInstance = assessmentSlate.find('AssessmentSlateData').instance();
         expect(assessmentSlateDataInstance).toBeDefined();
@@ -75,7 +76,7 @@ xdescribe('Testing Assessment Slate Data component', () => {
             selectAssessmentType: jest.fn(),
             isLOExist: jest.fn()
         }
-        const component = mount(<AssessmentSlateData {...props} />);
+        const component = mount(<Provider store={store}><AssessmentSlateData {...props} /></Provider>);
         const assessmentSlateDataInstance = component.instance();
         assessmentSlateDataInstance.setState({
             activeAssessmentType: "Full Assessment CITE",
@@ -125,7 +126,7 @@ xdescribe('Testing Assessment Slate Data component', () => {
             selectAssessmentType: jest.fn(),
             isLOExist: jest.fn()
         }
-        const component = mount(<AssessmentSlateData {...props} />);
+        const component = mount(<Provider store={store}><AssessmentSlateData {...props} /></Provider>);
         let assessmentSlateDataInstance = component.find('AssessmentSlateData').instance();
         assessmentSlateDataInstance.setState({
             activeAssessmentType: "Learning App Type"
@@ -217,6 +218,17 @@ xdescribe('Testing Assessment Slate Data component', () => {
             expect(spychangeAssessment).toHaveBeenCalled();
             spychangeAssessment.mockClear(); 
         })
+        it('Change Assessment- else block',()=>{
+            const spychangeAssessment = jest.spyOn(assessmentSlateDataInstance, 'changeAssessment')
+            const spyaddC2MediaAssessment = jest.spyOn(assessmentSlateDataInstance, 'addC2MediaAssessment')
+            assessmentSlateDataInstance.setState({
+                activeAssessmentType: 'other'
+            });
+            assessmentSlateDataInstance.changeAssessment();
+            expect(spychangeAssessment).toHaveBeenCalled();        
+            expect(spyaddC2MediaAssessment).toHaveBeenCalled();
+            spychangeAssessment.mockClear();
+        })
     })
     describe('Test-main assessment',()=>{
         let store = mockStore(initialState);
@@ -250,6 +262,24 @@ xdescribe('Testing Assessment Slate Data component', () => {
             assessmentSlateDataInstance.forceUpdate();
             component.update();
             expect(assessmentSlateDataInstance.state.activeAssessmentType).toBe("Full Assessment CITE");
+            expect(spymainAddAssessment).toHaveBeenCalled();
+            spymainAddAssessment.mockClear(); 
+            expect(spyaddC2MediaAssessment).toHaveBeenCalled();
+            spyaddC2MediaAssessment.mockClear(); 
+        })
+        it('main Assessment-TDX',()=>{
+            const spymainAddAssessment = jest.spyOn(assessmentSlateDataInstance, 'mainAddAssessment')
+            const spyaddC2MediaAssessment = jest.spyOn(assessmentSlateDataInstance, 'addC2MediaAssessment')
+            assessmentSlateDataInstance.setState({
+                activeAssessmentType: 'Full Assessment TDX'
+            });
+            assessmentSlateDataInstance.forceUpdate();
+            component.update();
+            assessmentSlateDataInstance.mainAddAssessment();
+            assessmentSlateDataInstance.addC2MediaAssessment('Full Assessment CITE');
+            assessmentSlateDataInstance.forceUpdate();
+            component.update();
+            expect(assessmentSlateDataInstance.state.activeAssessmentType).toBe('Full Assessment TDX');
             expect(spymainAddAssessment).toHaveBeenCalled();
             spymainAddAssessment.mockClear(); 
             expect(spyaddC2MediaAssessment).toHaveBeenCalled();
@@ -532,5 +562,106 @@ xdescribe('Testing Assessment Slate Data component', () => {
         assessmentSlateDataInstance.componentWillReceiveProps(nextProps);
         expect(spyLifecycleMethod).toHaveBeenCalled()
         spyLifecycleMethod.mockClear() 
-    })    
+    })
+    it("resetPage method if-block", () => {
+        let store = mockStore(initialState);
+        let props = {
+            handleFocus: function(){},
+            handleBlur : function(){},
+            model : assessmentSlateWithData,
+            onClick : ()=>{},
+            closeLtAction: function(){},
+            slateLockInfo: {
+                isLocked: false,
+                timestamp: "",
+                userId: ""
+            },
+            updateAssessment:jest.fn(),
+            isLOExist: jest.fn(),
+            getAssessmentDataPopup: true
+        }
+        const component = mount(<Provider store={store}><AssessmentSlateData {...props} /></Provider>);
+        let assessmentSlateDataInstance = component.find('AssessmentSlateData').instance();
+        let spyresetPage = jest.spyOn(assessmentSlateDataInstance, 'resetPage')
+        let isReset = true, isSearch = true
+        assessmentSlateDataInstance.resetPage(isReset, isSearch)
+        expect(spyresetPage).toHaveBeenCalled()
+        expect(assessmentSlateDataInstance.state.parentPageNo).toBe(1)
+    })
+    it("resetPage method else-block", () => {
+        let store = mockStore(initialState);
+        let props = {
+            handleFocus: function(){},
+            handleBlur : function(){},
+            model : assessmentSlateWithData,
+            onClick : ()=>{},
+            closeLtAction: function(){},
+            slateLockInfo: {
+                isLocked: false,
+                timestamp: "",
+                userId: ""
+            },
+            updateAssessment:jest.fn(),
+            isLOExist: jest.fn(),
+            getAssessmentDataPopup: true
+        }
+        const component = mount(<Provider store={store}><AssessmentSlateData {...props} /></Provider>);
+        let assessmentSlateDataInstance = component.find('AssessmentSlateData').instance();
+        let spyresetPage = jest.spyOn(assessmentSlateDataInstance, 'resetPage')
+        let isReset = true, isSearch = false
+        assessmentSlateDataInstance.resetPage(isReset, isSearch)
+        expect(spyresetPage).toHaveBeenCalled()
+        expect(assessmentSlateDataInstance.state.searchTitle).toBe('')
+    })
+    it("AssessmentSearchTitle ", () => {
+        let store = mockStore(initialState);
+        let props = {
+            handleFocus: function(){},
+            handleBlur : function(){},
+            model : assessmentSlateWithData,
+            onClick : ()=>{},
+            closeLtAction: function(){},
+            slateLockInfo: {
+                isLocked: false,
+                timestamp: "",
+                userId: ""
+            },
+            updateAssessment:jest.fn(),
+            isLOExist: jest.fn(),
+            getAssessmentDataPopup: true
+        }
+        const component = mount(<Provider store={store}><AssessmentSlateData {...props} /></Provider>);
+        let assessmentSlateDataInstance = component.find('AssessmentSlateData').instance();
+        let spyAssessmentSearchTitle = jest.spyOn(assessmentSlateDataInstance, 'AssessmentSearchTitle')
+        let searchTitle = "Test", filterUUID = "filter 1"
+        assessmentSlateDataInstance.AssessmentSearchTitle(searchTitle, filterUUID)
+        expect(spyAssessmentSearchTitle).toHaveBeenCalled()
+        expect(assessmentSlateDataInstance.state.searchTitle).toBe("Test")
+        expect(assessmentSlateDataInstance.state.filterUUID).toBe("filter 1")
+    })
+    it("closeWindowAssessment ", () => {
+        let store = mockStore(initialState);
+        let props = {
+            handleFocus: function(){},
+            handleBlur : function(){},
+            showBlocker : function(){},
+            model : assessmentSlateWithData,
+            onClick : ()=>{},
+            closeLtAction: function(){},
+            slateLockInfo: {
+                isLocked: false,
+                timestamp: "",
+                userId: ""
+            },
+            updateAssessment:jest.fn(),
+            isLOExist: jest.fn(),
+            getAssessmentDataPopup: true
+        }
+        const component = mount(<Provider store={store}><AssessmentSlateData {...props} /></Provider>);
+        let assessmentSlateDataInstance = component.find('AssessmentSlateData').instance();
+        const spycloseWindowAssessment = jest.spyOn(assessmentSlateDataInstance, 'closeWindowAssessment')
+        assessmentSlateDataInstance.closeWindowAssessment()
+        expect(spycloseWindowAssessment).toHaveBeenCalled()
+        expect(assessmentSlateDataInstance.state.showCiteTdxComponent).toBe(false)
+    })
 })
