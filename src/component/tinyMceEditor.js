@@ -1509,9 +1509,18 @@ export class TinyMceEditor extends Component {
             let innerHtml = this.innerHTML;
             this.outerHTML = innerHtml;
         })
+        let self = this
         tinymce.$('[data-mce-bogus]').each(function () {
-            let innerHtml = this.innerHTML;
-            this.outerHTML = innerHtml;
+            if (self.props.element && self.props.element.elementdata && (self.props.element.elementdata.type === "marginalia" || 
+            self.props.element.elementdata.type === "blockquote")) {
+                if (this.innerHTML === '') {
+                    this.remove();
+                }
+            }
+            else {
+                let innerHtml = this.innerHTML;
+                this.outerHTML = innerHtml;
+            }
         })
         tinyMCE.$('.Wirisformula').each(function () {
             this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
