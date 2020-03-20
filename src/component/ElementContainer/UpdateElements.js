@@ -183,7 +183,7 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
 
     let titleDOM = document.getElementById(`cypress-${index}-0`),
         subtitleDOM = document.getElementById(`cypress-${index}-1`),
-        preformattedText = document.getElementById(`cypress-${index}-2`).innerText,
+        preformattedText = document.getElementById(`cypress-${index}-2`).innerText ? document.getElementById(`cypress-${index}-2`).innerText : "",
         captionDOM = document.getElementById(`cypress-${index}-3`),
         creditsDOM = document.getElementById(`cypress-${index}-4`)
 
@@ -364,12 +364,12 @@ export const generateAssessmentData = (index, previousElementData, elementType, 
 
     dataToSend.figuredata.elementdata;
     if (isPuf) {
-        getAsid = assessmentId.split(' ')[2];
+        getAsid = assessmentId && assessmentId.split(' ').length && assessmentId.split(' ')[2];
     } else {
-        getAsid = assessmentId.split(' ')[1];
+        getAsid = assessmentId && assessmentId.split(' ').length && assessmentId.split(' ')[1];
     }
         let assessmentItemId = document.querySelector(assessmentNodeSelector + 'div.singleAssessmentItemIdInfo').innerText;
-        let getAsItemid = assessmentItemId.split(' ')[2];
+        let getAsItemid = assessmentItemId && assessmentItemId.split(' ')[2];
         dataToSend.figuredata.elementdata.assessmentitemid = getAsItemid ? getAsItemid : "";
     
 
@@ -379,7 +379,7 @@ export const generateAssessmentData = (index, previousElementData, elementType, 
 
     let usageType = document.querySelector(assessmentNodeSelector + 'span.singleAssessment_Dropdown_currentLabel').innerText;
     dataToSend.figuredata.elementdata.usagetype = usageType;
-    dataToSend.inputSubType = usageType.toUpperCase().replace(" ", "_").replace("-", "_");
+    dataToSend.inputSubType = usageType && usageType.toUpperCase().replace(" ", "_").replace("-", "_");
 
     return dataToSend;
 }
