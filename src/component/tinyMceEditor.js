@@ -1509,10 +1509,12 @@ export class TinyMceEditor extends Component {
             let innerHtml = this.innerHTML;
             this.outerHTML = innerHtml;
         })
-        tinymce.$('[data-mce-bogus]').each(function () {
-            let innerHtml = this.innerHTML;
-            this.outerHTML = innerHtml;
-        })
+        while (tinymce.$('[data-mce-bogus]:not(#sel-mce_0)').length) {
+            tinymce.$('[data-mce-bogus]:not(#sel-mce_0)').each(function () {
+                let innerHtml = this.innerHTML;
+                this.outerHTML = innerHtml;
+            })
+        }
         tinyMCE.$('.Wirisformula').each(function () {
             this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
             this.naturalWidth && this.setAttribute('width', this.naturalWidth)
