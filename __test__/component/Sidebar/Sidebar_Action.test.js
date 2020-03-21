@@ -22,68 +22,113 @@ jest.mock('../../../src/config/config.js', () => ({
 
 const initialState = {
     appStore: {
-        slateLevelData: slateData,
+        slateLevelData: slateData.SlateData1,
         activeElement: activeElementData.paragraph
     }
 }
 const initialState2 = {
     appStore: {
-        slateLevelData: slateData,
+        slateLevelData: slateData.SlateData1,
         activeElement: activeElementData.assessment
     },
 }
 const initialState3 = {
     appStore: {
-        slateLevelData: slateData,
+        slateLevelData: slateData.SlateData1,
         activeElement:activeElementData.image
     },
 }
 const initialState4 = {
     appStore: {
-        slateLevelData: slateData,
+        slateLevelData: slateData.SlateData1,
         activeElement: activeElementData.video
     },
 }
 const initialState5 = {
     appStore: {
-        slateLevelData: slateData,
+        slateLevelData: slateData.SlateData1,
         activeElement:activeElementData.interactive
     }
 }
 const initialState6 = {
     appStore: {
-        slateLevelData: slateData,
+        slateLevelData: slateData.SlateData1,
         activeElement:activeElementData.blockcode
     },
 }
 const initialState7 = {
     appStore: {
-        slateLevelData: slateData,
+        slateLevelData: slateData.SlateData1,
         activeElement:activeElementData.list
     },
 }
 const initialState8 = {
     appStore: {
-        slateLevelData: slateData,
+        slateLevelData: slateData.SlateData1,
         activeElement: activeElementData.workedexample
     },
 }
 const initialState9 = {
     appStore: {
-        slateLevelData: slateData,
+        slateLevelData: slateData.SlateData1,
         activeElement:activeElementData.aside 
     },
 }
 const initialState10 = {
     appStore: {
-        slateLevelData: slateData,
+        slateLevelData: slateData.SlateData1,
         activeElement:activeElementData.aside_authoredtext
     },
 }
 const initialState11 = {
     appStore: {
-        slateLevelData: slateData,
+        slateLevelData: slateData.SlateData1,
         activeElement: activeElementData.we_authoredtext
+    },
+}
+const initialState12 = {
+    appStore: {
+        slateLevelData: slateData.SlateData2,
+        activeElement: activeElementData.we_conversiondata,
+        parentUrn: {
+            manifestUrn: "urn:pearson:manifest:86fab86c-16ca-4428-9e38-bc15ebdbee49",
+            contentUrn: "urn:pearson:entity:646f6acc-e6ce-4ac4-ab04-4e526a6cb866",
+            elementType: "element-aside"
+        }
+    },
+}
+
+const initialState13 = {
+    appStore: {
+        slateLevelData: slateData.SlateData2,
+        activeElement: activeElementData.Section_ActiveElement,
+        parentUrn: {
+            manifestUrn: "urn:pearson:manifest:b254fd3f-ce8a-467b-9490-5dcd753de461",
+            contentUrn: "urn:pearson:entity:d869c4a6-2ba6-4716-baea-0374393bc784",
+            elementType: "manifest"
+        }
+    },
+}
+const initialState14 = {
+    appStore: {
+        slateLevelData: slateData.SlateData3,
+        activeElement: activeElementData.Aside_ActiveElement,
+        parentUrn: {
+            manifestUrn: "urn:pearson:manifest:8ed3c625-233e-48ca-a65c-3c4a80242f29",
+            contentUrn: "urn:pearson:entity:bc7aea75-84b1-4343-ab8e-fb03d4987337",
+            elementType: "element-aside"            
+        }
+    },
+}
+const initialState15 = {
+    appStore: {
+        slateLevelData: slateData.SlateData3,
+        activeElement: activeElementData.Aside_MMI_ActiveElement,
+        parentUrn: {
+            manifestUrn: "urn:pearson:manifest:8ed3c625-233e-48ca-a65c-3c4a80242f29",
+            contentUrn: "urn:pearson:entity:bc7aea75-84b1-4343-ab8e-fb03d4987337",
+            elementType: "element-aside"
+        },
     },
 }
 describe('Test convertElement- paragraph', () => {
@@ -125,7 +170,7 @@ describe('Test convertElement- paragraph', () => {
 });
 describe('Test convertElement- singleAssessment', () => {
     let store = mockStore(() => initialState2);
-    xit('Test convertElement  -assessment type', () => {
+    it('Test convertElement  -assessment type', () => {
         store = mockStore(() => initialState2);
         let newData = {
             elementId: "urn:pearson:work:fa8ebea3-d9ba-4aec-8658-2f944841404a",
@@ -405,9 +450,9 @@ describe('Test convertElement- WORKED-EXAMPLE 1 TO 2', () => {
     });
 });
 describe('Test convertElement- WORKED-EXAMPLE -internal conversion', () => {
-    let store = mockStore(() => initialState11);
+    let store = mockStore(() => initialState12);
     it('Test convertElement  -WORKED-EXAMPLE 1 TO 2', () => {
-        store = mockStore(() => initialState11);
+        store = mockStore(() => initialState12);
         let elementData = {
             elementId: "urn:pearson:work:fcba4843-df9e-491a-a144-b6a22fa5177a",
             elementType: "element-authoredtext",
@@ -416,7 +461,7 @@ describe('Test convertElement- WORKED-EXAMPLE -internal conversion', () => {
             secondaryOption: "secondary-heading-1",
             toolbar: ["bold", "underline", "strikethrough", "orderedlist", "unorderedlist", "increaseindent", "decreaseindent", "glossary", "assetpopover", "slatetag", "redo"]
         }
-        let store = mockStore(() => initialState11);
+        let store = mockStore(() => initialState12);
         const spyconversionElement = jest.spyOn(sidebarAction, 'conversionElement')
         store.dispatch(sidebarAction.conversionElement(elementData));
         expect(spyconversionElement).toHaveBeenCalled()
@@ -555,9 +600,9 @@ describe('Test convertElement- ASIDE-CONTAINER-internal conversion', () => {
 
     });
 });
-describe('Test convertElement- MOCK API CALL', () => {
+xdescribe('Test convertElement- MOCK API CALL', () => {
     let store = mockStore(() => initialState4);
-    xit('Test convertElement  -MOCK API CALL',async () => {
+    xit('Test convertElement  -MOCK API CALL', async () => {
         store = mockStore(() => initialState4);
         let getState = () => {
             return initialState;
@@ -857,5 +902,50 @@ describe('Test convertElement- MOCK API CALL-catch', () => {
         setTimeout(() => {
             expect(sendDataToIframe).toHaveBeenCalled()
         }, 1000)
+    });
+});
+describe('Test convertElement- WORKED-EXAMPLE - H1 TO P', () => {
+    let store = mockStore(() => initialState12);
+    it('Test convertElement  -WORKED-EXAMPLE H1 TO P', () => {
+        store = mockStore(() => initialState12);
+        let store = mockStore(() => initialState12);
+        const spyconversionElement = jest.spyOn(sidebarAction, 'convertElement')
+        store.dispatch(sidebarAction.convertElement(activeElementData.WE_OldData,activeElementData.WE_NewData,activeElementData.WE_OldInfo,slateData.SlateData2,["0", "0"]));
+        expect(spyconversionElement).toHaveBeenCalled()
+        spyconversionElement.mockClear()
+
+    });
+});
+describe('Test convertElement- WORKED-EXAMPLE - Section- P-H1', () => {
+    let store = mockStore(() => initialState13);
+    it('Test convertElement  -WORKED-EXAMPLE Section- P-H1', () => {
+        store = mockStore(() => initialState13);
+        const spyconversionElement = jest.spyOn(sidebarAction, 'convertElement')
+        store.dispatch(sidebarAction.convertElement(activeElementData.Section_OldData,activeElementData.Section_NewData,activeElementData.Section_OldInfo,slateData.SlateData2,["0", "1", "0"]));
+        expect(spyconversionElement).toHaveBeenCalled()
+        spyconversionElement.mockClear()
+
+    });
+});
+describe('Test convertElement- ASIDE-CONTAINER - P-H1', () => {
+    let store = mockStore(() => initialState14);
+    it('Test convertElement- ASIDE-CONTAINER- P-H1', () => {
+        store = mockStore(() => initialState14);
+        const spyconversionElement = jest.spyOn(sidebarAction, 'convertElement')
+        store.dispatch(sidebarAction.convertElement(activeElementData.Aside_OldData,activeElementData.Aside_NewData,activeElementData.Aside_OldInfo,slateData.SlateData3,["0", "1"]));
+        expect(spyconversionElement).toHaveBeenCalled()
+        spyconversionElement.mockClear()
+
+    });
+});
+describe('Test convertElement- ASIDE-CONTAINER -MMI to ShowHide', () => {
+    let store = mockStore(() => initialState15);
+    it('Test convertElement- ASIDE-CONTAINER- MMI to ShowHide', () => {
+        store = mockStore(() => initialState15);
+        const spyconversionElement = jest.spyOn(sidebarAction, 'convertElement')
+        store.dispatch(sidebarAction.convertElement(activeElementData.Aside_MMI_OldData,activeElementData.Aside_MMI_NewData,activeElementData.Aside_MMI_OldInfo,slateData.SlateData3,["0", "2"]));
+        expect(spyconversionElement).toHaveBeenCalled()
+        spyconversionElement.mockClear()
+
     });
 });
