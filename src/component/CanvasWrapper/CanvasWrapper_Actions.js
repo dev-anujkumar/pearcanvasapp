@@ -192,6 +192,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
     // if(config.isFetchSlateInProgress){
     //  return false;
     // }
+    sendDataToIframe({ 'type': 'fetchAllSlatesData', 'message': {} });
     // sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
     localStorage.removeItem('newElement');
     config.isFetchSlateInProgress = true;
@@ -216,10 +217,10 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
 						tc_activated: JSON.stringify(slateData.data[manifestURN].tcm)
 					}
 				}
-				sendDataToIframe({
-					'type': "TcmStatusUpdated",
-					'message': messageTcmStatus
-				})
+                sendDataToIframe({
+                    'type': "TcmStatusUpdated",
+                    'message': messageTcmStatus
+                })
 				config.totalPageCount = slateData.data[newVersionManifestId].pageCount;
 				config.pageLimit = slateData.data[newVersionManifestId].pageLimit;
 				let parentData = getState().appStore.slateLevelData;

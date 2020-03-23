@@ -17,3 +17,12 @@ export const ERROR_MESSAGE_ELM_RESOURCE = "This project has no PUF assessments c
 export const ERROR_MESSAGE_ELM_ITEMS = "No Data Found"
 export const ERROR_MESSAGE_LEARNOSITY = "No Results Found"
 export const ERROR_MESSAGE_ELM_DEFAULT = "**Error occured, Please try again!!!"
+
+export const FolderLabelList = {
+    'C':['chapter'],
+    'M':['module'],
+    'P':['part'],
+    'S':['section'],
+    'AS':['assessment'],
+    'IS':['container-introduction','introductry-slate'] ,
+}

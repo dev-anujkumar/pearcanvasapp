@@ -54,7 +54,8 @@ const INITIAL_STATE = {
     showHideId: "",
     parentUrn: {},
     asideData: {},
-    showHideObj:{}
+    showHideObj:{},
+    allSlateData:[]
 };
 
 const INITIAL_ACTION = {
@@ -189,6 +190,11 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
         //         ...state,
         //         slateLevelData: action.payload.slateLevelData
         //     };
+        case 'GET_ALL_SLATE_DATA':
+            return {
+                ...state,
+                allSlateData: action.payload.allSlateData
+            }
         default:
             return state;
     }
