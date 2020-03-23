@@ -86,6 +86,7 @@ class ElmTableComponent extends Component {
                 this.filterData(false, config.parentContainerUrn, elmData);
             }else{
                 parent= this.setParentUrn(allSlateData,apiData)
+                console.log("parent",parent)
                 this.filterData(false, parent, elmData);
             }
         }
@@ -110,9 +111,9 @@ class ElmTableComponent extends Component {
     
         allSlateData && allSlateData.forEach((container) => {
             if (container.type == 'chapter' && JSON.stringify(container).includes(config.parentContainerUrn)) {
-                if (container.containerUrn == config.parentContainerUrn) {
+                if (container.containerUrn == config.parentContainerUrn && elmData.includes(container.containerUrn)) {
                     parent1 = {
-                        urn: container.containerUrn,
+                        urn: config.parentContainerUrn,
                         type: "chapter"
                     }
                 } else {
@@ -120,7 +121,7 @@ class ElmTableComponent extends Component {
                         if (item.type == 'module' && item.containerUrn === config.parentContainerUrn && elmData.includes(item.containerUrn)) {
                             parent1.urn = item.containerUrn // save mod urn
                             parent1.type = 'module'
-                        } else if (item.type == 'module' && item.containerUrn === config.parentContainerUrn && !elmData.includes(item.containerUrn)) {
+                        } else if ((item.type == 'module' && item.containerUrn === config.parentContainerUrn && !elmData.includes(item.containerUrn))||(item.type != 'module' && config.slateManifestURN == item.containerUrn)) {
                             if (elmData.includes(container.containerUrn)) {
                                 parent1.urn = container.containerUrn //
                                 parent1.type = 'chapter'
@@ -128,20 +129,11 @@ class ElmTableComponent extends Component {
                                 parent1.urn = config.projectUrn //
                                 parent1.type = 'project'
                             }
-                        } else
-                        if (item.type != 'module' && config.slateManifestURN == item.containerUrn) {
-                            if (elmData.includes(container.containerUrn)) {
-                                parent1.urn = container.containerUrn //
-                                parent1.type = 'chapter'
-                            } else {
-                                parent1.urn = config.projectUrn //
-                                parent1.type = 'project'
-                            }
-                        }
+                        } 
                     })
                 }
             } else if (container.type == 'part' && (JSON.stringify(container).includes(config.parentContainerUrn))) {
-                if (container.containerUrn == config.parentContainerUrn) {
+                if (container.containerUrn == config.parentContainerUrn && elmData.includes(container.containerUrn) {
                     parent1 = {
                         urn: container.containerUrn,
                         type: "part"
@@ -152,6 +144,7 @@ class ElmTableComponent extends Component {
                             if (elmData.includes(config.parentContainerUrn)) {
                                 parent1.urn = item.containerUrn //
                                 parent1.type = 'chapter'
+                                console.log(6666)
                             } else if (item && item.type == 'chapter' && item.contents && item.contents.length) {
     
                                 item && item.contents && item.contents.forEach((subitem) => {
@@ -208,7 +201,7 @@ class ElmTableComponent extends Component {
          * @param urn- assessment id
          * @param parentUrn- parent-Urn
         */
-    filterData = (getItems, urn, apiData, parentUrn = this.state.currentUrn) => {
+    filterData = (getItems, urn, apiData, parentUrn = config.projectUrn) => {
         this.preparedData = [];
         this.setState({ addFlag: false, isActive: null });
         if (urn === parentUrn) {
@@ -221,6 +214,7 @@ class ElmTableComponent extends Component {
             })
 
             apiData.bodyMatter && apiData.bodyMatter.forEach((data) => {
+                console.log(11111122222222)
                 this.filterSubData(data, urn, parentUrn, getItems)
                 //this.filterData(getItems, urn, data, parentUrn)
             })
@@ -230,6 +224,7 @@ class ElmTableComponent extends Component {
             })
         }
         else if (!(apiData.contents || this.preparedData.length)) {
+            console.log(555566666666666)
             this.getResourcefromFilterData(getItems, apiData)
         }
     }
@@ -243,10 +238,12 @@ class ElmTableComponent extends Component {
     filterSubData = (data, urn, parentUrn, getItems) => {
 
         if (data.versionUrn === urn) {
+            console.log(3333337777777777)
             return this.getResourcefromFilterData(getItems, data, parentUrn)
         }
         else {
             if (data.contents){
+                console.log(33333344444444)
                 this.filterData(getItems, urn, data, data.versionUrn)
             }
             else
