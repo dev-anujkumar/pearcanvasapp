@@ -76,24 +76,22 @@ class ElmTableComponent extends Component {
 
     renderTableData = (currentProps) => {
         const { errFlag, elmData, elmItemData, elmLoading, itemErrorFlag } = currentProps.elmReducer;
-        let data = JSON.stringify(elmData)
+        let apiData = JSON.stringify(elmData), parent=""
+        const  {allSlateData} = currentProps
         if (((!errFlag && elmData) && !elmItemData)|| (this.state.openedFrom == "singleAssessment" && !itemErrorFlag && !errFlag && elmLoading)) {
-            if(data.includes(config.parentContainerUrn)){
+            if(config.parentLabel=="frontmatter"||config.parentLabel=="backmatter"){
+                this.filterData(false, config.projectUrn, elmData);
+            }
+            else if(apiData.includes(config.parentContainerUrn)){
                 this.filterData(false, config.parentContainerUrn, elmData);
             }else{
-                this.filterData(false, config.projectUrn, elmData);
+                parent= this.setParentUrn(allSlateData,apiData)
+                this.filterData(false, parent, elmData);
             }
         }
         else if (!itemErrorFlag && elmItemData && elmLoading==false) {
             this.filterData(true, config.parentContainerUrn,elmItemData)
         }
-        // else if(this.state.openedFrom == "singleAssessment" && !itemErrorFlag && !errFlag && elmLoading){
-        //     if(data.includes(config.parentContainerUrn)){
-        //         this.filterData(false, config.parentContainerUrn, elmData);
-        //     }else{
-        //         this.filterData(false, config.projectUrn, elmData);
-        //     }
-        // }
         else if(this.state.openedFrom == "slateAssessment" && !errFlag && elmLoading){
             this.filterData(false,config.parentContainerUrn, elmData);
         }               
@@ -101,6 +99,108 @@ class ElmTableComponent extends Component {
             this.filterData(false,this.state.currentUrn, elmData);
         }
     }
+
+
+
+    setParentUrn = (allSlateData, elmData) => {
+        let parent1 = {
+            urn: "",
+            type: ""
+        }
+    
+        allSlateData && allSlateData.forEach((container) => {
+            if (container.type == 'chapter' && JSON.stringify(container).includes(config.parentContainerUrn)) {
+                if (container.containerUrn == config.parentContainerUrn) {
+                    parent1 = {
+                        urn: container.containerUrn,
+                        type: "chapter"
+                    }
+                } else {
+                    container && container.contents && container.contents.forEach((item) => {
+                        if (item.type == 'module' && item.containerUrn === config.parentContainerUrn && elmData.includes(item.containerUrn)) {
+                            parent1.urn = item.containerUrn // save mod urn
+                            parent1.type = 'module'
+                        } else if (item.type == 'module' && item.containerUrn === config.parentContainerUrn && !elmData.includes(item.containerUrn)) {
+                            if (elmData.includes(container.containerUrn)) {
+                                parent1.urn = container.containerUrn //
+                                parent1.type = 'chapter'
+                            } else {
+                                parent1.urn = config.projectUrn //
+                                parent1.type = 'project'
+                            }
+                        } else
+                        if (item.type != 'module' && config.slateManifestURN == item.containerUrn) {
+                            if (elmData.includes(container.containerUrn)) {
+                                parent1.urn = container.containerUrn //
+                                parent1.type = 'chapter'
+                            } else {
+                                parent1.urn = config.projectUrn //
+                                parent1.type = 'project'
+                            }
+                        }
+                    })
+                }
+            } else if (container.type == 'part' && (JSON.stringify(container).includes(config.parentContainerUrn))) {
+                if (container.containerUrn == config.parentContainerUrn) {
+                    parent1 = {
+                        urn: container.containerUrn,
+                        type: "part"
+                    }
+                } else {
+                    container && container.contents && container.contents.forEach((item) => {
+                        if (item.type == 'chapter' && item.containerUrn == config.parentContainerUrn) {
+                            if (elmData.includes(config.parentContainerUrn)) {
+                                parent1.urn = item.containerUrn //
+                                parent1.type = 'chapter'
+                            } else if (item && item.type == 'chapter' && item.contents && item.contents.length) {
+    
+                                item && item.contents && item.contents.forEach((subitem) => {
+                                    if (subitem.type == 'module' && subitem.containerUrn == config.parentContainerUrn) {
+                                        if (elmData.includes(subitem.containerUrn)) {
+                                            parent1.urn = subitem.containerUrn //
+                                            parent1.type = 'module'
+                                        } else {
+                                            if (elmData.includes(item.containerUrn)) {
+                                                parent1.urn = item.containerUrn //
+                                                parent1.type = 'chapter'
+                                            } else {
+                                                if (elmData.includes(container.containerUrn)) {
+                                                    parent1.urn = container.containerUrn //
+                                                    parent1.type = 'part'
+                                                } else {
+                                                    parent1.urn = config.projectUrn //
+                                                    parent1.type = 'part'
+                                                }
+                                            }
+                                        }
+                                    } else if (subitem.type != 'module' && subitem.containerUrn == config.slateManifestURN) {
+                                        if (elmData.includes(item.containerUrn)) {
+                                            parent1.urn = item.containerUrn //
+                                            parent1.type = 'chapter'
+                                        } else {
+                                            if (elmData.includes(container.containerUrn)) {
+                                                parent1.urn = container.containerUrn //
+                                                parent1.type = 'part'
+                                            } else {
+                                                parent1.urn = config.projectUrn //
+                                                parent1.type = 'part'
+                                            }
+                                        }
+                                    }
+                                })
+                            }
+                        }
+                    })
+    
+                }
+            }
+    
+        })
+    
+        return parent1.urn
+    }
+
+
 
     /*** @description - This function is to filter table data based on parameters
          * @param getItems - check for type of data |true=assessment-item data|false- elm-resouces data     
@@ -444,6 +544,6 @@ class ElmTableComponent extends Component {
 export default connect((state) => {
     return {
         elmReducer: state.elmReducer,
-        isLoading: state.elmReducer.isLoading
+        allSlateData: state.appStore.allSlateData
     }
 })(ElmTableComponent);
