@@ -8,6 +8,7 @@ import moxios from 'moxios';
 import {
     FETCH_SLATE_DATA,
     SET_ACTIVE_ELEMENT,
+    AUTHORING_ELEMENT_UPDATE
 } from '../../../src/constants/Action_Constants';
 import { slateDataNew } from '../../../fixtures/slateTestingData';
 const mockStore = configureMockStore(middlewares);
@@ -124,6 +125,29 @@ describe('action file test', () => {
            }
         axios.get.mockImplementation(() => Promise.resolve(data));
         let result = await selectActions.fetchSlateData(manifestURN,2);
+        result(dispatch,getState);
+    })
+
+    it('testing---createPopupUnit action',async () => {
+        store = mockStore(() => initialState);
+        let manifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+        const expectedActions = [{
+            type: AUTHORING_ELEMENT_UPDATE,
+            payload: { slateDataNew }
+
+        }];
+        let data = slateDataNew;
+        let dispatch = (obj) =>{
+            if(obj.type === AUTHORING_ELEMENT_UPDATE){
+              expect(obj).toEqual(expectedActions);
+            }
+
+        };
+        let getState = () => {
+            return initialState;
+           }
+        axios.post.mockImplementation(() => Promise.resolve(data));
+        let result = await selectActions.createPopupUnit(manifestURN,2);
         result(dispatch,getState);
     })
 
@@ -726,7 +750,6 @@ describe('action file test', () => {
             expect(store.getActions().type).toEqual(expectedActions.type);
 
         });
-    });
 
     })
     describe('action file test casses for video', () => {
@@ -959,24 +982,24 @@ describe('action file test', () => {
             selectActions.setActiveElement(wip.smartLink, 1)(dispatch,getState);
     
         });
-        xit('setActiveElement for with show hide', () => {
+        it('setActiveElement for with show hide', () => {
             let expectedActions = [{
                 type: SET_ACTIVE_ELEMENT,
                 payload: {
                     "altText": "",
                     'elementType': 'element-interactive',
                     'primaryOption': 'primary-showhide',
-                    'secondaryOption': 'secondary-interactive-showhide',
+                    'secondaryOption': 'secondary-aside-showhide',
                     'elementId': 'urn:pearson:work:276f4d81-e76b-4d11-9e5e-0dae671e631e',
                     'index': 1,
                     'elementWipType': 'figure',
-                    'tag': undefined,
-                    'toolbar': undefined
+                    'tag': 'SH',
+                    'toolbar': []
                 }
             }];
             let dispatch = (obj) => {
                 if(obj.type === SET_ACTIVE_ELEMENT){
-                    expect(obj.payload).toEqual(expectedActions[0].payload);
+                    expect(obj.payload.tag).toEqual(expectedActions[0].payload.tag);
                 }
                 else{
                     return ''
@@ -985,8 +1008,9 @@ describe('action file test', () => {
             let getState = () => {
              return initialState;
             }
-    
-            selectActions.setActiveElement(wip.showHide, 1)(dispatch,getState);
+            let dataToSend = wip.showHide;
+            dataToSend.type = 'showhide'
+            selectActions.setActiveElement(dataToSend, 1)(dispatch,getState);
     
         });
         xit('setActiveElement for with show popup', () => {
@@ -1047,5 +1071,168 @@ describe('action file test', () => {
             selectActions.setActiveElement(wip.pdf, 1)(dispatch, getState);
     
         });
+    })
+    describe('action file tets cases for assessment', () => {
+
+        it('setActiveElement for with assesment', () => {
+            let store = mockStore();
+            store.dispatch(selectActions.setActiveElement(wip.assessment, 1));
+
+            let expectedActions = [{
+                type: SET_ACTIVE_ELEMENT,
+                payload: {
+                    'elementType': 'element-assessment',
+                    'primaryOption': 'primary-single-assessment',
+                    'secondaryOption': 'secondary-single-assessment-cite',
+                    'elementId': 'urn:pearson:work:ab5ae968-d1e8-4d31-8c2e-1a3cfdc7b0b1',
+                    'index': 1,
+                    "numbered": true,
+                    "startNumber": "1",
+                    'elementWipType': 'figure',
+                    'tag': 'Qu',
+                    'toolbar': ['assetpopover', 'decreaseindent', 'glossary']
+                }
+            }]
+
+            expect(store.getActions().type).toEqual(expectedActions.type);
+
+        });
+
+    })
+    describe('action file tets cases for containers', () => {
+
+        it('setActiveElement for with elemnt-aside', () => {
+            let store = mockStore();
+            let dataToSend = wip.aside;
+            dataToSend.subtype="";
+            store.dispatch(selectActions.setActiveElement(dataToSend, 1));
+
+            let expectedActions = [{
+                type: SET_ACTIVE_ELEMENT,
+                payload: {
+                    'elementType': 'element-aside',
+                    'primaryOption': 'primary-aside-aside',
+                    'secondaryOption': 'secondary-aside-sb1',
+                    'elementId': 'urn:pearson:work:ab5ae968-d1e8-4d31-8c2e-1a3cfdc7b0b1',
+                    'index': 1,
+                    "numbered": true,
+                    "startNumber": "1",
+                    'elementWipType': 'element-aside',
+                    'tag': 'As',
+                    'toolbar': ['assetpopover', 'decreaseindent', 'glossary']
+                }
+            }]
+
+            expect(store.getActions().type).toEqual(expectedActions.type);
+
+        });
+
+        it('setActiveElement for with eworkde example', () => {
+            let store = mockStore();
+            let dataToSend = wip.workedExample;
+            dataToSend.designtype = ""
+            store.dispatch(selectActions.setActiveElement(wip.workedExample, 1));
+
+            let expectedActions = [{
+                type: SET_ACTIVE_ELEMENT,
+                payload: {
+                    'elementType': 'element-workedexample',
+                    'primaryOption': 'primary-workedexample-we1',
+                    'secondaryOption': 'secondary-workedexample-we1',
+                    'elementId': 'urn:pearson:work:ab5ae968-d1e8-4d31-8c2e-1a3cfdc7b0b1',
+                    'index': 1,
+                    "numbered": true,
+                    "startNumber": "1",
+                    'elementWipType': 'element-aside',
+                    'tag': 'WE',
+                    'toolbar': ['assetpopover', 'decreaseindent', 'glossary']
+                }
+            }]
+
+            expect(store.getActions().type).toEqual(expectedActions.type);
+
+        });
+
+    })
+    describe('action file tets cases for LO', () => {
+
+        it('setActiveElement for with LO', () => {
+            let store = mockStore();
+            store.dispatch(selectActions.setActiveElement(wip.lo, 1));
+
+            let expectedActions = [{
+                type: SET_ACTIVE_ELEMENT,
+                payload: {
+                    'elementType': 'element-aside',
+                    'primaryOption': 'primary-aside-aside',
+                    'secondaryOption': 'secondary-aside-sb1',
+                    'elementId': 'urn:pearson:work:ab5ae968-d1e8-4d31-8c2e-1a3cfdc7b0b1',
+                    'index': 1,
+                    "numbered": true,
+                    "startNumber": "1",
+                    'elementWipType': 'element-aside',
+                    'tag': 'LO',
+                    'toolbar': ['assetpopover', 'decreaseindent', 'glossary']
+                }
+            }]
+
+            expect(store.getActions().type).toEqual(expectedActions.type);
+
+        });
+
+    })
+
+    describe('action file tets cases for list', () => {
+
+        it('setActiveElement for with list', () => {
+            let store = mockStore();
+            store.dispatch(selectActions.setActiveElement(wip.list, 1));
+
+            let expectedActions = [{
+                type: SET_ACTIVE_ELEMENT,
+                payload: {
+                    'elementType': 'element-list',
+                    'primaryOption': 'primary-ordered-list',
+                    'secondaryOption': 'secondary-ordered-list',
+                    'elementId': 'urn:pearson:work:ab5ae968-d1e8-4d31-8c2e-1a3cfdc7b0b1',
+                    'index': 1,
+                    "numbered": true,
+                    "startNumber": "1",
+                    'elementWipType': 'element-list',
+                    'tag': 'LI',
+                    'toolbar': ['assetpopover', 'decreaseindent', 'glossary']
+                }
+            }]
+
+            expect(store.getActions().type).toEqual(expectedActions.type);
+
+        });
+
+    })
+
+    describe('action file tets cases for opener element', () => {
+
+        it('setActiveElement for with opener element', () => {
+            let store = mockStore();
+            store.dispatch(selectActions.setActiveElement(wip.opener, 1));
+
+            let expectedActions = [{
+                type: SET_ACTIVE_ELEMENT,
+                payload: {
+                    'elementType': 'element-opener',
+                    'elementId': 'urn:pearson:work:ab5ae968-d1e8-4d31-8c2e-1a3cfdc7b0b1',
+                    'index': 1,
+                    "numbered": true,
+                    "startNumber": "1",
+                    'elementWipType': 'element-opener',
+                    'tag': 'OE',
+                    'toolbar': ['assetpopover', 'decreaseindent', 'glossary']
+                }
+            }]
+
+            expect(store.getActions().type).toEqual(expectedActions.type);
+
+        });
+
     })
 });
