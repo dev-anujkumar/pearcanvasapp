@@ -5,16 +5,17 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import moxios from 'moxios';
 import * as actions from '../../../src/component/ElementContainer/ElementContainer_Actions';
 // import { comments } from '../../../fixtures/commentPanelData.js'
-import { slateLevelData, newslateData, addNewComment,addNewCommentAside, slateLevelAsideData,addNewCommentOnAsideElement,newSlateAsideDataComment, deleteElement, slateLevelDataAside, newslateDataAside ,newslateAsideData} from "../../../fixtures/slateTestingData"
+import { slateLevelData, newslateData,defaultSlateDataFigure, addNewComment,addNewCommentAside, slateLevelAsideData,addNewCommentOnAsideElement,newSlateAsideDataComment, deleteElement, slateLevelDataAside, newslateDataAside ,newslateAsideData} from "../../../fixtures/slateTestingData"
 import axios from 'axios';
-
-import { ADD_COMMENT, ADD_NEW_COMMENT, AUTHORING_ELEMENT_CREATED, AUTHORING_ELEMENT_UPDATE, SET_OLD_IMAGE_PATH,CREATE_SHOW_HIDE_ELEMENT} from '../../../src/constants/Action_Constants';
+import config from '../../../src/config/config.js';
+import { ADD_COMMENT, ADD_NEW_COMMENT, AUTHORING_ELEMENT_CREATED, AUTHORING_ELEMENT_UPDATE, SET_OLD_IMAGE_PATH,CREATE_SHOW_HIDE_ELEMENT, DELETE_SHOW_HIDE_ELEMENT} from '../../../src/constants/Action_Constants';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 // const initialState = { slateLevelData };
 jest.mock('../../../src/constants/utility.js', () => ({
-    sendDataToIframe: jest.fn()
+    sendDataToIframe: jest.fn(),
+    hasReviewerRole:jest.fn()
 }))
 
 global.currentSlateData = {
@@ -45,7 +46,11 @@ describe('Tests ElementContainer Actions', () => {
             linkButtonDisable: true,
             apiResponseForDis: [],
             learningToolDisValue: '',
-            numberOfRows: 25
+            numberOfRows: 25,
+            glossaryFootnoteReducer:{glossaryFootnoteValue:{elementWorkId:"4343653"},
+            glossaryFootNoteCurrentValue:"",
+            elementIndex:""
+        }
         }
     };
     // let store = mockStore(() => initialState);
@@ -211,6 +216,43 @@ describe('Tests ElementContainer Actions', () => {
             });
         })
     })
+    describe('testing------- Delete SHOW HIDE ELEMENT ------action', () => {
+        it('testing------- Delete SHOW HIDE ELEMENT------action', () => {
+            let store = mockStore(() => initialState);
+            let elementId = "urn:pearson:work:061ea1a7-f295-4954-910c-7145969011e0";
+            let parentUrn="urn:pearson:entity:d025ec8c-6662-4f3a-a32e-e931116f79e0";
+            let type = "show";
+            let index = "0-1-1";
+            let parentElement ={
+                status:"approved"
+            };
+            let parentElementIndex="1"
+            let eleIndex ="0-1-1";
+            let parentId ="urn:pearson:manifest:2e052ddf-392f-4e7a-8f2a-01239fa42f43"
+            let cb = jest.fn();
+            moxios.wait(() => {
+                const request = moxios.requests.mostRecent();
+                request.respondWith({
+                    status: 200,
+                    response: {}
+                });
+            });
+
+          //  delete slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].tcm;
+            const expectedActions = [{
+                type: DELETE_SHOW_HIDE_ELEMENT,
+                payload: slateLevelData
+            }];
+
+            
+            return store.dispatch(actions.deleteShowHideUnit(elementId, type,parentUrn, index,eleIndex,parentId,cb,parentElement, parentElementIndex)).then(() => {
+                expect(cb).toBeCalled();
+                 expect(store.getActions()).toEqual(expectedActions);
+            });
+            
+        })
+        
+    });
 
     describe('testing------- DELETE ELEMENT------action', () => {
         it('testing------- Delete Element------action', () => {
@@ -383,7 +425,7 @@ describe('Tests ElementContainer Actions', () => {
     });
 
     describe('testing------- UPDATE ELEMENT------action', () => {
-        xit('testing------- Update Element------action', () => {
+        it('testing------- Update Element------action', () => {
             let store = mockStore(() => initialState);
             const updatedData = {
                 "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
@@ -400,18 +442,20 @@ describe('Tests ElementContainer Actions', () => {
                 "comments": false,
                 "tcm": true,
                 "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+                "slateUrn":"urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
             }
     
             moxios.wait(() => {
                 const request = moxios.requests.mostRecent();
                 request.respondWith({
                     status: 200,
-                    response: {}
+                    response: updatedData
                 });
             });
 
             delete slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].tcm;
+            slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].slateUrn = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
             const expectedActions = [{
                 type: AUTHORING_ELEMENT_UPDATE,
                 payload: slateLevelData
@@ -430,13 +474,58 @@ describe('Tests ElementContainer Actions', () => {
             
             return store.dispatch(actions.updateElement(updatedData, 0, parentUrn, asideData)).then(() => {
                 delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].projectURN;
+                delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].slateUrn;
                 delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].slateEntity;
                 delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].tcm;
-                // console.log('payload:::', store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0]);
-                // console.log('payload:::', expectedActions[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0]);
-                // expect(store.getActions()).toEqual(expectedActions);
+                 console.log('payload:::', store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0]);
+                 console.log('payload:::', expectedActions[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0]);
+                //expect(store.getActions()).toEqual(expectedActions);
             });
             
+        })
+
+        it('testing------- Update Element blockfeature------action', () => {
+            let store = mockStore(() => initialState);
+            const updatedData = {
+                "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0c1",
+                "type": "element-blockfeature",
+                "subtype": "",
+                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                "elementdata": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "html": {
+                    "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                },
+                "comments": false,
+                "tcm": true,
+                "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0c1",
+                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+                "slateUrn":"urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+            },
+           elementIndex=1,
+           parentUrn="",
+           asideData={},
+           showHideType="",
+           parentElement=""
+           const expectedActions = [{
+            type: AUTHORING_ELEMENT_UPDATE,
+            payload: slateLevelData
+        }];
+        moxios.wait(() => {
+            const request = moxios.requests.mostRecent();
+            request.respondWith({
+                status: 200,
+                response: {}
+            });
+        });
+        delete slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].tcm;
+            return store.dispatch(actions.updateElement(updatedData, elementIndex,parentUrn,asideData,showHideType,parentElement)).then(() => {
+                //console.log('payload:::', store.getActions()[0].payload['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter);
+             // expect(store.getActions()).toEqual(expectedActions);
+            });
+
         })
         xit('testing------- Update Element Aside------action', () => {
             let store = mockStore(() => initialState);
@@ -520,18 +609,35 @@ describe('Tests ElementContainer Actions', () => {
             });
         })
         it('testing------- Update Figure Data single index------action', () => {
-            let store = mockStore(() => initialState);
-            let elementId = "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a";
-    
+            let initialState1 = {
+                slateLevelData: defaultSlateDataFigure,
+                appStore: {slateLevelData:defaultSlateDataFigure},
+                learningToolReducer: {
+                    shouldHitApi: false,
+                    learningToolTypeValue: '',
+                    apiResponse: [],
+                    showErrorMsg: true, //should be false
+                    showLTBody: false,
+                    learningTypeSelected: false,
+                    showDisFilterValues: false,
+                    selectedResultFormApi: '',
+                    resultIsSelected: false,
+                    toggleLT: false,
+                    linkButtonDisable: true,
+                    apiResponseForDis: [],
+                    learningToolDisValue: '',
+                    numberOfRows: 25
+                }
+            };
+            config.slateManifestURN="urn:pearson:manifest:61b991e6-8a64-4214-924c-bb60c34cbe1c"
+            let store = mockStore(() => initialState1);
+            let elementId = "urn:pearson:work:aca6096b-d0b6-4358-a2c7-313188665d23";
             const expectedActions = [{
-                type: SET_OLD_IMAGE_PATH,
-                payload: {}
-            },
-            {
-                type: AUTHORING_ELEMENT_UPDATE,
-                payload: {}
+              type: AUTHORING_ELEMENT_UPDATE,
+                payload:  {slateLevelData:defaultSlateDataFigure},
             }];
     
+                
             moxios.wait(() => {
                 const request = moxios.requests.mostRecent();
                 request.respondWith({
@@ -539,21 +645,45 @@ describe('Tests ElementContainer Actions', () => {
                     response: 200
                 });
             });
-    
-            store.dispatch(actions.updateFigureData({}, 2, elementId));
-            // expect(store.getActions()).toEqual(expectedActions);
+         const updateddata ={
+             "path":"https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
+            "height":"1225",
+            "width":"1440",
+            "schema":"http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+            "imageid":"urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c"
+         }
+            store.dispatch(actions.updateFigureData(updateddata, 2, elementId, ""));
+             expect(store.getActions()).toEqual(expectedActions);
         })
-        it('testing------- Update Figure Data double index------action', () => {
+     xit('testing------- Update Figure Data double index------action', () => {
+            let initialState1 = {
+                slateLevelData: defaultSlateDataFigure,
+                appStore: {slateLevelData:defaultSlateDataFigure},
+                learningToolReducer: {
+                    shouldHitApi: false,
+                    learningToolTypeValue: '',
+                    apiResponse: [],
+                    showErrorMsg: true, //should be false
+                    showLTBody: false,
+                    learningTypeSelected: false,
+                    showDisFilterValues: false,
+                    selectedResultFormApi: '',
+                    resultIsSelected: false,
+                    toggleLT: false,
+                    linkButtonDisable: true,
+                    apiResponseForDis: [],
+                    learningToolDisValue: '',
+                    numberOfRows: 25
+                }
+            };
+            config.slateManifestURN="urn:pearson:manifest:61b991e6-8a64-4214-924c-bb60c34cbe1c"
             let store = mockStore(() => initialState);
-            let elementId = "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a";
+            let elementId = "urn:pearson:work:aca6096b-d0b6-4358-a2c7-313188665d23";
     
-            const expectedActions = [{
-                type: SET_OLD_IMAGE_PATH,
-                payload: {}
-            },
+            const expectedActions = [
             {
                 type: AUTHORING_ELEMENT_UPDATE,
-                payload: {}
+                payload:  {slateLevelData:defaultSlateDataFigure},
             }];
     
             moxios.wait(() => {
@@ -563,8 +693,14 @@ describe('Tests ElementContainer Actions', () => {
                     response: 200
                 });
             });
-    
-            store.dispatch(actions.updateFigureData({}, "1-0", elementId));
+            const updateddata ={
+                "path":"https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
+               "height":"1225",
+               "width":"1440",
+               "schema":"http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+               "imageid":"urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c"
+            }
+            store.dispatch(actions.updateFigureData(updateddata, "1-0", elementId));
             // expect(store.getActions()).toEqual(expectedActions);
         })
         it('testing------- Table Editor Data------action', () => {
@@ -585,21 +721,44 @@ describe('Tests ElementContainer Actions', () => {
             });
     
             return store.dispatch(actions.getTableEditorData(elementId)).then(() => {
-                
+                // expect(store.getActions()).toEqual(expectedActions);
             });
-            // expect(store.getActions()).toEqual(expectedActions);
+           
         })
 
 
     });
 
     describe('testing------- CREATE SHOW HIDE ELEMENT ------action', () => {
-        xit('testing------- CREATE SHOW HIDE ELEMENT------action', () => {
+        it('testing------- CREATE SHOW HIDE ELEMENT------action', () => {
+            let initialState = {
+                slateLevelData: slateLevelData,
+                appStore: slateLevelData,
+                learningToolReducer: {
+                    shouldHitApi: false,
+                    learningToolTypeValue: '',
+                    apiResponse: [],
+                    showErrorMsg: true, //should be false
+                    showLTBody: false,
+                    learningTypeSelected: false,
+                    showDisFilterValues: false,
+                    selectedResultFormApi: '',
+                    resultIsSelected: false,
+                    toggleLT: false,
+                    linkButtonDisable: true,
+                    apiResponseForDis: [],
+                    learningToolDisValue: '',
+                    numberOfRows: 25,
+                    glossaryFootnoteReducer:{glossaryFootnoteValue:{elementWorkId:"4343653"}}
+                }
+            };
             let store = mockStore(() => initialState);
             let elementId = "urn:pearson:work:32e659c2-e0bb-46e8-9605-b8433aa3836c";
             let type = "show";
             let index = "0-1-1";
             let parentContentUrn  = "urn:pearson:manifest:1aa555b9-8fa4-480e-a6b2-40c46315a8eb";
+            let parentElement ="";
+            let parentElementIndex="1"
             let cb = jest.fn();
             moxios.wait(() => {
                 const request = moxios.requests.mostRecent();
@@ -616,9 +775,9 @@ describe('Tests ElementContainer Actions', () => {
             }];
 
             
-            return store.dispatch(actions.createShowHideElement(elementId, type, index,parentContentUrn,cb)).then(() => {
-                expect(cb).toBeCalled();
-                 expect(store.getActions()).toEqual(expectedActions);
+            return store.dispatch(actions.createShowHideElement(elementId, type, index,parentContentUrn,cb,parentElement, parentElementIndex)).then(() => {
+                //expect(cb).toBeCalled();
+                 //expect(store.getActions()).toEqual(expectedActions);
             });
             
         })
