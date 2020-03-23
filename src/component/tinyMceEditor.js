@@ -1423,11 +1423,7 @@ export class TinyMceEditor extends Component {
              * Using timeout - init tinymce instance only when default events stack becomes empty
              */
             currentTarget.focus();
-            let termText = document.getElementById(currentTarget.id)&&document.getElementById(currentTarget.id).innerHTML;
             tinymce.init(this.editorConfig).then(() => { 
-                if(termText) {
-                    document.getElementById(currentTarget.id).innerHTML = termText;
-                   }
                 if(clickedX!==0&&clickedY!==0){
                     tinymce.activeEditor.selection.placeCaretAt(clickedX,clickedY) //Placing exact cursor position on clicking.
                 }
