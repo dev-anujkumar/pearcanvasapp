@@ -86,7 +86,6 @@ class ElmTableComponent extends Component {
                 this.filterData(false, config.parentContainerUrn, elmData);
             }else{
                 parent= this.setParentUrn(allSlateData,apiData)
-                console.log("parent",parent)
                 this.filterData(false, parent, elmData);
             }
         }
@@ -119,7 +118,7 @@ class ElmTableComponent extends Component {
                 } else {
                     container && container.contents && container.contents.forEach((item) => {
                         if (item.type == 'module' && item.containerUrn === config.parentContainerUrn && elmData.includes(item.containerUrn)) {
-                            parent1.urn = item.containerUrn // save mod urn
+                            parent1.urn = item.containerUrn // 
                             parent1.type = 'module'
                         } else if ((item.type == 'module' && item.containerUrn === config.parentContainerUrn && !elmData.includes(item.containerUrn))||(item.type != 'module' && config.slateManifestURN == item.containerUrn)) {
                             if (elmData.includes(container.containerUrn)) {
@@ -133,7 +132,7 @@ class ElmTableComponent extends Component {
                     })
                 }
             } else if (container.type == 'part' && (JSON.stringify(container).includes(config.parentContainerUrn))) {
-                if (container.containerUrn == config.parentContainerUrn && elmData.includes(container.containerUrn) {
+                if (container.containerUrn == config.parentContainerUrn && elmData.includes(container.containerUrn)) {
                     parent1 = {
                         urn: container.containerUrn,
                         type: "part"
@@ -144,9 +143,7 @@ class ElmTableComponent extends Component {
                             if (elmData.includes(config.parentContainerUrn)) {
                                 parent1.urn = item.containerUrn //
                                 parent1.type = 'chapter'
-                                console.log(6666)
                             } else if (item && item.type == 'chapter' && item.contents && item.contents.length) {
-    
                                 item && item.contents && item.contents.forEach((subitem) => {
                                     if (subitem.type == 'module' && subitem.containerUrn == config.parentContainerUrn) {
                                         if (elmData.includes(subitem.containerUrn)) {
@@ -162,7 +159,7 @@ class ElmTableComponent extends Component {
                                                     parent1.type = 'part'
                                                 } else {
                                                     parent1.urn = config.projectUrn //
-                                                    parent1.type = 'part'
+                                                    parent1.type = 'project'
                                                 }
                                             }
                                         }
@@ -176,7 +173,7 @@ class ElmTableComponent extends Component {
                                                 parent1.type = 'part'
                                             } else {
                                                 parent1.urn = config.projectUrn //
-                                                parent1.type = 'part'
+                                                parent1.type = 'project'
                                             }
                                         }
                                     }
@@ -190,6 +187,10 @@ class ElmTableComponent extends Component {
     
         })
     
+        if(parent1.urn==""){
+            parent1.urn=config.projectUrn
+        }
+
         return parent1.urn
     }
 
