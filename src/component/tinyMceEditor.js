@@ -123,7 +123,9 @@ export class TinyMceEditor extends Component {
                             if(this.props.element.type === "popup" && !this.props.currentElement){
                                 this.props.createPopupUnit(this.props.popupField, null, this.props.index, this.props.element) 
                             } else {
-                                this.props.handleBlur(null,this.props.currentElement,this.props.index, null)
+                                let showHideType = this.props.showHideType || null
+                                showHideType = showHideType === "revel" ? "postertextobject" : showHideType
+                                this.props.handleBlur(null,this.props.currentElement,this.props.index, showHideType)
                             }
                         }
                         editor.selection.placeCaretAt(clickedX,clickedY);                       
