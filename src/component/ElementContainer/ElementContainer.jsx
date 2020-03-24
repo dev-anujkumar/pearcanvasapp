@@ -37,6 +37,12 @@ import { updatePageNumber, accessDenied } from '../SlateWrapper/SlateWrapper_Act
 import { releaseSlateLock } from '../CanvasWrapper/SlateLock_Actions.js';
 import ElementShowHide from '../ElementShowHide';
 import ElementContainerContext from './ElementContainerContext'
+import {
+    CitationGroupContext,
+    ElementCitationContext
+} from './ElementCitationContext'
+import CitationGroup from '../CitationGroup'
+import CitationElement from '../CitationElement'
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -934,6 +940,41 @@ class ElementContainer extends Component {
                     }}><ElementShowHide />
                     </ElementContainerContext.Provider >;
                     labelText = 'SH'
+                    break;
+
+                case elementTypeConstant.CITATION_GROUP:
+                    editor = <CitationGroupContext.Provider value={{
+                        activeElement: this.props.activeElement,
+                        showBlocker: this.props.showBlocker,
+                        permissions: permissions,
+                        handleFocus: this.handleFocus,
+                        handleBlur: this.handleBlur,
+                        index: index,
+                        element: element,
+                        slateLockInfo: slateLockInfo,
+                        onClick: this.handleFocus,
+                        handleCommentspanel : handleCommentspanel,
+                        isBlockerActive : this.props.isBlockerActive,
+                        onClickCapture : this.props.onClickCapture,
+                        elementSeparatorProps : elementSepratorProps
+                    }}><CitationGroup />
+                    </CitationGroupContext.Provider >;
+                    labelText = 'CG'
+                    break;
+                case elementTypeConstant.CITATION_ELEMENT:
+                    editor = <CitationElement
+                        activeElement = {this.props.activeElement}
+                        showBlocker = {this.props.showBlocker}
+                        permissions = {permissions}
+                        handleFocus = {this.handleFocus}
+                        handleBlur = {this.handleBlur}
+                        index = {index}
+                        element = {element}
+                        model = {element.html}
+                        slateLockInfo = {slateLockInfo}
+                        onClick = {this.handleFocus}
+                    />
+                    labelText = 'Ct'
                     break;
             }
         } else {
