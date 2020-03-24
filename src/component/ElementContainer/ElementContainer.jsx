@@ -38,8 +38,7 @@ import { releaseSlateLock } from '../CanvasWrapper/SlateLock_Actions.js';
 import ElementShowHide from '../ElementShowHide';
 import ElementContainerContext from './ElementContainerContext'
 import {
-    CitationGroupContext,
-    ElementCitationContext
+    CitationGroupContext
 } from './ElementCitationContext'
 import CitationGroup from '../CitationGroup'
 import CitationElement from '../CitationElement'
@@ -453,6 +452,12 @@ class ElementContainer extends Component {
      * @param {*} activeEditorId
      */
     handleContentChange = (node, previousElementData, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType) => {
+        /**
+         * THIS CODE TO BE REMOVED AFTER UPDATE ELEMENT IMPLEMEMTATION
+         */
+        if(parentElement.type === "citations"){
+            return false
+        }
         const { parentUrn, asideData } = this.props
         let dataToSend = {}
         switch (previousElementData.type) {
@@ -956,7 +961,8 @@ class ElementContainer extends Component {
                         handleCommentspanel : handleCommentspanel,
                         isBlockerActive : this.props.isBlockerActive,
                         onClickCapture : this.props.onClickCapture,
-                        elementSeparatorProps : elementSepratorProps
+                        elementSeparatorProps : elementSepratorProps,
+                        setActiveElement : this.props.setActiveElement
                     }}><CitationGroup />
                     </CitationGroupContext.Provider >;
                     labelText = 'CG'
@@ -1024,7 +1030,7 @@ class ElementContainer extends Component {
                     sectionBreak={this.state.sectionBreak}
                     deleteElement={this.deleteElement}
                 />}
-                {
+                {this.props.children &&
                     <PageNumberContext.Consumer>
                         {
                             ({ isPageNumberEnabled }) => this.props.children(this.state.isHovered, isPageNumberEnabled, this.props.activeElement, this.props.permissions)

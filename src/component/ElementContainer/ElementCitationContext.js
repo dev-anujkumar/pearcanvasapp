@@ -9,6 +9,3 @@ import { createContext } from 'react';
 export const CitationGroupContext = createContext({
     index: ""
 })
-export const ElementCitationContext = createContext({
-    index: ""
-})

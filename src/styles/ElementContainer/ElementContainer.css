@@ -112,20 +112,20 @@ abbr.AssetPopoverTerm{
     color: #007FA3;
     font-family: inherit;
     /* font-style: normal; */
-  }
-  abbr.AssetPopoverTerm:hover {
+}
+abbr.AssetPopoverTerm:hover {
     color: #9E007E;
     text-decoration: underline;
     cursor: pointer;
-  }
+}
 
-  /* Alfresco Buttons */
-  button#assetSelectBtn{
-      font-size: 14px
-  }
-  button.SearchLibraryStyles__btnCancel___1G1qN, button.BrowseStyles__btnCancel___2wiLt, button.modalStyles__btnCancel___3b7HW{
+/* Alfresco Buttons */
+button#assetSelectBtn{
     font-size: 14px
-  }
-  .ignore-for-drag{
-      cursor: default!important;
-  }
+}
+button.SearchLibraryStyles__btnCancel___1G1qN, button.BrowseStyles__btnCancel___2wiLt, button.modalStyles__btnCancel___3b7HW{
+    font-size: 14px
+}
+.ignore-for-drag{
+    cursor: default!important;
+}

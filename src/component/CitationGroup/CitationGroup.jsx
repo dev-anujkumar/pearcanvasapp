@@ -3,13 +3,22 @@ import { connect } from 'react-redux'
 import { CitationGroupContext } from '../ElementContainer/ElementCitationContext'
 import ElementContainer from '../ElementContainer';
 import CGTinyMCE from './CGTinyMCE.jsx'
+import { swapElement } from '../SlateWrapper/SlateWrapper_Actions'
+import Sortable from 'react-sortablejs';
+import './../../styles/CitationGroup/CitationGroup.css';
 import { guid } from '../../constants/utility.js';
 
 let random = guid();
 
 export class CitationGroup extends Component {
 
-    renderElement = (_slateBodyMatter, parentUrn, parentIndex) => {
+    /**
+     * Renders Citation elements
+     * @param {object} _slateBodyMatter - Bodymatter containing an array of citation elements
+     * @param {object} parentUrn - Data about container element
+     * @param {string} parentIndex - Index of parent container element
+     */
+    renderElement = (_elements, parentUrn, parentIndex) => {
         try {
             if (_elements !== null && _elements !== undefined) {
                 // this.renderButtonsonCondition(_elements);
@@ -67,10 +76,34 @@ export class CitationGroup extends Component {
             }
         } catch (error) {
             // handle error
-            //console.error(error);
+            console.error(error)
         }
     }
+
+    /**
+     * Prepares data of elements to be swapped
+     * @param {object} event - event object
+     * @param {object} parentUrn - contains data about parent container
+     */
+    prepareSwapData = (event, parentUrn) => {
+        let swappedElementData;
+        let bodyMatterObj = [];
+        bodyMatterObj = this.props.element.contents.bodymatter || [];
+        swappedElementData = bodyMatterObj[event.oldDraggableIndex]
+        let dataObj = {
+            oldIndex: event.oldDraggableIndex,
+            newIndex: event.newDraggableIndex,
+            swappedElementData: swappedElementData,
+            currentSlateEntityUrn: parentUrn.contentUrn,
+            // containerTypeElem: 'we',
+        }
+        return dataObj
+    }
     
+    /**
+     * Renders a container containing Citation elements
+     * @param {object} context - component's context object (destructured)
+     */
     renderCitationElementContainer = ({ element: _containerData }) => {
         try {
             if (_containerData !== null && _containerData !== undefined) {
@@ -83,6 +116,7 @@ export class CitationGroup extends Component {
                         contentUrn: _containerData.contentUrn,
                         elementType: _containerType
                     }
+                    const cgThis = this
                     /* let filterElement = _bodyMatter.filter((ele) => ele.type == "manifest");
                     let elementLength = _bodyMatter.length - filterElement.length;
                      if(!_bodyMatter.length && this.props.deleteElement){
@@ -110,24 +144,20 @@ export class CitationGroup extends Component {
                                     forceFallback: true,
                                     onStart: function (/**Event*/evt) {
                                         // same properties as onEnd
-                                        _context.checkSlateLockStatus(evt)
+                                        cgThis.context.checkSlateLockStatus(evt)
                                     },
 
                                     // Element dragging ended
                                     onUpdate: (/**Event*/evt) => {
-                                        if (this.checkOpener(evt) || config.savingInProgress) {
+                                        /* if (config.savingInProgress) {
                                             evt.preventDefault()
                                             evt.stopPropagation()
                                             return false
                                         }
-                                        let dataObj = this.prepareSwapData(evt)
-                                        this.props.swapElement(dataObj, () => { })
-                                        this.props.setActiveElement(dataObj.swappedElementData, dataObj.newIndex);
-                                        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                                        let showHideNode = document.querySelector('.show-hide-active')
-                                        if(showHideNode){
-                                            showHideNode.classList.remove("show-hide-active")
-                                        }
+                                        let dataObj = this.prepareSwapData(evt, parentUrn)
+                                        cgThis.props.swapElement(dataObj, () => { })
+                                        cgThis.context.setActiveElement(dataObj.swappedElementData, dataObj.newIndex);
+                                        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } }); */
                                     },
                                 }}
                                 ref={(c) => {
@@ -146,9 +176,14 @@ export class CitationGroup extends Component {
             }
         } catch (error) {
             // handle error
+            console.error(error)
         }
     }
-    
+
+    /**
+     * Renders a container containing Citation Group contents
+     * @param {object} context - component's context object
+     */
     renderCitationGroupContainer = (context) => {
         return (
             <>
@@ -177,7 +212,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    
+    swapElement
 }
 
 CitationGroup.contextType = CitationGroupContext;

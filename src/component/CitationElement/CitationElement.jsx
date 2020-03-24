@@ -1,6 +1,10 @@
 import React, { Component } from 'react'
 import TinyMceEditor from "../tinyMceEditor";
 
+/**
+ * Renders Citation element
+ * @param {object} props - CitationElement component properties
+ */
 const CitationElement = (props) => {
     const { index, elementId, element, className, model, tagName, handleFocus, handleBlur, slateLockInfo, permissions } = props
     return (
