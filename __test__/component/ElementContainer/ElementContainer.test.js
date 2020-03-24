@@ -27,11 +27,13 @@ jest.mock('./../../../src/constants/utility.js', () => ({
     sendDataToIframe: jest.fn(),
     hasReviewerRole: jest.fn(),
     guid: jest.fn(),
-    encodeHTMLInWiris: jest.fn()
+    encodeHTMLInWiris: jest.fn(),
+    matchHTMLwithRegex:jest.fn()
 }))
 jest.mock('./../../../src/config/config.js', () => ({
     colors : ["#000000", "#003057", "#505759", "#005A70", "#006128"],
-    releaseCallCount :0
+    releaseCallCount :0,
+    savingInProgress:false
 }))
 jest.mock('./../../../src/component/CanvasWrapper/TCM_Integration_Actions.js', () => {
     return { loadTrackChanges: jest.fn()}
@@ -231,7 +233,7 @@ describe('Test for element container component', () => {
             expect(elementContainer).toHaveLength(1);
             expect(elementContainerInstance).toBeDefined();
         })
-        xit('Render Element Container ----->Figure Element-MathML', () => {
+        it('Render Element Container ----->Figure Element-MathML', () => {
             let props = {
                 element: wipData.equation,
                 permissions: []
@@ -269,7 +271,7 @@ describe('Test for element container component', () => {
             expect(elementContainer).toHaveLength(1);
             expect(elementContainerInstance).toBeDefined();
         })
-        xit('Render Element Container ----->AudioVideo Element', () => {
+        it('Render Element Container ----->AudioVideo Element', () => {
             let props = {
                 element: wipData.video,
                 permissions: []
@@ -297,7 +299,7 @@ describe('Test for element container component', () => {
             expect(spyhandleBlur).toHaveBeenCalled()
             spyhandleBlur.mockClear()
         })
-        xit('Render Element Container ----->Interactive Element-MMI', () => {
+        it('Render Element Container ----->Interactive Element-MMI', () => {
             let props = {
                 element: wipData.interactive,
                 permissions: []
@@ -331,6 +333,16 @@ describe('Test for element container component', () => {
             expect(elementContainer).toHaveLength(1);
             expect(elementContainerInstance).toBeDefined();
         })
+        it('Render Element Container ----->Interactive Element-Popup', () => {
+            let props = {
+                element: wipData.popUp,
+                permissions: []
+            };
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            expect(elementContainer).toHaveLength(1);
+            expect(elementContainerInstance).toBeDefined();
+        })
         it('Render Element Container ----->AssessmentSlate', () => {
             let props = {
                 element: wipData.assessmentSlate,
@@ -352,7 +364,7 @@ describe('Test for element container component', () => {
             expect(spyhandleBlurAssessmentSlate).toHaveBeenCalledWith(assessmentData)
             spyhandleBlurAssessmentSlate.mockClear()
         })
-        it('Render Element Container ----->AsideContainer-elemBorderToggle-true', () => {
+        it('Render Element Container ----->AsideContainer', () => {
             let props = {
                 element: wipData.aside,
                 permissions: [],
@@ -360,13 +372,8 @@ describe('Test for element container component', () => {
             };
             let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
             const elementContainerInstance = elementContainer.find('ElementContainer').instance();
-            const spyhandleBlurAside  = jest.spyOn(elementContainerInstance, 'handleBlurAside')
             expect(elementContainer).toHaveLength(1);
             expect(elementContainerInstance).toBeDefined(); 
-            elementContainerInstance.handleBlurAside();
-            expect(spyhandleBlurAside).toHaveBeenCalled()
-            expect(elementContainerInstance.state.borderToggle).toBe('showBorder')
-            spyhandleBlurAside.mockClear()
         })
         it('Render Element Container ----->WorkedExample', () => {
             let props = {
@@ -629,7 +636,7 @@ describe('Test for element container component', () => {
             expect(spyhandleFocus).toHaveBeenCalled()
             spyhandleFocus.mockClear()
         }) 
-        it('Test-handleFocus Function- for c2mdeia update', () => {
+        it('Test-handleFocus Function- for c2mdeia update-other elements', () => {
             const spyhandleFocus  = jest.spyOn(elementContainerInstance, 'handleFocus')
             elementContainerInstance.handleFocus(true);
             elementContainerInstance.forceUpdate();
@@ -637,6 +644,7 @@ describe('Test for element container component', () => {
             expect(spyhandleFocus).toHaveBeenCalled()
             spyhandleFocus.mockClear()
         }) 
+
         it('Test-handleTCM Function', () => {
             const spyhandleTCM  = jest.spyOn(elementContainerInstance, 'handleTCM')
             elementContainerInstance.handleTCM();
@@ -665,7 +673,42 @@ describe('Test for element container component', () => {
             elementContainer.update()
             expect(spydeleteElement).toHaveBeenCalled()
             spydeleteElement.mockClear()
-        })       
+        })  
+        it('Test-deleteElement Function-aside', () => {
+            let props = {
+                element: wipData.aside,
+                permissions: [
+                    "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
+                    "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
+                    "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
+                ],
+                showBlocker: jest.fn(),
+                isBlockerActive: true,
+                asideData: {},
+                parentUrn:"urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+                index:0,
+                deleteElement: jest.fn(),
+                parentElement:{
+                    subtype :"image",
+                    elementdata:{bodymatter:[{"id":1}]},
+                    type:"aside",
+                    contentUrn:"urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464"
+                }
+            }
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+
+            elementContainerInstance.setState({
+                sectionBreak: true
+            })
+            const spydeleteElement  = jest.spyOn(elementContainerInstance, 'deleteElement')
+            elementContainerInstance.deleteElement();
+            elementContainerInstance.forceUpdate();
+            elementContainer.update()
+            expect(spydeleteElement).toHaveBeenCalled()
+            spydeleteElement.mockClear()
+        }) 
+
     })
     describe('Test-Lifecycle Functions', () => {
         let props = {
@@ -680,7 +723,8 @@ describe('Test for element container component', () => {
             asideData: {},
             parentUrn:"urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
             index:0,
-            deleteElement: jest.fn()
+            deleteElement: jest.fn(),
+            elemBorderToggle:'showBorder'
         };
         let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
         const elementContainerInstance = elementContainer.find('ElementContainer').instance(); 
@@ -721,7 +765,35 @@ describe('Test for element container component', () => {
             };
             elementContainerInstance.componentWillReceiveProps(newProps);
             expect(elementContainerInstance.state.borderToggle).toBe("showBorder")
+        }) 
+        it('Test-componentWillReceiveProps Function- for hideBorder', () => {
+            let newProps = {
+                element: wipData.paragraphUpdate,
+                permissions: [
+                    "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
+                    "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
+                    "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
+                ],
+                showBlocker: jest.fn(),
+                isBlockerActive: true,
+                asideData: {},
+                parentUrn:"urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+                index:0,
+                deleteElement: jest.fn(),
+                activeElement: {
+                    elementId: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1a",
+                    elementType: "element-authoredtext",
+                    elementWipType: "element-authoredtext",
+                    primaryOption: "primary-paragraph",
+                    secondaryOption: "secondary-paragraph",
+                    index: "1",
+                    tag: "P",
+                },
+             };
+            elementContainerInstance.componentWillReceiveProps(newProps);
+            expect(elementContainerInstance.state.borderToggle).toBe("hideBorder")
         })  
+
     })
     describe('Test-Update Element Functions', () => {
         let props = {
@@ -731,14 +803,11 @@ describe('Test for element container component', () => {
                 "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
                 "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
             ],
-                updateElement: jest.fn()
+                updateElement: jest.fn(),
+                elemBorderToggle:false
         };
         let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
         const elementContainerInstance = elementContainer.find('ElementContainer').instance();
-        xit('Render Element Container ----->AsideContainer-elemBorderToggle-false', () => {
-            elementContainerInstance.handleBlurAside();
-            expect(elementContainerInstance.state.borderToggle).toBe('hideBorder')
-        })
         it('Render Element Container ----->AssessmentSlate-update-LT/LA', () => {
             let props = {
                 element: wipData.assessmentSlate,
@@ -775,5 +844,109 @@ describe('Test for element container component', () => {
             expect(spyhandleBlurAssessmentSlate).toHaveBeenCalledWith(assessmentData)
             spyhandleBlurAssessmentSlate.mockClear()
         })
+
     })
 });
+
+describe('Test-Lifecycle Functions-componentWillReceiveProps', () => {
+    let props = {
+        element: wipData.opener,
+        permissions: [
+            "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
+            "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
+            "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
+        ],
+        showBlocker: jest.fn(),
+        isBlockerActive: true,
+        index:0,
+        deleteElement: jest.fn(),
+        elemBorderToggle:'showBorder'
+    };
+    let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+    const elementContainerInstance = elementContainer.find('ElementContainer').instance(); 
+    it('Test-componentWillReceiveProps Function- for opener element', () => {
+        let nextProps = {
+            element: {
+                type:'openerelement'
+            },
+            permissions: [
+                "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
+                "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
+                "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
+            ],
+            showBlocker: jest.fn(),
+            index:0,
+            deleteElement: jest.fn(),
+            activeElement: {
+                elementId: "urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y",
+            },
+            elemBorderToggle:'true'
+         };
+         elementContainerInstance.setState({
+            ElementId:"urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y",
+            activeColorIndex: 0,
+            isOpener: true
+         })
+         elementContainerInstance.forceUpdate()
+         elementContainer.update()
+        elementContainerInstance.componentWillReceiveProps(nextProps);
+        expect(elementContainerInstance.state.borderToggle).toBe("active")
+        expect(elementContainerInstance.state.ElementId).toBe("urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y")
+    })  
+    it('Test-componentWillReceiveProps Function- for other elements', () => {
+        let nextProps = {
+            element: {
+                type:'figure'
+            },
+            permissions: [
+                "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
+                "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
+                "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
+            ],
+            showBlocker: jest.fn(),
+            index:0,
+            deleteElement: jest.fn(),
+            activeElement: {
+                elementId: "urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y",
+            },
+            elemBorderToggle:'true'
+         };
+         elementContainerInstance.setState({
+            ElementId:"urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y",
+            activeColorIndex: 0,
+            isOpener: true
+         })
+         elementContainerInstance.forceUpdate()
+         elementContainer.update()
+        elementContainerInstance.componentWillReceiveProps(nextProps);
+        expect(elementContainerInstance.state.borderToggle).toBe("active")
+        expect(elementContainerInstance.state.ElementId).toBe("urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y")
+    })  
+})
+describe('Test-Other Functions', () => {
+   
+    it('Test-handleFocus Function- for c2mdeia update-opener element', () => {
+        let props = {
+            element: wipData.opener,
+            permissions: [
+                "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
+                "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
+                "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
+            ],
+            showBlocker: jest.fn(),
+            isBlockerActive: true,
+            asideData: {},
+            parentUrn:"urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+            index:0,
+            deleteElement: jest.fn()
+        };
+        let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+        const elementContainerInstance = elementContainer.find('ElementContainer').instance();  
+        const spyhandleFocus  = jest.spyOn(elementContainerInstance, 'handleFocus')
+        elementContainerInstance.handleFocus(true);
+        elementContainerInstance.forceUpdate();
+        elementContainer.update()
+        expect(spyhandleFocus).toHaveBeenCalled()
+        spyhandleFocus.mockClear()
+    }) 
+})
