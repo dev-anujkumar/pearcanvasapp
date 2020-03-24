@@ -87,51 +87,7 @@ static getDerivedStateFromProps(nextProps, prevState) {
 
     return null;
 }
-    handleC2AssessmentClick=(value)=> {
-        if(this.props.permissions && this.props.permissions.includes('quad_linking_assessment') && !hasReviewerRole()){
-        let fileName = "";
-        let filterType = [this.props.model.figuredata.elementdata.assessmentformat.toUpperCase()];
-        let existingURN = this.props.model.figuredata.elementdata.assessmentid || "";//urn:pearson:work:
-        let searchMode = "partial";//"partial";
-        let prefix = 'urn:pearson:work:';
-        let startIndex = prefix.length;
-        let UUID = (existingURN) ? existingURN.substring(startIndex, existingURN.length) : "";
-        var searchSelectAssessmentURN = "";
-        if (searchMode == "partial") {
-            searchSelectAssessmentURN = UUID || "";
-        }
 
-        let productId = "";
-        let searchTypeOptVal = "";
-        showTocBlocker();
-        disableHeader(true);
-        this.toggleAssessmentPopup('',false);
-        productId = (value) ? value : "Unspecified";
-        c2AssessmentModule.launchAssetBrowser(fileName, filterType, searchMode, searchSelectAssessmentURN, productId, searchTypeOptVal,  (assessmentData)=> {
-            this.launchAssetBrowserCallBack(assessmentData) 
-        });
-        hideTocBlocker();
-    }
-    }
-
-    launchAssetBrowserCallBack = (assessmentData) => {
-        // let id = assessmentData['id'] ? assessmentData['id'] : assessmentData.assessmentData['id'];
-        // let itemID = assessmentData['itemID'];
-        // let title = assessmentData['title'] ? assessmentData['title']: null ;
-        // let assessmentFormat;
-        // if (assessmentData['itemsData'] && assessmentData['itemsData']['taxonomicType'] && assessmentData['itemsData']['taxonomicType'][0] && typeof assessmentData['itemsData']['taxonomicType'][0] === 'string') {
-        //     assessmentFormat = utils.getTaxonomicFormat(assessmentData['itemsData']['taxonomicType'][0]);
-        // } else if (assessmentData['assessmentData'] && assessmentData['assessmentData']['taxonomicType'] && assessmentData['assessmentData']['taxonomicType'][0] && typeof assessmentData['assessmentData']['taxonomicType'][0] === 'string') {
-        //     assessmentFormat = utils.getTaxonomicFormat(assessmentData['assessmentData']['taxonomicType'][0]);
-        // } else {
-        //     assessmentFormat = "";
-        //     this.props.openCustomPopup("There was an error loading asset due to malformed 'taxonomicType' data.  Please contact the helpdesk and reference id: " + id);
-        // }
-        this.setState({assessmentId: id,assessmentItemId : itemID, assessmentTitle: title},
-            ()=>{
-                this.saveAssessment();
-        })
-    }
     /**Assessment PopUp Functions */
     /*** @description - This function is to toggle the Assessment PopUp*/
     toggleAssessmentPopup = (e,value) => {

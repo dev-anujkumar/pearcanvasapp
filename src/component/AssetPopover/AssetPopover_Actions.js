@@ -12,6 +12,7 @@ import axios from 'axios';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader , HideLoader} from '../../constants/IFrameMessageTypes.js';
 let currentlySearching = false;
+let searchterm = "";
 
 //Action for render currently linked figure data
 export const apoSearchCloseAction = () => {
@@ -109,13 +110,14 @@ export const getCurrentlyLinkedImage = (id, cb) => {
  * Get images from manifest Api
  */
 export const searchForFiguresAction = (searchTerm, stateImageData) => {
-
+  
+  searchterm = searchTerm;
   if (stateImageData && stateImageData.length > 0) { // hit api and store data in imageData
     //We have image data now dispatch an action for render filter data 
     return store.dispatch({
       type: 'USE_STATE_IMAGE_DATA',
       payload: {
-        searchTerm: searchTerm
+        searchTerm: searchterm
       }
     })
   } else if (!currentlySearching) {
@@ -136,12 +138,12 @@ export const searchForFiguresAction = (searchTerm, stateImageData) => {
           type: IMAGES_FROM_API,
           payload: {
             images: [
-            ...(data.images?data.images:[]),
-            ...(data.audios?data.audios:[]),
-            ...(data.videos?data.videos:[]),
-            ...(data.interactives?data.interactives:[])
-          ],
-            searchTerm: searchTerm,
+              ...(data.images ? data.images : []),
+              ...(data.audios ? data.audios : []),
+              ...(data.videos ? data.videos : []),
+              ...(data.interactives ? data.interactives : [])
+            ],
+            searchTerm: searchterm,
             timeByAPI: performance.now() - time1
           }
         })
@@ -154,8 +156,7 @@ export const searchForFiguresAction = (searchTerm, stateImageData) => {
         })
       }
     ).catch(error => console.log('Error while getting data from Asset popover API', error))
-  }
-  else{
+  } else {
     return store.dispatch({
       type: 'ASSET_SEARCH_IN_PROGRESS',
     })

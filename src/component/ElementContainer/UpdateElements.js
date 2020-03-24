@@ -183,7 +183,7 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
 
     let titleDOM = document.getElementById(`cypress-${index}-0`),
         subtitleDOM = document.getElementById(`cypress-${index}-1`),
-        preformattedText = document.getElementById(`cypress-${index}-2`).innerText,
+        preformattedText = document.getElementById(`cypress-${index}-2`).innerText ? document.getElementById(`cypress-${index}-2`).innerText : "",
         captionDOM = document.getElementById(`cypress-${index}-3`),
         creditsDOM = document.getElementById(`cypress-${index}-4`)
 
@@ -364,12 +364,12 @@ export const generateAssessmentData = (index, previousElementData, elementType, 
 
     dataToSend.figuredata.elementdata;
     if (isPuf) {
-        getAsid = assessmentId.split(' ')[2];
+        getAsid = assessmentId && assessmentId.split(' ').length && assessmentId.split(' ')[2];
     } else {
-        getAsid = assessmentId.split(' ')[1];
+        getAsid = assessmentId && assessmentId.split(' ').length && assessmentId.split(' ')[1];
     }
         let assessmentItemId = document.querySelector(assessmentNodeSelector + 'div.singleAssessmentItemIdInfo').innerText;
-        let getAsItemid = assessmentItemId.split(' ')[2];
+        let getAsItemid = assessmentItemId && assessmentItemId.split(' ')[2];
         dataToSend.figuredata.elementdata.assessmentitemid = getAsItemid ? getAsItemid : "";
     
 
@@ -379,7 +379,7 @@ export const generateAssessmentData = (index, previousElementData, elementType, 
 
     let usageType = document.querySelector(assessmentNodeSelector + 'span.singleAssessment_Dropdown_currentLabel').innerText;
     dataToSend.figuredata.elementdata.usagetype = usageType;
-    dataToSend.inputSubType = usageType.toUpperCase().replace(" ", "_").replace("-", "_");
+    dataToSend.inputSubType = usageType && usageType.toUpperCase().replace(" ", "_").replace("-", "_");
 
     return dataToSend;
 }
@@ -399,6 +399,26 @@ export const generateAssessmentSlateData = (index, previousElementData, elementT
             title: "<p></p>"
         }}
         return dataToSend;
+}
+
+/**
+ * Detects postertext/reveal answer section of ShowHide and check for empty content in it
+ * @param {*} showHideType Section in ShowHide
+ * @param {*} node HTML node containing content
+ */
+const validateRevealAnswerData = (showHideType, node) => {
+    if(showHideType && showHideType === "postertextobject" && !node.innerText.trim().length){
+        return {
+            innerHTML : "<p class=\"paragraphNumeroUno\">Reveal Answer:</p>",
+            innerText : "Reveal Answer:"
+        }
+    }
+    else{
+        return {
+            innerHTML : node.innerHTML,
+            innerText : node.innerText
+        }
+    }
 }
 
 /**
@@ -422,6 +442,9 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
         case elementTypeConstant.ELEMENT_LIST:
             tinyMCE.$(node).find('.blockquote-hidden').remove();
             let { innerHTML, innerText } = node;
+            let revealTextData = validateRevealAnswerData(showHideType, node)
+            innerHTML = revealTextData.innerHTML
+            innerText = revealTextData.innerText
             dataToReturn = {
                 ...previousElementData,
                 elementdata : {
