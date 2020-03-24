@@ -5,7 +5,7 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import moxios from 'moxios';
 import * as actions from '../../../src/component/ElementContainer/ElementContainer_Actions';
 // import { comments } from '../../../fixtures/commentPanelData.js'
-import { slateLevelData, newslateData,defaultSlateDataFigure, addNewComment,addNewCommentAside, slateLevelAsideData,addNewCommentOnAsideElement,newSlateAsideDataComment, deleteElement, slateLevelDataAside, newslateDataAside ,newslateAsideData} from "../../../fixtures/slateTestingData"
+import { slateLevelData, newslateData,defaultSlateDataFigure, addNewComment,addNewCommentAside, slateLevelAsideData,addNewCommentOnAsideElement,newSlateAsideDataComment, deleteElement, slateLevelDataAside, newslateDataAside ,newslateAsideData, blockfeature} from "../../../fixtures/slateTestingData"
 import axios from 'axios';
 import config from '../../../src/config/config.js';
 import { ADD_COMMENT, ADD_NEW_COMMENT, AUTHORING_ELEMENT_CREATED, AUTHORING_ELEMENT_UPDATE, SET_OLD_IMAGE_PATH,CREATE_SHOW_HIDE_ELEMENT, DELETE_SHOW_HIDE_ELEMENT} from '../../../src/constants/Action_Constants';
@@ -47,11 +47,11 @@ describe('Tests ElementContainer Actions', () => {
             apiResponseForDis: [],
             learningToolDisValue: '',
             numberOfRows: 25,
-            glossaryFootnoteReducer:{glossaryFootnoteValue:{elementWorkId:"4343653"},
-            glossaryFootNoteCurrentValue:"",
-            elementIndex:""
-        }
-        }
+        },
+        glossaryFootnoteReducer:{glossaryFootnoteValue:{elementWorkId:"4343653"},
+        glossaryFootNoteCurrentValue:"",
+        elementIndex:""
+    }
     };
     // let store = mockStore(() => initialState);
 
@@ -474,20 +474,43 @@ describe('Tests ElementContainer Actions', () => {
             
             return store.dispatch(actions.updateElement(updatedData, 0, parentUrn, asideData)).then(() => {
                 delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].projectURN;
-                delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].slateUrn;
                 delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].slateEntity;
                 delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].tcm;
-                 console.log('payload:::', store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0]);
-                 console.log('payload:::', expectedActions[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0]);
-                //expect(store.getActions()).toEqual(expectedActions);
+                // console.log('payload:::', store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0]);
+                // console.log('payload:::', expectedActions[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0]);
+                expect(store.getActions()).toEqual(expectedActions);
             });
             
         })
 
         it('testing------- Update Element blockfeature------action', () => {
+            let initialState = {
+                slateLevelData: blockfeature,
+                appStore: blockfeature,
+                learningToolReducer: {
+                    shouldHitApi: false,
+                    learningToolTypeValue: '',
+                    apiResponse: [],
+                    showErrorMsg: true, //should be false
+                    showLTBody: false,
+                    learningTypeSelected: false,
+                    showDisFilterValues: false,
+                    selectedResultFormApi: '',
+                    resultIsSelected: false,
+                    toggleLT: false,
+                    linkButtonDisable: true,
+                    apiResponseForDis: [],
+                    learningToolDisValue: '',
+                    numberOfRows: 25,
+                },
+                glossaryFootnoteReducer:{glossaryFootnoteValue:{elementWorkId:"4343653"},
+                glossaryFootNoteCurrentValue:"",
+                elementIndex:""
+            }
+            };
             let store = mockStore(() => initialState);
             const updatedData = {
-                "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0c1",
+                "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
                 "type": "element-blockfeature",
                 "subtype": "",
                 "schema": "http://schemas.pearson.com/wip-authoring/element/1",
@@ -500,30 +523,44 @@ describe('Tests ElementContainer Actions', () => {
                 },
                 "comments": false,
                 "tcm": true,
-                "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0c1",
+                "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
                 "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
                 "slateUrn":"urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
-            },
-           elementIndex=1,
-           parentUrn="",
-           asideData={},
-           showHideType="",
-           parentElement=""
-           const expectedActions = [{
-            type: AUTHORING_ELEMENT_UPDATE,
-            payload: slateLevelData
-        }];
-        moxios.wait(() => {
-            const request = moxios.requests.mostRecent();
-            request.respondWith({
-                status: 200,
-                response: {}
+            }
+    
+            moxios.wait(() => {
+                const request = moxios.requests.mostRecent();
+                request.respondWith({
+                    status: 200,
+                    response: updatedData
+                });
             });
-        });
-        delete slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].tcm;
-            return store.dispatch(actions.updateElement(updatedData, elementIndex,parentUrn,asideData,showHideType,parentElement)).then(() => {
-                //console.log('payload:::', store.getActions()[0].payload['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter);
-             // expect(store.getActions()).toEqual(expectedActions);
+
+            delete blockfeature.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].tcm;
+            blockfeature.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].slateUrn = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
+            const expectedActions = [{
+                type: AUTHORING_ELEMENT_UPDATE,
+                payload: blockfeature
+            }];
+    
+            let  parentUrn= {
+                manifestUrn: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                elementType: "element-authoredtext"
+            }
+
+            let asideData = {
+                type:"element-authoredtext",
+                id:"urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+                
+            };
+            
+            return store.dispatch(actions.updateElement(updatedData, 0, parentUrn, asideData)).then(() => {
+                delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].projectURN;
+                delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].slateEntity;
+                delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].tcm;
+                // console.log('payload:::', store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0]);
+                // console.log('payload:::', expectedActions[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0]);
+                expect(store.getActions()).toEqual(expectedActions);
             });
 
         })
@@ -748,9 +785,9 @@ describe('Tests ElementContainer Actions', () => {
                     linkButtonDisable: true,
                     apiResponseForDis: [],
                     learningToolDisValue: '',
-                    numberOfRows: 25,
-                    glossaryFootnoteReducer:{glossaryFootnoteValue:{elementWorkId:"4343653"}}
-                }
+                    numberOfRows: 25
+                },
+                glossaryFootnoteReducer:{glossaryFootnoteValue:{elementWorkId:"4343653"}}
             };
             let store = mockStore(() => initialState);
             let elementId = "urn:pearson:work:32e659c2-e0bb-46e8-9605-b8433aa3836c";
