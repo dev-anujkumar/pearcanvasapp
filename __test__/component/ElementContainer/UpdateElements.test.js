@@ -95,7 +95,33 @@ describe('Test for UpdateElements Functions', () => {
         updateFunction.createUpdatedData(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement);
         expect(updateFunction.createUpdatedData).toHaveBeenCalledWith(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement)
     })
-    xit('Test for ELEMENT-TYPE----->figure---->BlockCodeEditor', () => {
+    it('Test for ELEMENT-TYPE----->Popup', () => {
+        const element = document.createElement('div');
+        element.id = "cypress-7-1";
+        document.body.appendChild(element);
+        let type = "element-authoredtext",
+            previousElementData = elementAuthoredText,
+            node = {},
+            elementType = "element-authoredtext",
+            primaryOption = "primary-paragraph",
+            secondaryOption = "secondary-paragraph",
+            activeEditorId = "cypress-7-1",
+            index = 7,
+            containerContext = {},
+            parentElement = {
+                type: 'popup',
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y',
+                popupdata : {
+                    "formatted-title" : { id : "urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f3133" },
+                    "formatted-subtitle" : { id : "urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f3134" },
+                    "postertextobject" : [ { id : "urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f3135" } ] ,
+                }
+            };
+        jest.spyOn(updateFunction, 'createUpdatedData')
+        updateFunction.createUpdatedData(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement);
+        expect(updateFunction.createUpdatedData).toHaveBeenCalledWith(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement)
+    })
+    it('Test for ELEMENT-TYPE----->figure---->BlockCodeEditor', () => {
         const elementDiv = document.createElement('div');
         elementDiv.className = "divCodeSnippetFigure blockCodeFigure";
 
@@ -105,7 +131,7 @@ describe('Test for UpdateElements Functions', () => {
         const code = document.createElement('code');
         code.id = "cypress-4-2";
         code.textContent = "blockCode";
-        code.innerText = "blockCode";
+        // code.innerText = "blockCode";
         code.innerHTML = "blockCode";
         elementPre.appendChild(code);
         elementDiv.appendChild(elementPre);
@@ -116,7 +142,7 @@ describe('Test for UpdateElements Functions', () => {
             node = {},
             elementType = "figure",
             primaryOption = "primary-blockcode-equation",
-            secondaryOption = "secondary-blockcode-language-C++",
+            secondaryOption = "secondary-blockcode-language-c++",
             activeEditorId = "cypress-4-2",
             index = 4,
             containerContext = {},
@@ -128,7 +154,7 @@ describe('Test for UpdateElements Functions', () => {
         updateFunction.createUpdatedData(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement);
         expect(updateFunction.createUpdatedData).toHaveBeenCalledWith(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement)
     })
-    xit('Test for ELEMENT-TYPE----->figure---->SingleAssessment', () => {
+    it('Test for ELEMENT-TYPE----->figure---->SingleAssessment', () => {
         const elementDiv = document.createElement('div');
         elementDiv.setAttribute('data-id', "urn:pearson:work:7b027839-60ae-4673-a80b-00d5a6567bd9");
 
@@ -138,22 +164,28 @@ describe('Test for UpdateElements Functions', () => {
         const elementTitle = document.createElement('div');
         elementTitle.id = "single_assessment_title";
         // elementTitle.innerText = "Title"
+        elementTitle.innerHTML = "Title"
         elementFigure.appendChild(elementTitle);
 
         const elementIdInfo = document.createElement('div');
         elementIdInfo.className = "singleAssessmentIdInfo";
+        elementIdInfo.innerHTML = "urn:pearson:work:4da32e71-a6b5-4daa-84ed-fb72d6b0aa74";
         elementIdInfo.textContent = "urn:pearson:work:4da32e71-a6b5-4daa-84ed-fb72d6b0aa74";
-        elementIdInfo.innerText = "urn:pearson:work:4da32e71-a6b5-4daa-84ed-fb72d6b0aa74";
+        // elementIdInfo.innerText = "urn:pearson:work:4da32e71-a6b5-4daa-84ed-fb72d6b0aa74";
         elementFigure.appendChild(elementIdInfo);
 
         const elementItemIdInfo = document.createElement('div');
         elementItemIdInfo.className = "singleAssessmentItemIdInfo";
-        elementItemIdInfo.innerText = "urn:pearson:work:4da32e71-a6b5-4daa-84ed-fb72d6b0ba74";
+        elementItemIdInfo.textContent = "urn:pearson:work:4da32e71-a6b5-4daa-84ed-fb72d6b0aa74";
+        elementItemIdInfo.innerHTML = "urn:pearson:work:4da32e71-a6b5-4daa-84ed-fb72d6b0ba74";
+        // elementItemIdInfo.innerText = "urn:pearson:work:4da32e71-a6b5-4daa-84ed-fb72d6b0ba74";
         elementFigure.appendChild(elementItemIdInfo);
 
         const elementUsageType = document.createElement('span');
         elementUsageType.className = "singleAssessment_Dropdown_currentLabel";
-        elementUsageType.innerText = "Quiz";
+        // elementUsageType.innerText = "Quiz";
+        elementUsageType.innerHTML = "Quiz";
+        elementUsageType.textContent = "Quiz";
         elementFigure.appendChild(elementUsageType);
 
         elementDiv.appendChild(elementFigure)
