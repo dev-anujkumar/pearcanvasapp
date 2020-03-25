@@ -7,10 +7,29 @@
 
 // IMPORT - Module dependencies
 import config from '../config/config';
+import cypressConfig from '../config/cypressConfig';
 import store from '../appstore/store'
 
 // DECLARATION - const or variables 
 const WRAPPER_URL = config.WRAPPER_URL; // TO BE IMPORTED
+
+export const requestConfigURI = () => {
+    let uri = '';
+    if(process.env.NODE_ENV === "development"){
+        uri = cypressConfig.sitePointing;
+        // projectDetailsRes.currentOrigin = uri;
+        // this.ifrmaeData();
+    }else{
+        let originUrl  = window.location.origin;
+        if(originUrl === cypressConfig.prodUrl) {
+            uri = 'prod';
+        }else{
+            let splitOriginUri = originUrl.split("-")[0];
+            uri = splitOriginUri.split("//")[1]
+        }
+    }
+    return uri;
+}
 
 export const sendDataToIframe = (messageObj) => {
     if(messageObj.type==='ShowLoader'){

@@ -13,7 +13,7 @@ import {
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
-import { sendDataToIframe } from '../../constants/utility.js';
+import { sendDataToIframe, requestConfigURI } from '../../constants/utility.js';
 import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 import elementDataBank from './elementDataBank'
 import figureData from '../ElementFigure/figureTypes.js';
@@ -206,7 +206,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
         }
     }).then(slateData => {
         let newVersionManifestId=Object.values(slateData.data)[0].id
-
+        
 		if(slateData.data && slateData.data[newVersionManifestId] && slateData.data[newVersionManifestId].type === "popup"){
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
             config.isPopupSlate = true
@@ -328,10 +328,29 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
                     console.log("incorrect data comming...")
                 }
             }
-		}
+        }
         
+        if(slateData.data && Object.values(slateData.data).length > 0) {
+            let slateTitle = 'Title';
+            if('title' in slateData.data[manifestURN].contents && 'text' in slateData.data[manifestURN].contents.title) {
+                slateTitle = slateData.data[manifestURN].contents.title.text || 'Title';
+            }
+            sendDataToIframe({
+                'type': "setSlateDetails",
+                'message': setSlateDetail(slateTitle, manifestURN)
+            });
+        }
     });
 };
+
+const setSlateDetail = (slateTitle, slateManifestURN) => {
+    return {
+        slateTitle: slateTitle,
+        slateManifestURN: slateManifestURN,
+        env: requestConfigURI().toUpperCase()
+    }
+}
+
 const setOldImagePath = (getState, activeElement, elementIndex = 0) => {
     let parentData = getState().appStore.slateLevelData,
         oldPath,
