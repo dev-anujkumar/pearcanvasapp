@@ -23,7 +23,8 @@ import {
     elmCloseWindowIcon,
     elmAssessmentItem,
     feedbackIcon,
-    assessmentCloseWindowIcon
+    assessmentCloseWindowIcon,
+    citationElement
 } from '../../images/ElementButtons/ElementButtons.jsx';
 import deleteIcon from '../../images/ElementButtons/deleteIcon.png'
 import forwardNavActive from '../../images/ElementButtons/forwardNavActive.png'
@@ -169,7 +170,11 @@ class Button extends Component {
                     {feedbackIcon}
                 </span>
                 break;
-                
+            case ButtonTypes.CITATION_ELEMENT:
+                buttonJSX = <span className="btn-element citation-elem" onClick={clickHandlerFn}>
+                    {citationElement}
+                </span>
+                break;
         }
         return buttonJSX
     }

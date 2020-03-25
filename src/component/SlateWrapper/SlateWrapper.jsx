@@ -705,6 +705,12 @@ class SlateWrapper extends Component {
                 tooltipText: 'Opener Element',
                 tooltipDirection: 'left'
             },
+            {
+                buttonType: 'citation-elem',
+                buttonHandler: () => this.splithandlerfunction('citation-elem', 0, firstOne),
+                tooltipText: 'Citation Element',
+                tooltipDirection: 'left'
+            },
         ]
 
     }
