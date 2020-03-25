@@ -8,6 +8,7 @@ import Tooltip from '../Tooltip'
 import config from '../../config/config';
 import { hasReviewerRole } from '../../constants/utility.js'
 import '../../styles/ElementSaprator/ElementSaprator.css'
+import ElementContainerType from '../ElementContainerType/ElementContainerType.jsx'
 
 const METADATA_ANCHOR = 'metadata-anchor',
 SECTION_BREAK = 'section-break-elem',
@@ -20,8 +21,10 @@ CONTAINER = 'container-elem',
 CONTAINER_INTRO = 'container-introduction'
 
 export default function ElementSaprator(props) {
-    const [showClass, setShowClass] = useState(false)
-    const { esProps, elementType, sectionBreak, permissions } = props
+    const [showClass, setShowClass] = useState(false);
+   
+
+    const { esProps, elementType, sectionBreak, permissions, splithandlerfunction,index } = props
     let buttonRef = useRef(null)
 
     /**
@@ -102,7 +105,7 @@ export default function ElementSaprator(props) {
                     </Tooltip>
                     <div id="myDropdown" className={showClass ? 'dropdown-content show' : 'dropdown-content'}>
                         <ul>
-                            {renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown)}
+                            {renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown,splithandlerfunction,index)}
                         </ul>
                     </div>
                 </div>
@@ -145,7 +148,10 @@ function asideButton(esProps,sectionBreak){
 /**
  * @description: rendering the dropdown
  */
-export function renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown) {
+export function renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown,splithandlerfunction,index) {
+    const [showInteractiveOption, setshowInteractiveOption] = useState(false);
+    
+    //console.log(this)
     let updatedEsProps, buttonType;
     if (config.parentEntityUrn == FRONT_MATTER || config.parentEntityUrn == BACK_MATTER) {
         if (elementType == ELEMENT_ASIDE) {
@@ -217,16 +223,33 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
 
     return updatedEsProps.map((elem, key) => {
         function buttonHandlerFunc() {
+            if(elem.buttonType=="interactive-elem-button"){
+               setshowInteractiveOption(true);
+            }
+            else{
             closeDropDown();
             elem.buttonHandler();
+            }
+            
         }
 
         return (
-            <Tooltip key={key} direction={elem.tooltipDirection} tooltipText={elem.tooltipText}>
-                <li>
-                    <Button type={elem.buttonType} onClick={buttonHandlerFunc} />
-                </li>
-            </Tooltip>
+            <React.Fragment>
+                {showInteractiveOption && elem.buttonType == "interactive-elem-button" &&
+                    <ElementContainerType
+                        closeDropDown={closeDropDown}
+                        splithandlerfunction={splithandlerfunction}
+                        index={index}>
+                    </ElementContainerType>
+                }
+
+                <Tooltip key={key} direction={elem.tooltipDirection} tooltipText={elem.tooltipText}>
+                    <li>
+                        <Button type={elem.buttonType} onClick={buttonHandlerFunc} />
+                    </li>
+                </Tooltip>
+            </React.Fragment>
+           
         )
     })
 }

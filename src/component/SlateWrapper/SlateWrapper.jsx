@@ -588,7 +588,8 @@ class SlateWrapper extends Component {
             indexToinsert = Number(index + 1)
         }
         /* For showing the spinning loader send HideLoader message to Wrapper component */
-        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+        if(type){sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });}
+        
 
         switch (type) {
             case 'text-elem':
@@ -666,6 +667,12 @@ class SlateWrapper extends Component {
             {
                 buttonType: 'interactive-elem',
                 buttonHandler: () => this.splithandlerfunction('interactive-elem', index, firstOne, parentUrn, asideData),
+                tooltipText: 'Interactive',
+                tooltipDirection: 'left'
+            },
+            {
+                buttonType: 'interactive-elem-button',
+                buttonHandler: () => this.splithandlerfunction('interactive-elem-button'),
                 tooltipText: 'Interactive',
                 tooltipDirection: 'left'
             },
@@ -860,6 +867,7 @@ class SlateWrapper extends Component {
                                             showAudioSplitPopup={this.props.showAudioSplitPopup}
                                             openAudio={this.props.openAudio}
                                             onClickCapture={this.checkSlateLockStatus}
+                                            splithandlerfunction={this.splithandlerfunction}
                                         />
                                         : index === 0 && config.isCO === true ? <div className="noSeparatorContainer"></div> : null
                                 }
