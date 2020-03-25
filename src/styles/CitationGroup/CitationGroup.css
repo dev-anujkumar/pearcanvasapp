@@ -1,5 +1,6 @@
 div.citation{
-    margin: 0 auto 0 auto;
+    margin: 16px;
+    /* margin: 0 auto 0 auto; */
     max-width: 680px;
 }
 h4.citationTitle {
@@ -20,4 +21,7 @@ h4.citationTitle {
     letter-spacing: 0.01em;
     margin: 0em 0em 1.70em 0em;
     text-indent: -2.25em
+}
+.element-container .ct{
+    margin-bottom: 25px;
 }

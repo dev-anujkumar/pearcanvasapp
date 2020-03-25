@@ -124,7 +124,7 @@ export class CitationGroup extends Component {
                     } */
                     this['cloneCOSlateControlledSource_3' + random] = this.renderElement(_bodyMatter, parentUrn, index)
                     return (
-                        <div className="container-aside" data-id={_containerId} container-type={_containerType}>
+                        <div className="container-citation" data-id={_containerId} container-type={_containerType}>
                             <Sortable
                                 options={{
                                     sort: true,  // sorting inside list
