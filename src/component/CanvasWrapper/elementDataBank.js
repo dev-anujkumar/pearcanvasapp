@@ -350,11 +350,20 @@ const elementDataBank = {
             }
         },
     },
-
     "showhide" : {
         "elementType" : "element-interactive",
         "primaryOption" : "primary-showhide",
         "secondaryOption" : "secondary-aside-showhide"
+    },
+    "citations" : {
+        "elementType" : "citations",
+        "primaryOption" : "primary-citations-group",
+        "secondaryOption" : "secondary-citations-group"
+    },
+    "element-citation" : {
+        "elementType" : "element-citation",
+        "primaryOption" : "primary-element-citation",
+        "secondaryOption" : "secondary-element-citation"
     }
 }
 

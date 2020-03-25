@@ -38,7 +38,11 @@ export default {
     ELEMENT_ASSESSMENT : "ELEMENT_ASSESSMENT ",
 
 /****************Pop Up elment************************ */  
-    POOPUP_ELEMENT:"popup"
+    POOPUP_ELEMENT:"popup",
+
+/****************Citation elment************************ */  
+    CITATION_GROUP: "citations",
+    CITATION_ELEMENT: "element-citation",
 }
 
 export const LABELS = {

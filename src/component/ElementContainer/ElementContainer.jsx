@@ -37,6 +37,11 @@ import { updatePageNumber, accessDenied } from '../SlateWrapper/SlateWrapper_Act
 import { releaseSlateLock } from '../CanvasWrapper/SlateLock_Actions.js';
 import ElementShowHide from '../ElementShowHide';
 import ElementContainerContext from './ElementContainerContext'
+import {
+    CitationGroupContext
+} from './ElementCitationContext'
+import CitationGroup from '../CitationGroup'
+import CitationElement from '../CitationElement'
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -447,6 +452,12 @@ class ElementContainer extends Component {
      * @param {*} activeEditorId
      */
     handleContentChange = (node, previousElementData, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType) => {
+        /**
+         * THIS CODE TO BE REMOVED AFTER UPDATE ELEMENT IMPLEMEMTATION
+         */
+        if(parentElement.type === "citations"){
+            return false
+        }
         const { parentUrn, asideData } = this.props
         let dataToSend = {}
         switch (previousElementData.type) {
@@ -935,6 +946,42 @@ class ElementContainer extends Component {
                     </ElementContainerContext.Provider >;
                     labelText = 'SH'
                     break;
+
+                case elementTypeConstant.CITATION_GROUP:
+                    editor = <CitationGroupContext.Provider value={{
+                        activeElement: this.props.activeElement,
+                        showBlocker: this.props.showBlocker,
+                        permissions: permissions,
+                        index: index,
+                        element: element,
+                        slateLockInfo: slateLockInfo,
+                        handleCommentspanel : handleCommentspanel,
+                        isBlockerActive : this.props.isBlockerActive,
+                        onClickCapture : this.props.onClickCapture,
+                        elementSeparatorProps : elementSepratorProps,
+                        setActiveElement : this.props.setActiveElement,
+                        handleFocus: this.handleFocus,
+                        handleBlur: this.handleBlur,
+                        onClick: this.handleFocus,
+                    }}><CitationGroup />
+                    </CitationGroupContext.Provider >;
+                    labelText = 'CG'
+                    break;
+                case elementTypeConstant.CITATION_ELEMENT:
+                    editor = <CitationElement
+                        activeElement = {this.props.activeElement}
+                        showBlocker = {this.props.showBlocker}
+                        permissions = {permissions}
+                        index = {index}
+                        element = {element}
+                        model = {element.html}
+                        slateLockInfo = {slateLockInfo}
+                        onClick = {this.handleFocus}
+                        handleFocus = {this.handleFocus}
+                        handleBlur = {this.handleBlur}
+                    />
+                    labelText = 'Ct'
+                    break;
             }
         } else {
             editor = <p className="incorrect-data">Incorrect Data - {element.id}</p>;
@@ -983,7 +1030,7 @@ class ElementContainer extends Component {
                     sectionBreak={this.state.sectionBreak}
                     deleteElement={this.deleteElement}
                 />}
-                {
+                {this.props.children &&
                     <PageNumberContext.Consumer>
                         {
                             ({ isPageNumberEnabled }) => this.props.children(this.state.isHovered, isPageNumberEnabled, this.props.activeElement, this.props.permissions)

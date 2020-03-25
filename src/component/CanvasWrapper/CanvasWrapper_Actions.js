@@ -165,6 +165,20 @@ const findElementType = (element, index) => {
                     secondaryOption: elementDataBank[element.type]["secondaryOption"]
                 }
                 break;
+            case "citations":
+                elementType = {
+                    elementType: elementDataBank[element.type]["elementType"],
+                    primaryOption: elementDataBank[element.type]["primaryOption"],
+                    secondaryOption: elementDataBank[element.type]["secondaryOption"]
+                }
+                break;
+            case "element-citation":
+                elementType = {
+                    elementType: elementDataBank[element.type]["elementType"],
+                    primaryOption: elementDataBank[element.type]["primaryOption"],
+                    secondaryOption: elementDataBank[element.type]["secondaryOption"]
+                }
+                break;
             default:
                 elementType = { ...elementDataBank["element-authoredtext"] }
         }
