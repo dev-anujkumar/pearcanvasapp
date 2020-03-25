@@ -26,7 +26,11 @@ import "tinymce/skins/content/default/content.css";
 import "tinymce/plugins/lists";
 import "tinymce/plugins/advlist";
 import "tinymce/plugins/paste";
-
+jest.mock('../../../src/config/config.js', () => ({
+    scrolling: true,
+    totalPageCount:3,
+    page:2
+}))
 jest.mock('../../../src/component/ListButtonDrop/ListButtonDropPortal.jsx', () => {
     return function () {
         return (<div>null</div>)
@@ -58,6 +62,8 @@ describe('Testing <SlateWrapper> Component', () => {
         permissions : [],
         toggleTocDelete: true,
         openRemovePopUp : true,
+        loadMorePages:jest.fn(),
+        showSlateLockPopupValue:true
     };
     test('renders without crashing', () => {
         const div = document.createElement('div');
@@ -80,6 +86,7 @@ describe('Testing <SlateWrapper> Component', () => {
             },
             permissions : [],
             openRemovePopUp : true,
+            showSlateLockPopupValue:true
 
         };
         let wrapper = mount(<SlateWrapper store={store} {...props} />);
@@ -90,16 +97,6 @@ describe('Testing <SlateWrapper> Component', () => {
             expect(wrapper.find('ElementContainer').length).toBe(0);
             expect(wrapper.find('SlateHeader').length).toBe(0);
             expect(wrapper.find('.header-label').length).toBe(0);
-        })
-        xtest('renders container-introduction slate', () => {
-            wrapper.setProps({ slateData: slateDataForIntro });
-            expect(wrapper.find('SlateHeader').length).toBe(1);
-            expect(wrapper.find('.header-label').length).toBe(1);
-        })
-        xtest('renders assessment slate', () => {
-            wrapper.setProps({ slateData: slateDataForAssess });
-            expect(wrapper.find('SlateHeader').length).toBe(1);
-            expect(wrapper.find('.header-label').length).toBe(1);
         })
     })
     describe('With loading elements', () => {
@@ -139,8 +136,14 @@ describe('Testing <SlateWrapper> Component', () => {
             openRemovePopUp : true,
             setSlateLock : ()=>{},
             showBlocker : ()=>{},
-            modifyState : ()=>{}
+            modifyState : ()=>{},
+            loadMorePages:jest.fn(),
+            updateTimer :jest.fn(),
+            showSlateLockPopupValue:true,
+            withinLockPeriod:jest.fn(),
+            getSlateLockStatus:jest.fn(),
         };
+        
         const slateWrapper = mount(<Provider store={store}><SlateWrapper {...props} /> </Provider>)
         let slateWrapperInstance = slateWrapper.find("SlateWrapper").instance()
         config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
@@ -179,8 +182,43 @@ describe('Testing <SlateWrapper> Component', () => {
             let returnValue = slateWrapperInstance.checkLockStatus()
             expect(returnValue).toBe(true)
         })
-        xit('checkSlateLockStatus function', () => {
-            slateWrapperInstance.checkSlateLockStatus({ target: { tagName: 'b' } })
+        it('checkSlateLockStatus function', () => {
+            const localStore = mockStore({
+                slateLockReducer: { 
+                    slateLockInfo: {
+                        isLocked: true,
+                        userId: 'c5Test01'
+                    } 
+                },
+                appStore: { slateTitleUpdated: {}, slateLevelData : {}, activeElement: {} },
+                toolbarReducer: { elemBorderToggle: true },
+                metadataReducer: { currentSlateLOData: {} },
+                audioReducer: {openRemovePopUp: false}
+            })
+            const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props} /> </Provider>)
+            let slateWrapperInstance = slateWrapper.find("SlateWrapper").instance()
+            config.userId = "test"
+             slateWrapperInstance.checkSlateLockStatus()
+        })
+
+        it('checkSlateLockStatus false function', () => {
+            const localStore = mockStore({
+                slateLockReducer: { 
+                    slateLockInfo: {
+                        isLocked: false,
+                        userId: 'c5Test01'
+                    } 
+                },
+                appStore: { slateTitleUpdated: {}, slateLevelData : {}, activeElement: {} },
+                toolbarReducer: { elemBorderToggle: true },
+                metadataReducer: { currentSlateLOData: {} },
+                audioReducer: {openRemovePopUp: false}
+            })
+            //config.savingInProgress=true
+            const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props} /> </Provider>)
+            let slateWrapperInstance = slateWrapper.find("SlateWrapper").instance()
+            config.userId = "test"
+             slateWrapperInstance.checkSlateLockStatus()
         })
         it('Simulating prohibitPropagation function', () => {
             slateWrapperInstance.prohibitPropagation({ preventDefault: () => { }, stopPropagation: () => { } })
@@ -220,44 +258,35 @@ describe('Testing <SlateWrapper> Component', () => {
             slateWrapperInstance.deleteAccepted()
             expect(spydeleteAccepted).toHaveBeenCalled();
         })
-        xit('Simulating splithandlerfunction with slate data function for sectionbreak elm', () => {
-            slateWrapperInstance.splithandlerfunction('section-break-elem', '', '', {}, { contentUrn: '' }, '')
+        it('swap data', () => {
+            let event={oldDraggableIndex:"",
+            newDraggableIndex:""}
+            const spySwapData = jest.spyOn(slateWrapperInstance, 'prepareSwapData')
+            slateWrapperInstance.prepareSwapData(event)
+            expect(spySwapData).toHaveBeenCalled();
         })
-        xit('Simulating splithandlerfunction with slate data function for text-elem', () => {
-            slateWrapperInstance.splithandlerfunction('text-elem', '', '', {}, { contentUrn: '' }, '')
+        it('releaseSlateLock data', () => {
+            const spyReleaseSlate = jest.spyOn(slateWrapperInstance, 'releaseSlateLock')
+            slateWrapperInstance.releaseSlateLock()
+            expect(spyReleaseSlate).toHaveBeenCalled();
         })
-        xit('Simulating splithandlerfunction with slate data function for image-elem', () => {
-            slateWrapperInstance.splithandlerfunction('image-elem', '', '', {}, { contentUrn: '' }, '')
+        it('setSlateLock data', () => {
+            const spySetSlate = jest.spyOn(slateWrapperInstance, 'setSlateLock')
+            slateWrapperInstance.setSlateLock()
+            expect(spySetSlate).toHaveBeenCalled();
         })
-        xit('Simulating splithandlerfunction with slate data function for image-elem', () => {
-            slateWrapperInstance.splithandlerfunction('audio-elem', '', '', {}, { contentUrn: '' }, '')
+        it('open custom popup', () => {
+            const spyOpenPopup= jest.spyOn(slateWrapperInstance, 'openCustomPopup')
+            slateWrapperInstance.openCustomPopup()
+            expect(spyOpenPopup).toHaveBeenCalled();
         })
-        xit('Simulating splithandlerfunction with slate data function for image-elem', () => {
-            slateWrapperInstance.splithandlerfunction('interactive-elem', '', '', {}, { contentUrn: '' }, '')
+        it('show custom popup', () => {
+            slateWrapperInstance.state.showCustomPopup = true;
+            const spyShowPopup= jest.spyOn(slateWrapperInstance, 'showCustomPopup')
+            slateWrapperInstance.showCustomPopup()
+            expect(spyShowPopup).toHaveBeenCalled();
         })
-        xit('Simulating splithandlerfunction with slate data function for assessment-elem', () => {
-            slateWrapperInstance.splithandlerfunction('assessment-elem', '', '', {}, { contentUrn: '' }, '')
-        })
-        xit('Simulating splithandlerfunction with slate data function for container-elem', () => {
-            slateWrapperInstance.splithandlerfunction('container-elem', '', '', {}, { contentUrn: '' }, '')
-        })
-        xit('Simulating splithandlerfunction with slate data function for opener-elem', () => {
-            slateWrapperInstance.splithandlerfunction('opener-elem', '', '', {}, { contentUrn: '' }, '')
-        })
-        xit('Simulating splithandlerfunction with slate data function for worked-exp-elem', () => {
-            slateWrapperInstance.splithandlerfunction('worked-exp-elem', '', '', {}, { contentUrn: '' }, '')
-        })
-        xit('Simulating splithandlerfunction with slate data function for metadata-anchor container-introduction', () => {
-            config.slateType = "container-introduction";
-            slateWrapperInstance.splithandlerfunction('metadata-anchor', '', '', {}, { contentUrn: '' }, '')
-        })
-        xit('Simulating splithandlerfunction with slate data function for metadata-anchor', () => {
-            config.slateType = "";
-            slateWrapperInstance.splithandlerfunction('metadata-anchor', '', '', {}, { contentUrn: '' }, '')
-        })
-        xit('Simulating splithandlerfunction with slate data function for default', () => {
-            slateWrapperInstance.splithandlerfunction('default', '', '', {}, { contentUrn: '' }, '')
-        })
+        
         it('Simulating togglePopup with slate data function', () => {
             slateWrapperInstance.togglePopup('', '')
         })
@@ -269,7 +298,7 @@ describe('Testing <SlateWrapper> Component', () => {
             slateWrapperInstance.state = {};
             slateWrapperInstance.state.showSplitSlatePopup = true;
             slateWrapperInstance.showSplitSlatePopup()
-        }),
+        })
         it("toggleCustomPopup method", () => {
             slateWrapperInstance.state.showCustomPopup = false;
             slateWrapperInstance.toggleCustomPopup(true, {
@@ -277,12 +306,15 @@ describe('Testing <SlateWrapper> Component', () => {
                 stopPropagation: () => { return true }
             })
             expect(slateWrapperInstance.state.showCustomPopup).toBe(true)
-        }),
-        it("handleScroll method", () => {
+        })
+
+        it("handleScroll method else ", () => {
+            
             let event = {
                 target : {
                     scrollTop : 0,
-                    clientHeight : 0 
+                    clientHeight : 0 ,
+                    scrollHeight:20
                 }
             }
             const spyhandleScroll = jest.spyOn(slateWrapperInstance, 'handleScroll')
@@ -557,7 +589,7 @@ describe('Testing <SlateWrapper> Component', () => {
     })
     
 })
-describe('With default elements', () => {
+describe('splihandler function', () => {
     let props = {
         slateData,
         slateLockInfo: {
@@ -571,19 +603,134 @@ describe('With default elements', () => {
         permissions : [],
         openRemovePopUp : true,
     };
-    document.getElementById= () => {
-        return {
-            scrollTop: 0,
-            focus: () => {}
-        }
-    }
-    let slatewrapper = mount(<SlateWrapper store={store} {...props} />);
-    xtest('renders properly', () => {
-        expect(slatewrapper.find('.element-list').length).toBe(1);
+    const localStore = mockStore({
+        slateLockReducer: { 
+            slateLockInfo: {
+                isLocked: false,
+                userId: 'c5Test01'
+            } 
+        },
+        appStore: { slateTitleUpdated: {}, slateLevelData : {}, activeElement: {} },
+        toolbarReducer: { elemBorderToggle: true },
+        metadataReducer: { currentSlateLOData: {} },
+        audioReducer: {openRemovePopUp: false}
     })
-    xtest('renders slate title', () => {
-        expect(slatewrapper.find('SlateHeader').length).toBe(1);
-        expect(slatewrapper.find('.header-label').length).toBe(1);
-        expect(slatewrapper.find('.header-label').text()).toBe('SLATE:');
+    //config.savingInProgress=true
+    const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props} /> </Provider>)
+    let slateWrapperInstance = slateWrapper.find("SlateWrapper").instance()
+    config.userId = "test"
+    it('Simulating splithandlerfunction with slate data function for sectionbreak elm', () => {
+     slateWrapperInstance.splithandlerfunction('section-break-elem', '', '', {}, { contentUrn: '' }, '')
     })
+    it('Simulating splithandlerfunction with slate data function for text-elem', () => {
+        slateWrapperInstance.splithandlerfunction('text-elem', '', '', {}, { contentUrn: '' }, '')
+    })
+    it('Simulating splithandlerfunction with slate data function for image-elem', () => {
+        slateWrapperInstance.splithandlerfunction('image-elem', '', '', {}, { contentUrn: '' }, '')
+    })
+    it('Simulating splithandlerfunction with slate data function for image-elem', () => {
+        slateWrapperInstance.splithandlerfunction('audio-elem', '', '', {}, { contentUrn: '' }, '')
+    })
+    it('Simulating splithandlerfunction with slate data function for image-elem', () => {
+        slateWrapperInstance.splithandlerfunction('interactive-elem', '', '', {}, { contentUrn: '' }, '')
+    })
+    it('Simulating splithandlerfunction with slate data function for assessment-elem', () => {
+        slateWrapperInstance.splithandlerfunction('assessment-elem', '', '', {}, { contentUrn: '' }, '')
+    })
+    it('Simulating splithandlerfunction with slate data function for container-elem', () => {
+        slateWrapperInstance.splithandlerfunction('container-elem', '', '', {}, { contentUrn: '' }, '')
+    })
+    it('Simulating splithandlerfunction with slate data function for opener-elem', () => {
+        slateWrapperInstance.splithandlerfunction('opener-elem', '', '', {}, { contentUrn: '' }, '')
+    })
+    it('Simulating splithandlerfunction with slate data function for worked-exp-elem', () => {
+        slateWrapperInstance.splithandlerfunction('worked-exp-elem', '', '', {}, { contentUrn: '' }, '')
+    })
+    it('Simulating splithandlerfunction with slate data function for metadata-anchor container-introduction', () => {
+        config.slateType = "container-introduction";
+        slateWrapperInstance.splithandlerfunction('metadata-anchor', '', '', {}, { contentUrn: '' }, '')
+    })
+    it('Simulating splithandlerfunction with slate data function for metadata-anchor', () => {
+        config.slateType = "";
+        slateWrapperInstance.splithandlerfunction('metadata-anchor', '', '', {}, { contentUrn: '' }, '')
+    })
+    it('Simulating splithandlerfunction with slate data function for default', () => {
+        slateWrapperInstance.splithandlerfunction('default', '', '', {}, { contentUrn: '' }, '')
+    })
+    it('openWrongAudioPopup', () => {
+        let props = {
+            slateData,
+            slateLockInfo: {
+                isLocked: false,
+                userId: 'c5Test01'
+            },
+            audioReducer : {
+                openRemovePopUp : false,
+                openWrongAudioPopup : true
+            },
+            permissions : [],
+            openRemovePopUp : false,
+            openWrongAudioPopup : true,
+            openSplitPopUp:false,
+            showBlocker:jest.fn()
+        };
+        const localStore = mockStore({
+            slateLockReducer: { 
+                slateLockInfo: {
+                    isLocked: false,
+                    userId: 'c5Test01'
+                } 
+            },
+            appStore: { slateTitleUpdated: {}, slateLevelData : {}, activeElement: {} },
+            toolbarReducer: { elemBorderToggle: true },
+            metadataReducer: { currentSlateLOData: {} },
+            audioReducer: {openRemovePopUp: false,openWrongAudioPopup : true,
+                openSplitPopUp:false}
+        })
+        //config.savingInProgress=true
+        const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props} /> </Provider>)
+        let slateWrapperInstance = slateWrapper.find("SlateWrapper").instance()
+        config.userId = "test"
+        slateWrapperInstance.showAudioRemoveConfirmationPopup()
+    })
+    it('showLockReleasePopup', () => {
+        let props = {
+            slateData,
+            slateLockInfo: {
+                isLocked: false,
+                userId: 'c5Test01'
+            },
+            audioReducer : {
+                openRemovePopUp : false,
+                openWrongAudioPopup : true
+            },
+            permissions : [],
+            openRemovePopUp : false,
+            openWrongAudioPopup : true,
+            openSplitPopUp:false,
+            showBlocker:jest.fn()
+        };
+        const localStore = mockStore({
+            slateLockReducer: { 
+                slateLockInfo: {
+                    isLocked: false,
+                    userId: 'c5Test01'
+                } 
+            },
+            appStore: { slateTitleUpdated: {}, slateLevelData : {}, activeElement: {} },
+            toolbarReducer: { elemBorderToggle: true },
+            metadataReducer: { currentSlateLOData: {} },
+            audioReducer: {openRemovePopUp: false,openWrongAudioPopup : true,
+                openSplitPopUp:false}
+        })
+        
+        //config.savingInProgress=true
+        const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props} /> </Provider>)
+        let slateWrapperInstance = slateWrapper.find("SlateWrapper").instance()
+        config.userId = "test"
+        slateWrapperInstance.state.showReleasePopup = true;
+        slateWrapperInstance.showLockReleasePopup()
+        slateWrapperInstance.showAudioRemoveConfirmationPopup()
+    })
+
 })

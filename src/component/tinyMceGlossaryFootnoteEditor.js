@@ -33,19 +33,7 @@ export class ReactEditor extends React.Component {
           this.addMathmlFormulaButton(editor);
         }
         this.onEditorBlur(editor);
-        editor.on('keyup', (e) => {
-          let activeElement = editor.dom.getParent(editor.selection.getStart(), ".definition-editor");
-          let contentHTML = e.target.innerHTML;
-          if (activeElement) {
-            let isContainsMath = contentHTML.match(/<img/)?(contentHTML.match(/<img/).input.includes('class="Wirisformula')||contentHTML.match(/<img/).input.includes('class="temp_Wirisformula')):false
-            if (activeElement.innerText.trim().length || isContainsMath) {
-              activeElement.classList.remove('place-holder')
-            }
-            else {
-              activeElement.classList.add('place-holder')
-            }
-          }
-        });
+        editor.on('keyup', (e) => { this.editorOnKeyup(e, editor) });
         editor.ui.registry.addToggleButton('code', {
           text: '<i class="fa fa-code" aria-hidden="true"></i>',
           tooltip: "Inline code",
@@ -58,41 +46,70 @@ export class ReactEditor extends React.Component {
         });
       },
       init_instance_callback: (editor) => {
-        // editor.fire('focus');
-        // let activeElement = editor.dom.getParent(editor.selection.getStart(), ".definition-editor");
-        // if (activeElement) {
-        //   if (!activeElement.innerText.trim().length) {
-        //     activeElement.classList.add('place-holder')
-        //   }
-        // }
         if (hasReviewerRole() && !hasProjectPermission('elements_add_remove')) {        // when user doesn't have edit permission
           if (editor && editor.id) {
             document.getElementById(editor.id).setAttribute('contenteditable', false)
           }
         }
-        editor.on('Change', (e) => {
-          let content = e.target.getContent({format: 'text'}),
-              contentHTML = e.target.getContent(),
-              activeElement = editor.dom.getParent(editor.selection.getStart(), ".definition-editor");
-
-          if (activeElement) {
-              let isContainsMath = contentHTML.match(/<img/)?(contentHTML.match(/<img/).input.includes('class="Wirisformula')||contentHTML.match(/<img/).input.includes('class="temp_Wirisformula')):false
-              if(content.trim().length || contentHTML.match(/<math/g) || isContainsMath){
-                  activeElement.classList.remove('place-holder')
-              }
-              else {
-                  activeElement.classList.add('place-holder')
-              }
-          }
-        });
+        editor.on('Change', (e) => { this.editorOnChange(e, editor) });
 
         /* Reverting data-temp-mathml to data-mathml and class Wirisformula to temp_WirisFormula */ 
-        let revertingTempContainerHtml = editor.getContentAreaContainer().innerHTML; 
-        revertingTempContainerHtml = revertingTempContainerHtml.replace(/data-temp-mathml/g,'data-mathml').replace(/temp_Wirisformula/g,'Wirisformula');
-        document.getElementById(editor.id).innerHTML = revertingTempContainerHtml;
+        this.revertingTempContainerHtml(editor)
       },
     }
     this.editorRef = React.createRef();
+  }
+
+  /**
+   * Reverting data-temp-mathml to data-mathml and class Wirisformula to temp_WirisFormula
+   * @param {*} editor Editor instance
+   */
+  revertingTempContainerHtml = editor => {
+    let revertingTempContainerHtml = editor.getContentAreaContainer().innerHTML;
+    let elementNode = document.getElementById(editor.id)
+    revertingTempContainerHtml = revertingTempContainerHtml.replace(/data-temp-mathml/g,'data-mathml').replace(/temp_Wirisformula/g,'Wirisformula');
+    if(elementNode){
+      elementNode.innerHTML = revertingTempContainerHtml;
+    }
+  }
+  /**
+  * Called on Keyup
+  * @param {*} e Event Object
+  * @param {*} editor Editor instance
+  */
+  editorOnKeyup = (e, editor) => {
+    let activeElement = editor.dom.getParent(editor.selection.getStart(), ".definition-editor");
+    let contentHTML = e.target.innerHTML;
+    if (activeElement) {
+      let isContainsMath = contentHTML.match(/<img/)?(contentHTML.match(/<img/).input.includes('class="Wirisformula')||contentHTML.match(/<img/).input.includes('class="temp_Wirisformula')):false
+      if (activeElement.innerText.trim().length || isContainsMath) {
+        activeElement.classList.remove('place-holder')
+      }
+      else {
+        activeElement.classList.add('place-holder')
+      }
+    }
+  }
+
+  /**
+  * Called on editor change
+  * @param {*} e Event Object
+  * @param {*} editor Editor instance
+  */
+  editorOnChange = (e, editor) => {
+    let content = e.target.getContent({format: 'text'}),
+        contentHTML = e.target.getContent(),
+        activeElement = editor.dom.getParent(editor.selection.getStart(), ".definition-editor");
+
+    if (activeElement) {
+        let isContainsMath = contentHTML.match(/<img/)?(contentHTML.match(/<img/).input.includes('class="Wirisformula')||contentHTML.match(/<img/).input.includes('class="temp_Wirisformula')):false
+        if(content.trim().length || contentHTML.match(/<math/g) || isContainsMath){
+            activeElement.classList.remove('place-holder')
+        }
+        else {
+            activeElement.classList.add('place-holder')
+        }
+    }
   }
 
   /**
@@ -167,21 +184,18 @@ export class ReactEditor extends React.Component {
       text: "",
       icon: "tinymceformulachemistryicon",
       tooltip: "Wiris editor chemistry",
-      onAction: function (_) {
-        //editor.execCommand("tiny_mce_wiris_openFormulaEditorChemistry");
-        let wirisChemistryInstance = window.WirisPlugin.instances[editor.id].getCore().getCustomEditors();
-        wirisChemistryInstance.enable('chemistry');
-        window.WirisPlugin.instances[editor.id].openNewFormulaEditor();
+      onAction: () => {
+        this.onChemMLAction(editor)
       },
       onSetup: (buttonApi) => {
         /*
           make merge menu button apis available globally among compnenet
         */
         this.chemistryMlMenuButton = buttonApi;
-        //this.chemistryMlMenuButton.setDisabled(true);
       }
     });
   };
+  
   addMathmlFormulaButton = editor => {
     /*
       Adding button and bind exec command on clicking the button to open the Mathml editor
@@ -192,22 +206,28 @@ export class ReactEditor extends React.Component {
       text: "",
       icon: "tinymceformulaicon",
       tooltip: "Wiris editor math",
-      onAction: function (_) {
-        var wirisPluginInstance = window.WirisPlugin.instances[editor.id];
-        wirisPluginInstance.core.getCustomEditors().disable();
-        wirisPluginInstance.openNewFormulaEditor();
-        //editor.execCommand('tiny_mce_wiris_openFormulaEditor');
+      onAction: () => {
+        this.onMathMLAction(editor)
       },
       onSetup: (buttonApi) => {
         /*
           make merge menu button apis available globally among compnenet
         */
         this.mathMlMenuButton = buttonApi;
-        //this.mathMlMenuButton.setDisabled(true);
       }
     });
   };
 
+  onMathMLAction = editor => {
+    let wirisPluginInstance = window.WirisPlugin.instances[editor.id];
+    wirisPluginInstance.core.getCustomEditors().disable();
+    wirisPluginInstance.openNewFormulaEditor();
+  }
+  onChemMLAction = editor => {
+    let wirisChemistryInstance = window.WirisPlugin.instances[editor.id].getCore().getCustomEditors();
+    wirisChemistryInstance.enable('chemistry');
+    window.WirisPlugin.instances[editor.id].openNewFormulaEditor();
+  }
   handlePlaceholer() {
     let model, tempPlaceHolderclass;
     model = this.props.glossaryFootNoteCurrentValue;
@@ -335,19 +355,15 @@ export class ReactEditor extends React.Component {
     this.editorConfig.selector = '#' + currentTarget.id;
     let termText = document.getElementById(currentTarget.id)&&document.getElementById(currentTarget.id).innerHTML;
     tinymce.init(this.editorConfig).then((d)=>{
-     // this.setCursorAtEnd(tinymce.activeEditor);
      if(termText) {
+      /**
+       * BG-1907 -[PCAT-7395] Temp classes in mathml cause issue in opening wiris editor.
+       */
+      termText = termText.replace(/data-temp-mathml/g,'data-mathml').replace(/temp_Wirisformula/g,'Wirisformula');
       document.getElementById(currentTarget.id).innerHTML = termText;
      }
      tinymce.activeEditor.selection.placeCaretAt(clickedX,clickedY) //Placing exact cursor position on clicking.
     })
-  }
-
-  setCursorAtEnd = (editor) => {
-    if(editor){
-      editor.selection.select(tinymce.activeEditor.getBody(), true);
-      editor.selection.collapse(false);
-    }
   }
 
   render() {

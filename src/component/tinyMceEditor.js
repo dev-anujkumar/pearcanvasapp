@@ -99,10 +99,10 @@ export class TinyMceEditor extends Component {
             init_instance_callback: (editor) => {
                 tinymce.$('.blockquote-editor').attr('contenteditable', false)
 
-                if (this.props.permissions && !(this.props.permissions.includes('access_formatting_bar'))) {        // when user doesn't have edit permission
+                if (this.props.permissions && !(this.props.permissions.includes('access_formatting_bar')||this.props.permissions.includes('elements_add_remove') )) {        // when user doesn't have edit permission
                     if (editor && editor.id) {
-                        document.getElementById(editor.id).setAttribute('contenteditable', false);
-                        if(tinymce.$('.blockquoteMarginaliaAttr .paragraphNummerEins')){
+                    document.getElementById(editor.id).setAttribute('contenteditable', false);
+                           if(tinymce.$('.blockquoteMarginaliaAttr .paragraphNummerEins')){
                             tinymce.$('.blockquoteMarginaliaAttr .paragraphNummerEins').attr('contenteditable', false)
                         }
                     }
@@ -123,7 +123,9 @@ export class TinyMceEditor extends Component {
                             if(this.props.element.type === "popup" && !this.props.currentElement){
                                 this.props.createPopupUnit(this.props.popupField, null, this.props.index, this.props.element) 
                             } else {
-                                this.props.handleBlur(null,this.props.currentElement,this.props.index, null)
+                                let showHideType = this.props.showHideType || null
+                                showHideType = showHideType === "revel" ? "postertextobject" : showHideType
+                                this.props.handleBlur(null,this.props.currentElement,this.props.index, showHideType)
                             }
                         }
                         editor.selection.placeCaretAt(clickedX,clickedY);                       
@@ -1320,7 +1322,7 @@ export class TinyMceEditor extends Component {
         // else if( tinymce.$(e.target).closest('li') && tinymce.$(e.target).closest('li').length && !tinymce.$(e.target).closest('li').html().trim() && !tinymce.$(e.target).closest('li').find('br').length ){
         //     tinymce.$(e.target).closest('li').append('<br/>');
         // }
-        if (this.props.permissions && !(this.props.permissions.includes('access_formatting_bar'))) {        // when user doesn't have edit permission
+        if (this.props.permissions && !(this.props.permissions.includes('access_formatting_bar')||this.props.permissions.includes('elements_add_remove'))) {        // when user doesn't have edit permission
             if (tinymce.activeEditor && tinymce.activeEditor.id) {
                 document.getElementById(tinymce.activeEditor.id).setAttribute('contenteditable', false)
             }
@@ -1441,7 +1443,7 @@ export class TinyMceEditor extends Component {
         }
         /**
          * case - continuing with toggling glossary & footnote popup
-         */
+         */      
         let timeoutInstance = setTimeout(() => {
             clearTimeout(timeoutInstance);
             tinymce.init(this.editorConfig).then((d) => {
@@ -1505,10 +1507,12 @@ export class TinyMceEditor extends Component {
             let innerHtml = this.innerHTML;
             this.outerHTML = innerHtml;
         })
-        tinymce.$('[data-mce-bogus]').each(function () {
-            let innerHtml = this.innerHTML;
-            this.outerHTML = innerHtml;
-        })
+        while (tinymce.$('[data-mce-bogus]:not(#sel-mce_0)').length) {
+            tinymce.$('[data-mce-bogus]:not(#sel-mce_0)').each(function () {
+                let innerHtml = this.innerHTML;
+                this.outerHTML = innerHtml;
+            })
+        }
         tinyMCE.$('.Wirisformula').each(function () {
             this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
             this.naturalWidth && this.setAttribute('width', this.naturalWidth)
@@ -1623,9 +1627,9 @@ export class TinyMceEditor extends Component {
         }
     }
     normalKeyDownHandler = (e) => {
-        if (this.props.permissions && !(this.props.permissions.includes('access_formatting_bar'))) {        // when user doesn't have edit permission
-            if (tinymce.activeEditor && tinymce.activeEditor.id) {
-                document.getElementById(tinymce.activeEditor.id).setAttribute('contenteditable', false)
+        if (this.props.permissions && !(this.props.permissions.includes('access_formatting_bar')||this.props.permissions.includes('elements_add_remove'))) {        // when user doesn't have edit permission
+           if (tinymce.activeEditor && tinymce.activeEditor.id) {
+               document.getElementById(tinymce.activeEditor.id).setAttribute('contenteditable', false)
             }
          }
         if(tinymce.activeEditor && tinymce.activeEditor.id!==e.target.id && (this.props.element.subtype&&this.props.element.subtype!=="mathml")){
