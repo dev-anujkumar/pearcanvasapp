@@ -1,32 +1,4 @@
 export default {
-    'citations' : {
-        'primary-citations-group': {
-            text: 'Citation',
-            enum: 'AUTHORED_TEXT',
-            toolbar: [],
-            subtype: {
-                'secondary-citations-group': {
-                    text: 'Citation Group',
-                    labelText: 'CG',
-                    enum: 'NA',
-                }
-            }
-        },
-    },
-    'element-citation' : {
-        'primary-element-citation': {
-            text: 'Citation',
-            enum: 'AUTHORED_TEXT',
-            toolbar: [],
-            subtype: {
-                'secondary-element-citation': {
-                    text: 'Citation element',
-                    labelText: 'Ct',
-                    enum: 'NA',
-                }
-            }
-        },
-    },
     'element-authoredtext': {
         'primary-paragraph': {
             text: 'Paragraph',
@@ -761,5 +733,33 @@ export default {
                 }
             }
         } 
+    },
+    'citations' : {
+        'primary-citations-group': {
+            text: 'Citation',
+            enum: 'AUTHORED_TEXT',
+            toolbar: [],
+            subtype: {
+                'secondary-citations-group': {
+                    text: 'Citation Group',
+                    labelText: 'CG',
+                    enum: 'NA',
+                }
+            }
+        }
+    },
+    'element-citation' : {
+        'primary-element-citation': {
+            text: 'Citation',
+            enum: 'AUTHORED_TEXT',
+            toolbar: [],
+            subtype: {
+                'secondary-element-citation': {
+                    text: 'Citation element',
+                    labelText: 'Ct',
+                    enum: 'NA',
+                }
+            }
+        }
     }
 };
