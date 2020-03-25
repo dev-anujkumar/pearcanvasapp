@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import ElementPoetryLine from "./ElementPoetryLine.jsx"
-class ElementPoetryStanza extends Component {
+import { connect } from 'react-redux';
+import ElementPoetryStanza from "./ElementPoetryStanza.jsx"
+import ElementContainerWrapper from "../HOCs/ElementContainerHOC"
+class ElementPoetry extends Component {
     constructor() {
       super();
     }
@@ -8,7 +10,7 @@ class ElementPoetryStanza extends Component {
     render() {
         const { className, model,openGlossaryFootnotePopUp, slateLockInfo,openAssetPopoverPopUp,glossaryFootnoteValue} = this.props
         return (
-           <ElementPoetryLine
+           <ElementPoetryStanza
              openAssetPopoverPopUp ={openAssetPopoverPopUp}
              openGlossaryFootnotePopUp={openGlossaryFootnotePopUp}
              index={this.props.index}
@@ -29,8 +31,8 @@ class ElementPoetryStanza extends Component {
     }
   }
 
-  ElementPoetryStanza.defaultProps = {
+  ElementPoetry.defaultProps = {
     type: "element-poetrystanza"
   }
   
-  export default ElementPoetryStanza;
+  export default ElementContainerWrapper(ElementPoetry);
