@@ -639,6 +639,9 @@ class SlateWrapper extends Component {
                     }
                    
                 break;
+            case 'poetry-elem':
+                this.props.createElement(POETRY, indexToinsert, parentUrn, asideData);
+                break;
             default:
         }
     }
@@ -697,6 +700,12 @@ class SlateWrapper extends Component {
                 buttonType: 'metadata-anchor',
                 buttonHandler: () => this.splithandlerfunction('metadata-anchor', index, firstOne, parentUrn, asideData),
                 tooltipText: 'Metadata Anchor',
+                tooltipDirection: 'left'
+            },
+            {
+                buttonType: 'poetry-elem',
+                buttonHandler: () => this.splithandlerfunction('poetry-elem',index, firstOne, parentUrn, asideData),
+                tooltipText: 'Poetry Element',
                 tooltipDirection: 'left'
             },
             {

@@ -165,6 +165,9 @@ const findElementType = (element, index) => {
                     secondaryOption: elementDataBank[element.type]["secondaryOption"]
                 }
                 break;
+            case "poetry":
+                elementType['elementType'] = elementDataBank[element.type]["elementType"];
+                break;
             default:
                 elementType = { ...elementDataBank["element-authoredtext"] }
         }

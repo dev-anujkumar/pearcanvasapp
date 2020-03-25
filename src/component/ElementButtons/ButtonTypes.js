@@ -27,5 +27,6 @@ export default {
     ELM_CLOSE_WINDOW:"elmCloseWindowIcon",
     ELM_ASSESSMENT_ITEM:"elmAssessmentItem",
     FEEDBACK : "feedback",
-    ASSESSMENT_CLOSE_WINDOW:"assessmentCloseWindowIcon"
+    ASSESSMENT_CLOSE_WINDOW:"assessmentCloseWindowIcon",
+    POETRY_ELEMENT: "poetry-elem"
 }
