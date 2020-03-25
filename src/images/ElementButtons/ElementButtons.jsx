@@ -20,8 +20,6 @@ export const textIcon = (function () {
 
 export const poetryIcon = (function () {
     return (<svg width="18px" height="18px" viewBox="0 0 18 18" version="1.1" xmlns="http://www.w3.org/2000/svg">
-    {/* <title>icon/element/PoetryElement@2x</title> */}
-    {/* <desc>Created with Sketch.</desc> */}
     <g id="PCAT-7012-Poetry" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <g id="06/v3-24Mar2020" transform="translate(-1052.000000, -479.000000)">
             <g id="icon/element/PoetryElement" transform="translate(1049.000000, 476.000000)">

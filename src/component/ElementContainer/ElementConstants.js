@@ -40,7 +40,7 @@ export default {
 /****************Pop Up elment************************ */  
     POOPUP_ELEMENT:"popup",
 
-/****************Pop Up elment************************ */  
+/****************Poetry elment************************ */  
     POETRY_ELEMENT: "poetry"
 
 }
