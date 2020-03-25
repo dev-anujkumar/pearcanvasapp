@@ -952,17 +952,17 @@ class ElementContainer extends Component {
                         activeElement: this.props.activeElement,
                         showBlocker: this.props.showBlocker,
                         permissions: permissions,
-                        handleFocus: this.handleFocus,
-                        handleBlur: this.handleBlur,
                         index: index,
                         element: element,
                         slateLockInfo: slateLockInfo,
-                        onClick: this.handleFocus,
                         handleCommentspanel : handleCommentspanel,
                         isBlockerActive : this.props.isBlockerActive,
                         onClickCapture : this.props.onClickCapture,
                         elementSeparatorProps : elementSepratorProps,
-                        setActiveElement : this.props.setActiveElement
+                        setActiveElement : this.props.setActiveElement,
+                        handleFocus: this.handleFocus,
+                        handleBlur: this.handleBlur,
+                        onClick: this.handleFocus,
                     }}><CitationGroup />
                     </CitationGroupContext.Provider >;
                     labelText = 'CG'
@@ -972,13 +972,13 @@ class ElementContainer extends Component {
                         activeElement = {this.props.activeElement}
                         showBlocker = {this.props.showBlocker}
                         permissions = {permissions}
-                        handleFocus = {this.handleFocus}
-                        handleBlur = {this.handleBlur}
                         index = {index}
                         element = {element}
                         model = {element.html}
                         slateLockInfo = {slateLockInfo}
                         onClick = {this.handleFocus}
+                        handleFocus = {this.handleFocus}
+                        handleBlur = {this.handleBlur}
                     />
                     labelText = 'Ct'
                     break;
