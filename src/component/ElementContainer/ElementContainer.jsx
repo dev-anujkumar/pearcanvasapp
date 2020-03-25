@@ -36,7 +36,8 @@ import ElementPopup from '../ElementPopup'
 import { updatePageNumber, accessDenied } from '../SlateWrapper/SlateWrapper_Actions';
 import { releaseSlateLock } from '../CanvasWrapper/SlateLock_Actions.js';
 import ElementShowHide from '../ElementShowHide';
-import ElementContainerContext from './ElementContainerContext'
+import ElementContainerContext from './ElementContainerContext';
+import ElementContainerHOC from '../HOCs/ElementContainerHOC';
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -934,6 +935,9 @@ class ElementContainer extends Component {
                     }}><ElementShowHide />
                     </ElementContainerContext.Provider >;
                     labelText = 'SH'
+                    break;
+                case elementTypeConstant.POETRY_ELEMENT:
+                    editor = <ElementContainerHOC index={index}/>
                     break;
             }
         } else {

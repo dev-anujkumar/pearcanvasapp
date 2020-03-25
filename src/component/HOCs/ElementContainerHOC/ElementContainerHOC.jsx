@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import TinyMceEditor from "../tinyMceEditor"
+import TinyMceEditor from "../../tinyMceEditor"
 
 
-export default containerWrapper = (WrappedComponent) => {
+const containerWrapper = (WrappedComponent) => {
     // ...and returns another component...
     return class extends Component {
       constructor(props) {
@@ -26,7 +26,7 @@ export default containerWrapper = (WrappedComponent) => {
 
                 {/* <TinyMceEditor permissions={this.props.permissions} element={model} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${index}-2`} placeholder="Type Something..." tagName={'p'} className="paragraphNumeroUno mathml figureData mathmlDiv" model={model.html.text} type={type} slateLockInfo={slateLockInfo} elementId={this.props.elementId} glossaryFootnoteValue={this.props.glossaryFootnoteValue} /> */}
 
-                <WrappedComponent data={...this.state} {...this.props} />;
+                <WrappedComponent data={this.state} {...this.props} />;
 
             </div>
             <figcaption className={figCaptionClass} >
@@ -47,3 +47,5 @@ export default containerWrapper = (WrappedComponent) => {
       }
     };
   }
+
+  export default containerWrapper;

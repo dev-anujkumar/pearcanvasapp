@@ -640,7 +640,7 @@ class SlateWrapper extends Component {
                    
                 break;
             case 'poetry-elem':
-                this.props.createElement(POETRY, indexToinsert, parentUrn, asideData);
+                this.props.createElement(TEXT, indexToinsert, parentUrn, asideData);
                 break;
             default:
         }

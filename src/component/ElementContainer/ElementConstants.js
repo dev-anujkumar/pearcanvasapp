@@ -38,7 +38,11 @@ export default {
     ELEMENT_ASSESSMENT : "ELEMENT_ASSESSMENT ",
 
 /****************Pop Up elment************************ */  
-    POOPUP_ELEMENT:"popup"
+    POOPUP_ELEMENT:"popup",
+
+/****************Pop Up elment************************ */  
+    POETRY_ELEMENT: "poetry"
+
 }
 
 export const LABELS = {
@@ -53,6 +57,7 @@ export const LABELS = {
     "assessment": "Qu",
     "external-link": "SL",
     "narrative-link": "Pop",
-    "workedexample": "WE"
+    "workedexample": "WE",
+    "poetry": "PE"
 }
 
