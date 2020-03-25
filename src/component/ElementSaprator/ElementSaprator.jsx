@@ -17,11 +17,13 @@ FRONT_MATTER = 'Front Matter',
 ELEMENT_ASIDE = 'element-aside',
 WORKED_EXP = 'worked-exp-elem',
 CONTAINER = 'container-elem',
-CONTAINER_INTRO = 'container-introduction'
+CONTAINER_INTRO = 'container-introduction',
+CITATION ='citation-elem',
+CITATION_ELEMENT='element-citation'
 
 export default function ElementSaprator(props) {
     const [showClass, setShowClass] = useState(false)
-    const { esProps, elementType, sectionBreak, permissions } = props
+    const { esProps, elementType, sectionBreak,fromCitation, permissions } = props
     let buttonRef = useRef(null)
 
     /**
@@ -102,7 +104,7 @@ export default function ElementSaprator(props) {
                     </Tooltip>
                     <div id="myDropdown" className={showClass ? 'dropdown-content show' : 'dropdown-content'}>
                         <ul>
-                            {renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown)}
+                            {renderDropdownButtons(esProps, elementType, sectionBreak,fromCitation, closeDropDown)}
                         </ul>
                     </div>
                 </div>
@@ -130,14 +132,18 @@ export function addMediaClickHandler() {
 /**
  * @description: rendering the aside dropdown
  */
-function asideButton(esProps,sectionBreak){
-    let updatedEsProps = esProps.filter((btnObj) => {
+function asideButton(esProps,sectionBreak,elementType){
+    let updatedEsProps = esProps.filter((btnObj) => {        
       let  buttonType = btnObj.buttonType;
+      if(elementType==CITATION_ELEMENT && sectionBreak){
+        return buttonType == CITATION;//citation element
+      }else{
         if (sectionBreak) {
             return buttonType !== WORKED_EXP && buttonType !== CONTAINER && buttonType !== OPENER;
         } else {
             return buttonType !== OPENER && buttonType !== SECTION_BREAK && buttonType !== WORKED_EXP && buttonType !== CONTAINER;
         }
+    }
     })
     return updatedEsProps;
 }
@@ -145,11 +151,11 @@ function asideButton(esProps,sectionBreak){
 /**
  * @description: rendering the dropdown
  */
-export function renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown) {
+export function renderDropdownButtons(esProps, elementType, sectionBreak, fromCitation,closeDropDown) {
     let updatedEsProps, buttonType;
     if (config.parentEntityUrn == FRONT_MATTER || config.parentEntityUrn == BACK_MATTER) {
-        if (elementType == ELEMENT_ASIDE) {
-            esProps = asideButton(esProps, sectionBreak);
+        if (elementType == ELEMENT_ASIDE || elementType == CITATION_ELEMENT) {
+            esProps = asideButton(esProps, sectionBreak,elementType);
             updatedEsProps = esProps.filter((btnObj) => {
                 buttonType = btnObj.buttonType;
                 return buttonType !== METADATA_ANCHOR;
@@ -191,8 +197,8 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
                     return buttonType !== SECTION_BREAK && buttonType !== OPENER;
                 })
             }
-            if (elementType == ELEMENT_ASIDE) {
-                esProps = asideButton(esProps, sectionBreak);
+            if (elementType == ELEMENT_ASIDE|| elementType == CITATION_ELEMENT) {
+                esProps = asideButton(esProps, sectionBreak,elementType);
                 updatedEsProps = esProps.filter((btnObj) => {
                     buttonType = btnObj.buttonType;
                     return buttonType !== METADATA_ANCHOR;
@@ -200,8 +206,8 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
             }
 
         }
-        else if (elementType == ELEMENT_ASIDE) {
-            updatedEsProps = asideButton(esProps, sectionBreak);
+        else if (elementType == ELEMENT_ASIDE|| elementType == CITATION_ELEMENT) {
+            updatedEsProps = asideButton(esProps, sectionBreak,elementType);
            
         }
        
