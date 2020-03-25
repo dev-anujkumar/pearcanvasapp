@@ -22,7 +22,7 @@ CONTAINER_INTRO = 'container-introduction'
 
 export default function ElementSaprator(props) {
     const [showClass, setShowClass] = useState(false);
-   
+    const [showInteractiveOption, setshowInteractiveOption] = useState(false);
 
     const { esProps, elementType, sectionBreak, permissions, splithandlerfunction,index } = props
     let buttonRef = useRef(null)
@@ -38,6 +38,7 @@ export default function ElementSaprator(props) {
             dropdown = 'dropdown'
             if (elems.indexOf(dropdown) === -1) {
                 setShowClass(false)
+                setshowInteractiveOption(false)
             }
         })
     });
@@ -105,7 +106,7 @@ export default function ElementSaprator(props) {
                     </Tooltip>
                     <div id="myDropdown" className={showClass ? 'dropdown-content show' : 'dropdown-content'}>
                         <ul>
-                            {renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown,splithandlerfunction,index)}
+                            {renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown,splithandlerfunction,index,showInteractiveOption,setshowInteractiveOption)}
                         </ul>
                     </div>
                 </div>
@@ -148,10 +149,8 @@ function asideButton(esProps,sectionBreak){
 /**
  * @description: rendering the dropdown
  */
-export function renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown,splithandlerfunction,index) {
-    const [showInteractiveOption, setshowInteractiveOption] = useState(false);
-    
-    //console.log(this)
+export function renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown,splithandlerfunction,index,showInteractiveOption,setshowInteractiveOption) {
+
     let updatedEsProps, buttonType;
     if (config.parentEntityUrn == FRONT_MATTER || config.parentEntityUrn == BACK_MATTER) {
         if (elementType == ELEMENT_ASIDE) {
@@ -223,6 +222,7 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
 
     return updatedEsProps.map((elem, key) => {
         function buttonHandlerFunc() {
+            window.data = typeOfContainerElements(elem,splithandlerfunction,index);
             if(elem.buttonType=="interactive-elem-button"){
                setshowInteractiveOption(true);
             }
@@ -230,28 +230,49 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
             closeDropDown();
             elem.buttonHandler();
             }
-            
         }
 
         return (
-            <React.Fragment>
-                {showInteractiveOption && elem.buttonType == "interactive-elem-button" &&
-                    <ElementContainerType
-                        closeDropDown={closeDropDown}
-                        splithandlerfunction={splithandlerfunction}
-                        index={index}>
-                    </ElementContainerType>
-                }
-
+            <React.Fragment>{showInteractiveOption && elem.buttonType == "interactive-elem-button" &&
+                <ElementContainerType
+                    closeDropDown={closeDropDown}
+                    data={data}
+                    >
+                </ElementContainerType>
+            }
                 <Tooltip key={key} direction={elem.tooltipDirection} tooltipText={elem.tooltipText}>
                     <li>
                         <Button type={elem.buttonType} onClick={buttonHandlerFunc} />
                     </li>
+
                 </Tooltip>
             </React.Fragment>
+                
            
         )
     })
 }
   
-  
+  function typeOfContainerElements(elem,splithandlerfunction,index){
+    let data = { "interactive-elem-button":
+                    [
+                    {
+                    buttonType: 'interactive-elem',
+                    buttonHandler: () => splithandlerfunction('interactive-elem',index),
+                    text: 'Add Existing Interactive',
+                    },
+                    {
+                        buttonType: 'interactive-elem',
+                        buttonHandler: () => splithandlerfunction(),
+                        text: 'Add Show Hide',
+                    },
+                    {
+                        buttonType: 'interactive-elem',
+                        buttonHandler: () => splithandlerfunction(),
+                        text: 'Add Pop-up',
+                    }
+                    ],
+                "conatiner":{}
+            }
+            return data[elem.buttonType];
+  }
