@@ -24,7 +24,7 @@ export default function ElementSaprator(props) {
     const [showClass, setShowClass] = useState(false);
     const [showInteractiveOption, setshowInteractiveOption] = useState(false);
 
-    const { esProps, elementType, sectionBreak, permissions, splithandlerfunction,index } = props
+    const { esProps, elementType, sectionBreak, permissions } = props
     let buttonRef = useRef(null)
 
     /**
@@ -106,7 +106,7 @@ export default function ElementSaprator(props) {
                     </Tooltip>
                     <div id="myDropdown" className={showClass ? 'dropdown-content show' : 'dropdown-content'}>
                         <ul>
-                            {renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown,splithandlerfunction,index,showInteractiveOption,setshowInteractiveOption)}
+                            {renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown,showInteractiveOption,setshowInteractiveOption,props)}
                         </ul>
                     </div>
                 </div>
@@ -149,7 +149,7 @@ function asideButton(esProps,sectionBreak){
 /**
  * @description: rendering the dropdown
  */
-export function renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown,splithandlerfunction,index,showInteractiveOption,setshowInteractiveOption) {
+export function renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown,showInteractiveOption,setshowInteractiveOption,props) {
 
     let updatedEsProps, buttonType;
     if (config.parentEntityUrn == FRONT_MATTER || config.parentEntityUrn == BACK_MATTER) {
@@ -222,7 +222,7 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
 
     return updatedEsProps.map((elem, key) => {
         function buttonHandlerFunc() {
-            window.data = typeOfContainerElements(elem,splithandlerfunction,index);
+            window.data = typeOfContainerElements(elem,props);
             if(elem.buttonType=="interactive-elem-button"){
                setshowInteractiveOption(true);
             }
@@ -253,12 +253,13 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
     })
 }
   
-  function typeOfContainerElements(elem,splithandlerfunction,index){
+  function typeOfContainerElements(elem,props){
+    const { index, firstOne, parentUrn, asideData,parentIndex,splithandlerfunction} = props
     let data = { "interactive-elem-button":
                     [
                     {
                     buttonType: 'interactive-elem',
-                    buttonHandler: () => splithandlerfunction('interactive-elem',index),
+                    buttonHandler: () => splithandlerfunction('interactive-elem',index,firstOne,parentUrn,asideData,parentIndex),
                     text: 'Add Existing Interactive',
                     },
                     {
