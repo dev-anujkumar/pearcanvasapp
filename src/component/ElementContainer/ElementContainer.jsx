@@ -77,7 +77,7 @@ class ElementContainer extends Component {
     }
 
     componentWillReceiveProps(newProps) {
-        if (!(newProps.permissions && newProps.permissions.includes('access_formatting_bar')) && !hasReviewerRole()) {
+        if (!(newProps.permissions && (newProps.permissions.includes('access_formatting_bar')|| newProps.permissions.includes('elements_add_remove'))) && !hasReviewerRole()) {
             return true
         }
         if (this.state.ElementId != newProps.activeElement.elementId || newProps.elemBorderToggle !== this.props.elemBorderToggle) {
@@ -125,7 +125,7 @@ class ElementContainer extends Component {
                 showHideNode.classList.remove("show-hide-active")
             }
         }
-        if (!(this.props.permissions && this.props.permissions.includes('access_formatting_bar')) && !hasReviewerRole()) {
+        if (!(this.props.permissions && (this.props.permissions.includes('access_formatting_bar') || this.props.permissions.includes('elements_add_remove'))) && !hasReviewerRole()) {
             return true
         }
         if (updateFromC2Flag) {
@@ -991,7 +991,7 @@ class ElementContainer extends Component {
         let btnClassName = this.state.btnClassName;
         let bceOverlay = "";
         let elementOverlay = ''
-        if (!hasReviewerRole() && this.props.permissions && !(this.props.permissions.includes('access_formatting_bar'))) {
+        if (!hasReviewerRole() && this.props.permissions && !(this.props.permissions.includes('access_formatting_bar')||this.props.permissions.includes('elements_add_remove')) ) {
             elementOverlay = <div className="element-Overlay disabled" onClick={() => this.handleFocus()}></div>
         }
         if (element.type === elementTypeConstant.FIGURE && element.figuretype === elementTypeConstant.FIGURE_CODELISTING) {

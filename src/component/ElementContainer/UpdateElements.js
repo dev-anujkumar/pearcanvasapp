@@ -402,6 +402,26 @@ export const generateAssessmentSlateData = (index, previousElementData, elementT
 }
 
 /**
+ * Detects postertext/reveal answer section of ShowHide and check for empty content in it
+ * @param {*} showHideType Section in ShowHide
+ * @param {*} node HTML node containing content
+ */
+const validateRevealAnswerData = (showHideType, node) => {
+    if(showHideType && showHideType === "postertextobject" && !node.innerText.trim().length){
+        return {
+            innerHTML : "<p class=\"paragraphNumeroUno\">Reveal Answer:</p>",
+            innerText : "Reveal Answer:"
+        }
+    }
+    else{
+        return {
+            innerHTML : node.innerHTML,
+            innerText : node.innerText
+        }
+    }
+}
+
+/**
  * Prepares new element data for all elements
  * @param {*} type 
  * @param {*} previousElementData 
@@ -422,6 +442,9 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
         case elementTypeConstant.ELEMENT_LIST:
             tinyMCE.$(node).find('.blockquote-hidden').remove();
             let { innerHTML, innerText } = node;
+            let revealTextData = validateRevealAnswerData(showHideType, node)
+            innerHTML = revealTextData.innerHTML
+            innerText = revealTextData.innerText
             dataToReturn = {
                 ...previousElementData,
                 elementdata : {
