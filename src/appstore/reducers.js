@@ -32,7 +32,9 @@ import {
     CREATE_SHOW_HIDE_ELEMENT,
     SET_PARENT_ASIDE_DATA,
     DELETE_SHOW_HIDE_ELEMENT,
-    SET_PARENT_SHOW_DATA
+    SET_PARENT_SHOW_DATA,
+    GET_ALL_SLATES_DATA,
+    GET_CURRENT_SLATE_DATA
 } from '../constants/Action_Constants';
 
 /**
@@ -190,10 +192,15 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
         //         ...state,
         //         slateLevelData: action.payload.slateLevelData
         //     };
-        case 'GET_ALL_SLATE_DATA':
+        case GET_ALL_SLATES_DATA:
             return {
                 ...state,
                 allSlateData: action.payload.allSlateData
+            }
+        case GET_CURRENT_SLATE_DATA:
+            return {
+                ...state,
+                currentSlateData: action.payload.currentSlateData
             }
         default:
             return state;

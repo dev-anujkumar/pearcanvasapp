@@ -17,6 +17,7 @@ import { sendDataToIframe } from '../../constants/utility.js';
 import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 import elementDataBank from './elementDataBank'
 import figureData from '../ElementFigure/figureTypes.js';
+import {getCurrentSlateData} from '../../constants/getAllSlatesData.js';
 const findElementType = (element, index) => {
     let elementType = {};
     elementType['tag'] = '';
@@ -207,7 +208,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
         }
     }).then(slateData => {
         let newVersionManifestId=Object.values(slateData.data)[0].id
-
+        dispatch(getCurrentSlateData())
 		if(slateData.data && slateData.data[newVersionManifestId] && slateData.data[newVersionManifestId].type === "popup"){
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
             config.isPopupSlate = true
