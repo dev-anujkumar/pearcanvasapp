@@ -143,7 +143,6 @@ class ElmTableComponent extends Component {
             })
 
             apiData.bodyMatter && apiData.bodyMatter.forEach((data) => {
-                console.log(11111122222222)
                 this.filterSubData(data, urn, parentUrn, getItems)
                 //this.filterData(getItems, urn, data, parentUrn)
             })
@@ -153,7 +152,6 @@ class ElmTableComponent extends Component {
             })
         }
         else if (!(apiData.contents || this.preparedData.length)) {
-            console.log(555566666666666)
             this.getResourcefromFilterData(getItems, apiData)
         }
     }
@@ -167,12 +165,10 @@ class ElmTableComponent extends Component {
     filterSubData = (data, urn, parentUrn, getItems) => {
 
         if (data.versionUrn === urn) {
-            console.log(3333337777777777)
             return this.getResourcefromFilterData(getItems, data, parentUrn)
         }
         else {
             if (data.contents){
-                console.log(33333344444444)
                 this.filterData(getItems, urn, data, data.versionUrn)
             }
             else

@@ -57,7 +57,8 @@ const INITIAL_STATE = {
     parentUrn: {},
     asideData: {},
     showHideObj:{},
-    allSlateData:[]
+    allSlateData:[],
+    currentSlateData:{}
 };
 
 const INITIAL_ACTION = {
