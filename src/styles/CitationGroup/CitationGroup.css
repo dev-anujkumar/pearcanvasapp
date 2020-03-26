@@ -20,7 +20,8 @@ h4.citationTitle {
     line-height: 1.70em;
     letter-spacing: 0.01em;
     margin: 0em 0em 1.70em 0em;
-    text-indent: -2.25em
+    text-indent: -2.25em;
+    padding-left: 25px;
 }
 .element-container .ct{
     margin-bottom: 25px;
