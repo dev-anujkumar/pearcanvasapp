@@ -737,7 +737,7 @@ export default {
     'citations' : {
         'primary-citations-group': {
             text: 'Citation',
-            enum: 'AUTHORED_TEXT',
+            enum: 'CITATION',
             toolbar: ['footnote', 'increaseindent', 'decreaseindent', 'glossary', 'assetpopover', 'orderedlist', 'unorderedlist'],
             subtype: {
                 'secondary-citations-group': {
@@ -751,7 +751,7 @@ export default {
     'element-citation' : {
         'primary-element-citation': {
             text: 'Citation',
-            enum: 'AUTHORED_TEXT',
+            enum: 'ELEMENT_CITATION',
             toolbar: ['footnote', 'increaseindent', 'decreaseindent', 'glossary', 'assetpopover', 'orderedlist', 'unorderedlist'],
             subtype: {
                 'secondary-element-citation': {
