@@ -790,7 +790,7 @@ class ElementContainer extends Component {
     */
     renderElement = (element = {}) => {
         let editor = '';
-        let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions, updatePageNumber, accessDenied, allComments } = this.props;
+        let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions, updatePageNumber, accessDenied, allComments, splithandlerfunction} = this.props;
         let labelText = fetchElementTag(element, index);
         config.elementToolbar = this.props.activeElement.toolbar || [];
         let anyOpenComment = allComments.filter(({ commentStatus, commentOnEntity }) => commentOnEntity === element.id && commentStatus.toLowerCase() === "open").length > 0
@@ -894,6 +894,7 @@ class ElementContainer extends Component {
                         glossaryFootnoteValue={this.props.glossaryFootnoteValue}
                         glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
                         onListSelect={this.props.onListSelect}
+                        splithandlerfunction={splithandlerfunction}
                     />;
                     break;
                 case elementTypeConstant.METADATA_ANCHOR:
