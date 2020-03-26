@@ -938,11 +938,37 @@ class ElementContainer extends Component {
                     labelText = 'SH'
                     break;
                 case elementTypeConstant.POETRY_ELEMENT:
-                    editor = <ElementPoetry index={index} accessDenied={accessDenied} updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} elementId={element.id} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} />;
+                    editor = <ElementPoetry index={index} 
+                    accessDenied={accessDenied} 
+                    updateFigureData={this.updateFigureData} 
+                    permissions={permissions} 
+                    openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} 
+                    handleFocus={this.handleFocus} 
+                    handleBlur={this.handleBlur} 
+                    model={element} 
+                    index={index} 
+                    slateLockInfo={slateLockInfo} 
+                    elementId={element.id} 
+                    glossaryFootnoteValue={this.props.glossaryFootnoteValue} 
+                    onClickCapture={this.props.onClickCapture}
+                    glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
+                    elementSepratorProps={elementSepratorProps} />
                     labelText = 'PE'
                     break;
                 case elementTypeConstant.POETRY_STANZA:
-                    editor = <ElementPoetryStanza index={index}/>
+                    editor = <ElementPoetryStanza index={index}
+                    permissions={permissions} 
+                    openAssetPopoverPopUp={this.openAssetPopoverPopUp} 
+                    openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} 
+                    handleFocus={this.handleFocus} 
+                    handleBlur={this.handleBlur} 
+                    elementId={element.id} 
+                    element={element} 
+                    model={element.poetrylines} 
+                    slateLockInfo={slateLockInfo} 
+                    onListSelect={this.props.onListSelect} 
+                    glossaryFootnoteValue={this.props.glossaryFootnoteValue} 
+                    glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}/>
                     labelText = 'St'
                     break;
             }
@@ -994,7 +1020,7 @@ class ElementContainer extends Component {
                     deleteElement={this.deleteElement}
                 />}
                 {
-                    <PageNumberContext.Consumer>
+                    this.props.children && <PageNumberContext.Consumer>
                         {
                             ({ isPageNumberEnabled }) => this.props.children(this.state.isHovered, isPageNumberEnabled, this.props.activeElement, this.props.permissions)
                         }
@@ -1070,7 +1096,6 @@ class ElementContainer extends Component {
             }
             return this.renderElement(element);
         } catch (error) {
-            console.log(error)
             return (
                 <p className="incorrect-data">Failed to load element {this.props.element.figuretype}, URN {this.props.element.id}</p>
             )

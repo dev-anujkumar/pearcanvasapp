@@ -14,7 +14,6 @@ const containerWrapper = (WrappedComponent) => {
         }
 
         renderContainer = (model, index, slateLockInfo) => {
-            console.log("model",model)
 
             let divClass = 'divImageTextWidth',
             figureClass= 'figureImageTextWidth',
@@ -24,7 +23,7 @@ const containerWrapper = (WrappedComponent) => {
             figCreditClass= 'paragraphImageTextWidthCredit'
 
             let poetryElem = <div className={divClass}>
-                <figure className={figureClass} resource="">
+                <figure className={figureClass} >
                     <header>
                         <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${index}-0`} placeholder="Enter Label..." tagName={'h4'} className={figLabelClass + " figureLabel "} model={model.contents["formatted-label"].text} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} />
 
@@ -32,7 +31,7 @@ const containerWrapper = (WrappedComponent) => {
                     </header>
 
                     <div>
-                        <WrappedComponent data={this.state} {...this.props} />;
+                        <WrappedComponent data={this.state} {...this.props} />
                     </div>
 
                     <figcaption className={figCaptionClass} >
