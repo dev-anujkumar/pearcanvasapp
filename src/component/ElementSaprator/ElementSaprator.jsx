@@ -24,7 +24,7 @@ CITATION_ELEMENT='citations'
 
 export default function ElementSaprator(props) {
     const [showClass, setShowClass] = useState(false);
-    const [showInteractiveOption, setshowInteractiveOption] = useState(false);
+    const [showInteractiveOption, setshowInteractiveOption] = useState({status:false,type:""});
     const [showAsideOption, setShowAsideOption] = useState(false);
     const { esProps, elementType, sectionBreak, permissions } = props
     let buttonRef = useRef(null)
@@ -144,9 +144,9 @@ function asideButton(esProps,sectionBreak,elementType){
         return buttonType == CITATION;//citation element
       }else{
         if (sectionBreak) {
-            return buttonType !== WORKED_EXP && buttonType !== CONTAINER && buttonType !== OPENER;
+            return buttonType !== WORKED_EXP && buttonType !== CONTAINER && buttonType !== OPENER &&  buttonType !== CITATION;
         } else {
-            return buttonType !== OPENER && buttonType !== SECTION_BREAK && buttonType !== WORKED_EXP && buttonType !== CONTAINER;
+            return buttonType !== OPENER && buttonType !== SECTION_BREAK && buttonType !== WORKED_EXP && buttonType !== CONTAINER && buttonType !== CITATION;
         }
     }
     })
@@ -164,13 +164,13 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
             esProps = asideButton(esProps, sectionBreak,elementType);
             updatedEsProps = esProps.filter((btnObj) => {
                 buttonType = btnObj.buttonType;
-                return buttonType !== METADATA_ANCHOR;
+                return buttonType !== METADATA_ANCHOR && buttonType !== CITATION;
             })
 
         } else {
             updatedEsProps = esProps.filter((btnObj) => {
                 buttonType = btnObj.buttonType;
-                return buttonType !== METADATA_ANCHOR && buttonType !== SECTION_BREAK && buttonType !== OPENER;
+                return buttonType !== METADATA_ANCHOR && buttonType !== SECTION_BREAK && buttonType !== OPENER && buttonType !== CITATION; 
             })
         }
 
@@ -195,19 +195,19 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
             
             if (!config.isCO) {
                 updatedEsProps = esProps.filter((btnObj) => {
-                    return btnObj.buttonType !== SECTION_BREAK;
+                    return btnObj.buttonType !== SECTION_BREAK && buttonType !== CITATION;
                 })
             } else {
                 updatedEsProps = esProps.filter((btnObj) => {
                     buttonType = btnObj.buttonType;
-                    return buttonType !== SECTION_BREAK && buttonType !== OPENER;
+                    return buttonType !== SECTION_BREAK && buttonType !== OPENER && buttonType !== CITATION;
                 })
             }
             if (elementType == ELEMENT_ASIDE|| elementType == CITATION_ELEMENT) {
                 esProps = asideButton(esProps, sectionBreak,elementType);
                 updatedEsProps = esProps.filter((btnObj) => {
                     buttonType = btnObj.buttonType;
-                    return buttonType !== METADATA_ANCHOR;
+                    return buttonType !== METADATA_ANCHOR && buttonType !== CITATION;
                 })
             }
 
@@ -220,25 +220,34 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
         else {
             updatedEsProps = esProps.filter((btnObj) => {
                 buttonType = btnObj.buttonType;
-                return buttonType !== SECTION_BREAK && buttonType !== OPENER;
+                return buttonType !== SECTION_BREAK && buttonType !== OPENER && buttonType !== CITATION;
             })
         }
     }
 
-    
+    // useEffect(()=>{
+    //     setshowInteractiveOption({status:false,type:showInteractiveOption.type})
+    // },[showInteractiveOption])
 
     return updatedEsProps.map((elem, key) => {
         const [data, setData] = useState([]);
-        async function buttonHandlerFunc() {
-            setData(typeOfContainerElements(elem,props));
-            if(elem.buttonType=="interactive-elem-button" ||elem.buttonType == "container-elem-button" ){
-                setshowInteractiveOption(true);
-                setShowAsideOption(false);
+         function buttonHandlerFunc() {             
+            setshowInteractiveOption({status:false,type:showInteractiveOption.type});
+            setData([]); 
+            console.log("showInteractiveOption",showInteractiveOption)
+            console.log("datatatatatta",data)
+            if(elem.buttonType == "container-elem-button"|| elem.buttonType == "interactive-elem-button"){
+                if(showInteractiveOption.type != elem.buttonType && showInteractiveOption.status ==false){
+                    setshowInteractiveOption({status:true,type:elem.buttonType});                    
+                    setData(typeOfContainerElements(elem, props)); 
+                    console.log("DATA",data)  
+                    console.log("showInteractiveOption------------",showInteractiveOption) 
+                }           
             } 
-            else if (elem.buttonType == "container-elem-button") {
-                setshowInteractiveOption(false);
-                setShowAsideOption(true);
-            }
+            // else if (elem.buttonType == "container-elem-button") {
+            //     setshowInteractiveOption(false);
+            //     setShowAsideOption(true);
+            // }
             else{
             closeDropDown();
             elem.buttonHandler();
@@ -246,7 +255,8 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
         }
 
         return (
-            <>{((showAsideOption && elem.buttonType == "container-elem-button")||(showInteractiveOption && elem.buttonType == "interactive-elem-button"))&&
+            <>{ data && data.length>0 && showInteractiveOption.status== true && (showInteractiveOption.type== "container-elem-button" ||showInteractiveOption.type== "interactive-elem-button" )&&
+                // ( (showAsideOption && elem.buttonType == "container-elem-button")||(showInteractiveOption && elem.buttonType == "interactive-elem-button"))&&
                 <ElementContainerType
                     closeDropDown={closeDropDown}
                     data={data}

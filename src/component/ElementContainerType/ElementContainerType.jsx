@@ -5,7 +5,8 @@ import React, { useEffect, useState } from 'react'
 import '../../styles/ElementContainerType/ElementContainerType.css'
 export default function ElementContainerType(props) {
     const { closeDropDown,data,asideClass } = props
-   
+   if(data!=[]){
+       console.log("data",data)
     return (
         <div className={`conatiner-other-elements ${asideClass ? asideClass : ''}`}>
             <ul className="other-elements-inner">
@@ -23,4 +24,6 @@ export default function ElementContainerType(props) {
         </div>
 
     )
+   }
+    
 }
