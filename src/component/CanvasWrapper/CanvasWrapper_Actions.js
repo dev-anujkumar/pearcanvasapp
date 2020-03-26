@@ -85,6 +85,9 @@ const findElementType = (element, index) => {
                             numbered: element.figuredata.numbered,
                             startNumber: element.figuredata.startNumber
                         }
+                        if(element.figuredata && !element.figuredata.programlanguage) {
+                            element.figuredata.programlanguage = 'Select';
+                        }
                         let languageBCE = element.figuredata.programlanguage.toLowerCase()
                         if (element.figuredata.programlanguage === "Select") {
                             elementType.secondaryOption = `secondary-blockcode-language-default`
