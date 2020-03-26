@@ -640,6 +640,9 @@ class SlateWrapper extends Component {
                     }
                    
                 break;
+                case 'SHOW_HIDE':
+                this.props.createElement(OPENER, indexToinsert, parentUrn)
+                break;
             default:
         }
     }
