@@ -639,6 +639,10 @@ class SlateWrapper extends Component {
                     }
                    
                 break;
+                case 'citation-elem':
+                    alert('citation element created')
+                   //this.props.createElement(ELEMENT_CITATION, indexToinsert, parentUrn,asideData)
+                   break;
             default:
         }
     }
@@ -707,6 +711,7 @@ class SlateWrapper extends Component {
             },
             {
                 buttonType: 'citation-elem',
+                // buttonHandler: () => this.splithandlerfunction('citation-elem', 0, firstOne, parentUrn, asideData),
                 buttonHandler: () => this.splithandlerfunction('citation-elem', 0, firstOne),
                 tooltipText: 'Citation Element',
                 tooltipDirection: 'left'

@@ -19,6 +19,12 @@ export class CitationGroup extends Component {
      * @param {string} parentIndex - Index of parent container element
      */
     renderElement = (_elements, parentUrn, parentIndex) => {
+        let asideData = {
+            type: "citations",
+            id: "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e",//this.props.element.id,
+            contentUrn: "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e",//this.props.element.contentUrn,
+            element : {}//this.props.element
+        };
         try {
             if (_elements !== null && _elements !== undefined) {
                 // this.renderButtonsonCondition(_elements);
@@ -53,7 +59,8 @@ export class CitationGroup extends Component {
                                     <ElementSaprator
                                         index={index}
                                         esProps={this.context.elementSeparatorProps(index, false, parentUrn, null, parentIndex)}
-                                        elementType="element-citation"
+                                        //esProps={this.context.elementSeparatorProps(index, false, parentUrn, asideData, parentIndex)}
+                                        elementType="citations"
                                         // slateType={_slateType}
                                         sectionBreak={true}
                                         toggleSplitSlatePopup={this.toggleSplitSlatePopup}
