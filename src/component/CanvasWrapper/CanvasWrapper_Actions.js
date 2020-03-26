@@ -9,7 +9,8 @@ import {
     AUTHORING_ELEMENT_UPDATE,
     SET_PARENT_ASIDE_DATA,
     SET_PARENT_SHOW_DATA,
-    ERROR_POPUP
+    ERROR_POPUP,
+    SLATE_TITLE
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
@@ -331,9 +332,9 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
         }
         
         if(slateData.data && Object.values(slateData.data).length > 0) {
-            let slateTitle = 'Title';
+            let slateTitle = SLATE_TITLE;
             if('title' in slateData.data[manifestURN].contents && 'text' in slateData.data[manifestURN].contents.title) {
-                slateTitle = slateData.data[manifestURN].contents.title.text || 'Title';
+                slateTitle = slateData.data[manifestURN].contents.title.text || SLATE_TITLE;
             }
             sendDataToIframe({
                 'type': "setSlateDetails",

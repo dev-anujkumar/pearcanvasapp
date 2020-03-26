@@ -102,3 +102,6 @@ export const CLOSE_POPUP_SLATE = "CLOSE_POPUP_SLATE"
 export const ERROR_POPUP = 'ERROR_POPUP'
 export const CREATE_SHOW_HIDE_ELEMENT = "CREATE_SHOW_HIDE_ELEMENT"
 export const DELETE_SHOW_HIDE_ELEMENT = "DELETE_SHOW_HIDE_ELEMENT"
+
+/*--------------- Slate Title -------------------*/
+export const SLATE_TITLE = 'Title'
