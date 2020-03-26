@@ -116,7 +116,8 @@ class Button extends Component {
                     </span>
                 break;
             case buttonTypes.CONTAINER_ELEMENT:
-                buttonJSX = <span className="btn-element container-elem" onClick={clickHandlerFn}>
+                buttonJSX = <span className="btn-element container-elem-button" onClick={clickHandlerFn}>
+                {/*buttonJSX = <span className="btn-element container-elem" onClick={clickHandlerFn}>  */}
                     {containerIcon}
                     </span>
                 break;

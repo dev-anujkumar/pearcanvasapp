@@ -25,6 +25,7 @@ CITATION_ELEMENT='citations'
 export default function ElementSaprator(props) {
     const [showClass, setShowClass] = useState(false);
     const [showInteractiveOption, setshowInteractiveOption] = useState(false);
+    const [showAsideOption, setShowAsideOption] = useState(false);
     const { esProps, elementType, sectionBreak, permissions } = props
     let buttonRef = useRef(null)
 
@@ -40,6 +41,7 @@ export default function ElementSaprator(props) {
             if (elems.indexOf(dropdown) === -1) {
                 setShowClass(false)
                 setshowInteractiveOption(false)
+                setShowAsideOption(false)
             }
         })
     });
@@ -107,7 +109,7 @@ export default function ElementSaprator(props) {
                     </Tooltip>
                     <div id="myDropdown" className={showClass ? 'dropdown-content show' : 'dropdown-content'}>
                         <ul>
-                            {renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown,showInteractiveOption,setshowInteractiveOption,props)}
+                            {renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown,showInteractiveOption,setshowInteractiveOption,showAsideOption,setShowAsideOption,props)}
                         </ul>
                     </div>
                 </div>
@@ -154,7 +156,7 @@ function asideButton(esProps,sectionBreak,elementType){
 /**
  * @description: rendering the dropdown
  */
-export function renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown,showInteractiveOption,setshowInteractiveOption,props) {
+export function renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown,showInteractiveOption,setshowInteractiveOption,showAsideOption,setShowAsideOption,props) {
 
     let updatedEsProps, buttonType;
     if (config.parentEntityUrn == FRONT_MATTER || config.parentEntityUrn == BACK_MATTER) {
@@ -229,8 +231,13 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
         const [data, setData] = useState([]);
         async function buttonHandlerFunc() {
             setData(typeOfContainerElements(elem,props));
-            if(elem.buttonType=="interactive-elem-button"){
-               setshowInteractiveOption(true);
+            if(elem.buttonType=="interactive-elem-button" ||elem.buttonType == "container-elem-button" ){
+                setshowInteractiveOption(true);
+                setShowAsideOption(false);
+            } 
+            else if (elem.buttonType == "container-elem-button") {
+                setshowInteractiveOption(false);
+                setShowAsideOption(true);
             }
             else{
             closeDropDown();
@@ -239,10 +246,11 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
         }
 
         return (
-            <React.Fragment>{showInteractiveOption && elem.buttonType == "interactive-elem-button" &&
+            <>{((showAsideOption && elem.buttonType == "container-elem-button")||(showInteractiveOption && elem.buttonType == "interactive-elem-button"))&&
                 <ElementContainerType
                     closeDropDown={closeDropDown}
                     data={data}
+                    asideClass={elem.buttonType == "container-elem-button" ? "aside-popup" : ""}
                     >
                 </ElementContainerType>
             }
@@ -252,9 +260,8 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
                     </li>
 
                 </Tooltip>
-            </React.Fragment>
+            </>
                 
-           
         )
     })
 }
@@ -269,7 +276,10 @@ function typeOfContainerElements(elem, props) {
             "Add Pop-up": "intt",
             "Add Show/Hide": "show-hide-elem",
         },
-        "container": {}
+        "container-elem-button": {
+            "Add Aside": "container-elem",
+            "Add Citation": "citation-group-elem",
+        }
     }
     let newData = containerArray[elem.buttonType];
     if(newData){
