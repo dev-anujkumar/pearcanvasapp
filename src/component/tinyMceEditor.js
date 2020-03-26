@@ -1529,7 +1529,7 @@ export class TinyMceEditor extends Component {
         showHideType = showHideType === "revel" ? "postertextobject" : showHideType
 
         if(!this.fromtinyInitBlur && !config.savingInProgress){
-            let elemNode = document.getElementById(`cypress-${this.props.index}`)
+            let elemNode = document.getElementById(`cypress-${this.props.index}`) 
             elemNode.innerHTML = elemNode.innerHTML.replace(/<br data-mce-bogus="1">/g, "")
             if(this.props.element && this.props.element.type === "popup" && !this.props.currentElement && elemNode && elemNode.innerHTML !== ""){
                 this.props.createPopupUnit(this.props.popupField, forceupdate, this.props.index, this.props.element)
