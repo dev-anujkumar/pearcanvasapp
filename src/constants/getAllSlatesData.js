@@ -1,6 +1,6 @@
 import { sendDataToIframe } from './utility'
 import config from '../config/config';
-import {GET_ALL_SLATES_DATA,GET_CURRENT_SLATE_DATA} from './Action_Constants';
+import { GET_ALL_SLATES_DATA, GET_CURRENT_SLATE_DATA } from './Action_Constants';
 
 export const fetchAllSlatesData = () => {
     sendDataToIframe({ 'type': 'fetchAllSlatesData', 'message': {} });
@@ -10,24 +10,49 @@ export const getAllSlateData = (allSlateData) => dispatch => {
     dispatch(prepareAllSlateData(allSlateData))
 }
 
-export const prepareContainerData = (matterContent) => {
+export const setItemDetails = (item) => {
+    if (item && item.type != 'project' ) {
+        return {
+            versionUrn: item.containerUrn,
+            entityUrn: item.entityUrn,
+            title: item.title ? item.title : item.unformattedTitle && item.unformattedTitle.en ? item.unformattedTitle.en : "",
+            type: item.type,
+        }
+    } else {
+        return {
+            versionUrn: config.projectUrn,
+            entityUrn: config.projectEntityUrn,
+            title: config.book_title,
+            type: 'project'
+        }
+
+    }
+
+}
+export const prepareContainerData = (matterContent, matterType) => {
     let matterData = [];
     matterContent && matterContent.forEach((item) => {
-        matterData.push({
-            containerUrn: item.containerUrn,
-            entityUrn: item.entityUrn,
-            type: item.label,
-            title: item.unformattedTitle && item.unformattedTitle.en ? item.unformattedTitle.en : ""
-        })
+        if (matterType) {
+            matterData.push(
+                Object.assign({}, setItemDetails(item), {
+                    matterType: matterType,
+                })
+            )
+        }
+        else {
+            matterData.push(
+                Object.assign({}, setItemDetails(item))
+            )
+        }
     })
     return matterData
 }
 
 export const prepareContents = (data) => {
-    let newContents=[];
-    for(let key in data){
-        newContents=newContents.concat(prepareContainerData(data[key]))
-    }  
+    let newContents = [];
+    for (let key in data) {
+        newContents = newContents.concat(prepareContainerData(data[key]))
+    }
     return newContents
 }
 
@@ -41,7 +66,7 @@ export const prepareAllSlateData = (allSlatesData) => dispatch => {
     if (parentData) {
         for (let matterType in parentData) {
             if (matterType == "frontmatter" || matterType == "backmatter") {
-                allProjectData[matterType] = prepareContainerData(parentData[matterType])
+                allProjectData[matterType] = prepareContainerData(parentData[matterType], matterType)
             }
         }
     }
@@ -50,48 +75,44 @@ export const prepareAllSlateData = (allSlatesData) => dispatch => {
         parentData && parentData.bodymatter && parentData.bodymatter.forEach((container) => {
             for (let key in childrenData) {
                 if (key == container.entityUrn) {
-                    allSlateData.push({
-                        entityUrn: container.entityUrn,
-                        containerUrn: container.containerUrn,
-                        type: container.label,
-                        title: container.unformattedTitle && container.unformattedTitle.en ? container.unformattedTitle.en : "",
-                        contents: prepareContents(childrenData[key])
-                    })
+                    allSlateData.push(
+                        Object.assign({}, setItemDetails(container), {
+                            matterType: "bodymatter",
+                            contents: prepareContents(childrenData[key])
+                        })
+                    )
                 }
+            }
+        })
+    }
+    allSlateData.forEach((container) => {
+        for (let key in childrenData) {
+            if (container && container.contents) {
+                container.contents.forEach((data) => {
+                    if (key == data.entityUrn) {
+                        data['contents'] = prepareContents(childrenData[key])
+                    }
+                })
+            }
+        }
+    })
 
+    allSlateData.forEach((container) => {
+        for (let key in childrenData) {
+            if (container && container.contents) {
+                container.contents.forEach((innerContainer) => {
+                    if (innerContainer && innerContainer.contents) {
+                        innerContainer.contents.forEach((data) => {
+                            if (key == data.entityUrn && data.type != 'section') {
+                                data['contents'] = prepareContents(childrenData[key])
+                            }
+                        })
+                    }
+                })
             }
-        })
-    }
-    if (allSlateData != []) {
-        allSlateData.forEach((container) => {
-            for (let key in childrenData) {
-                if (container && container.contents) {
-                    container.contents.forEach((data) => {
-                        if (key == data.entityUrn) {  
-                            data['contents'] = prepareContents(childrenData[key])
-                        }
-                    })
-                }
-            }
-        })
-    }
-    if (allSlateData != []) {
-        allSlateData.forEach((container) => {
-            for (let key in childrenData) {
-                if (container && container.contents) {
-                    container.contents.forEach((innerContainer) => {
-                        if (innerContainer && innerContainer.contents) {
-                            innerContainer.contents.forEach((data) => {
-                                if (key == data.entityUrn && data.type!='section') {
-                                    data['contents'] = prepareContents(childrenData[key])
-                                }
-                            })
-                        }
-                    })
-                }
-            }
-        })
-    }
+        }
+    })
+
 
 
     allProjectData['bodymatter'] = allSlateData
@@ -104,20 +125,17 @@ export const prepareAllSlateData = (allSlatesData) => dispatch => {
 
 
 
-export const getCurrentSlateData = () => (dispatch,getState)=>{
+export const getCurrentSlateData = () => (dispatch, getState) => {
     let allSlatesData = getState().appStore.allSlateData
     let currentSlateData = {}
     for (let matterType in allSlatesData) {
         if (matterType == "frontmatter" || matterType == "backmatter") {
-            allSlateData[matterType].forEach((slate) => {
+            allSlatesData && allSlateData[matterType].forEach((slate) => {
                 if (slate.containerUrn == config.slateManifestURN) {
-                    currentSlateData = {
-                        versionUrn: slate.containerUrn,
-                        entityUrn: slate.entityUrn,
-                        title: slate.title,
-                        type: slate.type,
-                        matterType: matterType
-                    }
+                    currentSlateData = Object.assign({}, setItemDetails(container), {
+                        matterType: matterType,
+                        ancestor: Object.assign({}, setItemDetails())
+                    })
                 }
             })
         } else {
@@ -131,7 +149,7 @@ export const getCurrentSlateData = () => (dispatch,getState)=>{
                                     innerContainer2.contents.forEach((slate) => {
                                         if (slate.containerUrn == config.slateManifestURN) {
                                             currentSlateData = Object.assign({}, setItemDetails(slate), {
-                                                matterType:"bodymatter",
+                                                matterType: "bodymatter",
                                                 ancestor: Object.assign({}, setItemDetails(innerContainer2), {
                                                     ancestor: Object.assign({}, setItemDetails(innerContainer1), {
                                                         ancestor: Object.assign({}, setItemDetails(container), {
@@ -146,7 +164,7 @@ export const getCurrentSlateData = () => (dispatch,getState)=>{
                                 else {
                                     if (innerContainer2.containerUrn == config.slateManifestURN) {
                                         currentSlateData = Object.assign({}, setItemDetails(innerContainer2), {
-                                            matterType:"bodymatter",
+                                            matterType: "bodymatter",
                                             ancestor: Object.assign({}, setItemDetails(innerContainer1), {
                                                 ancestor: Object.assign({}, setItemDetails(container), {
                                                     ancestor: Object.assign({}, setItemDetails())
@@ -156,31 +174,31 @@ export const getCurrentSlateData = () => (dispatch,getState)=>{
                                     }
                                 }
                             })
-                        } else if(innerContainer1.type !=undefined && innerContainer1.containerUrn == config.slateManifestURN ){
+                        } else if (innerContainer1.type != undefined && innerContainer1.containerUrn == config.slateManifestURN) {
                             currentSlateData = Object.assign({}, setItemDetails(innerContainer1), {
-                                matterType:"bodymatter",
+                                matterType: "bodymatter",
                                 ancestor: Object.assign({}, setItemDetails(container), {
                                     ancestor: Object.assign({}, setItemDetails())
                                 })
                             })
-                        } 
+                        }
                         else if (container.containerUrn == config.slateManifestURN) {
                             currentSlateData = Object.assign({}, setItemDetails(container), {
-                                matterType:"bodymatter",
+                                matterType: "bodymatter",
                                 ancestor: Object.assign({}, setItemDetails())
                             })
                         }
                     })
-                } else if(container.containerUrn == config.slateManifestURN) {
+                } else if (container.containerUrn == config.slateManifestURN) {
                     currentSlateData = Object.assign({}, setItemDetails(container), {
-                        matterType:"bodymatter",
+                        matterType: "bodymatter",
                         ancestor: Object.assign({}, setItemDetails())
                     })
                 }
             })
         }
     }
-    return   dispatch({
+    return dispatch({
         type: GET_CURRENT_SLATE_DATA,
         payload: {
             currentSlateData: currentSlateData
@@ -207,22 +225,3 @@ export const getContents = (bodymatter, currentSlateData = {}) => {
 
 
 
-export const setItemDetails = (item) => {
-    if (item && item.type != 'project') {
-        return {
-            versionUrn: item.containerUrn,
-            entityUrn: item.entityUrn,
-            title: item.title,
-            type: item.type,
-        }
-    } else {
-        return {
-            versionUrn: config.projectUrn,
-            entityUrn: config.projectEntityUrn,
-            title: config.book_title,
-            type: 'project'
-        }
-
-    }
-
-}
