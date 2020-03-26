@@ -221,8 +221,9 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
     
 
     return updatedEsProps.map((elem, key) => {
-        function buttonHandlerFunc() {
-            window.data = typeOfContainerElements(elem,props);
+        const [data, setData] = useState([]);
+        async function buttonHandlerFunc() {
+            setData(typeOfContainerElements(elem,props));
             if(elem.buttonType=="interactive-elem-button"){
                setshowInteractiveOption(true);
             }
@@ -261,17 +262,23 @@ function typeOfContainerElements(elem, props) {
         {
             "Add Existing Interactive": "interactive-elem",
             "Add Pop-up": "intt",
-            "Add Show/Hide": "intt",
+            "Add Show/Hide": "show-hide-elem",
         },
         "container": {}
     }
     let newData = containerArray[elem.buttonType];
-    let data = Object.entries(newData).map(function (num) {
-        return {
-            buttonType: num[1],
-            text: num[0],
-            buttonHandler: () => splithandlerfunction(num[1], index, firstOne, parentUrn, asideData, parentIndex),
-        }
-    })
-    return data;
+    if(newData){
+        let data = Object.entries(newData).map(function (num) {
+            return {
+                buttonType: num[1],
+                text: num[0],
+                buttonHandler: () => splithandlerfunction(num[1], index, firstOne, parentUrn, asideData, parentIndex),
+            }
+        })
+        return data;
+    }
+    else{
+        return;
+    }
+    
 }
