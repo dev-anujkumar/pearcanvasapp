@@ -13,6 +13,8 @@ const containerWrapper = (WrappedComponent) => {
       }
 
       renderContainer = ()=>{
+        const { divClass, figureClass, index, figLabelClass, model,
+          slateLockInfo, figTitleClass, dataType, figCaptionClass, figCreditClass } = this.props
         let poetryElem = <div className={divClass}>
         <figure className={figureClass} resource="">
             <header>
@@ -42,7 +44,7 @@ const containerWrapper = (WrappedComponent) => {
       }
   
       render() {
-        return renderContainer()
+        return (this.renderContainer())
         //return <WrappedComponent data={...this.state} {...this.props} />;
       }
     };
