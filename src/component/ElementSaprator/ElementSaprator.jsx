@@ -222,7 +222,7 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
 
     return updatedEsProps.map((elem, key) => {
         const [data, setData] = useState([]);
-        async function buttonHandlerFunc() {
+        function buttonHandlerFunc() {
             setData(typeOfContainerElements(elem,props));
             if(elem.buttonType=="interactive-elem-button"){
                setshowInteractiveOption(true);
