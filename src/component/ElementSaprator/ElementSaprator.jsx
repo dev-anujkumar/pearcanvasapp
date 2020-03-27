@@ -271,7 +271,7 @@ function typeOfContainerElements(elem, props) {
         },
         "container-elem-button":
         {
-            "Add Existing Interactive33": "interactive-elem",
+            "Add Existing Interactive33": "container-elem",
             "Add Pop-up33": "popup-elem",
             "Add Show/Hide33": "show-hide-elem",
         }

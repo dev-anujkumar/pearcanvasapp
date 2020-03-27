@@ -420,7 +420,7 @@ class SlateWrapper extends Component {
         else {
             const { projectUrn } = config
             // this.props.setLockPeriodFlag(true)                       // For local testing purpose
-            this.props.setSlateLock(projectUrn, slateId, lockDuration)
+            //this.props.setSlateLock(projectUrn, slateId, lockDuration)
             this.debounceReleaseTimeout()
         }
     }
@@ -641,6 +641,7 @@ class SlateWrapper extends Component {
                    
                 break;
                 case 'show-hide-elem':
+                config.setShowHideActive="true"
                 this.props.createElement(SHOW_HIDE, indexToinsert, parentUrn, asideData,null,null,SHOW_HIDE_PARENT);
                 break;
                 case 'popup-elem':
@@ -914,6 +915,7 @@ class SlateWrapper extends Component {
                                         showAudioSplitPopup={this.props.showAudioSplitPopup}
                                         openAudio={this.props.openAudio}
                                         onClickCapture={this.checkSlateLockStatus}
+                                        splithandlerfunction={this.splithandlerfunction}
                                     />
                                     : null
                                 }

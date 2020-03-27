@@ -93,7 +93,7 @@ class Sidebar extends Component {
         }
         const { activePrimaryOption } = this.state
         if(e.target.dataset && e.target.dataset.element !== "secondary"){
-            if(activePrimaryOption === "primary-openerelement" || activePrimaryOption === "primary-single-assessment" || activePrimaryOption === "primary-popup"){
+            if(activePrimaryOption === "primary-openerelement" || activePrimaryOption === "primary-single-assessment" || activePrimaryOption === "primary-popup" || activePrimaryOption === "primary-showhide"){
                 e.stopPropagation()
                 return false
             }
