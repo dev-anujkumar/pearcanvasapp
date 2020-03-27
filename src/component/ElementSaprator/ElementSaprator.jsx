@@ -57,7 +57,7 @@ export default function ElementSaprator(props) {
             }
         }
         setShowClass(!showClass)
-        //setshowInteractiveOption(!showInteractiveOption)
+        setshowInteractiveOption({status:false,type:""})
     }
 
     /**
