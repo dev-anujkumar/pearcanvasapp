@@ -9,20 +9,24 @@ export const poetryElem = {
     "contents": {
         "formatted-title": {
             "type": "element-authoredtext",
-            "id": "urn:pearson:work:e1b59ae0-b04a-4b6e-a1a4-33e21073g5w4"
+            "id": "urn:pearson:work:e1b59ae0-b04a-4b6e-a1a4-33e21073g5w4",
+            "text": "Poetry Title"
         },
         "formatted-label": {
             "type": "element-authoredtext",
-            "id": "urn:pearson:work:e1b59ae0-b04a-4b6e-a1a4-33e21073g5w4"
+            "id": "urn:pearson:work:e1b59ae0-b04a-4b6e-a1a4-33e21073g5w4",
+            "text": "Poetry Label"
         },
         "formatted-caption": {
             "type": "element-authoredtext",
-            "id": "urn:pearson:work:e1b59ae0-b04a-4b6e-a1a4-33e21073g5w4"
+            "id": "urn:pearson:work:e1b59ae0-b04a-4b6e-a1a4-33e21073g5w4",
+            "text": "Poetry caption"
         },
-        "creditsarray": [{
+        "formatted-credit": {
             "type": "element-authoredtext",
-            "id": "urn:pearson:work:e1b59ae0-b04a-4b6e-a1a4-33e21073go6t"
-        }],
+            "id": "urn:pearson:work:e1b59ae0-b04a-4b6e-a1a4-33e21073go6t",
+            "text": "Poetry credit"
+        },
         "bodymatter": [
             {
                 "type": "stanza",

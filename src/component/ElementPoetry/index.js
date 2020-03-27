@@ -1,2 +1,2 @@
-import ElementPoetryStanza from './ElementPoetryStanza';
-export default ElementPoetryStanza;
+import ElementPoetry from './ElementPoetry.jsx';
+export default ElementPoetry;

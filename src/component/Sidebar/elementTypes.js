@@ -733,5 +733,19 @@ export default {
                 }
             }
         } 
+    },
+    "poetry" : {
+        "primary-poetry": {
+            text: 'Poetry Element',
+            enum: 'poetryelement',
+            dropdownDisabled: true,
+            subtype: {
+                'secondary-poetry': {
+                    text: 'Poetry Element',
+                    labelText: 'PE',
+                    enum: 'poetryelement',
+                }
+            }
+        } 
     }
 };

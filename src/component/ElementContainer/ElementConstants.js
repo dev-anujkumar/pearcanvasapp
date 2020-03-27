@@ -37,11 +37,12 @@ export default {
     ASSESSMENT_SLATE : "element-assessment",
     ELEMENT_ASSESSMENT : "ELEMENT_ASSESSMENT ",
 
-/****************Pop Up elment************************ */  
+/****************Pop Up element************************ */  
     POOPUP_ELEMENT:"popup",
 
-/****************Poetry elment************************ */  
-    POETRY_ELEMENT: "poetry"
+/****************Poetry element************************ */  
+    POETRY_ELEMENT: "poetry",
+    POETRY_STANZA: "stanza"
 
 }
 
