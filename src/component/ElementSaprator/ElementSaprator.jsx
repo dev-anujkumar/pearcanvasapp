@@ -22,7 +22,7 @@ CONTAINER_INTRO = 'container-introduction'
 
 export default function ElementSaprator(props) {
     const [showClass, setShowClass] = useState(false);
-    const [showInteractiveOption, setshowInteractiveOption] = useState(false);
+    const [showInteractiveOption, setshowInteractiveOption] = useState({status:false,type:""});
 
     const { esProps, elementType, sectionBreak, permissions } = props
     let buttonRef = useRef(null)
@@ -38,7 +38,7 @@ export default function ElementSaprator(props) {
             dropdown = 'dropdown'
             if (elems.indexOf(dropdown) === -1) {
                 setShowClass(false)
-                setshowInteractiveOption(false)
+                setshowInteractiveOption({status:false,type:""})
             }
         })
     });
@@ -57,6 +57,7 @@ export default function ElementSaprator(props) {
             }
         }
         setShowClass(!showClass)
+        //setshowInteractiveOption(!showInteractiveOption)
     }
 
     /**
@@ -76,6 +77,7 @@ export default function ElementSaprator(props) {
      */
     function closeDropDown() {
         setShowClass(false);
+        setshowInteractiveOption({status:false,type:""})
     }
 
     /**
@@ -222,20 +224,23 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
 
     return updatedEsProps.map((elem, key) => {
         const [data, setData] = useState([]);
-        async function buttonHandlerFunc() {
-            setData(typeOfContainerElements(elem,props));
-            if(elem.buttonType=="interactive-elem-button"){
-               setshowInteractiveOption(true);
+        function buttonHandlerFunc() {
+            setshowInteractiveOption({status:false,type:""});
+            if (elem.buttonType == "interactive-elem-button" || elem.buttonType == "container-elem-button") {
+                setData(typeOfContainerElements(elem, props));
+                if(elem.buttonType !== showInteractiveOption.type){
+                    setshowInteractiveOption({status:true,type:elem.buttonType});
+                }
             }
-            else{
-            closeDropDown();
-            elem.buttonHandler();
+            else {
+                closeDropDown();
+                elem.buttonHandler();
             }
         }
 
         return (
-            <React.Fragment>{showInteractiveOption && elem.buttonType == "interactive-elem-button" &&
-                <ElementContainerType
+            <>{data && data.length >0 && showInteractiveOption && showInteractiveOption.status && showInteractiveOption.type == elem.buttonType &&
+                <ElementContainerType text={elem.buttonType}
                     closeDropDown={closeDropDown}
                     data={data}
                     >
@@ -247,7 +252,7 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
                     </li>
 
                 </Tooltip>
-            </React.Fragment>
+            </>
                 
            
         )
@@ -261,10 +266,15 @@ function typeOfContainerElements(elem, props) {
         "interactive-elem-button":
         {
             "Add Existing Interactive": "interactive-elem",
-            "Add Pop-up": "intt",
+            "Add Pop-up": "popup-elem",
             "Add Show/Hide": "show-hide-elem",
         },
-        "container": {}
+        "container-elem-button":
+        {
+            "Add Existing Interactive33": "interactive-elem",
+            "Add Pop-up33": "popup-elem",
+            "Add Show/Hide33": "show-hide-elem",
+        }
     }
     let newData = containerArray[elem.buttonType];
     if(newData){

@@ -1,7 +1,7 @@
 /**
  * Component for Conatiner Type Elements
  */
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import '../../styles/ElementContainerType/ElementContainerType.css'
 export default function ElementContainerType(props) {
     const { closeDropDown,data } = props
