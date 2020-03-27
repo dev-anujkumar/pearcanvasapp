@@ -229,7 +229,7 @@ export const elmNavigateBack = (()=>{
 export const citationElement = (() => {
     return (
         <svg width="18px" height="13px" viewBox="0 0 18 13" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
-            <g id="PCAT-7012-Poetry" stroke="none" strokeWwidth="1" fill="none" fillRule="evenodd">
+            <g id="PCAT-7012-Poetry" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
                 <g id="05" transform="translate(-1072.000000, -619.000000)">
                     <g id="icon/element/CitationElement" transform="translate(1069.000000, 613.000000)">
                         <rect id="Rectangle" fill="#EEEEEE" fillRule="evenodd" opacity="0" x="0" y="0" width="24" height="24"></rect>
