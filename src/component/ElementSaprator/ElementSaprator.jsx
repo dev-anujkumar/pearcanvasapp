@@ -24,7 +24,7 @@ CITATION_ELEMENT='citations'
 
 export default function ElementSaprator(props) {
     const [showClass, setShowClass] = useState(false);
-    const [showInteractiveOption, setshowInteractiveOption] = useState(false);
+    const [showInteractiveOption, setshowInteractiveOption] = useState({status:false,type:""});
     const { esProps, elementType, sectionBreak, permissions } = props
     let buttonRef = useRef(null)
 
@@ -94,7 +94,7 @@ export default function ElementSaprator(props) {
     return (
         <div className={showClass ? 'elementSapratorContainer opacityClassOn ignore-for-drag' : 'elementSapratorContainer ignore-for-drag'}>
             <div className='elemDiv-split' onClickCapture={(e) => props.onClickCapture(e)}>
-                {permissions && permissions.includes('split_slate') && (elementType !== 'element-aside' || elementType !== 'citations') && !config.isPopupSlate && !props.firstOne ? <Tooltip direction='right' tooltipText='Split Slate'>
+                {permissions && permissions.includes('split_slate') && (elementType !== 'element-aside' && elementType !== 'citations') && !config.isPopupSlate && !props.firstOne ? <Tooltip direction='right' tooltipText='Split Slate'>
                     {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && <Button type='split' onClick={splitSlateClickHandler} />} </Tooltip> : ''}
             </div>
             <div className='elemDiv-hr'>
@@ -144,7 +144,7 @@ function asideButton(esProps,sectionBreak,elementType){
         if (sectionBreak) {
             return buttonType !== WORKED_EXP && buttonType !== CONTAINER && buttonType !== OPENER &&  buttonType !== CITATION;
         } else {
-            return buttonType !== OPENER && buttonType !== SECTION_BREAK && buttonType !== WORKED_EXP && buttonType !== CONTAINER &&  buttonType !== CITATION;
+            return buttonType !== OPENER && buttonType !== SECTION_BREAK && buttonType !== WORKED_EXP && buttonType !== CONTAINER && buttonType !== CITATION;
         }
     }
     })
@@ -223,15 +223,29 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
         }
     }
 
-    
+    // useEffect(()=>{
+    //     setshowInteractiveOption({status:false,type:showInteractiveOption.type})
+    // },[showInteractiveOption])
 
     return updatedEsProps.map((elem, key) => {
         const [data, setData] = useState([]);
-        async function buttonHandlerFunc() {
-            setData(typeOfContainerElements(elem,props));
-            if(elem.buttonType=="interactive-elem-button"){
-               setshowInteractiveOption(true);
-            }
+         function buttonHandlerFunc() {             
+            setshowInteractiveOption({status:false,type:showInteractiveOption.type});
+            setData([]); 
+            console.log("showInteractiveOption",showInteractiveOption)
+            console.log("datatatatatta",data)
+            if(elem.buttonType == "container-elem-button"|| elem.buttonType == "interactive-elem-button"){
+                if(showInteractiveOption.type != elem.buttonType && showInteractiveOption.status ==false){
+                    setshowInteractiveOption({status:true,type:elem.buttonType});                    
+                    setData(typeOfContainerElements(elem, props)); 
+                    console.log("DATA",data)  
+                    console.log("showInteractiveOption------------",showInteractiveOption) 
+                }           
+            } 
+            // else if (elem.buttonType == "container-elem-button") {
+            //     setshowInteractiveOption(false);
+            //     setShowAsideOption(true);
+            // }
             else{
             closeDropDown();
             elem.buttonHandler();
@@ -239,10 +253,12 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
         }
 
         return (
-            <React.Fragment>{showInteractiveOption && elem.buttonType == "interactive-elem-button" &&
+            <>{ data && data.length>0 && showInteractiveOption.status== true && (showInteractiveOption.type== "container-elem-button" ||showInteractiveOption.type== "interactive-elem-button" )&&
+                // ( (showAsideOption && elem.buttonType == "container-elem-button")||(showInteractiveOption && elem.buttonType == "interactive-elem-button"))&&
                 <ElementContainerType
                     closeDropDown={closeDropDown}
                     data={data}
+                    asideClass={elem.buttonType == "container-elem-button" ? "aside-popup" : ""}
                     >
                 </ElementContainerType>
             }
@@ -252,9 +268,8 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
                     </li>
 
                 </Tooltip>
-            </React.Fragment>
-                
-           
+            </>
+             
         )
     })
 }
@@ -269,7 +284,10 @@ function typeOfContainerElements(elem, props) {
             "Add Pop-up": "intt",
             "Add Show/Hide": "show-hide-elem",
         },
-        "container": {}
+        "container-elem-button": {
+            "Add Aside": "container-elem",
+            "Add Citation": "citation-group-elem",
+        }
     }
     let newData = containerArray[elem.buttonType];
     if(newData){

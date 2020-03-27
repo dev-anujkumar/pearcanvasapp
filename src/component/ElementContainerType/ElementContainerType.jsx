@@ -4,10 +4,11 @@
 import React, { useEffect, useState } from 'react'
 import '../../styles/ElementContainerType/ElementContainerType.css'
 export default function ElementContainerType(props) {
-    const { closeDropDown,data } = props
-   
+    const { closeDropDown,data,asideClass } = props
+   if(data!=[]){
+       console.log("data",data)
     return (
-        <div className="conatiner-other-elements">
+        <div className={`conatiner-other-elements ${asideClass ? asideClass : ''}`}>
             <ul className="other-elements-inner">
                 {data && data.map((item, key) => {
                     function buttonHandlerFunc() {
@@ -23,4 +24,6 @@ export default function ElementContainerType(props) {
         </div>
 
     )
+   }
+    
 }
