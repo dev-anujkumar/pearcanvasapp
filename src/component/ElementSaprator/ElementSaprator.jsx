@@ -142,9 +142,9 @@ function asideButton(esProps,sectionBreak,elementType){
         return buttonType == CITATION;//citation element
       }else{
         if (sectionBreak) {
-            return buttonType !== WORKED_EXP && buttonType !== CONTAINER && buttonType !== OPENER;
+            return buttonType !== WORKED_EXP && buttonType !== CONTAINER && buttonType !== OPENER &&  buttonType !== CITATION;
         } else {
-            return buttonType !== OPENER && buttonType !== SECTION_BREAK && buttonType !== WORKED_EXP && buttonType !== CONTAINER;
+            return buttonType !== OPENER && buttonType !== SECTION_BREAK && buttonType !== WORKED_EXP && buttonType !== CONTAINER &&  buttonType !== CITATION;
         }
     }
     })
@@ -162,13 +162,13 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
             esProps = asideButton(esProps, sectionBreak,elementType);
             updatedEsProps = esProps.filter((btnObj) => {
                 buttonType = btnObj.buttonType;
-                return buttonType !== METADATA_ANCHOR;
+                return buttonType !== METADATA_ANCHOR && buttonType !== CITATION;
             })
 
         } else {
             updatedEsProps = esProps.filter((btnObj) => {
                 buttonType = btnObj.buttonType;
-                return buttonType !== METADATA_ANCHOR && buttonType !== SECTION_BREAK && buttonType !== OPENER;
+                return buttonType !== METADATA_ANCHOR && buttonType !== SECTION_BREAK && buttonType !== OPENER &&  buttonType !== CITATION;
             })
         }
 
@@ -193,19 +193,19 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
             
             if (!config.isCO) {
                 updatedEsProps = esProps.filter((btnObj) => {
-                    return btnObj.buttonType !== SECTION_BREAK;
+                    return btnObj.buttonType !== SECTION_BREAK && buttonType !== CITATION;
                 })
             } else {
                 updatedEsProps = esProps.filter((btnObj) => {
                     buttonType = btnObj.buttonType;
-                    return buttonType !== SECTION_BREAK && buttonType !== OPENER;
+                    return buttonType !== SECTION_BREAK && buttonType !== OPENER && buttonType !== CITATION;
                 })
             }
             if (elementType == ELEMENT_ASIDE|| elementType == CITATION_ELEMENT) {
                 esProps = asideButton(esProps, sectionBreak,elementType);
                 updatedEsProps = esProps.filter((btnObj) => {
                     buttonType = btnObj.buttonType;
-                    return buttonType !== METADATA_ANCHOR;
+                    return buttonType !== METADATA_ANCHOR && buttonType !== CITATION;
                 })
             }
 
@@ -218,7 +218,7 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
         else {
             updatedEsProps = esProps.filter((btnObj) => {
                 buttonType = btnObj.buttonType;
-                return buttonType !== SECTION_BREAK && buttonType !== OPENER;
+                return buttonType !== SECTION_BREAK && buttonType !== OPENER && buttonType !== CITATION;
             })
         }
     }

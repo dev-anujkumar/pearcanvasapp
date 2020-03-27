@@ -121,6 +121,9 @@
     border: solid 1px #434343;
 }
 
+.citation-elem:hover text{
+    fill:black;
+}
 
 .color-palette{
     padding: 0px 0px;
