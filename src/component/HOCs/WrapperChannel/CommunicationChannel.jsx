@@ -402,7 +402,6 @@ function WithWrapperCommunication(WrappedComponent) {
                 config.totalPageCount = 0;
                 config.fromTOC = true;
                 config.parentLabel=message.node.nodeParentLabel;
-                fetchAllSlatesData();
                 this.props.getSlateLockStatus(config.projectUrn, config.slateManifestURN)
                 let slateData = {
                     currentProjectId: config.projectUrn,

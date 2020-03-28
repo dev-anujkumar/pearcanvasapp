@@ -34,7 +34,7 @@ import {
     DELETE_SHOW_HIDE_ELEMENT,
     SET_PARENT_SHOW_DATA,
     GET_ALL_SLATES_DATA,
-    GET_CURRENT_SLATE_DATA
+    SET_CURRENT_SLATE_DATA
 } from '../constants/Action_Constants';
 
 /**
@@ -198,7 +198,7 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
                 ...state,
                 allSlateData: action.payload.allSlateData
             }
-        case GET_CURRENT_SLATE_DATA:
+        case SET_CURRENT_SLATE_DATA:
             return {
                 ...state,
                 currentSlateData: action.payload.currentSlateData
