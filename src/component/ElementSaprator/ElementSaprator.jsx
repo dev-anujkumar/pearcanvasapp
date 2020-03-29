@@ -39,7 +39,7 @@ export default function ElementSaprator(props) {
             dropdown = 'dropdown'
             if (elems.indexOf(dropdown) === -1) {
                 setShowClass(false)
-                setshowInteractiveOption(false)
+                setshowInteractiveOption({status:false,type:""})
             }
         })
     });
@@ -58,6 +58,7 @@ export default function ElementSaprator(props) {
             }
         }
         setShowClass(!showClass)
+        setshowInteractiveOption({status:false,type:""})
     }
 
     /**
@@ -77,6 +78,7 @@ export default function ElementSaprator(props) {
      */
     function closeDropDown() {
         setShowClass(false);
+        setshowInteractiveOption({status:false,type:""})
     }
 
     /**
@@ -229,33 +231,24 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
 
     return updatedEsProps.map((elem, key) => {
         const [data, setData] = useState([]);
-         function buttonHandlerFunc() {             
-            setshowInteractiveOption({status:false,type:showInteractiveOption.type});
-            setData([]); 
-            console.log("showInteractiveOption",showInteractiveOption)
-            console.log("datatatatatta",data)
-            if(elem.buttonType == "container-elem-button"|| elem.buttonType == "interactive-elem-button"){
-                if(showInteractiveOption.type != elem.buttonType && showInteractiveOption.status ==false){
-                    setshowInteractiveOption({status:true,type:elem.buttonType});                    
-                    setData(typeOfContainerElements(elem, props)); 
-                    console.log("DATA",data)  
-                    console.log("showInteractiveOption------------",showInteractiveOption) 
-                }           
-            } 
-            // else if (elem.buttonType == "container-elem-button") {
-            //     setshowInteractiveOption(false);
-            //     setShowAsideOption(true);
-            // }
-            else{
-            closeDropDown();
-            elem.buttonHandler();
+        function buttonHandlerFunc() {
+            setshowInteractiveOption({status:false,type:""});
+            if (elem.buttonType == "interactive-elem-button" || elem.buttonType == "container-elem-button") {
+                setData(typeOfContainerElements(elem, props));
+                if(elem.buttonType !== showInteractiveOption.type){
+                    setshowInteractiveOption({status:true,type:elem.buttonType});
+                }
+            }
+            else {
+                closeDropDown();
+                elem.buttonHandler();
             }
         }
 
         return (
-            <>{ data && data.length>0 && showInteractiveOption.status== true && (showInteractiveOption.type== "container-elem-button" ||showInteractiveOption.type== "interactive-elem-button" )&&
-                // ( (showAsideOption && elem.buttonType == "container-elem-button")||(showInteractiveOption && elem.buttonType == "interactive-elem-button"))&&
-                <ElementContainerType
+            <>{data && data.length >0 && showInteractiveOption && showInteractiveOption.status && showInteractiveOption.type == elem.buttonType &&
+                <ElementContainerType 
+                    text={elem.buttonType}
                     closeDropDown={closeDropDown}
                     data={data}
                     asideClass={elem.buttonType == "container-elem-button" ? "aside-popup" : ""}
@@ -268,8 +261,7 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
                     </li>
 
                 </Tooltip>
-            </>
-             
+            </>                          
         )
     })
 }
@@ -281,12 +273,12 @@ function typeOfContainerElements(elem, props) {
         "interactive-elem-button":
         {
             "Add Existing Interactive": "interactive-elem",
-            "Add Pop-up": "intt",
+            "Add Pop-up": "popup-elem",
             "Add Show/Hide": "show-hide-elem",
         },
         "container-elem-button": {
             "Add Aside": "container-elem",
-            "Add Citation": "citation-group-elem",
+            "Add Citation": "citations-group-elem",
         }
     }
     let newData = containerArray[elem.buttonType];

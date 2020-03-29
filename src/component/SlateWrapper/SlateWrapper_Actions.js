@@ -60,7 +60,7 @@ function createNewVersionOfSlate(){
         })
 }
 
-export const createElement = (type, index, parentUrn, asideData, outerAsideIndex, loref, cb) => (dispatch, getState) => {
+export const createElement = (type, index, parentUrn, asideData, outerAsideIndex, loref, parentType,cb) => (dispatch, getState) => {
     config.currentInsertedIndex = index;
     config.currentInsertedType = type;
     let  popupSlateData = getState().appStore.popupSlateData
@@ -77,6 +77,9 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
 
     if (type == "LO") {
         _requestData.loref = loref ? loref : ""
+    }
+    if (type == "SHOW_HIDE" || type=="POP_UP") {
+        _requestData.parentType = parentType ? parentType : ""
     }
 
     prepareDataForTcmUpdate(_requestData, parentUrn, asideData)

@@ -96,9 +96,20 @@ const elementDataBank = {
     },
     
     "popup": {
-        "elementType" : "element-interactive",
+        "elementType" : "popup",
         "primaryOption" : "primary-popup",
-        "secondaryOption" : "secondary-interactive-popup"
+        "secondaryOption" : "secondary-popup",
+        "tag" : "POP",
+        "text":"Pop-up"
+
+    },
+    "showhide": {
+        "elementType" : "",
+        "primaryOption" : "",
+        "secondaryOption" : "",
+        "tag" : "SH",
+        "text":"Show/Hide"
+
     },
 
     "figure" : {

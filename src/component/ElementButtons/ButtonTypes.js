@@ -30,5 +30,7 @@ export default {
     ELM_ASSESSMENT_ITEM:"elmAssessmentItem",
     FEEDBACK : "feedback",
     ASSESSMENT_CLOSE_WINDOW:"assessmentCloseWindowIcon",
-    CITATION_ELEMENT:'citation-elem'
+    CITATION_ELEMENT:'citation-elem',
+    SHOW_HIDE : "show-hide-elem",
+    POP_UP : "popup-elem",
 }

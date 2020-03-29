@@ -22,7 +22,8 @@ import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
 import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
 import config from '../../config/config';
 import { TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER, WORKED_EXAMPLE, SECTION_BREAK, METADATA_ANCHOR, LO_LIST, ELEMENT_ASSESSMENT, OPENER,
-    ALREADY_USED_SLATE , REMOVE_LINKED_AUDIO, NOT_AUDIO_ASSET, SPLIT_SLATE_WITH_ADDED_AUDIO , ACCESS_DENIED_CONTACT_ADMIN, IN_USE_BY, LOCK_DURATION } from './SlateWrapperConstants';
+    ALREADY_USED_SLATE , REMOVE_LINKED_AUDIO, NOT_AUDIO_ASSET, SPLIT_SLATE_WITH_ADDED_AUDIO , ACCESS_DENIED_CONTACT_ADMIN, IN_USE_BY, LOCK_DURATION, SHOW_HIDE,POP_UP,POPUP_PARENT,SHOW_HIDE_PARENT ,
+    CITATIONS, ELEMENT_CITATION} from './SlateWrapperConstants';
 import PageNumberElement from './PageNumberElement.jsx';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
@@ -640,10 +641,20 @@ class SlateWrapper extends Component {
                     }
                    
                 break;
-                case 'citation-elem':
-                    alert('citation element created')
-                   //this.props.createElement(ELEMENT_CITATION, indexToinsert, parentUrn,asideData)
-                   break;
+                case 'show-hide-elem':
+                this.props.createElement(SHOW_HIDE, indexToinsert, parentUrn, asideData,null,null,SHOW_HIDE_PARENT);
+                break;
+                case 'popup-elem':
+                this.props.createElement(POP_UP, indexToinsert, parentUrn, asideData,null,null,POPUP_PARENT);
+                break;
+            case 'citation-elem':
+                this.props.createElement(TEXT, indexToinsert, parentUrn, asideData);//create a paragraph
+                //this.props.createElement(ELEMENT_CITATION, indexToinsert, parentUrn,asideData)
+                break;
+            case 'citations-group-elem':
+                this.props.createElement(CONTAINER, indexToinsert, parentUrn, asideData);//create a container
+                //this.props.createElement(CITATIONS, indexToinsert, parentUrn,asideData)
+                break;
             default:
         }
     }
@@ -671,19 +682,19 @@ class SlateWrapper extends Component {
             {
                 buttonType: 'interactive-elem-button',
                 buttonHandler: () => this.splithandlerfunction('interactive-elem-button'),
-                tooltipText: 'Interactive',
-                tooltipDirection: 'left'
-            },
-            {
-                buttonType: 'assessment-elem',
-                buttonHandler: () => this.splithandlerfunction('assessment-elem', index, firstOne, parentUrn, asideData),
-                tooltipText: 'Assessment',
+                tooltipText: 'Interactivity',
                 tooltipDirection: 'left'
             },
             {
                 buttonType: 'container-elem-button',
                 buttonHandler: () => this.splithandlerfunction('container-elem-button'),
                 tooltipText: 'Container',
+                tooltipDirection: 'left'
+            },
+            {
+                buttonType: 'assessment-elem',
+                buttonHandler: () => this.splithandlerfunction('assessment-elem', index, firstOne, parentUrn, asideData),
+                tooltipText: 'Assessment',
                 tooltipDirection: 'left'
             },
             // {
