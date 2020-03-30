@@ -99,10 +99,10 @@ export class TinyMceEditor extends Component {
             init_instance_callback: (editor) => {
                 tinymce.$('.blockquote-editor').attr('contenteditable', false)
 
-                if (this.props.permissions && !(this.props.permissions.includes('access_formatting_bar'))) {        // when user doesn't have edit permission
+                if (this.props.permissions && !(this.props.permissions.includes('access_formatting_bar')||this.props.permissions.includes('elements_add_remove') )) {        // when user doesn't have edit permission
                     if (editor && editor.id) {
-                        document.getElementById(editor.id).setAttribute('contenteditable', false);
-                        if(tinymce.$('.blockquoteMarginaliaAttr .paragraphNummerEins')){
+                    document.getElementById(editor.id).setAttribute('contenteditable', false);
+                           if(tinymce.$('.blockquoteMarginaliaAttr .paragraphNummerEins')){
                             tinymce.$('.blockquoteMarginaliaAttr .paragraphNummerEins').attr('contenteditable', false)
                         }
                     }
@@ -1322,7 +1322,7 @@ export class TinyMceEditor extends Component {
         // else if( tinymce.$(e.target).closest('li') && tinymce.$(e.target).closest('li').length && !tinymce.$(e.target).closest('li').html().trim() && !tinymce.$(e.target).closest('li').find('br').length ){
         //     tinymce.$(e.target).closest('li').append('<br/>');
         // }
-        if (this.props.permissions && !(this.props.permissions.includes('access_formatting_bar'))) {        // when user doesn't have edit permission
+        if (this.props.permissions && !(this.props.permissions.includes('access_formatting_bar')||this.props.permissions.includes('elements_add_remove'))) {        // when user doesn't have edit permission
             if (tinymce.activeEditor && tinymce.activeEditor.id) {
                 document.getElementById(tinymce.activeEditor.id).setAttribute('contenteditable', false)
             }
@@ -1513,6 +1513,14 @@ export class TinyMceEditor extends Component {
                 this.outerHTML = innerHtml;
             })
         }
+        let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
+        if(!assetPopoverPopupIsVisible){
+            tinymce.$('#asset-popover-attacher').each(function () {
+                let innerHtml = this.innerHTML;
+                this.outerHTML = innerHtml;
+            })
+        }
+        
         tinyMCE.$('.Wirisformula').each(function () {
             this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
             this.naturalWidth && this.setAttribute('width', this.naturalWidth)
@@ -1521,7 +1529,7 @@ export class TinyMceEditor extends Component {
         showHideType = showHideType === "revel" ? "postertextobject" : showHideType
 
         if(!this.fromtinyInitBlur && !config.savingInProgress){
-            let elemNode = document.getElementById(`cypress-${this.props.index}`)
+            let elemNode = document.getElementById(`cypress-${this.props.index}`) 
             elemNode.innerHTML = elemNode.innerHTML.replace(/<br data-mce-bogus="1">/g, "")
             if(this.props.element && this.props.element.type === "popup" && !this.props.currentElement && elemNode && elemNode.innerHTML !== ""){
                 this.props.createPopupUnit(this.props.popupField, forceupdate, this.props.index, this.props.element)
@@ -1627,12 +1635,12 @@ export class TinyMceEditor extends Component {
         }
     }
     normalKeyDownHandler = (e) => {
-        if (this.props.permissions && !(this.props.permissions.includes('access_formatting_bar'))) {        // when user doesn't have edit permission
-            if (tinymce.activeEditor && tinymce.activeEditor.id) {
-                document.getElementById(tinymce.activeEditor.id).setAttribute('contenteditable', false)
+        if (this.props.permissions && !(this.props.permissions.includes('access_formatting_bar')||this.props.permissions.includes('elements_add_remove'))) {        // when user doesn't have edit permission
+           if (tinymce.activeEditor && tinymce.activeEditor.id) {
+               document.getElementById(tinymce.activeEditor.id).setAttribute('contenteditable', false)
             }
          }
-        if(tinymce.activeEditor && tinymce.activeEditor.id!==e.target.id && (this.props.element.subtype&&this.props.element.subtype!=="mathml")){
+        if(tinymce.activeEditor && tinymce.activeEditor.id !== e.target.id && ((this.props.element.subtype && this.props.element.subtype !== "mathml") || (this.props.element.figuretype && this.props.element.figuretype === "interactive"))){
             e.preventDefault();
             e.stopPropagation();
             return false;
