@@ -38,7 +38,6 @@ export default function ElementSaprator(props) {
             dropdown = 'dropdown'
             if (elems.indexOf(dropdown) === -1) {
                 setShowClass(false)
-                //setshowInteractiveOption({status:false,type:""})
             }
         })
     });
