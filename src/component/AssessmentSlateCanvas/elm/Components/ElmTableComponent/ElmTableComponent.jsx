@@ -115,7 +115,7 @@ class ElmTableComponent extends Component {
         } else if (currentSlate && currentSlate.ancestor && currentSlate.ancestor.ancestor && elmData.includes(currentSlate.ancestor.ancestor.containerUrn)) {
             parent1.urn = currentSlate.ancestor.ancestor.containerUrn
         } else if (currentSlate && currentSlate.ancestor && currentSlate.ancestor.ancestor && currentSlate.ancestor.ancestor.ancestor && elmData.includes(currentSlate.ancestor.ancestor.ancestor.containerUrn)) {
-            parent1.urn = currentSlate.ancestor.ancestor.ancesto.containerUrn
+            parent1.urn = currentSlate.ancestor.ancestor.ancestor.containerUrn
         } else if (currentSlate && currentSlate.ancestor && currentSlate.ancestor.ancestor && currentSlate.ancestor.ancestor.ancestor && currentSlate.ancestor.ancestor.ancestor.ancestor && elmData.includes(currentSlate.ancestor.ancestor.ancestor.ancestor.containerUrn)) {
             parent1.urn = currentSlate.ancestor.ancestor.ancestor.ancestor.containerUrn
         } else {
@@ -425,7 +425,7 @@ class ElmTableComponent extends Component {
     };
 
     render() {
-        const { isLoading, elmLoading } = this.props.elmReducer;
+        const { isLoading } = this.props.elmReducer;
         {
             if (this.props.elmReducer.errFlag == true) {
                 return <ElmError elmErrorProps={this.elmErrorProps} />
@@ -466,7 +466,6 @@ class ElmTableComponent extends Component {
 
 
 export default connect((state) => {
-    console.log("state.appStore.setCurrentSlateAncestorData",state.appStore.currentSlateAncestorData)
     return {
         elmReducer: state.elmReducer,
         currentSlateAncestorData: state.appStore.currentSlateAncestorData

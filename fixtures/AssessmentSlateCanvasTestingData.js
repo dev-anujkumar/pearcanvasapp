@@ -2221,3 +2221,702 @@ export const assessmentSlateWithNewData = {
     "versionUrn": "urn:pearson:work:4da32e71-a6b5-4daa-84ed-fb72d6b0aa74",
     "contentUrn": "urn:pearson:entity:30e2df12-8683-4ef7-b064-d889d4d480f6"
 }
+
+export const CurrentSlateAncestor = {
+    currentSlateAncestorData1:
+    {
+        containerUrn: "urn:pearson:manifest:bb4e289e-8add-4c30-9f52-33b8fd246f81",
+        entityUrn: "urn:pearson:entity:a92c93e9-7eca-4855-aa52-8746076382c7",
+        title: "AS67",
+        type: "assessment",
+        matterType: "BodyMatter",
+        ancestor: {
+            containerUrn: "urn:pearson:manifest:2cd2b0e9-5d9e-4f14-a4ed-8daf8dd871fe",
+            entityUrn: "urn:pearson:entity:949c84a3-8b21-4809-9728-bd9bf7d5a80b",
+            title: "M67",
+            type: "module",
+            ancestor: {
+                containerUrn: "urn:pearson:manifest:c4f8a211-7518-448c-acd0-831cd7715ae1",
+                entityUrn: "urn:pearson:entity:c93ac30e-9945-4c1f-afbc-74cff157c589",
+                title: "C67",
+                type: "chapter",
+                ancestor: {
+                    containerUrn: "urn:pearson:manifest:f870431b-29a1-42a7-90e1-05ad274f00c5",
+                    entityUrn: "urn:pearson:entity:39541e3c-92bb-453b-b147-665663bf2d78",
+                    title: "P67",
+                    type: "part",
+                    ancestor: {
+                        containerUrn: "urn:pearson:distributable:97aec104-3c20-46c2-825b-be5c1ea9ac4e",
+                        entityUrn: "urn:pearson:entity:ae765bae-a86c-4020-8e35-b98fcb0e3a5f",
+                        title: "CYQA_Dec21",
+                        type: "project"
+                    }
+                }
+            }
+        }
+    },
+    currentSlateAncestorData2:
+    {
+        containerUrn: "urn:pearson:manifest:50778b02-a808-4a8c-9c7c-923181e1a7fc",
+        entityUrn: "urn:pearson:entity:e14419c8-640e-4767-89c6-c439d9537db1",
+        title: "AS--67",
+        type: "assessment",
+        matterType: "BodyMatter",
+        ancestor: {
+            containerUrn: "urn:pearson:manifest:c4f8a211-7518-448c-acd0-831cd7715ae1",
+            entityUrn: "urn:pearson:entity:c93ac30e-9945-4c1f-afbc-74cff157c589",
+            title: "C67",
+            type: "chapter",
+            ancestor: {
+                containerUrn: "urn:pearson:manifest:f870431b-29a1-42a7-90e1-05ad274f00c5",
+                entityUrn: "urn:pearson:entity:39541e3c-92bb-453b-b147-665663bf2d78",
+                title: "P67",
+                type: "part",
+                ancestor: {
+                    containerUrn: "urn:pearson:distributable:97aec104-3c20-46c2-825b-be5c1ea9ac4e",
+                    entityUrn: "urn:pearson:entity:ae765bae-a86c-4020-8e35-b98fcb0e3a5f",
+                    title: "CYQA_Dec21",
+                    type: "project"
+                }
+            }
+        }
+    },
+    currentSlateAncestorData3:
+    {
+        containerUrn: "urn:pearson:manifest:2473babc-3182-4639-b36e-4177e03fac03",
+        entityUrn: "urn:pearson:entity:4e2e5124-e6f3-4db0-96b6-1d805baee6bb",
+        title: "AS3",
+        type: "assessment",
+        matterType: "BodyMatter",
+        ancestor: {
+            containerUrn: "urn:pearson:manifest:761f2d68-6a7c-41e9-8363-ca81ab926b82",
+            entityUrn: "urn:pearson:entity:dfd414ed-6e32-4d71-90d0-231158853e45",
+            title: "Chap1",
+            type: "chapter",
+            ancestor: {
+                containerUrn: "urn:pearson:manifest:1e4ce418-4160-4d8f-bbae-7a2c814555ad",
+                entityUrn: "urn:pearson:entity:e0066675-a993-4f03-aa3c-cd5a4631da41",
+                title: "Part1",
+                type: "part",
+                ancestor: {
+                    containerUrn: "urn:pearson:distributable:97aec104-3c20-46c2-825b-be5c1ea9ac4e",
+                    entityUrn: "urn:pearson:entity:ae765bae-a86c-4020-8e35-b98fcb0e3a5f",
+                    title: "CYQA_Dec21",
+                    type: "project"
+                }
+            }
+        }
+    },
+    currentSlateAncestorData4:
+    {
+        containerUrn: "urn:pearson:manifest:cfcfaa16-6e12-4ec8-b764-e0a440ee7bea",
+        entityUrn: "urn:pearson:entity:f2126c57-5fcb-4dae-95ed-6811c140f71a",
+        title: "AS1",
+        type: "assessment",
+        matterType: "BodyMatter",
+        ancestor: {
+            containerUrn: "urn:pearson:manifest:823f4807-74f5-4411-b9e2-5ede994b1091",
+            entityUrn: "urn:pearson:entity:fc5a6d43-b861-490c-9df5-5843dd4046e4",
+            title: "Mod1",
+            type: "module",
+            ancestor: {
+                containerUrn: "urn:pearson:manifest:761f2d68-6a7c-41e9-8363-ca81ab926b82",
+                entityUrn: "urn:pearson:entity:dfd414ed-6e32-4d71-90d0-231158853e45",
+                title: "Chap1",
+                type: "chapter",
+                ancestor: {
+                    containerUrn: "urn:pearson:manifest:1e4ce418-4160-4d8f-bbae-7a2c814555ad",
+                    entityUrn: "urn:pearson:entity:e0066675-a993-4f03-aa3c-cd5a4631da41",
+                    title: "Part1",
+                    type: "part",
+                    ancestor: {
+                        containerUrn: "urn:pearson:distributable:97aec104-3c20-46c2-825b-be5c1ea9ac4e",
+                        entityUrn: "urn:pearson:entity:ae765bae-a86c-4020-8e35-b98fcb0e3a5f",
+                        title: "CYQA_Dec21",
+                        type: "project"
+                    }
+                }
+            }
+        }
+    },
+    currentSlateAncestorData5:
+    {
+        containerUrn: "urn:pearson:manifest:d29dfda8-73bc-4ad5-bd4a-3381193549d7",
+        entityUrn: "urn:pearson:entity:9734374c-9032-4fe8-aa14-7500cedd0e88",
+        title: "",
+        type: "assessment",
+        matterType: "BodyMatter",
+        ancestor: {
+            containerUrn: "urn:pearson:manifest:7a37125e-038b-43ad-a9cd-c46e5cab4b1b",
+            entityUrn: "urn:pearson:entity:a3e502ad-e60b-43b2-8b11-065874cdb652",
+            title: "",
+            type: "module",
+            ancestor: {
+                containerUrn: "urn:pearson:manifest:df38223f-8dac-43ee-b720-edb053bbfa71",
+                entityUrn: "urn:pearson:entity:1b4235f3-63ed-4e88-821b-af12f4d087ef",
+                title: "chap4",
+                type: "chapter",
+                ancestor: {
+                    containerUrn: "urn:pearson:manifest:1e4ce418-4160-4d8f-bbae-7a2c814555ad",
+                    entityUrn: "urn:pearson:entity:e0066675-a993-4f03-aa3c-cd5a4631da41",
+                    title: "Part1",
+                    type: "part",
+                    ancestor: {
+                        containerUrn: "urn:pearson:distributable:97aec104-3c20-46c2-825b-be5c1ea9ac4e",
+                        entityUrn: "urn:pearson:entity:ae765bae-a86c-4020-8e35-b98fcb0e3a5f",
+                        title: "CYQA_Dec21",
+                        type: "project"
+                    }
+                }
+            }
+        }
+    }
+}
+
+export const newElmData = {
+    "type": "container",
+    "label": "project",
+    "containerUrn": "urn:pearson:distributable:97aec104-3c20-46c2-825b-be5c1ea9ac4e",
+    "contentUrn": "urn:pearson:entity:ae765bae-a86c-4020-8e35-b98fcb0e3a5f",
+    "versionUrn": "urn:pearson:distributable:97aec104-3c20-46c2-825b-be5c1ea9ac4e",
+    "numberOfResources": 14,
+    "projectVersionUrn": "urn:pearson:distributable:97aec104-3c20-46c2-825b-be5c1ea9ac4e",
+    "unformattedTitle": {
+        "en": "CYQA_Dec21"
+    },
+    "alignments": {
+        "resourceCollections": [
+            {
+                "rcUrn": "urn:pearson:rc:460c6239-f8a1-4be1-8c0b-0a01396c63de",
+                "title": {
+                    "en": "elm|urn:pearson:distributable:97aec104-3c20-46c2-825b-be5c1ea9ac4e|urn:pearson:distributable:97aec104-3c20-46c2-825b-be5c1ea9ac4e"
+                },
+                "description": {
+                    "en": "Elm collection for project urn:pearson:distributable:97aec104-3c20-46c2-825b-be5c1ea9ac4e container urn:pearson:distributable:97aec104-3c20-46c2-825b-be5c1ea9ac4e alignment"
+                },
+                "resources": [
+                    {
+                        "urn": "urn:pearson:work:763ee36d-aa7b-4ee9-af58-e31c8582e38a",
+                        "title": {
+                            "en": "Elm Assessments title is 1F42J2SAMU"
+                        },
+                        "description": {
+                            "en": "--"
+                        },
+                        "type": "assessment",
+                        "usageType": "Plan"
+                    },
+                    {
+                        "urn": "urn:pearson:work:5a0928b3-7761-406a-a1b9-ca1cc1aad6b3",
+                        "title": {
+                            "en": "Copy of PUF Assessment from Elm 01"
+                        },
+                        "description": {
+                            "en": "--"
+                        },
+                        "type": "assessment",
+                        "usageType": "Plan"
+                    },
+                    {
+                        "urn": "urn:pearson:work:fc7f7eff-05be-4e60-ad1b-60bd2151ddc2",
+                        "title": {
+                            "en": "PUF Assessment from Elm 02"
+                        },
+                        "description": {
+                            "en": "--"
+                        },
+                        "type": "assessment",
+                        "usageType": "Plan"
+                    },
+                    {
+                        "urn": "urn:pearson:work:1d06d487-fcbe-4309-ad8d-85968e774656",
+                        "title": {
+                            "en": "Copy of PUF Assessment from Elm 02"
+                        },
+                        "description": {
+                            "en": "--"
+                        },
+                        "type": "assessment",
+                        "usageType": "Plan"
+                    },
+                    {
+                        "urn": "urn:pearson:work:dc75e07e-c33f-4ffe-b76c-1c13fb93e79f",
+                        "title": {
+                            "en": "Copy of Copy of PUF Assessment from Elm 01"
+                        },
+                        "description": {
+                            "en": "--"
+                        },
+                        "type": "assessment",
+                        "usageType": "Plan"
+                    },
+                    {
+                        "urn": "urn:pearson:work:b209bb2f-0500-4a1a-b1a5-3e41af325a31",
+                        "title": {
+                            "en": "Copy of Copy of PUF Assessment from Elm 01"
+                        },
+                        "description": {
+                            "en": "--"
+                        },
+                        "type": "assessment",
+                        "usageType": "Plan"
+                    },
+                    {
+                        "urn": "urn:pearson:work:610896d7-2e67-4913-835f-14707a8d2437",
+                        "title": {
+                            "en": "dfabhdfzhgdfhdfh"
+                        },
+                        "description": {
+                            "en": "undefined"
+                        },
+                        "type": "assessmentItem",
+                        "usageType": "Plan"
+                    },
+                    {
+                        "urn": "urn:pearson:work:589ae7d6-7413-49fd-9eb5-08ac174ac12e",
+                        "title": {
+                            "en": "Copy of dfabhdfzhgdfhdfh_edited title"
+                        },
+                        "description": {
+                            "en": "undefined"
+                        },
+                        "type": "assessmentItem",
+                        "usageType": "Plan"
+                    },
+                    {
+                        "urn": "urn:pearson:work:9cf196bc-4ef9-4713-b6c8-03e8bd4301cb",
+                        "title": {
+                            "en": "Copy of new item chapter with assessment name"
+                        },
+                        "description": {
+                            "en": "undefined"
+                        },
+                        "type": "assessmentItem",
+                        "usageType": "Plan"
+                    },
+                    {
+                        "urn": "urn:pearson:work:896197d7-3f8c-4578-aa2d-cc85ca17eba0",
+                        "title": {
+                            "en": "adasd"
+                        },
+                        "description": {
+                            "en": "undefined"
+                        },
+                        "type": "assessmentItem",
+                        "usageType": "Plan"
+                    },
+                    {
+                        "urn": "urn:pearson:work:c20d01c5-4bda-4374-af75-6ca3b98bb0ce",
+                        "title": {
+                            "en": "mcq"
+                        },
+                        "description": {
+                            "en": "undefined"
+                        },
+                        "type": "assessmentItem",
+                        "usageType": "Plan"
+                    },
+                    {
+                        "urn": "urn:pearson:work:cf68ac9a-6ac0-4da2-aac7-060ee9deec65",
+                        "title": {
+                            "en": "Copy of PAFAA 2125 Item 2"
+                        },
+                        "description": {
+                            "en": "undefined"
+                        },
+                        "type": "assessmentItem",
+                        "usageType": "Plan"
+                    }
+                ]
+            }
+        ]
+    },
+    "contents": {
+        "bodyMatter": [
+            {
+                "type": "container",
+                "label": "chapter",
+                "containerUrn": "urn:pearson:manifest:d1544f9f-3266-4217-aab7-5f3b463aadc7",
+                "contentUrn": "urn:pearson:entity:dfea6e72-b290-4acf-94a5-b6ef2e1262b7",
+                "versionUrn": "urn:pearson:manifest:d1544f9f-3266-4217-aab7-5f3b463aadc7",
+                "unformattedTitle": {
+                    "en": "chpter5"
+                },
+                "contents": {
+                    "bodyMatter": [
+                        {
+                            "type": "container",
+                            "label": "module",
+                            "containerUrn": "urn:pearson:manifest:e5b5c211-e1ad-4f1a-ab94-e6d001ad16d9",
+                            "contentUrn": "urn:pearson:entity:95bae58a-70d8-4017-b4bd-d89031afc935",
+                            "versionUrn": "urn:pearson:manifest:e5b5c211-e1ad-4f1a-ab94-e6d001ad16d9",
+                            "unformattedTitle": {
+                                "en": "mod5"
+                            },
+                            "alignments": {
+                                "resourceCollections": [
+                                    {
+                                        "rcUrn": "urn:pearson:rc:99e78628-d49e-486e-8d7c-98b79c100cb0",
+                                        "title": {
+                                            "en": "elm|urn:pearson:distributable:97aec104-3c20-46c2-825b-be5c1ea9ac4e|urn:pearson:manifest:e5b5c211-e1ad-4f1a-ab94-e6d001ad16d9"
+                                        },
+                                        "description": {
+                                            "en": "Elm collection for project urn:pearson:distributable:97aec104-3c20-46c2-825b-be5c1ea9ac4e container urn:pearson:manifest:e5b5c211-e1ad-4f1a-ab94-e6d001ad16d9 alignment"
+                                        },
+                                        "resources": [
+                                            {
+                                                "urn": "urn:pearson:work:b8756ecf-2bf0-4fc6-9c23-6c1fae6a8418",
+                                                "title": {
+                                                    "en": "test assessment"
+                                                },
+                                                "description": {
+                                                    "en": "--"
+                                                },
+                                                "type": "assessment",
+                                                "usageType": "Plan"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "type": "container",
+                "label": "chapter",
+                "containerUrn": "urn:pearson:manifest:f4ab674c-9015-4cba-9752-09e32b62e4f3",
+                "contentUrn": "urn:pearson:entity:df477df5-78f8-4552-a372-9f954b829e96",
+                "versionUrn": "urn:pearson:manifest:f4ab674c-9015-4cba-9752-09e32b62e4f3",
+                "unformattedTitle": {
+                    "en": "C4"
+                },
+                "alignments": {
+                    "resourceCollections": [
+                        {
+                            "rcUrn": "urn:pearson:rc:9d738752-6f70-49ba-a482-a83278867196",
+                            "title": {
+                                "en": "elm|urn:pearson:distributable:97aec104-3c20-46c2-825b-be5c1ea9ac4e|urn:pearson:manifest:f4ab674c-9015-4cba-9752-09e32b62e4f3"
+                            },
+                            "description": {
+                                "en": "Elm collection for project urn:pearson:distributable:97aec104-3c20-46c2-825b-be5c1ea9ac4e container urn:pearson:manifest:f4ab674c-9015-4cba-9752-09e32b62e4f3 alignment"
+                            },
+                            "resources": [
+                                {
+                                    "urn": "urn:pearson:work:821eb68c-2228-4b38-9be4-02edd732651f",
+                                    "title": {
+                                        "en": "Elm Assessments title is IFTPFR8G4E"
+                                    },
+                                    "description": {
+                                        "en": "--"
+                                    },
+                                    "type": "assessment",
+                                    "usageType": "Plan"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            {
+                "type": "container",
+                "label": "part",
+                "containerUrn": "urn:pearson:manifest:eb2128cd-4348-439a-aa48-62b4877f9bfd",
+                "contentUrn": "urn:pearson:entity:5d900972-d967-410a-bce5-7c4bca3fc694",
+                "versionUrn": "urn:pearson:manifest:eb2128cd-4348-439a-aa48-62b4877f9bfd",
+                "unformattedTitle": {
+                    "en": "P2"
+                },
+                "alignments": {
+                    "resourceCollections": [
+                        {
+                            "rcUrn": "urn:pearson:rc:94c2801b-607d-44c2-a141-07a0a8cf0d68",
+                            "title": {
+                                "en": "elm|urn:pearson:distributable:97aec104-3c20-46c2-825b-be5c1ea9ac4e|urn:pearson:manifest:eb2128cd-4348-439a-aa48-62b4877f9bfd"
+                            },
+                            "description": {
+                                "en": "Elm collection for project urn:pearson:distributable:97aec104-3c20-46c2-825b-be5c1ea9ac4e container urn:pearson:manifest:eb2128cd-4348-439a-aa48-62b4877f9bfd alignment"
+                            },
+                            "resources": [
+                                {
+                                    "urn": "urn:pearson:work:821eb68c-2228-4b38-9be4-02edd732651f",
+                                    "title": {
+                                        "en": "Elm Assessments title is IFTPFR8G4E"
+                                    },
+                                    "description": {
+                                        "en": "--"
+                                    },
+                                    "type": "assessment",
+                                    "usageType": "Plan"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            {
+                "type": "container",
+                "label": "part",
+                "containerUrn": "urn:pearson:manifest:00d0427e-e575-4132-8082-0248b7bf9991",
+                "contentUrn": "urn:pearson:entity:097beb01-72a9-48f6-a445-4caf25ac7397",
+                "versionUrn": "urn:pearson:manifest:00d0427e-e575-4132-8082-0248b7bf9991",
+                "unformattedTitle": {
+                    "en": "P3"
+                },
+                "contents": {
+                    "bodyMatter": [
+                        {
+                            "type": "container",
+                            "label": "chapter",
+                            "containerUrn": "urn:pearson:manifest:7e005dc7-85cb-4ebf-bce4-6355203ba569",
+                            "contentUrn": "urn:pearson:entity:1e16d2e1-af94-41a8-80ce-f0e13338ff13",
+                            "versionUrn": "urn:pearson:manifest:7e005dc7-85cb-4ebf-bce4-6355203ba569",
+                            "unformattedTitle": {
+                                "en": "C3"
+                            },
+                            "alignments": {
+                                "resourceCollections": [
+                                    {
+                                        "rcUrn": "urn:pearson:rc:ddf8f754-f6b4-4813-8faa-f063e79da3a7",
+                                        "title": {
+                                            "en": "elm|urn:pearson:distributable:97aec104-3c20-46c2-825b-be5c1ea9ac4e|urn:pearson:manifest:7e005dc7-85cb-4ebf-bce4-6355203ba569"
+                                        },
+                                        "description": {
+                                            "en": "Elm collection for project urn:pearson:distributable:97aec104-3c20-46c2-825b-be5c1ea9ac4e container urn:pearson:manifest:7e005dc7-85cb-4ebf-bce4-6355203ba569 alignment"
+                                        },
+                                        "resources": [
+                                            {
+                                                "urn": "urn:pearson:work:821eb68c-2228-4b38-9be4-02edd732651f",
+                                                "title": {
+                                                    "en": "Elm Assessments title is IFTPFR8G4E"
+                                                },
+                                                "description": {
+                                                    "en": "--"
+                                                },
+                                                "type": "assessment",
+                                                "usageType": "Plan"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "type": "container",
+                "label": "chapter",
+                "containerUrn": "urn:pearson:manifest:80988f18-3326-4c0f-8b60-151d871a86d3",
+                "contentUrn": "urn:pearson:entity:98f9c874-124e-43f0-b7fc-a9c3ccc58c63",
+                "versionUrn": "urn:pearson:manifest:80988f18-3326-4c0f-8b60-151d871a86d3",
+                "unformattedTitle": {
+                    "en": "CH45"
+                },
+                "alignments": {
+                    "resourceCollections": [
+                        {
+                            "rcUrn": "urn:pearson:rc:a47d774a-3beb-405e-9253-62faae408162",
+                            "title": {
+                                "en": "elm|urn:pearson:distributable:97aec104-3c20-46c2-825b-be5c1ea9ac4e|urn:pearson:manifest:80988f18-3326-4c0f-8b60-151d871a86d3"
+                            },
+                            "description": {
+                                "en": "Elm collection for project urn:pearson:distributable:97aec104-3c20-46c2-825b-be5c1ea9ac4e container urn:pearson:manifest:80988f18-3326-4c0f-8b60-151d871a86d3 alignment"
+                            },
+                            "resources": [
+                                {
+                                    "urn": "urn:pearson:work:b8756ecf-2bf0-4fc6-9c23-6c1fae6a8418",
+                                    "title": {
+                                        "en": "test assessment"
+                                    },
+                                    "description": {
+                                        "en": "--"
+                                    },
+                                    "type": "assessment",
+                                    "usageType": "Plan"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            {
+                "type": "container",
+                "label": "part",
+                "containerUrn": "urn:pearson:manifest:1e4ce418-4160-4d8f-bbae-7a2c814555ad",
+                "contentUrn": "urn:pearson:entity:e0066675-a993-4f03-aa3c-cd5a4631da41",
+                "versionUrn": "urn:pearson:manifest:1e4ce418-4160-4d8f-bbae-7a2c814555ad",
+                "unformattedTitle": {
+                    "en": "Part1"
+                },
+                "alignments": {
+                    "resourceCollections": [
+                        {
+                            "rcUrn": "urn:pearson:rc:47427992-02f8-4e98-8dc7-12a5c1e59447",
+                            "title": {
+                                "en": "elm|urn:pearson:distributable:97aec104-3c20-46c2-825b-be5c1ea9ac4e|urn:pearson:manifest:1e4ce418-4160-4d8f-bbae-7a2c814555ad"
+                            },
+                            "description": {
+                                "en": "Elm collection for project urn:pearson:distributable:97aec104-3c20-46c2-825b-be5c1ea9ac4e container urn:pearson:manifest:1e4ce418-4160-4d8f-bbae-7a2c814555ad alignment"
+                            },
+                            "resources": [
+                                {
+                                    "urn": "urn:pearson:work:b8756ecf-2bf0-4fc6-9c23-6c1fae6a8418",
+                                    "title": {
+                                        "en": "test assessment"
+                                    },
+                                    "description": {
+                                        "en": "--"
+                                    },
+                                    "type": "assessment",
+                                    "usageType": "Plan"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "contents": {
+                    "bodyMatter": [
+                        {
+                            "type": "container",
+                            "label": "chapter",
+                            "containerUrn": "urn:pearson:manifest:761f2d68-6a7c-41e9-8363-ca81ab926b82",
+                            "contentUrn": "urn:pearson:entity:dfd414ed-6e32-4d71-90d0-231158853e45",
+                            "versionUrn": "urn:pearson:manifest:761f2d68-6a7c-41e9-8363-ca81ab926b82",
+                            "unformattedTitle": {
+                                "en": "Chap1"
+                            },
+                            "contents": {
+                                "bodyMatter": [
+                                    {
+                                        "type": "container",
+                                        "label": "module",
+                                        "containerUrn": "urn:pearson:manifest:823f4807-74f5-4411-b9e2-5ede994b109f",
+                                        "contentUrn": "urn:pearson:entity:fc5a6d43-b861-490c-9df5-5843dd4046e4",
+                                        "versionUrn": "urn:pearson:manifest:823f4807-74f5-4411-b9e2-5ede994b109f",
+                                        "unformattedTitle": {
+                                            "en": "Mod1"
+                                        },
+                                        "alignments": {
+                                            "resourceCollections": [
+                                                {
+                                                    "rcUrn": "urn:pearson:rc:e0a892e9-8fd6-469f-86b8-5c0b45c17630",
+                                                    "title": {
+                                                        "en": "elm|urn:pearson:distributable:97aec104-3c20-46c2-825b-be5c1ea9ac4e|urn:pearson:manifest:823f4807-74f5-4411-b9e2-5ede994b109f"
+                                                    },
+                                                    "description": {
+                                                        "en": "Elm collection for project urn:pearson:distributable:97aec104-3c20-46c2-825b-be5c1ea9ac4e container urn:pearson:manifest:823f4807-74f5-4411-b9e2-5ede994b109f alignment"
+                                                    },
+                                                    "resources": [
+                                                        {
+                                                            "urn": "urn:pearson:work:b8756ecf-2bf0-4fc6-9c23-6c1fae6a8418",
+                                                            "title": {
+                                                                "en": "test assessment"
+                                                            },
+                                                            "description": {
+                                                                "en": "--"
+                                                            },
+                                                            "type": "assessment",
+                                                            "usageType": "Plan"
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "type": "container",
+                            "label": "chapter",
+                            "containerUrn": "urn:pearson:manifest:affc71b9-16f9-4448-9732-9610e26745cd",
+                            "contentUrn": "urn:pearson:entity:551bc929-e1de-4878-b8b4-b6550a16f40c",
+                            "versionUrn": "urn:pearson:manifest:affc71b9-16f9-4448-9732-9610e26745cd",
+                            "unformattedTitle": {
+                                "en": "Chap2"
+                            },
+                            "alignments": {
+                                "resourceCollections": [
+                                    {
+                                        "rcUrn": "urn:pearson:rc:d5ebaa01-0bd5-4341-96cc-75667f50fc10",
+                                        "title": {
+                                            "en": "elm|urn:pearson:distributable:97aec104-3c20-46c2-825b-be5c1ea9ac4e|urn:pearson:manifest:affc71b9-16f9-4448-9732-9610e26745cd"
+                                        },
+                                        "description": {
+                                            "en": "Elm collection for project urn:pearson:distributable:97aec104-3c20-46c2-825b-be5c1ea9ac4e container urn:pearson:manifest:affc71b9-16f9-4448-9732-9610e26745cd alignment"
+                                        },
+                                        "resources": [
+                                            {
+                                                "urn": "urn:pearson:work:b8756ecf-2bf0-4fc6-9c23-6c1fae6a8418",
+                                                "title": {
+                                                    "en": "test assessment"
+                                                },
+                                                "description": {
+                                                    "en": "--"
+                                                },
+                                                "type": "assessment",
+                                                "usageType": "Plan"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "type": "container",
+                            "label": "chapter",
+                            "containerUrn": "urn:pearson:manifest:38f19555-2002-4a3c-998e-bdb91c7fe0d4",
+                            "contentUrn": "urn:pearson:entity:901261b9-1f8a-4ff1-892b-624d06c7438b",
+                            "versionUrn": "urn:pearson:manifest:38f19555-2002-4a3c-998e-bdb91c7fe0d4",
+                            "unformattedTitle": {
+                                "en": "chap3"
+                            },
+                            "contents": {
+                                "bodyMatter": [
+                                    {
+                                        "type": "container",
+                                        "label": "module",
+                                        "containerUrn": "urn:pearson:manifest:1b050a2a-a248-45e8-b09c-167dd4c6be14",
+                                        "contentUrn": "urn:pearson:entity:6d3c1207-1506-4367-a349-ec3827e0b5f3",
+                                        "versionUrn": "urn:pearson:manifest:1b050a2a-a248-45e8-b09c-167dd4c6be14",
+                                        "unformattedTitle": {
+                                            "en": "Mod3"
+                                        },
+                                        "alignments": {
+                                            "resourceCollections": [
+                                                {
+                                                    "rcUrn": "urn:pearson:rc:1cbaaaeb-21d1-4abe-a5b9-14bab87e753d",
+                                                    "title": {
+                                                        "en": "elm|urn:pearson:distributable:97aec104-3c20-46c2-825b-be5c1ea9ac4e|urn:pearson:manifest:1b050a2a-a248-45e8-b09c-167dd4c6be14"
+                                                    },
+                                                    "description": {
+                                                        "en": "Elm collection for project urn:pearson:distributable:97aec104-3c20-46c2-825b-be5c1ea9ac4e container urn:pearson:manifest:1b050a2a-a248-45e8-b09c-167dd4c6be14 alignment"
+                                                    },
+                                                    "resources": [
+                                                        {
+                                                            "urn": "urn:pearson:work:b8756ecf-2bf0-4fc6-9c23-6c1fae6a8418",
+                                                            "title": {
+                                                                "en": "test assessment"
+                                                            },
+                                                            "description": {
+                                                                "en": "--"
+                                                            },
+                                                            "type": "assessment",
+                                                            "usageType": "Plan"
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}
