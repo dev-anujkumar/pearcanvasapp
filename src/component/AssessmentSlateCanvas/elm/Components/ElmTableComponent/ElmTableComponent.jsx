@@ -103,7 +103,7 @@ class ElmTableComponent extends Component {
      * @param elmData- ELM resouces API data
      * @param currentSlate- details of ancestors of current slat
     */
-    setParentUrn = (elmData, currentSlate = this.props.setCurrentSlateAncestorData) => {
+    setParentUrn = (elmData, currentSlate = this.props.currentSlateAncestorData) => {
         let parent1 = {
             urn: "",
             type: ""
@@ -466,8 +466,9 @@ class ElmTableComponent extends Component {
 
 
 export default connect((state) => {
+    console.log("state.appStore.setCurrentSlateAncestorData",state.appStore.currentSlateAncestorData)
     return {
         elmReducer: state.elmReducer,
-        setCurrentSlateAncestorData: state.appStore.setCurrentSlateAncestorData
+        currentSlateAncestorData: state.appStore.currentSlateAncestorData
     }
 })(ElmTableComponent);
