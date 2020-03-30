@@ -181,11 +181,12 @@ class ElementPoetry extends Component {
                                     </ElementContainer>
                                     <ElementSaprator
                                         index={index}
-                                        esProps={this.props.elementSepratorProps(index, false, this.props.parentUrn, poetryData, parentIndex)}
-                                        elementType={this.props.model.type}
+                                        esProps={this.props.elementSepratorProps(index, false, this.props.parentUrn)}
+                                       // elementType={this.props.model.type}
+                                       elementType="poetry"
                                         sectionBreak= {false}
                                         permissions={this.props.permissions}
-                                        onClickCapture={this.props.onClickCapture}
+                                        //onClickCapture={this.props.onClickCapture}
                                     />
                                 </React.Fragment>
                             )

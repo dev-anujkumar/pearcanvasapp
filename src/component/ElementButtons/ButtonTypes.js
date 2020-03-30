@@ -28,5 +28,6 @@ export default {
     ELM_ASSESSMENT_ITEM:"elmAssessmentItem",
     FEEDBACK : "feedback",
     ASSESSMENT_CLOSE_WINDOW:"assessmentCloseWindowIcon",
-    POETRY_ELEMENT: "poetry-elem"
+    POETRY_ELEMENT: "poetry-elem",
+    STANZA_ELEMENT: "stanza-elem"
 }

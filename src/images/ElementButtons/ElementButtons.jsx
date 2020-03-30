@@ -18,6 +18,8 @@ export const textIcon = (function () {
     return (<svg id="textIcon" viewBox="0 0 16 16" width="16" height="16" version="1.1" xmlns="http://www.w3.org/2000/svg"><rect width="16" height="16" fill="none" /><path d="M14.2,1.5H3.8a.71.71,0,0,0-.8.7V4.4H4.5V3H8.3V15H6v1.5h6V15H9.8V3h3.8V4.5H15V2.2A.71.71,0,0,0,14.2,1.5Z" /></svg>)
 })();
 
+/****************************************************Poetry Element***********************************************************/
+
 export const poetryIcon = (function () {
     return (<svg width="18px" height="18px" viewBox="0 0 18 18" version="1.1" xmlns="http://www.w3.org/2000/svg">
     <g id="PCAT-7012-Poetry" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -30,6 +32,24 @@ export const poetryIcon = (function () {
     </g>
 </svg>)
 })();
+
+export const stanzaIcon = (function () {
+    return (<svg width="16px" height="14px" viewBox="0 0 16 14" version="1.1" xmlns="http://www.w3.org/2000/svg">
+        <g id="PCAT-7012-Poetry" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+            <g id="05" transform="translate(-1107.000000, -618.000000)">
+                <g id="icon/element/Stanza" transform="translate(1103.000000, 613.000000)">
+                    <rect id="Rectangle" fill="#EEEEEE" fill-rule="evenodd" opacity="0" x="0" y="0" width="24" height="24"></rect>
+                    <polyline id="Path" fill="#454545" fill-rule="nonzero" points="7.88888889 11 19.8888889 11 19.8888889 9 7.88888889 9"></polyline>
+                    <polyline id="Path" fill="#454545" fill-rule="nonzero" points="4 5 4 7 20 7 20 5"></polyline>
+                    <polyline id="Path" fill="#454545" fill-rule="nonzero" points="7.88888889 19 19.8888889 19 19.8888889 17 7.88888889 17"></polyline>
+                    <polygon id="Path" fill="#454545" fill-rule="nonzero" points="4 15 20 15 20 13 4 13"></polygon>
+                </g>
+            </g>
+        </g>
+    </svg>)
+})();
+
+/****************************************************************************************************************************/
 
 export const imageIcon = (function () {
     return (<svg id="image-media" viewBox="0 0 16 14" width="18" height="18" version="1.1" xmlns="http://www.w3.org/2000/svg"><rect width="18" height="18" fill="none" ></rect><path d="M15,2h0V14H1V2H15Zm0-1H1A1,1,0,0,0,0,2V14a1,1,0,0,0,1,1H15a1,1,0,0,0,1-1V2a1,1,0,0,0-1-1Z" transform="translate(0 -1)"></path><path d="M13,4.5A1.5,1.5,0,1,1,11.5,3,1.5,1.5,0,0,1,13,4.5Z" transform="translate(0 -1)"></path><path d="M14,13H2V11L5.5,5l4,5h1L14,7Z" transform="translate(0 -1)"></path></svg>)

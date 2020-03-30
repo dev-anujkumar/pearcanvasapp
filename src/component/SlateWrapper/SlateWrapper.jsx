@@ -571,7 +571,7 @@ class SlateWrapper extends Component {
         this.prohibitPropagation(event)
     }
 
-    splithandlerfunction = (type, index, firstOne, parentUrn, asideData, outerAsideIndex) => {
+    splithandlerfunction = (type, index, firstOne, parentUrn, asideData, outerAsideIndex ,poetryData) => {
         if (this.checkLockStatus()) {
             this.togglePopup(true)
             return false
@@ -640,13 +640,16 @@ class SlateWrapper extends Component {
                    
                 break;
             case 'poetry-elem':
-                this.props.createElement(POETRY, indexToinsert, parentUrn, asideData);
+                this.props.createElement(POETRY, indexToinsert, parentUrn);
+                break;
+            case 'stanza-elem':
+                this.props.createElement(STANZA, indexToinsert, parentUrn);
                 break;
             default:
         }
     }
 
-    elementSepratorProps = (index, firstOne, parentUrn, asideData, outerAsideIndex) => {
+    elementSepratorProps = (index, firstOne, parentUrn, asideData, outerAsideIndex , poetryData) => {
         return [
             {
                 buttonType: 'text-elem',
@@ -704,7 +707,7 @@ class SlateWrapper extends Component {
             },
             {
                 buttonType: 'poetry-elem',
-                buttonHandler: () => this.splithandlerfunction('poetry-elem',index, firstOne, parentUrn, asideData),
+                buttonHandler: () => this.splithandlerfunction('poetry-elem',index, firstOne, parentUrn),
                 tooltipText: 'Poetry Element',
                 tooltipDirection: 'left'
             },
@@ -712,6 +715,12 @@ class SlateWrapper extends Component {
                 buttonType: 'opener-elem',
                 buttonHandler: () => this.splithandlerfunction('opener-elem', 0, firstOne),
                 tooltipText: 'Opener Element',
+                tooltipDirection: 'left'
+            },
+            {
+                buttonType: 'stanza-elem',
+                buttonHandler: () => this.splithandlerfunction('stanza-elem',index, firstOne, parentUrn),
+                tooltipText: 'Stanza Element',
                 tooltipDirection: 'left'
             },
         ]

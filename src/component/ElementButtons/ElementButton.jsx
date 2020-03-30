@@ -24,7 +24,8 @@ import {
     elmAssessmentItem,
     feedbackIcon,
     assessmentCloseWindowIcon,
-    poetryIcon
+    poetryIcon,
+    stanzaIcon
 } from '../../images/ElementButtons/ElementButtons.jsx';
 import deleteIcon from '../../images/ElementButtons/deleteIcon.png'
 import forwardNavActive from '../../images/ElementButtons/forwardNavActive.png'
@@ -173,6 +174,11 @@ class Button extends Component {
             case buttonTypes.POETRY_ELEMENT:
                 buttonJSX = <span className="btn-element text-elem" onClick={clickHandlerFn}>
                     {poetryIcon}
+                    </span>
+                break;
+            case buttonTypes.STANZA_ELEMENT:
+                buttonJSX = <span className="btn-element text-elem" onClick={clickHandlerFn}>
+                    {stanzaIcon}
                     </span>
                 break;
                 
