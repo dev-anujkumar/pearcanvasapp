@@ -437,41 +437,42 @@ describe('Test- editor functions', () => {
         expect(spyaddMathmlFormulaButton).toHaveBeenCalledWith(editor);
         spyaddMathmlFormulaButton.mockClear()
     })
-    it('Test setCursorAtEnd ', () => {
-        let event = {
-            preventDefault: () => { },
-            stopPropagation: () => { }
-        }
-        let editor = {
-            on: (temp, cb) => { cb(event) },
-            innerHTML: '<p class="paragraphNumeroUno">hello</p>',
-            execCommand: jest.fn(),
-            selection: {
-                select: () => { },
-                collapse: () => {
-                    return true;
-                },
-            },
-            insertContent: jest.fn(),
-        }
-        tinymce.activeEditor = {
-            innerHTML: '<p class="paragraphNumeroUno">hello</p>',
-            innerText: "hello",
-            textContent: "hello",
-            outerHTML: '<div id="cypress-0" class="cypress-editable mce-content-body mce-edit-focus" placeholder="Type Something..." contenteditable="true" style="caret-color: black;" spellcheck="false"><p class="paragraphNumeroUno">hello</p></div>',
-            selection: {
-                getStart: () => {
-                    return tinymce.activeEditor.innerHTML;
-                }
-            },
-            getBody: () => {
-                return '<p class="definition-editor  mce-content-body mce-edit-focus" placeholder="Type Something" contenteditable="true" id="glossary-1" style="position: relative;" spellcheck="false">Test</p>'
-            }
-        }
-        const spysetCursorAtEnd = jest.spyOn(instance, 'setCursorAtEnd')
-        instance.setCursorAtEnd(editor);
-        expect(spysetCursorAtEnd).toHaveBeenCalled()
-    });
+    // Description - SetCursorAtEnd function is removed from JS file as it's not been used anywhere. So there is no need of this test case. 
+    // it('Test setCursorAtEnd ', () => {
+    //     let event = {
+    //         preventDefault: () => { },
+    //         stopPropagation: () => { }
+    //     }
+    //     let editor = {
+    //         on: (temp, cb) => { cb(event) },
+    //         innerHTML: '<p class="paragraphNumeroUno">hello</p>',
+    //         execCommand: jest.fn(),
+    //         selection: {
+    //             select: () => { },
+    //             collapse: () => {
+    //                 return true;
+    //             },
+    //         },
+    //         insertContent: jest.fn(),
+    //     }
+    //     tinymce.activeEditor = {
+    //         innerHTML: '<p class="paragraphNumeroUno">hello</p>',
+    //         innerText: "hello",
+    //         textContent: "hello",
+    //         outerHTML: '<div id="cypress-0" class="cypress-editable mce-content-body mce-edit-focus" placeholder="Type Something..." contenteditable="true" style="caret-color: black;" spellcheck="false"><p class="paragraphNumeroUno">hello</p></div>',
+    //         selection: {
+    //             getStart: () => {
+    //                 return tinymce.activeEditor.innerHTML;
+    //             }
+    //         },
+    //         getBody: () => {
+    //             return '<p class="definition-editor  mce-content-body mce-edit-focus" placeholder="Type Something" contenteditable="true" id="glossary-1" style="position: relative;" spellcheck="false">Test</p>'
+    //         }
+    //     }
+    //     const spysetCursorAtEnd = jest.spyOn(instance, 'setCursorAtEnd')
+    //     instance.setCursorAtEnd(editor);
+    //     expect(spysetCursorAtEnd).toHaveBeenCalled()
+    // });
     it("editorOnKeyup method", () => {
         let event = {
             target : {

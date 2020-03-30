@@ -46,13 +46,6 @@ export class ReactEditor extends React.Component {
         });
       },
       init_instance_callback: (editor) => {
-        // editor.fire('focus');
-        // let activeElement = editor.dom.getParent(editor.selection.getStart(), ".definition-editor");
-        // if (activeElement) {
-        //   if (!activeElement.innerText.trim().length) {
-        //     activeElement.classList.add('place-holder')
-        //   }
-        // }
         if (hasReviewerRole() && !hasProjectPermission('elements_add_remove')) {        // when user doesn't have edit permission
           if (editor && editor.id) {
             document.getElementById(editor.id).setAttribute('contenteditable', false)
@@ -193,17 +186,12 @@ export class ReactEditor extends React.Component {
       tooltip: "Wiris editor chemistry",
       onAction: () => {
         this.onChemMLAction(editor)
-        //editor.execCommand("tiny_mce_wiris_openFormulaEditorChemistry");
-        /* let wirisChemistryInstance = window.WirisPlugin.instances[editor.id].getCore().getCustomEditors();
-        wirisChemistryInstance.enable('chemistry');
-        window.WirisPlugin.instances[editor.id].openNewFormulaEditor(); */
       },
       onSetup: (buttonApi) => {
         /*
           make merge menu button apis available globally among compnenet
         */
         this.chemistryMlMenuButton = buttonApi;
-        //this.chemistryMlMenuButton.setDisabled(true);
       }
     });
   };
@@ -220,17 +208,12 @@ export class ReactEditor extends React.Component {
       tooltip: "Wiris editor math",
       onAction: () => {
         this.onMathMLAction(editor)
-        /* var wirisPluginInstance = window.WirisPlugin.instances[editor.id];
-        wirisPluginInstance.core.getCustomEditors().disable();
-        wirisPluginInstance.openNewFormulaEditor(); */
-        //editor.execCommand('tiny_mce_wiris_openFormulaEditor');
       },
       onSetup: (buttonApi) => {
         /*
           make merge menu button apis available globally among compnenet
         */
         this.mathMlMenuButton = buttonApi;
-        //this.mathMlMenuButton.setDisabled(true);
       }
     });
   };
@@ -280,10 +263,10 @@ export class ReactEditor extends React.Component {
 
   setGlossaryFootnoteNode = (id, glossaryNode, footnoteNode) => {
     if(id === "glossary-0" && glossaryNode && this.termtext){
-      glossaryNode.innerHTML = this.termtext;
+      glossaryNode.innerHTML = this.termtext.replace(/data-temp-mathml/g,'data-mathml').replace(/temp_Wirisformula/g,'Wirisformula');;
     }
     else if(id === "footnote-0" && footnoteNode && this.termtext){
-      footnoteNode.innerHTML = this.termtext;
+      footnoteNode.innerHTML = this.termtext.replace(/data-temp-mathml/g,'data-mathml').replace(/temp_Wirisformula/g,'Wirisformula');;
     }
   }
   
@@ -372,19 +355,15 @@ export class ReactEditor extends React.Component {
     this.editorConfig.selector = '#' + currentTarget.id;
     let termText = document.getElementById(currentTarget.id)&&document.getElementById(currentTarget.id).innerHTML;
     tinymce.init(this.editorConfig).then((d)=>{
-     // this.setCursorAtEnd(tinymce.activeEditor);
      if(termText) {
+      /**
+       * BG-1907 -[PCAT-7395] Temp classes in mathml cause issue in opening wiris editor.
+       */
+      termText = termText.replace(/data-temp-mathml/g,'data-mathml').replace(/temp_Wirisformula/g,'Wirisformula');
       document.getElementById(currentTarget.id).innerHTML = termText;
      }
      tinymce.activeEditor.selection.placeCaretAt(clickedX,clickedY) //Placing exact cursor position on clicking.
     })
-  }
-
-  setCursorAtEnd = (editor) => {
-    if(editor){
-      editor.selection.select(tinymce.activeEditor.getBody(), true);
-      editor.selection.collapse(false);
-    }
   }
 
   render() {

@@ -168,7 +168,7 @@ describe('Test convertElement- paragraph', () => {
         spyconversionElement.mockClear()
     });
 });
-xdescribe('Test convertElement- singleAssessment', () => {
+describe('Test convertElement- singleAssessment', () => {
     let store = mockStore(() => initialState2);
     it('Test convertElement  -assessment type', () => {
         store = mockStore(() => initialState2);
@@ -220,7 +220,7 @@ xdescribe('Test convertElement- singleAssessment', () => {
         assessmentDiv.setAttribute('data-id', 'urn:pearson:work:fa8ebea3-d9ba-4aec-8658-2f944841404a')
         let usageTypeSpan = document.createElement('span');
         usageTypeSpan.className = 'singleAssessment_Dropdown_currentLabel';
-        usageTypeSpan.innerText = 'Quiz'
+        //usageTypeSpan.innerText = 'Quiz';
         assessmentDiv.appendChild(usageTypeSpan)
         document.body.appendChild(assessmentDiv)
         let store = mockStore(() => initialState2);
