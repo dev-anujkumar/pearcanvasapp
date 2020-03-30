@@ -16,7 +16,6 @@ import { releaseSlateLockWithCallback, getSlateLockStatusWithCallback } from '..
 import PopUp from '../../PopUp';
 import {loadTrackChanges} from '../../CanvasWrapper/TCM_Integration_Actions';
 import { ALREADY_USED_SLATE_TOC } from '../../SlateWrapper/SlateWrapperConstants'
-
 function WithWrapperCommunication(WrappedComponent) {
     class CommunicationWrapper extends Component {
         constructor(props) {
@@ -223,6 +222,11 @@ function WithWrapperCommunication(WrappedComponent) {
                      loadTrackChanges();
                      break;
                 }
+                case 'fetchAllSlateDataFromWrapper':
+                    { 
+                        this.props.getAllSlatesData(message)
+                        break;
+                    }
             }
         }
 
@@ -396,6 +400,7 @@ function WithWrapperCommunication(WrappedComponent) {
                 config.scrolling = true;
                 config.totalPageCount = 0;
                 config.fromTOC = true;
+                config.parentLabel=message.node.nodeParentLabel;
                 this.props.getSlateLockStatus(config.projectUrn, config.slateManifestURN)
                 let slateData = {
                     currentProjectId: config.projectUrn,

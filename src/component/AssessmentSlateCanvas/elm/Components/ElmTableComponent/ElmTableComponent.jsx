@@ -76,24 +76,21 @@ class ElmTableComponent extends Component {
 
     renderTableData = (currentProps) => {
         const { errFlag, elmData, elmItemData, elmLoading, itemErrorFlag } = currentProps.elmReducer;
-        let data = JSON.stringify(elmData)
+        let apiData = JSON.stringify(elmData), parent=""
         if (((!errFlag && elmData) && !elmItemData)|| (this.state.openedFrom == "singleAssessment" && !itemErrorFlag && !errFlag && elmLoading)) {
-            if(data.includes(config.parentContainerUrn)){
+            if(config.parentLabel=="frontmatter"||config.parentLabel=="backmatter"){
+                this.filterData(false, config.projectUrn, elmData);
+            }
+            else if(apiData.includes(config.parentContainerUrn)){
                 this.filterData(false, config.parentContainerUrn, elmData);
             }else{
-                this.filterData(false, config.projectUrn, elmData);
+                parent= this.setParentUrn(apiData,this.props.currentSlateData)
+                this.filterData(false, parent, elmData);
             }
         }
         else if (!itemErrorFlag && elmItemData && elmLoading==false) {
             this.filterData(true, config.parentContainerUrn,elmItemData)
         }
-        // else if(this.state.openedFrom == "singleAssessment" && !itemErrorFlag && !errFlag && elmLoading){
-        //     if(data.includes(config.parentContainerUrn)){
-        //         this.filterData(false, config.parentContainerUrn, elmData);
-        //     }else{
-        //         this.filterData(false, config.projectUrn, elmData);
-        //     }
-        // }
         else if(this.state.openedFrom == "slateAssessment" && !errFlag && elmLoading){
             this.filterData(false,config.parentContainerUrn, elmData);
         }               
@@ -102,13 +99,38 @@ class ElmTableComponent extends Component {
         }
     }
 
+
+
+    setParentUrn = (elmData, currentSlate = this.props.currentSlateData) => {
+        let parent1 = {
+            urn: "",
+            type: ""
+        }
+        if (currentSlate && currentSlate.containerUrn && elmData.includes(currentSlate.containerUrn)) {
+            parent1.urn = currentSlate.containerUrn
+        } else if (currentSlate && currentSlate.ancestor && elmData.includes(currentSlate.ancestor.containerUrn)) {
+            parent1.urn = currentSlate.ancestor.containerUrn
+        } else if (currentSlate && currentSlate.ancestor && currentSlate.ancestor.ancestor && elmData.includes(currentSlate.ancestor.ancestor.containerUrn)) {
+            parent1.urn = currentSlate.ancestor.ancestor.containerUrn
+        } else if (currentSlate && currentSlate.ancestor && currentSlate.ancestor.ancestor && currentSlate.ancestor.ancestor.ancestor && elmData.includes(currentSlate.ancestor.ancestor.ancestor.containerUrn)) {
+            parent1.urn = currentSlate.ancestor.ancestor.ancesto.containerUrn
+        } else if (currentSlate && currentSlate.ancestor && currentSlate.ancestor.ancestor && currentSlate.ancestor.ancestor.ancestor && currentSlate.ancestor.ancestor.ancestor.ancestor && elmData.includes(currentSlate.ancestor.ancestor.ancestor.ancestor.containerUrn)) {
+            parent1.urn = currentSlate.ancestor.ancestor.ancestor.ancestor.containerUrn
+        } else {
+            parent1.urn = config.projectUrn
+        }
+        return parent1.urn
+    }
+
+
+
     /*** @description - This function is to filter table data based on parameters
          * @param getItems - check for type of data |true=assessment-item data|false- elm-resouces data     
          * @param data- api data
          * @param urn- assessment id
          * @param parentUrn- parent-Urn
         */
-    filterData = (getItems, urn, apiData, parentUrn = this.state.currentUrn) => {
+    filterData = (getItems, urn, apiData, parentUrn = config.projectUrn) => {
         this.preparedData = [];
         this.setState({ addFlag: false, isActive: null });
         if (urn === parentUrn) {
@@ -444,6 +466,6 @@ class ElmTableComponent extends Component {
 export default connect((state) => {
     return {
         elmReducer: state.elmReducer,
-        isLoading: state.elmReducer.isLoading
+        currentSlateData: state.appStore.currentSlateData
     }
 })(ElmTableComponent);
