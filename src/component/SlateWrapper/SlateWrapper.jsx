@@ -22,7 +22,7 @@ import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
 import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
 import config from '../../config/config';
 import { TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER, WORKED_EXAMPLE, SECTION_BREAK, METADATA_ANCHOR, LO_LIST, ELEMENT_ASSESSMENT, OPENER,
-    ALREADY_USED_SLATE , REMOVE_LINKED_AUDIO, NOT_AUDIO_ASSET, SPLIT_SLATE_WITH_ADDED_AUDIO , ACCESS_DENIED_CONTACT_ADMIN, IN_USE_BY, LOCK_DURATION, SHOW_HIDE,POP_UP,POPUP_PARENT,SHOW_HIDE_PARENT } from './SlateWrapperConstants';
+    ALREADY_USED_SLATE , REMOVE_LINKED_AUDIO, NOT_AUDIO_ASSET, SPLIT_SLATE_WITH_ADDED_AUDIO , ACCESS_DENIED_CONTACT_ADMIN, IN_USE_BY, LOCK_DURATION, SHOW_HIDE,POP_UP } from './SlateWrapperConstants';
 import PageNumberElement from './PageNumberElement.jsx';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
@@ -641,10 +641,10 @@ class SlateWrapper extends Component {
                    
                 break;
                 case 'show-hide-elem':
-                this.props.createElement(SHOW_HIDE, indexToinsert, parentUrn, asideData,null,null,SHOW_HIDE_PARENT);
+                this.props.createElement(SHOW_HIDE, indexToinsert, parentUrn, asideData,null,null);
                 break;
                 case 'popup-elem':
-                this.props.createElement(POP_UP, indexToinsert, parentUrn, asideData,null,null,POPUP_PARENT);
+                this.props.createElement(POP_UP, indexToinsert, parentUrn, asideData,null,null);
                 break;
             default:
         }
@@ -679,7 +679,7 @@ class SlateWrapper extends Component {
             {
                 buttonType: 'container-elem-button',
                 buttonHandler: () => this.splithandlerfunction('container-elem-button'),
-                tooltipText: 'Interactivity1',
+                tooltipText: 'Container',
                 tooltipDirection: 'left'
             },
             {
