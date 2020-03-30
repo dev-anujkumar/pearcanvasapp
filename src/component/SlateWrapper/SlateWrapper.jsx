@@ -686,15 +686,15 @@ class SlateWrapper extends Component {
                 tooltipDirection: 'left'
             },
             {
-                buttonType: 'container-elem-button',
-                buttonHandler: () => this.splithandlerfunction('container-elem-button'),
-                tooltipText: 'Container',
-                tooltipDirection: 'left'
-            },
-            {
                 buttonType: 'assessment-elem',
                 buttonHandler: () => this.splithandlerfunction('assessment-elem', index, firstOne, parentUrn, asideData),
                 tooltipText: 'Assessment',
+                tooltipDirection: 'left'
+            },
+            {
+                buttonType: 'container-elem-button',
+                buttonHandler: () => this.splithandlerfunction('container-elem-button'),
+                tooltipText: 'Container',
                 tooltipDirection: 'left'
             },
             // {

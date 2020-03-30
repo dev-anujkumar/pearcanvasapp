@@ -20,7 +20,7 @@ WORKED_EXP = 'worked-exp-elem',
 CONTAINER = 'container-elem',
 CONTAINER_INTRO = 'container-introduction',
 CITATION ='citation-elem',
-CITATION_ELEMENT='citations'
+CITATION_GROUP_ELEMENT='citations'
 
 export default function ElementSaprator(props) {
     const [showClass, setShowClass] = useState(false);
@@ -140,7 +140,7 @@ export function addMediaClickHandler() {
 function asideButton(esProps,sectionBreak,elementType){
     let updatedEsProps = esProps.filter((btnObj) => {        
       let  buttonType = btnObj.buttonType;
-      if(elementType==CITATION_ELEMENT && sectionBreak){
+      if(elementType==CITATION_GROUP_ELEMENT && sectionBreak){
         return buttonType == CITATION;//citation element
       }else{
         if (sectionBreak) {
@@ -160,14 +160,19 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
 
     let updatedEsProps, buttonType;
     if (config.parentEntityUrn == FRONT_MATTER || config.parentEntityUrn == BACK_MATTER) {
-        if (elementType == ELEMENT_ASIDE || elementType == CITATION_ELEMENT) {
+        if (elementType == ELEMENT_ASIDE ) {            
             esProps = asideButton(esProps, sectionBreak,elementType);
             updatedEsProps = esProps.filter((btnObj) => {
                 buttonType = btnObj.buttonType;
                 return buttonType !== METADATA_ANCHOR && buttonType !== CITATION;
             })
-
-        } else {
+        } else if(elementType == CITATION_GROUP_ELEMENT){
+            esProps = asideButton(esProps, sectionBreak,elementType);
+            updatedEsProps = esProps.filter((btnObj) => {
+                buttonType = btnObj.buttonType;
+                return buttonType == CITATION;
+            })
+        }else {            
             updatedEsProps = esProps.filter((btnObj) => {
                 buttonType = btnObj.buttonType;
                 return buttonType !== METADATA_ANCHOR && buttonType !== SECTION_BREAK && buttonType !== OPENER &&  buttonType !== CITATION;
@@ -195,7 +200,7 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
             
             if (!config.isCO) {
                 updatedEsProps = esProps.filter((btnObj) => {
-                    return btnObj.buttonType !== SECTION_BREAK && buttonType !== CITATION;
+                    return btnObj.buttonType !== SECTION_BREAK && btnObj.buttonType !== CITATION;
                 })
             } else {
                 updatedEsProps = esProps.filter((btnObj) => {
@@ -203,16 +208,21 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
                     return buttonType !== SECTION_BREAK && buttonType !== OPENER && buttonType !== CITATION;
                 })
             }
-            if (elementType == ELEMENT_ASIDE|| elementType == CITATION_ELEMENT) {
+            if (elementType == ELEMENT_ASIDE) {
                 esProps = asideButton(esProps, sectionBreak,elementType);
                 updatedEsProps = esProps.filter((btnObj) => {
                     buttonType = btnObj.buttonType;
                     return buttonType !== METADATA_ANCHOR && buttonType !== CITATION;
                 })
+            }else if (elementType == CITATION_GROUP_ELEMENT){
+                esProps = asideButton(esProps, sectionBreak,elementType);
+                updatedEsProps = esProps.filter((btnObj) => {
+                    buttonType = btnObj.buttonType;
+                    return buttonType == CITATION;
+                })
             }
-
         }
-        else if (elementType == ELEMENT_ASIDE|| elementType == CITATION_ELEMENT) {
+        else if (elementType == ELEMENT_ASIDE|| elementType == CITATION_GROUP_ELEMENT) {
             updatedEsProps = asideButton(esProps, sectionBreak,elementType);
            
         }
