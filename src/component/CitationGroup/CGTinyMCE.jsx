@@ -7,9 +7,19 @@ import TinyMceEditor from "../tinyMceEditor";
 // import { showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader'
 import { CitationGroupContext } from '../ElementContainer/ElementCitationContext'
 
-const CGTinyMCE = () => {
+const CGTinyMCE = (props) => {
     const context = useContext(CitationGroupContext)
-    const props = {
+
+     /**
+     * Creates Citation Title element if not present.
+     */
+    const createPopupUnit = (popupField, forceupdate, index, parentElement) => {
+        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+        config.popupCreationCallInProgress = true
+        props.createPopupUnit(popupField, parentElement, (currentElementData) => context.handleBlur(forceupdate, currentElementData, index, null), index, config.slateManifestURN)
+    }
+
+    const editorProps = {
         permissions : context.permissions,
         element : context.element,
         index : `${context.index}-0`,
@@ -24,10 +34,14 @@ const CGTinyMCE = () => {
         slateLockInfo : context.slateLockInfo,
         elementId : context.elementId,
         citationField  :  "formatted-title",
-        // createCitationUnit : this.context.createCitationUnit
+        createPopupUnit
     }
+    /**
+     * Creates Title/Subtitle element if not present.
+     */
+    
     return (
-        <TinyMceEditor {...props} />
+        <TinyMceEditor {...editorProps} />
     )
 }
 

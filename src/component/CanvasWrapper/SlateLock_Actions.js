@@ -9,7 +9,10 @@ import store from './../../appstore/store';
  * @param {*} projectUrn Project URN
  * @param {*} slateId Slate manifest URN
  */
-export const getSlateLockStatus = (projectUrn, slateId) => (dispatch) => { 
+export const getSlateLockStatus = (projectUrn, slateId) => (dispatch) => {
+    if(process.env.NODE_ENV === "development"){
+        return false
+    }
     if(config.isSlateLockChecked){
         return false;
     }
@@ -58,6 +61,9 @@ export const getSlateLockStatus = (projectUrn, slateId) => (dispatch) => {
  * @param {*} lockDuration Lock duration
  */
 export const setSlateLock = (projectUrn, slateId, lockDuration) => (dispatch) => {
+    if(process.env.NODE_ENV === "development"){
+        return false
+    }
     let url = `${config.LOCK_API_BASE_URL}/locks/typ/setlock`
 
     let data = {

@@ -67,6 +67,44 @@ let citationGroupData = {
     "contentUrn": "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5",
     "versionUrn": "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e"
 }
+let citationGroupData2 = {
+    "id": "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t4e",
+    "schema": "http://schemas.pearson.com/wip-authoring/citations/1",
+    "type": "citations",
+    "contents": {
+        "bodymatter": [
+        {
+            "id": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27640",
+            "type": "element-citation",
+            "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+            "elementdata": {
+                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                "text": "Allport, G. W., 47(211). element-citationelement-citationelement-citationelement-citationelement-citationelement-citationelement-citation element-citationelement-citationelement-citationelement-citation element-citationelement-citation element-citation element-citationelement-citation",
+            },
+            "html" : {
+                "text":`<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r3d" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27640"> Allport, G. W., 47(211). element-citationelement-citationelement-citationelement-citationelement-citationelement-citationelement-citation element-citationelement-citationelement-citationelement-citation element-citationelement-citation element-citation element-citationelement-citation </p>`
+            },
+            "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r3d",
+            "versionUrn": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27640"
+        },
+        {
+            "id": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27641",
+            "type": "element-citation",
+            "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+            "elementdata": {
+                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                "text": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
+            },
+            "html" : {
+                "text":`<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r2e" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27641">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</p>`
+            },
+            "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r2e",
+            "versionUrn": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27641"
+        }]
+    },
+    "contentUrn": "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367r2",
+    "versionUrn": "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t4e"
+}
 const findElementType = (element, index) => {
     let elementType = {};
     elementType['tag'] = '';
@@ -364,7 +402,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
                     } else {
                         currentParentData = slateData.data[manifestURN];
                         //MOCK DATA. TO BE REMOVED AFTER CITATION ELEMENT IMPLEMENTATION
-                        currentParentData.contents.bodymatter.push(citationGroupData)
+                        currentParentData.contents.bodymatter.push(citationGroupData, citationGroupData2)
                     }
                     dispatch({
                         type: FETCH_SLATE_DATA,
@@ -593,21 +631,42 @@ export const openPopupSlate = (element, popupId) => dispatch => {
 }
 
 export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex, slateManifestURN) => (dispatch, getState) => {
-    let popupFieldType = ""
-    if(popupField === "formatted-subtitle"){
-        popupFieldType = "formattedSubtitle"
+
+    const getRequestData = (parentElement) => {
+        let dataToSend = {}
+        if(parentElement.type === "popup"){
+            let popupFieldType = ""
+            if(popupField === "formatted-subtitle"){
+                popupFieldType = "formattedSubtitle"
+            }
+            else{
+                popupFieldType = "formattedTitle"
+            }
+            
+            dataToSend = {
+                "projectUrn": config.projectUrn,
+                "slateEntityUrn": parentElement.contentUrn,
+                "slateUrn": parentElement.id,
+                "type": "TEXT",
+                "updatePopupElementField" : popupFieldType
+            }
+        }
+        else if(parentElement.type === "citations"){
+            let citationField = "formattedTitle"
+            dataToSend = {
+                "projectUrn": config.projectUrn,
+                "slateEntityUrn": parentElement.contentUrn,
+                "slateUrn": parentElement.id,
+                "type": "TEXT",
+                "updatePopupElementField" : citationField
+            }
+        }
+        
+        return dataToSend
     }
-    else{
-        popupFieldType = "formattedTitle"
-    }
+
+    let _requestData =  getRequestData(parentElement)
     
-    let _requestData = {
-        "projectUrn": config.projectUrn,
-        "slateEntityUrn": parentElement.contentUrn,
-        "slateUrn": parentElement.id,
-        "type": "TEXT",
-        "updatePopupElementField" : popupFieldType
-    };
     let url = `${config.REACT_APP_API_URL}v1/slate/element`
     return axios.post(url, 
         JSON.stringify(_requestData),
@@ -618,26 +677,51 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
             }
         })
     .then((response) => {
-        let elemIndex = `cypress-${popupElementIndex}`
-        let elemNode = document.getElementById(elemIndex)
-        popupElementIndex = Number(popupElementIndex.split("-")[0])
-        const parentData = getState().appStore.slateLevelData
-        let newslateData = JSON.parse(JSON.stringify(parentData))
-        let _slateObject = newslateData[slateManifestURN]
-        let targetPopupElement = _slateObject.contents.bodymatter[popupElementIndex]
-        if(targetPopupElement){
-            targetPopupElement.popupdata[popupField] = response.data
-            targetPopupElement.popupdata[popupField].html.text = elemNode.innerHTML
-            targetPopupElement.popupdata[popupField].elementdata.text = elemNode.innerText
-            _slateObject.contents.bodymatter[popupElementIndex] = targetPopupElement
-        }
-        dispatch({
-            type: AUTHORING_ELEMENT_UPDATE,
-            payload: {
-                slateLevelData: newslateData
+        if(parentElement.type === "popup"){
+            let elemIndex = `cypress-${popupElementIndex}`
+            let elemNode = document.getElementById(elemIndex)
+            popupElementIndex = Number(popupElementIndex.split("-")[0])
+            const parentData = getState().appStore.slateLevelData
+            let newslateData = JSON.parse(JSON.stringify(parentData))
+            let _slateObject = newslateData[slateManifestURN]
+            let targetPopupElement = _slateObject.contents.bodymatter[popupElementIndex]
+            if(targetPopupElement){
+                targetPopupElement.popupdata[popupField] = response.data
+                targetPopupElement.popupdata[popupField].html.text = elemNode.innerHTML
+                targetPopupElement.popupdata[popupField].elementdata.text = elemNode.innerText
+                _slateObject.contents.bodymatter[popupElementIndex] = targetPopupElement
             }
-        })
-        if(cb) cb(response.data)
+            dispatch({
+                type: AUTHORING_ELEMENT_UPDATE,
+                payload: {
+                    slateLevelData: newslateData
+                }
+            })
+            if(cb) cb(response.data)
+        }
+        else if(parentElement.type === "citations"){
+            let elemIndex = `cypress-${popupElementIndex}`
+            let elemNode = document.getElementById(elemIndex)
+            popupElementIndex = Number(popupElementIndex.split("-")[0])
+            const parentData = getState().appStore.slateLevelData
+            let newslateData = JSON.parse(JSON.stringify(parentData))
+            let _slateObject = newslateData[slateManifestURN]
+            let targetCG = _slateObject.contents.bodymatter[popupElementIndex]
+            if(targetCG){
+                targetCG.contents["formatted-title"] = response.data
+                targetCG.contents["formatted-title"].html.text = elemNode.innerHTML
+                targetCG.contents["formatted-title"].elementdata.text = elemNode.innerText
+                _slateObject.contents.bodymatter[popupElementIndex] = targetCG
+            }
+            dispatch({
+                type: AUTHORING_ELEMENT_UPDATE,
+                payload: {
+                    slateLevelData: newslateData
+                }
+            })
+            console.log("CG TITLE CREATED::>>>", newslateData)
+            if(cb) cb(response.data)
+        }
     })
     .catch((error) => {
         console.log("%c ERROR RESPONSE", "font: 30px; color: red; background: black", error)
