@@ -83,8 +83,8 @@ const prepareContents = (data) => {
  * @param {object} allSlatesData  
 */
 export const prepareAllSlateData = (allSlatesData) => dispatch => {
-    let parentData = allSlatesData['parentData'],
-        childrenData = allSlatesData['childrenData'];
+    let parentData = allSlatesData && allSlatesData['parentData'] ? allSlatesData['parentData'] : {},
+        childrenData = allSlatesData && allSlatesData['childrenData'] ? allSlatesData['childrenData'] :{};
     let allProjectData = {},
         allBodyMatterData = []
 
@@ -95,7 +95,7 @@ export const prepareAllSlateData = (allSlatesData) => dispatch => {
     }
     allBodyMatterData = allProjectData['bodymatter']
 
-    if (allProjectData && allProjectData['bodymatter'] != []) {
+    if (allProjectData['bodymatter'] != [] && childrenData !={}) {
 
         allBodyMatterData.forEach((container) => {
             container = setChildContents(container, childrenData)
@@ -166,15 +166,15 @@ export const setCurrentSlate = (allSlateData) => dispatch => {
     switch (config.parentEntityUrn) {
         case 'Front Matter':
             matterType = 'FrontMatter';
-            matterTypeData = allSlateData.frontmatter;
+            matterTypeData = allSlateData && allSlateData.frontmatter ? allSlateData.frontmatter : [];
             break;
         case 'Back Matter':
             matterType = 'BackMatter';
-            matterTypeData = allSlateData.backmatter;
+            matterTypeData = allSlateData && allSlateData.backmatter ? allSlateData.backmatter : [];
             break;
         default:
             matterType = 'BodyMatter';
-            matterTypeData = allSlateData.bodymatter;
+            matterTypeData = allSlateData && allSlateData.bodymatter ? allSlateData.bodymatter : [];
     }
 
     currentSlateData = setCurrentSlateDetails(matterTypeData, ancestor, matterType)
@@ -190,7 +190,9 @@ export const setCurrentSlate = (allSlateData) => dispatch => {
 /**
  * @function setCurrentSlateDetails
  * @description-This is a recursive function to prepare structured data for the current Slate based and set its ancestors
- * @param {Object} allSlatesData  
+ * @param {Array} matterTypeData  
+ * @param {Object} ancestor
+ * @param {String} matterType
  * @returns {Object}
 */
 const setCurrentSlateDetails = (matterTypeData, ancestor, matterType) => {
@@ -218,5 +220,8 @@ const setCurrentSlateDetails = (matterTypeData, ancestor, matterType) => {
                 continue;
             }
         }
+    }
+    else{
+        return ancestor
     }
 }
