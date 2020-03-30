@@ -27,13 +27,16 @@ Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
 };
 
-function prepareDataForTcmUpdate(updatedData, parentData, asideData) {
+function prepareDataForTcmUpdate(updatedData, parentData, asideData,parentType) {
     if (parentData && parentData.elementType === "element-aside") {
         updatedData.isHead = true;
     } else if (parentData && parentData.elementType === "manifest") {
         updatedData.isHead = false;
     }
-    if (asideData && asideData.type === "element-aside") {
+    if(parentType){
+        updatedData.parentType = parentType;
+    }
+    else if (asideData && asideData.type === "element-aside") {
         if (asideData.subtype === "workedexample") {
             updatedData.parentType = "workedexample";
         } else {
@@ -60,7 +63,7 @@ function createNewVersionOfSlate(){
         })
 }
 
-export const createElement = (type, index, parentUrn, asideData, outerAsideIndex, loref, cb) => (dispatch, getState) => {
+export const createElement = (type, index, parentUrn, asideData, outerAsideIndex, loref, parentType,cb) => (dispatch, getState) => {
     config.currentInsertedIndex = index;
     config.currentInsertedType = type;
     let  popupSlateData = getState().appStore.popupSlateData
@@ -79,7 +82,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         _requestData.loref = loref ? loref : ""
     }
 
-    prepareDataForTcmUpdate(_requestData, parentUrn, asideData)
+    prepareDataForTcmUpdate(_requestData, parentUrn, asideData,parentType)
     return axios.post(`${config.REACT_APP_API_URL}v1/slate/element`,
         JSON.stringify(_requestData),
         {
