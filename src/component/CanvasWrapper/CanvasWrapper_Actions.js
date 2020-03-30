@@ -17,7 +17,7 @@ import { sendDataToIframe } from '../../constants/utility.js';
 import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 import elementDataBank from './elementDataBank'
 import figureData from '../ElementFigure/figureTypes.js';
-import { setCurrentSlate } from '../../constants/getAllSlatesData.js';
+import { fetchAllSlatesData, setCurrentSlate } from '../../js/getAllSlatesData.js';
 const findElementType = (element, index) => {
     let elementType = {};
     elementType['tag'] = '';
@@ -193,7 +193,9 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
     // if(config.isFetchSlateInProgress){
     //  return false;
     // }
-    sendDataToIframe({ 'type': 'fetchAllSlatesData', 'message': {} });
+    /** TK-3289- Fetch Data for All Slates */
+    dispatch(fetchAllSlatesData());
+    /**sendDataToIframe({ 'type': 'fetchAllSlatesData', 'message': {} }); */
     // sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
     localStorage.removeItem('newElement');
     config.isFetchSlateInProgress = true;
@@ -329,7 +331,8 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
                     console.log("incorrect data comming...")
                 }
             }
-		}
+        }
+        /** TK-3289- To get Current Slate details */
         dispatch(setCurrentSlate(getState().appStore.allSlateData))
     });
 };

@@ -16,7 +16,6 @@ import { releaseSlateLockWithCallback, getSlateLockStatusWithCallback } from '..
 import PopUp from '../../PopUp';
 import {loadTrackChanges} from '../../CanvasWrapper/TCM_Integration_Actions';
 import { ALREADY_USED_SLATE_TOC } from '../../SlateWrapper/SlateWrapperConstants'
-import {fetchAllSlatesData,getAllSlateData} from '../../../constants/getAllSlatesData'
 function WithWrapperCommunication(WrappedComponent) {
     class CommunicationWrapper extends Component {
         constructor(props) {
@@ -225,7 +224,7 @@ function WithWrapperCommunication(WrappedComponent) {
                 }
                 case 'fetchAllSlateDataFromWrapper':
                     { 
-                        this.props.getAllSlateData(message)
+                        this.props.getAllSlatesData(message)
                         break;
                     }
             }

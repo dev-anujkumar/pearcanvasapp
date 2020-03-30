@@ -106,16 +106,16 @@ class ElmTableComponent extends Component {
             urn: "",
             type: ""
         }
-        if (currentSlate && currentSlate.versionUrn && elmData.includes(currentSlate.versionUrn)) {
-            parent1.urn = currentSlate.versionUrn
-        } else if (currentSlate && currentSlate.ancestor && elmData.includes(currentSlate.ancestor.versionUrn)) {
-            parent1.urn = currentSlate.ancestor.versionUrn
-        } else if (currentSlate && currentSlate.ancestor && currentSlate.ancestor.ancestor && elmData.includes(currentSlate.ancestor.ancestor.versionUrn)) {
-            parent1.urn = currentSlate.ancestor.ancestor.versionUrn
-        } else if (currentSlate && currentSlate.ancestor && currentSlate.ancestor.ancestor && currentSlate.ancestor.ancestor.ancestor && elmData.includes(currentSlate.ancestor.ancestor.ancestor.versionUrn)) {
-            parent1.urn = currentSlate.ancestor.ancestor.ancesto.versionUrn
-        } else if (currentSlate && currentSlate.ancestor && currentSlate.ancestor.ancestor && currentSlate.ancestor.ancestor.ancestor && currentSlate.ancestor.ancestor.ancestor.ancestor && elmData.includes(currentSlate.ancestor.ancestor.ancestor.ancestor.versionUrn)) {
-            parent1.urn = currentSlate.ancestor.ancestor.ancestor.ancestor.versionUrn
+        if (currentSlate && currentSlate.containerUrn && elmData.includes(currentSlate.containerUrn)) {
+            parent1.urn = currentSlate.containerUrn
+        } else if (currentSlate && currentSlate.ancestor && elmData.includes(currentSlate.ancestor.containerUrn)) {
+            parent1.urn = currentSlate.ancestor.containerUrn
+        } else if (currentSlate && currentSlate.ancestor && currentSlate.ancestor.ancestor && elmData.includes(currentSlate.ancestor.ancestor.containerUrn)) {
+            parent1.urn = currentSlate.ancestor.ancestor.containerUrn
+        } else if (currentSlate && currentSlate.ancestor && currentSlate.ancestor.ancestor && currentSlate.ancestor.ancestor.ancestor && elmData.includes(currentSlate.ancestor.ancestor.ancestor.containerUrn)) {
+            parent1.urn = currentSlate.ancestor.ancestor.ancesto.containerUrn
+        } else if (currentSlate && currentSlate.ancestor && currentSlate.ancestor.ancestor && currentSlate.ancestor.ancestor.ancestor && currentSlate.ancestor.ancestor.ancestor.ancestor && elmData.includes(currentSlate.ancestor.ancestor.ancestor.ancestor.containerUrn)) {
+            parent1.urn = currentSlate.ancestor.ancestor.ancestor.ancestor.containerUrn
         } else {
             parent1.urn = config.projectUrn
         }
