@@ -120,7 +120,7 @@ export class TinyMceEditor extends Component {
                         //     this.naturalWidth && this.setAttribute('width', this.naturalWidth)
                         // }) 
                         if(!config.savingInProgress){
-                            if(this.props.element.type === "popup" && !this.props.currentElement){
+                            if((this.props.element.type === "popup" || this.props.element.type === "citations") && !this.props.currentElement){
                                 this.props.createPopupUnit(this.props.popupField, null, this.props.index, this.props.element) 
                             } else {
                                 let showHideType = this.props.showHideType || null
@@ -495,7 +495,7 @@ export class TinyMceEditor extends Component {
             if (activeElement) { 
                 let lastCont = this.lastContent;
                 this.lastContent = activeElement.innerHTML;
-                if (!isMediaElement && !activeElement.children.length || (activeElement.children.length === 1 && activeElement.children[0].tagName === "BR" && activeElement.nodeName !== "CODE")) {
+                if (!isMediaElement && !activeElement.children.length && this.props.element.type !== "citations" || (activeElement.children.length === 1 && activeElement.children[0].tagName === "BR" && activeElement.nodeName !== "CODE")) {
                     //code to avoid deletion of editor first child(like p,h1,blockquote etc)
                     let div = document.createElement('div');
                     div.innerHTML = lastCont;
@@ -1570,7 +1570,10 @@ export class TinyMceEditor extends Component {
                 if(this.props.element && this.props.element.type === "popup"){
                     model = this.props.model && this.props.model.replace(/class="paragraphNumeroUno"/g, "")
                 }
-                else {
+                else if(this.props.element && this.props.element.type === "citations"){
+                    model = this.props.element.contents['formatted-title'] && this.props.element.contents['formatted-title'].html.text.length ? this.props.element.contents['formatted-title'].html.text : `<h4><br/></h4>`
+                }
+                else{
                     model = this.props.model;
                 }
                 let tempDiv = document.createElement('div');

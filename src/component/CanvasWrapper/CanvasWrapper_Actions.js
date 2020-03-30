@@ -661,7 +661,6 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
                 "updatePopupElementField" : citationField
             }
         }
-        
         return dataToSend
     }
 
@@ -677,13 +676,14 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
             }
         })
     .then((response) => {
+        let elemIndex = `cypress-${popupElementIndex}`
+        let elemNode = document.getElementById(elemIndex)
+        popupElementIndex = Number(popupElementIndex.split("-")[0])
+        const parentData = getState().appStore.slateLevelData
+        let newslateData = JSON.parse(JSON.stringify(parentData))
+        let _slateObject = newslateData[slateManifestURN]
+
         if(parentElement.type === "popup"){
-            let elemIndex = `cypress-${popupElementIndex}`
-            let elemNode = document.getElementById(elemIndex)
-            popupElementIndex = Number(popupElementIndex.split("-")[0])
-            const parentData = getState().appStore.slateLevelData
-            let newslateData = JSON.parse(JSON.stringify(parentData))
-            let _slateObject = newslateData[slateManifestURN]
             let targetPopupElement = _slateObject.contents.bodymatter[popupElementIndex]
             if(targetPopupElement){
                 targetPopupElement.popupdata[popupField] = response.data
@@ -700,12 +700,6 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
             if(cb) cb(response.data)
         }
         else if(parentElement.type === "citations"){
-            let elemIndex = `cypress-${popupElementIndex}`
-            let elemNode = document.getElementById(elemIndex)
-            popupElementIndex = Number(popupElementIndex.split("-")[0])
-            const parentData = getState().appStore.slateLevelData
-            let newslateData = JSON.parse(JSON.stringify(parentData))
-            let _slateObject = newslateData[slateManifestURN]
             let targetCG = _slateObject.contents.bodymatter[popupElementIndex]
             if(targetCG){
                 targetCG.contents["formatted-title"] = response.data
@@ -727,5 +721,6 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
         console.log("%c ERROR RESPONSE", "font: 30px; color: red; background: black", error)
         dispatch({type: ERROR_POPUP, payload:{show: true}})
         config.savingInProgress = false
+        sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
     })
 }
