@@ -17,7 +17,7 @@ import { sendDataToIframe } from '../../constants/utility.js';
 import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 import elementDataBank from './elementDataBank'
 import figureData from '../ElementFigure/figureTypes.js';
-import { fetchAllSlatesData, setCurrentSlate } from '../../js/getAllSlatesData.js';
+import { fetchAllSlatesData, setCurrentSlateAncestorData } from '../../js/getAllSlatesData.js';
 const findElementType = (element, index) => {
     let elementType = {};
     elementType['tag'] = '';
@@ -196,7 +196,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
     // if(config.isFetchSlateInProgress){
     //  return false;
     // }
-    /** TK-3289- Fetch Data for All Slates */
+    /** [TK-3289]- Fetch Data for All Slates */
     dispatch(fetchAllSlatesData());
     /**sendDataToIframe({ 'type': 'fetchAllSlatesData', 'message': {} }); */
     // sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
@@ -213,7 +213,8 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
         }
     }).then(slateData => {
         let newVersionManifestId=Object.values(slateData.data)[0].id
-		if(slateData.data && slateData.data[newVersionManifestId] && slateData.data[newVersionManifestId].type === "popup"){
+        
+        if(slateData.data && slateData.data[newVersionManifestId] && slateData.data[newVersionManifestId].type === "popup"){
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
             config.isPopupSlate = true
 			if (config.slateManifestURN === Object.values(slateData.data)[0].id) {
@@ -335,8 +336,8 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
                 }
             }
         }
-        /** TK-3289- To get Current Slate details */
-        dispatch(setCurrentSlate(getState().appStore.allSlateData))
+        /** [TK-3289]- To get Current Slate details */
+        dispatch(setCurrentSlateAncestorData(getState().appStore.allSlateData))
     });
 };
 const setOldImagePath = (getState, activeElement, elementIndex = 0) => {

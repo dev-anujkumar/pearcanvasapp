@@ -58,7 +58,7 @@ const INITIAL_STATE = {
     asideData: {},
     showHideObj:{},
     allSlateData:[],
-    currentSlateData:{}
+    currentSlateAncestorData:{}
 };
 
 const INITIAL_ACTION = {
@@ -201,7 +201,7 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
         case SET_CURRENT_SLATE_DATA:
             return {
                 ...state,
-                currentSlateData: action.payload.currentSlateData
+                currentSlateAncestorData: action.payload.currentSlateAncestorData
             }
         default:
             return state;

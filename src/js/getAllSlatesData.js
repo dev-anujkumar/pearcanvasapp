@@ -147,11 +147,11 @@ const setChildContents = (container, childrenData) => {
     return container
 }
 /**
- * @function setCurrentSlate
+ * @function setCurrentSlateAncestorData
  * @description-This function is to set details for Current Slate from AllSlatesData
  * @param {Object} allSlatesData  
 */
-export const setCurrentSlate = (allSlateData) => dispatch => {
+export const setCurrentSlateAncestorData = (allSlateData) => dispatch => {
 
     let ancestor = {
         containerUrn: config.projectUrn,
@@ -177,25 +177,25 @@ export const setCurrentSlate = (allSlateData) => dispatch => {
             matterTypeData = allSlateData && allSlateData.bodymatter ? allSlateData.bodymatter : [];
     }
 
-    currentSlateData = setCurrentSlateDetails(matterTypeData, ancestor, matterType)
+    currentSlateData = setCurrentSlateAncestorDataDetails(matterTypeData, ancestor, matterType)
 
     return dispatch({
         type: SET_CURRENT_SLATE_DATA,
         payload: {
-            currentSlateData: currentSlateData
+            currentSlateAncestorData: currentSlateData
         }
     })
 }
 
 /**
- * @function setCurrentSlateDetails
+ * @function setCurrentSlateAncestorDataDetails
  * @description-This is a recursive function to prepare structured data for the current Slate based and set its ancestors
  * @param {Array} matterTypeData  
  * @param {Object} ancestor
  * @param {String} matterType
  * @returns {Object}
 */
-const setCurrentSlateDetails = (matterTypeData, ancestor, matterType) => {
+const setCurrentSlateAncestorDataDetails = (matterTypeData, ancestor, matterType) => {
     if (matterTypeData && matterTypeData.length > 0 && JSON.stringify(matterTypeData).includes(config.slateManifestURN)) {
         for (let key in matterTypeData) {
             if (matterTypeData[key].containerUrn == config.slateManifestURN) {
@@ -213,7 +213,7 @@ const setCurrentSlateDetails = (matterTypeData, ancestor, matterType) => {
                     {
                         ancestor: ancestor
                     })
-                return setCurrentSlateDetails(matterTypeData[key].contents, ancestor, matterType)
+                return setCurrentSlateAncestorDataDetails(matterTypeData[key].contents, ancestor, matterType)
             }
             else {
                 // return ancestor = Object.assign({}, setItemDetails(matterTypeData[key]), { ancestor: ancestor })
