@@ -140,18 +140,15 @@ class ElementPoetry extends Component {
             if (stanzas !== undefined) {
                     return stanzas.map((element, index) => {
                             return (
-                                <React.Fragment key={element.id}>
-                                    {/* {index === 0 && (!this.props.element.hasOwnProperty("subtype") || this.props.element.subtype == "sidebar") && 
+                                <React.Fragment key={element.id}>                                   
                                     <ElementSaprator
-                                        upperOne={true}
-                                        firstOne={index === 0}
                                         index={index}
-                                        esProps={this.props.elementSepratorProps(index, true, parentUrn, poetryData, parentIndex)}
-                                        elementType={this.props.element.type}
+                                        esProps={this.props.elementSepratorProps(index, false, this.props.parentUrn, "", parentIndex, poetryData)}
+                                        elementType="poetry"
+                                        sectionBreak= {false}
                                         permissions={this.props.permissions}
                                         onClickCapture={this.props.onClickCapture}
                                     />
-                                    } */}
                                     <ElementContainer
                                         element={element}
                                         index={`${parentIndex}-${index}`}
@@ -181,12 +178,11 @@ class ElementPoetry extends Component {
                                     </ElementContainer>
                                     <ElementSaprator
                                         index={index}
-                                        esProps={this.props.elementSepratorProps(index, false, this.props.parentUrn)}
-                                       // elementType={this.props.model.type}
-                                       elementType="poetry"
+                                        esProps={this.props.elementSepratorProps(index, false, this.props.parentUrn, "", parentIndex, poetryData)}
+                                        elementType="poetry"
                                         sectionBreak= {false}
                                         permissions={this.props.permissions}
-                                        //onClickCapture={this.props.onClickCapture}
+                                        onClickCapture={this.props.onClickCapture}
                                     />
                                 </React.Fragment>
                             )
