@@ -38,7 +38,7 @@ export default function ElementSaprator(props) {
             dropdown = 'dropdown'
             if (elems.indexOf(dropdown) === -1) {
                 setShowClass(false)
-                setshowInteractiveOption({status:false,type:""})
+                //setshowInteractiveOption({status:false,type:""})
             }
         })
     });
@@ -225,7 +225,6 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
     return updatedEsProps.map((elem, key) => {
         const [data, setData] = useState([]);
         function buttonHandlerFunc() {
-            setshowInteractiveOption({status:false,type:""});
             if (elem.buttonType == "interactive-elem-button" || elem.buttonType == "container-elem-button") {
                 setData(typeOfContainerElements(elem, props));
                 if(elem.buttonType !== showInteractiveOption.type){
