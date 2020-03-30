@@ -42,6 +42,9 @@ export const getSlateLockStatus = (projectUrn, slateId) => (dispatch) => {
  * @param {*} callback Callback method to be executed
  */
  export const getSlateLockStatusWithCallback = (projectUrn, slateId, callback) => { 
+    if(process.env.NODE_ENV === "development"){
+        return false
+    }
     let url = `${config.LOCK_API_BASE_URL}/locks?projectUrn=${projectUrn}&slateId=${slateId}`
     
     return axios.get(url)
