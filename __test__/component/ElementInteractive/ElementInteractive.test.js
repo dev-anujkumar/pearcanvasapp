@@ -654,28 +654,7 @@ describe('Testing Interactive element component', () => {
                 spydataFromAlfresco.mockClear()
             })
         })
-        describe('Test-Alfresco Data Handling', () => {
-            const elementInteractive = mount(<Provider store={store}><Interactive type={type} model={Interactivefpo} index="1" {...props} /></Provider>);
-            let elementInteractiveInstance = elementInteractive.find('Interactive').instance();
-            const spyhandleC2InteractiveClick = jest.spyOn(elementInteractiveInstance, 'handleC2InteractiveClick')
-            it('Test- if case workflow -smartLinkType-3rd Party Interactive', () => {
-                let data = {
-                    'assetType': "image",
-                    'EpsUrl': "",
-                    'width': "",
-                    'height': "",
-                    'req': {
-                        url: "https://staging.api.pearson.com/content/cmis/uswip-aws/alfresco-proxy/api/-default-/public/cmis/versions/1.1/browser?cmisselector=query&q=SELECT s.avs:url,s.avs:jsonString FROM cmis:document AS d JOIN avs:smartLink AS s ON d.cmis:objectId = s.cmis:objectId where s.cmis:objectId = '7bffceb3-33fc-40cc-a70c-50b6f32665c9'"
-                    },
-                    desc: '{"smartLinkType":"3rd Party Interactive"}'
-                }
-                elementInteractiveInstance.handleC2InteractiveClick("")
-                elementInteractiveInstance.forceUpdate();
-                elementInteractive.update();
-                expect(spyhandleC2InteractiveClick).toHaveBeenCalled()
-                spyhandleC2InteractiveClick.mockClear()
-            })
-        })
+       
     });
     describe('Testing Element interactive - handleC2MediaClick Function', () => {
         let type = "figure";
@@ -812,35 +791,6 @@ describe('Testing Interactive element component', () => {
             elementInteractiveInstance.handleC2MediaClick(e);
             expect(spyhandleC2MediaClick).toHaveBeenCalledWith(e)
             spyhandleC2MediaClick.mockClear()
-        })
-    });
-    describe('Testing Element interactive - handleC2InteractiveClick Functions', () => {
-        let type = "figure";
-        let props = {
-            slateLockInfo: {
-                isLocked: false,
-                userId: 'c5Test01'
-            },
-            onClick: () => { },
-            permissions: [
-                "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
-                "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
-                "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
-            ],
-            updateFigureData: jest.fn(),
-            handleBlur: jest.fn(),
-            handleFocus: jest.fn(),
-            accessDenied: jest.fn(),
-            showBlocker: jest.fn()
-        };
-        const elementInteractive = mount(<Provider store={store}><Interactive type={type} model={Interactivefpo} index="1" {...props} /></Provider>);
-        let elementInteractiveInstance = elementInteractive.find('Interactive').instance();
-
-        it('handleC2InteractiveClick-default case', () => {
-            const spyhandleC2InteractiveClick = jest.spyOn(elementInteractiveInstance, 'handleC2InteractiveClick')
-            elementInteractiveInstance.handleC2InteractiveClick();
-            expect(spyhandleC2InteractiveClick).toHaveBeenCalled()
-            spyhandleC2InteractiveClick.mockClear()
         })
     });
     describe('Test-Alfresco Data Handling', () => {
