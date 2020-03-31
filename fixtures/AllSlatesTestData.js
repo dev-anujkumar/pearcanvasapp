@@ -89,16 +89,16 @@ export const allSlatesData = {
 
 export const returnAllSlateData = {
     frontmatter: [
-        { entityUrn: "urn:pearson:entity:a2f725e7-3fe0-4e1b-938c-d77b78907214", matterType: "frontmatter", type: "section", title: "",containerUrn: "urn:pearson:manifest:7f275000-4518-46af-85c8-3d54b9a0bcb2" },
-        { entityUrn: "urn:pearson:entity:9eb6021f-4b67-4989-a80b-82198a7185a8", matterType: "frontmatter", type: "assessment", title: "",containerUrn: "urn:pearson:manifest:718b9684-6ad8-4054-9253-0724a2252575" }
+        { entityUrn: "urn:pearson:entity:a2f725e7-3fe0-4e1b-938c-d77b78907214", matterType: "frontmatter", label: "section", title: "",containerUrn: "urn:pearson:manifest:7f275000-4518-46af-85c8-3d54b9a0bcb2" },
+        { entityUrn: "urn:pearson:entity:9eb6021f-4b67-4989-a80b-82198a7185a8", matterType: "frontmatter", label: "assessment", title: "",containerUrn: "urn:pearson:manifest:718b9684-6ad8-4054-9253-0724a2252575" }
     ],
     backmatter: [
-        { entityUrn: "urn:pearson:entity:f7f6f57a-fbad-4e57-a0fd-4734b671d15b", matterType: "backmatter", type:  "assessment", title: "",containerUrn: "urn:pearson:manifest:214d7b06-b094-4302-9c92-915cd7cccab1" }
+        { entityUrn: "urn:pearson:entity:f7f6f57a-fbad-4e57-a0fd-4734b671d15b", matterType: "backmatter", label:  "assessment", title: "",containerUrn: "urn:pearson:manifest:214d7b06-b094-4302-9c92-915cd7cccab1" }
     ],
     bodymatter: [
         {
             entityUrn: "urn:pearson:entity:e0066675-a993-4f03-aa3c-cd5a4631da41",
-            type: "part",
+            label: "part",
             title: "Part1",
             matterType: "bodymatter",
             containerUrn: "urn:pearson:manifest:1e4ce418-4160-4d8f-bbae-7a2c814555ad",
@@ -107,26 +107,26 @@ export const returnAllSlateData = {
                     containerUrn: "urn:pearson:manifest:761f2d68-6a7c-41e9-8363-ca81ab926b82",
                     entityUrn: "urn:pearson:entity:dfd414ed-6e32-4d71-90d0-231158853e45",
                     title: "Chap1",
-                    type: "chapter",
+                    label: "chapter",
                     contents: [
                         {
                             containerUrn: "urn:pearson:manifest:823f4807-74f5-4411-b9e2-5ede994b109f",
                             entityUrn: "urn:pearson:entity:fc5a6d43-b861-490c-9df5-5843dd4046e4",
                             title: "Mod1",
-                            type: "module",
+                            label: "module",
                             contents: [
-                                { containerUrn: "urn:pearson:manifest:68fb57d8-144c-4c00-b1d9-5b4ea9a1384f", entityUrn: "urn:pearson:entity:5a5d4d4a-1dec-46b9-9bb3-7761320f4416", title: "s1", type: "section" },
-                                { containerUrn: "urn:pearson:manifest:cfcfaa16-6e12-4ec8-b764-e0a440ee7bea", entityUrn: "urn:pearson:entity:f2126c57-5fcb-4dae-95ed-6811c140f71a", title: "AS1", type: "assessment" }
+                                { containerUrn: "urn:pearson:manifest:68fb57d8-144c-4c00-b1d9-5b4ea9a1384f", entityUrn: "urn:pearson:entity:5a5d4d4a-1dec-46b9-9bb3-7761320f4416", title: "s1", label: "section" },
+                                { containerUrn: "urn:pearson:manifest:cfcfaa16-6e12-4ec8-b764-e0a440ee7bea", entityUrn: "urn:pearson:entity:f2126c57-5fcb-4dae-95ed-6811c140f71a", title: "AS1", label: "assessment" }
                             ]
                         },
-                        { containerUrn: "urn:pearson:manifest:b1031799-ee2a-4931-8a18-7a565651e4aa", entityUrn: "urn:pearson:entity:dfd4d379-13f8-4a03-8991-34c84b7f7c82", title: "s3", type: "section" }
+                        { containerUrn: "urn:pearson:manifest:b1031799-ee2a-4931-8a18-7a565651e4aa", entityUrn: "urn:pearson:entity:dfd4d379-13f8-4a03-8991-34c84b7f7c82", title: "s3", label: "section" }
                     ]
                 }
             ]
         },
         {
             entityUrn: "urn:pearson:entity:5cf84b06-21e3-40b7-9825-fcdf70ff9968",
-            type: "section",
+            label: "section",
             title: "",
             matterType: "bodymatter",
             containerUrn: "urn:pearson:manifest:14148de5-2a50-4fd9-9fd6-0ceaeb57415f"
@@ -135,10 +135,10 @@ export const returnAllSlateData = {
             containerUrn: "urn:pearson:manifest:d1544f9f-3266-4217-aab7-5f3b463aadc7",
             entityUrn: "urn:pearson:entity:dfea6e72-b290-4acf-94a5-b6ef2e1262b7",
             title: "chpter5",
-            type: "chapter",
+            label: "chapter",
             matterType: "bodymatter",
             contents: [
-                { containerUrn: "urn:pearson:manifest:3fed58d7-02e0-44b9-881e-d1fd3db60103", entityUrn: "urn:pearson:entity:ff4f869b-7cab-4e9b-b615-3359881899b3", title: "S26", type: "section" }
+                { containerUrn: "urn:pearson:manifest:3fed58d7-02e0-44b9-881e-d1fd3db60103", entityUrn: "urn:pearson:entity:ff4f869b-7cab-4e9b-b615-3359881899b3", title: "S26", label: "section" }
             ]
         }
     ],
