@@ -76,15 +76,15 @@ class ElementPoetry extends Component {
                                             newIndex: evt.newDraggableIndex,
                                             swappedElementData: swappedElementData,
                                             currentSlateEntityUrn: parentUrn.contentUrn,
-                                            containerTypeElem: 'we',
+                                            containerTypeElem: 'pe',
                                         }
                                         this.props.swapElement(dataObj, (bodyObj) => { })
                                         this.props.setActiveElement(dataObj.swappedElementData, dataObj.newIndex);
                                         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                                        let showHideNode = document.querySelector('.show-hide-active')
-                                        if(showHideNode){
-                                            showHideNode.classList.remove("show-hide-active")
-                                        }
+                                        // let showHideNode = document.querySelector('.show-hide-active')
+                                        // if(showHideNode){
+                                        //     showHideNode.classList.remove("show-hide-active")
+                                        // }
                                     },
                                 }}
                                 ref={(c) => {
@@ -141,14 +141,14 @@ class ElementPoetry extends Component {
                     return stanzas.map((element, index) => {
                             return (
                                 <React.Fragment key={element.id}>                                   
-                                    <ElementSaprator
+                                    {index === 0 && <ElementSaprator
                                         index={index}
                                         esProps={this.props.elementSepratorProps(index, false, this.props.parentUrn, "", parentIndex, poetryData)}
                                         elementType="poetry"
                                         sectionBreak= {false}
                                         permissions={this.props.permissions}
                                         onClickCapture={this.props.onClickCapture}
-                                    />
+                                    />}
                                     <ElementContainer
                                         element={element}
                                         index={`${parentIndex}-${index}`}
