@@ -5,7 +5,8 @@ const INIT_STATE = {
     slateTagEnable: false,
     showModule:false,
     currentSlateLODataMath:"",
-    showSlateLockPopup: false
+    showSlateLockPopup: false,
+    isRenderMetdataLO:false
 
 }
 
@@ -14,6 +15,7 @@ slateTagEnable: false,
 showModule:false,
 currentSlateLODataMath:"",
 showSlateLockPopup: false,
+isRenderMetdataLO:false
 }
 
 describe('testing meta data Reducer cases --', () => {
@@ -65,6 +67,14 @@ describe('testing meta data Reducer cases --', () => {
             
         })).toEqual(state4);
     })
-
+    it('RE_RENDER_META_LO', () => {
+        let state5 = INIT_STATE;
+        state5.isRenderMetdataLO = true;
+        expect(metadataReducer(INIT_STATE, {
+            type: 'RE_RENDER_META_LO',
+            payload:true
+            
+        })).toEqual(state5);
+    })
 });
 

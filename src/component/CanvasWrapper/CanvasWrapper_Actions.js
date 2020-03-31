@@ -9,14 +9,16 @@ import {
     AUTHORING_ELEMENT_UPDATE,
     SET_PARENT_ASIDE_DATA,
     SET_PARENT_SHOW_DATA,
-    ERROR_POPUP
+    ERROR_POPUP,
+    SLATE_TITLE
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
-import { sendDataToIframe } from '../../constants/utility.js';
+import { sendDataToIframe, requestConfigURI } from '../../constants/utility.js';
 import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 import elementDataBank from './elementDataBank'
 import figureData from '../ElementFigure/figureTypes.js';
+import { fetchAllSlatesData, setCurrentSlate } from '../../js/getAllSlatesData.js';
 const findElementType = (element, index) => {
     let elementType = {};
     elementType['tag'] = '';
@@ -195,6 +197,9 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
     // if(config.isFetchSlateInProgress){
     //  return false;
     // }
+    /** TK-3289- Fetch Data for All Slates */
+    dispatch(fetchAllSlatesData());
+    /**sendDataToIframe({ 'type': 'fetchAllSlatesData', 'message': {} }); */
     // sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
     localStorage.removeItem('newElement');
     config.isFetchSlateInProgress = true;
@@ -209,7 +214,6 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
         }
     }).then(slateData => {
         let newVersionManifestId=Object.values(slateData.data)[0].id
-
 		if(slateData.data && slateData.data[newVersionManifestId] && slateData.data[newVersionManifestId].type === "popup"){
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
             config.isPopupSlate = true
@@ -219,10 +223,10 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
 						tc_activated: JSON.stringify(slateData.data[manifestURN].tcm)
 					}
 				}
-				sendDataToIframe({
-					'type': "TcmStatusUpdated",
-					'message': messageTcmStatus
-				})
+                sendDataToIframe({
+                    'type': "TcmStatusUpdated",
+                    'message': messageTcmStatus
+                })
 				config.totalPageCount = slateData.data[newVersionManifestId].pageCount;
 				config.pageLimit = slateData.data[newVersionManifestId].pageLimit;
 				let parentData = getState().appStore.slateLevelData;
@@ -331,10 +335,32 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
                     console.log("incorrect data comming...")
                 }
             }
-		}
+        }
+
+        /** TK-3289- To get Current Slate details */
+        dispatch(setCurrentSlate(getState().appStore.allSlateData))
         
+        if(slateData.data && Object.values(slateData.data).length > 0) {
+            let slateTitle = SLATE_TITLE;
+            if('title' in slateData.data[manifestURN].contents && 'text' in slateData.data[manifestURN].contents.title) {
+                slateTitle = slateData.data[manifestURN].contents.title.text || SLATE_TITLE;
+            }
+            sendDataToIframe({
+                'type': "setSlateDetails",
+                'message': setSlateDetail(slateTitle, manifestURN)
+            });
+        }
     });
 };
+
+const setSlateDetail = (slateTitle, slateManifestURN) => {
+    return {
+        slateTitle: slateTitle,
+        slateManifestURN: slateManifestURN,
+        env: requestConfigURI().toUpperCase()
+    }
+}
+
 const setOldImagePath = (getState, activeElement, elementIndex = 0) => {
     let parentData = getState().appStore.slateLevelData,
         oldPath,
