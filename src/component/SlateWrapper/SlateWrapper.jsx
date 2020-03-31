@@ -863,7 +863,6 @@ class SlateWrapper extends Component {
                     // if (element.type === "element-aside" && element.subtype !== "workedexample" && element.elementdata.bodymatter && element.elementdata.bodymatter.length === 0) {
                     //     return null;
                     // } else {
-                        console.log("kanika slatewrapper")
                         return (
                            <React.Fragment key={element.id}>
                                 {
