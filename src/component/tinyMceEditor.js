@@ -1631,7 +1631,7 @@ export class TinyMceEditor extends Component {
                 )
             case 'element-citation':
                 return (
-                    <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onKeyDown={this.normalKeyDownHandler} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model && this.props.model.text }} onChange={this.handlePlaceholder}></div> 
+                    <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onKeyDown={this.normalKeyDownHandler} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model && this.props.model.text ? this.props.model.text : '<p class="paragraphNumeroUnoCitation"><br/></p>' }} onChange={this.handlePlaceholder}></div> 
                 )
             default:
                 return (

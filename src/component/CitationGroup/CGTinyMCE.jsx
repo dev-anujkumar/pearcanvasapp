@@ -50,6 +50,4 @@ const CGTinyMCE = (props) => {
 
 CGTinyMCE.displayName = "CitationGroupTinyMCE";
 
-CGTinyMCE.contextType = CitationGroupContext;
-
 export default CGTinyMCE
