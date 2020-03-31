@@ -147,8 +147,8 @@ function WithWrapperCommunication(WrappedComponent) {
                     config.citeUrn = message.citeUrn;
                     config.projectEntityUrn = message.entityUrn;
                     config.alfrescoMetaData = message;
-                    config.book_title =  message.name;                  
-                    this.props.fetchAuthUser();
+                    config.book_title =  message.name;
+                    this.props.fetchAuthUser()                  
                     break;
                 case 'permissionsDetails':
                     this.handlePermissioning(message);

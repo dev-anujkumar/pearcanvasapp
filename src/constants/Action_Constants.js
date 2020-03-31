@@ -62,6 +62,7 @@ export const SLATE_TAG_ENABLE = 'SLATE_TAG_ENABLE'
 export const SHOW_MODULE_NAME = 'SHOW_MODULE_NAME'
 export const CURRENT_SLATE_LO_DATA_MATH = 'CURRENT_SLATE_LO_DATA_MATH'
 export const SHOW_SLATE_LOCK_POPUP = 'SHOW_SLATE_LOCK_POPUP'
+export const RE_RENDER_META_LO = 'RE_RENDER_META_LO'
 
 /*--------------- Asset Popover -------------------*/
 export const APO_SEARCH_SAVE = 'APO_SEARCH_SAVE'
@@ -105,3 +106,6 @@ export const CLOSE_POPUP_SLATE = "CLOSE_POPUP_SLATE"
 export const ERROR_POPUP = 'ERROR_POPUP'
 export const CREATE_SHOW_HIDE_ELEMENT = "CREATE_SHOW_HIDE_ELEMENT"
 export const DELETE_SHOW_HIDE_ELEMENT = "DELETE_SHOW_HIDE_ELEMENT"
+
+/*--------------- Slate Title -------------------*/
+export const SLATE_TITLE = 'Title'
