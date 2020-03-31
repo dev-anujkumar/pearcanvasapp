@@ -12,6 +12,7 @@ export const OPENER = "OPENER_ELEMENT";
 export const ELEMENT_ASSESSMENT = "ELEMENT_ASSESSMENT";
 export const SHOW_HIDE = "SHOW_HIDE";
 export const POP_UP = "POP_UP";
+export const SMARTLINK = "SMART_LINK";
 export const ACCESS_DENIED_CONTACT_ADMIN = "Access Denied! You do not have access to the Linked Alfresco site. please contact the Manager for this project"
 
 /*-----------------Pop Dialog text-------------------------- */
