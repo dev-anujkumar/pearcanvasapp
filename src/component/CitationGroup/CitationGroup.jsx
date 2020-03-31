@@ -8,6 +8,8 @@ import Sortable from 'react-sortablejs';
 import './../../styles/CitationGroup/CitationGroup.css';
 import { guid } from '../../constants/utility.js';
 import ElementSaprator from '../ElementSaprator';
+import { createPopupUnit } from '../CanvasWrapper/CanvasWrapper_Actions';
+
 let random = guid();
 
 export class CitationGroup extends Component {
@@ -197,7 +199,7 @@ export class CitationGroup extends Component {
         return (
             <>
                 <header>
-                    <CGTinyMCE />
+                    <CGTinyMCE createPopupUnit = {this.props.createPopupUnit} />
                 </header>
                 <div >
                     {this.renderCitationElementContainer(context)}
@@ -221,7 +223,8 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    swapElement
+    swapElement,
+    createPopupUnit
 }
 
 CitationGroup.contextType = CitationGroupContext;

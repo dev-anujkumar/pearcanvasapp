@@ -6,10 +6,26 @@ import React, { useContext } from 'react';
 import TinyMceEditor from "../tinyMceEditor";
 // import { showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader'
 import { CitationGroupContext } from '../ElementContainer/ElementCitationContext'
+import { sendDataToIframe } from '../../constants/utility.js';
+import config from '../../config/config.js';
 
-const CGTinyMCE = () => {
+const CGTinyMCE = (props) => {
     const context = useContext(CitationGroupContext)
-    const props = {
+
+    /**
+     * Creates Citation Title element if not present.
+     * @param {*} popupField undefined here
+     * @param {*} forceupdate flag to forceupdate
+     * @param {*} index index of element
+     * @param {*} parentElement parent citations group element
+     */
+    const createPopupUnit = (popupField, forceupdate, index, parentElement) => {
+        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+        config.popupCreationCallInProgress = true
+        props.createPopupUnit(popupField, parentElement, (currentElementData) => context.handleBlur(forceupdate, currentElementData, index, null), index, config.slateManifestURN)
+    }
+
+    const editorProps = {
         permissions : context.permissions,
         element : context.element,
         index : `${context.index}-0`,
@@ -24,10 +40,11 @@ const CGTinyMCE = () => {
         slateLockInfo : context.slateLockInfo,
         elementId : context.elementId,
         citationField  :  "formatted-title",
-        // createCitationUnit : this.context.createCitationUnit
+        createPopupUnit
     }
+
     return (
-        <TinyMceEditor {...props} />
+        <TinyMceEditor {...editorProps} />
     )
 }
 
