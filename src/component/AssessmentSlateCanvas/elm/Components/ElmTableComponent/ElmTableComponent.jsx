@@ -78,14 +78,14 @@ class ElmTableComponent extends Component {
             if(config.parentLabel=="frontmatter"||config.parentLabel=="backmatter"){
                 this.filterData(false, config.projectUrn, elmData);
             }
-            else if(apiData.includes(config.parentContainerUrn)){
+            else if(apiData.includes(config.parentContainerUrn) && config.parentContainerUrn){
                 this.filterData(false, config.parentContainerUrn, elmData);
             }else{
                 parent= this.setParentUrn(apiData,this.props.setCurrentSlateAncestorData)
                 this.filterData(false, parent, elmData);
             }
         }
-        else if (!itemErrorFlag && elmItemData && elmLoading==false) {
+        else if (!itemErrorFlag && elmItemData && elmLoading==false && config.parentContainerUrn) {
             this.filterData(true, config.parentContainerUrn,elmItemData)
         }
         else if(this.state.openedFrom == "slateAssessment" && !errFlag && elmLoading){
