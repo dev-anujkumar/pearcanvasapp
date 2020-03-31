@@ -229,6 +229,9 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
                 if(elem.buttonType !== showInteractiveOption.type){
                     setshowInteractiveOption({status:true,type:elem.buttonType});
                 }
+                else{
+                    setshowInteractiveOption({status:!showInteractiveOption.status,type:elem.buttonType});
+                }
             }
             else {
                 closeDropDown();
