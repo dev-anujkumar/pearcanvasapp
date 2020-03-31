@@ -1,5 +1,5 @@
 .conatiner-other-elements{
-    width: 250px;
+    width: 160px;
     color: #fff;
     text-align: center;
     font-family: 'Open Sans', sans-serif;
@@ -11,7 +11,7 @@
     z-index: 2;
     transition: opacity 1s;
     right: 115%;
-    margin-top: -46px;
+    margin-top: -65px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     background-color: #ffffff;
 }
