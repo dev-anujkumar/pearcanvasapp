@@ -402,7 +402,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
                     } else {
                         currentParentData = slateData.data[manifestURN];
                         //MOCK DATA. TO BE REMOVED AFTER CITATION ELEMENT IMPLEMENTATION
-                        currentParentData.contents.bodymatter.push(citationGroupData, citationGroupData2)
+                        // currentParentData.contents.bodymatter.push(citationGroupData, citationGroupData2)
                     }
                     dispatch({
                         type: FETCH_SLATE_DATA,

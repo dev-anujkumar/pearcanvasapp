@@ -23,9 +23,9 @@ export class CitationGroup extends Component {
     renderElement = (_elements, parentUrn, parentIndex) => {
         let asideData = {
             type: "citations",
-            id: "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e",//this.props.element.id,
-            contentUrn: "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e",//this.props.element.contentUrn,
-            element : {}//this.props.element
+            id: this.context.element.id,//this.props.element.id,
+            contentUrn: this.context.element.contentUrn,
+            element : this.context.element
         };
         try {
             if (_elements !== null && _elements !== undefined) {
@@ -60,7 +60,7 @@ export class CitationGroup extends Component {
                                 {
                                     <ElementSaprator
                                         index={index+1}
-                                        esProps={this.context.elementSeparatorProps(index+1, false, parentUrn, null, parentIndex)}
+                                        esProps={this.context.elementSeparatorProps(index+1, false, parentUrn, asideData, parentIndex)}
                                         //esProps={this.context.elementSeparatorProps(index, false, parentUrn, asideData, parentIndex)}
                                         elementType="citations"
                                         // slateType={_slateType}
