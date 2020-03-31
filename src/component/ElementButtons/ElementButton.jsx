@@ -172,12 +172,12 @@ class Button extends Component {
                 </span>
                 break;
             case buttonTypes.POETRY_ELEMENT:
-                buttonJSX = <span className="btn-element text-elem" onClick={clickHandlerFn}>
+                buttonJSX = <span className="btn-element poetry-elem" onClick={clickHandlerFn}>
                     {poetryIcon}
                     </span>
                 break;
             case buttonTypes.STANZA_ELEMENT:
-                buttonJSX = <span className="btn-element text-elem" onClick={clickHandlerFn}>
+                buttonJSX = <span className="btn-element stanza-elem" onClick={clickHandlerFn}>
                     {stanzaIcon}
                     </span>
                 break;

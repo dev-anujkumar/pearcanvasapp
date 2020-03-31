@@ -559,7 +559,7 @@ export class TinyMceEditor extends Component {
             let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
             if (activeElement) {
                 if (!activeElement.children.length ||
-                    (activeElement.children.length <= 1 && activeElement.children[0].tagName === 'BR' && activeElement.nodeName !== "CODE")) {
+                    (activeElement.children.length <= 1 && activeElement.children[0].tagName === 'BR' && activeElement.nodeName !== "CODE" && activeElement.nodeName !== 'DIV')) {
                     //code to avoid deletion of editor first child(like p,h1,blockquote etc)
                     let div = document.createElement('div');
                     div.innerHTML = this.lastContent;
@@ -584,18 +584,24 @@ export class TinyMceEditor extends Component {
             if (activeElement) {
                isContainsMath = activeElement.innerHTML.match(/<img/) ? (activeElement.innerHTML.match(/<img/).input.includes('class="Wirisformula') || activeElement.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula')) : false;
              }
-            if(key === 13 && this.props.element.type !== 'element-list' && activeElement.nodeName !== "CODE" && this.props.element.type!=='showhide') {
+            if(key === 13 && this.props.element.type !== 'element-list' && activeElement.nodeName !== "CODE" && this.props.element.type!=='showhide' && this.props.element.type !== "stanza") {
                 let activeEditor = document.getElementById(tinymce.activeEditor.id);
                 activeEditor.blur();
                 let nextSaparator = (activeEditor.closest('.editor')).nextSibling;
                 let textPicker = nextSaparator.querySelector('#myDropdown li > .text-elem');
                 textPicker.click();
-            }else if (key === 13 && this.props.element.type === 'showhide' && this.props.showHideType != 'revel' && this.props.currentElement.type !== 'element-list') {
+            }else if (key === 13 && this.props.element.type === 'showhide' && this.props.showHideType != 'revel' && this.props.currentElement.type !== 'element-list' && this.props.element.type !== "stanza") {
                 this.props.createShowHideElement(this.props.showHideType, this.props.index, this.props.id);
             }
             else if((this.props.element && this.props.element.type ==='showhide' && this.props.showHideType !== 'revel' && !editor.bodyElement.innerText.trim().length && e.keyCode === 8 && this.props.element.interactivedata) && ((this.props.showHideType === "show" && this.props.element.interactivedata.show.length >1) || (this.props.showHideType === "hide" && this.props.element.interactivedata.hide.length >1 ))&& !isContainsMath ){
                 this.props.deleteShowHideUnit(this.props.currentElement.id, this.props.showHideType, this.props.element.contentUrn, this.props.innerIndex,this.props.index,this.props.element.id)
-             }   
+             } else if(key === 13 && this.props.element.type === 'stanza' ){
+                let activeEditor = document.getElementById(tinymce.activeEditor.id);
+                activeEditor.blur();
+                let nextSaparator = (activeEditor.closest('.editor')).nextSibling;
+                let textPicker = nextSaparator.querySelector('#myDropdown li > .stanza-elem');
+                textPicker.click();
+             }  
         });
     }
 

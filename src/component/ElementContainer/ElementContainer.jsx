@@ -948,6 +948,12 @@ class ElementContainer extends Component {
                     model={element} 
                     index={index} 
                     slateLockInfo={slateLockInfo} 
+                    setActiveElement={this.props.setActiveElement}
+                    handleBlur={this.handleBlur}
+                    handleFocus={this.handleFocus}
+                    btnClassName={this.state.btnClassName}
+                    borderToggle={this.state.borderToggle}
+                    elemBorderToggle={this.props.elemBorderToggle}
                     elementId={element.id} 
                     glossaryFootnoteValue={this.props.glossaryFootnoteValue} 
                     onClickCapture={this.props.onClickCapture}
@@ -962,6 +968,12 @@ class ElementContainer extends Component {
                     openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} 
                     handleFocus={this.handleFocus} 
                     handleBlur={this.handleBlur} 
+                    setActiveElement={this.props.setActiveElement}
+                    handleBlur={this.handleBlur}
+                    handleFocus={this.handleFocus}
+                    btnClassName={this.state.btnClassName}
+                    borderToggle={this.state.borderToggle}
+                    elemBorderToggle={this.props.elemBorderToggle}
                     elementId={element.id} 
                     element={element} 
                     model={element.poetrylines} 
