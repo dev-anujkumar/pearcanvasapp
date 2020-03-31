@@ -15,7 +15,7 @@ export default function ElementContainerType(props) {
                         item.buttonHandler();
                     }
                     return (
-                        <React.Fragment> <li onClick={buttonHandlerFunc}>{item.text}</li></React.Fragment>
+                        <React.Fragment> <li key={key} onClick={buttonHandlerFunc}>{item.text}</li></React.Fragment>
 
                     )
                 })}
