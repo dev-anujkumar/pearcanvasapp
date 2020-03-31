@@ -170,7 +170,7 @@ describe('Test convertElement- paragraph', () => {
 });
 describe('Test convertElement- singleAssessment', () => {
     let store = mockStore(() => initialState2);
-    it('Test convertElement  -assessment type', () => {
+    xit('Test convertElement  -assessment type', () => {
         store = mockStore(() => initialState2);
         let newData = {
             elementId: "urn:pearson:work:fa8ebea3-d9ba-4aec-8658-2f944841404a",
