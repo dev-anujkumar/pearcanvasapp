@@ -19,6 +19,7 @@ import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 import elementDataBank from './elementDataBank'
 import figureData from '../ElementFigure/figureTypes.js';
 import { fetchAllSlatesData, setCurrentSlateAncestorData } from '../../js/getAllSlatesData.js';
+import {poetryElem} from '../../../fixtures/ElementPoetryTestData'
 const findElementType = (element, index) => {
     let elementType = {};
     elementType['tag'] = '';
@@ -164,12 +165,20 @@ const findElementType = (element, index) => {
                 }
                 break;
             case "showhide":
+            case  'poetry':
                 elementType = {
                     elementType: elementDataBank[element.type]["elementType"],
                     primaryOption: elementDataBank[element.type]["primaryOption"],
                     secondaryOption: elementDataBank[element.type]["secondaryOption"]
                 }
                 break;
+            // case "poetry":
+            //     elementType = {
+            //         elementType : elementDataBank[element.type]["elementType"],
+            //         primaryOption: elementDataBank[element.type]["primaryOption"],
+            //         secondaryOption: elementDataBank[element.type]["secondaryOption"]
+            //     }
+            //     break;
             default:
                 elementType = { ...elementDataBank["element-authoredtext"] }
         }
@@ -214,8 +223,9 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
         }
     }).then(slateData => {
         let newVersionManifestId=Object.values(slateData.data)[0].id
-        
-        if(slateData.data && slateData.data[newVersionManifestId] && slateData.data[newVersionManifestId].type === "popup"){
+        slateData.data[newVersionManifestId].contents.bodymatter.push(poetryElem)
+
+		if(slateData.data && slateData.data[newVersionManifestId] && slateData.data[newVersionManifestId].type === "popup"){
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
             config.isPopupSlate = true
 			if (config.slateManifestURN === Object.values(slateData.data)[0].id) {

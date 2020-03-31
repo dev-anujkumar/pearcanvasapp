@@ -36,7 +36,9 @@ import ElementPopup from '../ElementPopup'
 import { updatePageNumber, accessDenied } from '../SlateWrapper/SlateWrapper_Actions';
 import { releaseSlateLock } from '../CanvasWrapper/SlateLock_Actions.js';
 import ElementShowHide from '../ElementShowHide';
-import ElementContainerContext from './ElementContainerContext'
+import ElementContainerContext from './ElementContainerContext';
+import ElementPoetry from '../ElementPoetry';
+import ElementPoetryStanza from '../ElementPoetry/ElementPoetryStanza.jsx';
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -480,7 +482,7 @@ class ElementContainer extends Component {
                     html = html.replace(/<br data-mce-bogus="1">/g, "<br>")
                     html = matchHTMLwithRegex(html) ? html : `<p class="paragraphNumeroUno">${html}</p>`
                 }
-                html =html.replace(/(\r\n|\n|\r)/gm, '')
+                html =html.replace(/(\r\n|\n|\r)/gm, '')                
                 previousElementData.html.text= previousElementData.html.text.replace(/<br data-mce-bogus="1">/g, "<br>").replace(/(\r\n|\n|\r)/gm, '');
                 previousElementData.html.text = previousElementData.html.text.replace(/data-mce-bogus="all"/g, '')
                 if (html && previousElementData.html && (this.replaceUnwantedtags(html) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate) && !assetPopoverPopupIsVisible && !config.savingInProgress) {
@@ -577,7 +579,7 @@ class ElementContainer extends Component {
                     for (let i = 0; i < tinyMCE.$(currentListNode).find('li').length; i++) {
                         tinyMCE.$(currentListNode).find('li')[i].innerHTML = tinyMCE.$(currentListNode).find('li')[i].innerHTML.replace(/^\s+|\s+$/g, '&nbsp;');
                     }                    
-                    if (nodehtml && previousElementData.html && (this.replaceUnwantedtags(nodehtml) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate && !config.savingInProgress) && !assetPopoverPopupIsVisible) {
+                    if (nodehtml && previousElementData.html && (this.replaceUnwantedtags(nodehtml) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate && !assetPopoverPopupIsVisible &&  !config.savingInProgress)) {
                         dataToSend = createUpdatedData(previousElementData.type, previousElementData, currentListNode, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, showHideType,undefined)
                         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                         if(dataToSend.status === "approved"){
@@ -935,6 +937,40 @@ class ElementContainer extends Component {
                     </ElementContainerContext.Provider >;
                     labelText = 'SH'
                     break;
+                case elementTypeConstant.POETRY_ELEMENT:
+                    editor = <ElementPoetry index={index} 
+                    accessDenied={accessDenied} 
+                    updateFigureData={this.updateFigureData} 
+                    permissions={permissions} 
+                    openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} 
+                    handleFocus={this.handleFocus} 
+                    handleBlur={this.handleBlur} 
+                    model={element} 
+                    index={index} 
+                    slateLockInfo={slateLockInfo} 
+                    elementId={element.id} 
+                    glossaryFootnoteValue={this.props.glossaryFootnoteValue} 
+                    onClickCapture={this.props.onClickCapture}
+                    glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
+                    elementSepratorProps={elementSepratorProps} />
+                    labelText = 'PE'
+                    break;
+                case elementTypeConstant.POETRY_STANZA:
+                    editor = <ElementPoetryStanza index={index}
+                    permissions={permissions} 
+                    openAssetPopoverPopUp={this.openAssetPopoverPopUp} 
+                    openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} 
+                    handleFocus={this.handleFocus} 
+                    handleBlur={this.handleBlur} 
+                    elementId={element.id} 
+                    element={element} 
+                    model={element.poetrylines} 
+                    slateLockInfo={slateLockInfo} 
+                    onListSelect={this.props.onListSelect} 
+                    glossaryFootnoteValue={this.props.glossaryFootnoteValue} 
+                    glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}/>
+                    labelText = 'St'
+                    break;
             }
         } else {
             editor = <p className="incorrect-data">Incorrect Data - {element.id}</p>;
@@ -984,7 +1020,7 @@ class ElementContainer extends Component {
                     deleteElement={this.deleteElement}
                 />}
                 {
-                    <PageNumberContext.Consumer>
+                    this.props.children && <PageNumberContext.Consumer>
                         {
                             ({ isPageNumberEnabled }) => this.props.children(this.state.isHovered, isPageNumberEnabled, this.props.activeElement, this.props.permissions)
                         }

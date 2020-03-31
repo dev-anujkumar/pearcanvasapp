@@ -355,6 +355,11 @@ const elementDataBank = {
         "elementType" : "element-interactive",
         "primaryOption" : "primary-showhide",
         "secondaryOption" : "secondary-aside-showhide"
+    },
+    "poetry" : {
+        "elementType" : "poetry",
+        "primaryOption" : "primary-poetry",
+        "secondaryOption" : "secondary-poetry"
     }
 }
 
