@@ -6,26 +6,39 @@ import config from '../../config/config';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { OpenLOPopup, NoSlateTagIS } from '../../constants/IFrameMessageTypes.js';
 import '../../styles/ElementMetaLOList/ElementMetaLOList.css';
-import { setCurrentModule } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
+import { setCurrentModule, reRenderLO } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 
 export class ElementMetaLOList extends Component {
   //To show module name if groupby module is present in wip
   componentDidMount() {
+    this.renderCurrentModule()
+  }
+  componentDidUpdate(prevProps, prevState){
+    if(this.props.isRenderMetdataLO !=prevProps.isRenderMetdataLO && this.props.isRenderMetdataLO==true){
+      this.props.reRenderLO(false)
+      this.renderCurrentModule()
+    }
+  }
+  renderCurrentModule = () => {
     if (this.props.element && this.props.element.elementdata.groupby && this.props.element.elementdata.groupby == "module") {
       this.props.setCurrentModule(true);
       let els = document.getElementsByClassName('moduleContainer');
-      els = Array.from(els);
-      els.forEach((item, i) => {
-        let children = els[i].querySelectorAll('.moduleContainer .learningObjectiveData');
-        if (children.length > 0) {
-          els[i].classList.add('showmodule');
-        }
-      })
+      if (els.length > 0) {
+        els = Array.from(els);
+        els.forEach((item, i) => {
+          let children = els[i].querySelectorAll('.moduleContainer .learningObjectiveData');
+          if (children.length > 0) {
+            els[i].classList.add('showmodule');
+          }
+        })
+      }
+      else {
+        this.props.reRenderLO(true)
+      }
     }
     else {
       this.props.setCurrentModule(false)
     }
-
   }
   render() {
     let wipmodel = {
@@ -162,9 +175,12 @@ ElementMetaLOList.propTypes = {
 ElementMetaLOList.displayName = "ElementMetaLOList"
 const mapStateToProps = (state) => {
   return {
-    currentSlateLOData: state.metadataReducer.currentSlateLOData
+    currentSlateLOData: state.metadataReducer.currentSlateLOData,
+    isRenderMetdataLO:state.metadataReducer.isRenderMetdataLO
   }
 }
-export default connect(mapStateToProps, {
-  setCurrentModule
-})(ElementMetaLOList);
+const mapActionToProps = {
+  setCurrentModule,
+  reRenderLO
+}
+export default connect(mapStateToProps, mapActionToProps)(ElementMetaLOList);

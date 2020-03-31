@@ -18,6 +18,7 @@ import { sendDataToIframe, requestConfigURI } from '../../constants/utility.js';
 import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 import elementDataBank from './elementDataBank'
 import figureData from '../ElementFigure/figureTypes.js';
+import { fetchAllSlatesData, setCurrentSlate } from '../../js/getAllSlatesData.js';
 const findElementType = (element, index) => {
     let elementType = {};
     elementType['tag'] = '';
@@ -196,6 +197,9 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
     // if(config.isFetchSlateInProgress){
     //  return false;
     // }
+    /** TK-3289- Fetch Data for All Slates */
+    dispatch(fetchAllSlatesData());
+    /**sendDataToIframe({ 'type': 'fetchAllSlatesData', 'message': {} }); */
     // sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
     localStorage.removeItem('newElement');
     config.isFetchSlateInProgress = true;
@@ -210,7 +214,6 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
         }
     }).then(slateData => {
         let newVersionManifestId=Object.values(slateData.data)[0].id
-        
 		if(slateData.data && slateData.data[newVersionManifestId] && slateData.data[newVersionManifestId].type === "popup"){
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
             config.isPopupSlate = true
@@ -220,10 +223,10 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
 						tc_activated: JSON.stringify(slateData.data[manifestURN].tcm)
 					}
 				}
-				sendDataToIframe({
-					'type': "TcmStatusUpdated",
-					'message': messageTcmStatus
-				})
+                sendDataToIframe({
+                    'type': "TcmStatusUpdated",
+                    'message': messageTcmStatus
+                })
 				config.totalPageCount = slateData.data[newVersionManifestId].pageCount;
 				config.pageLimit = slateData.data[newVersionManifestId].pageLimit;
 				let parentData = getState().appStore.slateLevelData;
@@ -333,6 +336,9 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
                 }
             }
         }
+
+        /** TK-3289- To get Current Slate details */
+        dispatch(setCurrentSlate(getState().appStore.allSlateData))
         
         if(slateData.data && Object.values(slateData.data).length > 0) {
             let slateTitle = SLATE_TITLE;

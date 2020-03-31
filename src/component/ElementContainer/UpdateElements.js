@@ -406,11 +406,16 @@ export const generateAssessmentSlateData = (index, previousElementData, elementT
  * @param {*} showHideType Section in ShowHide
  * @param {*} node HTML node containing content
  */
-const validateRevealAnswerData = (showHideType, node) => {
+const validateRevealAnswerData = (showHideType, node, elementType) => {
     if(showHideType && showHideType === "postertextobject" && !node.innerText.trim().length){
         return {
             innerHTML : "<p class=\"paragraphNumeroUno\">Reveal Answer:</p>",
             innerText : "Reveal Answer:"
+        }
+    } else if(showHideType && (showHideType === "show" || showHideType === "hide") && elementType === elementTypeConstant.AUTHORED_TEXT){
+        return {
+            innerHTML : matchHTMLwithRegex(node.innerHTML) ? node.innerHTML : `<p class="paragraphNumeroUno">${node.innerHTML}</p>`,
+            innerText : node.innerText
         }
     }
     else{
@@ -442,7 +447,7 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
         case elementTypeConstant.ELEMENT_LIST:
             tinyMCE.$(node).find('.blockquote-hidden').remove();
             let { innerHTML, innerText } = node;
-            let revealTextData = validateRevealAnswerData(showHideType, node)
+            let revealTextData = validateRevealAnswerData(showHideType, node, type)
             innerHTML = revealTextData.innerHTML
             innerText = revealTextData.innerText
             dataToReturn = {

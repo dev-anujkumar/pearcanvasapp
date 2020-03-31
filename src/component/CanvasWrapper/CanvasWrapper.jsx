@@ -34,7 +34,7 @@ import { glossaaryFootnotePopup } from '../GlossaryFootnotePopup/GlossaryFootnot
 import store from './../../appstore/store'
 import PopUp from '../PopUp';
 import { hideBlocker } from '../../js/toggleLoader';
-
+import {getAllSlatesData} from '../../js/getAllSlatesData'
 export class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
@@ -270,6 +270,7 @@ export default connect(
         updateElement,
         setSlateParent,
         openPopupSlate,
-        getTableEditorData
+        getTableEditorData,
+        getAllSlatesData
     }
 )(CommunicationChannelWrapper(CanvasWrapper));
