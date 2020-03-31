@@ -402,6 +402,31 @@ export const generateAssessmentSlateData = (index, previousElementData, elementT
 }
 
 /**
+ * Data preparation for Citation element
+ * @param {*} index 
+ * @param {*} previousElementData 
+ * @param {*} elementType 
+ * @param {*} primaryOption 
+ * @param {*} secondaryOption 
+ */
+const generateCitationElementData = (index, previousElementData, elementType, primaryOption, secondaryOption, node, parentElement) => {
+    let { innerHTML, innerText } = node;
+    let citationElementData = {
+        ...previousElementData,
+        elementdata : {
+            text : innerText
+        },
+        html : {
+            text : innerHTML
+        },
+        inputType : elementTypes[elementType][primaryOption]['enum'],
+        inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
+        slateUrn : parentElement.id
+    }
+    return citationElementData
+}
+
+/**
  * Detects postertext/reveal answer section of ShowHide and check for empty content in it
  * @param {*} showHideType Section in ShowHide
  * @param {*} node HTML node containing content
@@ -433,7 +458,7 @@ const validateRevealAnswerData = (showHideType, node) => {
  * @param {*} index 
  * @param {*} containerContext 
  */
-export const createUpdatedData = (type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext,parentElement,showHideType,asideData) => {
+export const createUpdatedData = (type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement, showHideType, asideData) => {
     let dataToReturn = {}
     switch (type){
         case elementTypeConstant.AUTHORED_TEXT:
@@ -526,6 +551,9 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
         
         case elementTypeConstant.ASSESSMENT_SLATE:
             dataToReturn = generateAssessmentSlateData(index, previousElementData, elementType, primaryOption, secondaryOption)
+            break;
+        case elementTypeConstant.CITATION_ELEMENT:
+            dataToReturn = generateCitationElementData(index, previousElementData, elementType, primaryOption, secondaryOption, node, parentElement)
             break;
     }
     dataToReturn.slateUrn = config.slateManifestURN;

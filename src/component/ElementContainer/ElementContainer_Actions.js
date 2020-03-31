@@ -198,7 +198,11 @@ function prepareDataForTcmUpdate (updatedData,id, elementIndex, asideData, getSt
     let storeData = getState().appStore.slateLevelData;
     let slateData = JSON.parse(JSON.stringify(storeData));
     let slateBodyMatter = slateData[config.slateManifestURN].contents.bodymatter;
-    if (indexes.length === 2) {
+    if(updatedData.type === "element-citation"){
+        if (slateBodyMatter[indexes[0]].contents.bodymatter[indexes[1] - 1].id === id) {
+            updatedData.isHead = true;
+        }
+    } else if (indexes.length === 2) {
         if (slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].id === id) {
             updatedData.isHead = true;
         }
@@ -214,7 +218,6 @@ function prepareDataForTcmUpdate (updatedData,id, elementIndex, asideData, getSt
             updatedData.parentType = "element-aside";
         }
     }
-
     if(config.tempSlateManifestURN){
         updatedData.parentType = "popup"
     }

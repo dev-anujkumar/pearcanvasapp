@@ -35,7 +35,7 @@ export class CitationGroup extends Component {
                            <React.Fragment key={element.id}>
                                 <ElementContainer
                                     element={element}
-                                    index={`${parentIndex}-${index}`}
+                                    index={`${parentIndex}-${index+1}`}
                                     parentUrn={parentUrn}
                                     showBlocker={this.context.showBlocker}
                                     permissions={this.context.permissions}
@@ -59,8 +59,8 @@ export class CitationGroup extends Component {
                                 </ElementContainer>
                                 {
                                     <ElementSaprator
-                                        index={index}
-                                        esProps={this.context.elementSeparatorProps(index, false, parentUrn, null, parentIndex)}
+                                        index={index+1}
+                                        esProps={this.context.elementSeparatorProps(index+1, false, parentUrn, null, parentIndex)}
                                         //esProps={this.context.elementSeparatorProps(index, false, parentUrn, asideData, parentIndex)}
                                         elementType="citations"
                                         // slateType={_slateType}

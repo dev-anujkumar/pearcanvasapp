@@ -6,20 +6,21 @@ import TinyMceEditor from "../tinyMceEditor";
  * @param {object} props - CitationElement component properties
  */
 const CitationElement = (props) => {
-    const { index, elementId, element, className, model, handleFocus, handleBlur, slateLockInfo, permissions } = props
+    const { index, elementId, element, className, model, handleFocus, handleBlur, slateLockInfo, permissions, currentElement } = props
     return (
         <TinyMceEditor 
             index={index}
             elementId={elementId}
             element={element}
+            currentElement={currentElement}
             placeholder="Type Something..."
             className={className}
             model={model}
             tagName = "element-citation"
-            handleEditorFocus={handleFocus}
-            handleBlur = {handleBlur}
             slateLockInfo={slateLockInfo}
             permissions={permissions}
+            handleEditorFocus={handleFocus}
+            handleBlur = {handleBlur}
         />
     )
 }

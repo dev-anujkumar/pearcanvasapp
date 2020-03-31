@@ -44,7 +44,7 @@ let citationGroupData = {
                 ]
             },
             "html" : {
-                "text":`<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4d" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635"> Allport, G. W., &amp; Odbert, H. S. (1936). Trait names: A psycho-lexical study. <em>Psychological Monographs,</em> 47(211). The CITE classes for the containing the WiP's "element-citation" content should be decided based on the context of usage as described below. It follows the same logic as when paragraphNumeroUno and paragraphNummerEins. If the citation grouping </p>`
+                "text":`<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4d" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635">Allport, G. W., &amp; Odbert, H. S. (1936). Trait names: A psycho-lexical study. <em>Psychological Monographs,</em> 47(211). The CITE classes for the containing the WiP's "element-citation" content should be decided based on the context of usage as described below. It follows the same logic as when paragraphNumeroUno and paragraphNummerEins. If the citation grouping.</p>`
             },
             "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4d",
             "versionUrn": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635"
@@ -82,7 +82,7 @@ let citationGroupData2 = {
                 "text": "Allport, G. W., 47(211). element-citationelement-citationelement-citationelement-citationelement-citationelement-citationelement-citation element-citationelement-citationelement-citationelement-citation element-citationelement-citation element-citation element-citationelement-citation",
             },
             "html" : {
-                "text":`<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r3d" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27640"> Allport, G. W., 47(211). element-citationelement-citationelement-citationelement-citationelement-citationelement-citationelement-citation element-citationelement-citationelement-citationelement-citation element-citationelement-citation element-citation element-citationelement-citation </p>`
+                "text":`<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r3d" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27640">Allport, G. W., 47(211). element-citationelement-citationelement-citationelement-citationelement-citationelement-citationelement-citation element-citationelement-citationelement-citationelement-citation element-citationelement-citation element-citation element-citationelement-citation</p>`
             },
             "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r3d",
             "versionUrn": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27640"

@@ -464,7 +464,7 @@ class ElementContainer extends Component {
             case elementTypeConstant.AUTHORED_TEXT:
             case elementTypeConstant.LEARNING_OBJECTIVE_ITEM:
             case elementTypeConstant.BLOCKFEATURE:
-            let index  = parentElement.type == "showhide" ||  parentElement.type == "popup"? activeEditorId:`cypress-${this.props.index}`
+            let index = parentElement.type == "showhide" || parentElement.type == "popup" || parentElement.type == "citations" ? activeEditorId : `cypress-${this.props.index}`
             if (this.props.element && this.props.element.type === "element-blockfeature" && this.props.element.subtype === "quote" && tinyMCE.activeEditor && tinyMCE.activeEditor.id  && !tinyMCE.activeEditor.id.includes("footnote")) {
                 let blockqtText = document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins')?document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').innerText:"";
                 if (!blockqtText.trim()) {
@@ -572,7 +572,6 @@ class ElementContainer extends Component {
                 }
                 break;
 
-
             case elementTypeConstant.ASSESSMENT_SLATE:
                 dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, undefined, undefined, undefined)
                 this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, undefined, undefined);
@@ -598,6 +597,22 @@ class ElementContainer extends Component {
                     }
                     break;
                 }
+                case elementTypeConstant.CITATION_ELEMENT:
+                    let ceIndex  = `cypress-${this.props.index}`
+                    let ceCurrentNode = document.getElementById(ceIndex)
+                    let ceHtml = ceCurrentNode && ceCurrentNode.innerHTML;
+                    let tempDivForCE = document.createElement('div');
+                    tempDivForCE.innerHTML = ceHtml;
+                    ceHtml = tempDivForCE.innerHTML;
+                    if (ceHtml && previousElementData.html && (this.replaceUnwantedtags(ceHtml) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate) && !config.savingInProgress) {
+                        dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDivForCE, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, showHideType, asideData)
+                        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+                        if(dataToSend.status === "approved"){
+                            config.savingInProgress = true
+                        }
+                        this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, showHideType, parentElement);
+                    }
+                    break;
         }
     }
 
@@ -609,7 +624,8 @@ class ElementContainer extends Component {
         let activeEditorId = elemIndex ? `cypress-${elemIndex}` : (tinyMCE.activeEditor ? tinyMCE.activeEditor.id : '')
         let node = document.getElementById(activeEditorId);
         let element = currrentElement ? currrentElement : this.props.element
-        this.handleContentChange(node, element, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, this.props.element, showHideType)
+        let parentElement = currrentElement && currrentElement.type === elementTypeConstant.CITATION_ELEMENT ? this.props.parentElement : this.props.element
+        this.handleContentChange(node, element, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType)
     }
 
     /**
@@ -974,9 +990,10 @@ class ElementContainer extends Component {
                         showBlocker = {this.props.showBlocker}
                         permissions = {permissions}
                         index = {index}
-                        element = {element}
+                        element = {this.props.parentElement}
                         model = {element.html}
                         slateLockInfo = {slateLockInfo}
+                        currentElement = {element}
                         onClick = {this.handleFocus}
                         handleFocus = {this.handleFocus}
                         handleBlur = {this.handleBlur}
