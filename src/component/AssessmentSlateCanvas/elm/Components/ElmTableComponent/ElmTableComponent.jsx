@@ -71,7 +71,6 @@ class ElmTableComponent extends Component {
     /*** @description - This function is to render elm table data
      * @param currentProps- props
     */
-
     renderTableData = (currentProps) => {
         const { errFlag, elmData, elmItemData, elmLoading, itemErrorFlag } = currentProps.elmReducer;
         let apiData = JSON.stringify(elmData), parent=""
@@ -123,8 +122,6 @@ class ElmTableComponent extends Component {
         }
         return parent1.urn
     }
-
-
 
     /*** @description - This function is to filter table data based on parameters
          * @param getItems - check for type of data |true=assessment-item data|false- elm-resouces data     

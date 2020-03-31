@@ -2228,28 +2228,28 @@ export const CurrentSlateAncestor = {
         containerUrn: "urn:pearson:manifest:bb4e289e-8add-4c30-9f52-33b8fd246f81",
         entityUrn: "urn:pearson:entity:a92c93e9-7eca-4855-aa52-8746076382c7",
         title: "AS67",
-        type: "assessment",
+        label: "assessment",
         matterType: "BodyMatter",
         ancestor: {
             containerUrn: "urn:pearson:manifest:2cd2b0e9-5d9e-4f14-a4ed-8daf8dd871fe",
             entityUrn: "urn:pearson:entity:949c84a3-8b21-4809-9728-bd9bf7d5a80b",
             title: "M67",
-            type: "module",
+            label: "module",
             ancestor: {
                 containerUrn: "urn:pearson:manifest:c4f8a211-7518-448c-acd0-831cd7715ae1",
                 entityUrn: "urn:pearson:entity:c93ac30e-9945-4c1f-afbc-74cff157c589",
                 title: "C67",
-                type: "chapter",
+                label: "chapter",
                 ancestor: {
                     containerUrn: "urn:pearson:manifest:f870431b-29a1-42a7-90e1-05ad274f00c5",
                     entityUrn: "urn:pearson:entity:39541e3c-92bb-453b-b147-665663bf2d78",
                     title: "P67",
-                    type: "part",
+                    label: "part",
                     ancestor: {
                         containerUrn: "urn:pearson:distributable:97aec104-3c20-46c2-825b-be5c1ea9ac4e",
                         entityUrn: "urn:pearson:entity:ae765bae-a86c-4020-8e35-b98fcb0e3a5f",
                         title: "CYQA_Dec21",
-                        type: "project"
+                        label: "project"
                     }
                 }
             }
@@ -2260,23 +2260,23 @@ export const CurrentSlateAncestor = {
         containerUrn: "urn:pearson:manifest:50778b02-a808-4a8c-9c7c-923181e1a7fc",
         entityUrn: "urn:pearson:entity:e14419c8-640e-4767-89c6-c439d9537db1",
         title: "AS--67",
-        type: "assessment",
+        label: "assessment",
         matterType: "BodyMatter",
         ancestor: {
             containerUrn: "urn:pearson:manifest:c4f8a211-7518-448c-acd0-831cd7715ae1",
             entityUrn: "urn:pearson:entity:c93ac30e-9945-4c1f-afbc-74cff157c589",
             title: "C67",
-            type: "chapter",
+            label: "chapter",
             ancestor: {
                 containerUrn: "urn:pearson:manifest:f870431b-29a1-42a7-90e1-05ad274f00c5",
                 entityUrn: "urn:pearson:entity:39541e3c-92bb-453b-b147-665663bf2d78",
                 title: "P67",
-                type: "part",
+                label: "part",
                 ancestor: {
                     containerUrn: "urn:pearson:distributable:97aec104-3c20-46c2-825b-be5c1ea9ac4e",
                     entityUrn: "urn:pearson:entity:ae765bae-a86c-4020-8e35-b98fcb0e3a5f",
                     title: "CYQA_Dec21",
-                    type: "project"
+                    label: "project"
                 }
             }
         }
@@ -2286,23 +2286,23 @@ export const CurrentSlateAncestor = {
         containerUrn: "urn:pearson:manifest:2473babc-3182-4639-b36e-4177e03fac03",
         entityUrn: "urn:pearson:entity:4e2e5124-e6f3-4db0-96b6-1d805baee6bb",
         title: "AS3",
-        type: "assessment",
+        label: "assessment",
         matterType: "BodyMatter",
         ancestor: {
             containerUrn: "urn:pearson:manifest:761f2d68-6a7c-41e9-8363-ca81ab926b82",
             entityUrn: "urn:pearson:entity:dfd414ed-6e32-4d71-90d0-231158853e45",
             title: "Chap1",
-            type: "chapter",
+            label: "chapter",
             ancestor: {
                 containerUrn: "urn:pearson:manifest:1e4ce418-4160-4d8f-bbae-7a2c814555ad",
                 entityUrn: "urn:pearson:entity:e0066675-a993-4f03-aa3c-cd5a4631da41",
                 title: "Part1",
-                type: "part",
+                label: "part",
                 ancestor: {
                     containerUrn: "urn:pearson:distributable:97aec104-3c20-46c2-825b-be5c1ea9ac4e",
                     entityUrn: "urn:pearson:entity:ae765bae-a86c-4020-8e35-b98fcb0e3a5f",
                     title: "CYQA_Dec21",
-                    type: "project"
+                    label: "project"
                 }
             }
         }
@@ -2312,28 +2312,28 @@ export const CurrentSlateAncestor = {
         containerUrn: "urn:pearson:manifest:cfcfaa16-6e12-4ec8-b764-e0a440ee7bea",
         entityUrn: "urn:pearson:entity:f2126c57-5fcb-4dae-95ed-6811c140f71a",
         title: "AS1",
-        type: "assessment",
+        label: "assessment",
         matterType: "BodyMatter",
         ancestor: {
             containerUrn: "urn:pearson:manifest:823f4807-74f5-4411-b9e2-5ede994b1091",
             entityUrn: "urn:pearson:entity:fc5a6d43-b861-490c-9df5-5843dd4046e4",
             title: "Mod1",
-            type: "module",
+            label: "module",
             ancestor: {
                 containerUrn: "urn:pearson:manifest:761f2d68-6a7c-41e9-8363-ca81ab926b82",
                 entityUrn: "urn:pearson:entity:dfd414ed-6e32-4d71-90d0-231158853e45",
                 title: "Chap1",
-                type: "chapter",
+                label: "chapter",
                 ancestor: {
                     containerUrn: "urn:pearson:manifest:1e4ce418-4160-4d8f-bbae-7a2c814555ad",
                     entityUrn: "urn:pearson:entity:e0066675-a993-4f03-aa3c-cd5a4631da41",
                     title: "Part1",
-                    type: "part",
+                    label: "part",
                     ancestor: {
                         containerUrn: "urn:pearson:distributable:97aec104-3c20-46c2-825b-be5c1ea9ac4e",
                         entityUrn: "urn:pearson:entity:ae765bae-a86c-4020-8e35-b98fcb0e3a5f",
                         title: "CYQA_Dec21",
-                        type: "project"
+                        label: "project"
                     }
                 }
             }
@@ -2344,28 +2344,28 @@ export const CurrentSlateAncestor = {
         containerUrn: "urn:pearson:manifest:d29dfda8-73bc-4ad5-bd4a-3381193549d7",
         entityUrn: "urn:pearson:entity:9734374c-9032-4fe8-aa14-7500cedd0e88",
         title: "",
-        type: "assessment",
+        label: "assessment",
         matterType: "BodyMatter",
         ancestor: {
             containerUrn: "urn:pearson:manifest:7a37125e-038b-43ad-a9cd-c46e5cab4b1b",
             entityUrn: "urn:pearson:entity:a3e502ad-e60b-43b2-8b11-065874cdb652",
             title: "",
-            type: "module",
+            label: "module",
             ancestor: {
                 containerUrn: "urn:pearson:manifest:df38223f-8dac-43ee-b720-edb053bbfa71",
                 entityUrn: "urn:pearson:entity:1b4235f3-63ed-4e88-821b-af12f4d087ef",
                 title: "chap4",
-                type: "chapter",
+                label: "chapter",
                 ancestor: {
                     containerUrn: "urn:pearson:manifest:1e4ce418-4160-4d8f-bbae-7a2c814555ad",
                     entityUrn: "urn:pearson:entity:e0066675-a993-4f03-aa3c-cd5a4631da41",
                     title: "Part1",
-                    type: "part",
+                    label: "part",
                     ancestor: {
                         containerUrn: "urn:pearson:distributable:97aec104-3c20-46c2-825b-be5c1ea9ac4e",
                         entityUrn: "urn:pearson:entity:ae765bae-a86c-4020-8e35-b98fcb0e3a5f",
                         title: "CYQA_Dec21",
-                        type: "project"
+                        label: "project"
                     }
                 }
             }

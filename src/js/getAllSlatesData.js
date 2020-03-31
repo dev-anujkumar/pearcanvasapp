@@ -27,12 +27,12 @@ export const getAllSlatesData = (allSlateData) => dispatch => {
  * @returns {Object}  
 */
 const setItemDetails = (item) => {
-    if (item && item.type != 'project') {
+    if (item && item.label != 'project') {
         return {
             containerUrn: item.containerUrn,
             entityUrn: item.entityUrn,
             title: item.title ? item.title : item.unformattedTitle && item.unformattedTitle.en ? item.unformattedTitle.en : "",
-            type: item.label ? item.label : item.type ? item.type : "",
+            label: item.label ? item.label : "",
         }
     }
 }
@@ -139,7 +139,7 @@ export const prepareAllSlateData = (allSlatesData) => dispatch => {
 */
 const setChildContents = (container, childrenData) => {
     for (let key in childrenData) {
-        if (key == container.entityUrn && containerType.includes(container.type)) {
+        if (key == container.entityUrn && containerType.includes(container.label)) {
             container['contents'] = prepareContents(childrenData[key])
             break;
         }
@@ -157,7 +157,7 @@ export const setCurrentSlateAncestorData = (allSlateData) => dispatch => {
         containerUrn: config.projectUrn,
         entityUrn: config.projectEntityUrn,
         title: config.book_title,
-        type: 'project'
+        label: 'project'
     },
         currentSlateData = {},
         matterType = "",
