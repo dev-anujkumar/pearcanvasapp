@@ -641,17 +641,11 @@ class SlateWrapper extends Component {
                     }
                    
                 break;
-                case 'show-hide-elem':
-                //this.props.createElement(SHOW_HIDE, indexToinsert, parentUrn, asideData,null,null);
-                break;
-                case 'popup-elem':
-                //this.props.createElement(POP_UP, indexToinsert, parentUrn, asideData,null,null);
-                break;
             case 'citation-elem':
-                this.props.createElement(ELEMENT_CITATION, indexToinsert, parentUrn,asideData)
+                this.props.createElement(ELEMENT_CITATION, indexToinsert, parentUrn,asideData,null,null)
                 break;
             case 'citations-group-elem':
-                this.props.createElement(CITATION, indexToinsert, parentUrn,asideData)
+                this.props.createElement(CITATION, indexToinsert, parentUrn,asideData,null,null)
                 break;
             default:
         }
@@ -678,9 +672,9 @@ class SlateWrapper extends Component {
                 tooltipDirection: 'left'
             },
             {
-                buttonType: 'interactive-elem-button',
-                buttonHandler: () => this.splithandlerfunction('interactive-elem-button'),
-                tooltipText: 'Interactivity',
+                buttonType: 'interactive-elem',
+                buttonHandler: () => this.splithandlerfunction('interactive-elem', index, firstOne, parentUrn, asideData),
+                tooltipText: 'Interactive',
                 tooltipDirection: 'left'
             },
             {

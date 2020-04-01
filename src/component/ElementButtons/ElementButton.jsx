@@ -111,7 +111,8 @@ class Button extends Component {
                     </span>
                 break;
             case buttonTypes.INTERACTIVE_ELEMENT:
-                buttonJSX = <span className="btn-element interactive-elem-button" onClick={clickHandlerFn}>
+                buttonJSX = <span className="btn-element interactive-elem" onClick={clickHandlerFn}>
+                    {/* buttonJSX = <span className="btn-element interactive-elem-button" onClick={clickHandlerFn}> */}
                     {interativeIcon}
                     </span>
                 break;
