@@ -626,7 +626,7 @@ class SlateWrapper extends Component {
                 } else {
                     outerIndex = indexToinsert;
                 }
-                this.props.createElement(SECTION_BREAK, indexToinsert, parentUrn, asideData, outerIndex)
+                this.props.createElement(SECTION_BREAK, indexToinsert, parentUrn, asideData, outerIndex,null,null)
                 break;
                 case 'metadata-anchor':
                     if(config.slateType == "container-introduction"){
