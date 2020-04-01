@@ -21,10 +21,14 @@
     position: absolute;
     top: 50%;
     left: 100%;
-    border: 5px solid #fff;
-    transform-origin: -10px 10px;
-    transform: rotate(-40deg);
+    transform-origin: -6px 8px;
+    transform: rotate(-45deg);
     box-shadow: 2px 2px 0 0 #ddd;
+    border-left: 5px solid transparent;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid #fff;
+    border-right: 5px solid #fff;
+
 }
 .other-elements-inner li{
     color: #6c6c6c;
