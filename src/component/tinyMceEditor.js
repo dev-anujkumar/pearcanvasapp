@@ -1439,7 +1439,9 @@ export class TinyMceEditor extends Component {
                         }
                     })
                 }
-                document.getElementById(currentTarget.id).innerHTML = termText;
+                if(termText) {
+                    document.getElementById(currentTarget.id).innerHTML = termText;
+                }
             });
             this.setToolbarByElementType();
         }
