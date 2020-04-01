@@ -778,8 +778,7 @@ class ElementContainer extends Component {
         this.setState({
             sectionBreak: null
         })
-
-   }
+    }
 
     /**
      * Updates figuredata to local store
