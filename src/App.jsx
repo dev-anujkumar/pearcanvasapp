@@ -17,11 +17,7 @@ import CanvasWrapper from './component/CanvasWrapper';
 // IMPORT - Assets // 
 import './styles/style.css';
 
-<<<<<<< HEAD
- console.log("!!!!!! ---- canvas-1.0.13.1 ---- !!!!!!")
-=======
- console.log("!!!!!! ---- canvas-1.0.13 ---- !!!!!!")
->>>>>>> db87e49c50b1db8624f4484a3cd4728e187b7021
+ console.log("!!!!!! ---- canvas-1.0.13.2 ---- !!!!!!")
 
 class App extends Component {
     constructor(props) {
