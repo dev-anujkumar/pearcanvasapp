@@ -110,7 +110,7 @@ class ElementContainer extends Component {
     /**
      * function will be called on element focus of tinymce instance
      */
-    handleFocus = (updateFromC2Flag, showHideObj,event) => {
+    handleFocus = (updateFromC2Flag, showHideObj, event) => {
         if(event){
             event.stopPropagation();
         }

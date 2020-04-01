@@ -70,7 +70,7 @@ export class CitationGroup extends Component {
                                         permissions={['elements_add_remove']}
                                         showAudioSplitPopup={this.props.showAudioSplitPopup}
                                         openAudio={this.props.openAudio}
-                                        onClickCapture={this.checkSlateLockStatus}
+                                        onClickCapture={this.context.onClickCapture}
                                     />
                                 }
                               
@@ -207,11 +207,17 @@ export class CitationGroup extends Component {
             </>
         )
     }
+    handleFocus = (event) => {
+        if(event && event.target && !(event.target.classList.contains('citationTitle'))){
+            return false
+        }
+        this.context.handleFocus("", "", event)
+    }
     
     render() {
         const { context } = this
         return (
-            <div className = "citation citation-group-container" onClick={(e)=>this.context.handleFocus("","",e)}>
+            <div className = "citation citation-group-container" onMouseUp={this.handleFocus}>
                 {this.renderCitationGroupContainer(context)}
             </div>
         )
