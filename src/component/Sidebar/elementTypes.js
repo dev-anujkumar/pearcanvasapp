@@ -738,6 +738,7 @@ export default {
         "primary-poetry": {
             text: 'Poetry Element',
             enum: 'poetryelement',
+            toolbar: ['assetpopover','decreaseindent','glossary'],
             dropdownDisabled: true,
             subtype: {
                 'secondary-poetry': {
