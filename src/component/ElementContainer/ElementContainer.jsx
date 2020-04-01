@@ -970,6 +970,7 @@ class ElementContainer extends Component {
                         index: index,
                         element: element,
                         slateLockInfo: slateLockInfo,
+                        updatePageNumber: updatePageNumber,
                         handleCommentspanel : handleCommentspanel,
                         isBlockerActive : this.props.isBlockerActive,
                         onClickCapture : this.props.onClickCapture,
@@ -991,6 +992,7 @@ class ElementContainer extends Component {
                         element = {this.props.parentElement}
                         model = {element.html}
                         slateLockInfo = {slateLockInfo}
+                        updatePageNumber = {updatePageNumber}
                         currentElement = {element}
                         onClick = {this.handleFocus}
                         handleFocus = {this.handleFocus}
