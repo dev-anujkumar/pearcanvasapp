@@ -1439,7 +1439,7 @@ export class TinyMceEditor extends Component {
                         }
                     })
                 }
-                document.getElementById(currentTarget.id).innerHTML = termText;
+                // document.getElementById(currentTarget.id).innerHTML = termText;
             });
             this.setToolbarByElementType();
         }
@@ -1462,7 +1462,7 @@ export class TinyMceEditor extends Component {
                     document.querySelector('button[title="Asset Popover"]').removeAttribute('aria-pressed')
                     document.querySelector('button[title="Asset Popover"]').classList.remove('tox-tbtn--disabled')
                 }
-                document.getElementById(currentTarget.id).innerHTML = termText;
+                // document.getElementById(currentTarget.id).innerHTML = termText;
             })
         });
         if (isSameTarget) {
