@@ -767,7 +767,7 @@ class ElementContainer extends Component {
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
 
         /** This condition to delete whole aside element when only one element in it deleted */
-        if (this.props.parentElement && this.props.parentElement.subtype !== "workedexample" && this.props.parentElement.elementdata.bodymatter.length === 1) {
+        if (this.props.parentElement && this.props.parentElement.subtype !== "workedexample" && this.props.parentElement.elementdata && this.props.parentElement.elementdata.bodymatter.length === 1) {
             id = this.props.parentElement.id
             type = this.props.parentElement.type
             contentUrn = this.props.parentElement.contentUrn

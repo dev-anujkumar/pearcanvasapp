@@ -94,6 +94,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
             case "element-aside":
             case "showhide":
             case "popup":
+            case "citations":
                 return {
                     "projectUrn": config.projectUrn,
                     "entityUrn": contentUrn
@@ -163,6 +164,11 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
 
                         })
                     }
+                } else if (parentUrn && parentUrn.elementType == "citations"){
+                    if (element.id === parentUrn.manifestUrn) {
+                        let innerIndex = index.split("-")
+                        element.contents.bodymatter.splice([innerIndex[1] - 1], 1)
+                    }
                 }
 
             })
@@ -198,7 +204,11 @@ function prepareDataForTcmUpdate (updatedData,id, elementIndex, asideData, getSt
     let storeData = getState().appStore.slateLevelData;
     let slateData = JSON.parse(JSON.stringify(storeData));
     let slateBodyMatter = slateData[config.slateManifestURN].contents.bodymatter;
-    if(updatedData.type === "element-citation"){
+    if(type && type === "element-citation"){
+        if (slateBodyMatter[indexes[0]].contents.bodymatter[indexes[1] - 1].id === id) {
+            updatedData.isHead = true;
+        }
+    } else if(updatedData.type === "element-citation"){
         if (slateBodyMatter[indexes[0]].contents.bodymatter[indexes[1] - 1].id === id) {
             updatedData.isHead = true;
         }
