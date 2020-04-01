@@ -592,28 +592,28 @@ class SlateWrapper extends Component {
 
         switch (type) {
             case 'text-elem':
-                this.props.createElement(TEXT, indexToinsert, parentUrn, asideData);
+                this.props.createElement(TEXT, indexToinsert, parentUrn, asideData,null,null,null);
                 break;
             case 'image-elem':
-                this.props.createElement(IMAGE, indexToinsert, parentUrn, asideData);
+                this.props.createElement(IMAGE, indexToinsert, parentUrn, asideData,null,null,null);
                 break;
             case 'audio-elem':
-                this.props.createElement(VIDEO, indexToinsert, parentUrn, asideData);
+                this.props.createElement(VIDEO, indexToinsert, parentUrn, asideData,null,null,null);
                 break;
             case 'interactive-elem':
-                this.props.createElement(INTERACTIVE, indexToinsert, parentUrn, asideData);
+                this.props.createElement(INTERACTIVE, indexToinsert, parentUrn, asideData,null,null,null);
                 break;
             case 'assessment-elem':
-                this.props.createElement(ASSESSMENT, indexToinsert, parentUrn, asideData);
+                this.props.createElement(ASSESSMENT, indexToinsert, parentUrn, asideData,null,null,null);
                 break;
             case 'container-elem':
-                this.props.createElement(CONTAINER, indexToinsert, parentUrn, asideData)
+                this.props.createElement(CONTAINER, indexToinsert, parentUrn, asideData,null,null,null)
                 break;
             case 'worked-exp-elem':
-                this.props.createElement(WORKED_EXAMPLE, indexToinsert, parentUrn)
+                this.props.createElement(WORKED_EXAMPLE, indexToinsert, parentUrn,null,null,null,null)
                 break;
             case 'opener-elem':
-                this.props.createElement(OPENER, indexToinsert, parentUrn)
+                this.props.createElement(OPENER, indexToinsert, parentUrn,null,null,null,null)
                 break;
             case 'section-break-elem':
                 parentUrn.contentUrn = asideData.contentUrn
@@ -626,16 +626,16 @@ class SlateWrapper extends Component {
                 } else {
                     outerIndex = indexToinsert;
                 }
-                this.props.createElement(SECTION_BREAK, indexToinsert, parentUrn, asideData, outerIndex)
+                this.props.createElement(SECTION_BREAK, indexToinsert, parentUrn, asideData, outerIndex,null,null)
                 break;
                 case 'metadata-anchor':
                     if(config.slateType == "container-introduction"){
-                        this.props.createElement(LO_LIST, indexToinsert,parentUrn,"","","");
+                        this.props.createElement(LO_LIST, indexToinsert,parentUrn,null,null,null,null);
                         
                     }
                     else{
                         let LOUrn = this.props.currentSlateLOData.id?this.props.currentSlateLOData.id:this.props.currentSlateLOData.loUrn;
-                        this.props.createElement(METADATA_ANCHOR, indexToinsert,parentUrn,asideData,"",LOUrn)
+                        this.props.createElement(METADATA_ANCHOR, indexToinsert,parentUrn,asideData,null,LOUrn,null)
                     }
                    
                 break;
