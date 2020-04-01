@@ -22,7 +22,7 @@ import { setActiveElement, fetchElementTag, openPopupSlate } from './../CanvasWr
 import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
 import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris } from '../../constants/utility.js';
-import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
+import { ShowLoader, HideLoader } from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
 import AssessmentSlateCanvas from './../AssessmentSlateCanvas';
@@ -454,6 +454,7 @@ class ElementContainer extends Component {
          * THIS CODE TO BE REMOVED AFTER UPDATE ELEMENT IMPLEMEMTATION
          */
         if(parentElement.type === "citations"){
+            sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
             return false
         }
         const { parentUrn, asideData } = this.props
