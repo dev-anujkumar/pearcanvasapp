@@ -686,12 +686,24 @@ export default {
     },
     "popup": {
         "primary-popup": {
-            text: 'Popup',
+            text: 'Pop-up',
             dropdownDisabled: true,
             subtype: {
                 'secondary-popup': {
                     text: 'Popup',
                     labelText: 'Pop',
+                }
+            }
+        } 
+    },
+    "showhide": {
+        "primary-showhide": {
+            text: 'Show/ Hide',
+            dropdownDisabled: true,
+            subtype: {
+                'secondary-showhide': {
+                    text: 'Show/Hide',
+                    labelText: 'SH',
                 }
             }
         } 

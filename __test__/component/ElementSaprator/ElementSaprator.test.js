@@ -6,7 +6,8 @@ import config from '../../../src/config/config.js';
 import {shallow, mount} from 'enzyme';
 const METADATA_ANCHOR = 'metadata-anchor',
 ELEMENT_ASIDE = 'element-aside',
-CONTAINER_INTRO = 'container-introduction'
+CONTAINER_INTRO = 'container-introduction',
+CITATION_GROUP_ELEMENT = 'citations'
 let esProps
 
 function splithandlerfunction(type) {
@@ -45,8 +46,8 @@ esProps = [
         tooltipDirection: 'left'
     },
     {
-        buttonType: 'container-elem',
-        buttonHandler: () => splithandlerfunction('container-elem'),
+        buttonType: 'container-elem-button',
+        buttonHandler: () => this.splithandlerfunction('container-elem-button'),
         tooltipText: 'Container',
         tooltipDirection: 'left'
     },
@@ -61,7 +62,13 @@ esProps = [
         buttonHandler: () => splithandlerfunction('opener-elem'),
         tooltipText: 'Opener Element',
         tooltipDirection: 'left'
-    }
+    },        
+    {
+        buttonType: 'citation-elem',
+        buttonHandler: () => this.splithandlerfunction('citation-elem'),
+        tooltipText: 'Citation Element',
+        tooltipDirection: 'left'
+    },
 ]
 
 describe('Testing ElementSaprator rendering', () => {
@@ -85,7 +92,24 @@ describe('Testing ElementSaprator rendering', () => {
         let Es = mount(<ElementSaprator {...props} esProps = {esProps} permissions ={permissions} elementType = {elementType} firstOne= {firstOne}/>);
     })
 });
-
+describe('Testing functions', () => {
+    it('Testing renderDropdownButtons function CITATION_GROUP_ELEMENT else condition',() => {
+        let sectionBreak = true
+        let closeDropDown = ''
+        config.slateType = 'container-introduction';
+        config.isCO = false;
+        config.isLOL = false;
+        let newData = renderDropdownButtons(esProps, 'citations', sectionBreak, closeDropDown)
+    })
+    it('Testing renderDropdownButtons function ELEMENT_ASIDE else condition',() => {
+        let sectionBreak = false
+        let closeDropDown = ''
+        config.slateType = 'container-introduction';
+        config.isCO = false;
+        config.isLOL = false;
+        renderDropdownButtons(esProps, 'element-aside', sectionBreak, closeDropDown)
+    })
+});
 describe('Testing functions', () => {
     it('addMediaClickHandler testing', () => {
         addMediaClickHandler();
@@ -205,6 +229,19 @@ describe('Testing functions', () => {
 
         renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown)
     })
+    it('Testing renderDropdownButtons function CITATION_GROUP_ELEMENT if condition',() => {
+        let elementType = CITATION_GROUP_ELEMENT
+        let sectionBreak = true
+        let closeDropDown = ''
+        config.slateType = 'adsdfsdf';
+        config.isCO = true;
+        config.isLOL = true;
+
+        config.parentEntityUrn = 'Front Matter' 
+        config.parentEntityUrn = 'Back Matter'
+
+        renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown)
+    })
 
     it('Testing renderDropdownButtons function ELEMENT_ASIDE if-else condition',() => {
         let elementType = ''
@@ -220,13 +257,14 @@ describe('Testing functions', () => {
         renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown)
     })
 
-    it('Testing renderDropdownButtons function ELEMENT_ASIDE else condition',() => {
+
+
+    it('Testing renderDropdownButtons function ELEMENT_ASIDE if-else condition',() => {
         let elementType = ELEMENT_ASIDE
-        let sectionBreak = false
+        let sectionBreak = ''
         let closeDropDown = ''
-        config.slateType = 'adsdfsdf';
-        config.isCO = true;
-        config.isLOL = true;
+        config.slateType = 'adsdfsdf'
+        config.parentEntityUrn = 'urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527' 
         renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown)
     })
 });
