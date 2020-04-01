@@ -115,11 +115,11 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                     item.elementdata.bodymatter.splice(outerAsideIndex, 0, createdElementData)
                 }
             })
-        } else if (asideData && (asideData.type == 'element-aside' || asideData.type == 'citations') && type !== 'SECTION_BREAK') {
+        } else if (asideData && asideData.type == 'element-aside'  && type !== 'SECTION_BREAK') {
             newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
                 if (item.id == parentUrn.manifestUrn) {
                     item.elementdata.bodymatter.splice(index, 0, createdElementData)
-                } else if ((item.type == "element-aside" ||item.type == "citations" ) && item.id == asideData.id) {
+                } else if (item.type == "element-aside" && item.id == asideData.id) {
                     item.elementdata.bodymatter && item.elementdata.bodymatter.map((ele) => {
                         if (ele.id === parentUrn.manifestUrn) {
                             ele.contents.bodymatter.splice(index, 0, createdElementData)
@@ -129,6 +129,13 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
             })
         }else if (popupSlateData && popupSlateData.type == "popup"){
             newPopupSlateData.popupdata.bodymatter.splice(index, 0, createdElementData);
+        }
+        else if(asideData && asideData.type == 'citations'){
+            newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
+                if (item.id == parentUrn.manifestUrn) {
+                    item.contents.bodymatter.splice(index, 0, createdElementData)
+                }
+            })
         }
         else {
             newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
