@@ -588,7 +588,12 @@ export class TinyMceEditor extends Component {
                 let activeEditor = document.getElementById(tinymce.activeEditor.id);
                 activeEditor.blur();
                 let nextSaparator = (activeEditor.closest('.editor')).nextSibling;
-                let textPicker = nextSaparator.querySelector('#myDropdown li > .text-elem');
+                let textPicker;
+                if(this.props.element.type == 'citations'){
+                    textPicker = nextSaparator.querySelector('#myDropdown li > .citation-elem');
+                }else{
+                    textPicker = nextSaparator.querySelector('#myDropdown li > .text-elem');
+                }
                 textPicker.click();
             }else if (key === 13 && this.props.element.type === 'showhide' && this.props.showHideType != 'revel' && this.props.currentElement.type !== 'element-list') {
                 this.props.createShowHideElement(this.props.showHideType, this.props.index, this.props.id);
