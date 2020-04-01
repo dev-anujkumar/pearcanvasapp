@@ -23,7 +23,7 @@ export class CitationGroup extends Component {
     renderElement = (_elements, parentUrn, parentIndex) => {
         let asideData = {
             type: "citations",
-            id: this.context.element.id,//this.props.element.id,
+            id: this.context.element.id,
             contentUrn: this.context.element.contentUrn,
             element : this.context.element
         };
@@ -59,9 +59,8 @@ export class CitationGroup extends Component {
                                 </ElementContainer>
                                 {
                                     <ElementSaprator
-                                        index={index+1}
-                                        esProps={this.context.elementSeparatorProps(index+1, false, parentUrn, asideData, parentIndex)}
-                                        //esProps={this.context.elementSeparatorProps(index, false, parentUrn, asideData, parentIndex)}
+                                        index={index}
+                                        esProps={this.context.elementSeparatorProps(index, false, parentUrn, asideData, parentIndex)}
                                         elementType="citations"
                                         // slateType={_slateType}
                                         sectionBreak={true}
@@ -128,11 +127,11 @@ export class CitationGroup extends Component {
                         elementType: _containerType
                     }
                     const cgThis = this
-                    /* let filterElement = _bodyMatter.filter((ele) => ele.type == "manifest");
+                    let filterElement = _bodyMatter.filter((ele) => ele.type == "manifest");
                     let elementLength = _bodyMatter.length - filterElement.length;
-                     if(!_bodyMatter.length && this.props.deleteElement){
-                        this.props.deleteElement();
-                    } */
+                     if(!_bodyMatter.length && this.context.deleteElement){
+                        this.context.deleteElement();
+                    }
                     this['cloneCOSlateControlledSource_3' + random] = this.renderElement(_bodyMatter, parentUrn, index)
                     return (
                         <div className="container-citation" data-id={_containerId} container-type={_containerType}>

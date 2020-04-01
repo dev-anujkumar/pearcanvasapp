@@ -24,6 +24,7 @@ CITATION_GROUP_ELEMENT='citations'
 
 export default function ElementSaprator(props) {
     const [showClass, setShowClass] = useState(false);
+    const [data, setData] = useState([]);
     const [showInteractiveOption, setshowInteractiveOption] = useState({status:false,type:""});
     const { esProps, elementType, sectionBreak, permissions } = props
     let buttonRef = useRef(null)
@@ -39,7 +40,6 @@ export default function ElementSaprator(props) {
             dropdown = 'dropdown'
             if (elems.indexOf(dropdown) === -1) {
                 setShowClass(false)
-                setshowInteractiveOption({status:false,type:""})
             }
         })
     });
@@ -109,7 +109,7 @@ export default function ElementSaprator(props) {
                     </Tooltip>
                     <div id="myDropdown" className={showClass ? 'dropdown-content show' : 'dropdown-content'}>
                         <ul>
-                            {renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown,showInteractiveOption,setshowInteractiveOption,props)}
+                            {renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown,showInteractiveOption,setshowInteractiveOption,props,data,setData)}
                         </ul>
                     </div>
                 </div>
@@ -156,7 +156,7 @@ function asideButton(esProps,sectionBreak,elementType){
 /**
  * @description: rendering the dropdown
  */
-export function renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown,showInteractiveOption,setshowInteractiveOption,props) {
+export function renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown,showInteractiveOption,setshowInteractiveOption,props,data,setData) {
 
     let updatedEsProps, buttonType;
     if (config.parentEntityUrn == FRONT_MATTER || config.parentEntityUrn == BACK_MATTER) {
@@ -240,9 +240,7 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
     // },[showInteractiveOption])
 
     return updatedEsProps.map((elem, key) => {
-        const [data, setData] = useState([]);
         function buttonHandlerFunc() {
-            setshowInteractiveOption({status:false,type:""});
             if (elem.buttonType == "interactive-elem-button" || elem.buttonType == "container-elem-button") {
                 setData(typeOfContainerElements(elem, props));
                 if(elem.buttonType !== showInteractiveOption.type){
@@ -280,12 +278,7 @@ function typeOfContainerElements(elem, props) {
     const { index, firstOne, parentUrn, asideData, parentIndex, splithandlerfunction } = props
 
     let containerArray = {
-        "interactive-elem-button":
-        {
-            "Add Existing Interactive": "interactive-elem",
-            "Add Pop-up": "popup-elem",
-            "Add Show/Hide": "show-hide-elem",
-        },
+
         "container-elem-button": {
             "Add Aside": "container-elem",
             "Add Citation": "citations-group-elem",

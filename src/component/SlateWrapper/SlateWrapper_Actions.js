@@ -60,7 +60,7 @@ function createNewVersionOfSlate(){
         })
 }
 
-export const createElement = (type, index, parentUrn, asideData, outerAsideIndex, loref, parentType,cb) => (dispatch, getState) => {
+export const createElement = (type, index, parentUrn, asideData, outerAsideIndex, loref,cb) => (dispatch, getState) => {
     config.currentInsertedIndex = index;
     config.currentInsertedType = type;
     let  popupSlateData = getState().appStore.popupSlateData
@@ -78,8 +78,8 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
     if (type == "LO") {
         _requestData.loref = loref ? loref : ""
     }
-    if (type == "SHOW_HIDE" || type=="POP_UP") {
-        _requestData.parentType = parentType ? parentType : ""
+    if (type == 'ELEMENT_CITATION') {
+        _requestData.parentType = "citations"
     }
 
     prepareDataForTcmUpdate(_requestData, parentUrn, asideData)
@@ -115,11 +115,11 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                     item.elementdata.bodymatter.splice(outerAsideIndex, 0, createdElementData)
                 }
             })
-        } else if (asideData && asideData.type == 'element-aside' && type !== 'SECTION_BREAK') {
+        } else if (asideData && (asideData.type == 'element-aside' || asideData.type == 'citations') && type !== 'SECTION_BREAK') {
             newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
                 if (item.id == parentUrn.manifestUrn) {
                     item.elementdata.bodymatter.splice(index, 0, createdElementData)
-                } else if (item.type == "element-aside" && item.id == asideData.id) {
+                } else if ((item.type == "element-aside" ||item.type == "citations" ) && item.id == asideData.id) {
                     item.elementdata.bodymatter && item.elementdata.bodymatter.map((ele) => {
                         if (ele.id === parentUrn.manifestUrn) {
                             ele.contents.bodymatter.splice(index, 0, createdElementData)

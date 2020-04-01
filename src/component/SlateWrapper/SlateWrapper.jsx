@@ -23,7 +23,7 @@ import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
 import config from '../../config/config';
 import { TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER, WORKED_EXAMPLE, SECTION_BREAK, METADATA_ANCHOR, LO_LIST, ELEMENT_ASSESSMENT, OPENER,
     ALREADY_USED_SLATE , REMOVE_LINKED_AUDIO, NOT_AUDIO_ASSET, SPLIT_SLATE_WITH_ADDED_AUDIO , ACCESS_DENIED_CONTACT_ADMIN, IN_USE_BY, LOCK_DURATION, SHOW_HIDE,POP_UP,POPUP_PARENT,SHOW_HIDE_PARENT ,
-    CITATIONS, ELEMENT_CITATION} from './SlateWrapperConstants';
+    CITATION, ELEMENT_CITATION} from './SlateWrapperConstants';
 import PageNumberElement from './PageNumberElement.jsx';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
@@ -641,19 +641,11 @@ class SlateWrapper extends Component {
                     }
                    
                 break;
-                case 'show-hide-elem':
-                this.props.createElement(SHOW_HIDE, indexToinsert, parentUrn, asideData,null,null,SHOW_HIDE_PARENT);
-                break;
-                case 'popup-elem':
-                this.props.createElement(POP_UP, indexToinsert, parentUrn, asideData,null,null,POPUP_PARENT);
-                break;
             case 'citation-elem':
-                this.props.createElement(TEXT, indexToinsert, parentUrn, asideData);//create a paragraph
-                //this.props.createElement(ELEMENT_CITATION, indexToinsert, parentUrn,asideData)
+                this.props.createElement(ELEMENT_CITATION, indexToinsert, parentUrn,asideData,null,null)
                 break;
             case 'citations-group-elem':
-                this.props.createElement(CONTAINER, indexToinsert, parentUrn, asideData);//create a container
-                //this.props.createElement(CITATIONS, indexToinsert, parentUrn,asideData)
+                this.props.createElement(CITATION, indexToinsert, parentUrn,asideData,null,null)
                 break;
             default:
         }
@@ -680,9 +672,9 @@ class SlateWrapper extends Component {
                 tooltipDirection: 'left'
             },
             {
-                buttonType: 'interactive-elem-button',
-                buttonHandler: () => this.splithandlerfunction('interactive-elem-button'),
-                tooltipText: 'Interactivity',
+                buttonType: 'interactive-elem',
+                buttonHandler: () => this.splithandlerfunction('interactive-elem', index, firstOne, parentUrn, asideData),
+                tooltipText: 'Interactive',
                 tooltipDirection: 'left'
             },
             {
@@ -697,12 +689,6 @@ class SlateWrapper extends Component {
                 tooltipText: 'Container',
                 tooltipDirection: 'left'
             },
-            // {
-            //     buttonType: 'container-elem',
-            //     buttonHandler: () => this.splithandlerfunction('container-elem', index, firstOne, parentUrn),
-            //     tooltipText: 'Container',
-            //     tooltipDirection: 'left'
-            // },
             {
                 buttonType: 'worked-exp-elem',
                 buttonHandler: () => this.splithandlerfunction('worked-exp-elem', index, firstOne, parentUrn),
@@ -729,8 +715,7 @@ class SlateWrapper extends Component {
             },
             {
                 buttonType: 'citation-elem',
-                // buttonHandler: () => this.splithandlerfunction('citation-elem', 0, firstOne, parentUrn, asideData),
-                buttonHandler: () => this.splithandlerfunction('citation-elem', 0, firstOne),
+                buttonHandler: () => this.splithandlerfunction('citation-elem', index, firstOne, parentUrn, asideData),
                 tooltipText: 'Citation Element',
                 tooltipDirection: 'left'
             },
@@ -930,6 +915,7 @@ class SlateWrapper extends Component {
                                         showAudioSplitPopup={this.props.showAudioSplitPopup}
                                         openAudio={this.props.openAudio}
                                         onClickCapture={this.checkSlateLockStatus}
+                                         splithandlerfunction={this.splithandlerfunction}
                                     />
                                     : null
                                 }

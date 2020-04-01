@@ -11,10 +11,8 @@ export const LO_LIST = "LO_LIST";
 export const OPENER = "OPENER_ELEMENT";
 export const ELEMENT_ASSESSMENT = "ELEMENT_ASSESSMENT";
 export const ELEMENT_CITATION = "ELEMENT_CITATION";
-export const CITATIONS = "CITATIONS";
+export const CITATION = "CITATION";
 export const SHOW_HIDE = "SHOW_HIDE";
-export const SHOW_HIDE_PARENT = "showhide";
-export const POPUP_PARENT = "popup";
 export const POP_UP = "POP_UP";
 export const ACCESS_DENIED_CONTACT_ADMIN = "Access Denied! You do not have access to the Linked Alfresco site. please contact the Manager for this project"
 
