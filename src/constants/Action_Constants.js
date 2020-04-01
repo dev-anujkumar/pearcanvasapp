@@ -10,6 +10,9 @@ export const FETCH_DATA_ON_SLATE_REFRESH= 'FETCH_DATA_ON_SLATE_REFRESH'
 export const ACCESS_DENIED_POPUP = 'ACCESS_DENIED_POPUP' 
 export const SET_PARENT_ASIDE_DATA = "SET_PARENT_ASIDE_DATA"
 export const SET_PARENT_SHOW_DATA = "SET_PARENT_SHOW_DATA"
+export const GET_ALL_SLATES_DATA = "GET_ALL_SLATES_DATA"
+export const SET_CURRENT_SLATE_DATA = "SET_CURRENT_SLATE_DATA"
+
 /*---------------Comments Panel ----------------------*/
 export const FETCH_COMMENTS = 'FETCH_COMMENTS'
 export const TOGGLE_COMMENTS_PANEL = 'TOGGLE_COMMENTS_PANEL'
@@ -59,6 +62,7 @@ export const SLATE_TAG_ENABLE = 'SLATE_TAG_ENABLE'
 export const SHOW_MODULE_NAME = 'SHOW_MODULE_NAME'
 export const CURRENT_SLATE_LO_DATA_MATH = 'CURRENT_SLATE_LO_DATA_MATH'
 export const SHOW_SLATE_LOCK_POPUP = 'SHOW_SLATE_LOCK_POPUP'
+export const RE_RENDER_META_LO = 'RE_RENDER_META_LO'
 
 /*--------------- Asset Popover -------------------*/
 export const APO_SEARCH_SAVE = 'APO_SEARCH_SAVE'
@@ -102,3 +106,6 @@ export const CLOSE_POPUP_SLATE = "CLOSE_POPUP_SLATE"
 export const ERROR_POPUP = 'ERROR_POPUP'
 export const CREATE_SHOW_HIDE_ELEMENT = "CREATE_SHOW_HIDE_ELEMENT"
 export const DELETE_SHOW_HIDE_ELEMENT = "DELETE_SHOW_HIDE_ELEMENT"
+
+/*--------------- Slate Title -------------------*/
+export const SLATE_TITLE = 'Title'
