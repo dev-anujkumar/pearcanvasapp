@@ -11,6 +11,13 @@ import store from './../../appstore/store';
  */
 export const getSlateLockStatus = (projectUrn, slateId) => (dispatch) => {
     if(process.env.NODE_ENV === "development"){
+        dispatch({
+            type: SET_SLATE_LOCK_STATUS,
+            payload: {
+                isLocked : false,
+                userId : ""
+            }
+        })
         return false
     }
     if(config.isSlateLockChecked){
@@ -43,7 +50,7 @@ export const getSlateLockStatus = (projectUrn, slateId) => (dispatch) => {
  */
  export const getSlateLockStatusWithCallback = (projectUrn, slateId, callback) => { 
     if(process.env.NODE_ENV === "development"){
-        return false
+        return callback({isLocked : false, userId : ""})
     }
     let url = `${config.LOCK_API_BASE_URL}/locks?projectUrn=${projectUrn}&slateId=${slateId}`
     
