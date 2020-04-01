@@ -9,7 +9,7 @@ import './../../styles/CitationGroup/CitationGroup.css';
 import { guid } from '../../constants/utility.js';
 import ElementSaprator from '../ElementSaprator';
 import { createPopupUnit } from '../CanvasWrapper/CanvasWrapper_Actions';
-
+import PageNumberElement from '../SlateWrapper/PageNumberElement.jsx';
 let random = guid();
 
 export class CitationGroup extends Component {
@@ -44,18 +44,20 @@ export class CitationGroup extends Component {
                                     onClickCapture={this.context.onClickCapture}
                                     parentElement = {this.context.element}
                                 >
-                                    {/* PAGE NUMBER FUNCTIONALITY. REMOVE THIS IF YOU WANT IT IN A DIFFERENT WAY
                                      {
                                         (isHovered, isPageNumberEnabled, activeElement, permissions) => (
-                                            <PageNumberElement pageLoading={pageLoading}
-                                                updatePageNumber={updatePageNumber}
-                                                element={element} _slateType={_slateType}
-                                                isHovered={isHovered}
-                                                isPageNumberEnabled={isPageNumberEnabled}
-                                                activeElement={activeElement}
-                                                permissions={permissions} />
+                                            <PageNumberElement 
+                                            updatePageNumber={this.context.updatePageNumber}
+                                            asideData={asideData}
+                                            parentUrn={parentUrn}
+                                            element={element}
+                                            isHovered={isHovered}
+                                            isPageNumberEnabled={isPageNumberEnabled}
+                                            activeElement={activeElement}
+                                            permissions={permissions}
+                                           />
                                         )
-                                    } */}
+                                    }
                                 </ElementContainer>
                                 {
                                     <ElementSaprator
