@@ -11,12 +11,17 @@ import axios from 'axios';
 import store from './appstore/store';
 import config from './config/config';
 import cypressConfig from './config/cypressConfig';
+import { requestConfigURI } from './constants/utility';
 import CanvasWrapper from './component/CanvasWrapper';
 
 // IMPORT - Assets // 
 import './styles/style.css';
 
+<<<<<<< HEAD
  console.log("!!!!!! ---- canvas-1.0.13.1 ---- !!!!!!")
+=======
+ console.log("!!!!!! ---- canvas-1.0.13 ---- !!!!!!")
+>>>>>>> db87e49c50b1db8624f4484a3cd4728e187b7021
 
 class App extends Component {
     constructor(props) {
@@ -26,27 +31,9 @@ class App extends Component {
         };
         this.getEnvConfig();
     }
-
-    requestConfigURI = () => {
-        let uri = '';
-        if(process.env.NODE_ENV === "development"){
-            uri = cypressConfig.sitePointing;
-            // projectDetailsRes.currentOrigin = uri;
-            // this.ifrmaeData();
-        }else{
-            let originUrl  = window.location.origin;
-            if(originUrl === cypressConfig.prodUrl) {
-                uri = 'prod';
-            }else{
-                let splitOriginUri = originUrl.split("-")[0];
-                uri = splitOriginUri.split("//")[1]
-            }
-        }
-        return uri;
-    }
     
     getEnvConfig = () => {
-        let requestURI = this.requestConfigURI();
+        let requestURI = requestConfigURI();
         return axios.get(`${cypressConfig.getENVConfig}v1/getEnvConfig/${requestURI}`, {
             headers: {
                 "Content-Type": "application/json",

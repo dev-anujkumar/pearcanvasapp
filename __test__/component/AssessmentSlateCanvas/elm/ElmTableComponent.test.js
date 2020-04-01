@@ -5,12 +5,10 @@ import { Provider } from 'react-redux';
 const middlewares = [thunk];
 import configureMockStore from 'redux-mock-store';
 import ElmTableComponent from '../../../../src/component/AssessmentSlateCanvas/elm/Components/ElmTableComponent';
-import { DefaultSlateData, mockELMResponse, mockElmItemResponse } from '../../../../fixtures/AssessmentSlateCanvasTestingData';
+import { DefaultSlateData, mockELMResponse, mockElmItemResponse,newElmData ,CurrentSlateAncestor } from '../../../../fixtures/AssessmentSlateCanvasTestingData';
+import config from '../../../../src/config/config.js';
 
-
-jest.mock('../../../../src/config/config.js', () => ({
-    slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
-}))
+config.slateManifestURN="urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
 
 const mockStore = configureMockStore(middlewares);
 
@@ -26,10 +24,26 @@ let initialState = {
     },
     appStore: {
         pageNumberData: {},
-        slateLevelData: DefaultSlateData
+        slateLevelData: DefaultSlateData,
+        currentSlateAncestorData:{}
     }
 };
-
+let initialState2 = {
+    elmReducer: {
+        elmData: {
+            numberOfResources: 88,
+            contentUrn: "urn:pearson:entity:dfeb8286-217e-40a4-8d40-3ced46e469e0",
+            versionUrn: "urn:pearson:distributable:3e872df6-834c-45f5-b5c7-c7b525fab1ef"
+        },
+        errFlag: false,
+        errorStatu: ""
+    },
+    appStore: {
+        pageNumberData: {},
+        slateLevelData: DefaultSlateData,
+        currentSlateAncestorData:CurrentSlateAncestor.currentSlateAncestorData1
+    }
+};
 describe('ELM Actions test', () => {
     let store = {};
     beforeEach(() => {
@@ -430,5 +444,73 @@ describe('ELM Actions test', () => {
             spynavigateBack.mockClear()
         })
 
+    })
+});
+describe('ELM setParentUrn TEST- ', () => {
+    let store = {};
+    beforeEach(() => {
+        store = mockStore(initialState2);
+    })
+
+
+    describe('TEST-setParentUrn', () => {
+        beforeEach(() => {
+            store = mockStore(initialState2);
+        })
+        let store = mockStore(initialState2);
+        let props = {
+            errFlag: true,
+            errorStatus: "404",
+            apiData: {
+                contents: {
+                    frontMatter: [],
+                    bodyMatter: [],
+                    backMatter: []
+                }
+            },
+            navigateBack: function () { },
+            hidePufPopup: function () { },
+            usageTypeMetadata: 'Quiz',
+            addPufFunction: (obj) => { },
+            closeElmWindow: function () { },
+            openedFrom: "slateAssessment",
+            fetchAssessmentItem: jest.fn()
+        }
+        let pufObj = {
+            id: "urn:pearson:work:133dd9fd-a5be-45e5-8d83-891283abb9a5",
+            title: "Open response question updated",
+            assessmentFormat: "puf",
+            usagetype: "Quiz"
+        }
+        const component = mount(<Provider store={store}><ElmTableComponent {...props} /></Provider>);
+        const elmTableInstance = component.find('ElmTableComponent').instance();
+        it('TEST-setParentUrn case1-', () => {
+            config.slateManifestURN="urn:pearson:manifest:bb4e289e-8add-4c30-9f52-33b8fd246f81"
+            const spysetParentUrn = jest.spyOn(elmTableInstance, 'setParentUrn')
+            elmTableInstance.setParentUrn( JSON.stringify(newElmData),CurrentSlateAncestor.currentSlateAncestorData1);
+            expect(spysetParentUrn).toHaveBeenCalled()
+            spysetParentUrn.mockClear()
+        })
+        it('TEST-setParentUrn case2-', () => {
+            config.slateManifestURN="urn:pearson:manifest:50778b02-a808-4a8c-9c7c-923181e1a7fc"
+            const spysetParentUrn = jest.spyOn(elmTableInstance, 'setParentUrn')
+            elmTableInstance.setParentUrn( JSON.stringify(newElmData),CurrentSlateAncestor.currentSlateAncestorData2);
+            expect(spysetParentUrn).toHaveBeenCalled()
+            spysetParentUrn.mockClear()
+        })
+        it('TEST-setParentUrn case3-', () => {
+            config.slateManifestURN="urn:pearson:manifest:2473babc-3182-4639-b36e-4177e03fac03"
+            const spysetParentUrn = jest.spyOn(elmTableInstance, 'setParentUrn')
+            elmTableInstance.setParentUrn( JSON.stringify(newElmData),CurrentSlateAncestor.currentSlateAncestorData3);
+            expect(spysetParentUrn).toHaveBeenCalled()
+            spysetParentUrn.mockClear()
+        })
+        it('TEST-setParentUrn case4-', () => {
+            config.slateManifestURN="urn:pearson:manifest:d29dfda8-73bc-4ad5-bd4a-3381193549d7"
+            const spysetParentUrn = jest.spyOn(elmTableInstance, 'setParentUrn')
+            elmTableInstance.setParentUrn( JSON.stringify(newElmData),CurrentSlateAncestor.currentSlateAncestorData4);
+            expect(spysetParentUrn).toHaveBeenCalled()
+            spysetParentUrn.mockClear()
+        })
     })
 });
