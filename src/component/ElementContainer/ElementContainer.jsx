@@ -37,9 +37,7 @@ import { updatePageNumber, accessDenied } from '../SlateWrapper/SlateWrapper_Act
 import { releaseSlateLock } from '../CanvasWrapper/SlateLock_Actions.js';
 import ElementShowHide from '../ElementShowHide';
 import ElementContainerContext from './ElementContainerContext'
-import {
-    CitationGroupContext
-} from './ElementCitationContext'
+import { CitationGroupContext } from './ElementCitationContext'
 import CitationGroup from '../CitationGroup'
 import CitationElement from '../CitationElement'
 class ElementContainer extends Component {

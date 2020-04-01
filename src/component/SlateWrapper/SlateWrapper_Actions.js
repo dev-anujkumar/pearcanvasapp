@@ -77,8 +77,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
 
     if (type == "LO") {
         _requestData.loref = loref ? loref : ""
-    }
-    if (type == 'ELEMENT_CITATION') {
+    } else if (type == 'ELEMENT_CITATION') {
         _requestData.parentType = "citations"
     }
 

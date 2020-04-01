@@ -60,10 +60,10 @@ export class CitationGroup extends Component {
                                 {
                                     <ElementSaprator
                                         index={index}
-                                        esProps={this.context.elementSeparatorProps(index+1, false, parentUrn, asideData, parentIndex)}
+                                        esProps={this.context.elementSeparatorProps(index, false, parentUrn, asideData, parentIndex)}
                                         elementType="citations"
                                         sectionBreak={true}
-                                        permissions={this.props.permissions}
+                                        permissions={this.context.permissions}
                                         onClickCapture={this.context.onClickCapture}                                       
                                     />
                                 }
