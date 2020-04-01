@@ -59,16 +59,11 @@ export class CitationGroup extends Component {
                                 </ElementContainer>
                                 {
                                     <ElementSaprator
-                                        index={index}
-                                        esProps={this.context.elementSeparatorProps(index, false, parentUrn, asideData, parentIndex)}
+                                        index={index+1}
+                                        esProps={this.context.elementSeparatorProps(index+1, false, parentUrn, asideData, parentIndex)}
                                         elementType="citations"
-                                        // slateType={_slateType}
                                         sectionBreak={true}
-                                        toggleSplitSlatePopup={this.toggleSplitSlatePopup}
-                                        permissions={this.props.permissions}
                                         permissions={['elements_add_remove']}
-                                        showAudioSplitPopup={this.props.showAudioSplitPopup}
-                                        openAudio={this.props.openAudio}
                                         onClickCapture={this.context.onClickCapture}
                                     />
                                 }
