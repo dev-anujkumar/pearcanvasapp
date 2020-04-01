@@ -278,13 +278,7 @@ function typeOfContainerElements(elem, props) {
     const { index, firstOne, parentUrn, asideData, parentIndex, splithandlerfunction } = props
 
     let containerArray = {
-        "interactive-elem-button":
-        {
-            "Add MMI": "interactive-elem",
-            "Add SmartLink": "smartlink-elem",
-            "Add Pop-up": "popup-elem",
-            "Add Show/Hide": "show-hide-elem",
-        },
+
         "container-elem-button": {
             "Add Aside": "container-elem",
             "Add Citation": "citations-group-elem",

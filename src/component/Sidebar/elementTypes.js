@@ -684,30 +684,30 @@ export default {
         },
         enumType: 'interactive'
     },
-    "popup": {
-        "primary-popup": {
-            text: 'Pop-up',
-            dropdownDisabled: true,
-            subtype: {
-                'secondary-popup': {
-                    text: 'Popup',
-                    labelText: 'Pop',
-                }
-            }
-        } 
-    },
-    "showhide": {
-        "primary-showhide": {
-            text: 'Show/ Hide',
-            dropdownDisabled: true,
-            subtype: {
-                'secondary-showhide': {
-                    text: 'Show/Hide',
-                    labelText: 'SH',
-                }
-            }
-        } 
-    },
+    // "popup": {
+    //     "primary-popup": {
+    //         text: 'Pop-up',
+    //         dropdownDisabled: true,
+    //         subtype: {
+    //             'secondary-popup': {
+    //                 text: 'Popup',
+    //                 labelText: 'Pop',
+    //             }
+    //         }
+    //     } 
+    // },
+    // "showhide": {
+    //     "primary-showhide": {
+    //         text: 'Show/ Hide',
+    //         dropdownDisabled: true,
+    //         subtype: {
+    //             'secondary-showhide': {
+    //                 text: 'Show/Hide',
+    //                 labelText: 'SH',
+    //             }
+    //         }
+    //     } 
+    // },
     "openerelement": {
         "primary-openerelement": {
             text: 'Opener Element',
