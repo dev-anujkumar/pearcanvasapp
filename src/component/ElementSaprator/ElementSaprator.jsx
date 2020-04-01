@@ -26,6 +26,7 @@ export default function ElementSaprator(props) {
     const [showClass, setShowClass] = useState(false);
     const [data, setData] = useState([]);
     const [showInteractiveOption, setshowInteractiveOption] = useState({status:false,type:""});
+    let propsData={data,setData,showInteractiveOption,setshowInteractiveOption,props}
     const { esProps, elementType, sectionBreak, permissions } = props
     let buttonRef = useRef(null)
 
@@ -109,7 +110,7 @@ export default function ElementSaprator(props) {
                     </Tooltip>
                     <div id="myDropdown" className={showClass ? 'dropdown-content show' : 'dropdown-content'}>
                         <ul>
-                            {renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown,showInteractiveOption,setshowInteractiveOption,props,data,setData)}
+                            {renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown, propsData)}
                         </ul>
                     </div>
                 </div>
@@ -156,8 +157,8 @@ function asideButton(esProps,sectionBreak,elementType){
 /**
  * @description: rendering the dropdown
  */
-export function renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown,showInteractiveOption,setshowInteractiveOption,props,data,setData) {
-
+export function renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown, propsData) {
+    let {data,setData,showInteractiveOption,setshowInteractiveOption,props} =propsData
     let updatedEsProps, buttonType;
     if (config.parentEntityUrn == FRONT_MATTER || config.parentEntityUrn == BACK_MATTER) {
         if (elementType == ELEMENT_ASIDE ) {            
@@ -245,6 +246,8 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
                 setData(typeOfContainerElements(elem, props));
                 if(elem.buttonType !== showInteractiveOption.type){
                     setshowInteractiveOption({status:true,type:elem.buttonType});
+                }else {
+                    setshowInteractiveOption({ status: !showInteractiveOption.status, type: elem.buttonType });
                 }
             }
             else {
