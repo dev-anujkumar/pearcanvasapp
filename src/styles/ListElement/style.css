@@ -143,3 +143,16 @@ span.list-opt-tooltip {
 .element-container li {
     min-height: 22px;
 }
+
+table ul li {
+    color: inherit !important;
+}
+
+table ol li {
+    color: inherit !important;
+}
+
+table ol li:before {
+    color: inherit !important;
+}
+

@@ -29,7 +29,8 @@ let props={
     },
     currentSlateLOData: jest.fn(),
     handleFocus: jest.fn(),
-    showBlocker: jest.fn()
+    showBlocker: jest.fn(),
+    reRenderLO: jest.fn()
 }
 
 let wrapper = mount(<Provider store={store}><ElementMetaLOList  model ={{}} {...props}/> </Provider>)
@@ -66,8 +67,10 @@ describe('Test Rendering of metadaanchor on slate', () => {
 
         store = mockStore({
             metadataReducer:{
-                currentSlateLOData:["Test"]
-            }
+                currentSlateLOData:["Test"],
+                isRenderMetdataLO: true
+            },
+            
         });
 
         wrapper = mount(<Provider store={store}><ElementMetaLOList  model ={{}} {...props}/> </Provider>)
@@ -75,5 +78,35 @@ describe('Test Rendering of metadaanchor on slate', () => {
 
         elementMetaAnchorInstance.onLOLClickHandle(data, e);
         expect(elementMetaAnchorInstance.props.currentSlateLOData).toEqual(data);
+    })
+    it('componentDidUpdate', () => {
+        const spyFunction = jest.spyOn(elementMetaAnchorInstance, 'componentDidUpdate')
+        wrapper.setProps({ ...props, isRenderMetdataLO: true })
+        wrapper.update()
+        elementMetaAnchorInstance.componentDidUpdate({ isRenderMetdataLO: false })
+        expect(elementMetaAnchorInstance.props.isRenderMetdataLO).toEqual(true)
+        expect(spyFunction).toHaveBeenCalled()
+    })
+    it('renderCurrentModule', () => {
+        let newProps={
+            slateLockInfo:{
+                isLocked:false,
+                userId : 'c5test01'
+            },
+            element: {
+                elementdata: {
+                    groupby: ""
+                }
+            },
+            currentSlateLOData: jest.fn(),
+            handleFocus: jest.fn(),
+            showBlocker: jest.fn(),
+            reRenderLO: jest.fn()
+        }
+        wrapper = mount(<Provider store={store}><ElementMetaLOList  model ={{}} {...newProps}/> </Provider>)
+        elementMetaAnchorInstance = wrapper.find('ElementMetaLOList').instance();
+        const spyFunction = jest.spyOn(elementMetaAnchorInstance, 'renderCurrentModule')
+        elementMetaAnchorInstance.renderCurrentModule()
+        expect(spyFunction).toHaveBeenCalled()
     })
 });

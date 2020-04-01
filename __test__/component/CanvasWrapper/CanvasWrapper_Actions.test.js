@@ -152,7 +152,7 @@ describe('action file test', () => {
     })
 
 
-    it('fetchSlateData', () => {
+    xit('fetchSlateData', () => {
         const manifestURN = 'urn:9324dsfds23432dsf45';
         const expectedActions = [{
             type: SET_ACTIVE_ELEMENT,

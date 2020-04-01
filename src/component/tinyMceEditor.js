@@ -1337,6 +1337,7 @@ export class TinyMceEditor extends Component {
         let event = Object.assign({}, e);
         let currentTarget = event.currentTarget;
         let isSameTargetBasedOnDataId = true;
+        let termText = document.getElementById(currentTarget.id)&&document.getElementById(currentTarget.id).innerHTML;
 
         /*
             checking for same target based on data-id not id
@@ -1443,6 +1444,7 @@ export class TinyMceEditor extends Component {
                         }
                     })
                 }
+                document.getElementById(currentTarget.id).innerHTML = termText;
             });
             this.setToolbarByElementType();
         }
@@ -1465,6 +1467,7 @@ export class TinyMceEditor extends Component {
                     document.querySelector('button[title="Asset Popover"]').removeAttribute('aria-pressed')
                     document.querySelector('button[title="Asset Popover"]').classList.remove('tox-tbtn--disabled')
                 }
+                document.getElementById(currentTarget.id).innerHTML = termText;
             })
         });
         if (isSameTarget) {
@@ -1518,6 +1521,14 @@ export class TinyMceEditor extends Component {
                 this.outerHTML = innerHtml;
             })
         }
+        let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
+        if(!assetPopoverPopupIsVisible){
+            tinymce.$('#asset-popover-attacher').each(function () {
+                let innerHtml = this.innerHTML;
+                this.outerHTML = innerHtml;
+            })
+        }
+        
         tinyMCE.$('.Wirisformula').each(function () {
             this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
             this.naturalWidth && this.setAttribute('width', this.naturalWidth)
@@ -1526,7 +1537,7 @@ export class TinyMceEditor extends Component {
         showHideType = showHideType === "revel" ? "postertextobject" : showHideType
 
         if(!this.fromtinyInitBlur && !config.savingInProgress){
-            let elemNode = document.getElementById(`cypress-${this.props.index}`)
+            let elemNode = document.getElementById(`cypress-${this.props.index}`) 
             elemNode.innerHTML = elemNode.innerHTML.replace(/<br data-mce-bogus="1">/g, "")
             if(
                 this.props.element &&
@@ -1650,7 +1661,7 @@ export class TinyMceEditor extends Component {
                document.getElementById(tinymce.activeEditor.id).setAttribute('contenteditable', false)
             }
          }
-        if(tinymce.activeEditor && tinymce.activeEditor.id!==e.target.id && (this.props.element.subtype&&this.props.element.subtype!=="mathml")){
+        if(tinymce.activeEditor && tinymce.activeEditor.id !== e.target.id && ((this.props.element.subtype && this.props.element.subtype !== "mathml") || (this.props.element.figuretype && this.props.element.figuretype === "interactive"))){
             e.preventDefault();
             e.stopPropagation();
             return false;
