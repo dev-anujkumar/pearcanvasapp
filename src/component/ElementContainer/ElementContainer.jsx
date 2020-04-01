@@ -33,7 +33,7 @@ import { updateFigureData } from './ElementContainer_Actions.js';
 import { createUpdatedData, createOpenerElementData } from './UpdateElements.js';
 import { loadTrackChanges } from '../CanvasWrapper/TCM_Integration_Actions';
 import ElementPopup from '../ElementPopup'
-import { updatePageNumber, accessDenied, createElement } from '../SlateWrapper/SlateWrapper_Actions';
+import { updatePageNumber, accessDenied } from '../SlateWrapper/SlateWrapper_Actions';
 import { releaseSlateLock } from '../CanvasWrapper/SlateLock_Actions.js';
 import ElementShowHide from '../ElementShowHide';
 import ElementContainerContext from './ElementContainerContext'
@@ -767,20 +767,11 @@ class ElementContainer extends Component {
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
 
         /** This condition to delete whole aside element when only one element in it deleted */
-        if (this.props.parentElement && this.props.parentElement.type!=='citations' && this.props.parentElement.subtype !== "workedexample" && this.props.parentElement.elementdata.bodymatter.length === 1) {
+        if (this.props.parentElement && this.props.parentElement.subtype !== "workedexample" && this.props.parentElement.elementdata.bodymatter.length === 1) {
             id = this.props.parentElement.id
             type = this.props.parentElement.type
             contentUrn = this.props.parentElement.contentUrn
         }
-
-        /** This condition to delete whole aside element when only one element in it deleted */
-        if (this.props.parentElement && this.props.parentElement.type == "citations" && this.props.parentElement.contents.bodymatter.length === 1) {
-            id = this.props.parentElement.id
-            type = this.props.parentElement.type
-            contentUrn = this.props.parentElement.contentUrn
-        }
-
-
 
         // api needs to run from here
         this.props.deleteElement(id, type, parentUrn, asideData, contentUrn, index);
@@ -788,12 +779,7 @@ class ElementContainer extends Component {
             sectionBreak: null
         })
 
-        if(this.props.parentElement && this.props.parentElement.type == "citations" && this.props.parentElement.contents.bodymatter.length === 1){
-            sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-            this.props.createElement('ELEMENT_CITATION', 0, parentUrn,asideData)
-        }
-
-    }
+   }
 
     /**
      * Updates figuredata to local store
@@ -995,7 +981,6 @@ class ElementContainer extends Component {
                         handleFocus: this.handleFocus,
                         handleBlur: this.handleBlur,
                         onClick: this.handleFocus,
-                        deleteElement: this.deleteElement
                     }}><CitationGroup />
                     </CitationGroupContext.Provider >;
                     labelText = 'CG'
@@ -1221,9 +1206,6 @@ const mapDispatchToProps = (dispatch) => {
         },
         deleteShowHideUnit: (id, type, contentUrn, index, eleIndex, parentId, cb, parentElement, parentElementIndex) => {
             dispatch(deleteShowHideUnit(id, type, contentUrn, index, eleIndex, parentId, cb, parentElement, parentElementIndex))
-        },
-        createElement : (element, type, index, parentContentUrn, cb, parentElement, parentElementIndex) => {
-            dispatch(createElement(element, type, index, parentContentUrn, cb, parentElement, parentElementIndex))
         }
 
     }
