@@ -1,4 +1,4 @@
-import { currentSlateLO, isLOExist, setCurrentModule, currentSlateLOMath } from '../../../src/component/ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
+import { currentSlateLO, isLOExist, setCurrentModule, currentSlateLOMath,reRenderLO } from '../../../src/component/ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import thunk from 'redux-thunk';
 import configureMockStore from 'redux-mock-store';
 
@@ -85,5 +85,15 @@ describe('Testing Actions', () => {
     store.dispatch(isLOExist(message));
     expect(store.getActions()).toEqual(expectedActions);
   })
-  
+  it('testing reRenderLO function', () => {
+    const isRenderLO = true
+    const expectedActions =
+      [{
+        'payload': isRenderLO,
+        'type': "RE_RENDER_META_LO",
+      }]
+    let store = mockStore();
+    store.dispatch(reRenderLO(isRenderLO));
+    expect(store.getActions()).toEqual(expectedActions);
+  })
 });

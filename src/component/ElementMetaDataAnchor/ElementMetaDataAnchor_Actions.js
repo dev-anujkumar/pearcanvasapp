@@ -61,3 +61,9 @@ export const showSlateLockPopup = (showPopup) => (dispatch, getState) => {
         payload: showPopup
     })
 }
+export const reRenderLO = (isRenderLO) => (dispatch, getState) => {
+    dispatch({
+        type: 'RE_RENDER_META_LO',
+        payload: isRenderLO
+    })
+}

@@ -9,8 +9,6 @@ import ElmError from '../ElmError';
 import ElmFooter from '../ElmFooter'
 import { FULL_ASSESSMENT_PUF, PUF } from '../../../AssessmentSlateConstants.js'
 import { elmAssessmentItem, elmSortUp, elmSortDown, elmNavigateBack, singleAssessmentItemIcon } from './../../../../../images/ElementButtons/ElementButtons.jsx';
-import { objectExpression } from '@babel/types';
-
 
 /*** @description - ElmTable is a class based component to store ELM assessments in tabular form*/
 class ElmTableComponent extends Component {
@@ -73,7 +71,6 @@ class ElmTableComponent extends Component {
     /*** @description - This function is to render elm table data
      * @param currentProps- props
     */
-
     renderTableData = (currentProps) => {
         const { errFlag, elmData, elmItemData, elmLoading, itemErrorFlag } = currentProps.elmReducer;
         let apiData = JSON.stringify(elmData), parent=""
@@ -81,27 +78,31 @@ class ElmTableComponent extends Component {
             if(config.parentLabel=="frontmatter"||config.parentLabel=="backmatter"){
                 this.filterData(false, config.projectUrn, elmData);
             }
-            else if(apiData.includes(config.parentContainerUrn)){
+            else if(apiData.includes(config.parentContainerUrn) && config.parentContainerUrn){
                 this.filterData(false, config.parentContainerUrn, elmData);
             }else{
-                parent= this.setParentUrn(apiData,this.props.currentSlateData)
+                parent= this.setParentUrn(apiData,this.props.setCurrentSlateAncestorData)
                 this.filterData(false, parent, elmData);
             }
         }
-        else if (!itemErrorFlag && elmItemData && elmLoading==false) {
+        else if (!itemErrorFlag && elmItemData && elmLoading==false && config.parentContainerUrn) {
             this.filterData(true, config.parentContainerUrn,elmItemData)
         }
         else if(this.state.openedFrom == "slateAssessment" && !errFlag && elmLoading){
-            this.filterData(false,config.parentContainerUrn, elmData);
+            parent= this.setParentUrn(apiData,this.props.setCurrentSlateAncestorData)
+            this.filterData(false, parent, elmData);
+            //this.filterData(false,config.parentContainerUrn, elmData);
         }               
         else {
             this.filterData(false,this.state.currentUrn, elmData);
         }
     }
 
-
-
-    setParentUrn = (elmData, currentSlate = this.props.currentSlateData) => {
+    /*** @description - This function is to set the ParentUrn at which the elm table popup opens up
+     * @param elmData- ELM resouces API data
+     * @param currentSlate- details of ancestors of current slat
+    */
+    setParentUrn = (elmData, currentSlate = this.props.currentSlateAncestorData) => {
         let parent1 = {
             urn: "",
             type: ""
@@ -113,7 +114,7 @@ class ElmTableComponent extends Component {
         } else if (currentSlate && currentSlate.ancestor && currentSlate.ancestor.ancestor && elmData.includes(currentSlate.ancestor.ancestor.containerUrn)) {
             parent1.urn = currentSlate.ancestor.ancestor.containerUrn
         } else if (currentSlate && currentSlate.ancestor && currentSlate.ancestor.ancestor && currentSlate.ancestor.ancestor.ancestor && elmData.includes(currentSlate.ancestor.ancestor.ancestor.containerUrn)) {
-            parent1.urn = currentSlate.ancestor.ancestor.ancesto.containerUrn
+            parent1.urn = currentSlate.ancestor.ancestor.ancestor.containerUrn
         } else if (currentSlate && currentSlate.ancestor && currentSlate.ancestor.ancestor && currentSlate.ancestor.ancestor.ancestor && currentSlate.ancestor.ancestor.ancestor.ancestor && elmData.includes(currentSlate.ancestor.ancestor.ancestor.ancestor.containerUrn)) {
             parent1.urn = currentSlate.ancestor.ancestor.ancestor.ancestor.containerUrn
         } else {
@@ -121,8 +122,6 @@ class ElmTableComponent extends Component {
         }
         return parent1.urn
     }
-
-
 
     /*** @description - This function is to filter table data based on parameters
          * @param getItems - check for type of data |true=assessment-item data|false- elm-resouces data     
@@ -423,7 +422,7 @@ class ElmTableComponent extends Component {
     };
 
     render() {
-        const { isLoading, elmLoading } = this.props.elmReducer;
+        const { isLoading } = this.props.elmReducer;
         {
             if (this.props.elmReducer.errFlag == true) {
                 return <ElmError elmErrorProps={this.elmErrorProps} />
@@ -466,6 +465,6 @@ class ElmTableComponent extends Component {
 export default connect((state) => {
     return {
         elmReducer: state.elmReducer,
-        currentSlateData: state.appStore.currentSlateData
+        currentSlateAncestorData: state.appStore.currentSlateAncestorData
     }
 })(ElmTableComponent);

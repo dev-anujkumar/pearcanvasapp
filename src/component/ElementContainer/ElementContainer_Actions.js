@@ -263,14 +263,11 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         
         if(config.slateManifestURN === updatedData.slateUrn){  //Check applied so that element does not gets copied to next slate while navigating
             if (updatedData.elementVersionType === "element-learningobjectivemapping" || updatedData.elementVersionType === "element-generateLOlist") {
-                console.log("mapping inside")
                 for(let i=0;i <updatedData.metaDataAnchorID.length; i++){
                         if(updatedData.metaDataAnchorID[i] !==  response.data.metaDataAnchorID[i] ){
                             if (currentSlateData.status === 'wip') {
-                                console.log("mapping wip")
                                 updateLOInStore(updatedData, response.data, getState,dispatch);
                             } else if (currentSlateData.status === 'approved') {
-                                console.log("mapping approved")
                                 sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
                             }
                             break;
@@ -308,7 +305,6 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
 }
 
 function updateLOInStore(updatedData, versionedData, getState, dispatch) {
-    console.log("updateLOInStore")
     let parentData = getState().appStore.slateLevelData;
     let newslateData = JSON.parse(JSON.stringify(parentData));
     if(versionedData){

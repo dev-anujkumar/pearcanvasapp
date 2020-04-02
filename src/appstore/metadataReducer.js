@@ -1,5 +1,5 @@
 import {
-    CURRENT_SLATE_LO_DATA, SLATE_TAG_ENABLE, SHOW_MODULE_NAME, CURRENT_SLATE_LO_DATA_MATH, SHOW_SLATE_LOCK_POPUP
+    CURRENT_SLATE_LO_DATA, SLATE_TAG_ENABLE, SHOW_MODULE_NAME, CURRENT_SLATE_LO_DATA_MATH, SHOW_SLATE_LOCK_POPUP,RE_RENDER_META_LO
 } from '../constants/Action_Constants';
 
 const INIT_STATE = {
@@ -7,7 +7,8 @@ const INIT_STATE = {
     slateTagEnable: false,
     showModule:false,
     currentSlateLODataMath:"",
-    showSlateLockPopup:false
+    showSlateLockPopup:false,
+    isRenderMetdataLO:false
 }
 
 const INITIAL_ACTION = {
@@ -46,7 +47,13 @@ export default function (state = INIT_STATE, action = INITIAL_ACTION) {
                showSlateLockPopup : action.payload
            }
        }
-        
+        case RE_RENDER_META_LO: {
+            return {
+                ...state,
+                isRenderMetdataLO: action.payload
+            }
+        }
+       
         default:
             return state;
     }
