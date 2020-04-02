@@ -139,7 +139,7 @@ class Sidebar extends Component {
                     className={`element-dropdown ${this.props.showHideObj && this.props.activeElement.elementType? "sidebar-disable": ""}`}>
                     <div className="element-dropdown-title" data-element="primary" onClick={this.toggleElementDropdown}>
                         {primaryOptionObject[this.state.activePrimaryOption].text}
-                        { activePrimaryOption === "primary-single-assessment" ? null : dropdownArrow }
+                        { activePrimaryOption === "primary-single-assessment" || activePrimaryOption === "primary-citations-group" || activePrimaryOption === "primary-element-citation" ? null : dropdownArrow }
                     </div>
                     <ul className={`element-dropdown-content primary-options ${active}`}>
                         {primaryOptions}
