@@ -999,7 +999,7 @@ class ElementContainer extends Component {
                         handleFocus = {this.handleFocus}
                         handleBlur = {this.handleBlur}
                     />
-                    labelText = 'Ct'
+                    labelText = 'CT'
                     break;
             }
         } else {
