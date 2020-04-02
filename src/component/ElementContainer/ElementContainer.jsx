@@ -765,8 +765,15 @@ class ElementContainer extends Component {
         this.handleCommentPopup(false);
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
 
+        /** This condition is to delete whole Container Group element when only one element is left and that too getting deleted */
+        if (this.props.parentElement && this.props.parentElement.type === "citations" && this.props.parentElement.contents && this.props.parentElement.contents.bodymatter.length === 1) {
+            id = this.props.parentElement.id
+            type = this.props.parentElement.type
+            contentUrn = this.props.parentElement.contentUrn
+            index = index.split("-")[0]
+        }
         /** This condition to delete whole aside element when only one element in it deleted */
-        if (this.props.parentElement && this.props.parentElement.subtype !== "workedexample" && this.props.parentElement.elementdata && this.props.parentElement.elementdata.bodymatter.length === 1) {
+        else if (this.props.parentElement && this.props.parentElement.subtype !== "workedexample" && this.props.parentElement.elementdata && this.props.parentElement.elementdata.bodymatter.length === 1) {
             id = this.props.parentElement.id
             type = this.props.parentElement.type
             contentUrn = this.props.parentElement.contentUrn
