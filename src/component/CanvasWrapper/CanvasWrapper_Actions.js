@@ -354,10 +354,11 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
 };
 
 const setSlateDetail = (slateTitle, slateManifestURN) => {
+    let env = requestConfigURI().toLowerCase();
     return {
         slateTitle: slateTitle,
         slateManifestURN: slateManifestURN,
-        env: requestConfigURI().toUpperCase()
+        env: env.replace(env.charAt(0), env.charAt(0).toUpperCase())
     }
 }
 
