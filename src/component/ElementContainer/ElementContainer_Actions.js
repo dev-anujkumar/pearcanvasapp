@@ -204,11 +204,7 @@ function prepareDataForTcmUpdate (updatedData,id, elementIndex, asideData, getSt
     let storeData = getState().appStore.slateLevelData;
     let slateData = JSON.parse(JSON.stringify(storeData));
     let slateBodyMatter = slateData[config.slateManifestURN].contents.bodymatter;
-    if(type && type === "element-citation"){
-        if (slateBodyMatter[indexes[0]].contents.bodymatter[indexes[1] - 1].id === id) {
-            updatedData.isHead = true;
-        }
-    } else if(updatedData.type === "element-citation"){
+    if((type && type === "element-citation") || (updatedData.type === "element-citation")){
         if (slateBodyMatter[indexes[0]].contents.bodymatter[indexes[1] - 1].id === id) {
             updatedData.isHead = true;
         }
