@@ -16,15 +16,15 @@ export default function ElementContainerType(props) {
         let elementPickerPosition = 1
         switch (props.text) {
             case 'interactive-elem-button': elementPickerPosition = 4; break; 
-            case 'container-elem-button': elementPickerPosition = 5; break;
+            case 'container-elem-button': elementPickerPosition = 6; break;
         }
 
-        let onePickerHeight = 35;   // default pixel size of one picker element
+        let onePickerHeight = 34;   // default pixel size of one picker element
         let listItemHeight = (clientHeight / 2)
         let pickerPosition = ((elementPickerPosition - 1) * onePickerHeight + (onePickerHeight / 2)) - listItemHeight;
         let dataPos = `${pickerPosition}px`;
         setTop(dataPos);
-    })
+    },[])
     
     return (
         <div className="conatiner-other-elements" ref={myListContainer} style={{top}}>
