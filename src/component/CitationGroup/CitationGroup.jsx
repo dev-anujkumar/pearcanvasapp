@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import config from '../../config/config';
 import { CitationGroupContext } from '../ElementContainer/ElementCitationContext'
 import ElementContainer from '../ElementContainer';
 import CGTinyMCE from './CGTinyMCE.jsx'
@@ -9,7 +10,10 @@ import './../../styles/CitationGroup/CitationGroup.css';
 import { guid } from '../../constants/utility.js';
 import ElementSaprator from '../ElementSaprator';
 import { createPopupUnit } from '../CanvasWrapper/CanvasWrapper_Actions';
+import { sendDataToIframe } from '../../constants/utility.js';
+import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import PageNumberElement from '../SlateWrapper/PageNumberElement.jsx';
+
 let random = guid();
 
 export class CitationGroup extends Component {
@@ -95,14 +99,14 @@ export class CitationGroup extends Component {
     prepareSwapData = (event, parentUrn) => {
         let swappedElementData;
         let bodyMatterObj = [];
-        bodyMatterObj = this.props.element.contents.bodymatter || [];
+        bodyMatterObj = this.context.element.contents.bodymatter || [];
         swappedElementData = bodyMatterObj[event.oldDraggableIndex]
         let dataObj = {
             oldIndex: event.oldDraggableIndex,
             newIndex: event.newDraggableIndex,
             swappedElementData: swappedElementData,
             currentSlateEntityUrn: parentUrn.contentUrn,
-            // containerTypeElem: 'we',
+            containerTypeElem: 'cg',
         }
         return dataObj
     }
@@ -151,25 +155,25 @@ export class CitationGroup extends Component {
                                     forceFallback: true,
                                     onStart: function (/**Event*/evt) {
                                         // same properties as onEnd
-                                        cgThis.context.checkSlateLockStatus(evt)
+                                      cgThis.context.onClickCapture(evt)
                                     },
 
                                     // Element dragging ended
                                     onUpdate: (/**Event*/evt) => {
-                                        /* if (config.savingInProgress) {
+                                        /**  if (config.savingInProgress) {   //to be uncommented once update api is integrated
                                             evt.preventDefault()
                                             evt.stopPropagation()
                                             return false
-                                        }
+                                        }*/
                                         let dataObj = this.prepareSwapData(evt, parentUrn)
                                         cgThis.props.swapElement(dataObj, () => { })
                                         cgThis.context.setActiveElement(dataObj.swappedElementData, dataObj.newIndex);
-                                        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } }); */
+                                        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } }); 
                                     },
                                 }}
                                 ref={(c) => {
                                     if (c) {
-                                        //let sortable = c.sortable;
+                                        let sortable = c.sortable;
                                     }
                                 }}
                                 tag="div"

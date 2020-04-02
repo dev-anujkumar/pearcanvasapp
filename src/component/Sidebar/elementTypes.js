@@ -754,7 +754,7 @@ export default {
             subtype: {
                 'secondary-element-citation': {
                     text: 'Citation element',
-                    labelText: 'Ct',
+                    labelText: 'CT',
                     enum: 'NA',
                 }
             }

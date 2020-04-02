@@ -238,7 +238,15 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                             })
                         }
                     });
-                } else {
+                } 
+                /** ----------Swapping elements inside Citations Group Element----------------- */
+                else if(containerTypeElem && containerTypeElem == 'cg'){
+                    for (let i in newBodymatter) {
+                        if (newBodymatter[i].contentUrn == currentSlateEntityUrn) {
+                            newBodymatter[i].contents.bodymatter.move(oldIndex, newIndex);
+                        }
+                    }
+                }else{
                     newParentData[slateId].contents.bodymatter.move(oldIndex, newIndex);
                 }
 
