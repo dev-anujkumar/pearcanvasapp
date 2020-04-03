@@ -201,9 +201,9 @@ describe('Tests Slate Wrapper Actions', () => {
         return store.dispatch(actions.createElement(type, index, parentUrn, {},0)).then(() => {
             let { type, payload } = store.getActions()[0];
 
-            console.log("data:::", payload.slateLevelData[config.slateManifestURN].contents.bodymatter);
-            console.log("===========================================")
-            console.log("expected:::", expectedActions.payload.slateLevelData[config.slateManifestURN].contents.bodymatter);
+          //  console.log("data:::", payload.slateLevelData[config.slateManifestURN].contents.bodymatter);
+         //   console.log("===========================================")
+         //   console.log("expected:::", expectedActions.payload.slateLevelData[config.slateManifestURN].contents.bodymatter);
             expect(type).toBe(expectedActions.type);
             expect(payload).toStrictEqual(expectedActions.payload);
         });
@@ -284,6 +284,41 @@ describe('Tests Slate Wrapper Actions', () => {
         });
 
         return store.dispatch(actions.swapElement(dataObj,()=>{})).then(() => {
+            const { type } = store.getActions()[0];
+            expect(type).toBe(expectedActions.type);
+
+        });
+    });
+    it('testing------- SWAP ELEMENT ------action - then- citation element', () => {
+        let swappedElementData = {
+            "id" : "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636",
+            "contentUrn" : "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4e",
+            "type": "element-citation"
+        }
+
+        config.projectUrn = "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f"
+        config.slateEntityURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5"
+        
+        let dataObj = {
+            oldIndex : 0,
+            newIndex : 1,
+            swappedElementData : swappedElementData,
+            containerTypeElem: 'cg' ,
+            currentSlateEntityUrn:"urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5"
+        }
+
+        const expectedActions = {
+            type: SWAP_ELEMENT
+        };
+        moxios.wait(() => {
+            const request = moxios.requests.mostRecent();
+            request.respondWith({
+                status: 200
+            });
+        });
+
+        return store.dispatch(actions.swapElement(dataObj,()=>{})).then(() => {
+            console.log("store.getActions()",store.getActions())
             const { type } = store.getActions()[0];
             expect(type).toBe(expectedActions.type);
 
