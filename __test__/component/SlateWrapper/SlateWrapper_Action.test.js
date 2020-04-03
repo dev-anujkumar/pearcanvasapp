@@ -318,7 +318,6 @@ describe('Tests Slate Wrapper Actions', () => {
         });
 
         return store.dispatch(actions.swapElement(dataObj,()=>{})).then(() => {
-            console.log("store.getActions()",store.getActions())
             const { type } = store.getActions()[0];
             expect(type).toBe(expectedActions.type);
 
