@@ -270,12 +270,6 @@ function typeOfContainerElements(elem, props) {
             "Add SmartLink": "smartlink-elem",
             "Add Pop-up": "popup-elem",
             "Add Show/Hide": "show-hide-elem",
-        },
-        "container-elem-button":
-        {
-            
-            "Add Pop-up33": "popup-elem",
-            "Add Show/Hide33": "show-hide-elem",
         }
     }
     let newData = containerArray[elem.buttonType];
