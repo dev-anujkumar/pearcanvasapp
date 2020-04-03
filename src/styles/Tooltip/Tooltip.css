@@ -42,6 +42,7 @@
 .tooltip:hover .tooltiptext {
     visibility: visible;
     opacity: 1;
+    z-index:9;
 }
 
 .tooltip .tooltiptext.tooltip-right {
