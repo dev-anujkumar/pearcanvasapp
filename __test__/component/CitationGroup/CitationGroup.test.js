@@ -6,13 +6,17 @@ import configureMockStore from 'redux-mock-store';
 import CitationGroup from '../../../src/component/CitationGroup/CitationGroup';
 import { CitationGroupContext } from '../../../src/component/ElementContainer/ElementCitationContext'
 import { citationGroupElement } from '../../../fixtures/ElementCitationData';
-import { swapElement} from '../../../src/component/SlateWrapper/SlateWrapper_Actions';
 import { Provider } from 'react-redux';
 jest.mock('../../../src/component/ElementSaprator/ElementSaprator.jsx', () => {
     return function () {
         return (<div>null</div>)
     }
 });
+jest.mock('../../../src/component/tinyMceEditor.js',()=>{
+    return function () {
+        return (<div>null</div>)
+    }
+})
 const mockStore = configureMockStore(middlewares)
 
 let initialState = {

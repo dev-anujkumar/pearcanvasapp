@@ -12,20 +12,6 @@ import config from '../../config/config.js';
 const CGTinyMCE = (props) => {
     const context = useContext(CitationGroupContext)
 
-    /**
-     * Creates Citation Title element if not present.
-     * @param {*} popupField undefined here
-     * @param {*} forceupdate flag to forceupdate
-     * @param {*} index index of element
-     * @param {*} parentElement parent citations group element
-     */
-    const createPopupUnit = (popupField, forceupdate, index, parentElement) => {
-        return false
-        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-        config.popupCreationCallInProgress = true
-        props.createPopupUnit(popupField, parentElement, (currentElementData) => context.handleBlur(forceupdate, currentElementData, index, null), index, config.slateManifestURN)
-    }
-
     const editorProps = {
         permissions : context.permissions,
         element : context.element,
@@ -41,7 +27,7 @@ const CGTinyMCE = (props) => {
         slateLockInfo : context.slateLockInfo,
         elementId : context.elementId,
         citationField  :  "formatted-title",
-        createPopupUnit
+        createPopupUnit : (popupField, forceupdate, index, parentElement) => createPopupUnit(popupField, forceupdate, index, parentElement, props, context)
     }
 
     return (
@@ -52,3 +38,17 @@ const CGTinyMCE = (props) => {
 CGTinyMCE.displayName = "CitationGroupTinyMCE";
 
 export default CGTinyMCE
+
+/**
+ * Creates Citation Title element if not present.
+ * @param {*} popupField undefined here
+ * @param {*} forceupdate flag to forceupdate
+ * @param {*} index index of element
+ * @param {*} parentElement parent citations group element
+ */
+export const createPopupUnit = (popupField, forceupdate, index, parentElement, props, context) => {
+    return false
+    sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+    config.popupCreationCallInProgress = true
+    props.createPopupUnit(popupField, parentElement, (currentElementData) => context.handleBlur(forceupdate, currentElementData, index, null), index, config.slateManifestURN)
+}
