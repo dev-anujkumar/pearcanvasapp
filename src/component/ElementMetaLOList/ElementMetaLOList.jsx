@@ -14,13 +14,13 @@ export class ElementMetaLOList extends Component {
     this.renderCurrentModule()
   }
   componentDidUpdate(prevProps, prevState){
-    if(this.props.isRenderMetdataLO !=prevProps.isRenderMetdataLO && this.props.isRenderMetdataLO==true){
+    if((this.props.isRenderMetdataLO !=prevProps.isRenderMetdataLO && this.props.isRenderMetdataLO==true)|| (this.props.currentSlateLOData.length!=prevProps.currentSlateLOData.length)){
       this.props.reRenderLO(false)
       this.renderCurrentModule()
     }
   }
   renderCurrentModule = () => {
-    if (this.props.element && this.props.element.elementdata.groupby && this.props.element.elementdata.groupby == "module") {
+    if (this.props.element && this.props.element.elementdata.groupby && this.props.element.elementdata.groupby == "module" && this.props.currentSlateLOData.length>0) {
       this.props.setCurrentModule(true);
       let els = document.getElementsByClassName('moduleContainer');
       if (els.length > 0) {
