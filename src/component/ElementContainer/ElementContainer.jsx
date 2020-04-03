@@ -453,7 +453,7 @@ class ElementContainer extends Component {
         /**
          * THIS CODE TO BE REMOVED AFTER UPDATE ELEMENT IMPLEMEMTATION
          */
-        if(parentElement.type === "citations"){
+        if(parentElement && parentElement.type === "citations"){
             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
             return false
         }
