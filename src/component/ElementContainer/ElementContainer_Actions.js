@@ -242,7 +242,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         return ;
     }
     prepareDataForTcmUpdate(updatedData,updatedData.id, elementIndex, asideData, getState);
-    updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, null, null, showHideType, parentElement)
+    updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, null, elementIndex, showHideType, parentElement)
     return axios.put(`${config.REACT_APP_API_URL}v1/slate/element`,
         updatedData,
         {
@@ -362,6 +362,9 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                 parentElement.indexes =elementIndex;
                 dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:parentElement.id, parentElement.contentUrn, 0, parentElement)); 
             }
+            else if(parentElement && parentElement.type === "citations"){
+                dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:parentElement.id, parentElement.contentUrn, 0, parentElement));
+            }
             else {
                 elementIndex = indexes.length == 2 ?indexes[0] : elementIndex
                 newslateData[config.slateManifestURN].contents.bodymatter[elementIndex] = versionedData;
@@ -374,178 +377,186 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
         })
     }
     else {
-        _slateBodyMatter = _slateBodyMatter.map(element => {
-            if (element.id === elementId) {
-               
-                if(element.type !== "openerelement"){
-                    element  = {
-                        ...element,
-                        ...updatedData,
-                        elementdata : {
-                            ...element.elementdata,
-                            text : updatedData.elementdata?updatedData.elementdata.text:null
-                        },
-                        tcm : _slateObject.tcm?true:false,
-                        html : updatedData.html
-                    };
-                }
-                else{
-                    element  = {
-                        ...element,
-                        ...updatedData,
-                        tcm : _slateObject.tcm?true:false,
-                        html : updatedData.html
-                    };
-                }
-            }else if(asideData && asideData.type == 'element-aside'){
-                if(element.id == asideData.id){
-                   let nestedBodyMatter =  element.elementdata.bodymatter.map((nestedEle)=>{
-                        /*This condition add object of element in existing element  in aside */
-                        if(nestedEle.id == elementId) {
-                            nestedEle  = {
-                                ...nestedEle,
-                                ...updatedData,
-                                elementdata: {
-                                    ...nestedEle.elementdata,
-                                    text: updatedData.elementdata ? updatedData.elementdata.text : null
-                                },
-                                tcm: _slateObject.tcm ? true : false,
-                                html: updatedData.html
-                            };
-                        }
-                        else if(nestedEle.type === "popup"){
-                            if(nestedEle.popupdata["formatted-title"] && nestedEle.popupdata["formatted-title"]["id"] === elementId){
+        if(updatedData.type === "element-citation"){
+            let indexes = elementIndex.split("-")
+            _slateBodyMatter[indexes[0]].contents.bodymatter[indexes[1] - 1] = {...updatedData}
+        }
+        else{
+            _slateBodyMatter = _slateBodyMatter.map(element => {
+                if (element.id === elementId) {
+                   
+                    if(element.type !== "openerelement"){
+                        element  = {
+                            ...element,
+                            ...updatedData,
+                            elementdata : {
+                                ...element.elementdata,
+                                text : updatedData.elementdata?updatedData.elementdata.text:null
+                            },
+                            tcm : _slateObject.tcm?true:false,
+                            html : updatedData.html
+                        };
+                    }
+                    else{
+                        element  = {
+                            ...element,
+                            ...updatedData,
+                            tcm : _slateObject.tcm?true:false,
+                            html : updatedData.html
+                        };
+                    }
+                }else if(asideData && asideData.type == 'element-aside'){
+                    if(element.id == asideData.id){
+                       let nestedBodyMatter =  element.elementdata.bodymatter.map((nestedEle)=>{
+                            /*This condition add object of element in existing element  in aside */
+                            if(nestedEle.id == elementId) {
                                 nestedEle  = {
                                     ...nestedEle,
-                                    popupdata : {
-                                        ...nestedEle.popupdata,
-                                        "formatted-title" : {...updatedData}
-                                    }
-                                };
-                            } else if(nestedEle.popupdata["formatted-subtitle"] && nestedEle.popupdata["formatted-subtitle"]["id"] === elementId){
-                                nestedEle  = {
-                                    ...nestedEle,
-                                    popupdata : {
-                                        ...nestedEle.popupdata,
-                                        "formatted-subtitle" : {...updatedData}
-                                    }
-                                };
-                            } else if(nestedEle.popupdata.postertextobject[0].id === elementId){
-                                nestedEle  = {
-                                    ...nestedEle,
-                                    popupdata : {
-                                        ...nestedEle.popupdata,
-                                        postertextobject : [{...updatedData}]
-                                    }
+                                    ...updatedData,
+                                    elementdata: {
+                                        ...nestedEle.elementdata,
+                                        text: updatedData.elementdata ? updatedData.elementdata.text : null
+                                    },
+                                    tcm: _slateObject.tcm ? true : false,
+                                    html: updatedData.html
                                 };
                             }
-                        }else if(nestedEle.type == "showhide" && showHideType){
-                            nestedEle.interactivedata[showHideType].map((showHideData,index)=>{
-                                if(showHideData.id == updatedData.id){
-                                    showHideData.elementdata.text =  updatedData.elementdata.text;
-                                    showHideData.html = updatedData.html;
-                                }
-                            })
-                        }
-                         else if(nestedEle.type == "manifest" && nestedEle.id == parentUrn.manifestUrn) {
-                            /*This condition add object of element in existing element  in section of aside */
-                            let elementObject =  nestedEle.contents.bodymatter.map((ele)=>{
-                                if(ele.id == elementId) {
-                                    ele = {
-                                        ...ele,
-                                        ...updatedData,
-                                        elementdata: {
-                                            ...ele.elementdata,
-                                            text: updatedData.elementdata ? updatedData.elementdata.text : null
-                                        },
-                                        tcm: _slateObject.tcm ? true : false,
-                                        html: updatedData.html
+                            else if(nestedEle.type === "popup"){
+                                if(nestedEle.popupdata["formatted-title"] && nestedEle.popupdata["formatted-title"]["id"] === elementId){
+                                    nestedEle  = {
+                                        ...nestedEle,
+                                        popupdata : {
+                                            ...nestedEle.popupdata,
+                                            "formatted-title" : {...updatedData}
+                                        }
+                                    };
+                                } else if(nestedEle.popupdata["formatted-subtitle"] && nestedEle.popupdata["formatted-subtitle"]["id"] === elementId){
+                                    nestedEle  = {
+                                        ...nestedEle,
+                                        popupdata : {
+                                            ...nestedEle.popupdata,
+                                            "formatted-subtitle" : {...updatedData}
+                                        }
+                                    };
+                                } else if(nestedEle.popupdata.postertextobject[0].id === elementId){
+                                    nestedEle  = {
+                                        ...nestedEle,
+                                        popupdata : {
+                                            ...nestedEle.popupdata,
+                                            postertextobject : [{...updatedData}]
+                                        }
                                     };
                                 }
-                                else if(ele.type === "popup"){
-                                    if(ele.popupdata["formatted-title"] && ele.popupdata["formatted-title"]["id"] === elementId){
-                                        ele  = {
+                            }else if(nestedEle.type == "showhide" && showHideType){
+                                nestedEle.interactivedata[showHideType].map((showHideData,index)=>{
+                                    if(showHideData.id == updatedData.id){
+                                        showHideData.elementdata.text =  updatedData.elementdata.text;
+                                        showHideData.html = updatedData.html;
+                                    }
+                                })
+                            }
+                             else if(nestedEle.type == "manifest" && nestedEle.id == parentUrn.manifestUrn) {
+                                /*This condition add object of element in existing element  in section of aside */
+                                let elementObject =  nestedEle.contents.bodymatter.map((ele)=>{
+                                    if(ele.id == elementId) {
+                                        ele = {
                                             ...ele,
-                                            popupdata : {
-                                                ...ele.popupdata,
-                                                "formatted-title" : {...updatedData}
-                                            }
-                                        };
-                                    } else if(ele.popupdata["formatted-subtitle"] && ele.popupdata["formatted-subtitle"]["id"] === elementId){
-                                        ele  = {
-                                            ...ele,
-                                            popupdata : {
-                                                ...ele.popupdata,
-                                                "formatted-subtitle" : {...updatedData}
-                                            }
-                                        };
-                                    } else if(ele.popupdata.postertextobject[0].id === elementId){
-                                        ele  = {
-                                            ...ele,
-                                            popupdata : {
-                                                ...ele.popupdata,
-                                                postertextobject : [{...updatedData}]
-                                            }
+                                            ...updatedData,
+                                            elementdata: {
+                                                ...ele.elementdata,
+                                                text: updatedData.elementdata ? updatedData.elementdata.text : null
+                                            },
+                                            tcm: _slateObject.tcm ? true : false,
+                                            html: updatedData.html
                                         };
                                     }
-                                }else if(ele.type == "showhide" && showHideType){
-                                    ele.interactivedata[showHideType].map((showHideData,index)=>{
-                                        if(showHideData.id == updatedData.id){
-                                            showHideData.elementdata.text =  updatedData.elementdata.text;
-                                            showHideData.html = updatedData.html;
+                                    else if(ele.type === "popup"){
+                                        if(ele.popupdata["formatted-title"] && ele.popupdata["formatted-title"]["id"] === elementId){
+                                            ele  = {
+                                                ...ele,
+                                                popupdata : {
+                                                    ...ele.popupdata,
+                                                    "formatted-title" : {...updatedData}
+                                                }
+                                            };
+                                        } else if(ele.popupdata["formatted-subtitle"] && ele.popupdata["formatted-subtitle"]["id"] === elementId){
+                                            ele  = {
+                                                ...ele,
+                                                popupdata : {
+                                                    ...ele.popupdata,
+                                                    "formatted-subtitle" : {...updatedData}
+                                                }
+                                            };
+                                        } else if(ele.popupdata.postertextobject[0].id === elementId){
+                                            ele  = {
+                                                ...ele,
+                                                popupdata : {
+                                                    ...ele.popupdata,
+                                                    postertextobject : [{...updatedData}]
+                                                }
+                                            };
                                         }
-                                    })
-                                   
-                                }
-                                return ele;
-                            })
-                            nestedEle.contents.bodymatter = elementObject;
-                        }
-                        return nestedEle;
-                    })
-                    element.elementdata.bodymatter = nestedBodyMatter;
+                                    }else if(ele.type == "showhide" && showHideType){
+                                        ele.interactivedata[showHideType].map((showHideData,index)=>{
+                                            if(showHideData.id == updatedData.id){
+                                                showHideData.elementdata.text =  updatedData.elementdata.text;
+                                                showHideData.html = updatedData.html;
+                                            }
+                                        })
+                                       
+                                    }
+                                    return ele;
+                                })
+                                nestedEle.contents.bodymatter = elementObject;
+                            }
+                            return nestedEle;
+                        })
+                        element.elementdata.bodymatter = nestedBodyMatter;
+                    }
                 }
-            }
-            else if(element.type === "popup"){
-                if(element.popupdata["formatted-title"] && element.popupdata["formatted-title"]["id"] === elementId){
-                    element  = {
-                        ...element,
-                        popupdata : {
-                            ...element.popupdata,
-                            "formatted-title" : {...updatedData}
-                        }
-                    };
-                } else if(element.popupdata["formatted-subtitle"] && element.popupdata["formatted-subtitle"]["id"] === elementId){
-                    element  = {
-                        ...element,
-                        popupdata : {
-                            ...element.popupdata,
-                            "formatted-subtitle" : {...updatedData}
-                        }
-                    };
-                } else if(element.popupdata.postertextobject[0].id === elementId){
-                    element  = {
-                        ...element,
-                        popupdata : {
-                            ...element.popupdata,
-                            postertextobject : [{...updatedData}]
-                        }
-                    };
+                else if(element.type === "popup"){
+                    if(element.popupdata["formatted-title"] && element.popupdata["formatted-title"]["id"] === elementId){
+                        element  = {
+                            ...element,
+                            popupdata : {
+                                ...element.popupdata,
+                                "formatted-title" : {...updatedData}
+                            }
+                        };
+                    } else if(element.popupdata["formatted-subtitle"] && element.popupdata["formatted-subtitle"]["id"] === elementId){
+                        element  = {
+                            ...element,
+                            popupdata : {
+                                ...element.popupdata,
+                                "formatted-subtitle" : {...updatedData}
+                            }
+                        };
+                    } else if(element.popupdata.postertextobject[0].id === elementId){
+                        element  = {
+                            ...element,
+                            popupdata : {
+                                ...element.popupdata,
+                                postertextobject : [{...updatedData}]
+                            }
+                        };
+                    }
                 }
-            }
-            else if(element.type === "showhide"){
-                if(showHideType){
-                    element.interactivedata[showHideType].forEach((showHideElement, index) => {
-                        if(showHideElement.id === elementId){
-                            showHideElement = {...updatedData}
-                            element.interactivedata[showHideType][index] = showHideElement
-                        }
-                    })
+                else if(element.type === "showhide"){
+                    if(showHideType){
+                        element.interactivedata[showHideType].forEach((showHideElement, index) => {
+                            if(showHideElement.id === elementId){
+                                showHideElement = {...updatedData}
+                                element.interactivedata[showHideType][index] = showHideElement
+                            }
+                        })
+                    }
+                    
                 }
                 
-            }
-            return element
-        })
+                return element
+            })
+
+        }
         _slateContent.bodymatter = _slateBodyMatter
         _slateObject.contents = _slateContent
 

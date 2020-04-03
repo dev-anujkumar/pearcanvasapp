@@ -453,10 +453,10 @@ class ElementContainer extends Component {
         /**
          * THIS CODE TO BE REMOVED AFTER UPDATE ELEMENT IMPLEMEMTATION
          */
-        if(parentElement.type === "citations"){
+        /* if(parentElement.type === "citations"){
             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
             return false
-        }
+        } */
         const { parentUrn, asideData } = this.props
         let dataToSend = {}
         let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");

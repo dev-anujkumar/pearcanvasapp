@@ -421,7 +421,8 @@ const generateCitationElementData = (index, previousElementData, elementType, pr
         },
         inputType : elementTypes[elementType][primaryOption]['enum'],
         inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
-        slateUrn : parentElement.id
+        slateUrn : parentElement.id,
+        parentType : parentElement.type
     }
     return citationElementData
 }

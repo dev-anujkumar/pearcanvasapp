@@ -569,41 +569,96 @@ export const openPopupSlate = (element, popupId) => dispatch => {
 	}
 }
 
+/**
+ * Appends the created Unit element to the parent element and then to the slate.
+ * @param {*} paramObj 
+ * @param {*} responseData 
+ */
+const appendCreatedElement = (paramObj, responseData) => {
+    let {
+        popupElementIndex,
+        getState,
+        slateManifestURN,
+        parentElement,
+        dispatch,
+        cb,
+        popupField
+    } = paramObj
+
+    let elemIndex = `cypress-${popupElementIndex}`
+    let elemNode = document.getElementById(elemIndex)
+    popupElementIndex = Number(popupElementIndex.split("-")[0])
+    const parentData = getState().appStore.slateLevelData
+    let newslateData = JSON.parse(JSON.stringify(parentData))
+    let _slateObject = newslateData[slateManifestURN]
+
+    if(parentElement.type === "popup"){
+        let targetPopupElement = _slateObject.contents.bodymatter[popupElementIndex]
+        if(targetPopupElement){
+            targetPopupElement.popupdata[popupField] = responseData
+            targetPopupElement.popupdata[popupField].html.text = elemNode.innerHTML
+            targetPopupElement.popupdata[popupField].elementdata.text = elemNode.innerText
+            _slateObject.contents.bodymatter[popupElementIndex] = targetPopupElement
+        }
+    }
+    else if(parentElement.type === "citations"){
+        let targetCG = _slateObject.contents.bodymatter[popupElementIndex]
+        if(targetCG){
+            targetCG.contents["formatted-title"] = responseData
+            targetCG.contents["formatted-title"].html.text = elemNode.innerHTML
+            targetCG.contents["formatted-title"].elementdata.text = elemNode.innerText
+            _slateObject.contents.bodymatter[popupElementIndex] = targetCG
+        }
+    }
+    dispatch({
+        type: AUTHORING_ELEMENT_UPDATE,
+        payload: {
+            slateLevelData: newslateData
+        }
+    })
+    if(cb) cb(responseData)
+}
+
+/**
+ * Creates request data for creating popup/citation unit.
+ * @param {*} parentElement Parent popup element/ citation group container
+ * @param {*} popupField formatted title or formatted-subtitle
+ */
+const getRequestData = (parentElement, popupField) => {
+    let dataToSend = {}
+    if(parentElement.type === "popup"){
+        let popupFieldType = ""
+        if(popupField === "formatted-subtitle"){
+            popupFieldType = "formattedSubtitle"
+        }
+        else{
+            popupFieldType = "formattedTitle"
+        }
+        
+        dataToSend = {
+            "projectUrn": config.projectUrn,
+            "slateEntityUrn": parentElement.contentUrn,
+            "slateUrn": parentElement.id,
+            "type": "TEXT",
+            "metaDataField" : popupFieldType
+        }
+    }
+    else if(parentElement.type === "citations"){
+        let citationField = "formattedTitle"
+        dataToSend = {
+            "projectUrn": config.projectUrn,
+            "slateEntityUrn": parentElement.contentUrn,
+            "slateUrn": parentElement.id,
+            "type": "TEXT",
+            "metaDataField" : citationField
+        }
+    }
+    return dataToSend
+}
+
 export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex, slateManifestURN) => (dispatch, getState) => {
 
-    const getRequestData = (parentElement) => {
-        let dataToSend = {}
-        if(parentElement.type === "popup"){
-            let popupFieldType = ""
-            if(popupField === "formatted-subtitle"){
-                popupFieldType = "formattedSubtitle"
-            }
-            else{
-                popupFieldType = "formattedTitle"
-            }
-            
-            dataToSend = {
-                "projectUrn": config.projectUrn,
-                "slateEntityUrn": parentElement.contentUrn,
-                "slateUrn": parentElement.id,
-                "type": "TEXT",
-                "updatePopupElementField" : popupFieldType
-            }
-        }
-        else if(parentElement.type === "citations"){
-            let citationField = "formattedTitle"
-            dataToSend = {
-                "projectUrn": config.projectUrn,
-                "slateEntityUrn": parentElement.contentUrn,
-                "slateUrn": parentElement.id,
-                "type": "TEXT",
-                "updatePopupElementField" : citationField
-            }
-        }
-        return dataToSend
-    }
-
-    let _requestData =  getRequestData(parentElement)
+    let _requestData =  getRequestData(parentElement, popupField)
     
     let url = `${config.REACT_APP_API_URL}v1/slate/element`
     return axios.post(url, 
@@ -615,46 +670,16 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
             }
         })
     .then((response) => {
-        let elemIndex = `cypress-${popupElementIndex}`
-        let elemNode = document.getElementById(elemIndex)
-        popupElementIndex = Number(popupElementIndex.split("-")[0])
-        const parentData = getState().appStore.slateLevelData
-        let newslateData = JSON.parse(JSON.stringify(parentData))
-        let _slateObject = newslateData[slateManifestURN]
-
-        if(parentElement.type === "popup"){
-            let targetPopupElement = _slateObject.contents.bodymatter[popupElementIndex]
-            if(targetPopupElement){
-                targetPopupElement.popupdata[popupField] = response.data
-                targetPopupElement.popupdata[popupField].html.text = elemNode.innerHTML
-                targetPopupElement.popupdata[popupField].elementdata.text = elemNode.innerText
-                _slateObject.contents.bodymatter[popupElementIndex] = targetPopupElement
-            }
-            dispatch({
-                type: AUTHORING_ELEMENT_UPDATE,
-                payload: {
-                    slateLevelData: newslateData
-                }
-            })
-            if(cb) cb(response.data)
+        let argObj = {
+            popupElementIndex,
+            getState,
+            slateManifestURN,
+            parentElement,
+            dispatch,
+            cb,
+            popupField
         }
-        else if(parentElement.type === "citations"){
-            let targetCG = _slateObject.contents.bodymatter[popupElementIndex]
-            if(targetCG){
-                targetCG.contents["formatted-title"] = response.data
-                targetCG.contents["formatted-title"].html.text = elemNode.innerHTML
-                targetCG.contents["formatted-title"].elementdata.text = elemNode.innerText
-                _slateObject.contents.bodymatter[popupElementIndex] = targetCG
-            }
-            dispatch({
-                type: AUTHORING_ELEMENT_UPDATE,
-                payload: {
-                    slateLevelData: newslateData
-                }
-            })
-            console.log("CG TITLE CREATED::>>>", newslateData)
-            if(cb) cb(response.data)
-        }
+        appendCreatedElement(argObj, response.data)
     })
     .catch((error) => {
         console.log("%c ERROR RESPONSE", "font: 30px; color: red; background: black", error)
