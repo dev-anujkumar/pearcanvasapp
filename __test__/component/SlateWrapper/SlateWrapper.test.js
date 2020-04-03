@@ -657,6 +657,12 @@ describe('splihandler function', () => {
     it('Simulating splithandlerfunction with slate data function for default', () => {
         slateWrapperInstance.splithandlerfunction('default', '', '', {}, { contentUrn: '' }, '')
     })
+    it('Simulating splithandlerfunction with slate data function for citation-elem', () => {
+        slateWrapperInstance.splithandlerfunction('citation-elem', '', '', {}, { contentUrn: '' }, '')
+    })
+    it('Simulating splithandlerfunction with slate data function for citations-group-elem', () => {
+        slateWrapperInstance.splithandlerfunction('citations-group-elem', '', '', {}, { contentUrn: '' }, '')
+    })
     it('openWrongAudioPopup', () => {
         let props = {
             slateData,

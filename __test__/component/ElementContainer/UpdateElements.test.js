@@ -1,5 +1,5 @@
 import * as updateFunction from '../../../src/component/ElementContainer/UpdateElements';
-import { elementAuthoredText, figureData, audioVideoData, interactiveData, mathMLData, blockCodeEditorData, singleAssessmentData, assessmentSlateData, openerElementData } from '../../../fixtures/UpdateElementsTestData';
+import { citationElementData, elementAuthoredText, figureData, audioVideoData, interactiveData, mathMLData, blockCodeEditorData, singleAssessmentData, assessmentSlateData, openerElementData } from '../../../fixtures/UpdateElementsTestData';
 import tinyMCE from 'tinymce/tinymce'
 describe('Test for UpdateElements Functions', () => {
     it('Test for ELEMENT-TYPE----->element-authoredtext', () => {
@@ -235,5 +235,23 @@ describe('Test for UpdateElements Functions', () => {
         jest.spyOn(updateFunction, 'createOpenerElementData')
         updateFunction.createOpenerElementData(elementData, elementType, primaryOption, secondaryOption);
         expect(updateFunction.createOpenerElementData).toHaveBeenCalledWith(elementData, elementType, primaryOption, secondaryOption)
+    })
+    it('Test for ELEMENT-TYPE----->element-citation', () => {
+        let type = "element-citation",
+            previousElementData = citationElementData,
+            node = {},
+            elementType = "citations",
+            primaryOption = "primary-citations-group",
+            secondaryOption = "secondary-citations-group",
+            activeEditorId = "cypress-0-1",
+            index = "0-1",
+            containerContext = {},
+            parentElement = {
+                type: 'citations',
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y'
+            };
+        jest.spyOn(updateFunction, 'createUpdatedData')
+        updateFunction.createUpdatedData(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement);
+        expect(updateFunction.createUpdatedData).toHaveBeenCalledWith(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement)
     })
 })
