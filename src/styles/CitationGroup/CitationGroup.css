@@ -1,6 +1,6 @@
 /* style for citation container div */
 div.citation{
-    margin: 16px;
+    /* margin: 16px; */
     max-width: 680px;
 }
 
@@ -35,4 +35,12 @@ h4.citationTitle {
 .citationTitle::before {
     font-size: 16px !important;
     margin-top: 2px !important;
+}
+
+/*style for element picker inside CG element*/
+.citation .horizontalLine {
+    margin-left: -30px;
+}
+.citation .dropdown {
+    margin-left: -23px;
 }
