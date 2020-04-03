@@ -389,6 +389,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                     };
                 }
             }else if(asideData && asideData.type == 'element-aside'){
+                console.log(asideData,element.id)
                 if(element.id == asideData.id){
                    let nestedBodyMatter =  element.elementdata.bodymatter.map((nestedEle)=>{
                         /*This condition add object of element in existing element  in aside */
@@ -799,13 +800,4 @@ export const deleteShowHideUnit = (elementId, type, parentUrn, index,eleIndex, p
 const cascadeElement = (parentElement, dispatch, parentElementIndex) => {
     parentElement.indexes = parentElementIndex;
     dispatch(fetchSlateData(parentElement.id, parentElement.contentUrn, 0, parentElement)); 
-}
-
-export const currentSHowHideElement = (element) => (dispatch, getState) => {
-    dispatch({
-        type: CURRENT_SHOW_HIDE_ELEMENT,
-        payload: {
-            currentShowhideElement:element
-        }
-    })
 }
