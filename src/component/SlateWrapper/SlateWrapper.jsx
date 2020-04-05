@@ -680,6 +680,12 @@ class SlateWrapper extends Component {
                 tooltipDirection: 'left'
             },
             {
+                buttonType: 'poetry-elem',
+                buttonHandler: () => this.splithandlerfunction('poetry-elem',index, firstOne, parentUrn),
+                tooltipText: 'Poetry Element',
+                tooltipDirection: 'left'
+            },
+            {
                 buttonType: 'interactive-elem-button',
                 buttonHandler: () => this.splithandlerfunction('interactive-elem-button'),
                 tooltipText: 'Interactivity',
@@ -714,12 +720,6 @@ class SlateWrapper extends Component {
                 buttonType: 'metadata-anchor',
                 buttonHandler: () => this.splithandlerfunction('metadata-anchor', index, firstOne, parentUrn, asideData),
                 tooltipText: 'Metadata Anchor',
-                tooltipDirection: 'left'
-            },
-            {
-                buttonType: 'poetry-elem',
-                buttonHandler: () => this.splithandlerfunction('poetry-elem',index, firstOne, parentUrn),
-                tooltipText: 'Poetry Element',
                 tooltipDirection: 'left'
             },
             {
