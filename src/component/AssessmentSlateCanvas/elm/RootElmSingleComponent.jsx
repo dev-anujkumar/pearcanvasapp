@@ -56,6 +56,7 @@ const RootElmSingleAssessment = (props) => {
                         activeAssessmentType={props.activeAssessmentType}
                         setItemParentUrn={props.setItemParentUrn}
                         setElmLoader={props.setElmLoader}
+                        currentSlateAncestorData={props.currentSlateAncestorData}
                     />}
             </div>
         </div>
@@ -71,7 +72,8 @@ const mapActionToProps = {
 
 const mapStateToProps = (state) => {
     return {
-        elmReducer: state.elmReducer
+        elmReducer: state.elmReducer,
+        currentSlateAncestorData : state.appStore.currentSlateAncestorData
     }
 }
 

@@ -482,7 +482,7 @@ class ElementContainer extends Component {
                     html = html.replace(/<br data-mce-bogus="1">/g, "<br>")
                     html = matchHTMLwithRegex(html) ? html : `<p class="paragraphNumeroUno">${html}</p>`
                 }
-                html =html.replace(/(\r\n|\n|\r)/gm, '')                
+                html =html.replace(/(\r\n|\n|\r)/gm, '')
                 previousElementData.html.text= previousElementData.html.text.replace(/<br data-mce-bogus="1">/g, "<br>").replace(/(\r\n|\n|\r)/gm, '');
                 previousElementData.html.text = previousElementData.html.text.replace(/data-mce-bogus="all"/g, '')
                 if (html && previousElementData.html && (this.replaceUnwantedtags(html) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate) && !assetPopoverPopupIsVisible && !config.savingInProgress) {
@@ -579,7 +579,7 @@ class ElementContainer extends Component {
                     for (let i = 0; i < tinyMCE.$(currentListNode).find('li').length; i++) {
                         tinyMCE.$(currentListNode).find('li')[i].innerHTML = tinyMCE.$(currentListNode).find('li')[i].innerHTML.replace(/^\s+|\s+$/g, '&nbsp;');
                     }                    
-                    if (nodehtml && previousElementData.html && (this.replaceUnwantedtags(nodehtml) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate && !assetPopoverPopupIsVisible &&  !config.savingInProgress)) {
+                    if (nodehtml && previousElementData.html && (this.replaceUnwantedtags(nodehtml) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate && !config.savingInProgress) && !assetPopoverPopupIsVisible) {
                         dataToSend = createUpdatedData(previousElementData.type, previousElementData, currentListNode, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, showHideType,undefined)
                         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                         if(dataToSend.status === "approved"){
@@ -787,7 +787,7 @@ class ElementContainer extends Component {
     */
     renderElement = (element = {}) => {
         let editor = '';
-        let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions, updatePageNumber, accessDenied, allComments } = this.props;
+        let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions, updatePageNumber, accessDenied, allComments, splithandlerfunction} = this.props;
         let labelText = fetchElementTag(element, index);
         config.elementToolbar = this.props.activeElement.toolbar || [];
         let anyOpenComment = allComments.filter(({ commentStatus, commentOnEntity }) => commentOnEntity === element.id && commentStatus.toLowerCase() === "open").length > 0
@@ -891,6 +891,7 @@ class ElementContainer extends Component {
                         glossaryFootnoteValue={this.props.glossaryFootnoteValue}
                         glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
                         onListSelect={this.props.onListSelect}
+                        splithandlerfunction={splithandlerfunction}
                     />;
                     break;
                 case elementTypeConstant.METADATA_ANCHOR:
