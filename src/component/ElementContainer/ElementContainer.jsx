@@ -18,7 +18,7 @@ import { addComment, deleteElement, updateElement, createShowHideElement, delete
 import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
-import { setActiveElement, fetchElementTag, openPopupSlate } from './../CanvasWrapper/CanvasWrapper_Actions';
+import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } from './../CanvasWrapper/CanvasWrapper_Actions';
 import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
 import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris } from '../../constants/utility.js';
@@ -774,6 +774,12 @@ class ElementContainer extends Component {
             }
         }
     }
+    createPoetryElements = (poetryField, forceupdate, index, parentElement) => {
+        // sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+       // config.popupCreationCallInProgress = true
+        this.props.createPoetryUnit(poetryField, parentElement, (currentElementData) =>
+        this.props.handleBlur(forceupdate, currentElementData, index, null), index, config.slateManifestURN)
+    }
 
     /**
      * Render Element function takes current element from bodymatter and render it into currnet slate 
@@ -946,15 +952,16 @@ class ElementContainer extends Component {
                     handleFocus={this.handleFocus} 
                     handleBlur={this.handleBlur} 
                     model={element} 
-                    index={index} 
                     slateLockInfo={slateLockInfo} 
                     setActiveElement={this.props.setActiveElement}
                     handleBlur={this.handleBlur}
                     handleFocus={this.handleFocus}
                     btnClassName={this.state.btnClassName}
+                    tagName={"div"}
                     borderToggle={this.state.borderToggle}
                     elemBorderToggle={this.props.elemBorderToggle}
                     elementId={element.id} 
+                    createPoetryElements={this.createPoetryElements}
                     glossaryFootnoteValue={this.props.glossaryFootnoteValue} 
                     onClickCapture={this.props.onClickCapture}
                     glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
@@ -975,8 +982,9 @@ class ElementContainer extends Component {
                     borderToggle={this.state.borderToggle}
                     elemBorderToggle={this.props.elemBorderToggle}
                     elementId={element.id} 
+                    tagName={"div"}
                     element={element} 
-                    model={element.poetrylines} 
+                    model={element} 
                     slateLockInfo={slateLockInfo} 
                     onListSelect={this.props.onListSelect} 
                     glossaryFootnoteValue={this.props.glossaryFootnoteValue} 
@@ -1183,6 +1191,7 @@ const mapDispatchToProps = (dispatch) => {
         },
         accessDenied,
         releaseSlateLock,
+        createPoetryUnit,
         createShowHideElement: (element, type, index, parentContentUrn, cb, parentElement, parentElementIndex) => {
             dispatch(createShowHideElement(element, type, index, parentContentUrn, cb, parentElement, parentElementIndex))
         },

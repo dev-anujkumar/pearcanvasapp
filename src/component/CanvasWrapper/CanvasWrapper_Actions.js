@@ -604,3 +604,52 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
         config.savingInProgress = false
     })
 }
+
+
+export const createPoetryUnit = (poetryField, parentElement) => (dispatch, getState) => {
+    let _requestData = {
+        "projectUrn": config.projectUrn,
+        "slateEntityUrn": parentElement.contentUrn,
+        "slateUrn": parentElement.id,
+        "type": "TEXT",
+        "updatePopupElementField" : poetryField
+    };
+    console.log("response",_requestData)
+    let url = `${config.REACT_APP_API_URL}v1/slate/element`
+    return axios.post(url, 
+        JSON.stringify(_requestData),
+        {
+            headers: {
+                "Content-Type": "application/json",
+                "PearsonSSOSession": config.ssoToken
+            }
+        })
+    .then((response) => {
+        console.log("response",response)
+        // let elemIndex = `cypress-${popupElementIndex}`
+        // let elemNode = document.getElementById(elemIndex)
+        // popupElementIndex = Number(popupElementIndex.split("-")[0])
+        // const parentData = getState().appStore.slateLevelData
+        // let newslateData = JSON.parse(JSON.stringify(parentData))
+        // let _slateObject = newslateData[slateManifestURN]
+        // let targetPopupElement = _slateObject.contents.bodymatter[popupElementIndex]
+        // if(targetPopupElement){
+        //     targetPopupElement.popupdata[popupField] = response.data
+        //     targetPopupElement.popupdata[popupField].html.text = elemNode.innerHTML
+        //     targetPopupElement.popupdata[popupField].elementdata.text = elemNode.innerText
+        //     _slateObject.contents.bodymatter[popupElementIndex] = targetPopupElement
+        // }
+        // dispatch({
+        //     type: AUTHORING_ELEMENT_UPDATE,
+        //     payload: {
+        //         slateLevelData: newslateData
+        //     }
+        // })
+       // if(cb) cb(response.data)
+    })
+    .catch((error) => {
+        console.log("%c ERROR RESPONSE", "font: 30px; color: red; background: black", error)
+       // dispatch({type: ERROR_POPUP, payload:{show: true}})
+        config.savingInProgress = false
+    })
+}

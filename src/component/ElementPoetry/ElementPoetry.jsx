@@ -151,7 +151,7 @@ class ElementPoetry extends Component {
                                     />}
                                     <ElementContainer
                                         element={element}
-                                        index={`${parentIndex}-${index}`}
+                                        index={`${parentIndex}-3-${index}`}
                                         parentUrn={poetryData.parentUrn}
                                         showBlocker={this.props.showBlocker}
                                         poetryData={poetryData}
@@ -161,6 +161,7 @@ class ElementPoetry extends Component {
                                         onClickCapture={this.props.onClickCapture}
                                         parentElement = {this.props.element}
                                         onListSelect={this.props.onListSelect}
+                                       // createPoetryElements={this.createPoetryElements}
                                     >
                                         {/* {
                                             (isHovered, isPageNumberEnabled, activeElement) => (

@@ -5,15 +5,9 @@ class ElementPoetryLine extends PureComponent {
     super();
   }
 
-  handleFocus = (e) => {
-    this.props.setActiveElement(this.props.element);     
-    this.props.handleFocus();
-  }
-
   render() {
     const { index, className, model, openGlossaryFootnotePopUp, slateLockInfo, openAssetPopoverPopUp, glossaryFootnoteValue } = this.props
     return (
-      <div onClick={this.handleFocus}>
         <TinyMceEditor
           openAssetPopoverPopUp={openAssetPopoverPopUp}
           openGlossaryFootnotePopUp={openGlossaryFootnotePopUp}
@@ -23,7 +17,7 @@ class ElementPoetryLine extends PureComponent {
           placeholder="Type Something..."
           className={className}
           model={model}
-          //  tagName={this.props.tagName}
+          tagName={this.props.tagName}
           handleEditorFocus={this.props.handleFocus}
           handleBlur={this.props.handleBlur}
           slateLockInfo={slateLockInfo}
@@ -38,7 +32,6 @@ class ElementPoetryLine extends PureComponent {
           glossaryFootnoteValue={glossaryFootnoteValue}
           glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
         />
-      </div>
     )
   }
 }
