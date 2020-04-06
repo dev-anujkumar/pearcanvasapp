@@ -154,11 +154,12 @@ function asideButton(esProps,sectionBreak){
  */
 
 function renderConditionalButton(esProps, elementType) {
-    const { TEXT, IMAGE, AUDIO, INTERACTIVE, ASSESSMENT, CONTAINER, WORKED_EXP, OPENER , SECTION_BREAK, METADATA_ANCHOR, POETRY_ELEMENT } = elementTypeConstant
+    const { TEXT, IMAGE, AUDIO, INTERACTIVE, ASSESSMENT, CONTAINER, WORKED_EXP, OPENER , SECTION_BREAK, METADATA_ANCHOR,
+         POETRY_ELEMENT, INTERACTIVE_BUTTON } = elementTypeConstant
     let updatedEsProps = esProps.filter((btnObj) => {
         let buttonType = btnObj.buttonType;       
             return buttonType !== OPENER && buttonType !== SECTION_BREAK && buttonType !== WORKED_EXP && buttonType !== CONTAINER
-            && buttonType !== TEXT && buttonType !== IMAGE && buttonType !== AUDIO && buttonType !== INTERACTIVE && buttonType !== ASSESSMENT && buttonType !== METADATA_ANCHOR && buttonType !== POETRY_ELEMENT;
+            && buttonType !== TEXT && buttonType !== IMAGE && buttonType !== AUDIO && buttonType !== INTERACTIVE && buttonType !== ASSESSMENT && buttonType !== METADATA_ANCHOR && buttonType !== POETRY_ELEMENT && buttonType !== INTERACTIVE_BUTTON;
         
     })
     return updatedEsProps;
