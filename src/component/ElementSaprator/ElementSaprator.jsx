@@ -268,8 +268,8 @@ function typeOfContainerElements(elem, props) {
         {
             "Add MMI": "interactive-elem",
             "Add SmartLink": "smartlink-elem",
-            "Add Pop-up": "popup-elem",
-            "Add Show/Hide": "show-hide-elem",
+            "Add Show Hide": "show-hide-elem",
+            "Add Pop Up": "popup-elem",
         }
     }
     let newData = containerArray[elem.buttonType];

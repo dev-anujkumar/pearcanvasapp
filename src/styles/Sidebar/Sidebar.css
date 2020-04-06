@@ -131,3 +131,6 @@
 .canvas-sidebar .sidebar-disable{
     pointer-events: none;
 }
+.element-dropdown-title.disabled .dropdown-arrow{
+    opacity:0.2
+}
