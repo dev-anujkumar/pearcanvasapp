@@ -98,20 +98,20 @@ describe('Testing Button component with props', () => {
     })
     it('render Interactive element Button component  ', () => {
         const component = mount(<Button type={buttonTypes.INTERACTIVE_ELEMENT} />);
-        expect(component.find('span.btn-element').hasClass('interactive-elem')).toBe(true);
+        expect(component.find('span.btn-element').hasClass('interactive-elem-button')).toBe(true);
         expect(component.find('span.btn-element').hasClass('backward-nav-disable')).toBe(false);
         expect(component.find('svg#audioIcon').exists()).toBe(false);
         expect(component.find('rect').exists()).toBe(true);
     })
     it('render Container element Button component  ', () => {
         const component = mount(<Button type={buttonTypes.CONTAINER_ELEMENT} />);
-        expect(component.find('span.btn-element').hasClass('interactive-elem')).toBe(false);
+        expect(component.find('span.btn-element').hasClass('interactive-elem-button')).toBe(false);
         expect(component.find('span.btn-element').hasClass('backward-nav-disable')).toBe(false);
         expect(component.find('span.btn-element').hasClass('container-elem-button')).toBe(true);
     })
     it('render Worked example Button component  ', () => {
         const component = mount(<Button type={buttonTypes.WORKED_EXAMPLE_ELEMENT} />);
-        expect(component.find('span.btn-element').hasClass('interactive-elem')).toBe(false);
+        expect(component.find('span.btn-element').hasClass('interactive-elem-button')).toBe(false);
         expect(component.find('span.btn-element').hasClass('backward-nav-disable')).toBe(false);
         expect(component.find('span.btn-element').hasClass('worked-exp-elem')).toBe(true);
         expect(component.find('svg#workedExampleIcon').exists()).toBe(true);

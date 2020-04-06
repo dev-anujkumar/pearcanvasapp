@@ -356,10 +356,11 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
 };
 
 const setSlateDetail = (slateTitle, slateManifestURN) => {
+    let env = requestConfigURI().toLowerCase();
     return {
         slateTitle: slateTitle,
         slateManifestURN: slateManifestURN,
-        env: requestConfigURI().toUpperCase()
+        env: env.replace(env.charAt(0), env.charAt(0).toUpperCase())
     }
 }
 
@@ -659,7 +660,6 @@ const getRequestData = (parentElement, popupField) => {
 export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex, slateManifestURN) => (dispatch, getState) => {
 
     let _requestData =  getRequestData(parentElement, popupField)
-    
     let url = `${config.REACT_APP_API_URL}v1/slate/element`
     return axios.post(url, 
         JSON.stringify(_requestData),

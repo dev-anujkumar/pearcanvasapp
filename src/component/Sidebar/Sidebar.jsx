@@ -93,12 +93,8 @@ class Sidebar extends Component {
         }
         const { activePrimaryOption } = this.state
         if(e.target.dataset && e.target.dataset.element !== "secondary"){
-            if(
-                activePrimaryOption === "primary-openerelement" ||
-                activePrimaryOption === "primary-single-assessment" ||
-                activePrimaryOption === "primary-citations-group" ||
-                activePrimaryOption === "primary-element-citation"
-            ){
+            let disabledPrimaryOption=["primary-openerelement", "primary-single-assessment" ,"primary-popup", "primary-showhide", "primary-mmi", "primary-smartlink","primary-citations-group", "primary-element-citation"];
+            if( disabledPrimaryOption.indexOf(activePrimaryOption) !== -1 ){
                 e.stopPropagation()
                 return false
             }

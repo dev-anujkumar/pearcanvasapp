@@ -13,6 +13,11 @@ let esProps
 function splithandlerfunction(type) {
     return ;
 }
+let propsData={data:[],
+    setData:jest.fn(),
+    showInteractiveOption:{},
+    setshowInteractiveOption:jest.fn(),
+    props:{}}
 
 esProps = [
     {
@@ -34,7 +39,7 @@ esProps = [
         tooltipDirection: 'left'
     },
     {
-        buttonType: 'interactive-elem',
+        buttonType: 'interactive-elem-button',
         buttonHandler: () => splithandlerfunction('interactive-elem'),
         tooltipText: 'Interactive',
         tooltipDirection: 'left'
@@ -164,6 +169,7 @@ describe('Testing functions', () => {
         })
         tempWrapper.find(Button).at(0).simulate('click');
     })
+    
 
     it('toggleElementList  testing', () => {
         let tempWrapper;
@@ -187,6 +193,22 @@ describe('Testing functions', () => {
         tempWrapper.find(Button).at(0).simulate('click');
     })
 
+    it('buttonhandler', () => {
+        let tempWrapper;
+        let permissions = ['split_slate', 'elements_add_remove']
+        let elementType  = 'test';
+        let firstOne = false;
+        let props = {
+            onClickCapture: jest.fn(),
+        }
+        tempWrapper = mount(<ElementSaprator {...props} esProps={esProps} permissions ={permissions} elementType = {elementType} firstOne= {firstOne}/>)
+        tempWrapper.setProps({
+            toggleSplitSlatePopup : jest.fn(),
+            showAudioSplitPopup: jest.fn()
+        })
+        tempWrapper.find(Button).at(5).simulate('click');
+    })
+    
     it('Testing renderDropdownButtons function if condition',() => {
         let elementType = ''
         let sectionBreak = ''

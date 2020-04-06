@@ -11,9 +11,10 @@
     z-index: 2;
     transition: opacity 1s;
     right: 115%;
-    /* margin-top: -46px; */
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    box-shadow: 0 2px 3px -3px rgba(0,0,0,0.3);
+    border: 2px solid #ddd;
     background-color: #ffffff;
+    top:16%
 }
 
 .conatiner-other-elements.aside-popup{
@@ -25,10 +26,14 @@
     position: absolute;
     top: 50%;
     left: 100%;
-    margin-top: -5px;
-    border-width: 7px;
-    border-style: solid;
-    border-color: transparent transparent transparent #ffffff;
+    transform-origin: -6px 8px;
+    transform: rotate(-45deg);
+    box-shadow: 2px 2px 0 0 #ddd;
+    border-left: 5px solid transparent;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid #fff;
+    border-right: 5px solid #fff;
+
 }
 .other-elements-inner li{
     color: #6c6c6c;

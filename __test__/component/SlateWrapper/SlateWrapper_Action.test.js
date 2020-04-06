@@ -210,7 +210,7 @@ describe('Tests Slate Wrapper Actions', () => {
     });
     it('testing------- POPUP ------action when fails', () => {
         //let store = mockStore(() => initialState);
-        const type = "FIGURE";
+        const type = "POP_UP";
         const index = 3;
         const _requestData = {
             "projectUrn": "urn:pearson:distributable:553615b2-57c9-4508-93a9-17c6909d5b44",

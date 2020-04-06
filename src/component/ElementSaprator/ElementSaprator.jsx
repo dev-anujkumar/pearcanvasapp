@@ -246,8 +246,9 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
                 setData(typeOfContainerElements(elem, props));
                 if(elem.buttonType !== showInteractiveOption.type){
                     setshowInteractiveOption({status:true,type:elem.buttonType});
-                }else {
-                    setshowInteractiveOption({ status: !showInteractiveOption.status, type: elem.buttonType });
+                }
+                else{
+                    setshowInteractiveOption({status:!showInteractiveOption.status,type:elem.buttonType});
                 }
             }
             else {
@@ -262,7 +263,6 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
                     text={elem.buttonType}
                     closeDropDown={closeDropDown}
                     data={data}
-                    asideClass={elem.buttonType == "container-elem-button" ? "aside-popup" : ""}
                     >
                 </ElementContainerType>
             }
@@ -279,12 +279,17 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
   
 function typeOfContainerElements(elem, props) {
     const { index, firstOne, parentUrn, asideData, parentIndex, splithandlerfunction } = props
-
     let containerArray = {
-
         "container-elem-button": {
             "Add Aside": "container-elem",
-            "Add Citation": "citations-group-elem",
+            "Add Citation": "citations-group-elem"
+        },
+        "interactive-elem-button":
+        {
+            "Add MMI": "interactive-elem",
+            "Add SmartLink": "smartlink-elem",
+            "Add Pop-up": "popup-elem",
+            "Add Show/Hide": "show-hide-elem",
         }
     }
     let newData = containerArray[elem.buttonType];
