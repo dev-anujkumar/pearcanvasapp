@@ -15,7 +15,8 @@ export default {
     TEXT_ELEMENT : "text-elem",
     IMAGE_ELEMENT : "image-elem",
     AUDIO_ELEMENT : "audio-elem",
-    INTERACTIVE_ELEMENT : "interactive-elem",
+    INTERACTIVE_ELEMENT : "interactive-elem-button",
+    // INTERACTIVE_ELEMENT : "interactive-elem",
     CONTAINER_ELEMENT : "container-elem",
     WORKED_EXAMPLE_ELEMENT : "worked-exp-elem",
     ASSESSMENT_ELEMENT : "assessment-elem",
@@ -27,5 +28,7 @@ export default {
     ELM_CLOSE_WINDOW:"elmCloseWindowIcon",
     ELM_ASSESSMENT_ITEM:"elmAssessmentItem",
     FEEDBACK : "feedback",
-    ASSESSMENT_CLOSE_WINDOW:"assessmentCloseWindowIcon"
+    ASSESSMENT_CLOSE_WINDOW:"assessmentCloseWindowIcon",
+    SHOW_HIDE : "show-hide-elem",
+    POP_UP : "popup-elem",
 }

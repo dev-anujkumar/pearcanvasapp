@@ -104,6 +104,15 @@
        -o-animation: fadein 2s; 
           animation: fadein 2s;
 }
+.conatiner-other-elements + .tooltip:hover .tooltiptext{
+    opacity:0;
+    visibility:hidden;
+}
+.conatiner-other-elements + .tooltip span{
+    opacity: 1;
+    fill: black!important;
+    border: solid 1px #434343;
+}
 
 @keyframes fadein {
     from { opacity: 0; }

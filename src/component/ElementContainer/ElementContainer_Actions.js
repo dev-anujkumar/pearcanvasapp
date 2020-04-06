@@ -347,7 +347,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                 //     dispatch(fetchSlateData(asideData.id,asideData.contentUrn, 0, asideData));
                 }
             } 
-            else if(parentElement && parentElement.type === "popup" && updatedData.popupEntityUrn && (updatedData.updatePopupElementField || updatedData.section === "postertextobject") ){
+            else if(parentElement && parentElement.type === "popup" && updatedData.popupEntityUrn && (updatedData.metaDataField || updatedData.section === "postertextobject") ){
                 dispatch(fetchSlateData(updatedData.slateUrn, updatedData.slateEntity, 0)); }
             else if(parentElement && parentElement.type === "showhide"){
                 parentElement.indexes =elementIndex;
