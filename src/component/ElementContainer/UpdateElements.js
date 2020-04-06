@@ -460,8 +460,8 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                     footnotes : previousElementData.html.footnotes || {},
                     glossaryentries : previousElementData.html.glossaryentries || {},
                 },
-                inputType : parentElement && (parentElement.type === "popup" || parentElement.type === "showhide" && previousElementData.type === "element-authoredtext") ? "AUTHORED_TEXT" : elementTypes[elementType][primaryOption]['enum'],
-                inputSubType : parentElement && parentElement.type == "popup" ? "NA" : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
+                inputType : parentElement && (parentElement.type === "popup" || parentElement.type === "showhide" && previousElementData.type === "element-authoredtext" || parentElement.type === "poetry" && previousElementData.type === "element-authoredtext") ? "AUTHORED_TEXT" : elementTypes[elementType][primaryOption]['enum'],
+                inputSubType : parentElement && (parentElement.type == "popup" || parentElement.type === "poetry") ? "NA" : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
                 slateUrn: parentElement && (parentElement.type === "showhide" || parentElement.type === "popup") ? parentElement.id: config.slateManifestURN  
             }
             

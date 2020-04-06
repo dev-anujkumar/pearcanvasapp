@@ -522,7 +522,7 @@ export class TinyMceEditor extends Component {
                         activeElement.append(' ')
                     }
                 }
-                if (activeElement.nodeName == "DIV" && this.props.element.type === 'stanza') {
+                if (activeElement.nodeName === "DIV" && this.props.element.type === 'stanza') {
                     let key = e.keyCode || e.which;
                      if (key === 13) {
                          activeElement.innerHTML += '<br /><span><br /></span>';  

@@ -641,10 +641,10 @@ class SlateWrapper extends Component {
                    
                 break;
             case 'poetry-elem':
-                this.props.createElement(POETRY, indexToinsert, parentUrn);
+                this.props.createElement(POETRY, indexToinsert, parentUrn,null,null,null,null,poetryData);
                 break;
             case 'stanza-elem':
-                this.props.createElement(STANZA, indexToinsert, parentUrn);
+                this.props.createElement(STANZA, indexToinsert, parentUrn,null,null,null,null,poetryData);
                 break;
             case 'show-hide-elem':
             this.props.createElement(SHOW_HIDE, indexToinsert, parentUrn, asideData,null,null);
@@ -681,7 +681,7 @@ class SlateWrapper extends Component {
             },
             {
                 buttonType: 'poetry-elem',
-                buttonHandler: () => this.splithandlerfunction('poetry-elem',index, firstOne, parentUrn),
+                buttonHandler: () => this.splithandlerfunction('poetry-elem',index, firstOne, parentUrn,"",outerAsideIndex,poetryData),
                 tooltipText: 'Poetry Element',
                 tooltipDirection: 'left'
             },
@@ -730,7 +730,7 @@ class SlateWrapper extends Component {
             },
             {
                 buttonType: 'stanza-elem',
-                buttonHandler: () => this.splithandlerfunction('stanza-elem',index, firstOne, parentUrn),
+                buttonHandler: () => this.splithandlerfunction('stanza-elem',index, firstOne, parentUrn,"",outerAsideIndex,poetryData),
                 tooltipText: 'Stanza Element',
                 tooltipDirection: 'left'
             },
