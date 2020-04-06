@@ -98,20 +98,20 @@ describe('Testing Button component with props', () => {
     })
     it('render Interactive element Button component  ', () => {
         const component = mount(<Button type={buttonTypes.INTERACTIVE_ELEMENT} />);
-        expect(component.find('span.btn-element').hasClass('interactive-elem')).toBe(true);
+        expect(component.find('span.btn-element').hasClass('interactive-elem-button')).toBe(true);
         expect(component.find('span.btn-element').hasClass('backward-nav-disable')).toBe(false);
         expect(component.find('svg#audioIcon').exists()).toBe(false);
         expect(component.find('rect').exists()).toBe(true);
     })
     it('render Container element Button component  ', () => {
         const component = mount(<Button type={buttonTypes.CONTAINER_ELEMENT} />);
-        expect(component.find('span.btn-element').hasClass('interactive-elem')).toBe(false);
+        expect(component.find('span.btn-element').hasClass('interactive-elem-button')).toBe(false);
         expect(component.find('span.btn-element').hasClass('backward-nav-disable')).toBe(false);
-        expect(component.find('span.btn-element').hasClass('container-elem')).toBe(true);
+        expect(component.find('span.btn-element').hasClass('container-elem-button')).toBe(true);
     })
     it('render Worked example Button component  ', () => {
         const component = mount(<Button type={buttonTypes.WORKED_EXAMPLE_ELEMENT} />);
-        expect(component.find('span.btn-element').hasClass('interactive-elem')).toBe(false);
+        expect(component.find('span.btn-element').hasClass('interactive-elem-button')).toBe(false);
         expect(component.find('span.btn-element').hasClass('backward-nav-disable')).toBe(false);
         expect(component.find('span.btn-element').hasClass('worked-exp-elem')).toBe(true);
         expect(component.find('svg#workedExampleIcon').exists()).toBe(true);
@@ -139,5 +139,19 @@ describe('Testing Button component with props', () => {
         expect(component.find('span.btn-element').hasClass('backward-nav-disable')).toBe(false);
         expect(component.find('span.btn-element').hasClass('worked-exp-elem')).toBe(false);
         expect(component.find('svg#sectionBreakElement').exists()).toBe(true);
+    })
+    it('render Metadata Anchor  Button component  ', () => {
+        const component = mount(<Button type={buttonTypes.METADATA_ANCHOR} />);
+        expect(component.find('span.btn-element').hasClass('metadata-anchor')).toBe(true);
+        expect(component.find('span.btn-element').hasClass('backward-nav-disable')).toBe(false);
+        expect(component.find('svg#audioIcon').exists()).toBe(false);
+        expect(component.find('rect').exists()).toBe(true);
+    })
+    it('render ELM Close Window  Button component  ', () => {
+        const component = mount(<Button type={buttonTypes.ELM_CLOSE_WINDOW} />);
+    })
+    it('render LOCK Window  Button component  ', () => {
+        const component = mount(<Button type={buttonTypes.LOCK} />);
+        expect(component.find('span.btn-element').hasClass('lock-icon')).toBe(true);
     })
 })

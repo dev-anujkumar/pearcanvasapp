@@ -682,33 +682,31 @@ export default {
                 }
             }
         },
-        'primary-showhide': {
-            text: 'Show Hide',
-            toolbar: ['footnote','glossary','assetpopover'],
-            enum: 'SHOW_HIDE',
-            subtype: {
-                'secondary-aside-showhide': {
-                    text: 'Show Hide',
-                    labelText: 'SH',
-                    enum: 'NA',
-                    wipValue: 'showhide'
-                }
-            }
-        },
-        'primary-popup': {
-            text: 'Pop up window',
-            toolbar: ['assetpopover', 'glossary'],
-            enum: 'POP_UP',
-            subtype: {
-                'secondary-interactive-popup': {
-                    text: 'Popup window',
-                    labelText: 'SH',
-                    enum: 'NA',
-                    wipValue: 'popup'
-                }
-            }
-        },
         enumType: 'interactive'
+    },
+    "popup": {
+        "primary-popup": {
+            text: 'Pop-up',
+            dropdownDisabled: true,
+            subtype: {
+                'secondary-popup': {
+                    text: 'Popup',
+                    labelText: 'Pop',
+                }
+            }
+        } 
+    },
+    "showhide": {
+        "primary-showhide": {
+            text: 'Show/ Hide',
+            dropdownDisabled: true,
+            subtype: {
+                'secondary-showhide': {
+                    text: 'Show/Hide',
+                    labelText: 'SH',
+                }
+            }
+        } 
     },
     "openerelement": {
         "primary-openerelement": {

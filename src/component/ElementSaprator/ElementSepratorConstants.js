@@ -11,5 +11,6 @@ export default {
     OPENER: 'opener-elem',
     SECTION_BREAK: 'section-break-elem',
     METADATA_ANCHOR : 'metadata-anchor',
-    STANZA_ELEMENT : 'stanza-elem'
+    STANZA_ELEMENT : 'stanza-elem',
+    INTERACTIVE_BUTTON : 'interactive-elem-button'
 }

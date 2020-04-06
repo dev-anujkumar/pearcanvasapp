@@ -65,7 +65,10 @@ function prepareDataForTcmUpdate(updatedData, parentData, asideData) {
     } else if (parentData && parentData.elementType === "manifest") {
         updatedData.isHead = false;
     }
-    if (asideData && asideData.type === "element-aside") {
+    if(updatedData.type === "POP_UP" || updatedData.type === "SHOW_HIDE"){
+        updatedData.parentType = updatedData.type==="POP_UP"? "popup":"showhide";
+    }
+    else if (asideData && asideData.type === "element-aside") {
         if (asideData.subtype === "workedexample") {
             updatedData.parentType = "workedexample";
         } else {
@@ -367,6 +370,14 @@ export const handleSplitSlate = (newSlateObj) => (dispatch, getState) => {
         }
     ).then(res => {
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
+        let parentData = getState().appStore.slateLevelData;
+        let currentParentData = JSON.parse(JSON.stringify(parentData));
+        let currentSlateData = currentParentData[config.slateManifestURN];
+        if (currentSlateData.status === 'approved') {
+            sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
+            sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+            return;
+        }
         dispatch({
             type: FETCH_SLATE_DATA,
             payload: {

@@ -18,7 +18,7 @@ import { addComment, deleteElement, updateElement, createShowHideElement, delete
 import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
-import { setActiveElement, fetchElementTag, openPopupSlate } from './../CanvasWrapper/CanvasWrapper_Actions';
+import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } from './../CanvasWrapper/CanvasWrapper_Actions';
 import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
 import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris } from '../../constants/utility.js';
@@ -482,7 +482,7 @@ class ElementContainer extends Component {
                     html = html.replace(/<br data-mce-bogus="1">/g, "<br>")
                     html = matchHTMLwithRegex(html) ? html : `<p class="paragraphNumeroUno">${html}</p>`
                 }
-                html =html.replace(/(\r\n|\n|\r)/gm, '')                
+                html =html.replace(/(\r\n|\n|\r)/gm, '')
                 previousElementData.html.text= previousElementData.html.text.replace(/<br data-mce-bogus="1">/g, "<br>").replace(/(\r\n|\n|\r)/gm, '');
                 previousElementData.html.text = previousElementData.html.text.replace(/data-mce-bogus="all"/g, '')
                 if (html && previousElementData.html && (this.replaceUnwantedtags(html) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate) && !assetPopoverPopupIsVisible && !config.savingInProgress) {
@@ -579,7 +579,7 @@ class ElementContainer extends Component {
                     for (let i = 0; i < tinyMCE.$(currentListNode).find('li').length; i++) {
                         tinyMCE.$(currentListNode).find('li')[i].innerHTML = tinyMCE.$(currentListNode).find('li')[i].innerHTML.replace(/^\s+|\s+$/g, '&nbsp;');
                     }                    
-                    if (nodehtml && previousElementData.html && (this.replaceUnwantedtags(nodehtml) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate && !assetPopoverPopupIsVisible &&  !config.savingInProgress)) {
+                    if (nodehtml && previousElementData.html && (this.replaceUnwantedtags(nodehtml) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate && !config.savingInProgress) && !assetPopoverPopupIsVisible) {
                         dataToSend = createUpdatedData(previousElementData.type, previousElementData, currentListNode, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, showHideType,undefined)
                         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                         if(dataToSend.status === "approved"){
@@ -774,6 +774,12 @@ class ElementContainer extends Component {
             }
         }
     }
+    createPoetryElements = (poetryField, forceupdate, index, parentElement) => {
+        // sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+       // config.popupCreationCallInProgress = true
+        this.props.createPoetryUnit(poetryField, parentElement, (currentElementData) =>
+        this.props.handleBlur(forceupdate, currentElementData, index, null), index, config.slateManifestURN)
+    }
 
     /**
      * Render Element function takes current element from bodymatter and render it into currnet slate 
@@ -781,7 +787,7 @@ class ElementContainer extends Component {
     */
     renderElement = (element = {}) => {
         let editor = '';
-        let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions, updatePageNumber, accessDenied, allComments } = this.props;
+        let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions, updatePageNumber, accessDenied, allComments, splithandlerfunction} = this.props;
         let labelText = fetchElementTag(element, index);
         config.elementToolbar = this.props.activeElement.toolbar || [];
         let anyOpenComment = allComments.filter(({ commentStatus, commentOnEntity }) => commentOnEntity === element.id && commentStatus.toLowerCase() === "open").length > 0
@@ -885,6 +891,7 @@ class ElementContainer extends Component {
                         glossaryFootnoteValue={this.props.glossaryFootnoteValue}
                         glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
                         onListSelect={this.props.onListSelect}
+                        splithandlerfunction={splithandlerfunction}
                     />;
                     break;
                 case elementTypeConstant.METADATA_ANCHOR:
@@ -946,15 +953,16 @@ class ElementContainer extends Component {
                     handleFocus={this.handleFocus} 
                     handleBlur={this.handleBlur} 
                     model={element} 
-                    index={index} 
                     slateLockInfo={slateLockInfo} 
                     setActiveElement={this.props.setActiveElement}
                     handleBlur={this.handleBlur}
                     handleFocus={this.handleFocus}
                     btnClassName={this.state.btnClassName}
+                    tagName={"div"}
                     borderToggle={this.state.borderToggle}
                     elemBorderToggle={this.props.elemBorderToggle}
                     elementId={element.id} 
+                    createPoetryElements={this.createPoetryElements}
                     glossaryFootnoteValue={this.props.glossaryFootnoteValue} 
                     onClickCapture={this.props.onClickCapture}
                     glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
@@ -975,8 +983,9 @@ class ElementContainer extends Component {
                     borderToggle={this.state.borderToggle}
                     elemBorderToggle={this.props.elemBorderToggle}
                     elementId={element.id} 
+                    tagName={"div"}
                     element={element} 
-                    model={element.poetrylines} 
+                    model={element} 
                     slateLockInfo={slateLockInfo} 
                     onListSelect={this.props.onListSelect} 
                     glossaryFootnoteValue={this.props.glossaryFootnoteValue} 
@@ -1183,6 +1192,7 @@ const mapDispatchToProps = (dispatch) => {
         },
         accessDenied,
         releaseSlateLock,
+        createPoetryUnit,
         createShowHideElement: (element, type, index, parentContentUrn, cb, parentElement, parentElementIndex) => {
             dispatch(createShowHideElement(element, type, index, parentContentUrn, cb, parentElement, parentElementIndex))
         },

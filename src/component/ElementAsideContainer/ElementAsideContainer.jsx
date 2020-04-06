@@ -364,11 +364,15 @@ class ElementAsideContainer extends Component {
                         index= {index}
                         upperOne={true}
                         firstOne={index === 0}
+                        parentUrn={parentUrn}
+                        asideData={asideData}
+                        parentIndex={parentIndex}
                         esProps={this.props.elementSepratorProps(index, true, parentUrn, asideData, parentIndex)}
                         elementType="element-aside"
                         sectionBreak={true}
                         permissions={this.props.permissions}
                         onClickCapture={this.props.onClickCapture}
+                        splithandlerfunction={this.props.splithandlerfunction}
                     />
                     ) 
                  
@@ -383,11 +387,15 @@ class ElementAsideContainer extends Component {
                                     index= {0}
                                     upperOne={true}
                                     firstOne={0}
+                                    parentUrn={parentUrn}
+                                    asideData={asideData}
+                                    parentIndex={parentIndex}
                                     esProps={this.props.elementSepratorProps(0, true, parentUrn, asideData, parentIndex)}
                                     elementType="element-aside"
                                     sectionBreak={true}
                                     permissions={this.props.permissions}
                                     onClickCapture={this.props.onClickCapture}
+                                    splithandlerfunction={this.props.splithandlerfunction}
                                 />
                                 {this.section(element, index)}
                                 </>
@@ -408,10 +416,14 @@ class ElementAsideContainer extends Component {
                                         upperOne={true}
                                         firstOne={index === 0}
                                         index={index}
+                                        parentUrn={parentUrn}
+                                        asideData={asideData}
+                                        parentIndex={parentIndex}
                                         esProps={this.props.elementSepratorProps(index, true, parentUrn, asideData, parentIndex)}
                                         elementType={this.props.element.type}
                                         permissions={this.props.permissions}
                                         onClickCapture={this.props.onClickCapture}
+                                        splithandlerfunction={this.props.splithandlerfunction}
                                     />
                                     }
                                     <ElementContainer
@@ -443,7 +455,11 @@ class ElementAsideContainer extends Component {
                                     </ElementContainer>
                                     <ElementSaprator
                                         index={index}
+                                        parentUrn={parentUrn}
+                                        asideData={asideData}
+                                        parentIndex={parentIndex}
                                         esProps={this.props.elementSepratorProps(index, false, parentUrn, asideData, parentIndex)}
+                                        splithandlerfunction={this.props.splithandlerfunction}
                                         elementType={this.props.element.type}
                                         sectionBreak={this.props.element.subtype == "workedexample" ? showSectionBreak : false}
                                         permissions={this.props.permissions}

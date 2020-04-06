@@ -5,31 +5,30 @@ class ElementPoetryStanza extends Component {
       super();
     }
 
-    prepareLineDom = (model)=>{
+  // prepareLineDom = (model) => {
 
-      let lineModel = `
-        ${
-          model.map((line)=>{
-          return `<span data-id=${line.id}>${line.authoredtext.text}</span><br/>`
-          })
-        }
-      `
-      return lineModel;
-    }
+  //   let lineModel = 
+  //     `${model.map((line) => {
+  //       return (line.authoredtext.text ? `<span class="poetryLine" data-id=${line.id}>${line.authoredtext.text}</span><br/>`:
+  //       `<span class="poetryLine" data-id=${line.id}><br /></span><br/>`)
+  //     })
+  //     }` 
+  //   return lineModel;
+  // }
     
     render() {
         const { className, model,openGlossaryFootnotePopUp, slateLockInfo,openAssetPopoverPopUp,glossaryFootnoteValue , index} = this.props
-        let lineModel = this.prepareLineDom(model)
+        // let lineModel = this.prepareLineDom(model)
         return (
            <ElementPoetryLine
              openAssetPopoverPopUp ={openAssetPopoverPopUp}
              openGlossaryFootnotePopUp={openGlossaryFootnotePopUp}
-             index={`${index}-3`}
+             index={index}
              elementId={this.props.elementId}
              element={this.props.element}
              className={className}
-             model={lineModel}
-            //  tagName={this.props.tagName}
+             model={model && model.html && model.html.text}
+             tagName={'div'}
              handleEditorFocus={this.props.handleFocus}
              handleBlur = {this.props.handleBlur}
              slateLockInfo={slateLockInfo}

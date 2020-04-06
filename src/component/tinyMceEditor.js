@@ -122,6 +122,8 @@ export class TinyMceEditor extends Component {
                         if(!config.savingInProgress){
                             if(this.props.element.type === "popup" && !this.props.currentElement){
                                 this.props.createPopupUnit(this.props.popupField, null, this.props.index, this.props.element) 
+                            } else if(this.props.element && this.props.element.type === "poetry" && !this.props.currentElement){
+                                this.props.createPoetryElements(this.props.poetryField, null, this.props.index, this.props.element)
                             } else {
                                 let showHideType = this.props.showHideType || null
                                 showHideType = showHideType === "revel" ? "postertextobject" : showHideType
@@ -520,6 +522,12 @@ export class TinyMceEditor extends Component {
                         activeElement.append(' ')
                     }
                 }
+                if (activeElement.nodeName == "DIV" && this.props.element.type === 'stanza') {
+                    let key = e.keyCode || e.which;
+                     if (key === 13) {
+                         activeElement.innerHTML += '<br /><span><br /></span>';  
+                    }
+                }
             }
         });
     }
@@ -559,7 +567,7 @@ export class TinyMceEditor extends Component {
             let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
             if (activeElement) {
                 if (!activeElement.children.length ||
-                    (activeElement.children.length <= 1 && activeElement.children[0].tagName === 'BR' && activeElement.nodeName !== "CODE" && activeElement.nodeName !== 'DIV')) {
+                    (activeElement.children.length <= 1 && activeElement.children[0].tagName === 'BR' && activeElement.nodeName !== "CODE")) {
                     //code to avoid deletion of editor first child(like p,h1,blockquote etc)
                     let div = document.createElement('div');
                     div.innerHTML = this.lastContent;
@@ -590,18 +598,25 @@ export class TinyMceEditor extends Component {
                 let nextSaparator = (activeEditor.closest('.editor')).nextSibling;
                 let textPicker = nextSaparator.querySelector('#myDropdown li > .text-elem');
                 textPicker.click();
-            }else if (key === 13 && this.props.element.type === 'showhide' && this.props.showHideType != 'revel' && this.props.currentElement.type !== 'element-list' && this.props.element.type !== "stanza") {
+            }else if (key === 13 && this.props.element.type === 'showhide' && this.props.showHideType != 'revel' && this.props.currentElement.type !== 'element-list') {
                 this.props.createShowHideElement(this.props.showHideType, this.props.index, this.props.id);
             }
             else if((this.props.element && this.props.element.type ==='showhide' && this.props.showHideType !== 'revel' && !editor.bodyElement.innerText.trim().length && e.keyCode === 8 && this.props.element.interactivedata) && ((this.props.showHideType === "show" && this.props.element.interactivedata.show.length >1) || (this.props.showHideType === "hide" && this.props.element.interactivedata.hide.length >1 ))&& !isContainsMath ){
                 this.props.deleteShowHideUnit(this.props.currentElement.id, this.props.showHideType, this.props.element.contentUrn, this.props.innerIndex,this.props.index,this.props.element.id)
-             } else if(key === 13 && this.props.element.type === 'stanza' ){
-                let activeEditor = document.getElementById(tinymce.activeEditor.id);
-                activeEditor.blur();
-                let nextSaparator = (activeEditor.closest('.editor')).nextSibling;
-                let textPicker = nextSaparator.querySelector('#myDropdown li > .stanza-elem');
-                textPicker.click();
-             }  
+             }
+            else if (key === 13 && this.props.element.type === 'stanza') {
+                let activeElementChildLength = activeElement.children && activeElement.children.length;
+                if (activeElementChildLength > 0
+                    && activeElement.children[activeElementChildLength - 1].tagName == 'SPAN'
+                    && activeElement.children[activeElementChildLength - 1].innerHTML == '<br>') {
+
+                    let activeEditor = document.getElementById(tinymce.activeEditor.id);
+                    activeEditor.blur();
+                    let nextSaparator = (activeEditor.closest('.editor')).nextSibling;
+                    let textPicker = nextSaparator.querySelector('#myDropdown li > .stanza-elem');
+                    textPicker.click();
+                }
+            }      
         });
     }
 
@@ -1338,6 +1353,7 @@ export class TinyMceEditor extends Component {
         let event = Object.assign({}, e);
         let currentTarget = event.currentTarget;
         let isSameTargetBasedOnDataId = true;
+        let termText = document.getElementById(currentTarget.id)&&document.getElementById(currentTarget.id).innerHTML;
 
         /*
             checking for same target based on data-id not id
@@ -1444,6 +1460,9 @@ export class TinyMceEditor extends Component {
                         }
                     })
                 }
+                if(termText) {
+                    document.getElementById(currentTarget.id).innerHTML = termText;
+                }
             });
             this.setToolbarByElementType();
         }
@@ -1539,6 +1558,8 @@ export class TinyMceEditor extends Component {
             elemNode.innerHTML = elemNode.innerHTML.replace(/<br data-mce-bogus="1">/g, "")
             if(this.props.element && this.props.element.type === "popup" && !this.props.currentElement && elemNode && elemNode.innerHTML !== ""){
                 this.props.createPopupUnit(this.props.popupField, forceupdate, this.props.index, this.props.element)
+            } else if(this.props.element && this.props.element.type === "poetry" && !this.props.currentElement && elemNode && elemNode.innerHTML !== ""){
+                this.props.createPoetryElements(this.props.poetryField, forceupdate, this.props.index, this.props.element)
             } else {
                 this.props.handleBlur(forceupdate,this.props.currentElement,this.props.index, showHideType)
             }
