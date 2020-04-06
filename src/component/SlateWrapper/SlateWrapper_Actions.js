@@ -134,6 +134,8 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
             newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
         }
 
+        
+       
         dispatch({
             type: AUTHORING_ELEMENT_CREATED,
             payload: {
