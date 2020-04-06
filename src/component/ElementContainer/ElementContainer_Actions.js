@@ -377,11 +377,18 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
         })
     }
     else {
-        if(updatedData.type === "element-citation"){
-            let indexes = elementIndex.split("-")
-            _slateBodyMatter[indexes[0]].contents.bodymatter[indexes[1] - 1] = {...updatedData}
+        if(parentElement && parentElement.type === "citations"){
+            if(updatedData.type === "element-citation"){
+                let indexes = elementIndex.split("-")
+                _slateBodyMatter[indexes[0]].contents.bodymatter[indexes[1] - 1] = {...updatedData}
+            }
+            else {
+                if(updatedData.type === "element-authoredtext"){
+                    _slateBodyMatter[elementIndex].contents["formatted-title"] = {...updatedData}     
+                }
+            }
         }
-        else{
+        else {
             _slateBodyMatter = _slateBodyMatter.map(element => {
                 if (element.id === elementId) {
                    

@@ -47,7 +47,6 @@ export default CGTinyMCE
  * @param {*} parentElement parent citations group element
  */
 export const createPopupUnit = (popupField, forceupdate, index, parentElement, props, context) => {
-    return false
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
     config.popupCreationCallInProgress = true
     props.createPopupUnit(popupField, parentElement, (currentElementData) => context.handleBlur(forceupdate, currentElementData, index, null), index, config.slateManifestURN)
