@@ -94,6 +94,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
             case "element-aside":
             case "showhide":
             case "popup":
+            case "poetry":
                 return {
                     "projectUrn": config.projectUrn,
                     "entityUrn": contentUrn
@@ -121,6 +122,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
             }
         }
     ).then(deleteElemData => {
+        console.log("deleteElemData",deleteElemData)
         if (deleteElemData.status === 200) {
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
             const parentData = getState().appStore.slateLevelData;

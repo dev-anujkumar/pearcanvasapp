@@ -956,6 +956,7 @@ class ElementContainer extends Component {
                     setActiveElement={this.props.setActiveElement}
                     handleBlur={this.handleBlur}
                     handleFocus={this.handleFocus}
+                    deleteElement={this.deleteElement}
                     btnClassName={this.state.btnClassName}
                     tagName={"div"}
                     borderToggle={this.state.borderToggle}
@@ -978,6 +979,7 @@ class ElementContainer extends Component {
                     setActiveElement={this.props.setActiveElement}
                     handleBlur={this.handleBlur}
                     handleFocus={this.handleFocus}
+                    deleteElement={this.deleteElement}
                     btnClassName={this.state.btnClassName}
                     borderToggle={this.state.borderToggle}
                     elemBorderToggle={this.props.elemBorderToggle}
