@@ -525,7 +525,7 @@ export class TinyMceEditor extends Component {
                 if (activeElement.nodeName == "DIV" && this.props.element.type === 'stanza') {
                     let key = e.keyCode || e.which;
                      if (key != undefined && key === 13) {
-                         activeElement.innerHTML += '<br /><span><br /></span>';  
+                         activeElement.innerHTML += '<span class="stanza-line"><br /></span>';  
                     }
                 }              
             }

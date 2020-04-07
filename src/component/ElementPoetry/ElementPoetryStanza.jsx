@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ElementPoetryLine from "./ElementPoetryLine.jsx"
+import '../../styles/ElementPoetry/ElementPoetry.css'
 class ElementPoetryStanza extends Component {
     constructor() {
       super();
@@ -16,7 +17,7 @@ class ElementPoetryStanza extends Component {
     let ConvertedModel = model && model.html && model.html.text.replace(/<p>/g, "")
     ConvertedModel = ConvertedModel && ConvertedModel.replace(/<\/p>/g, "")
 
-    let lineModel = ConvertedModel ? ConvertedModel : '<span><br /></span>'
+    let lineModel = ConvertedModel ? ConvertedModel : '<span class="stanza-line"><br /></span>'
 
     return lineModel;
   }
