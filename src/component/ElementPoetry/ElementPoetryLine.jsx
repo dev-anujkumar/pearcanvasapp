@@ -16,7 +16,7 @@ class ElementPoetryLine extends PureComponent {
           element={this.props.element}
           placeholder="Type Something..."
           className={className}
-          model={model}
+          model={model?model:'<span><br></span>'}
           tagName={this.props.tagName}
           handleEditorFocus={this.props.handleFocus}
           handleBlur={this.props.handleBlur}
