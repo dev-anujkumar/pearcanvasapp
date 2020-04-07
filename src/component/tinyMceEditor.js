@@ -1583,7 +1583,7 @@ export class TinyMceEditor extends Component {
                     model = this.props.model && this.props.model.replace(/class="paragraphNumeroUno"/g, "")
                 }
                 else if(this.props.element && this.props.element.type === "citations"){
-                    model = this.props.element.contents['formatted-title'] && this.props.element.contents['formatted-title'].html && this.props.element.contents['formatted-title'].html.text && this.props.element.contents['formatted-title'].html.text.length ? this.props.element.contents['formatted-title'].html.text : `<h4><br/></h4>`
+                    model = this.props.element.contents['formatted-title'] && this.props.element.contents['formatted-title'].html && this.props.element.contents['formatted-title'].html.text.length ? this.props.element.contents['formatted-title'].html.text : `<p class="paragraphNumeroUno"><br/></p>`
                 }
                 else{
                     model = this.props.model;

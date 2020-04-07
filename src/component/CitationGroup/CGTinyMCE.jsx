@@ -20,7 +20,7 @@ const CGTinyMCE = (props) => {
         id : context.id,
         placeholder : "Enter Title...",
         tagName : 'h4',
-        model : context.element.contents && context.element.contents["formatted-title"] && context.element.contents["formatted-title"].html && context.element.contents["formatted-title"].html.text ? context.element.contents["formatted-title"].html.text : '',
+        model : context.element.contents && context.element.contents["formatted-title"] && context.element.contents["formatted-title"].html && context.element.contents["formatted-title"].html.text ? context.element.contents["formatted-title"].html.text : "",
         currentElement : context.element.contents && context.element.contents["formatted-title"],
         handleEditorFocus : context.handleFocus,
         handleBlur  :  context.handleBlur,
