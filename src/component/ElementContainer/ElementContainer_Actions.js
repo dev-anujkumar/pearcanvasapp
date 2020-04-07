@@ -800,12 +800,3 @@ const cascadeElement = (parentElement, dispatch, parentElementIndex) => {
     parentElement.indexes = parentElementIndex;
     dispatch(fetchSlateData(parentElement.id, parentElement.contentUrn, 0, parentElement)); 
 }
-
-export const currentSHowHideElement = (element) => (dispatch, getState) => {
-    dispatch({
-        type: CURRENT_SHOW_HIDE_ELEMENT,
-        payload: {
-            currentShowhideElement:element
-        }
-    })
-}
