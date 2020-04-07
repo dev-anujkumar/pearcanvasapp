@@ -497,7 +497,7 @@ export class TinyMceEditor extends Component {
             if (activeElement) { 
                 let lastCont = this.lastContent;
                 this.lastContent = activeElement.innerHTML;
-                if (!isMediaElement && !activeElement.children.length || (activeElement.children.length === 1 && activeElement.children[0].tagName === "BR" && activeElement.nodeName !== "CODE")) {
+                if (!isMediaElement && !activeElement.children.length && this.props.element.type !== 'poetry' || (activeElement.children.length === 1 && activeElement.children[0].tagName === "BR" && activeElement.nodeName !== "CODE")) {
                     //code to avoid deletion of editor first child(like p,h1,blockquote etc)
                     let div = document.createElement('div');
                     div.innerHTML = lastCont;
@@ -512,7 +512,7 @@ export class TinyMceEditor extends Component {
                 else {
                     activeElement.classList.add('place-holder')
                 }
-                this.lastContent = activeElement.innerHTML;
+                 this.lastContent = activeElement.innerHTML;
 
                 if (activeElement.nodeName === "CODE") {
                     let key = e.keyCode || e.which;
@@ -522,12 +522,12 @@ export class TinyMceEditor extends Component {
                         activeElement.append(' ')
                     }
                 }
-                if (activeElement.nodeName === "DIV" && this.props.element.type === 'stanza') {
+                if (activeElement.nodeName == "DIV" && this.props.element.type === 'stanza') {
                     let key = e.keyCode || e.which;
-                     if (key === 13) {
+                     if (key != undefined && key === 13) {
                          activeElement.innerHTML += '<br /><span><br /></span>';  
                     }
-                }
+                }              
             }
         });
     }
@@ -1598,6 +1598,14 @@ export class TinyMceEditor extends Component {
                 let model = ""
                 if(this.props.element && this.props.element.type === "popup"){
                     model = this.props.model && this.props.model.replace(/class="paragraphNumeroUno"/g, "")
+                }
+                else if(this.props.element && this.props.element.type === "poetry" ){
+                    if(this.props.poetryField === 'formattedTitle'){
+                        model = this.props.element.contents['formatted-title'] && this.props.element.contents['formatted-title'].html && this.props.element.contents['formatted-title'].html.text.length ? this.props.element.contents['formatted-title'].html.text : `<p class="paragraphNumeroUno"><br/></p>`
+                    }
+                    else if (this.props.poetryField === 'formattedSubtitle'){
+                        model = this.props.element.contents['formatted-subtitle'] && this.props.element.contents['formatted-subtitle'].html && this.props.element.contents['formatted-subtitle'].html.text.length ? this.props.element.contents['formatted-subtitle'].html.text : `<p class="paragraphNumeroUno"><br/></p>`
+                    }
                 }
                 else {
                     model = this.props.model;
