@@ -407,6 +407,11 @@ export default {
                     text: 'SML',
                     labelText: 'BCE',
                     enum: 'SML'
+                },
+                'secondary-blockcode-language-verilog': {
+                    text: 'Verilog',
+                    labelText: 'BCE',
+                    enum: 'VERILOG'
                 }
             }
         },
