@@ -172,13 +172,6 @@ const findElementType = (element, index) => {
                     secondaryOption: elementDataBank[element.type]["secondaryOption"]
                 }
                 break;
-            // case "poetry":
-            //     elementType = {
-            //         elementType : elementDataBank[element.type]["elementType"],
-            //         primaryOption: elementDataBank[element.type]["primaryOption"],
-            //         secondaryOption: elementDataBank[element.type]["secondaryOption"]
-            //     }
-            //     break;
             default:
                 elementType = { ...elementDataBank["element-authoredtext"] }
         }
@@ -223,7 +216,6 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
         }
     }).then(slateData => {
         let newVersionManifestId=Object.values(slateData.data)[0].id
-        slateData.data[newVersionManifestId].contents.bodymatter.push(poetryElem)
 
 		if(slateData.data && slateData.data[newVersionManifestId] && slateData.data[newVersionManifestId].type === "popup"){
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
@@ -633,13 +625,13 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
 }
 
 
-export const createPoetryUnit = (poetryField, parentElement) => (dispatch, getState) => {
+export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, slateManifestURN) => (dispatch, getState) => {
     let _requestData = {
         "projectUrn": config.projectUrn,
         "slateEntityUrn": parentElement.contentUrn,
         "slateUrn": parentElement.id,
         "type": "TEXT",
-        "updatePopupElementField" : poetryField
+        "metaDataField" : poetryField
     };
     console.log("response",_requestData)
     let url = `${config.REACT_APP_API_URL}v1/slate/element`
@@ -652,27 +644,32 @@ export const createPoetryUnit = (poetryField, parentElement) => (dispatch, getSt
             }
         })
     .then((response) => {
-        console.log("response",response)
-        // let elemIndex = `cypress-${popupElementIndex}`
-        // let elemNode = document.getElementById(elemIndex)
-        // popupElementIndex = Number(popupElementIndex.split("-")[0])
-        // const parentData = getState().appStore.slateLevelData
-        // let newslateData = JSON.parse(JSON.stringify(parentData))
-        // let _slateObject = newslateData[slateManifestURN]
-        // let targetPopupElement = _slateObject.contents.bodymatter[popupElementIndex]
-        // if(targetPopupElement){
-        //     targetPopupElement.popupdata[popupField] = response.data
-        //     targetPopupElement.popupdata[popupField].html.text = elemNode.innerHTML
-        //     targetPopupElement.popupdata[popupField].elementdata.text = elemNode.innerText
-        //     _slateObject.contents.bodymatter[popupElementIndex] = targetPopupElement
-        // }
-        // dispatch({
-        //     type: AUTHORING_ELEMENT_UPDATE,
-        //     payload: {
-        //         slateLevelData: newslateData
-        //     }
-        // })
-       // if(cb) cb(response.data)
+
+        let elemIndex = `cypress-${ElementIndex}`
+        let elemNode = document.getElementById(elemIndex)
+        ElementIndex = Number(ElementIndex.split("-")[0])
+        const parentData = getState().appStore.slateLevelData
+        let newslateData = JSON.parse(JSON.stringify(parentData))
+        let _slateObject = newslateData[slateManifestURN]
+        let targetPoetryElement = _slateObject.contents.bodymatter[ElementIndex]
+        targetPoetryElement.contents['creditsarray'] = [];
+        targetPoetryElement.contents['formattedTitle'] = {};
+        targetPoetryElement.contents['formattedCaption'] = {};
+        targetPoetryElement.contents['formattedCredit'] = {};
+
+        if(targetPoetryElement){
+            targetPoetryElement.contents[poetryField] = response.data
+            targetPoetryElement.contents[poetryField].html.text = elemNode.innerHTML
+            targetPoetryElement.contents[poetryField].elementdata.text = elemNode.innerText
+            _slateObject.contents.bodymatter[ElementIndex] = targetPoetryElement
+        }
+        dispatch({
+            type: AUTHORING_ELEMENT_UPDATE,
+            payload: {
+                slateLevelData: newslateData
+            }
+        })
+       if(cb) cb(response.data)
     })
     .catch((error) => {
         console.log("%c ERROR RESPONSE", "font: 30px; color: red; background: black", error)

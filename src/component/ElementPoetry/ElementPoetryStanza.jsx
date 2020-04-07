@@ -27,7 +27,8 @@ class ElementPoetryStanza extends Component {
              elementId={this.props.elementId}
              element={this.props.element}
              className={className}
-             model={model && model.html && model.html.text}
+            //  model={model && model.html && model.html.text}
+            model={'<span class="poetryLine"><br /></span><br/>'}
              tagName={'div'}
              handleEditorFocus={this.props.handleFocus}
              handleBlur = {this.props.handleBlur}

@@ -95,35 +95,7 @@ function createNewVersionOfSlate(){
         })
 }
 
-export const createElement = (type, index, parentUrn, asideData, outerAsideIndex, loref, cb) => (dispatch, getState) => {
-    if(type == "STANZA"){
-        let parentURN = {
-            manifestUrn: 'urn:pearson:work:e1b59ae0-b04a-4b6e-a1a4-33e21077u97'}
-        let mockData = mock
-        sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
-        const parentData = getState().appStore.slateLevelData;
-        const newParentData = JSON.parse(JSON.stringify(parentData));
-        // let currentSlateData = newParentData[config.slateManifestURN];
-        newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
-            // if (item.id == parentURN.manifestUrn) {
-                item.contents.bodymatter.splice(index, 0, mockData)
-            // } else if (item.type == "poetry") {
-            //     item.contents.bodymatter && item.contents.bodymatter.map((ele) => {
-            //         if (ele.id === parentURN.manifestUrn) {
-            //             ele.contents.bodymatter.splice(index, 0, mock)
-            //         }
-            //     })
-            // }
-        })
-        // newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 1, mockData);
-        dispatch({
-            type: AUTHORING_ELEMENT_CREATED,
-            payload: {
-                slateLevelData: newParentData
-            }
-        })
-    }
-    else {
+export const createElement = (type, index, parentUrn, asideData, outerAsideIndex, loref, cb,poetryData) => (dispatch, getState) => {
     config.currentInsertedIndex = index;
     config.currentInsertedType = type;
     let  popupSlateData = getState().appStore.popupSlateData
@@ -225,7 +197,6 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
             cb();
         }
     })
-}
 }
 
 export const swapElement = (dataObj, cb) => (dispatch, getState) => {

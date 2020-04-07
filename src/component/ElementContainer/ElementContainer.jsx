@@ -456,7 +456,7 @@ class ElementContainer extends Component {
             case elementTypeConstant.AUTHORED_TEXT:
             case elementTypeConstant.LEARNING_OBJECTIVE_ITEM:
             case elementTypeConstant.BLOCKFEATURE:
-            let index  = parentElement.type == "showhide" ||  parentElement.type == "popup"? activeEditorId:`cypress-${this.props.index}`
+            let index  = (parentElement.type == "showhide" ||  parentElement.type == "popup" || parentElement.type == "poetry")? activeEditorId:`cypress-${this.props.index}`
             if (this.props.element && this.props.element.type === "element-blockfeature" && this.props.element.subtype === "quote" && tinyMCE.activeEditor && tinyMCE.activeEditor.id  && !tinyMCE.activeEditor.id.includes("footnote")) {
                 let blockqtText = document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins')?document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').innerText:"";
                 if (!blockqtText.trim()) {
@@ -477,7 +477,7 @@ class ElementContainer extends Component {
                 tempDiv.innerHTML = html;
                 //tinyMCE.$(tempDiv).find('.blockquote-hidden').remove();
                 html = tempDiv.innerHTML;
-                if(parentElement.type === "popup"){
+                if(parentElement.type === "popup" || parentElement.type === "poetry"){
                     tempDiv.innerHTML = matchHTMLwithRegex(tempDiv.innerHTML) ? tempDiv.innerHTML : `<p class="paragraphNumeroUno">${tempDiv.innerHTML}</p>`
                     html = html.replace(/<br data-mce-bogus="1">/g, "<br>")
                     html = matchHTMLwithRegex(html) ? html : `<p class="paragraphNumeroUno">${html}</p>`
@@ -775,10 +775,9 @@ class ElementContainer extends Component {
         }
     }
     createPoetryElements = (poetryField, forceupdate, index, parentElement) => {
-        // sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-       // config.popupCreationCallInProgress = true
+         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
         this.props.createPoetryUnit(poetryField, parentElement, (currentElementData) =>
-        this.props.handleBlur(forceupdate, currentElementData, index, null), index, config.slateManifestURN)
+        this.handleBlur(forceupdate, currentElementData, index, null), index, config.slateManifestURN)
     }
 
     /**
@@ -957,6 +956,7 @@ class ElementContainer extends Component {
                     setActiveElement={this.props.setActiveElement}
                     handleBlur={this.handleBlur}
                     handleFocus={this.handleFocus}
+                    deleteElement={this.deleteElement}
                     btnClassName={this.state.btnClassName}
                     tagName={"div"}
                     borderToggle={this.state.borderToggle}
@@ -979,6 +979,7 @@ class ElementContainer extends Component {
                     setActiveElement={this.props.setActiveElement}
                     handleBlur={this.handleBlur}
                     handleFocus={this.handleFocus}
+                    deleteElement={this.deleteElement}
                     btnClassName={this.state.btnClassName}
                     borderToggle={this.state.borderToggle}
                     elemBorderToggle={this.props.elemBorderToggle}
@@ -1192,13 +1193,15 @@ const mapDispatchToProps = (dispatch) => {
         },
         accessDenied,
         releaseSlateLock,
-        createPoetryUnit,
         createShowHideElement: (element, type, index, parentContentUrn, cb, parentElement, parentElementIndex) => {
             dispatch(createShowHideElement(element, type, index, parentContentUrn, cb, parentElement, parentElementIndex))
         },
         deleteShowHideUnit: (id, type, contentUrn, index, eleIndex, parentId, cb, parentElement, parentElementIndex) => {
             dispatch(deleteShowHideUnit(id, type, contentUrn, index, eleIndex, parentId, cb, parentElement, parentElementIndex))
-        }
+        },
+        createPoetryUnit: (poetryField, parentElement,cb, popupElementIndex, slateManifestURN) => {
+            dispatch(createPoetryUnit(poetryField, parentElement,cb, popupElementIndex, slateManifestURN))
+        },
 
     }
 }

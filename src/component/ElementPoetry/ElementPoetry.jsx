@@ -134,7 +134,8 @@ class ElementPoetry extends Component {
         let poetryData = {
             type: "poetry",
             parentUrn: this.props.elementId,
-            id: this.props.elementId
+            id: this.props.elementId,
+            element : this.props.element           
         };
         try {
             if (stanzas !== undefined) {
@@ -145,6 +146,7 @@ class ElementPoetry extends Component {
                                         index={index}
                                         esProps={this.props.elementSepratorProps(index, false, this.props.parentUrn, "", parentIndex, poetryData)}
                                         elementType="poetry"
+                                        poetryData={poetryData}
                                         sectionBreak= {false}
                                         permissions={this.props.permissions}
                                         onClickCapture={this.props.onClickCapture}
