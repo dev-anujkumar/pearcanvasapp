@@ -1506,7 +1506,7 @@ export class TinyMceEditor extends Component {
         if (checkforToolbarClick(relatedTargets)) {
             e.stopPropagation();
             return;
-        }
+        }        
         tinymce.$('span[data-mce-type="bookmark"]').each(function () {
             let innerHtml = this.innerHTML;
             this.outerHTML = innerHtml;
@@ -1517,6 +1517,9 @@ export class TinyMceEditor extends Component {
                 this.outerHTML = innerHtml;
             })
         }
+        tinymce.$('div[data-mce-bogus="all"]').each(function () {
+            this.outerHTML = '';
+        })
         let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
         if(!assetPopoverPopupIsVisible){
             tinymce.$('#asset-popover-attacher').each(function () {
