@@ -110,14 +110,13 @@ class Button extends Component {
                     {audioIcon}
                     </span>
                 break;
-            case buttonTypes.INTERACTIVE_ELEMENT:
-                buttonJSX = <span className="btn-element interactive-elem" onClick={clickHandlerFn}>
-                    {/* buttonJSX = <span className="btn-element interactive-elem-button" onClick={clickHandlerFn}> */}
+            case buttonTypes.INTERACTIVE_ELEMENT:                
+                buttonJSX = <span className="btn-element interactive-elem-button" onClick={clickHandlerFn}>
                     {interativeIcon}
                     </span>
                 break;
             case buttonTypes.CONTAINER_ELEMENT:
-                buttonJSX = <span className="btn-element container-elem" onClick={clickHandlerFn}>
+                buttonJSX = <span className="btn-element container-elem-button" onClick={clickHandlerFn}>
                     {containerIcon}
                     </span>
                 break;

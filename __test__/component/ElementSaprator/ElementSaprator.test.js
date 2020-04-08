@@ -76,8 +76,6 @@ esProps = [
     },
 ]
 
-let propsData ={}
-
 describe('Testing ElementSaprator rendering', () => {
     it('Render ElementSaprator with props split_slate permission', () => {
         let permissions = ['split_slate'];

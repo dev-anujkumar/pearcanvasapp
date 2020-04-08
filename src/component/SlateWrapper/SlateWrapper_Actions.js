@@ -28,7 +28,7 @@ Array.prototype.move = function (from, to) {
 };
 
 function prepareDataForTcmUpdate(updatedData, parentData, asideData) {
-    if (parentData && parentData.elementType === "element-aside") {
+    if (parentData && (parentData.elementType === "element-aside" || parentData.elementType === "citations")) {
         updatedData.isHead = true;
     } else if (parentData && parentData.elementType === "manifest") {
         updatedData.isHead = false;
