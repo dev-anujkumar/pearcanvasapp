@@ -149,9 +149,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         }
         if (cb) {
             cb();
-        }
-        
-        
+        }   
     }).catch(error => {
         // Opener Element mock creation
         if (type == "OPENER") {
