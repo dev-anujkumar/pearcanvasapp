@@ -449,7 +449,7 @@ class ElementContainer extends Component {
      * @param {*} activeEditorId
      */
     handleContentChange = (node, previousElementData, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType) => {
-        const { parentUrn, asideData } = this.props
+        const { parentUrn, asideData, poetryData } = this.props
         let dataToSend = {}
         let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
         switch (previousElementData.type) {
@@ -486,7 +486,7 @@ class ElementContainer extends Component {
                 previousElementData.html.text= previousElementData.html.text.replace(/<br data-mce-bogus="1">/g, "<br>").replace(/(\r\n|\n|\r)/gm, '');
                 previousElementData.html.text = previousElementData.html.text.replace(/data-mce-bogus="all"/g, '')
                 if (html && previousElementData.html && (this.replaceUnwantedtags(html) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate) && !assetPopoverPopupIsVisible && !config.savingInProgress) {
-                    dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDiv, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,parentElement,showHideType, asideData)
+                    dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDiv, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,parentElement,showHideType, asideData, poetryData)
                     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                     if(dataToSend.status === "approved"){
                         config.savingInProgress = true

@@ -438,7 +438,7 @@ const validateRevealAnswerData = (showHideType, node, elementType) => {
  * @param {*} index 
  * @param {*} containerContext 
  */
-export const createUpdatedData = (type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext,parentElement,showHideType,asideData) => {
+export const createUpdatedData = (type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext,parentElement,showHideType,asideData, poetryData) => {
     let dataToReturn = {}
     switch (type){
         case elementTypeConstant.AUTHORED_TEXT:
@@ -475,6 +475,19 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                 }
                 else if(parentElement.popupdata["postertextobject"][0]["id"] === previousElementData.id){
                     dataToReturn.section = "postertextobject";
+                }
+            } else if(parentElement && parentElement.type === "poetry"){
+                dataToReturn.poetryEntityUrn = parentElement.contentUrn;
+                if(parentElement.contents && parentElement.contents["formatted-title"] && parentElement.contents["formatted-title"]["id"] === previousElementData.id){
+                    dataToReturn.updatepoetryField = "formattedTitle";
+                } 
+                else if(parentElement.contents && parentElement.contents["formatted-subtitle"] && parentElement.contents["formatted-subtitle"]["id"] === previousElementData.id){
+                    dataToReturn.updatepoetryField = "formattedSubtitle";
+                }
+                else if(parentElement.contents && parentElement.contents["formatted-caption"] && parentElement.contents["formatted-caption"]["id"] === previousElementData.id){
+                    dataToReturn.updatepoetryField = "formattedCaption";
+                }else if(parentElement.contents && parentElement.contents["formatted-credit"] && parentElement.contents["formatted-credit"]["id"] === previousElementData.id){
+                    dataToReturn.updatepoetryField = "formattedCredit";
                 }
             }
             if(parentElement && parentElement.type === "showhide" && showHideType){
@@ -542,7 +555,9 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
             dataToReturn.parentEntityId = asideData.contentUrn;
         } else if (parentElement && parentElement.type === "showhide" && showHideType && parentElement.contentUrn) {
             dataToReturn.parentEntityId = parentElement.contentUrn;
-        }
+        } else if (poetryData && poetryData.contentUrn) {
+            dataToReturn.parentEntityId = poetryData.contentUrn;
+        } 
     }
     dataToReturn = { ...dataToReturn, index: index.toString().split('-')[index.toString().split('-').length - 1] }
     return dataToReturn
