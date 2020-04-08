@@ -59,7 +59,7 @@ Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
 };
 
-function prepareDataForTcmUpdate(updatedData, parentData, asideData) {
+function prepareDataForTcmUpdate(updatedData, parentData, asideData,poetryData) {
     if (parentData && parentData.elementType === "element-aside") {
         updatedData.isHead = true;
     } else if (parentData && parentData.elementType === "manifest") {
@@ -76,7 +76,7 @@ function prepareDataForTcmUpdate(updatedData, parentData, asideData) {
         }
     }
     updatedData.projectURN = config.projectUrn;
-    updatedData.slateEntity = config.slateEntityURN;
+    updatedData.slateEntity = poetryData && poetryData.contentUrn || config.slateEntityURN;
 }
 
 function createNewVersionOfSlate(){
@@ -100,8 +100,8 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
     config.currentInsertedType = type;
     let  popupSlateData = getState().appStore.popupSlateData
     localStorage.setItem('newElement', 1);
-    let slateEntityUrn = parentUrn && parentUrn.contentUrn || popupSlateData && popupSlateData.contentUrn|| config.slateEntityURN,
-    slateUrn =  parentUrn && parentUrn.manifestUrn || popupSlateData && popupSlateData.id || config.slateManifestURN
+    let slateEntityUrn = parentUrn && parentUrn.contentUrn || popupSlateData && popupSlateData.contentUrn || poetryData && poetryData.contentUrn || config.slateEntityURN,
+    slateUrn =  parentUrn && parentUrn.manifestUrn || popupSlateData && popupSlateData.id || poetryData && poetryData.id || config.slateManifestURN
     let _requestData = {
         "projectUrn": config.projectUrn,
         "slateEntityUrn":slateEntityUrn,
@@ -114,7 +114,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         _requestData.loref = loref ? loref : ""
     }
 
-    prepareDataForTcmUpdate(_requestData, parentUrn, asideData)
+    prepareDataForTcmUpdate(_requestData, parentUrn, asideData, poetryData)
     return axios.post(`${config.REACT_APP_API_URL}v1/slate/element`,
         JSON.stringify(_requestData),
         {
@@ -161,6 +161,19 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
             })
         }else if (popupSlateData && popupSlateData.type == "popup"){
             newPopupSlateData.popupdata.bodymatter.splice(index, 0, createdElementData);
+        }
+        else if (poetryData && poetryData.type == "poetry"){
+            newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
+                if (item.id == poetryData.parentUrn) {
+                    item.contents.bodymatter.splice(index, 0, createdElementData)
+                } else if (item.type == "poetry" && item.id == poetryData.id) {
+                    item.contents.bodymatter && item.contents.bodymatter.map((ele) => {
+                        if (ele.id === poetryData.parentUrn) {
+                            ele.contents.bodymatter.splice(index, 0, createdElementData)
+                        }
+                    })
+                }
+            })
         }
         else {
             newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);

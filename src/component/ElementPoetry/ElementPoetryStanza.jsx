@@ -1,24 +1,30 @@
 import React, { Component } from 'react';
 import ElementPoetryLine from "./ElementPoetryLine.jsx"
+import '../../styles/ElementPoetry/ElementPoetry.css'
 class ElementPoetryStanza extends Component {
     constructor() {
       super();
     }
 
-  // prepareLineDom = (model) => {
+  prepareLineDom = (model) => {
 
-  //   let lineModel = 
-  //     `${model.map((line) => {
-  //       return (line.authoredtext.text ? `<span class="poetryLine" data-id=${line.id}>${line.authoredtext.text}</span><br/>`:
-  //       `<span class="poetryLine" data-id=${line.id}><br /></span><br/>`)
-  //     })
-  //     }` 
-  //   return lineModel;
-  // }
+    // let lineModel = 
+    //   `${model.map((line) => {
+    //     return (line.authoredtext.text ? `<span class="poetryLine" data-id=${line.id}>${line.authoredtext.text}</span><br/>`:
+    //     `<span class="poetryLine" data-id=${line.id}><br /></span><br/>`)
+    //   })
+    //   }` 
+    let ConvertedModel = model && model.html && model.html.text.replace(/<p>/g, "")
+    ConvertedModel = ConvertedModel && ConvertedModel.replace(/<\/p>/g, "")
+
+    let lineModel = ConvertedModel ? ConvertedModel : '<span class="stanza-line"><br /></span>'
+
+    return lineModel;
+  }
     
     render() {
         const { className, model,openGlossaryFootnotePopUp, slateLockInfo,openAssetPopoverPopUp,glossaryFootnoteValue , index} = this.props
-        // let lineModel = this.prepareLineDom(model)
+         let lineModel = this.prepareLineDom(model)
         return (
            <ElementPoetryLine
              openAssetPopoverPopUp ={openAssetPopoverPopUp}
@@ -27,8 +33,8 @@ class ElementPoetryStanza extends Component {
              elementId={this.props.elementId}
              element={this.props.element}
              className={className}
-            //  model={model && model.html && model.html.text}
-            model={'<span class="poetryLine"><br /></span><br/>'}
+             model={lineModel}
+            // model={'<span class="poetryLine"><br /></span><br/>'}
              tagName={'div'}
              handleEditorFocus={this.props.handleFocus}
              handleBlur = {this.props.handleBlur}

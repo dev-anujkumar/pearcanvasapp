@@ -135,11 +135,14 @@ class ElementPoetry extends Component {
             type: "poetry",
             parentUrn: this.props.elementId,
             id: this.props.elementId,
-            element : this.props.element           
+            contentUrn : this.props.model.contentUrn,
+            element : this.props.model           
         };
         try {
             if (stanzas !== undefined) {
                     return stanzas.map((element, index) => {
+                        // let indexStanza = `${parentIndex}-3-${index}`;
+                        // console.log("indexstanza>>>>>>",indexStanza)
                             return (
                                 <React.Fragment key={element.id}>                                   
                                     {index === 0 && <ElementSaprator
