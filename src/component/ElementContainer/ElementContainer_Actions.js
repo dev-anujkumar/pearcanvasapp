@@ -86,7 +86,7 @@ export const addComment = (commentString, elementId, asideData, parentUrn) => (d
 }
 
 
-export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, index) => (dispatch, getState) => {
+export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, index, poetryData) => (dispatch, getState) => {
 
     const prepareDeleteRequestData = (elementType) => {
         switch (elementType) {
@@ -111,7 +111,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
     let _requestData = prepareDeleteRequestData(type)
     let indexToBeSent = index || "0"
     _requestData = { ..._requestData, index: indexToBeSent.toString().split('-')[indexToBeSent.toString().split('-').length - 1] }
-    prepareDataForTcmUpdate(_requestData, elmId, index, asideData, getState, type);
+    prepareDataForTcmUpdate(_requestData, elmId, index, asideData, getState, type, poetryData);
 
     return axios.post(`${config.REACT_APP_API_URL}v1/slate/deleteElement`,
         JSON.stringify(_requestData),
@@ -122,7 +122,6 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
             }
         }
     ).then(deleteElemData => {
-        console.log("deleteElemData",deleteElemData)
         if (deleteElemData.status === 200) {
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
             const parentData = getState().appStore.slateLevelData;
@@ -152,7 +151,16 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
                             }
                         })
                     }
-                } else if (parentUrn && parentUrn.elementType == "manifest") {
+                } else if(poetryData && poetryData.type == 'poetry') {
+                    if (element.id === poetryData.parentUrn) {
+                        element.contents.bodymatter.forEach((ele, indexInner) => {
+                            if (ele.id === elmId) {
+                                element.contents.bodymatter.splice(indexInner, 1);
+                            }
+                        })
+                    }
+                }
+                else if (parentUrn && parentUrn.elementType == "manifest") {
                     if (element.id === asideData.id) {
                         element.elementdata.bodymatter.forEach((ele) => {
                             if (ele.id == parentUrn.manifestUrn) {
@@ -194,18 +202,20 @@ function contentEditableFalse (updatedData){
     }
 }
 
-function prepareDataForTcmUpdate (updatedData,id, elementIndex, asideData, getState, type) {
+function prepareDataForTcmUpdate (updatedData,id, elementIndex, asideData, getState, type, poetryData) {
     updatedData = (updatedData.type == "element-blockfeature") ? contentEditableFalse(updatedData): updatedData;
     let indexes = elementIndex && elementIndex.length > 0 ? elementIndex.split('-') : 0;
     let storeData = getState().appStore.slateLevelData;
     let slateData = JSON.parse(JSON.stringify(storeData));
     let slateBodyMatter = slateData[config.slateManifestURN].contents.bodymatter;
     if (indexes.length === 2) {
-        if (slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].id === id) {
+        if (poetryData && poetryData.type != "poetry" && slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].id === id) {
             updatedData.isHead = true;
         }
     } else if (indexes.length === 3) {
-        if (slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].id === id) {
+        if (poetryData && poetryData.type != "poetry" && slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].id === id) {
+            updatedData.isHead = false;
+        } else if (poetryData && poetryData.type === "poetry" && slateBodyMatter[indexes[0]].contents.bodymatter[indexes[2]].id === id) {
             updatedData.isHead = false;
         }
     }
@@ -215,6 +225,8 @@ function prepareDataForTcmUpdate (updatedData,id, elementIndex, asideData, getSt
         } else {
             updatedData.parentType = "element-aside";
         }
+    } else if (poetryData && poetryData.type === 'poetry'){
+        updatedData.parentType = "poetry";
     }
 
     if(config.tempSlateManifestURN){

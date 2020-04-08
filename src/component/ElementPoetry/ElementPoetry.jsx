@@ -31,13 +31,17 @@ class ElementPoetry extends Component {
                     //let { id: _containerId, type: _containerType, contents: _contents, elementdata: _elementData } = _containerData;
                     let { bodymatter: _bodyMatter } = _containerData;
                     let { index } = this.props
-
+                    let parentUrn = {
+                        manifestUrn: this.props.elementId,
+                        contentUrn: this.props.model.contentUrn ,
+                        elementType: "poetry"
+                    }
                     //let filterElement = _bodyMatter.filter((ele) => ele.type == "manifest");
                     //let elementLength = _bodyMatter.length - filterElement.length;
                     if(!_bodyMatter.length && this.props.deleteElement){
                         this.props.deleteElement();
                     }
-                    this['cloneCOSlateControlledSource_2' + random] = this.renderStanzas(_bodyMatter, index)
+                    this['cloneCOSlateControlledSource_2' + random] = this.renderStanzas(_bodyMatter, index ,parentUrn)
                     return (
                         <div>
                             <Sortable
@@ -130,7 +134,7 @@ class ElementPoetry extends Component {
     //        )
     // }
 
-    renderStanzas = (stanzas, parentIndex) => {
+    renderStanzas = (stanzas, parentIndex, parentUrn) => {
         let poetryData = {
             type: "poetry",
             parentUrn: this.props.elementId,
@@ -147,7 +151,7 @@ class ElementPoetry extends Component {
                                 <React.Fragment key={element.id}>                                   
                                     {index === 0 && <ElementSaprator
                                         index={index}
-                                        esProps={this.props.elementSepratorProps(index, false, this.props.parentUrn, "", parentIndex, poetryData)}
+                                        esProps={this.props.elementSepratorProps(index, false, parentUrn, "", parentIndex, poetryData)}
                                         elementType="poetry"
                                         poetryData={poetryData}
                                         sectionBreak= {false}
@@ -157,13 +161,14 @@ class ElementPoetry extends Component {
                                     <ElementContainer
                                         element={element}
                                         index={`${parentIndex}-3-${index}`}
-                                        parentUrn={poetryData.parentUrn}
+                                        parentUrn={parentUrn}
                                         showBlocker={this.props.showBlocker}
                                         poetryData={poetryData}
                                         permissions={this.props.permissions}
                                         handleCommentspanel={this.props.handleCommentspanel}
                                         isBlockerActive={this.props.isBlockerActive}
                                         onClickCapture={this.props.onClickCapture}
+                                        showDeleteElemPopup={this.props.showDeleteElemPopup}
                                         parentElement = {this.props.element}
                                         onListSelect={this.props.onListSelect}
                                        // createPoetryElements={this.createPoetryElements}
@@ -184,7 +189,7 @@ class ElementPoetry extends Component {
                                     </ElementContainer>
                                     <ElementSaprator
                                         index={index}
-                                        esProps={this.props.elementSepratorProps(index, false, this.props.parentUrn, "", parentIndex, poetryData)}
+                                        esProps={this.props.elementSepratorProps(index, false, parentUrn, "", parentIndex, poetryData)}
                                         elementType="poetry"
                                         sectionBreak= {false}
                                         permissions={this.props.permissions}

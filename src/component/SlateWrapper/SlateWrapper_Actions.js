@@ -22,39 +22,6 @@ import { sendDataToIframe } from '../../constants/utility.js';
 import { HideLoader, ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
 
-const mock = {
-    "type": "stanza",
-    "schema": "http://schemas.pearson.com/wip-authoring/poetry/1",
-    "id": "urn:pearson:work:e1b59ae0-b04a-4b6e-a1a4-33e21077u97",
-    "contentUrn": "urn:pearson:entity:44d43f1b-3bdf-4386-a06c-bfa779f28hh5",
-    "versionUrn": "urn:pearson:work:e1b59ae0-b04a-4b6e-a1a4-33e21077u97",
-    "poetrylines": [
-        {
-            "type": "line",
-            "id": "urn:pearson:entity:44d43f1b-3bdf-4386-a06c-bfa779f28hh5:f2f5300e-34fa-4d87-82c1-29e33bf5fu67",
-            "authoredtext": {
-                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                "text": ""
-            }
-        },
-        {
-            "type": "line",
-            "id": "urn:pearson:entity:44d43f1b-3bdf-4386-a06c-bfa779f28hh5:f2f5300e-34fa-4d87-82c1-29e33bf5kl64",
-            "authoredtext": {
-                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                "text": ""
-            }
-        },
-        {
-            "type": "line",
-            "id": "urn:pearson:entity:44d43f1b-3bdf-4386-a06c-bfa779f28hh5:f2f5300e-34fa-4d87-82c1-29e33bf5lg31",
-            "authoredtext": {
-                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                "text": ""
-            }
-        }
-    ]
-}
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
 };

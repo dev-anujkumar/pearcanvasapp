@@ -725,7 +725,7 @@ class ElementContainer extends Component {
      */
     deleteElement = () => {
         let { id, type } = this.props.element;
-        let { parentUrn, asideData, element } = this.props;
+        let { parentUrn, asideData, element, poetryData } = this.props;
         let { contentUrn } = this.props.element
         let index = this.props.index
 
@@ -749,7 +749,7 @@ class ElementContainer extends Component {
         }
 
         // api needs to run from here
-        this.props.deleteElement(id, type, parentUrn, asideData, contentUrn, index);
+        this.props.deleteElement(id, type, parentUrn, asideData, contentUrn, index, poetryData);
         this.setState({
             sectionBreak: null
         })
@@ -948,8 +948,10 @@ class ElementContainer extends Component {
                     accessDenied={accessDenied} 
                     updateFigureData={this.updateFigureData} 
                     permissions={permissions} 
+                    showBlocker={this.props.showBlocker}
                     openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} 
                     handleFocus={this.handleFocus} 
+                    showDeleteElemPopup={this.showDeleteElemPopup}
                     handleBlur={this.handleBlur} 
                     model={element} 
                     slateLockInfo={slateLockInfo} 
@@ -975,10 +977,11 @@ class ElementContainer extends Component {
                     openAssetPopoverPopUp={this.openAssetPopoverPopUp} 
                     openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} 
                     handleFocus={this.handleFocus} 
+                    showDeleteElemPopup={this.showDeleteElemPopup}
                     handleBlur={this.handleBlur} 
                     setActiveElement={this.props.setActiveElement}
                     handleBlur={this.handleBlur}
-                    handleFocus={this.handleFocus}
+                    // handleFocus={this.handleFocus}
                     deleteElement={this.deleteElement}
                     btnClassName={this.state.btnClassName}
                     borderToggle={this.state.borderToggle}
@@ -1166,8 +1169,8 @@ const mapDispatchToProps = (dispatch) => {
         setActiveElement: (element, index, parentUrn, asideData, updateFromC2Flag, showHideObj) => {
             dispatch(setActiveElement(element, index, parentUrn, asideData, updateFromC2Flag, showHideObj))
         },
-        deleteElement: (id, type, parentUrn, asideData, contentUrn, index) => {
-            dispatch(deleteElement(id, type, parentUrn, asideData, contentUrn, index))
+        deleteElement: (id, type, parentUrn, asideData, contentUrn, index, poetryData) => {
+            dispatch(deleteElement(id, type, parentUrn, asideData, contentUrn, index, poetryData))
         },
         glossaaryFootnotePopup: (glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, callback, typeWithPopup) => {
             dispatch(glossaaryFootnotePopup(glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, typeWithPopup)).then(() => {

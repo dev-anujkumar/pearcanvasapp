@@ -100,7 +100,7 @@
     padding-top: 2px;
 }
 
-.btn-element.text-elem, .image-elem, .audio-elem, .interactive-elem, .container-elem, .worked-exp-elem, .assessment-elem, .opener-elem, .section-break-elem, .metadata-anchor,.interactive-elem-button, .container-elem-button , .poetry-elem , .stanza-elem{
+.btn-element.text-elem, .image-elem, .audio-elem, .interactive-elem, .container-elem, .worked-exp-elem, .assessment-elem, .opener-elem, .section-break-elem, .metadata-anchor,.interactive-elem-button, .container-elem-button , .poetry-elem , .btn-element.stanza-elem{
     width: 30px;
     height: 30px;
     display: flex;

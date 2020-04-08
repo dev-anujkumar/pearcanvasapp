@@ -615,6 +615,8 @@ export class TinyMceEditor extends Component {
                     let nextSaparator = (activeEditor.closest('.editor')).nextSibling;
                     let textPicker = nextSaparator.querySelector('#myDropdown li > .stanza-elem');
                     textPicker.click();
+                    // deleting br from the node in poetry element//
+                    activeElement.children[activeElementChildLength - 1].innerHTML = ''
                 }
             }      
         });

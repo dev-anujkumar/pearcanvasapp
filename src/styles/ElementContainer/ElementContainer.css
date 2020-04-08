@@ -16,7 +16,7 @@
     border: 1.5px solid #149632;
 }
 
-.element-container.hideBorder:not(.as):not(.we) *, .element-container.showBorder:not(.as):not(.we) * {
+.element-container.hideBorder:not(.as):not(.we):not(.pe) *, .element-container.showBorder:not(.as):not(.we):not(.pe) * {
     cursor: default !important;
 }
 
