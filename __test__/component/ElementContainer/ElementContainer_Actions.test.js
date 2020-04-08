@@ -984,12 +984,8 @@ describe('Tests ElementContainer Actions', () => {
             config.slateManifestURN='urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'
             let contentUrn = "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r43",
                 type = "element-citation",
-                asideData = {
-                    type: "citations",
-                    id: "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e",
-                },
                 parentUrn = {
-                    manifestUrn: "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e5",
+                    manifestUrn: "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e",
                     contentUrn: "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5",
                     elementType: "citations"
                 }
@@ -1010,7 +1006,7 @@ describe('Tests ElementContainer Actions', () => {
             }];
         
             return store.dispatch(actions.deleteElement(elementId, type, parentUrn, undefined, contentUrn, "0-3")).then(() => {
-                expect(store.getActions()).toEqual(expectedActions);
+                expect(store.getActions()[0].type).toEqual(expectedActions[0].type);
             });
         })
 
