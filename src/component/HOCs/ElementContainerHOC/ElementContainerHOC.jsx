@@ -58,8 +58,6 @@ const containerWrapper = (WrappedComponent) => {
         render() {
             const { model, index, slateLockInfo } = this.props;
             return this.renderContainer(model, index, slateLockInfo)
-            // return "Hello Poetry element"
-            //return <WrappedComponent data={...this.state} {...this.props} />;
         }
     };
 }

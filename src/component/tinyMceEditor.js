@@ -610,13 +610,12 @@ export class TinyMceEditor extends Component {
                     && activeElement.children[activeElementChildLength - 1].tagName == 'SPAN'
                     && activeElement.children[activeElementChildLength - 1].innerHTML == '<br>') {
 
+                    activeElement.children[activeElementChildLength - 1].remove();
                     let activeEditor = document.getElementById(tinymce.activeEditor.id);
                     activeEditor.blur();
                     let nextSaparator = (activeEditor.closest('.editor')).nextSibling;
                     let textPicker = nextSaparator.querySelector('#myDropdown li > .stanza-elem');
                     textPicker.click();
-                    // deleting br from the node in poetry element//
-                    activeElement.children[activeElementChildLength - 1].innerHTML = ''
                 }
             }      
         });
