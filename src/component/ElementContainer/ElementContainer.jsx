@@ -489,7 +489,7 @@ class ElementContainer extends Component {
                     if(dataToSend.status === "approved"){
                         config.savingInProgress = true
                     }
-                    this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, showHideType, parentElement);
+                    this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, showHideType, parentElement, poetryData);
                 }
                 break;
 
@@ -791,7 +791,7 @@ class ElementContainer extends Component {
         /** Handle TCM for tcm enable elements */
         let tcm = false;
         let feedback = false;
-        if (element.type == 'element-authoredtext' || element.type == 'element-list' || element.type == 'element-blockfeature' || element.type == 'element-learningobjectives') {
+        if (element.type == 'element-authoredtext' || element.type == 'element-list' || element.type == 'element-blockfeature' || element.type == 'element-learningobjectives' || element.type === 'poetry' || element.type === 'stanza') {
             if (element.tcm) {
                 tcm = element.tcm;
                 sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });
@@ -1177,8 +1177,8 @@ const mapDispatchToProps = (dispatch) => {
                 }
             })
         },
-        updateElement: (updatedData, elementIndex, parentUrn, asideData, showHideType, parentElement) => {
-            dispatch(updateElement(updatedData, elementIndex, parentUrn, asideData, showHideType, parentElement))
+        updateElement: (updatedData, elementIndex, parentUrn, asideData, showHideType, parentElement, poetryData) => {
+            dispatch(updateElement(updatedData, elementIndex, parentUrn, asideData, showHideType, parentElement, poetryData))
         },
         updateFigureData: (figureData, index, elementId, cb) => {
             dispatch(updateFigureData(figureData, index, elementId, cb))

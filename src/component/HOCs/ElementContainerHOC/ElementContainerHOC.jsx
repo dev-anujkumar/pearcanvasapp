@@ -23,10 +23,10 @@ const containerWrapper = (WrappedComponent) => {
             figCaptionClass= 'figcaptionImageTextWidth',
             figCreditClass= 'paragraphImageTextWidthCredit'
             
-            let formattedSubtitle = model.contents.hasOwnProperty('formatted-subtitle') ? model.contents["formatted-subtitle"].text : "<p></p>";
-            let formattedTitle = model.contents.hasOwnProperty('formatted-title') ? model.contents["formatted-title"].text : "<p></p>";
-            let formattedCaption = model.contents.hasOwnProperty('formatted-caption') ? model.contents["formatted-caption"].text : "<p></p>";
-            let formattedCredit = model.contents.hasOwnProperty('formatted-credit') ? model.contents["formatted-credit"].text : "<p></p>";
+            let formattedSubtitle = model.contents.hasOwnProperty('formatted-subtitle') ? model.contents["formatted-subtitle"].html.text : "<p></p>";
+            let formattedTitle = model.contents.hasOwnProperty('formatted-title') ? model.contents["formatted-title"].html.text : "<p></p>";
+            let formattedCaption = model.contents.hasOwnProperty('formatted-caption') ? model.contents["formatted-caption"].html.text : "<p></p>";
+            let formattedCredit = model.contents.hasOwnProperty('formatted-credit') ? model.contents["formatted-credit"].html.text : "<p></p>";
 
             let poetryElem = <div className={divClass}>
                 <div className={divContainerClass}>

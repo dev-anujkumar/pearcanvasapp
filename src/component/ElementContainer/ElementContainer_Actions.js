@@ -244,13 +244,13 @@ function prepareDataForTcmUpdate (updatedData,id, elementIndex, asideData, getSt
  * @param {*} updatedData the updated content
  * @param {*} elementIndex index of the element on the slate
  */
-export const updateElement = (updatedData, elementIndex, parentUrn, asideData, showHideType, parentElement) => (dispatch, getState) => {
+export const updateElement = (updatedData, elementIndex, parentUrn, asideData, showHideType, parentElement, poetryData) => (dispatch, getState) => {
     if(hasReviewerRole()){
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
         return ;
     }
-    prepareDataForTcmUpdate(updatedData,updatedData.id, elementIndex, asideData, getState, updatedData.type);
-    updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, null, null, showHideType, parentElement)
+    prepareDataForTcmUpdate(updatedData,updatedData.id, elementIndex, asideData, getState, updatedData.type, poetryData);
+    updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, null, null, showHideType, parentElement, poetryData)
     return axios.put(`${config.REACT_APP_API_URL}v1/slate/element`,
         updatedData,
         {
@@ -341,7 +341,7 @@ function updateLOInStore(updatedData, versionedData, getState, dispatch) {
     
 
 }
-function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getState, versionedData, elementIndex, showHideType, parentElement){
+function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getState, versionedData, elementIndex, showHideType, parentElement, poetryData){
     //direct dispatching in store
     let parentData = getState().appStore.slateLevelData;
     let newslateData = JSON.parse(JSON.stringify(parentData));
@@ -362,6 +362,10 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                     dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:asideData.id, asideData.contentUrn, 0, asideData));
                 // }else if(indexes.length === 3){
                 //     dispatch(fetchSlateData(asideData.id,asideData.contentUrn, 0, asideData));
+                }
+            } else if(poetryData && poetryData.type == 'poetry'){
+                if(indexes.length === 2 || indexes.length === 3){
+                    dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:poetryData.id, poetryData.contentUrn, 0, poetryData));
                 }
             } 
             else if(parentElement && parentElement.type === "popup" && updatedData.popupEntityUrn && (updatedData.metaDataField || updatedData.section === "postertextobject") ){
@@ -540,6 +544,53 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                         }
                     };
                 }
+            }  else if(element.type === "poetry"){
+                if(element.contents["formattedTitle"] && element.contents["formattedTitle"]["id"] === elementId){
+                    element  = {
+                        ...element,
+                        contents : {
+                            ...element.contents,
+                            "formattedTitle" : {...updatedData}
+                        }
+                    };
+                } else if(element.contents["formattedSubtitle"] && element.contents["formattedSubtitle"]["id"] === elementId){
+                    element  = {
+                        ...element,
+                        contents : {
+                            ...element.contents,
+                            "formattedSubtitle" : {...updatedData}
+                        }
+                    };
+                } else if(element.contents["formattedCaption"] && element.contents["formattedCaption"]["id"] === elementId){
+                    element  = {
+                        ...element,
+                        contents : {
+                            ...element.contents,
+                            "formattedCaption" : {...updatedData}
+                        }
+                    };
+                } else if(element.contents["formattedCredit"] && element.contents["formattedCredit"]["id"] === elementId){
+                    element  = {
+                        ...element,
+                        contents : {
+                            ...element.contents,
+                            "formattedCredit" : {...updatedData}
+                        }
+                    };
+                } 
+                // else if(element.contents.bodymatter[0].type === 'stanza'){
+                //     element.contents.bodymatter.forEach((stanza, index)=> {
+                //         if(element.contents.bodymatter[index].id === elementId){
+                //             element  = {
+                //                 ...element,
+                //                 contents : {
+                //                     ...element.contents,
+                //                     bodymatter : {...updatedData}
+                //                 }
+                //             };
+                //         }
+                //     })
+                // }
             }
             else if(element.type === "showhide"){
                 if(showHideType){
