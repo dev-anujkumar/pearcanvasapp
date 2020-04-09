@@ -40,15 +40,12 @@ describe('Tests ElementContainer Actions', () => {
             elementIndex: ""
         }
     };
-<<<<<<< HEAD
-=======
     let initialState2 ={...initialState,
         slateLevelData: slateWithCitationElement.slateLevelData,  
         appStore: {slateLevelData:slateWithCitationElement.slateLevelData}
     }
     // let store = mockStore(() => initialState);
 
->>>>>>> d8e8ae3c15fa0b11f7723e59a0f6cad791278eb2
     beforeEach(() => {
         moxios.install();
     });
@@ -1753,7 +1750,6 @@ describe('Tests ElementContainer Actions', () => {
             
         };
 
-<<<<<<< HEAD
         (slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter).splice(2, 1);
         const expectedActions = [{
             type: AUTHORING_ELEMENT_CREATED,
@@ -1771,9 +1767,7 @@ describe('Tests ElementContainer Actions', () => {
             // expect(store.getActions()).toEqual(expectedActions);
         });
     })
-})
-})
-=======
+    })
     describe('testing----------- Citation Element -------------',()=>{
        
         it('testing------- Delete Element citations type------action', () => {
@@ -1806,8 +1800,16 @@ describe('Tests ElementContainer Actions', () => {
                 expect(store.getActions()[0].type).toEqual(expectedActions[0].type);
             });
         })
-
+    
     })
-   
-});
->>>>>>> d8e8ae3c15fa0b11f7723e59a0f6cad791278eb2
+})
+
+
+
+
+
+
+
+
+
+
