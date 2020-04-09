@@ -223,6 +223,32 @@ export default {
         elementWipType: undefined,
         altText: "",
         longDesc: ""
+    },    
+    "Section_NewInfo": {
+        id: "urn:pearson:work:b9125fbb-e982-4d5a-8bbf-748ad53f82d2",
+        type: "element-authoredtext",
+        schema: "http://schemas.pearson.com/wip-authoring/element/1",
+        designtype: "",
+        elementdata:
+        {
+            schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+            text: "",
+            headers: [{ charStart: 0, charEnd: -1, level: 1 }]
+        },
+
+        html:
+        {
+            text: '<h1 class="heading1NummerEins"><br></h1>',
+            footnotes: {},
+            glossaryentries: {}
+        },
+
+        versionUrn: "urn:pearson:work:b9125fbb-e982-4d5a-8bbf-748ad53f82d2",
+        contentUrn: "urn:pearson:entity:1c9395e3-6f50-452d-95c4-617c19f613dd",
+        status: "wip",
+        tcm: false,
+        feedback: false,
+        comments: false
     },
     "Aside_OldData": {
         id: "urn:pearson:work:188d143b-101c-400d-80f5-3102b25483bb",
@@ -351,5 +377,97 @@ export default {
         elementWipType: undefined,
         altText: "",
         longDesc: ""
+    },    
+    "SingleAssessment_OldData": {
+        id: "urn:pearson:work:fa8ebea3-d9ba-4aec-8658-2f944841404a",
+        type: "figure",
+        figuretype: "assessment",
+        schema: "http://schemas.pearson.com/wip-authoring/figure/1",
+        title: {
+            schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+            text: "",
+            textsemantics: [],
+            mathml: []
+        },
+        figuredata:
+        {
+            schema: "http://schemas.pearson.com/wip-authoring/element/1",
+            type: "element-assessment",
+            elementdata:
+            {
+                assessmentitemtype: "assessmentItem",
+                assessmentformat: "puf",
+                schema: "http://schemas.pearson.com/wip-authoring/assessment/1#/definitions/assessment",
+                posterimage: {
+                    path: "https://cite-media-stg.pearson.com/legacy_paths/8e…41-4ed3-44a3-8310-1106d3715c3e/FPO-assessment.png",
+                    imageid: ""
+                },
+                usagetype: "Quiz",
+                assessmentid: "",
+                assessmentitemid: ""
+            },
+            id: ""
+        },
+        html: { title: "", subtitle: "<p><br></p>", text: "" },
+        versionUrn: "urn:pearson:work:fa8ebea3-d9ba-4aec-8658-2f944841404a",
+        contentUrn: "urn:pearson:entity:cc716797-180e-4850-9198-1c59e43f59a3",
+        status: "wip",
+        feedback: false,
+        comments: false
+    },
+    "SingleAssessment_NewData":{
+        elementId: "urn:pearson:work:fa8ebea3-d9ba-4aec-8658-2f944841404a",
+        elementType: "element-assessment",
+        primaryOption: "primary-single-assessment",
+        secondaryOption: "secondary-single-assessment-puf",
+        labelText: "Qu",
+        toolbar: []
+    },
+    "SingleAssessment_OldInfo":{
+        elementType: "element-assessment",
+        primaryOption: "primary-single-assessment",
+        secondaryOption: "secondary-single-assessment-cite",
+        elementId: "urn:pearson:work:fa8ebea3-d9ba-4aec-8658-2f944841404a",
+        index: 3,
+        elementWipType: "figure",
+        toolbar: [],
+        tag: "Qu",
+    },
+    "sidebarExpectedRes":{
+        id: "urn:pearson:work:fa8ebea3-d9ba-4aec-8658-2f944841404a",
+        type: "figure",
+        figuretype: "assessment",
+        schema: "http://schemas.pearson.com/wip-authoring/figure/1",
+        title: {
+            schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+            text: "",
+            textsemantics: [],
+            mathml: []
+        },
+        figuredata:
+        {
+            schema: "http://schemas.pearson.com/wip-authoring/element/1",
+            type: "element-assessment",
+            elementdata:
+            {
+                assessmentitemtype: "assessmentItem",
+                assessmentformat: "puf",
+                schema: "http://schemas.pearson.com/wip-authoring/assessment/1#/definitions/assessment",
+                posterimage: {
+                    path: "https://cite-media-stg.pearson.com/legacy_paths/8e…41-4ed3-44a3-8310-1106d3715c3e/FPO-assessment.png",
+                    imageid: ""
+                },
+                usagetype: "Quiz",
+                assessmentid: "",
+                assessmentitemid: ""
+            },
+            id: ""
+        },
+        html: { title: "", subtitle: "<p><br></p>", text: "" },
+        versionUrn: "urn:pearson:work:fa8ebea3-d9ba-4aec-8658-2f944841404a",
+        contentUrn: "urn:pearson:entity:cc716797-180e-4850-9198-1c59e43f59a3",
+        status: "wip",
+        feedback: false,
+        comments: false
     }
 }
