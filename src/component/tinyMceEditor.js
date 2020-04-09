@@ -1355,7 +1355,7 @@ export class TinyMceEditor extends Component {
         let event = Object.assign({}, e);
         let currentTarget = event.currentTarget;
         let isSameTargetBasedOnDataId = true;
-        let termText = document.getElementById(currentTarget.id)&&document.getElementById(currentTarget.id).innerHTML;
+        // let termText = document.getElementById(currentTarget.id)&&document.getElementById(currentTarget.id).innerHTML;
 
         /*
             checking for same target based on data-id not id
@@ -1462,9 +1462,9 @@ export class TinyMceEditor extends Component {
                         }
                     })
                 }
-                if(termText) {
-                    document.getElementById(currentTarget.id).innerHTML = termText;
-                }
+                // if(termText) {
+                //     document.getElementById(currentTarget.id).innerHTML = termText;
+                // }
             });
             this.setToolbarByElementType();
         }
@@ -1529,7 +1529,7 @@ export class TinyMceEditor extends Component {
         if (checkforToolbarClick(relatedTargets)) {
             e.stopPropagation();
             return;
-        }
+        }        
         tinymce.$('span[data-mce-type="bookmark"]').each(function () {
             let innerHtml = this.innerHTML;
             this.outerHTML = innerHtml;
@@ -1540,6 +1540,9 @@ export class TinyMceEditor extends Component {
                 this.outerHTML = innerHtml;
             })
         }
+        tinymce.$('div[data-mce-bogus="all"]').each(function () {
+            this.outerHTML = '';
+        })
         let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
         if(!assetPopoverPopupIsVisible){
             tinymce.$('#asset-popover-attacher').each(function () {

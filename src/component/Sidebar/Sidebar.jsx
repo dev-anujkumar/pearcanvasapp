@@ -112,12 +112,17 @@ class Sidebar extends Component {
         const { activePrimaryOption } = this.state
         let primaryOptions = '';
         if(this.state.activeElementType){
+            let className=""
             let primaryOptionObject = elementList[this.state.activeElementType];
             let primaryOptionList = Object.keys(primaryOptionObject);
             if(primaryOptionList.length > 0) {
                 if(this.state.activeElementType === 'element-assessment'){
                     delete primaryOptionList[1];
                 }
+                let disabledPrimaryOption=["popup", "showhide", "element-interactive", "element-smartlink"];
+                 if( disabledPrimaryOption.indexOf(this.state.activeElementType) !== -1 ){
+                    className="disabled"
+                 }
                 primaryOptions = primaryOptionList.map(item => {
                     if(item !== 'enumType') {
                         return <li key={item} data-value={item} onClick={this.handlePrimaryOptionChange}>
@@ -133,7 +138,7 @@ class Sidebar extends Component {
     
                 primaryOptions = <div
                     className={`element-dropdown ${this.props.showHideObj && this.props.activeElement.elementType? "sidebar-disable": ""}`}>
-                    <div className="element-dropdown-title" data-element="primary" onClick={this.toggleElementDropdown}>
+                    <div className={`element-dropdown-title ${className}`} data-element="primary" onClick={this.toggleElementDropdown}>
                         {primaryOptionObject[this.state.activePrimaryOption].text}
                         { activePrimaryOption === "primary-single-assessment" ? null : dropdownArrow }
                     </div>
