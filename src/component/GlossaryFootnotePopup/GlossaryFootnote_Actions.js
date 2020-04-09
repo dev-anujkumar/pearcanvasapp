@@ -318,6 +318,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                     }
                 }
             }
+        }
         store.dispatch({
             type: UPDATE_FOOTNOTEGLOSSARY,
             payload: {
