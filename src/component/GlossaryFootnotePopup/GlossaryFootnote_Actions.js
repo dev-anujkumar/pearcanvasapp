@@ -72,7 +72,12 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                         glossaryFootElem = condition
                     }
                 } else if (indexesLen == 3) {
-                    condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
+                    if(elementType==='stanza'){
+                        condition = newBodymatter[indexes[0]].contents.bodymatter[indexes[2]]
+                    }
+                    else{
+                        condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
+                    }
                     if (condition.versionUrn == elementWorkId) {
                         glossaryFootElem = condition
                     }
@@ -227,7 +232,12 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                 }
             }
         }else if(tempIndex.length === 3){
-            if(newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]].id === elementWorkId){
+            if(elementType==='stanza'){
+                if (newBodymatter[tempIndex[0]].contents.bodymatter[tempIndex[2]].id === elementWorkId){
+                    data.isHead = false;
+                }
+            }
+            else if(newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]].id === elementWorkId){
                 data.isHead = false;
                 if(newBodymatter[tempIndex[0]].subtype === "workedexample"){
                     data.parentType = "workedexample";
@@ -292,13 +302,22 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                         newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]] = res.data
                     }
                 } else if (indexesLen == 3) {
-                    condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
+                    if(elementType==='stanza'){
+                        condition = newBodymatter[indexes[0]].contents.bodymatter[indexes[2]]
+                    }
+                    else{
+                        condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
+                    }
                     if (condition.versionUrn == elementWorkId) {
-                        newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]] = res.data
+                        if(elementType==='stanza'){
+                            newBodymatter[indexes[0]].contents.bodymatter[indexes[2]] = res.data
+                        }
+                        else{
+                            newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]] = res.data
+                        }
                     }
                 }
             }
-        }
         store.dispatch({
             type: UPDATE_FOOTNOTEGLOSSARY,
             payload: {

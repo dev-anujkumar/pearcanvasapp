@@ -28,6 +28,7 @@ const findElementType = (element, index) => {
     try {
         switch (element.type) {
             case 'element-authoredtext':
+            case 'stanza':
                 elementType['elementType'] = elementDataBank[element.type]["elementType"];
                 if ('elementdata' in element && 'headers' in element.elementdata && element.elementdata.headers) {
                     elementType['primaryOption'] = elementDataBank["element-authoredtext-heading"]["primaryOption"];

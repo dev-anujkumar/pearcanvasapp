@@ -387,13 +387,7 @@ class ElementContainer extends Component {
     }
 
     figureDifferenceAudioVideo = (index, previousElementData) => {
-        // let newAudioVideoId = ""  can be removed after regression testing
-        // if (previousElementData.figuretype === "audio") {
-        //     newAudioVideoId = previousElementData.figuredata.audio && previousElementData.figuredata.audio.path || ""
-        // }
-        // else {
-        //     newAudioVideoId = previousElementData.figuredata.videos[0].path
-        // }
+
         let titleDOM = document.getElementById(`cypress-${index}-0`),
             subtitleDOM = document.getElementById(`cypress-${index}-1`),
             captionDOM = document.getElementById(`cypress-${index}-2`),
@@ -456,6 +450,7 @@ class ElementContainer extends Component {
             case elementTypeConstant.AUTHORED_TEXT:
             case elementTypeConstant.LEARNING_OBJECTIVE_ITEM:
             case elementTypeConstant.BLOCKFEATURE:
+            case elementTypeConstant.POETRY_STANZA:
             let index  = (parentElement.type == "showhide" ||  parentElement.type == "popup" || parentElement.type == "poetry")? activeEditorId:`cypress-${this.props.index}`
             if (this.props.element && this.props.element.type === "element-blockfeature" && this.props.element.subtype === "quote" && tinyMCE.activeEditor && tinyMCE.activeEditor.id  && !tinyMCE.activeEditor.id.includes("footnote")) {
                 let blockqtText = document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins')?document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').innerText:"";
@@ -481,6 +476,9 @@ class ElementContainer extends Component {
                     tempDiv.innerHTML = matchHTMLwithRegex(tempDiv.innerHTML) ? tempDiv.innerHTML : `<p class="paragraphNumeroUno">${tempDiv.innerHTML}</p>`
                     html = html.replace(/<br data-mce-bogus="1">/g, "<br>")
                     html = matchHTMLwithRegex(html) ? html : `<p class="paragraphNumeroUno">${html}</p>`
+                }
+                else if (previousElementData.type === "stanza") {
+                    html = `<p>${html}</p>`
                 }
                 html =html.replace(/(\r\n|\n|\r)/gm, '')
                 previousElementData.html.text= previousElementData.html.text.replace(/<br data-mce-bogus="1">/g, "<br>").replace(/(\r\n|\n|\r)/gm, '');

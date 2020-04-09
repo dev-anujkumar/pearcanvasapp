@@ -746,5 +746,20 @@ export default {
                 }
             }
         } 
+    },
+    "stanza" : {
+        "primary-stanza": {
+            text: 'Stanza Element',
+            enum: 'STANZA',
+            toolbar: [],
+            dropdownDisabled: true,
+            subtype: {
+                'secondary-stanza': {
+                    text: 'Stanza Element',
+                    labelText: 'PE',
+                    enum: 'NA',
+                }
+            }
+        } 
     }
 };

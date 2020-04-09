@@ -362,6 +362,11 @@ const elementDataBank = {
         "elementType" : "poetry",
         "primaryOption" : "primary-poetry",
         "secondaryOption" : "secondary-poetry"
+    },
+    "stanza" : {
+        "elementType" : "stanza",
+        "primaryOption" : "primary-stanza",
+        "secondaryOption" : "secondary-stanza"
     }
 }
 

@@ -205,7 +205,12 @@ function prepareDataForTcmUpdate (updatedData,id, elementIndex, asideData, getSt
             updatedData.isHead = true;
         }
     } else if (indexes.length === 3) {
-        if (slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].id === id) {
+        if(type==="stanza"){
+            if(slateBodyMatter[indexes[0]].contents.bodymatter[indexes[2]].id === id){
+                updatedData.isHead = false;
+            }
+        }
+        else if (slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].id === id) {
             updatedData.isHead = false;
         }
     }
@@ -234,7 +239,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
         return ;
     }
-    prepareDataForTcmUpdate(updatedData,updatedData.id, elementIndex, asideData, getState);
+    prepareDataForTcmUpdate(updatedData,updatedData.id, elementIndex, asideData, getState, updatedData.type);
     updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, null, null, showHideType, parentElement)
     return axios.put(`${config.REACT_APP_API_URL}v1/slate/element`,
         updatedData,
