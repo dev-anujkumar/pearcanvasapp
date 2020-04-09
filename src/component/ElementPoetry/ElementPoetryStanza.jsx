@@ -1,19 +1,13 @@
 import React, { Component } from 'react';
-import ElementPoetryLine from "./ElementPoetryLine.jsx"
 import '../../styles/ElementPoetry/ElementPoetry.css'
+import TinyMceEditor from "../tinyMceEditor"
 class ElementPoetryStanza extends Component {
-    constructor() {
-      super();
-    }
+  constructor() {
+    super();
+  }
 
   prepareLineDom = (model) => {
 
-    // let lineModel = 
-    //   `${model.map((line) => {
-    //     return (line.authoredtext.text ? `<span class="poetryLine" data-id=${line.id}>${line.authoredtext.text}</span><br/>`:
-    //     `<span class="poetryLine" data-id=${line.id}><br /></span><br/>`)
-    //   })
-    //   }` 
     let ConvertedModel = model && model.html && model.html.text.replace(/<p>/g, "")
     ConvertedModel = ConvertedModel && ConvertedModel.replace(/<\/p>/g, "")
 
@@ -21,41 +15,40 @@ class ElementPoetryStanza extends Component {
 
     return lineModel;
   }
-    
-    render() {
-        const { className, model,openGlossaryFootnotePopUp, slateLockInfo,openAssetPopoverPopUp,glossaryFootnoteValue , index} = this.props
-         let lineModel = this.prepareLineDom(model)
-        return (
-           <ElementPoetryLine
-             openAssetPopoverPopUp ={openAssetPopoverPopUp}
-             openGlossaryFootnotePopUp={openGlossaryFootnotePopUp}
-             index={index}
-             elementId={this.props.elementId}
-             element={this.props.element}
-             className={className}
-             model={lineModel}
-            // model={'<span class="poetryLine"><br /></span><br/>'}
-             tagName={'div'}
-             handleEditorFocus={this.props.handleFocus}
-             handleBlur = {this.props.handleBlur}
-             slateLockInfo={slateLockInfo}
-             onListSelect={this.props.onListSelect}
-             setActiveElement={this.props.setActiveElement}
-              // handleBlur={this.handleBlur}
-              handleFocus={this.props.handleFocus}
-              btnClassName={this.props.btnClassName}
-              borderToggle={this.props.borderToggle}
-              elemBorderToggle={this.props.elemBorderToggle}
-             permissions={this.props.permissions}
-             glossaryFootnoteValue={glossaryFootnoteValue}
-             glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
-           />
-       )
-    }
-  }
 
-  ElementPoetryStanza.defaultProps = {
-    type: "element-poetrystanza"
+  render() {
+    const { className, model, openGlossaryFootnotePopUp, slateLockInfo, openAssetPopoverPopUp, glossaryFootnoteValue, index } = this.props
+    let lineModel = this.prepareLineDom(model)
+    return (
+      <TinyMceEditor
+        openAssetPopoverPopUp={openAssetPopoverPopUp}
+        openGlossaryFootnotePopUp={openGlossaryFootnotePopUp}
+        index={index}
+        elementId={this.props.elementId}
+        element={this.props.element}
+        placeholder="Type Something..."
+        className={className}
+        model={lineModel ? lineModel : '<span><br></span>'}
+        tagName={'div'}
+        handleEditorFocus={this.props.handleFocus}
+        handleBlur={this.props.handleBlur}
+        slateLockInfo={slateLockInfo}
+        onListSelect={this.props.onListSelect}
+        permissions={this.props.permissions}
+        setActiveElement={this.props.setActiveElement}
+        handleFocus={this.handleFocus}
+        btnClassName={this.props.btnClassName}
+        borderToggle={this.props.borderToggle}
+        elemBorderToggle={this.props.elemBorderToggle}
+        glossaryFootnoteValue={glossaryFootnoteValue}
+        glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
+      />
+    )
   }
-  
-  export default ElementPoetryStanza;
+}
+
+ElementPoetryStanza.defaultProps = {
+  type: "element-poetrystanza"
+}
+
+export default ElementPoetryStanza;
