@@ -120,7 +120,7 @@ export class TinyMceEditor extends Component {
                         //     this.naturalWidth && this.setAttribute('width', this.naturalWidth)
                         // }) 
                         if(!config.savingInProgress){
-                            if(this.props.element.type === "popup" && !this.props.currentElement){
+                            if((this.props.element.type === "popup" || this.props.element.type === "citations") && !this.props.currentElement){
                                 this.props.createPopupUnit(this.props.popupField, null, this.props.index, this.props.element) 
                             } else {
                                 let showHideType = this.props.showHideType || null
@@ -495,7 +495,7 @@ export class TinyMceEditor extends Component {
             if (activeElement) { 
                 let lastCont = this.lastContent;
                 this.lastContent = activeElement.innerHTML;
-                if (!isMediaElement && !activeElement.children.length || (activeElement.children.length === 1 && activeElement.children[0].tagName === "BR" && activeElement.nodeName !== "CODE")) {
+                if (!isMediaElement && !activeElement.children.length && this.props.element.type !== "citations" || (activeElement.children.length === 1 && activeElement.children[0].tagName === "BR" && activeElement.nodeName !== "CODE")) {
                     //code to avoid deletion of editor first child(like p,h1,blockquote etc)
                     let div = document.createElement('div');
                     div.innerHTML = lastCont;
@@ -588,7 +588,12 @@ export class TinyMceEditor extends Component {
                 let activeEditor = document.getElementById(tinymce.activeEditor.id);
                 activeEditor.blur();
                 let nextSaparator = (activeEditor.closest('.editor')).nextSibling;
-                let textPicker = nextSaparator.querySelector('#myDropdown li > .text-elem');
+                let textPicker;
+                if(this.props.element.type == 'citations'){
+                    textPicker = nextSaparator.querySelector('#myDropdown li > .citation-elem');
+                }else{
+                    textPicker = nextSaparator.querySelector('#myDropdown li > .text-elem');
+                }
                 textPicker.click();
             }else if (key === 13 && this.props.element.type === 'showhide' && this.props.showHideType != 'revel' && this.props.currentElement.type !== 'element-list') {
                 this.props.createShowHideElement(this.props.showHideType, this.props.index, this.props.id);
@@ -1332,8 +1337,6 @@ export class TinyMceEditor extends Component {
         let event = Object.assign({}, e);
         let currentTarget = event.currentTarget;
         let isSameTargetBasedOnDataId = true;
-        // let termText = document.getElementById(currentTarget.id)&&document.getElementById(currentTarget.id).innerHTML;
-
         /*
             checking for same target based on data-id not id
         */
@@ -1439,9 +1442,6 @@ export class TinyMceEditor extends Component {
                         }
                     })
                 }
-                // if(termText) {
-                //     document.getElementById(currentTarget.id).innerHTML = termText;
-                // }
             });
             this.setToolbarByElementType();
         }
@@ -1538,7 +1538,13 @@ export class TinyMceEditor extends Component {
         if(!this.fromtinyInitBlur && !config.savingInProgress){
             let elemNode = document.getElementById(`cypress-${this.props.index}`) 
             elemNode.innerHTML = elemNode.innerHTML.replace(/<br data-mce-bogus="1">/g, "")
-            if(this.props.element && this.props.element.type === "popup" && !this.props.currentElement && elemNode && elemNode.innerHTML !== ""){
+            if(
+                this.props.element &&
+                (this.props.element.type === "popup" || this.props.element.type === "citations") &&
+                !this.props.currentElement &&
+                elemNode &&
+                elemNode.innerHTML !== ""
+            ){
                 this.props.createPopupUnit(this.props.popupField, forceupdate, this.props.index, this.props.element)
             } else {
                 this.props.handleBlur(forceupdate,this.props.currentElement,this.props.index, showHideType)
@@ -1579,7 +1585,10 @@ export class TinyMceEditor extends Component {
                 if(this.props.element && this.props.element.type === "popup"){
                     model = this.props.model && this.props.model.replace(/class="paragraphNumeroUno"/g, "")
                 }
-                else {
+                else if(this.props.element && this.props.element.type === "citations"){
+                    model = this.props.element.contents['formatted-title'] && this.props.element.contents['formatted-title'].html && this.props.element.contents['formatted-title'].html.text.length ? this.props.element.contents['formatted-title'].html.text : `<p class="paragraphNumeroUno"><br/></p>`
+                }
+                else{
                     model = this.props.model;
                 }
                 let tempDiv = document.createElement('div');
@@ -1634,6 +1643,10 @@ export class TinyMceEditor extends Component {
             case 'figureCredit':
                 return (
                     <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onKeyDown={this.normalKeyDownHandler} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model }} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
+                )
+            case 'element-citation':
+                return (
+                    <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onKeyDown={this.normalKeyDownHandler} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model && this.props.model.text ? this.props.model.text : '<p class="paragraphNumeroUnoCitation"><br/></p>' }} onChange={this.handlePlaceholder}></div> 
                 )
             default:
                 return (

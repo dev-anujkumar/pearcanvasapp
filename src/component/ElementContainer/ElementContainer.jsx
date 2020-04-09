@@ -22,7 +22,7 @@ import { setActiveElement, fetchElementTag, openPopupSlate } from './../CanvasWr
 import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
 import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris } from '../../constants/utility.js';
-import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
+import { ShowLoader, HideLoader } from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
 import AssessmentSlateCanvas from './../AssessmentSlateCanvas';
@@ -37,6 +37,9 @@ import { updatePageNumber, accessDenied } from '../SlateWrapper/SlateWrapper_Act
 import { releaseSlateLock } from '../CanvasWrapper/SlateLock_Actions.js';
 import ElementShowHide from '../ElementShowHide';
 import ElementContainerContext from './ElementContainerContext'
+import { CitationGroupContext } from './ElementCitationContext'
+import CitationGroup from '../CitationGroup'
+import CitationElement from '../CitationElement'
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -105,7 +108,7 @@ class ElementContainer extends Component {
     /**
      * function will be called on element focus of tinymce instance
      */
-    handleFocus = (updateFromC2Flag, showHideObj,event) => {
+    handleFocus = (updateFromC2Flag, showHideObj, event) => {
         if(event){
             event.stopPropagation();
         }
@@ -454,7 +457,7 @@ class ElementContainer extends Component {
             case elementTypeConstant.AUTHORED_TEXT:
             case elementTypeConstant.LEARNING_OBJECTIVE_ITEM:
             case elementTypeConstant.BLOCKFEATURE:
-            let index  = parentElement.type == "showhide" ||  parentElement.type == "popup"? activeEditorId:`cypress-${this.props.index}`
+            let index = parentElement.type == "showhide" || parentElement.type == "popup" || parentElement.type == "citations" ? activeEditorId : `cypress-${this.props.index}`
             if (this.props.element && this.props.element.type === "element-blockfeature" && this.props.element.subtype === "quote" && tinyMCE.activeEditor && tinyMCE.activeEditor.id  && !tinyMCE.activeEditor.id.includes("footnote")) {
                 let blockqtText = document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins')?document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').innerText:"";
                 if (!blockqtText.trim()) {
@@ -475,7 +478,7 @@ class ElementContainer extends Component {
                 tempDiv.innerHTML = html;
                 //tinyMCE.$(tempDiv).find('.blockquote-hidden').remove();
                 html = tempDiv.innerHTML;
-                if(parentElement.type === "popup"){
+                if(parentElement.type === "popup" || parentElement.type === "citations"){
                     tempDiv.innerHTML = matchHTMLwithRegex(tempDiv.innerHTML) ? tempDiv.innerHTML : `<p class="paragraphNumeroUno">${tempDiv.innerHTML}</p>`
                     html = html.replace(/<br data-mce-bogus="1">/g, "<br>")
                     html = matchHTMLwithRegex(html) ? html : `<p class="paragraphNumeroUno">${html}</p>`
@@ -561,7 +564,6 @@ class ElementContainer extends Component {
                 }
                 break;
 
-
             case elementTypeConstant.ASSESSMENT_SLATE:
                 dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, undefined, undefined, undefined)
                 this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, undefined, undefined);
@@ -587,6 +589,22 @@ class ElementContainer extends Component {
                     }
                     break;
                 }
+                case elementTypeConstant.CITATION_ELEMENT:
+                    let ceIndex  = `cypress-${this.props.index}`
+                    let ceCurrentNode = document.getElementById(ceIndex)
+                    let ceHtml = ceCurrentNode && ceCurrentNode.innerHTML;
+                    let tempDivForCE = document.createElement('div');
+                    tempDivForCE.innerHTML = ceHtml;
+                    ceHtml = tempDivForCE.innerHTML;
+                    if (ceHtml && previousElementData.html && (this.replaceUnwantedtags(ceHtml) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate) && !config.savingInProgress) {
+                        dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDivForCE, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, showHideType, asideData)
+                        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+                        if(dataToSend.status === "approved"){
+                            config.savingInProgress = true
+                        }
+                        this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, showHideType, parentElement);
+                    }
+                    break;
         }
     }
 
@@ -598,7 +616,8 @@ class ElementContainer extends Component {
         let activeEditorId = elemIndex ? `cypress-${elemIndex}` : (tinyMCE.activeEditor ? tinyMCE.activeEditor.id : '')
         let node = document.getElementById(activeEditorId);
         let element = currrentElement ? currrentElement : this.props.element
-        this.handleContentChange(node, element, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, this.props.element, showHideType)
+        let parentElement = currrentElement && currrentElement.type === elementTypeConstant.CITATION_ELEMENT ? this.props.parentElement : this.props.element
+        this.handleContentChange(node, element, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType)
     }
 
     /**
@@ -739,8 +758,15 @@ class ElementContainer extends Component {
         this.handleCommentPopup(false);
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
 
+        /** This condition is to delete whole Container Group element when only one element is left and that too getting deleted */
+        if (this.props.parentElement && this.props.parentElement.type === "citations" && this.props.parentElement.contents && this.props.parentElement.contents.bodymatter.length === 1) {
+            id = this.props.parentElement.id
+            type = this.props.parentElement.type
+            contentUrn = this.props.parentElement.contentUrn
+            index = index.split("-")[0]
+        }
         /** This condition to delete whole aside element when only one element in it deleted */
-        if (this.props.parentElement && this.props.parentElement.subtype !== "workedexample" && this.props.parentElement.elementdata.bodymatter.length === 1) {
+        else if (this.props.parentElement && this.props.parentElement.subtype !== "workedexample" && this.props.parentElement.elementdata && this.props.parentElement.elementdata.bodymatter.length === 1) {
             id = this.props.parentElement.id
             type = this.props.parentElement.type
             contentUrn = this.props.parentElement.contentUrn
@@ -786,7 +812,7 @@ class ElementContainer extends Component {
         /** Handle TCM for tcm enable elements */
         let tcm = false;
         let feedback = false;
-        if (element.type == 'element-authoredtext' || element.type == 'element-list' || element.type == 'element-blockfeature' || element.type == 'element-learningobjectives') {
+        if (element.type == 'element-authoredtext' || element.type == 'element-list' || element.type == 'element-blockfeature' || element.type == 'element-learningobjectives' || element.type == 'element-citation') {
             if (element.tcm) {
                 tcm = element.tcm;
                 sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });
@@ -936,6 +962,45 @@ class ElementContainer extends Component {
                     </ElementContainerContext.Provider >;
                     labelText = 'SH'
                     break;
+
+                case elementTypeConstant.CITATION_GROUP:
+                    editor = <CitationGroupContext.Provider value={{
+                        activeElement: this.props.activeElement,
+                        showBlocker: this.props.showBlocker,
+                        permissions: permissions,
+                        index: index,
+                        element: element,
+                        slateLockInfo: slateLockInfo,
+                        updatePageNumber: updatePageNumber,
+                        handleCommentspanel : handleCommentspanel,
+                        isBlockerActive : this.props.isBlockerActive,
+                        onClickCapture : this.props.onClickCapture,
+                        elementSeparatorProps : elementSepratorProps,
+                        setActiveElement : this.props.setActiveElement,
+                        handleFocus: this.handleFocus,
+                        handleBlur: this.handleBlur,
+                        onClick: this.handleFocus,
+                    }}><CitationGroup />
+                    </CitationGroupContext.Provider >;
+                    labelText = 'CG'
+                    break;
+                case elementTypeConstant.CITATION_ELEMENT:
+                    editor = <CitationElement
+                        activeElement = {this.props.activeElement}
+                        showBlocker = {this.props.showBlocker}
+                        permissions = {permissions}
+                        index = {index}
+                        element = {this.props.parentElement}
+                        model = {element.html}
+                        slateLockInfo = {slateLockInfo}
+                        updatePageNumber = {updatePageNumber}
+                        currentElement = {element}
+                        onClick = {this.handleFocus}
+                        handleFocus = {this.handleFocus}
+                        handleBlur = {this.handleBlur}
+                    />
+                    labelText = 'CT'
+                    break;
             }
         } else {
             editor = <p className="incorrect-data">Incorrect Data - {element.id}</p>;
@@ -984,7 +1049,7 @@ class ElementContainer extends Component {
                     sectionBreak={this.state.sectionBreak}
                     deleteElement={this.deleteElement}
                 />}
-                {
+                {this.props.children &&
                     <PageNumberContext.Consumer>
                         {
                             ({ isPageNumberEnabled }) => this.props.children(this.state.isHovered, isPageNumberEnabled, this.props.activeElement, this.props.permissions)
@@ -1095,7 +1160,7 @@ ElementContainer.defaultProps = {
 ElementContainer.propTypes = {
     /** Detail of element in JSON object */
     element: PropTypes.object,
-    elemBorderToggle: PropTypes.string
+    elemBorderToggle: PropTypes.bool
 }
 
 const mapDispatchToProps = (dispatch) => {

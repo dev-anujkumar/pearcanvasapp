@@ -2,6 +2,9 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import moxios from 'moxios';
 import * as actions from '../../../src/component/ElementContainer/ElementContainer_Actions';
+// import { comments } from '../../../fixtures/commentPanelData.js'
+import { slateLevelData, newslateData,defaultSlateDataFigure, addNewComment,addNewCommentAside, slateLevelAsideData,addNewCommentOnAsideElement,newSlateAsideDataComment, deleteElement, slateLevelDataAside, newslateDataAside ,newslateAsideData, blockfeature,slateWithCitationElement} from "../../../fixtures/slateTestingData"
+import axios from 'axios';
 import config from '../../../src/config/config.js';
 import { slateLevelData, addNewComment, slateLevelDataWithApproved, blockfeature, defaultSlateDataFigure , newslateAsideData} from "../../../fixtures/containerActionsTestingData"
 import { ADD_COMMENT, ADD_NEW_COMMENT, AUTHORING_ELEMENT_CREATED, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, DELETE_SHOW_HIDE_ELEMENT } from '../../../src/constants/Action_Constants';
@@ -37,6 +40,15 @@ describe('Tests ElementContainer Actions', () => {
             elementIndex: ""
         }
     };
+<<<<<<< HEAD
+=======
+    let initialState2 ={...initialState,
+        slateLevelData: slateWithCitationElement.slateLevelData,  
+        appStore: {slateLevelData:slateWithCitationElement.slateLevelData}
+    }
+    // let store = mockStore(() => initialState);
+
+>>>>>>> d8e8ae3c15fa0b11f7723e59a0f6cad791278eb2
     beforeEach(() => {
         moxios.install();
     });
@@ -1741,6 +1753,7 @@ describe('Tests ElementContainer Actions', () => {
             
         };
 
+<<<<<<< HEAD
         (slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter).splice(2, 1);
         const expectedActions = [{
             type: AUTHORING_ELEMENT_CREATED,
@@ -1760,3 +1773,41 @@ describe('Tests ElementContainer Actions', () => {
     })
 })
 })
+=======
+    describe('testing----------- Citation Element -------------',()=>{
+       
+        it('testing------- Delete Element citations type------action', () => {
+            let store = mockStore(() => initialState2);
+            config.slateManifestURN='urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'
+            let contentUrn = "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r43",
+                type = "element-citation",
+                parentUrn = {
+                    manifestUrn: "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e",
+                    contentUrn: "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5",
+                    elementType: "citations"
+                }
+        
+            moxios.wait(() => {
+                const request = moxios.requests.mostRecent();
+                request.respondWith({
+                    status: 200,
+                    response: 200
+                });
+            });
+        
+            let elementId = "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27637";
+            (slateWithCitationElement.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].contents.bodymatter).splice(3, 1);
+            const expectedActions = [{
+                type: AUTHORING_ELEMENT_CREATED,
+                payload: { slateLevelData: slateWithCitationElement.slateLevelData}
+            }];
+        
+            return store.dispatch(actions.deleteElement(elementId, type, parentUrn, undefined, contentUrn, "0-3")).then(() => {
+                expect(store.getActions()[0].type).toEqual(expectedActions[0].type);
+            });
+        })
+
+    })
+   
+});
+>>>>>>> d8e8ae3c15fa0b11f7723e59a0f6cad791278eb2

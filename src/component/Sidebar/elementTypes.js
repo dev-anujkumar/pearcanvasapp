@@ -736,5 +736,33 @@ export default {
                 }
             }
         } 
+    },
+    'citations' : {
+        'primary-citations-group': {
+            text: 'Citation',
+            enum: 'CITATION',
+            toolbar: ['footnote', 'increaseindent', 'decreaseindent', 'glossary', 'assetpopover', 'orderedlist', 'unorderedlist'],
+            subtype: {
+                'secondary-citations-group': {
+                    text: 'Citation Group',
+                    labelText: 'CG',
+                    enum: 'NA',
+                }
+            }
+        }
+    },
+    'element-citation' : {
+        'primary-element-citation': {
+            text: 'Citation',
+            enum: 'ELEMENT_CITATION',
+            toolbar: ['footnote', 'increaseindent', 'decreaseindent', 'glossary', 'assetpopover', 'orderedlist', 'unorderedlist'],
+            subtype: {
+                'secondary-element-citation': {
+                    text: 'Citation element',
+                    labelText: 'CT',
+                    enum: 'NA',
+                }
+            }
+        }
     }
 };

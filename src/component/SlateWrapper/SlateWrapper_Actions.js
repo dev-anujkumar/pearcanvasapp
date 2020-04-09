@@ -28,7 +28,7 @@ Array.prototype.move = function (from, to) {
 };
 
 function prepareDataForTcmUpdate(updatedData, parentData, asideData) {
-    if (parentData && parentData.elementType === "element-aside") {
+    if (parentData && (parentData.elementType === "element-aside" || parentData.elementType === "citations")) {
         updatedData.isHead = true;
     } else if (parentData && parentData.elementType === "manifest") {
         updatedData.isHead = false;
@@ -80,6 +80,9 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
 
     if (type == "LO") {
         _requestData.loref = loref ? loref : ""
+    } 
+    else if (type == 'ELEMENT_CITATION') {
+        _requestData.parentType = "citations"
     }
 
     prepareDataForTcmUpdate(_requestData, parentUrn, asideData)
@@ -115,7 +118,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                     item.elementdata.bodymatter.splice(outerAsideIndex, 0, createdElementData)
                 }
             })
-        } else if (asideData && asideData.type == 'element-aside' && type !== 'SECTION_BREAK') {
+        } else if (asideData && asideData.type == 'element-aside'  && type !== 'SECTION_BREAK') {
             newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
                 if (item.id == parentUrn.manifestUrn) {
                     item.elementdata.bodymatter.splice(index, 0, createdElementData)
@@ -129,6 +132,13 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
             })
         }else if (popupSlateData && popupSlateData.type == "popup"){
             newPopupSlateData.popupdata.bodymatter.splice(index, 0, createdElementData);
+        }
+        else if(asideData && asideData.type == 'citations'){
+            newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
+                if (item.id == parentUrn.manifestUrn) {
+                    item.contents.bodymatter.splice(index, 0, createdElementData)
+                }
+            })
         }
         else {
             newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
@@ -232,7 +242,15 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                             })
                         }
                     });
-                } else {
+                } 
+                /** ----------Swapping elements inside Citations Group Element----------------- */
+                else if(containerTypeElem && containerTypeElem == 'cg'){
+                    for (let i in newBodymatter) {
+                        if (newBodymatter[i].contentUrn == currentSlateEntityUrn) {
+                            newBodymatter[i].contents.bodymatter.move(oldIndex, newIndex);
+                        }
+                    }
+                }else{
                     newParentData[slateId].contents.bodymatter.move(oldIndex, newIndex);
                 }
 

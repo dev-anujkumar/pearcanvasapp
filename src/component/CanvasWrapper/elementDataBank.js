@@ -94,7 +94,7 @@ const elementDataBank = {
             "secondaryOption" : "secondary-list-7"
         }
     },
-
+    
     "figure" : {
         "image" : {
             "elementType" : "figure",
@@ -359,6 +359,16 @@ const elementDataBank = {
         "tag" : "SH",
 
     },
+    "citations" : {
+        "elementType" : "citations",
+        "primaryOption" : "primary-citations-group",
+        "secondaryOption" : "secondary-citations-group"
+    },
+    "element-citation" : {
+        "elementType" : "element-citation",
+        "primaryOption" : "primary-element-citation",
+        "secondaryOption" : "secondary-element-citation"
+    }
 }
 
 export default elementDataBank

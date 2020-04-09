@@ -14,6 +14,11 @@
     border: 1px solid #ddd;
     background-color: #ffffff;
 }
+
+.conatiner-other-elements.aside-popup{
+    width: 120px;
+   /* margin-top: -77%; */
+}
 .conatiner-other-elements::after {
     content: " ";
     position: absolute;
