@@ -1485,7 +1485,7 @@ export default {
     },
     "showHide":{
         "id": "urn:pearson:work:276f4d81-e76b-4d11-9e5e-0dae671e631e",
-        "type": "figure",
+        "type": "showhide",
         "figuretype": "interactive",
         "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
         "title": {
@@ -1536,7 +1536,7 @@ export default {
     },
     "popUp":{
         "id": "urn:pearson:work:d5a8989a-f468-47b1-aca0-452e2503a09a",
-        "type": "figure",
+        "type": "popup",
         "figuretype": "interactive",
         "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
         "title": {
