@@ -958,6 +958,7 @@ class ElementContainer extends Component {
                     handleFocus={this.handleFocus}
                     deleteElement={this.deleteElement}
                     btnClassName={this.state.btnClassName}
+                    isBlockerActive={this.props.isBlockerActive}
                     tagName={"div"}
                     borderToggle={this.state.borderToggle}
                     elemBorderToggle={this.props.elemBorderToggle}
