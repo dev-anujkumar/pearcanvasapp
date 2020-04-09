@@ -952,6 +952,7 @@ class ElementContainer extends Component {
                     showDeleteElemPopup={this.showDeleteElemPopup}
                     handleBlur={this.handleBlur} 
                     model={element} 
+                    element={element}
                     slateLockInfo={slateLockInfo} 
                     setActiveElement={this.props.setActiveElement}
                     handleBlur={this.handleBlur}

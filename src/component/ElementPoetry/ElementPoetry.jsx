@@ -4,7 +4,9 @@ import { connect } from 'react-redux';
 import ElementContainerWrapper from "../HOCs/ElementContainerHOC";
 import ElementContainer from '../ElementContainer';
 import ElementSaprator from '../ElementSaprator';
-import { swapElement } from '../SlateWrapper/SlateWrapper_Actions';
+import { sendDataToIframe } from '../../constants/utility.js';
+import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
+import { swapElement } from '../SlateWrapper/SlateWrapper_Actions'
 import Sortable from 'react-sortablejs';
 import { guid } from '../../constants/utility.js';
 import config from '../../config/config';
@@ -68,11 +70,8 @@ class ElementPoetry extends Component {
                                     onUpdate: (/**Event*/evt) => {
                                         let swappedElementData;
                                         let bodyMatterObj = [];
-                                        if(this.props.element.contents){
+                                        if(this.props.element && this.props.element.contents){
                                             bodyMatterObj = this.props.element.contents.bodymatter;
-                                        }
-                                        else{
-                                            bodyMatterObj = this.props.element.elementdata.bodymatter;
                                         }
                                         swappedElementData = bodyMatterObj[evt.oldDraggableIndex]
                                         let dataObj = {
@@ -81,6 +80,7 @@ class ElementPoetry extends Component {
                                             swappedElementData: swappedElementData,
                                             currentSlateEntityUrn: parentUrn.contentUrn,
                                             containerTypeElem: 'pe',
+                                            poetryId: this.props.element.id
                                         }
                                         this.props.swapElement(dataObj, (bodyObj) => { })
                                         this.props.setActiveElement(dataObj.swappedElementData, dataObj.newIndex);
@@ -215,5 +215,16 @@ class ElementPoetry extends Component {
   ElementPoetry.defaultProps = {
     type: "element-poetrystanza"
   }
-  
-  export default ElementContainerWrapper(ElementPoetry);
+
+const mapStateToProps = state => {
+    return {
+    };
+};
+
+
+export default connect(
+    mapStateToProps,
+    {
+        swapElement
+    }
+)(ElementContainerWrapper(ElementPoetry));

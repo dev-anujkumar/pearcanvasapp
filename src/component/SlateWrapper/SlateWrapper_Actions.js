@@ -180,7 +180,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
 }
 
 export const swapElement = (dataObj, cb) => (dispatch, getState) => {
-    const { oldIndex, newIndex, currentSlateEntityUrn, swappedElementData, containerTypeElem, asideId } = dataObj;
+    const { oldIndex, newIndex, currentSlateEntityUrn, swappedElementData, containerTypeElem, asideId, poetryId} = dataObj;
     const slateId = config.slateManifestURN;
 
     let _requestData = {
@@ -244,7 +244,18 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                             })
                         }
                     });
-                } else {
+                } else if (containerTypeElem && containerTypeElem == 'pe') {
+                    newBodymatter.forEach(element => {
+                        if (element.id == poetryId) {
+                            element.contents.bodymatter.forEach((nestedElem) => {
+                                if (nestedElem.contentUrn == swappedElementData.contentUrn) {
+                                    element.contents.bodymatter.move(oldIndex, newIndex);
+                                }
+                            })
+                        }
+                    });
+                }
+                 else {
                     newParentData[slateId].contents.bodymatter.move(oldIndex, newIndex);
                 }
 
