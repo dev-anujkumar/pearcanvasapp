@@ -582,7 +582,7 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
         "slateEntityUrn": parentElement.contentUrn,
         "slateUrn": parentElement.id,
         "type": "TEXT",
-        "updatePopupElementField" : popupFieldType
+        "metaDataField" : popupFieldType
     };
     let url = `${config.REACT_APP_API_URL}v1/slate/element`
     return axios.post(url, 
