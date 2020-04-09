@@ -217,7 +217,10 @@ function prepareDataForTcmUpdate (updatedData,id, elementIndex, asideData, getSt
             updatedData.isHead = false;
         } else if (poetryData && poetryData.type === "poetry" && slateBodyMatter[indexes[0]].contents.bodymatter[indexes[2]].id === id) {
             updatedData.isHead = false;
+        } else if(type==="stanza" && slateBodyMatter[indexes[0]].contents.bodymatter[indexes[2]].id === id){
+            updatedData.isHead = false;
         }
+        
     }
     if (asideData && asideData.type === "element-aside") {
         if (asideData.subtype === "workedexample") {
@@ -246,7 +249,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
         return ;
     }
-    prepareDataForTcmUpdate(updatedData,updatedData.id, elementIndex, asideData, getState);
+    prepareDataForTcmUpdate(updatedData,updatedData.id, elementIndex, asideData, getState, updatedData.type);
     updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, null, null, showHideType, parentElement)
     return axios.put(`${config.REACT_APP_API_URL}v1/slate/element`,
         updatedData,

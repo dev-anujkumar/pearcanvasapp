@@ -445,6 +445,7 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
         case elementTypeConstant.LEARNING_OBJECTIVE_ITEM:
         case elementTypeConstant.BLOCKFEATURE:
         case elementTypeConstant.ELEMENT_LIST:
+        case elementTypeConstant.POETRY_STANZA:
             tinyMCE.$(node).find('.blockquote-hidden').remove();
             let { innerHTML, innerText } = node;
             let revealTextData = validateRevealAnswerData(showHideType, node, type)
@@ -464,7 +465,11 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                 inputSubType : parentElement && (parentElement.type == "popup" || parentElement.type === "poetry") ? "NA" : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
                 slateUrn: parentElement && (parentElement.type === "showhide" || parentElement.type === "popup") ? parentElement.id: config.slateManifestURN  
             }
-            
+
+            if(type==="stanza"){
+                dataToReturn.html.text=`<p>${innerHTML}</p>`
+                delete dataToReturn.poetrylines;
+            } 
             if(parentElement && parentElement.type === "popup"){
                 dataToReturn.popupEntityUrn = parentElement.contentUrn;
                 if(parentElement.popupdata["formatted-title"] && parentElement.popupdata["formatted-title"]["id"] === previousElementData.id){
