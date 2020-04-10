@@ -2,17 +2,11 @@ import React, { Component } from 'react';
 import '../../styles/ElementPoetry/ElementPoetry.css'
 import TinyMceEditor from "../tinyMceEditor"
 class ElementPoetryStanza extends Component {
-  constructor() {
-    super();
-  }
 
   prepareLineDom = (model) => {
-
     let ConvertedModel = model && model.html && model.html.text.replace(/<p>/g, "")
     ConvertedModel = ConvertedModel && ConvertedModel.replace(/<\/p>/g, "")
-
     let lineModel = ConvertedModel ? ConvertedModel : '<span class="poetryLine"><br /></span>'
-
     return lineModel;
   }
 
@@ -28,7 +22,7 @@ class ElementPoetryStanza extends Component {
         element={this.props.element}
         placeholder="Type Something..."
         className={className}
-        model={lineModel ? lineModel : '<span><br></span>'}
+        model={lineModel ? lineModel : '<span class="poetryLine"><br></span>'}
         tagName={'div'}
         handleEditorFocus={this.props.handleFocus}
         handleBlur={this.props.handleBlur}
