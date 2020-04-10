@@ -299,11 +299,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
                             }
                             break;
                         }
-                       
-                   
                 }
-              
-                
             } else if(response.data.id !== updatedData.id){
                 if(currentSlateData.status === 'wip'){
                     updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, response.data, elementIndex, null, parentElement);
@@ -316,6 +312,9 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
                         sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' }); 
                     }
                 }
+            }
+            else if (updatedData.type === 'stanza') {
+                updateStoreInCanvas({...updatedData,...response.data}, asideData, parentUrn, dispatch, getState, null, elementIndex, showHideType, parentElement, poetryData)
             }
         }
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
@@ -604,19 +603,19 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                             }
                         };
                     }
-                    // else if(element.contents.bodymatter[0].type === 'stanza'){
-                    //     element.contents.bodymatter.forEach((stanza, index)=> {
-                    //         if(element.contents.bodymatter[index].id === elementId){
-                    //             element  = {
-                    //                 ...element,
-                    //                 contents : {
-                    //                     ...element.contents,
-                    //                     bodymatter : {...updatedData}
-                    //                 }
-                    //             };
-                    //         }
-                    //     })
-                    // }
+                    else {
+                        let newPoetryBodymatter = element.contents.bodymatter.map((stanza) => {
+                            if (stanza.id === elementId) {
+                                stanza = {
+                                    ...stanza,
+                                    ...updatedData,
+                                    tcm: _slateObject.tcm ? true : false,
+                                };
+                            }
+                            return stanza;
+                        })
+                        element.contents.bodymatter = newPoetryBodymatter;
+                    }
                 }
                 else if (element.type === "showhide") {
                     if (showHideType) {
