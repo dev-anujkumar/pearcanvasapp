@@ -1644,7 +1644,7 @@ export class TinyMceEditor extends Component {
                document.getElementById(tinymce.activeEditor.id).setAttribute('contenteditable', false)
             }
          }
-        if(tinymce.activeEditor && tinymce.activeEditor.id !== e.target.id && ((this.props.element.subtype && this.props.element.subtype !== "mathml") || (this.props.element.figuretype && this.props.element.figuretype === "interactive"))){
+        if(tinymce.activeEditor && tinymce.activeEditor.id !== e.target.id && (this.props.element.subtype && this.props.element.subtype !== "mathml")){
             e.preventDefault();
             e.stopPropagation();
             return false;
