@@ -23,7 +23,7 @@ import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
 import config from '../../config/config';
 import { TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER, WORKED_EXAMPLE, SECTION_BREAK, METADATA_ANCHOR, LO_LIST, ELEMENT_ASSESSMENT, OPENER,
     ALREADY_USED_SLATE , REMOVE_LINKED_AUDIO, NOT_AUDIO_ASSET, SPLIT_SLATE_WITH_ADDED_AUDIO , ACCESS_DENIED_CONTACT_ADMIN, IN_USE_BY, LOCK_DURATION, SHOW_HIDE,POP_UP ,
-    CITATION, ELEMENT_CITATION,SMARTLINK} from './SlateWrapperConstants';
+    CITATION, ELEMENT_CITATION,SMARTLINK,POETRY ,STANZA} from './SlateWrapperConstants';
 import PageNumberElement from './PageNumberElement.jsx';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
@@ -572,7 +572,7 @@ class SlateWrapper extends Component {
         this.prohibitPropagation(event)
     }
 
-    splithandlerfunction = (type, index, firstOne, parentUrn, asideData, outerAsideIndex) => {
+    splithandlerfunction = (type, index, firstOne, parentUrn, asideData, outerAsideIndex ,poetryData) => {
         if (this.checkLockStatus()) {
             this.togglePopup(true)
             return false
@@ -651,6 +651,12 @@ class SlateWrapper extends Component {
             case 'smartlink-elem':
                 this.props.createElement(SMARTLINK, indexToinsert, parentUrn, asideData, null, null);
                 break;
+            case 'poetry-elem':
+                this.props.createElement(POETRY, indexToinsert, parentUrn,null,null,null,null,poetryData);
+                break;
+            case 'stanza-elem':
+                this.props.createElement(STANZA, indexToinsert, parentUrn,null,null,null,null,poetryData);
+                break;
             case 'text-elem':
             default:
                 this.props.createElement(TEXT, indexToinsert, parentUrn, asideData, null, null, null);
@@ -658,7 +664,7 @@ class SlateWrapper extends Component {
         }
     }
 
-    elementSepratorProps = (index, firstOne, parentUrn, asideData, outerAsideIndex) => {
+    elementSepratorProps = (index, firstOne, parentUrn, asideData, outerAsideIndex , poetryData) => {
         return [
             {
                 buttonType: 'text-elem',
@@ -676,6 +682,12 @@ class SlateWrapper extends Component {
                 buttonType: 'audio-elem',
                 buttonHandler: () => this.splithandlerfunction('audio-elem', index, firstOne, parentUrn, asideData),
                 tooltipText: 'Audio/Video',
+                tooltipDirection: 'left'
+            },
+            {
+                buttonType: 'poetry-elem',
+                buttonHandler: () => this.splithandlerfunction('poetry-elem',index, firstOne, parentUrn,"",outerAsideIndex,poetryData),
+                tooltipText: 'Poetry Element',
                 tooltipDirection: 'left'
             },
             {
@@ -726,6 +738,12 @@ class SlateWrapper extends Component {
                 tooltipText: 'Citation Element',
                 tooltipDirection: 'left'
             },
+            {
+                buttonType: 'stanza-elem',
+                buttonHandler: () => this.splithandlerfunction('stanza-elem', index, firstOne, parentUrn, "", outerAsideIndex, poetryData),
+                tooltipText: 'Stanza Element',
+                tooltipDirection: 'left'
+            }
         ]
 
     }

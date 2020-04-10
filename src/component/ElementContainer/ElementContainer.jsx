@@ -18,7 +18,7 @@ import { addComment, deleteElement, updateElement, createShowHideElement, delete
 import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
-import { setActiveElement, fetchElementTag, openPopupSlate } from './../CanvasWrapper/CanvasWrapper_Actions';
+import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } from './../CanvasWrapper/CanvasWrapper_Actions';
 import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
 import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris } from '../../constants/utility.js';
@@ -40,6 +40,8 @@ import ElementContainerContext from './ElementContainerContext'
 import { CitationGroupContext } from './ElementCitationContext'
 import CitationGroup from '../CitationGroup'
 import CitationElement from '../CitationElement'
+import ElementPoetry from '../ElementPoetry';
+import ElementPoetryStanza from '../ElementPoetry/ElementPoetryStanza.jsx';
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -388,13 +390,7 @@ class ElementContainer extends Component {
     }
 
     figureDifferenceAudioVideo = (index, previousElementData) => {
-        // let newAudioVideoId = ""  can be removed after regression testing
-        // if (previousElementData.figuretype === "audio") {
-        //     newAudioVideoId = previousElementData.figuredata.audio && previousElementData.figuredata.audio.path || ""
-        // }
-        // else {
-        //     newAudioVideoId = previousElementData.figuredata.videos[0].path
-        // }
+
         let titleDOM = document.getElementById(`cypress-${index}-0`),
             subtitleDOM = document.getElementById(`cypress-${index}-1`),
             captionDOM = document.getElementById(`cypress-${index}-2`),
@@ -450,14 +446,15 @@ class ElementContainer extends Component {
      * @param {*} activeEditorId
      */
     handleContentChange = (node, previousElementData, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType) => {
-        const { parentUrn, asideData } = this.props
+        const { parentUrn, asideData, poetryData } = this.props
         let dataToSend = {}
         let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
         switch (previousElementData.type) {
             case elementTypeConstant.AUTHORED_TEXT:
             case elementTypeConstant.LEARNING_OBJECTIVE_ITEM:
             case elementTypeConstant.BLOCKFEATURE:
-            let index = parentElement.type == "showhide" || parentElement.type == "popup" || parentElement.type == "citations" ? activeEditorId : `cypress-${this.props.index}`
+            case elementTypeConstant.POETRY_STANZA:
+            let index  = (parentElement.type == "showhide" ||  parentElement.type == "popup" || parentElement.type == "poetry" || parentElement.type == "citations")? activeEditorId:`cypress-${this.props.index}`
             if (this.props.element && this.props.element.type === "element-blockfeature" && this.props.element.subtype === "quote" && tinyMCE.activeEditor && tinyMCE.activeEditor.id  && !tinyMCE.activeEditor.id.includes("footnote")) {
                 let blockqtText = document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins')?document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').innerText:"";
                 if (!blockqtText.trim()) {
@@ -478,21 +475,24 @@ class ElementContainer extends Component {
                 tempDiv.innerHTML = html;
                 //tinyMCE.$(tempDiv).find('.blockquote-hidden').remove();
                 html = tempDiv.innerHTML;
-                if(parentElement.type === "popup" || parentElement.type === "citations"){
+                if(parentElement.type === "popup" || parentElement.type === "citations" || parentElement.type === "poetry"){
                     tempDiv.innerHTML = matchHTMLwithRegex(tempDiv.innerHTML) ? tempDiv.innerHTML : `<p class="paragraphNumeroUno">${tempDiv.innerHTML}</p>`
                     html = html.replace(/<br data-mce-bogus="1">/g, "<br>")
                     html = matchHTMLwithRegex(html) ? html : `<p class="paragraphNumeroUno">${html}</p>`
+                }
+                else if (previousElementData.type === "stanza") {
+                    html = `<p>${html}</p>`
                 }
                 html =html.replace(/(\r\n|\n|\r)/gm, '')
                 previousElementData.html.text= previousElementData.html.text.replace(/<br data-mce-bogus="1">/g, "<br>").replace(/(\r\n|\n|\r)/gm, '');
                 previousElementData.html.text = previousElementData.html.text.replace(/data-mce-bogus="all"/g, '')
                 if (html && previousElementData.html && (this.replaceUnwantedtags(html) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate) && !assetPopoverPopupIsVisible && !config.savingInProgress) {
-                    dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDiv, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,parentElement,showHideType, asideData)
+                    dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDiv, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,parentElement,showHideType, asideData, poetryData)
                     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                     if(dataToSend.status === "approved"){
                         config.savingInProgress = true
                     }
-                    this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, showHideType, parentElement);
+                    this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, showHideType, parentElement, poetryData);
                 }
                 break;
 
@@ -742,7 +742,7 @@ class ElementContainer extends Component {
      */
     deleteElement = () => {
         let { id, type } = this.props.element;
-        let { parentUrn, asideData, element } = this.props;
+        let { parentUrn, asideData, element, poetryData } = this.props;
         let { contentUrn } = this.props.element
         let index = this.props.index
 
@@ -773,7 +773,7 @@ class ElementContainer extends Component {
         }
 
         // api needs to run from here
-        this.props.deleteElement(id, type, parentUrn, asideData, contentUrn, index);
+        this.props.deleteElement(id, type, parentUrn, asideData, contentUrn, index, poetryData);
         this.setState({
             sectionBreak: null
         })
@@ -799,6 +799,18 @@ class ElementContainer extends Component {
         }
     }
 
+     /**
+    * @description - createPoetryElements is responsible for creating the Label,title,caption.credit for poetry element
+    * @param {*} poetryField is value of the field ie. label, title etc of poetry element
+    * @param {*} index
+    * @param {*} parentElement
+    */
+    createPoetryElements = (poetryField, forceupdate, index, parentElement) => {
+         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+        this.props.createPoetryUnit(poetryField, parentElement, (currentElementData) =>
+        this.handleBlur(forceupdate, currentElementData, index, null), index, config.slateManifestURN)
+    }
+
     /**
      * Render Element function takes current element from bodymatter and render it into currnet slate 
      * @param {element} 
@@ -812,7 +824,7 @@ class ElementContainer extends Component {
         /** Handle TCM for tcm enable elements */
         let tcm = false;
         let feedback = false;
-        if (element.type == 'element-authoredtext' || element.type == 'element-list' || element.type == 'element-blockfeature' || element.type == 'element-learningobjectives' || element.type == 'element-citation') {
+        if (element.type == 'element-authoredtext' || element.type == 'element-list' || element.type == 'element-blockfeature' || element.type == 'element-learningobjectives' || element.type == 'element-citation' || element.type === 'poetry' || element.type === 'stanza') {
             if (element.tcm) {
                 tcm = element.tcm;
                 sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });
@@ -1001,6 +1013,62 @@ class ElementContainer extends Component {
                     />
                     labelText = 'CT'
                     break;
+                case elementTypeConstant.POETRY_ELEMENT:
+                    editor = <ElementPoetry index={index} 
+                    accessDenied={accessDenied} 
+                    updateFigureData={this.updateFigureData} 
+                    permissions={permissions} 
+                    showBlocker={this.props.showBlocker}
+                    openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} 
+                    handleFocus={this.handleFocus} 
+                    showDeleteElemPopup={this.showDeleteElemPopup}
+                    handleBlur={this.handleBlur} 
+                    model={element} 
+                    element={element}
+                    slateLockInfo={slateLockInfo} 
+                    setActiveElement={this.props.setActiveElement}
+                    handleBlur={this.handleBlur}
+                    handleFocus={this.handleFocus}
+                    deleteElement={this.deleteElement}
+                    btnClassName={this.state.btnClassName}
+                    isBlockerActive={this.props.isBlockerActive}
+                    tagName={"div"}
+                    updatePageNumber={updatePageNumber}
+                    borderToggle={this.state.borderToggle}
+                    elemBorderToggle={this.props.elemBorderToggle}
+                    elementId={element.id} 
+                    createPoetryElements={this.createPoetryElements}
+                    glossaryFootnoteValue={this.props.glossaryFootnoteValue} 
+                    onClickCapture={this.props.onClickCapture}
+                    glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
+                    elementSepratorProps={elementSepratorProps} />
+                    labelText = 'PE'
+                    break;
+                case elementTypeConstant.POETRY_STANZA:
+                    editor = <ElementPoetryStanza index={index}
+                    permissions={permissions} 
+                    openAssetPopoverPopUp={this.openAssetPopoverPopUp} 
+                    openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} 
+                    handleFocus={this.handleFocus} 
+                    showDeleteElemPopup={this.showDeleteElemPopup}
+                    handleBlur={this.handleBlur} 
+                    setActiveElement={this.props.setActiveElement}
+                    handleBlur={this.handleBlur}
+                    deleteElement={this.deleteElement}
+                    updatePageNumber={updatePageNumber}
+                    btnClassName={this.state.btnClassName}
+                    borderToggle={this.state.borderToggle}
+                    elemBorderToggle={this.props.elemBorderToggle}
+                    elementId={element.id} 
+                    tagName={"div"}
+                    element={element} 
+                    model={element} 
+                    slateLockInfo={slateLockInfo} 
+                    onListSelect={this.props.onListSelect} 
+                    glossaryFootnoteValue={this.props.glossaryFootnoteValue} 
+                    glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}/>
+                    labelText = 'St'
+                    break;
             }
         } else {
             editor = <p className="incorrect-data">Incorrect Data - {element.id}</p>;
@@ -1174,8 +1242,8 @@ const mapDispatchToProps = (dispatch) => {
         setActiveElement: (element, index, parentUrn, asideData, updateFromC2Flag, showHideObj) => {
             dispatch(setActiveElement(element, index, parentUrn, asideData, updateFromC2Flag, showHideObj))
         },
-        deleteElement: (id, type, parentUrn, asideData, contentUrn, index) => {
-            dispatch(deleteElement(id, type, parentUrn, asideData, contentUrn, index))
+        deleteElement: (id, type, parentUrn, asideData, contentUrn, index, poetryData) => {
+            dispatch(deleteElement(id, type, parentUrn, asideData, contentUrn, index, poetryData))
         },
         glossaaryFootnotePopup: (glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, callback, typeWithPopup) => {
             dispatch(glossaaryFootnotePopup(glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, typeWithPopup)).then(() => {
@@ -1184,8 +1252,8 @@ const mapDispatchToProps = (dispatch) => {
                 }
             })
         },
-        updateElement: (updatedData, elementIndex, parentUrn, asideData, showHideType, parentElement) => {
-            dispatch(updateElement(updatedData, elementIndex, parentUrn, asideData, showHideType, parentElement))
+        updateElement: (updatedData, elementIndex, parentUrn, asideData, showHideType, parentElement, poetryData) => {
+            dispatch(updateElement(updatedData, elementIndex, parentUrn, asideData, showHideType, parentElement, poetryData))
         },
         updateFigureData: (figureData, index, elementId, cb) => {
             dispatch(updateFigureData(figureData, index, elementId, cb))
@@ -1206,7 +1274,10 @@ const mapDispatchToProps = (dispatch) => {
         },
         deleteShowHideUnit: (id, type, contentUrn, index, eleIndex, parentId, cb, parentElement, parentElementIndex) => {
             dispatch(deleteShowHideUnit(id, type, contentUrn, index, eleIndex, parentId, cb, parentElement, parentElementIndex))
-        }
+        },
+        createPoetryUnit: (poetryField, parentElement,cb, popupElementIndex, slateManifestURN) => {
+            dispatch(createPoetryUnit(poetryField, parentElement,cb, popupElementIndex, slateManifestURN))
+        },
 
     }
 }

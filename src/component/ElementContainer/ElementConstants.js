@@ -43,6 +43,10 @@ export default {
 /****************Citation elment************************ */  
     CITATION_GROUP: "citations",
     CITATION_ELEMENT: "element-citation",
+
+/****************Poetry element************************ */  
+    POETRY_ELEMENT: "poetry",
+    POETRY_STANZA: "stanza"
 }
 
 export const LABELS = {
@@ -57,6 +61,7 @@ export const LABELS = {
     "assessment": "Qu",
     "external-link": "SL",
     "narrative-link": "Pop",
-    "workedexample": "WE"
+    "workedexample": "WE",
+    "poetry": "PE"
 }
 

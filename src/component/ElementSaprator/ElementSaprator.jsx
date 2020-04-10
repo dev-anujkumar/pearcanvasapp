@@ -6,7 +6,8 @@ import PropTypes from 'prop-types'
 import Button from '../ElementButtons'
 import Tooltip from '../Tooltip'
 import config from '../../config/config';
-import { hasReviewerRole } from '../../constants/utility.js'
+import { hasReviewerRole } from '../../constants/utility.js';
+import elementTypeConstant from './ElementSepratorConstants.js';
 import '../../styles/ElementSaprator/ElementSaprator.css'
 import ElementContainerType from '../ElementContainerType/ElementContainerType.jsx'
 
@@ -97,7 +98,7 @@ export default function ElementSaprator(props) {
     return (
         <div className={showClass ? 'elementSapratorContainer opacityClassOn ignore-for-drag' : 'elementSapratorContainer ignore-for-drag'}>
             <div className='elemDiv-split' onClickCapture={(e) => props.onClickCapture(e)}>
-                {permissions && permissions.includes('split_slate') && (elementType !== 'element-aside' && elementType !== 'citations') && !config.isPopupSlate && !props.firstOne ? <Tooltip direction='right' tooltipText='Split Slate'>
+                {permissions && permissions.includes('split_slate') && (elementType !== 'element-aside' && elementType !== 'citations' && elementType !== 'poetry') && !config.isPopupSlate && !props.firstOne ? <Tooltip direction='right' tooltipText='Split Slate'>
                     {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && <Button type='split' onClick={splitSlateClickHandler} />} </Tooltip> : ''}
             </div>
             <div className='elemDiv-hr'>
@@ -145,11 +146,27 @@ function asideButton(esProps,sectionBreak,elementType){
         return buttonType == CITATION;//citation element
       }else{
         if (sectionBreak) {
-            return buttonType !== WORKED_EXP && buttonType !== CONTAINER && buttonType !== OPENER &&  buttonType !== CITATION;
+            return buttonType !== WORKED_EXP && buttonType !== CONTAINER && buttonType !== OPENER &&  buttonType !== CITATION && buttonType !== elementTypeConstant.STANZA_ELEMENT;
         } else {
-            return buttonType !== OPENER && buttonType !== SECTION_BREAK && buttonType !== WORKED_EXP && buttonType !== CONTAINER && buttonType !== CITATION;
+            return buttonType !== OPENER && buttonType !== SECTION_BREAK && buttonType !== WORKED_EXP && buttonType !== CONTAINER && buttonType !== CITATION && buttonType !== elementTypeConstant.STANZA_ELEMENT;
         }
     }
+    })
+    return updatedEsProps;
+}
+
+/**
+ * @description: rendering the element picker dropdown
+ */
+
+function renderConditionalButton(esProps, elementType) {
+    const { TEXT, IMAGE, AUDIO, INTERACTIVE, ASSESSMENT, CONTAINER, WORKED_EXP, OPENER , SECTION_BREAK, METADATA_ANCHOR,
+         POETRY_ELEMENT, INTERACTIVE_BUTTON } = elementTypeConstant
+    let updatedEsProps = esProps.filter((btnObj) => {
+        let buttonType = btnObj.buttonType;       
+            return buttonType !== OPENER && buttonType !== SECTION_BREAK && buttonType !== WORKED_EXP && buttonType !== CONTAINER
+            && buttonType !== TEXT && buttonType !== IMAGE && buttonType !== AUDIO && buttonType !== INTERACTIVE && buttonType !== ASSESSMENT && buttonType !== METADATA_ANCHOR && buttonType !== POETRY_ELEMENT && buttonType !== INTERACTIVE_BUTTON;
+        
     })
     return updatedEsProps;
 }
@@ -161,8 +178,9 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
     let {data,setData,showInteractiveOption,setshowInteractiveOption,props} =propsData
     let updatedEsProps, buttonType;
     if (config.parentEntityUrn == FRONT_MATTER || config.parentEntityUrn == BACK_MATTER) {
-        if (elementType == ELEMENT_ASIDE ) {            
-            esProps = asideButton(esProps, sectionBreak,elementType);
+        if (elementType == ELEMENT_ASIDE || elementType == elementTypeConstant.POETRY) {
+            esProps = (elementType == ELEMENT_ASIDE) ? asideButton(esProps, sectionBreak,elementType) : 
+                renderConditionalButton(esProps,elementType);
             updatedEsProps = esProps.filter((btnObj) => {
                 buttonType = btnObj.buttonType;
                 return buttonType !== METADATA_ANCHOR && buttonType !== CITATION;
@@ -176,7 +194,7 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
         }else {            
             updatedEsProps = esProps.filter((btnObj) => {
                 buttonType = btnObj.buttonType;
-                return buttonType !== METADATA_ANCHOR && buttonType !== SECTION_BREAK && buttonType !== OPENER &&  buttonType !== CITATION;
+                return buttonType !== METADATA_ANCHOR && buttonType !== SECTION_BREAK && buttonType !== OPENER &&  buttonType !== CITATION && buttonType !== elementTypeConstant.STANZA_ELEMENT;
             })
         }
 
@@ -209,8 +227,9 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
                     return buttonType !== SECTION_BREAK && buttonType !== OPENER && buttonType !== CITATION;
                 })
             }
-            if (elementType == ELEMENT_ASIDE) {
-                esProps = asideButton(esProps, sectionBreak,elementType);
+            if (elementType == ELEMENT_ASIDE || elementType == elementTypeConstant.POETRY) {
+                esProps = (elementType == ELEMENT_ASIDE) ? asideButton(esProps, sectionBreak,elementType) :
+                    renderConditionalButton(esProps, elementType);
                 updatedEsProps = esProps.filter((btnObj) => {
                     buttonType = btnObj.buttonType;
                     return buttonType !== METADATA_ANCHOR && buttonType !== CITATION;
@@ -225,13 +244,17 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
         }
         else if (elementType == ELEMENT_ASIDE|| elementType == CITATION_GROUP_ELEMENT) {
             updatedEsProps = asideButton(esProps, sectionBreak,elementType);
+        }   
+        else if (elementType == ELEMENT_ASIDE || elementType === elementTypeConstant.POETRY) {
+            updatedEsProps = (elementType == ELEMENT_ASIDE) ? asideButton(esProps, sectionBreak) :
+            renderConditionalButton(esProps, elementType);
            
         }
        
         else {
             updatedEsProps = esProps.filter((btnObj) => {
                 buttonType = btnObj.buttonType;
-                return buttonType !== SECTION_BREAK && buttonType !== OPENER && buttonType !== CITATION;
+                return buttonType !== SECTION_BREAK && buttonType !== OPENER && buttonType !== CITATION && buttonType !== elementTypeConstant.STANZA_ELEMENT;
             })
         }
     }

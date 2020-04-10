@@ -654,6 +654,10 @@ describe('splihandler function', () => {
         config.slateType = "";
         slateWrapperInstance.splithandlerfunction('metadata-anchor', '', '', {}, { contentUrn: '' }, '')
     })
+    it('Simulating splithandlerfunction with slate data function for poetry element', () => {
+        config.slateType = "";
+        slateWrapperInstance.splithandlerfunction('poetry-elem', '', '', {}, { contentUrn: '' }, '')
+    })
     it('Simulating splithandlerfunction with slate data function for default', () => {
         slateWrapperInstance.splithandlerfunction('default', '', '', {}, { contentUrn: '' }, '')
     })

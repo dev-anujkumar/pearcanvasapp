@@ -357,7 +357,6 @@ const elementDataBank = {
         "primaryOption" : "primary-showhide",
         "secondaryOption" : "secondary-showhide",
         "tag" : "SH",
-
     },
     "citations" : {
         "elementType" : "citations",
@@ -368,6 +367,16 @@ const elementDataBank = {
         "elementType" : "element-citation",
         "primaryOption" : "primary-element-citation",
         "secondaryOption" : "secondary-element-citation"
+    },
+    "poetry" : {
+        "elementType" : "poetry",
+        "primaryOption" : "primary-poetry",
+        "secondaryOption" : "secondary-poetry"
+    },
+    "stanza" : {
+        "elementType" : "stanza",
+        "primaryOption" : "primary-stanza",
+        "secondaryOption" : "secondary-stanza"
     }
 }
 

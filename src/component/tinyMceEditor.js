@@ -122,6 +122,8 @@ export class TinyMceEditor extends Component {
                         if(!config.savingInProgress){
                             if((this.props.element.type === "popup" || this.props.element.type === "citations") && !this.props.currentElement){
                                 this.props.createPopupUnit(this.props.popupField, null, this.props.index, this.props.element) 
+                            } else if(this.props.element && this.props.element.type === "poetry" && !this.props.currentElement){
+                                this.props.createPoetryElements(this.props.poetryField, null, this.props.index, this.props.element)
                             } else {
                                 let showHideType = this.props.showHideType || null
                                 showHideType = showHideType === "revel" ? "postertextobject" : showHideType
@@ -495,7 +497,7 @@ export class TinyMceEditor extends Component {
             if (activeElement) { 
                 let lastCont = this.lastContent;
                 this.lastContent = activeElement.innerHTML;
-                if (!isMediaElement && !activeElement.children.length && this.props.element.type !== "citations" || (activeElement.children.length === 1 && activeElement.children[0].tagName === "BR" && activeElement.nodeName !== "CODE")) {
+                if (!isMediaElement && !activeElement.children.length && this.props.element.type !== "citations" && this.props.element.type !== 'poetry' || (activeElement.children.length === 1 && activeElement.children[0].tagName === "BR" && activeElement.nodeName !== "CODE")) {
                     //code to avoid deletion of editor first child(like p,h1,blockquote etc)
                     let div = document.createElement('div');
                     div.innerHTML = lastCont;
@@ -510,7 +512,7 @@ export class TinyMceEditor extends Component {
                 else {
                     activeElement.classList.add('place-holder')
                 }
-                this.lastContent = activeElement.innerHTML;
+                 this.lastContent = activeElement.innerHTML;
 
                 if (activeElement.nodeName === "CODE") {
                     let key = e.keyCode || e.which;
@@ -520,6 +522,12 @@ export class TinyMceEditor extends Component {
                         activeElement.append(' ')
                     }
                 }
+                if (activeElement.nodeName == "DIV" && this.props.element.type === 'stanza') {
+                    let key = e.keyCode || e.which;
+                     if (key != undefined && key === 13) {
+                         activeElement.innerHTML += '<span class="poetryLine"><br /></span>';  
+                    }
+                }              
             }
         });
     }
@@ -584,7 +592,7 @@ export class TinyMceEditor extends Component {
             if (activeElement) {
                isContainsMath = activeElement.innerHTML.match(/<img/) ? (activeElement.innerHTML.match(/<img/).input.includes('class="Wirisformula') || activeElement.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula')) : false;
              }
-            if(key === 13 && this.props.element.type !== 'element-list' && activeElement.nodeName !== "CODE" && this.props.element.type!=='showhide') {
+            if(key === 13 && this.props.element.type !== 'element-list' && activeElement.nodeName !== "CODE" && this.props.element.type!=='showhide' && this.props.element.type !== "stanza") {
                 let activeEditor = document.getElementById(tinymce.activeEditor.id);
                 activeEditor.blur();
                 let nextSaparator = (activeEditor.closest('.editor')).nextSibling;
@@ -600,7 +608,21 @@ export class TinyMceEditor extends Component {
             }
             else if((this.props.element && this.props.element.type ==='showhide' && this.props.showHideType !== 'revel' && !editor.bodyElement.innerText.trim().length && e.keyCode === 8 && this.props.element.interactivedata) && ((this.props.showHideType === "show" && this.props.element.interactivedata.show.length >1) || (this.props.showHideType === "hide" && this.props.element.interactivedata.hide.length >1 ))&& !isContainsMath ){
                 this.props.deleteShowHideUnit(this.props.currentElement.id, this.props.showHideType, this.props.element.contentUrn, this.props.innerIndex,this.props.index,this.props.element.id)
-             }   
+             }
+            else if (key === 13 && this.props.element.type === 'stanza') {
+                let activeElementChildLength = activeElement.children && activeElement.children.length;
+                if (activeElementChildLength > 0
+                    && activeElement.children[activeElementChildLength - 1].tagName == 'SPAN'
+                    && activeElement.children[activeElementChildLength - 1].innerHTML == '<br>') {
+
+                    activeElement.children[activeElementChildLength - 1].remove();
+                    let activeEditor = document.getElementById(tinymce.activeEditor.id);
+                    activeEditor.blur();
+                    let nextSaparator = (activeEditor.closest('.editor')).nextSibling;
+                    let textPicker = nextSaparator.querySelector('#myDropdown li > .stanza-elem');
+                    textPicker.click();
+                }
+            }      
         });
     }
 
@@ -1546,6 +1568,8 @@ export class TinyMceEditor extends Component {
                 elemNode.innerHTML !== ""
             ){
                 this.props.createPopupUnit(this.props.popupField, forceupdate, this.props.index, this.props.element)
+            } else if(this.props.element && this.props.element.type === "poetry" && !this.props.currentElement && elemNode && elemNode.innerHTML !== ""){
+                this.props.createPoetryElements(this.props.poetryField, forceupdate, this.props.index, this.props.element)
             } else {
                 this.props.handleBlur(forceupdate,this.props.currentElement,this.props.index, showHideType)
             }
@@ -1587,6 +1611,14 @@ export class TinyMceEditor extends Component {
                 }
                 else if(this.props.element && this.props.element.type === "citations"){
                     model = this.props.element.contents['formatted-title'] && this.props.element.contents['formatted-title'].html && this.props.element.contents['formatted-title'].html.text.length ? this.props.element.contents['formatted-title'].html.text : `<p class="paragraphNumeroUno"><br/></p>`
+                }
+                else if(this.props.element && this.props.element.type === "poetry" ){
+                    if(this.props.poetryField === 'formattedTitle'){
+                        model = this.props.element.contents['formatted-title'] && this.props.element.contents['formatted-title'].html && this.props.element.contents['formatted-title'].html.text.length ? this.props.element.contents['formatted-title'].html.text : `<p class="paragraphNumeroUno"><br/></p>`
+                    }
+                    else if (this.props.poetryField === 'formattedSubtitle'){
+                        model = this.props.element.contents['formatted-subtitle'] && this.props.element.contents['formatted-subtitle'].html && this.props.element.contents['formatted-subtitle'].html.text.length ? this.props.element.contents['formatted-subtitle'].html.text : `<p class="paragraphNumeroUno"><br/></p>`
+                    }
                 }
                 else{
                     model = this.props.model;

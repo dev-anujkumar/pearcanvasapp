@@ -764,5 +764,35 @@ export default {
                 }
             }
         }
+    },   
+    "poetry" : {
+        "primary-poetry": {
+            text: 'Poetry Element',
+            enum: 'poetryelement',
+            toolbar: ['assetpopover','decreaseindent','glossary'],
+            dropdownDisabled: true,
+            subtype: {
+                'secondary-poetry': {
+                    text: 'Poetry Element',
+                    labelText: 'PE',
+                    enum: 'poetryelement',
+                }
+            }
+        } 
+    },
+    "stanza" : {
+        "primary-stanza": {
+            text: 'Stanza Element',
+            enum: 'STANZA',
+            toolbar: [],
+            dropdownDisabled: true,
+            subtype: {
+                'secondary-stanza': {
+                    text: 'Stanza Element',
+                    labelText: 'PE',
+                    enum: 'NA',
+                }
+            }
+        } 
     }
 };

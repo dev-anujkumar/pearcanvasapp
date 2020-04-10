@@ -22,12 +22,11 @@ import { sendDataToIframe } from '../../constants/utility.js';
 import { HideLoader, ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
 
-
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
 };
 
-function prepareDataForTcmUpdate(updatedData, parentData, asideData) {
+function prepareDataForTcmUpdate(updatedData, parentData, asideData, poetryData) {
     if (parentData && (parentData.elementType === "element-aside" || parentData.elementType === "citations")) {
         updatedData.isHead = true;
     } else if (parentData && parentData.elementType === "manifest") {
@@ -44,7 +43,7 @@ function prepareDataForTcmUpdate(updatedData, parentData, asideData) {
         }
     }
     updatedData.projectURN = config.projectUrn;
-    updatedData.slateEntity = config.slateEntityURN;
+    updatedData.slateEntity = poetryData && poetryData.contentUrn || config.slateEntityURN;
 }
 
 function createNewVersionOfSlate(){
@@ -63,13 +62,13 @@ function createNewVersionOfSlate(){
         })
 }
 
-export const createElement = (type, index, parentUrn, asideData, outerAsideIndex, loref,cb) => (dispatch, getState) => {
+export const createElement = (type, index, parentUrn, asideData, outerAsideIndex, loref, cb,poetryData) => (dispatch, getState) => {
     config.currentInsertedIndex = index;
     config.currentInsertedType = type;
     let  popupSlateData = getState().appStore.popupSlateData
     localStorage.setItem('newElement', 1);
-    let slateEntityUrn = parentUrn && parentUrn.contentUrn || popupSlateData && popupSlateData.contentUrn|| config.slateEntityURN,
-    slateUrn =  parentUrn && parentUrn.manifestUrn || popupSlateData && popupSlateData.id || config.slateManifestURN
+    let slateEntityUrn = parentUrn && parentUrn.contentUrn || popupSlateData && popupSlateData.contentUrn || poetryData && poetryData.contentUrn || config.slateEntityURN,
+    slateUrn =  parentUrn && parentUrn.manifestUrn || popupSlateData && popupSlateData.id || poetryData && poetryData.id || config.slateManifestURN
     let _requestData = {
         "projectUrn": config.projectUrn,
         "slateEntityUrn":slateEntityUrn,
@@ -85,7 +84,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         _requestData.parentType = "citations"
     }
 
-    prepareDataForTcmUpdate(_requestData, parentUrn, asideData)
+    prepareDataForTcmUpdate(_requestData, parentUrn, asideData, poetryData)
     return axios.post(`${config.REACT_APP_API_URL}v1/slate/element`,
         JSON.stringify(_requestData),
         {
@@ -140,6 +139,20 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 }
             })
         }
+        else if (poetryData && poetryData.type == "poetry"){
+            newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
+                if (item.id == poetryData.parentUrn) {
+                    item.contents.bodymatter.splice(index, 0, createdElementData)
+                } 
+                else if (item.type == "poetry" && item.id == poetryData.id) {
+                    item.contents.bodymatter && item.contents.bodymatter.map((ele) => {
+                        if (ele.id === poetryData.parentUrn) {
+                            ele.contents.bodymatter.splice(index, 0, createdElementData)
+                        }
+                    })
+                }
+            })  
+        }
         else {
             newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
         }
@@ -178,7 +191,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
 }
 
 export const swapElement = (dataObj, cb) => (dispatch, getState) => {
-    const { oldIndex, newIndex, currentSlateEntityUrn, swappedElementData, containerTypeElem, asideId } = dataObj;
+    const { oldIndex, newIndex, currentSlateEntityUrn, swappedElementData, containerTypeElem, asideId, poetryId} = dataObj;
     const slateId = config.slateManifestURN;
 
     let _requestData = {
@@ -244,13 +257,25 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                     });
                 } 
                 /** ----------Swapping elements inside Citations Group Element----------------- */
-                else if(containerTypeElem && containerTypeElem == 'cg'){
+                else if (containerTypeElem && containerTypeElem == 'cg') {
                     for (let i in newBodymatter) {
                         if (newBodymatter[i].contentUrn == currentSlateEntityUrn) {
                             newBodymatter[i].contents.bodymatter.move(oldIndex, newIndex);
                         }
                     }
-                }else{
+                }
+                else if (containerTypeElem && containerTypeElem == 'pe') {
+                    newBodymatter.forEach(element => {
+                        if (element.id == poetryId) {
+                            element.contents.bodymatter.forEach((nestedElem) => {
+                                if (nestedElem.contentUrn == swappedElementData.contentUrn) {
+                                    element.contents.bodymatter.move(oldIndex, newIndex);
+                                }
+                            })
+                        }
+                    });
+                }
+                else {
                     newParentData[slateId].contents.bodymatter.move(oldIndex, newIndex);
                 }
 

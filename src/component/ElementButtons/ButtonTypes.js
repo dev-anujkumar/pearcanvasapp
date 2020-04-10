@@ -29,6 +29,8 @@ export default {
     FEEDBACK : "feedback",
     ASSESSMENT_CLOSE_WINDOW:"assessmentCloseWindowIcon",
     CITATION_ELEMENT:'citation-elem',
+    POETRY_ELEMENT: "poetry-elem",
+    STANZA_ELEMENT: "stanza-elem",
     SHOW_HIDE : "show-hide-elem",
     POP_UP : "popup-elem",
 }
