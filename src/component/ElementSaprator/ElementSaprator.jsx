@@ -267,7 +267,7 @@ function typeOfContainerElements(elem, props) {
         "interactive-elem-button":
         {
             "Add MMI": "interactive-elem",
-            "Add SmartLink": "smartlink-elem",
+            "Add Smart Link": "smartlink-elem",
             "Add Show Hide": "show-hide-elem",
             "Add Pop Up": "popup-elem",
         }
