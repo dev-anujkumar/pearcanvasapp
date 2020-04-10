@@ -1332,7 +1332,7 @@ export class TinyMceEditor extends Component {
         let event = Object.assign({}, e);
         let currentTarget = event.currentTarget;
         let isSameTargetBasedOnDataId = true;
-        let termText = document.getElementById(currentTarget.id)&&document.getElementById(currentTarget.id).innerHTML;
+        // let termText = document.getElementById(currentTarget.id)&&document.getElementById(currentTarget.id).innerHTML;
 
         /*
             checking for same target based on data-id not id
@@ -1439,9 +1439,9 @@ export class TinyMceEditor extends Component {
                         }
                     })
                 }
-                if(termText) {
-                    document.getElementById(currentTarget.id).innerHTML = termText;
-                }
+                // if(termText) {
+                //     document.getElementById(currentTarget.id).innerHTML = termText;
+                // }
             });
             this.setToolbarByElementType();
         }
