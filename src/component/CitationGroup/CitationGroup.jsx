@@ -160,11 +160,11 @@ export class CitationGroup extends Component {
 
                                     // Element dragging ended
                                     onUpdate: (/**Event*/evt) => {
-                                        /**  if (config.savingInProgress) {   //to be uncommented once update api is integrated
+                                        if (config.savingInProgress) {
                                             evt.preventDefault()
                                             evt.stopPropagation()
                                             return false
-                                        }*/
+                                        }
                                         let dataObj = this.prepareSwapData(evt, parentUrn)
                                         cgThis.props.swapElement(dataObj, () => { })
                                         cgThis.context.setActiveElement(dataObj.swappedElementData, dataObj.newIndex);
