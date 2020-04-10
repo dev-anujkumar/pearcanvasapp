@@ -29,13 +29,13 @@ export default function ElementContainerType(props) {
     return (
         <div className="conatiner-other-elements" ref={myListContainer} style={{top}}>
             <ul className="other-elements-inner">
-                {data && data.map((item, key) => {
+                {data && data.map((item, index) => {
                     function buttonHandlerFunc() {
                         closeDropDown();
                         item.buttonHandler();
                     }
                     return (
-                        <React.Fragment> <li key={key} onClick={buttonHandlerFunc}>{item.text}</li></React.Fragment>
+                        <React.Fragment> <li key={index} onClick={buttonHandlerFunc}>{item.text}</li></React.Fragment>
 
                     )
                 })}
