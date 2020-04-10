@@ -7,9 +7,10 @@ import ElementSaprator from '../ElementSaprator';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { swapElement } from '../SlateWrapper/SlateWrapper_Actions'
+import PageNumberElement from '../SlateWrapper/PageNumberElement.jsx';
 import Sortable from 'react-sortablejs';
 import { guid } from '../../constants/utility.js';
-import config from '../../config/config';
+
 let random = guid();
 class ElementPoetry extends Component {
     constructor() {
@@ -21,7 +22,6 @@ class ElementPoetry extends Component {
         return (
             <React.Fragment>
                 {context.renderConatiner(props.model.contents)}
-                {/* <div className={designtype + "BorderBottom"} /> */}
             </React.Fragment>
         )
     }
@@ -30,7 +30,6 @@ class ElementPoetry extends Component {
         try {
             if (_containerData !== null && _containerData !== undefined) {
                 if (Object.values(_containerData).length > 0) {
-                    //let { id: _containerId, type: _containerType, contents: _contents, elementdata: _elementData } = _containerData;
                     let { bodymatter: _bodyMatter } = _containerData;
                     let { index } = this.props
                     let parentUrn = {
@@ -38,8 +37,6 @@ class ElementPoetry extends Component {
                         contentUrn: this.props.model.contentUrn ,
                         elementType: "poetry"
                     }
-                    //let filterElement = _bodyMatter.filter((ele) => ele.type == "manifest");
-                    //let elementLength = _bodyMatter.length - filterElement.length;
                     if(!_bodyMatter.length && this.props.deleteElement){
                         this.props.deleteElement();
                     }
@@ -85,15 +82,15 @@ class ElementPoetry extends Component {
                                         this.props.swapElement(dataObj, (bodyObj) => { })
                                         this.props.setActiveElement(dataObj.swappedElementData, dataObj.newIndex);
                                         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                                        // let showHideNode = document.querySelector('.show-hide-active')
-                                        // if(showHideNode){
-                                        //     showHideNode.classList.remove("show-hide-active")
-                                        // }
+                                        let showHideNode = document.querySelector('.show-hide-active')
+                                        if(showHideNode){
+                                            showHideNode.classList.remove("show-hide-active")
+                                        }
                                     },
                                 }}
                                 ref={(c) => {
                                     if (c) {
-                                        //let sortable = c.sortable;
+                                        // let sortable = c.sortable;
                                     }
                                 }}
                                 tag="div"
@@ -110,30 +107,6 @@ class ElementPoetry extends Component {
         }
     }
 
-
-    // renderStanzas = (stanzas) =>{
-    //     const { className, model,openGlossaryFootnotePopUp, slateLockInfo,openAssetPopoverPopUp,glossaryFootnoteValue} = this.props
-    //         return (
-    //            <ElementPoetryStanza
-    //              openAssetPopoverPopUp ={openAssetPopoverPopUp}
-    //              openGlossaryFootnotePopUp={openGlossaryFootnotePopUp}
-    //              index={this.props.index}
-    //              elementId={this.props.elementId}
-    //              element={this.props.element}
-    //              className={className}
-    //              model={model}
-    //              tagName={this.props.tagName}
-    //              handleEditorFocus={this.props.handleFocus}
-    //              handleBlur = {this.props.handleBlur}
-    //              slateLockInfo={slateLockInfo}
-    //              onListSelect={this.props.onListSelect}
-    //              permissions={this.props.permissions}
-    //              glossaryFootnoteValue={glossaryFootnoteValue}
-    //              glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
-    //            />
-    //        )
-    // }
-
     renderStanzas = (stanzas, parentIndex, parentUrn) => {
         let poetryData = {
             type: "poetry",
@@ -145,8 +118,6 @@ class ElementPoetry extends Component {
         try {
             if (stanzas !== undefined) {
                     return stanzas.map((element, index) => {
-                        // let indexStanza = `${parentIndex}-3-${index}`;
-                        // console.log("indexstanza>>>>>>",indexStanza)
                             return (
                                 <React.Fragment key={element.id}>                                   
                                     {index === 0 && <ElementSaprator
@@ -170,10 +141,8 @@ class ElementPoetry extends Component {
                                         onClickCapture={this.props.onClickCapture}
                                         showDeleteElemPopup={this.props.showDeleteElemPopup}
                                         parentElement = {this.props.element}
-                                        onListSelect={this.props.onListSelect}
-                                       // createPoetryElements={this.createPoetryElements}
-                                    >
-                                        {/* {
+                                        onListSelect={this.props.onListSelect}>
+                                        {
                                             (isHovered, isPageNumberEnabled, activeElement) => (
                                                 <PageNumberElement
                                                     updatePageNumber={this.props.updatePageNumber}
@@ -185,7 +154,7 @@ class ElementPoetry extends Component {
                                                     activeElement={activeElement}
                                                     permissions={this.props.permissions} />
                                             )
-                                        } */}
+                                        }
                                     </ElementContainer>
                                     <ElementSaprator
                                         index={index}

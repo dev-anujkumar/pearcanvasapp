@@ -11,7 +11,7 @@ class ElementPoetryStanza extends Component {
     let ConvertedModel = model && model.html && model.html.text.replace(/<p>/g, "")
     ConvertedModel = ConvertedModel && ConvertedModel.replace(/<\/p>/g, "")
 
-    let lineModel = ConvertedModel ? ConvertedModel : '<span class="stanza-line"><br /></span>'
+    let lineModel = ConvertedModel ? ConvertedModel : '<span class="poetryLine"><br /></span>'
 
     return lineModel;
   }

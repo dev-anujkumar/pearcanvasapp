@@ -1,10 +1,7 @@
-/* .stanza-line:nth-of-type(odd){ 
-    color: green; 
-}  */
-.stanza-line:nth-of-type(even){
+.poetryLine:nth-of-type(even){
      background-color:#fff;
      text-indent:1.5em;
 } 
-.stanza-line{
+.poetryLine{
     display: block;
 }

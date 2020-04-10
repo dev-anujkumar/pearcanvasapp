@@ -961,6 +961,7 @@ class ElementContainer extends Component {
                     btnClassName={this.state.btnClassName}
                     isBlockerActive={this.props.isBlockerActive}
                     tagName={"div"}
+                    updatePageNumber={updatePageNumber}
                     borderToggle={this.state.borderToggle}
                     elemBorderToggle={this.props.elemBorderToggle}
                     elementId={element.id} 
@@ -981,8 +982,8 @@ class ElementContainer extends Component {
                     handleBlur={this.handleBlur} 
                     setActiveElement={this.props.setActiveElement}
                     handleBlur={this.handleBlur}
-                    // handleFocus={this.handleFocus}
                     deleteElement={this.deleteElement}
+                    updatePageNumber={updatePageNumber}
                     btnClassName={this.state.btnClassName}
                     borderToggle={this.state.borderToggle}
                     elemBorderToggle={this.props.elemBorderToggle}
