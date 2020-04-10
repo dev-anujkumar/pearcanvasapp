@@ -13,6 +13,7 @@ import { createPopupUnit } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import PageNumberElement from '../SlateWrapper/PageNumberElement.jsx';
+import { checkSlateLock } from '../../js/slateLockUtility.js'
 
 let random = guid();
 
@@ -208,6 +209,9 @@ export class CitationGroup extends Component {
         )
     }
     handleFocus = (event) => {
+        if(checkSlateLock(this.context.slateLockInfo)){
+            return false
+        }
         if(event && event.target && !(event.target.classList.contains('citationTitle'))){
             return false
         }
