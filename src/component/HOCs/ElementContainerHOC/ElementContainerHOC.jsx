@@ -1,15 +1,13 @@
 import React, { Component } from 'react';
 import TinyMceEditor from "../../tinyMceEditor"
 
+/**
+* @description - containerWrapper is a HOC. It is defined simply
+* to make a HOC skeleton of the Poetry alike Element.
+*/
 const containerWrapper = (WrappedComponent) => {
     // ...and returns another component...
     return class extends Component {
-        constructor(props) {
-            super(props);
-            this.state = {
-                someValues: 12
-            };
-        }
         
         renderContainer = (model, index, slateLockInfo) => {
 

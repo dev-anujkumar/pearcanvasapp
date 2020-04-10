@@ -11,6 +11,11 @@ import Sortable from 'react-sortablejs';
 import { guid } from '../../constants/utility.js';
 
 let random = guid();
+
+/**
+* @description - ElementPoetry is a class based component. It is defined simply
+* to make a skeleton of the Poetry container.
+*/
 class ElementPoetry extends Component {
     constructor() {
       super();
@@ -25,6 +30,10 @@ class ElementPoetry extends Component {
         )
     }
 
+    /**
+    * @description - renderConatiner is a function for rendering the container part inside poetry element
+    * @param {*} _containerData is the array of stanza element
+    */
     renderConatiner = (_containerData) =>{
         try {
             if (_containerData !== null && _containerData !== undefined) {
@@ -105,6 +114,13 @@ class ElementPoetry extends Component {
         }
     }
 
+
+/**
+* @description - renderStanzas is a function for rendering the stanza element inside poetry element
+* @param {*} stanzas is the array of stanza element
+* @param {*} parentIndex is the index of poetry element
+* @param {*} parentUrn is the URN of poetry elememt
+*/
     renderStanzas = (stanzas, parentIndex, parentUrn) => {
         let poetryData = {
             type: "poetry",

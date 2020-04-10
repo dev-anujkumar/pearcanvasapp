@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 import '../../styles/ElementPoetry/ElementPoetry.css'
-import TinyMceEditor from "../tinyMceEditor"
+import TinyMceEditor from "../tinyMceEditor";
+
+/**
+* @description - ElementPoetryStanza is a class based component. It is defined simply
+* to make a skeleton of the stanza element by intoducing tinymce in it.
+*/
 class ElementPoetryStanza extends Component {
 
   prepareLineDom = (model) => {

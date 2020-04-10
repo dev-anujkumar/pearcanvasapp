@@ -772,6 +772,13 @@ class ElementContainer extends Component {
             }
         }
     }
+
+     /**
+    * @description - createPoetryElements is responsible for creating the Label,title,caption.credit for poetry element
+    * @param {*} poetryField is value of the field ie. label, title etc of poetry element
+    * @param {*} index
+    * @param {*} parentElement
+    */
     createPoetryElements = (poetryField, forceupdate, index, parentElement) => {
          sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
         this.props.createPoetryUnit(poetryField, parentElement, (currentElementData) =>
