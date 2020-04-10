@@ -692,6 +692,7 @@ export default {
                 'secondary-popup': {
                     text: 'Pop up window',
                     labelText: 'Pop',
+                    enum : "NA"
                 }
             }
         } 
@@ -704,6 +705,7 @@ export default {
                 'secondary-showhide': {
                     text: 'Show Hide',
                     labelText: 'SH',
+                    enum : "NA"
                 }
             }
         } 
