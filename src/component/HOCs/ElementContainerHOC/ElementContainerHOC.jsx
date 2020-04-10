@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import TinyMceEditor from "../../tinyMceEditor"
-import figureData from './../../ElementFigure/figureTypes';
-
 
 const containerWrapper = (WrappedComponent) => {
     // ...and returns another component...
