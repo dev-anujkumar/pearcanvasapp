@@ -591,13 +591,19 @@ const appendCreatedElement = (paramObj, responseData) => {
 
     let elemIndex = `cypress-${popupElementIndex}`
     let elemNode = document.getElementById(elemIndex)
-    popupElementIndex = Number(popupElementIndex.split("-")[0])
+    popupElementIndex = popupElementIndex.split("-")
     const parentData = getState().appStore.slateLevelData
     let newslateData = JSON.parse(JSON.stringify(parentData))
     let _slateObject = newslateData[slateManifestURN]
 
     if(parentElement.type === "popup"){
-        let targetPopupElement = _slateObject.contents.bodymatter[popupElementIndex]
+        let targetPopupElement=_slateObject.contents.bodymatter[popupElementIndex[0]];
+        if(popupElementIndex.length === 3){
+            targetPopupElement = targetPopupElement.elementdata.bodymatter[popupElementIndex[1]]
+        }
+        else if(popupElementIndex.length === 4){
+            targetPopupElement = targetPopupElement.elementdata.bodymatter[popupElementIndex[1]].contents.bodymatter[popupElementIndex[2]]
+        }
         if(targetPopupElement){
             targetPopupElement.popupdata[popupField] = responseData
             targetPopupElement.popupdata[popupField].html.text = elemNode.innerHTML
@@ -606,7 +612,7 @@ const appendCreatedElement = (paramObj, responseData) => {
         }
     }
     else if(parentElement.type === "citations"){
-        let targetCG = _slateObject.contents.bodymatter[popupElementIndex]
+        let targetCG = _slateObject.contents.bodymatter[popupElementIndex[0]]
         if(targetCG){
             targetCG.contents["formatted-title"] = responseData
             targetCG.contents["formatted-title"].html.text = elemNode.innerHTML
