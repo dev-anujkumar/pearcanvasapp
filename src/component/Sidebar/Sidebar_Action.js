@@ -217,7 +217,9 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     if (newElementData.primaryOption !== "primary-list" && conversionDataToSend.inputType === conversionDataToSend.outputType && conversionDataToSend.inputSubType === conversionDataToSend.outputSubType) {
         return;
     }
-
+    if(showHideObj){
+        conversionDataToSend["section"] = showHideObj.showHideType
+    }
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
     config.conversionInProcess = true
     if(conversionDataToSend.status === "approved"){
