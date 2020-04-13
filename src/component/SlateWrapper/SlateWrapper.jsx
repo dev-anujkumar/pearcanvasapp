@@ -676,7 +676,7 @@ class SlateWrapper extends Component {
             {
                 buttonType: 'interactive-elem-button',
                 buttonHandler: () => this.splithandlerfunction('interactive-elem-button'),
-                tooltipText: 'Interactivity',
+                tooltipText: 'Interactive',
                 tooltipDirection: 'left'
             },
             {
