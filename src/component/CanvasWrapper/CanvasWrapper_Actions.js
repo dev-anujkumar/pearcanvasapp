@@ -591,13 +591,19 @@ const appendCreatedElement = (paramObj, responseData) => {
 
     let elemIndex = `cypress-${popupElementIndex}`
     let elemNode = document.getElementById(elemIndex)
-    popupElementIndex = Number(popupElementIndex.split("-")[0])
+    popupElementIndex = popupElementIndex.split("-")
     const parentData = getState().appStore.slateLevelData
     let newslateData = JSON.parse(JSON.stringify(parentData))
     let _slateObject = newslateData[slateManifestURN]
 
     if(parentElement.type === "popup"){
-        let targetPopupElement = _slateObject.contents.bodymatter[popupElementIndex]
+        let targetPopupElement=_slateObject.contents.bodymatter[popupElementIndex[0]];
+        if(popupElementIndex.length === 3){
+            targetPopupElement = targetPopupElement.elementdata.bodymatter[popupElementIndex[1]]
+        }
+        else if(popupElementIndex.length === 4){
+            targetPopupElement = targetPopupElement.elementdata.bodymatter[popupElementIndex[1]].contents.bodymatter[popupElementIndex[2]]
+        }
         if(targetPopupElement){
             targetPopupElement.popupdata[popupField] = responseData
             targetPopupElement.popupdata[popupField].html.text = elemNode.innerHTML
@@ -606,7 +612,7 @@ const appendCreatedElement = (paramObj, responseData) => {
         }
     }
     else if(parentElement.type === "citations"){
-        let targetCG = _slateObject.contents.bodymatter[popupElementIndex]
+        let targetCG = _slateObject.contents.bodymatter[popupElementIndex[0]]
         if(targetCG){
             targetCG.contents["formatted-title"] = responseData
             targetCG.contents["formatted-title"].html.text = elemNode.innerHTML
@@ -671,32 +677,17 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
             }
         })
     .then((response) => {
-        let elemIndex = `cypress-${popupElementIndex}`
-        let elemNode = document.getElementById(elemIndex)
-        popupElementIndex = popupElementIndex.split("-")
-        const parentData = getState().appStore.slateLevelData
-        let newslateData = JSON.parse(JSON.stringify(parentData))
-        let _slateObject = newslateData[slateManifestURN]
-        let targetPopupElement=_slateObject.contents.bodymatter[popupElementIndex[0]];
-        if(popupElementIndex.length === 3){
-            targetPopupElement = targetPopupElement.elementdata.bodymatter[popupElementIndex[1]]
+        let argObj = {
+            popupElementIndex,
+            getState,
+            slateManifestURN,
+            parentElement,
+            dispatch,
+            cb,
+            popupField
         }
-        else if(popupElementIndex.length === 4){
-            targetPopupElement = targetPopupElement.elementdata.bodymatter[popupElementIndex[1]].contents.bodymatter[popupElementIndex[2]]
-        }
-        if(targetPopupElement){
-            targetPopupElement.popupdata[popupField] = response.data
-            targetPopupElement.popupdata[popupField].html.text = elemNode.innerHTML
-            targetPopupElement.popupdata[popupField].elementdata.text = elemNode.innerText
-            _slateObject.contents.bodymatter[popupElementIndex] = targetPopupElement
-        }
-        dispatch({
-            type: AUTHORING_ELEMENT_UPDATE,
-            payload: {
-                slateLevelData: newslateData
-            }
-        })
-        if(cb) cb(response.data)
+        appendCreatedElement(argObj, response.data)
+
     })
     .catch((error) => {
         console.log("%c ERROR RESPONSE", "font: 30px; color: red; background: black", error)
@@ -713,7 +704,6 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
         "type": "TEXT",
         "metaDataField" : poetryField
     };
-    console.log("response",_requestData)
     let url = `${config.REACT_APP_API_URL}v1/slate/element`
     return axios.post(url, 
         JSON.stringify(_requestData),

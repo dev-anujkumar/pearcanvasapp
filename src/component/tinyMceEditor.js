@@ -530,6 +530,11 @@ export class TinyMceEditor extends Component {
                         if (editor.selection.getNode().tagName.toLowerCase() !== 'span' || editor.selection.getNode().className.toLowerCase() !== 'poetryLine') {
                             elementSearch = editor.selection.getNode().closest('.poetryLine');
                         }
+                        tinymce.$(`div[data-id="${this.props.elementId}"] .poetryLine`).each(function (){
+                            if(this.innerHTML==='' || this.innerHTML==="<br>"){
+                                this.remove();
+                            }
+                        })
                         let elm = editor.dom.create('span', { 'class': 'poetryLine' }, '<br />');
                         if (editor.selection.getRng().startOffset === 0) {
                             elementSearch.parentNode.insertBefore(elm, elementSearch);
@@ -997,6 +1002,29 @@ export class TinyMceEditor extends Component {
                 elementId = this.props.currentElement.id
             }
         }
+        else if (this.props.element.type === "poetry") {
+            let tempIndex = this.props.index.split('-');
+            let indexesLen = tempIndex.length;
+            if (indexesLen === 2) {
+                switch (tempIndex[1]) {
+                    case "1":
+                        if (!this.props.element.contents['formattedSubtitle']) {
+                            return false;
+                        }
+                        break;
+                    case "3":
+                        if (!this.props.element.contents['formattedCaption']) {
+                            return false;
+                        }
+                        break;
+                    case "4":
+                        if (!this.props.element.contents['formattedCredit']) {
+                            return false;
+                        }
+                }
+            }
+            elementId = this.props.elementId
+        }
         else {
             elementId = this.props.elementId
         }
@@ -1331,10 +1359,10 @@ export class TinyMceEditor extends Component {
     setInstanceToolbar = () => {
         let toolbar = [];
         if (this.props.placeholder === "Enter Label..." || this.props.placeholder === 'Enter call to action...' || (this.props.element && this.props.element.subtype == 'mathml' && this.props.placeholder === "Type something...")) {
-            toolbar = config.labelToolbar;
+            toolbar = (this.props.element && this.props.element.type === 'poetry') ? config.poetryLabelToolbar : config.labelToolbar;
         }
         else if (this.props.placeholder === "Enter Caption..." || this.props.placeholder === "Enter Credit...") {
-            toolbar = config.captionToolbar;
+            toolbar = (this.props.element && this.props.element.type === 'poetry') ? config.poetryCaptionToolbar : config.captionToolbar;
 
         } else if (this.props.placeholder === "Enter block code...") {
             toolbar = config.codeListingToolbar;
@@ -1603,6 +1631,11 @@ export class TinyMceEditor extends Component {
                 this.outerHTML = innerHtml;
             })
         }
+        tinymce.$(`div[data-id="${this.props.elementId}"] .poetryLine`).each(function (){
+            if(this.innerHTML==='' || this.innerHTML==="<br>"){
+                this.remove();
+            }
+        })
         
         tinyMCE.$('.Wirisformula').each(function () {
             this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
