@@ -261,18 +261,29 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         let storeElement = store[config.slateManifestURN];
         let bodymatter = storeElement.contents.bodymatter;
         let focusedElement = bodymatter;
-        indexes.forEach(index => {
-            if(focusedElement[index]){
-            if(newElementData.elementId === focusedElement[index].id) {
-                focusedElement[index] = res.data
-            } else {
-                if(('elementdata' in focusedElement[index] && 'bodymatter' in focusedElement[index].elementdata) || ('contents' in focusedElement[index] && 'bodymatter' in focusedElement[index].contents) || 'interactivedata' in bodymatter[index]) {
-                    //  focusedElement = focusedElement[index].elementdata.bodymatter;
-                    focusedElement = focusedElement[index].elementdata && focusedElement[index].elementdata.bodymatter ||  focusedElement[index].contents && focusedElement[index].contents.bodymatter ||  bodymatter[index].interactivedata[showHideObj.showHideType]
+        if(newElementData.asideData && showHideObj) {
+            switch(indexes.length) {
+                case 4:
+                    focusedElement[indexes[0]].elementdata.bodymatter[indexes[1]].interactivedata[showHideObj.showHideType][indexes[3]] = res.data
+                    break
+                case 5:
+                    focusedElement[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].interactivedata[showHideObj.showHideType][indexes[4]] = res.data
+                    break
+            }
+        } else {
+            indexes.forEach(index => {
+                if(focusedElement[index]){
+                if(newElementData.elementId === focusedElement[index].id) {
+                    focusedElement[index] = res.data
+                } else {
+                    if(('elementdata' in focusedElement[index] && 'bodymatter' in focusedElement[index].elementdata) || ('contents' in focusedElement[index] && 'bodymatter' in focusedElement[index].contents) || 'interactivedata' in bodymatter[index]) {
+                        //  focusedElement = focusedElement[index].elementdata.bodymatter;
+                        focusedElement = focusedElement[index].elementdata && focusedElement[index].elementdata.bodymatter ||  focusedElement[index].contents && focusedElement[index].contents.bodymatter ||  bodymatter[index].interactivedata[showHideObj.showHideType]
+                    }
                 }
             }
+            });
         }
-        });
         store[config.slateManifestURN].contents.bodymatter = bodymatter;//res.data;
         let altText="";
         let longDesc="";
