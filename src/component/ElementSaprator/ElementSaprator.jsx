@@ -160,13 +160,15 @@ function asideButton(esProps,sectionBreak,elementType){
  */
 
 function renderConditionalButton(esProps, elementType) {
-    const { TEXT, IMAGE, AUDIO, INTERACTIVE, ASSESSMENT, CONTAINER, WORKED_EXP, OPENER , SECTION_BREAK, METADATA_ANCHOR,
-         POETRY_ELEMENT, INTERACTIVE_BUTTON } = elementTypeConstant
+    const { TEXT, IMAGE, AUDIO, INTERACTIVE, ASSESSMENT, CONTAINER, WORKED_EXP, OPENER, SECTION_BREAK, METADATA_ANCHOR,
+        POETRY_ELEMENT, INTERACTIVE_BUTTON, CITATION, CONTAINER_BUTTON } = elementTypeConstant
     let updatedEsProps = esProps.filter((btnObj) => {
-        let buttonType = btnObj.buttonType;       
-            return buttonType !== OPENER && buttonType !== SECTION_BREAK && buttonType !== WORKED_EXP && buttonType !== CONTAINER
-            && buttonType !== TEXT && buttonType !== IMAGE && buttonType !== AUDIO && buttonType !== INTERACTIVE && buttonType !== ASSESSMENT && buttonType !== METADATA_ANCHOR && buttonType !== POETRY_ELEMENT && buttonType !== INTERACTIVE_BUTTON;
-        
+        let buttonType = btnObj.buttonType;
+        return buttonType !== OPENER && buttonType !== SECTION_BREAK && buttonType !== WORKED_EXP &&
+            buttonType !== CONTAINER && buttonType !== TEXT && buttonType !== IMAGE &&
+            buttonType !== AUDIO && buttonType !== INTERACTIVE && buttonType !== ASSESSMENT &&
+            buttonType !== METADATA_ANCHOR && buttonType !== POETRY_ELEMENT && buttonType !== INTERACTIVE_BUTTON
+            && buttonType !== CITATION && buttonType !== CONTAINER_BUTTON;
     })
     return updatedEsProps;
 }
@@ -242,15 +244,11 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
                 })
             }
         }
-        else if (elementType == ELEMENT_ASIDE|| elementType == CITATION_GROUP_ELEMENT) {
-            updatedEsProps = asideButton(esProps, sectionBreak,elementType);
-        }   
-        else if (elementType == ELEMENT_ASIDE || elementType === elementTypeConstant.POETRY) {
-            updatedEsProps = (elementType == ELEMENT_ASIDE) ? asideButton(esProps, sectionBreak) :
-            renderConditionalButton(esProps, elementType);
-           
-        }
-       
+        else if (elementType == ELEMENT_ASIDE || elementType == CITATION_GROUP_ELEMENT || elementType === elementTypeConstant.POETRY) {
+            updatedEsProps = (elementType === elementTypeConstant.POETRY) ?
+                renderConditionalButton(esProps, elementType) :
+                asideButton(esProps, sectionBreak, elementType);
+        }          
         else {
             updatedEsProps = esProps.filter((btnObj) => {
                 buttonType = btnObj.buttonType;

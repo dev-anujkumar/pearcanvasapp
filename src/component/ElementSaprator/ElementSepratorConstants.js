@@ -12,5 +12,8 @@ export default {
     SECTION_BREAK: 'section-break-elem',
     METADATA_ANCHOR : 'metadata-anchor',
     STANZA_ELEMENT : 'stanza-elem',
-    INTERACTIVE_BUTTON : 'interactive-elem-button'
+    INTERACTIVE_BUTTON : 'interactive-elem-button',
+    CITATION :'citation-elem',
+    CITATION_GROUP_ELEMENT : 'citations',
+    CONTAINER_BUTTON : 'container-elem-button'
 }
