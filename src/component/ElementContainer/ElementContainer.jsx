@@ -1027,8 +1027,6 @@ class ElementContainer extends Component {
                     element={element}
                     slateLockInfo={slateLockInfo} 
                     setActiveElement={this.props.setActiveElement}
-                    handleBlur={this.handleBlur}
-                    handleFocus={this.handleFocus}
                     deleteElement={this.deleteElement}
                     btnClassName={this.state.btnClassName}
                     isBlockerActive={this.props.isBlockerActive}
@@ -1040,6 +1038,7 @@ class ElementContainer extends Component {
                     createPoetryElements={this.createPoetryElements}
                     glossaryFootnoteValue={this.props.glossaryFootnoteValue} 
                     onClickCapture={this.props.onClickCapture}
+                    onListSelect={this.props.onListSelect} 
                     glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
                     elementSepratorProps={elementSepratorProps} />
                     labelText = 'PE'
@@ -1053,7 +1052,6 @@ class ElementContainer extends Component {
                     showDeleteElemPopup={this.showDeleteElemPopup}
                     handleBlur={this.handleBlur} 
                     setActiveElement={this.props.setActiveElement}
-                    handleBlur={this.handleBlur}
                     deleteElement={this.deleteElement}
                     updatePageNumber={updatePageNumber}
                     btnClassName={this.state.btnClassName}
