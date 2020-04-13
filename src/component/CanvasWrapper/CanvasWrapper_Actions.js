@@ -713,7 +713,6 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
         "type": "TEXT",
         "metaDataField" : poetryField
     };
-    console.log("response",_requestData)
     let url = `${config.REACT_APP_API_URL}v1/slate/element`
     return axios.post(url, 
         JSON.stringify(_requestData),
