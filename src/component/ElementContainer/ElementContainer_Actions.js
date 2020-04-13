@@ -401,7 +401,9 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
         if(parentElement && parentElement.type === "citations"){
             if(updatedData.type === "element-citation"){
                 let indexes = elementIndex.split("-")
-                _slateBodyMatter[indexes[0]].contents.bodymatter[indexes[1] - 1] = {...updatedData}
+                _slateBodyMatter[indexes[0]].contents.bodymatter[indexes[1] - 1] = {...updatedData,
+                    tcm: _slateObject.tcm ? true : false
+                }
             }
             else {
                 if(updatedData.type === "element-authoredtext"){

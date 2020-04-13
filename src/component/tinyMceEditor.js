@@ -524,8 +524,35 @@ export class TinyMceEditor extends Component {
                 }
                 if (activeElement.nodeName == "DIV" && this.props.element.type === 'stanza') {
                     let key = e.keyCode || e.which;
-                     if (key != undefined && key === 13) {
-                         activeElement.innerHTML += '<span class="poetryLine"><br /></span>';  
+                    if (key != undefined && key === 13) {
+                        //activeElement.innerHTML += '<span class="poetryLine"><br /></span>';
+                        let elementSearch = editor.selection.getNode();
+                        if (editor.selection.getNode().tagName.toLowerCase() !== 'span' || editor.selection.getNode().className.toLowerCase() !== 'poetryLine') {
+                            elementSearch = editor.selection.getNode().closest('.poetryLine');
+                        }
+                        let elm = editor.dom.create('span', { 'class': 'poetryLine' }, '<br />');
+                        if (editor.selection.getRng().startOffset === 0) {
+                            elementSearch.parentNode.insertBefore(elm, elementSearch);
+                            editor.selection.setCursorLocation(elementSearch.previousSibling, 0);
+                        } else {
+                            if (elementSearch.nextSibling) {
+                                elementSearch.parentNode.insertBefore(elm, elementSearch.nextSibling)
+                                editor.selection.setCursorLocation(elementSearch.nextSibling, 0);
+                            } else {
+                                elementSearch.parentNode.appendChild(elm);
+                                editor.selection.setCursorLocation(elementSearch.nextSibling, 0);
+                            }
+                        }
+                    } else if (key != undefined && (key === 8 || key === 46)) {
+                        let currentElement = editor.selection.getNode();
+                        if (editor.selection.getNode().tagName.toLowerCase() !== 'span' || editor.selection.getNode().className.toLowerCase() !== 'poetryLine') {
+                            currentElement = editor.selection.getNode().closest('.poetryLine');
+                        }
+                        let innerSpans = currentElement.getElementsByTagName('span');
+                        for (let index=0; index < innerSpans.length; index++) {
+                            let innerHtml = innerSpans[index].innerHTML;
+                            innerSpans[index].outerHTML = innerHtml;
+                        }
                     }
                 }              
             }
@@ -610,19 +637,46 @@ export class TinyMceEditor extends Component {
                 this.props.deleteShowHideUnit(this.props.currentElement.id, this.props.showHideType, this.props.element.contentUrn, this.props.innerIndex,this.props.index,this.props.element.id)
              }
             else if (key === 13 && this.props.element.type === 'stanza') {
-                let activeElementChildLength = activeElement.children && activeElement.children.length;
-                if (activeElementChildLength > 0
-                    && activeElement.children[activeElementChildLength - 1].tagName == 'SPAN'
-                    && activeElement.children[activeElementChildLength - 1].innerHTML == '<br>') {
-
-                    activeElement.children[activeElementChildLength - 1].remove();
+                if (editor.selection.getNode().tagName == 'SPAN'
+                    && editor.selection.getNode().innerHTML == '<br>') {
+                    editor.selection.getNode().remove();
                     let activeEditor = document.getElementById(tinymce.activeEditor.id);
                     activeEditor.blur();
                     let nextSaparator = (activeEditor.closest('.editor')).nextSibling;
                     let textPicker = nextSaparator.querySelector('#myDropdown li > .stanza-elem');
                     textPicker.click();
                 }
-            }      
+            }
+            if (activeElement.nodeName == "DIV" && this.props.element.type === 'stanza') {
+                let key = e.keyCode || e.which;
+                if (key != undefined && (key === 8 || key === 46)) {
+                    let currentElement = editor.selection.getNode();
+                    if (editor.selection.getNode().tagName.toLowerCase() !== 'span' || editor.selection.getNode().className.toLowerCase() !== 'poetryLine') {
+                        currentElement = editor.selection.getNode().closest('.poetryLine');
+                    }
+                    if (key === 8 && editor.selection.getRng().startOffset === 0 && currentElement.innerHTML !== '<br>') {
+                        e.preventDefault();
+                    } else if ((currentElement.innerHTML && currentElement.innerHTML.length === 1) || (key === 8 && currentElement.tagName == 'SPAN' && currentElement.innerHTML == '<br>')) {
+                        if (currentElement.previousSibling) {
+                            if (key === 46) {
+                                e.preventDefault();
+                            } else {
+                                currentElement.previousSibling.innerHTML += '&nbsp';
+                            }
+                            editor.selection.setCursorLocation(currentElement.previousSibling, 1);
+                            currentElement.remove();
+                        } else {
+                            let elm = editor.dom.create('span', { 'class': 'poetryLine' }, '<br />');
+                            currentElement.parentNode.insertBefore(elm, currentElement);
+                            editor.selection.setCursorLocation(currentElement.previousSibling, 0);
+                            currentElement.remove();
+                            if (key === 46) {
+                                e.preventDefault();
+                            }
+                        }
+                    }
+                }
+            }     
         });
     }
 

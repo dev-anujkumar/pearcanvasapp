@@ -2,9 +2,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import moxios from 'moxios';
 import * as actions from '../../../src/component/ElementContainer/ElementContainer_Actions';
-// import { comments } from '../../../fixtures/commentPanelData.js'
-import { slateLevelData, newslateData,defaultSlateDataFigure, addNewComment,addNewCommentAside, slateLevelAsideData,addNewCommentOnAsideElement,newSlateAsideDataComment, deleteElement, slateLevelDataAside, newslateDataAside ,newslateAsideData, blockfeature,slateWithCitationElement} from "../../../fixtures/slateTestingData"
-import axios from 'axios';
+import { slateWithCitationElement} from "../../../fixtures/slateTestingData"
 import config from '../../../src/config/config.js';
 import { slateLevelData, addNewComment, slateLevelDataWithApproved, blockfeature, defaultSlateDataFigure , newslateAsideData} from "../../../fixtures/containerActionsTestingData"
 import { ADD_COMMENT, ADD_NEW_COMMENT, AUTHORING_ELEMENT_CREATED, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, DELETE_SHOW_HIDE_ELEMENT } from '../../../src/constants/Action_Constants';

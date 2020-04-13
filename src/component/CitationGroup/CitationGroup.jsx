@@ -13,6 +13,7 @@ import { createPopupUnit } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import PageNumberElement from '../SlateWrapper/PageNumberElement.jsx';
+import { checkSlateLock } from '../../js/slateLockUtility.js'
 
 let random = guid();
 
@@ -160,11 +161,11 @@ export class CitationGroup extends Component {
 
                                     // Element dragging ended
                                     onUpdate: (/**Event*/evt) => {
-                                        /**  if (config.savingInProgress) {   //to be uncommented once update api is integrated
+                                        if (config.savingInProgress) {
                                             evt.preventDefault()
                                             evt.stopPropagation()
                                             return false
-                                        }*/
+                                        }
                                         let dataObj = this.prepareSwapData(evt, parentUrn)
                                         cgThis.props.swapElement(dataObj, () => { })
                                         cgThis.context.setActiveElement(dataObj.swappedElementData, dataObj.newIndex);
@@ -208,6 +209,9 @@ export class CitationGroup extends Component {
         )
     }
     handleFocus = (event) => {
+        if(checkSlateLock(this.context.slateLockInfo)){
+            return false
+        }
         if(event && event.target && !(event.target.classList.contains('citationTitle'))){
             return false
         }
