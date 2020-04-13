@@ -671,32 +671,17 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
             }
         })
     .then((response) => {
-        let elemIndex = `cypress-${popupElementIndex}`
-        let elemNode = document.getElementById(elemIndex)
-        popupElementIndex = popupElementIndex.split("-")
-        const parentData = getState().appStore.slateLevelData
-        let newslateData = JSON.parse(JSON.stringify(parentData))
-        let _slateObject = newslateData[slateManifestURN]
-        let targetPopupElement=_slateObject.contents.bodymatter[popupElementIndex[0]];
-        if(popupElementIndex.length === 3){
-            targetPopupElement = targetPopupElement.elementdata.bodymatter[popupElementIndex[1]]
+        let argObj = {
+            popupElementIndex,
+            getState,
+            slateManifestURN,
+            parentElement,
+            dispatch,
+            cb,
+            popupField
         }
-        else if(popupElementIndex.length === 4){
-            targetPopupElement = targetPopupElement.elementdata.bodymatter[popupElementIndex[1]].contents.bodymatter[popupElementIndex[2]]
-        }
-        if(targetPopupElement){
-            targetPopupElement.popupdata[popupField] = response.data
-            targetPopupElement.popupdata[popupField].html.text = elemNode.innerHTML
-            targetPopupElement.popupdata[popupField].elementdata.text = elemNode.innerText
-            _slateObject.contents.bodymatter[popupElementIndex] = targetPopupElement
-        }
-        dispatch({
-            type: AUTHORING_ELEMENT_UPDATE,
-            payload: {
-                slateLevelData: newslateData
-            }
-        })
-        if(cb) cb(response.data)
+        appendCreatedElement(argObj, response.data)
+
     })
     .catch((error) => {
         console.log("%c ERROR RESPONSE", "font: 30px; color: red; background: black", error)
