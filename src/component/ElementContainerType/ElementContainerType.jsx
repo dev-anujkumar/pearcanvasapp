@@ -15,8 +15,8 @@ export default function ElementContainerType(props) {
          */
         let elementPickerPosition = 1
         switch (props.text) {
-            case 'interactive-elem-button': elementPickerPosition = 4; break;
-            case 'container-elem-button': elementPickerPosition = 6; break;
+            case 'interactive-elem-button': elementPickerPosition = 5; break;
+            case 'container-elem-button': elementPickerPosition = 7; break;
         }
 
         let onePickerHeight = 34;   // default pixel size of one picker element
