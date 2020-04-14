@@ -36,7 +36,7 @@ let initialState = {
 jest.mock('axios');
 describe('action file test', () => {
     let store = mockStore(() => initialState);
-
+    let initialState2;
     beforeEach(() => {
         initialState = {
             slateLevelData: {},
@@ -103,7 +103,15 @@ describe('action file test', () => {
             splittedElementIndex: 0,
             pageNumberData: {}
         };
-
+        initialState2 = {
+            slateLevelData: {},
+            appStore:{
+                slateLevelData: slateDataNew.data
+                },
+            activeElement: {},
+            splittedElementIndex: 0,
+            pageNumberData: {}
+        };
         moxios.install();
     });
 
@@ -155,7 +163,7 @@ describe('action file test', () => {
         result(dispatch,getState);
     })
     it('testing---createPopupUnit action - citations',async () => {
-        store = mockStore(() => initialState);
+        store = mockStore(() => initialState2);
         let manifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
         const expectedActions = [{
             type: AUTHORING_ELEMENT_UPDATE,
@@ -170,7 +178,7 @@ describe('action file test', () => {
 
         };
         let getState = () => {
-            return initialState;
+            return initialState2;
         }
         let cb = jest.fn()
         axios.post.mockImplementation(() => Promise.resolve(data));

@@ -105,9 +105,9 @@ describe('Testing Button component with props', () => {
     })
     it('render Container element Button component  ', () => {
         const component = mount(<Button type={buttonTypes.CONTAINER_ELEMENT} />);
-        expect(component.find('span.btn-element').hasClass('interactive-elem-button')).toBe(false);
+        expect(component.find('span.btn-element').hasClass('container-elem-button')).toBe(true);
         expect(component.find('span.btn-element').hasClass('backward-nav-disable')).toBe(false);
-        expect(component.find('span.btn-element').hasClass('container-elem')).toBe(true);
+        expect(component.find('svg#containerIcon').exists()).toBe(true);
     })
     it('render Worked example Button component  ', () => {
         const component = mount(<Button type={buttonTypes.WORKED_EXAMPLE_ELEMENT} />);
