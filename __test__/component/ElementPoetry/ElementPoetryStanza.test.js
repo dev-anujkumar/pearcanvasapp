@@ -19,7 +19,8 @@ describe('Testing ElementPoetryStanza component', () => {
         index: 1,
         model : {
             html : {
-                title: ''
+                title: '',
+                text: '<p><span></span></p>'
             }
         },
         slateLockInfo: {
