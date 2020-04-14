@@ -540,12 +540,14 @@ export class TinyMceEditor extends Component {
                             elementSearch.parentNode.insertBefore(elm, elementSearch);
                             editor.selection.setCursorLocation(elementSearch.previousSibling, 0);
                         } else {
-                            if (elementSearch && elementSearch.nextSibling) {
-                                elementSearch.parentNode.insertBefore(elm, elementSearch.nextSibling)
-                                editor.selection.setCursorLocation(elementSearch.nextSibling, 0);
-                            } else {
-                                elementSearch.parentNode.appendChild(elm);
-                                editor.selection.setCursorLocation(elementSearch.nextSibling, 0);
+                            if (elementSearch) {
+                                if (elementSearch.nextSibling) {
+                                    elementSearch.parentNode.insertBefore(elm, elementSearch.nextSibling)
+                                    editor.selection.setCursorLocation(elementSearch.nextSibling, 0);
+                                } else {
+                                    elementSearch.parentNode.appendChild(elm);
+                                    editor.selection.setCursorLocation(elementSearch.nextSibling, 0);
+                                }
                             }
                         }
                     } else if (key != undefined && (key === 8 || key === 46)) {
