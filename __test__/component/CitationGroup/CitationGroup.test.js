@@ -7,6 +7,7 @@ import CitationGroup from '../../../src/component/CitationGroup/CitationGroup';
 import { CitationGroupContext } from '../../../src/component/ElementContainer/ElementCitationContext'
 import { citationGroupElement } from '../../../fixtures/ElementCitationData';
 import { Provider } from 'react-redux';
+import config from '../../../src/config/config.js';
 jest.mock('../../../src/component/ElementSaprator/ElementSaprator.jsx', () => {
     return function () {
         return (<div>null</div>)
@@ -16,7 +17,15 @@ jest.mock('../../../src/component/tinyMceEditor.js',()=>{
     return function () {
         return (<div>null</div>)
     }
-})
+});
+jest.mock('../../../src/component/SlateWrapper/SlateWrapper_Actions.js', () => {
+    return {
+        swapElement: function () {
+            return (<div>null</div>)
+        }
+    }
+});
+
 const mockStore = configureMockStore(middlewares)
 
 let initialState = {
@@ -69,7 +78,8 @@ describe('Testing CitationGroup component with props', () => {
         setActiveElement : jest.fn(),
         handleFocus: jest.fn(),
         handleBlur: jest.fn(),
-        onClick: jest.fn()
+        onClick: jest.fn(),
+        deleteElement: jest.fn(),
     }
     const wrapper = mount(
     <CitationGroupContext.Provider value={contextValue} >
@@ -118,10 +128,71 @@ describe('Testing CitationGroup component with props', () => {
         CitationGroupInstance.renderElement(contextValue.element.contents.bodymatter, parentUrn, contextValue.index);
         expect(spyrenderElement).toHaveBeenCalled()
     })
-    it("handleFocus method - if block", () => {
+    it("handleFocus method - default", () => {
         const spyhandleFocus = jest.spyOn(CitationGroupInstance, 'handleFocus')
         let event = {}
         CitationGroupInstance.handleFocus(event);
+        expect(spyhandleFocus).toHaveBeenCalled()
+    })
+    it("handleFocus method - if block -event ", () => {
+        const spyhandleFocus = jest.spyOn(CitationGroupInstance, 'handleFocus')
+        let event = { 
+            target: { 
+                classList: { contains: ()=>{return false;}}
+            } 
+        }
+        CitationGroupInstance.handleFocus(event);
+        expect(spyhandleFocus).toHaveBeenCalled()
+    })
+    it('sortable testing', () => {
+        const instance = wrapper.find('Sortable').instance();
+        expect(instance.props.onChange).toHaveLength(3);
+    })
+    it(' Sortable onStart function testing', () => {
+        const instance = wrapper.find('Sortable').instance();
+        instance.props.options.onStart()
+        instance.props.onChange();
+        expect(instance.props.onChange).toHaveLength(3);
+    })
+    it(' Sortable onUpdate function testing', () => {
+        props.setActiveElement = jest.fn();
+        const instance = wrapper.find('Sortable').instance();
+        let evt = {
+            oldDraggableIndex : 0,
+            newDraggableIndex : 1
+        }
+        
+        instance.props.options.onUpdate(evt);
+        expect(instance.props.options.onUpdate).toHaveLength(1);
+    })
+    it(' Sortable onUpdate function testing - IF savingInProgress is true', () => {
+        config.savingInProgress = true
+        props.setActiveElement = jest.fn();
+        const instance = wrapper.find('Sortable').instance();
+        let evt = {
+            oldDraggableIndex : 0,
+            newDraggableIndex : 1,
+            preventDefault: jest.fn(),
+            stopPropagation: jest.fn()
+        }
+        
+        instance.props.options.onUpdate(evt);
+        expect(instance.props.options.onUpdate).toHaveLength(1);
+    })
+    it("handleFocus method - if block - checkSlateLock()", () => {
+        let store2 = mockStore({...initialState, slateLockReducer : {
+            slateLockInfo: { isLocked : true, userId : 'c5test01'},
+        }} );
+        const wrapper2 = mount(
+            <CitationGroupContext.Provider value={{...contextValue,  slateLockInfo:{ isLocked : true, userId : 'c5test01'}}} >
+                <Provider store={store2}>
+                    <CitationGroup {...props} />
+                </Provider>
+            </CitationGroupContext.Provider>);
+            const CitationGroupInstance2 = wrapper2.find('CitationGroup').instance();
+        const spyhandleFocus = jest.spyOn(CitationGroupInstance2, 'handleFocus')
+        let event = {}
+        CitationGroupInstance2.handleFocus(event);
         expect(spyhandleFocus).toHaveBeenCalled()
     })
 })

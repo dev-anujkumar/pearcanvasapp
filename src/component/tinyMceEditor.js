@@ -1639,8 +1639,7 @@ export class TinyMceEditor extends Component {
                 }
             })
         }
-        
-        
+                
         tinyMCE.$('.Wirisformula').each(function () {
             this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
             this.naturalWidth && this.setAttribute('width', this.naturalWidth)

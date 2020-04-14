@@ -1798,7 +1798,114 @@ describe('Tests ElementContainer Actions', () => {
                 expect(store.getActions()[0].type).toEqual(expectedActions[0].type);
             });
         })
-    
+        it('testing------- Update Element citations type------action', () => {
+            let store = mockStore(() => initialState2);
+            config.slateManifestURN='urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'
+            let asideData = {
+                type:"citations",
+                id:"urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e",
+            }
+            let updatedData={
+                "id": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27637",
+                "type": "element-citation",
+                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                "elementdata": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
+                },
+                "html" : {
+                    "text":`<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4e" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</p>`
+                },
+                "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r43",
+                "versionUrn": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27637",
+                slateUrn: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+            }
+            let   parentUrn = {
+                    manifestUrn:"urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e" ,
+                    contentUrn: "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5",
+                    elementType: "citations"
+                }
+        
+            moxios.wait(() => {
+                const request = moxios.requests.mostRecent();
+                request.respondWith({
+                    status: 200,
+                    response: 200
+                });
+            });
+            let parentElement = {
+                type: 'citations',
+                contentUrn:"urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5",
+                id:"urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e"
+            }
+
+            const expectedActions = [{
+                type: AUTHORING_ELEMENT_UPDATE,
+                payload: { slateLevelData: slateWithCitationElement.slateLevelData}
+            }];
+   
+            return store.dispatch(actions.updateElement(updatedData, "0-3", parentUrn, asideData, null, parentElement, {})).then(() => {
+                expect(store.getActions()[0].type).toEqual(expectedActions[0].type);
+            });
+        })
+        it('testing------- Update citations title------action', () => {
+            let store = mockStore(() => initialState2);
+            config.slateManifestURN='urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'
+            let asideData = {
+                type:"citations",
+                id:"urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e",
+            }
+            let updatedData={
+                "id": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635",
+                "type": "element-authoredtext",
+                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                "elementdata": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": "If the citation grouping.",
+                    "textsemantics":
+                    [
+                        {
+                            "type": "strong",
+                            "charStart": 1,
+                            "charEnd": 5
+                        }
+                    ]
+                },
+                "html" : {
+                    "text":`<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4d" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635">If the citation grouping.</p>`
+                },
+                "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4d",
+                "versionUrn": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635",
+                slateUrn: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+            }
+            let   parentUrn = {
+                    manifestUrn:"urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e" ,
+                    contentUrn: "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5",
+                    elementType: "citations"
+                }
+        
+            moxios.wait(() => {
+                const request = moxios.requests.mostRecent();
+                request.respondWith({
+                    status: 200,
+                    response: 200
+                });
+            });
+            let parentElement = {
+                type: 'citations',
+                contentUrn:"urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5",
+                id:"urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e"
+            }
+
+            const expectedActions = [{
+                type: AUTHORING_ELEMENT_UPDATE,
+                payload: { slateLevelData: slateWithCitationElement.slateLevelData}
+            }];
+   
+            return store.dispatch(actions.updateElement(updatedData, "0", parentUrn, asideData, null, parentElement, null)).then(() => {
+                expect(store.getActions()[0].type).toEqual(expectedActions[0].type);
+            });
+        })
     })
 })
 
