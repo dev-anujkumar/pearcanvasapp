@@ -17,9 +17,6 @@ let random = guid();
 * to make a skeleton of the Poetry container.
 */
 class ElementPoetry extends Component {
-    constructor() {
-      super();
-    }
 
     renderStanzaContainer = (props) => {
         let context = this;
