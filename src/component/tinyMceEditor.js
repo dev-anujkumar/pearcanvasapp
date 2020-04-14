@@ -540,7 +540,7 @@ export class TinyMceEditor extends Component {
                             elementSearch.parentNode.insertBefore(elm, elementSearch);
                             editor.selection.setCursorLocation(elementSearch.previousSibling, 0);
                         } else {
-                            if (elementSearch.nextSibling) {
+                            if (elementSearch && elementSearch.nextSibling) {
                                 elementSearch.parentNode.insertBefore(elm, elementSearch.nextSibling)
                                 editor.selection.setCursorLocation(elementSearch.nextSibling, 0);
                             } else {
@@ -661,7 +661,7 @@ export class TinyMceEditor extends Component {
                     }
                     if (key === 8 && editor.selection.getRng().startOffset === 0 && currentElement.innerHTML !== '<br>') {
                         e.preventDefault();
-                    } else if ((currentElement.innerHTML && currentElement.innerHTML.length === 1) || (key === 8 && currentElement.tagName == 'SPAN' && currentElement.innerHTML == '<br>')) {
+                    } else if (currentElement && ((currentElement.innerHTML && currentElement.innerHTML.length === 1) || (key === 8 && currentElement.tagName == 'SPAN' && currentElement.innerHTML == '<br>'))) {
                         if (currentElement.previousSibling) {
                             if (key === 46) {
                                 e.preventDefault();
