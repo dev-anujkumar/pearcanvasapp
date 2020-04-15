@@ -515,11 +515,13 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                 else if(parentElement.contents && parentElement.contents["formatted-subtitle"] && parentElement.contents["formatted-subtitle"]["id"] === previousElementData.id){
                     dataToReturn.updatepoetryField = "formattedSubtitle";
                 }
-                else if(parentElement.contents && parentElement.contents["formatted-caption"] && parentElement.contents["formatted-caption"]["id"] === previousElementData.id){
-                    dataToReturn.updatepoetryField = "formattedCaption";
-                }else if(parentElement.contents && parentElement.contents["formatted-credit"] && parentElement.contents["formatted-credit"]["id"] === previousElementData.id){
+                // else if(parentElement.contents && parentElement.contents["formatted-caption"] && parentElement.contents["formatted-caption"]["id"] === previousElementData.id){
+                //     dataToReturn.updatepoetryField = "formattedCaption";
+                // }
+                else if(parentElement.contents && parentElement.contents["creditsarray"] && parentElement.contents["creditsarray"].length && parentElement.contents["creditsarray"][0]["id"] === previousElementData.id){
                     dataToReturn.updatepoetryField = "formattedCredit";
                 }
+                dataToReturn.elementParentEntityUrn = parentElement.id
             }
             if(parentElement && parentElement.type === "showhide" && showHideType){
                 dataToReturn.section = showHideType;

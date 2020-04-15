@@ -734,10 +734,10 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
         let newslateData = JSON.parse(JSON.stringify(parentData))
         let _slateObject = newslateData[slateManifestURN]
         let targetPoetryElement = _slateObject.contents.bodymatter[ElementIndex]
-        targetPoetryElement.contents['creditsarray'] = [];
-        targetPoetryElement.contents['formattedTitle'] = {};
-        targetPoetryElement.contents['formattedCaption'] = {};
-        targetPoetryElement.contents['formattedCredit'] = {};
+        // targetPoetryElement.contents['creditsarray'] = [];
+        // targetPoetryElement.contents['formattedTitle'] = {};
+        // targetPoetryElement.contents['formattedCaption'] = {};
+        // targetPoetryElement.contents['formattedCredit'] = {};
 
         if(targetPoetryElement){
             targetPoetryElement.contents[poetryField] = response.data
