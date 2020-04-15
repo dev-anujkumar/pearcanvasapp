@@ -322,12 +322,12 @@ export class TinyMceEditor extends Component {
                         ) {
                             e.target.targetElm.children[0].innerHTML = textToReplace;
                         }
-                        else if(this.props.element.type === 'stanza'){
-                            tinymce.$(`div[data-id="${this.props.elementId}"] .poetryLine`).each(function (){
+                        else if (this.props.element.type === 'stanza') {
+                            tinymce.$(`div[data-id="${this.props.elementId}"] .poetryLine`).each(function () {
                                 this.innerHTML = this.innerText;
                             })
                         }
-                         /*  For Figure type*/
+                        /*  For Figure type*/
                         else {
                             e.target.targetElm.innerHTML = textToReplace;
                         }
@@ -575,10 +575,12 @@ export class TinyMceEditor extends Component {
                         if (editor.selection.getNode().tagName.toLowerCase() !== 'span' || editor.selection.getNode().className.toLowerCase() !== 'poetryLine') {
                             currentElement = editor.selection.getNode().closest('.poetryLine');
                         }
-                        let innerSpans = currentElement.getElementsByTagName('span');
-                        for (let index = 0; index < innerSpans.length; index++) {
-                            let innerHtml = innerSpans[index].innerHTML;
-                            innerSpans[index].outerHTML = innerHtml;
+                        if (currentElement) {
+                            let innerSpans = currentElement.getElementsByTagName('span');
+                            for (let index = 0; index < innerSpans.length; index++) {
+                                let innerHtml = innerSpans[index].innerHTML;
+                                innerSpans[index].outerHTML = innerHtml;
+                            }
                         }
                     }
                 }
@@ -681,7 +683,7 @@ export class TinyMceEditor extends Component {
                     if (editor.selection.getNode().tagName.toLowerCase() !== 'span' || editor.selection.getNode().className.toLowerCase() !== 'poetryLine') {
                         currentElement = editor.selection.getNode().closest('.poetryLine');
                     }
-                    if (key === 8 && editor.selection.getRng().startOffset === 0 && currentElement.innerHTML !== '<br>') {
+                    if (key === 8 && editor.selection.getRng().startOffset === 0 && currentElement && currentElement.innerHTML !== '<br>') {
                         e.preventDefault();
                     } else if (currentElement && ((currentElement.innerHTML && currentElement.innerHTML.length === 1) || (key === 8 && currentElement.tagName == 'SPAN' && currentElement.innerHTML == '<br>'))) {
                         if (currentElement.previousSibling) {
