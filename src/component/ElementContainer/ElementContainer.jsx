@@ -1031,6 +1031,7 @@ class ElementContainer extends Component {
                     btnClassName={this.state.btnClassName}
                     isBlockerActive={this.props.isBlockerActive}
                     tagName={"div"}
+                    currentElement = {element}
                     updatePageNumber={updatePageNumber}
                     borderToggle={this.state.borderToggle}
                     elemBorderToggle={this.props.elemBorderToggle}

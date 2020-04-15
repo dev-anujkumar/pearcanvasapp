@@ -10,7 +10,8 @@ const containerWrapper = (WrappedComponent) => {
     return class extends Component {
         
         renderContainer = (model, index, slateLockInfo) => {
-
+            const { element } = this.props
+            
             let divClass = 'figureElement',
             divContainerClass= 'divImageTextWidth',
             figureClass='figureImageTextWidth',
