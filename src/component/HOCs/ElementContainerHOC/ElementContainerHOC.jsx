@@ -16,12 +16,12 @@ const containerWrapper = (WrappedComponent) => {
             figureClass='figureImageTextWidth',
             figLabelClass= 'heading4ImageTextWidthNumberLabel',
             figTitleClass= 'heading4ImageTextWidthTitle',
-            figCaptionClass= 'figcaptionImageTextWidth',
+            // figCaptionClass= 'figcaptionImageTextWidth',
             figCreditClass= 'paragraphImageTextWidthCredit'
             
             let formattedSubtitle = model.contents.hasOwnProperty('formatted-subtitle') ? model.contents["formatted-subtitle"].html && model.contents["formatted-subtitle"].html.text : "<p></p>";
             let formattedTitle = model.contents.hasOwnProperty('formatted-title') ? model.contents["formatted-title"].html && model.contents["formatted-title"].html.text : "<p></p>";
-            let formattedCaption = model.contents.hasOwnProperty('formatted-caption') ? model.contents["formatted-caption"].html && model.contents["formatted-caption"].html.text : "<p></p>";
+            // let formattedCaption = model.contents.hasOwnProperty('formatted-caption') ? model.contents["formatted-caption"].html && model.contents["formatted-caption"].html.text : "<p></p>";
             let formattedCredit = model.contents.hasOwnProperty('formatted-credit') ? model.contents["formatted-credit"].html && model.contents["formatted-credit"].html.text : "<p></p>";
 
             let poetryElem = <div className={divClass}>
@@ -37,9 +37,9 @@ const containerWrapper = (WrappedComponent) => {
                             <WrappedComponent data={this.state} {...this.props} />
                         </div>
 
-                        <figcaption className={figCaptionClass} >
+                        {/* <figcaption className={figCaptionClass} >
                             <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${index}-3`} placeholder="Enter Caption..." tagName={'p'} className={figCaptionClass + " figureCaption"} model={formattedCaption} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} createPoetryElements={this.props.createPoetryElements} poetryField="formattedCaption" />
-                        </figcaption>
+                        </figcaption> */}
 
                         <div>
                             <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${index}-4`} placeholder="Enter Credit..." tagName={'p'} className={figCreditClass + " figureCredit"} model={formattedCredit} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} createPoetryElements={this.props.createPoetryElements} poetryField="formattedCredit" />
