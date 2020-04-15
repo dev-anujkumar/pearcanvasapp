@@ -377,7 +377,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                     dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:poetryData.id, poetryData.contentUrn, 0, poetryData));
                 }
             } 
-            else if(parentElement && parentElement.type === "popup" && updatedData.popupEntityUrn && (updatedData.metaDataField || updatedData.section === "postertextobject") ){
+            else if(parentElement && parentElement.type === "popup" && updatedData.elementParentEntityUrn && (updatedData.metaDataField || updatedData.section === "postertextobject") ){
                 dispatch(fetchSlateData(updatedData.slateUrn, updatedData.slateEntity, 0)); }
             else if(parentElement && parentElement.type === "showhide"){
                 parentElement.indexes =elementIndex;
