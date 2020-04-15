@@ -1640,12 +1640,15 @@ export class TinyMceEditor extends Component {
                 this.outerHTML = innerHtml;
             })
         }
-        /*tinymce.$(`div[data-id="${this.props.elementId}"] .poetryLine`).each(function (){
-            if(this.innerHTML==='' || this.innerHTML==="<br>"){
-                this.remove();
-            }
-        })*/
-        
+        let poetryStanza = tinymce.$(`div[data-id="${this.props.elementId}"] .poetryLine`);
+        if(poetryStanza.length>1){
+            poetryStanza.each(function (){
+                if(this.innerHTML==='' || this.innerHTML==="<br>"){
+                    this.remove();
+                }
+            })
+        }
+                
         tinyMCE.$('.Wirisformula').each(function () {
             this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
             this.naturalWidth && this.setAttribute('width', this.naturalWidth)
