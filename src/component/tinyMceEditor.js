@@ -1426,7 +1426,14 @@ export class TinyMceEditor extends Component {
              * Using timeout - init tinymce instance only when default events stack becomes empty
              */
             currentTarget.focus();
-            tinymce.init(this.editorConfig).then(() => { 
+            let termText = tinyMCE.$("#" + currentTarget.id)&&tinyMCE.$("#" + currentTarget.id).html();
+            tinymce.init(this.editorConfig).then(() => {
+                if(termText && termText.length !== "") {
+                    if(termText.search(/^(<p.*>)+$/g) >= 0) {
+                        termText = tinyMCE.$("#" + currentTarget.id).html();
+                    }
+                    document.getElementById(currentTarget.id).innerHTML = termText;
+                }
                 if(clickedX!==0&&clickedY!==0){
                     tinymce.activeEditor.selection.placeCaretAt(clickedX,clickedY) //Placing exact cursor position on clicking.
                 }
@@ -1439,9 +1446,6 @@ export class TinyMceEditor extends Component {
                         }
                     })
                 }
-                // if(termText) {
-                //     document.getElementById(currentTarget.id).innerHTML = termText;
-                // }
             });
             this.setToolbarByElementType();
         }
