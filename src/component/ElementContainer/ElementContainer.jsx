@@ -479,6 +479,7 @@ class ElementContainer extends Component {
                     tempDiv.innerHTML = matchHTMLwithRegex(tempDiv.innerHTML) ? tempDiv.innerHTML : `<p class="paragraphNumeroUno">${tempDiv.innerHTML}</p>`
                     html = html.replace(/<br data-mce-bogus="1">/g, "<br>")
                     html = matchHTMLwithRegex(html) ? html : `<p class="paragraphNumeroUno">${html}</p>`
+                    parentElement["index"] = this.props.index
                 }
                 else if (previousElementData.type === "stanza") {
                     html = `<p>${html}</p>`
@@ -602,6 +603,7 @@ class ElementContainer extends Component {
                         if(dataToSend.status === "approved"){
                             config.savingInProgress = true
                         }
+                        parentElement["index"] = this.props.index
                         this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, showHideType, parentElement);
                     }
                     break;

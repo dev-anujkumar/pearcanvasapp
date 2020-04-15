@@ -520,8 +520,10 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                 }else if(parentElement.contents && parentElement.contents["formatted-credit"] && parentElement.contents["formatted-credit"]["id"] === previousElementData.id){
                     dataToReturn.updatepoetryField = "formattedCredit";
                 }
-            }
-            if(parentElement && parentElement.type === "showhide" && showHideType){
+            } else if(parentElement && parentElement.type === "citations") {
+                dataToReturn["metaDataField"] = "formattedTitle"
+                dataToReturn["elementParentEntityUrn"] = parentElement.contentUrn
+            } else if(parentElement && parentElement.type === "showhide" && showHideType){
                 dataToReturn.section = showHideType;
             }
             break;

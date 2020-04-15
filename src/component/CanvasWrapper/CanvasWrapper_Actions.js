@@ -284,7 +284,25 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
                             slateLevelData: newslateData
                         }
                     })
-                }else if (config.slateManifestURN === Object.values(slateData.data)[0].id) {
+                } else if (versioning.type === 'citations') {
+                    let parentData = getState().appStore.slateLevelData;
+                    let newslateData = JSON.parse(JSON.stringify(parentData));
+                    let index
+                    if(typeof versioning.index === "number"){
+                        index = versioning.index;
+                    }
+                    else if(typeof versioning.index === "string"){
+                        index = versioning.index.split("-")[0];
+                    }
+                    newslateData[config.slateManifestURN].contents.bodymatter[index] = Object.values(slateData.data)[0];
+                    return dispatch({
+                        type: AUTHORING_ELEMENT_UPDATE,
+                        payload: {
+                            slateLevelData: newslateData
+                        }
+                    })
+
+                } else if (config.slateManifestURN === Object.values(slateData.data)[0].id) {
                     sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
                     let contentUrn = slateData.data[manifestURN].contentUrn;
                     let title = slateData.data[manifestURN].contents.title ? slateData.data[manifestURN].contents.title.text : '';
