@@ -335,10 +335,12 @@ export class TinyMceEditor extends Component {
                     else if (this.props.element.type === 'stanza') {
                         let selection = window.getSelection();
                         if (selection.anchorNode.parentNode.nodeName === "SPAN" && selection.anchorNode.parentNode.classList.contains('poetryLine')) {
+                            if (selectedText !== "") {
+                                selection.anchorNode.parentNode.innerHTML = selection.anchorNode.parentNode.innerText;
+                            }
                             e.preventDefault();
                             e.stopPropagation();
-                        }
-                        else {
+                        } else {
                             selection.anchorNode.parentNode.outerHTML = selection.anchorNode.parentNode.innerText
                             e.preventDefault();
                             e.stopPropagation();
