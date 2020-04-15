@@ -28,15 +28,20 @@ const containerWrapper = (WrappedComponent) => {
             let formattedCredit = model.contents.hasOwnProperty('creditsarray') && model.contents['creditsarray'].length ?
                 model.contents["creditsarray"][0].html && model.contents["creditsarray"][0].html.text : "<p></p>";
 
+            let Title = element.contents && (element.contents['formatted-title'] || element.contents['formattedTitle'])
+            let subTitle = element.contents && (element.contents['formatted-subtitle'] || element.contents['formattedSubtitle'])
+            let credit = element.contents && (element.contents.hasOwnProperty('creditsarray') && element.contents['creditsarray'][0] || element.contents['formattedCredit'])
+            
+            
             let poetryElem = <div className={divClass}>
                 <div className={divContainerClass}>
                     <figure className={figureClass} >
                         <header>
                             <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${index}-0`} placeholder="Enter Label..." tagName={'h4'} className={figLabelClass + " figureLabel "} model={formattedTitle} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} createPoetryElements={this.props.createPoetryElements} poetryField="formattedTitle" 
-                             currentElement={element.contents && element.contents['formatted-title']}/>
+                             currentElement={Title}/>
 
                             <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${index}-1`} placeholder="Enter Title..." tagName={'h4'} className={figTitleClass + " figureTitle "} model={formattedSubtitle} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} createPoetryElements={this.props.createPoetryElements} poetryField="formattedSubtitle" 
-                            currentElement={element.contents && element.contents['formatted-subtitle']}/>
+                            currentElement={subTitle}/>
                         </header>
 
                         <div>
@@ -49,7 +54,7 @@ const containerWrapper = (WrappedComponent) => {
 
                         <div>
                             <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${index}-4`} placeholder="Enter Credit..." tagName={'p'} className={figCreditClass + " figureCredit"} model={formattedCredit} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} createPoetryElements={this.props.createPoetryElements} poetryField="formattedCredit" 
-                            currentElement={element.contents && element.contents.hasOwnProperty('creditsarray') && element.contents['creditsarray'].length && element.contents['creditsarray'][0]}/>
+                            currentElement={credit}/>
                         </div>
                     </figure>
                 </div>
