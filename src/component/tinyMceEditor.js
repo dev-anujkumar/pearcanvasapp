@@ -1429,7 +1429,7 @@ export class TinyMceEditor extends Component {
             let termText = tinyMCE.$("#" + currentTarget.id)&&tinyMCE.$("#" + currentTarget.id).html();
             tinymce.init(this.editorConfig).then(() => {
                 if(termText && termText.length !== "") {
-                    if(termText.search(/^(<p.*>)+$/g) >= 0) {
+                    if(termText.search(/^(<.*>)+$/g) >= 0) {
                         termText = tinyMCE.$("#" + currentTarget.id).html();
                     }
                     document.getElementById(currentTarget.id).innerHTML = termText;

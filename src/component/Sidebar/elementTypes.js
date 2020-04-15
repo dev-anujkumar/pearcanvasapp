@@ -692,6 +692,7 @@ export default {
     "popup": {
         "primary-popup": {
             text: 'Pop up window',
+            toolbar: ['assetpopover', 'glossary'],
             dropdownDisabled: true,
             subtype: {
                 'secondary-popup': {
