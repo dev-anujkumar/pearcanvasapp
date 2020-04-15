@@ -697,13 +697,25 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
 }
 
 export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, slateManifestURN) => (dispatch, getState) => {
-    let _requestData = {
-        "projectUrn": config.projectUrn,
-        "slateEntityUrn": parentElement.contentUrn,
-        "slateUrn": parentElement.id,
-        "type": "TEXT",
-        "metaDataField" : poetryField
-    };
+    let _requestData;
+    if (poetryField === 'formattedCredit'){
+         _requestData = {
+            "projectUrn": config.projectUrn,
+            "slateEntityUrn": parentElement.contentUrn,
+            "slateUrn": parentElement.id,
+            "type": "TEXT",
+            "sectionType" : 'creditsarray'
+        };
+    } else{
+         _requestData = {
+            "projectUrn": config.projectUrn,
+            "slateEntityUrn": parentElement.contentUrn,
+            "slateUrn": parentElement.id,
+            "type": "TEXT",
+            "metaDataField" : poetryField
+        };
+    }
+    
     let url = `${config.REACT_APP_API_URL}v1/slate/element`
     return axios.post(url, 
         JSON.stringify(_requestData),
