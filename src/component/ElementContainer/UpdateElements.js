@@ -497,7 +497,7 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                 delete dataToReturn.poetrylines;
             } 
             if(parentElement && parentElement.type === "popup"){
-                dataToReturn.popupEntityUrn = parentElement.contentUrn;
+                dataToReturn.elementParentEntityUrn = parentElement.contentUrn;
                 if(parentElement.popupdata["formatted-title"] && parentElement.popupdata["formatted-title"]["id"] === previousElementData.id){
                     dataToReturn.metaDataField = "formattedTitle";
                 } 
@@ -522,8 +522,11 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                     dataToReturn.updatepoetryField = "formattedCredit";
                 }
                 dataToReturn.elementParentEntityUrn = parentElement.id
-            }
-            if(parentElement && parentElement.type === "showhide" && showHideType){
+                
+            } else if(parentElement && parentElement.type === "citations") {
+                dataToReturn["metaDataField"] = "formattedTitle"
+                dataToReturn["elementParentEntityUrn"] = parentElement.contentUrn
+            } else if(parentElement && parentElement.type === "showhide" && showHideType){
                 dataToReturn.section = showHideType;
             }
             break;
