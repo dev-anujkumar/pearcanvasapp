@@ -1,0 +1,7 @@
+.poetryLine:nth-of-type(even){
+     background-color:#fff;
+     text-indent:1.5em;
+} 
+.poetryLine{
+    display: block;
+}

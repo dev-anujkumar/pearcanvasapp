@@ -29,7 +29,7 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
         const parentData = store.getState().appStore.slateLevelData;
         let newParentData = JSON.parse(JSON.stringify(parentData));
         let newBodymatter = newParentData[slateId].contents.bodymatter;
-        var footnoteContentText, glossaryFootElem, glossaryContentText, tempGlossaryContentText;
+        var footnoteContentText, glossaryFootElem = {}, glossaryContentText, tempGlossaryContentText;
         let tempIndex = index && typeof (index) !== 'number' && index.split('-');
         if(tempIndex.length == 4 && elementType == 'figure'){ //Figure inside WE
             glossaryFootElem = newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]]
@@ -58,6 +58,24 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                     break;
             }   
         }
+        else if (elementType === 'poetry') {
+            let tempIndex = index.split('-');
+            let indexesLen = tempIndex.length;
+            if (indexesLen === 2) {
+                switch (tempIndex[1]) {
+                    case "1":
+                        glossaryFootElem = newBodymatter[tempIndex[0]].contents['formattedSubtitle'] || {};
+                        break;
+                    case "3":
+                        glossaryFootElem = newBodymatter[tempIndex[0]].contents['formattedCaption'] || {};
+                        break;
+                    case "4":
+                        glossaryFootElem = newBodymatter[tempIndex[0]].contents['formattedCredit'] || {};
+                        break;
+                }
+                glossaaryFootnoteValue.elementWorkId = glossaryFootElem.id;
+            }
+        }
          else {
             if (typeof (index) == 'number') { 
                 if (newBodymatter[index].versionUrn == elementWorkId) {
@@ -72,7 +90,12 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                         glossaryFootElem = condition
                     }
                 } else if (indexesLen == 3) {
-                    condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
+                    if(elementType==='stanza'){
+                        condition = newBodymatter[indexes[0]].contents.bodymatter[indexes[2]]
+                    }
+                    else{
+                        condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
+                    }
                     if (condition.versionUrn == elementWorkId) {
                         glossaryFootElem = condition
                     }
@@ -215,7 +238,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             break;
     }
 
-    if(index &&  typeof (index) !== 'number' && elementType !== 'figure'  && typeWithPopup !== 'popup'){
+    if(index &&  typeof (index) !== 'number' && elementType !== 'figure'  && typeWithPopup !== 'popup' && elementType !== 'poetry'){
         let tempIndex =  index.split('-');
         if(tempIndex.length === 2){
             if(newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].id === elementWorkId){
@@ -227,7 +250,12 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                 }
             }
         }else if(tempIndex.length === 3){
-            if(newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]].id === elementWorkId){
+            if(elementType==='stanza'){
+                if (newBodymatter[tempIndex[0]].contents.bodymatter[tempIndex[2]].id === elementWorkId){
+                    data.isHead = false;
+                }
+            }
+            else if(newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]].id === elementWorkId){
                 data.isHead = false;
                 if(newBodymatter[tempIndex[0]].subtype === "workedexample"){
                     data.parentType = "workedexample";
@@ -278,6 +306,23 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                     break;
             }
         }
+        else if (elementType === 'poetry') {
+            let tempIndex = index.split('-');
+            let indexesLen = tempIndex.length;
+            if (indexesLen === 2) {
+                switch (tempIndex[1]) {
+                    case "1":
+                        newBodymatter[tempIndex[0]].contents['formattedSubtitle'] = res.data;
+                        break;
+                    case "3":
+                        newBodymatter[tempIndex[0]].contents['formattedCaption'] = res.data;
+                        break;
+                    case "4":
+                        newBodymatter[tempIndex[0]].contents['formattedCredit'] = res.data;
+                        break;
+                }
+            }
+        }
         else {
             if (typeof (index) == 'number') {
                 if (newBodymatter[index].versionUrn == elementWorkId) {
@@ -292,9 +337,19 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                         newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]] = res.data
                     }
                 } else if (indexesLen == 3) {
-                    condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
+                    if(elementType==='stanza'){
+                        condition = newBodymatter[indexes[0]].contents.bodymatter[indexes[2]]
+                    }
+                    else{
+                        condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
+                    }
                     if (condition.versionUrn == elementWorkId) {
-                        newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]] = res.data
+                        if(elementType==='stanza'){
+                            newBodymatter[indexes[0]].contents.bodymatter[indexes[2]] = res.data
+                        }
+                        else{
+                            newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]] = res.data
+                        }
                     }
                 }
             }

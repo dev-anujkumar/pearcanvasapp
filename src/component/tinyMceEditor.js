@@ -120,8 +120,10 @@ export class TinyMceEditor extends Component {
                         //     this.naturalWidth && this.setAttribute('width', this.naturalWidth)
                         // }) 
                         if(!config.savingInProgress){
-                            if(this.props.element.type === "popup" && !this.props.currentElement){
+                            if((this.props.element.type === "popup" || this.props.element.type === "citations") && !this.props.currentElement){
                                 this.props.createPopupUnit(this.props.popupField, null, this.props.index, this.props.element) 
+                            } else if(this.props.element && this.props.element.type === "poetry" && !this.props.currentElement){
+                                this.props.createPoetryElements(this.props.poetryField, null, this.props.index, this.props.element)
                             } else {
                                 let showHideType = this.props.showHideType || null
                                 showHideType = showHideType === "revel" ? "postertextobject" : showHideType
@@ -495,7 +497,7 @@ export class TinyMceEditor extends Component {
             if (activeElement) { 
                 let lastCont = this.lastContent;
                 this.lastContent = activeElement.innerHTML;
-                if (!isMediaElement && !activeElement.children.length || (activeElement.children.length === 1 && activeElement.children[0].tagName === "BR" && activeElement.nodeName !== "CODE")) {
+                if (!isMediaElement && !activeElement.children.length && this.props.element.type !== "citations" && this.props.element.type !== 'poetry' || (activeElement.children.length === 1 && activeElement.children[0].tagName === "BR" && activeElement.nodeName !== "CODE")) {
                     //code to avoid deletion of editor first child(like p,h1,blockquote etc)
                     let div = document.createElement('div');
                     div.innerHTML = lastCont;
@@ -510,7 +512,7 @@ export class TinyMceEditor extends Component {
                 else {
                     activeElement.classList.add('place-holder')
                 }
-                this.lastContent = activeElement.innerHTML;
+                 this.lastContent = activeElement.innerHTML;
 
                 if (activeElement.nodeName === "CODE") {
                     let key = e.keyCode || e.which;
@@ -520,6 +522,46 @@ export class TinyMceEditor extends Component {
                         activeElement.append(' ')
                     }
                 }
+                if (activeElement.nodeName == "DIV" && this.props.element.type === 'stanza') {
+                    let key = e.keyCode || e.which;
+                    if (key != undefined && key === 13) {
+                        //activeElement.innerHTML += '<span class="poetryLine"><br /></span>';
+                        let elementSearch = editor.selection.getNode();
+                        if (editor.selection.getNode().tagName.toLowerCase() !== 'span' || editor.selection.getNode().className.toLowerCase() !== 'poetryLine') {
+                            elementSearch = editor.selection.getNode().closest('.poetryLine');
+                        }
+                        tinymce.$(`div[data-id="${this.props.elementId}"] .poetryLine`).each(function (){
+                            if(this.innerHTML==='' || this.innerHTML==="<br>"){
+                                this.remove();
+                            }
+                        })
+                        let elm = editor.dom.create('span', { 'class': 'poetryLine' }, '<br />');
+                        if (editor.selection.getRng().startOffset === 0) {
+                            elementSearch.parentNode.insertBefore(elm, elementSearch);
+                            editor.selection.setCursorLocation(elementSearch.previousSibling, 0);
+                        } else {
+                            if (elementSearch) {
+                                if (elementSearch.nextSibling) {
+                                    elementSearch.parentNode.insertBefore(elm, elementSearch.nextSibling)
+                                    editor.selection.setCursorLocation(elementSearch.nextSibling, 0);
+                                } else {
+                                    elementSearch.parentNode.appendChild(elm);
+                                    editor.selection.setCursorLocation(elementSearch.nextSibling, 0);
+                                }
+                            }
+                        }
+                    } else if (key != undefined && (key === 8 || key === 46)) {
+                        let currentElement = editor.selection.getNode();
+                        if (editor.selection.getNode().tagName.toLowerCase() !== 'span' || editor.selection.getNode().className.toLowerCase() !== 'poetryLine') {
+                            currentElement = editor.selection.getNode().closest('.poetryLine');
+                        }
+                        let innerSpans = currentElement.getElementsByTagName('span');
+                        for (let index=0; index < innerSpans.length; index++) {
+                            let innerHtml = innerSpans[index].innerHTML;
+                            innerSpans[index].outerHTML = innerHtml;
+                        }
+                    }
+                }              
             }
         });
     }
@@ -584,18 +626,64 @@ export class TinyMceEditor extends Component {
             if (activeElement) {
                isContainsMath = activeElement.innerHTML.match(/<img/) ? (activeElement.innerHTML.match(/<img/).input.includes('class="Wirisformula') || activeElement.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula')) : false;
              }
-            if(key === 13 && this.props.element.type !== 'element-list' && activeElement.nodeName !== "CODE" && this.props.element.type!=='showhide') {
+            if(key === 13 && this.props.element.type !== 'element-list' && activeElement.nodeName !== "CODE" && this.props.element.type!=='showhide' && this.props.element.type !== "stanza") {
                 let activeEditor = document.getElementById(tinymce.activeEditor.id);
                 activeEditor.blur();
                 let nextSaparator = (activeEditor.closest('.editor')).nextSibling;
-                let textPicker = nextSaparator.querySelector('#myDropdown li > .text-elem');
+                let textPicker;
+                if(this.props.element.type == 'citations'){
+                    textPicker = nextSaparator.querySelector('#myDropdown li > .citation-elem');
+                }else{
+                    textPicker = nextSaparator.querySelector('#myDropdown li > .text-elem');
+                }
                 textPicker.click();
             }else if (key === 13 && this.props.element.type === 'showhide' && this.props.showHideType != 'revel' && this.props.currentElement.type !== 'element-list') {
                 this.props.createShowHideElement(this.props.showHideType, this.props.index, this.props.id);
             }
             else if((this.props.element && this.props.element.type ==='showhide' && this.props.showHideType !== 'revel' && !editor.bodyElement.innerText.trim().length && e.keyCode === 8 && this.props.element.interactivedata) && ((this.props.showHideType === "show" && this.props.element.interactivedata.show.length >1) || (this.props.showHideType === "hide" && this.props.element.interactivedata.hide.length >1 ))&& !isContainsMath ){
                 this.props.deleteShowHideUnit(this.props.currentElement.id, this.props.showHideType, this.props.element.contentUrn, this.props.innerIndex,this.props.index,this.props.element.id)
-             }   
+             }
+            else if (key === 13 && this.props.element.type === 'stanza') {
+                if (editor.selection.getNode().tagName == 'SPAN'
+                    && editor.selection.getNode().innerHTML == '<br>') {
+                    editor.selection.getNode().remove();
+                    let activeEditor = document.getElementById(tinymce.activeEditor.id);
+                    activeEditor.blur();
+                    let nextSaparator = (activeEditor.closest('.editor')).nextSibling;
+                    let textPicker = nextSaparator.querySelector('#myDropdown li > .stanza-elem');
+                    textPicker.click();
+                }
+            }
+            if (activeElement.nodeName == "DIV" && this.props.element.type === 'stanza') {
+                let key = e.keyCode || e.which;
+                if (key != undefined && (key === 8 || key === 46)) {
+                    let currentElement = editor.selection.getNode();
+                    if (editor.selection.getNode().tagName.toLowerCase() !== 'span' || editor.selection.getNode().className.toLowerCase() !== 'poetryLine') {
+                        currentElement = editor.selection.getNode().closest('.poetryLine');
+                    }
+                    if (key === 8 && editor.selection.getRng().startOffset === 0 && currentElement.innerHTML !== '<br>') {
+                        e.preventDefault();
+                    } else if (currentElement && ((currentElement.innerHTML && currentElement.innerHTML.length === 1) || (key === 8 && currentElement.tagName == 'SPAN' && currentElement.innerHTML == '<br>'))) {
+                        if (currentElement.previousSibling) {
+                            if (key === 46) {
+                                e.preventDefault();
+                            } else {
+                                currentElement.previousSibling.innerHTML += '&nbsp';
+                            }
+                            editor.selection.setCursorLocation(currentElement.previousSibling, 1);
+                            currentElement.remove();
+                        } else {
+                            let elm = editor.dom.create('span', { 'class': 'poetryLine' }, '<br />');
+                            currentElement.parentNode.insertBefore(elm, currentElement);
+                            editor.selection.setCursorLocation(currentElement.previousSibling, 0);
+                            currentElement.remove();
+                            if (key === 46) {
+                                e.preventDefault();
+                            }
+                        }
+                    }
+                }
+            }     
         });
     }
 
@@ -915,6 +1003,29 @@ export class TinyMceEditor extends Component {
             } else {
                 elementId = this.props.currentElement.id
             }
+        }
+        else if (this.props.element.type === "poetry") {
+            let tempIndex = this.props.index.split('-');
+            let indexesLen = tempIndex.length;
+            if (indexesLen === 2) {
+                switch (tempIndex[1]) {
+                    case "1":
+                        if (!this.props.element.contents['formattedSubtitle']) {
+                            return false;
+                        }
+                        break;
+                    case "3":
+                        if (!this.props.element.contents['formattedCaption']) {
+                            return false;
+                        }
+                        break;
+                    case "4":
+                        if (!this.props.element.contents['formattedCredit']) {
+                            return false;
+                        }
+                }
+            }
+            elementId = this.props.elementId
         }
         else {
             elementId = this.props.elementId
@@ -1250,10 +1361,10 @@ export class TinyMceEditor extends Component {
     setInstanceToolbar = () => {
         let toolbar = [];
         if (this.props.placeholder === "Enter Label..." || this.props.placeholder === 'Enter call to action...' || (this.props.element && this.props.element.subtype == 'mathml' && this.props.placeholder === "Type something...")) {
-            toolbar = config.labelToolbar;
+            toolbar = (this.props.element && this.props.element.type === 'poetry') ? config.poetryLabelToolbar : config.labelToolbar;
         }
         else if (this.props.placeholder === "Enter Caption..." || this.props.placeholder === "Enter Credit...") {
-            toolbar = config.captionToolbar;
+            toolbar = (this.props.element && this.props.element.type === 'poetry') ? config.poetryCaptionToolbar : config.captionToolbar;
 
         } else if (this.props.placeholder === "Enter block code...") {
             toolbar = config.codeListingToolbar;
@@ -1332,8 +1443,6 @@ export class TinyMceEditor extends Component {
         let event = Object.assign({}, e);
         let currentTarget = event.currentTarget;
         let isSameTargetBasedOnDataId = true;
-        // let termText = document.getElementById(currentTarget.id)&&document.getElementById(currentTarget.id).innerHTML;
-
         /*
             checking for same target based on data-id not id
         */
@@ -1531,6 +1640,11 @@ export class TinyMceEditor extends Component {
                 this.outerHTML = innerHtml;
             })
         }
+        /*tinymce.$(`div[data-id="${this.props.elementId}"] .poetryLine`).each(function (){
+            if(this.innerHTML==='' || this.innerHTML==="<br>"){
+                this.remove();
+            }
+        })*/
         
         tinyMCE.$('.Wirisformula').each(function () {
             this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
@@ -1542,8 +1656,16 @@ export class TinyMceEditor extends Component {
         if(!this.fromtinyInitBlur && !config.savingInProgress){
             let elemNode = document.getElementById(`cypress-${this.props.index}`) 
             elemNode.innerHTML = elemNode.innerHTML.replace(/<br data-mce-bogus="1">/g, "")
-            if(this.props.element && this.props.element.type === "popup" && !this.props.currentElement && elemNode && elemNode.innerHTML !== ""){
+            if(
+                this.props.element &&
+                (this.props.element.type === "popup" || this.props.element.type === "citations") &&
+                !this.props.currentElement &&
+                elemNode &&
+                elemNode.innerHTML !== ""
+            ){
                 this.props.createPopupUnit(this.props.popupField, forceupdate, this.props.index, this.props.element)
+            } else if(this.props.element && this.props.element.type === "poetry" && !this.props.currentElement && elemNode && elemNode.innerHTML !== ""){
+                this.props.createPoetryElements(this.props.poetryField, forceupdate, this.props.index, this.props.element)
             } else {
                 this.props.handleBlur(forceupdate,this.props.currentElement,this.props.index, showHideType)
             }
@@ -1583,7 +1705,18 @@ export class TinyMceEditor extends Component {
                 if(this.props.element && this.props.element.type === "popup"){
                     model = this.props.model && this.props.model.replace(/class="paragraphNumeroUno"/g, "")
                 }
-                else {
+                else if(this.props.element && this.props.element.type === "citations"){
+                    model = this.props.element.contents['formatted-title'] && this.props.element.contents['formatted-title'].html && this.props.element.contents['formatted-title'].html.text.length ? this.props.element.contents['formatted-title'].html.text : `<p class="paragraphNumeroUno"><br/></p>`
+                }
+                else if(this.props.element && this.props.element.type === "poetry" ){
+                    if(this.props.poetryField === 'formattedTitle'){
+                        model = this.props.element.contents['formatted-title'] && this.props.element.contents['formatted-title'].html && this.props.element.contents['formatted-title'].html.text.length ? this.props.element.contents['formatted-title'].html.text : `<p class="paragraphNumeroUno"><br/></p>`
+                    }
+                    else if (this.props.poetryField === 'formattedSubtitle'){
+                        model = this.props.element.contents['formatted-subtitle'] && this.props.element.contents['formatted-subtitle'].html && this.props.element.contents['formatted-subtitle'].html.text.length ? this.props.element.contents['formatted-subtitle'].html.text : `<p class="paragraphNumeroUno"><br/></p>`
+                    }
+                }
+                else{
                     model = this.props.model;
                 }
                 let tempDiv = document.createElement('div');
@@ -1638,6 +1771,10 @@ export class TinyMceEditor extends Component {
             case 'figureCredit':
                 return (
                     <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onKeyDown={this.normalKeyDownHandler} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model }} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
+                )
+            case 'element-citation':
+                return (
+                    <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onKeyDown={this.normalKeyDownHandler} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model && this.props.model.text ? this.props.model.text : '<p class="paragraphNumeroUnoCitation"><br/></p>' }} onChange={this.handlePlaceholder}></div> 
                 )
             default:
                 return (

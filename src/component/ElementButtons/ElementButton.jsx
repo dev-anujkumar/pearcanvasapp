@@ -23,7 +23,10 @@ import {
     elmCloseWindowIcon,
     elmAssessmentItem,
     feedbackIcon,
-    assessmentCloseWindowIcon
+    assessmentCloseWindowIcon,
+    citationElement,
+    poetryIcon,
+    stanzaIcon
 } from '../../images/ElementButtons/ElementButtons.jsx';
 import deleteIcon from '../../images/ElementButtons/deleteIcon.png'
 import forwardNavActive from '../../images/ElementButtons/forwardNavActive.png'
@@ -109,13 +112,13 @@ class Button extends Component {
                     {audioIcon}
                     </span>
                 break;
-            case buttonTypes.INTERACTIVE_ELEMENT:
+            case buttonTypes.INTERACTIVE_ELEMENT:                
                 buttonJSX = <span className="btn-element interactive-elem-button" onClick={clickHandlerFn}>
                     {interativeIcon}
                     </span>
                 break;
             case buttonTypes.CONTAINER_ELEMENT:
-                buttonJSX = <span className="btn-element container-elem" onClick={clickHandlerFn}>
+                buttonJSX = <span className="btn-element container-elem-button" onClick={clickHandlerFn}>
                     {containerIcon}
                     </span>
                 break;
@@ -167,6 +170,21 @@ class Button extends Component {
             case ButtonTypes.FEEDBACK:
                 buttonJSX = <span className={`btn-element small feedback ${btnClassName}`} title="feedback" onClick={clickHandlerFn}>
                     {feedbackIcon}
+                </span>
+                break;
+            case ButtonTypes.CITATION_ELEMENT:
+                buttonJSX = <span className="btn-element citation-elem" onClick={clickHandlerFn}>
+                    {citationElement}
+                </span>
+                break;
+            case buttonTypes.POETRY_ELEMENT:
+                buttonJSX = <span className="btn-element poetry-elem" onClick={clickHandlerFn}>
+                    {poetryIcon}
+                </span>
+                break;
+            case buttonTypes.STANZA_ELEMENT:
+                buttonJSX = <span className="btn-element stanza-elem" onClick={clickHandlerFn}>
+                    {stanzaIcon}
                 </span>
                 break;
                 

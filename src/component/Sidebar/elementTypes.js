@@ -739,5 +739,63 @@ export default {
                 }
             }
         } 
+    },
+    'citations' : {
+        'primary-citations-group': {
+            text: 'Citation',
+            enum: 'CITATION',
+            toolbar: ['footnote', 'increaseindent', 'decreaseindent', 'glossary', 'assetpopover', 'orderedlist', 'unorderedlist'],
+            subtype: {
+                'secondary-citations-group': {
+                    text: 'Citation Group',
+                    labelText: 'CG',
+                    enum: 'NA',
+                }
+            }
+        }
+    },
+    'element-citation' : {
+        'primary-element-citation': {
+            text: 'Citation',
+            enum: 'ELEMENT_CITATION',
+            toolbar: ['footnote', 'increaseindent', 'decreaseindent', 'glossary', 'assetpopover', 'orderedlist', 'unorderedlist'],
+            subtype: {
+                'secondary-element-citation': {
+                    text: 'Citation element',
+                    labelText: 'CT',
+                    enum: 'NA',
+                }
+            }
+        }
+    },   
+    "poetry" : {
+        "primary-poetry": {
+            text: 'Poetry Element',
+            enum: 'POETRY',
+            toolbar: ['assetpopover','decreaseindent','glossary', 'orderedlist', 'unorderedlist'],
+            dropdownDisabled: true,
+            subtype: {
+                'secondary-poetry': {
+                    text: 'Poetry Element',
+                    labelText: 'PE',
+                    enum: 'NA',
+                }
+            }
+        } 
+    },
+    "stanza" : {
+        "primary-stanza": {
+            text: 'Stanza Element',
+            enum: 'STANZA',
+            toolbar: ['orderedlist', 'unorderedlist'],
+            dropdownDisabled: true,
+            subtype: {
+                'secondary-stanza': {
+                    text: 'Stanza Element',
+                    labelText: 'PE',
+                    enum: 'NA',
+                }
+            }
+        } 
     }
 };
