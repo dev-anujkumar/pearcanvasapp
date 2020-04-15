@@ -322,10 +322,30 @@ export class TinyMceEditor extends Component {
                         ) {
                             e.target.targetElm.children[0].innerHTML = textToReplace;
                         }
-                        /*  For Figure type*/
+                        else if(this.props.element.type === 'stanza'){
+                            tinymce.$(`div[data-id="${this.props.elementId}"] .poetryLine`).each(function (){
+                                this.innerHTML = this.innerText;
+                            })
+                        }
+                         /*  For Figure type*/
                         else {
                             e.target.targetElm.innerHTML = textToReplace;
                         }
+                    }
+                    else if (this.props.element.type === 'stanza') {
+                        let selection = window.getSelection();
+                        if (selection.anchorNode.parentNode.nodeName === "SPAN" && selection.anchorNode.parentNode.classList.contains('poetryLine')) {
+                            if (selectedText !== "") {
+                                selection.anchorNode.parentNode.innerHTML = selection.anchorNode.parentNode.innerText;
+                            }
+                            e.preventDefault();
+                            e.stopPropagation();
+                        } else {
+                            selection.anchorNode.parentNode.outerHTML = selection.anchorNode.parentNode.innerText
+                            e.preventDefault();
+                            e.stopPropagation();
+                        }
+                        return false
                     }
                     /**
                      * In case remove all formatting is being appied on list element
@@ -1633,12 +1653,15 @@ export class TinyMceEditor extends Component {
                 this.outerHTML = innerHtml;
             })
         }
-        /*tinymce.$(`div[data-id="${this.props.elementId}"] .poetryLine`).each(function (){
-            if(this.innerHTML==='' || this.innerHTML==="<br>"){
-                this.remove();
-            }
-        })*/
-        
+        let poetryStanza = tinymce.$(`div[data-id="${this.props.elementId}"] .poetryLine`);
+        if(poetryStanza.length>1){
+            poetryStanza.each(function (){
+                if(this.innerHTML==='' || this.innerHTML==="<br>"){
+                    this.remove();
+                }
+            })
+        }
+                
         tinyMCE.$('.Wirisformula').each(function () {
             this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
             this.naturalWidth && this.setAttribute('width', this.naturalWidth)
