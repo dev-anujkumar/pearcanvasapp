@@ -221,7 +221,8 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
             
             if (!config.isCO) {
                 updatedEsProps = esProps.filter((btnObj) => {
-                    return btnObj.buttonType !== SECTION_BREAK && btnObj.buttonType !== CITATION;
+                    return btnObj.buttonType !== SECTION_BREAK && btnObj.buttonType !== CITATION 
+                    && btnObj.buttonType !== elementTypeConstant.STANZA_ELEMENT;
                 })
             } else {
                 updatedEsProps = esProps.filter((btnObj) => {

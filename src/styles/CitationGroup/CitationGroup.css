@@ -31,7 +31,7 @@ h4.citationTitle {
     letter-spacing: 0.01em;
     margin: 0em 0em 1.70em 0em !important;
     text-indent: -3.0115em;
-    padding-left: 34px !important;
+    padding: 2px 0px 2px 40px !important;
 }
 
 /* Placeholder style for citation title */
