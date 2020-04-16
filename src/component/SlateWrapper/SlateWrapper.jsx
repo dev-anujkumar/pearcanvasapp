@@ -687,7 +687,7 @@ class SlateWrapper extends Component {
             {
                 buttonType: 'poetry-elem',
                 buttonHandler: () => this.splithandlerfunction('poetry-elem',index, firstOne, parentUrn,"",outerAsideIndex,poetryData),
-                tooltipText: 'Poetry Element',
+                tooltipText: 'Poetry',
                 tooltipDirection: 'left'
             },
             {
@@ -741,7 +741,7 @@ class SlateWrapper extends Component {
             {
                 buttonType: 'stanza-elem',
                 buttonHandler: () => this.splithandlerfunction('stanza-elem', index, firstOne, parentUrn, "", outerAsideIndex, poetryData),
-                tooltipText: 'Stanza Element',
+                tooltipText: 'Stanza',
                 tooltipDirection: 'left'
             }
         ]

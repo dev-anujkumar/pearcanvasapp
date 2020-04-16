@@ -300,22 +300,40 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
                             break;
                         }
                 }
-            } else if(response.data.id !== updatedData.id){
-                if(currentSlateData.status === 'wip'){
+            } 
+            /** -------------------------Update Element After Versioning-------------------------- */
+            else if(currentSlateData.status === 'approved'){
+                if(currentSlateData.type==="popup"){
+                    sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
+                    dispatch(fetchSlateData(response.data.newParentVersion,updatedData.parentEntityId, 0,currentSlateData));
+                }else{
+                    sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' }); 
+                }
+            } 
+            else if((response.data.id !== updatedData.id || currentSlateData.status === 'wip')){
+                if (updatedData.type === 'stanza') {
+                    updateStoreInCanvas({ ...updatedData, ...response.data }, asideData, parentUrn, dispatch, getState, null, elementIndex, showHideType, parentElement, poetryData)
+                } else {
                     updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, response.data, elementIndex, null, parentElement);
                     config.savingInProgress = false
-                }else if(currentSlateData.status === 'approved'){
-                    if(currentSlateData.type==="popup"){
-                        sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
-                        dispatch(fetchSlateData(response.data.newParentVersion,updatedData.parentEntityId, 0,currentSlateData));
-                    }else{
-                        sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' }); 
-                    }
                 }
             }
-            else if (updatedData.type === 'stanza') {
-                updateStoreInCanvas({...updatedData,...response.data}, asideData, parentUrn, dispatch, getState, null, elementIndex, showHideType, parentElement, poetryData)
-            }
+            /** ---------------------------------------------------------------------------- */
+            // else if(response.data.id !== updatedData.id){
+            //     if(currentSlateData.status === 'wip'){
+            //         updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, response.data, elementIndex, null, parentElement);
+            //         config.savingInProgress = false
+            //     }else if(currentSlateData.status === 'approved'){
+            //         if(currentSlateData.type==="popup"){
+            //             sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
+            //             dispatch(fetchSlateData(response.data.newParentVersion,updatedData.parentEntityId, 0,currentSlateData));
+            //         }else{
+            //             sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' }); 
+            //         }
+            // //     }
+            // else if (updatedData.type === 'stanza') {
+            //     updateStoreInCanvas({...updatedData,...response.data}, asideData, parentUrn, dispatch, getState, null, elementIndex, showHideType, parentElement, poetryData)
+            // }
         }
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
         

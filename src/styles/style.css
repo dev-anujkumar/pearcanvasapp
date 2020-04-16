@@ -151,8 +151,8 @@ h1, h2, h3, h4, h5, p {
 }
 .element-container.ct .cypress-editable.place-holder::before {
     /* font-size: 14px !important; */
-    margin-top: 2px !important;
-    margin-left: -1px;
+    margin-top: 3px !important;
+    margin-left: 3px;
 }
 
 .definition-editor.place-holder::before{

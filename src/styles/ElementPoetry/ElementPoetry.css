@@ -1,7 +1,16 @@
 .poetryLine:nth-of-type(even){
      background-color:#fff;
-     text-indent:1.5em;
 } 
 .poetryLine{
     display: block;
+}
+.element-container.pe .horizontalLine  {
+    margin-left: -30px;
+}
+.element-container.pe .dropdown  {
+    margin-left: -23px;
+}
+.poetryLineLevelZero{
+    display: block;
+    padding-left: 40px !important;
 }
