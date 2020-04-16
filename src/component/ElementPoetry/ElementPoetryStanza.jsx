@@ -25,7 +25,7 @@ class ElementPoetryStanza extends Component {
         index={index}
         elementId={this.props.elementId}
         element={this.props.element}
-        placeholder="Enter the Poetry Content..."
+        placeholder="Type Something..."
         className={className}
         model={lineModel ? lineModel : '<span class="poetryLine"><br></span>'}
         tagName={'div'}
