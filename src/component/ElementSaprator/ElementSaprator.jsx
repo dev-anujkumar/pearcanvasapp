@@ -146,9 +146,9 @@ function asideButton(esProps,sectionBreak,elementType){
         return buttonType == CITATION;//citation element
       }else{
         if (sectionBreak) {
-            return buttonType !== WORKED_EXP && buttonType !== CONTAINER && buttonType !== OPENER &&  buttonType !== CITATION && buttonType !== elementTypeConstant.STANZA_ELEMENT;
+            return buttonType !== WORKED_EXP && buttonType !== CONTAINER && buttonType !== OPENER &&  buttonType !== CITATION && buttonType !== elementTypeConstant.STANZA_ELEMENT && buttonType !== elementTypeConstant.POETRY_ELEMENT;
         } else {
-            return buttonType !== OPENER && buttonType !== SECTION_BREAK && buttonType !== WORKED_EXP && buttonType !== CONTAINER && buttonType !== CITATION && buttonType !== elementTypeConstant.STANZA_ELEMENT;
+            return buttonType !== OPENER && buttonType !== SECTION_BREAK && buttonType !== WORKED_EXP && buttonType !== CONTAINER && buttonType !== CITATION && buttonType !== elementTypeConstant.STANZA_ELEMENT && buttonType !== elementTypeConstant.POETRY_ELEMENT;
         }
     }
     })
