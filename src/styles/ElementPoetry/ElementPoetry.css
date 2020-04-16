@@ -5,3 +5,9 @@
 .poetryLine{
     display: block;
 }
+.element-container.pe .horizontalLine  {
+    margin-left: -30px;
+}
+.element-container.pe .dropdown  {
+    margin-left: -23px;
+}

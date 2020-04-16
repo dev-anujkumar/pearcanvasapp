@@ -340,12 +340,8 @@ export class TinyMceEditor extends Component {
                             }
                             e.preventDefault();
                             e.stopPropagation();
-                        } else {
-                            selection.anchorNode.parentNode.outerHTML = selection.anchorNode.parentNode.innerText
-                            e.preventDefault();
-                            e.stopPropagation();
+                            return false;
                         }
-                        return false
                     }
                     /**
                      * In case remove all formatting is being appied on list element
