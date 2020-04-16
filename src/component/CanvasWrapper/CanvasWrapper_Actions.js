@@ -284,7 +284,25 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
                             slateLevelData: newslateData
                         }
                     })
-                }else if (config.slateManifestURN === Object.values(slateData.data)[0].id) {
+                } else if (versioning.type === 'citations') {
+                    let parentData = getState().appStore.slateLevelData;
+                    let newslateData = JSON.parse(JSON.stringify(parentData));
+                    let index
+                    if(typeof versioning.index === "number"){
+                        index = versioning.index;
+                    }
+                    else if(typeof versioning.index === "string"){
+                        index = versioning.index.split("-")[0];
+                    }
+                    newslateData[config.slateManifestURN].contents.bodymatter[index] = Object.values(slateData.data)[0];
+                    return dispatch({
+                        type: AUTHORING_ELEMENT_UPDATE,
+                        payload: {
+                            slateLevelData: newslateData
+                        }
+                    })
+
+                } else if (config.slateManifestURN === Object.values(slateData.data)[0].id) {
                     sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
                     let contentUrn = slateData.data[manifestURN].contentUrn;
                     let title = slateData.data[manifestURN].contents.title ? slateData.data[manifestURN].contents.title.text : '';
@@ -697,13 +715,25 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
 }
 
 export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, slateManifestURN) => (dispatch, getState) => {
-    let _requestData = {
-        "projectUrn": config.projectUrn,
-        "slateEntityUrn": parentElement.contentUrn,
-        "slateUrn": parentElement.id,
-        "type": "TEXT",
-        "metaDataField" : poetryField
-    };
+    let _requestData;
+    if (poetryField === 'formattedCredit'){
+         _requestData = {
+            "projectUrn": config.projectUrn,
+            "slateEntityUrn": parentElement.contentUrn,
+            "slateUrn": parentElement.id,
+            "type": "TEXT",
+            "sectionType" : 'creditsarray'
+        };
+    } else{
+         _requestData = {
+            "projectUrn": config.projectUrn,
+            "slateEntityUrn": parentElement.contentUrn,
+            "slateUrn": parentElement.id,
+            "type": "TEXT",
+            "metaDataField" : poetryField
+        };
+    }
+    
     let url = `${config.REACT_APP_API_URL}v1/slate/element`
     return axios.post(url, 
         JSON.stringify(_requestData),
@@ -722,10 +752,10 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
         let newslateData = JSON.parse(JSON.stringify(parentData))
         let _slateObject = newslateData[slateManifestURN]
         let targetPoetryElement = _slateObject.contents.bodymatter[ElementIndex]
-        targetPoetryElement.contents['creditsarray'] = [];
-        targetPoetryElement.contents['formattedTitle'] = {};
-        targetPoetryElement.contents['formattedCaption'] = {};
-        targetPoetryElement.contents['formattedCredit'] = {};
+        // targetPoetryElement.contents['creditsarray'] = [];
+        // targetPoetryElement.contents['formattedTitle'] = {};
+        // targetPoetryElement.contents['formattedCaption'] = {};
+        // targetPoetryElement.contents['formattedCredit'] = {};
 
         if(targetPoetryElement){
             targetPoetryElement.contents[poetryField] = response.data

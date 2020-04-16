@@ -497,7 +497,7 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                 delete dataToReturn.poetrylines;
             } 
             if(parentElement && parentElement.type === "popup"){
-                dataToReturn.popupEntityUrn = parentElement.contentUrn;
+                dataToReturn.elementParentEntityUrn = parentElement.contentUrn;
                 if(parentElement.popupdata["formatted-title"] && parentElement.popupdata["formatted-title"]["id"] === previousElementData.id){
                     dataToReturn.metaDataField = "formattedTitle";
                 } 
@@ -515,13 +515,18 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                 else if(parentElement.contents && parentElement.contents["formatted-subtitle"] && parentElement.contents["formatted-subtitle"]["id"] === previousElementData.id){
                     dataToReturn.updatepoetryField = "formattedSubtitle";
                 }
-                else if(parentElement.contents && parentElement.contents["formatted-caption"] && parentElement.contents["formatted-caption"]["id"] === previousElementData.id){
-                    dataToReturn.updatepoetryField = "formattedCaption";
-                }else if(parentElement.contents && parentElement.contents["formatted-credit"] && parentElement.contents["formatted-credit"]["id"] === previousElementData.id){
+                // else if(parentElement.contents && parentElement.contents["formatted-caption"] && parentElement.contents["formatted-caption"]["id"] === previousElementData.id){
+                //     dataToReturn.updatepoetryField = "formattedCaption";
+                // }
+                else if(parentElement.contents && parentElement.contents["creditsarray"] && parentElement.contents["creditsarray"].length && parentElement.contents["creditsarray"][0]["id"] === previousElementData.id){
                     dataToReturn.updatepoetryField = "formattedCredit";
                 }
-            }
-            if(parentElement && parentElement.type === "showhide" && showHideType){
+                dataToReturn.elementParentEntityUrn = parentElement.id
+                
+            } else if(parentElement && parentElement.type === "citations") {
+                dataToReturn["metaDataField"] = "formattedTitle"
+                dataToReturn["elementParentEntityUrn"] = parentElement.contentUrn
+            } else if(parentElement && parentElement.type === "showhide" && showHideType){
                 dataToReturn.section = showHideType;
             }
             break;
