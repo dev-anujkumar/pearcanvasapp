@@ -724,7 +724,7 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
     if (poetryField === 'creditsarray') {
         _requestData.sectionType = 'creditsarray';
     } else {
-        _requestData.metaDataField = poetryField;
+        _requestData.metaDataField = poetryField==="formatted-title"?"formattedTitle":"formattedSubtitle";
     }
     
     let url = `${config.REACT_APP_API_URL}v1/slate/element`
