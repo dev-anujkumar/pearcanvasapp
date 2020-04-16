@@ -310,9 +310,13 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
                     sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' }); 
                 }
             } 
-            else if(response.data.id !== updatedData.id || currentSlateData.status === 'wip'){
+            else if((response.data.id !== updatedData.id || currentSlateData.status === 'wip')){
+                if (updatedData.type === 'stanza') {
+                    updateStoreInCanvas({ ...updatedData, ...response.data }, asideData, parentUrn, dispatch, getState, null, elementIndex, showHideType, parentElement, poetryData)
+                } else {
                     updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, response.data, elementIndex, null, parentElement);
                     config.savingInProgress = false
+                }
             }
             /** ---------------------------------------------------------------------------- */
             // else if(response.data.id !== updatedData.id){
@@ -326,10 +330,10 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
             //         }else{
             //             sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' }); 
             //         }
-            //     }
-            else if (updatedData.type === 'stanza') {
-                updateStoreInCanvas({...updatedData,...response.data}, asideData, parentUrn, dispatch, getState, null, elementIndex, showHideType, parentElement, poetryData)
-            }
+            // //     }
+            // else if (updatedData.type === 'stanza') {
+            //     updateStoreInCanvas({...updatedData,...response.data}, asideData, parentUrn, dispatch, getState, null, elementIndex, showHideType, parentElement, poetryData)
+            // }
         }
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
         
