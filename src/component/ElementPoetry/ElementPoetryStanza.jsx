@@ -35,7 +35,6 @@ class ElementPoetryStanza extends Component {
         onListSelect={this.props.onListSelect}
         permissions={this.props.permissions}
         setActiveElement={this.props.setActiveElement}
-        handleFocus={this.handleFocus}
         btnClassName={this.props.btnClassName}
         borderToggle={this.props.borderToggle}
         elemBorderToggle={this.props.elemBorderToggle}
