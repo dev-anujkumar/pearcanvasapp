@@ -310,7 +310,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
                     sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' }); 
                 }
             } 
-            else if(response.data.id !== updatedData.id && currentSlateData.status === 'wip'){
+            else if(response.data.id !== updatedData.id || currentSlateData.status === 'wip'){
                     updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, response.data, elementIndex, null, parentElement);
                     config.savingInProgress = false
             }
