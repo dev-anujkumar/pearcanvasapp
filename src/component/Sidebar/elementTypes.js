@@ -742,7 +742,7 @@ export default {
     },
     'citations' : {
         'primary-citations-group': {
-            text: 'Citation',
+            text: 'Citation Group',
             enum: 'CITATION',
             toolbar: ['footnote', 'increaseindent', 'decreaseindent', 'glossary', 'assetpopover', 'orderedlist', 'unorderedlist'],
             subtype: {

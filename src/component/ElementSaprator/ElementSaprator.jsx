@@ -303,7 +303,7 @@ function typeOfContainerElements(elem, props) {
     let containerArray = {
         "container-elem-button": {
             "Add Aside": "container-elem",
-            "Add Citation": "citations-group-elem"
+            "Add Citation Group": "citations-group-elem"
         },
         "interactive-elem-button":
         {
