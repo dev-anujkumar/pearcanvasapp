@@ -581,6 +581,12 @@ export class TinyMceEditor extends Component {
                                 let innerHtml = innerSpans[index].innerHTML;
                                 innerSpans[index].outerHTML = innerHtml;
                             }
+                        } else {
+                            currentElement = editor.selection.getNode();
+                            let checkSpan = currentElement.getElementsByClassName("poetryLine");
+                            if (!checkSpan.length) {
+                                currentElement.innerHTML = '<span class="poetryLine"><br/></span>';
+                            }
                         }
                     }
                 }
