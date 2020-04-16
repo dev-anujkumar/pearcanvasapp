@@ -1608,7 +1608,24 @@ export class TinyMceEditor extends Component {
             })
         });
         if (isSameTarget) {
-            this.editorOnClick(event);
+            if(this.props.element.type==='stanza'){
+                let termText = tinyMCE.$("#" + currentTarget.id) && tinyMCE.$("#" + currentTarget.id).html();
+                tinymce.init(this.editorConfig).then(() => {
+                if (termText && termText.length !== "") {
+                    if (termText.search(/^(<.*>)+$/g) >= 0) {
+                        termText = tinyMCE.$("#" + currentTarget.id).html();
+                    }
+                    document.getElementById(currentTarget.id).innerHTML = termText;
+                }
+                if (clickedX !== 0 && clickedY !== 0) {
+                    tinymce.activeEditor.selection.placeCaretAt(clickedX, clickedY) //Placing exact cursor position on clicking.
+                }
+                this.editorOnClick(event);
+            });
+            }
+            else{
+                this.editorOnClick(event);
+            }
         }
         tinyMCE.$('.cypress-editable').css('caret-color', 'black')
     }
