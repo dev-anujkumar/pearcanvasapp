@@ -770,13 +770,13 @@ export default {
     },   
     "poetry" : {
         "primary-poetry": {
-            text: 'Poetry Element',
+            text: 'Poetry Editor',
             enum: 'POETRY',
             toolbar: ['assetpopover','decreaseindent','glossary', 'orderedlist', 'unorderedlist'],
             dropdownDisabled: true,
             subtype: {
                 'secondary-poetry': {
-                    text: 'Poetry Element',
+                    text: 'Poetry Editor',
                     labelText: 'PE',
                     enum: 'NA',
                 }
@@ -785,13 +785,13 @@ export default {
     },
     "stanza" : {
         "primary-stanza": {
-            text: 'Stanza Element',
+            text: 'Stanza',
             enum: 'STANZA',
             toolbar: ['orderedlist', 'unorderedlist'],
             dropdownDisabled: true,
             subtype: {
                 'secondary-stanza': {
-                    text: 'Stanza Element',
+                    text: 'Stanza',
                     labelText: 'PE',
                     enum: 'NA',
                 }

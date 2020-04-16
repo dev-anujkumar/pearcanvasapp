@@ -1065,17 +1065,17 @@ export class TinyMceEditor extends Component {
             if (indexesLen === 2) {
                 switch (tempIndex[1]) {
                     case "1":
-                        if (!this.props.element.contents['formattedSubtitle']) {
+                        if (!this.props.element.contents['formatted-subtitle']) {
                             return false;
                         }
                         break;
-                    case "3":
-                        if (!this.props.element.contents['formattedCaption']) {
-                            return false;
-                        }
-                        break;
+                    // case "3":
+                    //     if (!this.props.element.contents['formatted-caption']) {
+                    //         return false;
+                    //     }
+                    //     break;
                     case "4":
-                        if (!this.props.element.contents['formattedCredit']) {
+                        if (!(this.props.element.contents['creditsarray'] ? this.props.element.contents['creditsarray'][0] : null)) {
                             return false;
                         }
                 }
@@ -1592,7 +1592,7 @@ export class TinyMceEditor extends Component {
             currentTarget.focus();
             let termText = tinyMCE.$("#" + currentTarget.id) && tinyMCE.$("#" + currentTarget.id).html();
             tinymce.init(this.editorConfig).then(() => {
-                if (termText && termText.length !== "") {
+                if (termText && termText.length !== "" && this.props.element.type!=='poetry') {
                     if (termText.search(/^(<.*>)+$/g) >= 0) {
                         termText = tinyMCE.$("#" + currentTarget.id).html();
                     }
@@ -1650,9 +1650,9 @@ export class TinyMceEditor extends Component {
             //     this.editorOnClick(event);
             // });
             // }
-            // else{
+            //else{
                 this.editorOnClick(event);
-            // }
+            //}
         }
         tinyMCE.$('.cypress-editable').css('caret-color', 'black')
     }
@@ -1784,10 +1784,10 @@ export class TinyMceEditor extends Component {
                     model = this.props.element.contents['formatted-title'] && this.props.element.contents['formatted-title'].html && this.props.element.contents['formatted-title'].html.text.length ? this.props.element.contents['formatted-title'].html.text : `<p class="paragraphNumeroUno"><br/></p>`
                 }
                 else if (this.props.element && this.props.element.type === "poetry") {
-                    if (this.props.poetryField === 'formattedTitle') {
+                    if (this.props.poetryField === 'formatted-title') {
                         model = this.props.element.contents['formatted-title'] && this.props.element.contents['formatted-title'].html && this.props.element.contents['formatted-title'].html.text.length ? this.props.element.contents['formatted-title'].html.text : `<p class="paragraphNumeroUno"><br/></p>`
                     }
-                    else if (this.props.poetryField === 'formattedSubtitle') {
+                    else if (this.props.poetryField === 'formatted-subtitle') {
                         model = this.props.element.contents['formatted-subtitle'] && this.props.element.contents['formatted-subtitle'].html && this.props.element.contents['formatted-subtitle'].html.text.length ? this.props.element.contents['formatted-subtitle'].html.text : `<p class="paragraphNumeroUno"><br/></p>`
                     }
                 }
