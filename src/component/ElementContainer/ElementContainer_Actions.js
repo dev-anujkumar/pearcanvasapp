@@ -598,7 +598,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                     //         }
                     //     };
                     // }
-                     else if (element.contents["creditsarray"] && element.contents["creditsarray"][0]["id"] === elementId) {
+                     else if (element.contents["creditsarray"] && element.contents["creditsarray"][0] && element.contents["creditsarray"][0]["id"] === elementId) {
                          element = {
                              ...element,
                              contents: {
