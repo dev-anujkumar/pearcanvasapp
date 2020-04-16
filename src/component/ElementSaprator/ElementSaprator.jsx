@@ -146,9 +146,9 @@ function asideButton(esProps,sectionBreak,elementType){
         return buttonType == CITATION;//citation element
       }else{
         if (sectionBreak) {
-            return buttonType !== WORKED_EXP && buttonType !== CONTAINER && buttonType !== OPENER &&  buttonType !== CITATION && buttonType !== elementTypeConstant.STANZA_ELEMENT;
+            return buttonType !== WORKED_EXP && buttonType !== CONTAINER && buttonType !== OPENER &&  buttonType !== CITATION && buttonType !== elementTypeConstant.STANZA_ELEMENT && buttonType !== elementTypeConstant.POETRY_ELEMENT;
         } else {
-            return buttonType !== OPENER && buttonType !== SECTION_BREAK && buttonType !== WORKED_EXP && buttonType !== CONTAINER && buttonType !== CITATION && buttonType !== elementTypeConstant.STANZA_ELEMENT;
+            return buttonType !== OPENER && buttonType !== SECTION_BREAK && buttonType !== WORKED_EXP && buttonType !== CONTAINER && buttonType !== CITATION && buttonType !== elementTypeConstant.STANZA_ELEMENT && buttonType !== elementTypeConstant.POETRY_ELEMENT;
         }
     }
     })
@@ -221,7 +221,8 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
             
             if (!config.isCO) {
                 updatedEsProps = esProps.filter((btnObj) => {
-                    return btnObj.buttonType !== SECTION_BREAK && btnObj.buttonType !== CITATION;
+                    return btnObj.buttonType !== SECTION_BREAK && btnObj.buttonType !== CITATION 
+                    && btnObj.buttonType !== elementTypeConstant.STANZA_ELEMENT;
                 })
             } else {
                 updatedEsProps = esProps.filter((btnObj) => {
@@ -303,7 +304,7 @@ function typeOfContainerElements(elem, props) {
     let containerArray = {
         "container-elem-button": {
             "Add Aside": "container-elem",
-            "Add Citation": "citations-group-elem"
+            "Add Citation Group": "citations-group-elem"
         },
         "interactive-elem-button":
         {

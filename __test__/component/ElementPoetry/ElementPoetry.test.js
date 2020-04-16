@@ -64,6 +64,15 @@ describe('Testing ElementPoetry component', () => {
                 'formatted-subtitle': {}
             }
         },
+        element : {
+            html : {
+                title: '',
+                text: '<p><span></span></p>'
+            },
+            contents: {
+                'formatted-subtitle': {}
+            }
+        },
         slateLockInfo: {
             isLocked: false,
             timestamp: "",
