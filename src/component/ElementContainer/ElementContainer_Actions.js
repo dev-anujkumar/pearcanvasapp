@@ -572,15 +572,15 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                     }
                 }
                 else if (element.type === "poetry") {
-                    if (element.contents["formattedTitle"] && element.contents["formattedTitle"]["id"] === elementId) {
+                    if (element.contents["formatted-title"] && element.contents["formatted-title"]["id"] === elementId) {
                         element = {
                             ...element,
                             contents: {
                                 ...element.contents,
-                                "formattedTitle": { ...updatedData }
+                                "formatted-title": { ...updatedData }
                             }
                         };
-                    } else if (element.contents["formattedSubtitle"] && element.contents["formattedSubtitle"]["id"] === elementId) {
+                    } else if (element.contents["formatted-subtitle"] && element.contents["formatted-subtitle"]["id"] === elementId) {
                         element = {
                             ...element,
                             contents: {
@@ -588,23 +588,25 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                                 "formattedSubtitle": { ...updatedData }
                             }
                         };
-                    } else if (element.contents["formattedCaption"] && element.contents["formattedCaption"]["id"] === elementId) {
-                        element = {
-                            ...element,
-                            contents: {
-                                ...element.contents,
-                                "formattedCaption": { ...updatedData }
-                            }
-                        };
-                    } else if (element.contents["formattedCredit"] && element.contents["formattedCredit"]["id"] === elementId) {
-                        element = {
-                            ...element,
-                            contents: {
-                                ...element.contents,
-                                "formattedCredit": { ...updatedData }
-                            }
-                        };
-                    }
+                    } 
+                    // else if (element.contents["formattedCaption"] && element.contents["formattedCaption"]["id"] === elementId) {
+                    //     element = {
+                    //         ...element,
+                    //         contents: {
+                    //             ...element.contents,
+                    //             "formattedCaption": { ...updatedData }
+                    //         }
+                    //     };
+                    // }
+                     else if (element.contents["creditsarray"] && element.contents["creditsarray"][0]["id"] === elementId) {
+                         element = {
+                             ...element,
+                             contents: {
+                                 ...element.contents,
+                             }
+                         };
+                         element.contents.creditsarray[0] = updatedData;
+                     }
                     else {
                         let newPoetryBodymatter = element.contents.bodymatter.map((stanza) => {
                             if (stanza.id === elementId) {

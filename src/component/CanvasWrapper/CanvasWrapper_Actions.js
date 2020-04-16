@@ -715,23 +715,16 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
 }
 
 export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, slateManifestURN) => (dispatch, getState) => {
-    let _requestData;
-    if (poetryField === 'formattedCredit'){
-         _requestData = {
-            "projectUrn": config.projectUrn,
-            "slateEntityUrn": parentElement.contentUrn,
-            "slateUrn": parentElement.id,
-            "type": "TEXT",
-            "sectionType" : 'creditsarray'
-        };
-    } else{
-         _requestData = {
-            "projectUrn": config.projectUrn,
-            "slateEntityUrn": parentElement.contentUrn,
-            "slateUrn": parentElement.id,
-            "type": "TEXT",
-            "metaDataField" : poetryField
-        };
+    let _requestData = {
+        "projectUrn": config.projectUrn,
+        "slateEntityUrn": parentElement.contentUrn,
+        "slateUrn": parentElement.id,
+        "type": "TEXT"
+    }
+    if (poetryField === 'creditsarray') {
+        _requestData.sectionType = 'creditsarray';
+    } else {
+        _requestData.metaDataField = poetryField;
     }
     
     let url = `${config.REACT_APP_API_URL}v1/slate/element`
@@ -752,15 +745,21 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
         let newslateData = JSON.parse(JSON.stringify(parentData))
         let _slateObject = newslateData[slateManifestURN]
         let targetPoetryElement = _slateObject.contents.bodymatter[ElementIndex]
-        // targetPoetryElement.contents['creditsarray'] = [];
-        // targetPoetryElement.contents['formattedTitle'] = {};
-        // targetPoetryElement.contents['formattedCaption'] = {};
-        // targetPoetryElement.contents['formattedCredit'] = {};
 
         if(targetPoetryElement){
-            targetPoetryElement.contents[poetryField] = response.data
-            targetPoetryElement.contents[poetryField].html.text = elemNode.innerHTML
-            targetPoetryElement.contents[poetryField].elementdata.text = elemNode.innerText
+            if(poetryField==="creditsarray"){
+                if(!targetPoetryElement.contents[poetryField]){
+                    targetPoetryElement.contents[poetryField] = [];
+                }
+                targetPoetryElement.contents[poetryField][0] = response.data
+                targetPoetryElement.contents[poetryField][0].html.text  = elemNode.innerHTML
+                targetPoetryElement.contents[poetryField][0].elementdata.text = elemNode.innerText
+            }
+            else{
+                targetPoetryElement.contents[poetryField] = response.data
+                targetPoetryElement.contents[poetryField].html.text = elemNode.innerHTML
+                targetPoetryElement.contents[poetryField].elementdata.text = elemNode.innerText
+            }
             _slateObject.contents.bodymatter[ElementIndex] = targetPoetryElement
         }
         dispatch({
