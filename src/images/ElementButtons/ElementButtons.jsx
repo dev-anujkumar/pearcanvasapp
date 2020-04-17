@@ -266,8 +266,10 @@ export const citationElement = (() => {
                 <g id="05" transform="translate(-1072.000000, -619.000000)">
                     <g id="icon/element/CitationElement" transform="translate(1069.000000, 613.000000)">
                         <rect id="Rectangle" fill="#EEEEEE" fillRule="evenodd" opacity="0" x="0" y="0" width="24" height="24"></rect>
-                        <text id="CT" fontFamily="SFCompactDisplay-Medium, SF Compact Display" fontSize="16" fontWeight="400" fill="grey">
-                            <tspan x="2" y="18">CT</tspan>
+                        {/* <text id="CT" fontFamily="SFCompactDisplay-Medium, SF Compact Display" fontSize="16" fontWeight="400" fill="grey"> */}
+                        <text id="CT" fontFamily="Arial Narrow, serif" fontSize="16" fontWeight="600" fill="grey">
+                            {/* <tspan x="2" y="18">CT</tspan> */}
+                            <tspan x="3" y="19">CT</tspan>
                         </text>
                     </g>
                 </g>
