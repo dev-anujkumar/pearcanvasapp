@@ -1742,7 +1742,7 @@ export class TinyMceEditor extends Component {
         let poetryStanza = tinymce.$(`div[data-id="${this.props.elementId}"] .poetryLine`);
         if (poetryStanza.length > 1) {
             poetryStanza.each(function () {
-                if (this.innerHTML === '' || this.innerHTML === "<br>" || currentElement.textContent.trim() == '') {
+                if (this.innerHTML === '' || this.innerHTML === "<br>" || this.textContent.trim() == '') {
                     this.remove();
                 }
             })
