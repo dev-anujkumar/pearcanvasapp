@@ -1199,8 +1199,10 @@ export class TinyMceEditor extends Component {
      */
     addAssetPopover = (editor, selectedText) => {
 
-        let selectedTag = window.getSelection().anchorNode.parentNode.nodeName;
-        if (selectedTag !== "LI" && selectedTag !== "P" && selectedTag !== "H3" && selectedTag !== "BLOCKQUOTE") {
+        let selection = window.getSelection().anchorNode.parentNode;
+        let selectedTag = selection.nodeName;
+        let selectedTagClass = selection.classList;
+        if (selectedTag !== "LI" && selectedTag !== "P" && selectedTag !== "H3" && selectedTag !== "BLOCKQUOTE" && (!selectedTagClass.contains('poetryLine'))) {
             //selectedText = window.getSelection().anchorNode.parentNode.outerHTML;
             selectedText = '<' + selectedTag.toLocaleLowerCase() + '>' + selectedText + '</' + selectedTag.toLocaleLowerCase() + '>'
         }
