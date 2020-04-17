@@ -217,6 +217,7 @@ function prepareDataForTcmUpdate (updatedData,id, elementIndex, asideData, getSt
     if((type && type === "element-citation") || (updatedData.type === "element-citation")){
         if (slateBodyMatter[indexes[0]].contents.bodymatter[indexes[1] - 1].id === id) {
             updatedData.isHead = true;
+            updatedData.parentType = "citations";
         }
     } else if (indexes.length === 2) {
         if (poetryData && poetryData.type != "poetry" && slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].id === id) {
