@@ -248,13 +248,19 @@ export class TinyMceEditor extends Component {
     editorExecCommand = (editor) => {
         editor.on('ExecCommand', (e) => {
             let content = e.target.getContent()
+            let node = editor.selection.getNode();
+            if (this.props.element.type === 'stanza') {
+                if (editor.selection.getNode().tagName.toLowerCase() !== 'span' || editor.selection.getNode().className.toLowerCase() !== 'poetryLine') {
+                    node = editor.selection.getNode().closest('.poetryLine');
+                }
+            }
             switch (e.command) {
                 case "indent":
-                    this.handleIndent(e, editor, content, this.props.element.type, editor.selection.getNode())
+                    this.handleIndent(e, editor, content, this.props.element.type, node)
                     break;
 
                 case "outdent":
-                    this.handleOutdent(e, editor, content, this.props.element.type, editor.selection.getNode())
+                    this.handleOutdent(e, editor, content, this.props.element.type, node)
                     break;
                 case "updateFormula":
                     editor.selection.bookmarkManager.moveToBookmark(this.currentCursorBookmark);
@@ -280,7 +286,13 @@ export class TinyMceEditor extends Component {
                         editor.targetElm.dispatchEvent(keyDownEvent)
                         return false
                     }
-                    this.onBeforeIndent(e, content, this.props.element.type, editor.selection.getNode())
+                    let selectedNode = editor.selection.getNode();
+                    if (this.props.element.type === 'stanza') {
+                        if (editor.selection.getNode().tagName.toLowerCase() !== 'span' || editor.selection.getNode().className.toLowerCase() !== 'poetryLine') {
+                            selectedNode = editor.selection.getNode().closest('.poetryLine');
+                        }
+                    }
+                    this.onBeforeIndent(e, content, this.props.element.type, selectedNode)
                     break;
                 case "outdent":
                     if (editor.targetElm.findChildren('ol').length || editor.targetElm.findChildren('ul').length) {
@@ -290,7 +302,13 @@ export class TinyMceEditor extends Component {
                         editor.targetElm.dispatchEvent(keyDownEvent)
                         return false
                     }
-                    this.onBeforeOutdent(e, content, this.props.element.type, editor.selection.getNode())
+                    let node = editor.selection.getNode();
+                    if (this.props.element.type === 'stanza') {
+                        if (editor.selection.getNode().tagName.toLowerCase() !== 'span' || editor.selection.getNode().className.toLowerCase() !== 'poetryLine') {
+                            node = editor.selection.getNode().closest('.poetryLine');
+                        }
+                    }
+                    this.onBeforeOutdent(e, content, this.props.element.type, node)
                     break;
                 case "RemoveFormat":
                     let selectedText = window.getSelection().toString();
@@ -338,6 +356,12 @@ export class TinyMceEditor extends Component {
                             if (selectedText !== "") {
                                 selection.anchorNode.parentNode.innerHTML = selection.anchorNode.parentNode.innerText;
                             }
+                            let spanNode = selection.anchorNode;
+                            let outerNode = selection.anchorNode;
+                            while (outerNode.parentElement && outerNode.parentElement.tagName.toLowerCase() != 'div') {
+                                outerNode = outerNode.parentElement;
+                            }
+                            outerNode.parentNode.replaceChild(spanNode, outerNode);
                             e.preventDefault();
                             e.stopPropagation();
                             return false;
@@ -672,10 +696,20 @@ export class TinyMceEditor extends Component {
                 this.props.deleteShowHideUnit(this.props.currentElement.id, this.props.showHideType, this.props.element.contentUrn, this.props.innerIndex, this.props.index, this.props.element.id)
             }
             else if (key === 13 && this.props.element.type === 'stanza') {
-                console.log(editor.selection.getNode().innerHTML,'check');
-                if (editor.selection.getNode().tagName == 'SPAN'
-                    && editor.selection.getNode().innerHTML == '<br>') {
-                    editor.selection.getNode().remove();
+                let currentElement = editor.selection.getNode();
+                if (editor.selection.getNode().tagName.toLowerCase() !== 'span' || editor.selection.getNode().className.toLowerCase() !== 'poetryLine') {
+                    currentElement = editor.selection.getNode().closest('.poetryLine');
+                }
+                if (!currentElement) {
+                    currentElement = editor.selection.getNode();
+                    let checkSpan = currentElement.getElementsByClassName("poetryLine");
+                    if(checkSpan.length) {
+                        currentElement = checkSpan[0];
+                    }
+                }
+                if (currentElement && currentElement.tagName == 'SPAN'
+                    && (currentElement == '<br>' || currentElement.textContent.trim() == '')) {
+                    currentElement.remove();
                     let activeEditor = document.getElementById(tinymce.activeEditor.id);
                     activeEditor.blur();
                     let nextSaparator = (activeEditor.closest('.editor')).nextSibling;
@@ -972,9 +1006,9 @@ export class TinyMceEditor extends Component {
             content = content.replace(/paragraphNumeroUnoIndentLevel2\b/, "paragraphNumeroUnoIndentLevel3")
         }
         else if (className && className === 'poetryLine') {
-            selectedNode.className = 'poetryLine poetryLineLevelZero';
+            selectedNode.className = 'poetryLine poetryLineLevel1';
         }
-        if(!className) {
+        if (!className) {
             this.setContentAndPlaceCaret(editor, content)
         }
     }
@@ -999,10 +1033,10 @@ export class TinyMceEditor extends Component {
         else if (content.match(/paragraphNumeroUnoIndentLevel1\b/)) {
             content = content.replace(/paragraphNumeroUnoIndentLevel1\b/, "paragraphNumeroUno")
         }
-        else if (className && className === 'poetryLine poetryLineLevelZero') {
+        else if (className && className === 'poetryLine poetryLineLevel1') {
             selectedNode.className = 'poetryLine';
         }
-        if(!className) {
+        if (!className) {
             this.setContentAndPlaceCaret(editor, content)
         }
     }
@@ -1020,7 +1054,7 @@ export class TinyMceEditor extends Component {
         if (!content.match(/paragraphNumeroUno\b/) && !content.match(/paragraphNumeroUnoIndentLevel1\b/) && !content.match(/paragraphNumeroUnoIndentLevel2\b/) && !content.match(/paragraphNumeroUnoIndentLevel3\b/) && !className) {
             e.preventDefault()
         }
-        if (content.match(/paragraphNumeroUnoIndentLevel3\b/) || (className && className === 'poetryLine poetryLineLevelZero')) {
+        if (content.match(/paragraphNumeroUnoIndentLevel3\b/) || (className && className === 'poetryLine poetryLineLevel1')) {
             e.preventDefault()
         }
     }
@@ -1592,7 +1626,7 @@ export class TinyMceEditor extends Component {
             currentTarget.focus();
             let termText = tinyMCE.$("#" + currentTarget.id) && tinyMCE.$("#" + currentTarget.id).html();
             tinymce.init(this.editorConfig).then(() => {
-                if (termText && termText.length !== "" && this.props.element.type!=='poetry') {
+                if (termText && termText.length !== "" && this.props.element.type !== 'poetry') {
                     if (termText.search(/^(<.*>)+$/g) >= 0) {
                         termText = tinyMCE.$("#" + currentTarget.id).html();
                     }
@@ -1651,7 +1685,7 @@ export class TinyMceEditor extends Component {
             // });
             // }
             //else{
-                this.editorOnClick(event);
+            this.editorOnClick(event);
             //}
         }
         tinyMCE.$('.cypress-editable').css('caret-color', 'black')
@@ -1712,13 +1746,35 @@ export class TinyMceEditor extends Component {
                 this.outerHTML = innerHtml;
             })
         }
-        let poetryStanza = tinymce.$(`div[data-id="${this.props.elementId}"] .poetryLine`);
-        if (poetryStanza.length > 1) {
-            poetryStanza.each(function () {
-                if (this.innerHTML === '' || this.innerHTML === "<br>") {
-                    this.remove();
+        if (this.props.elementId && !this.props.elementId.includes("manifest")) {
+            let poetryStanza = tinymce.$(`div[data-id="${this.props.elementId}"] .poetryLine`);
+            if (poetryStanza.length > 1) {
+                poetryStanza.each(function () {
+                    if (this.innerHTML === '' || this.innerHTML === "<br>" || this.textContent.trim() == '') {
+                        this.remove();
+                    }
+                })
+            }
+            let mainParent = null;
+            let allLines = tinymce.$(`div[data-id="${this.props.elementId}"] .poetryLine`);
+            let nodesFragment = document.createDocumentFragment();
+            for (let index = 0; index < allLines.length; index++) {
+                let parents = [];
+                let elem = allLines[index];
+                while (elem.parentNode && elem.parentNode.nodeName.toLowerCase() != 'div') {
+                    elem = elem.parentNode;
+                    parents.push(elem.nodeName.toLowerCase());
                 }
-            })
+                mainParent = elem.parentElement;
+                for (let innerIndex = 0; innerIndex < parents.length; innerIndex++) {
+                    allLines[index].innerHTML = '<' + parents[innerIndex] + '>' + allLines[index].innerHTML + '</' + parents[innerIndex] + '>';
+                }
+                nodesFragment.appendChild(allLines[index]);
+            }
+            if (mainParent) {
+                mainParent.innerHTML = "";
+                mainParent.appendChild(nodesFragment);
+            }
         }
 
         tinyMCE.$('.Wirisformula').each(function () {
