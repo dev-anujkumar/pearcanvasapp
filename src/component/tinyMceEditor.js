@@ -356,6 +356,12 @@ export class TinyMceEditor extends Component {
                             if (selectedText !== "") {
                                 selection.anchorNode.parentNode.innerHTML = selection.anchorNode.parentNode.innerText;
                             }
+                            let spanNode = selection.anchorNode;
+                            let outerNode = selection.anchorNode;
+                            while (outerNode.parentElement && outerNode.parentElement.tagName.toLowerCase() != 'div') {
+                                outerNode = outerNode.parentElement;
+                            }
+                            outerNode.parentNode.replaceChild(spanNode, outerNode);
                             e.preventDefault();
                             e.stopPropagation();
                             return false;
@@ -690,9 +696,13 @@ export class TinyMceEditor extends Component {
                 this.props.deleteShowHideUnit(this.props.currentElement.id, this.props.showHideType, this.props.element.contentUrn, this.props.innerIndex, this.props.index, this.props.element.id)
             }
             else if (key === 13 && this.props.element.type === 'stanza') {
-                if (editor.selection.getNode().tagName == 'SPAN'
-                    && editor.selection.getNode().innerHTML == '<br>') {
-                    editor.selection.getNode().remove();
+                let currentElement = editor.selection.getNode();
+                if (editor.selection.getNode().tagName.toLowerCase() !== 'span' || editor.selection.getNode().className.toLowerCase() !== 'poetryLine') {
+                    currentElement = editor.selection.getNode().closest('.poetryLine');
+                }
+                if (currentElement.tagName == 'SPAN'
+                    && (currentElement == '<br>' || currentElement.textContent.trim() == '')) {
+                    currentElement.remove();
                     let activeEditor = document.getElementById(tinymce.activeEditor.id);
                     activeEditor.blur();
                     let nextSaparator = (activeEditor.closest('.editor')).nextSibling;
@@ -1732,31 +1742,32 @@ export class TinyMceEditor extends Component {
         let poetryStanza = tinymce.$(`div[data-id="${this.props.elementId}"] .poetryLine`);
         if (poetryStanza.length > 1) {
             poetryStanza.each(function () {
-                if (this.innerHTML === '' || this.innerHTML === "<br>") {
+                if (this.innerHTML === '' || this.innerHTML === "<br>" || currentElement.textContent.trim() == '') {
                     this.remove();
                 }
             })
         }
-
-        let mainParent = null;
-        let allLines = tinymce.$(`div[data-id="${this.props.elementId}"] .poetryLine`);
-        let nodesFragment = document.createDocumentFragment();
-        for (let index = 0; index < allLines.length; index++) {
-            let parents = [];
-            let elem = allLines[index];
-            while (elem.parentNode && elem.parentNode.nodeName.toLowerCase() != 'div') {
-                elem = elem.parentNode;
-                parents.push(elem.nodeName.toLowerCase());
+        if (!this.props.elementId.includes("manifest")) {
+            let mainParent = null;
+            let allLines = tinymce.$(`div[data-id="${this.props.elementId}"] .poetryLine`);
+            let nodesFragment = document.createDocumentFragment();
+            for (let index = 0; index < allLines.length; index++) {
+                let parents = [];
+                let elem = allLines[index];
+                while (elem.parentNode && elem.parentNode.nodeName.toLowerCase() != 'div') {
+                    elem = elem.parentNode;
+                    parents.push(elem.nodeName.toLowerCase());
+                }
+                mainParent = elem.parentElement;
+                for (let innerIndex = 0; innerIndex < parents.length; innerIndex++) {
+                    allLines[index].innerHTML = '<' + parents[innerIndex] + '>' + allLines[index].innerHTML + '</' + parents[innerIndex] + '>';
+                }
+                nodesFragment.appendChild(allLines[index]);
             }
-            mainParent = elem.parentElement;
-            for (let innerIndex = 0; innerIndex < parents.length; innerIndex++) {
-                allLines[index].innerHTML = '<' + parents[innerIndex] + '>' + allLines[index].innerHTML + '</' + parents[innerIndex] + '>';
+            if (mainParent) {
+                mainParent.innerHTML = "";
+                mainParent.appendChild(nodesFragment);
             }
-            nodesFragment.appendChild(allLines[index]);
-        }
-        if (mainParent) {
-            mainParent.innerHTML = "";
-            mainParent.appendChild(nodesFragment);
         }
 
         tinyMCE.$('.Wirisformula').each(function () {
