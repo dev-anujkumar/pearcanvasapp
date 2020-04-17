@@ -999,7 +999,7 @@ export class TinyMceEditor extends Component {
             content = content.replace(/paragraphNumeroUnoIndentLevel2\b/, "paragraphNumeroUnoIndentLevel3")
         }
         else if (className && className === 'poetryLine') {
-            selectedNode.className = 'poetryLine poetryLineLevelZero';
+            selectedNode.className = 'poetryLine poetryLineLevel1';
         }
         if (!className) {
             this.setContentAndPlaceCaret(editor, content)
@@ -1026,7 +1026,7 @@ export class TinyMceEditor extends Component {
         else if (content.match(/paragraphNumeroUnoIndentLevel1\b/)) {
             content = content.replace(/paragraphNumeroUnoIndentLevel1\b/, "paragraphNumeroUno")
         }
-        else if (className && className === 'poetryLine poetryLineLevelZero') {
+        else if (className && className === 'poetryLine poetryLineLevel1') {
             selectedNode.className = 'poetryLine';
         }
         if (!className) {
@@ -1047,7 +1047,7 @@ export class TinyMceEditor extends Component {
         if (!content.match(/paragraphNumeroUno\b/) && !content.match(/paragraphNumeroUnoIndentLevel1\b/) && !content.match(/paragraphNumeroUnoIndentLevel2\b/) && !content.match(/paragraphNumeroUnoIndentLevel3\b/) && !className) {
             e.preventDefault()
         }
-        if (content.match(/paragraphNumeroUnoIndentLevel3\b/) || (className && className === 'poetryLine poetryLineLevelZero')) {
+        if (content.match(/paragraphNumeroUnoIndentLevel3\b/) || (className && className === 'poetryLine poetryLineLevel1')) {
             e.preventDefault()
         }
     }
@@ -1739,15 +1739,15 @@ export class TinyMceEditor extends Component {
                 this.outerHTML = innerHtml;
             })
         }
-        let poetryStanza = tinymce.$(`div[data-id="${this.props.elementId}"] .poetryLine`);
-        if (poetryStanza.length > 1) {
-            poetryStanza.each(function () {
-                if (this.innerHTML === '' || this.innerHTML === "<br>" || this.textContent.trim() == '') {
-                    this.remove();
-                }
-            })
-        }
         if (!this.props.elementId.includes("manifest")) {
+            let poetryStanza = tinymce.$(`div[data-id="${this.props.elementId}"] .poetryLine`);
+            if (poetryStanza.length > 1) {
+                poetryStanza.each(function () {
+                    if (this.innerHTML === '' || this.innerHTML === "<br>" || this.textContent.trim() == '') {
+                        this.remove();
+                    }
+                })
+            }
             let mainParent = null;
             let allLines = tinymce.$(`div[data-id="${this.props.elementId}"] .poetryLine`);
             let nodesFragment = document.createDocumentFragment();
