@@ -508,20 +508,20 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                     dataToReturn.section = "postertextobject";
                 }
             } else if(parentElement && parentElement.type === "poetry"){
-                dataToReturn.poetryEntityUrn = parentElement.contentUrn;
+                // dataToReturn.poetryEntityUrn = parentElement.contentUrn;
                 if(parentElement.contents && parentElement.contents["formatted-title"] && parentElement.contents["formatted-title"]["id"] === previousElementData.id){
-                    dataToReturn.updatepoetryField = "formattedTitle";
+                    dataToReturn["metaDataField"] = "formattedTitle";
                 } 
                 else if(parentElement.contents && parentElement.contents["formatted-subtitle"] && parentElement.contents["formatted-subtitle"]["id"] === previousElementData.id){
-                    dataToReturn.updatepoetryField = "formattedSubtitle";
+                    dataToReturn["metaDataField"] = "formattedSubtitle";
                 }
                 // else if(parentElement.contents && parentElement.contents["formatted-caption"] && parentElement.contents["formatted-caption"]["id"] === previousElementData.id){
                 //     dataToReturn.updatepoetryField = "formattedCaption";
                 // }
                 else if(parentElement.contents && parentElement.contents["creditsarray"] && parentElement.contents["creditsarray"].length && parentElement.contents["creditsarray"][0]["id"] === previousElementData.id){
-                    dataToReturn.updatepoetryField = "formattedCredit";
+                    dataToReturn["section"] = "creditsarray";
                 }
-                dataToReturn.elementParentEntityUrn = parentElement.id
+                dataToReturn["elementParentEntityUrn"] = parentElement.contentUrn
                 
             } else if(parentElement && parentElement.type === "citations") {
                 dataToReturn["metaDataField"] = "formattedTitle"
