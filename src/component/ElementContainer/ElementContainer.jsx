@@ -446,7 +446,13 @@ class ElementContainer extends Component {
      * @param {*} activeEditorId
      */
     handleContentChange = (node, previousElementData, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType) => {
-        const { parentUrn, asideData, poetryData } = this.props
+        const { parentUrn, asideData } = this.props
+        let poetryData = {
+            type: "poetry",
+            parentUrn: parentElement.id,
+            id: parentElement.id,
+            contentUrn : parentElement.contentUrn           
+        };
         let dataToSend = {}
         let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
         switch (previousElementData.type) {

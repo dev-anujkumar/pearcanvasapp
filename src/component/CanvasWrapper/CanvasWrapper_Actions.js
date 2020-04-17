@@ -284,7 +284,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
                             slateLevelData: newslateData
                         }
                     })
-                } else if (versioning.type === 'citations') {
+                } else if (versioning.type === 'citations' || versioning.type === 'poetry') {
                     let parentData = getState().appStore.slateLevelData;
                     let newslateData = JSON.parse(JSON.stringify(parentData));
                     let index

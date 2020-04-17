@@ -302,7 +302,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
                 }
             } else if(response.data.id !== updatedData.id){
                 if(currentSlateData.status === 'wip'){
-                    updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, response.data, elementIndex, null, parentElement);
+                    updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, response.data, elementIndex, null, parentElement, poetryData);
                     config.savingInProgress = false
                 }else if(currentSlateData.status === 'approved'){
                     if(currentSlateData.type==="popup"){
@@ -373,7 +373,8 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                 //     dispatch(fetchSlateData(asideData.id,asideData.contentUrn, 0, asideData));
                 }
             } else if(poetryData && poetryData.type == 'poetry'){
-                if(indexes.length === 2 || indexes.length === 3){
+                poetryData.indexes = indexes;
+                if(indexes.length === 2 || indexes.length === 3 || indexes === 2 || indexes === 3){
                     dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:poetryData.id, poetryData.contentUrn, 0, poetryData));
                 }
             } 
