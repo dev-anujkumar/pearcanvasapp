@@ -672,7 +672,7 @@ export class TinyMceEditor extends Component {
                 this.props.deleteShowHideUnit(this.props.currentElement.id, this.props.showHideType, this.props.element.contentUrn, this.props.innerIndex, this.props.index, this.props.element.id)
             }
             else if (key === 13 && this.props.element.type === 'stanza') {
-                console.log(editor.selection.getNode().innerHTML,'check');
+                console.log(editor.selection.getNode().innerHTML, 'check');
                 if (editor.selection.getNode().tagName == 'SPAN'
                     && editor.selection.getNode().innerHTML == '<br>') {
                     editor.selection.getNode().remove();
@@ -974,7 +974,7 @@ export class TinyMceEditor extends Component {
         else if (className && className === 'poetryLine') {
             selectedNode.className = 'poetryLine poetryLineLevelZero';
         }
-        if(!className) {
+        if (!className) {
             this.setContentAndPlaceCaret(editor, content)
         }
     }
@@ -1002,7 +1002,7 @@ export class TinyMceEditor extends Component {
         else if (className && className === 'poetryLine poetryLineLevelZero') {
             selectedNode.className = 'poetryLine';
         }
-        if(!className) {
+        if (!className) {
             this.setContentAndPlaceCaret(editor, content)
         }
     }
@@ -1635,22 +1635,22 @@ export class TinyMceEditor extends Component {
             })
         });
         if (isSameTarget) {
-            if(this.props.element.type==='stanza'){
+            if (this.props.element.type === 'stanza') {
                 let termText = tinyMCE.$("#" + currentTarget.id) && tinyMCE.$("#" + currentTarget.id).html();
                 tinymce.init(this.editorConfig).then(() => {
-                if (termText && termText.length !== "") {
-                    if (termText.search(/^(<.*>)+$/g) >= 0) {
-                        termText = tinyMCE.$("#" + currentTarget.id).html();
+                    if (termText && termText.length !== "") {
+                        if (termText.search(/^(<.*>)+$/g) >= 0) {
+                            termText = tinyMCE.$("#" + currentTarget.id).html();
+                        }
+                        document.getElementById(currentTarget.id).innerHTML = termText;
                     }
-                    document.getElementById(currentTarget.id).innerHTML = termText;
-                }
-                if (clickedX !== 0 && clickedY !== 0) {
-                    tinymce.activeEditor.selection.placeCaretAt(clickedX, clickedY) //Placing exact cursor position on clicking.
-                }
-                this.editorOnClick(event);
-            });
+                    if (clickedX !== 0 && clickedY !== 0) {
+                        tinymce.activeEditor.selection.placeCaretAt(clickedX, clickedY) //Placing exact cursor position on clicking.
+                    }
+                    this.editorOnClick(event);
+                });
             }
-            else{
+            else {
                 this.editorOnClick(event);
             }
         }
@@ -1719,6 +1719,27 @@ export class TinyMceEditor extends Component {
                     this.remove();
                 }
             })
+        }
+
+        let mainParent = null;
+        let allLines = tinymce.$(`div[data-id="${this.props.elementId}"] .poetryLine`);
+        let nodesFragment = document.createDocumentFragment();
+        for (let index = 0; index < allLines.length; index++) {
+            let parents = [];
+            let elem = allLines[index];
+            while (elem.parentNode && elem.parentNode.nodeName.toLowerCase() != 'div') {
+                elem = elem.parentNode;
+                parents.push(elem.nodeName.toLowerCase());
+            }
+            mainParent = elem.parentElement;
+            for (let innerIndex = 0; innerIndex < parents.length; innerIndex++) {
+                allLines[index].innerHTML = '<'+parents[innerIndex]+'>'+ allLines[index].innerHTML + '</'+parents[innerIndex]+'>';
+            }
+            nodesFragment.appendChild(allLines[index]);
+        }
+        if(mainParent) {
+            mainParent.innerHTML = "";
+            mainParent.appendChild(nodesFragment);
         }
 
         tinyMCE.$('.Wirisformula').each(function () {
