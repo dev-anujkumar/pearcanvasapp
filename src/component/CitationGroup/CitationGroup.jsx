@@ -38,6 +38,15 @@ export class CitationGroup extends Component {
                 return _elements.map((element, index) => {
                         return (
                            <React.Fragment key={element.id}>
+                               { index==0 && <ElementSaprator
+                                        index={index}
+                                        firstOne={index === 0}
+                                        esProps={this.context.elementSeparatorProps(index, true, parentUrn, asideData, parentIndex)}
+                                        elementType="citations"
+                                        sectionBreak={true}
+                                        permissions={this.context.permissions}
+                                        onClickCapture={this.context.onClickCapture}     
+                                    />}
                                 <ElementContainer
                                     element={element}
                                     index={`${parentIndex}-${index+1}`}
