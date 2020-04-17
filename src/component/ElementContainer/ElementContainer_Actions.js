@@ -585,7 +585,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                             ...element,
                             contents: {
                                 ...element.contents,
-                                "formattedSubtitle": { ...updatedData }
+                                "formatted-subtitle": { ...updatedData }
                             }
                         };
                     } 
