@@ -58,22 +58,21 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                     break;
             }   
         }
-        else if (elementType === 'poetry') {
+        else if (typeWithPopup && typeWithPopup === 'poetry') {
             let tempIndex = index.split('-');
             let indexesLen = tempIndex.length;
             if (indexesLen === 2) {
                 switch (tempIndex[1]) {
                     case "1":
-                        glossaryFootElem = newBodymatter[tempIndex[0]].contents['formattedSubtitle'] || {};
+                        glossaryFootElem = newBodymatter[tempIndex[0]].contents['formatted-subtitle'] || {};
                         break;
-                    case "3":
-                        glossaryFootElem = newBodymatter[tempIndex[0]].contents['formattedCaption'] || {};
-                        break;
+                    // case "3":
+                    //     glossaryFootElem = newBodymatter[tempIndex[0]].contents['formatted-caption'] || {};
+                    //     break;
                     case "4":
-                        glossaryFootElem = newBodymatter[tempIndex[0]].contents['formattedCredit'] || {};
+                        glossaryFootElem = (newBodymatter[tempIndex[0]].contents['creditsarray'] ? newBodymatter[tempIndex[0]].contents['creditsarray'][0] : {});
                         break;
                 }
-                glossaaryFootnoteValue.elementWorkId = glossaryFootElem.id;
             }
         }
          else {
@@ -238,7 +237,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             break;
     }
 
-    if(index &&  typeof (index) !== 'number' && elementType !== 'figure'  && typeWithPopup !== 'popup' && elementType !== 'poetry'){
+    if(index &&  typeof (index) !== 'number' && elementType !== 'figure'  && typeWithPopup !== 'popup' && typeWithPopup !== 'poetry'){
         let tempIndex =  index.split('-');
         if(tempIndex.length === 2){
             if(newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].id === elementWorkId){
@@ -306,19 +305,22 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                     break;
             }
         }
-        else if (elementType === 'poetry') {
+        else if (typeWithPopup && typeWithPopup === 'poetry') {
             let tempIndex = index.split('-');
             let indexesLen = tempIndex.length;
             if (indexesLen === 2) {
                 switch (tempIndex[1]) {
                     case "1":
-                        newBodymatter[tempIndex[0]].contents['formattedSubtitle'] = res.data;
+                        newBodymatter[tempIndex[0]].contents['formatted-subtitle'] = res.data;
                         break;
-                    case "3":
-                        newBodymatter[tempIndex[0]].contents['formattedCaption'] = res.data;
-                        break;
+                    // case "3":
+                    //     newBodymatter[tempIndex[0]].contents['formatted-caption'] = res.data;
+                    //     break;
                     case "4":
-                        newBodymatter[tempIndex[0]].contents['formattedCredit'] = res.data;
+                        if(!newBodymatter[tempIndex[0]].contents['creditsarray']){
+                            newBodymatter[tempIndex[0]].contents['creditsarray'] = [];
+                        }
+                        newBodymatter[tempIndex[0]].contents['creditsarray'][0] = res.data;
                         break;
                 }
             }
