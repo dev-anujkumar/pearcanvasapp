@@ -1746,7 +1746,7 @@ export class TinyMceEditor extends Component {
                 this.outerHTML = innerHtml;
             })
         }
-        if (!this.props.elementId.includes("manifest")) {
+        if (!(this.props.elementId && this.props.elementId.includes("manifest"))) {
             let poetryStanza = tinymce.$(`div[data-id="${this.props.elementId}"] .poetryLine`);
             if (poetryStanza.length > 1) {
                 poetryStanza.each(function () {
