@@ -1018,6 +1018,7 @@ class ElementContainer extends Component {
                 case elementTypeConstant.POETRY_ELEMENT:
                     editor = <ElementPoetry index={index} 
                     accessDenied={accessDenied} 
+                    handleCommentspanel={handleCommentspanel}
                     updateFigureData={this.updateFigureData} 
                     permissions={permissions} 
                     showBlocker={this.props.showBlocker}
@@ -1055,6 +1056,7 @@ class ElementContainer extends Component {
                     showDeleteElemPopup={this.showDeleteElemPopup}
                     handleBlur={this.handleBlur} 
                     setActiveElement={this.props.setActiveElement}
+                    handleCommentspanel={handleCommentspanel}
                     deleteElement={this.deleteElement}
                     updatePageNumber={updatePageNumber}
                     btnClassName={this.state.btnClassName}
