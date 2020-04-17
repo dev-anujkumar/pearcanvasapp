@@ -700,7 +700,14 @@ export class TinyMceEditor extends Component {
                 if (editor.selection.getNode().tagName.toLowerCase() !== 'span' || editor.selection.getNode().className.toLowerCase() !== 'poetryLine') {
                     currentElement = editor.selection.getNode().closest('.poetryLine');
                 }
-                if (currentElement.tagName == 'SPAN'
+                if (!currentElement) {
+                    currentElement = editor.selection.getNode();
+                    let checkSpan = currentElement.getElementsByClassName("poetryLine");
+                    if(checkSpan.length) {
+                        currentElement = checkSpan[0];
+                    }
+                }
+                if (currentElement && currentElement.tagName == 'SPAN'
                     && (currentElement == '<br>' || currentElement.textContent.trim() == '')) {
                     currentElement.remove();
                     let activeEditor = document.getElementById(tinymce.activeEditor.id);
