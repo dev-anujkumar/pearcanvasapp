@@ -25,7 +25,7 @@ const CGTinyMCE = (props) => {
         handleEditorFocus : context.handleFocus,
         handleBlur  :  context.handleBlur,
         slateLockInfo : context.slateLockInfo,
-        elementId : context.elementId,
+        elementId : context.element.contents && context.element.contents["formatted-title"] && context.element.contents["formatted-title"].id,
         citationField  :  "formatted-title",
         createPopupUnit : (popupField, forceupdate, index, parentElement) => createPopupUnit(popupField, forceupdate, index, parentElement, props, context)
     }
