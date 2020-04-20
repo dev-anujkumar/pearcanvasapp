@@ -227,7 +227,8 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
             } else {
                 updatedEsProps = esProps.filter((btnObj) => {
                     buttonType = btnObj.buttonType;
-                    return buttonType !== SECTION_BREAK && buttonType !== OPENER && buttonType !== CITATION;
+                    return buttonType !== SECTION_BREAK && buttonType !== OPENER 
+                    && buttonType !== CITATION && btnObj.buttonType !== elementTypeConstant.STANZA_ELEMENT;
                 })
             }
             if (elementType == ELEMENT_ASIDE || elementType == elementTypeConstant.POETRY) {

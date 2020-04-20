@@ -484,14 +484,14 @@ class ElementContainer extends Component {
                         contentUrn : parentElement.contentUrn           
                     };
                 }
-                if(parentElement.type === "popup" || parentElement.type === "citations" || parentElement.type === "poetry"){
+                if(parentElement.type === "popup" || parentElement.type === "citations" || (parentElement.type === "poetry" && previousElementData.type !== "stanza")){
                     tempDiv.innerHTML = matchHTMLwithRegex(tempDiv.innerHTML) ? tempDiv.innerHTML : `<p class="paragraphNumeroUno">${tempDiv.innerHTML}</p>`
                     html = html.replace(/<br data-mce-bogus="1">/g, "<br>")
                     html = matchHTMLwithRegex(html) ? html : `<p class="paragraphNumeroUno">${html}</p>`
                     parentElement["index"] = this.props.index
                 }
                 else if (previousElementData.type === "stanza") {
-                    html = `<p>${html}</p>`
+                        html = `<p>${html}</p>`                                      
                 }
                 html =html.replace(/(\r\n|\n|\r)/gm, '')
                 previousElementData.html.text= previousElementData.html.text.replace(/<br data-mce-bogus="1">/g, "<br>").replace(/(\r\n|\n|\r)/gm, '');
@@ -627,7 +627,7 @@ class ElementContainer extends Component {
         let activeEditorId = elemIndex ? `cypress-${elemIndex}` : (tinyMCE.activeEditor ? tinyMCE.activeEditor.id : '')
         let node = document.getElementById(activeEditorId);
         let element = currrentElement ? currrentElement : this.props.element
-        let parentElement = currrentElement && currrentElement.type === elementTypeConstant.CITATION_ELEMENT ? this.props.parentElement : this.props.element
+        let parentElement = ((currrentElement && currrentElement.type === elementTypeConstant.CITATION_ELEMENT) || (this.props.parentElement && this.props.parentElement.type === 'poetry')) ? this.props.parentElement : this.props.element
         this.handleContentChange(node, element, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType)
     }
 
@@ -1075,6 +1075,7 @@ class ElementContainer extends Component {
                     tagName={"div"}
                     element={element} 
                     model={element} 
+                    parentElement = {this.props.parentElement}
                     slateLockInfo={slateLockInfo} 
                     onListSelect={this.props.onListSelect} 
                     glossaryFootnoteValue={this.props.glossaryFootnoteValue} 
