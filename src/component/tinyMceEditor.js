@@ -1199,8 +1199,10 @@ export class TinyMceEditor extends Component {
      */
     addAssetPopover = (editor, selectedText) => {
 
-        let selectedTag = window.getSelection().anchorNode.parentNode.nodeName;
-        if (selectedTag !== "LI" && selectedTag !== "P" && selectedTag !== "H3" && selectedTag !== "BLOCKQUOTE") {
+        let selection = window.getSelection().anchorNode.parentNode;
+        let selectedTag = selection.nodeName;
+        let selectedTagClass = selection.classList;
+        if (selectedTag !== "LI" && selectedTag !== "P" && selectedTag !== "H3" && selectedTag !== "BLOCKQUOTE" && (!selectedTagClass.contains('poetryLine'))) {
             //selectedText = window.getSelection().anchorNode.parentNode.outerHTML;
             selectedText = '<' + selectedTag.toLocaleLowerCase() + '>' + selectedText + '</' + selectedTag.toLocaleLowerCase() + '>'
         }
@@ -1746,7 +1748,7 @@ export class TinyMceEditor extends Component {
                 this.outerHTML = innerHtml;
             })
         }
-        if (!(this.props.elementId && this.props.elementId.includes("manifest"))) {
+        if (this.props.elementId && !this.props.elementId.includes("manifest")) {
             let poetryStanza = tinymce.$(`div[data-id="${this.props.elementId}"] .poetryLine`);
             if (poetryStanza.length > 1) {
                 poetryStanza.each(function () {
