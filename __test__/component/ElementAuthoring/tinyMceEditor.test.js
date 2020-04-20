@@ -341,6 +341,9 @@ describe('Testing tinyMce  component with  props', () => {
             isLocked: false,
             userId: 'c5Test03'
         },
+        element : {
+            type : 'stanza'
+        },
         permissions: permissions,
         onListSelect: () => { }
     }
@@ -455,6 +458,13 @@ describe('Testing tinyMce  component with  props', () => {
                 },
                 placeCaretAt : (a,b) => {
                     return true
+                },
+                getNode: () => {
+                    return {
+                        tagName: 'span',
+                        className: 'poetryLine',
+                        closest : () => {}
+                    }
                 }
             }
         }
@@ -480,6 +490,13 @@ describe('Testing tinyMce  component with  props', () => {
                 },
                 placeCaretAt : (a,b) => {
                     return true
+                },
+                getNode: () => {
+                    return {
+                        tagName: 'span',
+                        className: 'poetryLine',
+                        closest : () => {}
+                    }
                 }
             }
         }
@@ -507,6 +524,13 @@ describe('Testing tinyMce  component with  props', () => {
                 },
                 placeCaretAt : (a,b) => {
                     return true
+                },
+                getNode: () => {
+                    return {
+                        tagName: 'span',
+                        className: 'poetryLine',
+                        closest : () => {}
+                    }
                 }
             }
         }
@@ -693,6 +717,15 @@ describe('Testing tinyMce  component with  props', () => {
                 },
                 dispatchEvent: () => { }
             },
+            selection : {
+                getNode: () => {
+                    return {
+                        tagName: 'span',
+                        className: 'poetryLine',
+                        closest : () => {}
+                    }
+                }
+            }
         }
         const getContent = jest.spyOn(event.target, 'getContent');
         tinyMceEditor.instance().editorBeforeExecCommand(editor);
@@ -774,6 +807,15 @@ describe('Testing tinyMce  component with  props', () => {
                 },
                 dispatchEvent: () => { }
             },
+            selection: {
+                getNode: () => {
+                    return {
+                        tagName: 'span',
+                        className: 'poetryLine',
+                        closest : () => {}
+                    }
+                }
+            }
         }
         const getContent = jest.spyOn(event.target, 'getContent');
         tinyMceEditor.instance().editorBeforeExecCommand(editor);
