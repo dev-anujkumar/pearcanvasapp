@@ -447,12 +447,6 @@ class ElementContainer extends Component {
      */
     handleContentChange = (node, previousElementData, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType) => {
         const { parentUrn, asideData } = this.props
-        let poetryData = {
-            type: "poetry",
-            parentUrn: parentElement.id,
-            id: parentElement.id,
-            contentUrn : parentElement.contentUrn           
-        };
         let dataToSend = {}
         let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
         switch (previousElementData.type) {
@@ -481,6 +475,15 @@ class ElementContainer extends Component {
                 tempDiv.innerHTML = html;
                 //tinyMCE.$(tempDiv).find('.blockquote-hidden').remove();
                 html = tempDiv.innerHTML;
+                let poetryData;
+                if(parentElement && parentElement.type === "poetry"){
+                    poetryData = {
+                        type: "poetry",
+                        parentUrn: parentElement.id,
+                        id: parentElement.id,
+                        contentUrn : parentElement.contentUrn           
+                    };
+                }
                 if(parentElement.type === "popup" || parentElement.type === "citations" || parentElement.type === "poetry"){
                     tempDiv.innerHTML = matchHTMLwithRegex(tempDiv.innerHTML) ? tempDiv.innerHTML : `<p class="paragraphNumeroUno">${tempDiv.innerHTML}</p>`
                     html = html.replace(/<br data-mce-bogus="1">/g, "<br>")
