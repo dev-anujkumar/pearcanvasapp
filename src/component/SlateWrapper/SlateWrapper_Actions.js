@@ -274,11 +274,7 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                 else if (containerTypeElem && containerTypeElem == 'pe') {
                     newBodymatter.forEach(element => {
                         if (element.id == poetryId) {
-                            element.contents.bodymatter.forEach((nestedElem) => {
-                                if (nestedElem.contentUrn == swappedElementData.contentUrn) {
-                                    element.contents.bodymatter.move(oldIndex, newIndex);
-                                }
-                            })
+                            element.contents.bodymatter.move(oldIndex, newIndex);
                         }
                     });
                 }
