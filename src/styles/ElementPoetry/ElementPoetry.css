@@ -19,7 +19,14 @@
 .element-container.pe .dropdown  {
     margin-left: -23px;
 }
-.poetryLineLevelZero{
+.poetryLineLevel1{
     display: block;
     padding-left: 40px !important;
+}
+.poetryLineLevel2 {
+    padding-left: 80px !important;
+}
+
+.poetryLineLevel3 {
+    padding-left: 120px !important;
 }
