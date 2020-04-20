@@ -217,6 +217,7 @@ function prepareDataForTcmUpdate (updatedData,id, elementIndex, asideData, getSt
     if((type && type === "element-citation") || (updatedData.type === "element-citation")){
         if (slateBodyMatter[indexes[0]].contents.bodymatter[indexes[1] - 1].id === id) {
             updatedData.isHead = true;
+            updatedData.parentType = "citations";
         }
     } else if (indexes.length === 2) {
         if (poetryData && poetryData.type != "poetry" && slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].id === id) {
@@ -302,7 +303,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
                 }
             } else if(response.data.id !== updatedData.id){
                 if(currentSlateData.status === 'wip'){
-                    updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, response.data, elementIndex, null, parentElement);
+                    updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, response.data, elementIndex, null, parentElement, poetryData);
                     config.savingInProgress = false
                 }else if(currentSlateData.status === 'approved'){
                     if(currentSlateData.type==="popup"){
@@ -373,7 +374,8 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                 //     dispatch(fetchSlateData(asideData.id,asideData.contentUrn, 0, asideData));
                 }
             } else if(poetryData && poetryData.type == 'poetry'){
-                if(indexes.length === 2 || indexes.length === 3){
+                poetryData.indexes = indexes;
+                if(indexes.length === 2 || indexes.length === 3 || indexes === 2 || indexes === 3){
                     dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:poetryData.id, poetryData.contentUrn, 0, poetryData));
                 }
             } 
@@ -585,7 +587,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                             ...element,
                             contents: {
                                 ...element.contents,
-                                "formattedSubtitle": { ...updatedData }
+                                "formatted-subtitle": { ...updatedData }
                             }
                         };
                     } 

@@ -703,7 +703,7 @@ export class TinyMceEditor extends Component {
                 if (!currentElement) {
                     currentElement = editor.selection.getNode();
                     let checkSpan = currentElement.getElementsByClassName("poetryLine");
-                    if(checkSpan.length) {
+                    if (checkSpan.length) {
                         currentElement = checkSpan[0];
                     }
                 }
@@ -1008,6 +1008,12 @@ export class TinyMceEditor extends Component {
         else if (className && className === 'poetryLine') {
             selectedNode.className = 'poetryLine poetryLineLevel1';
         }
+        else if (className && className === 'poetryLine poetryLineLevel1') {
+            selectedNode.className = 'poetryLine poetryLineLevel2';
+        }
+        else if (className && className === 'poetryLine poetryLineLevel2') {
+            selectedNode.className = 'poetryLine poetryLineLevel3';
+        }
         if (!className) {
             this.setContentAndPlaceCaret(editor, content)
         }
@@ -1036,6 +1042,12 @@ export class TinyMceEditor extends Component {
         else if (className && className === 'poetryLine poetryLineLevel1') {
             selectedNode.className = 'poetryLine';
         }
+        else if (className && className === 'poetryLine poetryLineLevel2') {
+            selectedNode.className = 'poetryLine poetryLineLevel1';
+        }
+        else if (className && className === 'poetryLine poetryLineLevel3') {
+            selectedNode.className = 'poetryLine poetryLineLevel2';
+        }
         if (!className) {
             this.setContentAndPlaceCaret(editor, content)
         }
@@ -1054,7 +1066,7 @@ export class TinyMceEditor extends Component {
         if (!content.match(/paragraphNumeroUno\b/) && !content.match(/paragraphNumeroUnoIndentLevel1\b/) && !content.match(/paragraphNumeroUnoIndentLevel2\b/) && !content.match(/paragraphNumeroUnoIndentLevel3\b/) && !className) {
             e.preventDefault()
         }
-        if (content.match(/paragraphNumeroUnoIndentLevel3\b/) || (className && className === 'poetryLine poetryLineLevel1')) {
+        if (content.match(/paragraphNumeroUnoIndentLevel3\b/) || (className && className === 'poetryLine poetryLineLevel3')) {
             e.preventDefault()
         }
     }
@@ -1199,8 +1211,10 @@ export class TinyMceEditor extends Component {
      */
     addAssetPopover = (editor, selectedText) => {
 
-        let selectedTag = window.getSelection().anchorNode.parentNode.nodeName;
-        if (selectedTag !== "LI" && selectedTag !== "P" && selectedTag !== "H3" && selectedTag !== "BLOCKQUOTE") {
+        let selection = window.getSelection().anchorNode.parentNode;
+        let selectedTag = selection.nodeName;
+        let selectedTagClass = selection.classList;
+        if (selectedTag !== "LI" && selectedTag !== "P" && selectedTag !== "H3" && selectedTag !== "BLOCKQUOTE" && (!selectedTagClass.contains('poetryLine'))) {
             //selectedText = window.getSelection().anchorNode.parentNode.outerHTML;
             selectedText = '<' + selectedTag.toLocaleLowerCase() + '>' + selectedText + '</' + selectedTag.toLocaleLowerCase() + '>'
         }
@@ -1746,7 +1760,7 @@ export class TinyMceEditor extends Component {
                 this.outerHTML = innerHtml;
             })
         }
-        if (!this.props.elementId.includes("manifest")) {
+        if (this.props.elementId && !this.props.elementId.includes("manifest")) {
             let poetryStanza = tinymce.$(`div[data-id="${this.props.elementId}"] .poetryLine`);
             if (poetryStanza.length > 1) {
                 poetryStanza.each(function () {
