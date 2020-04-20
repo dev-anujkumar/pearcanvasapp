@@ -373,10 +373,10 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                 // }else if(indexes.length === 3){
                 //     dispatch(fetchSlateData(asideData.id,asideData.contentUrn, 0, asideData));
                 }
-            } else if(poetryData && poetryData.type == 'poetry'){
-                poetryData.indexes = indexes;
+            } else if(parentElement && parentElement.type == 'poetry'){
+
                 if(indexes.length === 2 || indexes.length === 3 || indexes === 2 || indexes === 3){
-                    dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:poetryData.id, poetryData.contentUrn, 0, poetryData));
+                    dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:parentElement.id, parentElement.contentUrn, 0, parentElement));
                 }
             } 
             else if(parentElement && parentElement.type === "popup" && updatedData.elementParentEntityUrn && (updatedData.metaDataField || updatedData.section === "postertextobject") ){
