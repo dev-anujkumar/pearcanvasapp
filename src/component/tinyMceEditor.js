@@ -324,10 +324,9 @@ export class TinyMceEditor extends Component {
                                 this.clearFormateText = '';
                             }
                         }
-                        if (e.target.targetElm.children[0].classList.contains('blockquoteMarginaliaAttr') || e.target.targetElm.children[0].classList.contains('blockquoteMarginalia')) {
-                            e.target.targetElm.children[0].children[0].innerHTML = textToReplace;
-                        }
-                        else if (
+                        else if ((e && e.target && e.target.targetElm && e.target.targetElm.children.length) &&
+                            (
+                            e.target.targetElm.children[0].classList.contains("paragraphNumeroUnoCitation") ||
                             e.target.targetElm.children[0].classList.contains("heading1NummerEins") ||
                             e.target.targetElm.children[0].classList.contains("heading2NummerEins") ||
                             e.target.targetElm.children[0].classList.contains("heading3NummerEins") ||
@@ -336,7 +335,7 @@ export class TinyMceEditor extends Component {
                             e.target.targetElm.children[0].classList.contains("heading6NummerEins") ||
                             e.target.targetElm.children[0].classList.contains("paragraphNumeroUno") ||
                             e.target.targetElm.children[0].classList.contains("pullQuoteNumeroUno") ||
-                            e.target.targetElm.children[0].classList.contains("heading2learningObjectiveItem")
+                            e.target.targetElm.children[0].classList.contains("heading2learningObjectiveItem"))
                         ) {
                             e.target.targetElm.children[0].innerHTML = textToReplace;
                         }
@@ -651,6 +650,18 @@ export class TinyMceEditor extends Component {
                 this.props.createShowHideElement(this.props.showHideType, this.props.index, this.props.id);
             });
             let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
+            /** [BG-2134] | This block is to clear selection when CT element is blank before paste process*/
+            if ((e.keyCode == 86 || e.key == 'v') && e.ctrlKey && this.props.currentElement && this.props.currentElement.type == 'element-citation') {
+                if (window.getSelection().toString().trim() == '') {             //Chrome
+                    window.getSelection().empty()
+                } 
+                else if (window.getSelection().removeAllRanges) {                // Firefox
+                    window.getSelection().removeAllRanges();
+                }
+                else if (document.selection && document.selection.empty) {       // IE
+                    document.selection.empty();
+                }
+            }
             if (activeElement) {
                 if (!activeElement.children.length ||
                     (activeElement.children.length <= 1 && activeElement.children[0].tagName === 'BR' && activeElement.nodeName !== "CODE")) {
