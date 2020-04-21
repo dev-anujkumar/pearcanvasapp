@@ -73,7 +73,7 @@ var openWindow = function (url, h) {
             }
         } catch (ex1) {
             // Do nothing
-        };
+        }
     }, 500);
 };
 
@@ -203,7 +203,7 @@ function getLocal(storageKey) {
     }
     console.log("getLocal data: " + data);
     return data;
-};
+}
 
 /**
  * Stores a value "data" in the key "storageKey" in the local session storage
@@ -224,7 +224,7 @@ function storeLocal(storageKey, data) {
             // Nothing
         }
     }
-};
+}
 
 /*
  * Removes the value for the storageKey
@@ -241,7 +241,7 @@ function removeLocal(storageKey) {
             // Do nothing
         }
     }
-};
+}
 
 /**
  * Removes the whole local session storage
@@ -258,7 +258,7 @@ function removeAllLocal() {
             // Do nothing
         }
     }
-};
+}
 
 /**
  * Displays a message in the browser's console (if possible)
@@ -275,7 +275,7 @@ function debug(message) {
             debugEnabled = false;
         }
     }
-};
+}
 
 // Functions to connect to the server using XMLHttpRequest
 // or MSoft stuff, in case is necessary
@@ -503,7 +503,7 @@ function openamConfig(options) {
     function serverinfoURL() {
         console.log("serverinfoURL: " + serverinfo_url);
         return serverinfo_url;
-    };
+    }
 
     var response_sir = null;
     var serverinfo_url = serverinfoURL();
@@ -518,7 +518,7 @@ function openamConfig(options) {
     function serverinfo() {
         console.log("response_sir from serverinfo: " + response_sir);
         return response_sir;
-    };
+    }
     
     var cookieName = serverinfo() ? JSON.parse(serverinfo()).cookieName :'';
     debug("openamConfig: Session Cookie Name=" + cookieName);

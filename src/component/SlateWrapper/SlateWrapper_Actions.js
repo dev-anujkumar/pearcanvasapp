@@ -230,8 +230,6 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
 
                 /* For hiding the spinning loader send HideLoader message to Wrapper component */
                 sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
-
-                const parentData = getState().appStore.slateLevelData;
                 let newParentData = JSON.parse(JSON.stringify(parentData));
                 if (currentSlateData.status === 'approved') {
                     if(currentSlateData.type==="popup"){

@@ -4,7 +4,7 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import './../../../styles/AssessmentSlateCanvas/elm/RootElmComponent.css';
-import { insertElmResourceAction, fetchAssessmentItem ,setElmLoader } from './Actions/ElmActions';
+import { insertElmResourceAction, fetchAssessmentItem } from './Actions/ElmActions';
 import ElmHeader from './Components/ElmHeader';
 import ElmTableComponent from './Components/ElmTableComponent';
 
