@@ -327,10 +327,8 @@ export class TinyMceEditor extends Component {
                         if (e.target.targetElm.children[0].classList.contains('blockquoteMarginaliaAttr') || e.target.targetElm.children[0].classList.contains('blockquoteMarginalia')) {
                             e.target.targetElm.children[0].children[0].innerHTML = textToReplace;
                         }
-                        else if ((e && e.target && e.target.targetElm && e.target.targetElm.children  
-                            && (e.target.targetElm.children != null || e.target.targetElm.children != undefined) 
-                            && e.target.targetElm.children.length) 
-                            && (
+                        else if ((e && e.target && e.target.targetElm && e.target.targetElm.children && e.target.targetElm.children.length) && 
+                            (
                             e.target.targetElm.children[0].classList.contains("paragraphNumeroUnoCitation") ||
                             e.target.targetElm.children[0].classList.contains("heading1NummerEins") ||
                             e.target.targetElm.children[0].classList.contains("heading2NummerEins") ||
