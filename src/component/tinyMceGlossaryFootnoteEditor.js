@@ -263,10 +263,10 @@ export class ReactEditor extends React.Component {
 
   setGlossaryFootnoteNode = (id, glossaryNode, footnoteNode) => {
     if(id === "glossary-0" && glossaryNode && this.termtext){
-      glossaryNode.innerHTML = this.termtext.replace(/data-temp-mathml/g,'data-mathml').replace(/temp_Wirisformula/g,'Wirisformula');;
+      glossaryNode.innerHTML = this.termtext.replace(/data-temp-mathml/g,'data-mathml').replace(/temp_Wirisformula/g,'Wirisformula');
     }
     else if(id === "footnote-0" && footnoteNode && this.termtext){
-      footnoteNode.innerHTML = this.termtext.replace(/data-temp-mathml/g,'data-mathml').replace(/temp_Wirisformula/g,'Wirisformula');;
+      footnoteNode.innerHTML = this.termtext.replace(/data-temp-mathml/g,'data-mathml').replace(/temp_Wirisformula/g,'Wirisformula');
     }
   }
   
