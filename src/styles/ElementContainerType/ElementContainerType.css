@@ -36,7 +36,6 @@
 .other-elements-inner li{
     color: #424242;
     text-align: left;
-    font-size: 14px;
     padding: 8px 0 8px 5px;
     cursor:pointer;
     font-family: 'Open Sans', sans-serif;
@@ -45,8 +44,6 @@
 .other-elements-inner li:hover{
     color: #6c6c6c;
     text-align: left;
-}
-.other-elements-inner li:hover{
     background-color: #1565c0;
     transition: all .2s ease-in-out;
     color: white;

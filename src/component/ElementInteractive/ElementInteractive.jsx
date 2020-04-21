@@ -6,12 +6,10 @@ import React from 'react';
 import PropTypes from 'prop-types'
 import './../../styles/ElementInteractive/ElementInteractive.css';
 import TinyMceEditor from "../tinyMceEditor";
-import { c2AssessmentModule } from './../../js/c2_assessment_module';
 import { c2MediaModule } from './../../js/c2_media_module';
 import { showTocBlocker,hideTocBlocker, disableHeader } from '../../js/toggleLoader'
 import config from '../../config/config';
 import { utils } from '../../js/utils';
-import PopUp from '../PopUp'
 import axios from 'axios';
 import { hasReviewerRole } from '../../constants/utility.js';
 import RootCiteTdxComponent from '../AssessmentSlateCanvas/assessmentCiteTdx/RootCiteTdxComponent.jsx';

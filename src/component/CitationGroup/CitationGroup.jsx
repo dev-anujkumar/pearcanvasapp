@@ -138,8 +138,6 @@ export class CitationGroup extends Component {
                         elementType: _containerType
                     }
                     const cgThis = this
-                    let filterElement = _bodyMatter.filter((ele) => ele.type == "manifest");
-                    let elementLength = _bodyMatter.length - filterElement.length;
                      if(!_bodyMatter.length && this.context.deleteElement){
                         this.context.deleteElement();
                     }
@@ -182,9 +180,6 @@ export class CitationGroup extends Component {
                                     },
                                 }}
                                 ref={(c) => {
-                                    if (c) {
-                                        let sortable = c.sortable;
-                                    }
                                 }}
                                 tag="div"
                                 onChange={function (items, sortable, evt) { }}
