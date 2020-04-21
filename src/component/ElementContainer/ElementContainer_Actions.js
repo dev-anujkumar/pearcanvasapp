@@ -220,14 +220,14 @@ function prepareDataForTcmUpdate (updatedData,id, elementIndex, asideData, getSt
             updatedData.parentType = "citations";
         }
     } else if (indexes.length === 2) {
-        if (poetryData && poetryData.type != "poetry" && slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].id === id) {
+        if (((!poetryData) || (poetryData.type != "poetry")) && slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].id === id) {
         //if (slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].id === id) {
             updatedData.isHead = true;
         }
     } else if (indexes.length === 3) {
-        if (poetryData && poetryData.type != "poetry" && slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].id === id) {
+        if (((!poetryData) || (poetryData.type != "poetry")) && slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].id === id) {
             updatedData.isHead = false;
-        } else if (poetryData && poetryData.type === "poetry" && slateBodyMatter[indexes[0]].contents.bodymatter[indexes[2]].id === id) {
+        } else if ((poetryData && poetryData.type === "poetry") && slateBodyMatter[indexes[0]].contents.bodymatter[indexes[2]].id === id) {
             updatedData.isHead = false;
         } else if(type==="stanza" && slateBodyMatter[indexes[0]].contents.bodymatter[indexes[2]].id === id){
             updatedData.isHead = false;
