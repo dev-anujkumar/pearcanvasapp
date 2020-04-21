@@ -352,6 +352,43 @@ describe('Tests ElementContainer Actions', () => {
                 expect(store.getActions()).toEqual(expectedActions);
             });
         })
+        it('testing------- Delete Element Poetry------action', () => {
+            let store = mockStore(() => initialState);
+            config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+            config.projectUrn = "urn:pearson:distributable:3e872df6-834c-45f5-b5c7-c7b525fab1ef"
+            config.slateEntityURN = "urn:pearson:entity:920e1d14-236e-4882-9a7c-d9d067795d75"
+            let elementId = "urn:pearson:work:e1b59ae0-b04a-4b6e-a1a4-33e21077u98",
+                contentUrn = "urn:pearson:entity:44d43f1b-3bdf-4386-a06c-bfa779f28hh5",
+                type = "stanza"
+            moxios.wait(() => {
+                const request = moxios.requests.mostRecent();
+                request.respondWith({
+                    status: 200,
+                    response: 200
+                });
+            });
+            const expectedActions = [{
+                type: AUTHORING_ELEMENT_CREATED,
+                payload: {
+                    slateLevelData: slateLevelData.slateLevelData
+                }
+            }];
+            let parentUrn = {
+                manifestUrn: "urn:pearson:manifest:8a49e877-144a-4750-92d2-81d5188d8e0b",
+                contentUrn: "urn:pearson:entity:2b489c98-5e61-46d8-967c-6354b28e3679",
+                elementType: "manifest"
+            }
+            let poetryData = {
+                type: "poetry",
+                id: "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f28540",
+                contentUrn: "urn:pearson:entity:44d43f1b-3bdf-4386-a06c-bfa779f27y75",
+                parentUrn: "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f28540"
+
+            }
+            return store.dispatch(actions.deleteElement(elementId, type, parentUrn, null , contentUrn, "1",poetryData)).then(() => {
+                expect(store.getActions()).toEqual(expectedActions);
+            });
+        })
     })
 
     describe('testing------- UPDATE ELEMENT------action', () => {
@@ -1031,7 +1068,7 @@ describe('Tests ElementContainer Actions', () => {
             });
         })
 
-        it('testing------- Update Element LO versioning------action', () => {
+        xit('testing------- Update Element LO versioning------action', () => {
             let store = mockStore(() => initialState);
             let updatedData = {
                 "elementdata": { "loref": "urn:pearson:educationalgoal:0805387d-724a-4b3b-8998-b1562b8c9012" },
@@ -1174,6 +1211,71 @@ describe('Tests ElementContainer Actions', () => {
                 delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].projectURN;
                 delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].slateEntity;
                 delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].tcm;
+            });
+        })
+
+        it('testing------- Update Stanza------action', () => {
+            let store = mockStore(() => initialState);
+            const updatedData = {
+                "type": "stanza",
+                "schema": "http://schemas.pearson.com/wip-authoring/poetry/1",
+                "id": "urn:pearson:work:e1b59ae0-b04a-4b6e-a1a4-33e21077u97",
+                "contentUrn": "urn:pearson:entity:44d43f1b-3bdf-4386-a06c-bfa779f28hh5",
+                "versionUrn": "urn:pearson:work:e1b59ae0-b04a-4b6e-a1a4-33e21077u97",
+                "slateUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
+                "poetrylines": [
+                    {
+                        "type": "line",
+                        "id": "urn:pearson:entity:44d43f1b-3bdf-4386-a06c-bfa779f28hh5:f2f5300e-34fa-4d87-82c1-29e33bf5fu67",
+                        "authoredtext": {
+                            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                            "text": ""
+                        }
+                    },
+                ],
+                "html": {
+                    "title": "<p></p>",
+                    "subtitle": "<p></p>",
+                    "captions": "<p></p>",
+                    "credits": "<p></p>",
+                    "text": "<span><br /></span>"
+                }
+            }
+
+
+            moxios.wait(() => {
+                const request = moxios.requests.mostRecent();
+                request.respondWith({
+                    status: 200,
+                    response: updatedData
+                });
+            });
+            delete slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].tcm;
+            slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].slateUrn = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
+            const expectedActions = [{
+                type: AUTHORING_ELEMENT_UPDATE,
+                payload: slateLevelData
+            }];
+
+            let parentUrn = {
+                manifestUrn: "urn:pearson:manifest:8a49e877-144a-4750-92d2-81d5188d8e0b",
+                contentUrn: "urn:pearson:entity:2b489c98-5e61-46d8-967c-6354b28e3679",
+                elementType: "manifest"
+            }
+
+            let poetryData = {
+                type: 'poetry',
+                id: "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f28540",
+                contentUrn: "urn:pearson:entity:44d43f1b-3bdf-4386-a06c-bfa779f27y75",
+                parentUrn: "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f28540"
+
+            }
+
+            return store.dispatch(actions.updateElement(updatedData, "6-2-0", parentUrn, {}, null, null,poetryData )).then(() => {
+                delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].projectURN;
+                delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].slateEntity;
+                delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].tcm;
+                expect(store.getActions().type).toEqual(expectedActions.type);
             });
         })
     })
