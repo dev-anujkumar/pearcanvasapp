@@ -718,8 +718,9 @@ export class TinyMceEditor extends Component {
                         currentElement = checkSpan[0];
                     }
                 }
+                let imgTag = currentElement && currentElement.getElementsByTagName("img")
                 if (currentElement && currentElement.tagName == 'SPAN'
-                    && (currentElement == '<br>' || currentElement.textContent.trim() == '')) {
+                    && (currentElement == '<br>' || currentElement.textContent.trim() == '')  && !(imgTag && imgTag.length)) {
                     currentElement.remove();
                     let activeEditor = document.getElementById(tinymce.activeEditor.id);
                     activeEditor.blur();
@@ -1773,9 +1774,10 @@ export class TinyMceEditor extends Component {
         }
         if (this.props.elementId && !this.props.elementId.includes("manifest")) {
             let poetryStanza = tinymce.$(`div[data-id="${this.props.elementId}"] .poetryLine`);
-            if (poetryStanza.length > 1) {
+            if (poetryStanza.length > 1) {              
                 poetryStanza.each(function () {
-                    if (this.innerHTML === '' || this.innerHTML === "<br>" || this.textContent.trim() == '') {
+                    let imgTag = this && this.getElementsByTagName("img")
+                    if ((this.innerHTML === '' || this.innerHTML === "<br>" || this.textContent.trim() == '') && !(imgTag && imgTag.length)) {
                         this.remove();
                     }
                 })
