@@ -261,7 +261,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         let storeElement = store[config.slateManifestURN];
         let bodymatter = storeElement.contents.bodymatter;
         let focusedElement = bodymatter;
-        if(newElementData.asideData && showHideObj) {
+        if(newElementData.asideData && newElementData.asideData.hasOwnProperty('type') && showHideObj) {
             switch(indexes.length) {
                 case 4:
                     focusedElement[indexes[0]].elementdata.bodymatter[indexes[1]].interactivedata[showHideObj.showHideType][indexes[3]] = res.data
