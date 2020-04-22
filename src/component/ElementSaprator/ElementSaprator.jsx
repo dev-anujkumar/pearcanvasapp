@@ -57,6 +57,11 @@ export default function ElementSaprator(props) {
             let openDropdown = openDropdowns[i]
             if (openDropdown.classList.contains('show')) {
                 openDropdown.classList.remove('show')
+                // BG-2040 fix
+                let openedSeparator = document.getElementsByClassName("opacityClassOn")
+                if(openedSeparator && openedSeparator.length){
+                    openedSeparator[0].classList.remove('opacityClassOn')
+                }
             }
         }
         setShowClass(!showClass)
