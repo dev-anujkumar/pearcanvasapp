@@ -44,7 +44,7 @@ class ElementAudioVideo extends Component {
         smartLinkAssetType = smartLinkAssetType.toLowerCase();
         if (figureType === "video" || figureType === "audio" || smartLinkAssetType == "video" || smartLinkAssetType == "audio") {
             if ((figureType === "video" || smartLinkAssetType == "video") && (epsURL === "" || epsURL == undefined)) {
-                epsURL = imageData['posterImageUrl'] ? imageData['posterImageUrl'] : "https://d12m40tknrppbi.cloudfront.net/cite/images/FPO-audio_video.png";
+                epsURL = imageData['posterImageUrl'] ? imageData['posterImageUrl'] : "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png";
             }
             let smartLinkURl = imageData['smartLinkURl'] ? imageData['smartLinkURl'] : "";
             if (imageData['clipinfo']) {
