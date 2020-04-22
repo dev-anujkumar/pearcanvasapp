@@ -376,6 +376,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
             } else if(parentElement && parentElement.type == 'poetry'){
 
                 if(indexes.length === 2 || indexes.length === 3 || indexes === 2 || indexes === 3){
+                    parentElement.index = elementIndex;
                     dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:parentElement.id, parentElement.contentUrn, 0, parentElement));
                 }
             } 
