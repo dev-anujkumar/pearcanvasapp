@@ -1543,7 +1543,7 @@ export class TinyMceEditor extends Component {
             }
         }
         this.props.handleEditorFocus("", showHideObj, e);
-        let isSameTarget = false;
+        let isSameTarget = false,isSameByElementId = false;
         let event = Object.assign({}, e);
         let currentTarget = event.currentTarget;
         let isSameTargetBasedOnDataId = true;
@@ -1560,12 +1560,16 @@ export class TinyMceEditor extends Component {
             this.setToolbarByElementType();
             isSameTarget = true;
         }
+        let currentActiveNode = document.querySelector('div .active')
+        if(currentActiveNode && currentActiveNode.getAttribute('data-id') === this.props.element.id){
+            isSameByElementId = true;
+        }
         /**
          * case - if tinymce already has an active editor then...
          * first remove current tinymce instance then prepare element currently being focused to get tinymce intialized
          */
         let activeEditorId = '';
-        if ((!isSameTargetBasedOnDataId || !isSameTarget) && tinymce.activeEditor && document.getElementById(tinyMCE.activeEditor.id) && !(tinymce.activeEditor.id.includes('glossary') || tinymce.activeEditor.id.includes('footnote'))) {
+        if ((!isSameTargetBasedOnDataId || !isSameTarget || !isSameByElementId) && tinymce.activeEditor && document.getElementById(tinyMCE.activeEditor.id) && !(tinymce.activeEditor.id.includes('glossary') || tinymce.activeEditor.id.includes('footnote'))) {
             activeEditorId = tinymce.activeEditor.id;
             /**
              * Before removing the current tinymce instance, update wiris image attribute data-mathml to data-temp-mathml and class Wirisformula to temp_Wirisformula
@@ -1575,8 +1579,12 @@ export class TinyMceEditor extends Component {
             let tempNewContainerHtml = tinyMCE.$("#" + currentTarget.id).html()
             let previousTargetId = '';
             let currentTargetId = '';
-            if (!isSameTargetBasedOnDataId) {
-                previousTargetId = tinymce.activeEditor.targetElm.closest('.element-container').getAttribute('data-id');
+            if (!isSameTargetBasedOnDataId || !isSameByElementId) {
+                if (!isSameTargetBasedOnDataId) {
+                    previousTargetId = tinymce.activeEditor.targetElm.closest('.element-container').getAttribute('data-id');
+                } else {
+                    previousTargetId = currentActiveNode.getAttribute('data-id');
+                }
                 currentTargetId = e.currentTarget.closest('.element-container').getAttribute('data-id');
                 tempContainerHtml = tinyMCE.$("[data-id='" + previousTargetId + "'] .cypress-editable").html()
                 tempNewContainerHtml = tinyMCE.$("[data-id='" + currentTargetId + "'] .cypress-editable").html()
@@ -1590,7 +1598,7 @@ export class TinyMceEditor extends Component {
             */
             let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");
             if (!isBlockQuote) {
-                if (!isSameTargetBasedOnDataId) {
+                if (!isSameTargetBasedOnDataId || !isSameByElementId) {
                     if (document.querySelectorAll('.element-container[data-id="' + previousTargetId + '"] .cypress-editable').length)
                         document.querySelectorAll('.element-container[data-id="' + previousTargetId + '"] .cypress-editable')[0].innerHTML = tempContainerHtml;
                     document.querySelectorAll('.element-container[data-id="' + currentTargetId + '"] .cypress-editable')[0].innerHTML = tempNewContainerHtml;
@@ -1607,7 +1615,7 @@ export class TinyMceEditor extends Component {
          * first remove all existing non-glossary&footnote tinymce instances keeping contentEditable to true
          * then mark current target id as tinymce selector and instantiate tinymce on this target again
          */
-        if (!isSameTarget || !isSameTargetBasedOnDataId) {
+        if (!isSameTarget || !isSameTargetBasedOnDataId || !isSameByElementId) {
             /*
                 Remove all instaces of wiris on changing element on basis of there data-ids not on id 
                 because on inserting new element id changes
@@ -1770,6 +1778,11 @@ export class TinyMceEditor extends Component {
                         this.remove();
                     }
                 })
+            }
+            else if(poetryStanza.length === 1 && poetryStanza[0].innerHTML==="&nbsp;"){
+                poetryStanza[0].innerHTML = "<br>"
+                e.stopPropagation();
+                return;
             }
             let mainParent = null;
             let allLines = tinymce.$(`div[data-id="${this.props.elementId}"] .poetryLine`);
