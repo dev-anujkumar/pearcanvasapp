@@ -37,14 +37,14 @@ class ElementAudioVideo extends Component {
         let imageData = data;
         let clipInfo;
         let epsURL = imageData['EpsUrl'] ? imageData['EpsUrl'] : "";
-        let figureType = imageData['assetType'] ? imageData['assetType'] : "";
+        let figureType = imageData['assetType'] ? imageData['assetType'].toLowerCase() : "";
         let width = imageData['width'] ? imageData['width'] : "";
         let height = imageData['height'] ? imageData['height'] : "";
         let smartLinkAssetType = (typeof (data.desc) == "string") ? data.desc.includes('smartLinkType') ? JSON.parse(data.desc).smartLinkType : "" : "";
-
-        if (figureType === "video" || figureType === "audio" || smartLinkAssetType == "Video" || smartLinkAssetType == "Audio") {
-            if (figureType === "video" || smartLinkAssetType == "Video" && epsURL === "") {
-                epsURL = "https://d12m40tknrppbi.cloudfront.net/cite/images/FPO-audio_video.png";
+        smartLinkAssetType = smartLinkAssetType.toLowerCase();
+        if (figureType === "video" || figureType === "audio" || smartLinkAssetType == "video" || smartLinkAssetType == "audio") {
+            if ((figureType === "video" || smartLinkAssetType == "video") && (epsURL === "" || epsURL == undefined)) {
+                epsURL = imageData['posterImageUrl'] ? imageData['posterImageUrl'] : "https://d12m40tknrppbi.cloudfront.net/cite/images/FPO-audio_video.png";
             }
             let smartLinkURl = imageData['smartLinkURl'] ? imageData['smartLinkURl'] : "";
             if (imageData['clipinfo']) {
@@ -117,8 +117,6 @@ class ElementAudioVideo extends Component {
                     uniqID = uniqueID;
                 }
             }
-
-            smartLinkAssetType = smartLinkAssetType.toLowerCase();
             switch(figureType || smartLinkAssetType){
                 case "video":
                     figureData = {
