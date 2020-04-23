@@ -1575,7 +1575,8 @@ export class TinyMceEditor extends Component {
             isSameTarget = true;
         }
         let currentActiveNode = document.querySelector('div .active')
-        if(currentActiveNode && currentActiveNode.getAttribute('data-id') === this.props.element.id){
+        let currentElementId = this.props.currentElement && this.props.currentElement.type === "element-citation" ? this.props.currentElement.id : this.props.element.id
+        if(currentActiveNode && currentActiveNode.getAttribute('data-id') === currentElementId){
             isSameByElementId = true;
         }
         /**

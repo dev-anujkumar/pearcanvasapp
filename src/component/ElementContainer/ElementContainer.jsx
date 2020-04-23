@@ -1005,7 +1005,6 @@ class ElementContainer extends Component {
                         setActiveElement : this.props.setActiveElement,
                         handleFocus: this.handleFocus,
                         handleBlur: this.handleBlur,
-                        onClick: this.handleFocus,
                     }}><CitationGroup />
                     </CitationGroupContext.Provider >;
                     labelText = 'CG'
@@ -1021,7 +1020,6 @@ class ElementContainer extends Component {
                         slateLockInfo = {slateLockInfo}
                         updatePageNumber = {updatePageNumber}
                         currentElement = {element}
-                        onClick = {this.handleFocus}
                         handleFocus = {this.handleFocus}
                         handleBlur = {this.handleBlur}
                     />
