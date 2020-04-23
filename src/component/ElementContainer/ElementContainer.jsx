@@ -22,7 +22,7 @@ import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } f
 import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
 import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris } from '../../constants/utility.js';
-import { ShowLoader, HideLoader } from '../../constants/IFrameMessageTypes.js';
+import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
 import AssessmentSlateCanvas from './../AssessmentSlateCanvas';
@@ -100,10 +100,12 @@ class ElementContainer extends Component {
             })
         }
         else {
-            this.setState({
-                borderToggle: 'active',
-                btnClassName: 'activeTagBgColor'
-            })
+            if(newProps.element.type !== "element-citation"){
+                this.setState({
+                    borderToggle: 'active',
+                    btnClassName: 'activeTagBgColor'
+                })
+            }
         }
     }
 
@@ -585,10 +587,11 @@ class ElementContainer extends Component {
                     let currentListNode = document.getElementById(parentIndex)
                     tinyMCE.$(currentListNode).find('ol').removeAttr('data-mce-style');
                     currentListNode.innerHTML = currentListNode.innerHTML.replace(/counter-increment:section/g, "counter-increment: section")
-                    let nodehtml = currentListNode.innerHTML;
                     for (let i = 0; i < tinyMCE.$(currentListNode).find('li').length; i++) {
+                        tinyMCE.$(currentListNode).find('li')[i].innerHTML= tinyMCE.$(currentListNode).find('li')[i].innerHTML.replace( /[\r\n]+/gm, "" ); 
                         tinyMCE.$(currentListNode).find('li')[i].innerHTML = tinyMCE.$(currentListNode).find('li')[i].innerHTML.replace(/^\s+|\s+$/g, '&nbsp;');
-                    }                    
+                    } 
+                    let nodehtml = currentListNode.innerHTML;
                     if (nodehtml && previousElementData.html && (this.replaceUnwantedtags(nodehtml) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate && !config.savingInProgress) && !assetPopoverPopupIsVisible) {
                         dataToSend = createUpdatedData(previousElementData.type, previousElementData, currentListNode, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, showHideType,undefined)
                         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })

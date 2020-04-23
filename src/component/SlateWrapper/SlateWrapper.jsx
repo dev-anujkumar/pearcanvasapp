@@ -1116,7 +1116,7 @@ class SlateWrapper extends Component {
         setTimeout(() => {
             let elementDom = document.querySelector(`[data-id="${config.cachedActiveElement.element.id}"]`)
             if(elementDom){
-                elementDom.querySelector(`#cypress-${config.cachedActiveElement.index}-0`).focus()
+                elementDom.querySelector(`#cypress-${config.cachedActiveElement.index}-0`).click()
             }
         },0);
     }

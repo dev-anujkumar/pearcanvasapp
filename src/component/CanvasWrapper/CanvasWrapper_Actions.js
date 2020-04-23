@@ -18,7 +18,6 @@ import { sendDataToIframe, requestConfigURI } from '../../constants/utility.js';
 import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 import elementDataBank from './elementDataBank'
 import figureData from '../ElementFigure/figureTypes.js';
-import {poetryElem} from '../../../fixtures/ElementPoetryTestData'
 import { fetchAllSlatesData, setCurrentSlateAncestorData } from '../../js/getAllSlatesData.js';
 const findElementType = (element, index) => {
     let elementType = {};

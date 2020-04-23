@@ -5,7 +5,7 @@ import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import {
     fetchSlateData
 } from '../CanvasWrapper/CanvasWrapper_Actions';
-import { ADD_COMMENT, AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP, OPEN_GLOSSARY_FOOTNOTE,DELETE_SHOW_HIDE_ELEMENT,CURRENT_SHOW_HIDE_ELEMENT} from "./../../constants/Action_Constants";
+import {  AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP, OPEN_GLOSSARY_FOOTNOTE,DELETE_SHOW_HIDE_ELEMENT} from "./../../constants/Action_Constants";
 import { customEvent } from '../../js/utils';
 
 export const addComment = (commentString, elementId, asideData, parentUrn) => (dispatch, getState) => {
@@ -40,39 +40,8 @@ export const addComment = (commentString, elementId, asideData, parentUrn) => (d
     )
         .then(response => {
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
-            const parentData = getState().appStore.slateLevelData;
-            const newslateData = JSON.parse(JSON.stringify(parentData));
-            let _slateObject = Object.values(newslateData)[0];
-            let { contents: _slateContent } = _slateObject;
-            let { bodymatter: _slateBodyMatter } = _slateContent;
             Comment.commentUrn = response.data.commentUrn
-            //const elementBM = _slateBodyMatter.map(element => {
-            _slateBodyMatter.map(element => {
-                if (element.id === elementId) {
-                    element['comments'] = true
-                } else if (asideData && asideData.type == 'element-aside') {
-                    if (element.id == asideData.id) {
-                        element.elementdata.bodymatter.map((nestedEle) => {
-                            /*This condition add comment in element in aside */
-                            if (nestedEle.id == elementId) {
-                                nestedEle['comments'] = true;
-                            } else if (nestedEle.type == "manifest" && nestedEle.id == parentUrn.manifestUrn) {
-                                /*This condition add comment in element in section of aside */
-                                nestedEle.contents.bodymatter.map((ele) => {
-                                    if (ele.id == elementId) {
-                                        ele['comments'] = true;
-                                    }
-                                })
-                            }
-                        })
-                    }
-                }
-            }
-            );
-            dispatch({
-                type: ADD_COMMENT,
-                payload: newslateData
-            });
+           
             dispatch({
                 type: ADD_NEW_COMMENT,
                 payload: Comment
@@ -220,14 +189,14 @@ function prepareDataForTcmUpdate (updatedData,id, elementIndex, asideData, getSt
             updatedData.parentType = "citations";
         }
     } else if (indexes.length === 2) {
-        if (poetryData && poetryData.type != "poetry" && slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].id === id) {
+        if (((!poetryData) || (poetryData.type != "poetry")) && slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].id === id) {
         //if (slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].id === id) {
             updatedData.isHead = true;
         }
     } else if (indexes.length === 3) {
-        if (poetryData && poetryData.type != "poetry" && slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].id === id) {
+        if (((!poetryData) || (poetryData.type != "poetry")) && slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].id === id) {
             updatedData.isHead = false;
-        } else if (poetryData && poetryData.type === "poetry" && slateBodyMatter[indexes[0]].contents.bodymatter[indexes[2]].id === id) {
+        } else if ((poetryData && poetryData.type === "poetry") && slateBodyMatter[indexes[0]].contents.bodymatter[indexes[2]].id === id) {
             updatedData.isHead = false;
         } else if(type==="stanza" && slateBodyMatter[indexes[0]].contents.bodymatter[indexes[2]].id === id){
             updatedData.isHead = false;
@@ -376,6 +345,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
             } else if(parentElement && parentElement.type == 'poetry'){
 
                 if(indexes.length === 2 || indexes.length === 3 || indexes === 2 || indexes === 3){
+                    parentElement.index = elementIndex;
                     dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:parentElement.id, parentElement.contentUrn, 0, parentElement));
                 }
             } 
