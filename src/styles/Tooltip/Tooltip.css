@@ -133,7 +133,7 @@
 }
 
 .tooltip .poetry-elem {
-    opacity: 40%;
+    opacity: 40% !important;
     border: solid 1px;
 }
 
