@@ -708,9 +708,12 @@ export class TinyMceEditor extends Component {
                     }
                 }
                 let imgTag = currentElement && currentElement.getElementsByTagName("img")
-                if (currentElement && currentElement.tagName == 'SPAN'
-                    && (currentElement == '<br>' || currentElement.textContent.trim() == '')  && !(imgTag && imgTag.length)) {
-                    currentElement.remove();
+                if (currentElement && currentElement.tagName == 'SPAN' &&
+                    (currentElement == '<br>' || currentElement.textContent.trim() == '') && !(imgTag && imgTag.length)) {
+                    let poetryStanza = tinymce.$(`div[data-id="${this.props.elementId}"] .poetryLine`);
+                    if (poetryStanza.length > 1) {
+                        currentElement.remove();
+                    }
                     let activeEditor = document.getElementById(tinymce.activeEditor.id);
                     activeEditor.blur();
                     let nextSaparator = (activeEditor.closest('.editor')).nextSibling;
