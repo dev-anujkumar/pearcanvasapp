@@ -2812,7 +2812,7 @@ describe('Testing -Editor Key events', () => {
         let event={
             clientX:jest.fn(),
             clientY:jest.fn(),
-            currentTarget:{id:""},
+            currentTarget:{id:"123", focus: jest.fn()},
             target: {
                 parentElement: {
                     nodeName: 'SUP'
