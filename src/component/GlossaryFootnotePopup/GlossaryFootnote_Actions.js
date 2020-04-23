@@ -192,6 +192,9 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         figureDataObj = {
             "text": workContainer
         }
+        if(elementType == 'stanza'){
+            figureDataObj.text = `<p>${figureDataObj.text}</p>`
+        }
     }
 
     switch (semanticType) {
