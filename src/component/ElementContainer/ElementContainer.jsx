@@ -100,10 +100,12 @@ class ElementContainer extends Component {
             })
         }
         else {
-            this.setState({
-                borderToggle: 'active',
-                btnClassName: 'activeTagBgColor'
-            })
+            if(newProps.element.type !== "element-citation"){
+                this.setState({
+                    borderToggle: 'active',
+                    btnClassName: 'activeTagBgColor'
+                })
+            }
         }
     }
 
