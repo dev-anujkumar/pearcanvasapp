@@ -65,7 +65,7 @@ export const c2MediaModule = {
         else if (data['assetType'] == 'video' || data['assetType'] == 'audio') {
             smartLinkURl = data['EpsUrl']
             data['smartLinkURl'] = smartLinkURl;
-            data['EpsUrl'] = 'https://d12m40tknrppbi.cloudfront.net/cite/images/FPO-audio_video.png'
+            data['EpsUrl'] = 'https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png'
             data['clipinfo'] = {
                 "id": "",
                 "start": "",
