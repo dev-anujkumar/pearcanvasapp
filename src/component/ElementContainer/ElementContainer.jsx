@@ -412,7 +412,7 @@ class ElementContainer extends Component {
         creditsHTML = this.removeClassesFromHtml(creditsHTML)
         subtitleHTML = this.removeClassesFromHtml(subtitleHTML)
         titleHTML = this.removeClassesFromHtml(titleHTML)
-        let defaultImageUrl =  "https://d12m40tknrppbi.cloudfront.net/cite/images/FPO-audio_video.png";
+        let defaultImageUrl =  "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png";
         return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
             subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
             captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
@@ -1005,7 +1005,6 @@ class ElementContainer extends Component {
                         setActiveElement : this.props.setActiveElement,
                         handleFocus: this.handleFocus,
                         handleBlur: this.handleBlur,
-                        onClick: this.handleFocus,
                     }}><CitationGroup />
                     </CitationGroupContext.Provider >;
                     labelText = 'CG'
@@ -1021,7 +1020,6 @@ class ElementContainer extends Component {
                         slateLockInfo = {slateLockInfo}
                         updatePageNumber = {updatePageNumber}
                         currentElement = {element}
-                        onClick = {this.handleFocus}
                         handleFocus = {this.handleFocus}
                         handleBlur = {this.handleBlur}
                     />

@@ -832,14 +832,11 @@ export class TinyMceEditor extends Component {
             let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
             /** [BG-2134] | This block is to clear selection when CT element is blank before paste process*/
             if ((e.keyCode == 86 || e.key == 'v') && e.ctrlKey && this.props.currentElement && this.props.currentElement.type == 'element-citation') {
-                if (window.getSelection().toString().trim() == '') {             //Chrome
-                    window.getSelection().empty()
+                if (window.getSelection().toString().trim() == '') {        // Other Browsers
+                    window.getSelection().removeAllRanges()
                 }
-                else if (window.getSelection().removeAllRanges) {                // Firefox
-                    window.getSelection().removeAllRanges();
-                }
-                else if (document.selection && document.selection.empty) {       // IE
-                    document.selection.empty();
+                else if (document.selection && document.selection.empty) {   
+                    document.selection.empty();                             // IE
                 }
             }
             if (activeElement) {
@@ -899,9 +896,12 @@ export class TinyMceEditor extends Component {
                     }
                 }
                 let imgTag = currentElement && currentElement.getElementsByTagName("img")
-                if (currentElement && currentElement.tagName == 'SPAN'
-                    && (currentElement == '<br>' || currentElement.textContent.trim() == '') && !(imgTag && imgTag.length)) {
-                    currentElement.remove();
+                if (currentElement && currentElement.tagName == 'SPAN' &&
+                    (currentElement == '<br>' || currentElement.textContent.trim() == '') && !(imgTag && imgTag.length)) {
+                    let poetryStanza = tinymce.$(`div[data-id="${this.props.elementId}"] .poetryLine`);
+                    if (poetryStanza && poetryStanza.length > 1) {
+                        currentElement.remove();
+                    }
                     let activeEditor = document.getElementById(tinymce.activeEditor.id);
                     activeEditor.blur();
                     let nextSaparator = (activeEditor.closest('.editor')).nextSibling;
@@ -1803,7 +1803,8 @@ export class TinyMceEditor extends Component {
             isSameTarget = true;
         }
         let currentActiveNode = document.querySelector('div .active')
-        if (currentActiveNode && currentActiveNode.getAttribute('data-id') === this.props.element.id) {
+        let currentElementId = this.props.currentElement && this.props.currentElement.type === "element-citation" ? this.props.currentElement.id : this.props.element.id
+        if (currentActiveNode && currentActiveNode.getAttribute('data-id') === currentElementId) {
             isSameByElementId = true;
         }
         /**

@@ -174,6 +174,12 @@ const findElementType = (element, index) => {
                     secondaryOption: elementDataBank[element.type]["secondaryOption"]
                 }
                 break;
+            case "element-assessment":
+                if (element.elementdata && element.elementdata.assessmentformat) {
+                    element.elementdata.assessmentformat = element.elementdata.assessmentformat.toLowerCase()  /**PCAT-7526 fixes */
+                }
+                elementType = { ...elementDataBank["element-authoredtext"] }
+                break;
             default:
                 elementType = { ...elementDataBank["element-authoredtext"] }
         }
@@ -182,6 +188,7 @@ const findElementType = (element, index) => {
             elementType: ''
         }
     }
+    
     elementType['elementId'] = element.id;
     elementType['index'] = index;
     elementType['elementWipType'] = element.type;
@@ -221,7 +228,8 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
 
 		if(slateData.data && slateData.data[newVersionManifestId] && slateData.data[newVersionManifestId].type === "popup"){
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
-            config.isPopupSlate = true
+            config.isPopupSlate = true;
+            config.savingInProgress = false;
 			if (config.slateManifestURN === Object.values(slateData.data)[0].id) {
 				let messageTcmStatus = {
 					TcmStatus: {

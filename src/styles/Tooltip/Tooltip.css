@@ -133,12 +133,12 @@
 }
 
 .tooltip .poetry-elem {
-    opacity: 40%;
+    opacity: 0.4 !important;
     border: solid 1px;
 }
 
 .tooltip .poetry-elem:hover {
-    opacity: 100% !important;
+    opacity: 1 !important;
     fill: black !important;
     border: solid 1px #434343;
 }
