@@ -32,6 +32,8 @@ export class TinyMceEditor extends Component {
         super(props);
         context = this;
         this.placeHolderClass = ''
+        this.indentRun = false;
+        this.outdentRun = false;
         this.chemistryMlMenuButton = null;
         this.mathMlMenuButton = null;
         this.assetPopoverButtonState = null;
@@ -603,7 +605,6 @@ export class TinyMceEditor extends Component {
                                         let comment = document.createNodeIterator(elementSearch.parentNode, NodeFilter.SHOW_COMMENT, null, true).nextNode();
                                         this.splitOnTag(elementSearch.parentNode, comment);
                                         elementSearch.nextSibling.remove();
-                                        console.log("elementSearch.nextSibling", elementSearch.nextSibling.innerHTML);
                                         let innerSpans = elementSearch.getElementsByTagName('span');
                                         for (let index = 0; index < innerSpans.length; index++) {
                                             let innerHtml = innerSpans[index].innerHTML;
@@ -835,7 +836,7 @@ export class TinyMceEditor extends Component {
                 if (window.getSelection().toString().trim() == '') {        // Other Browsers
                     window.getSelection().removeAllRanges()
                 }
-                else if (document.selection && document.selection.empty) {   
+                else if (document.selection && document.selection.empty) {
                     document.selection.empty();                             // IE
                 }
             }
@@ -946,32 +947,39 @@ export class TinyMceEditor extends Component {
                         if (editor.selection.getNode().tagName.toLowerCase() !== 'span' || editor.selection.getNode().className.toLowerCase() !== 'poetryLine') {
                             currentElement = editor.selection.getNode().closest('.poetryLine');
                         }
-                        console.log('currentElement', currentElement);
                         if (currentElement) {
                             let className = null;
                             className = currentElement.className;
                             if (e.shiftKey) {
-                                if (className && className.trim() === 'poetryLine poetryLineLevel1') {
-                                    currentElement.className = 'poetryLine';
+                                if (!this.outdentRun) {
+                                    if (className && className.trim() === 'poetryLine poetryLineLevel1') {
+                                        currentElement.className = 'poetryLine';
+                                    }
+                                    else if (className && className.trim() === 'poetryLine poetryLineLevel2') {
+                                        currentElement.className = 'poetryLine poetryLineLevel1';
+                                    }
+                                    else if (className && className.trim() === 'poetryLine poetryLineLevel3') {
+                                        currentElement.className = 'poetryLine poetryLineLevel2';
+                                    }
+                                    e.preventDefault();
+                                } else {
+                                    this.outdentRun = false;
                                 }
-                                else if (className && className.trim() === 'poetryLine poetryLineLevel2') {
-                                    currentElement.className = 'poetryLine poetryLineLevel1';
-                                }
-                                else if (className && className.trim() === 'poetryLine poetryLineLevel3') {
-                                    currentElement.className = 'poetryLine poetryLineLevel2';
-                                }
-                                e.preventDefault();
                             } else {
-                                if (className && className.trim() === 'poetryLine') {
-                                    currentElement.className = 'poetryLine poetryLineLevel1';
+                                if (!this.indentRun) {
+                                    if (className && className.trim() === 'poetryLine') {
+                                        currentElement.className = 'poetryLine poetryLineLevel1';
+                                    }
+                                    else if (className && className.trim() === 'poetryLine poetryLineLevel1') {
+                                        currentElement.className = 'poetryLine poetryLineLevel2';
+                                    }
+                                    else if (className && className.trim() === 'poetryLine poetryLineLevel2') {
+                                        currentElement.className = 'poetryLine poetryLineLevel3';
+                                    }
+                                    e.preventDefault();
+                                } else {
+                                    this.indentRun = false;
                                 }
-                                else if (className && className.trim() === 'poetryLine poetryLineLevel1') {
-                                    currentElement.className = 'poetryLine poetryLineLevel2';
-                                }
-                                else if (className && className.trim() === 'poetryLine poetryLineLevel2') {
-                                    currentElement.className = 'poetryLine poetryLineLevel3';
-                                }
-                                e.preventDefault();
                             }
                         }
                     }
@@ -1237,12 +1245,15 @@ export class TinyMceEditor extends Component {
         }
         else if (className && className.trim() === 'poetryLine') {
             selectedNode.className = 'poetryLine poetryLineLevel1';
+            this.indentRun = true;
         }
         else if (className && className.trim() === 'poetryLine poetryLineLevel1') {
             selectedNode.className = 'poetryLine poetryLineLevel2';
+            this.indentRun = true;
         }
         else if (className && className.trim() === 'poetryLine poetryLineLevel2') {
             selectedNode.className = 'poetryLine poetryLineLevel3';
+            this.indentRun = true;
         }
         if (!className) {
             this.setContentAndPlaceCaret(editor, content)
@@ -1271,12 +1282,15 @@ export class TinyMceEditor extends Component {
         }
         else if (className && className.trim() === 'poetryLine poetryLineLevel1') {
             selectedNode.className = 'poetryLine';
+            this.outdentRun = true;
         }
         else if (className && className.trim() === 'poetryLine poetryLineLevel2') {
             selectedNode.className = 'poetryLine poetryLineLevel1';
+            this.outdentRun = true;
         }
         else if (className && className.trim() === 'poetryLine poetryLineLevel3') {
             selectedNode.className = 'poetryLine poetryLineLevel2';
+            this.outdentRun = true;
         }
         if (!className) {
             this.setContentAndPlaceCaret(editor, content)
