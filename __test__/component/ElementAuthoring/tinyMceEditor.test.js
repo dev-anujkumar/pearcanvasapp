@@ -2721,9 +2721,8 @@ describe('Testing -Editor Key events', () => {
                     moveToBookmark: jest.fn(),
                     getBookmark: jest.fn()
                 },
-                getStart: () => {
-                    
-                }
+                getStart: () => { },
+                getContent: () => { }
             },
             insertContent:()=>{
                 return '<dfn data-uri= ${res.data.id} class="Pearson-Component GlossaryTerm">${selectedText}</dfn>'
