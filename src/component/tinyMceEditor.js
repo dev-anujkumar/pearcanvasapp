@@ -800,14 +800,11 @@ export class TinyMceEditor extends Component {
             let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
             /** [BG-2134] | This block is to clear selection when CT element is blank before paste process*/
             if ((e.keyCode == 86 || e.key == 'v') && e.ctrlKey && this.props.currentElement && this.props.currentElement.type == 'element-citation') {
-                if (window.getSelection().toString().trim() == '') {             //Chrome
-                    window.getSelection().empty()
+                if (window.getSelection().toString().trim() == '') {        // Other Browsers
+                    window.getSelection().removeAllRanges()
                 }
-                else if (window.getSelection().removeAllRanges) {                // Firefox
-                    window.getSelection().removeAllRanges();
-                }
-                else if (document.selection && document.selection.empty) {       // IE
-                    document.selection.empty();
+                else if (document.selection && document.selection.empty) {   
+                    document.selection.empty();                             // IE
                 }
             }
             if (activeElement) {
