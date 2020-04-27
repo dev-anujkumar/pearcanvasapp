@@ -11,27 +11,11 @@ import ElmTableComponent from './Components/ElmTableComponent';
 const RootElmSingleAssessment = (props) => {
 
     const [apiData, setElmResourceApiData] = useState({});
-    const [previousTableLength, setPreviousTableLength] = useState(0);
-    const [hidePopup, setHidePopup] = useState(false);
 
     useEffect(() => {
-        setElmResourceApiData({})
-        setHidePopup(true)
+        setElmResourceApiData(apiData)
         props.elmResource(props.activeAssessmentType);
     },[])
-
-    /***
-     * @description - This function is to navigate back to parent hierarchy
-     * @param- val - number of values in table
-    */
-    const navigateBack = (val) => {
-        setPreviousTableLength(val)
-    }
-
-    /*** @description - This function is to close ELM-PUF PopUp*/
-    const hidePufPopup = () => {
-        setHidePopup(true)
-    }
 
     /*** @description - This function is to pass props to elm-Header component*/
     const elmHeaderProps = {
@@ -46,8 +30,6 @@ const RootElmSingleAssessment = (props) => {
                 {props.elmReducer.errFlag == null ?
                     <div className="elm-loader"></div> :
                     <ElmTableComponent
-                        navigateBack={navigateBack}
-                        hidePufPopup={hidePufPopup}
                         elmReducer={props.elmReducer}
                         closeElmWindow={props.closeElmWindow}
                         addPufFunction={props.addPufFunction}
