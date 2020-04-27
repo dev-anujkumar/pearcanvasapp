@@ -109,3 +109,6 @@ export const DELETE_SHOW_HIDE_ELEMENT = "DELETE_SHOW_HIDE_ELEMENT"
 
 /*--------------- Slate Title -------------------*/
 export const SLATE_TITLE = 'Title'
+/*--------------- TCM Snapshot -------------------*/
+export const GET_TCM_RESOURCES = 'GET_TCM_RESOURCES'
+export const GET_TCM_STATUS_OF_PROJECT = 'GET_TCM_STATUS_OF_PROJECT'
