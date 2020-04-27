@@ -473,12 +473,10 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
         case elementTypeConstant.ELEMENT_LIST:
         case elementTypeConstant.POETRY_STANZA:
             tinyMCE.$(node).find('.blockquote-hidden').remove();
-            let { innerHTML, innerText } = node;
+            let innerHTML, innerText ;
             let revealTextData = validateRevealAnswerData(showHideType, node, type)
-            /**  innerHTML = revealTextData.innerHTML
-             innerText = revealTextData.innerText */
-            innerHTML = revealTextData && revealTextData.innerHTML ? revealTextData.innerHTML : innerHTML
-            innerText = revealTextData && revealTextData.innerText ? revealTextData.innerText : innerText
+            innerHTML = revealTextData.innerHTML
+            innerText = revealTextData.innerText
             dataToReturn = {
                 ...previousElementData,
                 elementdata : {

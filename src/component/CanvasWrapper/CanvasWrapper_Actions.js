@@ -228,7 +228,8 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
 
 		if(slateData.data && slateData.data[newVersionManifestId] && slateData.data[newVersionManifestId].type === "popup"){
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
-            config.isPopupSlate = true
+            config.isPopupSlate = true;
+            config.savingInProgress = false;
 			if (config.slateManifestURN === Object.values(slateData.data)[0].id) {
 				let messageTcmStatus = {
 					TcmStatus: {
