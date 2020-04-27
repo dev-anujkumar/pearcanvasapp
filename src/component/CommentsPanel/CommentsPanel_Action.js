@@ -11,7 +11,6 @@ import {
     GET_PROJECT_USER,
     UPDATE_ASSIGNEE,
     DELETE_COMMENT,
-    AUTHORING_ELEMENT_UPDATE,
     ERROR_POPUP
 } from '../../constants/Action_Constants';
 

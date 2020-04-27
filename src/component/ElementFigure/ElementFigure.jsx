@@ -60,7 +60,7 @@ class ElementFigure extends Component {
             } else {
                 this.setState({ imgSrc: DEFAULT_IMAGE_SOURCE })
             }
-            let figureData = {
+            let setFigureData = {
                 path: epsURL,
                 height: height,
                 width: width,
@@ -69,7 +69,7 @@ class ElementFigure extends Component {
                 alttext: altText,
                 longdescription: longDesc
             }
-            this.props.updateFigureData(figureData, this.props.index, this.props.elementId, () => {
+            this.props.updateFigureData(setFigureData, this.props.index, this.props.elementId, () => {
                 this.props.handleFocus("updateFromC2")
                 this.props.handleBlur()
             })
