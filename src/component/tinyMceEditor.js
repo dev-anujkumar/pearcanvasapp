@@ -24,6 +24,9 @@ import { checkforToolbarClick, customEvent } from '../js/utils';
 import { saveGlossaryAndFootnote } from "./GlossaryFootnotePopup/GlossaryFootnote_Actions"
 import { ShowLoader } from '../constants/IFrameMessageTypes';
 import { sendDataToIframe, hasReviewerRole } from '../constants/utility.js';
+import store from '../appstore/store';
+import { ERROR_POPUP } from '../constants/Action_Constants';
+import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER } from '../component/SlateWrapper/SlateWrapperConstants.js';
 let context = {};
 let clickedX = 0;
 let clickedY = 0;
@@ -1414,6 +1417,12 @@ export class TinyMceEditor extends Component {
         let htmlDoc = parser.parseFromString(sText, 'text/html');
         let spans = htmlDoc.getElementsByClassName("poetryLine");
         if (spans && spans.length) {
+           store.dispatch({
+               type: ERROR_POPUP, 
+               payload:{
+                   show: true , 
+                   message: ERROR_CREATING_GLOSSARY
+                }})
             return false;
         }
         let selectedText = window.getSelection().toString()
@@ -1468,6 +1477,12 @@ export class TinyMceEditor extends Component {
         let htmlDoc = parser.parseFromString(sText, 'text/html');
         let spans = htmlDoc.getElementsByClassName("poetryLine");
         if (spans && spans.length) {
+            store.dispatch({
+                type: ERROR_POPUP, 
+                payload:{
+                    show: true , 
+                    message: ERROR_CREATING_ASSETPOPOVER
+                }})
             return false;
         }
         let selection = window.getSelection().anchorNode.parentNode;
