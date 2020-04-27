@@ -261,6 +261,8 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         let storeElement = store[config.slateManifestURN];
         let bodymatter = storeElement.contents.bodymatter;
         let focusedElement = bodymatter;
+
+        //Separate case for element conversion in showhide in Aside/WE
         if(newElementData.asideData && newElementData.asideData.hasOwnProperty('type') && showHideObj) {
             switch(indexes.length) {
                 case 4:
@@ -347,6 +349,7 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
         let indexes = activeElement.index;
         indexes = indexes.toString().split("-");
         
+        //Separate case for element conversion in showhide
         if(showHideObj) {
             let oldElementData
             switch(indexes.length) {
