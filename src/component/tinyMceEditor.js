@@ -362,7 +362,7 @@ export class TinyMceEditor extends Component {
                             }
                             let spanNode = selection.anchorNode;
                             let outerNode = selection.anchorNode;
-                            if (spanNode.nodeName == "SPAN" || !spanNode.className.toLowerCase() == 'poetryLine') {
+                            if (spanNode.nodeName == "SPAN" || (spanNode.className && !spanNode.className.toLowerCase() == 'poetryLine')) {
                                 //spanNode = selection.anchorNode.closest('.poetryLine');
                                 while (outerNode.parentElement && outerNode.parentElement.tagName.toLowerCase() != 'div') {
                                     outerNode = outerNode.parentElement;
@@ -670,6 +670,8 @@ export class TinyMceEditor extends Component {
                                         }
                                         elementSearch.nextSibling.removeAttribute("data-id");
                                         elementSearch.nextSibling.className = 'poetryLine';
+                                        elementSearch.innerHTML = elementSearch.innerHTML.replace(/\s/g, '&nbsp;');
+                                        elementSearch.nextSibling.innerHTML = elementSearch.nextSibling.innerHTML.replace(/\s/g, '&nbsp;');
                                         editor.selection.setCursorLocation(elementSearch.nextSibling, 0);
                                     }
                                 }
