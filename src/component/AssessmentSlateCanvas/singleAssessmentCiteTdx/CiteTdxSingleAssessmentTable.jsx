@@ -18,9 +18,10 @@ class CiteTdxTable extends Component {
 
     }
     componentDidMount(){
-        if(this.props.currentSingleAssessmentSelected){
+        if(this.props.currentSingleAssessmentSelected && this.props.currentSingleAssessmentSelected.versionUrn){
+            console.log("kanika")
             this.setState({
-                activeRow: this.props.currentSingleAssessmentSelected.versionUrn
+                activeRow: this.props.currentSingleAssessmentSelected.versionUrn ? this.props.currentSingleAssessmentSelected.versionUrn:""
             })
         }
        
