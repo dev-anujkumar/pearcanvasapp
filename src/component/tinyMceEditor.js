@@ -25,7 +25,7 @@ import { saveGlossaryAndFootnote } from "./GlossaryFootnotePopup/GlossaryFootnot
 import { ShowLoader } from '../constants/IFrameMessageTypes';
 import { sendDataToIframe, hasReviewerRole } from '../constants/utility.js';
 import store from '../appstore/store';
-import { ERROR_POPUP } from '../constants/Action_Constants';
+import { MULTIPLE_LINE_POETRY_ERROR_POPUP } from '../constants/Action_Constants';
 import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER } from '../component/SlateWrapper/SlateWrapperConstants.js';
 let context = {};
 let clickedX = 0;
@@ -1479,7 +1479,7 @@ export class TinyMceEditor extends Component {
         let spans = htmlDoc.getElementsByClassName("poetryLine");
         if (spans && spans.length) {
            store.dispatch({
-               type: ERROR_POPUP, 
+               type: MULTIPLE_LINE_POETRY_ERROR_POPUP, 
                payload:{
                    show: true , 
                    message: ERROR_CREATING_GLOSSARY
@@ -1539,7 +1539,7 @@ export class TinyMceEditor extends Component {
         let spans = htmlDoc.getElementsByClassName("poetryLine");
         if (spans && spans.length) {
             store.dispatch({
-                type: ERROR_POPUP, 
+                type: MULTIPLE_LINE_POETRY_ERROR_POPUP, 
                 payload:{
                     show: true , 
                     message: ERROR_CREATING_ASSETPOPOVER
