@@ -54,6 +54,7 @@ let cypressConfig = {
     sitePointing : 'dev',
     conversionInProcess : false,
     savingInProgress: false,
+    citationFlag: false,
     lastActiveElementId:'',
     popupCreationCallInProgress : false
 }
