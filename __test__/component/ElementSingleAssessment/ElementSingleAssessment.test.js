@@ -8,7 +8,23 @@ import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
-let store = mockStore();
+let initialState = {
+    citeTdxReducer:{ 
+        currentAssessmentSelected:{
+            "versionUrn":"dfer",
+            "name":"mmoi"
+        },
+        citeApiData:{assessments:{"dfsarfw":"Sdfa"}},
+        tdxApiData:{assessments:{"dfsarfw":"Sdfa"}},
+        mmiApiData:{assessments:{"dfsarfw":"Sdfa"}},
+        isLoading:false,
+        currentSingleAssessmentSelected:{},
+        citeErrorFlag:"",
+        assessmenterrFlag:false,
+
+ },
+};
+let store = mockStore(initialState);
 jest.mock('../../../src/js/toggleLoader', () => ({
     hideTocBlocker: jest.fn(),
     disableHeader: jest.fn(),
@@ -16,6 +32,7 @@ jest.mock('../../../src/js/toggleLoader', () => ({
         return false
     }
 }))
+
 describe('Testing Element Single Assessment component', () => {
 
 test('renders without crashing', () => {
@@ -92,7 +109,7 @@ test('renders without crashing', () => {
         singleAssessmentInstance.forceUpdate();
         singleAssessment.update();
         expect(spytoggleAssessmentPopup).toHaveBeenCalledWith({},false) 
-        expect(singleAssessmentInstance.state.showAssessmentPopup).toBe(false)
+        expect(singleAssessmentInstance.state.showAssessmentPopup).toBe(true)
         spytoggleAssessmentPopup.mockClear()
     });
     it('Test-toggleUsageTypeDropdown function', () => {
