@@ -261,6 +261,8 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         let storeElement = store[config.slateManifestURN];
         let bodymatter = storeElement.contents.bodymatter;
         let focusedElement = bodymatter;
+
+        //Separate case for element conversion in showhide in Aside/WE
         if(newElementData.asideData && newElementData.asideData.hasOwnProperty('type') && showHideObj) {
             switch(indexes.length) {
                 case 4:
@@ -347,20 +349,37 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
         let indexes = activeElement.index;
         indexes = indexes.toString().split("-");
         
-        indexes.forEach(index => {
-            if(bodymatter[index]){
-                if(elementData.elementId === bodymatter[index].id) {
-                    dispatch(convertElement(bodymatter[index], elementData, activeElement, store, indexes, fromToolbar,showHideObj));
-                } else {
-                    if( bodymatter[index] && (('elementdata' in bodymatter[index] && 'bodymatter' in bodymatter[index].elementdata) || ('contents' in bodymatter[index] && 'bodymatter' in bodymatter[index].contents) || 'interactivedata' in bodymatter[index])) {
-                        
-                        bodymatter = bodymatter[index].elementdata && bodymatter[index].elementdata.bodymatter ||   bodymatter[index].contents && bodymatter[index].contents.bodymatter ||  bodymatter[index].interactivedata[showHideObj.showHideType]
-                    }
-                    
-                }
+        //Separate case for element conversion in showhide
+        if(showHideObj) {
+            let oldElementData
+            switch(indexes.length) {
+                case 3:
+                    oldElementData = bodymatter[indexes[0]].interactivedata[showHideObj.showHideType][indexes[2]]
+                    break;
+                case 4:
+                    oldElementData = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].interactivedata[showHideObj.showHideType][indexes[3]]
+                    break;
+                case 5:
+                    oldElementData = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].interactivedata[showHideObj.showHideType][indexes[4]]
+                    break;
             }
-       
-        });
+            dispatch(convertElement(oldElementData, elementData, activeElement, store, indexes, fromToolbar, showHideObj))
+        } else {
+            indexes.forEach(index => {
+                if(bodymatter[index]){
+                    if(elementData.elementId === bodymatter[index].id) {
+                        dispatch(convertElement(bodymatter[index], elementData, activeElement, store, indexes, fromToolbar,showHideObj));
+                    } else {
+                        if( bodymatter[index] && (('elementdata' in bodymatter[index] && 'bodymatter' in bodymatter[index].elementdata) || ('contents' in bodymatter[index] && 'bodymatter' in bodymatter[index].contents) || 'interactivedata' in bodymatter[index])) {
+                            
+                            bodymatter = bodymatter[index].elementdata && bodymatter[index].elementdata.bodymatter ||   bodymatter[index].contents && bodymatter[index].contents.bodymatter ||  bodymatter[index].interactivedata[showHideObj.showHideType]
+                        }
+                        
+                    }
+                }
+            
+            });
+        }
     }
     
     return store;

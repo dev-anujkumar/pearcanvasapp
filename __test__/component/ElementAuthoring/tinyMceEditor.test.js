@@ -2701,7 +2701,7 @@ describe('Testing -Editor Key events', () => {
         instance.addFootnote(editor);
         expect(spyaddFootnote).toHaveBeenCalled()
     });
-    it('Test addGlossary ', () => {
+    xit('Test addGlossary ', () => {
         let event = {
             preventDefault: () => { },
             stopPropagation: () => { }
