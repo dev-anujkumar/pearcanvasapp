@@ -1828,7 +1828,7 @@ export class TinyMceEditor extends Component {
          * first remove current tinymce instance then prepare element currently being focused to get tinymce intialized
          */
         let activeEditorId = '';
-        if ((!isSameTargetBasedOnDataId || !isSameTarget || !isSameByElementId) && tinymce.activeEditor && document.getElementById(tinyMCE.activeEditor.id) && !(tinymce.activeEditor.id.includes('glossary') || tinymce.activeEditor.id.includes('footnote'))) {
+        if ((!isSameTargetBasedOnDataId || !isSameTarget || !isSameByElementId) && currentActiveNode && tinymce.activeEditor && document.getElementById(tinyMCE.activeEditor.id) && !(tinymce.activeEditor.id.includes('glossary') || tinymce.activeEditor.id.includes('footnote'))) {
             activeEditorId = tinymce.activeEditor.id;
             /**
              * Before removing the current tinymce instance, update wiris image attribute data-mathml to data-temp-mathml and class Wirisformula to temp_Wirisformula
@@ -1951,24 +1951,7 @@ export class TinyMceEditor extends Component {
             })
         });
         if (isSameTarget) {
-            // if(this.props.element.type==='stanza'){
-            //     let termText = tinyMCE.$("#" + currentTarget.id) && tinyMCE.$("#" + currentTarget.id).html();
-            //     tinymce.init(this.editorConfig).then(() => {
-            //     if (termText && termText.length !== "") {
-            //         if (termText.search(/^(<.*>)+$/g) >= 0) {
-            //             termText = tinyMCE.$("#" + currentTarget.id).html();
-            //         }
-            //         document.getElementById(currentTarget.id).innerHTML = termText;
-            //     }
-            //     if (clickedX !== 0 && clickedY !== 0) {
-            //         tinymce.activeEditor.selection.placeCaretAt(clickedX, clickedY) //Placing exact cursor position on clicking.
-            //     }
-            //     this.editorOnClick(event);
-            // });
-            // }
-            //else{
             this.editorOnClick(event);
-            //}
         }
         tinyMCE.$('.cypress-editable').css('caret-color', 'black')
     }

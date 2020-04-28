@@ -596,9 +596,9 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                 else if (element.type === "showhide") {
                     if (showHideType) {
                         element.interactivedata[showHideType].forEach((showHideElement, index) => {
-                            if (showHideElement.id === elementId) {
-                                showHideElement = { ...updatedData }
-                                element.interactivedata[showHideType][index] = showHideElement
+                            if (showHideElement.id == updatedData.id) {
+                                showHideElement.elementdata.text = updatedData.elementdata.text;
+                                showHideElement.html = updatedData.html;
                             }
                         })
                     }
