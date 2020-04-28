@@ -24,6 +24,9 @@ import { checkforToolbarClick, customEvent } from '../js/utils';
 import { saveGlossaryAndFootnote } from "./GlossaryFootnotePopup/GlossaryFootnote_Actions"
 import { ShowLoader } from '../constants/IFrameMessageTypes';
 import { sendDataToIframe, hasReviewerRole } from '../constants/utility.js';
+import store from '../appstore/store';
+import { ERROR_POPUP } from '../constants/Action_Constants';
+import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER } from '../component/SlateWrapper/SlateWrapperConstants.js';
 let context = {};
 let clickedX = 0;
 let clickedY = 0;
@@ -249,6 +252,7 @@ export class TinyMceEditor extends Component {
      */
     editorExecCommand = (editor) => {
         editor.on('ExecCommand', (e) => {
+            let range = editor.selection.getRng();
             let content = e.target.getContent()
             let node = editor.selection.getNode();
             if (this.props.element.type === 'stanza') {
@@ -260,7 +264,6 @@ export class TinyMceEditor extends Component {
                 case "indent":
                     this.handleIndent(e, editor, content, this.props.element.type, node)
                     break;
-
                 case "outdent":
                     this.handleOutdent(e, editor, content, this.props.element.type, node)
                     break;
@@ -268,6 +271,67 @@ export class TinyMceEditor extends Component {
                     editor.selection.bookmarkManager.moveToBookmark(this.currentCursorBookmark);
                     break;
             }
+            if (this.props && this.props.element && this.props.element.type && this.props.element.type === 'stanza' && e.command === 'mceToggleFormat') {
+                let divParent = tinymce.$(`div[id="cypress-${this.props.index}"]`).children();
+                let havingExtraChild = false;
+                for (let index = 0; index < divParent.length; index++) {
+                    if (divParent[index].tagName && divParent[index].tagName.toLowerCase() !== 'span') {
+                        havingExtraChild = true;
+                        break;
+                    }
+                }
+                if (havingExtraChild) {
+                    let sText = editor.selection.getContent();
+                    let parser = new DOMParser();
+                    let htmlDoc = parser.parseFromString(sText, 'text/html');
+                    let spans = htmlDoc.getElementsByClassName("poetryLine");
+                    let startNode = null;
+                    let endNode = null;
+                    let startOffSet = 0;
+                    let endOffSet = -1;
+                    if (!spans.length) {
+                        if (editor.selection.getNode().tagName && editor.selection.getNode().tagName.toLowerCase === 'stanza') {
+                            spans = [editor.selection.getNode()];
+                        } else {
+                            spans = [editor.selection.getNode().closest('.poetryLine')];
+                        }
+                    }
+                    if (spans.length) {
+                        startNode = spans[0];
+                        endNode = spans[spans.length - 1];
+                    }
+                    let mainParent = null;
+                    let allLines = tinymce.$(`div[data-id="${this.props.elementId}"] .poetryLine`);
+                    let nodesFragment = document.createDocumentFragment();
+                    for (let index = 0; index < allLines.length; index++) {
+                        if (startNode && startNode.isEqualNode(allLines[index])) {
+                            startOffSet = index;
+                        }
+                        if (endNode && endNode.isEqualNode(allLines[index])) {
+                            endOffSet = index;
+                        }
+                        let parents = [];
+                        let elem = allLines[index];
+                        while (elem.parentNode && elem.parentNode.nodeName.toLowerCase() != 'div') {
+                            elem = elem.parentNode;
+                            parents.push(elem.nodeName.toLowerCase());
+                        }
+                        mainParent = elem.parentElement;
+                        for (let innerIndex = 0; innerIndex < parents.length; innerIndex++) {
+                            allLines[index].innerHTML = '<' + parents[innerIndex] + '>' + allLines[index].innerHTML + '</' + parents[innerIndex] + '>';
+                        }
+                        nodesFragment.appendChild(allLines[index]);
+                    }
+                    if (mainParent) {
+                        mainParent.innerHTML = "";
+                        mainParent.appendChild(nodesFragment);
+                        range.setStart(mainParent, startOffSet);
+                        range.setEnd(mainParent, endOffSet + 1);
+                        editor.selection.setRng(range);
+                    }
+                }
+            }
+
         });
     }
 
@@ -670,8 +734,8 @@ export class TinyMceEditor extends Component {
                                         }
                                         elementSearch.nextSibling.removeAttribute("data-id");
                                         elementSearch.nextSibling.className = 'poetryLine';
-                                        elementSearch.innerHTML = elementSearch.innerHTML.replace(/\s/g, '&nbsp;');
-                                        elementSearch.nextSibling.innerHTML = elementSearch.nextSibling.innerHTML.replace(/\s/g, '&nbsp;');
+                                        elementSearch.innerHTML = elementSearch.innerHTML.replace(/^\s+|\s+$/g, '&nbsp;');
+                                        elementSearch.nextSibling.innerHTML = elementSearch.nextSibling.innerHTML.replace(/^\s+|\s+$/g, '&nbsp;');
                                         editor.selection.setCursorLocation(elementSearch.nextSibling, 0);
                                     }
                                 }
@@ -1414,6 +1478,12 @@ export class TinyMceEditor extends Component {
         let htmlDoc = parser.parseFromString(sText, 'text/html');
         let spans = htmlDoc.getElementsByClassName("poetryLine");
         if (spans && spans.length) {
+           store.dispatch({
+               type: ERROR_POPUP, 
+               payload:{
+                   show: true , 
+                   message: ERROR_CREATING_GLOSSARY
+                }})
             return false;
         }
         let selectedText = window.getSelection().toString()
@@ -1468,6 +1538,12 @@ export class TinyMceEditor extends Component {
         let htmlDoc = parser.parseFromString(sText, 'text/html');
         let spans = htmlDoc.getElementsByClassName("poetryLine");
         if (spans && spans.length) {
+            store.dispatch({
+                type: ERROR_POPUP, 
+                payload:{
+                    show: true , 
+                    message: ERROR_CREATING_ASSETPOPOVER
+                }})
             return false;
         }
         let selection = window.getSelection().anchorNode.parentNode;
