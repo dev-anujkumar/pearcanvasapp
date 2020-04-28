@@ -264,7 +264,6 @@ export class TinyMceEditor extends Component {
                 case "indent":
                     this.handleIndent(e, editor, content, this.props.element.type, node)
                     break;
-
                 case "outdent":
                     this.handleOutdent(e, editor, content, this.props.element.type, node)
                     break;
