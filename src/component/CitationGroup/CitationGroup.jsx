@@ -174,7 +174,7 @@ export class CitationGroup extends Component {
                                             return false
                                         }
                                         let dataObj = this.prepareSwapData(evt, parentUrn)
-                                        cgThis.props.swapElement(dataObj, (bodyObj) => { })
+                                        cgThis.props.swapElement(dataObj, () => { })
                                         cgThis.context.setActiveElement(dataObj.swappedElementData, dataObj.newIndex);
                                         config.citationFlag= false;
                                         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } }); 

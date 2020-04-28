@@ -559,9 +559,3 @@ export const setSlateParent = (setSlateParentParams) => (dispatch, getState) => 
         payload: setSlateParentParams
     })
 }
-export const setCitationSwapFlag = (flag) => (dispatch, getState)=>{
-    dispatch({
-        type: 'SET_CITATION_FLAG',
-        payload: {citationFlag: flag}
-    })
-}
