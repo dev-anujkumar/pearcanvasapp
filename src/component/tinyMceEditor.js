@@ -675,8 +675,8 @@ export class TinyMceEditor extends Component {
                                             innerSpans[index].outerHTML = innerHtml;
                                         }
                                         if (elementSearch.textContent.trim() == '') {
-                                            position = 'current';
                                             if (elementSearch.innerHTML == '') {
+                                                position = 'current';
                                                 elementSearch.innerHTML = '<br/>';
                                             } else {
                                                 let childNodes = elementSearch.childNodes;
