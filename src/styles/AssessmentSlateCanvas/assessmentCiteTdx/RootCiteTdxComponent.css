@@ -132,12 +132,11 @@
   width: 100%;
 }
 .assessment-titles{
-  max-width: 325px;
+  max-width: 350px;
   height: 20px;
 }
 .modifiedby-data{
   max-width: 100px;
-  vertical-align: middle;
 }
 .filter-block input {
   width:95%;
@@ -236,15 +235,15 @@
   color: #666666;
   font-family: 'Open Sans', sans-serif;
   cursor: default;
+  vertical-align:top;
 }
 .assessment-type{
   cursor:auto;
 }
 .assessment-uuid{
   max-width: 270px;
-  vertical-align: middle;
 }
-.assessment-uuid, .modifiedby-date, .modifiedby-data, .assessment-titles{
+.assessment-uuid, .modifiedby-date, .modifiedby-data, .assessment-titles,.assessment-type{
   text-overflow: ellipsis;
   display: inline-block;
   white-space: nowrap;
@@ -260,7 +259,7 @@
 
 .assessment-table-class .elmAssessmentItem-icon{
   margin: 0 8px 0 6px;
-  vertical-align: middle;
+  vertical-align: top;
 }   
 .assessment-title{
   font-family: 'Open Sans', sans-serif;
@@ -322,19 +321,30 @@
 }
 .assessment-table-class .radio-button {
   cursor:pointer;
+  margin-top: 5px;
+  vertical-align: top;
 }
 .single-assessment .assessment-titles{
-  max-width:430px;
+  max-width:485px;
 }
 .modifiedby-date{
   max-width: 150px;
-  vertical-align: middle;
 }
 
 .noSelect {
   -webkit-touch-callout: none; /* iOS Safari */
   -webkit-user-select: none; /* Safari */
           user-select: none; /* Non-prefixed version, currently supported by Chrome, Opera and Firefox */
+}
+span.assessment-titles {
+  overflow: inherit;
+  white-space: initial;
+}
+svg#assessmentSlate-item-icon{
+  margin-top:4px;
+}
+.elmAssessmentItem-icon svg{
+  margin-top:4px;
 }
 
 @media screen and (max-width: 1300px) {
@@ -352,3 +362,4 @@
   font-size: 14px;
   font-family: Arial, Helvetica, sans-serif;
  }
+ 

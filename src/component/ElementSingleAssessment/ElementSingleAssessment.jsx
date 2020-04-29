@@ -88,14 +88,32 @@ static getDerivedStateFromProps(nextProps, prevState) {
 
     /**Assessment PopUp Functions */
     /*** @description - This function is to toggle the Assessment PopUp*/
-    toggleAssessmentPopup = (e,value) => {
+    toggleAssessmentPopup = (e, value) => {
         sendDataToIframe({ 'type': 'hideToc', 'message': {} });
         this.props.showBlocker(value);
         disableHeader(value);
         value ? showTocBlocker(value) : hideTocBlocker(value)
-        this.setState({
-            showAssessmentPopup : value
-        });
+        if (this.state.assessmentId) {
+            this.props.setCurrentCiteTdx({ 
+                "versionUrn": this.state.assessmentId, 
+                "name": this.state.assessmentTitle 
+            });
+            this.props.setCurrentInnerCiteTdx({ 
+                "versionUrn": this.state.assessmentItemId
+            });
+            this.setState({
+                showSinglePopup: value,
+                setCurrentAssessment: {
+                    id: this.state.assessmentId,
+                    title: this.state.assessmentTitle,
+                }
+            });
+        }
+        else {
+            this.setState({
+                showAssessmentPopup: value
+            });
+        }
     }
 
     /**Assessment Dropdown Functions */
