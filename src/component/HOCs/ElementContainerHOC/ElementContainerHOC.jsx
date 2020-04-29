@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import TinyMceEditor from "../../tinyMceEditor"
 
 /**
-* @description - containerWrapper is a HOC. It is defined simply
+* @description - ElementContainerHOC is a HOC. It is defined simply
 * to make a HOC skeleton of the Poetry alike Element.
 */
-const containerWrapper = (WrappedComponent) => {
+const ElementContainerHOC = (WrappedComponent) => {
     // ...and returns another component...
     return class extends Component {
         
@@ -70,4 +70,4 @@ const containerWrapper = (WrappedComponent) => {
     };
 }
 
-export default containerWrapper;
+export default ElementContainerHOC;

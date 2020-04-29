@@ -39,7 +39,7 @@ import colorPalette from '../../images/ElementButtons/colorPalette.png'
 import closeContainer from '../../images/ElementButtons/container_close.png';
 import ButtonTypes from './ButtonTypes.js';
 
-class Button extends Component {
+class ElementButton extends Component {
    
   /**
   * Responsible for rendering Button component according to the props received
@@ -203,12 +203,12 @@ class Button extends Component {
     }
 }
 
-Button.defaultProps = {
+ElementButton.defaultProps = {
     type: "expand",
     labelText: "P"
 }
 
-Button.propTypes = {
+ElementButton.propTypes = {
     /** Type of button to be rendered */
     type : PropTypes.string.isRequired,
     /** Handler to attach on button click */
@@ -219,6 +219,6 @@ Button.propTypes = {
     btnClassName : PropTypes.string
 }
 
-Button.displayName = 'ElementButton'
+ElementButton.displayName = 'ElementButton'
 
-export default Button
+export default ElementButton

@@ -113,7 +113,7 @@ class ListButtonDropPortal extends Component {
                         }else if (element.type === "showhide"){
                             element.interactivedata[this.props.showHideObj.showHideType].find(
                                 (nselement) => {
-                                    let isMatched = false
+                                    // let isMatched = false
                                     if (nselement.id === activeElement.elementId) {
                                         isMatched = nselement.type === 'element-list'
                                         isMatched && (listElement = nselement)
