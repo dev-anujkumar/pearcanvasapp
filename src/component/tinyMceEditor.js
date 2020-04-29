@@ -1986,8 +1986,9 @@ export class TinyMceEditor extends Component {
             currentTarget.focus();
             let termText = tinyMCE.$("#" + currentTarget.id) && tinyMCE.$("#" + currentTarget.id).html();
             tinymce.init(this.editorConfig).then(() => {
-                if (termText && termText.length !== "" && this.props.element.type !== 'poetry') {
-                    if (termText.search(/^(<.*>)+$/g) >= 0) {
+                if (termText && termText.length && this.props.element.type !== 'poetry') {
+                    if (termText.search(/^(<.*>(<br.*>)<\/.*>)+$/g) < 0 && 
+                    (tinyMCE.$("#" + currentTarget.id).html()).search(/^(<.*>(<br.*>)<\/.*>)+$/g) >= 0) {
                         termText = tinyMCE.$("#" + currentTarget.id).html();
                     }
                     document.getElementById(currentTarget.id).innerHTML = termText;
