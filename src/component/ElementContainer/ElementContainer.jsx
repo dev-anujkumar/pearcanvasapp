@@ -1081,7 +1081,7 @@ class ElementContainer extends Component {
                     onListSelect={this.props.onListSelect} 
                     glossaryFootnoteValue={this.props.glossaryFootnoteValue} 
                     glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}/>
-                    labelText = 'St'
+                    labelText = 'ST'
                     break;
             }
         } else {
