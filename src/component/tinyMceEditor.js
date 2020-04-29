@@ -977,7 +977,7 @@ export class TinyMceEditor extends Component {
                 }
             }
             if (activeElement.nodeName == "DIV" && this.props.element.type === 'stanza') {
-                let key = e.keyCode || e.which;
+                // let key = e.keyCode || e.which;
                 if (key != undefined && (key === 8 || key === 46)) {
                     let currentElement = editor.selection.getNode();
                     if (editor.selection.getNode().tagName.toLowerCase() !== 'span' || editor.selection.getNode().className.toLowerCase() !== 'poetryLine') {

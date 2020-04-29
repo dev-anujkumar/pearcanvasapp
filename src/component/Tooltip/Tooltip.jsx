@@ -1,7 +1,7 @@
 /**
  * Tooltip component
  */
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 
 import '../../styles/Tooltip/Tooltip.css'
@@ -11,12 +11,7 @@ export default function Tooltip(props) {
      * Hooks declearation
      */
     const {direction, tooltipText, children} = props
-    const [directionState, setDirectionState] = useState('')
-
-    useEffect(() => {
-        setDirectionState(direction)
-    }, {})
-
+    
     return(
         <>
             <div className="tooltip">

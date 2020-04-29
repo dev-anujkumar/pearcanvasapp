@@ -7,7 +7,7 @@ export const labelOptions = ["No Label", "Chapter", "Ch", "Part", "Unit"]
  * @param {*} titleText raw data
  */
 export const getOpenerContent = (textSemantics, type, titleText) => {
-    let dataToReturn = ""
+    let dataToReturn
     if(textSemantics && textSemantics.length > 0 && titleText) {
         let contentData = textSemantics.filter(data => data.type === type)[0]
         let contentNumberData = textSemantics.filter(data => data.type === "number")[0]

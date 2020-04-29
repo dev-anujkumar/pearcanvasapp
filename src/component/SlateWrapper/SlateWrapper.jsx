@@ -878,7 +878,7 @@ class SlateWrapper extends Component {
      * renderElement | renders single element according to its type
      */
     renderElement(_elements, _slateType, slateLockInfo) {
-        const { updatePageNumber, pageLoading } = this.props;
+        const { pageLoading } = this.props;
         try {
             if (_elements !== null && _elements !== undefined) {
                 this.renderButtonsonCondition(_elements);
@@ -920,7 +920,7 @@ class SlateWrapper extends Component {
                                     {
                                         (isHovered, isPageNumberEnabled, activeElement, permissions) => (
                                             <PageNumberElement pageLoading={pageLoading}
-                                                updatePageNumber={updatePageNumber}
+                                                updatePageNumber={this.props.updatePageNumber}
                                                 element={element} _slateType={_slateType}
                                                 isHovered={isHovered}
                                                 isPageNumberEnabled={isPageNumberEnabled}
