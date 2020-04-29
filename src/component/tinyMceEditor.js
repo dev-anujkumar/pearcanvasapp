@@ -25,7 +25,7 @@ import { saveGlossaryAndFootnote } from "./GlossaryFootnotePopup/GlossaryFootnot
 import { ShowLoader } from '../constants/IFrameMessageTypes';
 import { sendDataToIframe, hasReviewerRole } from '../constants/utility.js';
 import store from '../appstore/store';
-import { ERROR_POPUP } from '../constants/Action_Constants';
+import { MULTIPLE_LINE_POETRY_ERROR_POPUP } from '../constants/Action_Constants';
 import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER } from '../component/SlateWrapper/SlateWrapperConstants.js';
 let context = {};
 let clickedX = 0;
@@ -1479,7 +1479,7 @@ export class TinyMceEditor extends Component {
         let spans = htmlDoc.getElementsByClassName("poetryLine");
         if (spans && spans.length) {
            store.dispatch({
-               type: ERROR_POPUP, 
+               type: MULTIPLE_LINE_POETRY_ERROR_POPUP, 
                payload:{
                    show: true , 
                    message: ERROR_CREATING_GLOSSARY
@@ -1539,7 +1539,7 @@ export class TinyMceEditor extends Component {
         let spans = htmlDoc.getElementsByClassName("poetryLine");
         if (spans && spans.length) {
             store.dispatch({
-                type: ERROR_POPUP, 
+                type: MULTIPLE_LINE_POETRY_ERROR_POPUP, 
                 payload:{
                     show: true , 
                     message: ERROR_CREATING_ASSETPOPOVER
@@ -1904,7 +1904,7 @@ export class TinyMceEditor extends Component {
          * first remove current tinymce instance then prepare element currently being focused to get tinymce intialized
          */
         let activeEditorId = '';
-        if ((!isSameTargetBasedOnDataId || !isSameTarget || !isSameByElementId) && tinymce.activeEditor && document.getElementById(tinyMCE.activeEditor.id) && !(tinymce.activeEditor.id.includes('glossary') || tinymce.activeEditor.id.includes('footnote'))) {
+        if ((!isSameTargetBasedOnDataId || !isSameTarget || !isSameByElementId) && currentActiveNode && tinymce.activeEditor && document.getElementById(tinyMCE.activeEditor.id) && !(tinymce.activeEditor.id.includes('glossary') || tinymce.activeEditor.id.includes('footnote'))) {
             activeEditorId = tinymce.activeEditor.id;
             /**
              * Before removing the current tinymce instance, update wiris image attribute data-mathml to data-temp-mathml and class Wirisformula to temp_Wirisformula
@@ -1984,8 +1984,9 @@ export class TinyMceEditor extends Component {
             currentTarget.focus();
             let termText = tinyMCE.$("#" + currentTarget.id) && tinyMCE.$("#" + currentTarget.id).html();
             tinymce.init(this.editorConfig).then(() => {
-                if (termText && termText.length !== "" && this.props.element.type !== 'poetry') {
-                    if (termText.search(/^(<.*>)+$/g) >= 0) {
+                if (termText && termText.length && this.props.element.type !== 'poetry') {
+                    if (termText.search(/^(<.*>(<br.*>)<\/.*>)+$/g) < 0 && 
+                    (tinyMCE.$("#" + currentTarget.id).html()).search(/^(<.*>(<br.*>)<\/.*>)+$/g) >= 0) {
                         termText = tinyMCE.$("#" + currentTarget.id).html();
                     }
                     document.getElementById(currentTarget.id).innerHTML = termText;
@@ -2027,24 +2028,7 @@ export class TinyMceEditor extends Component {
             })
         });
         if (isSameTarget) {
-            // if(this.props.element.type==='stanza'){
-            //     let termText = tinyMCE.$("#" + currentTarget.id) && tinyMCE.$("#" + currentTarget.id).html();
-            //     tinymce.init(this.editorConfig).then(() => {
-            //     if (termText && termText.length !== "") {
-            //         if (termText.search(/^(<.*>)+$/g) >= 0) {
-            //             termText = tinyMCE.$("#" + currentTarget.id).html();
-            //         }
-            //         document.getElementById(currentTarget.id).innerHTML = termText;
-            //     }
-            //     if (clickedX !== 0 && clickedY !== 0) {
-            //         tinymce.activeEditor.selection.placeCaretAt(clickedX, clickedY) //Placing exact cursor position on clicking.
-            //     }
-            //     this.editorOnClick(event);
-            // });
-            // }
-            //else{
             this.editorOnClick(event);
-            //}
         }
         tinyMCE.$('.cypress-editable').css('caret-color', 'black')
     }

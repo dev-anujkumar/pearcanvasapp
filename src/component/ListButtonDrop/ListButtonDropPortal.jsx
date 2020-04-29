@@ -10,7 +10,7 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-
+import config from '../../config/config.js'
 class ListButtonDropPortal extends Component {
     constructor(props) {
         super(props);
@@ -65,7 +65,7 @@ class ListButtonDropPortal extends Component {
             this.startValue = null;
             this.selectedOption = null;
             if (activeElement.elementWipType === 'element-list') {
-                const slateObject = Object.values(slateData)[0];
+                const slateObject = slateData[config.slateManifestURN];
                 const { contents } = slateObject;
                 const { bodymatter } = contents;
                 let listElement = Object.create(null, {})

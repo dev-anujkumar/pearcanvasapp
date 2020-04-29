@@ -17,6 +17,15 @@ class CiteTdxTable extends Component {
 
 
     }
+    componentDidMount(){
+        if(this.props.currentSingleAssessmentSelected && this.props.currentSingleAssessmentSelected.versionUrn){
+            console.log("kanika")
+            this.setState({
+                activeRow: this.props.currentSingleAssessmentSelected.versionUrn ? this.props.currentSingleAssessmentSelected.versionUrn:""
+            })
+        }
+       
+    }
     addAssessment = (addedValue) => {
         this.setState({
             activeRow: addedValue.versionUrn
@@ -45,7 +54,7 @@ class CiteTdxTable extends Component {
                                         <React.Fragment key={`assessment-${index}`}>
                                             <tr className ={this.state.activeRow && this.state.activeRow== item.versionUrn ? 'selected':''}>
                                                 <td className="td-class">
-                                                    <input type="radio" className="radio-button" name="assessment-radio" value={item.versionUrn} onClick={() => this.addAssessment(item)} />
+                                                    <input type="radio" className="radio-button" name="assessment-radio" value={item.versionUrn} onClick={() => this.addAssessment(item)} checked={this.props.currentSingleAssessmentSelected.versionUrn=== item.versionUrn} />
                                                     <span className="elmAssessmentItem-icon">{singleAssessmentItemIcon}</span>
                                                     <span className="assessment-titles" title={item.name}>{item.name}</span>
                                                 </td>
@@ -79,7 +88,9 @@ const mapStateToProps = (state) => {
         isLoading: state.citeTdxReducer.isLoading,
         currentSingleAssessmentSelected:state.citeTdxReducer.currentSingleAssessmentSelected,
         citeErrorFlag: state.citeTdxReducer.assessmenterrFlag,
-        assessmenterrFlag: state.citeTdxReducer.assessmenterrFlag
+        assessmenterrFlag: state.citeTdxReducer.assessmenterrFlag,
+        currentSingleAssessmentSelected: state.citeTdxReducer.currentSingleAssessmentSelected
+        
     }
 }
 
