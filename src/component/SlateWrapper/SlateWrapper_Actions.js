@@ -216,7 +216,7 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
     let currentSlateData = currentParentData[config.slateManifestURN];
     config.swappedElementType = _requestData.type;
     config.swappedElementIndex = _requestData.index;
-
+    config.citationFlag= true;
     return axios.post(`${config.REACT_APP_API_URL}v1/slate/swap`,
         JSON.stringify(_requestData),
         {
