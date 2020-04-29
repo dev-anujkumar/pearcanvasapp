@@ -465,6 +465,16 @@ describe('Testing tinyMce  component with  props', () => {
                         className: 'poetryLine',
                         closest : () => {}
                     }
+                },
+                getRng: () => {
+                    return {
+                        setStart: () => {
+
+                        },
+                        setEnd: () => {
+                            
+                        }
+                    }
                 }
             }
         }
@@ -496,6 +506,16 @@ describe('Testing tinyMce  component with  props', () => {
                         tagName: 'span',
                         className: 'poetryLine',
                         closest : () => {}
+                    }
+                },
+                getRng: () => {
+                    return {
+                        setStart: () => {
+
+                        },
+                        setEnd: () => {
+                            
+                        }
                     }
                 }
             }
@@ -530,6 +550,16 @@ describe('Testing tinyMce  component with  props', () => {
                         tagName: 'span',
                         className: 'poetryLine',
                         closest : () => {}
+                    }
+                },
+                getRng: () => {
+                    return {
+                        setStart: () => {
+
+                        },
+                        setEnd: () => {
+                            
+                        }
                     }
                 }
             }
