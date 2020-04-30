@@ -20,7 +20,13 @@ describe('Filter Assessment component', () => {
         resetPage:jest.fn()
 
     }
-    let store = mockStore();
+    let initialState={
+        citeTdxReducer:{
+            sortBy:"name",
+            sortOrder:1
+        }
+    }
+    let store = mockStore(initialState);
     const component = mount(<Provider store={store}><FilterAssessmentData {...props} /></Provider>);
     let componentInstance = component.find('FilterAssessmentData').instance();
     const spyHandleChange = jest.spyOn(componentInstance, 'handleChange')
