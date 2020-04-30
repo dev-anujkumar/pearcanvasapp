@@ -290,7 +290,7 @@ export class TinyMceEditor extends Component {
                     let startOffSet = 0;
                     let endOffSet = -1;
                     if (!spans.length) {
-                        if (editor.selection.getNode().tagName && editor.selection.getNode().tagName.toLowerCase === 'stanza') {
+                        if (editor.selection.getNode().tagName && editor.selection.getNode().tagName.toLowerCase() === 'stanza') {
                             spans = [editor.selection.getNode()];
                         } else {
                             spans = [editor.selection.getNode().closest('.poetryLine')];
@@ -917,6 +917,10 @@ export class TinyMceEditor extends Component {
                         activeElement.innerHTML = div.children[0].outerHTML;
                     }
                 }
+
+                if(this.props.element && this.props.element.type === 'figure' && this.props.element.figuretype === 'authoredtext' && activeElement.innerHTML === '<p></p>'){
+                    activeElement.innerHTML = '<p><br /></p>'
+                }
                 // else if (activeElement.children.length <= 1 && activeElement.children[0].tagName === 'BR' && activeElement.nodeName !== "CODE") {
                 //     let div = document.createElement('div');
                 //     div.innerHTML = this.lastContent;
@@ -1178,11 +1182,29 @@ export class TinyMceEditor extends Component {
      * @param {*} editor  editor instance
      */
     addChemistryFormulaButton = editor => {
+        let self = this;
         editor.ui.registry.addButton("tinyMcewirisformulaEditorChemistry", {
             text: "",
             icon: "tinymceformulachemistryicon",
             tooltip: "WIRIS EDITOR chemistry",
             onAction: function (_) {
+                if (self && self.props && self.props.element && self.props.element.type === 'stanza') {
+                    let currentElement = editor.selection.getNode();
+                    if ((editor.selection.getNode().tagName && editor.selection.getNode().tagName.toLowerCase() !== 'span') || (editor.selection.getNode().className && editor.selection.getNode().className.toLowerCase() !== 'poetryLine')) {
+                        currentElement = editor.selection.getNode().closest('.poetryLine');
+                    }
+                    if (!currentElement) {
+                        currentElement = editor.selection.getNode();
+                        let checkSpan = currentElement.getElementsByClassName("poetryLine");
+                        if (!checkSpan.length) {
+                            currentElement.innerHTML = '<span class="poetryLine"><br/></span>';
+                            checkSpan = currentElement.getElementsByClassName("poetryLine");
+                            editor.selection.setCursorLocation(checkSpan[0], 0);
+                        } else {
+                            editor.selection.setCursorLocation(checkSpan[0], 0);
+                        }
+                    }
+                }
                 this.currentCursorBookmark = editor.selection.bookmarkManager.getBookmark();
                 /*
                     Enabling chemistry ML
@@ -1208,11 +1230,29 @@ export class TinyMceEditor extends Component {
      * @param {*} editor  editor instance
      */
     addMathmlFormulaButton = editor => {
+        let self = this;
         editor.ui.registry.addButton("tinyMcewirisformulaEditor", {
             text: "",
             icon: "tinymceformulaicon",
             tooltip: "WIRIS EDITOR math",
             onAction: function (_) {
+                if (self && self.props && self.props.element && self.props.element.type === 'stanza') {
+                    let currentElement = editor.selection.getNode();
+                    if ((editor.selection.getNode().tagName && editor.selection.getNode().tagName.toLowerCase() !== 'span') || (editor.selection.getNode().className && editor.selection.getNode().className.toLowerCase() !== 'poetryLine')) {
+                        currentElement = editor.selection.getNode().closest('.poetryLine');
+                    }
+                    if (!currentElement) {
+                        currentElement = editor.selection.getNode();
+                        let checkSpan = currentElement.getElementsByClassName("poetryLine");
+                        if (!checkSpan.length) {
+                            currentElement.innerHTML = '<span class="poetryLine"><br/></span>';
+                            checkSpan = currentElement.getElementsByClassName("poetryLine");
+                            editor.selection.setCursorLocation(checkSpan[0], 0);
+                        } else {
+                            editor.selection.setCursorLocation(checkSpan[0], 0);
+                        }
+                    }
+                }
                 this.currentCursorBookmark = editor.selection.bookmarkManager.getBookmark();
                 var wirisPluginInstance = window.WirisPlugin.instances[editor.id];
                 wirisPluginInstance.core.getCustomEditors().disable();
@@ -1988,7 +2028,8 @@ export class TinyMceEditor extends Component {
             currentTarget.focus();
             let termText = tinyMCE.$("#" + currentTarget.id) && tinyMCE.$("#" + currentTarget.id).html();
             tinymce.init(this.editorConfig).then(() => {
-                if (termText && termText.length && this.props.element.type !== 'poetry' && this.props.element.type !== 'element-list') {
+                if (termText && termText.length && this.props.element.type !== 'poetry' && this.props.element.type !== 'element-list' && !(
+                this.props.element.type === "showhide" && this.props.currentElement.type === 'element-list')) {
                     if (termText.search(/^(<.*>(<br.*>)<\/.*>)+$/g) < 0 && 
                     (tinyMCE.$("#" + currentTarget.id).html()).search(/^(<.*>(<br.*>)<\/.*>)+$/g) >= 0) {
                         termText = tinyMCE.$("#" + currentTarget.id).html();
