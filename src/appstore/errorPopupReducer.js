@@ -1,5 +1,6 @@
 import {
-  ERROR_POPUP
+  ERROR_POPUP,
+  MULTIPLE_LINE_POETRY_ERROR_POPUP
 } from '../constants/Action_Constants'
 
 const INITIAL_STATE = {
@@ -19,13 +20,23 @@ const INITIAL_ACTION = {
  */
 
 export default function errorPopupReducer(state = INITIAL_STATE, action = INITIAL_ACTION) {
-  if (action.type === ERROR_POPUP) {
-    return {
-      ...state,
-      ...action.payload
+  switch (action.type) {
+    case ERROR_POPUP: {
+      return {
+        ...state,
+        show : action.payload.show,
+        message : 'The element you tried to create or update did not save. Please try again.'
+      }
     }
-  } else {
-    return state
+    case MULTIPLE_LINE_POETRY_ERROR_POPUP: {
+      return {
+        ...state,
+        show : action.payload.show,
+        message : action.payload.message
+      }
+    }
+    default:
+      return state
   }
 }
 
