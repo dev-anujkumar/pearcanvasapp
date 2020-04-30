@@ -1657,7 +1657,8 @@ export class TinyMceEditor extends Component {
                     }, 0)
                     localStorage.removeItem('newElement');
                 }
-                this.editorConfig.selector = '#' + (this.editorRef.current ? this.editorRef.current.id : 'cypress-0');
+                let currentId = (this.editorRef.current ? this.editorRef.current.id : 'cypress-0');
+                this.editorConfig.selector = '#' + currentId;
 
                 /**
                  * Before removing the current tinymce instance, update wiris image attribute data-mathml to data-temp-mathml and class Wirisformula to temp_Wirisformula
@@ -1671,8 +1672,13 @@ export class TinyMceEditor extends Component {
                     document.getElementById(this.editorRef.current.id).innerHTML = tempFirstContainerHtml;
                 }
 
+                let termText = tinyMCE.$("#" + currentId) && tinyMCE.$("#" + currentId).html();
                 tinymce.init(this.editorConfig).then((d) => {
                     if (this.editorRef.current) {
+                        if (termText && termText.length && this.props.element.type === 'figure') {
+                            document.getElementById(currentId).innerHTML = termText;
+                        }
+
                         /*
                             Making blinking cursor color again to black
                         */
@@ -1684,8 +1690,6 @@ export class TinyMceEditor extends Component {
                             this.fromtinyInitBlur = false;
                         }
                     }
-
-
                 })
             }
         }
