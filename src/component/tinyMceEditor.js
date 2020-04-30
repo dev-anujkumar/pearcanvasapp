@@ -1178,11 +1178,29 @@ export class TinyMceEditor extends Component {
      * @param {*} editor  editor instance
      */
     addChemistryFormulaButton = editor => {
+        let self = this;
         editor.ui.registry.addButton("tinyMcewirisformulaEditorChemistry", {
             text: "",
             icon: "tinymceformulachemistryicon",
             tooltip: "WIRIS EDITOR chemistry",
             onAction: function (_) {
+                if (self && self.props && self.props.element && self.props.element.type === 'stanza') {
+                    let currentElement = editor.selection.getNode();
+                    if ((editor.selection.getNode().tagName && editor.selection.getNode().tagName.toLowerCase() !== 'span') || (editor.selection.getNode().className && editor.selection.getNode().className.toLowerCase() !== 'poetryLine')) {
+                        currentElement = editor.selection.getNode().closest('.poetryLine');
+                    }
+                    if (!currentElement) {
+                        currentElement = editor.selection.getNode();
+                        let checkSpan = currentElement.getElementsByClassName("poetryLine");
+                        if (!checkSpan.length) {
+                            currentElement.innerHTML = '<span class="poetryLine"><br/></span>';
+                            checkSpan = currentElement.getElementsByClassName("poetryLine");
+                            editor.selection.setCursorLocation(checkSpan[0], 0);
+                        } else {
+                            editor.selection.setCursorLocation(checkSpan[0], 0);
+                        }
+                    }
+                }
                 this.currentCursorBookmark = editor.selection.bookmarkManager.getBookmark();
                 /*
                     Enabling chemistry ML
@@ -1208,11 +1226,29 @@ export class TinyMceEditor extends Component {
      * @param {*} editor  editor instance
      */
     addMathmlFormulaButton = editor => {
+        let self = this;
         editor.ui.registry.addButton("tinyMcewirisformulaEditor", {
             text: "",
             icon: "tinymceformulaicon",
             tooltip: "WIRIS EDITOR math",
             onAction: function (_) {
+                if (self && self.props && self.props.element && self.props.element.type === 'stanza') {
+                    let currentElement = editor.selection.getNode();
+                    if ((editor.selection.getNode().tagName && editor.selection.getNode().tagName.toLowerCase() !== 'span') || (editor.selection.getNode().className && editor.selection.getNode().className.toLowerCase() !== 'poetryLine')) {
+                        currentElement = editor.selection.getNode().closest('.poetryLine');
+                    }
+                    if (!currentElement) {
+                        currentElement = editor.selection.getNode();
+                        let checkSpan = currentElement.getElementsByClassName("poetryLine");
+                        if (!checkSpan.length) {
+                            currentElement.innerHTML = '<span class="poetryLine"><br/></span>';
+                            checkSpan = currentElement.getElementsByClassName("poetryLine");
+                            editor.selection.setCursorLocation(checkSpan[0], 0);
+                        } else {
+                            editor.selection.setCursorLocation(checkSpan[0], 0);
+                        }
+                    }
+                }
                 this.currentCursorBookmark = editor.selection.bookmarkManager.getBookmark();
                 var wirisPluginInstance = window.WirisPlugin.instances[editor.id];
                 wirisPluginInstance.core.getCustomEditors().disable();
