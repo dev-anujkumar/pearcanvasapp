@@ -917,6 +917,10 @@ export class TinyMceEditor extends Component {
                         activeElement.innerHTML = div.children[0].outerHTML;
                     }
                 }
+
+                if(this.props.element && this.props.element.type === 'figure' && this.props.element.figuretype === 'authoredtext' && activeElement.innerHTML === '<p></p>'){
+                    activeElement.innerHTML = '<p><br /></p>'
+                }
                 // else if (activeElement.children.length <= 1 && activeElement.children[0].tagName === 'BR' && activeElement.nodeName !== "CODE") {
                 //     let div = document.createElement('div');
                 //     div.innerHTML = this.lastContent;
