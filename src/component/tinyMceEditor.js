@@ -290,7 +290,7 @@ export class TinyMceEditor extends Component {
                     let startOffSet = 0;
                     let endOffSet = -1;
                     if (!spans.length) {
-                        if (editor.selection.getNode().tagName && editor.selection.getNode().tagName.toLowerCase === 'stanza') {
+                        if (editor.selection.getNode().tagName && editor.selection.getNode().tagName.toLowerCase() === 'stanza') {
                             spans = [editor.selection.getNode()];
                         } else {
                             spans = [editor.selection.getNode().closest('.poetryLine')];
