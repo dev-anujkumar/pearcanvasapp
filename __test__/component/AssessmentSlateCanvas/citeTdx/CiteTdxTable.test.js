@@ -57,12 +57,6 @@ describe('Table component', () => {
          componentInstance.setSort("Title");
         expect(spysetSorting).toHaveBeenCalled()
         spysetSorting.mockClear()
-        // const component = mount(<Provider store={store}><CiteTdxTable {...props} /></Provider>);
-        // let componentInstance1 = component.find('CiteTdxTable').instance();
-        // const spysetSorting = jest.spyOn(componentInstance1, 'setSort')
-        // spysetSorting.setSort();
-        // expect(spysetSorting).toHaveBeenCalled()
-        // spysetSorting.mockClear()
     })
 
     it('TDX', () => {
