@@ -592,13 +592,19 @@ class ElementContainer extends Component {
                         tinyMCE.$(currentListNode).find('li')[i].innerHTML = tinyMCE.$(currentListNode).find('li')[i].innerHTML.replace(/^\s+|\s+$/g, '&nbsp;');
                     } 
                     let nodehtml = currentListNode.innerHTML;
-                    if (nodehtml && previousElementData.html && (this.replaceUnwantedtags(nodehtml) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate && !config.savingInProgress) && !assetPopoverPopupIsVisible) {
-                        dataToSend = createUpdatedData(previousElementData.type, previousElementData, currentListNode, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, showHideType,undefined)
-                        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                        if(dataToSend.status === "approved"){
-                            config.savingInProgress = true
+                    if(nodehtml && previousElementData.html) {
+                        let prevData = this.replaceUnwantedtags(previousElementData.html.text);
+                        prevData = prevData.replace(/(reset | reset|↵)/g, "");
+                        let nodeData = this.replaceUnwantedtags(nodehtml);
+                        nodeData = nodeData.replace(/(reset | reset|↵)/g, "");
+                        if ((nodeData !== prevData || forceupdate && !config.savingInProgress) && !assetPopoverPopupIsVisible) {
+                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, currentListNode, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, showHideType,undefined)
+                            sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+                            if(dataToSend.status === "approved"){
+                                config.savingInProgress = true
+                            }
+                            this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, showHideType, parentElement);
                         }
-                        this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, showHideType, parentElement);
                     }
                     break;
                 }
