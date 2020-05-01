@@ -346,6 +346,17 @@ svg#assessmentSlate-item-icon{
 .elmAssessmentItem-icon svg{
   margin-top:4px;
 }
+.assessment-row-class.title .sort-icon, .assessment-row-class.date.modified .sort-icon{
+  display: inline;
+  cursor: pointer;
+  margin-left: 3px;
+  float:none;
+}
+.sort-icon.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  cursor: auto;
+}
 
 @media screen and (max-width: 1300px) {
   .cite-wrapper .root-container{
