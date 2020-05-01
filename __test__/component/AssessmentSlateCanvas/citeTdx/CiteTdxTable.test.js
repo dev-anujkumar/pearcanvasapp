@@ -52,6 +52,12 @@ describe('Table component', () => {
         expect(spyaddAssessment).toHaveBeenCalled()
         spyaddAssessment.mockClear()
     })
+    it('sorting', () => { 
+         const spysetSorting = jest.spyOn(componentInstance, 'setSort')
+         componentInstance.setSort("Title");
+        expect(spysetSorting).toHaveBeenCalled()
+        spysetSorting.mockClear()
+    })
 
     it('TDX', () => {
         let props = {
@@ -83,5 +89,6 @@ describe('Table component', () => {
         const component = mount(<Provider store={store}><CiteTdxTable {...props} /></Provider>);
         expect(component).toHaveLength(1);
     })
+    
 
 });

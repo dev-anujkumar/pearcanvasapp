@@ -5,7 +5,9 @@ import axios from 'axios';
 /**
  * This action creator is used to fetch ELM resources added to the project
  */
-export const getCiteTdxData = (assessmentType, assessmentTitle, filterUUID, pageNo=1) => (dispatch) => {
+export const getCiteTdxData = (assessmentType, assessmentTitle, filterUUID, pageNo=1) => (dispatch,getState) => {
+    let sortBy = getState().citeTdxReducer.sortBy ? getState().citeTdxReducer.sortBy : '';
+    let sortOrder = (getState().citeTdxReducer.sortOrder === 0 || getState().citeTdxReducer.sortOrder === 1) ? getState().citeTdxReducer.sortOrder : '';
     let startPage = --pageNo;
     dispatch({ type: 'SET_LOADING_TRUE', payload: { isLoading: true } });
 
@@ -13,7 +15,7 @@ export const getCiteTdxData = (assessmentType, assessmentTitle, filterUUID, page
     var assessmentDispatchType = (assessmentType === FULL_ASSESSMENT_CITE)? 'GET_CITE_RESOURCES': (assessmentType === FULL_ASSESSMENT_TDX)?'GET_TDX_RESOURCES': 'GET_MMI_RESOURCES';
     let pageSize=25;
 
-    let url = `${config.ASSESSMENT_ENDPOINT}assessments/v3/search?taxonomicTypes=${assessmentType === FULL_ASSESSMENT_CITE ? `CITE` : assessmentType === FULL_ASSESSMENT_TDX? `TDX` :'MMI'}&status=approved&name=${searchTitle}&page=${startPage}&pageSize=${pageSize}`;
+    let url = `${config.ASSESSMENT_ENDPOINT}assessments/v3/search?taxonomicTypes=${assessmentType === FULL_ASSESSMENT_CITE ? `CITE` : assessmentType === FULL_ASSESSMENT_TDX? `TDX` :'MMI'}&status=approved&name=${searchTitle}&page=${startPage}&pageSize=${pageSize}&sortAttribute=${sortBy}&sortOrder=${sortOrder}`;
 
     return axios.get(url, {
         headers: {
@@ -141,4 +143,14 @@ export function getMCQGuidedData(workUrn) {
     } catch (err) {
         console.log('Error in get assessment data', err)
     }
+}
+
+export const assessmentSorting = (sortBy,sortOrder) => (dispatch, getState) => {
+    dispatch({
+        type: 'ASSESSMENT_SORTING',
+        payload: {
+            sortOrder:sortOrder,
+            sortBy:sortBy
+        }
+    })
 }
