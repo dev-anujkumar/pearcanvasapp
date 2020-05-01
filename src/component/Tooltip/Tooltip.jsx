@@ -13,12 +13,10 @@ export default function Tooltip(props) {
     const {direction, tooltipText, children} = props
     
     return(
-        <>
-            <div className="tooltip">
-                {children}
-                <span className={`tooltiptext tooltip-${direction}`}>{tooltipText}</span>
-            </div>
-        </>
+        <div className="tooltip">
+            {children}
+            <span className={`tooltiptext tooltip-${direction}`}>{tooltipText}</span>
+        </div>
     )
 }
 
