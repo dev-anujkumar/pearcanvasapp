@@ -1,8 +1,6 @@
 /**
  * Module - PageNumberElement
  * Description - this component is to show pagenumber up at element container
- * Developer - Abhay Singh
- * Last modified - 10-09-2019
  */
 
 // IMPORT - Plugins //

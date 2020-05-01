@@ -1,8 +1,6 @@
 /**
  * Module - utility
  * Description - This file contains utility functions to be shared across
- * Developer - Abhay Singh
- * Last modified - 11-09-2019
  */
 
 // IMPORT - Module dependencies
