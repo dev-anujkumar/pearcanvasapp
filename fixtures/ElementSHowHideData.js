@@ -67,7 +67,7 @@ export const showHide = {
                     "comments": false
                 }
             ],
-            "postertextobject": {
+            "postertextobject": [{
                 "id": "urn:pearson:work:50994dd9-c556-415f-bee2-57fc4c4fb032",
                 "type": "element-authoredtext",
                 "subtype": "",
@@ -85,6 +85,6 @@ export const showHide = {
                 "tcm": true,
                 "feedback": false,
                 "comments": false
-            }
+            }]
         }
 }

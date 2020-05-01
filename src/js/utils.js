@@ -38,49 +38,66 @@ export const utils = {
     getTaxonomicType(data) {
         let format = '';
         switch (true) {
-            case (data.toLowerCase().indexOf("flashcards") !== -1):
+            case (data.indexOf("flashcards") !== -1):
+            case(data.indexOf("cite-interactive-flashcards")!== -1):  
                 format = "flashcards";
                 break;
 
-            case (data.toLowerCase().indexOf("cite-interactive-slideshow-video") !== -1):
+            case (data.indexOf("cite-interactive-slideshow-video") !== -1):
+            case (data.indexOf("slideshow-video") !== -1):
                 format = "gallery-video";
                 break;
-            case (data.toLowerCase().indexOf("cite-interactive-slideshow-image") !== -1):
+            
+            case (data.indexOf("cite-interactive-slideshow-image") !== -1):
+            case (data.indexOf("slideshow-image") !== -1):
                 format = "gallery-image";
                 break;
-            // case (data.toLowerCase().indexOf("cite-interactive-slideshow-image") !== -1):
-            //     format = "guided-example";
-            //     break;
-            case (data.toLowerCase().indexOf("cite-interactive-graph") !== -1):
+
+            case (data.indexOf("guided-example") !== -1):
+                format = "guided-example";
+                break;
+
+            case (data.indexOf("cite-interactive-graph") !== -1):
+            case (data.indexOf("graph") !== -1):
                 format = "graph";
                 break;
 
-            case (data.toLowerCase().indexOf("cite-interactive-simulation") !== -1):
+            case (data.indexOf("cite-interactive-simulation") !== -1):
+            case (data.indexOf("simulation") !== -1):
                 format = "simulation";
                 break;
 
-            case (data.toLowerCase().indexOf("cite-interactive-survey") !== -1):
+            case (data.indexOf("cite-interactive-survey") !== -1):
+            case (data.indexOf("survey") !== -1):
                 format = "survey";
                 break;
 
-            case (data.toLowerCase().indexOf("cite-interactive-timeline") !== -1):
+            case (data.indexOf("cite-interactive-timeline") !== -1):
+            case (data.indexOf("timeline") !== -1):
                 format = "timeline";
                 break;
 
-            case (data.toLowerCase().indexOf("cite-interactive-fill-in-blank") !== -1):
+            case (data.indexOf("cite-interactive-fill-in-blank") !== -1):
+            case (data.indexOf("fill-in-blank") !== -1):
                 format = "fill-in-blank";
                 break;
-            case (data.toLowerCase().indexOf("cite-interactive-multiple-choice") !== -1):
+            case (data.indexOf("cite-interactive-multiple-choice") !== -1):
                 format = "mcq";
                 break;
-            case (data.toLowerCase().indexOf("cite-interactive-hotspot") !== -1):
+            case (data.indexOf("cite-interactive-hotspot") !== -1):
+            case (data.indexOf("hotspot") !== -1):
                 format = "hotspot";
                 break;
-            case (data.toLowerCase().indexOf("cite-accounting-tables") !== -1):
+            case (data.indexOf("cite-accounting-tables") !== -1):
+            case (data.indexOf("accounting-tables") !== -1):
                 format = "accountingtable";
                 break;
-            case (data.toLowerCase().indexOf("cite-interactive-video-with-interactive") !== -1):
+            case (data.indexOf("cite-interactive-video-with-interactive") !== -1):
+            case (data.indexOf("video-with-interactive") !== -1):
                 format = "video-mcq";
+                break;
+            default:
+                format = "fpo";
                 break;
         }
         return format;

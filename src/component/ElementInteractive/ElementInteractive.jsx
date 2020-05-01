@@ -13,7 +13,12 @@ import config from '../../config/config';
 import { utils } from '../../js/utils';
 import PopUp from '../PopUp'
 import axios from 'axios';
-import { hasReviewerRole } from '../../constants/utility.js'
+import { hasReviewerRole } from '../../constants/utility.js';
+import RootCiteTdxComponent from '../AssessmentSlateCanvas/assessmentCiteTdx/RootCiteTdxComponent.jsx';
+import RootSingleAssessmentComponent from '../AssessmentSlateCanvas/singleAssessmentCiteTdx/RootSingleAssessmentComponent.jsx'
+import  {setCurrentCiteTdx, setCurrentInnerCiteTdx, getMCQGuidedData}  from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
+import { connect } from 'react-redux';
+import { sendDataToIframe } from './../../constants/utility.js';
 
 /**
 * @description - Interactive is a class based component. It is defined simply
@@ -28,10 +33,34 @@ class Interactive extends React.Component {
             imagePath : this.props.model.figuredata && this.props.model.figuredata.posterimage && this.props.model.figuredata.posterimage.path ? this.props.model.figuredata.posterimage.path : "",
             showAssesmentpopup: false,
             elementType: this.props.model.figuredata.interactivetype || "",
-            projectMetadata: false
+            projectMetadata: false,
+            showAssessmentPopup: false,
+            showSinglePopup:false,
+            setCurrentAssessment:{},
+            parentPageNo:1,
+            isReset: false,
+            searchTitle : '',
+            filterUUID : ''
+
         };
 
     }
+
+    resetPage = (isReset, isSearch=false) => {
+        this.setState({isReset})
+        if(isReset && isSearch){
+            this.setState({parentPageNo:1})
+        } else if (isReset){
+            this.setState({parentPageNo:1})
+            this.setState({searchTitle:'', filterUUID:''})
+        }
+    }
+    AssessmentSearchTitle = (searchTitle, filterUUID) => {
+        this.setState({searchTitle, filterUUID},()=>{
+            console.log("SetSate for filter", searchTitle + filterUUID)
+        });
+    }
+
     componentDidMount(){
         this.setState({
             itemID : this.props.model.figuredata && this.props.model.figuredata.interactiveid ? this.props.model.figuredata.interactiveid : "",
@@ -42,79 +71,6 @@ class Interactive extends React.Component {
      * @description - This function is for accessing c2_assessment library for interactive.
      * @param {event} value
      */
-
-    handleC2InteractiveClick = (value) => {
-        if( this.props.permissions && this.props.permissions.includes('quad_linking_assessment') && !hasReviewerRole()){
-        let that = this;
-        let fileName = "";
-        let filterType = [this.props.model.figuredata.interactiveformat.toUpperCase()];
-        let searchMode = "partial";
-        let searchSelectAssessmentURN = "";
-        let productId = "";
-        let searchTypeOptVal = "";
-        // showTocBlocker();
-        // disableHeader(true);
-        this.togglePopup(false);
-        productId = value ? value : "Unspecified";
-        c2AssessmentModule.launchAssetBrowser(fileName, filterType, searchMode, searchSelectAssessmentURN, productId, searchTypeOptVal, async function (interactiveData) {
-            let tempInteractiveType = utils.getTaxonomicType(interactiveData['itemsData']['taxonomicType'][1]);
-
-            // if (tempInteractiveType === 'video-mcq') {
-            if(tempInteractiveType === 'video-mcq' || tempInteractiveType === 'guided-example'){
-                let responseData = await axios.get(config.CONTENT_SCAPI_ENDPOINT + "/" + interactiveData['workExample'][0],
-                    {
-                        headers: {
-                            "ApiKey": config.MANIFEST_APIKEY,
-                            "PearsonSSOSession":config.ssoToken,
-                        }
-                    });
-                interactiveData['imageId'] = responseData['data']["thumbnail"]['id'];
-                interactiveData['path'] = responseData['data']["thumbnail"]['src'];
-                interactiveData['alttext'] = responseData['data']["thumbnail"]['alt'];
-            }
-            let posterImage = {};
-            // let itemsData = interactiveData['itemsData'];
-            // let id = interactiveData['id'] ? interactiveData['id'] : "";
-            let itemId = interactiveData['itemID'] ? interactiveData['itemID'] : "";
-            // let totalduration = interactiveData['totalduration'] ? interactiveData['totalduration'] : '';
-            posterImage['imageid'] = interactiveData['imageId'] ? interactiveData['imageId'] : '';
-            posterImage['path'] = interactiveData['path'] ? interactiveData['path'] : '';
-            let alttext = interactiveData['alttext'] ? interactiveData['alttext'] : '';
-            // let workExample = (interactiveData['itemsData']['workExample'] && interactiveData['itemsData']['workExample'][0]) ? interactiveData['itemsData']['workExample'][0] : "";
-            // let imageId = "";
-            // let epsURL = interactiveData['EpsUrl'] ? interactiveData['EpsUrl'] : "";
-            that.setState({itemID : itemId,
-                imagePath:posterImage.path })
-            let figureData={}
-            // if(tempInteractiveType === 'video-mcq'){
-            if(tempInteractiveType === 'video-mcq' || tempInteractiveType === 'guided-example'){
-                figureData = {
-                    schema: "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
-                    interactiveid: itemId,
-                    interactivetype: tempInteractiveType,
-                    interactiveformat: "mmi",
-                    posterimage: posterImage,
-                    alttext: alttext  
-                }
-            }else{
-             figureData = {
-                schema: "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
-                interactiveid: itemId,
-                interactivetype: tempInteractiveType,
-                interactiveformat: "mmi"
-            }
-        }
-        
-            that.props.updateFigureData(figureData, that.props.index, that.props.elementId,()=>{               
-                that.props.handleFocus("updateFromC2");
-                setTimeout(()=>{
-                    that.props.handleBlur()
-                },300)
-               
-            })
-        }); 
-      }
-    }
      
     static getDerivedStateFromProps(nextProps, prevState) {
         if('figuredata' in nextProps.model && 'interactivetype' in nextProps.model.figuredata && nextProps.model.figuredata.interactivetype !== prevState.elementType) {
@@ -409,7 +365,7 @@ class Interactive extends React.Component {
                 </figure>
                 <p className="paragraphWidgetShowHideCredit"></p>
             </div>
-        }else if(context === 'video-mcq' || context === 'mcq' || context === "guided-example") {
+        }else if(context === 'video-mcq' || context === 'mcq' || context === "guided-example" ) {
             jsx = <div className={divImage} resource="">
                 <figure className={figureImage} resource="">
                     <header>
@@ -494,6 +450,15 @@ class Interactive extends React.Component {
                 return;
             }
             this.handleC2MediaClick(e);
+        }
+        else if(this.props.model.figuredata.interactiveformat === "mmi"){
+            sendDataToIframe({ 'type': 'hideToc', 'message': {} });
+            this.props.showBlocker(value);
+            disableHeader(value);
+            this.props.handleFocus();
+            this.setState({
+            showAssessmentPopup : value
+            });
         }
         else {
             this.props.showBlocker(value);
@@ -695,7 +660,83 @@ class Interactive extends React.Component {
         }
 
     }
+    /*** @description - This function is to close CITE/TDX PopUp
+    */
+   closeWindowAssessment = () => {
+    this.props.setCurrentCiteTdx({});
+    this.props.setCurrentInnerCiteTdx({});
+    this.setState({
+        showAssessmentPopup: false,
+        showSinglePopup:false,
+    });
+    hideTocBlocker();
+    disableHeader(false);
+    this.props.showBlocker(false);
+    }
+    assessmentNavigateBack = () => {
+        this.props.setCurrentInnerCiteTdx({});
+        this.setState({
+            showAssessmentPopup: true,
+            showSinglePopup:false,
+        });
+    }
 
+    addCiteTdxAssessment = async(citeTdxObj, parentPageNo=1) => {
+        showTocBlocker();
+        disableHeader(true);
+        if(citeTdxObj.slateType === "singleSlateAssessment"){
+            this.setState({
+                showSinglePopup: true,
+                setCurrentAssessment: citeTdxObj,
+                showAssessmentPopup:false,
+                parentPageNo
+            })
+        }
+        else{
+            let itemId = citeTdxObj.singleAssessmentID.versionUrn ? citeTdxObj.singleAssessmentID.versionUrn : "";
+            let interactiveData ={};
+            let tempInteractiveType = citeTdxObj.singleAssessmentID.taxonomicTypes ?String.prototype.toLowerCase.apply(citeTdxObj.singleAssessmentID.taxonomicTypes).split(","):"cite-interactive-video-with-interactive";
+            tempInteractiveType = utils.getTaxonomicType(tempInteractiveType);
+            if(tempInteractiveType === 'video-mcq' || tempInteractiveType === 'guided-example'){
+               await getMCQGuidedData(itemId).then((responseData) => {
+                    if(responseData && responseData['data'] && responseData['data']["thumbnail"]){
+                        interactiveData['imageId'] = responseData['data']["thumbnail"]['id'];
+                        interactiveData['path'] = responseData['data']["thumbnail"]['src'];
+                        interactiveData['alttext'] = responseData['data']["thumbnail"]['alt'];
+                    }
+                })
+            }
+            let posterImage = {};
+            posterImage['imageid'] = interactiveData['imageId'] ? interactiveData['imageId'] : '';
+            posterImage['path'] = interactiveData['path'] ? interactiveData['path'] : '';
+            let alttext = interactiveData['alttext'] ? interactiveData['alttext'] : '';
+            let that = this;
+           
+               let figureData = {
+                   schema: "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+                   interactiveid: citeTdxObj.singleAssessmentID.versionUrn,
+                   interactivetype: tempInteractiveType,
+                   interactiveformat: "mmi"
+               }
+            if(tempInteractiveType === 'video-mcq' || tempInteractiveType === 'guided-example'){
+                figureData.posterimage = posterImage;
+                figureData.alttext = alttext;  
+                
+            }
+            that.setState({itemID : itemId,
+                imagePath:posterImage.path 
+               })
+          
+               that.props.updateFigureData(figureData, that.props.index, that.props.elementId,()=>{               
+                   that.props.handleFocus("updateFromC2");
+                   setTimeout(()=>{
+                       that.props.handleBlur()
+                   },300)
+                  
+               })
+        }
+        
+    }
     /**
      * @description - This function is for rendering the Jsx Part of different Interactive Elements.
      * @param {event} element
@@ -710,7 +751,8 @@ class Interactive extends React.Component {
                
                     <div className="interactive-element">
                         {this.renderInteractiveType(model, itemId, index, slateLockInfo)}
-                        {this.state.showAssesmentpopup ? <PopUp handleC2Click ={this.handleC2InteractiveClick} togglePopup={this.togglePopup}  assessmentAndInteractive={"assessmentAndInteractive"} dialogText={'PLEASE ENTER A PRODUCT UUID'}/>:''}
+                        {this.state.showAssessmentPopup? <RootCiteTdxComponent openedFrom = {'singleSlateAssessment'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.elementType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAsseessmentUsageType} parentPageNo={this.state.parentPageNo} resetPage={this.resetPage} isReset={this.state.isReset} AssessmentSearchTitle={this.AssessmentSearchTitle} searchTitle={this.state.searchTitle} filterUUID={this.state.filterUUID} />:""}
+                        {this.state.showSinglePopup ? <RootSingleAssessmentComponent setCurrentAssessment ={this.state.setCurrentAssessment} activeAssessmentType={this.state.activeAssessmentType} openedFrom = {'singleSlateAssessmentInner'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.activeAssessmentType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAssessmentUsageType} assessmentNavigateBack = {this.assessmentNavigateBack} resetPage={this.resetPage}/>:""}
                     </div>
                 
             )
@@ -742,4 +784,12 @@ Interactive.propTypes = {
     /** itemId coming from c2module */
     itemId: PropTypes.string
 }
-export default Interactive;
+const mapActionToProps = {
+    setCurrentCiteTdx: setCurrentCiteTdx,
+    setCurrentInnerCiteTdx: setCurrentInnerCiteTdx
+}
+
+export default connect(
+    null,
+    mapActionToProps
+)(Interactive);

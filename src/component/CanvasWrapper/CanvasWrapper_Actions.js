@@ -7,14 +7,18 @@ import {
 	CLOSE_POPUP_SLATE,
     SET_OLD_IMAGE_PATH,
     AUTHORING_ELEMENT_UPDATE,
-    SET_PARENT_ASIDE_DATA
+    SET_PARENT_ASIDE_DATA,
+    SET_PARENT_SHOW_DATA,
+    ERROR_POPUP,
+    SLATE_TITLE
 } from '../../constants/Action_Constants';
-import { fetchComments } from '../CommentsPanel/CommentsPanel_Action';
+import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
-import { sendDataToIframe } from '../../constants/utility.js';
+import { sendDataToIframe, requestConfigURI } from '../../constants/utility.js';
 import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 import elementDataBank from './elementDataBank'
 import figureData from '../ElementFigure/figureTypes.js';
+import { fetchAllSlatesData, setCurrentSlateAncestorData } from '../../js/getAllSlatesData.js';
 const findElementType = (element, index) => {
     let elementType = {};
     elementType['tag'] = '';
@@ -83,12 +87,14 @@ const findElementType = (element, index) => {
                             numbered: element.figuredata.numbered,
                             startNumber: element.figuredata.startNumber
                         }
-                        switch (element.figuredata.programlanguage) {
-                            case "Select":
-                                elementType.secondaryOption = `secondary-blockcode-language-Default`
-                                break;
-                            default:
-                                elementType.secondaryOption = `secondary-blockcode-language-${(element.figuredata.programlanguage).replace(" ", "_")}`
+                        if(element.figuredata && !element.figuredata.programlanguage) {
+                            element.figuredata.programlanguage = 'Select';
+                        }
+                        let languageBCE = element.figuredata.programlanguage.toLowerCase()
+                        if (element.figuredata.programlanguage === "Select") {
+                            elementType.secondaryOption = `secondary-blockcode-language-default`
+                        } else {
+                            elementType.secondaryOption = `secondary-blockcode-language-${(languageBCE).replace(" ", "_")}`
                         }
                         break;
                     case "video":
@@ -164,6 +170,12 @@ const findElementType = (element, index) => {
                     secondaryOption: elementDataBank[element.type]["secondaryOption"]
                 }
                 break;
+            case "element-assessment":
+                if (element.elementdata && element.elementdata.assessmentformat) {
+                    element.elementdata.assessmentformat = element.elementdata.assessmentformat.toLowerCase()  /**PCAT-7526 fixes */
+                }
+                elementType = { ...elementDataBank["element-authoredtext"] }
+                break;
             default:
                 elementType = { ...elementDataBank["element-authoredtext"] }
         }
@@ -172,6 +184,7 @@ const findElementType = (element, index) => {
             elementType: ''
         }
     }
+    
     elementType['elementId'] = element.id;
     elementType['index'] = index;
     elementType['elementWipType'] = element.type;
@@ -191,7 +204,11 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
     // if(config.isFetchSlateInProgress){
     //  return false;
     // }
+    /** [TK-3289]- Fetch Data for All Slates */
+    dispatch(fetchAllSlatesData());
+    /**sendDataToIframe({ 'type': 'fetchAllSlatesData', 'message': {} }); */
     // sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
+    localStorage.removeItem('newElement');
     config.isFetchSlateInProgress = true;
     if (config.totalPageCount <= page) {
         page = config.totalPageCount;
@@ -203,7 +220,9 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
             "PearsonSSOSession": config.ssoToken
         }
     }).then(slateData => {
-		if(slateData.data && slateData.data[manifestURN] && slateData.data[manifestURN].type === "popup"){
+        let newVersionManifestId=Object.values(slateData.data)[0].id
+        
+        if(slateData.data && slateData.data[newVersionManifestId] && slateData.data[newVersionManifestId].type === "popup"){
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
             config.isPopupSlate = true
 			if (config.slateManifestURN === Object.values(slateData.data)[0].id) {
@@ -212,24 +231,24 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
 						tc_activated: JSON.stringify(slateData.data[manifestURN].tcm)
 					}
 				}
-				sendDataToIframe({
-					'type': "TcmStatusUpdated",
-					'message': messageTcmStatus
-				})
-				config.totalPageCount = slateData.data[manifestURN].pageCount;
-				config.pageLimit = slateData.data[manifestURN].pageLimit;
+                sendDataToIframe({
+                    'type': "TcmStatusUpdated",
+                    'message': messageTcmStatus
+                })
+				config.totalPageCount = slateData.data[newVersionManifestId].pageCount;
+				config.pageLimit = slateData.data[newVersionManifestId].pageLimit;
 				let parentData = getState().appStore.slateLevelData;
 				let currentParentData;
-				if ((slateData.data[manifestURN]) && (!config.fromTOC) && slateData.data[manifestURN].pageNo > 0) {
+				if ((slateData.data[newVersionManifestId]) && (!config.fromTOC) && slateData.data[newVersionManifestId].pageNo > 0) {
 					currentParentData = JSON.parse(JSON.stringify(parentData));
 					let currentContent = currentParentData[config.slateManifestURN].contents
 					let oldbodymatter = currentContent.bodymatter;
-					let newbodymatter = slateData.data[manifestURN].contents.bodymatter;
+					let newbodymatter = slateData.data[newVersionManifestId].contents.bodymatter;
 					currentContent.bodymatter = [...oldbodymatter, ...newbodymatter];
 					currentParentData = currentParentData[manifestURN];
 					config.scrolling = true;
 				} else {
-					currentParentData = slateData.data[manifestURN];
+					currentParentData = slateData.data[newVersionManifestId];
 				}
 				dispatch({
 					type: OPEN_POPUP_SLATE,
@@ -241,7 +260,18 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
                     type: SET_ACTIVE_ELEMENT,
                     payload: {}
                 });
-			}
+            }
+            else if(versioning && versioning.type==="popup"){
+                let parentData = getState().appStore.slateLevelData;
+                let newslateData = JSON.parse(JSON.stringify(parentData));
+                newslateData[config.slateManifestURN] = Object.values(slateData.data)[0];
+                return dispatch({
+                    type: AUTHORING_ELEMENT_UPDATE,
+                    payload: {
+                        slateLevelData: newslateData
+                    }
+                })
+            }
 		}
 		else{
 			if (Object.values(slateData.data).length > 0) {
@@ -269,7 +299,19 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
                         'type': "TcmStatusUpdated",
                         'message': messageTcmStatus
                     })
-                    dispatch(fetchComments(contentUrn, title));
+                     /**
+                     * [BG-1522]- On clicking the Notes icon, only the comments of last active element should be 
+                     * displayed in the Comments Panel, when user navigates back to the slate or refreshes the slate 
+                     */
+                    // let appData =  appData1 && appData1.id? appData1.id : appData1;
+                    let appData =  config.lastActiveElementId;
+                    if(appData){
+                        dispatch(fetchComments(contentUrn, title))
+                        dispatch(fetchCommentByElement(appData))
+                    }
+                    else{
+                        dispatch(fetchComments(contentUrn, title))
+                    }
                     config.totalPageCount = slateData.data[manifestURN].pageCount;
                     config.pageLimit = slateData.data[manifestURN].pageLimit;
                     let parentData = getState().appStore.slateLevelData;
@@ -301,10 +343,32 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
                     console.log("incorrect data comming...")
                 }
             }
-		}
+        }
+        /** [TK-3289]- To get Current Slate details */
+        dispatch(setCurrentSlateAncestorData(getState().appStore.allSlateData))
         
+        if(slateData.data && Object.values(slateData.data).length > 0) {
+            let slateTitle = SLATE_TITLE;
+            if('title' in slateData.data[manifestURN].contents && 'text' in slateData.data[manifestURN].contents.title) {
+                slateTitle = slateData.data[manifestURN].contents.title.text || SLATE_TITLE;
+            }
+            sendDataToIframe({
+                'type': "setSlateDetails",
+                'message': setSlateDetail(slateTitle, manifestURN)
+            });
+        }
     });
 };
+
+const setSlateDetail = (slateTitle, slateManifestURN) => {
+    let env = requestConfigURI().toLowerCase();
+    return {
+        slateTitle: slateTitle,
+        slateManifestURN: slateManifestURN,
+        env: env.replace(env.charAt(0), env.charAt(0).toUpperCase())
+    }
+}
+
 const setOldImagePath = (getState, activeElement, elementIndex = 0) => {
     let parentData = getState().appStore.slateLevelData,
         oldPath,
@@ -344,7 +408,7 @@ const setOldAudioVideoPath = (getState, activeElement, elementIndex, type) => {
         case "audio":
             if (typeof (index) == 'number') {
                 if (newBodymatter[index].versionUrn == activeElement.id) {
-                    oldPath = bodymatter[index].figuredata.audio.path || ""
+                    oldPath = (bodymatter[index].figuredata.audio && bodymatter[index].figuredata.audio.path) || ""
                 }
             } else {
                 let indexes = index.split('-');
@@ -352,12 +416,12 @@ const setOldAudioVideoPath = (getState, activeElement, elementIndex, type) => {
                 if (indexesLen == 2) {
                     condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
                     if (condition.versionUrn == activeElement.id) {
-                        oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.audio.path
+                        oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.audio && bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.audio.path
                     }
                 } else if (indexesLen == 3) {
                     condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
                     if (condition.versionUrn == activeElement.id) {
-                        oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata.audio.path
+                        oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata.audio && bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata.audio.path
                     }
                 }
             }
@@ -415,7 +479,7 @@ const setOldinteractiveIdPath = (getState, activeElement, elementIndex) => {
     }
     return oldPath || ""
 }
-export const setActiveElement = (activeElement = {}, index = 0,parentUrn = {},asideData={} , updateFromC2Flag = false) => (dispatch, getState) => {
+export const setActiveElement = (activeElement = {}, index = 0,parentUrn = {},asideData={} , updateFromC2Flag = false,showHideObj) => (dispatch, getState) => {
     dispatch({
         type: SET_ACTIVE_ELEMENT,
         payload: findElementType(activeElement, index)
@@ -425,6 +489,12 @@ export const setActiveElement = (activeElement = {}, index = 0,parentUrn = {},as
         payload: {
             parentUrn : parentUrn,
             asideData:asideData
+        }
+    })
+    dispatch({
+        type: SET_PARENT_SHOW_DATA,
+        payload: {
+            showHideObj : showHideObj,
         }
     })
     switch (activeElement.figuretype) {
@@ -476,7 +546,9 @@ export const fetchAuthUser = () => dispatch => {
         }
     }).then((response) => {
         let userInfo = response.data;
-        config.userEmail = userInfo.email;
+		config.userEmail = userInfo.email;
+		document.cookie = (userInfo.firstName)?`FIRST_NAME=${userInfo.firstName};path=/;`:`FIRST_NAME=;path=/;`;
+		document.cookie = (userInfo.lastName)?`LAST_NAME=${userInfo.lastName};path=/;`:`LAST_NAME=;path=/;`;
     })
         .catch(err => {
             console.log('axios Error', err);
@@ -501,5 +573,64 @@ export const openPopupSlate = (element, popupId) => dispatch => {
 			}
 		});
 	}
-	
+}
+
+export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex, slateManifestURN) => (dispatch, getState) => {
+    let popupFieldType = ""
+    if(popupField === "formatted-subtitle"){
+        popupFieldType = "formattedSubtitle"
+    }
+    else{
+        popupFieldType = "formattedTitle"
+    }
+    
+    let _requestData = {
+        "projectUrn": config.projectUrn,
+        "slateEntityUrn": parentElement.contentUrn,
+        "slateUrn": parentElement.id,
+        "type": "TEXT",
+        "metaDataField" : popupFieldType
+    };
+    let url = `${config.REACT_APP_API_URL}v1/slate/element`
+    return axios.post(url, 
+        JSON.stringify(_requestData),
+        {
+            headers: {
+                "Content-Type": "application/json",
+                "PearsonSSOSession": config.ssoToken
+            }
+        })
+    .then((response) => {
+        let elemIndex = `cypress-${popupElementIndex}`
+        let elemNode = document.getElementById(elemIndex)
+        popupElementIndex = popupElementIndex.split("-")
+        const parentData = getState().appStore.slateLevelData
+        let newslateData = JSON.parse(JSON.stringify(parentData))
+        let _slateObject = newslateData[slateManifestURN]
+        let targetPopupElement=_slateObject.contents.bodymatter[popupElementIndex[0]];
+        if(popupElementIndex.length === 3){
+            targetPopupElement = targetPopupElement.elementdata.bodymatter[popupElementIndex[1]]
+        }
+        else if(popupElementIndex.length === 4){
+            targetPopupElement = targetPopupElement.elementdata.bodymatter[popupElementIndex[1]].contents.bodymatter[popupElementIndex[2]]
+        }
+        if(targetPopupElement){
+            targetPopupElement.popupdata[popupField] = response.data
+            targetPopupElement.popupdata[popupField].html.text = elemNode.innerHTML
+            targetPopupElement.popupdata[popupField].elementdata.text = elemNode.innerText
+            _slateObject.contents.bodymatter[popupElementIndex] = targetPopupElement
+        }
+        dispatch({
+            type: AUTHORING_ELEMENT_UPDATE,
+            payload: {
+                slateLevelData: newslateData
+            }
+        })
+        if(cb) cb(response.data)
+    })
+    .catch((error) => {
+        console.log("%c ERROR RESPONSE", "font: 30px; color: red; background: black", error)
+        dispatch({type: ERROR_POPUP, payload:{show: true}})
+        config.savingInProgress = false
+    })
 }

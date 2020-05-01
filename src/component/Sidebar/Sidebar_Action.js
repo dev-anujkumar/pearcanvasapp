@@ -9,9 +9,10 @@ import {
 import elementTypes from './../Sidebar/elementTypes';
 import figureDataBank from '../../js/figure_data_bank';
 import { sendDataToIframe } from '../../constants/utility.js';
+import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
 let imageSource = ['image','table','mathImage'],imageDestination = ['primary-image-figure','primary-image-table','primary-image-equation']
 
-export const convertElement = (oldElementData, newElementData, oldElementInfo, store, indexes, fromToolbar) => (dispatch,getState) => {
+export const convertElement = (oldElementData, newElementData, oldElementInfo, store, indexes, fromToolbar,showHideObj) => (dispatch,getState) => {
     let appStore =  getState().appStore;
     try {
         let conversionDataToSend = {};
@@ -38,7 +39,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         outputSubType = outputSubTypeList[[newElementData['secondaryOption']]]
 
     if (oldElementData.type === "figure") {
-        if (!(imageSource.includes(oldElementData.figuretype) && imageDestination.includes(newElementData['primaryOption']))){
+        if (!(imageSource.includes(oldElementData.figuretype) && imageDestination.includes(newElementData['primaryOption'])) && oldElementData.figuretype !== 'codelisting'){
             oldElementData.figuredata = {...figureDataBank[newElementData['primaryOption']]}
         }
         if(oldElementData.figuredata.srctype){
@@ -50,7 +51,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
 
         /* on Conversion removing the tinymce instance for BCE element*/
         if ((outputPrimaryOptionType && outputPrimaryOptionType['enum'] === "BLOCK_CODE_EDITOR" || newElementData && newElementData['primaryOption'] === 'primary-blockcode-equation') &&
-            newElementData['secondaryOption'] === "secondary-blockcode-language-Default") {
+            newElementData['secondaryOption'] === "secondary-blockcode-language-default") {
             if (tinymce && tinymce.activeEditor && tinymce.activeEditor.id) {
                 document.getElementById(tinymce.activeEditor.id).setAttribute('contenteditable', false)
             }
@@ -74,15 +75,28 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         oldElementData.figuredata.elementdata.usagetype=usageType;
         let assessmentFormat =outputSubType.text.toLowerCase();
         let assessmentItemType ="";
-        if(assessmentFormat==="cite"){
+        if(assessmentFormat==="cite" || assessmentFormat==="puf"){
             assessmentItemType ="assessmentItem";
         }else{
             assessmentItemType = "tdxAssessmentItem";
         }
         // oldElementData['html']['title'] = "";
-        oldElementData.figuredata.elementdata.assessmentformat=assessmentFormat
+        oldElementData.figuredata.id = "";                                              //PCAT-6792 fixes
+        oldElementData.figuredata.elementdata.posterimage.imageid = "";
+        oldElementData.figuredata.elementdata.assessmentid = "";
+        oldElementData.figuredata.elementdata.assessmentitemid = "";
+        oldElementData.figuredata.elementdata.assessmentformat=assessmentFormat;
         oldElementData.figuredata.elementdata.assessmentitemtype=assessmentItemType;
         oldElementData.html.title="";
+        oldElementData && oldElementData.title && oldElementData.title.text ? oldElementData.title.text ="": null;
+        // if(assessmentFormat==="puf"){
+        //     delete oldElementData.figuredata.elementdata.posterimage
+        // }else{
+        //     oldElementData.figuredata.elementdata.posterimage ={
+        //         imageid : "",
+        //         path: "https://cite-media-stg.pearson.com/legacy_paths/8efb9941-4ed3-44a3-8310-1106d3715c3e/FPO-assessment.png"
+        //     }
+        // }
     }
     /**
      * Patch [code in If block] - in case list is being converted from toolbar and there are some unsaved changes in current element
@@ -97,6 +111,10 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
           tinyMCE.$(editableDom).find('ol').removeAttr('data-mce-style')
         }
         let domHtml = editableDom ? editableDom.innerHTML : "<ol></ol>"
+        if(showHideObj){
+            containerDom = document.getElementById(`cypress-${showHideObj.index}`)
+            domHtml = containerDom ? containerDom.innerHTML : "<ol></ol>"
+        }
         if (storeHtml !== domHtml) {
             oldElementData.html.text = domHtml
         }
@@ -143,6 +161,12 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                 break;
         }
         oldElementData.designtype = elemDesigntype
+    }
+    if (oldElementData.type === "element-blockfeature") {
+        let tempDiv = document.createElement('div');
+        tempDiv.innerHTML = oldElementData.html.text;
+        tinyMCE.$(tempDiv).find('.blockquote-hidden').remove();
+        oldElementData.html.text = tempDiv.innerHTML;
     }
     conversionDataToSend = {
         ...oldElementData,
@@ -193,9 +217,14 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     if (newElementData.primaryOption !== "primary-list" && conversionDataToSend.inputType === conversionDataToSend.outputType && conversionDataToSend.inputSubType === conversionDataToSend.outputSubType) {
         return;
     }
-
+    if(showHideObj){
+        conversionDataToSend["section"] = showHideObj.showHideType
+    }
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
     config.conversionInProcess = true
+    if(conversionDataToSend.status === "approved"){
+        config.savingInProgress = true
+    }
     const url = `${config.REACT_APP_API_URL}v1/slate/elementTypeConversion/${overallType}`
     axios.post(url, JSON.stringify(conversionDataToSend), { 
         headers: {
@@ -203,28 +232,46 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             "PearsonSSOSession": config.ssoToken
         }
     }).then(res =>{
-      	let parentData = store;
+        if (res && res.data && res.data.type && res.data.type === 'figure' && res.data.figuretype && res.data.figuretype === 'codelisting') {
+            if (res.data.figuredata && !res.data.figuredata.programlanguage) {
+                res.data.figuredata.programlanguage = 'Select';
+            }
+        }
+        let parentData = store;
         let currentParentData = JSON.parse(JSON.stringify(parentData));
         let currentSlateData = currentParentData[config.slateManifestURN];
         if (currentSlateData.status === 'approved') {
-        sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+            if(currentSlateData.type==="popup"){
+                sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
+                dispatch(fetchSlateData(config.slateManifestURN,conversionDataToSend.slateEntity, 0,currentSlateData));
+            }
+            else{
+                sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+            }
+            /**
+             * PCAT-6929 : Renumbering of List element creates a new version but doesn't reorder the List numbering in element
+             */
+            // return false;
         }
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
         config.conversionInProcess = false
+        config.savingInProgress = false
         tinymce.activeEditor&&tinymce.activeEditor.undoManager&&tinymce.activeEditor.undoManager.clear();
 
         let storeElement = store[config.slateManifestURN];
         let bodymatter = storeElement.contents.bodymatter;
         let focusedElement = bodymatter;
         indexes.forEach(index => {
+            if(focusedElement[index]){
             if(newElementData.elementId === focusedElement[index].id) {
-                focusedElement[index] = res.data//ElementWipData.showhide;
+                focusedElement[index] = res.data
             } else {
-                if(('elementdata' in focusedElement[index] && 'bodymatter' in focusedElement[index].elementdata) || ('contents' in focusedElement[index] && 'bodymatter' in focusedElement[index].contents)) {
+                if(('elementdata' in focusedElement[index] && 'bodymatter' in focusedElement[index].elementdata) || ('contents' in focusedElement[index] && 'bodymatter' in focusedElement[index].contents) || 'interactivedata' in bodymatter[index]) {
                     //  focusedElement = focusedElement[index].elementdata.bodymatter;
-                    focusedElement = focusedElement[index].elementdata && focusedElement[index].elementdata.bodymatter ||  focusedElement[index].contents.bodymatter
+                    focusedElement = focusedElement[index].elementdata && focusedElement[index].elementdata.bodymatter ||  focusedElement[index].contents && focusedElement[index].contents.bodymatter ||  bodymatter[index].interactivedata[showHideObj.showHideType]
                 }
             }
+        }
         });
         store[config.slateManifestURN].contents.bodymatter = bodymatter;//res.data;
         let altText="";
@@ -271,6 +318,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         console.log("Conversion Error >> ",err)
         dispatch({type: ERROR_POPUP, payload:{show: true}})
         config.conversionInProcess = false
+        config.savingInProgress = false
     })
 }
 catch (error) {
@@ -280,7 +328,7 @@ catch (error) {
 }
 }
 
-export const handleElementConversion = (elementData, store, activeElement, fromToolbar) => dispatch => {
+export const handleElementConversion = (elementData, store, activeElement, fromToolbar,showHideObj) => dispatch => {
     store = JSON.parse(JSON.stringify(store));
     if(Object.keys(store).length > 0) {
         let storeElement = store[config.slateManifestURN];
@@ -289,14 +337,18 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
         indexes = indexes.toString().split("-");
         
         indexes.forEach(index => {
-            if(elementData.elementId === bodymatter[index].id) {
-                dispatch(convertElement(bodymatter[index], elementData, activeElement, store, indexes, fromToolbar));
-            } else {
-                if(('elementdata' in bodymatter[index] && 'bodymatter' in bodymatter[index].elementdata) || ('contents' in bodymatter[index] && 'bodymatter' in bodymatter[index].contents))  {
-                    bodymatter = bodymatter[index].elementdata && bodymatter[index].elementdata.bodymatter ||  bodymatter[index].contents.bodymatter
+            if(bodymatter[index]){
+                if(elementData.elementId === bodymatter[index].id) {
+                    dispatch(convertElement(bodymatter[index], elementData, activeElement, store, indexes, fromToolbar,showHideObj));
+                } else {
+                    if( bodymatter[index] && (('elementdata' in bodymatter[index] && 'bodymatter' in bodymatter[index].elementdata) || ('contents' in bodymatter[index] && 'bodymatter' in bodymatter[index].contents) || 'interactivedata' in bodymatter[index])) {
+                        
+                        bodymatter = bodymatter[index].elementdata && bodymatter[index].elementdata.bodymatter ||   bodymatter[index].contents && bodymatter[index].contents.bodymatter ||  bodymatter[index].interactivedata[showHideObj.showHideType]
+                    }
+                    
                 }
-                
             }
+       
         });
     }
     
@@ -311,7 +363,7 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
 export const conversionElement = (elementData, fromToolbar) => (dispatch, getState) => {
     if(!config.conversionInProcess && !config.savingInProgress){
         let appStore =  getState().appStore;
-        dispatch(handleElementConversion(elementData, appStore.slateLevelData, appStore.activeElement, fromToolbar));
+        dispatch(handleElementConversion(elementData, appStore.slateLevelData, appStore.activeElement, fromToolbar,appStore.showHideObj));
     } else {
         return false;
     }

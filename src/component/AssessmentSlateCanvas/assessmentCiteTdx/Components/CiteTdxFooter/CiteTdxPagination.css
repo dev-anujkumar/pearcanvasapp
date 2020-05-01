@@ -1,0 +1,43 @@
+.pagination {
+    display: block;
+    float: left;
+    padding: 14px;
+  }
+  
+  .pagination a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+  }
+  
+  .pagination a.active {
+    background-color: #0880a3;
+    color: white;
+    pointer-events: none;
+    cursor: default;
+  }
+
+  a.disableClick {
+    pointer-events: none;
+    cursor: default;
+  }
+
+    .disableAssessmentSearch {
+    pointer-events: none;
+    cursor: default;  
+  }
+
+  a.hideNavigation {
+    pointer-events: none;
+    cursor: default;
+    color:rgb(232, 232, 232);
+  }
+  
+  .pagination a:hover:not(.active) {background-color: #ddd;}
+
+  a.noSelect {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+            user-select: none; /* Non-prefixed version, currently supported by Chrome, Opera and Firefox */
+  }

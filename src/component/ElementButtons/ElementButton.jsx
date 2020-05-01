@@ -22,7 +22,8 @@ import {
     metaDataAnchor,
     elmCloseWindowIcon,
     elmAssessmentItem,
-    feedbackIcon
+    feedbackIcon,
+    assessmentCloseWindowIcon
 } from '../../images/ElementButtons/ElementButtons.jsx';
 import deleteIcon from '../../images/ElementButtons/deleteIcon.png'
 import forwardNavActive from '../../images/ElementButtons/forwardNavActive.png'
@@ -109,7 +110,7 @@ class Button extends Component {
                     </span>
                 break;
             case buttonTypes.INTERACTIVE_ELEMENT:
-                buttonJSX = <span className="btn-element interactive-elem" onClick={clickHandlerFn}>
+                buttonJSX = <span className="btn-element interactive-elem-button" onClick={clickHandlerFn}>
                     {interativeIcon}
                     </span>
                 break;
@@ -151,6 +152,11 @@ class Button extends Component {
             case ButtonTypes.ELM_CLOSE_WINDOW:
                 buttonJSX = <span className="" onClick={clickHandlerFn}>
                     {elmCloseWindowIcon}
+                </span>
+                break;
+            case ButtonTypes.ASSESSMENT_CLOSE_WINDOW:
+                buttonJSX = <span className="" onClick={clickHandlerFn}>
+                    {assessmentCloseWindowIcon}
                 </span>
                 break;
             case ButtonTypes.ELM_ASSESSMENT_ITEM:

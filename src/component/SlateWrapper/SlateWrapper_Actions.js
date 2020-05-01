@@ -20,6 +20,7 @@ import {
 
 import { sendDataToIframe } from '../../constants/utility.js';
 import { HideLoader, ShowLoader } from '../../constants/IFrameMessageTypes.js';
+import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
 
 
 Array.prototype.move = function (from, to) {
@@ -32,7 +33,10 @@ function prepareDataForTcmUpdate(updatedData, parentData, asideData) {
     } else if (parentData && parentData.elementType === "manifest") {
         updatedData.isHead = false;
     }
-    if (asideData && asideData.type === "element-aside") {
+    if(updatedData.type === "POP_UP" || updatedData.type === "SHOW_HIDE"){
+        updatedData.parentType = updatedData.type==="POP_UP"? "popup":"showhide";
+    }
+    else if (asideData && asideData.type === "element-aside") {
         if (asideData.subtype === "workedexample") {
             updatedData.parentType = "workedexample";
         } else {
@@ -59,7 +63,7 @@ function createNewVersionOfSlate(){
         })
 }
 
-export const createElement = (type, index, parentUrn, asideData, outerAsideIndex, loref, cb) => (dispatch, getState) => {
+export const createElement = (type, index, parentUrn, asideData, outerAsideIndex, loref,cb) => (dispatch, getState) => {
     config.currentInsertedIndex = index;
     config.currentInsertedType = type;
     let  popupSlateData = getState().appStore.popupSlateData
@@ -93,10 +97,15 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         const newParentData = JSON.parse(JSON.stringify(parentData));
         let currentSlateData = newParentData[config.slateManifestURN];
         if (currentSlateData.status === 'approved') {
+            if(currentSlateData.type==="popup"){
+                sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
+                dispatch(fetchSlateData(config.slateManifestURN,_requestData.slateEntity, 0,currentSlateData));
+            } else {
             // createNewVersionOfSlate();
             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
             sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
             return false;
+            }
         }
         const newPopupSlateData = JSON.parse(JSON.stringify(popupSlateData));
         let createdElementData = createdElemData.data;
@@ -131,6 +140,13 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 slateLevelData: newParentData
             }
         })
+        if(type === "SHOW_HIDE"){
+            let showHideRevealElement = document.getElementById(`cypress-${index}-2-0`)
+               if(showHideRevealElement){
+                    showHideRevealElement.focus()
+                    showHideRevealElement.blur()
+               } 
+            }
         if (cb) {
             cb();
         }
@@ -195,8 +211,14 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                 const parentData = getState().appStore.slateLevelData;
                 let newParentData = JSON.parse(JSON.stringify(parentData));
                 if (currentSlateData.status === 'approved') {
-                    sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
-                    sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+                    if(currentSlateData.type==="popup"){
+                        sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
+                        dispatch(fetchSlateData(config.slateManifestURN,_requestData.currentSlateEntityUrn, 0,currentSlateData));
+                    }
+                    else{
+                        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
+                        sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+                    }
                     return false;
                 }
                 let newBodymatter = newParentData[slateId].contents.bodymatter;
@@ -294,6 +316,14 @@ export const handleSplitSlate = (newSlateObj) => (dispatch, getState) => {
         }
     ).then(res => {
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
+        let parentData = getState().appStore.slateLevelData;
+        let currentParentData = JSON.parse(JSON.stringify(parentData));
+        let currentSlateData = currentParentData[config.slateManifestURN];
+        if (currentSlateData.status === 'approved') {
+            sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
+            sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+            return;
+        }
         dispatch({
             type: FETCH_SLATE_DATA,
             payload: {
@@ -381,7 +411,7 @@ export const updatePageNumber = (pagenumber, elementId, asideData, parentUrn) =>
             let pageNumberRef = {
                 pageNumber: data.pageNumber
             }
-            const elementObject = _slateBodyMatter.map(element => {
+             _slateBodyMatter.map(element => {
                 if (element.id === elementId) {
                     element['pageNumberRef'] = { ...pageNumberRef, urn: element.id }
                 }

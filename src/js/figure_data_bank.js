@@ -42,7 +42,7 @@ export default {
         "videoid": "",
         "posterimage": {
             "imageid": "",
-            "path": "https://d12m40tknrppbi.cloudfront.net/cite/images/FPO-audio_video.png"
+            "path": "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png"
         },
         "videos": [
             {
@@ -52,7 +52,6 @@ export default {
         ],
         "tracks": [],
         "srctype": "externallink",
-        "clipinfo": {}
 
     },
     "primary-audio": {
@@ -63,10 +62,6 @@ export default {
         "posterimage": {
             "imageid": "",
             "path": "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png"
-        },
-        "audio": {
-            "format": "",
-            "path": ""
         },
         "srctype": "externallink"
 
@@ -105,7 +100,7 @@ export default {
     "primary-single-assessment": {
         "schema": "http://schemas.pearson.com/wip-authoring/element/1",
         "type": "element-assessment",
-        "subtype": "assessment",
+       // "subtype": "assessment",
         "elementdata": {
             "assessmentitemtype": "tdxAssessmentItem",
             "assessmentformat": "tdx",

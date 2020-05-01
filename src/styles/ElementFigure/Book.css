@@ -650,14 +650,7 @@ a.paragraphNumeroUnoFootnote:hover {
 
 
  /* SANS-SERIF */
-
-p.paragraphNummerEins {
-  color: #000;
-  font-family: Helvetica, sans-serif;
-  font-size: 1.025em;
-  font-weight: 400;
-  line-height: 1.60em;
-}
+ 
 
 a.paragraphNummerEins {
   color: #007FA3;
@@ -667,33 +660,6 @@ a.paragraphNummerEins {
 
 a.paragraphNummerEins:hover {
   text-decoration: underline;
-}
-
-P.paragraphNummerEinsIndentLevel1 {
-  color: #000;
-  margin-left: 0em;
-  font-family: Helvetica, sans-serif;
-  font-size: 1em;
-  font-weight: 400;
-  line-height: 1.65em;
-}
-
-P.paragraphNummerEinsIndentLevel2 {
-  color: #000;
-  margin-left: 4em;
-  font-family: Helvetica, sans-serif;
-  font-size: 1em;
-  font-weight: 400;
-  line-height: 1.65em;
-}
-
-P.paragraphNummerEinsIndentLevel3 {
-  color: #000;
-  margin-left: 6em;
-  font-family: Helvetica, sans-serif;
-  font-size: 1em;
-  font-weight: 400;
-  line-height: 1.65em;
 }
   
 

@@ -7,6 +7,7 @@ let config = {
     PRODUCTAPI_ENDPOINT: "https://contentapis-staging.pearsoncms.net/product-api/",
     PROJECTAPI_ENDPOINT: "https://contentapis-staging.pearsoncms.net/project-api/distributable/v2",
     ELM_ENDPOINT:  "https://contentapis-staging.pearsoncms.net/manifest-api/",
+    ASSESSMENT_ENDPOINT:  "https://contentapis-staging.pearsoncms.net/assessment-api/",
     LERNOSITY_ENDPOINT:  "https://contentapis-staging.pearsoncms.net/manifest-api/",
     SLATE_REFRESH_URL : "https://contentapis-staging.pearsoncms.net/structure-api/container/v2/",
     AUDIO_NARRATION_URL : 'https://contentapis-staging.pearsoncms.net/structure-api/',
@@ -26,7 +27,7 @@ let config = {
     CMDS_DATA_ENDPOINT: 'https://staging.data.pearson.com',
     CMDS_SCHEMA_ENDPOINT: 'https://staging.schema.pearson.com',
     CMDS_DATABASE:  '?db=qa2',
-    CMIS_REPO   : '[{"repo":"https://staging.api.pearson.com/content/cmis/ukwip","repoName":"UK"},{"repo":"https://staging.api.pearson.com/content/cmis/uswip-aws","repoName":"AWS US"},{"repo":"https://staging.api.pearson.com/content/cmis/uswip","repoName":"US"}]',
+    CMIS_REPO   : [{repo:"https://staging.api.pearson.com/content/cmis/ukwip",repoName:"UK"},{repo:"https://staging.api.pearson.com/content/cmis/uswip-aws","repoName":"AWS US"},{"repo":"https://staging.api.pearson.com/content/cmis/uswip","repoName":"US"}],
     CMDS_AUTHORIZATION: 'Basic Ymx1ZWJlcnJ5OmVAQkhSTUF2M2V5S2xiT1VjS0tAWl56Q0ZhMDRtYw==',
     EPS_API: 'https://us-school-stg.pearsoned.com/school',
     //c4 required keys and urls
@@ -53,7 +54,8 @@ let config = {
     },
     IDENTITY_URL: "/auth",
     GET_FIGURES : 'https://contentapis-staging.pearsoncms.net/',
-    GET_ASSETPOPOVER_ID :'https://staging.api.pearson.com/'
+    GET_ASSETPOPOVER_ID :'https://staging.api.pearson.com/',
+    PREVIEW_ASSESSMENT_LO_ENDPOINT : "https://cite-qa.pearson.com/"
 };
 
 if (process.env.NODE_ENV === "development") {

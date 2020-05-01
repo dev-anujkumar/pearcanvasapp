@@ -62,7 +62,7 @@ class ElementAsideContainer extends Component {
             if (_containerData !== null && _containerData !== undefined) {
                 if (Object.values(_containerData).length > 0) {
                     let { id: _containerId, type: _containerType, contents: _contents, elementdata: _elementData } = _containerData;
-                    let { title: _slateTitle, bodymatter: _bodyMatter } = _contents || _elementData;
+                    let { bodymatter: _bodyMatter } = _contents || _elementData;
                     let { index } = this.props
                     let parentUrn = {
                         manifestUrn: _containerId,
@@ -126,7 +126,7 @@ class ElementAsideContainer extends Component {
                                 }}
                                 ref={(c) => {
                                     if (c) {
-                                        let sortable = c.sortable;
+                                        //let sortable = c.sortable;
                                     }
                                 }}
                                 tag="div"
@@ -187,15 +187,32 @@ class ElementAsideContainer extends Component {
                         // Element dragging ended
                         onUpdate: (/**Event*/evt) => {
                             let swappedElementData;
-                            swappedElementData = this.sectionBodyMatter[evt.oldDraggableIndex]
+                            let bodyMatterObj = [];
+                            let contentURN;
+                            if(this.props.element.contents){
+                                contentURN = this.props.element.contentUrn;
+                                bodyMatterObj = this.props.element.contents.bodymatter;
+                            } else {
+                                contentURN = this.props.element.elementdata.bodymatter[index].contentUrn;
+                                bodyMatterObj = this.props.element.elementdata.bodymatter[index].contents.bodymatter;
+                            }
+
+                            if(bodyMatterObj[evt.oldDraggableIndex]) {
+                                swappedElementData = bodyMatterObj[evt.oldDraggableIndex];
+                            } else {
+                                this.sectionBodyMatter = _containerBodyMatter;
+                                swappedElementData = this.sectionBodyMatter[evt.oldDraggableIndex]
+                            }
+
                             let dataObj = {
                                 oldIndex: evt.oldDraggableIndex,
                                 newIndex: evt.newDraggableIndex,
                                 swappedElementData: swappedElementData,
-                                currentSlateEntityUrn: parentUrn.contentUrn,
+                                currentSlateEntityUrn: contentURN,
                                 containerTypeElem: 'section',
                                 asideId: this.props.element.id
                             }
+
                             this.props.swapElement(dataObj, (bodyObj) => { })
                             this.props.setActiveElement(dataObj.swappedElementData, dataObj.newIndex);
                             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
@@ -207,7 +224,7 @@ class ElementAsideContainer extends Component {
                     }}
                     ref={(c) => {
                         if (c) {
-                            let sortable = c.sortable;
+                            //let sortable = c.sortable;
                         }
                     }}
                     tag="div"
@@ -229,12 +246,12 @@ class ElementAsideContainer extends Component {
     sectionBreak(_element, index) {
         let { id: _elementId, type: _elementType, contents: _containerContent, elementdata: _elementData } = _element;
         let { bodymatter: _containerBodyMatter } = _containerContent || _elementData;
-        this.sectionBreakBodyMatter = _containerBodyMatter;
         let parentUrn = {
             manifestUrn: _elementId,
             contentUrn: _element.contentUrn,
             elementType: _elementType
         }
+        this.sectionBreakBodyMatter = _containerBodyMatter;
         const { elemBorderToggle, borderToggle } = this.props
         let parentIndex = `${this.props.index}-${index}`
         let elementLength = _containerBodyMatter.length
@@ -273,15 +290,32 @@ class ElementAsideContainer extends Component {
                         // Element dragging ended
                         onUpdate: (/**Event*/evt) => {
                             let swappedElementData;
-                            swappedElementData = this.sectionBreakBodyMatter[evt.oldDraggableIndex]
+                            let bodyMatterObj = [];
+                            let contentURN;
+                            if(this.props.element.contents){
+                                contentURN = this.props.element.contentUrn;
+                                bodyMatterObj = this.props.element.contents.bodymatter;
+                            } else {
+                                contentURN = this.props.element.elementdata.bodymatter[index].contentUrn;
+                                bodyMatterObj = this.props.element.elementdata.bodymatter[index].contents.bodymatter;
+                            }
+
+                            if(bodyMatterObj[evt.oldDraggableIndex]) {
+                                swappedElementData = bodyMatterObj[evt.oldDraggableIndex];
+                            } else {
+                                this.sectionBreakBodyMatter = _containerBodyMatter;
+                                swappedElementData = this.sectionBreakBodyMatter[evt.oldDraggableIndex]
+                            }                           
+                            
                             let dataObj = {
                                 oldIndex: evt.oldDraggableIndex,
                                 newIndex: evt.newDraggableIndex,
                                 swappedElementData: swappedElementData,
-                                currentSlateEntityUrn: parentUrn.contentUrn,
+                                currentSlateEntityUrn: contentURN,
                                 containerTypeElem: 'section',
                                 asideId: this.props.element.id,
                             }
+
                             this.props.swapElement(dataObj, (bodyObj) => { })
                             this.props.setActiveElement(dataObj.swappedElementData, dataObj.newIndex);
                             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
@@ -293,7 +327,7 @@ class ElementAsideContainer extends Component {
                     }}
                     ref={(c) => {
                         if (c) {
-                            let sortable = c.sortable;
+                            //let sortable = c.sortable;
                         }
                     }}
                     tag="div"
@@ -330,11 +364,15 @@ class ElementAsideContainer extends Component {
                         index= {index}
                         upperOne={true}
                         firstOne={index === 0}
+                        parentUrn={parentUrn}
+                        asideData={asideData}
+                        parentIndex={parentIndex}
                         esProps={this.props.elementSepratorProps(index, true, parentUrn, asideData, parentIndex)}
                         elementType="element-aside"
                         sectionBreak={true}
                         permissions={this.props.permissions}
                         onClickCapture={this.props.onClickCapture}
+                        splithandlerfunction={this.props.splithandlerfunction}
                     />
                     ) 
                  
@@ -349,11 +387,15 @@ class ElementAsideContainer extends Component {
                                     index= {0}
                                     upperOne={true}
                                     firstOne={0}
+                                    parentUrn={parentUrn}
+                                    asideData={asideData}
+                                    parentIndex={parentIndex}
                                     esProps={this.props.elementSepratorProps(0, true, parentUrn, asideData, parentIndex)}
                                     elementType="element-aside"
                                     sectionBreak={true}
                                     permissions={this.props.permissions}
                                     onClickCapture={this.props.onClickCapture}
+                                    splithandlerfunction={this.props.splithandlerfunction}
                                 />
                                 {this.section(element, index)}
                                 </>
@@ -374,10 +416,14 @@ class ElementAsideContainer extends Component {
                                         upperOne={true}
                                         firstOne={index === 0}
                                         index={index}
+                                        parentUrn={parentUrn}
+                                        asideData={asideData}
+                                        parentIndex={parentIndex}
                                         esProps={this.props.elementSepratorProps(index, true, parentUrn, asideData, parentIndex)}
                                         elementType={this.props.element.type}
                                         permissions={this.props.permissions}
                                         onClickCapture={this.props.onClickCapture}
+                                        splithandlerfunction={this.props.splithandlerfunction}
                                     />
                                     }
                                     <ElementContainer
@@ -409,7 +455,11 @@ class ElementAsideContainer extends Component {
                                     </ElementContainer>
                                     <ElementSaprator
                                         index={index}
+                                        parentUrn={parentUrn}
+                                        asideData={asideData}
+                                        parentIndex={parentIndex}
                                         esProps={this.props.elementSepratorProps(index, false, parentUrn, asideData, parentIndex)}
+                                        splithandlerfunction={this.props.splithandlerfunction}
                                         elementType={this.props.element.type}
                                         sectionBreak={this.props.element.subtype == "workedexample" ? showSectionBreak : false}
                                         permissions={this.props.permissions}

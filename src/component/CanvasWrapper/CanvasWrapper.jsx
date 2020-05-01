@@ -34,7 +34,7 @@ import { glossaaryFootnotePopup } from '../GlossaryFootnotePopup/GlossaryFootnot
 import store from './../../appstore/store'
 import PopUp from '../PopUp';
 import { hideBlocker } from '../../js/toggleLoader';
-
+import {getAllSlatesData} from '../../js/getAllSlatesData'
 export class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
@@ -75,20 +75,12 @@ export class CanvasWrapper extends Component {
             'type': ShowHeader,
             'message': true
         })
-        // let { projectUrn } = config,
-        // slateId = config.slateManifestURN
         this.props.getSlateLockStatus(config.projectUrn ,config.slateManifestURN) 
-
-        let searchString = window.location.search;
-        let q = new URLSearchParams(searchString);
-        if(q.get('q')){
-            let currentWorkId = q.get('q');
-            setTimeout(() => {
-                this.props.toggleCommentsPanel(true);
-                this.props.fetchCommentByElement(currentWorkId);
-            }, 4000);
-        }
         localStorage.removeItem('newElement');
+        window.onbeforeunload = () => {
+            let slateId = config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
+            this.props.releaseSlateLock(config.projectUrn, slateId)
+        }
     }
 
 
@@ -107,7 +99,7 @@ export class CanvasWrapper extends Component {
                     if (wirisNodeLength > 1) {
                         for (let i = 0; i < wirisNodeLength - 1; i++) {
                             wirisNodes[i].remove();
-                            document.getElementsByClassName('wrs_modal_overlay').remove
+                            document.getElementsByClassName('wrs_modal_overlay').remove;
                         }
                     }
                 }
@@ -278,6 +270,7 @@ export default connect(
         updateElement,
         setSlateParent,
         openPopupSlate,
-        getTableEditorData
+        getTableEditorData,
+        getAllSlatesData
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

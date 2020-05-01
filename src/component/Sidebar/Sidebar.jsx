@@ -88,12 +88,13 @@ class Sidebar extends Component {
     }
 
     toggleElementDropdown = e => {
-        if(hasReviewerRole() || !(this.props.permissions && this.props.permissions.includes('access_formatting_bar'))){
+        if(hasReviewerRole()){
             return true
         }
         const { activePrimaryOption } = this.state
         if(e.target.dataset && e.target.dataset.element !== "secondary"){
-            if(activePrimaryOption === "primary-openerelement" || activePrimaryOption === "primary-single-assessment"){
+            let disabledPrimaryOption=["primary-openerelement", "primary-single-assessment" ,"primary-popup", "primary-showhide", "primary-mmi", "primary-smartlink"];
+            if( disabledPrimaryOption.indexOf(activePrimaryOption) !== -1 ){
                 e.stopPropagation()
                 return false
             }
@@ -111,12 +112,17 @@ class Sidebar extends Component {
         const { activePrimaryOption } = this.state
         let primaryOptions = '';
         if(this.state.activeElementType){
+            let className=""
             let primaryOptionObject = elementList[this.state.activeElementType];
             let primaryOptionList = Object.keys(primaryOptionObject);
             if(primaryOptionList.length > 0) {
                 if(this.state.activeElementType === 'element-assessment'){
                     delete primaryOptionList[1];
                 }
+                let disabledPrimaryOption=["popup", "showhide", "element-interactive", "element-smartlink"];
+                 if( disabledPrimaryOption.indexOf(this.state.activeElementType) !== -1 ){
+                    className="disabled"
+                 }
                 primaryOptions = primaryOptionList.map(item => {
                     if(item !== 'enumType') {
                         return <li key={item} data-value={item} onClick={this.handlePrimaryOptionChange}>
@@ -131,8 +137,8 @@ class Sidebar extends Component {
                 }
     
                 primaryOptions = <div
-                    className="element-dropdown">
-                    <div className="element-dropdown-title" data-element="primary" onClick={this.toggleElementDropdown}>
+                    className={`element-dropdown ${this.props.showHideObj && this.props.activeElement.elementType? "sidebar-disable": ""}`}>
+                    <div className={`element-dropdown-title ${className}`} data-element="primary" onClick={this.toggleElementDropdown}>
                         {primaryOptionObject[this.state.activePrimaryOption].text}
                         { activePrimaryOption === "primary-single-assessment" ? null : dropdownArrow }
                     </div>
@@ -165,7 +171,7 @@ class Sidebar extends Component {
     }
 
     handleSecondaryOptionChange = e => {
-        let value = e.target.getAttribute('data-value');
+        let value = e.target.getAttribute('data-value').toLowerCase();
         let elementTypeList = elementList[this.state.activeElementType];
         let labelText = elementTypeList[this.state.activePrimaryOption].subtype[value].labelText;
         this.setState({
@@ -192,7 +198,7 @@ class Sidebar extends Component {
             let primaryOptionObject = elementList[this.state.activeElementType];
             let secondaryOptionObject = primaryOptionObject[this.state.activePrimaryOption].subtype;
             let secondaryOptionList = Object.keys(secondaryOptionObject);
-            if(this.state.activePrimaryOption==="primary-blockcode-equation"&&this.state.activeSecondaryOption!=="secondary-blockcode-language-Default"){
+            if(this.state.activePrimaryOption==="primary-blockcode-equation"&&this.state.activeSecondaryOption!=="secondary-blockcode-language-default"){
                secondaryOptionList.splice(0,1)
             }
             if(secondaryOptionList.length > 1) {
@@ -211,9 +217,9 @@ class Sidebar extends Component {
                 if(this.state.elementDropdown === 'secondary') {
                     active = 'active';
                 }
-    
+
                 secondaryOptions = <div
-                    className={`element-dropdown ${display}`}>
+                    className={`element-dropdown ${display} ${this.props.showHideObj && this.props.activeElement.elementType? "sidebar-disable": ""} `}>
                     <div className="element-dropdown-title" data-element="secondary" onClick={this.toggleElementDropdown}>
                         {secondaryOptionObject[this.state.activeSecondaryOption].text}
                         {dropdownArrow}
@@ -415,7 +421,8 @@ const mapStateToProps = state => {
     return {
         activeElement: state.appStore.activeElement,
         showModule:state.metadataReducer.showModule,
-        permissions : state.appStore.permissions
+        permissions : state.appStore.permissions,
+        showHideObj:state.appStore.showHideObj
     };
 };
 

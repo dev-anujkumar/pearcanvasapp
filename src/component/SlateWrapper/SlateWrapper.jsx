@@ -22,7 +22,7 @@ import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
 import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
 import config from '../../config/config';
 import { TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER, WORKED_EXAMPLE, SECTION_BREAK, METADATA_ANCHOR, LO_LIST, ELEMENT_ASSESSMENT, OPENER,
-    ALREADY_USED_SLATE , REMOVE_LINKED_AUDIO, NOT_AUDIO_ASSET, SPLIT_SLATE_WITH_ADDED_AUDIO , ACCESS_DENIED_CONTACT_ADMIN, IN_USE_BY } from './SlateWrapperConstants';
+    ALREADY_USED_SLATE , REMOVE_LINKED_AUDIO, NOT_AUDIO_ASSET, SPLIT_SLATE_WITH_ADDED_AUDIO , ACCESS_DENIED_CONTACT_ADMIN, IN_USE_BY, LOCK_DURATION, SHOW_HIDE,POP_UP, SMARTLINK } from './SlateWrapperConstants';
 import PageNumberElement from './PageNumberElement.jsx';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
@@ -244,7 +244,7 @@ class SlateWrapper extends Component {
                 // if (Object.values(_slateData).length > 0) {
                     // let _slateObject = Object.values(_slateData)[0];
                     let _slateObject = _slateData[config.slateManifestURN];
-                    let { type: _slateType, contents: _slateContent } = _slateObject;
+                    let { contents: _slateContent } = _slateObject;
                     let title = {
                         text: this.props.slateTitleUpdated
                     }
@@ -285,7 +285,7 @@ class SlateWrapper extends Component {
                     let _slateObject = _slateData[config.slateManifestURN];
                     let _slateContent = _slateObject.contents
                     let { id: _slateId, type: _slateType } = _slateObject;
-                    let { title: _slateTitle, bodymatter: _slateBodyMatter } = _slateContent
+                    let { bodymatter: _slateBodyMatter } = _slateContent
                     this['cloneCOSlateControlledSource_' + random] = this.renderElement(_slateBodyMatter, config.slateType, this.props.slateLockInfo)
                     let _context = this;
                     return (
@@ -333,7 +333,7 @@ class SlateWrapper extends Component {
                                     }}
                                     ref={(c) => {
                                         if (c) {
-                                            let sortable = c.sortable;
+                                            //let sortable = c.sortable;
                                         }
                                     }}
                                     tag="div"
@@ -375,7 +375,7 @@ class SlateWrapper extends Component {
         this.setState({
             showReleasePopup: true
         })
-        // this.props.releaseSlateLock(projectUrn, slateId)
+        this.props.releaseSlateLock(projectUrn, slateId)
     }
 
     /**
@@ -389,7 +389,7 @@ class SlateWrapper extends Component {
             clearTimeout(timer)
             timer = setTimeout(() => {
                 this.debounceReleaseHandler(callback, _context)
-            }, 900000)
+            }, LOCK_DURATION)
         }
     }
 
@@ -416,11 +416,10 @@ class SlateWrapper extends Component {
     setSlateLock = (slateId, lockDuration) => {
         if (this.props.withinLockPeriod) {
             this.debounceReleaseTimeout()
-            // this.debounceReleaseTimeout(this.props.releaseSlateLock)
         }
         else {
             const { projectUrn } = config
-            this.props.setLockPeriodFlag(true)
+            // this.props.setLockPeriodFlag(true)                       // For local testing purpose
             this.props.setSlateLock(projectUrn, slateId, lockDuration)
             this.debounceReleaseTimeout()
         }
@@ -438,8 +437,6 @@ class SlateWrapper extends Component {
         this.props.showBlocker(toggleValue)
         hideBlocker()
         this.prohibitPropagation(event)
-        this.props.releaseSlateLock(config.projectUrn, Object.keys(this.props.slateData)[0])
-        //OPEN_AM.logout();
     }
 
     /**
@@ -456,7 +453,8 @@ class SlateWrapper extends Component {
 
     checkLockStatus = () => {
         const { slateLockInfo } = this.props
-        if (slateLockInfo.isLocked && config.userId !== slateLockInfo.userId) {
+        let lockedUserId = slateLockInfo.userId.replace(/.*\(|\)/gi, ''); // Retrieve only PROOT id
+        if (slateLockInfo.isLocked && config.userId !== lockedUserId) {
             this.setState({
                 lockOwner: slateLockInfo.userId,
                 lockOwnerName: `${slateLockInfo.userFirstName} ${slateLockInfo.userLastName}`
@@ -590,32 +588,33 @@ class SlateWrapper extends Component {
             indexToinsert = Number(index + 1)
         }
         /* For showing the spinning loader send HideLoader message to Wrapper component */
-        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+        if(type){sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });}
+        
 
         switch (type) {
             case 'text-elem':
-                this.props.createElement(TEXT, indexToinsert, parentUrn, asideData);
+                this.props.createElement(TEXT, indexToinsert, parentUrn, asideData,null,null,null);
                 break;
             case 'image-elem':
-                this.props.createElement(IMAGE, indexToinsert, parentUrn, asideData);
+                this.props.createElement(IMAGE, indexToinsert, parentUrn, asideData,null,null,null);
                 break;
             case 'audio-elem':
-                this.props.createElement(VIDEO, indexToinsert, parentUrn, asideData);
+                this.props.createElement(VIDEO, indexToinsert, parentUrn, asideData,null,null,null);
                 break;
             case 'interactive-elem':
-                this.props.createElement(INTERACTIVE, indexToinsert, parentUrn, asideData);
+                this.props.createElement(INTERACTIVE, indexToinsert, parentUrn, asideData,null,null,null);
                 break;
             case 'assessment-elem':
-                this.props.createElement(ASSESSMENT, indexToinsert, parentUrn, asideData);
+                this.props.createElement(ASSESSMENT, indexToinsert, parentUrn, asideData,null,null,null);
                 break;
             case 'container-elem':
-                this.props.createElement(CONTAINER, indexToinsert, parentUrn, asideData)
+                this.props.createElement(CONTAINER, indexToinsert, parentUrn, asideData,null,null,null)
                 break;
             case 'worked-exp-elem':
-                this.props.createElement(WORKED_EXAMPLE, indexToinsert, parentUrn)
+                this.props.createElement(WORKED_EXAMPLE, indexToinsert, parentUrn,null,null,null,null)
                 break;
             case 'opener-elem':
-                this.props.createElement(OPENER, indexToinsert, parentUrn)
+                this.props.createElement(OPENER, indexToinsert, parentUrn,null,null,null,null)
                 break;
             case 'section-break-elem':
                 parentUrn.contentUrn = asideData.contentUrn
@@ -628,19 +627,28 @@ class SlateWrapper extends Component {
                 } else {
                     outerIndex = indexToinsert;
                 }
-                this.props.createElement(SECTION_BREAK, indexToinsert, parentUrn, asideData, outerIndex)
+                this.props.createElement(SECTION_BREAK, indexToinsert, parentUrn, asideData, outerIndex,null,null)
                 break;
                 case 'metadata-anchor':
                     if(config.slateType == "container-introduction"){
-                        this.props.createElement(LO_LIST, indexToinsert,parentUrn,"","","");
+                        this.props.createElement(LO_LIST, indexToinsert,parentUrn,null,null,null,null);
                         
                     }
                     else{
                         let LOUrn = this.props.currentSlateLOData.id?this.props.currentSlateLOData.id:this.props.currentSlateLOData.loUrn;
-                        this.props.createElement(METADATA_ANCHOR, indexToinsert,parentUrn,asideData,"",LOUrn)
+                        this.props.createElement(METADATA_ANCHOR, indexToinsert,parentUrn,asideData,null,LOUrn,null)
                     }
                    
                 break;
+                case 'show-hide-elem':
+                this.props.createElement(SHOW_HIDE, indexToinsert, parentUrn, asideData,null,null);
+                break;
+                case 'popup-elem':
+                this.props.createElement(POP_UP, indexToinsert, parentUrn, asideData,null,null);
+                break;
+                case 'smartlink-elem':
+                    this.props.createElement(SMARTLINK, indexToinsert, parentUrn, asideData,null,null);
+                    break;
             default:
         }
     }
@@ -666,8 +674,8 @@ class SlateWrapper extends Component {
                 tooltipDirection: 'left'
             },
             {
-                buttonType: 'interactive-elem',
-                buttonHandler: () => this.splithandlerfunction('interactive-elem', index, firstOne, parentUrn, asideData),
+                buttonType: 'interactive-elem-button',
+                buttonHandler: () => this.splithandlerfunction('interactive-elem-button'),
                 tooltipText: 'Interactive',
                 tooltipDirection: 'left'
             },
@@ -677,6 +685,7 @@ class SlateWrapper extends Component {
                 tooltipText: 'Assessment',
                 tooltipDirection: 'left'
             },
+            
             {
                 buttonType: 'container-elem',
                 buttonHandler: () => this.splithandlerfunction('container-elem', index, firstOne, parentUrn),
@@ -862,6 +871,7 @@ class SlateWrapper extends Component {
                                             showAudioSplitPopup={this.props.showAudioSplitPopup}
                                             openAudio={this.props.openAudio}
                                             onClickCapture={this.checkSlateLockStatus}
+                                            splithandlerfunction={this.splithandlerfunction}
                                         />
                                         : index === 0 && config.isCO === true ? <div className="noSeparatorContainer"></div> : null
                                 }
@@ -877,6 +887,7 @@ class SlateWrapper extends Component {
                                     onListSelect={this.props.convertToListElement}
                                     onClickCapture={this.checkSlateLockStatus}
                                     isLOExist={this.props.isLOExist}
+                                    splithandlerfunction={this.splithandlerfunction}
                                 >
                                     {
                                         (isHovered, isPageNumberEnabled, activeElement, permissions) => (
@@ -901,6 +912,7 @@ class SlateWrapper extends Component {
                                         showAudioSplitPopup={this.props.showAudioSplitPopup}
                                         openAudio={this.props.openAudio}
                                         onClickCapture={this.checkSlateLockStatus}
+                                         splithandlerfunction={this.splithandlerfunction}
                                     />
                                     : null
                                 }
@@ -1059,6 +1071,11 @@ class SlateWrapper extends Component {
     }
     closePopup = () =>{
         let popupId = config.slateManifestURN
+        let newVersionManifestId = document.getElementsByClassName('slate-content ')[0];
+        if( newVersionManifestId && newVersionManifestId.getAttribute('data-id')!==popupId){
+            sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
+            sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+        }
         config.slateManifestURN = config.tempSlateManifestURN
         config.slateEntityURN = config.tempSlateEntityURN
         config.tempSlateManifestURN = null

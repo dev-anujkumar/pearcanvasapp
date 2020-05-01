@@ -8,7 +8,6 @@ div.cypress-editable ol li, div.cypress-editable ul li {
     /* font-size: 1em !important; */
     list-style-type: none !important;
     font-family: Palatino, Palatino Linotype, Palatino LT STD, Georgia, serif;
-    font-size: 1em !important;
     font-weight: normal;
     line-height: 1.90em;
     letter-spacing: 0.01em;
@@ -144,3 +143,16 @@ span.list-opt-tooltip {
 .element-container li {
     min-height: 22px;
 }
+
+table ul li {
+    color: inherit !important;
+}
+
+table ol li {
+    color: inherit !important;
+}
+
+table ol li:before {
+    color: inherit !important;
+}
+

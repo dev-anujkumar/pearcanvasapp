@@ -437,47 +437,119 @@ describe('Test- editor functions', () => {
         expect(spyaddMathmlFormulaButton).toHaveBeenCalledWith(editor);
         spyaddMathmlFormulaButton.mockClear()
     })
-    it('Test setCursorAtEnd ', () => {
+    // Description - SetCursorAtEnd function is removed from JS file as it's not been used anywhere. So there is no need of this test case. 
+    // it('Test setCursorAtEnd ', () => {
+    //     let event = {
+    //         preventDefault: () => { },
+    //         stopPropagation: () => { }
+    //     }
+    //     let editor = {
+    //         on: (temp, cb) => { cb(event) },
+    //         innerHTML: '<p class="paragraphNumeroUno">hello</p>',
+    //         execCommand: jest.fn(),
+    //         selection: {
+    //             select: () => { },
+    //             collapse: () => {
+    //                 return true;
+    //             },
+    //         },
+    //         insertContent: jest.fn(),
+    //     }
+    //     tinymce.activeEditor = {
+    //         innerHTML: '<p class="paragraphNumeroUno">hello</p>',
+    //         innerText: "hello",
+    //         textContent: "hello",
+    //         outerHTML: '<div id="cypress-0" class="cypress-editable mce-content-body mce-edit-focus" placeholder="Type Something..." contenteditable="true" style="caret-color: black;" spellcheck="false"><p class="paragraphNumeroUno">hello</p></div>',
+    //         selection: {
+    //             getStart: () => {
+    //                 return tinymce.activeEditor.innerHTML;
+    //             }
+    //         },
+    //         getBody: () => {
+    //             return '<p class="definition-editor  mce-content-body mce-edit-focus" placeholder="Type Something" contenteditable="true" id="glossary-1" style="position: relative;" spellcheck="false">Test</p>'
+    //         }
+    //     }
+    //     const spysetCursorAtEnd = jest.spyOn(instance, 'setCursorAtEnd')
+    //     instance.setCursorAtEnd(editor);
+    //     expect(spysetCursorAtEnd).toHaveBeenCalled()
+    // });
+    it("editorOnKeyup method", () => {
         let event = {
+            target : {
+                innerHTML: '<img class="Wirisformula"></img>',
+            },
             preventDefault: () => { },
             stopPropagation: () => { }
         }
         let editor = {
-            on: (temp, cb) => { cb(event) },
-            innerHTML: '<p class="paragraphNumeroUno">hello</p>',
-            execCommand: jest.fn(),
-            selection: {
-                select: () => { },
-                collapse: () => {
-                    return true;
+            dom : {
+                getParent : function (){
+                    return {
+                        innerHTML: '<img class="Wirisformula"></img>',
+                        children: [
+                            {
+                                tagName: 'BR'
+                            }
+                        ],
+                        innerText: "hello",
+                        querySelectorAll: jest.fn(),
+                        classList: {
+                            remove: jest.fn()
+                        }
+                    }
                 },
+
             },
-            insertContent: jest.fn(),
-        }
-        tinymce.activeEditor = {
-            innerHTML: '<p class="paragraphNumeroUno">hello</p>',
-            innerText: "hello",
-            textContent: "hello",
-            outerHTML: '<div id="cypress-0" class="cypress-editable mce-content-body mce-edit-focus" placeholder="Type Something..." contenteditable="true" style="caret-color: black;" spellcheck="false"><p class="paragraphNumeroUno">hello</p></div>',
-            selection: {
-                getStart: () => {
-                    return tinymce.activeEditor.innerHTML;
-                }
-            },
-            getBody: () => {
-                return '<p class="definition-editor  mce-content-body mce-edit-focus" placeholder="Type Something" contenteditable="true" id="glossary-1" style="position: relative;" spellcheck="false">Test</p>'
+            selection : {
+                getStart : function () { return event.target.innerHTML }
             }
         }
-        const spysetCursorAtEnd = jest.spyOn(instance, 'setCursorAtEnd')
-        instance.setCursorAtEnd(editor);
-        expect(spysetCursorAtEnd).toHaveBeenCalled()
-    });
+        const spyeditorOnKeyup = jest.spyOn(instance, 'editorOnKeyup')
+        instance.editorOnKeyup(event, editor);
+        expect(spyeditorOnKeyup).toHaveBeenCalled()
+    })
+    it("editorOnChange method", () => {
+        let event = {
+            target : {
+                innerHTML: '<img class="Wirisformula"></img>',
+                getContent : () => { return '<img class="Wirisformula"></img>' }
+            },
+            preventDefault: () => { },
+            stopPropagation: () => { }
+        }
+        let editor = {
+            dom : {
+                getParent : function (){
+                    return {
+                        innerHTML: '<img class="Wirisformula"></img>',
+                        children: [
+                            {
+                                tagName: 'BR'
+                            }
+                        ],
+                        innerText: "hello",
+                        querySelectorAll: jest.fn(),
+                        classList: {
+                            remove: jest.fn()
+                        }
+                    }
+                },
+
+            },
+            selection : {
+                getStart : function () { return event.target.innerHTML }
+            }
+        }
+        const spyeditorOnChange = jest.spyOn(instance, 'editorOnChange')
+        instance.editorOnChange(event, editor);
+        expect(spyeditorOnChange).toHaveBeenCalled()
+    })
 })
 describe('Test-Function-handlePlaceholer-------->', () => {
     let nextProps = {
         className: "definition-editor place-holder",
         glossaaryFootnotePopup: undefined,
-        glossaryFootNoteCurrentValue: "T",
+        glossaryFootNoteCurrentValue: '<p>T<img class="Wirisformula"></img></p>',
         id: "glossary-0",
         placeholder: "Type Something",
         permissions: ["login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects", "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar", "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying", "note_search_comment", "note_viewer", "lo_edit_metadata"]
@@ -529,4 +601,122 @@ describe('Test- lifecycle methods', () => {
         expect(spycomponentDidMount).toHaveBeenCalled();
         spycomponentDidMount.mockClear()
     })
-}) 
+    it('Test-Function- componentDidUpdate', () => {
+        document = { 
+            ...document,
+            getElementsByClassName : function() { 
+                return [
+                    {
+                        parentElement : { id : "test" },
+                        remove : () => {}
+                    },
+                    {
+                        parentElement : { id : "test1" },
+                        remove : () => {}
+                    },
+                    {
+                        parentElement : { id : "test3" },
+                        remove : () => {}
+                    }
+                ]
+            }
+        }
+        const spycomponentDidUpdate = jest.spyOn(instance, 'componentDidUpdate')
+        instance.componentDidUpdate();
+        expect(spycomponentDidUpdate).toHaveBeenCalled();
+        spycomponentDidUpdate.mockClear()
+    })
+    
+})
+
+describe('Test- other methods', () => {
+    let props = {
+        className: "definition-editor place-holder",
+        glossaaryFootnotePopup: undefined,
+        glossaryFootNoteCurrentValue: "<p>hello</p>",
+        id: "glossary-0",
+        placeholder: "Type Something",
+        permissions: ["login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects", "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar", "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying", "note_search_comment", "note_viewer", "lo_edit_metadata"]
+    }
+    const component = mount(<ReactEditor {...props} />)
+    let instance = component.find('ReactEditor').instance();
+    it('setGlossaryFootnoteTerm method - footnote', () => {
+        const glossaryNode = {
+            innerHTML : "Test data"
+        }
+        const spysetGlossaryFootnoteTerm = jest.spyOn(instance, 'setGlossaryFootnoteTerm')
+        instance.setGlossaryFootnoteTerm('footnote-0', glossaryNode, glossaryNode);
+        expect(spysetGlossaryFootnoteTerm).toHaveBeenCalled();
+        spysetGlossaryFootnoteTerm.mockClear()
+    })
+    it('setGlossaryFootnoteNode method - footnote', () => {
+        const glossaryNode = {
+            innerHTML : "Test data"
+        }
+        const spysetGlossaryFootnoteNode = jest.spyOn(instance, 'setGlossaryFootnoteNode')
+        instance.setGlossaryFootnoteNode('footnote-0', glossaryNode, glossaryNode);
+        expect(spysetGlossaryFootnoteNode).toHaveBeenCalled();
+        spysetGlossaryFootnoteNode.mockClear()
+    })
+    it('setGlossaryFootnoteNode method - glossary', () => {
+        const glossaryNode = {
+            innerHTML : "Test data"
+        }
+        const spysetGlossaryFootnoteNode = jest.spyOn(instance, 'setGlossaryFootnoteNode')
+        instance.setGlossaryFootnoteNode('glossary-0', glossaryNode, glossaryNode);
+        expect(spysetGlossaryFootnoteNode).toHaveBeenCalled();
+        spysetGlossaryFootnoteNode.mockClear()
+    })
+    it("revertingTempContainerHtml method", () => {
+        const editor = {
+            id : "cypress-3",
+            getContentAreaContainer : () => {
+                return { innerHTML : "" }
+            }
+        }
+        const spyrevertingTempContainerHtml = jest.spyOn(instance, 'revertingTempContainerHtml')
+        instance.revertingTempContainerHtml(editor);
+        expect(spyrevertingTempContainerHtml).toHaveBeenCalled();
+        spyrevertingTempContainerHtml.mockClear()
+    })
+    it("onMathMLAction ", () => {
+        const editor = {
+            id : "cypress-3"
+        }
+        window['WirisPlugin'] = {
+            instances : {
+                [editor.id] : {
+                    openNewFormulaEditor : () => { },
+                    core : {
+                        getCustomEditors : () => { return { disable : () => { return false } } }
+                    },
+                    getCore : () => { return { getCustomEditors : () => { return { enable : () => { } } } } }
+                }
+            }
+        }
+        const spyonMathMLAction = jest.spyOn(instance, 'onMathMLAction')
+        instance.onMathMLAction(editor);
+        expect(spyonMathMLAction).toHaveBeenCalled();
+        spyonMathMLAction.mockClear()
+    })
+    it("onChemMLAction ", () => {
+        const editor = {
+            id : "cypress-3"
+        }
+        window['WirisPlugin'] = {
+            instances : {
+                [editor.id] : {
+                    openNewFormulaEditor : () => { },
+                    core : {
+                        getCustomEditors : () => { return { disable : () => { return false } } }
+                    },
+                    getCore : () => { return { getCustomEditors : () => { return { enable : () => { } } } } }
+                }
+            }
+        }
+        const spyonChemMLAction = jest.spyOn(instance, 'onChemMLAction')
+        instance.onChemMLAction(editor);
+        expect(spyonChemMLAction).toHaveBeenCalled();
+        spyonChemMLAction.mockClear()
+    })
+})

@@ -35,6 +35,24 @@ export const fetchComments = (contentUrn, title) => dispatch => {
             type: FETCH_COMMENTS,
             payload: { comments: response.data.comments, title }
         })
+        let searchString = window.location.search;
+        let q = new URLSearchParams(searchString);
+        if(q.get('q')){
+            let currentWorkId = q.get('q');
+            dispatch({
+                type: TOGGLE_COMMENTS_PANEL,
+                payload: true
+            })
+            dispatch({
+                type: FETCH_COMMENT_BY_ELEMENT,
+                payload: {
+                    elementId: currentWorkId,
+                    index: 0
+                }
+            })
+            //Replaces to the original URL to prevent multiple panel toggle
+            window.history.replaceState(null, null, `/toc-wrapper/index.html?projectUrn=${config.projectUrn}&entityUrn=${config.projectEntityUrn}`);
+        }
     }).catch(error => {
         console.log("failed to fetch comment", error);
     })

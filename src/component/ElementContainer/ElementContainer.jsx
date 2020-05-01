@@ -14,14 +14,14 @@ import Button from './../ElementButtons';
 import PopUp from '../PopUp';
 import OpenerElement from "../OpenerElement";
 import { glossaaryFootnotePopup } from './../GlossaryFootnotePopup/GlossaryFootnote_Actions';
-import { addComment, deleteElement, updateElement, createShowHideElement } from './ElementContainer_Actions';
+import { addComment, deleteElement, updateElement, createShowHideElement, deleteShowHideUnit } from './ElementContainer_Actions';
 import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
-import { setActiveElement, fetchElementTag,openPopupSlate } from './../CanvasWrapper/CanvasWrapper_Actions';
+import { setActiveElement, fetchElementTag, openPopupSlate } from './../CanvasWrapper/CanvasWrapper_Actions';
 import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
-import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex } from '../../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
@@ -33,9 +33,10 @@ import { updateFigureData } from './ElementContainer_Actions.js';
 import { createUpdatedData, createOpenerElementData } from './UpdateElements.js';
 import { loadTrackChanges } from '../CanvasWrapper/TCM_Integration_Actions';
 import ElementPopup from '../ElementPopup'
-import { updatePageNumber , accessDenied } from '../SlateWrapper/SlateWrapper_Actions';
+import { updatePageNumber, accessDenied } from '../SlateWrapper/SlateWrapper_Actions';
 import { releaseSlateLock } from '../CanvasWrapper/SlateLock_Actions.js';
 import ElementShowHide from '../ElementShowHide';
+import ElementContainerContext from './ElementContainerContext'
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -52,6 +53,8 @@ class ElementContainer extends Component {
             hasError: false,
             sectionBreak: null
         };
+
+
     }
     componentDidMount() {
         this.setState({
@@ -69,7 +72,7 @@ class ElementContainer extends Component {
     }
 
     componentWillReceiveProps(newProps) {
-        if (!(newProps.permissions && newProps.permissions.includes('access_formatting_bar')) && !hasReviewerRole()) {
+        if (!(newProps.permissions && (newProps.permissions.includes('access_formatting_bar')|| newProps.permissions.includes('elements_add_remove'))) && !hasReviewerRole()) {
             return true
         }
         if (this.state.ElementId != newProps.activeElement.elementId || newProps.elemBorderToggle !== this.props.elemBorderToggle) {
@@ -102,12 +105,26 @@ class ElementContainer extends Component {
     /**
      * function will be called on element focus of tinymce instance
      */
-    handleFocus = (updateFromC2Flag) => {
-        if (!(this.props.permissions && this.props.permissions.includes('access_formatting_bar')) && !hasReviewerRole()) {
+    handleFocus = (updateFromC2Flag, showHideObj,event) => {
+        if(event){
+            event.stopPropagation();
+        }
+        let element = this.props.element,
+            index = this.props.index
+        if(showHideObj) {
+            element = showHideObj.currentElement
+            index = showHideObj.index
+        }else{
+            let showHideNode = document.querySelector('.show-hide-active')
+            if(showHideNode){
+                showHideNode.classList.remove("show-hide-active")
+            }
+        }
+        if (!(this.props.permissions && (this.props.permissions.includes('access_formatting_bar') || this.props.permissions.includes('elements_add_remove'))) && !hasReviewerRole()) {
             return true
         }
         if (updateFromC2Flag) {
-            if(this.props.element.type === "openerelement"){
+            if (this.props.element.type === "openerelement") {
                 this.setState({
                     borderToggle: 'active'
                 })
@@ -118,7 +135,8 @@ class ElementContainer extends Component {
                     btnClassName: 'activeTagBgColor'
                 })
             }
-            this.props.setActiveElement(this.props.element, this.props.index ,"","", true);
+            config.lastActiveElementId=element.id
+            this.props.setActiveElement(element, index, "", "", true, showHideObj);
         }
         else {
             if (this.props.element.type === "openerelement") {
@@ -132,12 +150,13 @@ class ElementContainer extends Component {
                     btnClassName: 'activeTagBgColor'
                 })
             }
-            this.props.setActiveElement(this.props.element, this.props.index,this.props.parentUrn,this.props.asideData);
+            config.lastActiveElementId=element.id
+            this.props.setActiveElement(element, index, this.props.parentUrn, this.props.asideData, "", showHideObj);
             this.props.fetchCommentByElement(this.props.element.id);
         }
     }
 
-    removeClassesFromHtml = (html) =>{
+    removeClassesFromHtml = (html) => {
         let tempDiv = document.createElement('div');
         tempDiv.innerHTML = html;
         tinyMCE.$(tempDiv).find('p').removeAttr('class')
@@ -145,17 +164,25 @@ class ElementContainer extends Component {
     }
 
     replaceUnwantedtags = (html) => {
+        if(!html){
+            return;
+        }
         let tempDiv = document.createElement('div');
-        html = html.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
+        html = html.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula').replace(/\uFEFF/g,"").replace(/>\s+</g,'><');
+        html=html.trim();
         tempDiv.innerHTML = html;
         tinyMCE.$(tempDiv).find('br').remove();
-        tinyMCE.$(tempDiv).find('br').remove();
         tinyMCE.$(tempDiv).find('.blockquote-hidden').remove();
+        tinyMCE.$(tempDiv).find('span#_mce_caret').remove();
         tinyMCE.$(tempDiv).find('img').removeAttr('data-mce-style');
+        tinyMCE.$(tempDiv).find('img').removeAttr('data-custom-editor');
         tinyMCE.$(tempDiv).find('ol').removeAttr('data-mce-style');
+        tinyMCE.$(tempDiv).find('ol').removeAttr('style');
         tinyMCE.$(tempDiv).find('img').removeAttr('style');
         tinyMCE.$(tempDiv).find('p').removeAttr('contenteditable');
+        tinyMCE.$(tempDiv).find('blockquote').removeAttr('contenteditable');
         tinyMCE.$(tempDiv).find('blockquote').removeAttr('data-mce-selected');
+        tinyMCE.$(tempDiv).find('code').removeAttr('data-mce-selected');
         tinyMCE.$(tempDiv).find('img').removeAttr('data-mce-selected');
         tinyMCE.$(tempDiv).find('img').removeAttr('height');
         tinyMCE.$(tempDiv).find('img').removeAttr('width');
@@ -163,8 +190,12 @@ class ElementContainer extends Component {
         tinyMCE.$(tempDiv).find('.paragraphNummerEins').removeAttr('contenteditable');
         tinyMCE.$(tempDiv).find('img').removeAttr('draggable');
         tinyMCE.$(tempDiv).find('img.temp_Wirisformula').removeClass('fr-draggable');
-        return tempDiv.innerHTML;
+        tinyMCE.$(tempDiv).find('a').removeAttr('data-mce-href');
+        tinyMCE.$(tempDiv).find('a').removeAttr('data-mce-selected');
+        tinyMCE.$(tempDiv).find('a').removeAttr('data-custom-editor');
+        return encodeHTMLInWiris(tempDiv.innerHTML);
     }
+
     /**
      * Checks for any difference in data before initiating saving call
      * @param {*} index element index
@@ -192,17 +223,6 @@ class ElementContainer extends Component {
         subtitleHTML = this.removeClassesFromHtml(subtitleHTML)
         titleHTML = this.removeClassesFromHtml(titleHTML)
 
-        // if (titleHTML !== previousElementData.html.title ||
-        //     subtitleHTML !== previousElementData.html.subtitle ||
-        //     captionHTML !== previousElementData.html.captions ||
-        //     creditsHTML !== previousElementData.html.credits ||
-        //     this.props.oldImage !== previousElementData.figuredata.path
-        //     ){
-        //         return 1
-        //     }
-        //     else {
-        //         return 0
-        //     }
         let defaultImageUrl = "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png";
         return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
             subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
@@ -230,15 +250,16 @@ class ElementContainer extends Component {
         if (typeof (isNumbered) == "string") {
             isNumbered = JSON.parse(isNumbered)
         }
-        captionHTML= captionHTML.match(/<p>/g) ? captionHTML : `<p>${captionHTML}</p>`
-        creditsHTML= creditsHTML.match(/<p>/g) ? creditsHTML : `<p>${creditsHTML}</p>`
-        subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>` 
+        captionHTML = captionHTML.match(/<p>/g) ? captionHTML : `<p>${captionHTML}</p>`
+        creditsHTML = creditsHTML.match(/<p>/g) ? creditsHTML : `<p>${creditsHTML}</p>`
+        subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
         titleHTML = titleHTML.match(/<p>/g) ? titleHTML : `<p>${titleHTML}</p>`
 
         captionHTML = this.removeClassesFromHtml(captionHTML)
         creditsHTML = this.removeClassesFromHtml(creditsHTML)
         subtitleHTML = this.removeClassesFromHtml(subtitleHTML)
         titleHTML = this.removeClassesFromHtml(titleHTML)
+        preformattedText = this.removeClassesFromHtml(preformattedText)
 
         // if (titleHTML !== previousElementData.html.title ||
         //     subtitleHTML !== previousElementData.html.subtitle ||
@@ -260,7 +281,7 @@ class ElementContainer extends Component {
             preformattedText !== this.removeClassesFromHtml(previousElementData.figuredata.preformattedtext.join('\n').trim()) ||
             Number(startNumber) !== Number(previousElementData.figuredata.startNumber) ||
             isNumbered !== previousElementData.figuredata.numbered
-            );
+        );
     }
 
     /**
@@ -279,22 +300,21 @@ class ElementContainer extends Component {
             subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
             captionHTML = captionsDOM ? captionsDOM.innerHTML : "",
             creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
+        captionHTML = matchHTMLwithRegex(captionHTML) ? captionHTML : `<p>${captionHTML}</p>`
+        creditsHTML = matchHTMLwithRegex(creditsHTML) ? creditsHTML : `<p>${creditsHTML}</p>`
+        subtitleHTML = matchHTMLwithRegex(subtitleHTML) ? subtitleHTML : `<p>${subtitleHTML}</p>`
+        titleHTML = matchHTMLwithRegex(titleHTML) ? titleHTML : `<p>${titleHTML}</p>`
 
         captionHTML = this.removeClassesFromHtml(captionHTML)
         creditsHTML = this.removeClassesFromHtml(creditsHTML)
         subtitleHTML = this.removeClassesFromHtml(subtitleHTML)
         titleHTML = this.removeClassesFromHtml(titleHTML)
-
-        captionHTML = captionHTML.match(/(<p.*?>.*?<\/p>)/g) ? captionHTML : `<p>${captionHTML}</p>`
-        creditsHTML = creditsHTML.match(/(<p.*?>.*?<\/p>)/g) ? creditsHTML : `<p>${creditsHTML}</p>`
-        subtitleHTML = subtitleHTML.match(/(<p.*?>.*?<\/p>)/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
-        titleHTML = titleHTML.match(/(<p.*?>.*?<\/p>)/g) ? titleHTML : `<p>${titleHTML}</p>`
-
         if (previousElementData.figuredata.interactivetype === "pdf" || previousElementData.figuredata.interactivetype === "pop-up-web-link" ||
             previousElementData.figuredata.interactivetype === "web-link") {
             let pdfPosterTextDOM = document.getElementById(`cypress-${index}-2`)
             let posterTextHTML = pdfPosterTextDOM ? pdfPosterTextDOM.innerHTML : ""
-
+            posterTextHTML = posterTextHTML.match(/(<p.*?>.*?<\/p>)/g)?posterTextHTML:`<p>${posterTextHTML}</p>`
+            
             // if(titleHTML !== previousElementData.html.title ||
             //     subtitleHTML !== previousElementData.html.subtitle || 
             //     captionHTML !== previousElementData.html.captions ||
@@ -307,34 +327,22 @@ class ElementContainer extends Component {
             //         return 0
             //     }
             return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
-                subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) || 
+                subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
                 captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
-                creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) || 
-                posterTextHTML !== this.removeClassesFromHtml(previousElementData.html.postertext) ||
+                creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
+                posterTextHTML !== this.removeClassesFromHtml(previousElementData.html.postertext.match(/(<p.*?>.*?<\/p>)/g)?previousElementData.html.postertext:`<p>${previousElementData.html.postertext}</p>`) ||
                 this.props.oldImage !== newInteractiveid
-                );
+            );
         }
         else {
-            // if(titleHTML !== previousElementData.html.title ||
-            //     subtitleHTML !== previousElementData.html.subtitle || 
-            //     captionHTML !== previousElementData.html.captions ||
-            //     creditsHTML !== previousElementData.html.credits || 
-            //     this.props.oldImage !== newInteractiveid
-            //     ){
-            //         return 1
-            //     }
-            //     else {
-            //         return 0
-            //     }
             return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
-                subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) || 
+                subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
                 captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
                 creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
                 this.props.oldImage !== newInteractiveid
-                );
+            );
         }
     }
-
     figureDifferenceAT = (index, previousElementData) => {
         let titleDOM = document.getElementById(`cypress-${index}-0`),
             subtitleDOM = document.getElementById(`cypress-${index}-1`),
@@ -346,7 +354,7 @@ class ElementContainer extends Component {
             subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
             captionHTML = captionDOM ? captionDOM.innerHTML : "",
             creditsHTML = creditsDOM ? creditsDOM.innerHTML : "",
-            oldtext = previousElementData.html.text?previousElementData.html.text:""
+            oldtext = previousElementData.html.text ? previousElementData.html.text : ""
 
         captionHTML = matchHTMLwithRegex(captionHTML) ? captionHTML : `<p>${captionHTML}</p>`
         creditsHTML = matchHTMLwithRegex(creditsHTML) ? creditsHTML : `<p>${creditsHTML}</p>`
@@ -359,40 +367,31 @@ class ElementContainer extends Component {
         creditsHTML = this.removeClassesFromHtml(creditsHTML)
         subtitleHTML = this.removeClassesFromHtml(subtitleHTML)
         titleHTML = this.removeClassesFromHtml(titleHTML)
-        text =  this.removeClassesFromHtml(text)
-        oldtext =  this.removeClassesFromHtml(oldtext)
+        text = this.removeClassesFromHtml(text)
+        oldtext = this.removeClassesFromHtml(oldtext)
+       
+        let oldTitle =  this.removeClassesFromHtml(previousElementData.html.title),
+        oldSubtitle =  this.removeClassesFromHtml(previousElementData.html.subtitle),
+        oldCaption =  this.removeClassesFromHtml(previousElementData.html.captions),
+        oldCredit =  this.removeClassesFromHtml(previousElementData.html.credits)
 
-        // if (titleHTML !== previousElementData.html.title ||
-        //     subtitleHTML !== previousElementData.html.subtitle ||
-        //     captionHTML !== previousElementData.html.captions ||
-        //     creditsHTML !== previousElementData.html.credits ||
-        //     text !== previousElementData.figuredata.elementdata.text
-        //     ){
-        //         return 1
-        //     }
-        //     else {
-        //         return 0
-        //     }
-        let formattedText = this.replaceUnwantedtags(text),
-        formattedOldText= this.replaceUnwantedtags(oldtext);
-
-        //text!==oldtext
-        return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
-            subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
-            captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
-            creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
-            formattedText!==formattedOldText
+        return (titleHTML !==oldTitle ||
+            subtitleHTML !== oldSubtitle ||
+            captionHTML !== oldCaption ||
+            creditsHTML !== oldCredit ||
+            // formattedText!==formattedOldText
+            text!==oldtext
             );
     }
 
     figureDifferenceAudioVideo = (index, previousElementData) => {
-        let newAudioVideoId = ""
-        if (previousElementData.figuretype === "audio") {
-            newAudioVideoId = previousElementData.figuredata.audio.path
-        }
-        else {
-            newAudioVideoId = previousElementData.figuredata.videos[0].path
-        }
+        // let newAudioVideoId = ""  can be removed after regression testing
+        // if (previousElementData.figuretype === "audio") {
+        //     newAudioVideoId = previousElementData.figuredata.audio && previousElementData.figuredata.audio.path || ""
+        // }
+        // else {
+        //     newAudioVideoId = previousElementData.figuredata.videos[0].path
+        // }
         let titleDOM = document.getElementById(`cypress-${index}-0`),
             subtitleDOM = document.getElementById(`cypress-${index}-1`),
             captionDOM = document.getElementById(`cypress-${index}-2`),
@@ -403,39 +402,32 @@ class ElementContainer extends Component {
             captionHTML = captionDOM ? captionDOM.innerHTML : "",
             creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
 
-        captionHTML = captionHTML.match(/(<p.*?>.*?<\/p>)/g) ? captionHTML : `<p>${captionHTML}</p>`
-        creditsHTML = creditsHTML.match(/(<p.*?>.*?<\/p>)/g) ? creditsHTML : `<p>${creditsHTML}</p>`
-        subtitleHTML = subtitleHTML.match(/(<p.*?>.*?<\/p>)/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
-        titleHTML = titleHTML.match(/(<p.*?>.*?<\/p>)/g) ? titleHTML : `<p>${titleHTML}</p>`
+        captionHTML = matchHTMLwithRegex(captionHTML) ? captionHTML : `<p>${captionHTML}</p>`
+        creditsHTML = matchHTMLwithRegex(creditsHTML) ? creditsHTML : `<p>${creditsHTML}</p>`
+        subtitleHTML = matchHTMLwithRegex(subtitleHTML) ? subtitleHTML : `<p>${subtitleHTML}</p>`
+        titleHTML = matchHTMLwithRegex(titleHTML) ? titleHTML : `<p>${titleHTML}</p>`
 
         captionHTML = this.removeClassesFromHtml(captionHTML)
         creditsHTML = this.removeClassesFromHtml(creditsHTML)
         subtitleHTML = this.removeClassesFromHtml(subtitleHTML)
         titleHTML = this.removeClassesFromHtml(titleHTML)
-
-        // if (titleHTML !== previousElementData.html.title ||
-        //     subtitleHTML !== previousElementData.html.subtitle ||
-        //     captionHTML !== previousElementData.html.captions ||
-        //     creditsHTML !== previousElementData.html.credits ||
-        //     this.props.oldImage !== newAudioVideoId
-        //     ){
-        //         return 1
-        //     }
-        //     else {
-        //         return 0
-        //     }
+        let defaultImageUrl =  "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png";
         return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
             subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
             captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
             creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
-            this.props.oldImage !== newAudioVideoId
-            );
+            //    this.props.oldImage !== newAudioVideoId
+            (defaultImageUrl !== (previousElementData.figuredata.posterimage && previousElementData.figuredata.posterimage.path)) //PCAT-6815  fixes
+        );
     }
-    
+
     updateOpenerElement = (dataToSend) => {
         const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
         dataToSend = createOpenerElementData(this.props.element, elementType, primaryOption, secondaryOption)
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+        if(dataToSend.status === "approved"){
+            config.savingInProgress = true
+        }
         this.props.updateElement(dataToSend, 0,undefined,undefined,undefined,undefined);
     }
 
@@ -454,28 +446,45 @@ class ElementContainer extends Component {
      * @param {*} secondaryOption
      * @param {*} activeEditorId
      */
-    handleContentChange = (node, previousElementData, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate,parentElement, showHideType) => {
-        const {parentUrn,asideData} = this.props
+    handleContentChange = (node, previousElementData, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType) => {
+        const { parentUrn, asideData } = this.props
         let dataToSend = {}
+        let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
         switch (previousElementData.type) {
             case elementTypeConstant.AUTHORED_TEXT:
             case elementTypeConstant.LEARNING_OBJECTIVE_ITEM:
             case elementTypeConstant.BLOCKFEATURE:
             let index  = parentElement.type == "showhide" ||  parentElement.type == "popup"? activeEditorId:`cypress-${this.props.index}`
+            if (this.props.element && this.props.element.type === "element-blockfeature" && this.props.element.subtype === "quote" && tinyMCE.activeEditor && tinyMCE.activeEditor.id  && !tinyMCE.activeEditor.id.includes("footnote")) {
+                let blockqtText = document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins')?document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').innerText:"";
+                if (!blockqtText.trim()) {
+                    var MLtext = document.querySelector('#'+ tinymce.activeEditor.id +' > p > img') || document.querySelector('#'+ tinymce.activeEditor.id +' > img')
+                    if(MLtext){
+                        tinyMCE.$('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').find('br').remove();
+                        document.querySelector('#'+ tinymce.activeEditor.id +' blockquote p.paragraphNummerEins').append(MLtext)
+                        tinyMCE.$('#' + tinymce.activeEditor.id).find('p[data-mce-caret="before"]').remove();
+                        tinyMCE.$('#' + tinymce.activeEditor.id).find('span#mce_1_start').remove();
+                        tinyMCE.$('#' + tinymce.activeEditor.id).find('div.mce-visual-caret').remove();
+                        tinyMCE.$('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').append("&nbsp;")
+                    }
+                }
+            } 
                 let currentNode = document.getElementById(index)
                 let html = currentNode.innerHTML;
                 let tempDiv = document.createElement('div');
                 tempDiv.innerHTML = html;
-                tinyMCE.$(tempDiv).find('.blockquote-hidden').remove();
+                //tinyMCE.$(tempDiv).find('.blockquote-hidden').remove();
                 html = tempDiv.innerHTML;
                 if(parentElement.type === "popup"){
-                    tempDiv.innerHTML = tempDiv.innerHTML.match(/(<p.*?>.*?<\/p>)/g) ? tempDiv.innerHTML : `<p class="paragraphNumeroUno">${tempDiv.innerHTML}</p> `
-                    html = html.match(/(<p.*?>.*?<\/p>)/g) ? html : `<p class="paragraphNumeroUno">${html}</p> `
+                    tempDiv.innerHTML = matchHTMLwithRegex(tempDiv.innerHTML) ? tempDiv.innerHTML : `<p class="paragraphNumeroUno">${tempDiv.innerHTML}</p>`
+                    html = html.replace(/<br data-mce-bogus="1">/g, "<br>")
+                    html = matchHTMLwithRegex(html) ? html : `<p class="paragraphNumeroUno">${html}</p>`
                 }
                 html =html.replace(/(\r\n|\n|\r)/gm, '')
-                let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
-                if (previousElementData.html && (this.replaceUnwantedtags(html) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate) && !assetPopoverPopupIsVisible && !config.savingInProgress) {
-                    dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDiv, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,parentElement,showHideType)
+                previousElementData.html.text= previousElementData.html.text.replace(/<br data-mce-bogus="1">/g, "<br>").replace(/(\r\n|\n|\r)/gm, '');
+                previousElementData.html.text = previousElementData.html.text.replace(/data-mce-bogus="all"/g, '')
+                if (html && previousElementData.html && (this.replaceUnwantedtags(html) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate) && !assetPopoverPopupIsVisible && !config.savingInProgress) {
+                    dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDiv, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,parentElement,showHideType, asideData)
                     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                     if(dataToSend.status === "approved"){
                         config.savingInProgress = true
@@ -491,7 +500,7 @@ class ElementContainer extends Component {
                     case elementTypeConstant.FIGURE_MATH_IMAGE:
                     case elementTypeConstant.FIGURE_TABLE_EDITOR:
                         if(this.figureDifference(this.props.index, previousElementData) || forceupdate && !config.savingInProgress){
-                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,undefined,undefined)
+                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,undefined,undefined, asideData)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                             if(dataToSend.status === "approved"){
                                 config.savingInProgress = true
@@ -502,16 +511,16 @@ class ElementContainer extends Component {
                     case elementTypeConstant.FIGURE_VIDEO:
                     case elementTypeConstant.FIGURE_AUDIO:
                         if (this.figureDifferenceAudioVideo(this.props.index, previousElementData) || forceupdate && !config.savingInProgress) {
-                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,undefined,undefined)
+                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, undefined, undefined, asideData)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                             if(dataToSend.status === "approved"){
                                 config.savingInProgress = true
                             }
-                            this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData,undefined,undefined);
+                            this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, undefined, undefined);
                         }
                         break;
                     case elementTypeConstant.FIGURE_ASSESSMENT:
-                        dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,undefined,undefined)
+                        dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, undefined, undefined, asideData)
                         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                         if(dataToSend.status === "approved"){
                             config.savingInProgress = true
@@ -520,7 +529,7 @@ class ElementContainer extends Component {
                         break;
                     case elementTypeConstant.INTERACTIVE:
                         if(this.figureDifferenceInteractive(this.props.index, previousElementData) || forceupdate && !config.savingInProgress){
-                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,undefined,undefined)
+                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,undefined,undefined, asideData)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                             if(dataToSend.status === "approved"){
                                 config.savingInProgress = true
@@ -531,17 +540,17 @@ class ElementContainer extends Component {
 
                     case elementTypeConstant.FIGURE_CODELISTING:
                             if(this.figureDifferenceBlockCode(this.props.index, previousElementData) || forceupdate && !config.savingInProgress){
-                                dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,undefined,undefined)
+                                dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,undefined,undefined, asideData)
                                 sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                                 if(dataToSend.status === "approved"){
-                        config.savingInProgress = true
-                    }
+                                    config.savingInProgress = true
+                                 }
                                 this.props.updateElement(dataToSend, this.props.index,parentUrn,asideData,undefined,undefined);
                             }
                             break;
                     case elementTypeConstant.FIGURE_AUTHORED_TEXT:
                             if(this.figureDifferenceAT(this.props.index, previousElementData) || forceupdate && !config.savingInProgress){
-                                dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,undefined,undefined)
+                                dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,undefined,undefined, asideData)
                                 sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                                 if(dataToSend.status === "approved"){
                                     config.savingInProgress = true
@@ -554,37 +563,42 @@ class ElementContainer extends Component {
 
 
             case elementTypeConstant.ASSESSMENT_SLATE:
-                dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,undefined,undefined)
-                this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData,undefined,undefined);
+                dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, undefined, undefined, undefined)
+                this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, undefined, undefined);
                 break;
             case elementTypeConstant.ELEMENT_LIST:
                 {
                     // let html = node.innerHTML;
-                    let currentListNode = document.getElementById(`cypress-${this.props.index}`)
+                    let parentIndex = parentElement.type == "showhide" || parentElement.type == "popup" ? activeEditorId : `cypress-${this.props.index}`
+                    let currentListNode = document.getElementById(parentIndex)
                     tinyMCE.$(currentListNode).find('ol').removeAttr('data-mce-style');
+                    currentListNode.innerHTML = currentListNode.innerHTML.replace(/counter-increment:section/g, "counter-increment: section")
                     let nodehtml = currentListNode.innerHTML;
-                    if (previousElementData.html && (nodehtml !== previousElementData.html.text || forceupdate && !config.savingInProgress)) {
-                        dataToSend = createUpdatedData(previousElementData.type, previousElementData, currentListNode, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,undefined,undefined)
+                    for (let i = 0; i < tinyMCE.$(currentListNode).find('li').length; i++) {
+                        tinyMCE.$(currentListNode).find('li')[i].innerHTML = tinyMCE.$(currentListNode).find('li')[i].innerHTML.replace(/^\s+|\s+$/g, '&nbsp;');
+                    }                    
+                    if (nodehtml && previousElementData.html && (this.replaceUnwantedtags(nodehtml) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate && !config.savingInProgress) && !assetPopoverPopupIsVisible) {
+                        dataToSend = createUpdatedData(previousElementData.type, previousElementData, currentListNode, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, showHideType,undefined)
                         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                         if(dataToSend.status === "approved"){
                             config.savingInProgress = true
                         }
-                        this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData,undefined,undefined);
+                        this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, showHideType, parentElement);
                     }
                     break;
                 }
-            }
+        }
     }
 
     /**
      * Will be called on element blur and a saving call will be made
      */
-    handleBlur = (forceupdate,currrentElement,elemIndex, showHideType) => {
+    handleBlur = (forceupdate, currrentElement, elemIndex, showHideType) => {
         const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
-        let activeEditorId = elemIndex?`cypress-${elemIndex}`:(tinyMCE.activeEditor ? tinyMCE.activeEditor.id : '')
+        let activeEditorId = elemIndex ? `cypress-${elemIndex}` : (tinyMCE.activeEditor ? tinyMCE.activeEditor.id : '')
         let node = document.getElementById(activeEditorId);
-        let element = currrentElement ? currrentElement:this.props.element
-        this.handleContentChange(node, element, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate,this.props.element, showHideType)
+        let element = currrentElement ? currrentElement : this.props.element
+        this.handleContentChange(node, element, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, this.props.element, showHideType)
     }
 
     /**
@@ -652,7 +666,9 @@ class ElementContainer extends Component {
         });
 
         elementData.backgroundcolor = selectedColor;
-        this.updateOpenerElement(elementData);
+        if(this.props.element.backgroundcolor !== config.colors[this.state.activeColorIndex]){
+            this.updateOpenerElement(elementData);
+        }       
     }
 
     /**
@@ -756,14 +772,14 @@ class ElementContainer extends Component {
             }
         }
     }
-    
+
     /**
      * Render Element function takes current element from bodymatter and render it into currnet slate 
      * @param {element} 
     */
     renderElement = (element = {}) => {
         let editor = '';
-        let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions, updatePageNumber, accessDenied, allComments } = this.props;
+        let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions, updatePageNumber, accessDenied, allComments, splithandlerfunction} = this.props;
         let labelText = fetchElementTag(element, index);
         config.elementToolbar = this.props.activeElement.toolbar || [];
         let anyOpenComment = allComments.filter(({ commentStatus, commentOnEntity }) => commentOnEntity === element.id && commentStatus.toLowerCase() === "open").length > 0
@@ -867,6 +883,7 @@ class ElementContainer extends Component {
                         glossaryFootnoteValue={this.props.glossaryFootnoteValue}
                         glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
                         onListSelect={this.props.onListSelect}
+                        splithandlerfunction={splithandlerfunction}
                     />;
                     break;
                 case elementTypeConstant.METADATA_ANCHOR:
@@ -886,18 +903,37 @@ class ElementContainer extends Component {
                         element={element}
                         model={element.html}
                         slateLockInfo={slateLockInfo}
-                        onClick={this.handleFocus} 
-                        openPopupSlate = {this.props.openPopupSlate}
+                        onClick={this.handleFocus}
+                        openPopupSlate={this.props.openPopupSlate}
                         accessDenied={accessDenied}
                         openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}
                         glossaryFootnoteValue={this.props.glossaryFootnoteValue}
                         glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
                         activeElement={this.props.activeElement}
-                        />;
+                    />;
                     labelText = 'Pop'
                     break;
                 case elementTypeConstant.SHOW_HIDE:
-                    editor = <ElementShowHide showHideId={this.props.showHideId} createShowHideElement={this.props.createShowHideElement} activeElement={this.props.activeElement} showBlocker={this.props.showBlocker} permissions={permissions} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onClick={this.handleFocus} glossaryFootnoteValue={this.props.glossaryFootnoteValue}/>;
+                    editor = <ElementContainerContext.Provider value={{
+                        onListSelect: this.props.onListSelect,
+                        showHideId: this.props.showHideId,
+                        createShowHideElement: this.props.createShowHideElement,
+                        deleteShowHideUnit: this.props.deleteShowHideUnit,
+                        activeElement: this.props.activeElement,
+                        showBlocker: this.props.showBlocker,
+                        permissions: permissions,
+                        handleFocus: this.handleFocus,
+                        handleBlur: this.handleBlur,
+                        index: index,
+                        element: element,
+                        model: element.html,
+                        slateLockInfo: slateLockInfo,
+                        onClick: this.handleFocus,
+                        glossaryFootnoteValue: this.props.glossaryFootnoteValue,
+                        openAssetPopoverPopUp: this.openAssetPopoverPopUp,
+                        openGlossaryFootnotePopUp: this.openGlossaryFootnotePopUp,
+                    }}><ElementShowHide />
+                    </ElementContainerContext.Provider >;
                     labelText = 'SH'
                     break;
             }
@@ -909,11 +945,11 @@ class ElementContainer extends Component {
         let btnClassName = this.state.btnClassName;
         let bceOverlay = "";
         let elementOverlay = ''
-        if (!hasReviewerRole() && this.props.permissions && !(this.props.permissions.includes('access_formatting_bar'))) {
+        if (!hasReviewerRole() && this.props.permissions && !(this.props.permissions.includes('access_formatting_bar')||this.props.permissions.includes('elements_add_remove')) ) {
             elementOverlay = <div className="element-Overlay disabled" onClick={() => this.handleFocus()}></div>
         }
         if (element.type === elementTypeConstant.FIGURE && element.figuretype === elementTypeConstant.FIGURE_CODELISTING) {
-            if ((element.figuredata && element.figuredata.programlanguage && element.figuredata.programlanguage == "Select") || (this.props.activeElement.secondaryOption === "secondary-blockcode-language-Default" && this.props.activeElement.elementId === element.id)) {
+            if ((element.figuredata && element.figuredata.programlanguage && element.figuredata.programlanguage == "Select") || (this.props.activeElement.secondaryOption === "secondary-blockcode-language-default" && this.props.activeElement.elementId === element.id)) {
                 bceOverlay = <div className="bce-overlay disabled" onClick={() => this.handleFocus()}></div>;
                 borderToggle = (this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? 'showBorder' : 'hideBorder';
                 btnClassName = '';
@@ -1070,8 +1106,8 @@ const mapDispatchToProps = (dispatch) => {
         fetchCommentByElement: (elementId) => {
             dispatch(fetchCommentByElement(elementId))
         },
-        setActiveElement: (element, index,parentUrn,asideData, updateFromC2Flag) => {
-            dispatch(setActiveElement(element, index,parentUrn,asideData, updateFromC2Flag))
+        setActiveElement: (element, index, parentUrn, asideData, updateFromC2Flag, showHideObj) => {
+            dispatch(setActiveElement(element, index, parentUrn, asideData, updateFromC2Flag, showHideObj))
         },
         deleteElement: (id, type, parentUrn, asideData, contentUrn, index) => {
             dispatch(deleteElement(id, type, parentUrn, asideData, contentUrn, index))
@@ -1094,15 +1130,18 @@ const mapDispatchToProps = (dispatch) => {
         },
         resetTableDataAction: (isReplaced) => {
             dispatch(resetTableDataAction(isReplaced))
-        } ,
-        openPopupSlate:(element) => {
+        },
+        openPopupSlate: (element) => {
             dispatch(openPopupSlate(element))
         },
         accessDenied,
         releaseSlateLock,
-        createShowHideElement: (element, type, index, parentContentUrn, cb) => {
-            dispatch(createShowHideElement(element, type, index, parentContentUrn, cb))
+        createShowHideElement: (element, type, index, parentContentUrn, cb, parentElement, parentElementIndex) => {
+            dispatch(createShowHideElement(element, type, index, parentContentUrn, cb, parentElement, parentElementIndex))
         },
+        deleteShowHideUnit: (id, type, contentUrn, index, eleIndex, parentId, cb, parentElement, parentElementIndex) => {
+            dispatch(deleteShowHideUnit(id, type, contentUrn, index, eleIndex, parentId, cb, parentElement, parentElementIndex))
+        }
 
     }
 }

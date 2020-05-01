@@ -94,12 +94,6 @@ const elementDataBank = {
             "secondaryOption" : "secondary-list-7"
         }
     },
-    
-    "popup": {
-        "elementType" : "element-interactive",
-        "primaryOption" : "primary-popup",
-        "secondaryOption" : "secondary-interactive-popup"
-    },
 
     "figure" : {
         "image" : {
@@ -289,6 +283,9 @@ const elementDataBank = {
             "cite" : {
                 "secondaryOption" : "secondary-single-assessment-cite"
             },
+            "puf" : {
+                "secondaryOption" : "secondary-single-assessment-puf"
+            }
         }
     },
 
@@ -348,11 +345,20 @@ const elementDataBank = {
         },
     },
 
-    "showhide" : {
-        "elementType" : "element-interactive",
+    "popup": {
+        "elementType" : "popup",
+        "primaryOption" : "primary-popup",
+        "secondaryOption" : "secondary-popup",
+        "tag" : "POP",
+
+    },
+    "showhide": {
+        "elementType" : "showhide",
         "primaryOption" : "primary-showhide",
-        "secondaryOption" : "secondary-aside-showhide"
-    }
+        "secondaryOption" : "secondary-showhide",
+        "tag" : "SH",
+
+    },
 }
 
 export default elementDataBank

@@ -8,10 +8,11 @@ import {
   IMAGES_FROM_API_FAIL
 } from '../../constants/Action_Constants';
 import config from '../../config/config.js'
-const { STRUCTURE_APIKEY, GET_ASSETPOPOVER_ID, APO_API_KEY, GET_FIGURES,COREAPI_ENDPOINT } = config;
 import axios from 'axios';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader , HideLoader} from '../../constants/IFrameMessageTypes.js';
+let currentlySearching = false;
+let searchterm = "";
 
 //Action for render currently linked figure data
 export const apoSearchCloseAction = () => {
@@ -109,43 +110,56 @@ export const getCurrentlyLinkedImage = (id, cb) => {
  * Get images from manifest Api
  */
 export const searchForFiguresAction = (searchTerm, stateImageData) => {
-
+  
+  searchterm = searchTerm;
   if (stateImageData && stateImageData.length > 0) { // hit api and store data in imageData
     //We have image data now dispatch an action for render filter data 
     return store.dispatch({
       type: 'USE_STATE_IMAGE_DATA',
       payload: {
-        searchTerm: searchTerm
+        searchTerm: searchterm
       }
     })
-  } else {
+  } else if (!currentlySearching) {
     let versionUrn, time1;
     time1 = performance.now();
     versionUrn = config.projectUrn;
 
-    return dispatch => fetch(config.GET_FIGURES + 'manifest-api/v2/' + versionUrn + '/images', {
+    currentlySearching = true;
+    return dispatch => fetch(config.REACT_APP_API_URL + 'v1/slate/' + versionUrn + '/assets', {
       method: 'GET',
       headers: {
-        'content-type': 'application/json',
-        'accept': 'application/json',
-        'cache-control': 'no-cache',
-        'apikey': config.STRUCTURE_APIKEY,
         'pearsonssosession': config.ssoToken
       }
     }).then(res => res.json()).then(
-      data => dispatch({
-        type: IMAGES_FROM_API,
-        payload: {
-          images: data.images,
-          searchTerm: searchTerm,
-          timeByAPI: performance.now() - time1
-        }
-      }),
-      err => dispatch({
-        type: IMAGES_FROM_API_FAIL,
-        payload: err
-      })
+      (data) => {
+        currentlySearching = false;
+        dispatch({
+          type: IMAGES_FROM_API,
+          payload: {
+            images: [
+              ...(data.images ? data.images : []),
+              ...(data.audios ? data.audios : []),
+              ...(data.videos ? data.videos : []),
+              ...(data.interactives ? data.interactives : [])
+            ],
+            searchTerm: searchterm,
+            timeByAPI: performance.now() - time1
+          }
+        })
+      },
+      (err) => {
+        currentlySearching = false;
+        dispatch({
+          type: IMAGES_FROM_API_FAIL,
+          payload: err
+        })
+      }
     ).catch(error => console.log('Error while getting data from Asset popover API', error))
+  } else {
+    return store.dispatch({
+      type: 'ASSET_SEARCH_IN_PROGRESS',
+    })
   }
 }
 

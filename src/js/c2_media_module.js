@@ -1,5 +1,6 @@
 
 import { showTocBlocker, hideTocBlocker, disableHeader } from './toggleLoader'
+import { sendDataToIframe } from '../constants/utility.js'
 import config_object1 from '../config/config';
 const configOBJ = require('./../config/config');
 let config_object = configOBJ.default;
@@ -64,7 +65,7 @@ export const c2MediaModule = {
         else if (data['assetType'] == 'video' || data['assetType'] == 'audio') {
             smartLinkURl = data['EpsUrl']
             data['smartLinkURl'] = smartLinkURl;
-            data['EpsUrl'] = 'https://d12m40tknrppbi.cloudfront.net/cite/images/FPO-audio_video.png'
+            data['EpsUrl'] = 'https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png'
             data['clipinfo'] = {
                 "id": "",
                 "start": "",
@@ -90,7 +91,7 @@ export const c2MediaModule = {
                 data['frenchsubtitle'] = patternBroker.extract(data, patternBroker.items.AddAnAsset['french subtitle'] ? patternBroker.items.AddAnAsset['french subtitle'] : '');
                 let mobileVal = patternBroker.extract(data, patternBroker.items.AddAnAsset['Smart Link optimizedMobileVal'] ? patternBroker.items.AddAnAsset['Smart Link optimizedMobileVal'] : '');
                 if (mobileVal) {
-                    let optimizedValue = false;
+                    let optimizedValue;
                     if (mobileVal.toLowerCase() === 'yes') {
                         optimizedValue = true
                     }
@@ -185,7 +186,7 @@ export const c2MediaModule = {
 
             showTocBlocker();
             disableHeader(true);
-            window.parent.postMessage({ 'type': 'hideToc', 'message': {} }, WRAPPER_URL);
+            sendDataToIframe({ 'type': 'hideToc', 'message': {} });
 
             //alfresco toc issue
             var targetNode = document.getElementsByClassName('overlay-0-0 overlayLittle-0-1')[0];
@@ -237,7 +238,7 @@ export const c2MediaModule = {
         disableHeader(true);
         showTocBlocker();
         addAnAssetConfig.nodeRef = '';//185fca35-4215-43bf-bf9d-11375903b2b4';
-        window.parent.postMessage({ 'type': 'hideToc', 'message': {} }, WRAPPER_URL);
+        sendDataToIframe({ 'type': 'hideToc', 'message': {} });
         if (addAnAssetConfig.nodeRef !== undefined && addAnAssetConfig.nodeRef !== '') {
             this.launchAssetBrowser(addAnAssetConfig.nodeRef);
 
@@ -251,10 +252,10 @@ export const c2MediaModule = {
             if (productLink && productLink.unmount) {
                 productLink.unmount();
             }
-            let CMIS_REPO=config_object1.CMIS_REPO.toString();
+            let CMIS_REPO=config_object1.CMIS_REPO;
             if (CMIS_REPO !== undefined && CMIS_REPO !== null && CMIS_REPO !== '') {
                 // try{
-                const cmisRepo = JSON.parse(CMIS_REPO);
+                const cmisRepo = CMIS_REPO;
                 if (cmisRepo.length > 0) {
                     const canWeProceedWithPL = this.validateRegistries(cmisRepo);
                     if (canWeProceedWithPL) {

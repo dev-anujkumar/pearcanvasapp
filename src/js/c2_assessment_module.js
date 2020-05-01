@@ -5,6 +5,7 @@ import config_object1 from '../config/config';
 import { hideTocBlocker, disableHeader } from './toggleLoader'
 const WRAPPER_URL = `${config_object.WRAPPER_URL}`;
 const authModule = { GET_SSO_TOKEN: function () { return config_object.ssoToken } };
+import { sendDataToIframe } from '../constants/utility.js'
 
 // Access individual pattern (from the <script> tag)
 var patternBroker; //(PatternBroker && PatternBroker !== undefined && PatternBroker !== null) ? PatternBroker.default : {}; //this.PatternBroker.default;
@@ -14,27 +15,6 @@ let _interactivePattern = {};
 let _interactivePatternConfig = {};
 var uname = config_object['userId'];
 
-/*Configure the library*/
-var libConfig = {
-  'locale': 'en_US',
-  'headers': {
-    'Content-Type': 'application/json',
-    'Accept': 'application/ld+json',
-    'X-Roles-Test': 'ContentMetadataEditor',
-    'Prefer': 'annotation=true',
-    'Apikey': config_object1.CMDS_APIKEY,
-    'X-APIKey': config_object1.CMDS_APIKEY,
-    'PearsonSSOSession': authModule.GET_SSO_TOKEN(),
-    'X-PearsonSSOSession': authModule.GET_SSO_TOKEN(),
-    'Authorization': config_object1.CMDS_AUTHORIZATION
-  },
-  'database': config_object1.CMDS_DATABASE,
-  'server': config_object1.CMDS_DATA_ENDPOINT,
-  'taxonomyserver': config_object1.CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
-  'userId': uname || config_object['userId']
-};
-
-//patternBroker.setup(libConfig);
 
 export const c2AssessmentModule = {
   searchAndSelectonSave: function (data) {
@@ -106,7 +86,7 @@ export const c2AssessmentModule = {
       _interactivePattern.run(_interactivePattern);
       _interactivePattern.on(callback);
 
-      window.parent.postMessage({ 'type': 'hideToc', 'message': {} }, WRAPPER_URL);
+      sendDataToIframe({ 'type': 'hideToc', 'message': {} });
 
       //alfresco toc issue
       var targetNode = document.getElementsByClassName('overlay-0-0 overlayLittle-0-1')[0];
