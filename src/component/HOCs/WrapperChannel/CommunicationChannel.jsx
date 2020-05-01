@@ -1,5 +1,5 @@
 /**
- * Module - WithWrapperCommunication
+ * Module - CommunicationChannel
  * Description - HOC to inherit channel communication functionalities with wrapper
  * Developer - Abhay Singh
  * Last modified - 09-09-2019
@@ -16,7 +16,7 @@ import { releaseSlateLockWithCallback, getSlateLockStatusWithCallback } from '..
 import PopUp from '../../PopUp';
 import {loadTrackChanges} from '../../CanvasWrapper/TCM_Integration_Actions';
 import { ALREADY_USED_SLATE_TOC } from '../../SlateWrapper/SlateWrapperConstants'
-function WithWrapperCommunication(WrappedComponent) {
+function CommunicationChannel(WrappedComponent) {
     class CommunicationWrapper extends Component {
         constructor(props) {
             super(props);
@@ -60,6 +60,8 @@ function WithWrapperCommunication(WrappedComponent) {
                     this.sendingPermissions();
                     break;
                 case 'selectedSlate':
+                case 'titleChanging':
+                    message['parentId'] = this.state.project_urn;
                     this.setCurrentSlate(message);
                     break;
                 case 'deleteTocItem':
@@ -70,11 +72,6 @@ function WithWrapperCommunication(WrappedComponent) {
                     break;
                 case 'showSingleContainerDelete':
                     this.onSingleContainerDelete(message);
-                    break;
-                case 'titleChanging': {
-                    message['parentId'] = this.state.project_urn;
-                    this.setCurrentSlate(message);
-                }
                     break;
                 case 'newSplitedSlate':
                     setTimeout(()=>{this.hanndleSplitSlate(message)}, 1000)
@@ -192,14 +189,10 @@ function WithWrapperCommunication(WrappedComponent) {
                         showBlocker: false
                     });
                  break;
-                 case 'slatePreview':
-                    if(!config.savingInProgress){
-                        this.props.publishContent('slatePreview');
-                    }
-                    break;
+                case 'slatePreview':
                 case 'projectPreview':
                     if(!config.savingInProgress){
-                        this.props.publishContent('projectPreview');
+                        this.props.publishContent(messageType);
                     }
                     break;
                 case 'getSlateLockStatus' :
@@ -622,4 +615,4 @@ function WithWrapperCommunication(WrappedComponent) {
     return CommunicationWrapper;
 }
 
-export default WithWrapperCommunication;
+export default CommunicationChannel;

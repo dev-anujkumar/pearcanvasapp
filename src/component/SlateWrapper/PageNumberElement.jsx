@@ -9,7 +9,7 @@
 import React from 'react';
 import { hasReviewerRole } from '../../constants/utility.js'
 
-class PageNumber extends React.Component {
+class PageNumberElement extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -99,5 +99,5 @@ class PageNumber extends React.Component {
     }
 }
 
-PageNumber.displayName = "PageNumberElement"
-export default PageNumber;
+PageNumberElement.displayName = "PageNumberElement"
+export default PageNumberElement;

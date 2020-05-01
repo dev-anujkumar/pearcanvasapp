@@ -42,7 +42,7 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
             glossaryFootElem = newBodymatter[updatedIndex]
         }
         else if (typeWithPopup && typeWithPopup === "popup" ){
-            let tempIndex = index.split('-');
+            // let tempIndex = index.split('-');
             let indexesLen = tempIndex.length;
             switch (indexesLen){
                 case 2:
@@ -59,7 +59,7 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
             }   
         }
         else if (typeWithPopup && typeWithPopup === 'poetry') {
-            let tempIndex = index.split('-');
+            // let tempIndex = index.split('-');
             let indexesLen = tempIndex.length;
             if (indexesLen === 2) {
                 switch (tempIndex[1]) {
@@ -277,8 +277,8 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             "PearsonSSOSession": config.ssoToken
         }
     }).then(res => {
-        let parentData = store.getState().appStore.slateLevelData;
-        let currentParentData = JSON.parse(JSON.stringify(parentData));
+        let parentData1 = store.getState().appStore.slateLevelData;
+        let currentParentData = JSON.parse(JSON.stringify(parentData1));
         let currentSlateData = currentParentData[config.slateManifestURN];
         if(res.data.id !== data.id && currentSlateData.status === 'approved'){
             sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
@@ -293,7 +293,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             newBodymatter[updatedIndex] = res.data;
         } 
         else if (typeWithPopup && typeWithPopup === "popup"){
-            let tempIndex = index.split('-');
+            // let tempIndex = index.split('-');
             let indexesLen = tempIndex.length
             switch (indexesLen){
                 case 2:
@@ -310,7 +310,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             }
         }
         else if (typeWithPopup && typeWithPopup === 'poetry') {
-            let tempIndex = index.split('-');
+            // let tempIndex = index.split('-');
             let indexesLen = tempIndex.length;
             if (indexesLen === 2) {
                 switch (tempIndex[1]) {
