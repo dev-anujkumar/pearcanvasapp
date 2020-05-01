@@ -1,8 +1,6 @@
 /**
  * Module - eventBinding
  * Description - contain events for custom list drop button and list element editor
- * Developer - Abhay Singh
- * Last modified - 24-09-2019
  */
 
 // IMPORT - dependencies
@@ -93,9 +91,6 @@ export const bindKeyDownEvent = (editor, e, element,showHideCallback) => {
      */
     if (anchorNode.tagName === "LI" || anchorNode.tagName === "BR") {
         if ((e.metaKey && e.which === 13) || (e.which === 13)) {
-            // prohibitEventBubling(e);
-            // isOnlyMathmlFlag = false;
-
             // if only mathml image is present in editor //
             if ((editor.targetElm.textContent.length === 0) ||
                 (editor.targetElm.innerHTML.indexOf('Wirisformula') != -1)) {
@@ -169,9 +164,6 @@ export const bindKeyDownEvent = (editor, e, element,showHideCallback) => {
         }
     }
 
-    // const atStart = false; // editor.selection.info(anchorNode.parentNode).atStart, // could not get this in tinymce
-    // const origFormat = anchorNode.parentNode.tagName.toLowerCase();
-    // const origClass = anchorNode.parentNode.classList[0];
     const sel = editor.selection.getSel();
     let atEnd = false;
 
@@ -462,7 +454,7 @@ export const updateNestedList = (element) => {
         treelevel = treelevel + 1;
     }
     if (allOlElement[i] && allOlElement[i].getCss("counter-increment") == 'none') {
-        for (let i = 0; i < liClasses.length; i++) {
+        for (var i = 0; i < liClasses.length; i++) {
             if (liClasses[i] && liClasses[i].indexOf('reset') && liClasses[i].indexOf('reset') !== -1) {
                 lis[i].classList.add("reset");
             }
@@ -494,20 +486,6 @@ const prohibitEventBubling = (e) => {
 }
 
 export const preventRemoveAllFormatting = (editor) => {
-    /**
-     * [BG-784] - to allow multilevel remove formatting and keeping default tiny behavior
-     * keep this commented code for reference
-     */
-    // if (editor.targetElm.findChildren('ol').length || editor.targetElm.findChildren('ul').length) {
-    //     if (isFullRangeSelected(editor) && editor.targetElm.querySelectorAll('li').length > 1) {
-    //         return false
-    //     }
-    //     let timeoutInstance = setTimeout(() => {
-    //         clearTimeout(timeoutInstance)
-    //         updateNestedList(editor.targetElm)
-    //         return false
-    //     });
-    // }
     return true
 }
 

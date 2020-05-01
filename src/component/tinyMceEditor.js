@@ -923,14 +923,6 @@ export class TinyMceEditor extends Component {
                 if(this.props.element && this.props.element.type === 'figure' && this.props.element.figuretype === 'authoredtext' && activeElement.innerHTML === '<p></p>'){
                     activeElement.innerHTML = '<p><br /></p>'
                 }
-                // else if (activeElement.children.length <= 1 && activeElement.children[0].tagName === 'BR' && activeElement.nodeName !== "CODE") {
-                //     let div = document.createElement('div');
-                //     div.innerHTML = this.lastContent;
-                //     if(div.children && div.children[0]){
-                //         div.children[0].innerHTML = '<br/>';
-                //         activeElement.innerHTML = div.children[0].outerHTML;
-                //     }
-                // }
                 this.lastContent = activeElement.innerHTML;
             }
 
@@ -1682,13 +1674,7 @@ export class TinyMceEditor extends Component {
                     this.editorRef.current.focus();
                 }
 
-                // element must be focused before
-                /**
-                 * This particular logic is now moved at SlateWrapper
-                 */
-                // if(!newElement){
-                //     document.getElementById('slateWrapper').scrollTop=0;
-                // }
+               
                 this.setToolbarByElementType();
                 // Make element active on element create, set toolbar for same and remove localstorage values
                 if (this.editorRef.current && document.getElementById(this.editorRef.current.id) && newElement) {
@@ -1699,7 +1685,8 @@ export class TinyMceEditor extends Component {
                     }, 0)
                     localStorage.removeItem('newElement');
                 }
-                this.editorConfig.selector = '#' + (this.editorRef.current ? this.editorRef.current.id : 'cypress-0');
+                let currentId = (this.editorRef.current ? this.editorRef.current.id : 'cypress-0');
+                this.editorConfig.selector = '#' + currentId;
 
                 /**
                  * Before removing the current tinymce instance, update wiris image attribute data-mathml to data-temp-mathml and class Wirisformula to temp_Wirisformula
@@ -1713,8 +1700,13 @@ export class TinyMceEditor extends Component {
                     document.getElementById(this.editorRef.current.id).innerHTML = tempFirstContainerHtml;
                 }
 
+                let termText = tinyMCE.$("#" + currentId) && tinyMCE.$("#" + currentId).html();
                 tinymce.init(this.editorConfig).then((d) => {
                     if (this.editorRef.current) {
+                        if (termText && termText.length && this.props.element.type === 'figure') {
+                            document.getElementById(currentId).innerHTML = termText;
+                        }
+
                         /*
                             Making blinking cursor color again to black
                         */
@@ -1726,8 +1718,6 @@ export class TinyMceEditor extends Component {
                             this.fromtinyInitBlur = false;
                         }
                     }
-
-
                 })
             }
         }
@@ -1794,19 +1784,12 @@ export class TinyMceEditor extends Component {
      * React's lifecycle method. Called immediately after updating occurs. Not called for the initial render.
      */
     componentDidUpdate() {
-        if (!tinymce.editors.length) {
-            //console.log('tiny update')
-            //tinymce.init(this.editorConfig)
-        }
         let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");
         if (isBlockQuote) {
             this.lastContent = document.getElementById('cypress-' + this.props.index).innerHTML;
         }
         this.removeMultiTinyInstance();
         this.handlePlaceholder()
-        /* if(document.getElementById('cypress-'+this.props.index) && !document.getElementById('cypress-'+this.props.index).innerText.trim().length){
-            this.handlePlaceholder()
-        } */
         tinymce.$('.blockquote-editor').attr('contenteditable', false)
     }
 
@@ -1903,16 +1886,7 @@ export class TinyMceEditor extends Component {
         /*
             Adding br tag in lists because on first conversion from p tag to list, br tag gets removed
         */
-        // if( tinymce.$(e.target).find('li').length   ){
-        //     tinymce.$(e.target).find('li').each(function(a,b){
-        //         if( this.innerHTML.trim() == '' ){
-        //             tinymce.$(this).append('<br/>')
-        //         } 
-        //     })
-        // }
-        // else if( tinymce.$(e.target).closest('li') && tinymce.$(e.target).closest('li').length && !tinymce.$(e.target).closest('li').html().trim() && !tinymce.$(e.target).closest('li').find('br').length ){
-        //     tinymce.$(e.target).closest('li').append('<br/>');
-        // }
+        
         if (this.props.permissions && !(this.props.permissions.includes('access_formatting_bar') || this.props.permissions.includes('elements_add_remove'))) {        // when user doesn't have edit permission
             if (tinymce.activeEditor && tinymce.activeEditor.id) {
                 document.getElementById(tinymce.activeEditor.id).setAttribute('contenteditable', false)

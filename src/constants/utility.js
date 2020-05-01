@@ -1,8 +1,6 @@
 /**
  * Module - utility
  * Description - This file contains utility functions to be shared across
- * Developer - Abhay Singh
- * Last modified - 11-09-2019
  */
 
 // IMPORT - Module dependencies
@@ -334,6 +332,8 @@ const htmlEntityList = {
     "§#9183;": ["⏟", ""],
 }
 
+/** This is a function to set Assessment Title for Quad Assessment
+ */
 export const setAssessmentTitle = (props) => {
     let assessmentTitle = null;
     if (props && props.model && props.model.html && props.model.html.title) {

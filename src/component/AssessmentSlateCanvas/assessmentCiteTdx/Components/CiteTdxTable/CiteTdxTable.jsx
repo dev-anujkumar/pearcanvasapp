@@ -29,6 +29,20 @@ class CiteTdxTable extends Component {
             sortBy: sortingData
         };
     }
+    componentDidMount() {
+        if (this.props.sortingData.sortBy && this.props.sortingData.sortOrder) {
+            let sortByParameter = Object.keys(this.sortingArray).find(key => this.sortingArray[key] === this.props.sortingData.sortBy);
+            this.setState(prevState => ({
+                sortBy: {
+                    ...prevState.sortBy,
+                    [sortByParameter]: {
+                        sortIcon: this.props.sortingData.sortOrder ? elmSortDown : elmSortUp,
+                        sortFlag: this.props.sortingData.sortOrder ? false : true
+                    }
+                }
+            }))
+        }
+    }
     
     addAssessment = (addedValue) => {
         this.props.setCurrentCiteTdx(addedValue);
@@ -39,7 +53,7 @@ class CiteTdxTable extends Component {
     setSort = (item) => {
         if(item && this.sortingArray[item]){
             let sortByParameter = this.sortingArray[item] ? this.sortingArray[item] : "" ;
-        let sortOrder = this.state.sortBy[item].sortFlag == true ? 1 : this.state.sortBy[item].sortFlag == false ? 0:''
+            let sortOrder = this.state.sortBy[item].sortFlag == true ? 1 : this.state.sortBy[item].sortFlag == false ? 0:''
 
         this.setState(prevState => ({
             sortBy: {                 
@@ -120,7 +134,8 @@ const mapStateToProps = (state) => {
         citeErrorFlag: state.citeTdxReducer.assessmenterrFlag,
         isLoading: state.citeTdxReducer.isLoading,
         currentAssessmentSelected: state.citeTdxReducer.currentAssessmentSelected,
-        assessmenterrFlag: state.citeTdxReducer.assessmenterrFlag
+        assessmenterrFlag: state.citeTdxReducer.assessmenterrFlag,
+        sortingData:state.citeTdxReducer
     }
 }
 
