@@ -11,7 +11,7 @@ import { hasReviewerRole } from '../../constants/utility.js';
 import RootCiteTdxComponent from '../AssessmentSlateCanvas/assessmentCiteTdx/RootCiteTdxComponent.jsx';
 import {FULL_ASSESSMENT_CITE, FULL_ASSESSMENT_TDX} from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import RootSingleAssessmentComponent from '../AssessmentSlateCanvas/singleAssessmentCiteTdx/RootSingleAssessmentComponent.jsx'
-import { setCurrentCiteTdx, setCurrentInnerCiteTdx } from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
+import { setCurrentCiteTdx, setCurrentInnerCiteTdx, assessmentSorting } from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
 import RootElmSingleAssessment from '../AssessmentSlateCanvas/elm/RootElmSingleComponent.jsx'
 import { sendDataToIframe } from './../../constants/utility.js';
 /*** @description - ElementSingleAssessment is a class based component. It is defined simply to make a skeleton of the assessment-type element .*/
@@ -93,7 +93,8 @@ static getDerivedStateFromProps(nextProps, prevState) {
         this.props.showBlocker(value);
         disableHeader(value);
         value ? showTocBlocker(value) : hideTocBlocker(value)
-        if (this.state.assessmentId) {
+        this.props.assessmentSorting("","");
+        if (this.state.assessmentId && this.state.assessmentItemId ) {
             this.props.setCurrentCiteTdx({ 
                 "versionUrn": this.state.assessmentId, 
                 "name": this.state.assessmentTitle 
@@ -323,7 +324,8 @@ ElementSingleAssessment.propTypes = {
 }
 const mapActionToProps = {
     setCurrentCiteTdx: setCurrentCiteTdx,
-    setCurrentInnerCiteTdx: setCurrentInnerCiteTdx
+    setCurrentInnerCiteTdx: setCurrentInnerCiteTdx,
+    assessmentSorting:assessmentSorting
 }
 
 
