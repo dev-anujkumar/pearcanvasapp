@@ -897,15 +897,17 @@ export class TinyMceEditor extends Component {
                 this.props.createShowHideElement(this.props.showHideType, this.props.index, this.props.id);
             });
             let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
+
             /** [BG-2134] | This block is to clear selection when CT element is blank before paste process*/
-            if ((e.keyCode == 86 || e.key == 'v') && e.ctrlKey && this.props.currentElement && this.props.currentElement.type == 'element-citation') {
-                if (window.getSelection().toString().trim() == '') {        // Other Browsers
+            if ((e.keyCode == 86 || e.key == 'v') && e.ctrlKey && this.props.currentElement && this.props.currentElement.type == 'element-citation' && activeElement) {
+                if (activeElement.innerText && activeElement.innerText.trim() == "" && window.getSelection().toString().trim() == '') {        // Other Browsers
                     window.getSelection().removeAllRanges()
                 }
                 else if (document.selection && document.selection.empty) {
                     document.selection.empty();                             // IE
                 }
             }
+            
             if (activeElement) {
                 if (!activeElement.children.length ||
                     (activeElement.children.length <= 1 && activeElement.children[0].tagName === 'BR' && activeElement.nodeName !== "CODE")) {
