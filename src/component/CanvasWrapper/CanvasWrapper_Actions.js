@@ -116,6 +116,7 @@ const findElementType = (element, index) => {
                         }
                         break;
                     case "assessment":
+                        element.figuredata.elementdata.assessmentformat = element.figuredata.elementdata.assessmentformat.toLowerCase() 
                         elementType = {
                             elementType: elementDataBank[element.type][element.figuretype]["elementType"],
                             primaryOption: elementDataBank[element.type][element.figuretype]["primaryOption"],
