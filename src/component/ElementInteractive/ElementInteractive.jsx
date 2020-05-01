@@ -14,7 +14,7 @@ import axios from 'axios';
 import { hasReviewerRole } from '../../constants/utility.js';
 import RootCiteTdxComponent from '../AssessmentSlateCanvas/assessmentCiteTdx/RootCiteTdxComponent.jsx';
 import RootSingleAssessmentComponent from '../AssessmentSlateCanvas/singleAssessmentCiteTdx/RootSingleAssessmentComponent.jsx'
-import  {setCurrentCiteTdx, setCurrentInnerCiteTdx, getMCQGuidedData}  from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
+import  {setCurrentCiteTdx, setCurrentInnerCiteTdx, getMCQGuidedData, assessmentSorting}  from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
 import { connect } from 'react-redux';
 import { sendDataToIframe } from './../../constants/utility.js';
 
@@ -450,6 +450,7 @@ class Interactive extends React.Component {
             this.handleC2MediaClick(e);
         }
         else if(this.props.model.figuredata.interactiveformat === "mmi"){
+            this.props.assessmentSorting("","");
             sendDataToIframe({ 'type': 'hideToc', 'message': {} });
             this.props.showBlocker(value);
             disableHeader(value);
@@ -784,7 +785,8 @@ Interactive.propTypes = {
 }
 const mapActionToProps = {
     setCurrentCiteTdx: setCurrentCiteTdx,
-    setCurrentInnerCiteTdx: setCurrentInnerCiteTdx
+    setCurrentInnerCiteTdx: setCurrentInnerCiteTdx,
+    assessmentSorting:assessmentSorting
 }
 
 export default connect(
