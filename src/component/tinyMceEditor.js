@@ -897,15 +897,17 @@ export class TinyMceEditor extends Component {
                 this.props.createShowHideElement(this.props.showHideType, this.props.index, this.props.id);
             });
             let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
+
             /** [BG-2134] | This block is to clear selection when CT element is blank before paste process*/
-            if ((e.keyCode == 86 || e.key == 'v') && e.ctrlKey && this.props.currentElement && this.props.currentElement.type == 'element-citation') {
-                if (window.getSelection().toString().trim() == '') {        // Other Browsers
+            if ((e.keyCode == 86 || e.key == 'v') && e.ctrlKey && this.props.currentElement && this.props.currentElement.type == 'element-citation' && activeElement) {
+                if (activeElement.innerText && activeElement.innerText.trim() == "" && window.getSelection().toString().trim() == '') {        // Other Browsers
                     window.getSelection().removeAllRanges()
                 }
                 else if (document.selection && document.selection.empty) {
                     document.selection.empty();                             // IE
                 }
             }
+            
             if (activeElement) {
                 if (!activeElement.children.length ||
                     (activeElement.children.length <= 1 && activeElement.children[0].tagName === 'BR' && activeElement.nodeName !== "CODE")) {
@@ -1697,7 +1699,8 @@ export class TinyMceEditor extends Component {
                     }, 0)
                     localStorage.removeItem('newElement');
                 }
-                this.editorConfig.selector = '#' + (this.editorRef.current ? this.editorRef.current.id : 'cypress-0');
+                let currentId = (this.editorRef.current ? this.editorRef.current.id : 'cypress-0');
+                this.editorConfig.selector = '#' + currentId;
 
                 /**
                  * Before removing the current tinymce instance, update wiris image attribute data-mathml to data-temp-mathml and class Wirisformula to temp_Wirisformula
@@ -1711,8 +1714,13 @@ export class TinyMceEditor extends Component {
                     document.getElementById(this.editorRef.current.id).innerHTML = tempFirstContainerHtml;
                 }
 
+                let termText = tinyMCE.$("#" + currentId) && tinyMCE.$("#" + currentId).html();
                 tinymce.init(this.editorConfig).then((d) => {
                     if (this.editorRef.current) {
+                        if (termText && termText.length && this.props.element.type === 'figure') {
+                            document.getElementById(currentId).innerHTML = termText;
+                        }
+
                         /*
                             Making blinking cursor color again to black
                         */
@@ -1724,8 +1732,6 @@ export class TinyMceEditor extends Component {
                             this.fromtinyInitBlur = false;
                         }
                     }
-
-
                 })
             }
         }
