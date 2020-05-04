@@ -8,6 +8,7 @@ import TinyMceEditor from "../tinyMceEditor";
 import { CitationGroupContext } from '../ElementContainer/ElementCitationContext'
 import { sendDataToIframe } from '../../constants/utility.js';
 import config from '../../config/config.js';
+import { getTitleSubtitleModel } from "../../constants/utility.js"
 
 const CGTinyMCE = (props) => {
     const context = useContext(CitationGroupContext)
@@ -20,7 +21,7 @@ const CGTinyMCE = (props) => {
         id : context.id,
         placeholder : "Enter Title...",
         tagName : 'h4',
-        model : context.element.contents && context.element.contents["formatted-title"] && context.element.contents["formatted-title"].html && context.element.contents["formatted-title"].html.text ? context.element.contents["formatted-title"].html.text : "",
+        model : context.element.contents && context.element.contents["formatted-title"] && context.element.contents["formatted-title"].html && context.element.contents["formatted-title"].html.text ? getTitleSubtitleModel(context.element.contents["formatted-title"].html.text, "formatted-title") : `<p class="paragraphNumeroUno"><br/></p>`,
         currentElement : context.element.contents && context.element.contents["formatted-title"],
         handleEditorFocus : context.handleFocus,
         handleBlur  :  context.handleBlur,

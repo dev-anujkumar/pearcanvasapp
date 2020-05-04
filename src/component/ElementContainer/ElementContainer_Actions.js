@@ -553,7 +553,8 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                                 "formatted-title": { ...updatedData }
                             }
                         };
-                    } else if (element.contents["formatted-subtitle"] && element.contents["formatted-subtitle"]["id"] === elementId) {
+                    } 
+                    /* else if (element.contents["formatted-subtitle"] && element.contents["formatted-subtitle"]["id"] === elementId) {
                         element = {
                             ...element,
                             contents: {
@@ -561,7 +562,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                                 "formatted-subtitle": { ...updatedData }
                             }
                         };
-                    } 
+                    }  */
                     // else if (element.contents["formattedCaption"] && element.contents["formattedCaption"]["id"] === elementId) {
                     //     element = {
                     //         ...element,

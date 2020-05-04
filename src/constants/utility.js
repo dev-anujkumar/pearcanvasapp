@@ -122,6 +122,72 @@ export const encodeHTMLInWiris = (str) => {
     }
 }
 
+/**
+ * Refines title content from unified model by removing extra tags
+ * @param {*} htmlText unified HTML content
+ */
+const removeTagsforSubTitle = (htmlText) => {
+    return htmlText.replace(/<label>?.+<\/label>/g, "").replace(/<p>|<\/p>/g, "")
+}
+
+export const isOldDataFormat = (model) => {
+    return !model.match(/<label>?.+<\/label>/g)
+}
+
+/**
+ * Separates label and title from the unified HTML content and maps it to UI
+ * @param {*} model label or title HTML content
+ * @param {*} modelType type - label or title
+ */
+export const getTitleSubtitleModel = (model, modelType, oldSubTitleModel) => {
+    let modelDocDom = model && new DOMParser().parseFromString(model, "text/html")
+    let modelDom = modelDocDom && modelDocDom.body && modelDocDom.body.children[0]
+    let modelToReturn
+    if(modelType){
+        if(modelType === "formatted-title"){
+            try{
+                if(isOldDataFormat(model)){
+                    modelToReturn = model
+                }
+                else{
+                    modelToReturn = modelToReturn = `<p class="paragraphNumeroUno">${modelDom.children[0].innerHTML}</p>`   
+                }
+            }
+            catch (error) {
+                modelToReturn = `<p class="paragraphNumeroUno"><br/></p>`
+            }
+        }
+        else if(modelType === "formatted-subtitle"){
+            try{
+                if(isOldDataFormat(model)){
+                    modelToReturn = oldSubTitleModel ? oldSubTitleModel : `<p class="paragraphNumeroUno"><br/></p>`
+                }
+                else{
+                    let modelInnerHTML = modelDom.innerHTML
+                    let modelWithRemovedTags = removeTagsforSubTitle(modelInnerHTML)
+                    modelToReturn = `<p class="paragraphNumeroUno">${modelWithRemovedTags}</p>`
+                }
+            }
+            catch (error) {
+                modelToReturn = `<p class="paragraphNumeroUno"><br/></p>`
+            }
+        }
+        else{
+            modelToReturn = `<p class="paragraphNumeroUno"><br/></p>`
+        }
+    }
+    return modelToReturn
+}
+
+/**
+ * Combines label and title HTML and returns HTML content to send through update API
+ * @param {*} titleHTML Label HTML content
+ * @param {*} subtitleHTML title HTML content
+ */
+export const createTitleSubtitleModel = (titleHTML, subtitleHTML) => {
+    return `<p><label>${titleHTML}</label>${subtitleHTML}</p>`
+}
+
 /** This is a list of HTML Entity code mapped to their HTML Entity name and Special Character |
  *  It is used for mapping special characters in Wiris data 
  */

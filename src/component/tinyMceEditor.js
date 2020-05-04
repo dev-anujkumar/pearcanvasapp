@@ -2201,17 +2201,14 @@ export class TinyMceEditor extends Component {
                 if (this.props.element && this.props.element.type === "popup") {
                     model = this.props.model && this.props.model.replace(/class="paragraphNumeroUno"/g, "")
                 }
-                else if (this.props.element && this.props.element.type === "citations") {
-                    model = this.props.element.contents['formatted-title'] && this.props.element.contents['formatted-title'].html && this.props.element.contents['formatted-title'].html.text.length ? this.props.element.contents['formatted-title'].html.text : `<p class="paragraphNumeroUno"><br/></p>`
+                /* else if (this.props.element && this.props.element.type === "citations") {
+                    model = this.props.model
                 }
                 else if (this.props.element && this.props.element.type === "poetry") {
                     if (this.props.poetryField === 'formatted-title') {
-                        model = this.props.element.contents['formatted-title'] && this.props.element.contents['formatted-title'].html && this.props.element.contents['formatted-title'].html.text.length ? this.props.element.contents['formatted-title'].html.text : `<p class="paragraphNumeroUno"><br/></p>`
+                        model = this.props.model
                     }
-                    else if (this.props.poetryField === 'formatted-subtitle') {
-                        model = this.props.element.contents['formatted-subtitle'] && this.props.element.contents['formatted-subtitle'].html && this.props.element.contents['formatted-subtitle'].html.text.length ? this.props.element.contents['formatted-subtitle'].html.text : `<p class="paragraphNumeroUno"><br/></p>`
-                    }
-                }
+                } */
                 else {
                     model = this.props.model;
                 }

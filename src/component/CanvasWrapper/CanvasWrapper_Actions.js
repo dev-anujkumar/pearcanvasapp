@@ -14,7 +14,7 @@ import {
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
-import { sendDataToIframe, requestConfigURI } from '../../constants/utility.js';
+import { sendDataToIframe, requestConfigURI, createTitleSubtitleModel } from '../../constants/utility.js';
 import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 import elementDataBank from './elementDataBank'
 import figureData from '../ElementFigure/figureTypes.js';
@@ -762,10 +762,15 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
                 targetPoetryElement.contents[poetryField][0].html.text  = elemNode.innerHTML
                 targetPoetryElement.contents[poetryField][0].elementdata.text = elemNode.innerText
             }
-            else{
+            else if(poetryField==="formatted-title"){
                 targetPoetryElement.contents[poetryField] = response.data
                 targetPoetryElement.contents[poetryField].html.text = elemNode.innerHTML
                 targetPoetryElement.contents[poetryField].elementdata.text = elemNode.innerText
+            }
+            else if(poetryField==="formatted-subtitle"){
+                targetPoetryElement.contents["formatted-title"] = response.data
+                targetPoetryElement.contents["formatted-title"].html.text = createTitleSubtitleModel("", elemNode.innerHTML)
+                // targetPoetryElement.contents["formatted-title"].elementdata.text = elemNode.innerText
             }
             _slateObject.contents.bodymatter[ElementIndex] = targetPoetryElement
         }

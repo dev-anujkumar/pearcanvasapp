@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import TinyMceEditor from "../../tinyMceEditor"
-
+import { getTitleSubtitleModel, isOldDataFormat } from "../../../constants/utility.js"
 /**
 * @description - ElementContainerHOC is a HOC. It is defined simply
 * to make a HOC skeleton of the Poetry alike Element.
@@ -20,16 +20,46 @@ const ElementContainerHOC = (WrappedComponent) => {
             // figCaptionClass= 'figcaptionImageTextWidth',
             figCreditClass= 'paragraphImageTextWidthCredit'
 
-            let formattedSubtitle = model.contents.hasOwnProperty('formatted-subtitle') ?
+            /* let formattedSubtitle = model.contents.hasOwnProperty('formatted-subtitle') ?
                 model.contents["formatted-subtitle"].html && model.contents["formatted-subtitle"].html.text : "<p></p>";
             let formattedTitle = model.contents.hasOwnProperty('formatted-title') ?
-                model.contents["formatted-title"].html && model.contents["formatted-title"].html.text : "<p></p>";
+                model.contents["formatted-title"].html && model.contents["formatted-title"].html.text : "<p></p>"; */
+            let formattedSubtitle, formattedTitle
+            let oldSubtitleModel = model.contents.hasOwnProperty("formatted-subtitle") && model.contents["formatted-subtitle"].html && model.contents["formatted-subtitle"].html.text
+
+            if(model.contents.hasOwnProperty('formatted-title') && isOldDataFormat(model.contents["formatted-title"].html.text)){
+                /**
+                 * old format
+                 */
+                formattedSubtitle = oldSubtitleModel ? getTitleSubtitleModel(model.contents["formatted-subtitle"].html.text, "formatted-subtitle", oldSubtitleModel) : `<p class="paragraphNumeroUno"><br/></p>`;
+
+                formattedTitle = model.contents.hasOwnProperty('formatted-title') ?
+                model.contents["formatted-title"].html && getTitleSubtitleModel(model.contents["formatted-title"].html.text, "formatted-title") : `<p class="paragraphNumeroUno"><br/></p>`;
+            }
+            else if(model.contents.hasOwnProperty('formatted-title') && !isOldDataFormat(model.contents["formatted-title"].html.text)){
+                /**
+                 * New format
+                 */
+                formattedTitle = getTitleSubtitleModel(model.contents["formatted-title"].html.text, "formatted-title")
+                formattedSubtitle = getTitleSubtitleModel(model.contents["formatted-title"].html.text, "formatted-subtitle", oldSubtitleModel)
+            }
+            else if(!model.contents.hasOwnProperty('formatted-title') && oldSubtitleModel){
+                formattedTitle = `<p class="paragraphNumeroUno"><br/></p>`
+                formattedSubtitle = getTitleSubtitleModel(oldSubtitleModel, "formatted-subtitle", oldSubtitleModel)
+            }
+            else{
+                formattedSubtitle = `<p class="paragraphNumeroUno"><br/></p>`
+                formattedTitle = `<p class="paragraphNumeroUno"><br/></p>`
+            }
+
             // let formattedCaption = model.contents.hasOwnProperty('formatted-caption') ? model.contents["formatted-caption"].html && model.contents["formatted-caption"].html.text : "<p></p>";
             let formattedCredit = model.contents.hasOwnProperty('creditsarray') && model.contents['creditsarray'].length ?
                 model.contents["creditsarray"][0].html && model.contents["creditsarray"][0].html.text : "<p></p>";
-
-            let Title = element.contents && element.contents['formatted-title']
-            let subTitle = element.contents && element.contents['formatted-subtitle']
+            let subTitle
+            let Title = subTitle = element.contents && element.contents['formatted-title']
+            console.log("%c Title = subTitle", "background: black; color: yellow; font-size: 30px", Title, subTitle)
+            // let subTitle = element.contents && element.contents['formatted-title']
+            // let subTitle = element.contents && element.contents['formatted-subtitle']
             let credit = element.contents && element.contents.hasOwnProperty('creditsarray') && element.contents['creditsarray'][0]
             
             
