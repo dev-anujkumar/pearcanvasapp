@@ -19,8 +19,9 @@ class CiteTdxTable extends Component {
         let sortingData = Object.keys(this.sortingArray).map((item, index) => {
             return {
                 [item]: {
-                    sortIcon: elmSortUp,
-                    sortFlag: true
+                    sortIcon: elmSortDown,
+                    sortFlag: true,
+                    className: item === 'Title' ?' active' : 'inactive'
                 }
             }
         })
@@ -30,17 +31,21 @@ class CiteTdxTable extends Component {
         };
     }
     componentDidMount() {
-        if (this.props.sortingData.sortBy && this.props.sortingData.sortOrder) {
+        if (this.props.sortingData.sortBy) {
             let sortByParameter = Object.keys(this.sortingArray).find(key => this.sortingArray[key] === this.props.sortingData.sortBy);
-            this.setState(prevState => ({
-                sortBy: {
-                    ...prevState.sortBy,
-                    [sortByParameter]: {
-                        sortIcon: this.props.sortingData.sortOrder ? elmSortDown : elmSortUp,
-                        sortFlag: this.props.sortingData.sortOrder ? false : true
+            let sortingData = Object.keys(this.state.sortBy).map((ele, index) => {
+                return {
+                    [ele]: {
+                        sortIcon: sortByParameter === ele ? this.props.sortingData.sortOrder ? elmSortUp : elmSortDown : this.state.sortBy[sortByParameter].sortFlag ? elmSortDown : elmSortUp,
+                        sortFlag: sortByParameter === ele ? this.props.sortingData.sortOrder ? false : true : this.state.sortBy[sortByParameter].sortFlag,
+                        className: sortByParameter === ele ? 'active' : 'inactive'
                     }
                 }
-            }))
+            })
+            sortingData = sortingData.reduce((a, b) => Object.assign(a, b), {})
+            this.setState({
+                sortBy: sortingData
+            })
         }
     }
     
@@ -51,19 +56,22 @@ class CiteTdxTable extends Component {
       * @param e- event triggered
      */
     setSort = (item) => {
-        if(item && this.sortingArray[item]){
-            let sortByParameter = this.sortingArray[item] ? this.sortingArray[item] : "" ;
-            let sortOrder = this.state.sortBy[item].sortFlag == true ? 1 : this.state.sortBy[item].sortFlag == false ? 0:''
-
-        this.setState(prevState => ({
-            sortBy: {                 
-                ...prevState.sortBy,  
-                [item]: {
-                    sortIcon: this.state.sortBy[item].sortFlag?elmSortDown: elmSortUp,
-                    sortFlag: !this.state.sortBy[item].sortFlag
-                }      
-            }
-        }))
+        if (item && this.sortingArray[item]) {
+            let sortByParameter = this.sortingArray[item] ? this.sortingArray[item] : "";
+            let sortOrder = this.state.sortBy[item].sortFlag == true ? 1 : this.state.sortBy[item].sortFlag == false ? 0 : ''
+            let sortingData = Object.keys(this.state.sortBy).map((ele, index) => {
+                return {
+                    [ele]: {
+                        sortIcon: ele === item ? this.state.sortBy[ele].sortFlag ? elmSortUp : elmSortDown : this.state.sortBy[ele].sortFlag ? elmSortDown : elmSortUp,
+                        sortFlag: ele === item ? !this.state.sortBy[ele].sortFlag : this.state.sortBy[ele].sortFlag,
+                        className: ele === item ? 'active' : 'inactive'
+                    }
+                }
+            })
+            sortingData = sortingData.reduce((a, b) => Object.assign(a, b), {})
+            this.setState({
+                sortBy: sortingData
+            })
         this.props.assessmentSorting(sortByParameter,sortOrder);
         this.props.getCiteTdxData(this.props.assessmentType, this.props.searchTitle, this.props.filterUUID,this.props.currentPageNo);
         }
@@ -85,7 +93,7 @@ class CiteTdxTable extends Component {
                                 {this.tableHeaders.map(item => (
                                     <th className={`assessment-row-class ${item.toLowerCase()}`}>{item}
                                     {(item === "Title" || item === "Date Modified")  && this.state.sortBy[item] &&
-                                    <div className={`sort-icon ${apiData.assessments.length > 1 ? '':'disabled'}`} onClick={() => this.setSort(item)}>{this.state.sortBy[item].sortIcon}</div>
+                                    <div className={`sort-icon ${this.state.sortBy[item].className} ${apiData.assessments.length > 1 ? '':'disabled'}`} onClick={() => this.setSort(item)}>{this.state.sortBy[item].sortIcon}</div>
                                     }
                                     </th>
 
