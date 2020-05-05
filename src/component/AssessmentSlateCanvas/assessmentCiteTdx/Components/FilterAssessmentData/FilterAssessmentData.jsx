@@ -32,9 +32,13 @@ class FilterAssessmentData extends Component {
     }
 
     handleChange = (event) => {
+        document.querySelectorAll(".filter-block label").style.display = "inline";
         let name = event.target.name;
         let value = event.target.value;
         this.setState({ [name]: value });
+    }
+    handleFocus = () =>{
+
     }
 
     render() {
@@ -53,11 +57,13 @@ class FilterAssessmentData extends Component {
                                 <div className="filter-block">
                                     <div className="title-block">
                                         <i class="fa fa-search"></i>
-                                        <input autoComplete="on" name="searchAssessment" value={this.state.searchAssessment } onChange={this.handleChange} placeholder="Search by Title" />
+                                        <label>Title:</label>
+                                        <input type="text" autoComplete="on" name="searchAssessment" value={this.state.searchAssessment } onChange={this.handleChange} placeholder="Search by Title" onfocus={this.handleFocus} />
 
                                     </div>
                                     <div className="filter-uuid" >
-                                        <input name="filterUUID" value={this.state.filterUUID} onChange={this.handleChange} placeholder="Filter by UUID" />
+                                        <label>UUID:</label>
+                                        <input type="text" name="filterUUID" value={this.state.filterUUID} onChange={this.handleChange} placeholder="Filter by UUID" />
                                     </div>
 
                                 </div>
