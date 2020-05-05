@@ -239,7 +239,9 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             }
             break;
     }
-
+    if(typeWithPopup === 'poetry' || typeWithPopup === 'popup'){
+        data.metaDataField = "formattedTitle"
+    }
     if(index &&  typeof (index) !== 'number' && elementType !== 'figure'  && typeWithPopup !== 'popup' && typeWithPopup !== 'poetry'){
         let tempIndex =  index.split('-');
         if(tempIndex.length === 2){
