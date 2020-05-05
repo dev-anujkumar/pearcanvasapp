@@ -35,7 +35,8 @@ class ElementSingleAssessment extends Component {
             parentPageNo:1,
             isReset: false,
             searchTitle : '',
-            filterUUID : ''
+            filterUUID : '',
+            openedFrom:''
         };
     }
 
@@ -100,7 +101,7 @@ static getDerivedStateFromProps(nextProps, prevState) {
         if (this.state.assessmentId && this.state.assessmentItemId ) {
             this.props.setCurrentCiteTdx({ 
                 "versionUrn": this.state.assessmentId, 
-                "name": this.state.assessmentTitle 
+                "name": this.state.assessmentTitle,
             });
             this.props.setCurrentInnerCiteTdx({ 
                 "versionUrn": this.state.assessmentItemId
@@ -110,7 +111,8 @@ static getDerivedStateFromProps(nextProps, prevState) {
                 setCurrentAssessment: {
                     id: this.state.assessmentId,
                     title: this.state.assessmentTitle,
-                }
+                },
+                openedFrom:'singleAssessment'
             });
         }
         else {
@@ -169,6 +171,9 @@ static getDerivedStateFromProps(nextProps, prevState) {
     }
     assessmentNavigateBack = () => {
         this.props.setCurrentInnerCiteTdx({});
+        if(this.state.openedFrom === "singleAssessment"){
+            this.props.setCurrentCiteTdx({});
+        }
         this.setState({
             showAssessmentPopup: true,
             showSinglePopup:false,
