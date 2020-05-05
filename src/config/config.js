@@ -1,7 +1,7 @@
 let config = {
     NODE_ENV : process.env.NODE_ENV || "development",
     REACT_APP_API_URL :"https://10.11.7.24:8443/cypress-api/",
-    STRUCTURE_API_URL :"https://staging.api.pearson.com/",
+    STRUCTURE_API_URL :"https://contentapis-staging.pearsoncms.net/",
     LEARNING_OBJECTIVES_ENDPOINT:"https://contentapis-staging.pearsoncms.net/lo-api/",
     ASSET_POPOVER_ENDPOINT: "https://contentapis-staging.pearsoncms.net/manifest-api/",
     PRODUCTAPI_ENDPOINT: "https://contentapis-staging.pearsoncms.net/product-api/",
@@ -46,16 +46,18 @@ let config = {
     WRAPPER_URL: process.env.NODE_ENV === 'production' ? `${window.parent.origin}/toc-wrapper/index.html` : 'https://localhost:4000',
     LOCK_API_BASE_URL : process.env.NODE_ENV === 'production' ? `${window.parent.origin}/cypress/dashboard-srvr` : 'https://dev-structuredauthoring.pearson.com/cypress/dashboard-srvr',
     PATTERNS: {
-        PATTERN_ADD_ASSET: 'https://component-lib-stg.pearson.com/c2/654b2512-649f-42ab-9c14-72cf4ce380f7/PatternAddAnAsset.js',
-        PATTERN_BROKER: 'https://component-lib-stg.pearson.com/c2/7a03593e-61b0-4d72-ab3c-4fdd5d14ad06/PatternBroker.js',
-        PATTERN_PRODUCT_LINK:'https://component-lib-stg.pearson.com/c2/4e6724b9-b65e-41ac-a132-de949cec3948/PatternProductLink.js',
-        PATTERN_VENDOR: 'https://component-lib-stg.pearson.com/c2/6004cda8-7f38-4377-b7a6-5d06184a5de5/Patternvendor.js',
-        PATTERN_SEARCH_SELECT: 'https://component-lib-stg.pearson.com/c2/854fdf48-456c-4021-8ffb-2d9c969e50d4/PatternSearchSelect.js',
+        PATTERN_ADD_ASSET: 'https://component-lib-stg.pearson.com/c2/9f01f722-2a2e-4766-b55a-56043cb289cb/PatternAddAnAsset.js',
+        PATTERN_BROKER: 'https://component-lib-stg.pearson.com/c2/834288f8-7e30-45cf-b41f-a1f422222aa8/PatternBroker.js',
+        PATTERN_PRODUCT_LINK:'https://component-lib-stg.pearson.com/c2/d70a64ad-5659-408e-81bb-6b558cda5ce0/PatternProductLink.js',
+        PATTERN_VENDOR: 'https://component-lib-stg.pearson.com/c2/20e323b7-9421-410b-a1e5-e10be6c27549/Patternvendor.js',
+        PATTERN_SEARCH_SELECT: 'https://component-lib-stg.pearson.com/c2/0fc70e54-e5c7-42ae-9e26-5f8abb1b8f2f/PatternSearchSelect.js'
     },
     IDENTITY_URL: "/auth",
     GET_FIGURES : 'https://contentapis-staging.pearsoncms.net/',
-    GET_ASSETPOPOVER_ID :'https://staging.api.pearson.com/',
-    PREVIEW_ASSESSMENT_LO_ENDPOINT : "https://cite-qa.pearson.com/"
+    GET_ASSETPOPOVER_ID :'https://contentapis-staging.pearsoncms.net/',
+    PREVIEW_ASSESSMENT_LO_ENDPOINT : "https://cite-qa.pearson.com/",
+    APO_API_KEY:"7ij8zrLkCNR9DtAXx3KJ6yutoYnk4SAx",
+    dashboardUrl:"https://test-structuredauthoring.pearson.com" 
 };
 
 if (process.env.NODE_ENV === "development") {
