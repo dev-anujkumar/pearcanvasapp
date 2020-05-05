@@ -128,7 +128,7 @@ export class TinyMceEditor extends Component {
                             if ((this.props.element.type === "popup" || this.props.element.type === "citations") && !this.props.currentElement) {
                                 this.props.createPopupUnit(this.props.popupField, null, this.props.index, this.props.element)
                             } else if (this.props.element && this.props.element.type === "poetry" && !this.props.currentElement) {
-                                this.props.createPoetryElements(this.props.poetryField, null, this.props.index, this.props.element)
+                                this.props.createPoetryElements(this.props.poetryField, true, this.props.index, this.props.element)
                             } else {
                                 let showHideType = this.props.showHideType || null
                                 showHideType = showHideType === "revel" ? "postertextobject" : showHideType
@@ -1455,7 +1455,7 @@ export class TinyMceEditor extends Component {
             if (indexesLen === 2) {
                 switch (tempIndex[1]) {
                     case "1":
-                        if (!this.props.element.contents['formatted-subtitle']) {
+                        if (!this.props.element.contents['formatted-title']) {
                             return false;
                         }
                         break;
@@ -2161,7 +2161,7 @@ export class TinyMceEditor extends Component {
             ) {
                 this.props.createPopupUnit(this.props.popupField, forceupdate, this.props.index, this.props.element)
             } else if (this.props.element && this.props.element.type === "poetry" && !this.props.currentElement && elemNode && elemNode.innerHTML !== "") {
-                this.props.createPoetryElements(this.props.poetryField, forceupdate, this.props.index, this.props.element)
+                this.props.createPoetryElements(this.props.poetryField, true, this.props.index, this.props.element)
             } else {
                 this.props.handleBlur(forceupdate, this.props.currentElement, this.props.index, showHideType)
             }

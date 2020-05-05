@@ -57,7 +57,6 @@ const ElementContainerHOC = (WrappedComponent) => {
                 model.contents["creditsarray"][0].html && model.contents["creditsarray"][0].html.text : "<p></p>";
             let subTitle
             let Title = subTitle = element.contents && element.contents['formatted-title']
-            console.log("%c Title = subTitle", "background: black; color: yellow; font-size: 30px", Title, subTitle)
             // let subTitle = element.contents && element.contents['formatted-title']
             // let subTitle = element.contents && element.contents['formatted-subtitle']
             let credit = element.contents && element.contents.hasOwnProperty('creditsarray') && element.contents['creditsarray'][0]

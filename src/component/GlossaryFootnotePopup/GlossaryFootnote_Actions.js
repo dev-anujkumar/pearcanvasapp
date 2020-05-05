@@ -1,7 +1,7 @@
 import axios from 'axios';
 import config from '../../config/config';
 import store from '../../appstore/store.js'
-import { sendDataToIframe } from '../../constants/utility.js';
+import { sendDataToIframe, createTitleSubtitleModel, isOldDataFormat } from '../../constants/utility.js';
 import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 
 const {
@@ -64,7 +64,7 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
             if (indexesLen === 2) {
                 switch (tempIndex[1]) {
                     case "1":
-                        glossaryFootElem = newBodymatter[tempIndex[0]].contents['formatted-subtitle'] || {};
+                        glossaryFootElem = newBodymatter[tempIndex[0]].contents['formatted-title'] || {};
                         break;
                     // case "3":
                     //     glossaryFootElem = newBodymatter[tempIndex[0]].contents['formatted-caption'] || {};
@@ -315,7 +315,16 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             if (indexesLen === 2) {
                 switch (tempIndex[1]) {
                     case "1":
-                        newBodymatter[tempIndex[0]].contents['formatted-subtitle'] = res.data;
+                        let responseElement = {...res.data}
+                        newBodymatter[tempIndex[0]].contents['formatted-title']
+                        let labelHTML = newBodymatter[tempIndex[0]].contents['formatted-title'].html.text
+                        if(isOldDataFormat(labelHTML)){
+                            labelHTML = labelHTML.replace(/<p.*?>|<\/p>/g, "")
+                        }else{
+                            labelHTML = labelHTML.match(/<label>.*?<\/label>/g)[0].replace(/<label>|<\/label>/g, "")
+                        }
+                        responseElement.html.text = createTitleSubtitleModel(labelHTML, res.data.html.text)
+                        newBodymatter[tempIndex[0]].contents['formatted-title'] = responseElement;
                         break;
                     // case "3":
                     //     newBodymatter[tempIndex[0]].contents['formatted-caption'] = res.data;
