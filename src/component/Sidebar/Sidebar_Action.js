@@ -87,7 +87,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         oldElementData.figuredata.elementdata.assessmentitemid = "";
         oldElementData.figuredata.elementdata.assessmentformat=assessmentFormat;
         oldElementData.figuredata.elementdata.assessmentitemtype=assessmentItemType;
-        oldElementData.html.title="";
+        oldElementData && oldElementData.html && oldElementData.html.title ? oldElementData.html.title ="": null;
         oldElementData && oldElementData.title && oldElementData.title.text ? oldElementData.title.text ="": null;
         // if(assessmentFormat==="puf"){
         //     delete oldElementData.figuredata.elementdata.posterimage
