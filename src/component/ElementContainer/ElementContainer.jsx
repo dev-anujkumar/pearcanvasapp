@@ -490,9 +490,9 @@ class ElementContainer extends Component {
                     let titleHTML = document.getElementById(`cypress-${this.props.index}-0`).innerHTML,
                         subtitleHTML = document.getElementById(`cypress-${this.props.index}-1`).innerHTML
 
-                    titleHTML = titleHTML.replace(/<br>/g, "")
-                    subtitleHTML = subtitleHTML.replace(/<br>/g, "")
-                    
+                    titleHTML = titleHTML.replace(/<br>/g, "").replace(/<br data-mce-bogus="1">/g, "")
+                    subtitleHTML = subtitleHTML.replace(/<br>/g, "").replace(/<br data-mce-bogus="1">/g, "")
+
                     if(parentElement.type === "poetry"){
                         tempDiv.innerHTML = createTitleSubtitleModel(titleHTML, subtitleHTML)
                     }
