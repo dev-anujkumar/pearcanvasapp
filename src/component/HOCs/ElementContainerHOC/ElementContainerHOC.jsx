@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import TinyMceEditor from "../../tinyMceEditor"
-import { getTitleSubtitleModel, isOldDataFormat } from "../../../constants/utility.js"
+import { getTitleSubtitleModel } from "../../../constants/utility.js"
 /**
 * @description - ElementContainerHOC is a HOC. It is defined simply
 * to make a HOC skeleton of the Poetry alike Element.
@@ -25,27 +25,20 @@ const ElementContainerHOC = (WrappedComponent) => {
             let formattedTitle = model.contents.hasOwnProperty('formatted-title') ?
                 model.contents["formatted-title"].html && model.contents["formatted-title"].html.text : "<p></p>"; */
             let formattedSubtitle, formattedTitle
-            let oldSubtitleModel = model.contents.hasOwnProperty("formatted-subtitle") && model.contents["formatted-subtitle"].html && model.contents["formatted-subtitle"].html.text
+             /*let oldSubtitleModel = model.contents.hasOwnProperty("formatted-subtitle") && model.contents["formatted-subtitle"].html && model.contents["formatted-subtitle"].html.text
 
             if(model.contents.hasOwnProperty('formatted-title') && isOldDataFormat(model.contents["formatted-title"].html.text)){
-                /**
-                 * old format
-                 */
                 formattedSubtitle = oldSubtitleModel ? getTitleSubtitleModel(model.contents["formatted-subtitle"].html.text, "formatted-subtitle", oldSubtitleModel) : `<p class="paragraphNumeroUno"><br/></p>`;
 
                 formattedTitle = model.contents.hasOwnProperty('formatted-title') ?
                 model.contents["formatted-title"].html && getTitleSubtitleModel(model.contents["formatted-title"].html.text, "formatted-title") : `<p class="paragraphNumeroUno"><br/></p>`;
-            }
-            else if(model.contents.hasOwnProperty('formatted-title') && !isOldDataFormat(model.contents["formatted-title"].html.text)){
+            } */
+            if(model.contents.hasOwnProperty('formatted-title')){
                 /**
                  * New format
                  */
                 formattedTitle = getTitleSubtitleModel(model.contents["formatted-title"].html.text, "formatted-title")
-                formattedSubtitle = getTitleSubtitleModel(model.contents["formatted-title"].html.text, "formatted-subtitle", oldSubtitleModel)
-            }
-            else if(!model.contents.hasOwnProperty('formatted-title') && oldSubtitleModel){
-                formattedTitle = `<p class="paragraphNumeroUno"><br/></p>`
-                formattedSubtitle = getTitleSubtitleModel(oldSubtitleModel, "formatted-subtitle", oldSubtitleModel)
+                formattedSubtitle = getTitleSubtitleModel(model.contents["formatted-title"].html.text, "formatted-subtitle")
             }
             else{
                 formattedSubtitle = `<p class="paragraphNumeroUno"><br/></p>`

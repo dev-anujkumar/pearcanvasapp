@@ -1,7 +1,7 @@
 import axios from 'axios';
 import config from '../../config/config';
 import store from '../../appstore/store.js'
-import { sendDataToIframe, createTitleSubtitleModel, isOldDataFormat } from '../../constants/utility.js';
+import { sendDataToIframe, createTitleSubtitleModel } from '../../constants/utility.js';
 import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 
 const {
@@ -320,10 +320,11 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                         let responseElement = {...res.data}
                         newBodymatter[tempIndex[0]].contents['formatted-title']
                         let labelHTML = newBodymatter[tempIndex[0]].contents['formatted-title'].html.text
-                        if(isOldDataFormat(labelHTML)){
-                            labelHTML = labelHTML.replace(/<p.*?>|<\/p>/g, "")
-                        }else{
+                        if(labelHTML.match(/<label>.*?<\/label>/g)){
                             labelHTML = labelHTML.match(/<label>.*?<\/label>/g)[0].replace(/<label>|<\/label>/g, "")
+                        }
+                        else{
+                            labelHTML = ""
                         }
                         responseElement.html.text = createTitleSubtitleModel(labelHTML, res.data.html.text)
                         newBodymatter[tempIndex[0]].contents['formatted-title'] = responseElement;
