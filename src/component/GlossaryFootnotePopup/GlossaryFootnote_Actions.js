@@ -196,7 +196,25 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             figureDataObj.text = `<p>${figureDataObj.text}</p>`
         }
     }
-
+    let parentEntityUrn
+    if (typeWithPopup === "popup" || typeWithPopup === "poetry") {
+        let elemIndex = index &&  typeof (index) !== 'number' && index.split('-');
+        let indexesLen = elemIndex.length
+        switch (indexesLen){
+            case 2:
+                parentEntityUrn = newBodymatter[elemIndex[0]].contentUrn
+                break;
+    
+            case 3:
+                parentEntityUrn = newBodymatter[elemIndex[0]].elementdata.bodymatter[elemIndex[1]].contentUrn
+                break;
+    
+            case 4:
+                parentEntityUrn = newBodymatter[elemIndex[0]].elementdata.bodymatter[elemIndex[1]].contents.bodymatter[elemIndex[2]].contentUrn
+                break;
+        }
+    }
+    
     switch (semanticType) {
         case "FOOTNOTE":
             footnoteEntry[glossaryfootnoteid] = definition
@@ -241,6 +259,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
     }
     if(typeWithPopup === 'poetry' || typeWithPopup === 'popup'){
         data.metaDataField = "formattedTitle"
+        data.elementParentEntityUrn = parentEntityUrn
     }
     if(index &&  typeof (index) !== 'number' && elementType !== 'figure'  && typeWithPopup !== 'popup' && typeWithPopup !== 'poetry'){
         let tempIndex =  index.split('-');
