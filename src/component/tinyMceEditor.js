@@ -919,10 +919,6 @@ export class TinyMceEditor extends Component {
                         activeElement.innerHTML = div.children[0].outerHTML;
                     }
                 }
-
-                if(this.props.element && this.props.element.type === 'figure' && this.props.element.figuretype === 'authoredtext' && activeElement.innerHTML === '<p></p>'){
-                    activeElement.innerHTML = '<p><br /></p>'
-                }
                 this.lastContent = activeElement.innerHTML;
             }
 
