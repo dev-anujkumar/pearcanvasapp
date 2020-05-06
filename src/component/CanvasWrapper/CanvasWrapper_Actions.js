@@ -12,6 +12,7 @@ import {
     ERROR_POPUP,
     SLATE_TITLE
 } from '../../constants/Action_Constants';
+import {DEFAULT_VIDEO_POSTER_IMAGE} from '../../constants/Element_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
 import { sendDataToIframe, requestConfigURI, createTitleSubtitleModel } from '../../constants/utility.js';
@@ -99,6 +100,15 @@ const findElementType = (element, index) => {
                         }
                         break;
                     case "video":
+                        elementType = {
+                            elementType: elementDataBank[element.type][element.figuretype]["elementType"],
+                            primaryOption: elementDataBank[element.type][element.figuretype]["primaryOption"],
+                            ...elementDataBank[element.type][element.figuretype][element.figuredata.srctype || 'externallink']
+                        }
+                        if (element && element.figuredata && element.figuredata.posterimage && element.figuredata.posterimage.path === "https://d12m40tknrppbi.cloudfront.net/cite/images/FPO-audio_video.png") {
+                            element.figuredata.posterimage.path = DEFAULT_VIDEO_POSTER_IMAGE;
+                        }
+                        break;
                     case "audio":
                         elementType = {
                             elementType: elementDataBank[element.type][element.figuretype]["elementType"],

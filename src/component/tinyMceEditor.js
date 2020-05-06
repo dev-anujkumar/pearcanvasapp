@@ -2189,8 +2189,20 @@ export class TinyMceEditor extends Component {
         /**Render editable tag based on tagName*/
         switch (this.props.tagName) {
             case 'p':
+                let htmlModel = ""
+                let tempDiv1 = document.createElement('div');
+                tempDiv1.innerHTML = this.props.model;
+                // let figureTypeArray = ['image', 'table', 'mathImage', 'video', 'audio', 'interactive']
+                let figureTypeArray = ['video']
+                if (this.props.element && this.props.element.type === "figure" && figureTypeArray.includes(this.props.element.figuretype)) {
+                    if (tempDiv1 && tempDiv1.children && tempDiv1.children.length && tempDiv1.children[0].tagName === 'P') {
+                        htmlModel = tempDiv1.children[0].innerHTML;
+                    }
+                } else {
+                    htmlModel = this.props.model
+                }
                 return (
-                    <p ref={this.editorRef} id={id} onKeyDown={this.normalKeyDownHandler} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model }}>{/*htmlToReactParser.parse(this.props.model) */}</p>
+                    <p ref={this.editorRef} id={id} onKeyDown={this.normalKeyDownHandler} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: htmlModel }}>{/*htmlToReactParser.parse(this.props.model) */}</p>
                 );
             case 'h4':
                 let model = ""
