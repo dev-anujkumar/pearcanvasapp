@@ -13,8 +13,12 @@ class FilterAssessmentData extends Component {
         super(props);
         this.state = {
             searchAssessment: props.searchTitle,
-            filterUUID: props.filterUUID
+            filterUUID: props.filterUUID,
+            assessTitleFocus:'',
+            assessUUIDFocus:''
         }
+        this.asideRef = React.createRef();
+        this.asideRefs = React.createRef();
 
     }
 
@@ -32,13 +36,35 @@ class FilterAssessmentData extends Component {
     }
 
     handleChange = (event) => {
-        document.querySelectorAll(".filter-block label").style.display = "inline";
         let name = event.target.name;
         let value = event.target.value;
-        this.setState({ [name]: value });
+        let id = event.target.id;
+        this.setState({ [name]: value ,
+            [id]:true
+        });
     }
-    handleFocus = () =>{
-
+    handleBlur = (event) =>{
+        let id= event.target.id
+        let getId = document.getElementById(id);
+        if (getId.value.length === 0) {
+            this.setState({
+                [id]: false
+            });
+        }
+        else {
+            this.setState({
+                [id]: true
+            });
+        }
+    }
+    handleFocus = (event) =>{
+        let id= event.target.id
+        let getId = document.getElementById(id);
+        if (getId.value.length === 0) {
+        this.setState({ 
+        [id]:true
+        });
+    }
     }
 
     render() {
@@ -55,15 +81,15 @@ class FilterAssessmentData extends Component {
                         {!this.props.setCurrentAssessment &&
                             <React.Fragment>
                                 <div className="filter-block">
-                                    <div className="title-block">
+                                    <div className="title-block" >
                                         <i class="fa fa-search"></i>
-                                        <label>Title:</label>
-                                        <input type="text" autoComplete="on" name="searchAssessment" value={this.state.searchAssessment } onChange={this.handleChange} placeholder="Search by Title" onfocus={this.handleFocus} />
-
-                                    </div>
-                                    <div className="filter-uuid" >
-                                        <label>UUID:</label>
-                                        <input type="text" name="filterUUID" value={this.state.filterUUID} onChange={this.handleChange} placeholder="Filter by UUID" />
+                                        {this.state.assessTitleFocus &&
+                                        <label>Title:</label>}
+                                        <input type="text"  id="assessTitleFocus" autoComplete="on" name="searchAssessment" value={this.state.searchAssessment } onChange={this.handleChange} placeholder="Search by Title" onBlur={this.handleBlur} onFocus={this.handleFocus}/>
+                                        </div>
+                                    <div className="filter-uuid">
+                                       {this.state.assessUUIDFocus && <label>UUID:</label>}
+                                        <input type="text"  id="assessUUIDFocus" name="filterUUID" value={this.state.filterUUID} onChange={this.handleChange} placeholder="Filter by UUID"  onBlur={this.handleBlur} onFocus={this.handleFocus}/>
                                     </div>
 
                                 </div>

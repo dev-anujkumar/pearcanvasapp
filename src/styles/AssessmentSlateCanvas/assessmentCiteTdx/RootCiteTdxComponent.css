@@ -366,12 +366,6 @@ svg#assessmentSlate-item-icon{
 .filter-block input:focus::-moz-placeholder { color:transparent; } /* FF 19+ */
 .filter-block input:focus:-ms-input-placeholder { color:transparent; } /* IE 10+ */
 
-.filter-block label, .filter-uuid label{
-  display:none;
-  }
-  .title-block:focus-within label, .filter-uuid:focus-within label{
-  display:inline;
-  }
   .filter-block label{
     font-family: 'Open Sans', sans-serif;
     font-size: 12px;
