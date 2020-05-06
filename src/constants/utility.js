@@ -160,12 +160,12 @@ export const getTitleSubtitleModel = (model, modelType, oldSubTitleModel) => {
         else if(modelType === "formatted-subtitle"){
             try{
                 if(isOldDataFormat(model)){
-                    modelToReturn = oldSubTitleModel ? oldSubTitleModel : `<p class="paragraphNumeroUno"><br/></p>`
+                    modelToReturn = oldSubTitleModel ? oldSubTitleModel.trimLeft() : `<p class="paragraphNumeroUno"><br/></p>`
                 }
                 else{
                     let modelInnerHTML = modelDom.innerHTML
                     let modelWithRemovedTags = removeTagsforSubTitle(modelInnerHTML)
-                    modelToReturn = `<p class="paragraphNumeroUno">${modelWithRemovedTags}</p>`
+                    modelToReturn = `<p class="paragraphNumeroUno">${modelWithRemovedTags.trimLeft()}</p>`
                 }
             }
             catch (error) {
@@ -185,7 +185,7 @@ export const getTitleSubtitleModel = (model, modelType, oldSubTitleModel) => {
  * @param {*} subtitleHTML title HTML content
  */
 export const createTitleSubtitleModel = (titleHTML, subtitleHTML) => {
-    return `<p><label>${titleHTML}</label>${subtitleHTML}</p>`
+    return `<p><label>${titleHTML}</label> ${subtitleHTML}</p>`
 }
 
 /** This is a list of HTML Entity code mapped to their HTML Entity name and Special Character |
