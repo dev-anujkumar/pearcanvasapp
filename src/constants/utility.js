@@ -158,7 +158,7 @@ export const getTitleSubtitleModel = (model, modelType) => {
             try{
                 let modelInnerHTML = modelDom.innerHTML
                 let modelWithRemovedTags = removeTagsforSubTitle(modelInnerHTML)
-                modelToReturn = `<p class="paragraphNumeroUno">${modelWithRemovedTags.trimLeft()}</p>`
+                modelToReturn = `<p class="paragraphNumeroUno">${modelWithRemovedTags}</p>`
             }
             catch (error) {
                 modelToReturn = `<p class="paragraphNumeroUno"><br/></p>`
@@ -183,7 +183,7 @@ export const createTitleSubtitleModel = (titleHTML, subtitleHTML) => {
     if(labelHTML === ""){
         return `<p>${titleModel}</p>`
     }
-    return `<p><label>${labelHTML}</label> ${titleModel}</p>`
+    return `<p><label>${labelHTML}&nbsp;</label>${titleModel}</p>`
 }
 
 /** This is a list of HTML Entity code mapped to their HTML Entity name and Special Character |

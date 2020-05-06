@@ -37,7 +37,7 @@ const ElementContainerHOC = (WrappedComponent) => {
                 /**
                  * New format
                  */
-                formattedTitle = getTitleSubtitleModel(model.contents["formatted-title"].html.text, "formatted-title")
+                formattedTitle = getTitleSubtitleModel(model.contents["formatted-title"].html.text, "formatted-title").replace(/&nbsp;/g, "")
                 formattedSubtitle = getTitleSubtitleModel(model.contents["formatted-title"].html.text, "formatted-subtitle")
             }
             else{
