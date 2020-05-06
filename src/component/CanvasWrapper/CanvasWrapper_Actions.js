@@ -777,7 +777,7 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
             }
             else if(poetryField==="formatted-title"){
                 targetPoetryElement.contents[poetryField] = response.data
-                targetPoetryElement.contents[poetryField].html.text = elemNode.innerHTML
+                targetPoetryElement.contents[poetryField].html.text = createTitleSubtitleModel(elemNode.innerHTML, "")
                 targetPoetryElement.contents[poetryField].elementdata.text = elemNode.innerText
             }
             else if(poetryField==="formatted-subtitle"){

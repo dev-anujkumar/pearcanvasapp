@@ -38,8 +38,10 @@ class Interactive extends React.Component {
             parentPageNo:1,
             isReset: false,
             searchTitle : '',
-            filterUUID : ''
-
+            filterUUID : '',
+            itemParentID: this.props.model.figuredata && this.props.model.figuredata.interactiveparentid ? this.props.model.figuredata.interactiveparentid : "",
+            openedFrom:'',
+            interactiveTitle: this.props.model.figuredata && this.props.model.figuredata.interactivetitle? this.props.model.figuredata.interactivetitle : "",
         };
 
     }
@@ -62,7 +64,9 @@ class Interactive extends React.Component {
     componentDidMount(){
         this.setState({
             itemID : this.props.model.figuredata && this.props.model.figuredata.interactiveid ? this.props.model.figuredata.interactiveid : "",
-            posterImage : this.props.model.figuredata && this.props.model.figuredata.posterimage && this.props.model.figuredata.posterimage.path ? this.props.model.figuredata.posterimage.path : "",  
+            posterImage : this.props.model.figuredata && this.props.model.figuredata.posterimage && this.props.model.figuredata.posterimage.path ? this.props.model.figuredata.posterimage.path : "", 
+            itemParentID: this.props.model.figuredata && this.props.model.figuredata.interactiveparentid ? this.props.model.figuredata.interactiveparentid : "",
+            interactiveTitle: this.props.model.figuredata && this.props.model.figuredata.interactivetitle? this.props.model.figuredata.interactivetitle : "",
         })
     }
     /**
@@ -76,7 +80,9 @@ class Interactive extends React.Component {
                 itemID: nextProps.model.figuredata && nextProps.model.figuredata.interactiveid ? nextProps.model.figuredata.interactiveid : "",
                 posterImage: null,
                 imagePath : nextProps.model.figuredata && nextProps.model.figuredata.posterimage && nextProps.model.figuredata.posterimage.path ? nextProps.model.figuredata.posterimage.path : "",
-                elementType: nextProps.model.figuredata.interactivetype || ""
+                elementType: nextProps.model.figuredata.interactivetype || "",
+                itemParentID:nextProps.model.figuredata && nextProps.model.figuredata.interactiveparentid ? nextProps.model.figuredata.interactiveparentid : "",
+                interactiveTitle: nextProps.model.figuredata && nextProps.model.figuredata.interactivetitle? nextProps.model.figuredata.interactivetitle : "",
             };
         }
 
@@ -455,9 +461,29 @@ class Interactive extends React.Component {
             this.props.showBlocker(value);
             disableHeader(value);
             this.props.handleFocus();
-            this.setState({
-            showAssessmentPopup : value
-            });
+            if (this.state.itemParentID && this.state.itemID) {
+                this.props.setCurrentCiteTdx({
+                    "versionUrn": this.state.itemParentID,
+                    "name": this.state.interactiveTitle
+                });
+                this.props.setCurrentInnerCiteTdx({
+                    "versionUrn": this.state.itemID
+                });
+                this.setState({
+                    showSinglePopup: value,
+                    setCurrentAssessment: {
+                        id: this.state.itemParentID,
+                        title: this.state.interactiveTitle,
+                    },
+                    openedFrom: 'singleAssessment'
+                });
+            }
+            else{
+                this.setState({
+                    showAssessmentPopup : value
+                    });
+            }
+           
         }
         else {
             this.props.showBlocker(value);
@@ -674,9 +700,13 @@ class Interactive extends React.Component {
     }
     assessmentNavigateBack = () => {
         this.props.setCurrentInnerCiteTdx({});
+        if(this.state.openedFrom === "singleAssessment"){
+            this.props.setCurrentCiteTdx({});
+        }
         this.setState({
             showAssessmentPopup: true,
             showSinglePopup:false,
+            openedFrom:''
         });
     }
 
@@ -713,6 +743,8 @@ class Interactive extends React.Component {
            
                let figureData = {
                    schema: "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+                   interactiveparentid:citeTdxObj.id,
+                   interactivetitle:citeTdxObj.title,
                    interactiveid: citeTdxObj.singleAssessmentID.versionUrn,
                    interactivetype: tempInteractiveType,
                    interactiveformat: "mmi"
