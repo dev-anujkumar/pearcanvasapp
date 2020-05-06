@@ -408,20 +408,25 @@ class OpenerElement extends Component {
         }
     }   
     renderExistingCOImage = () => {
-        let A = <div className="exisiting-opener-element-image-view">
+        let COImg = <div className="exisiting-opener-element-image-view">
             <div className="update-image-label">Update Image</div>
+            <div>
+                <div className="select-image-global-button">Choose from Global Co site</div>
+                <div className="select-image-alresco-button" onClick={this.handleC2MediaClick}>Choose from Alfresco site</div>
+            </div>
+            
         </div>
-        return A
+        return COImg
     }
     renderDefaultCOImage = () => {
-        let B = <div className="empty-opener-element-view">
+        let COImg = <div className="empty-opener-element-view">
             <div className="select-image-label">Select an Image</div>
             <div className="select-image-co-buttons">
                 <div className="select-image-global-button">Choose from Global Co site</div>
                 <div className="select-image-alresco-button" onClick={this.handleC2MediaClick}>Choose from Alfresco site</div>
             </div>
         </div>
-        return B
+        return COImg
     }
     render() {
         const { imgSrc, width } = this.state
