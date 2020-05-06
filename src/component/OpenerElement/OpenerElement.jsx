@@ -407,12 +407,28 @@ class OpenerElement extends Component {
             document.getElementById('tinymceToolbar').classList.add('toolbar-disabled')
         }
     }   
-    
+    renderExistingCOImage = () => {
+        let A = <div className="exisiting-opener-element-image-view">
+            <div className="update-image-label">Update Image</div>
+        </div>
+        return A
+    }
+    renderDefaultCOImage = () => {
+        let B = <div className="empty-opener-element-view">
+            <div className="select-image-label">Select an Image</div>
+            <div className="select-image-co-buttons">
+                <div className="select-image-global-button">Choose from Global Co site</div>
+                <div className="select-image-alresco-button" onClick={this.handleC2MediaClick}>Choose from Alfresco site</div>
+            </div>
+        </div>
+        return B
+    }
     render() {
         const { imgSrc, width } = this.state
         const { backgroundColor, slateLockInfo } = this.props
         let isDisable = hasReviewerRole() ? " disable-role" : ""
         const styleObj = this.getBGStyle(imgSrc, width)
+        console.log("imgSrc",imgSrc,imgSrc==null,typeof(imgSrc))
         return (
             <div className = "opener-element-container" onClickCapture={(e) => this.handleOpenerClick(slateLockInfo, e)}>
                 <div className = "input-box-container">
@@ -432,7 +448,9 @@ class OpenerElement extends Component {
                         <input className={"element-dropdown-title opener-title" + isDisable} value={this.state.title} type="text" onChange={this.handleOpenerTitleChange} onBlur={this.handleBlur} onClick={this.handleToolbarOpener}/>
                     </div>
                 </div>
-                <figure className="pearson-component opener-image figureData" onClick={this.handleC2MediaClick} style={{ backgroundColor: `${backgroundColor}` }}>
+                {imgSrc?this.renderExistingCOImage():this.renderDefaultCOImage()}
+                
+                <figure className="pearson-component opener-image figureData" style={{ backgroundColor: `${backgroundColor}` }}>
                     <img style={styleObj} src={imgSrc ? imgSrc : noImage}
                         draggable="false" 
                     />

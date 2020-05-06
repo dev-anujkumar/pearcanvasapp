@@ -86,3 +86,44 @@
     pointer-events: none;
     opacity: 0.6;
 }
+.opener-element-container .empty-opener-element-view{
+    position: absolute;
+    width: 200px;
+    margin: 50px 230px;
+}
+.opener-element-container .select-image-label{
+    text-align: center;
+    color:#fff;
+    font-size:18px
+}
+.opener-element-container .select-image-co-buttons{
+    margin-top: 250px;
+}
+.opener-element-container .select-image-global-button{
+    background-color: #6a7070;
+    padding: 12px 20px;
+    color: #000;
+    margin: 20px 0;
+    font-size: 12px;
+    cursor: pointer;
+}
+.opener-element-container .select-image-alresco-button{
+    background-color: #6a7070;
+    padding: 12px 20px;
+    color: #000;
+    font-size: 12px;
+    cursor: pointer;
+}
+.opener-element-container .exisiting-opener-element-image-view{
+    position: absolute;
+    text-align: right;
+    right: 0;
+    margin-top: 25px;
+}
+.opener-element-container .update-image-label{
+    background-color: #6a7070;
+    padding: 12px 20px;
+    color: #000;
+    font-size: 12px;
+    cursor: pointer;
+}
