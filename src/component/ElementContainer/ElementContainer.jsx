@@ -499,16 +499,16 @@ class ElementContainer extends Component {
                     let imgTaginLabel = titleDOMNode && titleDOMNode.getElementsByTagName("img")
                     let imgTaginTitle = subtitleDOMNode && subtitleDOMNode.getElementsByTagName("img")
                     if (parentElement.type === "poetry") {
-                        if((titleDOMNode.textContent.trim() == '') && !(imgTaginLabel && imgTaginLabel.length)){
+                        if((titleDOMNode.textContent === '') && !(imgTaginLabel && imgTaginLabel.length)){
                             titleHTML = ""
                         }
-                        if ((subtitleDOMNode.textContent.trim() == '') && !(imgTaginTitle && imgTaginTitle.length)) {
+                        if ((subtitleDOMNode.textContent === '') && !(imgTaginTitle && imgTaginTitle.length)) {
                             subtitleHTML = ""
                         }
                         tempDiv.innerHTML = createTitleSubtitleModel(titleHTML, subtitleHTML)
                     }
                     else if(parentElement.type === "citations"){
-                        if((titleDOMNode.textContent.trim() == '') && !(imgTaginLabel && imgTaginLabel.length)){
+                        if((titleDOMNode.textContent === '') && !(imgTaginLabel && imgTaginLabel.length)){
                             titleHTML = ""
                         }
                         tempDiv.innerHTML = createTitleSubtitleModel(titleHTML, "")
