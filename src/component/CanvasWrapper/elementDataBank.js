@@ -285,6 +285,9 @@ const elementDataBank = {
             },
             "puf" : {
                 "secondaryOption" : "secondary-single-assessment-puf"
+            },
+            "learnosity" : {
+                "secondaryOption" : "secondary-single-assessment-learnosity"
             }
         }
     },

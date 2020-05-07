@@ -600,6 +600,11 @@ export default {
                     text: 'PUF',
                     labelText: 'Qu',
                     enum: 'SINGLE_ASSESSMENT_PUF'
+                },
+                'secondary-single-assessment-learnosity': {
+                    text: 'Learnosity Beta',
+                    labelText: 'Qu',
+                    enum: 'SINGLE_ASSESSMENT_LEARNOSITY'
                 }
             }		
         },
