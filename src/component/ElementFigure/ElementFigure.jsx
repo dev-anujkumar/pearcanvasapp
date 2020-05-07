@@ -263,6 +263,10 @@ class ElementFigure extends Component {
         var figureJsx;
 
         if (model && model.figuretype === 'authoredtext') {
+            let posterText = model.html.text
+            if (posterText === "" || posterText === '<p></p>') {
+                posterText = '<br />';
+            } 
             /**JSX for MathML/ChemML Editor*/
             figureJsx = <div className={divClass}>
                 <figure className={figureClass} resource="">
@@ -275,7 +279,7 @@ class ElementFigure extends Component {
                     </header>
                     <div data-type={dataType}>
 
-                        <TinyMceEditor permissions={this.props.permissions} element={model} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${index}-2`} placeholder="Type Something..." tagName={'p'} className="paragraphNumeroUno mathml figureData mathmlDiv" model={model.html.text} type={type} slateLockInfo={slateLockInfo} elementId={this.props.elementId} glossaryFootnoteValue={this.props.glossaryFootnoteValue} />
+                        <TinyMceEditor permissions={this.props.permissions} element={model} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${index}-2`} placeholder="Type Something..." tagName={'p'} className="paragraphNumeroUno mathml figureData mathmlDiv" model={posterText} type={type} slateLockInfo={slateLockInfo} elementId={this.props.elementId} glossaryFootnoteValue={this.props.glossaryFootnoteValue} />
 
                     </div>
                     <figcaption className={figCaptionClass} >

@@ -512,9 +512,9 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                 if(parentElement.contents && parentElement.contents["formatted-title"] && parentElement.contents["formatted-title"]["id"] === previousElementData.id){
                     dataToReturn["metaDataField"] = "formattedTitle";
                 } 
-                else if(parentElement.contents && parentElement.contents["formatted-subtitle"] && parentElement.contents["formatted-subtitle"]["id"] === previousElementData.id){
+                /* else if(parentElement.contents && parentElement.contents["formatted-subtitle"] && parentElement.contents["formatted-subtitle"]["id"] === previousElementData.id){
                     dataToReturn["metaDataField"] = "formattedSubtitle";
-                }
+                } */
                 // else if(parentElement.contents && parentElement.contents["formatted-caption"] && parentElement.contents["formatted-caption"]["id"] === previousElementData.id){
                 //     dataToReturn.updatepoetryField = "formattedCaption";
                 // }

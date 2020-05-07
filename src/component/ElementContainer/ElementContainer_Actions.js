@@ -284,9 +284,9 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
                     }
                 }
             }
-            else if (updatedData.type === 'stanza') {
-                updateStoreInCanvas({ ...updatedData, ...response.data }, asideData, parentUrn, dispatch, getState, null, elementIndex, showHideType, parentElement, poetryData)
-            }
+            // else if (updatedData.type === 'stanza') {
+            //     updateStoreInCanvas({ ...updatedData, ...response.data }, asideData, parentUrn, dispatch, getState, null, elementIndex, showHideType, parentElement, poetryData)
+            // }
         }
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
         
@@ -345,10 +345,10 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                 }
             } else if(parentElement && parentElement.type == 'poetry'){
 
-                if(indexes.length === 2 || indexes.length === 3 || indexes === 2 || indexes === 3){
+                // if(indexes.length === 2 || indexes.length === 3 || indexes === 2 || indexes === 3){
                     parentElement.index = elementIndex;
                     dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:parentElement.id, parentElement.contentUrn, 0, parentElement));
-                }
+                // }
             } 
             else if(parentElement && parentElement.type === "popup" && updatedData.elementParentEntityUrn && (updatedData.metaDataField || updatedData.section === "postertextobject") ){
                 dispatch(fetchSlateData(updatedData.slateUrn, updatedData.slateEntity, 0)); }
@@ -553,7 +553,8 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                                 "formatted-title": { ...updatedData }
                             }
                         };
-                    } else if (element.contents["formatted-subtitle"] && element.contents["formatted-subtitle"]["id"] === elementId) {
+                    } 
+                    /* else if (element.contents["formatted-subtitle"] && element.contents["formatted-subtitle"]["id"] === elementId) {
                         element = {
                             ...element,
                             contents: {
@@ -561,7 +562,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                                 "formatted-subtitle": { ...updatedData }
                             }
                         };
-                    } 
+                    }  */
                     // else if (element.contents["formattedCaption"] && element.contents["formattedCaption"]["id"] === elementId) {
                     //     element = {
                     //         ...element,

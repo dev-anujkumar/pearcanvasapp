@@ -21,7 +21,7 @@ import elementTypeConstant from './ElementConstants'
 import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } from './../CanvasWrapper/CanvasWrapper_Actions';
 import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
-import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris } from '../../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
@@ -486,7 +486,38 @@ class ElementContainer extends Component {
                         contentUrn : parentElement.contentUrn           
                     };
                 }
-                if(parentElement.type === "popup" || parentElement.type === "citations" || (parentElement.type === "poetry" && previousElementData.type !== "stanza")){
+                if((parentElement.type === "poetry" && previousElementData.type !== "stanza" && !(parentElement.contents["creditsarray"] && parentElement.contents["creditsarray"].length && parentElement.contents.creditsarray[0].id === previousElementData.id)) || parentElement.type === "citations"){
+                    let titleDOMNode = document.getElementById(`cypress-${this.props.index}-0`),
+                        subtitleDOMNode = document.getElementById(`cypress-${this.props.index}-1`)
+
+                    let titleHTML = titleDOMNode && titleDOMNode.innerHTML,
+                        subtitleHTML = subtitleDOMNode && subtitleDOMNode.innerHTML
+
+                    titleHTML = titleHTML.replace(/<br>/g, "").replace(/<br data-mce-bogus="1">/g, "")
+                    subtitleHTML = subtitleHTML.replace(/<br>/g, "").replace(/<br data-mce-bogus="1">/g, "")
+
+                    let imgTaginLabel = titleDOMNode && titleDOMNode.getElementsByTagName("img")
+                    let imgTaginTitle = subtitleDOMNode && subtitleDOMNode.getElementsByTagName("img")
+                    if (parentElement.type === "poetry") {
+                        if((titleDOMNode.textContent === '') && !(imgTaginLabel && imgTaginLabel.length)){
+                            titleHTML = ""
+                        }
+                        if ((subtitleDOMNode.textContent === '') && !(imgTaginTitle && imgTaginTitle.length)) {
+                            subtitleHTML = ""
+                        }
+                        tempDiv.innerHTML = createTitleSubtitleModel(titleHTML, subtitleHTML)
+                    }
+                    else if(parentElement.type === "citations"){
+                        if((titleDOMNode.textContent === '') && !(imgTaginLabel && imgTaginLabel.length)){
+                            titleHTML = ""
+                        }
+                        tempDiv.innerHTML = createTitleSubtitleModel(titleHTML, "")
+                    }
+                    html = tempDiv.innerHTML
+                    // html = html.replace(/<br data-mce-bogus="1">/g, "<br>")
+                    parentElement["index"] = this.props.index
+                }
+                else if(parentElement.type === "popup" || (parentElement.type === "poetry" && parentElement.contents["creditsarray"] && parentElement.contents["creditsarray"].length && parentElement.contents.creditsarray[0].id === previousElementData.id)){
                     tempDiv.innerHTML = matchHTMLwithRegex(tempDiv.innerHTML) ? tempDiv.innerHTML : `<p class="paragraphNumeroUno">${tempDiv.innerHTML}</p>`
                     html = html.replace(/<br data-mce-bogus="1">/g, "<br>")
                     html = matchHTMLwithRegex(html) ? html : `<p class="paragraphNumeroUno">${html}</p>`

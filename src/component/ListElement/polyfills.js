@@ -1,8 +1,6 @@
 /**
  * Module - polyfills
  * Description - contain polyfills for jQuery dependencies
- * Developer - Abhay Singh
- * Last modified - 26-09-2019
  */
 
 const _window_ = window

@@ -38,9 +38,8 @@ class Interactive extends React.Component {
             parentPageNo:1,
             isReset: false,
             searchTitle : '',
-            filterUUID : ''
-
-        };
+            filterUUID : '',
+           };
 
     }
 
@@ -62,7 +61,7 @@ class Interactive extends React.Component {
     componentDidMount(){
         this.setState({
             itemID : this.props.model.figuredata && this.props.model.figuredata.interactiveid ? this.props.model.figuredata.interactiveid : "",
-            posterImage : this.props.model.figuredata && this.props.model.figuredata.posterimage && this.props.model.figuredata.posterimage.path ? this.props.model.figuredata.posterimage.path : "",  
+            posterImage : this.props.model.figuredata && this.props.model.figuredata.posterimage && this.props.model.figuredata.posterimage.path ? this.props.model.figuredata.posterimage.path : "", 
         })
     }
     /**
@@ -76,7 +75,7 @@ class Interactive extends React.Component {
                 itemID: nextProps.model.figuredata && nextProps.model.figuredata.interactiveid ? nextProps.model.figuredata.interactiveid : "",
                 posterImage: null,
                 imagePath : nextProps.model.figuredata && nextProps.model.figuredata.posterimage && nextProps.model.figuredata.posterimage.path ? nextProps.model.figuredata.posterimage.path : "",
-                elementType: nextProps.model.figuredata.interactivetype || ""
+                elementType: nextProps.model.figuredata.interactivetype || "",
             };
         }
 
@@ -415,7 +414,7 @@ class Interactive extends React.Component {
                                 : 
                                  <a className={hyperlinkClass} href="javascript:void(0)">
                                     <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-2`} placeholder="Enter call to action..." className={"actionPU"} tagName={'p'} 
-                                    model={element.html.postertext? element.html.postertext : "" } handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} elementId={this.props.elementId} />
+                                    model={element.html.postertext? element.html.postertext : "" } handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} elementId={this.props.elementId} element={this.props.model}/>
                                  </a>
                         }
                     </div>
@@ -456,7 +455,7 @@ class Interactive extends React.Component {
             disableHeader(value);
             this.props.handleFocus();
             this.setState({
-            showAssessmentPopup : value
+                showAssessmentPopup: value
             });
         }
         else {

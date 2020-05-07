@@ -1,7 +1,7 @@
 import axios from 'axios';
 import config from '../../config/config';
 import store from '../../appstore/store.js'
-import { sendDataToIframe } from '../../constants/utility.js';
+import { sendDataToIframe, createTitleSubtitleModel } from '../../constants/utility.js';
 import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 
 const {
@@ -64,7 +64,7 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
             if (indexesLen === 2) {
                 switch (tempIndex[1]) {
                     case "1":
-                        glossaryFootElem = newBodymatter[tempIndex[0]].contents['formatted-subtitle'] || {};
+                        glossaryFootElem = newBodymatter[tempIndex[0]].contents['formatted-title'] || {};
                         break;
                     // case "3":
                     //     glossaryFootElem = newBodymatter[tempIndex[0]].contents['formatted-caption'] || {};
@@ -196,7 +196,25 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             figureDataObj.text = `<p>${figureDataObj.text}</p>`
         }
     }
-
+    let parentEntityUrn
+    if (typeWithPopup === "popup" || typeWithPopup === "poetry") {
+        let elemIndex = index &&  typeof (index) !== 'number' && index.split('-');
+        let indexesLen = elemIndex.length
+        switch (indexesLen){
+            case 2:
+                parentEntityUrn = newBodymatter[elemIndex[0]].contentUrn
+                break;
+    
+            case 3:
+                parentEntityUrn = newBodymatter[elemIndex[0]].elementdata.bodymatter[elemIndex[1]].contentUrn
+                break;
+    
+            case 4:
+                parentEntityUrn = newBodymatter[elemIndex[0]].elementdata.bodymatter[elemIndex[1]].contents.bodymatter[elemIndex[2]].contentUrn
+                break;
+        }
+    }
+    
     switch (semanticType) {
         case "FOOTNOTE":
             footnoteEntry[glossaryfootnoteid] = definition
@@ -239,7 +257,10 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             }
             break;
     }
-
+    if(typeWithPopup === 'poetry' || typeWithPopup === 'popup'){
+        data.metaDataField = "formattedTitle"
+        data.elementParentEntityUrn = parentEntityUrn
+    }
     if(index &&  typeof (index) !== 'number' && elementType !== 'figure'  && typeWithPopup !== 'popup' && typeWithPopup !== 'poetry'){
         let tempIndex =  index.split('-');
         if(tempIndex.length === 2){
@@ -315,7 +336,17 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             if (indexesLen === 2) {
                 switch (tempIndex[1]) {
                     case "1":
-                        newBodymatter[tempIndex[0]].contents['formatted-subtitle'] = res.data;
+                        let responseElement = {...res.data}
+                        newBodymatter[tempIndex[0]].contents['formatted-title']
+                        let labelHTML = newBodymatter[tempIndex[0]].contents['formatted-title'].html.text
+                        if(labelHTML.match(/<label>.*?<\/label>/g)){
+                            labelHTML = labelHTML.match(/<label>.*?<\/label>/g)[0].replace(/<label>|<\/label>/g, "")
+                        }
+                        else{
+                            labelHTML = ""
+                        }
+                        responseElement.html.text = createTitleSubtitleModel(labelHTML, res.data.html.text)
+                        newBodymatter[tempIndex[0]].contents['formatted-title'] = responseElement;
                         break;
                     // case "3":
                     //     newBodymatter[tempIndex[0]].contents['formatted-caption'] = res.data;

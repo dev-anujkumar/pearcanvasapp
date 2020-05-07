@@ -14,7 +14,7 @@ import {
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
-import { sendDataToIframe, requestConfigURI } from '../../constants/utility.js';
+import { sendDataToIframe, requestConfigURI, createTitleSubtitleModel } from '../../constants/utility.js';
 import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 import elementDataBank from './elementDataBank'
 import figureData from '../ElementFigure/figureTypes.js';
@@ -116,11 +116,13 @@ const findElementType = (element, index) => {
                         }
                         break;
                     case "assessment":
+                        let assessmentFormat = element.figuredata.elementdata.assessmentformat.toLowerCase()
                         elementType = {
                             elementType: elementDataBank[element.type][element.figuretype]["elementType"],
                             primaryOption: elementDataBank[element.type][element.figuretype]["primaryOption"],
-                            ...elementDataBank[element.type][element.figuretype][element.figuredata.elementdata.assessmentformat]
+                            ...elementDataBank[element.type][element.figuretype][assessmentFormat]
                         }
+                        element.figuredata.elementdata.assessmentformat = assessmentFormat 
                         break;
                 }
                 break;
@@ -731,7 +733,8 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
     if (poetryField === 'creditsarray') {
         _requestData.sectionType = 'creditsarray';
     } else {
-        _requestData.metaDataField = poetryField==="formatted-title"?"formattedTitle":"formattedSubtitle";
+        _requestData.metaDataField = "formattedTitle";
+        // _requestData.metaDataField = poetryField ==="formatted-title"?"formattedTitle":"formattedSubtitle";
     }
     
     let url = `${config.REACT_APP_API_URL}v1/slate/element`
@@ -762,10 +765,15 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
                 targetPoetryElement.contents[poetryField][0].html.text  = elemNode.innerHTML
                 targetPoetryElement.contents[poetryField][0].elementdata.text = elemNode.innerText
             }
-            else{
+            else if(poetryField==="formatted-title"){
                 targetPoetryElement.contents[poetryField] = response.data
-                targetPoetryElement.contents[poetryField].html.text = elemNode.innerHTML
+                targetPoetryElement.contents[poetryField].html.text = createTitleSubtitleModel(elemNode.innerHTML, "")
                 targetPoetryElement.contents[poetryField].elementdata.text = elemNode.innerText
+            }
+            else if(poetryField==="formatted-subtitle"){
+                targetPoetryElement.contents["formatted-title"] = response.data
+                targetPoetryElement.contents["formatted-title"].html.text = createTitleSubtitleModel("", elemNode.innerHTML)
+                // targetPoetryElement.contents["formatted-title"].elementdata.text = elemNode.innerText
             }
             _slateObject.contents.bodymatter[ElementIndex] = targetPoetryElement
         }

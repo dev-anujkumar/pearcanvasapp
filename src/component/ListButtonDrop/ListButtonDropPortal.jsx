@@ -1,8 +1,6 @@
 /**
  * Module - ListButtonDropPortal
  * Description - portal component for ListButtonDrop element
- * Developer - Abhay Singh
- * Last modified - 04-09-2019
  */
 
 // IMPORT - Plugins //

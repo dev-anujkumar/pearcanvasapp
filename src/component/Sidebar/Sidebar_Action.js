@@ -87,7 +87,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         oldElementData.figuredata.elementdata.assessmentitemid = "";
         oldElementData.figuredata.elementdata.assessmentformat=assessmentFormat;
         oldElementData.figuredata.elementdata.assessmentitemtype=assessmentItemType;
-        oldElementData.html.title="";
+        oldElementData && oldElementData.html && oldElementData.html.title ? oldElementData.html.title ="": null;
         oldElementData && oldElementData.title && oldElementData.title.text ? oldElementData.title.text ="": null;
         // if(assessmentFormat==="puf"){
         //     delete oldElementData.figuredata.elementdata.posterimage
@@ -261,10 +261,16 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         let storeElement = store[config.slateManifestURN];
         let bodymatter = storeElement.contents.bodymatter;
         let focusedElement = bodymatter;
-
-        //Separate case for element conversion in showhide in Aside/WE
-        if(newElementData.asideData && newElementData.asideData.hasOwnProperty('type') && showHideObj) {
-            switch(indexes.length) {
+        //Separate case for element conversion in showhide
+        if (showHideObj) {//newElementData.asideData && newElementData.asideData.hasOwnProperty('type') &&
+            switch (indexes.length) {
+                case 3:
+                    /**
+                     * [PCAT-7808] | Conversion to a List element in Show is not reflected immediately on converting the element type after versioning. 
+                     *             Browser refresh is required for the element to be converted to a list in canvas.
+                     */
+                    focusedElement[indexes[0]].interactivedata[showHideObj.showHideType][indexes[2]] = res.data
+                    break;
                 case 4:
                     focusedElement[indexes[0]].elementdata.bodymatter[indexes[1]].interactivedata[showHideObj.showHideType][indexes[3]] = res.data
                     break
