@@ -387,6 +387,7 @@ class ElmTableComponent extends Component {
         * @param openedFrom - the component it is opened from - Full or Embedded Assessment
     */
     setElmTableJsx = (item, index, openedFrom) => {
+        console.log("item>>>>",item)
         let elmTableBody,
             elmIcon = item.type == "assessment" ? elmAssessmentItem : singleAssessmentItemIcon;
         if ((item.type == "assessment" || item.type == "assessmentitem") && item.urn.includes("work")) {
@@ -396,6 +397,7 @@ class ElmTableComponent extends Component {
                         <span className="elmAssessmentItem-icon">{elmIcon}</span>
                         <b className="elm-text-assesment">{item.assessmentTitle ? item.assessmentTitle : item.urn}</b>
                     </td>
+                    <td className='td-class'><b className="elm-text-assesment">{item.urn}</b></td>
                 </tr>
             </tbody>
         } else {
@@ -404,6 +406,7 @@ class ElmTableComponent extends Component {
                     <td className='td-class' key={index} onClick={(e) => { this.showNewValueList(e, item.urn) }}>
                         <div className="desc-box">{this.getFolderLabel(item.type)} <span className="folder-icon"></span> </div>
                         <b className="elm-text-folder">{item.title}</b></td>
+                    <td className='td-class'>{item.urn}</td>
                 </tr>}
             </tbody>
         }
@@ -438,6 +441,23 @@ class ElmTableComponent extends Component {
                                 <div className="elm-navigate-back-icon" onClick={this.navigateBack} >{elmNavigateBack}</div> : null}
                             <p className="title-header">{this.state.parentTitle}</p>
                         </div>
+                        <div className="elm-search">
+                            <div className="filter-block elm-filter-block">
+                                <div className="title-block">
+                                    <i class="fa fa-search"></i>
+                                    <input autoComplete="on" name="searchAssessment" value={this.state.searchAssessment} onChange={this.handleChange} placeholder="Search by Title" />
+
+                                </div>
+                                <div className="filter-uuid" >
+                                    <input name="filterUUID" value={this.state.filterUUID} onChange={this.handleChange} placeholder="Filter by UUID" />
+                                </div>
+
+                            </div>
+                            <div className="search-block">
+                                <span className="search noSelect" onClick={this.handleSearch} >search</span>
+                            </div>
+                            <div className="both"></div>
+                        </div>
                         <div className='main-div'>
                             {(this.state.openItemTable == true && isLoading == true)? <div className="elm-loader"></div> : ""}
                             {(!this.props.elmReducer.itemErrorFlag && this.props.elmReducer.itemApiStatus != 200 && this.state.openItemTable == true && isLoading == false) ?
@@ -450,6 +470,7 @@ class ElmTableComponent extends Component {
                                                 <td className='td-class sort-icon'>Title</td>
                                                 <div className="sort-icon" onClick={() => this.setSort()}>{this.state.sortIcon}</div>
                                             </th>
+                                            <th className='row-class'>Assessment Id</th>
                                         </thead>
                                         {this.state.tableValue.map((item, index) => {
                                             return this.setElmTableJsx(item, index, this.state.openedFrom)
