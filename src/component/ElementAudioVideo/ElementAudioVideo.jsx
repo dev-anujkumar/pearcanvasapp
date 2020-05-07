@@ -198,12 +198,17 @@ class ElementAudioVideo extends Component {
         }
 
         const figureData = this.props.model.figuredata;
-        const id = figureData.videoid || figureData.audioid;
+        let currentAsset = null;
+
+        if (figureData) {
+            const id = figureData.videoid || figureData.audioid;
         
-        const currentAsset = id ? {
-            id: id.split(':').pop(), // get last
-            type: figureData.figureType,
-        } : null;
+            currentAsset = id ? {
+                id: id.split(':').pop(), // get last
+                type: figureData.figureType,
+            } : null;
+        }
+        
 
         let that = this;
         let alfrescoPath = config.alfrescoMetaData;

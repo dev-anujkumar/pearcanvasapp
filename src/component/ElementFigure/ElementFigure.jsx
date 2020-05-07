@@ -104,11 +104,10 @@ class ElementFigure extends Component {
         }
 
         const figureData = this.props.model.figuredata;
-        
-        const currentAsset = {
+        const currentAsset = figureData ? {
             id: figureData.imageid.split(':').pop(), // get last
             type: figureData.type,
-        };
+        } : null;
 
         let that = this;
         let alfrescoPath = config.alfrescoMetaData;
