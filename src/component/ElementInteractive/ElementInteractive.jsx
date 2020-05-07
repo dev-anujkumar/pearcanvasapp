@@ -39,9 +39,7 @@ class Interactive extends React.Component {
             isReset: false,
             searchTitle : '',
             filterUUID : '',
-            itemParentID: this.props.model.figuredata && this.props.model.figuredata.interactiveparentid ? this.props.model.figuredata.interactiveparentid : "",
-
-        };
+           };
 
     }
 
@@ -64,7 +62,6 @@ class Interactive extends React.Component {
         this.setState({
             itemID : this.props.model.figuredata && this.props.model.figuredata.interactiveid ? this.props.model.figuredata.interactiveid : "",
             posterImage : this.props.model.figuredata && this.props.model.figuredata.posterimage && this.props.model.figuredata.posterimage.path ? this.props.model.figuredata.posterimage.path : "", 
-            itemParentID: this.props.model.figuredata && this.props.model.figuredata.interactiveparentid ? this.props.model.figuredata.interactiveparentid : "",
         })
     }
     /**
@@ -79,7 +76,6 @@ class Interactive extends React.Component {
                 posterImage: null,
                 imagePath : nextProps.model.figuredata && nextProps.model.figuredata.posterimage && nextProps.model.figuredata.posterimage.path ? nextProps.model.figuredata.posterimage.path : "",
                 elementType: nextProps.model.figuredata.interactivetype || "",
-                itemParentID:nextProps.model.figuredata && nextProps.model.figuredata.interactiveparentid ? nextProps.model.figuredata.interactiveparentid : "",
             };
         }
 
@@ -458,27 +454,9 @@ class Interactive extends React.Component {
             this.props.showBlocker(value);
             disableHeader(value);
             this.props.handleFocus();
-            if (this.state.assessmentId && this.state.assessmentItemId ) {
-                this.props.setCurrentCiteTdx({ 
-                    "versionUrn": this.state.itemParentID, 
-                });
-                this.props.setCurrentInnerCiteTdx({ 
-                    "versionUrn": this.state.itemID
-                });
-                this.setState({
-                    showSinglePopup: value,
-                    setCurrentAssessment: {
-                        id: this.state.itemParentID,
-                    },
-                    openedFrom:'singleAssessment'
-                });
-            }
-            else{
-                this.setState({
-                    showAssessmentPopup : value
-                    });
-            }
-           
+            this.setState({
+                showAssessmentPopup: value
+            });
         }
         else {
             this.props.showBlocker(value);
@@ -734,7 +712,6 @@ class Interactive extends React.Component {
            
                let figureData = {
                    schema: "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
-                   interactiveparentid:citeTdxObj.id,
                    interactiveid: citeTdxObj.singleAssessmentID.versionUrn,
                    interactivetype: tempInteractiveType,
                    interactiveformat: "mmi"
