@@ -30,8 +30,10 @@ class ElementShowHide extends React.Component {
         }
 
          newshowIndex = newIndex.join("-");
-        if (document.getElementById(`cypress-${newshowIndex}`)) {
-            document.getElementById(`cypress-${newshowIndex}`).focus();
+        if (document.querySelector(`#cypress-${newshowIndex}`)) {
+            setTimeout(()=>{
+                document.querySelector(`#cypress-${newshowIndex}`).click();
+            },0)
         }
     }
     createShowHideElement = (type, index, elementShowHideId) => {
