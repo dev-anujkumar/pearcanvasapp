@@ -14,11 +14,9 @@ class FilterAssessmentData extends Component {
         this.state = {
             searchAssessment: props.searchTitle,
             filterUUID: props.filterUUID,
-            assessTitleFocus:'',
-            assessUUIDFocus:''
+            assessTitleFocus: props.searchTitle ? true : '',
+            assessUUIDFocus:props.filterUUID ? true : ''
         }
-        this.asideRef = React.createRef();
-        this.asideRefs = React.createRef();
 
     }
 
@@ -39,9 +37,7 @@ class FilterAssessmentData extends Component {
         let name = event.target.name;
         let value = event.target.value;
         let id = event.target.id;
-        this.setState({ [name]: value ,
-            [id]:true
-        });
+        this.setState({ [name]: value });
     }
     handleBlur = (event) =>{
         let id= event.target.id
@@ -68,6 +64,7 @@ class FilterAssessmentData extends Component {
     }
 
     render() {
+        console.log("laaa");
         return (
             <React.Fragment>
                 <div className={`filter-container ${this.props.openedFrom === "singleSlateAssessmentInner" ? 'inner-assessment':''}`}>

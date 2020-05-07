@@ -366,12 +366,13 @@ svg#assessmentSlate-item-icon{
 .filter-block input:focus::-moz-placeholder { color:transparent; } /* FF 19+ */
 .filter-block input:focus:-ms-input-placeholder { color:transparent; } /* IE 10+ */
 
-  .filter-block label{
-    font-family: 'Open Sans', sans-serif;
-    font-size: 12px;
-    letter-spacing: 0.17px;
-    color: #252525;
-  }
+.filter-block label{
+  font-family: 'Open Sans', sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.17px;
+  color: #252525;
+  margin: 0 3px 0 0;
+}
 
 @media screen and (max-width: 1300px) {
   .cite-wrapper .root-container{
