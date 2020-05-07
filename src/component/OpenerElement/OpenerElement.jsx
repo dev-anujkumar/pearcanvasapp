@@ -433,7 +433,6 @@ class OpenerElement extends Component {
         const { backgroundColor, slateLockInfo } = this.props
         let isDisable = hasReviewerRole() ? " disable-role" : ""
         const styleObj = this.getBGStyle(imgSrc, width)
-        console.log("imgSrc",imgSrc,imgSrc==null,typeof(imgSrc))
         return (
             <div className = "opener-element-container" onClickCapture={(e) => this.handleOpenerClick(slateLockInfo, e)}>
                 <div className = "input-box-container">
