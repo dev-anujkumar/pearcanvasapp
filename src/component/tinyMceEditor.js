@@ -2006,6 +2006,13 @@ export class TinyMceEditor extends Component {
                     (tinyMCE.$("#" + currentTarget.id).html()).search(/^(<.*>(<br.*>)<\/.*>)+$/g) >= 0) {
                         termText = tinyMCE.$("#" + currentTarget.id).html();
                     }
+                    /***
+                     * [BG-2225] | Unwanted saving calls in video element
+                     */
+                    if (this.props.element.type === "figure" && termText.search(/^(<.*>(<br.*>)<\/.*>)+$/g) < 0 &&
+                        (tinyMCE.$("#" + currentTarget.id).html()).search(/^(<br.*>)+$/g) >= 0) {
+                        termText = tinyMCE.$("#" + currentTarget.id).html();
+                    }
                     document.getElementById(currentTarget.id).innerHTML = termText;
                 }
                 if (clickedX !== 0 && clickedY !== 0) {
