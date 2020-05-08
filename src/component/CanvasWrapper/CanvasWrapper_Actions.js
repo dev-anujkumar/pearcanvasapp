@@ -12,7 +12,6 @@ import {
     ERROR_POPUP,
     SLATE_TITLE
 } from '../../constants/Action_Constants';
-import {DEFAULT_VIDEO_POSTER_IMAGE} from '../../constants/Element_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
 import { sendDataToIframe, requestConfigURI, createTitleSubtitleModel } from '../../constants/utility.js';
