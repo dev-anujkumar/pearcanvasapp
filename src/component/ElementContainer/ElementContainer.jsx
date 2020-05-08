@@ -487,20 +487,34 @@ class ElementContainer extends Component {
                     };
                 }
                 if((parentElement.type === "poetry" && previousElementData.type !== "stanza" && !(parentElement.contents["creditsarray"] && parentElement.contents["creditsarray"].length && parentElement.contents.creditsarray[0].id === previousElementData.id)) || parentElement.type === "citations"){
-                    let titleHTML = document.getElementById(`cypress-${this.props.index}-0`).innerHTML,
-                        subtitleHTML = document.getElementById(`cypress-${this.props.index}-1`).innerHTML
+                    let titleDOMNode = document.getElementById(`cypress-${this.props.index}-0`),
+                        subtitleDOMNode = document.getElementById(`cypress-${this.props.index}-1`)
+
+                    let titleHTML = titleDOMNode && titleDOMNode.innerHTML,
+                        subtitleHTML = subtitleDOMNode && subtitleDOMNode.innerHTML
 
                     titleHTML = titleHTML.replace(/<br>/g, "").replace(/<br data-mce-bogus="1">/g, "")
                     subtitleHTML = subtitleHTML.replace(/<br>/g, "").replace(/<br data-mce-bogus="1">/g, "")
 
-                    if(parentElement.type === "poetry"){
+                    let imgTaginLabel = titleDOMNode && titleDOMNode.getElementsByTagName("img")
+                    let imgTaginTitle = subtitleDOMNode && subtitleDOMNode.getElementsByTagName("img")
+                    if (parentElement.type === "poetry") {
+                        if((titleDOMNode.textContent === '') && !(imgTaginLabel && imgTaginLabel.length)){
+                            titleHTML = ""
+                        }
+                        if ((subtitleDOMNode.textContent === '') && !(imgTaginTitle && imgTaginTitle.length)) {
+                            subtitleHTML = ""
+                        }
                         tempDiv.innerHTML = createTitleSubtitleModel(titleHTML, subtitleHTML)
                     }
                     else if(parentElement.type === "citations"){
+                        if((titleDOMNode.textContent === '') && !(imgTaginLabel && imgTaginLabel.length)){
+                            titleHTML = ""
+                        }
                         tempDiv.innerHTML = createTitleSubtitleModel(titleHTML, "")
                     }
                     html = tempDiv.innerHTML
-                    html = html.replace(/<br data-mce-bogus="1">/g, "<br>")
+                    // html = html.replace(/<br data-mce-bogus="1">/g, "<br>")
                     parentElement["index"] = this.props.index
                 }
                 else if(parentElement.type === "popup" || (parentElement.type === "poetry" && parentElement.contents["creditsarray"] && parentElement.contents["creditsarray"].length && parentElement.contents.creditsarray[0].id === previousElementData.id)){
