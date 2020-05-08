@@ -67,7 +67,8 @@ class ElementFigure extends Component {
                 schema: "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
                 imageid: `urn:pearson:alfresco:${uniqID}`,
                 alttext: altText,
-                longdescription: longDesc
+                longdescription: longDesc,
+                type: figureType,
             }
             this.props.updateFigureData(setFigureData, this.props.index, this.props.elementId, () => {
                 this.props.handleFocus("updateFromC2")
@@ -101,6 +102,13 @@ class ElementFigure extends Component {
             e.stopPropagation();
             return;
         }
+
+        const figureData = this.props.model.figuredata;
+        const currentAsset = figureData ? {
+            id: figureData.imageid.split(':').pop(), // get last
+            type: figureData.type,
+        } : null;
+
         let that = this;
         let alfrescoPath = config.alfrescoMetaData;
         if (alfrescoPath && this.state.projectMetadata) {
@@ -111,6 +119,7 @@ class ElementFigure extends Component {
         if (alfrescoPath.alfresco.nodeRef) {         //if alfresco location is available
             if (this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco')) {
                 data_1 = alfrescoPath.alfresco;
+                data_1.currentAsset = currentAsset;
                 /*
                     data according to new project api 
                 */
@@ -136,7 +145,11 @@ class ElementFigure extends Component {
         }} else {
             if (this.props.permissions.includes('alfresco_crud_access')) {
                 c2MediaModule.onLaunchAddAnAsset(function (alfrescoData) {
-                    data_1 = { ...alfrescoData };
+                    data_1 = { 
+                        ...alfrescoData,
+                        currentAsset: currentAsset,
+                    };
+
                     let request = {
                         eTag: alfrescoPath.etag,
                         projectId: alfrescoPath.id,

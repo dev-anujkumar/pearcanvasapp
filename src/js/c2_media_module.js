@@ -62,7 +62,7 @@ export const c2MediaModule = {
         return setConfig
     },
     productLinkOnsaveCallBack: function (data, callback) {
-        this.launchAssetBrowser(data.nodeRef, data.repoInstance, data.repoName, callback);
+        this.launchAssetBrowser(data.nodeRef, data.repoInstance, data.repoName, callback, data.currentAsset);
 
     },
 
@@ -152,7 +152,7 @@ export const c2MediaModule = {
         callback(data);
     },
 
-    launchAssetBrowser: function (product, server, repo, callback) {
+    launchAssetBrowser: function (product, server, repo, callback, currentAsset) {
 		patternBroker = PatternBroker.default;
         patternProductLink = PatternProductLink.default;
         patternAddAnAsset = PatternAddAnAsset.default;
@@ -190,6 +190,7 @@ export const c2MediaModule = {
         addAnAssetConfig.nodeRef = productRef;
         addAnAssetConfig.alfserver = serverRef; //data.repoInstance;
         addAnAssetConfig.tabVisibility = tab_visibility;
+        addAnAssetConfig.currentAsset = currentAsset;
 
         addAnAssetConfig['cmis'] = '{"wURN":false}';
         addAnAssetConfig['epsserver'] = config_object1.EPS_API;

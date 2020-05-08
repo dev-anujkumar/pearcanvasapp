@@ -177,6 +177,7 @@ static getDerivedStateFromProps(nextProps, prevState) {
         this.setState({
             showAssessmentPopup: true,
             showSinglePopup:false,
+            openedFrom:''
         });
     }
     /***
