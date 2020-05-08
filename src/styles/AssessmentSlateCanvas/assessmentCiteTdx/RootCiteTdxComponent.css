@@ -139,7 +139,7 @@
   max-width: 100px;
 }
 .filter-block input {
-  width:90%;
+  flex-grow: 1;
   font-size: 14px;
   border:0;
 }
@@ -372,6 +372,14 @@ svg#assessmentSlate-item-icon{
 }
 .sort-icon.inactive{
   opacity:0.3
+}
+.flex-container{
+  display:inherit;
+  width: 96%;
+}
+.input-Container{
+  width: 100%;
+  display:flex;
 }
 
 @media screen and (max-width: 1300px) {
