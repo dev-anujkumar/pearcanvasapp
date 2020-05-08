@@ -100,15 +100,6 @@ const findElementType = (element, index) => {
                         }
                         break;
                     case "video":
-                        elementType = {
-                            elementType: elementDataBank[element.type][element.figuretype]["elementType"],
-                            primaryOption: elementDataBank[element.type][element.figuretype]["primaryOption"],
-                            ...elementDataBank[element.type][element.figuretype][element.figuredata.srctype || 'externallink']
-                        }
-                        if (element && element.figuredata && element.figuredata.posterimage && element.figuredata.posterimage.path === "https://d12m40tknrppbi.cloudfront.net/cite/images/FPO-audio_video.png") {
-                            element.figuredata.posterimage.path = DEFAULT_VIDEO_POSTER_IMAGE;
-                        }
-                        break;
                     case "audio":
                         elementType = {
                             elementType: elementDataBank[element.type][element.figuretype]["elementType"],
