@@ -62,7 +62,6 @@ export class ReactEditor extends React.Component {
         editor.on('Change', (e) => { this.editorOnChange(e, editor) });
         if(document.querySelector('div.glossary-toolbar-wrapper')){
           setFormattingToolbar('disableTinymceToolbar')
-          setFormattingToolbar('removeGlossaryFootnoteSuperscript')
           setFormattingToolbar('removeTinymceSuperscript')
         }
         /* Reverting data-temp-mathml to data-mathml and class Wirisformula to temp_WirisFormula */ 
@@ -377,7 +376,6 @@ export class ReactEditor extends React.Component {
     let termText = document.getElementById(currentTarget.id)&&document.getElementById(currentTarget.id).innerHTML;
     tinymce.init(this.editorConfig).then((d)=>{
       setFormattingToolbar('removeTinymceSuperscript')
-      setFormattingToolbar('removeGlossaryFootnoteSuperscript')
      if(termText) {
       /**
        * BG-1907 -[PCAT-7395] Temp classes in mathml cause issue in opening wiris editor.
