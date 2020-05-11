@@ -300,8 +300,8 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
                     text={elem.buttonType}
                     closeDropDown={closeDropDown}
                     data={data}
-                    sectionBreak = {sectionBreak}
-                    elementType = {elementType}
+                    sectionBreak={sectionBreak}
+                    elementType={elementType}
                 >
                 </ElementContainerType>
             }
