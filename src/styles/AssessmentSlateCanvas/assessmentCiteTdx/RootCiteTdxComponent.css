@@ -139,7 +139,7 @@
   max-width: 100px;
 }
 .filter-block input {
-  width:95%;
+  flex-grow: 1;
   font-size: 14px;
   border:0;
 }
@@ -354,8 +354,32 @@ svg#assessmentSlate-item-icon{
   pointer-events: none;
   cursor: auto;
 }
+.title-block:focus-within, .filter-uuid:focus-within{
+  box-shadow: 0 0 4px 0 #007fa3;
+  border: solid 1px #007fa3;
+}
+.filter-block input:focus::-webkit-input-placeholder { color:transparent; }
+.filter-block input:focus:-moz-placeholder { color:transparent; } /* FF 4-18 */
+.filter-block input:focus::-moz-placeholder { color:transparent; } /* FF 19+ */
+.filter-block input:focus:-ms-input-placeholder { color:transparent; } /* IE 10+ */
+
+.filter-block label{
+  font-family: 'Open Sans', sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.17px;
+  color: #252525;
+  margin: 0 3px 0 0;
+}
 .sort-icon.inactive{
   opacity:0.3
+}
+.flex-container{
+  display:inherit;
+  width: 96%;
+}
+.input-Container{
+  width: 100%;
+  display:flex;
 }
 
 @media screen and (max-width: 1300px) {
