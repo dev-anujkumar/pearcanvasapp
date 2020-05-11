@@ -12,10 +12,12 @@
    background-color: white;
   }
   .main-div {
-    min-height: 325px;
+    min-height: 316px;
     max-height: 325px;
     overflow-y: auto;
     padding-right: 10px;
+    margin-right: 4px;
+    border-top: 2px #EEEEEE solid;
   }
   button:disabled,
   button[disabled] {
@@ -44,6 +46,9 @@
     color: #565353;
     margin: 0px 20px 12px 20px;
   }
+  .table-class thead{
+    border-bottom: 2.5px #A5A5A5 solid;
+  }
   .table-header{
     padding: 5px 0 5px 5px;
     margin:  5px 20px 0px 20px;
@@ -62,7 +67,7 @@
   }
   .td-class.sort-icon{
     display: inline-block;
-    width: 6.5%;
+    /* width: 6.5%; */width: 22.5%;
     color: black;
     float: left;
     margin-left: -3px;
@@ -87,13 +92,14 @@
     margin-top: 2%;
     border: none;
   }
-  .cancel{
-    float: left;
-    margin-left: 378px;
+  .puf-footer .cancel{
+    float: right;
+    /* margin-left: 378px; */
   }
-  .add-button {
-    float: left;
+  .puf-footer .add-button {
+    float: right;
     margin-left: 18px;
+    margin-right: 50px;
   }
 
  .add-button-enabled {
@@ -169,3 +175,104 @@
  .elm-error-line{
   margin-top: 2%;
  }
+
+/** --------------------------------------------AssessmentSearchBar CSS-------------------------------------------- **/
+.learnosity {
+  /* border-bottom: 1px solid black; */
+}
+.learnosity .filter-container{
+  margin: 11px 50px 11px 20px;
+  background-color: #f5f5f5;
+  width: 94%;
+  box-sizing: border-box;
+}
+.learnosity .title-block {
+  width: 100%;
+  /* margin: 11px 20px 11px 20px; */
+  /* width: 80%; */
+  /* display: inline-block; */
+  /* display: inline-block; */
+  /* width: 95%; */
+  border: solid 1px #a9a9a9;
+  background-color: #ffffff;
+  padding: 9px 8px 9px 8px;
+}
+.learnosity .input-title1 {
+  /* margin-right: 20px; */
+  outline: none;
+}
+.learnosity .filter-block {
+  width: 100%;
+  margin: 11px 20px 11px 20px;
+  width: 80%;
+  display: inline-block;
+  display: inline-block;
+  /* width: 95%; */
+  /* border: solid 1px #a9a9a9; */
+  /* background-color: #ffffff; */
+  /* padding: 9px 8px 9px 8px; */
+}
+.learnosity .search-block {
+  font-family: 'Open Sans', sans-serif;
+  display: inline-block;
+  width: 9%;
+  font-size: 13px;
+  font-weight: 600;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #333333;
+}
+.learnosity .noSelect {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.learnosity  label.labelTitle,.learnosity input.input-title1 {
+  position: relative;
+  /* display: block; */
+  /* padding-right: 76px; */
+  /* width: 170px; */
+  box-sizing: border-box;
+}
+
+.learnosity .labelTitle::after {
+  /* content: attr(data-domain); */
+  position: absolute;
+  top: 2px;
+  left: 15px;
+  font-family: arial, helvetica, sans-serif;
+  font-size: 12px;
+  display: block;
+  color: rgba(0, 0, 0, 0.6);
+  font-weight: bold;
+}
+
+/** -------------------------------------------------------------------------------------------------------------- **/
+
+.elm-wrapper .main-div::-webkit-scrollbar-track {
+  /* box-shadow: inset 0 0 8px grey; */
+  /* -webkit-box-shadow: inset 0 0 8px grey; */
+  border-radius: 7px;
+  background-color: #F5F5F5;
+}
+
+.elm-wrapper .main-div::-webkit-scrollbar {
+  width: 5px;
+  background-color: #F5F5F5;
+}
+
+.elm-wrapper .main-div::-webkit-scrollbar-thumb {
+  border-radius: 7px;
+  /* box-shadow: inset 0 0 8px grey; */
+  /* -webkit-box-shadow: inset 0 0 8px grey; */
+  background-color: #555;
+}
+
+.elm-wrapper input:-internal-autofill-selected {
+  -webkit-appearance: menulist-button;
+  background-color: rgb(255, 255, 255) !important;
+  background-image: none !important;
+  color: -internal-light-dark-color(black, white) !important;
+}

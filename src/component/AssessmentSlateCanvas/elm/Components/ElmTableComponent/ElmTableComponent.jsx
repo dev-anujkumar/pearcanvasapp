@@ -7,9 +7,10 @@ import '../../../../../styles/AssessmentSlateCanvas/elm/ElmTable.css';
 import config from './../../../../../config/config';
 import ElmError from '../ElmError';
 import ElmFooter from '../ElmFooter'
+import AssessmentSearchBar from '../AssessmentSearchBar';
 import { FULL_ASSESSMENT_PUF, PUF } from '../../../AssessmentSlateConstants.js'
 import { elmAssessmentItem, elmSortUp, elmSortDown, elmNavigateBack, singleAssessmentItemIcon } from './../../../../../images/ElementButtons/ElementButtons.jsx';
-
+import { searchAndFilterAssessmentData } from '../../Actions/ElmActions.js';
 /*** @description - ElmTable is a class based component to store ELM assessments in tabular form*/
 class ElmTableComponent extends Component {
     constructor(props) {
@@ -30,6 +31,7 @@ class ElmTableComponent extends Component {
             openedFrom: this.setOpenedFrom() || ""
         };
         this.preparedData = [];
+        this.searchData = [];
         this.setSort();
         
     }
@@ -66,6 +68,17 @@ class ElmTableComponent extends Component {
             openedFrom="singleAssessment"
         }
         return openedFrom
+    }
+
+    searchAssessmentData = (assessmentType, searchAssessmentTitle) => {
+        // this.()
+        let searchResults = [];
+        searchResults = searchAndFilterAssessmentData(assessmentType, searchAssessmentTitle, this.props.elmReducer.elmData)
+        console.log("state vars", this.state.parentUrn, this.state.parentTitle)
+        console.log("searchResults", searchResults)
+        return this.setState({
+            tableValue: searchResults
+        })
     }
 
     /*** @description - This function is to render elm table data
@@ -259,8 +272,9 @@ class ElmTableComponent extends Component {
 
     /*** @description - This function is to navigate back to parent hierarchy */
     navigateBack = () => {
-        if (this.state.openItemTable == true && this.props.elmReducer.itemApiStatus != "200") {
-            this.navigateFromItemsTable();
+        console.log("condition:",this.state.openItemTable == true && this.props.elmReducer.itemApiStatus.toString() != "200")
+        if (this.state.openItemTable == true) {
+             this.navigateFromItemsTable()            
         } else {
             this.filterData(false, this.state.parentUrn, this.props.elmReducer.elmData);
         }
@@ -387,6 +401,7 @@ class ElmTableComponent extends Component {
         * @param openedFrom - the component it is opened from - Full or Embedded Assessment
     */
     setElmTableJsx = (item, index, openedFrom) => {
+        // console.log("item>>>>",item)
         let elmTableBody,
             elmIcon = item.type == "assessment" ? elmAssessmentItem : singleAssessmentItemIcon;
         if ((item.type == "assessment" || item.type == "assessmentitem") && item.urn.includes("work")) {
@@ -396,6 +411,7 @@ class ElmTableComponent extends Component {
                         <span className="elmAssessmentItem-icon">{elmIcon}</span>
                         <b className="elm-text-assesment">{item.assessmentTitle ? item.assessmentTitle : item.urn}</b>
                     </td>
+                    <td className='td-class'><b className="elm-text-assesment">{item.urn}</b></td>
                 </tr>
             </tbody>
         } else {
@@ -404,6 +420,7 @@ class ElmTableComponent extends Component {
                     <td className='td-class' key={index} onClick={(e) => { this.showNewValueList(e, item.urn) }}>
                         <div className="desc-box">{this.getFolderLabel(item.type)} <span className="folder-icon"></span> </div>
                         <b className="elm-text-folder">{item.title}</b></td>
+                    {/* <td className='td-class'>{item.urn}</td> */}
                 </tr>}
             </tbody>
         }
@@ -425,6 +442,8 @@ class ElmTableComponent extends Component {
         buttonText: (this.props.activeAssessmentType === FULL_ASSESSMENT_PUF || this.props.activeAssessmentType === PUF) ? "ADD" : "OK"
     };
 
+
+
     render() {
         const { isLoading } = this.props.elmReducer;
         {
@@ -438,6 +457,7 @@ class ElmTableComponent extends Component {
                                 <div className="elm-navigate-back-icon" onClick={this.navigateBack} >{elmNavigateBack}</div> : null}
                             <p className="title-header">{this.state.parentTitle}</p>
                         </div>
+                        {((this.props.activeAssessmentType == FULL_ASSESSMENT_PUF || this.props.activeAssessmentType == PUF) && (this.state.openItemTable == false)) ? <AssessmentSearchBar filterAssessmentData={this.searchAssessmentData} assessmentType={'learnosity'}/> : null}
                         <div className='main-div'>
                             {(this.state.openItemTable == true && isLoading == true)? <div className="elm-loader"></div> : ""}
                             {(!this.props.elmReducer.itemErrorFlag && this.props.elmReducer.itemApiStatus != 200 && this.state.openItemTable == true && isLoading == false) ?
@@ -450,6 +470,7 @@ class ElmTableComponent extends Component {
                                                 <td className='td-class sort-icon'>Title</td>
                                                 <div className="sort-icon" onClick={() => this.setSort()}>{this.state.sortIcon}</div>
                                             </th>
+                                            <th className='row-class'>Assessment Id</th>
                                         </thead>
                                         {this.state.tableValue.map((item, index) => {
                                             return this.setElmTableJsx(item, index, this.state.openedFrom)
@@ -465,10 +486,13 @@ class ElmTableComponent extends Component {
     }
 }
 
+const mapActionToProps = {
+    // searchAndFilterAssessmentData : searchAndFilterAssessmentData
+  }
 
 export default connect((state) => {
     return {
         elmReducer: state.elmReducer,
         currentSlateAncestorData: state.appStore.currentSlateAncestorData
     }
-})(ElmTableComponent);
+},mapActionToProps)(ElmTableComponent);

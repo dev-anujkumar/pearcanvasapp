@@ -1,2 +1,2 @@
-import {AssessmentSearchBar} from './Asses./AssessmentSearchBar.jsx'
+import {AssessmentSearchBar} from './AssessmentSearchBar.jsx'
 export default AssessmentSearchBar;
