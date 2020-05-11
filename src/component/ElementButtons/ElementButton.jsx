@@ -25,8 +25,9 @@ import {
     feedbackIcon,
     assessmentCloseWindowIcon,
     citationElement,
-    poetryIcon,
-    stanzaIcon
+    stanzaIcon,
+    blockTextIcon,
+    tableElemIcon
 } from '../../images/ElementButtons/ElementButtons.jsx';
 import deleteIcon from '../../images/ElementButtons/deleteIcon.png'
 import forwardNavActive from '../../images/ElementButtons/forwardNavActive.png'
@@ -177,9 +178,9 @@ class ElementButton extends Component {
                     {citationElement}
                 </span>
                 break;
-            case buttonTypes.POETRY_ELEMENT:
-                buttonJSX = <span className="btn-element poetry-elem" onClick={clickHandlerFn}>
-                    {poetryIcon}
+            case buttonTypes.BLOCK_TEXT:
+                buttonJSX = <span className="btn-element block-text-button" onClick={clickHandlerFn}>
+                    {blockTextIcon}
                 </span>
                 break;
             case buttonTypes.STANZA_ELEMENT:
@@ -187,7 +188,10 @@ class ElementButton extends Component {
                     {stanzaIcon}
                 </span>
                 break;
-                
+            case buttonTypes.TABLE_EDITOR:
+                buttonJSX = <span className="btn-element table-editor-elem" onClick={clickHandlerFn}>
+                    {tableElemIcon}
+                </span>
         }
         return buttonJSX
     }

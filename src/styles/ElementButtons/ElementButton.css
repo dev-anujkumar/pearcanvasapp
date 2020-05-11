@@ -100,7 +100,7 @@
     padding-top: 2px;
 }
 
-.btn-element.text-elem, .image-elem, .audio-elem, .interactive-elem, .container-elem, .worked-exp-elem, .assessment-elem, .opener-elem, .section-break-elem, .metadata-anchor,.interactive-elem-button,.citation-elem,.container-elem-button, .poetry-elem , .btn-element.stanza-elem{
+.btn-element.text-elem, .image-elem, .audio-elem, .interactive-elem, .container-elem, .worked-exp-elem, .assessment-elem, .opener-elem, .section-break-elem, .metadata-anchor,.interactive-elem-button,.citation-elem,.container-elem-button, .block-text-button , .btn-element.stanza-elem, .table-editor-elem{
     width: 30px;
     height: 30px;
     display: flex;
@@ -117,7 +117,7 @@
 .citation-elem:hover text{
     fill:black;
 }
-.text-elem:hover, .image-elem:hover, .audio-elem:hover, .interactive-elem:hover, .container-elem:hover, .worked-exp-elem:hover, .assessment-elem:hover, .opener-elem:hover, .section-break-elem:hover, .metadata-anchor:hover,.interactive-elem-button:hover, .citation-elem:hover,.container-elem-button:hover,.poetry-elem:hover , .stanza-elem:hover{
+.text-elem:hover, .image-elem:hover, .audio-elem:hover, .interactive-elem:hover, .container-elem:hover, .worked-exp-elem:hover, .assessment-elem:hover, .opener-elem:hover, .section-break-elem:hover, .metadata-anchor:hover,.interactive-elem-button:hover, .citation-elem:hover,.container-elem-button:hover,.block-text-button:hover , .stanza-elem:hover, .table-editor-elem:hover{
     opacity: 1;
     fill: black!important;
     border: solid 1px #434343;

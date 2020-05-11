@@ -20,7 +20,7 @@ export const textIcon = (function () {
 
 /****************************************************Poetry Element***********************************************************/
 
-export const poetryIcon = (function () {
+export const blockTextIcon = (function () {
     return (<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
     <g id="poetry-icon/hover-copy" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
         <rect id="Rectangle" fill="#EEEEEE" opacity="0.100000001" x="0" y="0" width="24" height="24"></rect>
@@ -277,3 +277,11 @@ export const citationElement = (() => {
             </g>
         </svg>)
 })();
+
+export const tableElemIcon = (() => {
+    return ( 
+        <svg style ={{width: "20px", height: "20px", fill: "#9e9e9e"}} xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 24 24">
+            <path d="M5,4H19A2,2 0 0,1 21,6V18A2,2 0 0,1 19,20H5A2,2 0 0,1 3,18V6A2,2 0 0,1 5,4M5,8V12H11V8H5M13,8V12H19V8H13M5,14V18H11V14H5M13,14V18H19V14H13Z" />
+        </svg>
+    )
+  })();
