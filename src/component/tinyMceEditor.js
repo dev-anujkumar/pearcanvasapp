@@ -21,7 +21,7 @@ import {
 } from '../images/TinyMce/TinyMce.jsx';
 import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
 import { checkforToolbarClick, customEvent } from '../js/utils';
-import { saveGlossaryAndFootnote } from "./GlossaryFootnotePopup/GlossaryFootnote_Actions"
+import { saveGlossaryAndFootnote, setFormattingToolbar } from "./GlossaryFootnotePopup/GlossaryFootnote_Actions"
 import { ShowLoader, HideLoader } from '../constants/IFrameMessageTypes';
 import { sendDataToIframe, hasReviewerRole } from '../constants/utility.js';
 import store from '../appstore/store';
@@ -527,9 +527,10 @@ export class TinyMceEditor extends Component {
 
         if (e.target.parentElement && e.target.parentElement.nodeName == "SUP" && e.target.dataset.uri) {
             let uri = e.target.dataset.uri;
-            this.glossaryBtnInstance.setDisabled(true)
+            this.glossaryBtnInstance && this.glossaryBtnInstance.setDisabled(true)
             if (alreadyExist) {
                 cbFunc = () => {
+                    setFormattingToolbar('disableTinymceToolbar')                  
                     this.toggleGlossaryandFootnoteIcon(true);
                     this.toggleGlossaryandFootnotePopup(true, "Footnote", uri);
                 }
