@@ -929,7 +929,10 @@ export class TinyMceEditor extends Component {
             }
             if (key === 13 && this.props.element.type !== 'element-list' && activeElement.nodeName !== "CODE" && this.props.element.type !== 'showhide' && this.props.element.type !== "stanza") {
                 let activeEditor = document.getElementById(tinymce.activeEditor.id);
-                activeEditor.blur();
+                if(this.props.element.status == "wip") {
+                    activeEditor.blur();
+                }
+                
                 let nextSaparator = (activeEditor.closest('.editor')).nextSibling;
                 let textPicker;
                 if (this.props.element.type == 'citations') {
