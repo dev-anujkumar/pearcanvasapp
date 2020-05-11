@@ -180,7 +180,39 @@ class OpenerElement extends Component {
             }
         }
     }
+    handleC2GlobalCO=(e)=>{
+        if(hasReviewerRole()){
+            return true
+        }
+        const { slateLockInfo } = this.props
+        if(checkSlateLock(slateLockInfo))
+            return false
 
+        if (e.target.tagName.toLowerCase() === "p") {
+            e.stopPropagation();
+            return;
+        }
+        let alfrescoPath = config.alfrescoMetaData;
+        // if (alfrescoPath && this.state.projectMetadata) {
+        //     alfrescoPath.alfresco = this.state.projectMetadata.alfresco;
+        // }
+        let  data_1 = false;
+        if (alfrescoPath && alfrescoPath.alfresco && Object.keys(alfrescoPath.alfresco).length > 0) {
+            if (alfrescoPath.alfresco.nodeRef) {
+                if (this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco')) {
+                    data_1 = alfrescoPath.alfresco;
+                    this.handleC2ExtendedClick(data_1)
+                }
+                else {
+                    this.props.accessDenied(true)
+                }
+            }
+        }
+        else{
+            this.props.accessDenied(true)
+        }
+        
+    }
     /**
      * Handles label model change event
      * @param {e} event
@@ -411,7 +443,7 @@ class OpenerElement extends Component {
         let COImg = <div className="exisiting-opener-element-image-view">
             <div className="update-image-label">Update Image</div>
             <div>
-                <div className="select-image-global-button">Choose from Global Co site</div>
+                <div className="select-image-global-button" onClick={this.handleC2GlobalCO}>Choose from Global Co site</div>
                 <div className="select-image-alresco-button" onClick={this.handleC2MediaClick}>Choose from Alfresco site</div>
             </div>
             
@@ -422,7 +454,7 @@ class OpenerElement extends Component {
         let COImg = <div className="empty-opener-element-view">
             <div className="select-image-label">Select an Image</div>
             <div className="select-image-co-buttons">
-                <div className="select-image-global-button">Choose from Global Co site</div>
+                <div className="select-image-global-button" onClick={this.handleC2GlobalCO}>Choose from Global Co site</div>
                 <div className="select-image-alresco-button" onClick={this.handleC2MediaClick}>Choose from Alfresco site</div>
             </div>
         </div>
