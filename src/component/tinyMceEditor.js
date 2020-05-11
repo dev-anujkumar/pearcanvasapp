@@ -21,7 +21,7 @@ import {
 } from '../images/TinyMce/TinyMce.jsx';
 import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
 import { checkforToolbarClick, customEvent } from '../js/utils';
-import { saveGlossaryAndFootnote } from "./GlossaryFootnotePopup/GlossaryFootnote_Actions"
+import { saveGlossaryAndFootnote, setFormattingToolbar } from "./GlossaryFootnotePopup/GlossaryFootnote_Actions"
 import { ShowLoader, HideLoader } from '../constants/IFrameMessageTypes';
 import { sendDataToIframe, hasReviewerRole } from '../constants/utility.js';
 import store from '../appstore/store';
@@ -527,9 +527,10 @@ export class TinyMceEditor extends Component {
 
         if (e.target.parentElement && e.target.parentElement.nodeName == "SUP" && e.target.dataset.uri) {
             let uri = e.target.dataset.uri;
-            this.glossaryBtnInstance.setDisabled(true)
+            this.glossaryBtnInstance && this.glossaryBtnInstance.setDisabled(true)
             if (alreadyExist) {
                 cbFunc = () => {
+                    setFormattingToolbar('disableTinymceToolbar')                  
                     this.toggleGlossaryandFootnoteIcon(true);
                     this.toggleGlossaryandFootnotePopup(true, "Footnote", uri);
                 }
@@ -929,7 +930,10 @@ export class TinyMceEditor extends Component {
             }
             if (key === 13 && this.props.element.type !== 'element-list' && activeElement.nodeName !== "CODE" && this.props.element.type !== 'showhide' && this.props.element.type !== "stanza") {
                 let activeEditor = document.getElementById(tinymce.activeEditor.id);
-                activeEditor.blur();
+                if('element' in this.props && 'status' in this.props.element && this.props.element.status == "wip") {
+                    activeEditor.blur();
+                }
+                
                 let nextSaparator = (activeEditor.closest('.editor')).nextSibling;
                 let textPicker;
                 if (this.props.element.type == 'citations') {
@@ -1003,7 +1007,11 @@ export class TinyMceEditor extends Component {
                     }
                 } else {
                     if (key != undefined && key === 9) {
-                        let currentElement = editor.selection.getNode();
+                        e.preventDefault();
+
+                        // Disable Indent and Outdent For Poetry-Stanza
+
+                        /*let currentElement = editor.selection.getNode();
                         if (editor.selection.getNode().tagName.toLowerCase() !== 'span' || editor.selection.getNode().className.toLowerCase() !== 'poetryLine') {
                             currentElement = editor.selection.getNode().closest('.poetryLine');
                         }
@@ -1041,7 +1049,7 @@ export class TinyMceEditor extends Component {
                                     this.indentRun = false;
                                 }
                             }
-                        }
+                        }*/
                     }
                 }
             }
@@ -1339,7 +1347,10 @@ export class TinyMceEditor extends Component {
         else if (content.match(/paragraphNumeroUnoIndentLevel2\b/)) {
             content = content.replace(/paragraphNumeroUnoIndentLevel2\b/, "paragraphNumeroUnoIndentLevel3")
         }
-        else if (className && className.trim() === 'poetryLine') {
+
+        // Disable Indent For Poetry-Stanza
+
+        /*else if (className && className.trim() === 'poetryLine') {
             selectedNode.className = 'poetryLine poetryLineLevel1';
             this.indentRun = true;
         }
@@ -1350,7 +1361,7 @@ export class TinyMceEditor extends Component {
         else if (className && className.trim() === 'poetryLine poetryLineLevel2') {
             selectedNode.className = 'poetryLine poetryLineLevel3';
             this.indentRun = true;
-        }
+        }*/
         if (!className) {
             this.setContentAndPlaceCaret(editor, content)
         }
@@ -1376,7 +1387,10 @@ export class TinyMceEditor extends Component {
         else if (content.match(/paragraphNumeroUnoIndentLevel1\b/)) {
             content = content.replace(/paragraphNumeroUnoIndentLevel1\b/, "paragraphNumeroUno")
         }
-        else if (className && className.trim() === 'poetryLine poetryLineLevel1') {
+
+        // Disable Outdent For Poetry-Stanza
+
+        /*else if (className && className.trim() === 'poetryLine poetryLineLevel1') {
             selectedNode.className = 'poetryLine';
             this.outdentRun = true;
         }
@@ -1387,7 +1401,7 @@ export class TinyMceEditor extends Component {
         else if (className && className.trim() === 'poetryLine poetryLineLevel3') {
             selectedNode.className = 'poetryLine poetryLineLevel2';
             this.outdentRun = true;
-        }
+        }*/
         if (!className) {
             this.setContentAndPlaceCaret(editor, content)
         }
@@ -1835,6 +1849,8 @@ export class TinyMceEditor extends Component {
             toolbar = config.showHideToolbar
         } else if (this.props.placeholder === "Enter Hide text") {
             toolbar = config.hideToolbar
+        } else if (this.props.placeholder == "Type Something..." && this.props.element && this.props.element.type == 'stanza') {
+            toolbar = config.poetryStanzaToolbar;
         } else {
             toolbar = config.elementToolbar;
         }
@@ -2224,9 +2240,18 @@ export class TinyMceEditor extends Component {
                 if (tempDiv && tempDiv.children && tempDiv.children.length && tempDiv.children[0].tagName === 'P') {
                     model = tempDiv.children[0].innerHTML;
                 }
-                return (
-                    <h4 ref={this.editorRef} id={id} onKeyDown={this.normalKeyDownHandler} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: model }} >{/*htmlToReactParser.parse(this.props.model) */}</h4>
-                )
+                if (this.props.poetryField && this.props.poetryField === 'formatted-title') {
+                    if( !classes.includes('poetryHideLabel')) {
+                        classes = classes + ' poetryHideLabel';
+                    }
+                    return (
+                        <h4 ref={this.editorRef} id={id} onKeyDown={this.normalKeyDownHandler} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: model }} >{/*htmlToReactParser.parse(this.props.model) */}</h4>
+                    )
+                } else {
+                    return (
+                        <h4 ref={this.editorRef} id={id} onKeyDown={this.normalKeyDownHandler} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: model }} >{/*htmlToReactParser.parse(this.props.model) */}</h4>
+                    )
+                }
             case 'code':
                 return (
                     <code ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model }}>{/*htmlToReactParser.parse(this.props.model) */}</code>
