@@ -1003,7 +1003,11 @@ export class TinyMceEditor extends Component {
                     }
                 } else {
                     if (key != undefined && key === 9) {
-                        let currentElement = editor.selection.getNode();
+                        e.preventDefault();
+
+                        // Disable Indent and Outdent For Poetry-Stanza
+
+                        /*let currentElement = editor.selection.getNode();
                         if (editor.selection.getNode().tagName.toLowerCase() !== 'span' || editor.selection.getNode().className.toLowerCase() !== 'poetryLine') {
                             currentElement = editor.selection.getNode().closest('.poetryLine');
                         }
@@ -1041,7 +1045,7 @@ export class TinyMceEditor extends Component {
                                     this.indentRun = false;
                                 }
                             }
-                        }
+                        }*/
                     }
                 }
             }
@@ -1339,7 +1343,10 @@ export class TinyMceEditor extends Component {
         else if (content.match(/paragraphNumeroUnoIndentLevel2\b/)) {
             content = content.replace(/paragraphNumeroUnoIndentLevel2\b/, "paragraphNumeroUnoIndentLevel3")
         }
-        else if (className && className.trim() === 'poetryLine') {
+
+        // Disable Indent For Poetry-Stanza
+
+        /*else if (className && className.trim() === 'poetryLine') {
             selectedNode.className = 'poetryLine poetryLineLevel1';
             this.indentRun = true;
         }
@@ -1350,7 +1357,7 @@ export class TinyMceEditor extends Component {
         else if (className && className.trim() === 'poetryLine poetryLineLevel2') {
             selectedNode.className = 'poetryLine poetryLineLevel3';
             this.indentRun = true;
-        }
+        }*/
         if (!className) {
             this.setContentAndPlaceCaret(editor, content)
         }
@@ -1376,7 +1383,10 @@ export class TinyMceEditor extends Component {
         else if (content.match(/paragraphNumeroUnoIndentLevel1\b/)) {
             content = content.replace(/paragraphNumeroUnoIndentLevel1\b/, "paragraphNumeroUno")
         }
-        else if (className && className.trim() === 'poetryLine poetryLineLevel1') {
+
+        // Disable Outdent For Poetry-Stanza
+
+        /*else if (className && className.trim() === 'poetryLine poetryLineLevel1') {
             selectedNode.className = 'poetryLine';
             this.outdentRun = true;
         }
@@ -1387,7 +1397,7 @@ export class TinyMceEditor extends Component {
         else if (className && className.trim() === 'poetryLine poetryLineLevel3') {
             selectedNode.className = 'poetryLine poetryLineLevel2';
             this.outdentRun = true;
-        }
+        }*/
         if (!className) {
             this.setContentAndPlaceCaret(editor, content)
         }
@@ -1835,6 +1845,8 @@ export class TinyMceEditor extends Component {
             toolbar = config.showHideToolbar
         } else if (this.props.placeholder === "Enter Hide text") {
             toolbar = config.hideToolbar
+        } else if (this.props.placeholder == "Type Something..." && this.props.element && this.props.element.type == 'stanza') {
+            toolbar = config.poetryStanzaToolbar;
         } else {
             toolbar = config.elementToolbar;
         }
@@ -2224,9 +2236,18 @@ export class TinyMceEditor extends Component {
                 if (tempDiv && tempDiv.children && tempDiv.children.length && tempDiv.children[0].tagName === 'P') {
                     model = tempDiv.children[0].innerHTML;
                 }
-                return (
-                    <h4 ref={this.editorRef} id={id} onKeyDown={this.normalKeyDownHandler} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: model }} >{/*htmlToReactParser.parse(this.props.model) */}</h4>
-                )
+                if (this.props.poetryField && this.props.poetryField === 'formatted-title') {
+                    if( !classes.includes('poetryHideLabel')) {
+                        classes = classes + ' poetryHideLabel';
+                    }
+                    return (
+                        <h4 ref={this.editorRef} id={id} onKeyDown={this.normalKeyDownHandler} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: model }} >{/*htmlToReactParser.parse(this.props.model) */}</h4>
+                    )
+                } else {
+                    return (
+                        <h4 ref={this.editorRef} id={id} onKeyDown={this.normalKeyDownHandler} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: model }} >{/*htmlToReactParser.parse(this.props.model) */}</h4>
+                    )
+                }
             case 'code':
                 return (
                     <code ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model }}>{/*htmlToReactParser.parse(this.props.model) */}</code>

@@ -24,3 +24,7 @@
 .poetryLineLevel3 {
     padding-left: 120px !important;
 }
+
+.poetryHideLabel {
+    display: none;
+}
