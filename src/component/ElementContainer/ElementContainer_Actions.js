@@ -213,9 +213,6 @@ function prepareDataForTcmUpdate (updatedData,id, elementIndex, asideData, getSt
     } else if (poetryData && poetryData.type === 'poetry'){
         updatedData.parentType = "poetry";
     }
-    if(config.tempSlateManifestURN){
-        updatedData.parentType = "popup"
-    }
     updatedData.projectURN = config.projectUrn;
     updatedData.slateEntity = config.slateEntityURN;
 }
