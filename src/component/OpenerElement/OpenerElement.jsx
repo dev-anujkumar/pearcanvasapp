@@ -33,7 +33,8 @@ class OpenerElement extends Component {
             imgSrc: getOpenerImageSource(bgImage),
             width: null,
             imageId: props.element.backgroundimage.imageid ? props.element.backgroundimage.imageid : "",
-            projectMetadata: false
+            projectMetadata: false,
+            updateImageOptions:false
         }
     }
 
@@ -394,6 +395,7 @@ class OpenerElement extends Component {
         element.backgroundimage.alttext = altText;
         element.backgroundimage.longdescription = longDesc;
         element.backgroundcolor = this.props.backgroundColor;
+        element.textcolor=this.props.textColor;
 
         flag && this.props.updateElement(element);
     }
@@ -409,11 +411,14 @@ class OpenerElement extends Component {
     }   
     renderExistingCOImage = () => {
         let COImg = <div className="exisiting-opener-element-image-view">
-            <div className="update-image-label">Update Image</div>
-            <div>
-                <div className="select-image-global-button">Choose from Global Co site</div>
-                <div className="select-image-alresco-button" onClick={this.handleC2MediaClick}>Choose from Alfresco site</div>
+            <div className="update-image-label" onClick={()=>{this.setState({updateImageOptions:!this.state.updateImageOptions})}}>Update Image
+            <span className="color_Dropdown_arrow">{dropdownArrow}</span>
             </div>
+           {this.state.updateImageOptions? <div>
+                <div className="select-image-global-button1">Choose from Global Co site</div>
+                <div className="select-image-alresco-button1" onClick={this.handleC2MediaClick}>Choose from Alfresco site</div>
+            </div>:null}
+           
             
         </div>
         return COImg

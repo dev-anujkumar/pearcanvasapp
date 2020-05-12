@@ -100,30 +100,85 @@
     margin-top: 250px;
 }
 .opener-element-container .select-image-global-button{
-    background-color: #6a7070;
-    padding: 12px 20px;
-    color: #000;
+    background-color: #e9e7e7;
+    padding: 8px 20px;
+    color: rgb(27, 27, 27);
     margin: 20px 0;
     font-size: 12px;
     cursor: pointer;
+    border-radius:1.5px;
+    box-shadow: 1px 0 1px 0 #e9e7e7;
 }
 .opener-element-container .select-image-alresco-button{
-    background-color: #6a7070;
-    padding: 12px 20px;
-    color: #000;
+    background-color: #e9e7e7;
+    padding: 8px 20px;
+    color: rgb(27, 27, 27);
     font-size: 12px;
     cursor: pointer;
+    border-radius:1.5px;
+    box-shadow: 1px 0 1px 0 #e9e7e7;
 }
 .opener-element-container .exisiting-opener-element-image-view{
-    position: absolute;
-    text-align: right;
-    right: 0;
-    margin-top: 25px;
+    /* position: absolute;
+    /* text-align: right; */
+    /* right: 17px;
+    margin-top: 27px; */ 
 }
-.opener-element-container .update-image-label{
-    background-color: #6a7070;
-    padding: 12px 20px;
+.exisiting-opener-element-image-view .update-image-label{
+    position: absolute;
+    /* text-align: right; */
+    right: 17px;
+    margin-top: 27px;
+   
+    background-color: #e9e7e7;
+    padding: 8px 18px;
+    color: #202020;
+    font-size: 12.4px;
+    cursor: pointer;
+    border-radius:1.5px;
+    width:130px;
+}
+.opener-element-container .select-image-global-button1{
+    position: absolute;
+    /* text-align: right; */
+    right: 17px;
+   top:140px;
+   width:193px;
+    background-color: #ffffff;
+    padding: 8px 20px;
+    color: #000;
+    margin: 2px 0 0 0;
+    font-size: 12px;
+    cursor: pointer;
+   border-radius:1.5px 1.5px 0 0;
+}
+.opener-element-container .select-image-global-button1:hover{
+    background-color:#107aca;
+    color:#fff;
+    transition: all 0.1s;
+}
+.opener-element-container .select-image-alresco-button1{
+    position: absolute;
+    /* text-align: right; */
+    right: 17px;
+   top:175.5px;
+    width:193px;
+    background-color: #ffffff;
+    padding: 8px 20px;
     color: #000;
     font-size: 12px;
     cursor: pointer;
+    border-radius:0 0 1.5px 1.5px;
 }
+.opener-element-container .select-image-alresco-button1:hover{
+    background-color:#107aca;
+    color:#fff;
+    transition: all 0.5s;
+}
+.opener-element-container .color_Dropdown_arrow{
+    float: right;
+    position: relative;
+    top: 0px;
+    width: 10px;
+    height: 10px;
+    }

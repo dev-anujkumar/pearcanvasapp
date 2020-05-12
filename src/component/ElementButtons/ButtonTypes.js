@@ -12,6 +12,7 @@ export default {
     EXPAND : "expand",
     SPLIT_SLATE : "split",
     COLOR_PALETTE : "color-palette",
+    COLOR_TEXT : "color-text",
     TEXT_ELEMENT : "text-elem",
     IMAGE_ELEMENT : "image-elem",
     AUDIO_ELEMENT : "audio-elem",

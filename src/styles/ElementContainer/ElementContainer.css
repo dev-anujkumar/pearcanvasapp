@@ -102,6 +102,37 @@ a.paragraphNumeroUnoFootnote {
 .color-palette-item.selected {
     border: 2.5px solid #1fd595 !important;
 }
+
+
+.color-text-list .color-text-item:nth-child(1) {
+    background-color: #ffffff !important;
+}
+
+.color-text-list .color-text-item:nth-child(2) {
+    background-color: #000000 !important;
+}
+
+.color-text-list .color-text-item{
+    margin: 0;
+    width: 27px;
+    height: 27px;
+    float: left;
+    cursor: pointer;
+    border-right: 1px solid #ffffff;
+    border-bottom: 1px solid #ffffff;
+}
+
+.color-text-list{
+    position: absolute;
+    left: 25px;
+    top: 18%;
+    z-index: 1;
+}
+.color-text-item.selected {
+    border: 2.5px solid #1fd595 !important;
+}
+
+
 .arrow{
     position: absolute;
     top: 85px;

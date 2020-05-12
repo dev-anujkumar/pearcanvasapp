@@ -51,6 +51,10 @@
     background-color: transparent;
 }
 
+.btn-element.color-text {
+    background-color: transparent;
+}
+
 .split-icon,.expand-icon{
     padding: 0;
 }
@@ -129,8 +133,22 @@
     width: 31px;
     position: absolute;
     cursor: pointer;
+   
 }
+.color-text{
+    padding: 0px 0px;
+    background-size: contain;
+    width: 31px;
+    position: absolute;
+    cursor: pointer;
+    top:100px;
+}
+
 .btn-element.color-palette>img {
+    width: 100%;
+}
+
+.btn-element.color-text>img {
     width: 100%;
 }
 .section-break-elem svg {
@@ -160,3 +178,5 @@
     margin-right: 10px;
     cursor: default;
 }
+
+
