@@ -130,27 +130,24 @@ const removeTagsforSubTitle = (htmlText) => {
     return htmlText.replace(/<label>?.+<\/label>/g, "").replace(/<p>|<\/p>/g, "")
 }
 
-export const isOldDataFormat = (model) => {
-    return !model.match(/<label>?.+<\/label>/g)
-}
 
 /**
  * Separates label and title from the unified HTML content and maps it to UI
  * @param {*} model label or title HTML content
  * @param {*} modelType type - label or title
  */
-export const getTitleSubtitleModel = (model, modelType, oldSubTitleModel) => {
+export const getTitleSubtitleModel = (model, modelType) => {
     let modelDocDom = model && new DOMParser().parseFromString(model, "text/html")
     let modelDom = modelDocDom && modelDocDom.body && modelDocDom.body.children[0]
     let modelToReturn
     if(modelType){
         if(modelType === "formatted-title"){
             try{
-                if(isOldDataFormat(model)){
-                    modelToReturn = model
+                if(model && model.match(/<label>?.+<\/label>/g)){
+                    modelToReturn = modelToReturn = `<p class="paragraphNumeroUno">${modelDom.children[0].innerHTML}</p>`   
                 }
                 else{
-                    modelToReturn = modelToReturn = `<p class="paragraphNumeroUno">${modelDom.children[0].innerHTML}</p>`   
+                    modelToReturn = `<p class="paragraphNumeroUno"><br/></p>`
                 }
             }
             catch (error) {
@@ -159,14 +156,9 @@ export const getTitleSubtitleModel = (model, modelType, oldSubTitleModel) => {
         }
         else if(modelType === "formatted-subtitle"){
             try{
-                if(isOldDataFormat(model)){
-                    modelToReturn = oldSubTitleModel ? oldSubTitleModel.trimLeft() : `<p class="paragraphNumeroUno"><br/></p>`
-                }
-                else{
-                    let modelInnerHTML = modelDom.innerHTML
-                    let modelWithRemovedTags = removeTagsforSubTitle(modelInnerHTML)
-                    modelToReturn = `<p class="paragraphNumeroUno">${modelWithRemovedTags.trimLeft()}</p>`
-                }
+                let modelInnerHTML = modelDom.innerHTML
+                let modelWithRemovedTags = removeTagsforSubTitle(modelInnerHTML)
+                modelToReturn = `<p class="paragraphNumeroUno">${modelWithRemovedTags}</p>`
             }
             catch (error) {
                 modelToReturn = `<p class="paragraphNumeroUno"><br/></p>`
@@ -185,7 +177,13 @@ export const getTitleSubtitleModel = (model, modelType, oldSubTitleModel) => {
  * @param {*} subtitleHTML title HTML content
  */
 export const createTitleSubtitleModel = (titleHTML, subtitleHTML) => {
-    return `<p><label>${titleHTML}</label> ${subtitleHTML}</p>`
+    let labelHTML = titleHTML.replace(/<br>/g, ""),
+        titleModel = subtitleHTML.replace(/<br>/g, "")
+
+    if(labelHTML === ""){
+        return `<p>${titleModel}</p>`
+    }
+    return `<p><label>${labelHTML}&nbsp;</label>${titleModel}</p>`
 }
 
 /** This is a list of HTML Entity code mapped to their HTML Entity name and Special Character |
