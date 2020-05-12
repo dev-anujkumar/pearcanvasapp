@@ -818,7 +818,8 @@ export const deleteShowHideUnit = (elementId, type, parentUrn, index,eleIndex, p
         {
             headers: {
                 "Content-Type": "application/json",
-                "PearsonSSOSession": config.ssoToken
+                "PearsonSSOSession": config.ssoToken,
+                "accept":"application/json",
             }
         }
     ).then((response)=>{

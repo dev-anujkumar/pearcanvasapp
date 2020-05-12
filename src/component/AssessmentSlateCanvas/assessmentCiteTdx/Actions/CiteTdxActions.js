@@ -12,6 +12,7 @@ export const getCiteTdxData = (assessmentType, assessmentTitle, filterUUID, page
     dispatch({ type: 'SET_LOADING_TRUE', payload: { isLoading: true } });
 
     let searchTitle = (assessmentTitle == undefined || assessmentTitle == '') ? '' : assessmentTitle;
+    searchTitle=encodeURI(searchTitle)
     var assessmentDispatchType = (assessmentType === FULL_ASSESSMENT_CITE)? 'GET_CITE_RESOURCES': (assessmentType === FULL_ASSESSMENT_TDX)?'GET_TDX_RESOURCES': 'GET_MMI_RESOURCES';
     let pageSize=25;
 
