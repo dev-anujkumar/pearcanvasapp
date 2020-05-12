@@ -15,29 +15,6 @@ var productLink;
 var addAnAsset = {};
 var addAnAssetConfig = {};
 
-/*Reference the library*/
-
-/*Configure the library*/
-/*
-var libConfig = {
-    'locale': 'en_US',
-    'headers': {
-        'Content-Type': 'application/json',
-        'Accept': 'application/ld+json',
-        'X-Roles-Test': 'ContentMetadataEditor',
-        'Prefer': 'annotation=true',
-        'Apikey': config_object1.CMDS_APIKEY,
-        'x-apikey': config_object1.CMDS_APIKEY,
-        'PearsonSSOSession': authModule.GET_SSO_TOKEN(),
-        'X-PearsonSSOSession': authModule.GET_SSO_TOKEN()
-    },
-    'database': config_object1.CMDS_DATABASE,
-    'server': config_object1.CMDS_DATA_ENDPOINT,
-    'taxonomyserver': config_object1.CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
-    'userId': uname || config_object['userId']
-};
-*/
-
 export const c2MediaModule = {
     addAnAsset: addAnAsset,
     libraryConfiguration: function () {
@@ -164,27 +141,7 @@ export const c2MediaModule = {
         if (addAnAsset && addAnAsset.unmount) {
             addAnAsset.unmount();
         }        
-        /*
-        var libConfig = {
-            'locale': 'en_US',
-            'headers': {
-                'Content-Type': 'application/json',
-                'Accept': 'application/ld+json',
-                'X-Roles-Test': 'ContentMetadataEditor',
-                'Prefer': 'annotation=true',
-                'Apikey': config_object1.CMDS_APIKEY,
-                'x-apikey': config_object1.CMDS_APIKEY,
-                'PearsonSSOSession': authModule.GET_SSO_TOKEN(),
-                'X-PearsonSSOSession': authModule.GET_SSO_TOKEN()
-            },
-            'database': config_object1.CMDS_DATABASE,
-            'server': config_object1.CMDS_DATA_ENDPOINT,
-            'taxonomyserver': config_object1.CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
-            'userId': uname || config_object['userId']
-        };
-        */
-
-
+        
         addAnAssetConfig = { 'selector': renderderedTagSelector };
         addAnAssetConfig.language = 'en';// YS
         addAnAssetConfig.nodeRef = productRef;
@@ -285,33 +242,12 @@ export const c2MediaModule = {
             //     "repoName":"Global"
             // }]
             console.log("CMIS_REPO>>>>>>>",CMIS_REPO)
-            //https://uswip.cms.pearson.com/share/page/site/cite-generic-openers/documentlibrary
             if (CMIS_REPO !== undefined && CMIS_REPO !== null && CMIS_REPO !== '') {
                 // try{
                 const cmisRepo = CMIS_REPO;
                 if (cmisRepo.length > 0) {
                     const canWeProceedWithPL = this.validateRegistries(cmisRepo);
                     if (canWeProceedWithPL) {
-                        /*
-                        //let libConfig=this.libraryConfiguration()
-                        var libConfig = {
-                            'locale': 'en_US',
-                            'headers': {
-                                'Content-Type': 'application/json',
-                                'Accept': 'application/ld+json',
-                                'X-Roles-Test': 'ContentMetadataEditor',
-                                'Prefer': 'annotation=true',
-                                'Apikey': config_object1.CMDS_APIKEY,
-                                'x-apikey': config_object1.CMDS_APIKEY,
-                                'PearsonSSOSession': authModule.GET_SSO_TOKEN(),
-                                'X-PearsonSSOSession': authModule.GET_SSO_TOKEN()
-                            },
-                            'database': config_object1.CMDS_DATABASE,
-                            'server': config_object1.CMDS_DATA_ENDPOINT,
-                            'taxonomyserver': config_object1.CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
-                            'userId': uname || config_object['userId']
-                        };
-                        */
                         var productLinkConfig = { 'selector': renderderedTagSelector };
                         productLinkConfig.repoList = cmisRepo;
                         productLinkConfig.language = 'en';  // YS
