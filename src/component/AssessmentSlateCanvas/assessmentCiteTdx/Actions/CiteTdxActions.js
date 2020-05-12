@@ -12,7 +12,7 @@ export const getCiteTdxData = (assessmentType, assessmentTitle, filterUUID, page
     dispatch({ type: 'SET_LOADING_TRUE', payload: { isLoading: true } });
 
     let searchTitle = (assessmentTitle == undefined || assessmentTitle == '') ? '' : assessmentTitle;
-    searchTitle=encodeURI(searchTitle)
+    searchTitle= specialCharacterEncode(searchTitle)
     var assessmentDispatchType = (assessmentType === FULL_ASSESSMENT_CITE)? 'GET_CITE_RESOURCES': (assessmentType === FULL_ASSESSMENT_TDX)?'GET_TDX_RESOURCES': 'GET_MMI_RESOURCES';
     let pageSize=25;
 
@@ -102,6 +102,8 @@ export const filterCiteTdxData = (assessmentType, assessmentTitle, filterUUID) =
     }).then((res) => {
         let taxonomyType = (res.data.taxonomicTypes.length > 0) ? res.data.taxonomicTypes : [];
         let responseName = (res.data.name !== undefined) ? res.data.name : '';
+        responseName=specialCharacterEncode(responseName);
+        assessmentTitle=specialCharacterEncode(assessmentTitle);
         if ((taxonomyType.includes(typeAssessment) == false) || (responseName.toLowerCase().search(assessmentTitle.toLowerCase()) == -1)) {
             filterData = { assessments: [] };
         } else {
@@ -154,4 +156,21 @@ export const assessmentSorting = (sortBy,sortOrder) => (dispatch, getState) => {
             sortBy:sortBy
         }
     })
+}
+function specialCharacterEncode(title){
+    let searchTitle=encodeURIComponent(title);
+    let specialCharacters={
+        "(":"%28",
+        ")":"%29",
+        "!":"%21",
+        "-":"%2D",
+        ".":"%2E",
+        "*":"%2A",
+        "_":"%5F"
+    }
+    for (let key in specialCharacters) {
+        searchTitle = searchTitle.replace(key,specialCharacters[key])
+    }
+    return searchTitle;
+
 }
