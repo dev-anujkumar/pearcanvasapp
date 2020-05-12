@@ -160,16 +160,17 @@ export const assessmentSorting = (sortBy,sortOrder) => (dispatch, getState) => {
 function specialCharacterEncode(title){
     let searchTitle=encodeURIComponent(title);
     let specialCharacters={
-        "(":"%28",
-        ")":"%29",
-        "!":"%21",
-        "-":"%2D",
-        ".":"%2E",
-        "*":"%2A",
-        "_":"%5F"
+        "\\(":"%28",
+        "\\)":"%29",
+        "\\!":"%21",
+        "\\-":"%2D",
+        "\\.":"%2E",
+        "\\*":"%2A",
+        "\\_":"%5F"
     }
+    
     for (let key in specialCharacters) {
-        searchTitle = searchTitle.replace(key,specialCharacters[key])
+        searchTitle = searchTitle.replace(new RegExp(key,"g") , specialCharacters[key])
     }
     return searchTitle;
 
