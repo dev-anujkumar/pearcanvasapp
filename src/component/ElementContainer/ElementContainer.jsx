@@ -511,7 +511,7 @@ class ElementContainer extends Component {
                         if((titleDOMNode.textContent === '') && !(imgTaginLabel && imgTaginLabel.length)){
                             titleHTML = ""
                         }
-                        tempDiv.innerHTML = createTitleSubtitleModel(titleHTML, "")
+                        tempDiv.innerHTML = createTitleSubtitleModel("", titleHTML)
                     }
                     html = tempDiv.innerHTML
                     // html = html.replace(/<br data-mce-bogus="1">/g, "<br>")
