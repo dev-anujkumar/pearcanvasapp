@@ -113,6 +113,9 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         let domHtml = editableDom ? editableDom.innerHTML : "<ol></ol>"
         if(showHideObj){
             containerDom = document.getElementById(`cypress-${showHideObj.index}`)
+            if(containerDom){
+                tinyMCE.$(containerDom).find('ol').removeAttr('data-mce-style')
+            }
             domHtml = containerDom ? containerDom.innerHTML : "<ol></ol>"
         }
         if (storeHtml !== domHtml) {
