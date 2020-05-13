@@ -15,10 +15,21 @@
     min-height: 316px;
     max-height: 325px;
     overflow-y: auto;
-    padding-right: 10px;
-    margin-right: 4px;
+    /* padding-right: 10px; */
+    margin-right: 5px;
     border-top: 2px #EEEEEE solid;
   }
+
+  .main-div.has-search {
+    min-height: 302px;
+    max-height: 308px;
+  }
+
+  .main-div.item-table{
+    min-height: 388px;
+    max-height: 388px;
+  }
+
   button:disabled,
   button[disabled] {
     opacity: 0.65; 
@@ -38,7 +49,7 @@
   }
   .table-class {
     border-collapse: collapse;
-    width: 95% !important;
+    width: 96% !important;
     line-height: 1.4em;
     border-top: none;
     font-family: Open Sans, sans-serif;
@@ -67,14 +78,15 @@
   }
   .td-class.sort-icon{
     display: inline-block;
-    /* width: 6.5%; */width: 22.5%;
-    color: black;
-    float: left;
-    margin-left: -3px;
+    /* width: 6.5%; */
+    /* width: 8.5%; */
+    /* color: black; */
+    /* float: left; */
+    margin-left: -4px;
     border: none !important;
-    text-align: center;
-    margin-bottom: 11px;
-    margin-top: 0px;
+    /* text-align: center; */
+    /* margin-bottom: 11px; */
+    margin-top: -9px;
   }
   .puf-footer {
     min-height: 57px;
@@ -154,11 +166,11 @@
  }
  .sort-icon{
   background-color: white;
-  height: 10px;
+  height: 12px;
   width: 0px;
   float: left;
-  margin-left: 3px;
-  margin-top: 8px;
+  margin-left: 18px;
+  margin-top: 0px;
   cursor: pointer;
  }
  .elm-navigate-back-icon{
@@ -177,16 +189,17 @@
  }
 
 /** --------------------------------------------AssessmentSearchBar CSS-------------------------------------------- **/
-.learnosity {
+.learnosity-search-block {
   /* border-bottom: 1px solid black; */
 }
-.learnosity .filter-container{
+.learnosity-search-block .filter-container{
   margin: 11px 50px 11px 20px;
   background-color: #f5f5f5;
   width: 94%;
   box-sizing: border-box;
 }
-.learnosity .title-block {
+
+.learnosity-search-block .title-block {
   width: 100%;
   /* margin: 11px 20px 11px 20px; */
   /* width: 80%; */
@@ -197,11 +210,18 @@
   background-color: #ffffff;
   padding: 9px 8px 9px 8px;
 }
-.learnosity .input-title1 {
+.label-title{
+  font-family: Open Sans,sans-serif;
+  font-size: 12px;
+  letter-spacing: .17px;
+  color: #252525;
+  margin: 0 3px 0 0;
+}
+.learnosity-search-block .input-title1 {
   /* margin-right: 20px; */
   outline: none;
 }
-.learnosity .filter-block {
+.learnosity-search-block .filter-block {
   width: 100%;
   margin: 11px 20px 11px 20px;
   width: 80%;
@@ -212,7 +232,7 @@
   /* background-color: #ffffff; */
   /* padding: 9px 8px 9px 8px; */
 }
-.learnosity .search-block {
+.learnosity-search-block .search-block {
   font-family: 'Open Sans', sans-serif;
   display: inline-block;
   width: 9%;
@@ -224,12 +244,12 @@
   letter-spacing: normal;
   color: #333333;
 }
-.learnosity .noSelect {
+.learnosity-search-block .noSelect {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   user-select: none;
 }
-.learnosity  label.labelTitle,.learnosity input.input-title1 {
+.learnosity input.input-title1 {
   position: relative;
   /* display: block; */
   /* padding-right: 76px; */
@@ -237,7 +257,7 @@
   box-sizing: border-box;
 }
 
-.learnosity .labelTitle::after {
+.learnosity-search-block .labelTitle::after {
   /* content: attr(data-domain); */
   position: absolute;
   top: 2px;
@@ -249,24 +269,20 @@
   font-weight: bold;
 }
 
-/** -------------------------------------------------------------------------------------------------------------- **/
+/** -------------------------------------------ELM Assesment Picker Scrollbar CSS--------------------------------------------------- **/
 
 .elm-wrapper .main-div::-webkit-scrollbar-track {
-  /* box-shadow: inset 0 0 8px grey; */
-  /* -webkit-box-shadow: inset 0 0 8px grey; */
   border-radius: 7px;
   background-color: #F5F5F5;
 }
 
 .elm-wrapper .main-div::-webkit-scrollbar {
-  width: 5px;
+  width: 6px;
   background-color: #F5F5F5;
 }
 
 .elm-wrapper .main-div::-webkit-scrollbar-thumb {
   border-radius: 7px;
-  /* box-shadow: inset 0 0 8px grey; */
-  /* -webkit-box-shadow: inset 0 0 8px grey; */
   background-color: #555;
 }
 

@@ -420,7 +420,7 @@ class ElmTableComponent extends Component {
                     <td className='td-class' key={index} onClick={(e) => { this.showNewValueList(e, item.urn) }}>
                         <div className="desc-box">{this.getFolderLabel(item.type)} <span className="folder-icon"></span> </div>
                         <b className="elm-text-folder">{item.title}</b></td>
-                    {/* <td className='td-class'>{item.urn}</td> */}
+                    <td className='td-class'></td>
                 </tr>}
             </tbody>
         }
@@ -446,6 +446,7 @@ class ElmTableComponent extends Component {
 
     render() {
         const { isLoading } = this.props.elmReducer;
+        let isPuf = this.props.activeAssessmentType == FULL_ASSESSMENT_PUF || this.props.activeAssessmentType == PUF; 
         {
             if (this.props.elmReducer.errFlag == true) {
                 return <ElmError elmErrorProps={this.elmErrorProps} />
@@ -457,8 +458,8 @@ class ElmTableComponent extends Component {
                                 <div className="elm-navigate-back-icon" onClick={this.navigateBack} >{elmNavigateBack}</div> : null}
                             <p className="title-header">{this.state.parentTitle}</p>
                         </div>
-                        {((this.props.activeAssessmentType == FULL_ASSESSMENT_PUF || this.props.activeAssessmentType == PUF) && (this.state.openItemTable == false)) ? <AssessmentSearchBar filterAssessmentData={this.searchAssessmentData} assessmentType={'learnosity'}/> : null}
-                        <div className='main-div'>
+                        {((isPuf) && (this.state.openItemTable == false)) ? <AssessmentSearchBar filterAssessmentData={this.searchAssessmentData} assessmentType={'learnosity'} titleFocus={true}/> : null}
+                        <div className={`main-div ${isPuf && (this.state.openItemTable == false)? 'has-search':this.state.openItemTable == true? 'item-table': ''}`}>
                             {(this.state.openItemTable == true && isLoading == true)? <div className="elm-loader"></div> : ""}
                             {(!this.props.elmReducer.itemErrorFlag && this.props.elmReducer.itemApiStatus != 200 && this.state.openItemTable == true && isLoading == false) ?
                                 <ElmError elmErrorProps={this.elmErrorProps} itemErrorStatus={this.props.elmReducer.itemApiStatus}/>
@@ -470,7 +471,7 @@ class ElmTableComponent extends Component {
                                                 <td className='td-class sort-icon'>Title</td>
                                                 <div className="sort-icon" onClick={() => this.setSort()}>{this.state.sortIcon}</div>
                                             </th>
-                                            <th className='row-class'>Assessment Id</th>
+                                            <th className='row-class'>Assessment ID</th>
                                         </thead>
                                         {this.state.tableValue.map((item, index) => {
                                             return this.setElmTableJsx(item, index, this.state.openedFrom)
