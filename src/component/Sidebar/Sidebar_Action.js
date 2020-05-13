@@ -299,7 +299,6 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
 
         let activeElementObject = {
             elementId: res.data.id,
-            // elementId: newElementData.elementId,
             index: indexes.join("-"),
             elementType: newElementData.elementType,
             primaryOption: newElementData.primaryOption,
@@ -315,18 +314,24 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             payload: store
         });
 
+        /**
+         * PCAT-7902 || ShowHide - Content is removed completely when clicking the unordered list button twice.
+         * Setting the correct active element to solve this issue.
+         */
+        if(showHideObj && res.data.type === "element-authoredtext"){
+            activeElementObject = {
+                ...activeElementObject,
+                primaryOption: "primary-paragraph",
+                secondaryOption: "secondary-paragraph",
+                tag: "P",
+                toolbar: [],
+                elementWipType: "element-authoredtext"
+            }
+        }
         dispatch({
             type: SET_ACTIVE_ELEMENT,
             payload: activeElementObject
         });
-
-        if(activeElementObject.primaryOption === "primary-showhide"){
-           let showHideRevealElement = document.getElementById(`cypress-${indexes[0]}-2-0`)
-           if(showHideRevealElement){
-                showHideRevealElement.focus()
-                showHideRevealElement.blur()
-           } 
-        }
     })
     
     .catch(err =>{
