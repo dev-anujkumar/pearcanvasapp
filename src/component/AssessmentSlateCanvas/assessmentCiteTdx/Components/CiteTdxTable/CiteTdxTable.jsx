@@ -6,8 +6,8 @@ import { connect } from 'react-redux';
 import { elmAssessmentItem } from './../../../../../images/ElementButtons/ElementButtons.jsx';
 import CiteLoader from './../CiteLoader/CiteLoader.jsx';
 import moment from 'moment'
-import {elmSortDown, elmSortUp } from './../../../../../images/ElementButtons/ElementButtons.jsx';
-import { getCiteTdxData, assessmentSorting, setCurrentCiteTdx } from './../../Actions/CiteTdxActions.js'
+import { elmSortDown, elmSortUp } from './../../../../../images/ElementButtons/ElementButtons.jsx';
+import { getCiteTdxData, assessmentSorting, setCurrentCiteTdx, specialCharacterDecode } from './../../Actions/CiteTdxActions.js'
 
 class CiteTdxTable extends Component {
     constructor(props) {
@@ -107,7 +107,7 @@ class CiteTdxTable extends Component {
                                                 <td className="td-class">
                                                     <input type="radio" className="radio-button" name="assessment-radio" value={item.versionUrn} onClick={() => this.addAssessment(item)} checked={this.props.currentAssessmentSelected.versionUrn=== item.versionUrn} />
                                                     <span className="elmAssessmentItem-icon">{elmAssessmentItem}</span>
-                                                    <span className="assessment-titles" title={item.name}>{item.name}</span>
+                                                    <span className="assessment-titles" title={specialCharacterDecode(item.name)}>{specialCharacterDecode(item.name)}</span>
                                                 </td>
                                                 <td><span className="assessment-type">{this.props.assessmentType === "Full Assessment CITE" ? "CITE" : this.props.assessmentType === "Full Assessment TDX"? "TDX" : "MMI"}</span></td>
                                                 <td><span className="modifiedby-date" title={item.modifiedDate ? moment(item.modifiedDate).format('DD MMM YYYY, hh:MMA') : ""}>{item.modifiedDate ? moment(item.modifiedDate).format('DD MMM YYYY, hh:MMA') : 'NA'}</span></td>
