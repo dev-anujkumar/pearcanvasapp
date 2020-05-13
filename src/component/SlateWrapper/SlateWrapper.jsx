@@ -18,7 +18,7 @@ import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
 import config from '../../config/config';
 import { TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER, WORKED_EXAMPLE, SECTION_BREAK, METADATA_ANCHOR, LO_LIST, ELEMENT_ASSESSMENT, OPENER,
     ALREADY_USED_SLATE , REMOVE_LINKED_AUDIO, NOT_AUDIO_ASSET, SPLIT_SLATE_WITH_ADDED_AUDIO , ACCESS_DENIED_CONTACT_ADMIN, IN_USE_BY, LOCK_DURATION, SHOW_HIDE,POP_UP ,
-    CITATION, ELEMENT_CITATION,SMARTLINK,POETRY ,STANZA, BLOCKCODE, TABLE_ELEM, FIGURE_MML} from './SlateWrapperConstants';
+    CITATION, ELEMENT_CITATION,SMARTLINK,POETRY ,STANZA, BLOCKCODE, TABLE_EDITOR, FIGURE_MML} from './SlateWrapperConstants';
 import PageNumberElement from './PageNumberElement.jsx';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
@@ -643,9 +643,6 @@ class SlateWrapper extends Component {
             case 'stanza-elem':
                 this.props.createElement(STANZA, indexToinsert, parentUrn,null,null,null,null,poetryData);
                 break;
-            /*
-            Work in Progress
-            */
             case 'figure-mml-elem':
                 this.props.createElement(FIGURE_MML, indexToinsert, parentUrn,null,null,null,null,poetryData);
                 break;
@@ -653,7 +650,7 @@ class SlateWrapper extends Component {
                 this.props.createElement(BLOCKCODE, indexToinsert, parentUrn,null,null,null,null,poetryData);
                 break;
             case 'table-editor-elem-button':
-                this.props.createElement(TABLE_ELEM, indexToinsert, parentUrn,null,null,null,null,poetryData);
+                this.props.createElement(TABLE_EDITOR, indexToinsert, parentUrn,null,null,null,null,poetryData);
                 break;
             case 'text-elem':
             default:
@@ -694,7 +691,6 @@ class SlateWrapper extends Component {
                 tooltipText: 'Interactive',
                 tooltipDirection: 'left'
             },
-            //Work in Progress
             {
                 buttonType: 'table-editor-elem-button',
                 buttonHandler: () => this.splithandlerfunction('table-editor-elem-button', index, firstOne, parentUrn, asideData ),
