@@ -4,7 +4,7 @@
 import React, { Component } from 'react';
 import '../../../../../styles/AssessmentSlateCanvas/assessmentCiteTdx/RootCiteTdxComponent.css';
 import { elmNavigateBack } from './../../../../../images/ElementButtons/ElementButtons.jsx';
-import { filterCiteTdxData, getCiteTdxData, setCurrentCiteTdx, setCurrentInnerCiteTdx } from './../../Actions/CiteTdxActions.js'
+import { filterCiteTdxData, getCiteTdxData, setCurrentCiteTdx, setCurrentInnerCiteTdx, specialCharacterDecode } from './../../Actions/CiteTdxActions.js'
 import { connect } from 'react-redux';
 
 class FilterAssessmentData extends Component {
@@ -76,7 +76,7 @@ class FilterAssessmentData extends Component {
                         {this.props.setCurrentAssessment && this.props.setCurrentAssessment.title && this.props.setCurrentAssessment.id && this.props.openedFrom === "singleSlateAssessmentInner" &&
                             <div className="assessemnt-title-container">
                                 <div className="elm-navigate-back-icon" onClick={this.props.assessmentNavigateBack} >{elmNavigateBack}</div>
-                                <div className="assessment-title">{this.props.setCurrentAssessment.title}</div>
+                                <div className="assessment-title">{specialCharacterDecode(this.props.setCurrentAssessment.title)}</div>
                             </div>
                         }
                         {!this.props.setCurrentAssessment &&
