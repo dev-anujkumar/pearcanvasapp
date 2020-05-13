@@ -477,6 +477,11 @@ class ElementContainer extends Component {
                 tempDiv.innerHTML = html;
                 //tinyMCE.$(tempDiv).find('.blockquote-hidden').remove();
                 html = tempDiv.innerHTML;
+                 /** [BG-2293 - mathML/chemML is not captured in postertextobject field in show-hide */
+                    if (parentElement.type == "showhide" && index && showHideType == 'postertextobject' && html.match(/<img/)) {
+                        tinyMCE.$(tempDiv).find('br').remove()
+                        tinyMCE.$(html).find('br').remove()
+                    }
                 let poetryData;
                 if(parentElement && parentElement.type === "poetry"){
                     poetryData = {
