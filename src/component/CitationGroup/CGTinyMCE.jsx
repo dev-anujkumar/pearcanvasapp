@@ -17,7 +17,7 @@ const CGTinyMCE = (props) => {
         permissions : context.permissions,
         element : context.element,
         index : `${context.index}-0`,
-        className : "citationTitle",
+        className : "citationTitle formatted-text",
         id : context.id,
         placeholder : "Enter Title...",
         tagName : 'h4',
