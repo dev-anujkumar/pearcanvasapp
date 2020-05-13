@@ -212,8 +212,9 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
         page = config.totalPageCount;
     }
     config.page = page;
-    dispatch(projectLevelTCMData())
-    setTimeout( ()=>{dispatch(handleTCMData(manifestURN))}, 10000) 
+     /** Project level and element level TCM status */
+    dispatch(projectLevelTCMData());
+    dispatch(handleTCMData(manifestURN));
     return axios.get(`${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}`, {
         headers: {
             "Content-Type": "application/json",

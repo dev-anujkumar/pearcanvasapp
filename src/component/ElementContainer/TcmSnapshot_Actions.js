@@ -17,18 +17,17 @@ export const handleTCMData = (slateManifestUrn) => (dispatch, getState) => {
         }
     }).then((response) => {
         if (response && response.data && response.data.elements) {
-            let pendingTCMStatus = response.data.elements.some(function (elem) {
-                if (elem.txCnt > 0) { return true; }
-            });
-              /** Show Red Dot in header if have any pending TCM status for element*/
-            if (pendingTCMStatus) {
-                sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });
-            }
-            console.log(result, "arora")
             dispatch({
                 type: GET_TCM_RESOURCES,
                 payload: {
                     data: response.data.elements
+                }
+            });
+            /** Show Red Dot in header if have any pending TCM status for element*/
+            response.data.elements.some(function (elem) {
+                if (elem.txCnt > 0) {
+                    sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });
+                    return true;
                 }
             });
         }
