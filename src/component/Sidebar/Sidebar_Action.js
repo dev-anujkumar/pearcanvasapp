@@ -81,7 +81,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             assessmentItemType = "tdxAssessmentItem";
         }
         // oldElementData['html']['title'] = "";
-        oldElementData.figuredata.id = "";                                              //PCAT-6792 fixes
+        // oldElementData.figuredata.id = "";                                           //PCAT-6792 fixes
         // oldElementData.figuredata.elementdata.posterimage.imageid = "";              //PCAT-7961 fixes
         oldElementData.figuredata.elementdata.assessmentid = "";
         oldElementData.figuredata.elementdata.assessmentitemid = "";
@@ -89,6 +89,10 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         oldElementData.figuredata.elementdata.assessmentitemtype=assessmentItemType;
         oldElementData && oldElementData.html && oldElementData.html.title ? oldElementData.html.title ="": null;
         oldElementData && oldElementData.title && oldElementData.title.text ? oldElementData.title.text ="": null;
+        /** [PCAT-7961] | case(1) - As no unique figuredata.id is present for the assessment,the  'figuredata.id' key is removed */
+        if (oldElementData && oldElementData.figuredata && (oldElementData.figuredata.id || oldElementData.figuredata.id=="")) {
+            delete oldElementData.figuredata.id;
+        }
         /** [PCAT-7961] | case(2) - As no image is present for the assessment,the  'posterimage' key is removed */
         let isPosterImage = oldElementData && oldElementData.figuredata && oldElementData.figuredata.elementdata && oldElementData.figuredata.elementdata.posterimage
         if(isPosterImage){
@@ -110,6 +114,9 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         let domHtml = editableDom ? editableDom.innerHTML : "<ol></ol>"
         if(showHideObj){
             containerDom = document.getElementById(`cypress-${showHideObj.index}`)
+            if(containerDom){
+                tinyMCE.$(containerDom).find('ol').removeAttr('data-mce-style')
+            }
             domHtml = containerDom ? containerDom.innerHTML : "<ol></ol>"
         }
         if (storeHtml !== domHtml) {
@@ -299,7 +306,6 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
 
         let activeElementObject = {
             elementId: res.data.id,
-            // elementId: newElementData.elementId,
             index: indexes.join("-"),
             elementType: newElementData.elementType,
             primaryOption: newElementData.primaryOption,
@@ -315,18 +321,24 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             payload: store
         });
 
+        /**
+         * PCAT-7902 || ShowHide - Content is removed completely when clicking the unordered list button twice.
+         * Setting the correct active element to solve this issue.
+         */
+        if(showHideObj && res.data.type === "element-authoredtext"){
+            activeElementObject = {
+                ...activeElementObject,
+                primaryOption: "primary-paragraph",
+                secondaryOption: "secondary-paragraph",
+                tag: "P",
+                toolbar: [],
+                elementWipType: "element-authoredtext"
+            }
+        }
         dispatch({
             type: SET_ACTIVE_ELEMENT,
             payload: activeElementObject
         });
-
-        if(activeElementObject.primaryOption === "primary-showhide"){
-           let showHideRevealElement = document.getElementById(`cypress-${indexes[0]}-2-0`)
-           if(showHideRevealElement){
-                showHideRevealElement.focus()
-                showHideRevealElement.blur()
-           } 
-        }
     })
     
     .catch(err =>{

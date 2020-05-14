@@ -1928,20 +1928,21 @@ export class TinyMceEditor extends Component {
         }
         let currentActiveNode = null
         let activeContainerNode = document.querySelector('div .active')
-        let activeShowHideNode = document.querySelector('.show-hide-active .cypress-editable')
-        if(activeContainerNode){
-            currentActiveNode = activeContainerNode
-        }
-        else if(activeShowHideNode){
-            currentActiveNode = activeShowHideNode
-        }
-        let currentElementId = this.props.currentElement && !this.props.className.includes('formatted-text') ? this.props.currentElement.id : this.props.element.id
-        if(this.props && this.props.className.includes('formatted-text')){
+        // let activeShowHideNode = document.querySelector('.show-hide-active .cypress-editable')
+        // if(activeContainerNode){
+        //     currentActiveNode = activeContainerNode
+        // }
+        // else if(activeShowHideNode){
+        //     currentActiveNode = activeShowHideNode
+        // }
+        let currentElementId = this.props.currentElement && this.props.currentElement.type == "element-citation" ? this.props.currentElement.id : this.props.element.id
+        // let currentElementId = this.props.currentElement && !this.props.className.includes('formatted-text') ? this.props.currentElement.id : this.props.element.id
+        // if(this.props && this.props.className.includes('formatted-text')){
             // document.getElementById(tinymce.activeEditor.id) && console.log("Doc",document.getElementById(tinymce.activeEditor.id))
             // let formattedTextField = document.querySelectorAll(`div .element-container.active .formatted-text`)
             // formattedTextField && console.log("formattedTextField",formattedTextField)
-            console.log(3333)
-        }
+            // console.log(3333)
+        // }
         if (currentActiveNode && currentActiveNode.getAttribute('data-id') === currentElementId) {
             isSameByElementId = true;
             console.log(2222)
@@ -2044,10 +2045,9 @@ export class TinyMceEditor extends Component {
                         (tinyMCE.$("#" + currentTarget.id).html()).search(/^(<br.*>)+$/g) >= 0) {
                         termText = tinyMCE.$("#" + currentTarget.id).html();
                     }
-                    console.log(1111)
                     /* Reverting data-temp-mathml to data-mathml and class Wirisformula to temp_WirisFormula */
-                    termText = termText.replace(/data-temp-mathml/g,'data-mathml').replace(/temp_Wirisformula/g,'Wirisformula');
-                    document.getElementById(currentTarget.id).innerHTML = termText;
+                    termText = termText.replace(/data-temp-mathml/g, 'data-mathml').replace(/temp_Wirisformula/g, 'Wirisformula');
+                    document.getElementById(currentTarget.id).innerHTML = termText
                 }
                 if (clickedX !== 0 && clickedY !== 0) {
                     tinymce.activeEditor.selection.placeCaretAt(clickedX, clickedY) //Placing exact cursor position on clicking.
