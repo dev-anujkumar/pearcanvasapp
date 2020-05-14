@@ -374,8 +374,14 @@ export const generateAssessmentData = (index, previousElementData, elementType, 
     
 
     dataToSend.figuredata.elementdata.assessmentid = getAsid ? getAsid : "";
-    dataToSend.figuredata.id = getAsid ? getAsid : "";                             //PCAT-6792 fixes
-    dataToSend.figuredata.elementdata.posterimage.imageid = getAsid ? getAsid : ""; //PCAT-6792 fixes
+    dataToSend.figuredata.id = getAsid ? getAsid : "";   //PCAT-6792 fixes
+
+    /** [PCAT-7961] | case(2) - As no image is present for the assessment,the  'posterimage' key is removed */
+    let isPosterImage = previousElementData && previousElementData.figuredata && previousElementData.figuredata.elementdata && previousElementData.figuredata.elementdata.posterimage                          
+    if(isPosterImage){
+         delete previousElementData.figuredata.elementdata.posterimage
+    }
+    // dataToSend.figuredata.elementdata.posterimage.imageid = getAsid ? getAsid : ""; //PCAT-6792 fixes
 
     let usageType = document.querySelector(assessmentNodeSelector + 'span.singleAssessment_Dropdown_currentLabel').innerText;
     dataToSend.figuredata.elementdata.usagetype = usageType;
