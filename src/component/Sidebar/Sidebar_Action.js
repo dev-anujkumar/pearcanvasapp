@@ -81,7 +81,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             assessmentItemType = "tdxAssessmentItem";
         }
         // oldElementData['html']['title'] = "";
-        oldElementData.figuredata.id = "";                                              //PCAT-6792 fixes
+        // oldElementData.figuredata.id = "";                                           //PCAT-6792 fixes
         // oldElementData.figuredata.elementdata.posterimage.imageid = "";              //PCAT-7961 fixes
         oldElementData.figuredata.elementdata.assessmentid = "";
         oldElementData.figuredata.elementdata.assessmentitemid = "";
@@ -89,6 +89,10 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         oldElementData.figuredata.elementdata.assessmentitemtype=assessmentItemType;
         oldElementData && oldElementData.html && oldElementData.html.title ? oldElementData.html.title ="": null;
         oldElementData && oldElementData.title && oldElementData.title.text ? oldElementData.title.text ="": null;
+        /** [PCAT-7961] | case(1) - As no unique figuredata.id is present for the assessment,the  'figuredata.id' key is removed */
+        if (oldElementData && oldElementData.figuredata && (oldElementData.figuredata.id || oldElementData.figuredata.id=="")) {
+            delete oldElementData.figuredata.id;
+        }
         /** [PCAT-7961] | case(2) - As no image is present for the assessment,the  'posterimage' key is removed */
         let isPosterImage = oldElementData && oldElementData.figuredata && oldElementData.figuredata.elementdata && oldElementData.figuredata.elementdata.posterimage
         if(isPosterImage){
