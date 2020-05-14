@@ -71,14 +71,26 @@ class ElmTableComponent extends Component {
     }
 
     searchAssessmentData = (assessmentType, searchAssessmentTitle) => {
-        // this.()
         let searchResults = [];
         searchResults = searchAndFilterAssessmentData(assessmentType, searchAssessmentTitle, this.props.elmReducer.elmData)
-        console.log("state vars", this.state.parentUrn, this.state.parentTitle)
+        // console.log("state vars", this.state.parentUrn, this.state.parentTitle)
         console.log("searchResults", searchResults)
-        return this.setState({
-            tableValue: searchResults
-        })
+        if(searchAssessmentTitle.trim()!=""){
+            if(searchResults.length!=0){
+                return this.setState({
+                    tableValue: searchResults
+                })
+            }else{
+                return this.setState({
+                    tableValue: []
+                })
+            }
+        }else{
+            let parent= this.setParentUrn(JSON.stringify(this.props.elmReducer.elmData),this.props.setCurrentSlateAncestorData)
+            this.filterData(false, parent, this.props.elmReducer.elmData);
+        }
+
+
     }
 
     /*** @description - This function is to render elm table data
@@ -98,7 +110,7 @@ class ElmTableComponent extends Component {
                 this.filterData(false, parent, elmData);
             }
         }
-        else if (!itemErrorFlag && elmItemData && elmLoading==false && (config.parentContainerUrn || (config.parentLabel=="frontmatter"||config.parentLabel=="backmatter"))) {
+        else if ((!itemErrorFlag && elmItemData && elmLoading==false) || (config.parentContainerUrn || (config.parentLabel=="frontmatter"||config.parentLabel=="backmatter"))) {
             if(config.parentLabel=="frontmatter"||config.parentLabel=="backmatter"){
              this.filterData(true, config.projectUrn,elmItemData)
             }else{
@@ -210,6 +222,7 @@ class ElmTableComponent extends Component {
                             title = assessments.title.en
                         }
                         if(assessments && assessments.type && assessments.type !="assessmentItem"){
+                            console.log("state vars",assessments.urn)
                             this.preparedData.push({ "type": assessments.type? assessments.type:"assessment", "urn": assessments.urn, "assessmentTitle": title, "parentUrn": parentUrn, previousUrn: data.versionUrn }) // "assessment" is added as type for resources where type-key is missing
                         }
                     })
@@ -406,7 +419,7 @@ class ElmTableComponent extends Component {
             elmIcon = item.type == "assessment" ? elmAssessmentItem : singleAssessmentItemIcon;
         if ((item.type == "assessment" || item.type == "assessmentitem") && item.urn.includes("work")) {
             elmTableBody = <tbody key={index}>
-                <tr className={`row-class ${this.state.isActive === index ? 'select':'not-select'}`} onClick={() => this.toggleActive(index)}>
+                <tr className={`row-class assessment-title ${this.state.isActive === index ? 'select':'not-select'}`} onClick={() => this.toggleActive(index)}>
                     <td className='td-class' key={index} onClick={() => this.handleClickAssessment(item, item.type, openedFrom)}>
                         <span className="elmAssessmentItem-icon">{elmIcon}</span>
                         <b className="elm-text-assesment">{item.assessmentTitle ? item.assessmentTitle : item.urn}</b>
@@ -458,20 +471,20 @@ class ElmTableComponent extends Component {
                                 <div className="elm-navigate-back-icon" onClick={this.navigateBack} >{elmNavigateBack}</div> : null}
                             <p className="title-header">{this.state.parentTitle}</p>
                         </div>
-                        {((isPuf) && (this.state.openItemTable == false)) ? <AssessmentSearchBar filterAssessmentData={this.searchAssessmentData} assessmentType={'learnosity'} titleFocus={true}/> : null}
-                        <div className={`main-div ${isPuf && (this.state.openItemTable == false)? 'has-search':this.state.openItemTable == true? 'item-table': ''}`}>
+                        {((!isPuf) && (this.state.openItemTable == false)) ? <AssessmentSearchBar filterAssessmentData={this.searchAssessmentData} assessmentType={'learnosity'} titleFocus={true}/> : null}
+                        <div className={`main-div ${(!isPuf) && (this.state.openItemTable == false)? 'has-search':this.state.openItemTable == true? 'item-table': ''}`}>
                             {(this.state.openItemTable == true && isLoading == true)? <div className="elm-loader"></div> : ""}
-                            {(!this.props.elmReducer.itemErrorFlag && this.props.elmReducer.itemApiStatus != 200 && this.state.openItemTable == true && isLoading == false) ?
+                            {!this.props.elmReducer.itemErrorFlag && this.props.elmReducer.itemApiStatus != 200 && this.state.openItemTable == true && isLoading == false && this.state.tableValue.length ?
                                 <ElmError elmErrorProps={this.elmErrorProps} itemErrorStatus={this.props.elmReducer.itemApiStatus}/>
                                 :
-                                (this.state.openItemTable == true && isLoading == false) || (this.state.openItemTable == false) ?
+                               ( (this.state.openItemTable == true && isLoading == false) || (this.state.openItemTable == false)) ?
                                     <table className='table-class'>
                                         <thead>
-                                            <th className='row-class'>
+                                            <th className='row-class assessment-title'>
                                                 <td className='td-class sort-icon'>Title</td>
                                                 <div className="sort-icon" onClick={() => this.setSort()}>{this.state.sortIcon}</div>
                                             </th>
-                                            <th className='row-class'>Assessment ID</th>
+                                            <th className='row-class assessment-id'>Assessment ID</th>
                                         </thead>
                                         {this.state.tableValue.map((item, index) => {
                                             return this.setElmTableJsx(item, index, this.state.openedFrom)

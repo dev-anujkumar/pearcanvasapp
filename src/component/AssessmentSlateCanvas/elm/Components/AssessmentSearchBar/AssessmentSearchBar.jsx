@@ -9,10 +9,10 @@ export const AssessmentSearchBar = (props) => {
     const [searchAssessmentTitle, setSearchAssessmentTitle] = useState('');
     const [titleFocus, setTitleFocus] = useState(false);
 
-    useEffect(() => {
-        let setFocus = props.titleFocus ? true : false;
-        setTitleFocus(setFocus)
-    }, [props.titleFocus]);
+    // useEffect(() => {
+    //     let setFocus = props.titleFocus ? true : false;
+    //     setTitleFocus(setFocus)
+    // }, [props.titleFocus]);
 
     const handleBlur = (event) => {
         let id = event.target.id;
@@ -49,12 +49,12 @@ export const AssessmentSearchBar = (props) => {
                 <form>
                     <>
                         <div className="filter-block">
-                            <div className="title-block">
-                                {titleFocus && <label className="label-title">Title:</label>}
+                            <div className="title-block">                                
                                 <i class="fa fa-search"></i>
+                                {titleFocus && <label className="label-title">Title:</label>}
                                 <input
                                     type="text"
-                                    // autoComplete="on"
+                                    autoComplete="on"
                                     id="inputTitle"
                                     className="input-title1"
                                     name="searchAssessment"

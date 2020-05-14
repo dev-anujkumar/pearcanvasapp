@@ -88,7 +88,12 @@ export const searchAndFilterAssessmentData = (assessmentType, searchAssessmentTi
     let tableData = []
     preparedData = []
     console.time("factorial test");
-    tableData = filterAssessmentsFromApiData(apiData, "", searchAssessmentTitle)
+    if(searchAssessmentTitle.trim()!=""){
+        tableData = filterAssessmentsFromApiData(apiData, "", searchAssessmentTitle)
+    }else{
+        tableData = [] 
+    }
+
     console.timeEnd("factorial test");
     // return dispatch({
     //     type:"FILTER_ASSESSMENT_DATA",
@@ -108,9 +113,9 @@ const filterAssessmentsFromApiData = (data, parentUrn, searchAssessmentTitle) =>
                         title = assessments.title.en
                     }
                     const result = preparedData.find(({ urn }) => urn === assessments.urn);
-                    console.log("indexOf", assessments.urn, preparedData.indexOf(assessments.urn))
+                    // console.log("indexOf", assessments.urn, preparedData.indexOf(assessments.urn))
                     if (assessments && assessments.type && assessments.type !== "assessmentItem") {
-                        if (title.includes(searchAssessmentTitle) && result == undefined) {
+                        if (title.toLowerCase().includes(searchAssessmentTitle.toLowerCase()) && result == undefined) {
                             preparedData.push({ "type": assessments.type ? assessments.type : "assessment", "urn": assessments.urn, "assessmentTitle": title, "parentUrn": parentUrn, previousUrn: data.versionUrn }) // "assessment" is added as type for resources where type-key is missing
                         }
                     }

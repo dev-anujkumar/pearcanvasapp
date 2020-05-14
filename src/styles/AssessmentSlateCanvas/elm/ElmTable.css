@@ -5,6 +5,12 @@
     color: grey;
     height: 15px;
   }
+  .assessment-id{
+    text-align:left;
+  }
+  .assessment-title{
+    width:400px;
+  }
   .row-class.select{
     background-color: #dbf2e0;
   }
@@ -12,8 +18,8 @@
    background-color: white;
   }
   .main-div {
-    min-height: 316px;
-    max-height: 325px;
+    min-height: 360px;
+    max-height: 360px;
     overflow-y: auto;
     /* padding-right: 10px; */
     margin-right: 5px;
@@ -66,7 +72,7 @@
     border-bottom: 0.5px solid #dddddd;
   }
   .th-class, .td-class {
-    padding:8px 10px !important;
+    padding:8px 8px !important;
     cursor: pointer;
     border:none;
   }
@@ -75,6 +81,7 @@
     border-left: none;
     border-right: none;
     border-top: none;
+    height: 40px;
   }
   .td-class.sort-icon{
     display: inline-block;
