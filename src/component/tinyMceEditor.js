@@ -1936,7 +1936,7 @@ export class TinyMceEditor extends Component {
             currentActiveNode = activeShowHideNode
         }
        
-        let currentElementId = this.props.currentElement && !currentTarget.classList.contains('formatted-text') ? this.props.currentElement.id : this.props.element.id
+        let currentElementId = this.props.currentElement && !(currentTarget && currentTarget.classList.contains('formatted-text')) ? this.props.currentElement.id : this.props.element.id
 
         if (currentActiveNode && currentActiveNode.getAttribute('data-id') === currentElementId) {
             isSameByElementId = true;
