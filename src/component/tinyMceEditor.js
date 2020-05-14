@@ -1928,24 +1928,18 @@ export class TinyMceEditor extends Component {
         }
         let currentActiveNode = null
         let activeContainerNode = document.querySelector('div .active')
-        // let activeShowHideNode = document.querySelector('.show-hide-active .cypress-editable')
-        // if(activeContainerNode){
-        //     currentActiveNode = activeContainerNode
-        // }
-        // else if(activeShowHideNode){
-        //     currentActiveNode = activeShowHideNode
-        // }
-        let currentElementId = this.props.currentElement && this.props.currentElement.type == "element-citation" ? this.props.currentElement.id : this.props.element.id
-        // let currentElementId = this.props.currentElement && !this.props.className.includes('formatted-text') ? this.props.currentElement.id : this.props.element.id
-        // if(this.props && this.props.className.includes('formatted-text')){
-            // document.getElementById(tinymce.activeEditor.id) && console.log("Doc",document.getElementById(tinymce.activeEditor.id))
-            // let formattedTextField = document.querySelectorAll(`div .element-container.active .formatted-text`)
-            // formattedTextField && console.log("formattedTextField",formattedTextField)
-            // console.log(3333)
-        // }
+        let activeShowHideNode = document.querySelector('.show-hide-active .cypress-editable')
+        if(activeContainerNode){
+            currentActiveNode = activeContainerNode
+        }
+        else if(activeShowHideNode){
+            currentActiveNode = activeShowHideNode
+        }
+       
+        let currentElementId = this.props.currentElement && !currentTarget.classList.contains('formatted-text') ? this.props.currentElement.id : this.props.element.id
+
         if (currentActiveNode && currentActiveNode.getAttribute('data-id') === currentElementId) {
             isSameByElementId = true;
-            console.log(2222)
         }
         /**
          * case - if tinymce already has an active editor then...
