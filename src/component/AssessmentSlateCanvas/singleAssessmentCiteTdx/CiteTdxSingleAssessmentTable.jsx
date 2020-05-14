@@ -3,7 +3,7 @@
 */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { setCurrentCiteTdx, setCurrentInnerCiteTdx } from '../../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
+import { setCurrentCiteTdx, setCurrentInnerCiteTdx, specialCharacterDecode } from '../../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
 import { singleAssessmentItemIcon } from './../../../images/ElementButtons/ElementButtons.jsx';
 import moment from 'moment'
 import CiteLoader from './../assessmentCiteTdx/Components/CiteLoader/CiteLoader.jsx';
@@ -55,7 +55,7 @@ class CiteTdxTable extends Component {
                                                 <td className="td-class">
                                                     <input type="radio" className="radio-button" name="assessment-radio" value={item.versionUrn} onClick={() => this.addAssessment(item)} checked={this.props.currentSingleAssessmentSelected.versionUrn=== item.versionUrn} />
                                                     <span className="elmAssessmentItem-icon">{singleAssessmentItemIcon}</span>
-                                                    <span className="assessment-titles" title={item.name}>{item.name}</span>
+                                                    <span className="assessment-titles" title={specialCharacterDecode(item.name)}>{specialCharacterDecode(item.name)}</span>
                                                 </td>
                                                 <td><span className="modifiedby-date" title={item.dateModified ? moment(item.dateModified).format('DD MMM YYYY, hh:MMA') : ""}>{item.dateModified ? moment(item.dateModified).format('DD MMM YYYY, hh:MMA') : "NA"}</span></td>
                                                 <td><span className="modifiedby-data" title={item.modifiedBy ? item.modifiedBy : ""}>{item.modifiedBy ? item.modifiedBy : "NA"}</span></td>
