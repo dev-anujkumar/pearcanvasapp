@@ -187,7 +187,9 @@ static getDerivedStateFromProps(nextProps, prevState) {
     addCiteTdxAssessment = (citeTdxObj, parentPageNo=1) => {
         showTocBlocker();
         disableHeader(true);
-        citeTdxObj.title = specialCharacterDecode(citeTdxObj.title)
+        if (citeTdxObj && citeTdxObj.title) {
+            citeTdxObj.title = specialCharacterDecode(citeTdxObj.title)
+        }
         if(citeTdxObj.slateType === "singleSlateAssessment"){
             this.setState({
                 showSinglePopup: true,
