@@ -51,7 +51,7 @@ const INITIAL_STATE = {
     accesDeniedPopup: false,
     popupSlateData: null,
     roleId: '',
-    oldImage: "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
+    oldImage: "",
     showHideId: "",
     parentUrn: {},
     asideData: {},

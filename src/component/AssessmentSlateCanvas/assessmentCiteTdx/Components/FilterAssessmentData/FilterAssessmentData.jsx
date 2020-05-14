@@ -4,20 +4,23 @@
 import React, { Component } from 'react';
 import '../../../../../styles/AssessmentSlateCanvas/assessmentCiteTdx/RootCiteTdxComponent.css';
 import { elmNavigateBack } from './../../../../../images/ElementButtons/ElementButtons.jsx';
-import { filterCiteTdxData, getCiteTdxData, setCurrentCiteTdx, setCurrentInnerCiteTdx } from './../../Actions/CiteTdxActions.js'
+import { filterCiteTdxData, getCiteTdxData, setCurrentCiteTdx, setCurrentInnerCiteTdx, specialCharacterDecode } from './../../Actions/CiteTdxActions.js'
 import { connect } from 'react-redux';
 
 class FilterAssessmentData extends Component {
-
     constructor(props) {
         super(props);
         this.state = {
             searchAssessment: props.searchTitle,
-            filterUUID: props.filterUUID
+            filterUUID: props.filterUUID,
+            assessTitleFocus: props.searchTitle ? true : false,
+            assessUUIDFocus:props.filterUUID ? true : false
         }
-
     }
-
+    /**
+     *
+     *@discription - This function is called when we click on search button
+    */
     handleSearch = e => {
         e.preventDefault();
         this.props.setCurrentCiteTdx({});
@@ -30,11 +33,39 @@ class FilterAssessmentData extends Component {
             this.props.getCiteTdxData(this.props.assessmentType, this.state.searchAssessment, this.state.filterUUID);
         }
     }
-
+    /**
+     *
+     *@discription - This function is called when we change or type in input field of title/UUID
+    */
     handleChange = (event) => {
         let name = event.target.name;
         let value = event.target.value;
         this.setState({ [name]: value });
+    }
+    /**
+     *
+     *@discription - This function is called on onblur to show label field
+    */
+    handleBlur = (event) => {
+        let id = event.target.id;
+        let getId = document.getElementById(id);
+        if (getId && getId.value.length === 0) {
+            this.setState({ [id]: false });
+        }
+        else {
+            this.setState({ [id]: true });
+        }
+    }
+    /**
+     *
+     *@discription - This function is called on onfoocus to show label field
+    */
+    handleFocus = (event) => {
+        let id = event.target.id;
+        let getId = document.getElementById(id);
+        if (getId && getId.value.length === 0) {
+            this.setState({ [id]: true });
+        }
     }
 
     render() {
@@ -45,27 +76,32 @@ class FilterAssessmentData extends Component {
                         {this.props.setCurrentAssessment && this.props.setCurrentAssessment.title && this.props.setCurrentAssessment.id && this.props.openedFrom === "singleSlateAssessmentInner" &&
                             <div className="assessemnt-title-container">
                                 <div className="elm-navigate-back-icon" onClick={this.props.assessmentNavigateBack} >{elmNavigateBack}</div>
-                                <div className="assessment-title">{this.props.setCurrentAssessment.title}</div>
+                                <div className="assessment-title">{specialCharacterDecode(this.props.setCurrentAssessment.title)}</div>
                             </div>
                         }
                         {!this.props.setCurrentAssessment &&
                             <React.Fragment>
-                                <div className="filter-block">
-                                    <div className="title-block">
-                                        <i class="fa fa-search"></i>
-                                        <input autoComplete="on" name="searchAssessment" value={this.state.searchAssessment } onChange={this.handleChange} placeholder="Search by Title" />
-
-                                    </div>
-                                    <div className="filter-uuid" >
-                                        <input name="filterUUID" value={this.state.filterUUID} onChange={this.handleChange} placeholder="Filter by UUID" />
+                            <div className="filter-block">
+                                <div className="title-block" >
+                                    <i class="fa fa-search"></i>
+                                    <div className="flex-container">
+                                        <div className="input-Container">
+                                            {this.state.assessTitleFocus && <label>Title:</label>}
+                                            <input type="text" id="assessTitleFocus" autoComplete="on" name="searchAssessment" value={this.state.searchAssessment} onChange={this.handleChange} placeholder="Search by Title" onBlur={this.handleBlur} onFocus={this.handleFocus} />
+                                        </div>
                                     </div>
 
                                 </div>
-                                <div className="search-block">
-                                    <button className="search noSelect" onClick={this.handleSearch} >search</button>
+                                <div className="filter-uuid">
+                                    <div className="input-Container">
+                                        {this.state.assessUUIDFocus && <label>UUID:</label>}
+                                        <input type="text" id="assessUUIDFocus" name="filterUUID" value={this.state.filterUUID} onChange={this.handleChange} placeholder="Filter by UUID" onBlur={this.handleBlur} onFocus={this.handleFocus} />
+                                    </div>
                                 </div>
-
-
+                            </div>
+                            <div className="search-block">
+                                <button className="search noSelect" onClick={this.handleSearch} >search</button>
+                            </div>
                             </React.Fragment>
                         }
                     </form>
