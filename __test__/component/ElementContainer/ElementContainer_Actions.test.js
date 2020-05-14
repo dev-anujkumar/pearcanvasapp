@@ -73,18 +73,15 @@ describe('Tests ElementContainer Actions', () => {
                     response: response
                 });
             });
-            const expectedActions = [{
-                type: ADD_COMMENT,
-                payload: slateLevelData.slateLevelData
-            },
+            const expectedActions = [
             {
                 type: ADD_NEW_COMMENT,
                 payload: addNewComment
             }];
             slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].comments = true;
             return store.dispatch(actions.addComment(newComment.comment, elementId)).then(() => {
-                store.getActions()[1].payload && delete store.getActions()[1].payload['commentDateTime'];
-                expectedActions[1].payload && delete expectedActions[1].payload['commentDateTime'];
+                store.getActions()[0].payload && delete store.getActions()[0].payload['commentDateTime'];
+                expectedActions[0].payload && delete expectedActions[0].payload['commentDateTime'];
                 expect(store.getActions()).toEqual(expectedActions);
 
             });
@@ -113,10 +110,7 @@ describe('Tests ElementContainer Actions', () => {
             addNewComment.commentOnEntity = elementId;
             slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].comments = false;
             slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[1].elementdata.bodymatter[0].comments = true;
-            const expectedActions = [{
-                type: ADD_COMMENT,
-                payload: slateLevelData.slateLevelData
-            },
+            const expectedActions = [
             {
                 type: ADD_NEW_COMMENT,
                 payload: addNewComment
@@ -128,8 +122,8 @@ describe('Tests ElementContainer Actions', () => {
             }
 
             return store.dispatch(actions.addComment(newComment.comment, elementId, asideData)).then(() => {
-                store.getActions()[1].payload && delete store.getActions()[1].payload['commentDateTime'];
-                expectedActions[1].payload && delete expectedActions[1].payload['commentDateTime'];
+                store.getActions()[0].payload && delete store.getActions()[0].payload['commentDateTime'];
+                expectedActions[0].payload && delete expectedActions[0].payload['commentDateTime'];
                 expect(store.getActions()).toEqual(expectedActions);
 
             });
@@ -158,10 +152,7 @@ describe('Tests ElementContainer Actions', () => {
             addNewComment.commentOnEntity = elementId;
             slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].comments = false;
             slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[1].elementdata.bodymatter[0].comments = true;
-            const expectedActions = [{
-                type: ADD_COMMENT,
-                payload: slateLevelData.slateLevelData
-            },
+            const expectedActions = [
             {
                 type: ADD_NEW_COMMENT,
                 payload: addNewComment
@@ -175,10 +166,9 @@ describe('Tests ElementContainer Actions', () => {
                 manifestUrn: "urn:pearson:manifest:f0c610b8-337d-47b0-9680-83b73481289c"
             }
             return store.dispatch(actions.addComment(newComment.comment, elementId, asideData, parentUrn)).then(() => {
-                store.getActions()[1].payload && delete store.getActions()[1].payload['commentDateTime'];
+                store.getActions()[0].payload && delete store.getActions()[0].payload['commentDateTime'];
                 expectedActions.payload && delete expectedActions.payload['commentDateTime'];
                 expect(store.getActions()[0].type).toEqual(expectedActions[0].type);
-                expect(store.getActions()[1].type).toEqual(expectedActions[1].type);
 
             });
         })

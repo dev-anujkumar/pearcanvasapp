@@ -139,7 +139,7 @@ describe('testing SLATE LEVEL REDUCER cases -->', () => {
             }
         })).toEqual(output)
     });
-    it('case 4- ADD COMMENT', () => {
+    xit('case 4- ADD COMMENT', () => {
         let output = {
             ...initialState,
             slateLevelData: newslateData
