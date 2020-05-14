@@ -175,3 +175,43 @@ function specialCharacterEncode(title){
     return searchTitle;
 
 }
+
+/** [PCAT-7985] - Special Characters on Assesment Picker showing as hexcode rather than special characters.*/
+/**
+ *  @function specialCharacterDecode
+ *  @description - This function is to convert HTML code back to special characters
+ *  @param {String} encodedString - string to be converted
+ *  @returns {String} 
+*/
+export const specialCharacterDecode = (encodedString) => {
+    let decodedString = "";
+    if (encodedString) {
+        decodedString = decodeHtmlCharCodes(encodedString)
+        decodedString = escapeHtml(decodedString)
+        decodedString = decodedString.replace(/<\s*\/?br\s*[\/]?>/gi, "")
+    }
+    return decodedString;
+}
+
+const decodeHtmlCharCodes = (str) => {
+    return str.replace(/(&#(\d+);)/g, (match, capture, charCode) => {
+        return String.fromCharCode(charCode);
+    });
+}
+
+const escapeHtml = (str) => {
+    var specialCharList = {
+        '\\&nbsp;': " ",
+        '\\&lt;': "<",
+        '\\&gt;': ">",
+        '\\&euro;': "€",
+        '\\&pound;': "£",
+        "\\&quot;": '"',
+        "\\&apos;": "'",
+        "\\&amp;": "&"
+    };
+    for (let key in specialCharList) {
+        str = str.replace(new RegExp(key,"g") , specialCharList[key])
+    }
+    return str;
+}

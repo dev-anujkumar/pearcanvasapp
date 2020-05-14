@@ -11,7 +11,7 @@ import { hasReviewerRole, sendDataToIframe, setAssessmentTitle} from '../../cons
 import RootCiteTdxComponent from '../AssessmentSlateCanvas/assessmentCiteTdx/RootCiteTdxComponent.jsx';
 import {FULL_ASSESSMENT_CITE, FULL_ASSESSMENT_TDX} from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import RootSingleAssessmentComponent from '../AssessmentSlateCanvas/singleAssessmentCiteTdx/RootSingleAssessmentComponent.jsx'
-import { setCurrentCiteTdx, setCurrentInnerCiteTdx, assessmentSorting } from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
+import { setCurrentCiteTdx, setCurrentInnerCiteTdx, assessmentSorting, specialCharacterDecode } from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
 import RootElmSingleAssessment from '../AssessmentSlateCanvas/elm/RootElmSingleComponent.jsx'
 // import { sendDataToIframe } from './../../constants/utility.js';
 /*** @description - ElementSingleAssessment is a class based component. It is defined simply to make a skeleton of the assessment-type element .*/
@@ -187,6 +187,7 @@ static getDerivedStateFromProps(nextProps, prevState) {
     addCiteTdxAssessment = (citeTdxObj, parentPageNo=1) => {
         showTocBlocker();
         disableHeader(true);
+        citeTdxObj.title = specialCharacterDecode(citeTdxObj.title)
         if(citeTdxObj.slateType === "singleSlateAssessment"){
             this.setState({
                 showSinglePopup: true,
@@ -196,7 +197,7 @@ static getDerivedStateFromProps(nextProps, prevState) {
             })
         }
         else{
-            this.setState({ assessmentId: citeTdxObj.id, assessmentItemId: citeTdxObj.singleAssessmentID.versionUrn, assessmentTitle: citeTdxObj.title },
+            this.setState({ assessmentId: citeTdxObj.id, assessmentItemId: citeTdxObj.singleAssessmentID.versionUrn, assessmentTitle: specialCharacterDecode(citeTdxObj.title) },
                 () => {
                     this.saveAssessment();
                 })
