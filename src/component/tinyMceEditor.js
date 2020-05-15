@@ -438,6 +438,26 @@ export class TinyMceEditor extends Component {
                             }
                         }
                     }
+                    else if(this.props.element.figuretype==='codelisting'){
+                        let selection = window.getSelection();
+                        if (selection.anchorNode.parentNode.nodeName === "SPAN" && selection.anchorNode.parentNode.classList.contains('codeNoHighlightLine')) {
+                            if (selectedText !== "") {
+                                selection.anchorNode.parentNode.innerHTML = selection.anchorNode.parentNode.innerText;
+                            }
+                            let spanNode = selection.anchorNode;
+                            let outerNode = selection.anchorNode;
+                            if (spanNode.nodeName == "SPAN" || (spanNode.className && !spanNode.className.toLowerCase() == 'codeNoHighlightLine')) {
+                                //spanNode = selection.anchorNode.closest('.poetryLine');
+                                while (outerNode.parentElement && outerNode.parentElement.tagName.toLowerCase() != 'code') {
+                                    outerNode = outerNode.parentElement;
+                                }
+                                outerNode.parentNode.replaceChild(spanNode, outerNode);
+                                e.preventDefault();
+                                e.stopPropagation();
+                                return false;
+                            }
+                        }
+                    }
                     /**
                      * In case remove all formatting is being appied on list element
                      */
@@ -1831,7 +1851,13 @@ export class TinyMceEditor extends Component {
             toolbar = (this.props.element && this.props.element.type === 'poetry') ? config.poetryCaptionToolbar : config.captionToolbar;
 
         } else if (this.props.placeholder === "Enter block code...") {
-            toolbar = config.codeListingToolbar;
+            let syntaxEnabled = document.querySelector('.panel_syntax_highlighting .switch input');
+            if(syntaxEnabled && syntaxEnabled.checked){
+                toolbar = config.codeListingToolbarDisabled;
+            }
+            else{
+                toolbar = config.codeListingToolbarEnabled;
+            }
         } else if (this.props.placeholder === "Enter Show text" || this.props.placeholder === "Enter revel text") {
             toolbar = config.showHideToolbar
         } else if (this.props.placeholder === "Enter Hide text") {
@@ -2229,8 +2255,11 @@ export class TinyMceEditor extends Component {
                     <h4 ref={this.editorRef} id={id} onKeyDown={this.normalKeyDownHandler} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: model }} >{/*htmlToReactParser.parse(this.props.model) */}</h4>
                 )
             case 'code':
+
+                let str = '<span class="codeNoHighlightLine"><strong>for</strong> (<strong>int</strong> <em>i</em> = 1; <em>i</em> &lt; 5; <em>i</em>++),</span><br><span class="codeNoHighlightLine">{</span><br><span class="codeNoHighlightLine"><strong>println</strong>("The Number is " + <em>i</em>),</span><br><span class="codeNoHighlightLine">}</span><br></code>'
+
                 return (
-                    <code ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model }}>{/*htmlToReactParser.parse(this.props.model) */}</code>
+                    <code ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: str }}>{/*htmlToReactParser.parse(this.props.model) */}</code>
                 )
             case 'blockquote':
                 if (this.props.element && this.props.element.elementdata && this.props.element.elementdata.type === "marginalia") {

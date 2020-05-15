@@ -75,10 +75,10 @@ class PopUp extends React.Component {
                 </div>
             )            
         }
-        if(props.isSplitSlatePopup){
+        if(props.isSplitSlatePopup || props.sytaxHighlight){
             return(
                 <div className={`dialog-buttons ${props.splitSlateClass}`}>
-                    <span className={`save-button ${props.splitSlateClass}`} onClick={props.handleSplit}>Yes</span>
+                    <span className={`save-button ${props.splitSlateClass}`} onClick={props.confirmCallback}>Yes</span>
                     <span className={`cancel-button ${props.splitSlateClass}`} id='close-container' onClick={(e) => props.togglePopup(false, e)}>Cancel</span>
                 </div>
             )
@@ -105,7 +105,7 @@ class PopUp extends React.Component {
     * @param {event} 
     */
     renderInputBox = (props) => {
-        if(props.showDeleteElemPopup || props.isLockReleasePopup ||  props.isSplitSlatePopup || props.tocDelete || props.removeConfirmation || props.wrongAudio || props.lockForTOC){
+        if(props.showDeleteElemPopup || props.isLockReleasePopup ||  props.isSplitSlatePopup || props.tocDelete || props.removeConfirmation || props.wrongAudio || props.lockForTOC || props.sytaxHighlight){
             return null
         }
         else if(props.isLockPopup && props.withInputBox && !props.lockForTOC){
@@ -127,7 +127,7 @@ class PopUp extends React.Component {
         }
     }
     renderCloseSymbol = (props) => {
-        if(props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.tocDelete || props.assessmentAndInteractive || props.removeConfirmation){
+        if(props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.tocDelete || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight){
             return null
         }
         else{
@@ -174,7 +174,7 @@ class PopUp extends React.Component {
                 <div className={`dialog-window ${props.splitSlateClass}`} >{props.dialogText}</div>
             )
         }
-        else if(props.isLockPopup){
+        else if(props.isLockPopup || props.sytaxHighlight){
             return (
                 <div className={`dialog-window ${props.slateLockClass}`} >{props.dialogText}</div>
             )  

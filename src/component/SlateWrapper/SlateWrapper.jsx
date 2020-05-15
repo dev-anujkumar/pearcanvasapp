@@ -743,7 +743,7 @@ class SlateWrapper extends Component {
                     active={true}
                     togglePopup={this.toggleSplitSlatePopup}
                     isSplitSlatePopup={true}
-                    handleSplit={this.handleSplitSlate}
+                    confirmCallback={this.handleSplitSlate}
                     isInputDisabled={true}
                     splitSlateClass="split-slate"
                 />

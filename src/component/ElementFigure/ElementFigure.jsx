@@ -1,4 +1,3 @@
-// IMPORT - Plugins //
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 // IMPORT - Components //
@@ -331,7 +330,7 @@ class ElementFigure extends Component {
                     </header>
                     <div className="pearson-component blockcode codeSnippet blockCodeDiv" data-type={dataType} >
                         <pre className="code-listing" >
-                            <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${index}-2`} placeholder="Enter block code..." tagName={'code'} className="" model={processedText} slateLockInfo={slateLockInfo} elementId={this.props.elementId} />
+                            <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${index}-2`} placeholder="Enter block code..." tagName={'code'} className="codeNoHighlightLineWrapper" model={processedText} slateLockInfo={slateLockInfo} elementId={this.props.elementId} />
                         </pre>
                     </div>
                     <figcaption >
