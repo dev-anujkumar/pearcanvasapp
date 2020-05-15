@@ -82,6 +82,7 @@ export class TinyMceEditor extends Component {
                 this.editorBeforeExecCommand(editor);
                 this.editorExecCommand(editor);
                 this.insertListButtonIcon(editor);
+                this.clearUndoStack(editor);
                 editor.on('init', function (e) {
                     if (config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType !== "container-introduction") {
                         if (document.getElementsByClassName("slate-tag-icon").length) {
@@ -275,6 +276,10 @@ export class TinyMceEditor extends Component {
                 let divParent = tinymce.$(`div[id="cypress-${this.props.index}"]`).children();
                 spanHandlers.handleFormattingTags(editor, this.props.elementId, 'div', divParent, 'poetryLine', range);
             }
+            if (this.props && this.props.element && this.props.element.type && this.props.element.figuretype ==='codelisting' && e.command === 'mceToggleFormat') {
+                let codeParent = tinymce.$(`code[id="cypress-${this.props.index}"]`).children();
+                spanHandlers.handleFormattingTags(editor, this.props.elementId, 'code', codeParent, 'codeNoHighlightLine', range);
+            }
 
         });
     }
@@ -353,9 +358,10 @@ export class TinyMceEditor extends Component {
                             e.target.targetElm.children[0].innerHTML = textToReplace;
                         }
                         else if (this.props.element.type === 'stanza') {
-                            tinymce.$(`div[data-id="${this.props.elementId}"] .poetryLine`).each(function () {
-                                this.innerHTML = this.innerText;
-                            })
+                            spanHandlers.handleSelectAllRemoveFormatting(this.props.index, 'div', 'poetryLine');
+                        }
+                        else if(e.target.targetElm.nodeName === "CODE" && this.props.element.figuretype==='codelisting'){
+                            spanHandlers.handleSelectAllRemoveFormatting(this.props.index, 'code', 'codeNoHighlightLine');
                         }
                         /*  For Figure type*/
                         else {
@@ -371,22 +377,9 @@ export class TinyMceEditor extends Component {
                     }
                     else if(this.props.element.figuretype==='codelisting'){
                         let selection = window.getSelection();
-                        if (selection.anchorNode.parentNode.nodeName === "SPAN" && selection.anchorNode.parentNode.classList.contains('codeNoHighlightLine')) {
-                            if (selectedText !== "") {
-                                selection.anchorNode.parentNode.innerHTML = selection.anchorNode.parentNode.innerText;
-                            }
-                            let spanNode = selection.anchorNode;
-                            let outerNode = selection.anchorNode;
-                            if (spanNode.nodeName == "SPAN" || (spanNode.className && !spanNode.className.toLowerCase() == 'codeNoHighlightLine')) {
-                                //spanNode = selection.anchorNode.closest('.poetryLine');
-                                while (outerNode.parentElement && outerNode.parentElement.tagName.toLowerCase() != 'code') {
-                                    outerNode = outerNode.parentElement;
-                                }
-                                outerNode.parentNode.replaceChild(spanNode, outerNode);
-                                e.preventDefault();
-                                e.stopPropagation();
-                                return false;
-                            }
+                        let output = spanHandlers.handleRemoveFormattingOnSpan(selection, e, 'code', 'codeNoHighlightLine');
+                        if(output === false) {
+                            return false;
                         }
                     }
                     /**
@@ -579,9 +572,13 @@ export class TinyMceEditor extends Component {
                 if (activeElement.nodeName === "CODE") {
                     let key = e.keyCode || e.which;
                     if (!activeElement.innerText.trim()) {
-                        activeElement.innerHTML = '<br/>';
-                    } else if (key === 13) {
-                        activeElement.append(' ')
+                        activeElement.innerHTML = '<span class="codeNoHighlightLine"><br/></span>';
+                    } 
+                    else if (key != undefined && key === 13) {
+                        spanHandlers.addAndSplitSpan(editor, this.props.elementId, 'code', 'codeNoHighlightLine');
+                    }
+                    else if (key != undefined && (key === 8 || key === 46)) {
+                        spanHandlers.handleBackSpaceAndDeleteKyeUp(editor, key, 'codeNoHighlightLine');
                     }
                 }
                 if (activeElement.nodeName == "DIV" && this.props.element.type === 'stanza') {
@@ -742,6 +739,11 @@ export class TinyMceEditor extends Component {
         });
     }
 
+    clearUndoStack = (editor) => {
+        customEvent.subscribe('clearUndoStack', () => {
+            editor.undoManager.clear();
+        })
+    }
     /**
      * Detects TAB key press.
      * @param {*} keydownEvent  keyDown event
@@ -1913,7 +1915,7 @@ export class TinyMceEditor extends Component {
                 }
             case 'code':
 
-                let str = '<span class="codeNoHighlightLine"><strong>for</strong> (<strong>int</strong> <em>i</em> = 1; <em>i</em> &lt; 5; <em>i</em>++),</span><br><span class="codeNoHighlightLine">{</span><br><span class="codeNoHighlightLine"><strong>println</strong>("The Number is " + <em>i</em>),</span><br><span class="codeNoHighlightLine">}</span><br></code>'
+                let str = '<span class="codeNoHighlightLine"><strong>for</strong> (<strong>int</strong> <em>i</em> = 1; <em>i</em> &lt; 5; <em>i</em>++),</span><span class="codeNoHighlightLine">{</span><span class="codeNoHighlightLine"><strong>println</strong>("The Number is " + <em>i</em>),</span><span class="codeNoHighlightLine">}</span></code>'
 
                 return (
                     <code ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: str }}>{/*htmlToReactParser.parse(this.props.model) */}</code>

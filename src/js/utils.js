@@ -330,6 +330,11 @@ export const spanHandlers = {
             }
         }
     },
+    handleSelectAllRemoveFormatting: (id, parentTag, childClass) =>{
+        tinymce.$(`${parentTag}#cypress-${id} .${childClass}`).each(function () {
+            this.innerHTML = this.innerText;
+        })
+    },
 
     splitOnTag: function(bound, cutElement) {
         for (let parent = cutElement.parentNode; bound != parent; parent = grandparent) {

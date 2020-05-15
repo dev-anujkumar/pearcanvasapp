@@ -13,6 +13,7 @@ import config from '../../../src/config/config.js';
 import PopUp from '../PopUp/index.js';
 import { SYNTAX_HIGHLIGHTING } from '../SlateWrapper/SlateWrapperConstants.js';
 import { showBlocker,hideBlocker } from '../../js/toggleLoader';
+import { customEvent } from '../../js/utils.js';
 
 class Sidebar extends Component {
     constructor(props) {
@@ -350,13 +351,12 @@ class Sidebar extends Component {
         tinymce.$(`[data-id='${this.props.activeElement.elementId}'] .codeNoHighlightLineWrapper span.codeNoHighlightLine`).each(function () {
             this.innerHTML = this.innerText;
         })
-
-        // let spanTags = document.querySelectorAll(`#cypress-${this.props.activeElement.index} .codeNoHighlightLineWrapper span`);
-        // console.log('spanTags',spanTags)
-
         this.setState({
             syntaxHighlightingToggleValue: !this.state.syntaxHighlightingToggleValue
-        }, () => this.handleSyntaxHighlightingPopup(false))
+        }, () => {
+            this.handleSyntaxHighlightingPopup(false);
+            customEvent.trigger('clearUndoStack');
+        })
     }
 
     handleSyntaxHighlightingPopup = (value) => {

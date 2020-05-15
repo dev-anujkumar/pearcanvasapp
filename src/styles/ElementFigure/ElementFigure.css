@@ -21,6 +21,11 @@ padding:0px;
 code.cypress-editable.language-none{
     padding: 0px!important;
 }
+code .codeNoHighlightLine{
+    display: block;
+    min-height: 22px;
+    color: #000;
+}
 /* .figureElement .pearson-component.blockcode.codeSnippet.blockCodeDiv .code-listing.language-none .cypress-editable{
     padding: 10px!important;
     
