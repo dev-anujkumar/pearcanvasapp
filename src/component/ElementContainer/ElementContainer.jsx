@@ -511,7 +511,7 @@ class ElementContainer extends Component {
                         if((titleDOMNode.textContent === '') && !(imgTaginLabel && imgTaginLabel.length)){
                             titleHTML = ""
                         }
-                        tempDiv.innerHTML = createTitleSubtitleModel(titleHTML, "")
+                        tempDiv.innerHTML = createTitleSubtitleModel("", titleHTML)
                     }
                     html = tempDiv.innerHTML
                     // html = html.replace(/<br data-mce-bogus="1">/g, "<br>")
@@ -875,7 +875,7 @@ class ElementContainer extends Component {
         /** Handle TCM for tcm enable elements */
         let tcm = false;
         let feedback = false;
-        if (element.type == 'element-authoredtext' || element.type == 'element-list' || element.type == 'element-blockfeature' || element.type == 'element-learningobjectives' || element.type == 'element-citation' || element.type === 'poetry' || element.type === 'stanza') {
+        if (element.type == 'element-authoredtext' || element.type == 'element-list' || element.type == 'element-blockfeature' || element.type == 'element-learningobjectives' || element.type == 'element-citation' || element.type === 'stanza') {
             if (element.tcm) {
                 tcm = element.tcm;
                 sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });

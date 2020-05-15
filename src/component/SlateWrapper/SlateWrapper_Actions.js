@@ -27,7 +27,8 @@ Array.prototype.move = function (from, to) {
 };
 
 function prepareDataForTcmUpdate(updatedData, parentData, asideData, poetryData) {
-    if (parentData && (parentData.elementType === "element-aside" || parentData.elementType === "citations")) {
+    if (parentData && (parentData.elementType === "element-aside" || parentData.elementType === "citations" 
+        || parentData.elementType === "poetry")) {
         updatedData.isHead = true;
     } else if (parentData && parentData.elementType === "manifest") {
         updatedData.isHead = false;
@@ -41,6 +42,8 @@ function prepareDataForTcmUpdate(updatedData, parentData, asideData, poetryData)
         } else {
             updatedData.parentType = "element-aside";
         }
+    } else if ((poetryData && poetryData.type === 'poetry') || (parentData && parentData.elementType === "poetry")){
+        updatedData.parentType = "poetry";
     }
     updatedData.projectURN = config.projectUrn;
     updatedData.slateEntity = poetryData && poetryData.contentUrn || config.slateEntityURN;
