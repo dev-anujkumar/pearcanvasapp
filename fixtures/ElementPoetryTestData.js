@@ -12,7 +12,7 @@ export const poetryElem = {
             "id": "urn:pearson:work:e1b59ae0-b04a-4b6e-a1a4-33e21073g5w4",
             "text": "",
             "html": {
-                "text": "<p>title</p>"
+                "text": "<p>test title data</p>"
             }
         },
         "formatted-subtitle": {

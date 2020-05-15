@@ -63,7 +63,7 @@ describe('Testing ElementPoetry component', () => {
             contents: {
                 'formatted-title': {
                     html : {
-                        text: '<p></p>'
+                        text: "<p>test title</p>"
                     }
                 }
             }
