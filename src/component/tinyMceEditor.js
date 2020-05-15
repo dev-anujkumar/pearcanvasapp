@@ -1680,7 +1680,8 @@ export class TinyMceEditor extends Component {
                         (tinyMCE.$("#" + currentTarget.id).html()).search(/^(<br.*>)+$/g) >= 0) {
                         termText = tinyMCE.$("#" + currentTarget.id).html();
                     }
-                    document.getElementById(currentTarget.id).innerHTML = termText;
+                    termText = termText.replace(/data-temp-mathml/g, 'data-mathml').replace(/temp_Wirisformula/g, 'Wirisformula');
+                    document.getElementById(currentTarget.id).innerHTML = termText
                 }
                 if (clickedX !== 0 && clickedY !== 0) {
                     tinymce.activeEditor.selection.placeCaretAt(clickedX, clickedY) //Placing exact cursor position on clicking.

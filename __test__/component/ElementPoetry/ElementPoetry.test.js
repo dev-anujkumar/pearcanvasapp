@@ -61,7 +61,11 @@ describe('Testing ElementPoetry component', () => {
                 text: '<p><span></span></p>'
             },
             contents: {
-                'formatted-subtitle': {}
+                'formatted-title': {
+                    html : {
+                        text: "<p>test title</p>"
+                    }
+                }
             }
         },
         element : {

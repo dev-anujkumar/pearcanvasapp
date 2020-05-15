@@ -374,12 +374,12 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
         
         if(slateData.data && Object.values(slateData.data).length > 0) {
             let slateTitle = SLATE_TITLE;
-            if('title' in slateData.data[manifestURN].contents && 'text' in slateData.data[manifestURN].contents.title) {
-                slateTitle = slateData.data[manifestURN].contents.title.text || SLATE_TITLE;
+            if('title' in slateData.data[newVersionManifestId].contents && 'text' in slateData.data[newVersionManifestId].contents.title) {
+                slateTitle = slateData.data[newVersionManifestId].contents.title.text || SLATE_TITLE;
             }
             sendDataToIframe({
                 'type': "setSlateDetails",
-                'message': setSlateDetail(slateTitle, manifestURN)
+                'message': setSlateDetail(slateTitle, newVersionManifestId)
             });
         }
     });
