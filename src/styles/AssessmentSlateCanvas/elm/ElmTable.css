@@ -4,6 +4,7 @@
     font-size: 12px;
     color: grey;
     height: 15px;
+    /* background-color: white; */
   }
   .assessment-id{
     text-align:left;
@@ -11,6 +12,19 @@
   .assessment-title{
     width:400px;
   }
+  .elm-assessment-title{
+    position: relative;
+    top: -4px;
+  }
+  /* tr.row-class.assessment-title :checked{
+    background-color: #dbf2e0;
+  }
+  input[type="radio"]:checked {
+    background-color: #dbf2e0;
+  }
+  .td-class.elm-text-assesment input[type="radio"]:checked+td {
+    background-color: #bbb;
+  } */
   .row-class.select{
     background-color: #dbf2e0;
   }
@@ -29,6 +43,7 @@
   .main-div.has-search {
     min-height: 302px;
     max-height: 308px;
+    overflow-y: hidden;
   }
 
   .main-div.item-table{
@@ -38,7 +53,7 @@
 
   button:disabled,
   button[disabled] {
-    opacity: 0.65; 
+    opacity: 0.35; 
     cursor: not-allowed;
   }
   .node-selected{
@@ -96,19 +111,23 @@
     margin-top: -9px;
   }
   .puf-footer {
-    min-height: 57px;
+    min-height: 60px;
     background-color: rgba(211, 211, 211, 0.41)
   }
   .puf-button {
-    box-shadow: rgb(61, 194, 27) 0px 0px 0px 0px;
-    background-color: rgba(88, 85, 85, 0.41);
+    /* box-shadow: rgb(61, 194, 27) 0px 0px 0px 0px; */
+    box-shadow: rgb(100, 99, 114) 1px 2px 0px 1px;
+    /* background-color: rgba(88, 85, 85, 0.41); */
+    background-color: white;
     border-radius: 4px;
     display: inline-block;
     cursor: pointer;
-    font-family: Arial, Helvetica, sans-serif;
+    /* font-family: Arial, Helvetica, sans-serif; */
+    font-family: Open sans, sans serif;
+    font-weight: 700;
     left: 64%;
     padding: 10px 24px;
-    margin-top: 2%;
+    margin-top: 1.2%;
     border: none;
   }
   .puf-footer .cancel{
@@ -118,13 +137,28 @@
   .puf-footer .add-button {
     float: right;
     margin-left: 18px;
-    margin-right: 50px;
+    margin-right: 58px;
+    background: #0880A3;
+    color: #ffffff;
   }
 
  .add-button-enabled {
   background: #0880A3;
   color: #ffffff;
  }
+
+ .puf-footer .search-button{
+    margin-right: 458px;
+    margin-left: 50px;
+    float: right;
+  }
+  .puf-footer .search-button:active{
+    box-shadow: 0 3px #666;
+    transform: translateY(3px);
+  }
+  .puf-footer .search-button.puf-assessment{
+    display:none;
+  }
 
  .desc-box{
   color: white;
@@ -169,7 +203,7 @@
   fill-opacity:1;
  }
  .elmAssessmentItem-icon{
-  margin-right : 6px;
+  margin-right : 8px;
  }
  .sort-icon{
   background-color: white;
@@ -190,11 +224,15 @@
   text-align: center;
   margin-top: 5%;
   min-height: 315px;
+  border-top:none
  }
+
  .elm-error-line{
   margin-top: 2%;
  }
-
+svg#assessmentSlate-item-icon {
+  margin-top: 0px;
+}
 /** --------------------------------------------AssessmentSearchBar CSS-------------------------------------------- **/
 .learnosity-search-block {
   /* border-bottom: 1px solid black; */
@@ -202,7 +240,7 @@
 .learnosity-search-block .filter-container{
   margin: 11px 50px 11px 20px;
   background-color: #f5f5f5;
-  width: 94%;
+  width: 95%;
   box-sizing: border-box;
 }
 
@@ -261,6 +299,7 @@
   /* display: block; */
   /* padding-right: 76px; */
   /* width: 170px; */
+  width: 95%;
   box-sizing: border-box;
 }
 
@@ -276,6 +315,17 @@
   font-weight: bold;
 }
 
+.learnosity-search-block .search-heading{
+  text-align: center;
+    padding: 5px;
+    font-size: 16px;
+    font-family: Open sans, sans-serif;
+    border-top: 2px #EEEEEE solid;
+    border-bottom: 2px #EEEEEE solid;
+}
+.table-header.show-search{
+  display: none;
+}
 /** -------------------------------------------ELM Assesment Picker Scrollbar CSS--------------------------------------------------- **/
 
 .elm-wrapper .main-div::-webkit-scrollbar-track {

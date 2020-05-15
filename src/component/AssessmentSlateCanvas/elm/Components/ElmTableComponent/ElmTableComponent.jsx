@@ -10,7 +10,7 @@ import ElmFooter from '../ElmFooter'
 import AssessmentSearchBar from '../AssessmentSearchBar';
 import { FULL_ASSESSMENT_PUF, PUF } from '../../../AssessmentSlateConstants.js'
 import { elmAssessmentItem, elmSortUp, elmSortDown, elmNavigateBack, singleAssessmentItemIcon } from './../../../../../images/ElementButtons/ElementButtons.jsx';
-import { searchAndFilterAssessmentData } from '../../Actions/ElmActions.js';
+import { searchAndFilterAssessmentData, openAssessmentSearchBar, setSearchBlock } from '../../Actions/ElmActions.js';
 /*** @description - ElmTable is a class based component to store ELM assessments in tabular form*/
 class ElmTableComponent extends Component {
     constructor(props) {
@@ -53,7 +53,20 @@ class ElmTableComponent extends Component {
             let _self = this;
             _self.renderTableData(this.props);
         }
+        // if((prevProps.elmReducer.openSearch != this.props.elmReducer.openSearch)){
+        //     openSearch
+        // }
     }
+
+//     static getDerivedStateFromProps(nextprops, prevState){
+//     if(nextprops.elmReducer.openSearch==true){
+//         console.log("nextprops.elmReducer.openSearch",nextprops.elmReducer.openSearch)
+//         return{
+//             tableValue: []  
+//         }
+//     }
+// }
+
 
     /*** @description - This function is to fetch project title*/
     getProjectTitle = () => {
@@ -72,6 +85,7 @@ class ElmTableComponent extends Component {
 
     searchAssessmentData = (assessmentType, searchAssessmentTitle) => {
         let searchResults = [];
+        this.props.setSearchBlock(assessmentType,true);
         searchResults = searchAndFilterAssessmentData(assessmentType, searchAssessmentTitle, this.props.elmReducer.elmData)
         // console.log("state vars", this.state.parentUrn, this.state.parentTitle)
         console.log("searchResults", searchResults)
@@ -81,6 +95,7 @@ class ElmTableComponent extends Component {
                     tableValue: searchResults
                 })
             }else{
+                // this.props.setSearchBlock(assessmentType,true);
                 return this.setState({
                     tableValue: []
                 })
@@ -285,7 +300,6 @@ class ElmTableComponent extends Component {
 
     /*** @description - This function is to navigate back to parent hierarchy */
     navigateBack = () => {
-        console.log("condition:",this.state.openItemTable == true && this.props.elmReducer.itemApiStatus.toString() != "200")
         if (this.state.openItemTable == true) {
              this.navigateFromItemsTable()            
         } else {
@@ -405,7 +419,11 @@ class ElmTableComponent extends Component {
             this.setState({
                 isActive: i
             });
+    }
 
+    openAssessmentSearchBar=(flag)=>{
+        console.log(123456789)
+        this.props.openAssessmentSearchBar(this.props.activeAssessmentType,flag)
     }
 
     /*** @description - Function to render Table structure 
@@ -418,24 +436,26 @@ class ElmTableComponent extends Component {
         let elmTableBody,
             elmIcon = item.type == "assessment" ? elmAssessmentItem : singleAssessmentItemIcon;
         if ((item.type == "assessment" || item.type == "assessmentitem") && item.urn.includes("work")) {
-            elmTableBody = <tbody key={index}>
-                <tr className={`row-class assessment-title ${this.state.isActive === index ? 'select':'not-select'}`} onClick={() => this.toggleActive(index)}>
-                    <td className='td-class' key={index} onClick={() => this.handleClickAssessment(item, item.type, openedFrom)}>
+            // elmTableBody = <tbody key={index}>
+         elmTableBody =        <tr key={index} className={`row-class assessment-title ${this.state.isActive === index ? 'select':'not-select'}`}> 
+         {/* onClick={() => this.toggleActive(index)}> */}
+                    <td className='td-class elm-text-assesment' key={index} onClick={() => this.handleClickAssessment(item, item.type, openedFrom)}>
+                    <input type="radio" className="radio-button" name="assessment-radio" value={item.urn} onClick={() => this.toggleActive(index)} checked={this.state.isActive === index} />
                         <span className="elmAssessmentItem-icon">{elmIcon}</span>
-                        <b className="elm-text-assesment">{item.assessmentTitle ? item.assessmentTitle : item.urn}</b>
+                        <b className='elm-assessment-title'> {item.assessmentTitle ? item.assessmentTitle : item.urn}</b>
                     </td>
                     <td className='td-class'><b className="elm-text-assesment">{item.urn}</b></td>
                 </tr>
-            </tbody>
+            // </tbody>
         } else {
-            elmTableBody = <tbody key={index}>
-                {(openedFrom == 'slateAssessment' || 'singleAssessment') && (item.type !== 'figure') && <tr className='row-class'>
+            // elmTableBody = <tbody key={index}>
+              elmTableBody =    (openedFrom == 'slateAssessment' || 'singleAssessment') && (item.type !== 'figure') && <tr key={index}className='row-class'>
                     <td className='td-class' key={index} onClick={(e) => { this.showNewValueList(e, item.urn) }}>
                         <div className="desc-box">{this.getFolderLabel(item.type)} <span className="folder-icon"></span> </div>
                         <b className="elm-text-folder">{item.title}</b></td>
                     <td className='td-class'></td>
-                </tr>}
-            </tbody>
+                </tr>
+           //{/* </tbody> */}
         }
         return elmTableBody;
     }
@@ -449,35 +469,63 @@ class ElmTableComponent extends Component {
     }
 
     /*** @description - This function is to pass props to ElmFooter component*/
-    elmFooterProps = {
-        closeElmWindow: this.props.closeElmWindow,
-        sendPufAssessment: this.sendPufAssessment,
-        buttonText: (this.props.activeAssessmentType === FULL_ASSESSMENT_PUF || this.props.activeAssessmentType === PUF) ? "ADD" : "OK"
-    };
-
-
-
+    // elmFooterProps = {
+        // closeElmWindow: this.props.closeElmWindow,
+        // sendPufAssessment: this.sendPufAssessment,
+        // buttonText: (this.props.activeAssessmentType === FULL_ASSESSMENT_PUF || this.props.activeAssessmentType === PUF) ? "ADD" : "OK",
+        // hideSearchButton: (((this.props.activeAssessmentType == 'learnosity') && this.props.elmReducer.openSearch) || (this.props.activeAssessmentType === FULL_ASSESSMENT_PUF || this.props.activeAssessmentType === PUF)) ? true : false
+    // };
+    setSearchButtonStatus = (assessmentType, openSearch, openItemTable) => {
+        let status = false;
+        if (assessmentType == FULL_ASSESSMENT_PUF || assessmentType == PUF) {
+            console.log(111)
+            status = true;
+        } else if (assessmentType == 'learnosity') {
+            console.log(222)
+            if (openItemTable == true) {
+                console.log(333)
+                status = true;
+            } else if (openSearch == true) {
+                console.log(444)
+                status = true;
+            } else {
+                console.log(555)
+            }
+        }
+        return status
+    }
     render() {
-        const { isLoading } = this.props.elmReducer;
-        let isPuf = this.props.activeAssessmentType == FULL_ASSESSMENT_PUF || this.props.activeAssessmentType == PUF; 
+        const { isLoading, openSearch, setSearchBlock  } = this.props.elmReducer;
+        let isPuf = this.props.activeAssessmentType == FULL_ASSESSMENT_PUF || this.props.activeAssessmentType == PUF;
+        // let openSearch =  this.props.elmReducer.openSearch;
+        let hideSearch = this.setSearchButtonStatus(this.props.activeAssessmentType,openSearch,this.state.openItemTable)
+        //  =((this.state.openItemTable == true) && (((this.state.openItemTable == false) && this.props.activeAssessmentType === FULL_ASSESSMENT_PUF || this.props.activeAssessmentType === PUF) ||
+        // ((this.props.activeAssessmentType == 'learnosity') && openSearch))) ? true:false
+        // (((this.props.activeAssessmentType == 'learnosity') && this.props.elmReducer.openSearch))
+console.log("hideSearh",hideSearch)
+console.log("openSearch",openSearch)
+console.log("!setSearchBlock",!setSearchBlock)
+console.log("condition", (setSearchBlock && !this.state.tableValue.length))
         {
             if (this.props.elmReducer.errFlag == true) {
                 return <ElmError elmErrorProps={this.elmErrorProps} />
             } else {
                 return (
                     <>
-                        <div className='table-header'>
+                    {/* ${openSearch ?"show-search":""} */}
+                       {((this.props.activeAssessmentType === FULL_ASSESSMENT_PUF || this.props.activeAssessmentType === PUF)||(this.props.activeAssessmentType == 'learnosity' && !openSearch)) &&  <div className={`table-header `}>
                             {(this.state.parentUrn) ?
                                 <div className="elm-navigate-back-icon" onClick={this.navigateBack} >{elmNavigateBack}</div> : null}
                             <p className="title-header">{this.state.parentTitle}</p>
-                        </div>
-                        {((!isPuf) && (this.state.openItemTable == false)) ? <AssessmentSearchBar filterAssessmentData={this.searchAssessmentData} assessmentType={'learnosity'} titleFocus={true}/> : null}
-                        <div className={`main-div ${(!isPuf) && (this.state.openItemTable == false)? 'has-search':this.state.openItemTable == true? 'item-table': ''}`}>
+                        </div>}
+                        {((!isPuf) && (this.state.openItemTable == false) && openSearch) ? <AssessmentSearchBar filterAssessmentData={this.searchAssessmentData} assessmentType={'learnosity'} titleFocus={true}/> : null}
+                        <div className={`main-div ${((!isPuf) && (this.state.openItemTable == false) && openSearch)? 'has-search':this.state.openItemTable == true? 'item-table': ''}`}>
                             {(this.state.openItemTable == true && isLoading == true)? <div className="elm-loader"></div> : ""}
-                            {!this.props.elmReducer.itemErrorFlag && this.props.elmReducer.itemApiStatus != 200 && this.state.openItemTable == true && isLoading == false && this.state.tableValue.length ?
-                                <ElmError elmErrorProps={this.elmErrorProps} itemErrorStatus={this.props.elmReducer.itemApiStatus}/>
+                            {(!this.props.elmReducer.itemErrorFlag && this.props.elmReducer.itemApiStatus != 200 && this.state.openItemTable == true && isLoading == false && this.state.tableValue.length)||((!isPuf) && (this.state.openItemTable == false) && openSearch && (!setSearchBlock ) )||(setSearchBlock && !this.state.tableValue.length) ?
+                                <ElmError elmErrorProps={this.elmErrorProps} itemErrorStatus={this.props.elmReducer.itemApiStatus} showSearchScreen={((!isPuf) && (this.state.openItemTable == false) && openSearch) ? true:false}
+                                noSearchResults={this.state.tableValue.length<=0}/>
                                 :
-                               ( (this.state.openItemTable == true && isLoading == false) || (this.state.openItemTable == false)) ?
+                               ( (this.state.openItemTable == true && isLoading == false) || (this.state.openItemTable == false)) || ((!isPuf) && (this.state.openItemTable == false) && openSearch && this.tableValue.length) ?
                                     <table className='table-class'>
                                         <thead>
                                             <th className='row-class assessment-title'>
@@ -486,22 +534,33 @@ class ElmTableComponent extends Component {
                                             </th>
                                             <th className='row-class assessment-id'>Assessment ID</th>
                                         </thead>
+                                        <tbody>
                                         {this.state.tableValue.map((item, index) => {
                                             return this.setElmTableJsx(item, index, this.state.openedFrom)
                                         })}
+                                        </tbody>
                                     </table> : ""
                             }
                         </div>
-                        <ElmFooter elmFooterProps={this.elmFooterProps} addFlag={this.state.addFlag} />
+                        <ElmFooter 
+                            addFlag={this.state.addFlag}
+                            closeElmWindow={this.props.closeElmWindow}
+                            sendPufAssessment={this.sendPufAssessment}
+                            openAssessmentSearchBar={this.openAssessmentSearchBar}
+                            buttonText={isPuf ? "ADD" : "OK"}
+                            hideSearchButton={hideSearch}
+                        />
                     </>
                 );
             }
         }
     }
 }
-
+//((!isPuf) && (this.state.openItemTable == false) && openSearch)? 'has-search':
+//(!isPuf) && (this.state.openItemTable == false)? 'has-search':
 const mapActionToProps = {
-    // searchAndFilterAssessmentData : searchAndFilterAssessmentData
+    openAssessmentSearchBar : openAssessmentSearchBar,
+    setSearchBlock : setSearchBlock
   }
 
 export default connect((state) => {
@@ -510,3 +569,4 @@ export default connect((state) => {
         currentSlateAncestorData: state.appStore.currentSlateAncestorData
     }
 },mapActionToProps)(ElmTableComponent);
+

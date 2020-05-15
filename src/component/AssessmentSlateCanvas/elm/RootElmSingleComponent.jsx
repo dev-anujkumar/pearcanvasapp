@@ -29,7 +29,6 @@ const RootElmSingleAssessment = (props) => {
                 <ElmHeader elmHeaderProps={elmHeaderProps} />
                 {props.elmReducer.errFlag == null ?
                     <div className="elm-loader"></div> :
-                    <>
                     <ElmTableComponent
                         elmReducer={props.elmReducer}
                         closeElmWindow={props.closeElmWindow}
@@ -42,7 +41,7 @@ const RootElmSingleAssessment = (props) => {
                         currentSlateAncestorData={props.currentSlateAncestorData}
                         activeAssessmentType={props.activeAssessmentType}
                     />
-                    </>}
+                }
             </div>
         </div>
     );
