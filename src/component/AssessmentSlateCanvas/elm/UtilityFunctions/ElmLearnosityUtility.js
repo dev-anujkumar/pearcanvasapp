@@ -98,21 +98,21 @@ export const setStatus = (condition, assessmentFormat, propsValue, stateValue) =
     return status;
 }
 
-export const searchAndFilterAssessmentData = (assessmentType, searchAssessmentTitle, apiData) => {
+export const searchAndFilterAssessmentData = (assessmentType, searchAssessmentData, apiData) => {
     let tableData = []
     preparedData = []
     if (assessmentType === LEARNOSITY_BETA || assessmentType === LEARNOSITY) {
-        if (searchAssessmentTitle.trim() != "") {
-            tableData = filterAssessmentsFromApiData(apiData, "", searchAssessmentTitle)
+        if (searchAssessmentData.trim() != "") {
+            tableData = filterAssessmentsFromApiData(apiData, "", searchAssessmentData,searchItems)
         } else {
             tableData = []
         }
     }
-
+    sortSearchResults(tableData,searchAssessmentData,searchItems)
     return tableData
 }
 
-const filterAssessmentsFromApiData = (data, parentUrn, searchAssessmentTitle) => {
+const filterAssessmentsFromApiData = (data, parentUrn, searchAssessmentTitle,searchItems) => {
     let title = "";
     if (data.alignments && data.alignments.resourceCollections && data.alignments.resourceCollections.length) {
         data.alignments.resourceCollections.forEach((resource) => {
@@ -122,9 +122,10 @@ const filterAssessmentsFromApiData = (data, parentUrn, searchAssessmentTitle) =>
                         title = assessments.title.en
                     }
                     const result = preparedData.find(({ urn }) => urn === assessments.urn);
-                    if (assessments && assessments.type && assessments.type !== "assessmentItem") {
-                        if (title.toLowerCase().includes(searchAssessmentTitle.toLowerCase()) && result == undefined) {
-                            preparedData.push({ "type": assessments.type ? assessments.type : "assessment", "urn": assessments.urn, "assessmentTitle": title, "parentUrn": parentUrn, previousUrn: data.versionUrn }) 
+                    if (assessments && assessments.type && assessments.type === "assessment") {
+                        let assessmentExists = title.toLowerCase().includes(searchAssessmentTitle.toLowerCase()) || assessments.urn.toLowerCase().includes(searchAssessmentTitle.toLowerCase())
+                        if (assessmentExists && result == undefined) {
+                            preparedData.push({ "type": assessments.type ? assessments.type : "assessment", "urn": assessments.urn, "assessmentTitle": title, "parentUrn": parentUrn, previousUrn: data.versionUrn })
                         }
                     }
                 })
@@ -139,4 +140,22 @@ const filterAssessmentsFromApiData = (data, parentUrn, searchAssessmentTitle) =>
         })
     }
     return preparedData
+}
+
+const sortSearchResults = (preparedData, searchAssessmentData,searchItems) => {
+    let keyword = searchAssessmentData;
+    preparedData.sort((a, b) => {
+        if ((a.assessmentTitle.toLowerCase().indexOf(keyword.toLowerCase()) > b.assessmentTitle.toLowerCase().indexOf(keyword.toLowerCase())) || (a.urn.toLowerCase().indexOf(keyword.toLowerCase()) > b.urn.toLowerCase().indexOf(keyword.toLowerCase()))
+        ) {
+            return 1;
+        } else if ((a.assessmentTitle.toLowerCase().indexOf(keyword.toLowerCase()) < b.assessmentTitle.toLowerCase().indexOf(keyword.toLowerCase())) || (a.urn.toLowerCase().indexOf(keyword.toLowerCase()) < b.urn.toLowerCase().indexOf(keyword.toLowerCase()))) {
+            return -1;
+        } else {
+            if (a.assessmentTitle > b.assessmentTitle || a.urn > b.urn)
+                return 1;
+            else
+                return -1;
+        }
+    });
+
 }
