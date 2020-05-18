@@ -9,7 +9,7 @@ import { GET_TCM_RESOURCES, GET_TCM_STATUS_OF_PROJECT } from '../../constants/Ac
      * @param {String} slateManifestUrn | Slate Manifest URN
   */
 export const handleTCMData = (slateManifestUrn) => (dispatch, getState) => {
-
+    sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'false' });
     let url = `${config.REACT_APP_API_URL}v1/slate/tcm/${config.projectUrn}/${slateManifestUrn}`;
     return axios.get(url, {
         headers: {
@@ -100,3 +100,17 @@ export const projectLevelTCMData = () => (dispatch, getState) => {
     })
 
 }
+export const tcmSnapshot = (slateManifestUrn,slateEntityUrn) => (dispatch, getState) => {
+    let url = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/tcm/${slateEntityUrn}/${slateManifestUrn}?page=0`;
+    return axios.get(url, {
+        headers: {
+            PearsonSSOSession: config.ssoToken
+        }
+    }).then((res) => {
+        console.log("success")
+    }).catch((error) => {
+        console.log("error")
+    })
+
+}
+

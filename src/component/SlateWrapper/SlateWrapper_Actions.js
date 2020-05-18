@@ -239,7 +239,8 @@ function prepareDataForTcmCreate(type, createdElementData, getState, dispatch) {
             "feedback": null
         })
     })
-
+    if(tcmData){
+        sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });}
     dispatch({
         type: GET_TCM_RESOURCES,
         payload: {

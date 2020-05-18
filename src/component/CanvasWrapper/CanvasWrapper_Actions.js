@@ -19,7 +19,7 @@ import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 import elementDataBank from './elementDataBank'
 import figureData from '../ElementFigure/figureTypes.js';
 import { fetchAllSlatesData, setCurrentSlateAncestorData } from '../../js/getAllSlatesData.js';
-import { handleTCMData, projectLevelTCMData } from '../../component/ElementContainer/TcmSnapshot_Actions';
+import { handleTCMData, projectLevelTCMData, tcmSnapshot } from '../../component/ElementContainer/TcmSnapshot_Actions';
 const findElementType = (element, index) => {
     let elementType = {};
     elementType['tag'] = '';
@@ -213,8 +213,10 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
     }
     config.page = page;
      /** Project level and element level TCM status */
-    dispatch(projectLevelTCMData());
-    dispatch(handleTCMData(manifestURN));
+    if(page === 0){
+        dispatch(projectLevelTCMData());
+        dispatch(handleTCMData(manifestURN));
+    }
     return axios.get(`${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}`, {
         headers: {
             "Content-Type": "application/json",
@@ -356,7 +358,9 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
         }
         /** [TK-3289]- To get Current Slate details */
         dispatch(setCurrentSlateAncestorData(getState().appStore.allSlateData))
-        
+        if(page === 0){
+        dispatch(tcmSnapshot(manifestURN,entityURN))
+        }
         if(slateData.data && Object.values(slateData.data).length > 0) {
             let slateTitle = SLATE_TITLE;
             if('title' in slateData.data[manifestURN].contents && 'text' in slateData.data[manifestURN].contents.title) {

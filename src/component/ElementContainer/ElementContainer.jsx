@@ -843,12 +843,6 @@ class ElementContainer extends Component {
         feedback = tcmData.filter(tcm => {
             let elementUrn = tcm.elemURN;
             return (element.id.includes('urn:pearson:work') && elementUrn.indexOf(element.id) !== -1) && tcm.feedback !== null}).length>0;
-        // if (element.type == 'element-authoredtext' || element.type == 'element-list' || element.type == 'element-blockfeature' || element.type == 'element-learningobjectives' || element.type == 'element-citation' || element.type === 'poetry' || element.type === 'stanza') {
-        //     if (tcm || feedback) {
-        //         sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });
-        //     }
-        // }
-
         /* TODO need better handling with a function and dynamic component rendering with label text*/
         if (labelText) {
             switch (element.type) {

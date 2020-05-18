@@ -5,7 +5,7 @@ import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import {
     fetchSlateData
 } from '../CanvasWrapper/CanvasWrapper_Actions';
-import {  AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP, OPEN_GLOSSARY_FOOTNOTE,DELETE_SHOW_HIDE_ELEMENT} from "./../../constants/Action_Constants";
+import {  AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP, OPEN_GLOSSARY_FOOTNOTE,DELETE_SHOW_HIDE_ELEMENT, GET_TCM_RESOURCES} from "./../../constants/Action_Constants";
 import { customEvent } from '../../js/utils';
 
 export const addComment = (commentString, elementId, asideData, parentUrn) => (dispatch, getState) => {
@@ -158,6 +158,11 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
                     slateLevelData: newParentData
                 }
             })
+            /** Delete Tcm data on element delete*/
+            let projectLevelTcm = getState().tcmReducer.tcmActivatedOnProjectLevel;
+            if (projectLevelTcm) {
+                prepareTCMforDelete(elmId, dispatch);
+            }
         }
 
     }).catch(error => {
@@ -165,6 +170,30 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         console.log("delete Api fail", error);
     })
+}
+/** Delete Tcm data on element delete*/
+function prepareTCMforDelete(elmId, dispatch) {
+    if (projectLevelTcm) {
+        let tcmData = getState().tcmReducer.tcmSnapshot;
+        tcmData = tcmData.filter(function (tcm) {
+            return !tcm.elemURN.includes(elmId);
+        });
+        dispatch({
+            type: GET_TCM_RESOURCES,
+            payload: {
+                data: tcmData
+            }
+        });
+        tcmData.some(function (elem) {
+            if (elem.txCnt > 0) {
+                sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });
+                return true;
+            }
+            else {
+                sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'false' });
+            }
+        });
+    }
 }
 
 function contentEditableFalse (updatedData){
