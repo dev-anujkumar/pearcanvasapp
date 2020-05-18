@@ -444,7 +444,7 @@ const generateCitationElementData = (index, previousElementData, elementType, pr
  * @param {*} node HTML node containing content
  */
 const validateRevealAnswerData = (showHideType, node, elementType) => {
-    if(showHideType && showHideType === "postertextobject" && !node.innerText.trim().length){
+    if(showHideType && showHideType === "postertextobject" && !(node.innerText.trim().length || node.innerHTML.match(/<img/))){
         return {
             innerHTML : "<p class=\"paragraphNumeroUno\">Reveal Answer:</p>",
             innerText : "Reveal Answer:"
