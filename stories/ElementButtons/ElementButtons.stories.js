@@ -47,6 +47,9 @@ const buttonTypes = () => (
     <div title="color palette" style = {divStyle}>
       <Button type="color-palette" onClick={action('color-palette')} />
     </div>
+    <div title="color text" style = {divStyle}>
+      <Button type="color-text" onClick={action('color-text')} />
+    </div>
     <div title="Text element" style = {divStyle}>
       <Button type="text-elem" onClick={action('text elem')} />
     </div>
@@ -97,6 +100,7 @@ storiesOf('Components|Button', module)
   .add('Expand', () => <Button type="expand" onClick={action('Expand element list')} />, { notes: "expand element list" })
   .add('Split', () => <Button type="split" onClick={action('Split slate')} />, { notes: "split slate" })
   .add('Color palette', () => <Button type="color-palette" onClick={action('color palette')} />, { notes: "Color palette for opener element" })
+  .add('Color text', () => <Button type="color-text" onClick={action('color text')} />, { notes: "Color text for opener element" })
   .add('Paragraph Element', () => <Button type="text-elem" onClick={action('text elem')} />, { notes: "Paragraph element" })
   .add('Figure Element', () => <Button type="image-elem" onClick={action('image elem')} />, { notes: "Figure Element" })
   .add('Audio element', () => <Button type="audio-elem" onClick={action('audio elem')} />, { notes: "Audio Element" })

@@ -37,6 +37,7 @@ import backwardNavDisable from '../../images/ElementButtons/backwardNav_disabled
 import splitIcon from '../../images/ElementButtons/splitIcon.png'
 import expandIcon from '../../images/ElementButtons/expandIcon.png'
 import colorPalette from '../../images/ElementButtons/colorPalette.png'
+import colorText from '../../images/ElementButtons/colorText.svg'
 import closeContainer from '../../images/ElementButtons/container_close.png';
 import ButtonTypes from './ButtonTypes.js';
 
@@ -97,6 +98,9 @@ class ElementButton extends Component {
                 break;
             case buttonTypes.COLOR_PALETTE:
                 buttonJSX = <span className="btn-element color-palette" onClick={clickHandlerFn}><img src={colorPalette} /></span>
+                break;
+            case buttonTypes.COLOR_TEXT:
+                buttonJSX = <span className="btn-element color-text" onClick={clickHandlerFn}><img src={colorText} /></span>
                 break;
             case buttonTypes.TEXT_ELEMENT:
                 buttonJSX = <span className="btn-element text-elem" onClick={clickHandlerFn}>
