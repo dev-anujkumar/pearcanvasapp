@@ -103,16 +103,16 @@ export const searchAndFilterAssessmentData = (assessmentType, searchAssessmentDa
     preparedData = []
     if (assessmentType === LEARNOSITY_BETA || assessmentType === LEARNOSITY) {
         if (searchAssessmentData.trim() != "") {
-            tableData = filterAssessmentsFromApiData(apiData, "", searchAssessmentData,searchItems)
+            tableData = filterAssessmentsFromApiData(apiData, "", searchAssessmentData)
         } else {
             tableData = []
         }
     }
-    sortSearchResults(tableData,searchAssessmentData,searchItems)
+    sortSearchResults(tableData,searchAssessmentData)
     return tableData
 }
 
-const filterAssessmentsFromApiData = (data, parentUrn, searchAssessmentTitle,searchItems) => {
+const filterAssessmentsFromApiData = (data, parentUrn, searchAssessmentTitle) => {
     let title = "";
     if (data.alignments && data.alignments.resourceCollections && data.alignments.resourceCollections.length) {
         data.alignments.resourceCollections.forEach((resource) => {
@@ -142,7 +142,7 @@ const filterAssessmentsFromApiData = (data, parentUrn, searchAssessmentTitle,sea
     return preparedData
 }
 
-const sortSearchResults = (preparedData, searchAssessmentData,searchItems) => {
+const sortSearchResults = (preparedData, searchAssessmentData) => {
     let keyword = searchAssessmentData;
     preparedData.sort((a, b) => {
         if ((a.assessmentTitle.toLowerCase().indexOf(keyword.toLowerCase()) > b.assessmentTitle.toLowerCase().indexOf(keyword.toLowerCase())) || (a.urn.toLowerCase().indexOf(keyword.toLowerCase()) > b.urn.toLowerCase().indexOf(keyword.toLowerCase()))
