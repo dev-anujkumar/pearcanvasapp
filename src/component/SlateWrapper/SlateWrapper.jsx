@@ -644,13 +644,13 @@ class SlateWrapper extends Component {
                 this.props.createElement(STANZA, indexToinsert, parentUrn,null,null,null,null,poetryData);
                 break;
             case 'figure-mml-elem':
-                this.props.createElement(FIGURE_MML, indexToinsert, parentUrn,null,null,null,null,poetryData);
+                this.props.createElement(FIGURE_MML, indexToinsert, parentUrn, asideData, null, null);
                 break;
             case 'blockcode-elem':
-                this.props.createElement(BLOCKCODE, indexToinsert, parentUrn,null,null,null,null,poetryData);
+                this.props.createElement(BLOCKCODE, indexToinsert, parentUrn, asideData, null, null);
                 break;
             case 'table-editor-elem-button':
-                this.props.createElement(TABLE_EDITOR, indexToinsert, parentUrn,null,null,null,null,poetryData);
+                this.props.createElement(TABLE_EDITOR, indexToinsert, parentUrn, asideData, null, null);
                 break;
             case 'text-elem':
             default:
