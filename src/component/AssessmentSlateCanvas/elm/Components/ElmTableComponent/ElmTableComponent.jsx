@@ -362,7 +362,7 @@ class ElmTableComponent extends Component {
             // this.setParentAssessment(item.urn, item.assessmentTitle, item.previousUrn)
         }
         else if ((openedFrom === "singleAssessment" && (type !== "assessment" || type !== "assessmentitem"))) {
-            console.log("type",type)
+            // console.log("type",type)
             this.addAssessment(item)
         } 
         // else {
@@ -408,7 +408,7 @@ class ElmTableComponent extends Component {
                 <td className='td-class'><b className="elm-text-assesment">{item.urn}</b></td>
             </tr>
         } else {
-            elmTableBody = (openedFrom == 'slateAssessment' || 'singleAssessment') && (item.type !== 'figure') && <tr key={index} className='row-class'>
+            elmTableBody = (openedFrom == 'slateAssessment' || 'singleAssessment') && (item.type !== 'figure') && <tr key={index} className={`row-class assessment-title ${this.state.isActive === index ? 'select' : 'not-select'}`}>
                 <td className='td-class assessment-container' key={index} >
                     <div className="icon-div">
                     <input type="radio" className="radio-button" name="assessment-radio" value={item.urn} checked={this.state.isActive === index} onClick={() => this.handleClickAssessment(index, item, item.type, openedFrom)} />
