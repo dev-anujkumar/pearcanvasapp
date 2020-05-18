@@ -53,7 +53,9 @@ class ElementContainer extends Component {
             showDeleteElemPopup: false,
             ElementId: this.props.index == 0 ? this.props.element.id : '',
             showColorPaletteList: false,
+            showColorTextList: false,
             activeColorIndex: this.props.element.backgroundcolor ? config.colors.indexOf(this.props.element.backgroundcolor) : 0,
+            activeTextColorIndex: this.props.element.textcolor ? config.textcolors.indexOf(this.props.element.textcolor) : 0,
             isHovered: false,
             hasError: false,
             sectionBreak: null
@@ -477,6 +479,11 @@ class ElementContainer extends Component {
                 tempDiv.innerHTML = html;
                 //tinyMCE.$(tempDiv).find('.blockquote-hidden').remove();
                 html = tempDiv.innerHTML;
+                 /** [BG-2293 - mathML/chemML is not captured in postertextobject field in show-hide */
+                    if (parentElement.type == "showhide" && index && showHideType == 'postertextobject' && html.match(/<img/)) {
+                        tinyMCE.$(tempDiv).find('br').remove()
+                        tinyMCE.$(html).find('br').remove()
+                    }
                 let poetryData;
                 if(parentElement && parentElement.type === "poetry"){
                     poetryData = {
@@ -723,6 +730,15 @@ class ElementContainer extends Component {
         })
     }
 
+    toggleColorTextList = () => {
+        if(config.savingInProgress) return false
+        const { showColorTextList } = this.state;
+        this.handleFocus();
+        this.setState({
+            showColorTextList: !showColorTextList
+        })
+    }
+
     /**
      * Updates background color in opener element.
      * @param {*} event event object
@@ -756,6 +772,8 @@ class ElementContainer extends Component {
             return null
         }
     }
+
+   
     /**
      * Renders color-palette button for opener element 
      * @param {e} event
@@ -766,6 +784,56 @@ class ElementContainer extends Component {
                 <>
                     <Button onClick={this.toggleColorPaletteList} type="color-palette" />
                     <ul className="color-palette-list">{this.renderPaletteList()}</ul>
+                </>
+            )
+        }
+        else {
+            return null
+        }
+    }
+
+
+    selectTextColor = (event)=>{
+        const selectedTextColor = event.target.getAttribute('data-value');
+        const elementData = this.props.element;
+        this.setState({
+            activeTextColorIndex: config.textcolors.indexOf(selectedTextColor),
+            showColorTextList:false
+        });
+        elementData.textcolor = selectedTextColor;
+        if(this.props.element.textcolor !== config.textcolors[this.state.activeTextColorIndex]){
+            this.updateOpenerElement(elementData);
+        } 
+       
+    }
+
+     /**
+     * Rendering Opener element text color 
+     * @param {e} event
+     */
+    renderTextColorList = () => {
+        const { showColorTextList, activeTextColorIndex } = this.state
+        if (showColorTextList) {
+            return config.textcolors.map((colortext, index) => {
+                return <li className={`color-text-item ${index === activeTextColorIndex ? 'selected' : ''}`} onClick={(event) => this.selectTextColor(event)} key={index} data-value={colortext}></li>
+            })
+        }
+        else {
+            return null
+        }
+    }
+
+
+    /**
+     * Renders color-text button for opener element 
+     * @param {e} event
+     */
+    renderColorTextButton = (element) => {
+        if (element.type === elementTypeConstant.OPENER) {
+            return (
+                <>
+                    <Button onClick={this.toggleColorTextList} type="color-text" />
+                    <ul className="color-text-list">{this.renderTextColorList()}</ul>
                 </>
             )
         }
@@ -894,8 +962,8 @@ class ElementContainer extends Component {
                     labelText = 'AS'
                     break;
                 case elementTypeConstant.OPENER:
-                    const { activeColorIndex } = this.state
-                    editor = <OpenerElement accessDenied={this.props.accessDenied} permissions={permissions} backgroundColor={config.colors[activeColorIndex]} index={index} onClick={this.handleFocus} handleBlur={this.handleBlur} elementId={element.id} element={element} slateLockInfo={slateLockInfo} updateElement={this.updateOpenerElement} />
+                    const { activeColorIndex, activeTextColorIndex } = this.state
+                    editor = <OpenerElement accessDenied={this.props.accessDenied} permissions={permissions} backgroundColor={config.colors[activeColorIndex]} textColor={config.textcolors[activeTextColorIndex]} index={index} onClick={this.handleFocus} handleBlur={this.handleBlur} elementId={element.id} element={element} slateLockInfo={slateLockInfo} updateElement={this.updateOpenerElement} />
                     labelText = 'OE'
                     break;
                 case elementTypeConstant.AUTHORED_TEXT:
@@ -1147,6 +1215,7 @@ class ElementContainer extends Component {
                     {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && config.slateType !== 'assessment' ? (<Button type="delete-element" onClick={() => this.showDeleteElemPopup(true)} />)
                         : null}
                     {this.renderColorPaletteButton(element)}
+                    {this.renderColorTextButton(element)}
                 </div>
                     : ''}
                 <div className={`element-container ${labelText.toLowerCase()} ${borderToggle}`} data-id={element.id} onFocus={() => this.toolbarHandling('remove')} onBlur={() => this.toolbarHandling('add')}>

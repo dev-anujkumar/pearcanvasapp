@@ -16,7 +16,8 @@ export default function ElementContainerType(props) {
         let elementPickerPosition = 1
         switch (props.text) {
             case 'interactive-elem-button': elementPickerPosition = 5; break;
-            case 'container-elem-button': elementPickerPosition = 7; break;
+            case 'container-elem-button': elementPickerPosition = 8; break;
+            case "block-text-button" : elementPickerPosition = 4; break;
         }
 
         let onePickerHeight = 34;   // default pixel size of one picker element
@@ -30,16 +31,28 @@ export default function ElementContainerType(props) {
         closeDropDown();
         item.buttonHandler();
     }
+
+    const renderMenu = (data) => {
+        return data && data.map((item, index) => {
+            if(props.elementType === "element-aside" && props.text === "block-text-button" && item.text === "Block Poetry"){
+                return null
+            }
+            else {
+                return (
+                    <li key={index} onClick={() =>buttonHandlerFunc(item)}>{item.text}</li>
+                )
+            }
+        })
+    }
     return (
         <div className="conatiner-other-elements" ref={myListContainer} style={{ top }}>
             <ul className="other-elements-inner">
-                {data && data.map((item, index) => {
-                    return (
-                        <li key={index} onClick={() =>buttonHandlerFunc(item)}>{item.text}</li>)
-                })}
+                {renderMenu(data)}
             </ul>
         </div>
 
     )
 }
+
+
 

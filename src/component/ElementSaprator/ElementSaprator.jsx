@@ -177,11 +177,12 @@ function asideButton(esProps,sectionBreak,elementType){
 function renderConditionalButton(esProps, elementType) {
     let updatedEsProps = esProps.filter((btnObj) => {
         let buttonType = btnObj.buttonType;
-        return buttonType !== OPENER && buttonType !== SECTION_BREAK && buttonType !== WORKED_EXP &&
+        return buttonType === STANZA_ELEMENT
+        /* return buttonType === OPENER && buttonType !== SECTION_BREAK && buttonType !== WORKED_EXP &&
             buttonType !== CONTAINER && buttonType !== TEXT && buttonType !== IMAGE &&
             buttonType !== AUDIO && buttonType !== INTERACTIVE && buttonType !== ASSESSMENT &&
             buttonType !== METADATA_ANCHOR && buttonType !== POETRY_ELEMENT && buttonType !== INTERACTIVE_BUTTON
-            && buttonType !== CITATION && buttonType !== CONTAINER_BUTTON;
+            && buttonType !== CITATION && buttonType !== CONTAINER_BUTTON; */
     })
     return updatedEsProps;
 }
@@ -278,7 +279,7 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
 
     return updatedEsProps.map((elem, key) => {
         function buttonHandlerFunc() {
-            if (elem.buttonType == "interactive-elem-button" || elem.buttonType == "container-elem-button") {
+            if (elem.buttonType === "interactive-elem-button" || elem.buttonType === "container-elem-button" || elem.buttonType === "block-text-button") {
                 setData(typeOfContainerElements(elem, props));
                 if(elem.buttonType !== showInteractiveOption.type){
                     setshowInteractiveOption({status:true,type:elem.buttonType});
@@ -299,7 +300,9 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
                     text={elem.buttonType}
                     closeDropDown={closeDropDown}
                     data={data}
-                    >
+                    sectionBreak={sectionBreak}
+                    elementType={elementType}
+                >
                 </ElementContainerType>
             }
                 <Tooltip key={key} direction={elem.tooltipDirection} tooltipText={elem.tooltipText}>
@@ -326,6 +329,11 @@ function typeOfContainerElements(elem, props) {
             "Add Smart Link": "smartlink-elem",
             "Add Show Hide": "show-hide-elem",
             "Add Pop Up": "popup-elem",
+        },
+        "block-text-button": {
+            "Block Math": "figure-mml-elem",
+            "Block Code": "blockcode-elem",
+            "Block Poetry": "poetry-elem"
         }
     }
     let newData = containerArray[elem.buttonType];

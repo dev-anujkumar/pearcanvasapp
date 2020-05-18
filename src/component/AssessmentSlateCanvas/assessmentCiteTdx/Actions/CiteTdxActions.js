@@ -186,24 +186,44 @@ function specialCharacterEncode(title){
 export const specialCharacterDecode = (encodedString) => {
     let decodedString = "";
     if (encodedString) {
-        decodedString = decodeHtmlCharCodes(encodedString)
+        // decodedString = decodeHtmlCharCodes(encodedString)
+        decodedString =  stringToHTML(encodedString)
         decodedString = escapeHtml(decodedString)
         decodedString = decodedString.replace(/<\s*\/?br\s*[\/]?>/gi, "")
     }
     return decodedString;
 }
 
-const decodeHtmlCharCodes = (str) => {
-    return str.replace(/(&#(\d+);)/g, (match, capture, charCode) => {
-        return String.fromCharCode(charCode);
-    });
-}
+// const decodeHtmlCharCodes = (str) => {
+//     return str.replace(/(&#(\d+);)/g, (match, capture, charCode) => {
+//         return String.fromCharCode(charCode);
+//     });
+// }
 
 const escapeHtml = (str) => {
     var specialCharList = {
-        '&nbsp;': " ",
-        '&lt;': "<",
-        '&gt;': ">",
+        '\\&nbsp;': " ",
+        '\\&lt;': "<",
+        '\\&gt;': ">",
+        '\\&euro;': "€",
+        '\\&pound;': "£",
+        "\\&quot;": '"',
+        "\\&apos;": "'",
+        "\\&amp;": "&"
     };
-    return str.replace(/(&(nbsp|lt|gt);)/g, (m) => { return specialCharList[m]; });
+    for (let key in specialCharList) {
+        str = str.replace(new RegExp(key,"g") , specialCharList[key])
+    }
+    return str;
 }
+
+/**
+ * Convert a template string into HTML DOM nodes
+ * @param  {String} str The template string
+ * @return {Node}       The template HTML
+ */
+var stringToHTML = function (str) {
+	var parser = new DOMParser();
+	var doc = parser.parseFromString(str, 'text/html');
+	return doc.body.innerHTML;
+};  

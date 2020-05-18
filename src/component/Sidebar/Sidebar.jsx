@@ -93,7 +93,7 @@ class Sidebar extends Component {
         }
         const { activePrimaryOption } = this.state
         if(e.target.dataset && e.target.dataset.element !== "secondary"){
-            let disabledPrimaryOption=["primary-openerelement", "primary-single-assessment" ,"primary-popup", "primary-showhide", "primary-mmi", "primary-smartlink","primary-citations-group", "primary-element-citation", "primary-poetry", "primary-stanza"];
+            let disabledPrimaryOption=["primary-openerelement", "primary-single-assessment" ,"primary-popup", "primary-showhide", "primary-mmi", "primary-smartlink","primary-citations-group", "primary-element-citation", "primary-poetry", "primary-stanza", "primary-editor-table-equation", "primary-blockcode-equation", "primary-mathml-equation"];
             if( disabledPrimaryOption.indexOf(activePrimaryOption) !== -1 ){
                 e.stopPropagation()
                 return false
@@ -123,8 +123,11 @@ class Sidebar extends Component {
                  if( disabledPrimaryOption.indexOf(this.state.activeElementType) !== -1 ){
                     className="disabled"
                  }
+                 if (activePrimaryOption === "primary-mathml-equation" || activePrimaryOption === "primary-blockcode-equation" || activePrimaryOption === "primary-editor-table-equation") {
+                    className="disabled"
+                 }
                 primaryOptions = primaryOptionList.map(item => {
-                    if(item !== 'enumType') {
+                    if(item !== 'enumType' && item !== 'primary-mathml-equation' && item !== 'primary-blockcode-equation' && item !== 'primary-editor-table-equation') {
                         return <li key={item} data-value={item} onClick={this.handlePrimaryOptionChange}>
                             {primaryOptionObject[item].text}
                         </li>;
@@ -140,7 +143,7 @@ class Sidebar extends Component {
                     className={`element-dropdown ${this.props.showHideObj && this.props.activeElement.elementType? "sidebar-disable": ""}`}>
                     <div className={`element-dropdown-title ${className}`} data-element="primary" onClick={this.toggleElementDropdown}>
                         {primaryOptionObject[this.state.activePrimaryOption].text}
-                        { activePrimaryOption === "primary-single-assessment" || activePrimaryOption === "primary-citations-group" || activePrimaryOption === "primary-element-citation" || activePrimaryOption === "primary-poetry" || activePrimaryOption === "primary-stanza"
+                        { activePrimaryOption === "primary-single-assessment" || activePrimaryOption === "primary-citations-group" || activePrimaryOption === "primary-element-citation" || activePrimaryOption === "primary-poetry" || activePrimaryOption === "primary-stanza" || activePrimaryOption === "primary-mathml-equation" || activePrimaryOption === "primary-blockcode-equation" || activePrimaryOption === "primary-editor-table-equation"
                          ? null : dropdownArrow }
                     </div>
                     <ul className={`element-dropdown-content primary-options ${active}`}>
