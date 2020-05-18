@@ -10,12 +10,14 @@
     text-align:left;
   }
   .assessment-title{
-    width:400px;
+    width: 360px;
   }
-  /* .elm-assessment-title{
-    position: relative;
-    top: -4px;
-  } */
+  .elm-data-span{
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 230px;
+  }
   .elm-text-assesment .radio-button{
     cursor: pointer;
     position: relative;
@@ -172,9 +174,9 @@
  .puf-footer .search-button{
     /* margin-right: 458px;
     margin-left: 50px; */
-    margin-right: 479px;
+    /* margin-right: 479px; */
     margin-left: 30px;
-    float: right;
+    float: left;
   }
   /* .puf-footer .search-button:active{
     box-shadow: 0 3px #666;
@@ -300,6 +302,10 @@ svg#assessmentSlate-item-icon {
 } */
 .learnosity-search-block .input-title1 {
   /* margin-right: 20px; */
+  position: relative;
+  width: 95%;
+  box-sizing: border-box;
+  padding-left: 4px;
   outline: none;
 }
 .learnosity-search-block .filter-block {

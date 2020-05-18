@@ -80,7 +80,7 @@ class ElmTableComponent extends Component {
         this.props.setSearchBlock(assessmentType,true);
         searchResults = searchAndFilterAssessmentData(assessmentType, searchAssessmentTitle, this.props.elmReducer.elmData)
         console.log("searchResults", searchResults)
-        if(searchAssessmentTitle.trim()!=""){
+        // if(searchAssessmentTitle.trim()!=""){
             if(searchResults.length!=0){
                 return this.setState({
                     tableValue: searchResults
@@ -90,10 +90,10 @@ class ElmTableComponent extends Component {
                     tableValue: []
                 })
             }
-        }else{
-            let parent= setParentUrn(JSON.stringify(this.props.elmReducer.elmData),this.props.setCurrentSlateAncestorData)
-            this.filterData(false, parent, this.props.elmReducer.elmData);
-        }
+        // }else{
+        //     let parent= setParentUrn(JSON.stringify(this.props.elmReducer.elmData),this.props.setCurrentSlateAncestorData)
+        //     this.filterData(false, parent, this.props.elmReducer.elmData);
+        // }
     }
 
     /*** @description - This function is to render elm table data
@@ -403,7 +403,7 @@ class ElmTableComponent extends Component {
                     <input type="radio" className="radio-button" name="assessment-radio" value={item.urn} checked={this.state.isActive === index} onClick={() => this.handleClickAssessment(index, item, item.type, openedFrom)} />
                     <span className="elmAssessmentItem-icon">{elmIcon}</span>
                     </div>
-                    <span><b className='elm-assessment-title'> {item.assessmentTitle ? item.assessmentTitle : item.urn}</b></span>
+                    <span className="elm-data-span" title={item.assessmentTitle ? item.assessmentTitle : item.urn}><b className='elm-assessment-title'> {item.assessmentTitle ? item.assessmentTitle : item.urn}</b></span>
                 </td>
                 <td className='td-class'><b className="elm-text-assesment">{item.urn}</b></td>
             </tr>
