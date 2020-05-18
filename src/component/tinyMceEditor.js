@@ -968,7 +968,9 @@ export class TinyMceEditor extends Component {
                         currentElement.remove();
                     }
                     let activeEditor = document.getElementById(tinymce.activeEditor.id);
-                    activeEditor.blur();
+                    if('element' in this.props && 'status' in this.props.element && this.props.element.status == "wip") {
+                        activeEditor.blur();
+                    }
                     let nextSaparator = (activeEditor.closest('.editor')).nextSibling;
                     let textPicker = nextSaparator.querySelector('#myDropdown li > .stanza-elem');
                     textPicker.click();
