@@ -314,6 +314,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
                 updateStoreInCanvas({ ...updatedData, ...response.data }, asideData, parentUrn, dispatch, getState, null, elementIndex, showHideType, parentElement, poetryData)
             }
         }
+        
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
         
         customEvent.trigger('glossaryFootnoteSave', response.data.id); 
@@ -639,16 +640,44 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
         _slateObject.contents = _slateContent
 
         //console.log("saving new data dispatched")
+
+        //tcm update code   
+        let projectLevelTcm = getState().tcmReducer.tcmActivatedOnProjectLevel;
+        if (projectLevelTcm) {
+            prepareDataForUpdateTcm(updatedData.id, getState, dispatch);
+        }
         return dispatch({
             type: AUTHORING_ELEMENT_UPDATE,
             payload: {
                 slateLevelData: newslateData
             }
         })
+    
     } 
     //diret dispatching in store
 }
-
+//TCM Update
+function prepareDataForUpdateTcm(updatedDataID, getState, dispatch) {
+    const tcmData = getState().tcmReducer.tcmSnapshot;
+    var test = tcmData.some(function (el) {
+        return el.elemURN === updatedDataID;
+    });
+    if (!test) {
+        tcmData.push({
+            "txCnt": 1,
+            "isPrevAcceptedTxAvailable": false,
+            "elemURN": updatedDataID,
+            "feedback": null
+        })
+        sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });
+    }
+    dispatch({
+        type: GET_TCM_RESOURCES,
+        payload: {
+            data: tcmData
+        }
+    })
+}
 export const updateFigureData = (figureData, elementIndex, elementId, cb) => (dispatch, getState) => {
     let parentData = getState().appStore.slateLevelData,
         //element,
