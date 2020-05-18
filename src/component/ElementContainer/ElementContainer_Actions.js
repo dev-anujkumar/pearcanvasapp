@@ -161,7 +161,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
             /** Delete Tcm data on element delete*/
             let projectLevelTcm = getState().tcmReducer.tcmActivatedOnProjectLevel;
             if (projectLevelTcm) {
-                prepareTCMforDelete(elmId, dispatch);
+                prepareTCMforDelete(elmId, dispatch,getState);
             }
         }
 
@@ -172,8 +172,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
     })
 }
 /** Delete Tcm data on element delete*/
-function prepareTCMforDelete(elmId, dispatch) {
-    if (projectLevelTcm) {
+function prepareTCMforDelete(elmId, dispatch,getState) {
         let tcmData = getState().tcmReducer.tcmSnapshot;
         tcmData = tcmData.filter(function (tcm) {
             return !tcm.elemURN.includes(elmId);
@@ -193,7 +192,6 @@ function prepareTCMforDelete(elmId, dispatch) {
                 sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'false' });
             }
         });
-    }
 }
 
 function contentEditableFalse (updatedData){
