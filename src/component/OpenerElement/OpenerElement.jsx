@@ -55,6 +55,7 @@ class OpenerElement extends Component {
             this.setState({
                 imgSrc: epsURL,
                 imageId: imageId,
+                updateImageOptions:false,
                 width
             });
             if (document.querySelector("[name='alt_text']"))
@@ -443,23 +444,14 @@ class OpenerElement extends Component {
     }   
     renderExistingCOImage = () => {
         let COImg = <div className="exisiting-opener-element-image-view">
-           
             <div className="update-image-label" onClick={()=>{this.setState({updateImageOptions:!this.state.updateImageOptions})}}>Update Image
             <span className="color_Dropdown_arrow">{dropdownArrow}</span>
             </div>
-           {/* {this.state.updateImageOptions? <div>
-                <ul className="select-image-global-button1">Choose from Global CO site</div>
-                <div className="select-image-alresco-button1" onClick={this.handleC2MediaClick}>Choose from an Alfresco site</div>
-            </div>:null} */}
-
-              {this.state.updateImageOptions? <ul className="image-global-button">
-                <li>Choose from Global CO site</li>
+          {this.state.updateImageOptions? <ul className="image-global-button">
+                <li onClick={this.handleC2GlobalCO}>Choose from Global CO site</li>
                 <li onClick={this.handleC2MediaClick}>Choose from an Alfresco site</li>
-            </ul>:null}
-           
-            
-        </div>
-        
+            </ul>:null} 
+        </div> 
         return COImg
     }
     renderDefaultCOImage = () => {
