@@ -447,10 +447,15 @@ class OpenerElement extends Component {
             <div className="update-image-label" onClick={()=>{this.setState({updateImageOptions:!this.state.updateImageOptions})}}>Update Image
             <span className="color_Dropdown_arrow">{dropdownArrow}</span>
             </div>
-           {this.state.updateImageOptions? <div>
-                <div className="select-image-global-button1">Choose from Global Co site</div>
-                <div className="select-image-alresco-button1" onClick={this.handleC2MediaClick}>Choose from Alfresco site</div>
-            </div>:null}
+           {/* {this.state.updateImageOptions? <div>
+                <ul className="select-image-global-button1">Choose from Global CO site</div>
+                <div className="select-image-alresco-button1" onClick={this.handleC2MediaClick}>Choose from an Alfresco site</div>
+            </div>:null} */}
+
+              {this.state.updateImageOptions? <ul className="image-global-button">
+                <li>Choose from Global CO site</li>
+                <li onClick={this.handleC2MediaClick}>Choose from an Alfresco site</li>
+            </ul>:null}
            
             
         </div>
@@ -461,8 +466,8 @@ class OpenerElement extends Component {
         let COImg = <div className="empty-opener-element-view">
             <div className="select-image-label">Select an Image</div>
             <div className="select-image-co-buttons">
-                <div className="select-image-global-button" onClick={this.handleC2GlobalCO}>Choose from Global Co site</div>
-                <div className="select-image-alresco-button" onClick={this.handleC2MediaClick}>Choose from Alfresco site</div>
+                <div className="select-image-global-button" onClick={this.handleC2GlobalCO}>Choose from Global CO site</div>
+                <div className="select-image-alresco-button" onClick={this.handleC2MediaClick}>Choose from an Alfresco site</div>
             </div>
         </div>
         return COImg

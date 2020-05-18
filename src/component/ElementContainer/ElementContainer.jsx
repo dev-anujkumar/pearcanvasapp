@@ -752,20 +752,6 @@ class ElementContainer extends Component {
         }       
     }
 
-    selectTextColor = (event)=>{
-        const selectedTextColor = event.target.getAttribute('data-value');
-        const elementData = this.props.element;
-        this.setState({
-            activeTextColorIndex: config.textcolors.indexOf(selectedTextColor),
-            showColorTextList:false
-        });
-        elementData.textcolor = selectedTextColor;
-        if(this.props.element.textcolor !== config.textcolors[this.state.activeTextColorIndex]){
-            this.updateOpenerElement(elementData);
-        } 
-       
-    }
-
     /**
      * Rendering Opener element color palette
      * @param {e} event
@@ -782,22 +768,7 @@ class ElementContainer extends Component {
         }
     }
 
-    /**
-     * Rendering Opener element text color 
-     * @param {e} event
-     */
-    renderTextColorList = () => {
-        const { showColorTextList, activeTextColorIndex } = this.state
-        if (showColorTextList) {
-            return config.textcolors.map((colortext, index) => {
-                return <li className={`color-text-item ${index === activeTextColorIndex ? 'selected' : ''}`} onClick={(event) => this.selectTextColor(event)} key={index} data-value={colortext}></li>
-            })
-        }
-        else {
-            return null
-        }
-    }
-
+   
     /**
      * Renders color-palette button for opener element 
      * @param {e} event
@@ -815,6 +786,38 @@ class ElementContainer extends Component {
             return null
         }
     }
+
+
+    selectTextColor = (event)=>{
+        const selectedTextColor = event.target.getAttribute('data-value');
+        const elementData = this.props.element;
+        this.setState({
+            activeTextColorIndex: config.textcolors.indexOf(selectedTextColor),
+            showColorTextList:false
+        });
+        elementData.textcolor = selectedTextColor;
+        if(this.props.element.textcolor !== config.textcolors[this.state.activeTextColorIndex]){
+            this.updateOpenerElement(elementData);
+        } 
+       
+    }
+
+     /**
+     * Rendering Opener element text color 
+     * @param {e} event
+     */
+    renderTextColorList = () => {
+        const { showColorTextList, activeTextColorIndex } = this.state
+        if (showColorTextList) {
+            return config.textcolors.map((colortext, index) => {
+                return <li className={`color-text-item ${index === activeTextColorIndex ? 'selected' : ''}`} onClick={(event) => this.selectTextColor(event)} key={index} data-value={colortext}></li>
+            })
+        }
+        else {
+            return null
+        }
+    }
+
 
     /**
      * Renders color-text button for opener element 
