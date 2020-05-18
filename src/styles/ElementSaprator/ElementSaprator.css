@@ -74,7 +74,7 @@
 .dropdown-content {
     display: none;
     position: absolute;
-    z-index: 1;
+    z-index: 2;
 }
 
 .dropdown-content ul{

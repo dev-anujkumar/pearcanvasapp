@@ -297,3 +297,6 @@ P.paragraphNumeroUnoIndentLevel1, P.paragraphNumeroUnoIndentLevel2, P.paragraphN
 .reviewer-role .Wirisformula,.reviewer-role .temp_Wirisformula {
     pointer-events: none;
 }
+table code {
+    color: unset !important;
+}

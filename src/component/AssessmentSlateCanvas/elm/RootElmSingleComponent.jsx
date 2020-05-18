@@ -39,7 +39,9 @@ const RootElmSingleAssessment = (props) => {
                         setItemParentUrn={props.setItemParentUrn}
                         setElmLoader={props.setElmLoader}
                         currentSlateAncestorData={props.currentSlateAncestorData}
-                    />}
+                        activeAssessmentType={props.activeAssessmentType}
+                    />
+                }
             </div>
         </div>
     );

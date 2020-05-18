@@ -252,7 +252,7 @@ export default {
             }
         },
         'primary-mathml-equation': {
-            text: 'Math ML / Chem Editor',
+            text: 'Block Math',
             toolbar: ['assetpopover','decreaseindent','glossary'],
             enum: 'MATH_ML_CHEM_EDITOR',
             subtype: {
@@ -264,7 +264,7 @@ export default {
             }
         },
         'primary-blockcode-equation': {
-            text: 'Block Code Editor',
+            text: 'Block Code',
             toolbar: ['assetpopover','decreaseindent','glossary'],
             enum: 'BLOCK_CODE_EDITOR',
             subtype: {
@@ -600,6 +600,11 @@ export default {
                     text: 'PUF',
                     labelText: 'Qu',
                     enum: 'SINGLE_ASSESSMENT_PUF'
+                },
+                'secondary-single-assessment-learnosity': {
+                    text: 'Learnosity Beta',
+                    labelText: 'Qu',
+                    enum: 'SINGLE_ASSESSMENT_LEARNOSITY'
                 }
             }		
         },
@@ -770,7 +775,7 @@ export default {
     },   
     "poetry" : {
         "primary-poetry": {
-            text: 'Poetry Editor',
+            text: 'Block Poetry',
             enum: 'POETRY',
             toolbar: ['assetpopover','decreaseindent','glossary', 'orderedlist', 'unorderedlist'],
             dropdownDisabled: true,

@@ -4,22 +4,72 @@
     font-size: 12px;
     color: grey;
     height: 15px;
+    /* background-color: white; */
+  }
+  .assessment-id{
+    text-align:left;
+  }
+  .assessment-title{
+    width:400px;
+  }
+  /* .elm-assessment-title{
+    position: relative;
+    top: -4px;
+  } */
+  .elm-text-assesment .radio-button{
+    cursor: pointer;
+    position: relative;
+    top: -2px;
+  }
+  .assessment-container .radio-button{
+    cursor: pointer;
+    float: left;
+    position: relative;
+    top: 3px;
+  }
+  /* tr.row-class.assessment-title :checked{
+    background-color: #dbf2e0;
+  }
+  input[type="radio"]:checked {
+    background-color: #dbf2e0;
+  }
+  .td-class.elm-text-assesment input[type="radio"]:checked+td {
+    background-color: #bbb;
+  } */
+  .td-class.elm-text-assesment{
+    text-overflow: ellipsis;
+    display: inline-flex;
   }
   .row-class.select{
-    background-color: #dbf2e0;
+    /* background-color: #dbf2e0; */
+    background-color: rgba(181, 214, 253, 0.2);
   }
   .row-class.not-select{
    background-color: white;
   }
   .main-div {
-    min-height: 325px;
-    max-height: 325px;
+    min-height: 360px;
+    max-height: 360px;
     overflow-y: auto;
-    padding-right: 10px;
+    /* padding-right: 10px; */
+    margin-right: 5px;
+    /* border-top: 2px #EEEEEE solid; */
   }
+
+  .main-div.has-search {
+    min-height: 302px;
+    max-height: 308px;
+    overflow-y: auto;
+  }
+
+  .main-div.item-table{
+    min-height: 388px;
+    max-height: 388px;
+  }
+
   button:disabled,
   button[disabled] {
-    opacity: 0.65; 
+    opacity: 0.35; 
     cursor: not-allowed;
   }
   .node-selected{
@@ -32,11 +82,12 @@
     overflow: hidden;
     display:inline-block;
     max-width: 97%;
+    font-size:13px;
     /* vertical-align: bottom; */
   }
   .table-class {
     border-collapse: collapse;
-    width: 95% !important;
+    width: 96% !important;
     line-height: 1.4em;
     border-top: none;
     font-family: Open Sans, sans-serif;
@@ -44,14 +95,17 @@
     color: #565353;
     margin: 0px 20px 12px 20px;
   }
+  .table-class thead{
+    border-bottom: 2.5px #A5A5A5 solid;
+  }
   .table-header{
     padding: 5px 0 5px 5px;
     margin:  5px 20px 0px 20px;
-    border-bottom: 0.5px solid #dddddd;
+    border-bottom: 2px solid #dddddd;
   }
   .th-class, .td-class {
-    padding:8px 10px !important;
-    cursor: pointer;
+    padding:8px 8px !important;
+    /* cursor: pointer; */
     border:none;
   }
   th.row-class{
@@ -59,41 +113,55 @@
     border-left: none;
     border-right: none;
     border-top: none;
+    height: 40px;
+    font-size: 12px;
+    color: dimgray;
   }
   .td-class.sort-icon{
     display: inline-block;
-    width: 6.5%;
-    color: black;
-    float: left;
-    margin-left: -3px;
+    /* width: 6.5%; */
+    /* width: 8.5%; */
+    /* color: black; */
+    color: dimgray;
+    /* float: left; */
+    margin-left: -4px;
     border: none !important;
-    text-align: center;
-    margin-bottom: 11px;
-    margin-top: 0px;
+    /* text-align: center; */
+    /* margin-bottom: 11px; */
+    margin-top: -9px;
+    cursor: default;
   }
   .puf-footer {
-    min-height: 57px;
+    min-height: 60px;
     background-color: rgba(211, 211, 211, 0.41)
   }
   .puf-button {
-    box-shadow: rgb(61, 194, 27) 0px 0px 0px 0px;
-    background-color: rgba(88, 85, 85, 0.41);
+    /* box-shadow: rgb(61, 194, 27) 0px 0px 0px 0px; */
+    /* box-shadow: rgb(100, 99, 114) 1px 2px 0px 1px; */
+    box-shadow: 0 2px 1px 0 rgba(0, 0, 0, 0.3);
+    /* background-color: rgba(88, 85, 85, 0.41); */
+    background-color: white;
     border-radius: 4px;
     display: inline-block;
     cursor: pointer;
-    font-family: Arial, Helvetica, sans-serif;
+    /* font-family: Arial, Helvetica, sans-serif; */
+    font-family: Open sans, sans serif;
+    font-weight: 700;
     left: 64%;
     padding: 10px 24px;
-    margin-top: 2%;
+    margin-top: 1.2%;
     border: none;
   }
-  .cancel{
-    float: left;
-    margin-left: 378px;
+  .puf-footer .cancel{
+    float: right;
+    /* margin-left: 378px; */
   }
-  .add-button {
-    float: left;
+  .puf-footer .add-button {
+    float: right;
     margin-left: 18px;
+    margin-right: 58px;
+    background: #0880A3;
+    color: #ffffff;
   }
 
  .add-button-enabled {
@@ -101,14 +169,31 @@
   color: #ffffff;
  }
 
+ .puf-footer .search-button{
+    /* margin-right: 458px;
+    margin-left: 50px; */
+    margin-right: 479px;
+    margin-left: 30px;
+    float: right;
+  }
+  /* .puf-footer .search-button:active{
+    box-shadow: 0 3px #666;
+    transform: translateY(3px);
+  } */
+  .puf-footer .search-button.puf-assessment{
+    display:none;
+  }
+
  .desc-box{
   color: white;
-  background-color:grey;
+  background-color: dimgrey;
   width: 20px;
   height: 16px;
   border-radius: 3px;
   text-transform: uppercase;
-  margin-right: 5px;
+  /* margin-right: 5px; */
+  margin-left: 8px;
+    margin-right: 10px;
   padding: 2px -3px;
   font-size: 10px;
   text-align: center;
@@ -120,16 +205,18 @@
   position: absolute;
   width: 60%;
   height: 7px;
-  background-color: grey;
+  background-color: dimgrey;
   top: -3px;
   left: 0px;
   border-radius: 3px 5px 0px 0px;
  }
  .elm-text-assesment{
   vertical-align: top;
+  text-overflow: ellipsis;
+  align-items: center;
  }
  .elm-text-folder{
-  vertical-align: sub;
+  vertical-align: text-top;
  }
  .td-class .cls-1{
   fill:rgb(100%,100%,100%);
@@ -144,15 +231,16 @@
   fill-opacity:1;
  }
  .elmAssessmentItem-icon{
-  margin-right : 6px;
+  margin-right : 8px;
+  margin-left : 8px;
  }
  .sort-icon{
   background-color: white;
-  height: 10px;
+  height: 12px;
   width: 0px;
   float: left;
-  margin-left: 3px;
-  margin-top: 8px;
+  margin-left: 24px;
+  margin-top: 0px;
   cursor: pointer;
  }
  .elm-navigate-back-icon{
@@ -165,7 +253,136 @@
   text-align: center;
   margin-top: 5%;
   min-height: 315px;
+  border-top:none;
+  overflow-y:none;
  }
+
  .elm-error-line{
   margin-top: 2%;
  }
+svg#assessmentSlate-item-icon {
+  margin-top: 0px;
+}
+.td-class .icon-div{
+  max-width: 55px;
+  margin: 2px !important;
+  display: inline-flex;
+  align-items: center;
+}
+/** --------------------------------------------AssessmentSearchBar CSS-------------------------------------------- **/
+.learnosity-search-block {
+  /* border-bottom: 1px solid black; */
+}
+.learnosity-search-block .filter-container{
+  margin: 11px 50px 11px 20px;
+  background-color: #f5f5f5;
+  width: 95%;
+  box-sizing: border-box;
+}
+
+.learnosity-search-block .title-block {
+  width: 100%;
+  /* margin: 11px 20px 11px 20px; */
+  /* width: 80%; */
+  /* display: inline-block; */
+  /* display: inline-block; */
+  /* width: 95%; */
+  border: solid 1px #a9a9a9;
+  background-color: #ffffff;
+  padding: 9px 8px 9px 8px;
+}
+/* .label-title{
+  font-family: Open Sans,sans-serif;
+  font-size: 12px;
+  letter-spacing: .17px;
+  color: #252525;
+  margin: 0 3px 0 0;
+} */
+.learnosity-search-block .input-title1 {
+  /* margin-right: 20px; */
+  outline: none;
+}
+.learnosity-search-block .filter-block {
+  width: 100%;
+  margin: 11px 20px 11px 20px;
+  width: 80%;
+  display: inline-block;
+  display: inline-block;
+  /* width: 95%; */
+  /* border: solid 1px #a9a9a9; */
+  /* background-color: #ffffff; */
+  /* padding: 9px 8px 9px 8px; */
+}
+.learnosity-search-block .search-block {
+  font-family: 'Open Sans', sans-serif;
+  display: inline-block;
+  width: 9%;
+  font-size: 13px;
+  font-weight: 600;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #333333;
+}
+.learnosity-search-block .noSelect {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.learnosity input.input-title1 {
+  position: relative;
+  /* display: block; */
+  /* padding-right: 76px; */
+  /* width: 170px; */
+  width: 95%;
+  box-sizing: border-box;
+  padding-left: 4px;
+}
+
+/* .learnosity-search-block .labelTitle::after {
+  content: attr(data-domain);
+  position: absolute;
+  top: 2px;
+  left: 15px;
+  font-family: arial, helvetica, sans-serif;
+  font-size: 12px;
+  display: block;
+  color: rgba(0, 0, 0, 0.6);
+  font-weight: bold;
+} */
+
+.learnosity-search-block .search-heading{
+  text-align: center;
+    padding: 5px;
+    font-size: 16px;
+    font-family: Open sans, sans-serif;
+    border-top: 2px #EEEEEE solid;
+    border-bottom: 2px #EEEEEE solid;
+}
+.table-header.show-search{
+  display: none;
+}
+/** -------------------------------------------ELM Assesment Picker Scrollbar CSS--------------------------------------------------- **/
+
+.elm-wrapper .main-div::-webkit-scrollbar-track {
+  border-radius: 7px;
+  background-color: #F5F5F5;
+}
+
+.elm-wrapper .main-div::-webkit-scrollbar {
+  width: 6px;
+  background-color: #F5F5F5;
+}
+
+.elm-wrapper .main-div::-webkit-scrollbar-thumb {
+  border-radius: 7px;
+  background-color: #555;
+}
+
+.elm-wrapper input:-internal-autofill-selected {
+  -webkit-appearance: menulist-button;
+  background-color: rgb(255, 255, 255) !important;
+  background-image: none !important;
+  color: -internal-light-dark-color(black, white) !important;
+}
