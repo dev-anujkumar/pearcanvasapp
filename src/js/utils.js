@@ -260,7 +260,9 @@ export const spanHandlers = {
                 if (key === 46) {
                     e.preventDefault();
                 } else {
-                    currentElement.previousSibling.innerHTML += '&nbsp;';
+                    if(currentElement.previousSibling.innerHTML != '<br>') {
+                        currentElement.previousSibling.innerHTML += '&nbsp;';
+                    }
                 }
                 let temElm = editor.dom.create('br');
                 currentElement.previousSibling.appendChild(temElm);
@@ -403,13 +405,17 @@ export const spanHandlers = {
         if (editor.selection.getNode().tagName.toLowerCase() !== 'span' || editor.selection.getNode().className.toLowerCase() !== childClass) {
             elementSearch = editor.selection.getNode().closest(`.${childClass}`);
         }
-        if (elementSearch && elementSearch.tagName.toLowerCase() === 'span' && elementSearch.innerHTML != '<br>') {
+        if (elementSearch && elementSearch.tagName.toLowerCase() === 'span' && ((childClass === 'poetryLine' && elementSearch.innerHTML != '<br>') || childClass === 'codeNoHighlightLine')) {
             editor.undoManager.transact(() => {
                 let elm = editor.dom.create('span', { 'class': childClass }, '<br />');
                 if (editor.selection.getRng().startOffset === 0) {
                     elementSearch.parentNode.insertBefore(elm, elementSearch);
                     editor.selection.setCursorLocation(elementSearch.previousSibling, 0);
-                    position = 'previous';
+                    if(elementSearch.innerHTML === '<br>') {
+                        position = 'current';
+                    } else {
+                        position = 'previous';
+                    }
                 } else {
                     if (editor.selection.getContent() !== '' || editor.selection.getNode().tagName.toLowerCase() === 'img' || editor.selection.getNode().tagName.toLowerCase() === 'dfn' || editor.selection.getNode().tagName.toLowerCase() === 'abbr' || editor.selection.getNode().tagName.toLowerCase() === 'a') {
                         if (elementSearch.nextSibling) {

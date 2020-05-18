@@ -709,8 +709,18 @@ export class TinyMceEditor extends Component {
                     textPicker.click();
                 }
             }
+            if (activeElement.nodeName === "CODE") {
+                let key = e.keyCode || e.which;
+                if (key != undefined && (key === 8 || key === 46)) {
+                    spanHandlers.handleBackSpaceAndDeleteKyeDown(editor, key, e, 'codeNoHighlightLine');
+                } else {
+                    if (key != undefined && key === 9) {
+                        e.preventDefault();
+                    }
+                }
+            }
             if (activeElement.nodeName == "DIV" && this.props.element.type === 'stanza') {
-                // let key = e.keyCode || e.which;
+                let key = e.keyCode || e.which;
                 if (key != undefined && (key === 8 || key === 46)) {
                     spanHandlers.handleBackSpaceAndDeleteKyeDown(editor, key, e, 'poetryLine');
                 } else {
