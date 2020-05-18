@@ -92,70 +92,15 @@ export const fetchAssessmentItem = (assessmentId) => (dispatch) => {
 }
 
 export const openAssessmentSearchBar = (assessmentType, flag) => dispatch => {
-    console.log('assessmentType, flag',assessmentType, flag)
     if ((assessmentType !== FULL_ASSESSMENT_PUF && assessmentType !== PUF)) {
         dispatch({ type: 'SET_SEARCH_FLAG', payload: { openSearch: flag } });
         dispatch({ type: 'SET_SEARCH_BLOCK', payload: { setSearchBlock: false } });
     }
 
 }
+
 export const setSearchBlock = (assessmentType, flag) => dispatch => {
-    console.log('assessmentType, flag',assessmentType, flag)
     if ((assessmentType !== FULL_ASSESSMENT_PUF && assessmentType !== PUF)) {
         dispatch({ type: 'SET_SEARCH_BLOCK', payload: { setSearchBlock: flag } });
     }
-
 }
-
-export const searchAndFilterAssessmentData = (assessmentType, searchAssessmentTitle, apiData) => {
-    // dispatch({ type: 'SET_ELM_LOADING_TRUE', payload: { elmLoading: false } });
-    console.log("assessmentType", assessmentType)
-    let tableData = []
-    preparedData = []
-    console.time("factorial test");
-    if(searchAssessmentTitle.trim()!=""){
-        tableData = filterAssessmentsFromApiData(apiData, "", searchAssessmentTitle)
-    }else{
-        tableData = [] 
-    }
-
-    console.timeEnd("factorial test");
-    // return dispatch({
-    //     type:"FILTER_ASSESSMENT_DATA",
-    //     payloD: tableData
-    // })
-    return tableData
-}
-let preparedData = []
-
-const filterAssessmentsFromApiData = (data, parentUrn, searchAssessmentTitle) => {
-    let title = "";
-    if (data.alignments && data.alignments.resourceCollections && data.alignments.resourceCollections.length) {
-        data.alignments.resourceCollections.forEach((resource) => {
-            if (resource.resources && resource.resources.length) {
-                resource.resources.forEach((assessments, index) => {
-                    if (assessments && assessments.title && assessments.title.en) {
-                        title = assessments.title.en
-                    }
-                    const result = preparedData.find(({ urn }) => urn === assessments.urn);
-                    // console.log("indexOf", assessments.urn, preparedData.indexOf(assessments.urn))
-                    if (assessments && assessments.type && assessments.type !== "assessmentItem") {
-                        if (title.toLowerCase().includes(searchAssessmentTitle.toLowerCase()) && result == undefined) {
-                            preparedData.push({ "type": assessments.type ? assessments.type : "assessment", "urn": assessments.urn, "assessmentTitle": title, "parentUrn": parentUrn, previousUrn: data.versionUrn }) // "assessment" is added as type for resources where type-key is missing
-                        }
-                    }
-                })
-            }
-        })
-    }
-    if (data.contents && data.contents.bodyMatter && data.contents.bodyMatter.length) {
-        data.contents.bodyMatter.forEach((item) => {
-            if (item && ((item.alignments && item.alignments != null) || (item.contents && item.contents != null))) {
-                filterAssessmentsFromApiData(item, parentUrn, searchAssessmentTitle)
-            }
-        })
-    }
-    return preparedData
-}
-
-

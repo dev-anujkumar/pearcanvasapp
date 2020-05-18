@@ -16,6 +16,17 @@
     position: relative;
     top: -4px;
   }
+  .elm-text-assesment .radio-button{
+    cursor: pointer;
+    position: relative;
+    top: -2px;
+  }
+  .assessment-container .radio-button{
+    cursor: pointer;
+    float: left;
+    position: relative;
+    top: 3px;
+  }
   /* tr.row-class.assessment-title :checked{
     background-color: #dbf2e0;
   }
@@ -37,7 +48,7 @@
     overflow-y: auto;
     /* padding-right: 10px; */
     margin-right: 5px;
-    border-top: 2px #EEEEEE solid;
+    /* border-top: 2px #EEEEEE solid; */
   }
 
   .main-div.has-search {
@@ -66,6 +77,7 @@
     overflow: hidden;
     display:inline-block;
     max-width: 97%;
+    font-size:14px;
     /* vertical-align: bottom; */
   }
   .table-class {
@@ -84,11 +96,11 @@
   .table-header{
     padding: 5px 0 5px 5px;
     margin:  5px 20px 0px 20px;
-    border-bottom: 0.5px solid #dddddd;
+    border-bottom: 2px solid #dddddd;
   }
   .th-class, .td-class {
     padding:8px 8px !important;
-    cursor: pointer;
+    /* cursor: pointer; */
     border:none;
   }
   th.row-class{
@@ -97,18 +109,22 @@
     border-right: none;
     border-top: none;
     height: 40px;
+    font-size: 14px;
+    color: dimgray;
   }
   .td-class.sort-icon{
     display: inline-block;
     /* width: 6.5%; */
     /* width: 8.5%; */
     /* color: black; */
+    color: dimgray;
     /* float: left; */
     margin-left: -4px;
     border: none !important;
     /* text-align: center; */
     /* margin-bottom: 11px; */
     margin-top: -9px;
+    cursor: default;
   }
   .puf-footer {
     min-height: 60px;
@@ -116,7 +132,8 @@
   }
   .puf-button {
     /* box-shadow: rgb(61, 194, 27) 0px 0px 0px 0px; */
-    box-shadow: rgb(100, 99, 114) 1px 2px 0px 1px;
+    /* box-shadow: rgb(100, 99, 114) 1px 2px 0px 1px; */
+    box-shadow: 0 2px 1px 0 rgba(0, 0, 0, 0.3);
     /* background-color: rgba(88, 85, 85, 0.41); */
     background-color: white;
     border-radius: 4px;
@@ -148,14 +165,16 @@
  }
 
  .puf-footer .search-button{
-    margin-right: 458px;
-    margin-left: 50px;
+    /* margin-right: 458px;
+    margin-left: 50px; */
+    margin-right: 479px;
+    margin-left: 30px;
     float: right;
   }
-  .puf-footer .search-button:active{
+  /* .puf-footer .search-button:active{
     box-shadow: 0 3px #666;
     transform: translateY(3px);
-  }
+  } */
   .puf-footer .search-button.puf-assessment{
     display:none;
   }
@@ -167,7 +186,9 @@
   height: 16px;
   border-radius: 3px;
   text-transform: uppercase;
-  margin-right: 5px;
+  /* margin-right: 5px; */
+  margin-left: 8px;
+    margin-right: 10px;
   padding: 2px -3px;
   font-size: 10px;
   text-align: center;
@@ -188,7 +209,7 @@
   vertical-align: top;
  }
  .elm-text-folder{
-  vertical-align: sub;
+  vertical-align: text-top;
  }
  .td-class .cls-1{
   fill:rgb(100%,100%,100%);
@@ -204,13 +225,14 @@
  }
  .elmAssessmentItem-icon{
   margin-right : 8px;
+  margin-left : 8px;
  }
  .sort-icon{
   background-color: white;
   height: 12px;
   width: 0px;
   float: left;
-  margin-left: 18px;
+  margin-left: 24px;
   margin-top: 0px;
   cursor: pointer;
  }
@@ -232,6 +254,11 @@
  }
 svg#assessmentSlate-item-icon {
   margin-top: 0px;
+}
+.td-class .icon-div{
+  max-width: 55px;
+  margin: 2px !important;
+  display: inline-block;
 }
 /** --------------------------------------------AssessmentSearchBar CSS-------------------------------------------- **/
 .learnosity-search-block {

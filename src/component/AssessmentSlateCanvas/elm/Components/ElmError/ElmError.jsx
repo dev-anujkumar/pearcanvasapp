@@ -8,7 +8,7 @@ import { ERROR_MESSAGE_ELM_RESOURCE, ERROR_MESSAGE_ELM_ITEMS, ERROR_MESSAGE_LEAR
 const ElmError = (props) => {
 
     const getErrorMessage = (error, itemErrorStatus,showSearchScreen,noSearchResults) => {
-        let errorMessage = "";
+        let errorMessage;
         if (error && error.errorStatus != "200" && !noSearchResults && (error.activeAssessmentType == PUF || error.activeAssessmentType == FULL_ASSESSMENT_PUF)) {
             errorMessage = ERROR_MESSAGE_ELM_RESOURCE
         } else if ((error && error.errorStatus != "200" && (error.activeAssessmentType == LEARNOSITY || error.activeAssessmentType == LEARNOSITY_BETA))|| (noSearchResults==true)) {
