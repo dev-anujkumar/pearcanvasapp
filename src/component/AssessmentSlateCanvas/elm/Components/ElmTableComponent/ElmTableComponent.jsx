@@ -394,7 +394,7 @@ class ElmTableComponent extends Component {
             </tr>
         } else {
             elmTableBody = (openedFrom == 'slateAssessment' || 'singleAssessment') && (item.type !== 'figure') && <tr key={index} className={`row-class ${this.state.isActive === index ? 'select' : 'not-select'}`} onClick={(e) => { this.showNewValueList(e, item.urn) }}>
-                <td className='td-class assessment-container' key={index} colspan="2">
+                <td className='td-class assessment-container' key={index} colSpan="2">
                     <div className="desc-box">{getFolderLabel(item.type)} <span className="folder-icon"></span> </div>
                     <b className="elm-text-folder elm-assessment-title">{item.title}</b>
                 </td>
