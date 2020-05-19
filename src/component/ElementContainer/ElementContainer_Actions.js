@@ -213,8 +213,8 @@ function prepareDataForTcmUpdate (updatedData,id, elementIndex, asideData, getSt
     } else if (poetryData && poetryData.type === 'poetry'){
         updatedData.parentType = "poetry";
     }
-    updatedData.projectURN = config.projectUrn;
-    updatedData.slateEntity = config.slateEntityURN;
+    updatedData.projectUrn = config.projectUrn;
+    // updatedData.slateEntity = config.slateEntityURN;
 }
 
 /**
@@ -256,7 +256,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         });
         }
         
-        if(config.slateManifestURN === updatedData.slateUrn){  //Check applied so that element does not gets copied to next slate while navigating
+        if(config.slateManifestURN === updatedData.slateVersionUrn){  //Check applied so that element does not gets copied to next slate while navigating
             if (updatedData.elementVersionType === "element-learningobjectivemapping" || updatedData.elementVersionType === "element-generateLOlist") {
                 for(let i=0;i <updatedData.metaDataAnchorID.length; i++){
                         if(updatedData.metaDataAnchorID[i] !==  response.data.metaDataAnchorID[i] ){
@@ -322,7 +322,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
     //direct dispatching in store
     let parentData = getState().appStore.slateLevelData;
     let newslateData = JSON.parse(JSON.stringify(parentData));
-    let _slateObject = newslateData[updatedData.slateUrn];
+    let _slateObject = newslateData[updatedData.slateVersionUrn];
    
     // let _slateObject = Object.values(newslateData)[0];
     let { contents: _slateContent } = _slateObject;
@@ -347,8 +347,8 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                     dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:parentElement.id, parentElement.contentUrn, 0, parentElement));
                 // }
             } 
-            else if(parentElement && parentElement.type === "popup" && updatedData.elementParentEntityUrn && (updatedData.metaDataField || updatedData.section === "postertextobject") ){
-                dispatch(fetchSlateData(updatedData.slateUrn, updatedData.slateEntity, 0)); }
+            else if(parentElement && parentElement.type === "popup" && updatedData.elementParentEntityUrn && (updatedData.metaDataField || updatedData.sectionType === "postertextobject") ){
+                dispatch(fetchSlateData(updatedData.slateVersionUrn, updatedData.slateEntity, 0)); }
             else if(parentElement && parentElement.type === "showhide"){
                 parentElement.indexes =elementIndex;
                 dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:parentElement.id, parentElement.contentUrn, 0, parentElement)); 
@@ -740,7 +740,6 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
     let _requestData = {
         "projectUrn": config.projectUrn,
         "slateEntityUrn": parentContentUrn,
-        "slateUrn":  elementId,
         "index": newShowhideIndex,
         "type": "TEXT",
         "parentType":"showhide",
@@ -807,7 +806,7 @@ export const deleteShowHideUnit = (elementId, type, parentUrn, index,eleIndex, p
         entityUrn : parentUrn,
         workUrn : elementId,
         index : index.toString(),
-        slateEntity : config.slateEntityURN
+        // slateEntity : config.slateEntityURN
     }
     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
     return axios.post(`${config.REACT_APP_API_URL}v1/slate/deleteElement`,

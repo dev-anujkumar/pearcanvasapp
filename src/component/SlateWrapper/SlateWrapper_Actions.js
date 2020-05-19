@@ -45,8 +45,8 @@ function prepareDataForTcmUpdate(updatedData, parentData, asideData, poetryData)
     } else if ((poetryData && poetryData.type === 'poetry') || (parentData && parentData.elementType === "poetry")){
         updatedData.parentType = "poetry";
     }
-    updatedData.projectURN = config.projectUrn;
-    updatedData.slateEntity = poetryData && poetryData.contentUrn || config.slateEntityURN;
+    // updatedData.projectURN = config.projectUrn;
+    // updatedData.slateEntity = poetryData && poetryData.contentUrn || config.slateEntityURN;
 }
 
 function createNewVersionOfSlate(){
@@ -70,14 +70,13 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
     config.currentInsertedType = type;
     let  popupSlateData = getState().appStore.popupSlateData
     localStorage.setItem('newElement', 1);
-    let slateEntityUrn = parentUrn && parentUrn.contentUrn || popupSlateData && popupSlateData.contentUrn || poetryData && poetryData.contentUrn || config.slateEntityURN,
-    slateUrn =  parentUrn && parentUrn.manifestUrn || popupSlateData && popupSlateData.id || poetryData && poetryData.id || config.slateManifestURN
+    let slateEntityUrn = parentUrn && parentUrn.contentUrn || popupSlateData && popupSlateData.contentUrn || poetryData && poetryData.contentUrn || config.slateEntityURN
+
     let _requestData = {
         "projectUrn": config.projectUrn,
         "slateEntityUrn":slateEntityUrn,
-        "slateUrn": slateUrn,
         "index": outerAsideIndex ? outerAsideIndex : index,
-        "type": type,
+        "type": type
     };
 
     if (type == "LO") {

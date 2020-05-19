@@ -196,8 +196,10 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             figureDataObj.text = `<p>${figureDataObj.text}</p>`
         }
     }
-    let parentEntityUrn
-    if (typeWithPopup === "popup" || typeWithPopup === "poetry") {
+    let parentEntityUrn,
+        appStore = store.getState().appStore
+
+    if (typeWithPopup === "popup" || typeWithPopup === "poetry") { //For Popup and Poetry
         let elemIndex = index &&  typeof (index) !== 'number' && index.split('-');
         let indexesLen = elemIndex.length
         switch (indexesLen){
@@ -213,6 +215,12 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                 parentEntityUrn = newBodymatter[elemIndex[0]].elementdata.bodymatter[elemIndex[1]].contents.bodymatter[elemIndex[2]].contentUrn
                 break;
         }
+    }
+    else if(appStore.asideData && appStore.asideData.contentUrn) { // For Aside/WE
+        parentEntityUrn = appStore.asideData.contentUrn
+    }
+    else { // elements in a slate
+        parentEntityUrn = config.slateEntityURN
     }
     
     switch (semanticType) {
@@ -231,7 +239,8 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                     assetspopover: {}
                 },
                 projectURN : config.projectUrn,
-                slateEntity : config.slateEntityURN
+                slateEntity : config.slateEntityURN,
+                elementParentEntityUrn: parentEntityUrn
             }
             break;
 
@@ -253,13 +262,14 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                     assetspopover: {}
                 },
                 projectURN : config.projectUrn,
-                slateEntity : config.slateEntityURN
+                slateEntity : config.slateEntityURN,
+                elementParentEntityUrn: parentEntityUrn
             }
             break;
     }
     if(typeWithPopup === 'poetry' || typeWithPopup === 'popup'){
         data.metaDataField = "formattedTitle"
-        data.elementParentEntityUrn = parentEntityUrn
+        // data.elementParentEntityUrn = parentEntityUrn
     }
     if(index &&  typeof (index) !== 'number' && elementType !== 'figure'  && typeWithPopup !== 'popup' && typeWithPopup !== 'poetry'){
         let tempIndex =  index.split('-');

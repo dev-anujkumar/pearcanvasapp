@@ -675,7 +675,6 @@ const getRequestData = (parentElement, popupField) => {
         dataToSend = {
             "projectUrn": config.projectUrn,
             "slateEntityUrn": parentElement.contentUrn,
-            "slateUrn": parentElement.id,
             "type": "TEXT",
             "metaDataField" : popupFieldType
         }
@@ -685,7 +684,6 @@ const getRequestData = (parentElement, popupField) => {
         dataToSend = {
             "projectUrn": config.projectUrn,
             "slateEntityUrn": parentElement.contentUrn,
-            "slateUrn": parentElement.id,
             "type": "TEXT",
             "metaDataField" : citationField
         }
@@ -727,14 +725,12 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
     let _requestData = {
         "projectUrn": config.projectUrn,
         "slateEntityUrn": parentElement.contentUrn,
-        "slateUrn": parentElement.id,
         "type": "TEXT"
     }
     if (poetryField === 'creditsarray') {
         _requestData.sectionType = 'creditsarray';
     } else {
         _requestData.metaDataField = "formattedTitle";
-        // _requestData.metaDataField = poetryField ==="formatted-title"?"formattedTitle":"formattedSubtitle";
     }
     
     let url = `${config.REACT_APP_API_URL}v1/slate/element`
@@ -773,7 +769,6 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
             else if(poetryField==="formatted-subtitle"){
                 targetPoetryElement.contents["formatted-title"] = response.data
                 targetPoetryElement.contents["formatted-title"].html.text = createTitleSubtitleModel("", elemNode.innerHTML)
-                // targetPoetryElement.contents["formatted-title"].elementdata.text = elemNode.innerText
             }
             _slateObject.contents.bodymatter[ElementIndex] = targetPoetryElement
         }

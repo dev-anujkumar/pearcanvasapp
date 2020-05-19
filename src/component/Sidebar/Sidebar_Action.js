@@ -179,8 +179,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         outputType : outputPrimaryOptionEnum,
         outputSubType: outputSubTypeEnum,
         projectUrn : config.projectUrn,
-        projectURN : config.projectUrn,
-        slateUrn:Object.keys(appStore.parentUrn).length !== 0 ? appStore.parentUrn.manifestUrn: config.slateManifestURN,
+        slateVersionUrn:Object.keys(appStore.parentUrn).length !== 0 ? appStore.parentUrn.manifestUrn: config.slateManifestURN,
         counterIncrement: (newElementData.startvalue > 0) ? (newElementData.startvalue) : 1, // earlier default by 0
         index: indexes[indexes.length - 1],
         slateEntity : Object.keys(appStore.parentUrn).length !== 0 ?appStore.parentUrn.contentUrn:config.slateEntityURN
@@ -210,7 +209,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             if(elem.type==="element-aside"){
                 elem.elementdata.bodymatter.forEach((nestElem)=>{
                     if(nestElem.id===conversionDataToSend.id){
-                        conversionDataToSend.slateUrn = elem.versionUrn;
+                        conversionDataToSend.slateVersionUrn = elem.versionUrn;
                         conversionDataToSend.slateEntity = elem.contentUrn;
                     }
                 })
@@ -222,8 +221,11 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         return;
     }
     if(showHideObj){
-        conversionDataToSend["section"] = showHideObj.showHideType
+        conversionDataToSend["sectionType"] = showHideObj.showHideType
+        conversionDataToSend["elementParentEntityUrn"] = showHideObj.element.contentUrn
     }
+    let parentEntityUrn = conversionDataToSend.elementParentEntityUrn || appStore.asideData && appStore.asideData.contentUrn || config.slateEntityURN
+    conversionDataToSend["elementParentEntityUrn"] = parentEntityUrn
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
     config.conversionInProcess = true
     if(conversionDataToSend.status === "approved"){
