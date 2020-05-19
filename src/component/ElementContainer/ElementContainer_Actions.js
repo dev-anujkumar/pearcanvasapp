@@ -159,8 +159,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
                 }
             })
             /** Delete Tcm data on element delete*/
-            let projectLevelTcm = getState().tcmReducer.tcmActivatedOnProjectLevel;
-            if (projectLevelTcm) {
+            if (config.tcmStatus) {
                 prepareTCMforDelete(elmId, dispatch,getState);
             }
         }
@@ -642,8 +641,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
         //console.log("saving new data dispatched")
 
         //tcm update code   
-        let projectLevelTcm = getState().tcmReducer.tcmActivatedOnProjectLevel;
-        if (projectLevelTcm) {
+        if (config.tcmStatus) {
             prepareDataForUpdateTcm(updatedData.id, getState, dispatch);
         }
         return dispatch({

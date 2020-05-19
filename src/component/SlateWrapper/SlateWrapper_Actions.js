@@ -157,8 +157,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         else {
             newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
         }
-        let projectLevelTcm = getState().tcmReducer.tcmActivatedOnProjectLevel;
-        if (projectLevelTcm) {
+        if (config.tcmStatus) {
             let elementType = ['WORKED_EXAMPLE', 'CONTAINER', 'SECTION_BREAK', 'TEXT', 'CITATION', 'ELEMENT_CITATION', 'POETRY', 'STANZA'];
             if (elementType.indexOf(type) !== -1) {
                 prepareDataForTcmCreate(type, createdElementData, getState, dispatch);

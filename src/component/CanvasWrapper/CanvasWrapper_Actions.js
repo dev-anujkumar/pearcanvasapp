@@ -19,7 +19,7 @@ import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 import elementDataBank from './elementDataBank'
 import figureData from '../ElementFigure/figureTypes.js';
 import { fetchAllSlatesData, setCurrentSlateAncestorData } from '../../js/getAllSlatesData.js';
-import { handleTCMData, projectLevelTCMData, tcmSnapshot } from '../../component/ElementContainer/TcmSnapshot_Actions';
+import { handleTCMData, tcmSnapshot } from '../../component/ElementContainer/TcmSnapshot_Actions';
 const findElementType = (element, index) => {
     let elementType = {};
     elementType['tag'] = '';
@@ -214,7 +214,18 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
     config.page = page;
      /** Project level and element level TCM status */
     if(page === 0){
-        dispatch(projectLevelTCMData());
+        if(config.tcmStatus){
+             /** Show TCM icon header if TCM is on for project level*/
+             let messageTcmStatus = {
+                TcmStatus: {
+                    tc_activated: "true"
+                }
+            }
+             sendDataToIframe({
+                'type': "TcmStatusUpdated",
+                'message': messageTcmStatus
+            })
+        }
         dispatch(handleTCMData(manifestURN));
     }
     return axios.get(`${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}`, {
