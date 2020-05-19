@@ -144,9 +144,6 @@ const filterAssessmentsFromApiData = (data, parentUrn, searchAssessmentData) => 
 
 const sortSearchResults = (preparedData, searchAssessmentData) => {
     let keyword = searchAssessmentData;
-    // if(searchAssessmentData){
-
-    // }
     preparedData.sort((a, b) => {
         if ((a.assessmentTitle.toLowerCase().indexOf(keyword.toLowerCase()) > b.assessmentTitle.toLowerCase().indexOf(keyword.toLowerCase())) || (a.urn.toLowerCase().indexOf(keyword.toLowerCase()) > b.urn.toLowerCase().indexOf(keyword.toLowerCase()))
         ) {

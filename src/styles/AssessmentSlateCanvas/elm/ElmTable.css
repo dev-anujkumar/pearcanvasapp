@@ -4,7 +4,6 @@
     font-size: 12px;
     color: grey;
     height: 15px;
-    /* background-color: white; */
   }
   .assessment-id{
     text-align:left;
@@ -18,32 +17,24 @@
     overflow: hidden;
     max-width: 230px;
   }
+  .elm-data-span:hover{ 
+      overflow: visible;
+      white-space: normal;
+      height: auto;
+  }
   .elm-text-assesment .radio-button{
     cursor: pointer;
     position: relative;
     top: -2px;
   }
-  .assessment-container .radio-button{
+  .row-class .assessment-container{
     cursor: pointer;
-    float: left;
-    position: relative;
-    top: 3px;
   }
-  /* tr.row-class.assessment-title :checked{
-    background-color: #dbf2e0;
-  }
-  input[type="radio"]:checked {
-    background-color: #dbf2e0;
-  }
-  .td-class.elm-text-assesment input[type="radio"]:checked+td {
-    background-color: #bbb;
-  } */
   .td-class.elm-text-assesment{
     text-overflow: ellipsis;
     display: inline-flex;
   }
   .row-class.select{
-    /* background-color: #dbf2e0; */
     background-color: rgba(181, 214, 253, 0.2);
   }
   .row-class.not-select{
@@ -53,14 +44,12 @@
     min-height: 360px;
     max-height: 360px;
     overflow-y: auto;
-    /* padding-right: 10px; */
     margin-right: 5px;
-    /* border-top: 2px #EEEEEE solid; */
   }
 
   .main-div.has-search {
-    min-height: 302px;
-    max-height: 308px;
+    min-height: 303px;
+    max-height: 303px;
     overflow-y: auto;
   }
 
@@ -85,7 +74,6 @@
     display:inline-block;
     max-width: 97%;
     font-size:13px;
-    /* vertical-align: bottom; */
   }
   .table-class {
     border-collapse: collapse;
@@ -107,8 +95,10 @@
   }
   .th-class, .td-class {
     padding:8px 8px !important;
-    /* cursor: pointer; */
     border:none;
+  }
+  .th-class{
+    cursor: pointer;
   }
   th.row-class{
     border: 1px solid #ccc;
@@ -121,15 +111,9 @@
   }
   .td-class.sort-icon{
     display: inline-block;
-    /* width: 6.5%; */
-    /* width: 8.5%; */
-    /* color: black; */
     color: dimgray;
-    /* float: left; */
     margin-left: -4px;
     border: none !important;
-    /* text-align: center; */
-    /* margin-bottom: 11px; */
     margin-top: -9px;
     cursor: default;
   }
@@ -138,15 +122,11 @@
     background-color: rgba(211, 211, 211, 0.41)
   }
   .puf-button {
-    /* box-shadow: rgb(61, 194, 27) 0px 0px 0px 0px; */
-    /* box-shadow: rgb(100, 99, 114) 1px 2px 0px 1px; */
     box-shadow: 0 2px 1px 0 rgba(0, 0, 0, 0.3);
-    /* background-color: rgba(88, 85, 85, 0.41); */
     background-color: white;
     border-radius: 4px;
     display: inline-block;
     cursor: pointer;
-    /* font-family: Arial, Helvetica, sans-serif; */
     font-family: Open sans, sans serif;
     font-weight: 700;
     left: 64%;
@@ -156,7 +136,6 @@
   }
   .puf-footer .cancel{
     float: right;
-    /* margin-left: 378px; */
   }
   .puf-footer .add-button {
     float: right;
@@ -172,16 +151,9 @@
  }
 
  .puf-footer .search-button{
-    /* margin-right: 458px;
-    margin-left: 50px; */
-    /* margin-right: 479px; */
     margin-left: 30px;
     float: left;
   }
-  /* .puf-footer .search-button:active{
-    box-shadow: 0 3px #666;
-    transform: translateY(3px);
-  } */
   .puf-footer .search-button.puf-assessment{
     display:none;
   }
@@ -193,9 +165,8 @@
   height: 16px;
   border-radius: 3px;
   text-transform: uppercase;
-  /* margin-right: 5px; */
-  margin-left: 8px;
-    margin-right: 10px;
+  margin-left: 4px;
+  margin-right: 10px;
   padding: 2px -3px;
   font-size: 10px;
   text-align: center;
@@ -218,7 +189,7 @@
   align-items: center;
  }
  .elm-text-folder{
-  vertical-align: text-top;
+  vertical-align: sub;
  }
  .td-class .cls-1{
   fill:rgb(100%,100%,100%);
@@ -246,7 +217,6 @@
   cursor: pointer;
  }
  .elm-navigate-back-icon{
-  /* vertical-align: middle; */
    cursor: pointer;
    display: flex;
    float:left;
@@ -254,9 +224,9 @@
  .elm-error-div{
   text-align: center;
   margin-top: 5%;
-  min-height: 315px;
+  min-height: 260px;
   border-top:none;
-  overflow-y:none;
+  overflow-y:hidden !important;
  }
 
  .elm-error-line{
@@ -272,9 +242,6 @@ svg#assessmentSlate-item-icon {
   align-items: center;
 }
 /** --------------------------------------------AssessmentSearchBar CSS-------------------------------------------- **/
-.learnosity-search-block {
-  /* border-bottom: 1px solid black; */
-}
 .learnosity-search-block .filter-container{
   margin: 11px 50px 11px 20px;
   background-color: #f5f5f5;
@@ -293,13 +260,7 @@ svg#assessmentSlate-item-icon {
   background-color: #ffffff;
   padding: 9px 8px 9px 8px;
 }
-/* .label-title{
-  font-family: Open Sans,sans-serif;
-  font-size: 12px;
-  letter-spacing: .17px;
-  color: #252525;
-  margin: 0 3px 0 0;
-} */
+
 .learnosity-search-block .input-title1 {
   /* margin-right: 20px; */
   position: relative;
@@ -308,6 +269,7 @@ svg#assessmentSlate-item-icon {
   padding-left: 4px;
   outline: none;
 }
+
 .learnosity-search-block .filter-block {
   width: 100%;
   margin: 11px 20px 11px 20px;
@@ -319,6 +281,7 @@ svg#assessmentSlate-item-icon {
   /* background-color: #ffffff; */
   /* padding: 9px 8px 9px 8px; */
 }
+
 .learnosity-search-block .search-block {
   font-family: 'Open Sans', sans-serif;
   display: inline-block;
@@ -331,11 +294,13 @@ svg#assessmentSlate-item-icon {
   letter-spacing: normal;
   color: #333333;
 }
+
 .learnosity-search-block .noSelect {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   user-select: none;
 }
+
 .learnosity input.input-title1 {
   position: relative;
   /* display: block; */
@@ -346,18 +311,6 @@ svg#assessmentSlate-item-icon {
   padding-left: 4px;
 }
 
-/* .learnosity-search-block .labelTitle::after {
-  content: attr(data-domain);
-  position: absolute;
-  top: 2px;
-  left: 15px;
-  font-family: arial, helvetica, sans-serif;
-  font-size: 12px;
-  display: block;
-  color: rgba(0, 0, 0, 0.6);
-  font-weight: bold;
-} */
-
 .learnosity-search-block .search-heading{
   text-align: center;
     padding: 5px;
@@ -366,6 +319,7 @@ svg#assessmentSlate-item-icon {
     border-top: 2px #EEEEEE solid;
     border-bottom: 2px #EEEEEE solid;
 }
+
 .table-header.show-search{
   display: none;
 }
@@ -392,3 +346,4 @@ svg#assessmentSlate-item-icon {
   background-image: none !important;
   color: -internal-light-dark-color(black, white) !important;
 }
+
