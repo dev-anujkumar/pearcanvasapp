@@ -1931,7 +1931,7 @@ export class TinyMceEditor extends Component {
         /*** PCAT-8087| After Versioning - Wiris editor is not loaded on clicking the MathML/ChemMl image added in the ShowHide element after versioning. */
         let currentActiveNode = null
         let activeContainerNode = document.querySelector('div .active')
-        let activeShowHideNode = document.querySelector('.show-hide-active .cypress-editable')
+        let activeShowHideNode = document.querySelector('.show-hide-active .cypress-editable.mce-content-body.mce-edit-focus')
         if(activeContainerNode){
             currentActiveNode = activeContainerNode
         }
