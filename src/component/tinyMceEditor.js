@@ -1926,8 +1926,22 @@ export class TinyMceEditor extends Component {
             this.setToolbarByElementType();
             isSameTarget = true;
         }
-        let currentActiveNode = document.querySelector('div .active')
-        let currentElementId = this.props.currentElement && this.props.currentElement.type === "element-citation" ? this.props.currentElement.id : this.props.element.id
+        // let currentActiveNode = document.querySelector('div .active')
+        // let currentElementId = this.props.currentElement && this.props.currentElement.type === "element-citation" ? this.props.currentElement.id : this.props.element.id
+        /*** PCAT-8087| After Versioning - Wiris editor is not loaded on clicking the MathML/ChemMl image added in the ShowHide element after versioning. */
+        let currentActiveNode = null
+        let activeContainerNode = document.querySelector('div .active')
+        let activeShowHideNode = document.querySelector('.show-hide-active .cypress-editable')
+        if(activeContainerNode){
+            currentActiveNode = activeContainerNode
+        }
+        else if(activeShowHideNode){
+            currentActiveNode = activeShowHideNode
+        }
+       
+        let currentElementId = this.props.currentElement && !(currentTarget && currentTarget.classList.contains('formatted-text')) ? this.props.currentElement.id : this.props.element.id
+
+
         if (currentActiveNode && currentActiveNode.getAttribute('data-id') === currentElementId) {
             isSameByElementId = true;
         }
