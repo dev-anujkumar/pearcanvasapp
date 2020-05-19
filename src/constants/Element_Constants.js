@@ -16,7 +16,7 @@ export const DEFAULT_IMAGE_SOURCE = "https://cite-media-stg.pearson.com/legacy_p
 export const AUDIO = "audio"
 export const VIDEO = "video"
 export const DEFAULT_ASSET="Asset data undefined"
-export const DEFAULT_VIDEO_POSTER_IMAGE = "https://d12m40tknrppbi.cloudfront.net/cite/images/FPO-audio_video.png"
+export const DEFAULT_VIDEO_POSTER_IMAGE = "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png"
 
 /*---------------Element Single Assessment ----------------------*/ 
 export const ASSESSMENT_USAGE_TYPE =['Quiz', 'Test', 'Practice', 'Homework', 'Diagnostic', 'Journal', 'Shared Writing', 'Concept Check', 'Non-Scored', 'Study Tool']

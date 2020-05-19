@@ -11,17 +11,27 @@ import elementTypeConstant from './ElementSepratorConstants.js';
 import '../../styles/ElementSaprator/ElementSaprator.css'
 import ElementContainerType from '../ElementContainerType/ElementContainerType.jsx'
 
-const METADATA_ANCHOR = 'metadata-anchor',
-SECTION_BREAK = 'section-break-elem',
-OPENER = 'opener-elem',
-BACK_MATTER = 'Back Matter',
-FRONT_MATTER = 'Front Matter',
-ELEMENT_ASIDE = 'element-aside',
-WORKED_EXP = 'worked-exp-elem',
-CONTAINER = 'container-elem-button',
-CONTAINER_INTRO = 'container-introduction',
-CITATION ='citation-elem',
-CITATION_GROUP_ELEMENT='citations'
+const { TEXT, 
+    IMAGE, 
+    AUDIO, 
+    INTERACTIVE, 
+    ASSESSMENT, 
+    CONTAINER, 
+    WORKED_EXP, 
+    OPENER, 
+    SECTION_BREAK, 
+    METADATA_ANCHOR, 
+    INTERACTIVE_BUTTON, 
+    ELEMENT_ASIDE, 
+    POETRY_ELEMENT, 
+    CITATION, 
+    CITATION_GROUP_ELEMENT, 
+    POETRY, 
+    STANZA_ELEMENT, 
+    CONTAINER_BUTTON, 
+    BACK_MATTER, 
+    FRONT_MATTER, 
+    CONTAINER_INTRO } = elementTypeConstant
 
 export default function ElementSaprator(props) {
     const [showClass, setShowClass] = useState(false);
@@ -57,6 +67,11 @@ export default function ElementSaprator(props) {
             let openDropdown = openDropdowns[i]
             if (openDropdown.classList.contains('show')) {
                 openDropdown.classList.remove('show')
+                // BG-2040 fix
+                let openedSeparator = document.getElementsByClassName("opacityClassOn")
+                if(openedSeparator && openedSeparator.length){
+                    openedSeparator[0].classList.remove('opacityClassOn')
+                }
             }
         }
         setShowClass(!showClass)
@@ -146,9 +161,9 @@ function asideButton(esProps,sectionBreak,elementType){
         return buttonType == CITATION;//citation element
       }else{
         if (sectionBreak) {
-            return buttonType !== WORKED_EXP && buttonType !== CONTAINER && buttonType !== OPENER &&  buttonType !== CITATION && buttonType !== elementTypeConstant.STANZA_ELEMENT && buttonType !== elementTypeConstant.POETRY_ELEMENT;
+            return buttonType !== WORKED_EXP && buttonType !== CONTAINER_BUTTON && buttonType !== OPENER &&  buttonType !== CITATION && buttonType !== STANZA_ELEMENT && buttonType !== POETRY_ELEMENT;
         } else {
-            return buttonType !== OPENER && buttonType !== SECTION_BREAK && buttonType !== WORKED_EXP && buttonType !== CONTAINER && buttonType !== CITATION && buttonType !== elementTypeConstant.STANZA_ELEMENT && buttonType !== elementTypeConstant.POETRY_ELEMENT;
+            return buttonType !== OPENER && buttonType !== SECTION_BREAK && buttonType !== WORKED_EXP && buttonType !== CONTAINER_BUTTON && buttonType !== CITATION && buttonType !== STANZA_ELEMENT && buttonType !== POETRY_ELEMENT;
         }
     }
     })
@@ -160,15 +175,14 @@ function asideButton(esProps,sectionBreak,elementType){
  */
 
 function renderConditionalButton(esProps, elementType) {
-    const { TEXT, IMAGE, AUDIO, INTERACTIVE, ASSESSMENT, CONTAINER, WORKED_EXP, OPENER, SECTION_BREAK, METADATA_ANCHOR,
-        POETRY_ELEMENT, INTERACTIVE_BUTTON, CITATION, CONTAINER_BUTTON } = elementTypeConstant
     let updatedEsProps = esProps.filter((btnObj) => {
         let buttonType = btnObj.buttonType;
-        return buttonType !== OPENER && buttonType !== SECTION_BREAK && buttonType !== WORKED_EXP &&
+        return buttonType === STANZA_ELEMENT
+        /* return buttonType === OPENER && buttonType !== SECTION_BREAK && buttonType !== WORKED_EXP &&
             buttonType !== CONTAINER && buttonType !== TEXT && buttonType !== IMAGE &&
             buttonType !== AUDIO && buttonType !== INTERACTIVE && buttonType !== ASSESSMENT &&
             buttonType !== METADATA_ANCHOR && buttonType !== POETRY_ELEMENT && buttonType !== INTERACTIVE_BUTTON
-            && buttonType !== CITATION && buttonType !== CONTAINER_BUTTON;
+            && buttonType !== CITATION && buttonType !== CONTAINER_BUTTON; */
     })
     return updatedEsProps;
 }
@@ -180,7 +194,7 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
     let {data,setData,showInteractiveOption,setshowInteractiveOption,props} =propsData
     let updatedEsProps, buttonType;
     if (config.parentEntityUrn == FRONT_MATTER || config.parentEntityUrn == BACK_MATTER) {
-        if (elementType == ELEMENT_ASIDE || elementType == elementTypeConstant.POETRY) {
+        if (elementType == ELEMENT_ASIDE || elementType == POETRY) {
             esProps = (elementType == ELEMENT_ASIDE) ? asideButton(esProps, sectionBreak,elementType) : 
                 renderConditionalButton(esProps,elementType);
             updatedEsProps = esProps.filter((btnObj) => {
@@ -196,7 +210,7 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
         }else {            
             updatedEsProps = esProps.filter((btnObj) => {
                 buttonType = btnObj.buttonType;
-                return buttonType !== METADATA_ANCHOR && buttonType !== SECTION_BREAK && buttonType !== OPENER &&  buttonType !== CITATION && buttonType !== elementTypeConstant.STANZA_ELEMENT;
+                return buttonType !== METADATA_ANCHOR && buttonType !== SECTION_BREAK && buttonType !== OPENER &&  buttonType !== CITATION && buttonType !== STANZA_ELEMENT;
             })
         }
 
@@ -222,16 +236,16 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
             if (!config.isCO) {
                 updatedEsProps = esProps.filter((btnObj) => {
                     return btnObj.buttonType !== SECTION_BREAK && btnObj.buttonType !== CITATION 
-                    && btnObj.buttonType !== elementTypeConstant.STANZA_ELEMENT;
+                    && btnObj.buttonType !== STANZA_ELEMENT;
                 })
             } else {
                 updatedEsProps = esProps.filter((btnObj) => {
                     buttonType = btnObj.buttonType;
                     return buttonType !== SECTION_BREAK && buttonType !== OPENER 
-                    && buttonType !== CITATION && btnObj.buttonType !== elementTypeConstant.STANZA_ELEMENT;
+                    && buttonType !== CITATION && btnObj.buttonType !== STANZA_ELEMENT;
                 })
             }
-            if (elementType == ELEMENT_ASIDE || elementType == elementTypeConstant.POETRY) {
+            if (elementType == ELEMENT_ASIDE || elementType == POETRY) {
                 esProps = (elementType == ELEMENT_ASIDE) ? asideButton(esProps, sectionBreak,elementType) :
                     renderConditionalButton(esProps, elementType);
                 updatedEsProps = esProps.filter((btnObj) => {
@@ -246,15 +260,15 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
                 })
             }
         }
-        else if (elementType == ELEMENT_ASIDE || elementType == CITATION_GROUP_ELEMENT || elementType === elementTypeConstant.POETRY) {
-            updatedEsProps = (elementType === elementTypeConstant.POETRY) ?
+        else if (elementType == ELEMENT_ASIDE || elementType == CITATION_GROUP_ELEMENT || elementType === POETRY) {
+            updatedEsProps = (elementType === POETRY) ?
                 renderConditionalButton(esProps, elementType) :
                 asideButton(esProps, sectionBreak, elementType);
         }          
         else {
             updatedEsProps = esProps.filter((btnObj) => {
                 buttonType = btnObj.buttonType;
-                return buttonType !== SECTION_BREAK && buttonType !== OPENER && buttonType !== CITATION && buttonType !== elementTypeConstant.STANZA_ELEMENT;
+                return buttonType !== SECTION_BREAK && buttonType !== OPENER && buttonType !== CITATION && buttonType !== STANZA_ELEMENT;
             })
         }
     }
@@ -265,7 +279,7 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
 
     return updatedEsProps.map((elem, key) => {
         function buttonHandlerFunc() {
-            if (elem.buttonType == "interactive-elem-button" || elem.buttonType == "container-elem-button") {
+            if (elem.buttonType === "interactive-elem-button" || elem.buttonType === "container-elem-button" || elem.buttonType === "block-text-button") {
                 setData(typeOfContainerElements(elem, props));
                 if(elem.buttonType !== showInteractiveOption.type){
                     setshowInteractiveOption({status:true,type:elem.buttonType});
@@ -286,7 +300,9 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
                     text={elem.buttonType}
                     closeDropDown={closeDropDown}
                     data={data}
-                    >
+                    sectionBreak={sectionBreak}
+                    elementType={elementType}
+                >
                 </ElementContainerType>
             }
                 <Tooltip key={key} direction={elem.tooltipDirection} tooltipText={elem.tooltipText}>
@@ -313,6 +329,11 @@ function typeOfContainerElements(elem, props) {
             "Add Smart Link": "smartlink-elem",
             "Add Show Hide": "show-hide-elem",
             "Add Pop Up": "popup-elem",
+        },
+        "block-text-button": {
+            "Block Math": "figure-mml-elem",
+            "Block Code": "blockcode-elem",
+            "Block Poetry": "poetry-elem"
         }
     }
     let newData = containerArray[elem.buttonType];

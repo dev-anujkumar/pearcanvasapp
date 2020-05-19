@@ -1,8 +1,6 @@
 /**
  * Module - utility
  * Description - This file contains utility functions to be shared across
- * Developer - Abhay Singh
- * Last modified - 11-09-2019
  */
 
 // IMPORT - Module dependencies
@@ -122,6 +120,70 @@ export const encodeHTMLInWiris = (str) => {
         // console.log('encodeHTMLInWiris:::', str);
         return str;
     }
+}
+
+/**
+ * Refines title content from unified model by removing extra tags
+ * @param {*} htmlText unified HTML content
+ */
+const removeTagsforSubTitle = (htmlText) => {
+    return htmlText.replace(/<label>?.+<\/label>/g, "").replace(/<p>|<\/p>/g, "")
+}
+
+
+/**
+ * Separates label and title from the unified HTML content and maps it to UI
+ * @param {*} model label or title HTML content
+ * @param {*} modelType type - label or title
+ */
+export const getTitleSubtitleModel = (model, modelType) => {
+    let modelDocDom = model && new DOMParser().parseFromString(model, "text/html")
+    let modelDom = modelDocDom && modelDocDom.body && modelDocDom.body.children[0]
+    let modelToReturn
+    if(modelType){
+        if(modelType === "formatted-title"){
+            try{
+                if(model && model.match(/<label>?.+<\/label>/g)){
+                    modelToReturn = modelToReturn = `<p class="paragraphNumeroUno">${modelDom.children[0].innerHTML}</p>`   
+                }
+                else{
+                    modelToReturn = `<p class="paragraphNumeroUno"><br/></p>`
+                }
+            }
+            catch (error) {
+                modelToReturn = `<p class="paragraphNumeroUno"><br/></p>`
+            }
+        }
+        else if(modelType === "formatted-subtitle"){
+            try{
+                let modelInnerHTML = modelDom.innerHTML
+                let modelWithRemovedTags = removeTagsforSubTitle(modelInnerHTML)
+                modelToReturn = `<p class="paragraphNumeroUno">${modelWithRemovedTags}</p>`
+            }
+            catch (error) {
+                modelToReturn = `<p class="paragraphNumeroUno"><br/></p>`
+            }
+        }
+        else{
+            modelToReturn = `<p class="paragraphNumeroUno"><br/></p>`
+        }
+    }
+    return modelToReturn
+}
+
+/**
+ * Combines label and title HTML and returns HTML content to send through update API
+ * @param {*} titleHTML Label HTML content
+ * @param {*} subtitleHTML title HTML content
+ */
+export const createTitleSubtitleModel = (titleHTML, subtitleHTML) => {
+    let labelHTML = titleHTML.replace(/<br>/g, ""),
+        titleModel = subtitleHTML.replace(/<br>/g, "")
+
+    if(labelHTML === ""){
+        return `<p>${titleModel}</p>`
+    }
+    return `<p><label>${labelHTML}&nbsp;</label>${titleModel}</p>`
 }
 
 /** This is a list of HTML Entity code mapped to their HTML Entity name and Special Character |
@@ -332,4 +394,16 @@ const htmlEntityList = {
     "§#9181;": ["⏝", ""],
     "§#9182;": ["⏞", ""],
     "§#9183;": ["⏟", ""],
+}
+
+/** This is a function to set Assessment Title for Quad Assessment
+ */
+export const setAssessmentTitle = (props) => {
+    let assessmentTitle = null;
+    if (props && props.model && props.model.html && props.model.html.title) {
+        assessmentTitle = props.model.html.title
+    } else if (props && props.model && props.model.title && props.model.title.text) {
+        assessmentTitle = props.model.title.text
+    }
+    return assessmentTitle;
 }

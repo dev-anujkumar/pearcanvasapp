@@ -78,6 +78,7 @@ describe('Testing Opener component with props', () => {
         openerComponent.find('ul.element-dropdown-content>li:first-child').simulate('click');
         expect(OpenerInstance.state.showLabelDropdown).toBe(false)
     })
+   
     it('Changing input number', () => {
         const openerComponent = mount( <Provider store={store}><OpenerElement {...props} /></Provider> )
         let openerElementInstance = openerComponent.find('OpenerElement').instance()
@@ -86,6 +87,18 @@ describe('Testing Opener component with props', () => {
         expect(openerElementInstance.handleOpenerNumberChange(event))
         expect(openerElementInstance.state.number).toBe('1234567890!!!')
     })
+   
+    describe('testing background image is already selected',()=>{
+        it('Simulating click event to open dropdown when background image is already selected', () => {
+            const openerComponent = mount( <Provider store={store}><OpenerElement {...props} /></Provider> )
+            const OpenerInstance = openerComponent.find('OpenerElement').instance()
+            openerComponent.find('div.update-image-label').simulate('click');
+            expect(OpenerInstance.state.updateImageOptions).toBe(true)
+            // openerComponent.find('ul.image-global-button>li:first-child').simulate('click');
+            //   expect(OpenerInstance.state.updateImageOptions).toBe(false)
+        })
+    })
+
     describe('Simulating keyPress event on input number', () => {
         const openerComponent = mount( <Provider store={store}><OpenerElement {...props} /></Provider> )        
         it('Simulating keyPress event on input number - alphanumeric input', () => {

@@ -1,16 +1,12 @@
 /**
  * Module - Webpack Config
  * Description - webpack config for production built on v4
- * Developer - Abhay Singh
- * Last modified - 12-08-2019
  */
 const path = require('path');
 const webpack = require('webpack');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 const TerserJSPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
@@ -99,7 +95,6 @@ module.exports = {
     },
     plugins: [
         // To cleanup dis folder every time with unwanted assets
-        // new CleanWebpackPlugin({ verbose: true }),
         new HtmlWebpackPlugin({
             // All the JS resources will be placed at head element
             inject: 'head',

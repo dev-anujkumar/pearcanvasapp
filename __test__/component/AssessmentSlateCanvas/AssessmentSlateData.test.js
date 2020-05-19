@@ -44,6 +44,10 @@ let initialState = {
     },
     learningToolReducer:{
         learningTypeSelected:""
+    },
+    citeTdxReducer:{
+        sortBy:"name",
+        sortOrder:1
     }
 };
 describe('Testing Assessment Slate Data component', () => {

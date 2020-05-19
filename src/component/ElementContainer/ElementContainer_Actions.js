@@ -222,11 +222,12 @@ function prepareDataForTcmUpdate (updatedData,id, elementIndex, asideData, getSt
     } else if (indexes.length === 3) {
         if (((!poetryData) || (poetryData.type != "poetry")) && slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].id === id) {
             updatedData.isHead = false;
-        } else if ((poetryData && poetryData.type === "poetry") && slateBodyMatter[indexes[0]].contents.bodymatter[indexes[2]].id === id) {
+        } else if (((poetryData && poetryData.type === "poetry") || (type === "stanza")) && slateBodyMatter[indexes[0]].contents.bodymatter[indexes[2]].id === id) {
             updatedData.isHead = false;
-        } else if(type==="stanza" && slateBodyMatter[indexes[0]].contents.bodymatter[indexes[2]].id === id){
+        } 
+        /** else if(type==="stanza" && slateBodyMatter[indexes[0]].contents.bodymatter[indexes[2]].id === id){
             updatedData.isHead = false;
-        }
+        }*/
         
     }
     if (asideData && asideData.type === "element-aside") {
@@ -237,9 +238,6 @@ function prepareDataForTcmUpdate (updatedData,id, elementIndex, asideData, getSt
         }
     } else if (poetryData && poetryData.type === 'poetry'){
         updatedData.parentType = "poetry";
-    }
-    if(config.tempSlateManifestURN){
-        updatedData.parentType = "popup"
     }
     updatedData.projectURN = config.projectUrn;
     updatedData.slateEntity = config.slateEntityURN;
@@ -309,9 +307,9 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
                     }
                 }
             }
-            else if (updatedData.type === 'stanza') {
-                updateStoreInCanvas({ ...updatedData, ...response.data }, asideData, parentUrn, dispatch, getState, null, elementIndex, showHideType, parentElement, poetryData)
-            }
+            // else if (updatedData.type === 'stanza') {
+            //     updateStoreInCanvas({ ...updatedData, ...response.data }, asideData, parentUrn, dispatch, getState, null, elementIndex, showHideType, parentElement, poetryData)
+            // }
         }
         
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
@@ -371,9 +369,10 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                 }
             } else if(parentElement && parentElement.type == 'poetry'){
 
-                if(indexes.length === 2 || indexes.length === 3 || indexes === 2 || indexes === 3){
+                // if(indexes.length === 2 || indexes.length === 3 || indexes === 2 || indexes === 3){
+                    parentElement.index = elementIndex;
                     dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:parentElement.id, parentElement.contentUrn, 0, parentElement));
-                }
+                // }
             } 
             else if(parentElement && parentElement.type === "popup" && updatedData.elementParentEntityUrn && (updatedData.metaDataField || updatedData.section === "postertextobject") ){
                 dispatch(fetchSlateData(updatedData.slateUrn, updatedData.slateEntity, 0)); }
@@ -578,7 +577,8 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                                 "formatted-title": { ...updatedData }
                             }
                         };
-                    } else if (element.contents["formatted-subtitle"] && element.contents["formatted-subtitle"]["id"] === elementId) {
+                    } 
+                    /* else if (element.contents["formatted-subtitle"] && element.contents["formatted-subtitle"]["id"] === elementId) {
                         element = {
                             ...element,
                             contents: {
@@ -586,7 +586,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                                 "formatted-subtitle": { ...updatedData }
                             }
                         };
-                    } 
+                    }  */
                     // else if (element.contents["formattedCaption"] && element.contents["formattedCaption"]["id"] === elementId) {
                     //     element = {
                     //         ...element,
@@ -622,9 +622,9 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                 else if (element.type === "showhide") {
                     if (showHideType) {
                         element.interactivedata[showHideType].forEach((showHideElement, index) => {
-                            if (showHideElement.id === elementId) {
-                                showHideElement = { ...updatedData }
-                                element.interactivedata[showHideType][index] = showHideElement
+                            if (showHideElement.id == updatedData.id) {
+                                showHideElement.elementdata.text = updatedData.elementdata.text;
+                                showHideElement.html = updatedData.html;
                             }
                         })
                     }

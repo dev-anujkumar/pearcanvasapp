@@ -1,24 +1,19 @@
 /**
  * Module - Webpack Config
  * Description - webpack config for development built on v4
- * Developer - Abhay Singh
- * Last modified - 12-08-2019
  */
 const path = require('path');
 const webpack = require('webpack');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 const WebpackMd5Hash = require('webpack-md5-hash');
 const BrotliPlugin = require('brotli-webpack-plugin');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const USEHASH = '[hash]'; // Use [hash] in case of HMR is enabled and [contenthash] otherwise
 const COMPRESSION = process.env.COMPRESSION && process.env.COMPRESSION == 'true' || false;
 const DOTENV = require('dotenv').config({ path: __dirname + '/.env' });
 const plugin = [
     // To cleanup dis folder every time with unwanted assets
-    // new CleanWebpackPlugin({ verbose: true }),
     new HtmlWebpackPlugin({
         // All the JS resources will be placed at head element
         inject: 'head',
@@ -40,9 +35,6 @@ const plugin = [
             to: path.join(__dirname, 'dist/')
         }
     ]),
-    // new BundleAnalyzerPlugin({
-    //     analyzerMode: 'static'
-    // }),
     // To prevent vendor hash id to change everytime
     new webpack.HashedModuleIdsPlugin(),
     // This doesn't work with [contenthash] or [chunkhash] and uncomment it if HMR is needed

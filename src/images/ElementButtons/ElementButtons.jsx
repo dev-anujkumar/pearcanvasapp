@@ -20,14 +20,15 @@ export const textIcon = (function () {
 
 /****************************************************Poetry Element***********************************************************/
 
-export const poetryIcon = (function () {
-    return (<svg width="18px" height="18px" viewBox="0 0 18 18" version="1.1" xmlns="http://www.w3.org/2000/svg">
-    <g id="PCAT-7012-Poetry" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="06/v3-24Mar2020" transform="translate(-1052.000000, -479.000000)">
-            <g id="icon/element/PoetryElement" transform="translate(1049.000000, 476.000000)">
-                <rect id="Rectangle" fill="#EEEEEE" fill-rule="evenodd" opacity="0" x="0" y="0" width="24" height="24"></rect>
-                <path d="M20.8455242,8.45002734 L15.5498679,3.15447656 C15.4509734,3.05554688 15.3168523,3 15.1770008,3 C15.0371492,3 14.9029929,3.05554688 14.8040984,3.15447656 L12.8212859,5.13721875 C12.7223914,5.23611328 12.6668094,5.37023438 12.6668094,5.51008594 C12.6668094,5.64997266 12.7223914,5.78409375 12.8212859,5.88298828 L13.3078836,6.36955078 C12.1217117,7.42160156 10.7456609,8.05451953 9.21017654,8.25248438 C7.92542654,8.41814062 7.00268045,8.20115625 6.99487576,8.19922266 C6.7188992,8.13108984 6.43859842,8.29386328 6.36107888,8.56730859 L3.04415701,20.2616133 C2.95904373,20.4564844 2.99697732,20.69175 3.15792263,20.8493906 C3.26054373,20.9499023 3.39378592,21 3.52692263,21 C3.61414529,21 3.70119217,20.9782734 3.77969607,20.9353828 L15.4322703,17.6386758 C15.7058914,17.5612617 15.8688758,17.2808203 15.8006726,17.0047734 C15.7921297,16.9701797 15.0133484,13.651957 17.6308719,10.6923984 L18.1169773,11.1785039 C18.21995,11.2815117 18.3548797,11.3329805 18.4898797,11.3329805 C18.6248094,11.3329805 18.7598094,11.2814766 18.862782,11.1785039 L20.8455945,9.19579687 C20.944489,9.09690234 21.0000711,8.96278125 21.0000711,8.82292969 C21.0000711,8.68307812 20.9444539,8.54888672 20.8455242,8.45002734 Z M14.6950789,14.704043 C14.5875008,15.5778164 14.6332039,16.3012266 14.6900164,16.7525977 L5.30941482,19.4065078 L9.47131717,15.1574883 C9.79883279,15.349582 10.1726492,15.4523438 10.5623914,15.4523438 C11.1400086,15.4523438 11.6830672,15.2274492 12.0915125,14.8189687 L12.0915476,14.8189687 C12.9346648,13.9758516 12.9346648,12.6039492 12.0915125,11.760832 C11.2483601,10.9177148 9.87645779,10.9177148 9.03330545,11.760832 C8.31327029,12.4808672 8.20864529,13.58625 8.71844607,14.4188906 L4.60716873,18.6161953 L7.24677029,9.30980859 C7.69814138,9.36662109 8.42169217,9.41242969 9.29567654,9.30478125 C10.5489265,9.15048047 12.3539539,8.63994141 14.0543914,7.11605859 L16.8838719,9.94546875 C15.359989,11.6458359 14.8494148,13.4508281 14.6950789,14.704043 L14.6950789,14.704043 Z M9.77903982,12.5065664 C9.99503982,12.2905664 10.2786453,12.1826367 10.5623562,12.1826367 C10.8459969,12.1826367 11.1297429,12.2906367 11.3456726,12.5065664 C11.7776023,12.9384961 11.7776023,13.6412344 11.3456726,14.0731641 C11.1364226,14.2823789 10.8582664,14.3975859 10.5623562,14.3975859 C10.2664461,14.3975859 9.98828982,14.2823789 9.77903982,14.0731641 C9.34714529,13.6412695 9.34714529,12.9384961 9.77903982,12.5065664 Z M18.4898445,10.0598672 L17.9922078,9.56226563 C17.9921375,9.56219531 17.9921023,9.56216016 17.9920672,9.56208984 C17.9919969,9.56201953 17.9919617,9.56198438 17.9918914,9.56191406 L13.9399929,5.51008594 L15.1770008,4.27311328 L19.7268523,8.82289453 L18.4898445,10.0598672 Z" id="Shape" fill="#454545" fill-rule="nonzero"></path>
-            </g>
+export const blockTextIcon = (function () {
+    return (<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <g id="poetry-icon/hover-copy" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
+        <rect id="Rectangle" fill="#EEEEEE" opacity="0.100000001" x="0" y="0" width="24" height="24"></rect>
+        <g id="Group-10-Copy-3" transform="translate(10.667262, 13.667262) rotate(-135.000000) translate(-10.667262, -13.667262) translate(4.667262, 3.167262)">
+            <path d="M6.00486653,8.42633854 L6,0 L12,11.088559 C9.64908956,13.0042877 8.47363434,15.1168809 8.47363434,17.4263385" id="Path-3" stroke="#000000" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
+            <path d="M0.00486653063,8.42633854 L0,0 L6,11.088559 C3.64908956,13.0042877 2.47363434,15.1168809 2.47363434,17.4263385" id="Path-3" stroke="#000000" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" transform="translate(3.000000, 8.713169) scale(-1, 1) translate(-3.000000, -8.713169) "></path>
+            <circle id="Oval" fill="#000000" cx="6" cy="10" r="2"></circle>
+            <path d="M10.8536443,17.778811 L0.859519854,18.2133381 L1.1463557,20.221189 L11.1404801,19.7866619 L10.8536443,17.778811 Z" id="Path-2" stroke="#000000" strokeWidth="1.5"></path>
         </g>
     </g>
 </svg>)
@@ -35,14 +36,14 @@ export const poetryIcon = (function () {
 
 export const stanzaIcon = (function () {
     return (<svg width="16px" height="14px" viewBox="0 0 16 14" version="1.1" xmlns="http://www.w3.org/2000/svg">
-        <g id="PCAT-7012-Poetry" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="PCAT-7012-Poetry" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
             <g id="05" transform="translate(-1107.000000, -618.000000)">
                 <g id="icon/element/Stanza" transform="translate(1103.000000, 613.000000)">
-                    <rect id="Rectangle" fill="#EEEEEE" fill-rule="evenodd" opacity="0" x="0" y="0" width="24" height="24"></rect>
-                    <polyline id="Path" fill="#454545" fill-rule="nonzero" points="7.88888889 11 19.8888889 11 19.8888889 9 7.88888889 9"></polyline>
-                    <polyline id="Path" fill="#454545" fill-rule="nonzero" points="4 5 4 7 20 7 20 5"></polyline>
-                    <polyline id="Path" fill="#454545" fill-rule="nonzero" points="7.88888889 19 19.8888889 19 19.8888889 17 7.88888889 17"></polyline>
-                    <polygon id="Path" fill="#454545" fill-rule="nonzero" points="4 15 20 15 20 13 4 13"></polygon>
+                    <rect id="Rectangle" fill="#EEEEEE" fillRule="evenodd" opacity="0" x="0" y="0" width="24" height="24"></rect>
+                    <polyline id="Path" fill="#454545" fillRule="nonzero" points="7.88888889 11 19.8888889 11 19.8888889 9 7.88888889 9"></polyline>
+                    <polyline id="Path" fill="#454545" fillRule="nonzero" points="4 5 4 7 20 7 20 5"></polyline>
+                    <polyline id="Path" fill="#454545" fillRule="nonzero" points="7.88888889 19 19.8888889 19 19.8888889 17 7.88888889 17"></polyline>
+                    <polygon id="Path" fill="#454545" fillRule="nonzero" points="4 15 20 15 20 13 4 13"></polygon>
                 </g>
             </g>
         </g>
@@ -115,8 +116,8 @@ export const openerElement = (function () {
     return (
         <svg fill= "#9e9e9e" style ={{width: "20px", height: "20px", fill: "#9e9e9e"}} id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
             <title>Opener Element</title>
-            <path class="cls-1" d="M8.75,9.06v8.75H0V8.94A6.61,6.61,0,0,1,5.62,2.19l.75,1.75s-2.5.37-3,2.37a3.14,3.14,0,0,0,.5,2.75Z"></path>
-            <path class="cls-1" d="M20,9.06v8.75H11.25V8.94a6.62,6.62,0,0,1,5.63-6.75l.75,1.75s-2.5.37-3,2.37a3.14,3.14,0,0,0,.5,2.75Z"></path>
+            <path className="cls-1" d="M8.75,9.06v8.75H0V8.94A6.61,6.61,0,0,1,5.62,2.19l.75,1.75s-2.5.37-3,2.37a3.14,3.14,0,0,0,.5,2.75Z"></path>
+            <path className="cls-1" d="M20,9.06v8.75H11.25V8.94a6.62,6.62,0,0,1,5.63-6.75l.75,1.75s-2.5.37-3,2.37a3.14,3.14,0,0,0,.5,2.75Z"></path>
         </svg>
     )
 })();
@@ -223,7 +224,7 @@ export const elmAssessmentItem = (()=>{
 export const singleAssessmentItemIcon = (()=>{
     return (
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
-        <g fill="none" fill-rule="evenodd" transform="translate(-3 -3)">
+        <g fill="none" fillRule="evenodd" transform="translate(-3 -3)">
             <rect width="18" height="18" x="3" y="3" fill="#CD1F2A" rx="2"/>
             <circle cx="7" cy="7" r="1" fill="#FFF"/>
             <path fill="#FFF" d="M9 6.3H18V7.699999999999999H9z"/>
@@ -276,3 +277,11 @@ export const citationElement = (() => {
             </g>
         </svg>)
 })();
+
+export const tableElemIcon = (() => {
+    return ( 
+        <svg style ={{width: "20px", height: "20px", fill: "#9e9e9e"}} xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 24 24">
+            <path d="M5,4H19A2,2 0 0,1 21,6V18A2,2 0 0,1 19,20H5A2,2 0 0,1 3,18V6A2,2 0 0,1 5,4M5,8V12H11V8H5M13,8V12H19V8H13M5,14V18H11V14H5M13,14V18H19V14H13Z" />
+        </svg>
+    )
+  })();

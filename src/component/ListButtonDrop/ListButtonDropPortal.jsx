@@ -1,8 +1,6 @@
 /**
  * Module - ListButtonDropPortal
  * Description - portal component for ListButtonDrop element
- * Developer - Abhay Singh
- * Last modified - 04-09-2019
  */
 
 // IMPORT - Plugins //
@@ -10,7 +8,7 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-
+import config from '../../config/config.js'
 class ListButtonDropPortal extends Component {
     constructor(props) {
         super(props);
@@ -65,7 +63,7 @@ class ListButtonDropPortal extends Component {
             this.startValue = null;
             this.selectedOption = null;
             if (activeElement.elementWipType === 'element-list') {
-                const slateObject = Object.values(slateData)[0];
+                const slateObject = slateData[config.slateManifestURN];
                 const { contents } = slateObject;
                 const { bodymatter } = contents;
                 let listElement = Object.create(null, {})
@@ -113,7 +111,7 @@ class ListButtonDropPortal extends Component {
                         }else if (element.type === "showhide"){
                             element.interactivedata[this.props.showHideObj.showHideType].find(
                                 (nselement) => {
-                                    let isMatched = false
+                                    // let isMatched = false
                                     if (nselement.id === activeElement.elementId) {
                                         isMatched = nselement.type === 'element-list'
                                         isMatched && (listElement = nselement)

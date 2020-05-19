@@ -15,7 +15,7 @@ import { FULL_ASSESSMENT_CITE , LEARNOSITY , PUF} from './AssessmentSlateConstan
 import TinyMceEditor from "./../tinyMceEditor"
 import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
-
+import { specialCharacterDecode } from './assessmentCiteTdx/Actions/CiteTdxActions';
 /*** @description - AssessmentSlateCanvas is a class*/
 export class AssessmentSlateCanvas extends Component {
     constructor(props) {
@@ -89,7 +89,7 @@ export class AssessmentSlateCanvas extends Component {
         // }
         showTocBlocker();
         disableHeader(true);
-        this.updateAssessment(citeTdxObj.id, "", citeTdxObj.title, assessmentType , citeTdxObj.usageType, 'insert');
+        this.updateAssessment(citeTdxObj.id, "", specialCharacterDecode(citeTdxObj.title), assessmentType , citeTdxObj.usageType, 'insert');
     }
 
     /***

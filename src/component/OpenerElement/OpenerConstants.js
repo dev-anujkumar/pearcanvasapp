@@ -44,7 +44,7 @@ export const getOpenerContent = (textSemantics, type, titleText) => {
                 dataToReturn = "No Label"
                 break;
             case "number":
-                dataToReturn = ''
+                dataToReturn = ' '.trim()
                 break;
             case "title":
             default:

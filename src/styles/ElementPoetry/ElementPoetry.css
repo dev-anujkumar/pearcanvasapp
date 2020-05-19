@@ -6,7 +6,6 @@
     min-height: 22px;
     color: #000;
     font-family: Palatino, Palatino Linotype, Palatino LT STD, Georgia, serif !important;
-    font-weight: normal !important;
 }
 .element-container.pe .horizontalLine  {
     margin-left: -30px;
@@ -24,4 +23,8 @@
 
 .poetryLineLevel3 {
     padding-left: 120px !important;
+}
+
+.poetryHideLabel {
+    display: none;
 }

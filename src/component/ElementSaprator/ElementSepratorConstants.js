@@ -15,5 +15,9 @@ export default {
     INTERACTIVE_BUTTON : 'interactive-elem-button',
     CITATION :'citation-elem',
     CITATION_GROUP_ELEMENT : 'citations',
-    CONTAINER_BUTTON : 'container-elem-button'
+    CONTAINER_BUTTON : 'container-elem-button',
+    BACK_MATTER : 'Back Matter',
+    FRONT_MATTER : 'Front Matter',
+    CONTAINER_INTRO : 'container-introduction',
+    ELEMENT_ASIDE : 'element-aside'
 }

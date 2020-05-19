@@ -8,6 +8,7 @@ import TinyMceEditor from "../tinyMceEditor";
 import { CitationGroupContext } from '../ElementContainer/ElementCitationContext'
 import { sendDataToIframe } from '../../constants/utility.js';
 import config from '../../config/config.js';
+import { getTitleSubtitleModel } from "../../constants/utility.js"
 
 const CGTinyMCE = (props) => {
     const context = useContext(CitationGroupContext)
@@ -16,11 +17,11 @@ const CGTinyMCE = (props) => {
         permissions : context.permissions,
         element : context.element,
         index : `${context.index}-0`,
-        className : "citationTitle",
+        className : "citationTitle formatted-text",
         id : context.id,
         placeholder : "Enter Title...",
         tagName : 'h4',
-        model : context.element.contents && context.element.contents["formatted-title"] && context.element.contents["formatted-title"].html && context.element.contents["formatted-title"].html.text ? context.element.contents["formatted-title"].html.text : "",
+        model : context.element.contents && context.element.contents["formatted-title"] && context.element.contents["formatted-title"].html && context.element.contents["formatted-title"].html.text ? getTitleSubtitleModel(context.element.contents["formatted-title"].html.text, "formatted-subtitle").replace(/&nbsp;/g, "") : `<p class="paragraphNumeroUno"><br/></p>`,
         currentElement : context.element.contents && context.element.contents["formatted-title"],
         handleEditorFocus : context.handleFocus,
         handleBlur  :  context.handleBlur,

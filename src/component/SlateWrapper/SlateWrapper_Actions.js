@@ -28,7 +28,8 @@ Array.prototype.move = function (from, to) {
 };
 
 function prepareDataForTcmUpdate(updatedData, parentData, asideData, poetryData) {
-    if (parentData && (parentData.elementType === "element-aside" || parentData.elementType === "citations")) {
+    if (parentData && (parentData.elementType === "element-aside" || parentData.elementType === "citations" 
+        || parentData.elementType === "poetry")) {
         updatedData.isHead = true;
     } else if (parentData && parentData.elementType === "manifest") {
         updatedData.isHead = false;
@@ -42,6 +43,8 @@ function prepareDataForTcmUpdate(updatedData, parentData, asideData, poetryData)
         } else {
             updatedData.parentType = "element-aside";
         }
+    } else if ((poetryData && poetryData.type === 'poetry') || (parentData && parentData.elementType === "poetry")){
+        updatedData.parentType = "poetry";
     }
     updatedData.projectURN = config.projectUrn;
     updatedData.slateEntity = poetryData && poetryData.contentUrn || config.slateEntityURN;
@@ -267,7 +270,7 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
     let currentSlateData = currentParentData[config.slateManifestURN];
     config.swappedElementType = _requestData.type;
     config.swappedElementIndex = _requestData.index;
-
+    config.citationFlag= true;
     return axios.post(`${config.REACT_APP_API_URL}v1/slate/swap`,
         JSON.stringify(_requestData),
         {

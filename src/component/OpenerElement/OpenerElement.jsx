@@ -33,7 +33,8 @@ class OpenerElement extends Component {
             imgSrc: getOpenerImageSource(bgImage),
             width: null,
             imageId: props.element.backgroundimage.imageid ? props.element.backgroundimage.imageid : "",
-            projectMetadata: false
+            projectMetadata: false,
+            updateImageOptions:false
         }
     }
 
@@ -54,6 +55,7 @@ class OpenerElement extends Component {
             this.setState({
                 imgSrc: epsURL,
                 imageId: imageId,
+                updateImageOptions:false,
                 width
             });
             if (document.querySelector("[name='alt_text']"))
@@ -180,7 +182,39 @@ class OpenerElement extends Component {
             }
         }
     }
+    handleC2GlobalCO=(e)=>{
+        if(hasReviewerRole()){
+            return true
+        }
+        const { slateLockInfo } = this.props
+        if(checkSlateLock(slateLockInfo))
+            return false
 
+        if (e.target.tagName.toLowerCase() === "p") {
+            e.stopPropagation();
+            return;
+        }
+        let alfrescoPath = config.alfrescoMetaData;
+        // if (alfrescoPath && this.state.projectMetadata) {
+        //     alfrescoPath.alfresco = this.state.projectMetadata.alfresco;
+        // }
+        let  data_1 = false;
+        if (alfrescoPath && alfrescoPath.alfresco && Object.keys(alfrescoPath.alfresco).length > 0) {
+            if (alfrescoPath.alfresco.nodeRef) {
+                if (this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco')) {
+                    data_1 = alfrescoPath.alfresco;
+                    this.handleC2ExtendedClick(data_1)
+                }
+                else {
+                    this.props.accessDenied(true)
+                }
+            }
+        }
+        else{
+            this.props.accessDenied(true)
+        }
+        
+    }
     /**
      * Handles label model change event
      * @param {e} event
@@ -394,6 +428,7 @@ class OpenerElement extends Component {
         element.backgroundimage.alttext = altText;
         element.backgroundimage.longdescription = longDesc;
         element.backgroundcolor = this.props.backgroundColor;
+        element.textcolor=this.props.textColor;
 
         flag && this.props.updateElement(element);
     }
@@ -407,7 +442,28 @@ class OpenerElement extends Component {
             document.getElementById('tinymceToolbar').classList.add('toolbar-disabled')
         }
     }   
-    
+    renderExistingCOImage = () => {
+        let COImg = <div className="exisiting-opener-element-image-view">
+            <div className="update-image-label" onClick={()=>{this.setState({updateImageOptions:!this.state.updateImageOptions})}}>Update Image
+            <span className="color_Dropdown_arrow">{dropdownArrow}</span>
+            </div>
+          {this.state.updateImageOptions? <ul className="image-global-button">
+                <li onClick={this.handleC2GlobalCO}>Choose from Global CO site</li>
+                <li onClick={this.handleC2MediaClick}>Choose from an Alfresco site</li>
+            </ul>:null} 
+        </div> 
+        return COImg
+    }
+    renderDefaultCOImage = () => {
+        let COImg = <div className="empty-opener-element-view">
+            <div className="select-image-label">Select an Image</div>
+            <div className="select-image-co-buttons">
+                <div className="select-image-global-button" onClick={this.handleC2GlobalCO}>Choose from Global CO site</div>
+                <div className="select-image-alresco-button" onClick={this.handleC2MediaClick}>Choose from an Alfresco site</div>
+            </div>
+        </div>
+        return COImg
+    }
     render() {
         const { imgSrc, width } = this.state
         const { backgroundColor, slateLockInfo } = this.props
@@ -432,7 +488,9 @@ class OpenerElement extends Component {
                         <input className={"element-dropdown-title opener-title" + isDisable} value={this.state.title} type="text" onChange={this.handleOpenerTitleChange} onBlur={this.handleBlur} onClick={this.handleToolbarOpener}/>
                     </div>
                 </div>
-                <figure className="pearson-component opener-image figureData" onClick={this.handleC2MediaClick} style={{ backgroundColor: `${backgroundColor}` }}>
+                {imgSrc?this.renderExistingCOImage():this.renderDefaultCOImage()}
+                
+                <figure className="pearson-component opener-image figureData" style={{ backgroundColor: `${backgroundColor}` }}>
                     <img style={styleObj} src={imgSrc ? imgSrc : noImage}
                         draggable="false" 
                     />

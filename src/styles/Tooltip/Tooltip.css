@@ -132,13 +132,14 @@
     border-color: transparent transparent black transparent;
 }
 
-.tooltip .poetry-elem {
-    opacity: 0.6;
+.tooltip .block-text-button {
+    opacity: 0.4 !important;
+    border: solid 1px;
 }
 
-.tooltip .poetry-elem:hover {
-    opacity: 1.4 !important;
+.tooltip .block-text-button:hover {
+    opacity: 1 !important;
     fill: black !important;
-    /* border: 1px solid #434343; */
+    border: solid 1px #434343;
 }
 

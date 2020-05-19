@@ -37,14 +37,14 @@ class ElementAudioVideo extends Component {
         let imageData = data;
         let clipInfo;
         let epsURL = imageData['EpsUrl'] ? imageData['EpsUrl'] : "";
-        let figureType = imageData['assetType'] ? imageData['assetType'] : "";
+        let figureType = imageData['assetType'] ? imageData['assetType'].toLowerCase() : "";
         let width = imageData['width'] ? imageData['width'] : "";
         let height = imageData['height'] ? imageData['height'] : "";
         let smartLinkAssetType = (typeof (data.desc) == "string") ? data.desc.includes('smartLinkType') ? JSON.parse(data.desc).smartLinkType : "" : "";
-
-        if (figureType === "video" || figureType === "audio" || smartLinkAssetType == "Video" || smartLinkAssetType == "Audio") {
-            if (figureType === "video" || smartLinkAssetType == "Video" && epsURL === "") {
-                epsURL = "https://d12m40tknrppbi.cloudfront.net/cite/images/FPO-audio_video.png";
+        smartLinkAssetType = smartLinkAssetType.toLowerCase();
+        if (figureType === "video" || figureType === "audio" || smartLinkAssetType == "video" || smartLinkAssetType == "audio") {
+            if ((figureType === "video" || smartLinkAssetType == "video") && (epsURL === "" || epsURL == undefined)) {
+                epsURL = imageData['posterImageUrl'] ? imageData['posterImageUrl'] : "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png";
             }
             let smartLinkURl = imageData['smartLinkURl'] ? imageData['smartLinkURl'] : "";
             if (imageData['clipinfo']) {
@@ -104,7 +104,8 @@ class ElementAudioVideo extends Component {
             let figureData = {
                 height : height,
                 width : width,
-                srctype: this.props.model.figuredata.srctype
+                srctype: this.props.model.figuredata.srctype,
+                figureType: figureType || smartLinkAssetType,
             }
             if (!uniqID) {
                 let uniqIDString = imageData && imageData.req && imageData.req.url;
@@ -117,8 +118,6 @@ class ElementAudioVideo extends Component {
                     uniqID = uniqueID;
                 }
             }
-
-            smartLinkAssetType = smartLinkAssetType.toLowerCase();
             switch(figureType || smartLinkAssetType){
                 case "video":
                     figureData = {
@@ -197,6 +196,21 @@ class ElementAudioVideo extends Component {
             e.stopPropagation();
             return;
         }
+
+        const figureData = this.props.model.figuredata;
+        let currentAsset = null;
+
+        if (figureData) {
+            const id = figureData.videoid || figureData.audioid;
+            const type = 'videoid' in figureData ? 'video' : ('audioid' in figureData ? 'audio' : null);
+        
+            currentAsset = id ? {
+                id: id.split(':').pop(), // get last
+                type,
+            } : null;
+        }
+        
+
         let that = this;
         let alfrescoPath = config.alfrescoMetaData;
         if (alfrescoPath && this.state.projectMetadata) {
@@ -207,6 +221,7 @@ class ElementAudioVideo extends Component {
             if (alfrescoPath.alfresco.nodeRef) {
                 if (this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco')) {
                     data_1 = alfrescoPath.alfresco;
+                    data_1.currentAsset = currentAsset;
                     /*
                         data according to new project api 
                     */
@@ -234,7 +249,11 @@ class ElementAudioVideo extends Component {
         else {
             if (this.props.permissions.includes('alfresco_crud_access')) {
                 c2MediaModule.onLaunchAddAnAsset(function (alfrescoData) {
-                    data_1 = { ...alfrescoData };
+                    data_1 = { 
+                        ...alfrescoData,
+                        currentAsset: currentAsset,
+                    };
+                    
                     let request = {
                         eTag: alfrescoPath.etag,
                         projectId: alfrescoPath.id,

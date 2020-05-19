@@ -7,13 +7,9 @@ import CommunicationChannelWrapper from '../HOCs/WrapperChannel';
 import SlateWrapper from '../SlateWrapper';
 import Sidebar from '../Sidebar';
 import AssetPopoverSearch from '../AssetPopover/AssetPopoverSearch.jsx';
-import {
-    fetchSlateData,fetchAuthUser,openPopupSlate
-} from './CanvasWrapper_Actions';
-import {toggleCommentsPanel,fetchComments,fetchCommentByElement} from '../CommentsPanel/CommentsPanel_Action'
 import Toolbar from '../Toolbar';
+import PopUp from '../PopUp';
 import config from './../../config/config';
-
 // IMPORT - Assets //
 import '../../styles/CanvasWrapper/style.css';
 import { sendDataToIframe , hasReviewerRole} from '../../constants/utility.js';
@@ -22,17 +18,18 @@ import { getSlateLockStatus, releaseSlateLock } from './SlateLock_Actions'
 import GlossaryFootnoteMenu from '../GlossaryFootnotePopup/GlossaryFootnoteMenu.jsx';
 import {updateElement,getTableEditorData}from '../../component/ElementContainer/ElementContainer_Actions'
 // IMPORT - Actions //
+import { fetchSlateData, fetchAuthUser, openPopupSlate } from './CanvasWrapper_Actions';
+import {toggleCommentsPanel,fetchComments,fetchCommentByElement} from '../CommentsPanel/CommentsPanel_Action'
 import { convertToListElement } from '../ListElement/ListElement_Action.js';
-import {publishContent,logout} from '../../js/header'
 import { handleSplitSlate,setUpdatedSlateTitle, setSlateType, setSlateEntity, setSlateParent } from '../SlateWrapper/SlateWrapper_Actions'
 import { currentSlateLO,isLOExist, currentSlateLOMath } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import { handleUserRole } from './UserRole_Actions'
-import RootContext from './CanvasContexts.js';
 import { handleSlateRefresh } from '../CanvasWrapper/SlateRefresh_Actions'
 import { fetchAudioNarrationForContainer } from '../AudioNarration/AudioNarration_Actions'
 import { glossaaryFootnotePopup } from '../GlossaryFootnotePopup/GlossaryFootnote_Actions';
+import RootContext from './PageNumberContext.js';
+import {publishContent,logout} from '../../js/header'
 import store from './../../appstore/store'
-import PopUp from '../PopUp';
 import { hideBlocker } from '../../js/toggleLoader';
 import {getAllSlatesData} from '../../js/getAllSlatesData'
 export class CanvasWrapper extends Component {

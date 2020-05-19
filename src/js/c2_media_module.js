@@ -8,7 +8,6 @@ const authModule = { GET_SSO_TOKEN: function () { return config_object.ssoToken 
 const tab_visibility = '{"audio" : true,"image": true,"other":true,"video": true,"epsUrl":true,"defaulttab":"search"}';
 var uname = config_object['userId'];
 const renderderedTagSelector = '#c2-modal';
-const WRAPPER_URL = `${config_object.WRAPPER_URL}`;
 var patternBroker;
 var patternProductLink;
 var patternAddAnAsset;
@@ -16,31 +15,31 @@ var productLink;
 var addAnAsset = {};
 var addAnAssetConfig = {};
 
-/*Reference the library*/
-
-/*Configure the library*/
-var libConfig = {
-    'locale': 'en_US',
-    'headers': {
-        'Content-Type': 'application/json',
-        'Accept': 'application/ld+json',
-        'X-Roles-Test': 'ContentMetadataEditor',
-        'Prefer': 'annotation=true',
-        'Apikey': config_object1.CMDS_APIKEY,
-        'x-apikey': config_object1.CMDS_APIKEY,
-        'PearsonSSOSession': authModule.GET_SSO_TOKEN(),
-        'X-PearsonSSOSession': authModule.GET_SSO_TOKEN()
-    },
-    'database': config_object1.CMDS_DATABASE,
-    'server': config_object1.CMDS_DATA_ENDPOINT,
-    'taxonomyserver': config_object1.CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
-    'userId': uname || config_object['userId']
-};
-
 export const c2MediaModule = {
     addAnAsset: addAnAsset,
+    libraryConfiguration: function () {
+        /*Configure the library*/
+        let setConfig = {
+            'locale': 'en_US',
+            'headers': {
+                'Content-Type': 'application/json',
+                'Accept': 'application/ld+json',
+                'X-Roles-Test': 'ContentMetadataEditor',
+                'Prefer': 'annotation=true',
+                'Apikey': config_object1.CMDS_APIKEY,
+                'x-apikey': config_object1.CMDS_APIKEY,
+                'PearsonSSOSession': authModule.GET_SSO_TOKEN(),
+                'X-PearsonSSOSession': authModule.GET_SSO_TOKEN()
+            },
+            'database': config_object1.CMDS_DATABASE,
+            'server': config_object1.CMDS_DATA_ENDPOINT,
+            'taxonomyserver': config_object1.CMDS_SCHEMA_ENDPOINT, // Rel 3.6
+            'userId': uname || config_object['userId']
+        };
+        return setConfig
+    },
     productLinkOnsaveCallBack: function (data, callback) {
-        this.launchAssetBrowser(data.nodeRef, data.repoInstance, data.repoName, callback);
+        this.launchAssetBrowser(data.nodeRef, data.repoInstance, data.repoName, callback, data.currentAsset);
 
     },
 
@@ -48,9 +47,10 @@ export const c2MediaModule = {
 		patternBroker = PatternBroker.default;
         patternProductLink = PatternProductLink.default;
         patternAddAnAsset = PatternAddAnAsset.default;
+        let libConfig=this.libraryConfiguration()
         patternBroker.setup(libConfig);
-        var uniqueID = data.nodeRef && data.nodeRef.split('/')[3];
-        var assetType = data.mimetype && data.mimetype.split('/')[0];
+        let uniqueID = data.nodeRef && data.nodeRef.split('/')[3];
+        let assetType = data.mimetype && data.mimetype.split('/')[0];
         data['uniqueID'] = uniqueID;
         data['assetType'] = assetType;
         let smartLinkURl = ""
@@ -65,7 +65,7 @@ export const c2MediaModule = {
         else if (data['assetType'] == 'video' || data['assetType'] == 'audio') {
             smartLinkURl = data['EpsUrl']
             data['smartLinkURl'] = smartLinkURl;
-            data['EpsUrl'] = 'https://d12m40tknrppbi.cloudfront.net/cite/images/FPO-audio_video.png'
+            data['EpsUrl'] = 'https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png'
             data['clipinfo'] = {
                 "id": "",
                 "start": "",
@@ -129,42 +129,25 @@ export const c2MediaModule = {
         callback(data);
     },
 
-    launchAssetBrowser: function (product, server, repo, callback) {
+    launchAssetBrowser: function (product, server, repo, callback, currentAsset) {
 		patternBroker = PatternBroker.default;
         patternProductLink = PatternProductLink.default;
         patternAddAnAsset = PatternAddAnAsset.default;
+        let libConfig=this.libraryConfiguration()
         patternBroker.setup(libConfig);
         let productRef = product;
-        let serverRef = server;
-
+        //let serverRef = "https://uswip.cms.pearson.com/share/page/site/cite-generic-openers/documentlibrary";
+        let serverRef=server;
         if (addAnAsset && addAnAsset.unmount) {
             addAnAsset.unmount();
         }        
-
-        var libConfig = {
-            'locale': 'en_US',
-            'headers': {
-                'Content-Type': 'application/json',
-                'Accept': 'application/ld+json',
-                'X-Roles-Test': 'ContentMetadataEditor',
-                'Prefer': 'annotation=true',
-                'Apikey': config_object1.CMDS_APIKEY,
-                'x-apikey': config_object1.CMDS_APIKEY,
-                'PearsonSSOSession': authModule.GET_SSO_TOKEN(),
-                'X-PearsonSSOSession': authModule.GET_SSO_TOKEN()
-            },
-            'database': config_object1.CMDS_DATABASE,
-            'server': config_object1.CMDS_DATA_ENDPOINT,
-            'taxonomyserver': config_object1.CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
-            'userId': uname || config_object['userId']
-        };
-
-
+        
         addAnAssetConfig = { 'selector': renderderedTagSelector };
         addAnAssetConfig.language = 'en';// YS
         addAnAssetConfig.nodeRef = productRef;
         addAnAssetConfig.alfserver = serverRef; //data.repoInstance;
         addAnAssetConfig.tabVisibility = tab_visibility;
+        addAnAssetConfig.currentAsset = currentAsset;
 
         addAnAssetConfig['cmis'] = '{"wURN":false}';
         addAnAssetConfig['epsserver'] = config_object1.EPS_API;
@@ -247,35 +230,24 @@ export const c2MediaModule = {
             patternBroker = PatternBroker.default;
             patternProductLink = PatternProductLink.default;
             patternAddAnAsset = PatternAddAnAsset.default;
+            let libConfig=this.libraryConfiguration()
             patternBroker.setup(libConfig);
 
             if (productLink && productLink.unmount) {
                 productLink.unmount();
             }
             let CMIS_REPO=config_object1.CMIS_REPO;
+            // let CMIS_REPO=[{
+            //     "repo":"https://uswip.cms.pearson.com/share/page/site/cite-generic-openers/documentlibrary",
+            //     "repoName":"Global"
+            // }]
+            console.log("CMIS_REPO>>>>>>>",CMIS_REPO)
             if (CMIS_REPO !== undefined && CMIS_REPO !== null && CMIS_REPO !== '') {
                 // try{
                 const cmisRepo = CMIS_REPO;
                 if (cmisRepo.length > 0) {
                     const canWeProceedWithPL = this.validateRegistries(cmisRepo);
                     if (canWeProceedWithPL) {
-                        var libConfig = {
-                            'locale': 'en_US',
-                            'headers': {
-                                'Content-Type': 'application/json',
-                                'Accept': 'application/ld+json',
-                                'X-Roles-Test': 'ContentMetadataEditor',
-                                'Prefer': 'annotation=true',
-                                'Apikey': config_object1.CMDS_APIKEY,
-                                'x-apikey': config_object1.CMDS_APIKEY,
-                                'PearsonSSOSession': authModule.GET_SSO_TOKEN(),
-                                'X-PearsonSSOSession': authModule.GET_SSO_TOKEN()
-                            },
-                            'database': config_object1.CMDS_DATABASE,
-                            'server': config_object1.CMDS_DATA_ENDPOINT,
-                            'taxonomyserver': config_object1.CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
-                            'userId': uname || config_object['userId']
-                        };
                         var productLinkConfig = { 'selector': renderderedTagSelector };
                         productLinkConfig.repoList = cmisRepo;
                         productLinkConfig.language = 'en';  // YS

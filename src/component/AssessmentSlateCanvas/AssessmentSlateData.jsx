@@ -12,7 +12,7 @@ import RootCiteTdxComponent from './assessmentCiteTdx/RootCiteTdxComponent.jsx';
 import LearningTool from './learningTool/learningTool.jsx';
 import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
-import  {setCurrentCiteTdx}  from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
+import  {setCurrentCiteTdx,assessmentSorting}  from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
 import { connect } from 'react-redux';
 
  class AssessmentSlateData extends Component {
@@ -159,6 +159,7 @@ import { connect } from 'react-redux';
             this.mainAddAssessment(e, LEARNING_TEMPLATE);
             } 
             else if(assessmentFormat === "cite" || assessmentFormat === "tdx" || assessmentFormat === FULL_ASSESSMENT_TDX || assessmentFormat ===FULL_ASSESSMENT_CITE){
+                this.props.assessmentSorting("","");
                 this.setState({
                     activeAssessmentType: (assessmentFormat==="cite" || assessmentFormat === FULL_ASSESSMENT_CITE)?FULL_ASSESSMENT_CITE:FULL_ASSESSMENT_TDX,
                     showCiteTdxComponent: true
@@ -241,6 +242,7 @@ import { connect } from 'react-redux';
             case FULL_ASSESSMENT_CITE:
             case FULL_ASSESSMENT_TDX:
                     sendDataToIframe({ 'type': 'hideToc', 'message': {} });
+                    this.props.assessmentSorting("","");
                     this.setState({
                         showCiteTdxComponent: true
                     })
@@ -432,6 +434,7 @@ import { connect } from 'react-redux';
 AssessmentSlateData.displayName = "AssessmentSlateData"
 const mapActionToProps = {
     setCurrentCiteTdx: setCurrentCiteTdx,
+    assessmentSorting:assessmentSorting
 }
 
 export default connect(

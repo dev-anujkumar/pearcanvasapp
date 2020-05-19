@@ -6,7 +6,9 @@ const INITIAL_STATE = {
     isLoading: true,
     currentAssessmentSelected:{},
     singleAssessmentData:[],
-    currentSingleAssessmentSelected:{}
+    currentSingleAssessmentSelected:{},
+    sortOrder:'',
+    sortBy:''
 }
 
 const INITIAL_ACTION = {
@@ -53,7 +55,7 @@ export default function citeTdxReducer (state = INITIAL_STATE, action = INITIAL_
                 ...state,
                 currentSingleAssessmentSelected: action.payload
             }
-    }
+        }
         case "GET_SINGLE_ASSESSMENT_DATA": {
             return {
                 ...state,
@@ -61,7 +63,15 @@ export default function citeTdxReducer (state = INITIAL_STATE, action = INITIAL_
                 assessmenterrFlag : action.payload.errFlag,
                 isLoading: action.payload.isLoading
             }
-    }
+        }
+        case "ASSESSMENT_SORTING": {
+            return {
+                ...state,
+                sortBy: action.payload.sortBy,
+                sortOrder : action.payload.sortOrder
+            }
+        }
+        
         default:
             return state
     }

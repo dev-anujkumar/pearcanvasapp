@@ -14,7 +14,7 @@ import {
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
-import { sendDataToIframe, requestConfigURI } from '../../constants/utility.js';
+import { sendDataToIframe, requestConfigURI, createTitleSubtitleModel } from '../../constants/utility.js';
 import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 import elementDataBank from './elementDataBank'
 import figureData from '../ElementFigure/figureTypes.js';
@@ -117,11 +117,13 @@ const findElementType = (element, index) => {
                         }
                         break;
                     case "assessment":
+                        let assessmentFormat = element.figuredata.elementdata.assessmentformat.toLowerCase()
                         elementType = {
                             elementType: elementDataBank[element.type][element.figuretype]["elementType"],
                             primaryOption: elementDataBank[element.type][element.figuretype]["primaryOption"],
-                            ...elementDataBank[element.type][element.figuretype][element.figuredata.elementdata.assessmentformat]
+                            ...elementDataBank[element.type][element.figuretype][assessmentFormat]
                         }
+                        element.figuredata.elementdata.assessmentformat = assessmentFormat 
                         break;
                 }
                 break;
@@ -175,6 +177,12 @@ const findElementType = (element, index) => {
                     secondaryOption: elementDataBank[element.type]["secondaryOption"]
                 }
                 break;
+            case "element-assessment":
+                if (element.elementdata && element.elementdata.assessmentformat) {
+                    element.elementdata.assessmentformat = element.elementdata.assessmentformat.toLowerCase()  /**PCAT-7526 fixes */
+                }
+                elementType = { ...elementDataBank["element-authoredtext"] }
+                break;
             default:
                 elementType = { ...elementDataBank["element-authoredtext"] }
         }
@@ -183,6 +191,7 @@ const findElementType = (element, index) => {
             elementType: ''
         }
     }
+    
     elementType['elementId'] = element.id;
     elementType['index'] = index;
     elementType['elementWipType'] = element.type;
@@ -238,7 +247,8 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
 
 		if(slateData.data && slateData.data[newVersionManifestId] && slateData.data[newVersionManifestId].type === "popup"){
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
-            config.isPopupSlate = true
+            config.isPopupSlate = true;
+            config.savingInProgress = false;
 			if (config.slateManifestURN === Object.values(slateData.data)[0].id) {
 				config.totalPageCount = slateData.data[newVersionManifestId].pageCount;
 				config.pageLimit = slateData.data[newVersionManifestId].pageLimit;
@@ -374,12 +384,12 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
         }
         if(slateData.data && Object.values(slateData.data).length > 0) {
             let slateTitle = SLATE_TITLE;
-            if('title' in slateData.data[manifestURN].contents && 'text' in slateData.data[manifestURN].contents.title) {
-                slateTitle = slateData.data[manifestURN].contents.title.text || SLATE_TITLE;
+            if('title' in slateData.data[newVersionManifestId].contents && 'text' in slateData.data[newVersionManifestId].contents.title) {
+                slateTitle = slateData.data[newVersionManifestId].contents.title.text || SLATE_TITLE;
             }
             sendDataToIframe({
                 'type': "setSlateDetails",
-                'message': setSlateDetail(slateTitle, manifestURN)
+                'message': setSlateDetail(slateTitle, newVersionManifestId)
             });
         }
     });
@@ -504,7 +514,7 @@ const setOldinteractiveIdPath = (getState, activeElement, elementIndex) => {
     }
     return oldPath || ""
 }
-export const setActiveElement = (activeElement = {}, index = 0,parentUrn = {},asideData={} , updateFromC2Flag = false,showHideObj) => (dispatch, getState) => {
+export const setActiveElement = (activeElement = {}, index = 0,parentUrn = {},asideData={} , updateFromC2Flag = false, showHideObj = undefined) => (dispatch, getState) => {
     dispatch({
         type: SET_ACTIVE_ELEMENT,
         payload: findElementType(activeElement, index)
@@ -733,7 +743,8 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
     if (poetryField === 'creditsarray') {
         _requestData.sectionType = 'creditsarray';
     } else {
-        _requestData.metaDataField = poetryField==="formatted-title"?"formattedTitle":"formattedSubtitle";
+        _requestData.metaDataField = "formattedTitle";
+        // _requestData.metaDataField = poetryField ==="formatted-title"?"formattedTitle":"formattedSubtitle";
     }
     
     let url = `${config.REACT_APP_API_URL}v1/slate/element`
@@ -764,10 +775,15 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
                 targetPoetryElement.contents[poetryField][0].html.text  = elemNode.innerHTML
                 targetPoetryElement.contents[poetryField][0].elementdata.text = elemNode.innerText
             }
-            else{
+            else if(poetryField==="formatted-title"){
                 targetPoetryElement.contents[poetryField] = response.data
-                targetPoetryElement.contents[poetryField].html.text = elemNode.innerHTML
+                targetPoetryElement.contents[poetryField].html.text = createTitleSubtitleModel(elemNode.innerHTML, "")
                 targetPoetryElement.contents[poetryField].elementdata.text = elemNode.innerText
+            }
+            else if(poetryField==="formatted-subtitle"){
+                targetPoetryElement.contents["formatted-title"] = response.data
+                targetPoetryElement.contents["formatted-title"].html.text = createTitleSubtitleModel("", elemNode.innerHTML)
+                // targetPoetryElement.contents["formatted-title"].elementdata.text = elemNode.innerText
             }
             _slateObject.contents.bodymatter[ElementIndex] = targetPoetryElement
         }

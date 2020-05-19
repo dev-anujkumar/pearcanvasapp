@@ -33,6 +33,7 @@ h4.citationTitle {
     margin: 0em 0em 1.70em 0em !important;
     text-indent: -3.0115em;
     padding: 2px 0px 2px 40px !important;
+    white-space: break-spaces;
 }
 
 /* Placeholder style for citation title */
