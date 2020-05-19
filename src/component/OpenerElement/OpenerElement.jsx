@@ -194,26 +194,26 @@ class OpenerElement extends Component {
             e.stopPropagation();
             return;
         }
-        let alfrescoPath = config.alfrescoMetaData;
-        // if (alfrescoPath && this.state.projectMetadata) {
-        //     alfrescoPath.alfresco = this.state.projectMetadata.alfresco;
-        // }
-        let  data_1 = false;
-        if (alfrescoPath && alfrescoPath.alfresco && Object.keys(alfrescoPath.alfresco).length > 0) {
-            if (alfrescoPath.alfresco.nodeRef) {
-                if (this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco')) {
-                    data_1 = alfrescoPath.alfresco;
-                    this.handleC2ExtendedClick(data_1)
-                }
-                else {
-                    this.props.accessDenied(true)
-                }
+        let GLOBAL_CO = config.GLOBAL_CO;
+        let globalAlfrescoPath = null
+        if (GLOBAL_CO) {
+            globalAlfrescoPath = {
+                "nodeRef": GLOBAL_CO.CITE_NODE_REF,
+                "repoInstance": GLOBAL_CO.CITE_REPO_INSTANCC,
+                "repoName": GLOBAL_CO.CITE_REPO_NAME
             }
         }
-        else{
-            this.props.accessDenied(true)
+        if (globalAlfrescoPath && globalAlfrescoPath.nodeRef) {
+            if (this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco')) {
+                this.handleC2ExtendedClick(globalAlfrescoPath)
+            }
+            else {
+                this.props.accessDenied(true)
+            }
         }
-        
+        else {
+            this.props.accessDenied(true)
+        } 
     }
     /**
      * Handles label model change event
