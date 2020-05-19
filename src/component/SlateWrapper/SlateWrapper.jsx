@@ -137,12 +137,6 @@ class SlateWrapper extends Component {
     }
 
     static getDerivedStateFromProps = (props, state) => {
-<<<<<<< HEAD
-=======
-        /** Default Red Dot indicator to false */
-        sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'false' });
-
->>>>>>> 5e7b18c46114b834b789a017cdcc0f8a0730dc84
         /**
          * updateTimer is for updating Time for slate refresh
          */

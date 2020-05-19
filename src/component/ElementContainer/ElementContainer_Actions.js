@@ -642,8 +642,11 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
 
         //tcm update code   
         if (config.tcmStatus) {
+        let elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza'];
+        if (elementType.indexOf(updatedData.type) !== -1) {
             prepareDataForUpdateTcm(updatedData.id, getState, dispatch);
         }
+        }   
         return dispatch({
             type: AUTHORING_ELEMENT_UPDATE,
             payload: {
@@ -657,24 +660,23 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
 //TCM Update
 function prepareDataForUpdateTcm(updatedDataID, getState, dispatch) {
     const tcmData = getState().tcmReducer.tcmSnapshot;
-    var test = tcmData.some(function (el) {
-        return el.elemURN === updatedDataID;
-    });
-    if (!test) {
-        tcmData.push({
-            "txCnt": 1,
-            "isPrevAcceptedTxAvailable": false,
-            "elemURN": updatedDataID,
-            "feedback": null
-        })
-        sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });
+    tcmData.forEach(function (element,index) {
+    if(element.elemURN.includes('urn:pearson:work') && element.elemURN.indexOf(updatedDataID) !== -1){
+        tcmData[index]["elemURN"]=updatedDataID
+        tcmData[index]["txCnt"]=tcmData[index]["txCnt"] !== 0 ? tcmData[index]["txCnt"]: 1
+        tcmData[index]["feedback"]=tcmData[index]["feedback"] !== null ? tcmData[index]["feedback"]:null
+        tcmData[index]["isPrevAcceptedTxAvailable"] = tcmData[index]["isPrevAcceptedTxAvailable"]  ? tcmData[index]["isPrevAcceptedTxAvailable"]:false
     }
-    dispatch({
-        type: GET_TCM_RESOURCES,
-        payload: {
-            data: tcmData
-        }
-    })
+});
+if (tcmData) {
+    sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });
+}
+dispatch({
+    type: GET_TCM_RESOURCES,
+    payload: {
+        data: tcmData
+    }
+})
 }
 export const updateFigureData = (figureData, elementIndex, elementId, cb) => (dispatch, getState) => {
     let parentData = getState().appStore.slateLevelData,
