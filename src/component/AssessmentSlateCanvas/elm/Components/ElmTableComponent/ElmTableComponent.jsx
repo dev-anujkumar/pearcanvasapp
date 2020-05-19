@@ -370,6 +370,7 @@ class ElmTableComponent extends Component {
     }
 
     openAssessmentSearchBar=(flag)=>{
+        this.setState({ isActive: null })
         this.props.openAssessmentSearchBar(this.props.activeAssessmentType,flag)
     }
 
