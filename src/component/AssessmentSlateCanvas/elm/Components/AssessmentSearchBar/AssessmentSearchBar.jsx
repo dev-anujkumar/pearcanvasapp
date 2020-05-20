@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react'
 import '../../../../../styles/AssessmentSlateCanvas/elm/ElmTable.css';
 
 export const AssessmentSearchBar = (props) => {
-    const [searchAssessmentTitle, setSearchAssessmentTitle] = useState('');
+    const [searchAssessmentTitle, setSearchAssessmentTitle] = useState(props.searchTerm?props.searchTerm:'');
 
     const handleSearch = e => {
         e.preventDefault();
