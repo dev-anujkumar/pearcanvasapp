@@ -243,6 +243,26 @@ function prepareDataForTcmUpdate (updatedData,id, elementIndex, asideData, getSt
     updatedData.slateEntity = config.slateEntityURN;
 }
 
+const validateRevealAnswerData = (showHideType, node, elementType) => {
+    if(showHideType && showHideType === "postertextobject" && !(node.innerText.trim().length || node.innerHTML.match(/<img/))){
+        return {
+            innerHTML : "<p class=\"paragraphNumeroUno\">Reveal Answer:</p>",
+            innerText : "Reveal Answer:"
+        }
+    } else if(showHideType && (showHideType === "show" || showHideType === "hide") && elementType === elementTypeConstant.AUTHORED_TEXT){
+        return {
+            innerHTML : matchHTMLwithRegex(node.innerHTML) ? node.innerHTML : `<p class="paragraphNumeroUno">${node.innerHTML}</p>`,
+            innerText : node.innerText
+        }
+    }
+    else{
+        return {
+            innerHTML : node.innerHTML,
+            innerText : node.innerText
+        }
+    }
+}
+
 /**
  * API to update the element data
  * @param {*} updatedData the updated content
@@ -253,10 +273,25 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
         return ;
     }
+    console.log("updateData before:>>>", updatedData)
+    let updatedData1 = JSON.parse(JSON.stringify(updatedData))
+    if (showHideType && showHideType === "postertextobject" && !(updatedData1.elementdata.text.trim().length || updatedData1.html.text.match(/<img/))) {
+        updatedData1 = {
+            ...updatedData,
+            elementdata : {
+                text : "Reveal Answer:"
+            },
+            html: {
+                ...updatedData1.html,
+                text : "<p class=\"paragraphNumeroUno\">Reveal Answer:</p>"
+            }
+        }
+    }
     prepareDataForTcmUpdate(updatedData,updatedData.id, elementIndex, asideData, getState, updatedData.type, poetryData);
     updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, null, elementIndex, showHideType, parentElement, poetryData)
+    updateStoreInCanvas({ ...updatedData, ...updatedData1 }, asideData, parentUrn, dispatch, getState, null, elementIndex, showHideType, parentElement, poetryData)
     return axios.put(`${config.REACT_APP_API_URL}v1/slate/element`,
-        updatedData,
+    updatedData1,
         {
             headers: {
                 "Content-Type": "application/json",
@@ -307,6 +342,11 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
                     }
                 }
             }
+            /* else if (showHideType && showHideType === "postertextobject") {
+                console.log("old",updatedData)
+                console.log("new",response.data)
+                updateStoreInCanvas({ ...updatedData, ...response.data }, asideData, parentUrn, dispatch, getState, null, elementIndex, showHideType, parentElement, poetryData)
+            } */
             // else if (updatedData.type === 'stanza') {
             //     updateStoreInCanvas({ ...updatedData, ...response.data }, asideData, parentUrn, dispatch, getState, null, elementIndex, showHideType, parentElement, poetryData)
             // }
