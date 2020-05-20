@@ -12,6 +12,7 @@ export default {
     EXPAND : "expand",
     SPLIT_SLATE : "split",
     COLOR_PALETTE : "color-palette",
+    COLOR_TEXT : "color-text",
     TEXT_ELEMENT : "text-elem",
     IMAGE_ELEMENT : "image-elem",
     AUDIO_ELEMENT : "audio-elem",
@@ -29,8 +30,9 @@ export default {
     FEEDBACK : "feedback",
     ASSESSMENT_CLOSE_WINDOW:"assessmentCloseWindowIcon",
     CITATION_ELEMENT:'citation-elem',
-    POETRY_ELEMENT: "poetry-elem",
     STANZA_ELEMENT: "stanza-elem",
     SHOW_HIDE : "show-hide-elem",
     POP_UP : "popup-elem",
+    BLOCK_TEXT : "block-text-button",
+    TABLE_EDITOR : "table-editor-elem-button"
 }

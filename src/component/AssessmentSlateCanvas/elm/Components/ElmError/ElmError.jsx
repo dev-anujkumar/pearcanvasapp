@@ -7,15 +7,17 @@ import { ERROR_MESSAGE_ELM_RESOURCE, ERROR_MESSAGE_ELM_ITEMS, ERROR_MESSAGE_LEAR
 
 const ElmError = (props) => {
 
-    const getErrorMessage = (error, itemErrorStatus) => {
-        let errorMessage = "";
-        if (error && error.errorStatus != "200" && (error.activeAssessmentType == PUF || error.activeAssessmentType == FULL_ASSESSMENT_PUF)) {
+    const getErrorMessage = (error, itemErrorStatus,showSearchScreen,noSearchResults) => {
+        let errorMessage;
+        if (error && error.errorStatus != "200" && !noSearchResults && (error.activeAssessmentType == PUF || error.activeAssessmentType == FULL_ASSESSMENT_PUF)) {
             errorMessage = ERROR_MESSAGE_ELM_RESOURCE
-        } else if (error && error.errorStatus != "200" && (error.activeAssessmentType == LEARNOSITY || error.activeAssessmentType == LEARNOSITY_BETA)) {
+        } else if ((error && error.errorStatus != "200" && (error.activeAssessmentType == LEARNOSITY || error.activeAssessmentType == LEARNOSITY_BETA))|| (noSearchResults==true)) {
             errorMessage = ERROR_MESSAGE_LEARNOSITY
-        } else if (itemErrorStatus != "200") {
+        } else if (itemErrorStatus != "200" && !showSearchScreen && !noSearchResults) {
             errorMessage = ERROR_MESSAGE_ELM_ITEMS
-        } else {
+        } else if(showSearchScreen == true && !noSearchResults){
+            errorMessage="";
+        }else{
             errorMessage = ERROR_MESSAGE_ELM_DEFAULT
         }
 
@@ -25,7 +27,7 @@ const ElmError = (props) => {
     return (
         <div className="main-div elm-error-div">
             <p className="elm-error-line">
-                <i>{getErrorMessage(props.elmErrorProps, props.itemErrorStatus)}</i>
+                <i>{getErrorMessage(props.elmErrorProps, props.itemErrorStatus,props.showSearchScreen,props.noSearchResults)}</i>
             </p>
         </div>
     );

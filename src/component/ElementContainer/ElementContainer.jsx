@@ -42,6 +42,7 @@ import CitationGroup from '../CitationGroup'
 import CitationElement from '../CitationElement'
 import ElementPoetry from '../ElementPoetry';
 import ElementPoetryStanza from '../ElementPoetry/ElementPoetryStanza.jsx';
+import {handleTCMData} from './TcmSnapshot_Actions';
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -53,7 +54,9 @@ class ElementContainer extends Component {
             showDeleteElemPopup: false,
             ElementId: this.props.index == 0 ? this.props.element.id : '',
             showColorPaletteList: false,
+            showColorTextList: false,
             activeColorIndex: this.props.element.backgroundcolor ? config.colors.indexOf(this.props.element.backgroundcolor) : 0,
+            activeTextColorIndex: this.props.element.textcolor ? config.textcolors.indexOf(this.props.element.textcolor) : 0,
             isHovered: false,
             hasError: false,
             sectionBreak: null
@@ -477,6 +480,11 @@ class ElementContainer extends Component {
                 tempDiv.innerHTML = html;
                 //tinyMCE.$(tempDiv).find('.blockquote-hidden').remove();
                 html = tempDiv.innerHTML;
+                 /** [BG-2293 - mathML/chemML is not captured in postertextobject field in show-hide */
+                    if (parentElement.type == "showhide" && index && showHideType == 'postertextobject' && html.match(/<img/)) {
+                        tinyMCE.$(tempDiv).find('br').remove()
+                        tinyMCE.$(html).find('br').remove()
+                    }
                 let poetryData;
                 if(parentElement && parentElement.type === "poetry"){
                     poetryData = {
@@ -723,6 +731,15 @@ class ElementContainer extends Component {
         })
     }
 
+    toggleColorTextList = () => {
+        if(config.savingInProgress) return false
+        const { showColorTextList } = this.state;
+        this.handleFocus();
+        this.setState({
+            showColorTextList: !showColorTextList
+        })
+    }
+
     /**
      * Updates background color in opener element.
      * @param {*} event event object
@@ -756,6 +773,8 @@ class ElementContainer extends Component {
             return null
         }
     }
+
+   
     /**
      * Renders color-palette button for opener element 
      * @param {e} event
@@ -766,6 +785,56 @@ class ElementContainer extends Component {
                 <>
                     <Button onClick={this.toggleColorPaletteList} type="color-palette" />
                     <ul className="color-palette-list">{this.renderPaletteList()}</ul>
+                </>
+            )
+        }
+        else {
+            return null
+        }
+    }
+
+
+    selectTextColor = (event)=>{
+        const selectedTextColor = event.target.getAttribute('data-value');
+        const elementData = this.props.element;
+        this.setState({
+            activeTextColorIndex: config.textcolors.indexOf(selectedTextColor),
+            showColorTextList:false
+        });
+        elementData.textcolor = selectedTextColor;
+        if(this.props.element.textcolor !== config.textcolors[this.state.activeTextColorIndex]){
+            this.updateOpenerElement(elementData);
+        } 
+       
+    }
+
+     /**
+     * Rendering Opener element text color 
+     * @param {e} event
+     */
+    renderTextColorList = () => {
+        const { showColorTextList, activeTextColorIndex } = this.state
+        if (showColorTextList) {
+            return config.textcolors.map((colortext, index) => {
+                return <li className={`color-text-item ${index === activeTextColorIndex ? 'selected' : ''}`} onClick={(event) => this.selectTextColor(event)} key={index} data-value={colortext}></li>
+            })
+        }
+        else {
+            return null
+        }
+    }
+
+
+    /**
+     * Renders color-text button for opener element 
+     * @param {e} event
+     */
+    renderColorTextButton = (element) => {
+        if (element.type === elementTypeConstant.OPENER) {
+            return (
+                <>
+                    <Button onClick={this.toggleColorTextList} type="color-text" />
+                    <ul className="color-text-list">{this.renderTextColorList()}</ul>
                 </>
             )
         }
@@ -868,24 +937,19 @@ class ElementContainer extends Component {
     */
     renderElement = (element = {}) => {
         let editor = '';
-        let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions, allComments, splithandlerfunction} = this.props;
+        let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions, allComments, splithandlerfunction, tcmData} = this.props;
         let labelText = fetchElementTag(element, index);
         config.elementToolbar = this.props.activeElement.toolbar || [];
         let anyOpenComment = allComments.filter(({ commentStatus, commentOnEntity }) => commentOnEntity === element.id && commentStatus.toLowerCase() === "open").length > 0
         /** Handle TCM for tcm enable elements */
         let tcm = false;
         let feedback = false;
-        if (element.type == 'element-authoredtext' || element.type == 'element-list' || element.type == 'element-blockfeature' || element.type == 'element-learningobjectives' || element.type == 'element-citation' || element.type === 'stanza') {
-            if (element.tcm) {
-                tcm = element.tcm;
-                sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });
-            }
-            if (element.feedback) {
-                feedback = element.feedback;
-                sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });
-            }
-        }
-
+        tcm = tcmData.filter(tcm => {
+            let elementUrn = tcm.elemURN;
+            return (element.id.includes('urn:pearson:work') && elementUrn.indexOf(element.id) !== -1) && tcm.txCnt > 0}).length>0;
+        feedback = tcmData.filter(tcm => {
+            let elementUrn = tcm.elemURN;
+            return (element.id.includes('urn:pearson:work') && elementUrn.indexOf(element.id) !== -1) && tcm.feedback !== null}).length>0;
         /* TODO need better handling with a function and dynamic component rendering with label text*/
         if (labelText) {
             switch (element.type) {
@@ -894,8 +958,8 @@ class ElementContainer extends Component {
                     labelText = 'AS'
                     break;
                 case elementTypeConstant.OPENER:
-                    const { activeColorIndex } = this.state
-                    editor = <OpenerElement accessDenied={this.props.accessDenied} permissions={permissions} backgroundColor={config.colors[activeColorIndex]} index={index} onClick={this.handleFocus} handleBlur={this.handleBlur} elementId={element.id} element={element} slateLockInfo={slateLockInfo} updateElement={this.updateOpenerElement} />
+                    const { activeColorIndex, activeTextColorIndex } = this.state
+                    editor = <OpenerElement accessDenied={this.props.accessDenied} permissions={permissions} backgroundColor={config.colors[activeColorIndex]} textColor={config.textcolors[activeTextColorIndex]} index={index} onClick={this.handleFocus} handleBlur={this.handleBlur} elementId={element.id} element={element} slateLockInfo={slateLockInfo} updateElement={this.updateOpenerElement} />
                     labelText = 'OE'
                     break;
                 case elementTypeConstant.AUTHORED_TEXT:
@@ -1147,6 +1211,7 @@ class ElementContainer extends Component {
                     {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && config.slateType !== 'assessment' ? (<Button type="delete-element" onClick={() => this.showDeleteElemPopup(true)} />)
                         : null}
                     {this.renderColorPaletteButton(element)}
+                    {this.renderColorTextButton(element)}
                 </div>
                     : ''}
                 <div className={`element-container ${labelText.toLowerCase()} ${borderToggle}`} data-id={element.id} onFocus={() => this.toolbarHandling('remove')} onBlur={() => this.toolbarHandling('add')}>
@@ -1329,6 +1394,9 @@ const mapDispatchToProps = (dispatch) => {
         createPoetryUnit: (poetryField, parentElement,cb, popupElementIndex, slateManifestURN) => {
             dispatch(createPoetryUnit(poetryField, parentElement,cb, popupElementIndex, slateManifestURN))
         },
+        handleTCMData: () => {
+            dispatch(handleTCMData())
+        },
 
     }
 }
@@ -1342,7 +1410,8 @@ const mapStateToProps = (state) => {
         oldImage: state.appStore.oldImage,
         glossaryFootnoteValue: state.glossaryFootnoteReducer.glossaryFootnoteValue,
         allComments: state.commentsPanelReducer.allComments,
-        showHideId: state.appStore.showHideId
+        showHideId: state.appStore.showHideId,
+        tcmData: state.tcmReducer.tcmSnapshot
     }
 }
 

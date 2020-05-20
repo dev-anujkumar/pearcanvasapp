@@ -25,8 +25,9 @@ import {
     feedbackIcon,
     assessmentCloseWindowIcon,
     citationElement,
-    poetryIcon,
-    stanzaIcon
+    stanzaIcon,
+    blockTextIcon,
+    tableElemIcon
 } from '../../images/ElementButtons/ElementButtons.jsx';
 import deleteIcon from '../../images/ElementButtons/deleteIcon.png'
 import forwardNavActive from '../../images/ElementButtons/forwardNavActive.png'
@@ -36,6 +37,7 @@ import backwardNavDisable from '../../images/ElementButtons/backwardNav_disabled
 import splitIcon from '../../images/ElementButtons/splitIcon.png'
 import expandIcon from '../../images/ElementButtons/expandIcon.png'
 import colorPalette from '../../images/ElementButtons/colorPalette.png'
+import colorText from '../../images/ElementButtons/colorText.svg'
 import closeContainer from '../../images/ElementButtons/container_close.png';
 import ButtonTypes from './ButtonTypes.js';
 
@@ -96,6 +98,9 @@ class ElementButton extends Component {
                 break;
             case buttonTypes.COLOR_PALETTE:
                 buttonJSX = <span className="btn-element color-palette" onClick={clickHandlerFn}><img src={colorPalette} /></span>
+                break;
+            case buttonTypes.COLOR_TEXT:
+                buttonJSX = <span className="btn-element color-text" onClick={clickHandlerFn}><img src={colorText} /></span>
                 break;
             case buttonTypes.TEXT_ELEMENT:
                 buttonJSX = <span className="btn-element text-elem" onClick={clickHandlerFn}>
@@ -177,9 +182,9 @@ class ElementButton extends Component {
                     {citationElement}
                 </span>
                 break;
-            case buttonTypes.POETRY_ELEMENT:
-                buttonJSX = <span className="btn-element poetry-elem" onClick={clickHandlerFn}>
-                    {poetryIcon}
+            case buttonTypes.BLOCK_TEXT:
+                buttonJSX = <span className="btn-element block-text-button" onClick={clickHandlerFn}>
+                    {blockTextIcon}
                 </span>
                 break;
             case buttonTypes.STANZA_ELEMENT:
@@ -187,7 +192,10 @@ class ElementButton extends Component {
                     {stanzaIcon}
                 </span>
                 break;
-                
+            case buttonTypes.TABLE_EDITOR:
+                buttonJSX = <span className="btn-element table-editor-elem" onClick={clickHandlerFn}>
+                    {tableElemIcon}
+                </span>
         }
         return buttonJSX
     }

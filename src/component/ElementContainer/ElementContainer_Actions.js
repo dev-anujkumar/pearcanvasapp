@@ -5,7 +5,7 @@ import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import {
     fetchSlateData
 } from '../CanvasWrapper/CanvasWrapper_Actions';
-import {  AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP, OPEN_GLOSSARY_FOOTNOTE,DELETE_SHOW_HIDE_ELEMENT} from "./../../constants/Action_Constants";
+import {  AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP, OPEN_GLOSSARY_FOOTNOTE,DELETE_SHOW_HIDE_ELEMENT, GET_TCM_RESOURCES} from "./../../constants/Action_Constants";
 import { customEvent } from '../../js/utils';
 
 export const addComment = (commentString, elementId, asideData, parentUrn) => (dispatch, getState) => {
@@ -158,6 +158,10 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
                     slateLevelData: newParentData
                 }
             })
+            /** Delete Tcm data on element delete*/
+            if (config.tcmStatus) {
+                prepareTCMforDelete(elmId, dispatch,getState);
+            }
         }
 
     }).catch(error => {
@@ -165,6 +169,28 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         console.log("delete Api fail", error);
     })
+}
+/** Delete Tcm data on element delete*/
+function prepareTCMforDelete(elmId, dispatch,getState) {
+        let tcmData = getState().tcmReducer.tcmSnapshot;
+        tcmData = tcmData.filter(function (tcm) {
+            return !tcm.elemURN.includes(elmId);
+        });
+        dispatch({
+            type: GET_TCM_RESOURCES,
+            payload: {
+                data: tcmData
+            }
+        });
+        tcmData.some(function (elem) {
+            if (elem.txCnt > 0) {
+                sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });
+                return true;
+            }
+            else {
+                sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'false' });
+            }
+        });
 }
 
 function contentEditableFalse (updatedData){
@@ -285,6 +311,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
             //     updateStoreInCanvas({ ...updatedData, ...response.data }, asideData, parentUrn, dispatch, getState, null, elementIndex, showHideType, parentElement, poetryData)
             // }
         }
+        
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
         
         customEvent.trigger('glossaryFootnoteSave', response.data.id); 
@@ -612,16 +639,45 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
         _slateObject.contents = _slateContent
 
         //console.log("saving new data dispatched")
+
+        //tcm update code   
+        if (config.tcmStatus) {
+        let elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza'];
+        if (elementType.indexOf(updatedData.type) !== -1) {
+            prepareDataForUpdateTcm(updatedData.id, getState, dispatch);
+        }
+        }   
         return dispatch({
             type: AUTHORING_ELEMENT_UPDATE,
             payload: {
                 slateLevelData: newslateData
             }
         })
+    
     } 
     //diret dispatching in store
 }
-
+//TCM Update
+function prepareDataForUpdateTcm(updatedDataID, getState, dispatch) {
+    const tcmData = getState().tcmReducer.tcmSnapshot;
+    tcmData.forEach(function (element,index) {
+    if(element.elemURN.includes('urn:pearson:work') && element.elemURN.indexOf(updatedDataID) !== -1){
+        tcmData[index]["elemURN"]=updatedDataID
+        tcmData[index]["txCnt"]=tcmData[index]["txCnt"] !== 0 ? tcmData[index]["txCnt"]: 1
+        tcmData[index]["feedback"]=tcmData[index]["feedback"] !== null ? tcmData[index]["feedback"]:null
+        tcmData[index]["isPrevAcceptedTxAvailable"] = tcmData[index]["isPrevAcceptedTxAvailable"]  ? tcmData[index]["isPrevAcceptedTxAvailable"]:false
+    }
+});
+if (tcmData) {
+    sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });
+}
+dispatch({
+    type: GET_TCM_RESOURCES,
+    payload: {
+        data: tcmData
+    }
+})
+}
 export const updateFigureData = (figureData, elementIndex, elementId, cb) => (dispatch, getState) => {
     let parentData = getState().appStore.slateLevelData,
         //element,

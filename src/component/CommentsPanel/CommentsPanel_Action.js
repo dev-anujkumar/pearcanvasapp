@@ -23,7 +23,7 @@ import {
 */
 export const fetchComments = (contentUrn, title) => dispatch => {
     let projectUrn = config.projectUrn,
-        url = `${config.JAVA_API_URL}v1/narrative/v2/${projectUrn}/aggregatedComments/container/${contentUrn}`
+        url = `${config.REACT_APP_API_URL}v1/narrative/v2/${projectUrn}/aggregatedComments/container/${contentUrn}`
     return axios.get(url, {
         headers: {
             "Content-Type": "application/json",
@@ -265,7 +265,7 @@ export const updateAssignee = (commentUrn, newAssignee, elementId) => dispatch =
 */
 
 export const deleteComment = (commentUrn, elementId) => (dispatch, getState) => {
-    let url = `${config.JAVA_API_URL}v2/narrative/container/${elementId}/comment/${commentUrn}`
+    let url = `${config.REACT_APP_API_URL}v2/narrative/container/${elementId}/comment/${commentUrn}`
     return axios.delete(url,
         {
             headers: {

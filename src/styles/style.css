@@ -78,6 +78,10 @@ h1, h2, h3, h4, h5, p {
     font-family :Arial, Helvetica, sans-serif;
     color: #3e3e3e;
 }
+table p {
+    font-family :Arial, Helvetica, sans-serif;
+    color: unset !important;
+}
 
 .description {
     font-size: 14px;
@@ -296,4 +300,7 @@ P.paragraphNumeroUnoIndentLevel1, P.paragraphNumeroUnoIndentLevel2, P.paragraphN
 
 .reviewer-role .Wirisformula,.reviewer-role .temp_Wirisformula {
     pointer-events: none;
+}
+table code {
+    color: unset !important;
 }

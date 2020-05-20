@@ -346,7 +346,7 @@ export const generateAssessmentData = (index, previousElementData, elementType, 
     let assessmentNodeSelector = `div[data-id='${previousElementData.id}'] figure.figureAssessment `;
     let assessmenttitle = document.querySelector(assessmentNodeSelector + '#single_assessment_title').innerText; //PCAT-6828 fixed
     let assessmentId = document.querySelector(assessmentNodeSelector + 'div.singleAssessmentIdInfo').innerText;
-    let isPuf = previousElementData && previousElementData.figuredata && previousElementData.figuredata.elementdata && previousElementData.figuredata.elementdata.assessmentformat === "puf";
+    let isPuf = previousElementData && previousElementData.figuredata && previousElementData.figuredata.elementdata && (previousElementData.figuredata.elementdata.assessmentformat === "puf" || previousElementData.figuredata.elementdata.assessmentformat === "learnosity");
     let getAsid = '';
 
     if (isPuf) {
@@ -444,7 +444,7 @@ const generateCitationElementData = (index, previousElementData, elementType, pr
  * @param {*} node HTML node containing content
  */
 const validateRevealAnswerData = (showHideType, node, elementType) => {
-    if(showHideType && showHideType === "postertextobject" && !node.innerText.trim().length){
+    if(showHideType && showHideType === "postertextobject" && !(node.innerText.trim().length || node.innerHTML.match(/<img/))){
         return {
             innerHTML : "<p class=\"paragraphNumeroUno\">Reveal Answer:</p>",
             innerText : "Reveal Answer:"

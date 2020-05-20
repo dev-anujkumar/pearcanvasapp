@@ -17,6 +17,9 @@ export const STANZA = "STANZA";
 export const SHOW_HIDE = "SHOW_HIDE";
 export const POP_UP = "POP_UP";
 export const SMARTLINK = "SMART_LINK";
+export const BLOCKCODE = "BLOCK_CODE_EDITOR";
+export const TABLE_EDITOR = "TABLE_EDITOR";
+export const FIGURE_MML = "MATH_ML_CHEM_EDITOR";
 export const ACCESS_DENIED_CONTACT_ADMIN = "Access Denied! You do not have access to the Linked Alfresco site. please contact the Manager for this project"
 
 /*-----------------Pop Dialog text-------------------------- */
