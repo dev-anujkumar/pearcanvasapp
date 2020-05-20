@@ -4,7 +4,8 @@ import config  from './../../config/config';
 import {
     FETCH_SLATE_DATA,
     SET_ACTIVE_ELEMENT,
-    ERROR_POPUP
+    ERROR_POPUP,
+    GET_TCM_RESOURCES
 } from './../../constants/Action_Constants';
 import elementTypes from './../Sidebar/elementTypes';
 import figureDataBank from '../../js/figure_data_bank';
@@ -335,6 +336,13 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                 elementWipType: "element-authoredtext"
             }
         }
+        //tcm conversion code   
+        if (config.tcmStatus) {
+            let elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza'];
+            if (elementType.indexOf(oldElementData.type) !== -1) {
+                prepareDataForConversionTcm(res.data.id, getState, dispatch);
+            }
+        }   
         dispatch({
             type: SET_ACTIVE_ELEMENT,
             payload: activeElementObject
@@ -354,6 +362,27 @@ catch (error) {
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
     dispatch({type: ERROR_POPUP, payload:{show: true}})
 }
+}
+function prepareDataForConversionTcm(updatedDataID, getState, dispatch) {
+    const tcmData = getState().tcmReducer.tcmSnapshot;
+    for (let i = 0; i < tcmData.length; i++) {
+        if (tcmData[i].elemURN.includes('urn:pearson:work') && tcmData[i].elemURN.indexOf(updatedDataID) !== -1) {
+            tcmData[i]["elemURN"] = updatedDataID
+            tcmData[i]["txCnt"] = tcmData[i]["txCnt"] !== 0 ? tcmData[i]["txCnt"] : 1
+            tcmData[i]["feedback"] = tcmData[i]["feedback"] !== null ? tcmData[i]["feedback"] : null
+            tcmData[i]["isPrevAcceptedTxAvailable"] = tcmData[i]["isPrevAcceptedTxAvailable"] ? tcmData[i]["isPrevAcceptedTxAvailable"] : false
+            break;
+        }
+    }
+    if (tcmData) {
+        sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });
+    }
+    dispatch({
+        type: GET_TCM_RESOURCES,
+        payload: {
+            data: tcmData
+        }
+    })
 }
 
 export const handleElementConversion = (elementData, store, activeElement, fromToolbar,showHideObj) => dispatch => {
