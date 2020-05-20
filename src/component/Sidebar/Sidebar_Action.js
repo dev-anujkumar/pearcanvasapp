@@ -336,12 +336,13 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                 elementWipType: "element-authoredtext"
             }
         }
-         //tcm update code   
-         if (config.tcmStatus) {
-           
-            prepareDataForConversionTcm(res.data.id, getState, dispatch);
-           
-            }   
+        //tcm conversion code   
+        if (config.tcmStatus) {
+            let elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza'];
+            if (elementType.indexOf(oldElementData.type) !== -1) {
+                prepareDataForConversionTcm(res.data.id, getState, dispatch);
+            }
+        }   
         dispatch({
             type: SET_ACTIVE_ELEMENT,
             payload: activeElementObject
