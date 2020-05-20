@@ -57,7 +57,12 @@ let config = {
     GET_ASSETPOPOVER_ID :'https://contentapis-staging.pearsoncms.net/',
     PREVIEW_ASSESSMENT_LO_ENDPOINT : "https://cite-qa.pearson.com/",
     APO_API_KEY:"7ij8zrLkCNR9DtAXx3KJ6yutoYnk4SAx",
-    dashboardUrl:"https://test-structuredauthoring.pearson.com" 
+    dashboardUrl:"https://dev-structuredauthoring.pearson.com",
+    GLOBAL_CO: {
+        CITE_NODE_REF: "ebaaf975-a68b-4ca6-9604-3d37111b847a",
+        CITE_REPO_INSTANCC:"https://staging.api.pearson.com/content/cmis/uswip-aws",
+        CITE_REPO_NAME:"AWS US"
+    } 
 };
 
 if (process.env.NODE_ENV === "development") {
