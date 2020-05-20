@@ -109,7 +109,7 @@ class GlossaryFootnoteMenu extends React.Component {
     saveContent = () => {
         if (!hasReviewerRole()) {
             const { glossaryFootnoteValue } = this.props;
-            let { elementWorkId, elementType, glossaryfootnoteid, type, elementSubType, typeWithPopup} = glossaryFootnoteValue;
+            let { elementWorkId, elementType, glossaryfootnoteid, type, elementSubType, typeWithPopup, poetryField} = glossaryFootnoteValue;
             let term = null;
             let definition = null;
             let defaultValue = document.createElement('p')
@@ -129,7 +129,7 @@ class GlossaryFootnoteMenu extends React.Component {
             definition = this.replaceUnwantedtags(definition)
             if(this.glossaryFootnoteDifference(term, definition, this.props.glossaryFootNoteCurrentValue.glossaryContentText, this.props.glossaryFootNoteCurrentValue.footnoteContentText, glossaryFootnoteValue.type.toLowerCase())){
                 sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType, typeWithPopup)
+                saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType, typeWithPopup, poetryField)
             }
         }
         this.props.showGlossaaryFootnote(false);

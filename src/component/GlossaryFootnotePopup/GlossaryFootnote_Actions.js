@@ -10,7 +10,7 @@ const {
 
 import { OPEN_GLOSSARY_FOOTNOTE, UPDATE_FOOTNOTEGLOSSARY, ERROR_POPUP } from "./../../constants/Action_Constants";
 
-export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, typeWithPopup) => async (dispatch) => {
+export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, typeWithPopup, poetryField) => async (dispatch) => {
     
     let glossaaryFootnoteValue = {
         "type": glossaaryFootnote,
@@ -20,7 +20,8 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
         glossaryfootnoteid,
         elementSubType,
         glossaryTermText,
-        typeWithPopup : typeWithPopup ? typeWithPopup : undefined
+        typeWithPopup : typeWithPopup ? typeWithPopup : undefined,
+        poetryField : poetryField ? poetryField : undefined
     }
 
     if (status === true) {
@@ -133,7 +134,7 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
  * @param {*} glossaryfootnoteid, glosary/footnote's work id
  * @param {*} type, type whether glossary or footnote
  */
-export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType, typeWithPopup) => {
+export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType, typeWithPopup,poetryField) => {
     if(!glossaryfootnoteid) return false
 
     let glossaryEntry = Object.create({})
@@ -192,7 +193,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         figureDataObj = {
             "text": workContainer
         }
-        if(elementType == 'stanza'){
+        if(elementType == 'stanza' || (typeWithPopup === "poetry" && poetryField === 'formatted-subtitle')){
             figureDataObj.text = `<p>${figureDataObj.text}</p>`
         }
     }
@@ -257,8 +258,16 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             }
             break;
     }
-    if(typeWithPopup === 'poetry' || typeWithPopup === 'popup'){
+   
+    if (typeWithPopup === 'popup') {
         data.metaDataField = "formattedTitle"
+        data.elementParentEntityUrn = parentEntityUrn
+    } else if (typeWithPopup === 'poetry') {
+        if (poetryField === 'creditsarray') {
+            data.section = 'creditsarray';
+        } else {
+            data.metaDataField = "formattedTitle";
+        }
         data.elementParentEntityUrn = parentEntityUrn
     }
     if(index &&  typeof (index) !== 'number' && elementType !== 'figure'  && typeWithPopup !== 'popup' && typeWithPopup !== 'poetry'){
@@ -338,14 +347,25 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                     case "1":
                         let responseElement = {...res.data}
                         newBodymatter[tempIndex[0]].contents['formatted-title']
-                        let labelHTML = newBodymatter[tempIndex[0]].contents['formatted-title'].html.text
-                        if(labelHTML.match(/<label>.*?<\/label>/g)){
-                            labelHTML = labelHTML.match(/<label>.*?<\/label>/g)[0].replace(/<label>|<\/label>/g, "")
-                        }
-                        else{
-                            labelHTML = ""
-                        }
-                        responseElement.html.text = createTitleSubtitleModel(labelHTML, res.data.html.text)
+                        // let labelHTML = newBodymatter[tempIndex[0]].contents['formatted-title'].html.text
+                        // if(labelHTML.match(/<label>.*?<\/label>/g)){
+                        //     labelHTML = labelHTML.match(/<label>.*?<\/label>/g)[0].replace(/<label>|<\/label>/g, "")
+                        // }
+                        // else{
+                        //     labelHTML = ""
+                        // }
+                       
+                        // let parser = new DOMParser();
+                        // let htmlDoc = parser.parseFromString(res.data.html.text, 'text/html');
+                        // let removeP_Tag = htmlDoc.getElementsByTagName("p");
+                        // console.log("removeP_Tag[0].innerHTML",removeP_Tag[0].innerHTML)
+                        // if(removeP_Tag && removeP_Tag.length){
+                        //     responseElement.html.text = createTitleSubtitleModel("", removeP_Tag[0].innerHTML) 
+                        // }
+                        // else {
+                            res.data.html.text = res.data.html.text.replace(/<p>|<\/p>/g, "")
+                            responseElement.html.text = createTitleSubtitleModel("", res.data.html.text)
+                        // }
                         newBodymatter[tempIndex[0]].contents['formatted-title'] = responseElement;
                         break;
                     // case "3":
