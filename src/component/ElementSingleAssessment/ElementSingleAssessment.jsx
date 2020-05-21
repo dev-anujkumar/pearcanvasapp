@@ -7,9 +7,9 @@ import './../../styles/ElementSingleAssessment/ElementSingleAssessment.css';
 import { dropdownArrow } from './../../images/ElementButtons/ElementButtons.jsx';
 import { connect } from 'react-redux';
 import { showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';
-import { hasReviewerRole, sendDataToIframe, setAssessmentTitle} from '../../constants/utility.js';
+import { hasReviewerRole, sendDataToIframe, setAssessmentTitle } from '../../constants/utility.js';
 import RootCiteTdxComponent from '../AssessmentSlateCanvas/assessmentCiteTdx/RootCiteTdxComponent.jsx';
-import {FULL_ASSESSMENT_CITE, FULL_ASSESSMENT_TDX} from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
+import { FULL_ASSESSMENT_CITE, FULL_ASSESSMENT_TDX } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import RootSingleAssessmentComponent from '../AssessmentSlateCanvas/singleAssessmentCiteTdx/RootSingleAssessmentComponent.jsx'
 import { setCurrentCiteTdx, setCurrentInnerCiteTdx, assessmentSorting, specialCharacterDecode } from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
 import RootElmSingleAssessment from '../AssessmentSlateCanvas/elm/RootElmSingleComponent.jsx'
@@ -207,7 +207,7 @@ static getDerivedStateFromProps(nextProps, prevState) {
        
     }
 
-    
+
     /*** @description - This function is to close ELM PopUp */
     closeElmWindow = () => {
         this.setState({
@@ -251,7 +251,7 @@ static getDerivedStateFromProps(nextProps, prevState) {
         }
     }
     /** ----------------------------------------------------------------------------------------------------------- */
-    
+
     setAssessmentProperties = (elementType) => {
         let assessmentClasses = { divMainClass: '', divInnerClass: '' }
         switch (elementType) {
@@ -288,10 +288,10 @@ static getDerivedStateFromProps(nextProps, prevState) {
         }
         let assessmentKeys = this.setAssessmentProperties(this.state.elementType)
         /*JSX for the Single Assessment Element */
-        assessmentJSX = <div className={`divAssessment ${assessmentKeys.divMainClass}`} >
-            <figure className={`figureAssessment ${this.state.elementType !== "tdx"?"heading4AssessmentItemNumberLabel":"heading4TdxAssessmentItemNumberLabel"}`}>
+        assessmentJSX = <div className={`divAssessment ${assessmentKeys && assessmentKeys.divMainClass ? assessmentKeys.divMainClass : ""}`} >
+            <figure className={`figureAssessment ${this.state.elementType !== "tdx" ? "figureAssessmentItem" : "figureTdxAssessmentItem"}`}>
                 <header>
-                    <h4 className={this.state.elementType !== "tdx"?"figureAssessmentItem":"figureTdxAssessmentItem"} id="single_assessment_title">{(this.state.elementType !== "puf" && this.state.elementType !== "learnosity") ? "" : "Assessment Title:"}{this.state.assessmentTitle}</h4>
+                    <h4 className={this.state.elementType !== "tdx" ? "heading4AssessmentItemNumberLabel" : "heading4TdxAssessmentItemNumberLabel"} id="single_assessment_title">{(this.state.elementType !== "puf" && this.state.elementType !== "learnosity") ? "" : "Assessment Title:"}{this.state.assessmentTitle}</h4>
                 </header>
                 <div className="singleAssessmentIdInfo" ><strong>{(this.state.elementType !== "puf" && this.state.elementType !== "learnosity") ? "ID: " : "Product ID: "}</strong>{this.state.assessmentId ? this.state.assessmentId : (model.figuredata.elementdata ? model.figuredata.elementdata.assessmentid : "")}</div>
                 <div className={`singleAssessmentItemIdInfo ${(this.state.elementType !== "puf" && this.state.elementType !== "learnosity")? '':'puf-assessment-id'}`} ><strong>ITEM ID: </strong>{this.state.assessmentItemId?this.state.assessmentItemId:(model.figuredata.elementdata ? model.figuredata.elementdata.assessmentitemid : "")}</div>                             
@@ -311,8 +311,8 @@ static getDerivedStateFromProps(nextProps, prevState) {
                     ) : null
                 }
 
-                <div className={`pearson-component ${assessmentKeys.assessmentItemType}`}
-                    data-type={assessmentKeys.assessmentItemType}
+                <div className={`pearson-component ${assessmentKeys && assessmentKeys.assessmentItemType ? assessmentKeys.assessmentItemType : ""}`}
+                    data-type={assessmentKeys && assessmentKeys.assessmentItemType ? assessmentKeys.assessmentItemType : ""}
                     data-assessment={this.state.assessmentId ? this.state.assessmentId : (model.figuredata.elementdata ? model.figuredata.elementdata.assessmentid : "")}
                     data-assessment-item={this.state.assessmentItemId ? this.state.assessmentItemId : (model.figuredata.elementdata ? model.figuredata.elementdata.assessmentitemid : "")}
                     data-item-type={this.state.elementType !== "tdx" ? "assessmentItem" : "tdxAssessmentItem"}
@@ -358,14 +358,14 @@ ElementSingleAssessment.propTypes = {
     toggleUsageTypeDropdown: PropTypes.func,
     /** Handler to toggle the assessment pop-up */
     toggleAssessmentPopup: PropTypes.func,
-     /** Handler to Add C2 -Media to the assessment*/
-    handleC2AssessmentClick : PropTypes.func,
+    /** Handler to Add C2 -Media to the assessment*/
+    handleC2AssessmentClick: PropTypes.func,
     /** Detail of element in JSON object */
 }
 const mapActionToProps = {
     setCurrentCiteTdx: setCurrentCiteTdx,
     setCurrentInnerCiteTdx: setCurrentInnerCiteTdx,
-    assessmentSorting:assessmentSorting
+    assessmentSorting: assessmentSorting
 }
 
 

@@ -80,6 +80,7 @@ class ElmTableComponent extends Component {
         let searchResults = [];
         this.searchData=[];
         this.props.setSearchTerm(assessmentType,searchAssessmentTitle);
+        this.setState({ isActive: null })
         searchResults = searchAndFilterAssessmentData(assessmentType, searchAssessmentTitle, this.props.elmReducer.elmData)
         this.searchData = searchResults
         // if(searchAssessmentTitle.trim()!=""){
@@ -388,7 +389,7 @@ class ElmTableComponent extends Component {
     }
 
     openAssessmentSearchBar=(flag,fromFooter)=>{
-        this.setState({ isActive: null, tableValue:[] })
+        this.setState({ isActive: null, tableValue:[], addFlag:false })
         this.props.setElmLoading(false);
         if(fromFooter==true){
             this.props.setSearchTerm('');
