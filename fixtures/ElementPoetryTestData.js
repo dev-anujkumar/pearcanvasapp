@@ -10,7 +10,10 @@ export const poetryElem = {
         "formatted-title": {
             "type": "element-authoredtext",
             "id": "urn:pearson:work:e1b59ae0-b04a-4b6e-a1a4-33e21073g5w4",
-            "text": ""
+            "text": "",
+            "html": {
+                "text": "<p>test title data</p>"
+            }
         },
         "formatted-subtitle": {
             "type": "element-authoredtext",

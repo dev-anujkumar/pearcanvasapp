@@ -11,7 +11,7 @@ import { hasReviewerRole, sendDataToIframe, setAssessmentTitle} from '../../cons
 import RootCiteTdxComponent from '../AssessmentSlateCanvas/assessmentCiteTdx/RootCiteTdxComponent.jsx';
 import {FULL_ASSESSMENT_CITE, FULL_ASSESSMENT_TDX} from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import RootSingleAssessmentComponent from '../AssessmentSlateCanvas/singleAssessmentCiteTdx/RootSingleAssessmentComponent.jsx'
-import { setCurrentCiteTdx, setCurrentInnerCiteTdx, assessmentSorting } from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
+import { setCurrentCiteTdx, setCurrentInnerCiteTdx, assessmentSorting, specialCharacterDecode } from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
 import RootElmSingleAssessment from '../AssessmentSlateCanvas/elm/RootElmSingleComponent.jsx'
 // import { sendDataToIframe } from './../../constants/utility.js';
 /*** @description - ElementSingleAssessment is a class based component. It is defined simply to make a skeleton of the assessment-type element .*/
@@ -187,6 +187,9 @@ static getDerivedStateFromProps(nextProps, prevState) {
     addCiteTdxAssessment = (citeTdxObj, parentPageNo=1) => {
         showTocBlocker();
         disableHeader(true);
+        if (citeTdxObj && citeTdxObj.title) {
+            citeTdxObj.title = specialCharacterDecode(citeTdxObj.title)
+        }
         if(citeTdxObj.slateType === "singleSlateAssessment"){
             this.setState({
                 showSinglePopup: true,
@@ -196,7 +199,7 @@ static getDerivedStateFromProps(nextProps, prevState) {
             })
         }
         else{
-            this.setState({ assessmentId: citeTdxObj.id, assessmentItemId: citeTdxObj.singleAssessmentID.versionUrn, assessmentTitle: citeTdxObj.title },
+            this.setState({ assessmentId: citeTdxObj.id, assessmentItemId: citeTdxObj.singleAssessmentID.versionUrn, assessmentTitle: specialCharacterDecode(citeTdxObj.title) },
                 () => {
                     this.saveAssessment();
                 })
@@ -234,7 +237,7 @@ static getDerivedStateFromProps(nextProps, prevState) {
     */
     addAssessmentResource = (e) => {
         if(this.props.permissions && this.props.permissions.includes('quad_linking_assessment') && !hasReviewerRole()){
-            if (this.state.elementType !== "puf") {
+            if (this.state.elementType !== "puf" && this.state.elementType !== "learnosity") {
             this.toggleAssessmentPopup(e, true)
             } else {
             this.setState({
@@ -264,10 +267,10 @@ static getDerivedStateFromProps(nextProps, prevState) {
         assessmentJSX = <div className="divAssessment" >
             <figure className="figureAssessment">
                 <header>
-                <h4 className="heading4ImageTextWidthNumberLabel" id="single_assessment_title">{this.state.elementType !=="puf"?"":"Assessment Title:"}{this.state.assessmentTitle}</h4>
+                    <h4 className="heading4ImageTextWidthNumberLabel" id="single_assessment_title">{(this.state.elementType !== "puf" && this.state.elementType !== "learnosity") ? "" : "Assessment Title:"}{this.state.assessmentTitle}</h4>
                 </header>
-                <div className="singleAssessmentIdInfo" ><strong>{this.state.elementType !=="puf"?"ID: ":"Product ID: "}</strong>{this.state.assessmentId?this.state.assessmentId:(model.figuredata.elementdata ? model.figuredata.elementdata.assessmentid : "")}</div>                              
-                <div className={`singleAssessmentItemIdInfo ${this.state.elementType !=="puf"? '':'puf-assessment-id'}`} ><strong>ITEM ID: </strong>{this.state.assessmentItemId?this.state.assessmentItemId:(model.figuredata.elementdata ? model.figuredata.elementdata.assessmentitemid : "")}</div>                             
+                <div className="singleAssessmentIdInfo" ><strong>{(this.state.elementType !== "puf" && this.state.elementType !== "learnosity") ? "ID: " : "Product ID: "}</strong>{this.state.assessmentId ? this.state.assessmentId : (model.figuredata.elementdata ? model.figuredata.elementdata.assessmentid : "")}</div>
+                <div className={`singleAssessmentItemIdInfo ${(this.state.elementType !== "puf" && this.state.elementType !== "learnosity")? '':'puf-assessment-id'}`} ><strong>ITEM ID: </strong>{this.state.assessmentItemId?this.state.assessmentItemId:(model.figuredata.elementdata ? model.figuredata.elementdata.assessmentitemid : "")}</div>                             
                 <div className="singleAssessment_Dropdown_Container">
                     <div className="singleAssessment_Dropdown_SelectLabel">Select usage type</div>
                     <div className={this.state.asseessmentUsageTypeDropdown ? "singleAssessment_Dropdown_activeDropdown select" : "singleAssessment_Dropdown_activeDropdown notselect"} onClick={ !hasReviewerRole() && this.toggleUsageTypeDropdown} >

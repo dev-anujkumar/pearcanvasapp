@@ -70,6 +70,14 @@ class GlossaryFootnoteMenu extends React.Component {
         html = html.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula').replace(/\uFEFF/g,"");
         html=html.trim();
         tempDiv.innerHTML = html;
+        /** BG-2332 | PCAT-7409 | Multiple Superseeded formatting entry is created in WIP when 
+         * entering text by selecting the strikethrough formatting in Footnote and Glossary  */
+        while(tinyMCE.$(tempDiv).find('span#_mce_caret').length) {
+            tinyMCE.$(tempDiv).find('span#_mce_caret').each(function () {
+                let innerHtml = this.innerHTML;
+                this.outerHTML = innerHtml;
+            })
+        }
         tinyMCE.$(tempDiv).find('span#_mce_caret').remove();
 
         tinyMCE.$(tempDiv).find('img').removeAttr('data-mce-style');

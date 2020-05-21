@@ -202,10 +202,11 @@ class ElementAudioVideo extends Component {
 
         if (figureData) {
             const id = figureData.videoid || figureData.audioid;
+            const type = 'videoid' in figureData ? 'video' : ('audioid' in figureData ? 'audio' : null);
         
             currentAsset = id ? {
                 id: id.split(':').pop(), // get last
-                type: figureData.figureType,
+                type,
             } : null;
         }
         

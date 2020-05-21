@@ -18,7 +18,7 @@ import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
 import config from '../../config/config';
 import { TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER, WORKED_EXAMPLE, SECTION_BREAK, METADATA_ANCHOR, LO_LIST, ELEMENT_ASSESSMENT, OPENER,
     ALREADY_USED_SLATE , REMOVE_LINKED_AUDIO, NOT_AUDIO_ASSET, SPLIT_SLATE_WITH_ADDED_AUDIO , ACCESS_DENIED_CONTACT_ADMIN, IN_USE_BY, LOCK_DURATION, SHOW_HIDE,POP_UP ,
-    CITATION, ELEMENT_CITATION,SMARTLINK,POETRY ,STANZA} from './SlateWrapperConstants';
+    CITATION, ELEMENT_CITATION,SMARTLINK,POETRY ,STANZA, BLOCKCODE, TABLE_EDITOR, FIGURE_MML} from './SlateWrapperConstants';
 import PageNumberElement from './PageNumberElement.jsx';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
@@ -30,6 +30,7 @@ import { setSlateLock, releaseSlateLock, setLockPeriodFlag, getSlateLockStatus }
 import { setActiveElement,openPopupSlate } from '../CanvasWrapper/CanvasWrapper_Actions';
 // import { OPEN_AM } from '../../js/auth_module';
 import { showSlateLockPopup } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
+import { handleTCMData } from '../ElementContainer/TcmSnapshot_Actions'
 
 let random = guid();
 class SlateWrapper extends Component {
@@ -136,9 +137,6 @@ class SlateWrapper extends Component {
     }
 
     static getDerivedStateFromProps = (props, state) => {
-        /** Default Red Dot indicator to false */
-        sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'false' });
-
         /**
          * updateTimer is for updating Time for slate refresh
          */
@@ -643,6 +641,15 @@ class SlateWrapper extends Component {
             case 'stanza-elem':
                 this.props.createElement(STANZA, indexToinsert, parentUrn,null,null,null,null,poetryData);
                 break;
+            case 'figure-mml-elem':
+                this.props.createElement(FIGURE_MML, indexToinsert, parentUrn, asideData, null, null);
+                break;
+            case 'blockcode-elem':
+                this.props.createElement(BLOCKCODE, indexToinsert, parentUrn, asideData, null, null);
+                break;
+            case 'table-editor-elem-button':
+                this.props.createElement(TABLE_EDITOR, indexToinsert, parentUrn, asideData, null, null);
+                break;
             case 'text-elem':
             default:
                 this.props.createElement(TEXT, indexToinsert, parentUrn, asideData, null, null, null);
@@ -671,15 +678,21 @@ class SlateWrapper extends Component {
                 tooltipDirection: 'left'
             },
             {
-                buttonType: 'poetry-elem',
-                buttonHandler: () => this.splithandlerfunction('poetry-elem',index, firstOne, parentUrn,"",outerAsideIndex,poetryData),
-                tooltipText: 'Poetry',
+                buttonType: 'block-text-button',
+                buttonHandler: () => this.splithandlerfunction('block-text-button'),
+                tooltipText: 'Block Text',
                 tooltipDirection: 'left'
             },
             {
                 buttonType: 'interactive-elem-button',
                 buttonHandler: () => this.splithandlerfunction('interactive-elem-button'),
                 tooltipText: 'Interactive',
+                tooltipDirection: 'left'
+            },
+            {
+                buttonType: 'table-editor-elem-button',
+                buttonHandler: () => this.splithandlerfunction('table-editor-elem-button', index, firstOne, parentUrn, asideData ),
+                tooltipText: 'Table',
                 tooltipDirection: 'left'
             },
             {
@@ -1091,7 +1104,7 @@ class SlateWrapper extends Component {
         config.isPopupSlate = false
         this.props.openPopupSlate(undefined, popupId)
         this.props.setActiveElement(config.cachedActiveElement.element, config.cachedActiveElement.index)
-        
+        this.props.handleTCMData(config.slateManifestURN)
         // Scrolling to the previous element after SAVE  & CLOSE is clicked
         setTimeout(() => {
             let elementDom = document.querySelector(`[data-id="${config.cachedActiveElement.element.id}"]`)
@@ -1209,6 +1222,7 @@ export default connect(
         accessDenied,
         openPopupSlate,
         showSlateLockPopup,
+        handleTCMData,
 
     }
 )(SlateWrapper);

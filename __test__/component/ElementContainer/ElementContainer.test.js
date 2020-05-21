@@ -32,6 +32,7 @@ jest.mock('./../../../src/constants/utility.js', () => ({
 }))
 jest.mock('./../../../src/config/config.js', () => ({
     colors : ["#000000", "#003057", "#505759", "#005A70", "#006128"],
+    textcolors:["option1", "option2"],
     releaseCallCount :0,
     savingInProgress:false
 }))
@@ -159,7 +160,10 @@ describe('Test for element container component', () => {
             elementContainerInstance.forceUpdate();
             elementContainer.update();
             expect(elementContainerInstance).toBeDefined();
-        }) 
+        })
+        
+      
+
         it('Render Element Container ----->BlockQuote-Pullquote', () => {
 
             let props = {
@@ -600,6 +604,44 @@ describe('Test for element container component', () => {
             elementContainer.update();
             expect(spyupdateOpenerElement).toHaveBeenCalled()
             spyupdateOpenerElement.mockClear()
+        })
+
+        it('Test-toggleColorTextList  Function', () => {
+            elementContainerInstance.setState({
+                showColorTextList: false
+            })
+            elementContainerInstance.forceUpdate();
+            elementContainer.update();
+            const spytoggleColorTextList  = jest.spyOn(elementContainerInstance, 'toggleColorTextList')
+            elementContainerInstance.toggleColorTextList();
+            expect(spytoggleColorTextList).toHaveBeenCalled()
+            expect(elementContainerInstance.state.showColorTextList).toBe(true)
+            spytoggleColorTextList.mockClear()
+        })
+
+        it('Test-renderTextColorList  Function', () => {
+            const spyrenderTextColorList = jest.spyOn(elementContainerInstance, 'renderTextColorList')
+            elementContainerInstance.renderTextColorList();
+            elementContainerInstance.forceUpdate();
+            elementContainer.update();
+            expect(spyrenderTextColorList).toHaveBeenCalled()
+            spyrenderTextColorList.mockClear()
+        })
+
+        it('Test-selectTextColor  Function', () => {
+            let e = {
+                target: {
+                    getAttribute:  ()=> {
+                        return 'primary';
+                    }
+                }
+            }
+            const spyselectTextColor = jest.spyOn(elementContainerInstance, 'selectTextColor')
+            elementContainerInstance.selectTextColor(e);
+            elementContainerInstance.forceUpdate();
+            elementContainer.update();
+            expect(spyselectTextColor).toHaveBeenCalledWith(e)
+            spyselectTextColor.mockClear()
         })
     })
     describe('Test-Other Functions', () => {

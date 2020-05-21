@@ -4,7 +4,8 @@ import config  from './../../config/config';
 import {
     FETCH_SLATE_DATA,
     SET_ACTIVE_ELEMENT,
-    ERROR_POPUP
+    ERROR_POPUP,
+    GET_TCM_RESOURCES
 } from './../../constants/Action_Constants';
 import elementTypes from './../Sidebar/elementTypes';
 import figureDataBank from '../../js/figure_data_bank';
@@ -73,30 +74,31 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         outputPrimaryOptionEnum=outputSubType['enum'];
         outputSubTypeEnum = usageType.toUpperCase().replace(" ", "_").replace("-", "_");
         oldElementData.figuredata.elementdata.usagetype=usageType;
-        let assessmentFormat =outputSubType.text.toLowerCase();
+        let assessmentFormat = outputSubType.text !== 'Learnosity Beta' ? outputSubType.text.toLowerCase() : 'learnosity';
         let assessmentItemType ="";
-        if(assessmentFormat==="cite" || assessmentFormat==="puf"){
+        if(assessmentFormat==="cite" || assessmentFormat==="puf" || assessmentFormat==="learnosity"){
             assessmentItemType ="assessmentItem";
         }else{
             assessmentItemType = "tdxAssessmentItem";
         }
         // oldElementData['html']['title'] = "";
-        oldElementData.figuredata.id = "";                                              //PCAT-6792 fixes
-        oldElementData.figuredata.elementdata.posterimage.imageid = "";
+        // oldElementData.figuredata.id = "";                                           //PCAT-6792 fixes
+        // oldElementData.figuredata.elementdata.posterimage.imageid = "";              //PCAT-7961 fixes
         oldElementData.figuredata.elementdata.assessmentid = "";
         oldElementData.figuredata.elementdata.assessmentitemid = "";
         oldElementData.figuredata.elementdata.assessmentformat=assessmentFormat;
         oldElementData.figuredata.elementdata.assessmentitemtype=assessmentItemType;
         oldElementData && oldElementData.html && oldElementData.html.title ? oldElementData.html.title ="": null;
         oldElementData && oldElementData.title && oldElementData.title.text ? oldElementData.title.text ="": null;
-        // if(assessmentFormat==="puf"){
-        //     delete oldElementData.figuredata.elementdata.posterimage
-        // }else{
-        //     oldElementData.figuredata.elementdata.posterimage ={
-        //         imageid : "",
-        //         path: "https://cite-media-stg.pearson.com/legacy_paths/8efb9941-4ed3-44a3-8310-1106d3715c3e/FPO-assessment.png"
-        //     }
-        // }
+        /** [PCAT-7961] | case(1) - As no unique figuredata.id is present for the assessment,the  'figuredata.id' key is removed */
+        if (oldElementData && oldElementData.figuredata && (oldElementData.figuredata.id || oldElementData.figuredata.id=="")) {
+            delete oldElementData.figuredata.id;
+        }
+        /** [PCAT-7961] | case(2) - As no image is present for the assessment,the  'posterimage' key is removed */
+        let isPosterImage = oldElementData && oldElementData.figuredata && oldElementData.figuredata.elementdata && oldElementData.figuredata.elementdata.posterimage
+        if(isPosterImage){
+            delete oldElementData.figuredata.elementdata.posterimage
+        }
     }
     /**
      * Patch [code in If block] - in case list is being converted from toolbar and there are some unsaved changes in current element
@@ -113,6 +115,9 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         let domHtml = editableDom ? editableDom.innerHTML : "<ol></ol>"
         if(showHideObj){
             containerDom = document.getElementById(`cypress-${showHideObj.index}`)
+            if(containerDom){
+                tinyMCE.$(containerDom).find('ol').removeAttr('data-mce-style')
+            }
             domHtml = containerDom ? containerDom.innerHTML : "<ol></ol>"
         }
         if (storeHtml !== domHtml) {
@@ -302,7 +307,6 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
 
         let activeElementObject = {
             elementId: res.data.id,
-            // elementId: newElementData.elementId,
             index: indexes.join("-"),
             elementType: newElementData.elementType,
             primaryOption: newElementData.primaryOption,
@@ -318,18 +322,31 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             payload: store
         });
 
+        /**
+         * PCAT-7902 || ShowHide - Content is removed completely when clicking the unordered list button twice.
+         * Setting the correct active element to solve this issue.
+         */
+        if(showHideObj && res.data.type === "element-authoredtext"){
+            activeElementObject = {
+                ...activeElementObject,
+                primaryOption: "primary-paragraph",
+                secondaryOption: "secondary-paragraph",
+                tag: "P",
+                toolbar: [],
+                elementWipType: "element-authoredtext"
+            }
+        }
+        //tcm conversion code   
+        if (config.tcmStatus) {
+            let elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza'];
+            if (elementType.indexOf(oldElementData.type) !== -1) {
+                prepareDataForConversionTcm(res.data.id, getState, dispatch);
+            }
+        }   
         dispatch({
             type: SET_ACTIVE_ELEMENT,
             payload: activeElementObject
         });
-
-        if(activeElementObject.primaryOption === "primary-showhide"){
-           let showHideRevealElement = document.getElementById(`cypress-${indexes[0]}-2-0`)
-           if(showHideRevealElement){
-                showHideRevealElement.focus()
-                showHideRevealElement.blur()
-           } 
-        }
     })
     
     .catch(err =>{
@@ -345,6 +362,27 @@ catch (error) {
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
     dispatch({type: ERROR_POPUP, payload:{show: true}})
 }
+}
+function prepareDataForConversionTcm(updatedDataID, getState, dispatch) {
+    const tcmData = getState().tcmReducer.tcmSnapshot;
+    for (let i = 0; i < tcmData.length; i++) {
+        if (tcmData[i].elemURN.includes('urn:pearson:work') && tcmData[i].elemURN.indexOf(updatedDataID) !== -1) {
+            tcmData[i]["elemURN"] = updatedDataID
+            tcmData[i]["txCnt"] = tcmData[i]["txCnt"] !== 0 ? tcmData[i]["txCnt"] : 1
+            tcmData[i]["feedback"] = tcmData[i]["feedback"] !== null ? tcmData[i]["feedback"] : null
+            tcmData[i]["isPrevAcceptedTxAvailable"] = tcmData[i]["isPrevAcceptedTxAvailable"] ? tcmData[i]["isPrevAcceptedTxAvailable"] : false
+            break;
+        }
+    }
+    if (tcmData) {
+        sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });
+    }
+    dispatch({
+        type: GET_TCM_RESOURCES,
+        payload: {
+            data: tcmData
+        }
+    })
 }
 
 export const handleElementConversion = (elementData, store, activeElement, fromToolbar,showHideObj) => dispatch => {

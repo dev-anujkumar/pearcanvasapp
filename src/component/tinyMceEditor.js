@@ -968,7 +968,9 @@ export class TinyMceEditor extends Component {
                         currentElement.remove();
                     }
                     let activeEditor = document.getElementById(tinymce.activeEditor.id);
-                    activeEditor.blur();
+                    if('element' in this.props && 'status' in this.props.element && this.props.element.status == "wip") {
+                        activeEditor.blur();
+                    }
                     let nextSaparator = (activeEditor.closest('.editor')).nextSibling;
                     let textPicker = nextSaparator.querySelector('#myDropdown li > .stanza-elem');
                     textPicker.click();
@@ -1922,8 +1924,18 @@ export class TinyMceEditor extends Component {
             this.setToolbarByElementType();
             isSameTarget = true;
         }
-        let currentActiveNode = document.querySelector('div .active')
-        let currentElementId = this.props.currentElement && this.props.currentElement.type === "element-citation" ? this.props.currentElement.id : this.props.element.id
+        let currentActiveNode = null
+        let activeContainerNode = document.querySelector('div .active')
+        let activeShowHideNode = document.querySelector('.show-hide-active .cypress-editable')
+        if(activeContainerNode){
+            currentActiveNode = activeContainerNode
+        }
+        else if(activeShowHideNode){
+            currentActiveNode = activeShowHideNode
+        }
+       
+        let currentElementId = this.props.currentElement && !(currentTarget && currentTarget.classList.contains('formatted-text')) ? this.props.currentElement.id : this.props.element.id
+
         if (currentActiveNode && currentActiveNode.getAttribute('data-id') === currentElementId) {
             isSameByElementId = true;
         }
@@ -2025,7 +2037,9 @@ export class TinyMceEditor extends Component {
                         (tinyMCE.$("#" + currentTarget.id).html()).search(/^(<br.*>)+$/g) >= 0) {
                         termText = tinyMCE.$("#" + currentTarget.id).html();
                     }
-                    document.getElementById(currentTarget.id).innerHTML = termText;
+                    /* Reverting data-temp-mathml to data-mathml and class Wirisformula to temp_WirisFormula */
+                    termText = termText.replace(/data-temp-mathml/g, 'data-mathml').replace(/temp_Wirisformula/g, 'Wirisformula');
+                    document.getElementById(currentTarget.id).innerHTML = termText
                 }
                 if (clickedX !== 0 && clickedY !== 0) {
                     tinymce.activeEditor.selection.placeCaretAt(clickedX, clickedY) //Placing exact cursor position on clicking.
