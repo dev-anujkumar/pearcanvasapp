@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react'
 import '../../../../../styles/AssessmentSlateCanvas/elm/ElmTable.css';
 
 export const AssessmentSearchBar = (props) => {
-    const [searchAssessmentTitle, setSearchAssessmentTitle] = useState('');
+    const [searchAssessmentTitle, setSearchAssessmentTitle] = useState(props.searchTerm?props.searchTerm:'');
 
     const handleSearch = e => {
         e.preventDefault();
@@ -25,7 +25,7 @@ export const AssessmentSearchBar = (props) => {
                     <>
                         <div className="filter-block">
                             <div className="title-block">                                
-                                <i class="fa fa-search"></i>
+                                <i className="fa fa-search"></i>
                                 <input
                                     type="text"
                                     autoComplete="on"

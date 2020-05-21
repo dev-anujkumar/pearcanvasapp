@@ -181,61 +181,6 @@ describe('ELM Actions test', () => {
         expect(spy2).toHaveBeenCalled()
         spy2.mockClear()
     });
-    it('TEST- switch case for getFolderLabel', () => {
-        let store = mockStore(initialState);
-        let props = {
-            errFlag: true,
-            errorStatus: "404",
-            apiData: {
-                contents: {
-                    frontMatter: [],
-                    bodyMatter: [],
-                    backMatter: []
-                }
-            },
-            navigateBack: function () { },
-            hidePufPopup: function () { },
-            usageTypeMetadata: 'Quiz',
-            addPufFunction: (obj) => { },
-            closeElmWindow: function () { },
-            openedFrom: "slateAssessment"
-        }
-
-        const component = mount(<Provider store={store}><ElmTableComponent {...props} /></Provider>);
-        const elmTableInstance = component.find('ElmTableComponent').instance();
-        elmTableInstance.setState({
-            parentUrn: "urn:pearson:manifest:3c780b1f-06ad-4e3d-b226-6797b29",
-            apiData: {},
-            renderTableData: () => { return; },
-            addFlag: true,
-            currentAssessmentSelected: {
-                urn: "urn:pearson:work:133dd9fd-a5be-45e5-8d83-891283abb9a5"
-            }
-        })
-
-        elmTableInstance.getFolderLabel('part');
-        const spygetFolderLabel = jest.spyOn(elmTableInstance, 'getFolderLabel')
-        elmTableInstance.forceUpdate();
-        component.update();
-        elmTableInstance.getFolderLabel('part');
-        expect(spygetFolderLabel).toHaveBeenCalledWith('part')
-        elmTableInstance.getFolderLabel('chapter');
-        expect(spygetFolderLabel).toHaveBeenCalledWith('chapter')
-        elmTableInstance.getFolderLabel('module');
-        expect(spygetFolderLabel).toHaveBeenCalledWith('module')
-        elmTableInstance.getFolderLabel('section');
-        expect(spygetFolderLabel).toHaveBeenCalledWith('section')
-        elmTableInstance.getFolderLabel('assessment');
-        expect(spygetFolderLabel).toHaveBeenCalledWith('assessment')
-        elmTableInstance.getFolderLabel('container-introduction');
-        expect(spygetFolderLabel).toHaveBeenCalledWith('container-introduction')
-        elmTableInstance.getFolderLabel('introductry-slate');
-        expect(spygetFolderLabel).toHaveBeenCalledWith('introductry-slate')
-        elmTableInstance.getFolderLabel('introduction');
-        expect(spygetFolderLabel).toHaveBeenCalledWith('introduction')
-        component.update();
-        spygetFolderLabel.mockClear()
-    });
     it('TEST-filterSubData function', () => {
         let store = mockStore(initialState);
         let props = {
@@ -311,23 +256,37 @@ describe('ELM Actions test', () => {
                 urn: "urn:pearson:work:133dd9fd-a5be-45e5-8d83-891283abb9a5"
             }
         })
-        it('TEST-getFolderLabel', () => {
-            const spygetFolderLabel = jest.spyOn(elmTableInstance, 'getFolderLabel')
-            elmTableInstance.getFolderLabel('part');
-            expect(spygetFolderLabel).toHaveBeenCalled()
-            spygetFolderLabel.mockClear()
-        })
-        it('TEST-sendPufAssessment-full assessment-puf', () => {
+        it('TEST-sendPufAssessment-elm assessment item', () => {
+            elmTableInstance.setState({
+                openedFrom:"singleAssessment"
+            })
+            elmTableInstance.forceUpdate()
+            component.update()
             const spysendPufAssessment = jest.spyOn(elmTableInstance, 'sendPufAssessment')
             elmTableInstance.sendPufAssessment();
             expect(spysendPufAssessment).toHaveBeenCalled()
             spysendPufAssessment.mockClear()
         })
-        it('TEST-sendPufAssessment-elm assessment item', () => {
-            component.setProps({
-                ...props,
-                openedFrom:"singleAssessment"
+        it('TEST-sendPufAssessment', () => {
+            elmTableInstance.setState({
+                openedFrom:"singleAssessment",
+                currentAssessmentSelected:{
+                    type: "assessment"
+                },
+                openItemTable:false
             })
+            elmTableInstance.forceUpdate()
+            component.update()
+            const spysendPufAssessment = jest.spyOn(elmTableInstance, 'sendPufAssessment')
+            elmTableInstance.sendPufAssessment();
+            expect(spysendPufAssessment).toHaveBeenCalled()
+            spysendPufAssessment.mockClear()
+        })
+        it('TEST-sendPufAssessment-elm assessment', () => {
+            elmTableInstance.setState({
+                openedFrom:"slateAssessment"
+            })
+            elmTableInstance.forceUpdate()
             component.update()
             const spysendPufAssessment = jest.spyOn(elmTableInstance, 'sendPufAssessment')
             elmTableInstance.sendPufAssessment();
@@ -372,7 +331,7 @@ describe('ELM Actions test', () => {
                 previousUrn: "urn:pearson:work:133dd9fd-a5be-45e5-5678-891283abb9a5"
             }
             const spyhandleClickAssessment = jest.spyOn(elmTableInstance, 'handleClickAssessment')
-            elmTableInstance.handleClickAssessment(assessmentItem, "assessmentitem", "singleAssessment")
+            elmTableInstance.handleClickAssessment(2,assessmentItem, "assessmentitem", "singleAssessment")
             expect(spyhandleClickAssessment).toHaveBeenCalled()
             spyhandleClickAssessment.mockClear()
         })
@@ -384,7 +343,7 @@ describe('ELM Actions test', () => {
                 previousUrn: "urn:pearson:work:133dd9fd-a5be-45e5-5678-891283abb9a5"
             }
             const spyhandleClickAssessment = jest.spyOn(elmTableInstance, 'handleClickAssessment')
-            elmTableInstance.handleClickAssessment(assessment, "assessment", "singleAssessment")
+            elmTableInstance.handleClickAssessment(2,assessment, "assessment", "singleAssessment")
             expect(spyhandleClickAssessment).toHaveBeenCalled()
             spyhandleClickAssessment.mockClear()
         })
@@ -396,15 +355,9 @@ describe('ELM Actions test', () => {
                 previousUrn: "urn:pearson:work:133dd9fd-a5be-45e5-5678-891283abb9a5"
             }
             const spyhandleClickAssessment = jest.spyOn(elmTableInstance, 'handleClickAssessment')
-            elmTableInstance.handleClickAssessment(assessmentItem, "assessment", "slateAssessment")
+            elmTableInstance.handleClickAssessment(2,assessmentItem, "assessment", "slateAssessment")
             expect(spyhandleClickAssessment).toHaveBeenCalled()
             spyhandleClickAssessment.mockClear()
-        })
-        it('TEST-toggleActive', () => {
-            const spytoggleActive = jest.spyOn(elmTableInstance, 'toggleActive')
-            elmTableInstance.toggleActive(2);
-            expect(spytoggleActive).toHaveBeenCalled()
-            spytoggleActive.mockClear()
         })
         it('TEST-navigateBack- assessmentsItems table', () => {
             const spynavigateBack = jest.spyOn(elmTableInstance, 'navigateBack')
@@ -424,11 +377,6 @@ describe('ELM Actions test', () => {
             expect(spyfilterSubData).toHaveBeenCalled()
             spyfilterSubData.mockClear()
         })
-        xit('TEST-componentWillUnmount', () => {
-            const spycomponentWillUnmount = jest.spyOn(elmTableInstance, 'componentWillUnmount')
-            elmTableInstance.componentWillUnmount()
-            expect(spycomponentWillUnmount.mock.calls.length).toBe(1)
-        })
         it('TEST-navigateBack- assessments', () => {
             elmTableInstance.setState({
                 openItemTable: false,
@@ -443,74 +391,50 @@ describe('ELM Actions test', () => {
             expect(spynavigateBack).toHaveBeenCalled()
             spynavigateBack.mockClear()
         })
-
-    })
-});
-describe('ELM setParentUrn TEST- ', () => {
-    let store = {};
-    beforeEach(() => {
-        store = mockStore(initialState2);
-    })
-
-
-    describe('TEST-setParentUrn', () => {
-        beforeEach(() => {
-            store = mockStore(initialState2);
+        it('TEST-setOpenedFrom', () => {
+            config.slateType="assessment"
+            const spysetOpenedFrom = jest.spyOn(elmTableInstance, 'setOpenedFrom')
+            elmTableInstance.setOpenedFrom();
+            expect(spysetOpenedFrom).toHaveBeenCalled()
+            spysetOpenedFrom.mockClear()
         })
-        let store = mockStore(initialState2);
-        let props = {
-            errFlag: true,
-            errorStatus: "404",
-            apiData: {
-                contents: {
-                    frontMatter: [],
-                    bodyMatter: [],
-                    backMatter: []
-                }
-            },
-            navigateBack: function () { },
-            hidePufPopup: function () { },
-            usageTypeMetadata: 'Quiz',
-            addPufFunction: (obj) => { },
-            closeElmWindow: function () { },
-            openedFrom: "slateAssessment",
-            fetchAssessmentItem: jest.fn()
-        }
-        let pufObj = {
-            id: "urn:pearson:work:133dd9fd-a5be-45e5-8d83-891283abb9a5",
-            title: "Open response question updated",
-            assessmentFormat: "puf",
-            usagetype: "Quiz"
-        }
-        const component = mount(<Provider store={store}><ElmTableComponent {...props} /></Provider>);
-        const elmTableInstance = component.find('ElmTableComponent').instance();
-        it('TEST-setParentUrn case1-', () => {
-            config.slateManifestURN="urn:pearson:manifest:bb4e289e-8add-4c30-9f52-33b8fd246f81"
-            const spysetParentUrn = jest.spyOn(elmTableInstance, 'setParentUrn')
-            elmTableInstance.setParentUrn( JSON.stringify(newElmData),CurrentSlateAncestor.currentSlateAncestorData1);
-            expect(spysetParentUrn).toHaveBeenCalled()
-            spysetParentUrn.mockClear()
+        it('TEST-openAssessmentSearchBar', () => {
+            config.slateType="section"
+            const spyopenAssessmentSearchBar = jest.spyOn(elmTableInstance, 'openAssessmentSearchBar')
+            elmTableInstance.openAssessmentSearchBar(true,true);
+            expect(spyopenAssessmentSearchBar).toHaveBeenCalled()
+            expect(elmTableInstance.state.isActive).toBe(null)
+            expect(elmTableInstance.state.tableValue).toEqual([])
+            spyopenAssessmentSearchBar.mockClear()
         })
-        it('TEST-setParentUrn case2-', () => {
-            config.slateManifestURN="urn:pearson:manifest:50778b02-a808-4a8c-9c7c-923181e1a7fc"
-            const spysetParentUrn = jest.spyOn(elmTableInstance, 'setParentUrn')
-            elmTableInstance.setParentUrn( JSON.stringify(newElmData),CurrentSlateAncestor.currentSlateAncestorData2);
-            expect(spysetParentUrn).toHaveBeenCalled()
-            spysetParentUrn.mockClear()
-        })
-        it('TEST-setParentUrn case3-', () => {
-            config.slateManifestURN="urn:pearson:manifest:2473babc-3182-4639-b36e-4177e03fac03"
-            const spysetParentUrn = jest.spyOn(elmTableInstance, 'setParentUrn')
-            elmTableInstance.setParentUrn( JSON.stringify(newElmData),CurrentSlateAncestor.currentSlateAncestorData3);
-            expect(spysetParentUrn).toHaveBeenCalled()
-            spysetParentUrn.mockClear()
-        })
-        it('TEST-setParentUrn case4-', () => {
-            config.slateManifestURN="urn:pearson:manifest:d29dfda8-73bc-4ad5-bd4a-3381193549d7"
-            const spysetParentUrn = jest.spyOn(elmTableInstance, 'setParentUrn')
-            elmTableInstance.setParentUrn( JSON.stringify(newElmData),CurrentSlateAncestor.currentSlateAncestorData4);
-            expect(spysetParentUrn).toHaveBeenCalled()
-            spysetParentUrn.mockClear()
+        it('TEST-setParentAssessment', () => {
+            config.slateType="section"
+            const spysetParentAssessment = jest.spyOn(elmTableInstance, 'setParentAssessment')
+            elmTableInstance.setParentAssessment('id','title','parenturn');
+            expect(spysetParentAssessment).toHaveBeenCalled()
+            expect(elmTableInstance.state.activeAssessmentId).toBe('id')
+            expect(elmTableInstance.state.parentUrn).toEqual('parenturn')
+            expect(elmTableInstance.state.openItemTable).toBe(true)
+            expect(elmTableInstance.state.parentTitle).toEqual('title')
+            expect(elmTableInstance.state.addFlag).toBe(false)
+            spysetParentAssessment.mockClear()
+        }) 
+        it('TEST-navigateFromItemsTable -else case', () => {
+            elmTableInstance.setState({
+                filterResults:'Search Results Exist'
+            })
+            elmTableInstance.forceUpdate()
+            component.update()
+            const spynavigateFromItemsTable = jest.spyOn(elmTableInstance, 'navigateFromItemsTable')
+            elmTableInstance.navigateFromItemsTable();
+            expect(spynavigateFromItemsTable).toHaveBeenCalled()
+            spynavigateFromItemsTable.mockClear()
+        }) 
+        it('TEST-searchAssessmentData', () => {
+            const spysearchAssessmentData = jest.spyOn(elmTableInstance, 'searchAssessmentData')
+            elmTableInstance.searchAssessmentData('learnosity','test data');
+            expect(spysearchAssessmentData).toHaveBeenCalled()
+            spysearchAssessmentData.mockClear()
         })
     })
 });
