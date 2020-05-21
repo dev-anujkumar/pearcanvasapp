@@ -25,7 +25,7 @@ export const AssessmentSearchBar = (props) => {
                     <>
                         <div className="filter-block">
                             <div className="title-block">                                
-                                <i class="fa fa-search"></i>
+                                <i className="fa fa-search"></i>
                                 <input
                                     type="text"
                                     autoComplete="on"
