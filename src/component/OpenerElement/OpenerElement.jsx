@@ -43,12 +43,10 @@ class OpenerElement extends Component {
         disableHeader(false);
         let imageData = data;
         let epsURL = imageData['EpsUrl'] ? imageData['EpsUrl'] : "";
-        let imageId = imageData['workURN'] ? imageData['workURN'] : "";
+        let uniqID = imageData['uniqueID'] ? imageData['uniqueID'] : "";
+        let imageId = `urn:pearson:alfresco:${uniqID}`;
         let figureType = imageData['assetType'] ? imageData['assetType'] : "";
         let width = imageData['width'] ? imageData['width'] : "";
-        // let smartLinkString = (imageData.desc && imageData.desc.toLowerCase() !== "eps media") ? imageData.desc : "{}";
-        // let smartLinkDesc = smartLinkString !== "{}" ? JSON.parse(smartLinkString) : "";
-        // let smartLinkType = smartLinkDesc !== "" ? smartLinkDesc.smartLinkType : "";
         if (figureType === "image" || figureType === "table" || figureType === "mathImage" || figureType === "authoredtext") {
             let altText = imageData['alt-text'] ? imageData['alt-text'] : "";
             let longDesc = imageData['longDescription'] ? imageData['longDescription'] : "";

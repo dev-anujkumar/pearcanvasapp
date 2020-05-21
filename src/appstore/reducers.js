@@ -10,6 +10,7 @@ import {
     SET_ACTIVE_ELEMENT,
     AUTHORING_ELEMENT_CREATED,
     AUTHORING_ELEMENT_UPDATE,
+    ADD_COMMENT,
     DELETE_ELEMENT,
     SWAP_ELEMENT,
     SET_SPLIT_INDEX,
@@ -73,6 +74,7 @@ const INITIAL_ACTION = {
 export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
     switch (action.type) {
         case FETCH_SLATE_DATA:
+        case ADD_COMMENT:
             return {
                 ...state,
                 slateLevelData: action.payload

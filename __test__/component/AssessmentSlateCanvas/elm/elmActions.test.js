@@ -159,3 +159,40 @@ describe('ELM Actions- fetchAssessmentItem test', () => {
         })
     });
 });
+describe('ELM Actions- non API functions',()=>{
+    // let newStore = mockStore(() => initialState);
+    beforeEach(() => {
+        initialState = {
+            elmData: {},
+            errFlag: false,
+            apiStatus: "",
+            isLoading:true,
+            elmLoading:true,
+            openSearch:false,
+            searchTerm:''
+        };
+
+        jest.setTimeout(10000);
+    });
+    it('Test- setElmLoading',()=>{
+       let newStore = mockStore(() => initialState);
+        newStore.dispatch(selectActions.setElmLoading(true))
+        const { type, payload } = newStore.getActions()[0];
+        expect(type).toBe('SET_ELM_LOADING_TRUE');
+        expect(payload.elmLoading).toBe(true);   
+    })
+    it('Test- openAssessmentSearchBar',()=>{
+        let newStore = mockStore(() => initialState);
+         newStore.dispatch(selectActions.openAssessmentSearchBar('learnosity',true))
+         const { type, payload } = newStore.getActions()[0];
+         expect(type).toBe('SET_SEARCH_FLAG');
+         expect(payload.openSearch).toBe(true);   
+     })
+     it('Test- setElmLsetSearchTermoading',()=>{
+        let newStore = mockStore(() => initialState);
+         newStore.dispatch(selectActions.setSearchTerm('learnosity','text'))
+         const { type, payload } = newStore.getActions()[0];
+         expect(type).toBe('SET_SEARCH_TERM');
+         expect(payload.searchTerm).toBe('text');   
+     })
+})

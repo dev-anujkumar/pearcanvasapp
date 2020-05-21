@@ -94,7 +94,7 @@ class ElementShowHide extends React.Component {
                                     <ShowHideTinyMce
                                         index={`${index}-2-${innerIndex}`}
                                         innerIndex={innerIndex}
-                                        model={posterItem.elementdata.text && posterItem.elementdata.text !== "" || posterItem.html.text.match(/<img/) ? posterItem.html.text : "<p class=\"paragraphNumeroUno\">Reveal Answer:</p>"}
+                                        model={posterItem.html && posterItem.html.text }
                                         placeholder="This field cannot be empty, either add specific content or add in the default content of Reveal Answer"
                                         activeShowHide={this.activeShowHide}
                                         showHideType="revel"
