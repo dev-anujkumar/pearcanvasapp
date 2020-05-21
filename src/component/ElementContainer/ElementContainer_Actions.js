@@ -253,10 +253,24 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
         return ;
     }
+
+    let updatedData1 = JSON.parse(JSON.stringify(updatedData))
+    if (showHideType && showHideType === "postertextobject" && !(updatedData1.elementdata.text.trim().length || updatedData1.html.text.match(/<img/))) {
+        updatedData1 = {
+            ...updatedData,
+            elementdata : {
+                text : "Reveal Answer:"
+            },
+            html: {
+                ...updatedData1.html,
+                text : "<p class=\"paragraphNumeroUno\">Reveal Answer:</p>"
+            }
+        }
+    }
     prepareDataForTcmUpdate(updatedData,updatedData.id, elementIndex, asideData, getState, updatedData.type, poetryData);
     updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, null, elementIndex, showHideType, parentElement, poetryData)
     return axios.put(`${config.REACT_APP_API_URL}v1/slate/element`,
-        updatedData,
+    updatedData1,
         {
             headers: {
                 "Content-Type": "application/json",
@@ -307,9 +321,11 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
                     }
                 }
             }
-            // else if (updatedData.type === 'stanza') {
-            //     updateStoreInCanvas({ ...updatedData, ...response.data }, asideData, parentUrn, dispatch, getState, null, elementIndex, showHideType, parentElement, poetryData)
-            // }
+            else if (showHideType && showHideType === "postertextobject") {
+                updateStoreInCanvas({ ...updatedData, ...response.data }, asideData, parentUrn, dispatch, getState, null, elementIndex, showHideType, parentElement, poetryData)
+                let revelDOM = document.querySelector(`div[data-id="${response.data.id}"]`)
+                if (revelDOM) revelDOM.click()
+            }
         }
         
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
