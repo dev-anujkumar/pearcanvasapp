@@ -5,7 +5,7 @@ import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import {
     fetchSlateData
 } from '../CanvasWrapper/CanvasWrapper_Actions';
-import {  AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP, OPEN_GLOSSARY_FOOTNOTE,DELETE_SHOW_HIDE_ELEMENT, GET_TCM_RESOURCES} from "./../../constants/Action_Constants";
+import {  ADD_COMMENT, AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP, OPEN_GLOSSARY_FOOTNOTE,DELETE_SHOW_HIDE_ELEMENT, GET_TCM_RESOURCES} from "./../../constants/Action_Constants";
 import { customEvent } from '../../js/utils';
 
 export const addComment = (commentString, elementId, asideData, parentUrn) => (dispatch, getState) => {
@@ -40,7 +40,39 @@ export const addComment = (commentString, elementId, asideData, parentUrn) => (d
     )
         .then(response => {
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
+            const parentData = getState().appStore.slateLevelData;
+            const newslateData = JSON.parse(JSON.stringify(parentData));
+            let _slateObject = Object.values(newslateData)[0];
+            let { contents: _slateContent } = _slateObject;
+            let { bodymatter: _slateBodyMatter } = _slateContent;
             Comment.commentUrn = response.data.commentUrn
+            //const elementBM = _slateBodyMatter.map(element => {
+            _slateBodyMatter.map(element => {
+                if (element.id === elementId) {
+                    element['comments'] = true
+                } else if (asideData && asideData.type == 'element-aside') {
+                    if (element.id == asideData.id) {
+                        element.elementdata.bodymatter.map((nestedEle) => {
+                            /*This condition add comment in element in aside */
+                            if (nestedEle.id == elementId) {
+                                nestedEle['comments'] = true;
+                            } else if (nestedEle.type == "manifest" && nestedEle.id == parentUrn.manifestUrn) {
+                                /*This condition add comment in element in section of aside */
+                                nestedEle.contents.bodymatter.map((ele) => {
+                                    if (ele.id == elementId) {
+                                        ele['comments'] = true;
+                                    }
+                                })
+                            }
+                        })
+                    }
+                }
+            }
+            );
+            dispatch({
+                type: ADD_COMMENT,
+                payload: newslateData
+            });
            
             dispatch({
                 type: ADD_NEW_COMMENT,
