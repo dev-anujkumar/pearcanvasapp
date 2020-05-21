@@ -120,6 +120,12 @@ export class TinyMceEditor extends Component {
                     if (!e.level && editor.selection.getBoundingClientRect()) {
                         clickedX = editor.selection.getBoundingClientRect().left;
                         clickedY = editor.selection.getBoundingClientRect().top;
+
+                        //BG-2376 - removing span bookmark from content
+                        tinymce.$('span[data-mce-type="bookmark"]').each(function () {
+                            let innerHtml = this.innerHTML;
+                            this.outerHTML = innerHtml;
+                        })
                         // tinyMCE.$('.Wirisformula').each(function () {
                         //     this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
                         //     this.naturalWidth && this.setAttribute('width', this.naturalWidth)
