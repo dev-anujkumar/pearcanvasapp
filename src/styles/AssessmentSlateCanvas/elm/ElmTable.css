@@ -7,9 +7,12 @@
   }
   .assessment-id{
     text-align:left;
+    padding-left: 9px;;
+    /* font-size: 13px; */
   }
   .assessment-title{
     width: 360px;
+    /* font-size: 13px; */
   }
   .elm-data-span{
     text-overflow: ellipsis;
@@ -222,6 +225,9 @@
   margin-left: 24px;
   margin-top: 0px;
   cursor: pointer;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
  }
  .elm-navigate-back-icon{
    cursor: pointer;

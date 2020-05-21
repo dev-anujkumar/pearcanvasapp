@@ -1552,7 +1552,7 @@ export class TinyMceEditor extends Component {
      * Saves glossary/footnote on creation
      */
     saveContent = () => {
-        const { glossaryFootnoteValue } = this.props;
+        const { glossaryFootnoteValue , poetryField} = this.props;
         let { elementType, glossaryfootnoteid, type, elementSubType, glossaryTermText } = glossaryFootnoteValue;
         let typeWithPopup = this.props.element ? this.props.element.type : "";
         let term = null;
@@ -1565,12 +1565,8 @@ export class TinyMceEditor extends Component {
         definition = definition.replace(/<br data-mce-bogus="1">/g, "")
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
         customEvent.subscribe('glossaryFootnoteSave', (elementWorkId) => {
-            if (definition !== '<p></p>') {
-                saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType, typeWithPopup)
+            saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType, typeWithPopup,poetryField)
                 customEvent.unsubscribe('glossaryFootnoteSave');
-            } else {
-                sendDataToIframe({'type': HideLoader,'message': { status: false }});  
-            }
         })
         this.handleBlur(null, true); //element saving before creating G/F (as per java team)
         //this.handleBlur(null, true);
@@ -1930,7 +1926,7 @@ export class TinyMceEditor extends Component {
         }
         let currentActiveNode = null
         let activeContainerNode = document.querySelector('div .active')
-        let activeShowHideNode = document.querySelector('.show-hide-active .cypress-editable')
+        let activeShowHideNode = document.querySelector('.show-hide-active .cypress-editable.mce-content-body.mce-edit-focus')
         if(activeContainerNode){
             currentActiveNode = activeContainerNode
         }
@@ -2217,7 +2213,7 @@ export class TinyMceEditor extends Component {
         let index = this.props.index;
         let elementSubType = this.props.element ? this.props.element.figuretype : '';
         let glossaryTermText = this.glossaryTermText;
-        this.props.openGlossaryFootnotePopUp && this.props.openGlossaryFootnotePopUp(status, popupType, glossaryfootnoteid, elementId, elementType, index, elementSubType, glossaryTermText, callback, typeWithPopup);
+        this.props.openGlossaryFootnotePopUp && this.props.openGlossaryFootnotePopUp(status, popupType, glossaryfootnoteid, elementId, elementType, index, elementSubType, glossaryTermText, callback, typeWithPopup, this.props.poetryField);
     }
 
     render() {

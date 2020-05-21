@@ -406,45 +406,4 @@ describe('ELM root component test', () => {
         expect(instance).toBeDefined();
 
     })
-    xit('Test- hide PopUp', () => {
-        let store = mockStore(() => initialState);
-        let props ={
-            openedFrom: 'slateAssessment',
-            usageTypeMetadata: 'Quiz',
-            closeElmWindow: function(){},
-            addPufFunction: function(){},
-        }
-        const elmComponent = mount(<Provider store={store}><RootElmSingleAssessment {...props}/></Provider>);
-        const elmComponentInstance = elmComponent.find('RootElmSingleAssessment').instance();
-        const spyhidePufPopup = jest.spyOn(elmComponentInstance, 'hidePufPopup')
-        elmComponentInstance.hidePufPopup();
-        elmComponentInstance.setState({
-            hidePopup: true,
-          })
-          elmComponentInstance.forceUpdate();
-          elmComponent.update();
-          expect(spyhidePufPopup).toHaveBeenCalled()
-          spyhidePufPopup.mockClear() 
-    });
-    xit('Test- Navigate Back Function', () => {
-        let store = mockStore(() => initialState);
-        let props ={
-            openedFrom: 'slateAssessment',
-            usageTypeMetadata: 'Quiz',
-            closeElmWindow: function(){},
-            addPufFunction: function(){},
-
-        }
-        const elmComponent = mount(<Provider store={store}><RootElmSingleAssessment {...props}/></Provider>);
-        const elmComponentInstance = elmComponent.find('RootElmSingleAssessment').instance();
-        const spynavigateBack = jest.spyOn(elmComponentInstance, 'navigateBack')
-        elmComponentInstance.navigateBack(2);
-        elmComponentInstance.setState({
-            previousTableLength: 2,
-          })
-          elmComponentInstance.forceUpdate();
-          elmComponent.update();
-          expect(spynavigateBack).toHaveBeenCalledWith(2)
-          spynavigateBack.mockClear() 
-    });
 });

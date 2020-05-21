@@ -13,11 +13,9 @@ describe('Testing ELM Error component', () => {
     })
     it('Test- ELM type assessment', () => {
         let props = {
-            elmErrorProps: {
-                errorStatus: "404",
-                itemErrorStatus: "200",
-                activeAssessmentType: "puf"
-            }
+            errorStatus: true,
+            errFlag: true,
+            activeAssessmentType: "puf"
         }
         const component = mount(<ElmError {...props}/>)       
         expect(component).toHaveLength(1);
@@ -25,34 +23,40 @@ describe('Testing ELM Error component', () => {
     })
     it('Test- Learnosity type assessment', () => {
         let props = {
-            elmErrorProps: {
-                errorStatus: "404",
-                activeAssessmentType: "learnosity"
-            }
+            errorStatus: true,
+            errFlag: true,
+            activeAssessmentType: "learnosity"
         }
-        const component = mount(<ElmError {...props}/>)       
+        const component = mount(<ElmError {...props} />)
         expect(component).toHaveLength(1);
-      
+
     })
-    it('Test- ELM-Assesment item ', () => {
+    it('Test- Learnosity Search Results', () => {
         let props = {
-            elmErrorProps: {
-                errorStatus: "200",                
-                activeAssessmentType: "puf"
-            },
-            itemErrorStatus: "404",
+            errorStatus: true,
+            errFlag: false,
+            filterResults: 'No Results',
+            activeAssessmentType: "learnosity"
         }
-        const component = mount(<ElmError {...props}/>)       
+        const component = mount(<ElmError {...props} />)
         expect(component).toHaveLength(1);
-      
+
+    })
+    it('Test- ELM-Assessment item ', () => {
+        let props = {
+            errorStatus: true, 
+            itemApiStatus: "404"
+        }
+        const component = mount(<ElmError {...props} />)
+        expect(component).toHaveLength(1);
+
     })
     it('Test- default case', () => {
         let props = {
-            elmErrorProps: {
-                errorStatus: "200",                
-                activeAssessmentType: "puf"
-            },
-            itemErrorStatus: "200",
+                errorStatus: true, 
+                errFlag:false,               
+                activeAssessmentType: "puf",
+                itemApiStatus: "200",
         }
         const component = mount(<ElmError {...props}/>)       
         expect(component).toHaveLength(1);
