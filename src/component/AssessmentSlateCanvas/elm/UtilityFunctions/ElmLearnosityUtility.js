@@ -18,16 +18,16 @@ export const getFolderLabel = label => {
         }
     }
     return containerLabel
-    switch (label) {
-        case 'chapter': return 'C'
-        case 'module': return 'M'
-        case 'part': return 'P'
-        case 'section': return 'S'
-        case 'assessment': return 'AS'
-        case 'container-introduction': return 'IS';
-        case 'introductry-slate': return 'IS';
-        default: return 'NA'
-    }
+    // switch (label) {
+    //     case 'chapter': return 'C'
+    //     case 'module': return 'M'
+    //     case 'part': return 'P'
+    //     case 'section': return 'S'
+    //     case 'assessment': return 'AS'
+    //     case 'container-introduction': return 'IS';
+    //     case 'introductry-slate': return 'IS';
+    //     default: return 'NA'
+    // }
 }
 
 /*** @description - This function is to set the ParentUrn at which the elm table popup opens up
@@ -69,31 +69,36 @@ export const setStatus = (condition, assessmentFormat, propsValue, stateValue) =
                 }
             }
             break;
-        case 'setErrorStatus':
-            if ((!propsValue.itemErrorFlag && propsValue.itemApiStatus != 200 && stateValue.openItemTable == true && propsValue.isLoading == false && tableValue.length) || ((assessmentFormat == LEARNOSITY_BETA) && (stateValue.openItemTable == false) && propsValue.openSearch && (!propsValue.setSearchBlock)) || (propsValue.setSearchBlock && !stateValue.tableValue.length)) {
-                status = true;
-            }
-            break;
         case 'setNavigationBarStatus':
             if (((assessmentFormat == PUF) || (assessmentFormat == LEARNOSITY_BETA && !propsValue.openSearch))) {
                 status = true;
             }
             break;
-        case 'setBlankSearchStatus':
-            if (((assessmentFormat == LEARNOSITY_BETA) && (stateValue.openItemTable == false) && propsValue.openSearch)) {
-                status = true;
-            }
-            break;
-        case 'setTableStatus':
-            if (((stateValue.openItemTable == true && propsValue.isLoading == false) || (stateValue.openItemTable == false)) || ((assessmentFormat == LEARNOSITY_BETA) && (stateValue.openItemTable == false) && propsValue.openSearch && stateValue.tableValue.length)) {
-                status = true;
-            }
-            break;
-        case 'setSearchBarStatus':
-            if ((assessmentFormat == LEARNOSITY_BETA) && (stateValue.openItemTable == false) && propsValue.openSearch) {
-                status = true;
-            }
-            break;
+        // case 'setErrorStatus':
+        //     if ((!propsValue.itemErrorFlag && propsValue.itemApiStatus != 200 && stateValue.openItemTable == true && propsValue.isLoading == false && tableValue.length) || ((assessmentFormat == LEARNOSITY_BETA) && (stateValue.openItemTable == false) && propsValue.openSearch && (!propsValue.setSearchBlock)) || (propsValue.setSearchBlock && !stateValue.tableValue.length)) {
+        //         status = true;
+        //     }
+        //     break;
+        // case 'setNavigationBarStatus':
+        //     if (((assessmentFormat == PUF) || (assessmentFormat == LEARNOSITY_BETA && !propsValue.openSearch))) {
+        //         status = true;
+        //     }
+        //     break;
+        // case 'setBlankSearchStatus':
+        //     if (((assessmentFormat == LEARNOSITY_BETA) && (stateValue.openItemTable == false) && propsValue.openSearch)) {
+        //         status = true;
+        //     }
+        //     break;
+        // case 'setTableStatus':
+        //     if (((stateValue.openItemTable == true && propsValue.isLoading == false) || (stateValue.openItemTable == false)) || ((assessmentFormat == LEARNOSITY_BETA) && (stateValue.openItemTable == false) && propsValue.openSearch && stateValue.tableValue.length)) {
+        //         status = true;
+        //     }
+        //     break;
+        // case 'setSearchBarStatus':
+        //     if ((assessmentFormat == LEARNOSITY_BETA) && (stateValue.openItemTable == false) && propsValue.openSearch) {
+        //         status = true;
+        //     }
+        //     break;
     }
     return status;
 }

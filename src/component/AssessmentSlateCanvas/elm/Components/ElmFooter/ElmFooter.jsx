@@ -9,7 +9,7 @@ const ElmFooter = (props) => {
     const { addFlag, hideSearch } = props;
     const openSearchBar = (e) => {
         e.preventDefault();
-        openAssessmentSearchBar(true)
+        openAssessmentSearchBar(true,true)
     }
     return (
         <div className="puf-footer">
