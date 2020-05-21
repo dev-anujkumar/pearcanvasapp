@@ -52,7 +52,7 @@ class ElementSingleAssessment extends Component {
 
     AssessmentSearchTitle = (searchTitle, filterUUID) => {
         this.setState({searchTitle, filterUUID},()=>{
-            console.log("SetSate for filter", searchTitle + filterUUID)
+            console.log("SetState for filter", searchTitle + filterUUID)
         });
     }
 

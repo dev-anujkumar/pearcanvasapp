@@ -57,6 +57,12 @@ export const setParentUrn = (elmData, currentSlate) => {
     return parent1.urn
 }
 
+/*** @description - This function is to set the set status of render condition based on props and state values
+    * @param condition- render condition to be set
+    * @param assessmentFormat- format of current assessment
+    * @param propsValue- props of elmTableComponent
+    * @param stateValue- state variables of elmTableComponent
+   */
 export const setStatus = (condition, assessmentFormat, propsValue, stateValue) => {
     let status = false;
     switch (condition) {
@@ -103,6 +109,11 @@ export const setStatus = (condition, assessmentFormat, propsValue, stateValue) =
     return status;
 }
 
+/*** @description - This is Root Function to search and filter assessments for given searchTerm
+    * @param assessmentType- format of current assessment
+    * @param searchAssessmentData- value to be searched in the API data
+    * @param apiData- The API data
+   */
 export const searchAndFilterAssessmentData = (assessmentType, searchAssessmentData, apiData) => {
     let tableData = []
     preparedData = []
@@ -117,6 +128,12 @@ export const searchAndFilterAssessmentData = (assessmentType, searchAssessmentDa
     return tableData
 }
 
+/*** @description - This is function to search and filter assessments from the API data
+    * @param data- The API data 
+    * @param parentUrn- parentUrn of current assessment
+    * @param searchAssessmentData- value to be searched in the API data
+
+   */
 const filterAssessmentsFromApiData = (data, parentUrn, searchAssessmentData) => {
     let title = "";
     if (data.alignments && data.alignments.resourceCollections && data.alignments.resourceCollections.length) {
@@ -147,6 +164,10 @@ const filterAssessmentsFromApiData = (data, parentUrn, searchAssessmentData) => 
     return preparedData
 }
 
+/*** @description - This is function to sort the seach and filter operation results
+    * @param preparedData- The search results 
+    * @param searchAssessmentData- value to be searched in the API data
+   */
 const sortSearchResults = (preparedData, searchAssessmentData) => {
     let keyword = searchAssessmentData;
     preparedData.sort((a, b) => {
