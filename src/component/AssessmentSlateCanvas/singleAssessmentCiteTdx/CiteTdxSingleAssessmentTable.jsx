@@ -57,7 +57,7 @@ class CiteTdxTable extends Component {
                                                     <span className="elmAssessmentItem-icon">{singleAssessmentItemIcon}</span>
                                                     <span className="assessment-titles" title={specialCharacterDecode(item.name)}>{specialCharacterDecode(item.name)}</span>
                                                 </td>
-                                                <td><span className="modifiedby-date" title={item.dateModified ? moment(item.dateModified).format('DD MMM YYYY, hh:MMA') : ""}>{item.dateModified ? moment(item.dateModified).format('DD MMM YYYY, hh:mmA') : "NA"}</span></td>
+                                                <td><span className="modifiedby-date" title={item.dateModified ? moment(item.dateModified).format('DD MMM YYYY, hh:mmA') : ""}>{item.dateModified ? moment(item.dateModified).format('DD MMM YYYY, hh:mmA') : "NA"}</span></td>
                                                 <td><span className="modifiedby-data" title={item.modifiedBy ? item.modifiedBy : ""}>{item.modifiedBy ? item.modifiedBy : "NA"}</span></td>
                                                 <td><span className="assessment-uuid" title={item.versionUrn.slice(17)}>{item.versionUrn.slice(17)}</span></td>
                                             </tr>
