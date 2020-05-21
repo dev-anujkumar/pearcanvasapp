@@ -5,7 +5,7 @@ import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import {
     fetchSlateData
 } from '../CanvasWrapper/CanvasWrapper_Actions';
-import {  AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP, OPEN_GLOSSARY_FOOTNOTE,DELETE_SHOW_HIDE_ELEMENT, GET_TCM_RESOURCES} from "./../../constants/Action_Constants";
+import {  ADD_COMMENT, AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP, OPEN_GLOSSARY_FOOTNOTE,DELETE_SHOW_HIDE_ELEMENT} from "./../../constants/Action_Constants";
 import { customEvent } from '../../js/utils';
 
 export const addComment = (commentString, elementId, asideData, parentUrn) => (dispatch, getState) => {
@@ -40,7 +40,39 @@ export const addComment = (commentString, elementId, asideData, parentUrn) => (d
     )
         .then(response => {
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
+            const parentData = getState().appStore.slateLevelData;
+            const newslateData = JSON.parse(JSON.stringify(parentData));
+            let _slateObject = Object.values(newslateData)[0];
+            let { contents: _slateContent } = _slateObject;
+            let { bodymatter: _slateBodyMatter } = _slateContent;
             Comment.commentUrn = response.data.commentUrn
+            //const elementBM = _slateBodyMatter.map(element => {
+            _slateBodyMatter.map(element => {
+                if (element.id === elementId) {
+                    element['comments'] = true
+                } else if (asideData && asideData.type == 'element-aside') {
+                    if (element.id == asideData.id) {
+                        element.elementdata.bodymatter.map((nestedEle) => {
+                            /*This condition add comment in element in aside */
+                            if (nestedEle.id == elementId) {
+                                nestedEle['comments'] = true;
+                            } else if (nestedEle.type == "manifest" && nestedEle.id == parentUrn.manifestUrn) {
+                                /*This condition add comment in element in section of aside */
+                                nestedEle.contents.bodymatter.map((ele) => {
+                                    if (ele.id == elementId) {
+                                        ele['comments'] = true;
+                                    }
+                                })
+                            }
+                        })
+                    }
+                }
+            }
+            );
+            dispatch({
+                type: ADD_COMMENT,
+                payload: newslateData
+            });
            
             dispatch({
                 type: ADD_NEW_COMMENT,
@@ -158,10 +190,6 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
                     slateLevelData: newParentData
                 }
             })
-            /** Delete Tcm data on element delete*/
-            if (config.tcmStatus) {
-                prepareTCMforDelete(elmId, dispatch,getState);
-            }
         }
 
     }).catch(error => {
@@ -170,28 +198,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
         console.log("delete Api fail", error);
     })
 }
-/** Delete Tcm data on element delete*/
-function prepareTCMforDelete(elmId, dispatch,getState) {
-        let tcmData = getState().tcmReducer.tcmSnapshot;
-        tcmData = tcmData.filter(function (tcm) {
-            return !tcm.elemURN.includes(elmId);
-        });
-        dispatch({
-            type: GET_TCM_RESOURCES,
-            payload: {
-                data: tcmData
-            }
-        });
-        tcmData.some(function (elem) {
-            if (elem.txCnt > 0) {
-                sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });
-                return true;
-            }
-            else {
-                sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'false' });
-            }
-        });
-}
+
 
 function contentEditableFalse (updatedData){
     if(updatedData.type == "element-blockfeature"){
@@ -654,15 +661,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
         _slateContent.bodymatter = _slateBodyMatter
         _slateObject.contents = _slateContent
 
-        //console.log("saving new data dispatched")
-
-        //tcm update code   
-        if (config.tcmStatus) {
-        let elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza'];
-        if (elementType.indexOf(updatedData.type) !== -1) {
-            prepareDataForUpdateTcm(updatedData.id, getState, dispatch);
-        }
-        }   
+        //console.log("saving new data dispatched") 
         return dispatch({
             type: AUTHORING_ELEMENT_UPDATE,
             payload: {
@@ -672,27 +671,6 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
     
     } 
     //diret dispatching in store
-}
-//TCM Update
-function prepareDataForUpdateTcm(updatedDataID, getState, dispatch) {
-    const tcmData = getState().tcmReducer.tcmSnapshot;
-    tcmData.forEach(function (element,index) {
-    if(element.elemURN.includes('urn:pearson:work') && element.elemURN.indexOf(updatedDataID) !== -1){
-        tcmData[index]["elemURN"]=updatedDataID
-        tcmData[index]["txCnt"]=tcmData[index]["txCnt"] !== 0 ? tcmData[index]["txCnt"]: 1
-        tcmData[index]["feedback"]=tcmData[index]["feedback"] !== null ? tcmData[index]["feedback"]:null
-        tcmData[index]["isPrevAcceptedTxAvailable"] = tcmData[index]["isPrevAcceptedTxAvailable"]  ? tcmData[index]["isPrevAcceptedTxAvailable"]:false
-    }
-});
-if (tcmData) {
-    sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });
-}
-dispatch({
-    type: GET_TCM_RESOURCES,
-    payload: {
-        data: tcmData
-    }
-})
 }
 export const updateFigureData = (figureData, elementIndex, elementId, cb) => (dispatch, getState) => {
     let parentData = getState().appStore.slateLevelData,
