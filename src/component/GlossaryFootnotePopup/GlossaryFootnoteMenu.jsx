@@ -70,6 +70,14 @@ class GlossaryFootnoteMenu extends React.Component {
         html = html.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula').replace(/\uFEFF/g,"");
         html=html.trim();
         tempDiv.innerHTML = html;
+        /** BG-2332 | PCAT-7409 | Multiple Superseeded formatting entry is created in WIP when 
+         * entering text by selecting the strikethrough formatting in Footnote and Glossary  */
+        while(tinyMCE.$(tempDiv).find('span#_mce_caret').length) {
+            tinyMCE.$(tempDiv).find('span#_mce_caret').each(function () {
+                let innerHtml = this.innerHTML;
+                this.outerHTML = innerHtml;
+            })
+        }
         tinyMCE.$(tempDiv).find('span#_mce_caret').remove();
 
         tinyMCE.$(tempDiv).find('img').removeAttr('data-mce-style');
@@ -109,7 +117,7 @@ class GlossaryFootnoteMenu extends React.Component {
     saveContent = () => {
         if (!hasReviewerRole()) {
             const { glossaryFootnoteValue } = this.props;
-            let { elementWorkId, elementType, glossaryfootnoteid, type, elementSubType, typeWithPopup} = glossaryFootnoteValue;
+            let { elementWorkId, elementType, glossaryfootnoteid, type, elementSubType, typeWithPopup, poetryField} = glossaryFootnoteValue;
             let term = null;
             let definition = null;
             let defaultValue = document.createElement('p')
@@ -129,7 +137,7 @@ class GlossaryFootnoteMenu extends React.Component {
             definition = this.replaceUnwantedtags(definition)
             if(this.glossaryFootnoteDifference(term, definition, this.props.glossaryFootNoteCurrentValue.glossaryContentText, this.props.glossaryFootNoteCurrentValue.footnoteContentText, glossaryFootnoteValue.type.toLowerCase())){
                 sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType, typeWithPopup)
+                saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType, typeWithPopup, poetryField)
             }
         }
         this.props.showGlossaaryFootnote(false);

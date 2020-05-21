@@ -43,12 +43,10 @@ class OpenerElement extends Component {
         disableHeader(false);
         let imageData = data;
         let epsURL = imageData['EpsUrl'] ? imageData['EpsUrl'] : "";
-        let imageId = imageData['workURN'] ? imageData['workURN'] : "";
+        let uniqID = imageData['uniqueID'] ? imageData['uniqueID'] : "";
+        let imageId = `urn:pearson:alfresco:${uniqID}`;
         let figureType = imageData['assetType'] ? imageData['assetType'] : "";
         let width = imageData['width'] ? imageData['width'] : "";
-        // let smartLinkString = (imageData.desc && imageData.desc.toLowerCase() !== "eps media") ? imageData.desc : "{}";
-        // let smartLinkDesc = smartLinkString !== "{}" ? JSON.parse(smartLinkString) : "";
-        // let smartLinkType = smartLinkDesc !== "" ? smartLinkDesc.smartLinkType : "";
         if (figureType === "image" || figureType === "table" || figureType === "mathImage" || figureType === "authoredtext") {
             let altText = imageData['alt-text'] ? imageData['alt-text'] : "";
             let longDesc = imageData['longDescription'] ? imageData['longDescription'] : "";
@@ -194,26 +192,26 @@ class OpenerElement extends Component {
             e.stopPropagation();
             return;
         }
-        let alfrescoPath = config.alfrescoMetaData;
-        // if (alfrescoPath && this.state.projectMetadata) {
-        //     alfrescoPath.alfresco = this.state.projectMetadata.alfresco;
-        // }
-        let  data_1 = false;
-        if (alfrescoPath && alfrescoPath.alfresco && Object.keys(alfrescoPath.alfresco).length > 0) {
-            if (alfrescoPath.alfresco.nodeRef) {
-                if (this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco')) {
-                    data_1 = alfrescoPath.alfresco;
-                    this.handleC2ExtendedClick(data_1)
-                }
-                else {
-                    this.props.accessDenied(true)
-                }
+        let GLOBAL_CO = config.GLOBAL_CO;
+        let globalAlfrescoPath = null
+        if (GLOBAL_CO) {
+            globalAlfrescoPath = {
+                "nodeRef": GLOBAL_CO.CITE_NODE_REF,
+                "repoInstance": GLOBAL_CO.CITE_REPO_INSTANCC,
+                "repoName": GLOBAL_CO.CITE_REPO_NAME
             }
         }
-        else{
-            this.props.accessDenied(true)
+        if (globalAlfrescoPath && globalAlfrescoPath.nodeRef) {
+            if (this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco')) {
+                this.handleC2ExtendedClick(globalAlfrescoPath)
+            }
+            else {
+                this.props.accessDenied(true)
+            }
         }
-        
+        else {
+            this.props.accessDenied(true)
+        } 
     }
     /**
      * Handles label model change event

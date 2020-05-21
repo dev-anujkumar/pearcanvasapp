@@ -22,8 +22,7 @@ const RootElmSingleAssessment = (props) => {
         title: 'Pearson Unified Format Assessments'
     };
     const closeElmLearnosityWindow =()=>{
-        // props.setSearchBlock(props.activeAssessmentType, false)
-        // props.openAssessmentSearchBar(props.activeAssessmentType, false)
+        props.openAssessmentSearchBar(props.activeAssessmentType, false)
         props.closeElmWindow();
     }
     return (

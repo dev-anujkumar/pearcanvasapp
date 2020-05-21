@@ -7,17 +7,15 @@ import { ERROR_MESSAGE_ELM_RESOURCE, ERROR_MESSAGE_ELM_ITEMS, ERROR_MESSAGE_LEAR
 
 const ElmError = (props) => {
 
-    const getErrorMessage = (error, itemErrorStatus,showSearchScreen,noSearchResults) => {
-        let errorMessage;
-        if (error && error.errorStatus != "200" && !noSearchResults && (error.activeAssessmentType == PUF || error.activeAssessmentType == FULL_ASSESSMENT_PUF)) {
+    const getErrorMessage = () => {
+        let errorMessage = '';
+        if (props && (props.activeAssessmentType == PUF) && props.errFlag) {
             errorMessage = ERROR_MESSAGE_ELM_RESOURCE
-        } else if ((error && error.errorStatus != "200" && (error.activeAssessmentType == LEARNOSITY || error.activeAssessmentType == LEARNOSITY_BETA))|| (noSearchResults==true)) {
+        } else if (props && (props.activeAssessmentType == LEARNOSITY_BETA) && (props.errFlag || (props.filterResults == 'No Results'))) {
             errorMessage = ERROR_MESSAGE_LEARNOSITY
-        } else if (itemErrorStatus != "200" && !showSearchScreen && !noSearchResults) {
+        } else if (props && (props.itemApiStatus != "200")) {
             errorMessage = ERROR_MESSAGE_ELM_ITEMS
-        } else if(showSearchScreen == true && !noSearchResults){
-            errorMessage="";
-        }else{
+        } else {
             errorMessage = ERROR_MESSAGE_ELM_DEFAULT
         }
 
@@ -27,7 +25,7 @@ const ElmError = (props) => {
     return (
         <div className="main-div elm-error-div">
             <p className="elm-error-line">
-                <i>{getErrorMessage(props.elmErrorProps, props.itemErrorStatus,props.showSearchScreen,props.noSearchResults)}</i>
+                {props.errorStatus && <i>{getErrorMessage()}</i>}
             </p>
         </div>
     );

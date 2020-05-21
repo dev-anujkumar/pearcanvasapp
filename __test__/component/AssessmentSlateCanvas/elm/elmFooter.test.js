@@ -9,7 +9,8 @@ describe('Testing ELM Footer component', () => {
             elmFooterProps: {
                 buttonText: "ADD"
             },
-            addFlag:true
+            addFlag:true,
+            hideSearch:true
         }
         const component = mount(<ElmFooter {...props} />)
         expect(component).toHaveLength(1);
@@ -20,6 +21,7 @@ describe('Testing ELM Footer component', () => {
             elmFooterProps: {
                 closeElmWindow: jest.fn(),
                 sendPufAssessment: jest.fn(),
+                openAssessmentSearchBar:jest.fn(),
                 buttonText: "ADD"
             }
         }
@@ -32,11 +34,39 @@ describe('Testing ELM Footer component', () => {
             elmFooterProps: {
                 closeElmWindow: jest.fn(),
                 sendPufAssessment: jest.fn(),
+                openAssessmentSearchBar:jest.fn(),
                 buttonText: "OK"
             }
         }
         const component = mount(<ElmFooter {...props} />)
         expect(component).toHaveLength(1);
 
+    })
+    it('Test- Learnosity type assessment', () => {
+        let props = {
+            elmFooterProps: {
+                closeElmWindow: jest.fn(),
+                sendPufAssessment: jest.fn(),
+                openAssessmentSearchBar:jest.fn(),
+                buttonText: "OK"
+            },
+            hideSearch:false
+        }
+        const component = mount(<ElmFooter {...props} />)
+        expect(component).toHaveLength(1);
+
+    })
+    it('Test- Learnosity type assessment', () => {
+        let props = {
+            elmFooterProps: {
+                closeElmWindow: jest.fn(),
+                sendPufAssessment: jest.fn(),
+                openAssessmentSearchBar:jest.fn(),
+                buttonText: "OK"
+            },
+            hideSearch:false
+        }
+        const component = mount(<ElmFooter {...props} />)
+        component.find('.puf-button.search-button').simulate('click');
     })
 });
