@@ -239,7 +239,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                     footnotes: footnoteEntry,
                     assetspopover: {}
                 },
-                projectURN : config.projectUrn,
+                projectUrn : config.projectUrn,
                 slateEntity : config.slateEntityURN,
                 elementParentEntityUrn: parentEntityUrn
             }
@@ -262,7 +262,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                     footnotes: {},
                     assetspopover: {}
                 },
-                projectURN : config.projectUrn,
+                projectUrn : config.projectUrn,
                 slateEntity : config.slateEntityURN,
                 elementParentEntityUrn: parentEntityUrn
             }
