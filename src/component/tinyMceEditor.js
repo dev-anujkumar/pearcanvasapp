@@ -1688,8 +1688,10 @@ export class TinyMceEditor extends Component {
 
 
                 if (this.editorRef.current) {
-                    this.editorRef.current.style.caretColor = 'transparent';
-                    this.editorRef.current.focus();
+                    if ( !(this.props.element && this.props.element.figuretype === "codelisting" && this.props.element.figuredata.programlanguage && this.props.element.figuredata.programlanguage === "Select")) {
+                        this.editorRef.current.style.caretColor = 'transparent';
+                        this.editorRef.current.focus();
+                    }
                 }
 
                
@@ -1698,7 +1700,9 @@ export class TinyMceEditor extends Component {
                 if (this.editorRef.current && document.getElementById(this.editorRef.current.id) && newElement) {
                     config.editorRefID = this.editorRef.current.id;
                     let timeoutId = setTimeout(() => {
-                        document.getElementById(this.editorRef.current.id).click();
+                        if ( !(this.props.element && this.props.element.figuretype === "codelisting" && this.props.element.figuredata.programlanguage && this.props.element.figuredata.programlanguage === "Select")) {
+                            document.getElementById(this.editorRef.current.id).click();
+                        }
                         clearTimeout(timeoutId)
                     }, 0)
                     localStorage.removeItem('newElement');
