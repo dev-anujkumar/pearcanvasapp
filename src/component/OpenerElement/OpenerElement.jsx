@@ -36,6 +36,8 @@ class OpenerElement extends Component {
             projectMetadata: false,
             updateImageOptions:false
         }
+        this.setWrapperRef = this.setWrapperRef.bind(this);
+        this.handleClickOutside = this.handleClickOutside.bind(this);
     }
 
     dataFromAlfresco = (data) => {
@@ -462,13 +464,38 @@ class OpenerElement extends Component {
         </div>
         return COImg
     }
+    componentDidMount() {
+        document.addEventListener('mousedown', this.handleClickOutside);
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener('mousedown', this.handleClickOutside);
+    }
+
+    /**
+     * Set the wrapper ref
+     */
+    setWrapperRef(node) {
+        this.wrapperRef = node;
+    }
+
+    /**
+     * Remove Update Button Popup if clicked on outside of element
+     */
+    handleClickOutside(event) {
+        if (this.state.updateImageOptions == true && this.wrapperRef && !this.wrapperRef.contains(event.target)) {
+            this.setState({
+                updateImageOptions: false
+            })
+        }
+    }
     render() {
         const { imgSrc, width } = this.state
         const { backgroundColor, slateLockInfo } = this.props
         let isDisable = hasReviewerRole() ? " disable-role" : ""
         const styleObj = this.getBGStyle(imgSrc, width)
         return (
-            <div className = "opener-element-container" onClickCapture={(e) => this.handleOpenerClick(slateLockInfo, e)}>
+            <div className = "opener-element-container" ref={this.setWrapperRef} onClickCapture={(e) => this.handleOpenerClick(slateLockInfo, e)}>
                 <div className = "input-box-container">
                     <div className="opener-label-box">
                         <div className="opener-label-text">Label</div>
