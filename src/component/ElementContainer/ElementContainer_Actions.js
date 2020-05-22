@@ -100,7 +100,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
             if (currentSlateData.status === 'approved') {
                 if(currentSlateData.type==="popup"){
                     sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
-                    dispatch(fetchSlateData(config.slateManifestURN,_requestData.entityUrn, 0,currentSlateData));
+                    dispatch(fetchSlateData(config.slateManifestURN,_requestData.entityUrn, 0,currentSlateData,""));
                 }
                 else{
                     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
@@ -315,7 +315,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
                 }else if(currentSlateData.status === 'approved'){
                     if(currentSlateData.type==="popup"){
                         sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
-                        dispatch(fetchSlateData(response.data.newParentVersion,updatedData.parentEntityId, 0,currentSlateData));
+                        dispatch(fetchSlateData(response.data.newParentVersion,updatedData.parentEntityId, 0,currentSlateData,""));
                     }else{
                         sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' }); 
                     }
@@ -379,7 +379,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
             if(asideData && asideData.type == 'element-aside'){
                 asideData.indexes = indexes;
                 if(indexes.length === 2 || indexes.length === 3){
-                    dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:asideData.id, asideData.contentUrn, 0, asideData));
+                    dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:asideData.id, asideData.contentUrn, 0, asideData,""));
                 // }else if(indexes.length === 3){
                 //     dispatch(fetchSlateData(asideData.id,asideData.contentUrn, 0, asideData));
                 }
@@ -387,17 +387,17 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
 
                 // if(indexes.length === 2 || indexes.length === 3 || indexes === 2 || indexes === 3){
                     parentElement.index = elementIndex;
-                    dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:parentElement.id, parentElement.contentUrn, 0, parentElement));
+                    dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:parentElement.id, parentElement.contentUrn, 0, parentElement,""));
                 // }
             } 
             else if(parentElement && parentElement.type === "popup" && updatedData.elementParentEntityUrn && (updatedData.metaDataField || updatedData.sectionType === "postertextobject") ){
-                dispatch(fetchSlateData(updatedData.slateVersionUrn, updatedData.slateEntity, 0)); }
+                dispatch(fetchSlateData(updatedData.slateVersionUrn, updatedData.slateEntity, 0,"","")); }
             else if(parentElement && parentElement.type === "showhide"){
                 parentElement.indexes =elementIndex;
-                dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:parentElement.id, parentElement.contentUrn, 0, parentElement)); 
+                dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:parentElement.id, parentElement.contentUrn, 0, parentElement,"")); 
             }
             else if(parentElement && parentElement.type === "citations"){
-                dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:parentElement.id, parentElement.contentUrn, 0, parentElement));
+                dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:parentElement.id, parentElement.contentUrn, 0, parentElement,""));
             }
             else {
                 elementIndex = indexes.length == 2 ?indexes[0] : elementIndex
@@ -940,5 +940,5 @@ export const deleteShowHideUnit = (elementId, type, parentUrn, index,eleIndex, p
 
 const cascadeElement = (parentElement, dispatch, parentElementIndex) => {
     parentElement.indexes = parentElementIndex;
-    dispatch(fetchSlateData(parentElement.id, parentElement.contentUrn, 0, parentElement)); 
+    dispatch(fetchSlateData(parentElement.id, parentElement.contentUrn, 0, parentElement,"")); 
 }
