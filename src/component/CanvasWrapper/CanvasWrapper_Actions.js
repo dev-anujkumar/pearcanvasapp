@@ -207,7 +207,7 @@ export const fetchElementTag = (element, index = 0) => {
         return findElementType(element, index).tag || "";
     }
 }
-export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dispatch, getState) => {
+export const fetchSlateData = (manifestURN, entityURN, page, versioning,calledFrom) => (dispatch, getState) => {
     // if(config.isFetchSlateInProgress){
     //  return false;
     // }
@@ -221,21 +221,23 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
         page = config.totalPageCount;
     }
     config.page = page;
-     /** Project level and element level TCM status */
-    if(page === 0){
-        if(config.tcmStatus){
-             /** Show TCM icon header if TCM is on for project level*/
-             let messageTcmStatus = {
-                TcmStatus: {
-                    tc_activated: "true"
-                }
+    /** Project level and element level TCM status */
+    if (page === 0 && config.tcmStatus) {
+        /** Show TCM icon header if TCM is on for project level*/
+        let messageTcmStatus = {
+            TcmStatus: {
+                tc_activated: "true"
             }
-             sendDataToIframe({
-                'type': "TcmStatusUpdated",
-                'message': messageTcmStatus
-            })
         }
+        sendDataToIframe({
+            'type': "TcmStatusUpdated",
+            'message': messageTcmStatus
+        })
+
         dispatch(handleTCMData(manifestURN));
+        if (calledFrom !== "slateRefresh") {
+            dispatch(tcmSnapshot(manifestURN, entityURN))
+        }
     }
     return axios.get(`${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}`, {
         headers: {
@@ -323,15 +325,6 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
                     sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
                     let contentUrn = slateData.data[manifestURN].contentUrn;
                     let title = slateData.data[manifestURN].contents.title ? slateData.data[manifestURN].contents.title.text : '';
-                    let messageTcmStatus = {
-                        TcmStatus: {
-                            tc_activated: JSON.stringify(slateData.data[manifestURN].tcm)
-                        }
-                    }
-                    // sendDataToIframe({
-                    //     'type': "TcmStatusUpdated",
-                    //     'message': messageTcmStatus
-                    // })
                      /**
                      * [BG-1522]- On clicking the Notes icon, only the comments of last active element should be 
                      * displayed in the Comments Panel, when user navigates back to the slate or refreshes the slate 
@@ -379,9 +372,6 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
         }
         /** [TK-3289]- To get Current Slate details */
         dispatch(setCurrentSlateAncestorData(getState().appStore.allSlateData))
-        if(page === 0){
-        dispatch(tcmSnapshot(manifestURN,entityURN))
-        }
         if(slateData.data && Object.values(slateData.data).length > 0) {
             let slateTitle = SLATE_TITLE;
             if('title' in slateData.data[newVersionManifestId].contents && 'text' in slateData.data[newVersionManifestId].contents.title) {

@@ -272,42 +272,11 @@ export const deleteComment = (commentUrn, elementId) => (dispatch, getState) => 
                 "Content-Type": "application/json",
                 PearsonSSOSession: config.ssoToken
             }
-        }).then(response => {
-            /*const parentData = getState().appStore.slateLevelData;
-            const newParentData = JSON.parse(JSON.stringify(parentData));
-            let newBodymatter = newParentData[config.slateManifestURN].contents.bodymatter;
-            const index = getState().commentsPanelReducer.index;
-             if(index){
-                if (typeof (index) == 'number') {
-                    if (newBodymatter[index].versionUrn == elementId) {
-                        newBodymatter[index].comments = false;
-                    }
-                } else {
-                    let indexes = index.split('-');
-                    let indexesLen = indexes.length, condition;
-                    if (indexesLen == 2) {
-                        condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
-                        if (condition.versionUrn == elementId) {
-                            newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].comments = false
-                        }
-                    } else if (indexesLen == 3) {
-                        condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
-                        if (condition.versionUrn == elementId) {
-                            newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].comments = false;
-                        }
-                    }
-                }
-            } */   
+        }).then(response => { 
             dispatch({
                 type: DELETE_COMMENT,
                 payload: commentUrn
             });
-            /* dispatch({
-                type: AUTHORING_ELEMENT_UPDATE,
-                payload: {
-                    slateLevelData: newParentData
-                }
-            }) */
         }).catch(error => {
             dispatch({type: ERROR_POPUP, payload:{show: true}})
             console.log("error while deleting user", error);

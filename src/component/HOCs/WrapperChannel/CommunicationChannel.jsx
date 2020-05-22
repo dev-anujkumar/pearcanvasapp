@@ -383,7 +383,7 @@ function CommunicationChannel(WrappedComponent) {
                     slateEntityUrn: config.slateEntityURN
                 }
                 this.props.fetchAudioNarrationForContainer(slateData)  
-                this.props.fetchSlateData(message.node.containerUrn,config.slateEntityURN, config.page,'');
+                this.props.fetchSlateData(message.node.containerUrn,config.slateEntityURN, config.page,'',"");
                 config.savingInProgress = false
                 this.props.setSlateType(config.slateType);
                 this.props.setSlateEntity(config.slateEntityURN);
