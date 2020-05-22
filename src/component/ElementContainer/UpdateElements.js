@@ -611,7 +611,8 @@ export const createOpenerElementData = (elementData, elementType, primaryOption,
             ...elementData,
             inputType: elementTypes[elementType][primaryOption]['enum'],
             inputSubType: elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
-            slateVersionUrn: config.slateManifestURN 
+            slateVersionUrn: config.slateManifestURN,
+            elementParentEntityUrn: config.slateEntityURN
         }
     }
 
