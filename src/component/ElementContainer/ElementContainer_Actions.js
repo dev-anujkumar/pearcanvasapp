@@ -77,10 +77,10 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
                 }
         }
     }
-
+    let elementParentEntityUrn = parentUrn && parentUrn.contentUrn || config.slateEntityURN
     let _requestData = prepareDeleteRequestData(type)
     let indexToBeSent = index || "0"
-    _requestData = { ..._requestData, index: indexToBeSent.toString().split('-')[indexToBeSent.toString().split('-').length - 1] }
+    _requestData = { ..._requestData, index: indexToBeSent.toString().split('-')[indexToBeSent.toString().split('-').length - 1], elementParentEntityUrn }
     prepareDataForTcmUpdate(_requestData, elmId, index, asideData, getState, type, poetryData);
 
     return axios.post(`${config.REACT_APP_API_URL}v1/slate/deleteElement`,
@@ -878,6 +878,7 @@ export const deleteShowHideUnit = (elementId, type, parentUrn, index,eleIndex, p
         entityUrn : parentUrn,
         workUrn : elementId,
         index : index.toString(),
+        elementParentEntityUrn: parentUrn
         // slateEntity : config.slateEntityURN
     }
     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
