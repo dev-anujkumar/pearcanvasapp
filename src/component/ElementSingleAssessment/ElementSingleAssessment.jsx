@@ -7,9 +7,9 @@ import './../../styles/ElementSingleAssessment/ElementSingleAssessment.css';
 import { dropdownArrow } from './../../images/ElementButtons/ElementButtons.jsx';
 import { connect } from 'react-redux';
 import { showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';
-import { hasReviewerRole, sendDataToIframe, setAssessmentTitle} from '../../constants/utility.js';
+import { hasReviewerRole, sendDataToIframe, setAssessmentTitle } from '../../constants/utility.js';
 import RootCiteTdxComponent from '../AssessmentSlateCanvas/assessmentCiteTdx/RootCiteTdxComponent.jsx';
-import {FULL_ASSESSMENT_CITE, FULL_ASSESSMENT_TDX} from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
+import { FULL_ASSESSMENT_CITE, FULL_ASSESSMENT_TDX } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import RootSingleAssessmentComponent from '../AssessmentSlateCanvas/singleAssessmentCiteTdx/RootSingleAssessmentComponent.jsx'
 import { setCurrentCiteTdx, setCurrentInnerCiteTdx, assessmentSorting, specialCharacterDecode } from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
 import RootElmSingleAssessment from '../AssessmentSlateCanvas/elm/RootElmSingleComponent.jsx'
@@ -52,7 +52,7 @@ class ElementSingleAssessment extends Component {
 
     AssessmentSearchTitle = (searchTitle, filterUUID) => {
         this.setState({searchTitle, filterUUID},()=>{
-            console.log("SetSate for filter", searchTitle + filterUUID)
+            console.log("SetState for filter", searchTitle + filterUUID)
         });
     }
 
@@ -207,13 +207,13 @@ static getDerivedStateFromProps(nextProps, prevState) {
        
     }
 
-    
+
     /*** @description - This function is to close ELM PopUp */
     closeElmWindow = () => {
         this.setState({
             showElmComponent: false
         });
-        hideTocBlocker();
+        hideTocBlocker(false);
         disableHeader(false);
         this.props.showBlocker(false);
     }
@@ -243,15 +243,38 @@ static getDerivedStateFromProps(nextProps, prevState) {
             this.setState({
                 showElmComponent: true
             })
-            showTocBlocker();
+            sendDataToIframe({ 'type': 'hideToc', 'message': {} });
+            showTocBlocker(true);
             disableHeader(true);
             this.props.showBlocker(true);
             }
         }
     }
     /** ----------------------------------------------------------------------------------------------------------- */
-    
-    
+
+    setAssessmentProperties = (elementType) => {
+        let assessmentClasses = { divMainClass: '', divInnerClass: '' }
+        switch (elementType) {
+            case 'puf':
+                assessmentClasses.divMainClass = 'divPUFItem';
+                assessmentClasses.assessmentItemType = 'pufItem';
+                break;
+            case 'learnosity':
+                assessmentClasses.divMainClass = 'divLearnosityItem';
+                assessmentClasses.assessmentItemType = 'learnosityItem'
+                break;
+            case 'tdx':
+                assessmentClasses.divMainClass = 'divTdxAssessmentItem';
+                assessmentClasses.assessmentItemType = 'tdxAssessmentItem';
+                break;
+            case 'cite':
+            default:
+                assessmentClasses.divMainClass = 'divAssessmentItem'
+                assessmentClasses.assessmentItemType = 'assessmentItem'
+                break;
+        }
+        return assessmentClasses
+    }
     /*** @description - This function is for handling the different types of figure-element.
     * @param model object that defined the type of element
     */
@@ -263,11 +286,12 @@ static getDerivedStateFromProps(nextProps, prevState) {
                 <li key={i} className="singleAssessment_Dropdown_item" onClick={(e) => this.handleAssessmentTypeChange(usageType, e)}>{usageType}</li>
             )
         }
+        let assessmentKeys = this.setAssessmentProperties(this.state.elementType)
         /*JSX for the Single Assessment Element */
-        assessmentJSX = <div className="divAssessment" >
-            <figure className="figureAssessment">
+        assessmentJSX = <div className={`divAssessment ${assessmentKeys && assessmentKeys.divMainClass ? assessmentKeys.divMainClass : ""}`} >
+            <figure className={`figureAssessment ${this.state.elementType !== "tdx" ? "figureAssessmentItem" : "figureTdxAssessmentItem"}`}>
                 <header>
-                    <h4 className="heading4ImageTextWidthNumberLabel" id="single_assessment_title">{(this.state.elementType !== "puf" && this.state.elementType !== "learnosity") ? "" : "Assessment Title:"}{this.state.assessmentTitle}</h4>
+                    <h4 className={this.state.elementType !== "tdx" ? "heading4AssessmentItemNumberLabel" : "heading4TdxAssessmentItemNumberLabel"} id="single_assessment_title">{(this.state.elementType !== "puf" && this.state.elementType !== "learnosity") ? "" : "Assessment Title:"}{this.state.assessmentTitle}</h4>
                 </header>
                 <div className="singleAssessmentIdInfo" ><strong>{(this.state.elementType !== "puf" && this.state.elementType !== "learnosity") ? "ID: " : "Product ID: "}</strong>{this.state.assessmentId ? this.state.assessmentId : (model.figuredata.elementdata ? model.figuredata.elementdata.assessmentid : "")}</div>
                 <div className={`singleAssessmentItemIdInfo ${(this.state.elementType !== "puf" && this.state.elementType !== "learnosity")? '':'puf-assessment-id'}`} ><strong>ITEM ID: </strong>{this.state.assessmentItemId?this.state.assessmentItemId:(model.figuredata.elementdata ? model.figuredata.elementdata.assessmentitemid : "")}</div>                             
@@ -287,7 +311,12 @@ static getDerivedStateFromProps(nextProps, prevState) {
                     ) : null
                 }
 
-                <div className="pearson-component image" data-uri="" data-type="image" onClick={(e) => this.addAssessmentResource(e)}>
+                <div className={`pearson-component ${assessmentKeys && assessmentKeys.assessmentItemType ? assessmentKeys.assessmentItemType : ""}`}
+                    data-type={assessmentKeys && assessmentKeys.assessmentItemType ? assessmentKeys.assessmentItemType : ""}
+                    data-assessment={this.state.assessmentId ? this.state.assessmentId : (model.figuredata.elementdata ? model.figuredata.elementdata.assessmentid : "")}
+                    data-assessment-item={this.state.assessmentItemId ? this.state.assessmentItemId : (model.figuredata.elementdata ? model.figuredata.elementdata.assessmentitemid : "")}
+                    data-item-type={this.state.elementType !== "tdx" ? "assessmentItem" : "tdxAssessmentItem"}
+                    onClick={(e) => this.addAssessmentResource(e)}>
                     <img src="https://cite-media-stg.pearson.com/legacy_paths/8efb9941-4ed3-44a3-8310-1106d3715c3e/FPO-assessment.png"
                         data-src="https://cite-media-stg.pearson.com/legacy_paths/8efb9941-4ed3-44a3-8310-1106d3715c3e/FPO-assessment.png"
                         title="View Image" alt="" className="imageTextWidth lazyloaded imageeee"></img>
@@ -302,7 +331,6 @@ static getDerivedStateFromProps(nextProps, prevState) {
         return (
             <div className="figureElement" onClick = {this.handleAssessmentFocus}>
                 {this.renderAssessmentType(model, index)}
-                {/* {this.state.showElmComponent? <RootElmComponent activeAssessmentType={this.state.elementType} closeElmWindow={() => this.closeElmWindow()} addPufFunction={this.addPufAssessment} openedFrom={'singleAssessment'} usageTypeMetadata={this.state.activeAsseessmentUsageType} assessmentType={this.state.elementType}/> : ''} */}
                 {this.state.showAssessmentPopup? <RootCiteTdxComponent openedFrom = {'singleSlateAssessment'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.elementType=="cite"?FULL_ASSESSMENT_CITE:FULL_ASSESSMENT_TDX} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAsseessmentUsageType} parentPageNo={this.state.parentPageNo} isReset={this.state.isReset} resetPage={this.resetPage} AssessmentSearchTitle={this.AssessmentSearchTitle} searchTitle={this.state.searchTitle} filterUUID={this.state.filterUUID} />:""}
                 {this.state.showSinglePopup ? <RootSingleAssessmentComponent setCurrentAssessment ={this.state.setCurrentAssessment} activeAssessmentType={this.state.activeAssessmentType} openedFrom = {'singleSlateAssessmentInner'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.activeAssessmentType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAssessmentUsageType} assessmentNavigateBack = {this.assessmentNavigateBack} resetPage={this.resetPage}/>:""}     
                 {this.state.showElmComponent? <RootElmSingleAssessment activeAssessmentType={this.state.elementType} closeElmWindow={() => this.closeElmWindow()} addPufFunction={this.addPufAssessment} activeUsageType={this.state.activeAssessmentUsageType}/> : ''}
@@ -330,14 +358,14 @@ ElementSingleAssessment.propTypes = {
     toggleUsageTypeDropdown: PropTypes.func,
     /** Handler to toggle the assessment pop-up */
     toggleAssessmentPopup: PropTypes.func,
-     /** Handler to Add C2 -Media to the assessment*/
-    handleC2AssessmentClick : PropTypes.func,
+    /** Handler to Add C2 -Media to the assessment*/
+    handleC2AssessmentClick: PropTypes.func,
     /** Detail of element in JSON object */
 }
 const mapActionToProps = {
     setCurrentCiteTdx: setCurrentCiteTdx,
     setCurrentInnerCiteTdx: setCurrentInnerCiteTdx,
-    assessmentSorting:assessmentSorting
+    assessmentSorting: assessmentSorting
 }
 
 

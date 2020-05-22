@@ -66,6 +66,7 @@ class ElmTableComponent extends Component {
         return config.book_title
     }
 
+    /*** @description - This function is to set the current slate type for assessment picker*/
     setOpenedFrom = () =>{
         let openedFrom=''
         if(config.slateType==="assessment"){
@@ -76,10 +77,15 @@ class ElmTableComponent extends Component {
         return openedFrom
     }
 
+    /*** @description - This function is to fetch the search results for given searchTerm
+        * @param assessmentType- type of assessment-(puf/learnosity)
+        * @param searchAssessmentTitle- term to search in API data
+    */
     searchAssessmentData = (assessmentType, searchAssessmentTitle) => {
         let searchResults = [];
         this.searchData=[];
         this.props.setSearchTerm(assessmentType,searchAssessmentTitle);
+        this.setState({ isActive: null })
         searchResults = searchAndFilterAssessmentData(assessmentType, searchAssessmentTitle, this.props.elmReducer.elmData)
         this.searchData = searchResults
         // if(searchAssessmentTitle.trim()!=""){
@@ -320,7 +326,7 @@ class ElmTableComponent extends Component {
         this.filterData(false, versionUrn, this.props.elmReducer.elmData);
     }
 
-    /*** @description - This function is to send puf assessment data to RootELMComponent */
+    /*** @description - This function is to send puf assessment data to RootELMSingleComponent */
     sendPufAssessment = () => {
         let obj = {}
         if (this.state.openedFrom === "singleAssessment" && this.state.currentAssessmentSelected.type === "assessment" && this.state.openItemTable==false) {
@@ -373,8 +379,10 @@ class ElmTableComponent extends Component {
         }
     }
 
-    /*** @description - This function is to toggle the current row selected
-        * @param i- index of the row
+    /*** @description - This function is to save the parent-assessment data before assessment items API is triggerd
+        * @param assessmentId- unique id of the assessment
+        * @param assessmentTitle- name of the assessment
+        * @param parentUrn- parentUrn of current assessment
        */
     setParentAssessment = (assessmentId, assessmentTitle, parentUrn) => {
         this.setState({
@@ -387,8 +395,12 @@ class ElmTableComponent extends Component {
         
     }
 
+    /*** @description - This function is to open the assessment search bar menu
+        * @param flag- true- open menu | false-close menu
+        * @param fromFooter-true if called from footer component(to set search term blank again) | false- other cases
+    */
     openAssessmentSearchBar=(flag,fromFooter)=>{
-        this.setState({ isActive: null, tableValue:[] })
+        this.setState({ isActive: null, tableValue:[], addFlag:false })
         this.props.setElmLoading(false);
         if(fromFooter==true){
             this.props.setSearchTerm('');
