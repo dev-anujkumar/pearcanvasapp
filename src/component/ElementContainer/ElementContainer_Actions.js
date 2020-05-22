@@ -274,7 +274,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
             }
         }
     }
-    prepareDataForTcmUpdate(updatedData,updatedData.id, elementIndex, asideData, getState, updatedData.type, poetryData);
+    prepareDataForTcmUpdate(updatedData1,updatedData1.id, elementIndex, asideData, getState, updatedData1.type, poetryData);
     updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, null, elementIndex, showHideType, parentElement, poetryData)
     return axios.put(`${config.REACT_APP_API_URL}v1/slate/element`,
     updatedData1,
