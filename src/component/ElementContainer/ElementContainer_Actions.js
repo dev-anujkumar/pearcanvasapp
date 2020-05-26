@@ -480,15 +480,8 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                                             "formatted-title": { ...updatedData }
                                         }
                                     };
-                                } else if (nestedEle.popupdata["formatted-subtitle"] && nestedEle.popupdata["formatted-subtitle"]["id"] === elementId) {
-                                    nestedEle = {
-                                        ...nestedEle,
-                                        popupdata: {
-                                            ...nestedEle.popupdata,
-                                            "formatted-subtitle": { ...updatedData }
-                                        }
-                                    };
-                                } else if (nestedEle.popupdata.postertextobject[0].id === elementId) {
+                                }
+                                else if (nestedEle.popupdata.postertextobject[0].id === elementId) {
                                     nestedEle = {
                                         ...nestedEle,
                                         popupdata: {
@@ -529,15 +522,8 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                                                     "formatted-title": { ...updatedData }
                                                 }
                                             };
-                                        } else if (ele.popupdata["formatted-subtitle"] && ele.popupdata["formatted-subtitle"]["id"] === elementId) {
-                                            ele = {
-                                                ...ele,
-                                                popupdata: {
-                                                    ...ele.popupdata,
-                                                    "formatted-subtitle": { ...updatedData }
-                                                }
-                                            };
-                                        } else if (ele.popupdata.postertextobject[0].id === elementId) {
+                                        }
+                                        else if (ele.popupdata.postertextobject[0].id === elementId) {
                                             ele = {
                                                 ...ele,
                                                 popupdata: {
@@ -573,15 +559,8 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                                 "formatted-title": { ...updatedData }
                             }
                         };
-                    } else if (element.popupdata["formatted-subtitle"] && element.popupdata["formatted-subtitle"]["id"] === elementId) {
-                        element = {
-                            ...element,
-                            popupdata: {
-                                ...element.popupdata,
-                                "formatted-subtitle": { ...updatedData }
-                            }
-                        };
-                    } else if (element.popupdata.postertextobject[0].id === elementId) {
+                    }
+                    else if (element.popupdata.postertextobject[0].id === elementId) {
                         element = {
                             ...element,
                             popupdata: {
@@ -600,25 +579,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                                 "formatted-title": { ...updatedData }
                             }
                         };
-                    } 
-                    /* else if (element.contents["formatted-subtitle"] && element.contents["formatted-subtitle"]["id"] === elementId) {
-                        element = {
-                            ...element,
-                            contents: {
-                                ...element.contents,
-                                "formatted-subtitle": { ...updatedData }
-                            }
-                        };
-                    }  */
-                    // else if (element.contents["formattedCaption"] && element.contents["formattedCaption"]["id"] === elementId) {
-                    //     element = {
-                    //         ...element,
-                    //         contents: {
-                    //             ...element.contents,
-                    //             "formattedCaption": { ...updatedData }
-                    //         }
-                    //     };
-                    // }
+                    }
                      else if (element.contents["creditsarray"] && element.contents["creditsarray"][0] && element.contents["creditsarray"][0]["id"] === elementId) {
                          element = {
                              ...element,

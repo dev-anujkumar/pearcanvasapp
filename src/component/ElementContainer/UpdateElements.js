@@ -506,9 +506,6 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                 dataToReturn.elementParentEntityUrn = parentElement.contentUrn;
                 if(parentElement.popupdata["formatted-title"] && parentElement.popupdata["formatted-title"]["id"] === previousElementData.id){
                     dataToReturn.metaDataField = "formattedTitle";
-                } 
-                else if(parentElement.popupdata["formatted-subtitle"] && parentElement.popupdata["formatted-subtitle"]["id"] === previousElementData.id){
-                    dataToReturn.metaDataField = "formattedSubtitle";
                 }
                 else if(parentElement.popupdata["postertextobject"][0]["id"] === previousElementData.id){
                     dataToReturn.section = "postertextobject";
