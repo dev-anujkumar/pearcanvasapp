@@ -133,6 +133,7 @@ class ElementPoetry extends Component {
                                 <React.Fragment key={element.id}>                                   
                                     {index === 0 && <ElementSaprator
                                         index={index}
+                                        isPartIS={false}
                                         esProps={this.props.elementSepratorProps(0, true, parentUrn, "", parentIndex, poetryData)}
                                         elementType="poetry"
                                         poetryData={poetryData}
@@ -169,6 +170,7 @@ class ElementPoetry extends Component {
                                     </ElementContainer>
                                     <ElementSaprator
                                         index={index}
+                                        isPartIS={false}
                                         esProps={this.props.elementSepratorProps(index, false, parentUrn, "", parentIndex, poetryData)}
                                         elementType="poetry"
                                         sectionBreak= {false}

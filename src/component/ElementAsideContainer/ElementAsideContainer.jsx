@@ -369,6 +369,7 @@ class ElementAsideContainer extends Component {
                         parentIndex={parentIndex}
                         esProps={this.props.elementSepratorProps(index, true, parentUrn, asideData, parentIndex)}
                         elementType="element-aside"
+                        isPartIS={false}
                         sectionBreak={true}
                         permissions={this.props.permissions}
                         onClickCapture={this.props.onClickCapture}
@@ -392,6 +393,7 @@ class ElementAsideContainer extends Component {
                                     parentIndex={parentIndex}
                                     esProps={this.props.elementSepratorProps(0, true, parentUrn, asideData, parentIndex)}
                                     elementType="element-aside"
+                                    isPartIS={false}
                                     sectionBreak={true}
                                     permissions={this.props.permissions}
                                     onClickCapture={this.props.onClickCapture}
@@ -419,6 +421,7 @@ class ElementAsideContainer extends Component {
                                         parentUrn={parentUrn}
                                         asideData={asideData}
                                         parentIndex={parentIndex}
+                                        isPartIS={false}
                                         esProps={this.props.elementSepratorProps(index, true, parentUrn, asideData, parentIndex)}
                                         elementType={this.props.element.type}
                                         permissions={this.props.permissions}
@@ -455,6 +458,7 @@ class ElementAsideContainer extends Component {
                                     </ElementContainer>
                                     <ElementSaprator
                                         index={index}
+                                        isPartIS={false}
                                         parentUrn={parentUrn}
                                         asideData={asideData}
                                         parentIndex={parentIndex}

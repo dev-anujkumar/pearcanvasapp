@@ -879,6 +879,7 @@ class SlateWrapper extends Component {
      */
     renderElement(_elements, _slateType, slateLockInfo) {
         const { pageLoading } = this.props;
+        let isPartIS = _slateType == 'container-introduction' && this.props && this.props.setSlateParent == 'part' ? true : false
         try {
             if (_elements !== null && _elements !== undefined) {
                 this.renderButtonsonCondition(_elements);
@@ -897,6 +898,7 @@ class SlateWrapper extends Component {
                                             openAudio={this.props.openAudio}
                                             onClickCapture={this.checkSlateLockStatus}
                                             splithandlerfunction={this.splithandlerfunction}
+                                            isPartIS={isPartIS}
                                         />
                                         : index === 0 && config.isCO === true ? <div className="noSeparatorContainer"></div> : null
                                 }
@@ -938,6 +940,7 @@ class SlateWrapper extends Component {
                                         openAudio={this.props.openAudio}
                                         onClickCapture={this.checkSlateLockStatus}
                                          splithandlerfunction={this.splithandlerfunction}
+                                        isPartIS={isPartIS}
                                     />
                                     : null
                                 }
@@ -1197,7 +1200,8 @@ const mapStateToProps = state => {
         openAudio: state.audioReducer.openAudio,
         indexSplit : state.audioReducer.indexSplit,
         accesDeniedPopup : state.appStore.accesDeniedPopup,
-        showSlateLockPopupValue: state.metadataReducer.showSlateLockPopup
+        showSlateLockPopupValue: state.metadataReducer.showSlateLockPopup,
+        setSlateParent: state.appStore.setSlateParent
     };
 };
 
