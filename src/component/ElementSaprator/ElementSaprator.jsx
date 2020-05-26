@@ -2,6 +2,7 @@
  * Root Component for Element Picker
  */
 import React, { useEffect, useState, useRef } from 'react'
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types'
 import Button from '../ElementButtons'
 import Tooltip from '../Tooltip'
