@@ -85,7 +85,7 @@ class ElmTableComponent extends Component {
         let searchResults = [];
         this.searchData=[];
         this.props.setSearchTerm(assessmentType,searchAssessmentTitle);
-        this.setState({ isActive: null })
+        this.setState({ isActive: null, addFlag:false })
         searchResults = searchAndFilterAssessmentData(assessmentType, searchAssessmentTitle, this.props.elmReducer.elmData)
         this.searchData = searchResults
         // if(searchAssessmentTitle.trim()!=""){
