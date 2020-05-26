@@ -1110,6 +1110,7 @@ class ElementContainer extends Component {
                         setActiveElement : this.props.setActiveElement,
                         handleFocus: this.handleFocus,
                         handleBlur: this.handleBlur,
+                        deleteElement: this.deleteElement
                     }}><CitationGroup />
                     </CitationGroupContext.Provider >;
                     labelText = 'CG'

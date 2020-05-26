@@ -141,7 +141,8 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
 
             return false;
         }
-            let bodymatter = newParentData[config.slateManifestURN].contents.bodymatter
+        config.citationDefaultElement=false;    
+        let bodymatter = newParentData[config.slateManifestURN].contents.bodymatter
             bodymatter.forEach((element, key) => {
                 if (element.id === elmId) {
                     bodymatter.splice(key, 1);
