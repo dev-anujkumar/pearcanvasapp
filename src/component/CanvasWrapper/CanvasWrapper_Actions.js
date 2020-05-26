@@ -371,9 +371,6 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
         }
         /** [TK-3289]- To get Current Slate details */
         dispatch(setCurrentSlateAncestorData(getState().appStore.allSlateData))
-        if(page === 0){
-        dispatch(tcmSnapshot(manifestURN,entityURN))
-        }
         if(slateData.data && Object.values(slateData.data).length > 0) {
             let slateTitle = SLATE_TITLE;
             if('title' in slateData.data[newVersionManifestId].contents && 'text' in slateData.data[newVersionManifestId].contents.title) {

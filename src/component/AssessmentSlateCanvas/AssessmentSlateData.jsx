@@ -99,7 +99,7 @@ import { connect } from 'react-redux';
         this.setState({
             showElmComponent: false
         });
-        hideTocBlocker();
+        hideTocBlocker(false);
         disableHeader(false);
         this.props.showBlocker(false);
     }
@@ -110,7 +110,7 @@ import { connect } from 'react-redux';
         this.setState({
             showCiteTdxComponent: false
         });
-        hideTocBlocker();
+        hideTocBlocker(false);
         disableHeader(false);
         this.props.showBlocker(false);
     }
@@ -190,7 +190,7 @@ import { connect } from 'react-redux';
            
         }, () => {
              disableHeader(false);
-             hideTocBlocker();
+             hideTocBlocker(false);
              this.props.showBlocker(false);
              setTimeout(() => {
                 this.setState({
@@ -201,7 +201,7 @@ import { connect } from 'react-redux';
     }
     closelearningPopup = () => {
         disableHeader(false);
-        hideTocBlocker();
+        hideTocBlocker(false);
         this.props.showBlocker(false);
         this.setState({
             activeAssessmentType: LEARNING_APP_TYPE,
@@ -227,7 +227,8 @@ import { connect } from 'react-redux';
         if(this.props.permissions && this.props.permissions.includes('quad_create_edit_ia')){
         switch (activeAssessmentType) {
             case LEARNING_TEMPLATE:
-            case LEARNING_APP_TYPE:               
+            case LEARNING_APP_TYPE: 
+                sendDataToIframe({ 'type': 'hideToc', 'message': {} });              
                 this.changeLearningApp()
                 break;
             case FULL_ASSESSMENT_PUF:
@@ -235,7 +236,8 @@ import { connect } from 'react-redux';
                 this.setState({
                     showElmComponent: true
                 })
-                showTocBlocker();    
+                sendDataToIframe({ 'type': 'hideToc', 'message': {} });
+                showTocBlocker(true);    
                 disableHeader(true);
                 this.props.showBlocker(true);             
                 break;

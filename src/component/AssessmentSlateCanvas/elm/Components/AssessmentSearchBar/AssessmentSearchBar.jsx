@@ -7,11 +7,17 @@ import '../../../../../styles/AssessmentSlateCanvas/elm/ElmTable.css';
 export const AssessmentSearchBar = (props) => {
     const [searchAssessmentTitle, setSearchAssessmentTitle] = useState(props.searchTerm?props.searchTerm:'');
 
+    /*** @description - This function is to call search function for the search term 
+         * @param e - event triggered
+        */
     const handleSearch = e => {
         e.preventDefault();
         props.filterAssessmentData(props.assessmentType, searchAssessmentTitle)
     }
 
+    /*** @description - This function is to handle the value in searchbar input
+         * @param event - event triggered
+        */
     const handleChange = (event) => {
         let value = event.target.value;
         setSearchAssessmentTitle(value)
@@ -24,7 +30,7 @@ export const AssessmentSearchBar = (props) => {
                 <form>
                     <>
                         <div className="filter-block">
-                            <div className="title-block">                                
+                            <div className="title-block">
                                 <i className="fa fa-search"></i>
                                 <input
                                     type="text"
