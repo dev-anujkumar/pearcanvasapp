@@ -331,13 +331,15 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning,calledFr
                      */
                     // let appData =  appData1 && appData1.id? appData1.id : appData1;
                     let appData =  config.lastActiveElementId;
-                    if(appData){
-                        dispatch(fetchComments(contentUrn, title))
-                        dispatch(fetchCommentByElement(appData))
-                    }
-                    else{
-                        dispatch(fetchComments(contentUrn, title))
-                    }
+                    if (page === 0) {
+                        if (appData) {
+                            dispatch(fetchComments(contentUrn, title))
+                            dispatch(fetchCommentByElement(appData))
+                        }
+                        else {
+                            dispatch(fetchComments(contentUrn, title))
+                        }
+                    }                   
                     config.totalPageCount = slateData.data[manifestURN].pageCount;
                     config.pageLimit = slateData.data[manifestURN].pageLimit;
                     let parentData = getState().appStore.slateLevelData;
