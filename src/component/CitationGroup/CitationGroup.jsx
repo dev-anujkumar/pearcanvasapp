@@ -14,9 +14,7 @@ import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import PageNumberElement from '../SlateWrapper/PageNumberElement.jsx';
 import { checkSlateLock } from '../../js/slateLockUtility.js'
-
 let random = guid();
-
 export class CitationGroup extends Component {
 
     /**
@@ -140,7 +138,8 @@ export class CitationGroup extends Component {
                         elementType: _containerType
                     }
                     const cgThis = this
-                     if(!_bodyMatter.length && this.context.deleteElement){
+                     if(!_bodyMatter.length && this.context.deleteElement && config.citationDefaultElement==false){
+                        config.citationDefaultElement=true;
                         this.context.deleteElement();
                     }
                     this['cloneCOSlateControlledSource_3' + random] = this.renderElement(_bodyMatter, parentUrn, index)
