@@ -1853,7 +1853,7 @@ export class TinyMceEditor extends Component {
 
         } else if (this.props.placeholder === "Enter block code...") {
             toolbar = config.codeListingToolbar;
-        } else if (this.props.placeholder === "Enter Show text" || this.props.placeholder === "Enter revel text") {
+        } else if (this.props.placeholder === "Enter Show text" || (this.props && this.props.showHideType && this.props.showHideType == 'revel')) {
             toolbar = config.showHideToolbar
         } else if (this.props.placeholder === "Enter Hide text") {
             toolbar = config.hideToolbar
