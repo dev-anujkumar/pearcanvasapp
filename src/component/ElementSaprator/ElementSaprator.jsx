@@ -33,7 +33,7 @@ const { TEXT,
     FRONT_MATTER, 
     CONTAINER_INTRO } = elementTypeConstant
 
-export default function ElementSaprator(props) {
+export function ElementSaprator(props) {
     const [showClass, setShowClass] = useState(false);
     const [data, setData] = useState([]);
     const [showInteractiveOption, setshowInteractiveOption] = useState({status:false,type:""});
@@ -113,7 +113,7 @@ export default function ElementSaprator(props) {
     return (
         <div className={showClass ? 'elementSapratorContainer opacityClassOn ignore-for-drag' : 'elementSapratorContainer ignore-for-drag'}>
             <div className='elemDiv-split' onClickCapture={(e) => props.onClickCapture(e)}>
-                {permissions && permissions.includes('split_slate') && (elementType !== 'element-aside' && elementType !== 'citations' && elementType !== 'poetry') && !config.isPopupSlate && !props.firstOne && !props.isPartIS ? <Tooltip direction='right' tooltipText='Split Slate'>
+                {permissions && permissions.includes('split_slate') && (elementType !== 'element-aside' && elementType !== 'citations' && elementType !== 'poetry') && !config.isPopupSlate && !props.firstOne && !(props.setSlateParent == 'part' && config.slateType == CONTAINER_INTRO) ? <Tooltip direction='right' tooltipText='Split Slate'>
                     {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && <Button type='split' onClick={splitSlateClickHandler} />} </Tooltip> : ''}
             </div>
             <div className='elemDiv-hr'>
@@ -352,3 +352,9 @@ function typeOfContainerElements(elem, props) {
     }
     
 }
+
+const mapStateToProps = (state) => ({
+    setSlateParent :  state.appStore.setSlateParent
+})
+
+export default connect(mapStateToProps, {})(ElementSaprator)

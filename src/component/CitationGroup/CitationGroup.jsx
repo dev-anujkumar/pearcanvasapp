@@ -42,7 +42,6 @@ export class CitationGroup extends Component {
                                         esProps={this.context.elementSeparatorProps(index, true, parentUrn, asideData, parentIndex)}
                                         elementType="citations"
                                         sectionBreak={true}
-                                        isPartIS={false}
                                         permissions={this.context.permissions}
                                         onClickCapture={this.context.onClickCapture}     
                                     />}
@@ -78,7 +77,6 @@ export class CitationGroup extends Component {
                                         esProps={this.context.elementSeparatorProps(index, false, parentUrn, asideData, parentIndex)}
                                         elementType="citations"
                                         sectionBreak={true}
-                                        isPartIS={false}
                                         permissions={this.context.permissions}
                                         onClickCapture={this.context.onClickCapture}                                       
                                     />
