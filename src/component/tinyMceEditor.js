@@ -1944,10 +1944,8 @@ export class TinyMceEditor extends Component {
                 }
             case 'code':
 
-                let str = '<span class="codeNoHighlightLine"><strong>for</strong> (<strong>int</strong> <em>i</em> = 1; <em>i</em> &lt; 5; <em>i</em>++),</span><span class="codeNoHighlightLine">{</span><span class="codeNoHighlightLine"><strong>println</strong>("The Number is " + <em>i</em>),</span><span class="codeNoHighlightLine">}</span></code>'
-
                 return (
-                    <code ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: str }}>{/*htmlToReactParser.parse(this.props.model) */}</code>
+                    <code ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model }}>{/*htmlToReactParser.parse(this.props.model) */}</code>
                 )
             case 'blockquote':
                 if (this.props.element && this.props.element.elementdata && this.props.element.elementdata.type === "marginalia") {
