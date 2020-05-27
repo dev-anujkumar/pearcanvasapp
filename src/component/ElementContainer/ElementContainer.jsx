@@ -245,7 +245,7 @@ class ElementContainer extends Component {
     figureDifferenceBlockCode = (index, previousElementData) => {
         let titleDOM = document.getElementById(`cypress-${index}-0`),
             subtitleDOM = document.getElementById(`cypress-${index}-1`),
-            preformattedText = document.getElementById(`cypress-${index}-2`) ? document.getElementById(`cypress-${index}-2`).innerText.trim() : "",
+            preformattedText = document.getElementById(`cypress-${index}-2`) ? document.getElementById(`cypress-${index}-2`).innerHTML.trim() : '<span class="codeNoHighlightLine"><br /></span>',
             captionDOM = document.getElementById(`cypress-${index}-3`),
             creditsDOM = document.getElementById(`cypress-${index}-4`)
 
@@ -288,7 +288,7 @@ class ElementContainer extends Component {
             subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
             captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
             creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
-            preformattedText !== this.removeClassesFromHtml(previousElementData.figuredata.preformattedtext.join('\n').trim()) ||
+            preformattedText !== this.removeClassesFromHtml(previousElementData.html.preformattedtext) ||
             Number(startNumber) !== Number(previousElementData.figuredata.startNumber) ||
             isNumbered !== previousElementData.figuredata.numbered
         );

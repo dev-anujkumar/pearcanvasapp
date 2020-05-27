@@ -303,20 +303,24 @@ class ElementFigure extends Component {
                 </div>
             </div>
         } else if (model && model.figuretype === 'codelisting') {
-            let preformattedText = model.figuredata.preformattedtext
-            let processedText = "";
-
-            if (preformattedText.length === 1 && preformattedText[0] === "") {
-                processedText = `<br />`;
-            } else {
-                preformattedText.forEach(function (item) {
-                    let encodedItem1 = item.replace(/</g, "&lt;")             //Encoded '<' and '>' to prevent TinyMCE to treat them as HTML tags.
-                    let encodedItem2 = encodedItem1.replace(/>/g, "&gt;")
-                    if (encodedItem2) {
-                        processedText += `${encodedItem2}<br />`;
-                    }
-                })
+        
+            let preformattedText = model.html && model.html.preformattedtext && model.html.preformattedtext.replace(/<p>/g, "")
+            preformattedText = preformattedText && preformattedText.replace(/<\/p>/g, "")
+            let processedText = preformattedText ? preformattedText : '<span class="codeNoHighlightLine"><br /></span>';
+            if (!preformattedText || preformattedText === '<p></p>'){
+                processedText = '<span class="codeNoHighlightLine"><br /></span>'
             }
+            // if (preformattedText.length === 1 && preformattedText[0] === "") {
+            //     processedText = `<br />`;
+            // else {
+            //     preformattedText.forEach(function (item) {
+            //         let encodedItem1 = item.replace(/</g, "&lt;")             //Encoded '<' and '>' to prevent TinyMCE to treat them as HTML tags.
+            //         let encodedItem2 = encodedItem1.replace(/>/g, "&gt;")
+            //         if (encodedItem2) {
+            //             processedText += `<span>${encodedItem2}</span>`;
+            //         }
+            //     })
+            // }
 
             /**JSX for Block Code Editor*/
             figureJsx = <div className={`${divClass} blockCodeFigure`}>
