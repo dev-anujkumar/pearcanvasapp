@@ -308,7 +308,7 @@ class ElementFigure extends Component {
             preformattedText = preformattedText && preformattedText.replace(/<\/p>/g, "")
             let processedText = preformattedText ? preformattedText : '<span class="codeNoHighlightLine"><br /></span>';
             if (!preformattedText || preformattedText === '<p></p>'){
-                processedText = '<span class="codeNoHighlightLine"><br /></span>'
+                processedText = '<span class="codeNoHighlightLine"><br /></span>' 
             }
             // if (preformattedText.length === 1 && preformattedText[0] === "") {
             //     processedText = `<br />`;
