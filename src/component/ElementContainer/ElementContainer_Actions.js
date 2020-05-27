@@ -379,7 +379,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
             if(asideData && asideData.type == 'element-aside'){
                 asideData.indexes = indexes;
                 if(indexes.length === 2 || indexes.length === 3){
-                    dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:asideData.id, asideData.contentUrn, 0, asideData,""));
+                    dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:asideData.id, asideData.contentUrn, 0, asideData,"", false));
                 // }else if(indexes.length === 3){
                 //     dispatch(fetchSlateData(asideData.id,asideData.contentUrn, 0, asideData));
                 }
@@ -387,17 +387,17 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
 
                 // if(indexes.length === 2 || indexes.length === 3 || indexes === 2 || indexes === 3){
                     parentElement.index = elementIndex;
-                    dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:parentElement.id, parentElement.contentUrn, 0, parentElement,""));
+                    dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:parentElement.id, parentElement.contentUrn, 0, parentElement,"", false));
                 // }
             } 
             else if(parentElement && parentElement.type === "popup" && updatedData.elementParentEntityUrn && (updatedData.metaDataField || updatedData.sectionType === "postertextobject") ){
-                dispatch(fetchSlateData(updatedData.slateVersionUrn, updatedData.slateEntity, 0,"","")); }
+                dispatch(fetchSlateData(updatedData.slateVersionUrn, updatedData.elementParentEntityUrn, 0, parentElement, "", true)); }
             else if(parentElement && parentElement.type === "showhide"){
                 parentElement.indexes =elementIndex;
-                dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:parentElement.id, parentElement.contentUrn, 0, parentElement,"")); 
+                dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:parentElement.id, parentElement.contentUrn, 0, parentElement,"", false)); 
             }
             else if(parentElement && parentElement.type === "citations"){
-                dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:parentElement.id, parentElement.contentUrn, 0, parentElement,""));
+                dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:parentElement.id, parentElement.contentUrn, 0, parentElement,"", false));
             }
             else {
                 elementIndex = indexes.length == 2 ?indexes[0] : elementIndex

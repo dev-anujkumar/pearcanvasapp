@@ -207,7 +207,7 @@ export const fetchElementTag = (element, index = 0) => {
         return findElementType(element, index).tag || "";
     }
 }
-export const fetchSlateData = (manifestURN, entityURN, page, versioning,calledFrom) => (dispatch, getState) => {
+export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledFrom, versionPopupReload) => (dispatch, getState) => {
     // if(config.isFetchSlateInProgress){
     //  return false;
     // }
@@ -239,7 +239,11 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning,calledFr
             dispatch(tcmSnapshot(manifestURN, entityURN))
         }
     }
-    return axios.get(`${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}`, {
+    let apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}`
+    if (versionPopupReload) {
+        apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}&metadata=true`
+    } 
+    return axios.get(apiUrl, {
         headers: {
             "Content-Type": "application/json",
             "PearsonSSOSession": config.ssoToken
@@ -277,6 +281,17 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning,calledFr
                     type: SET_ACTIVE_ELEMENT,
                     payload: {}
                 });
+            }
+            else if (versionPopupReload) {
+                let parentData = getState().appStore.slateLevelData;
+                let newslateData = JSON.parse(JSON.stringify(parentData));
+                newslateData[config.slateManifestURN].contents.bodymatter[versioning.index] = Object.values(slateData.data)[0];
+                return dispatch({
+                    type: AUTHORING_ELEMENT_UPDATE,
+                    payload: {
+                        slateLevelData: newslateData
+                    }
+                })
             }
             else if(versioning && versioning.type==="popup"){
                 let parentData = getState().appStore.slateLevelData;
