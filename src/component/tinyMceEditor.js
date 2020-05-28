@@ -120,6 +120,12 @@ export class TinyMceEditor extends Component {
                     if (!e.level && editor.selection.getBoundingClientRect()) {
                         clickedX = editor.selection.getBoundingClientRect().left;
                         clickedY = editor.selection.getBoundingClientRect().top;
+
+                        //BG-2376 - removing span bookmark from content
+                        tinymce.$('span[data-mce-type="bookmark"]').each(function () {
+                            let innerHtml = this.innerHTML;
+                            this.outerHTML = innerHtml;
+                        })
                         // tinyMCE.$('.Wirisformula').each(function () {
                         //     this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
                         //     this.naturalWidth && this.setAttribute('width', this.naturalWidth)
@@ -1682,8 +1688,10 @@ export class TinyMceEditor extends Component {
 
 
                 if (this.editorRef.current) {
-                    this.editorRef.current.style.caretColor = 'transparent';
-                    this.editorRef.current.focus();
+                    if ( !(this.props.element && this.props.element.figuretype === "codelisting" && this.props.element.figuredata.programlanguage && this.props.element.figuredata.programlanguage === "Select")) {
+                        this.editorRef.current.style.caretColor = 'transparent';
+                        this.editorRef.current.focus();
+                    }
                 }
 
                
@@ -1692,7 +1700,9 @@ export class TinyMceEditor extends Component {
                 if (this.editorRef.current && document.getElementById(this.editorRef.current.id) && newElement) {
                     config.editorRefID = this.editorRef.current.id;
                     let timeoutId = setTimeout(() => {
-                        document.getElementById(this.editorRef.current.id).click();
+                        if ( !(this.props.element && this.props.element.figuretype === "codelisting" && this.props.element.figuredata.programlanguage && this.props.element.figuredata.programlanguage === "Select")) {
+                            document.getElementById(this.editorRef.current.id).click();
+                        }
                         clearTimeout(timeoutId)
                     }, 0)
                     localStorage.removeItem('newElement');
@@ -1843,7 +1853,7 @@ export class TinyMceEditor extends Component {
 
         } else if (this.props.placeholder === "Enter block code...") {
             toolbar = config.codeListingToolbar;
-        } else if (this.props.placeholder === "Enter Show text" || this.props.placeholder === "Enter revel text") {
+        } else if (this.props.placeholder === "Enter Show text" || (this.props && this.props.showHideType && this.props.showHideType == 'revel')) {
             toolbar = config.showHideToolbar
         } else if (this.props.placeholder === "Enter Hide text") {
             toolbar = config.hideToolbar
@@ -2313,7 +2323,7 @@ export class TinyMceEditor extends Component {
                 )
             default:
                 return (
-                    <div ref={this.editorRef} data-id={this.props.currentElement ? this.props.currentElement.id : ''} onKeyDown={this.normalKeyDownHandler} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model && this.props.model.text ? this.props.model.text : (typeof (this.props.model) === 'string' ? this.props.model : '<p class="paragraphNumeroUno"><br/></p>') }} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
+                    <div ref={this.editorRef} data-id={this.props.currentElement ? this.props.currentElement.id : ''} onKeyDown={this.normalKeyDownHandler} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model && this.props.model.text ? this.props.model.text : (typeof (this.props.model) === 'string' ? this.props.model : '<p class="paragraphNumeroUno"><br/></p>') }} onChange={this.handlePlaceholder}></div>
                 )
         }
     }

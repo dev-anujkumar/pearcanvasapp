@@ -37,7 +37,7 @@ class OpenerElement extends Component {
             updateImageOptions:false
         }
         this.setWrapperRef = this.setWrapperRef.bind(this);
-    this.handleClickOutside = this.handleClickOutside.bind(this);
+        this.handleClickOutside = this.handleClickOutside.bind(this);
     }
 
     dataFromAlfresco = (data) => {
@@ -444,7 +444,7 @@ class OpenerElement extends Component {
     }   
     renderExistingCOImage = () => {
         let COImg = <div className="exisiting-opener-element-image-view">
-            <div className="update-image-label"  onClick={()=>{this.setState({updateImageOptions:!this.state.updateImageOptions})}}>Update Image
+            <div className="update-image-label" onClick={()=>{this.setState({updateImageOptions:!this.state.updateImageOptions})}}>Update Image
             <span className="color_Dropdown_arrow">{dropdownArrow}</span>
             </div>
           {this.state.updateImageOptions? <ul className="image-global-button">
@@ -471,27 +471,24 @@ class OpenerElement extends Component {
     componentWillUnmount() {
         document.removeEventListener('mousedown', this.handleClickOutside);
     }
-    
-      /**
-       * Set the wrapper ref
-       */
-      setWrapperRef(node) {
+
+    /**
+     * Set the wrapper ref
+     */
+    setWrapperRef(node) {
         this.wrapperRef = node;
-      }
-    
-      /**
-       * Alert if clicked on outside of element
-       */
-      handleClickOutside(event) {
-        console.log("in>>>>",this.wrapperRef)
-        if (this.state.updateImageOptions==true && this.wrapperRef && !this.wrapperRef.contains(event.target)) {
-        console.log("click Outisde")
-        this.setState({
-            updateImageOptions:false
-        })
-          //alert('You clicked outside of me!');
+    }
+
+    /**
+     * Remove Update Button Popup if clicked on outside of element
+     */
+    handleClickOutside(event) {
+        if (this.state.updateImageOptions == true && this.wrapperRef && !this.wrapperRef.contains(event.target)) {
+            this.setState({
+                updateImageOptions: false
+            })
         }
-      }
+    }
     render() {
         const { imgSrc, width } = this.state
         const { backgroundColor, slateLockInfo } = this.props

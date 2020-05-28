@@ -78,7 +78,7 @@ test('renders without crashing', () => {
         singleAssessment.update();
         singleAssessment.find('div.singleAssessment_Dropdown_Container .singleAssessment_Dropdown_activeDropdown').simulate('click');
         singleAssessment.find('ul.singleAssessment_Dropdown_options>li:first-child').simulate('click');
-        singleAssessment.find('div.pearson-component.image').simulate('click');
+        singleAssessment.find('div.pearson-component').simulate('click');
         singleAssessment.find('div.figureElement').simulate('click');
         expect(singleAssessmentInstance.state.showAssessmentPopup).toBe(true);
         expect(singleAssessmentInstance.state.asseessmentUsageTypeDropdown).toBe(false);

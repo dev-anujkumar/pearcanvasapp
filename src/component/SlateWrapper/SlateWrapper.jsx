@@ -30,7 +30,6 @@ import { setSlateLock, releaseSlateLock, setLockPeriodFlag, getSlateLockStatus }
 import { setActiveElement,openPopupSlate } from '../CanvasWrapper/CanvasWrapper_Actions';
 // import { OPEN_AM } from '../../js/auth_module';
 import { showSlateLockPopup } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
-import { handleTCMData } from '../ElementContainer/TcmSnapshot_Actions'
 
 let random = guid();
 class SlateWrapper extends Component {
@@ -137,6 +136,8 @@ class SlateWrapper extends Component {
     }
 
     static getDerivedStateFromProps = (props, state) => {
+         /** Default Red Dot indicator to false */
+         sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'false'});  
         /**
          * updateTimer is for updating Time for slate refresh
          */
@@ -1092,8 +1093,7 @@ class SlateWrapper extends Component {
     }
     closePopup = () =>{
         let popupId = config.slateManifestURN
-        let newVersionManifestId = document.getElementsByClassName('slate-content ')[0];
-        if( newVersionManifestId && newVersionManifestId.getAttribute('data-id')!==popupId){
+        if(this.props.slateData[config.tempSlateManifestURN].status === "approved" && this.props.slateData[config.slateManifestURN].status === "wip"){
             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
             sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
         }
@@ -1104,7 +1104,6 @@ class SlateWrapper extends Component {
         config.isPopupSlate = false
         this.props.openPopupSlate(undefined, popupId)
         this.props.setActiveElement(config.cachedActiveElement.element, config.cachedActiveElement.index)
-        this.props.handleTCMData(config.slateManifestURN)
         // Scrolling to the previous element after SAVE  & CLOSE is clicked
         setTimeout(() => {
             let elementDom = document.querySelector(`[data-id="${config.cachedActiveElement.element.id}"]`)
@@ -1221,8 +1220,7 @@ export default connect(
         getSlateLockStatus,
         accessDenied,
         openPopupSlate,
-        showSlateLockPopup,
-        handleTCMData,
+        showSlateLockPopup
 
     }
 )(SlateWrapper);

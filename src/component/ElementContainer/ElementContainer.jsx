@@ -42,7 +42,6 @@ import CitationGroup from '../CitationGroup'
 import CitationElement from '../CitationElement'
 import ElementPoetry from '../ElementPoetry';
 import ElementPoetryStanza from '../ElementPoetry/ElementPoetryStanza.jsx';
-import {handleTCMData} from './TcmSnapshot_Actions';
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -938,20 +937,24 @@ class ElementContainer extends Component {
     */
     renderElement = (element = {}) => {
         let editor = '';
-        let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions, allComments, splithandlerfunction, tcmData} = this.props;
+        let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions, allComments, splithandlerfunction} = this.props;
         let labelText = fetchElementTag(element, index);
         config.elementToolbar = this.props.activeElement.toolbar || [];
         let anyOpenComment = allComments.filter(({ commentStatus, commentOnEntity }) => commentOnEntity === element.id && commentStatus.toLowerCase() === "open").length > 0
         /** Handle TCM for tcm enable elements */
         let tcm = false;
         let feedback = false;
-        tcm = tcmData.filter(tcm => {
-            let elementUrn = tcm.elemURN;
-            return (element.id.includes('urn:pearson:work') && elementUrn.indexOf(element.id) !== -1) && tcm.txCnt > 0}).length>0;
-        feedback = tcmData.filter(tcm => {
-            let elementUrn = tcm.elemURN;
-            return (element.id.includes('urn:pearson:work') && elementUrn.indexOf(element.id) !== -1) && tcm.feedback !== null}).length>0;
-        /* TODO need better handling with a function and dynamic component rendering with label text*/
+        if (element.type == 'element-authoredtext' || element.type == 'element-list' || element.type == 'element-blockfeature' || element.type == 'element-learningobjectives' || element.type == 'element-citation' || element.type === 'stanza') {
+            if (element.tcm) {
+                tcm = element.tcm;
+                sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });
+            }
+            if (element.feedback) {
+                feedback = element.feedback;
+                sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });
+            }
+        }
+       /* TODO need better handling with a function and dynamic component rendering with label text*/
         if (labelText) {
             switch (element.type) {
                 case elementTypeConstant.ASSESSMENT_SLATE:
@@ -1107,6 +1110,7 @@ class ElementContainer extends Component {
                         setActiveElement : this.props.setActiveElement,
                         handleFocus: this.handleFocus,
                         handleBlur: this.handleBlur,
+                        deleteElement: this.deleteElement
                     }}><CitationGroup />
                     </CitationGroupContext.Provider >;
                     labelText = 'CG'
@@ -1394,10 +1398,7 @@ const mapDispatchToProps = (dispatch) => {
         },
         createPoetryUnit: (poetryField, parentElement,cb, popupElementIndex, slateManifestURN) => {
             dispatch(createPoetryUnit(poetryField, parentElement,cb, popupElementIndex, slateManifestURN))
-        },
-        handleTCMData: () => {
-            dispatch(handleTCMData())
-        },
+        }
 
     }
 }
@@ -1411,8 +1412,7 @@ const mapStateToProps = (state) => {
         oldImage: state.appStore.oldImage,
         glossaryFootnoteValue: state.glossaryFootnoteReducer.glossaryFootnoteValue,
         allComments: state.commentsPanelReducer.allComments,
-        showHideId: state.appStore.showHideId,
-        tcmData: state.tcmReducer.tcmSnapshot
+        showHideId: state.appStore.showHideId
     }
 }
 

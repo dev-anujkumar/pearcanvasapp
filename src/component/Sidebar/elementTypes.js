@@ -602,7 +602,7 @@ export default {
                     enum: 'SINGLE_ASSESSMENT_PUF'
                 },
                 'secondary-single-assessment-learnosity': {
-                    text: 'Learnosity Beta',
+                    text: 'Learnosity',
                     labelText: 'Qu',
                     enum: 'SINGLE_ASSESSMENT_LEARNOSITY'
                 }

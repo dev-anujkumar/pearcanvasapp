@@ -14,8 +14,14 @@
     margin:0;
     box-shadow: rgba(0, 0, 0, 0.2) 0px 4px 8px 0px, rgba(0, 0, 0, 0.19) 0px 6px 20px 0px, rgba(0, 0, 0, 0.19) 0px 6px 20px 0px, rgba(0, 0, 0, 0.19) 0px 6px 20px 0px;
 }
-.cite-wrapper .main-div {
+.cite-tdx-wrapper .main-div{
+  min-height: 335px;
+  max-height: 390px;
+}
+.cite-wrapper .main-div{
   margin: 0 5px 0 20px;
+  min-height: 335px;
+  max-height: 335px;
 }
 .cite-wrapper .header-container {
   height:100%;

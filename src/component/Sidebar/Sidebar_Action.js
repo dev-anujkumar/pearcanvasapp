@@ -4,8 +4,7 @@ import config  from './../../config/config';
 import {
     FETCH_SLATE_DATA,
     SET_ACTIVE_ELEMENT,
-    ERROR_POPUP,
-    GET_TCM_RESOURCES
+    ERROR_POPUP
 } from './../../constants/Action_Constants';
 import elementTypes from './../Sidebar/elementTypes';
 import figureDataBank from '../../js/figure_data_bank';
@@ -74,7 +73,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         outputPrimaryOptionEnum=outputSubType['enum'];
         outputSubTypeEnum = usageType.toUpperCase().replace(" ", "_").replace("-", "_");
         oldElementData.figuredata.elementdata.usagetype=usageType;
-        let assessmentFormat = outputSubType.text !== 'Learnosity Beta' ? outputSubType.text.toLowerCase() : 'learnosity';
+        let assessmentFormat = outputSubType.text.toLowerCase();
         let assessmentItemType ="";
         if(assessmentFormat==="cite" || assessmentFormat==="puf" || assessmentFormat==="learnosity"){
             assessmentItemType ="assessmentItem";
@@ -335,13 +334,6 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                 toolbar: [],
                 elementWipType: "element-authoredtext"
             }
-        }
-        //tcm conversion code   
-        if (config.tcmStatus) {
-            let elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza'];
-            if (elementType.indexOf(oldElementData.type) !== -1) {
-                prepareDataForConversionTcm(res.data.id, getState, dispatch);
-            }
         }   
         dispatch({
             type: SET_ACTIVE_ELEMENT,
@@ -363,28 +355,6 @@ catch (error) {
     dispatch({type: ERROR_POPUP, payload:{show: true}})
 }
 }
-function prepareDataForConversionTcm(updatedDataID, getState, dispatch) {
-    const tcmData = getState().tcmReducer.tcmSnapshot;
-    for (let i = 0; i < tcmData.length; i++) {
-        if (tcmData[i].elemURN.includes('urn:pearson:work') && tcmData[i].elemURN.indexOf(updatedDataID) !== -1) {
-            tcmData[i]["elemURN"] = updatedDataID
-            tcmData[i]["txCnt"] = tcmData[i]["txCnt"] !== 0 ? tcmData[i]["txCnt"] : 1
-            tcmData[i]["feedback"] = tcmData[i]["feedback"] !== null ? tcmData[i]["feedback"] : null
-            tcmData[i]["isPrevAcceptedTxAvailable"] = tcmData[i]["isPrevAcceptedTxAvailable"] ? tcmData[i]["isPrevAcceptedTxAvailable"] : false
-            break;
-        }
-    }
-    if (tcmData) {
-        sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });
-    }
-    dispatch({
-        type: GET_TCM_RESOURCES,
-        payload: {
-            data: tcmData
-        }
-    })
-}
-
 export const handleElementConversion = (elementData, store, activeElement, fromToolbar,showHideObj) => dispatch => {
     store = JSON.parse(JSON.stringify(store));
     if(Object.keys(store).length > 0) {
