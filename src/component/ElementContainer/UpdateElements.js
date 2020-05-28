@@ -179,7 +179,8 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
 
     let getAttributeBCE = document.querySelector(`div.element-container.active[data-id="${previousElementData.id}"] div.blockCodeFigure`)
     let startNumber = getAttributeBCE && getAttributeBCE.getAttribute("startnumber")
-    let isNumbered = getAttributeBCE && getAttributeBCE.getAttribute("numbered")
+    let isNumbered = getAttributeBCE && getAttributeBCE.getAttribute("numbered") || true;
+    let isSyntaxhighlighted = getAttributeBCE && getAttributeBCE.getAttribute("syntaxhighlighting") || true ;
 
     let titleDOM = document.getElementById(`cypress-${index}-0`),
         subtitleDOM = document.getElementById(`cypress-${index}-1`),
@@ -245,6 +246,7 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
             numbered: (typeof (isNumbered ) == "string") ? JSON.parse(isNumbered): isNumbered,
             startNumber: startNumber,
             programlanguage: previousElementData.figuredata.programlanguage,
+            syntaxhighlighting: (typeof (isSyntaxhighlighted ) == "string") ? JSON.parse(isSyntaxhighlighted): isSyntaxhighlighted,
             // preformattedtext: [...preformattedText.split("\n")]
         },
         inputType : elementTypes[elementType][primaryOption]['enum'],
