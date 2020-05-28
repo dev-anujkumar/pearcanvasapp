@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 //IMPORT TINYMCE 
 import tinymce from 'tinymce/tinymce';
@@ -41,6 +41,7 @@ export class TinyMceEditor extends Component {
         this.mathMlMenuButton = null;
         this.assetPopoverButtonState = null;
         this.glossaryTermText = '';
+        this.copyContent = '';
         this.lastContent = '';
         this.clearFormateText = '';
         this.isctrlPlusV = false;
@@ -63,6 +64,7 @@ export class TinyMceEditor extends Component {
             forced_root_block: '',
             remove_linebreaks: false,
             paste_preprocess: this.pastePreProcess,
+            paste_postprocess: this.pastePostProcess,
             force_p_newlines: false,
             setup: (editor) => {
                 if (this.props.permissions && this.props.permissions.includes('authoring_mathml')) {
@@ -79,10 +81,12 @@ export class TinyMceEditor extends Component {
                 this.editorClick(editor);
                 this.editorKeydown(editor);
                 this.editorKeyup(editor);
+                this.editorPaste(editor);
                 this.editorBeforeExecCommand(editor);
                 this.editorExecCommand(editor);
                 this.insertListButtonIcon(editor);
                 this.clearUndoStack(editor);
+                this.beforeAddUndo(editor);
                 editor.on('init', function (e) {
                     if (config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType !== "container-introduction") {
                         if (document.getElementsByClassName("slate-tag-icon").length) {
@@ -282,7 +286,7 @@ export class TinyMceEditor extends Component {
                 let divParent = tinymce.$(`div[id="cypress-${this.props.index}"]`).children();
                 spanHandlers.handleFormattingTags(editor, this.props.elementId, 'div', divParent, 'poetryLine', range);
             }
-            if (this.props && this.props.element && this.props.element.type && this.props.element.figuretype ==='codelisting' && e.command === 'mceToggleFormat') {
+            if (this.props && this.props.element && this.props.element.type && this.props.element.figuretype === 'codelisting' && e.command === 'mceToggleFormat') {
                 let codeParent = tinymce.$(`code[id="cypress-${this.props.index}"]`).children();
                 spanHandlers.handleFormattingTags(editor, this.props.elementId, 'code', codeParent, 'codeNoHighlightLine', range);
             }
@@ -366,7 +370,7 @@ export class TinyMceEditor extends Component {
                         else if (this.props.element.type === 'stanza') {
                             spanHandlers.handleSelectAllRemoveFormatting(this.props.index, 'div', 'poetryLine');
                         }
-                        else if(e.target.targetElm.nodeName === "CODE" && this.props.element.figuretype==='codelisting'){
+                        else if (e.target.targetElm.nodeName === "CODE" && this.props.element.figuretype === 'codelisting') {
                             spanHandlers.handleSelectAllRemoveFormatting(this.props.index, 'code', 'codeNoHighlightLine');
                         }
                         /*  For Figure type*/
@@ -377,14 +381,14 @@ export class TinyMceEditor extends Component {
                     else if (this.props.element.type === 'stanza') {
                         let selection = window.getSelection();
                         let output = spanHandlers.handleRemoveFormattingOnSpan(selection, e, 'div', 'poetryLine');
-                        if(output === false) {
+                        if (output === false) {
                             return false;
                         }
                     }
-                    else if(this.props.element.figuretype==='codelisting'){
+                    else if (this.props.element.figuretype === 'codelisting') {
                         let selection = window.getSelection();
                         let output = spanHandlers.handleRemoveFormattingOnSpan(selection, e, 'code', 'codeNoHighlightLine');
-                        if(output === false) {
+                        if (output === false) {
                             return false;
                         }
                     }
@@ -541,6 +545,30 @@ export class TinyMceEditor extends Component {
         this.footnoteBtnInstance && this.footnoteBtnInstance.setDisabled(flag)
     }
 
+    beforeAddUndo = (editor) => {
+        editor.on('BeforeAddUndo', function(e) {
+            let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
+            if (activeElement.nodeName === "CODE") {
+                if(e && e.originalEvent && e.originalEvent.command && e.originalEvent.command === '"mceInsertContent"') {
+                    return;
+                }
+            }
+        });
+    }
+
+    editorPaste = (editor) => {
+        editor.on('paste', (e) => {
+            let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
+            if (activeElement.nodeName === "CODE") {
+                let text = e.clipboardData.getData("text/plain");
+                text = String(text).replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                text = String(text).replace(/\r|\n/g, '<br>');
+                text = String(text).replace(/ /g, '&nbsp;');
+                this.copyContent = text;
+            }
+        });
+    }
+
     /**
      * This method is called on keyUp.
      * @param {*} editor  editor instance
@@ -579,7 +607,7 @@ export class TinyMceEditor extends Component {
                     let key = e.keyCode || e.which;
                     if (!activeElement.innerText.trim()) {
                         activeElement.innerHTML = '<span class="codeNoHighlightLine"><br/></span>';
-                    } 
+                    }
                     else if (key != undefined && key === 13) {
                         spanHandlers.addAndSplitSpan(editor, this.props.elementId, 'code', 'codeNoHighlightLine');
                     }
@@ -709,7 +737,7 @@ export class TinyMceEditor extends Component {
                         currentElement.remove();
                     }
                     let activeEditor = document.getElementById(tinymce.activeEditor.id);
-                    if('element' in this.props && 'status' in this.props.element && this.props.element.status == "wip") {
+                    if ('element' in this.props && 'status' in this.props.element && this.props.element.status == "wip") {
                         activeEditor.blur();
                     }
                     let nextSaparator = (activeEditor.closest('.editor')).nextSibling;
@@ -990,6 +1018,8 @@ export class TinyMceEditor extends Component {
      */
     pastePreProcess = (plugin, args) => {
         if (this.props.element && this.props.element.figuretype && this.props.element.figuretype === "codelisting") {
+            args.content = this.copyContent;
+            this.copyContent = '';
             return;
         }
         if (this.props.element && this.props.element.type && this.props.element.type === 'element-list') {
@@ -1002,6 +1032,96 @@ export class TinyMceEditor extends Component {
         } else {
             args.content = tinymce.activeEditor.selection.getContent();
         }
+    }
+
+    pastePostProcess = (plugin, args) => {
+        if (this.props.element && this.props.element.figuretype && this.props.element.figuretype === "codelisting") {
+            let paste_content = args.node.innerHTML;
+            let tempArr = paste_content.split("<br>");
+            let nodesFragment = document.createDocumentFragment();
+            for (let index = 0; index < tempArr.length; index++) {
+                let newSpan = document.createElement('span');
+                newSpan.innerHTML = tempArr[index];
+                newSpan.className = 'codeNoHighlightLineOne';
+                nodesFragment.appendChild(newSpan);
+            }
+            args.node.innerHTML = "";
+            args.node.appendChild(nodesFragment);
+            let self = this;
+            setTimeout(() => { self.makeReplace(); }, 0);
+        }
+    }
+
+    makeReplace = () => {
+        let innerSpans = document.getElementsByClassName('codeNoHighlightLineOne');
+        if (innerSpans.length) {
+            let parentNode = innerSpans[0].parentNode;
+            let elem = innerSpans[0];
+            if (parentNode.nodeName !== 'SPAN' && parentNode.className !== 'codeNoHighlightLine') {
+                while (elem.parentNode.className !== 'codeNoHighlightLine' && elem.parentNode.nodeName.toLowerCase() != 'span') {
+                    elem = elem.parentNode;
+                }
+                parentNode = elem.parentElement;
+            }
+            parentNode.className = "TempSpan";
+            let boldTags = parentNode.getElementsByTagName('STRONG');
+            while (boldTags.length) {
+                let innerHTML = boldTags[0].innerHTML;
+                boldTags[0].outerHTML = innerHTML;
+            }
+            let uTags = parentNode.getElementsByTagName('U');
+            while (uTags.length) {
+                let innerHTML = uTags[0].innerHTML;
+                uTags[0].outerHTML = innerHTML;
+            }
+            let emTags = parentNode.getElementsByTagName('EM');
+            while (emTags.length) {
+                let innerHTML = emTags[0].innerHTML;
+                emTags[0].outerHTML = innerHTML;
+            }
+            for (let index = 0; index < innerSpans.length; index++) {
+                innerSpans[index].className = 'codeNoHighlightLine';
+            }
+            let startText = '';
+            let endText = '';
+            let textNode = [];
+            let startFlag = true;
+            let element = document.getElementsByClassName('TempSpan')[0];
+            for (let index = 0; index < element.childNodes.length; ++index) {
+                if (element.childNodes[index].nodeType === Node.TEXT_NODE) {
+                    textNode.push(element.childNodes[index]);
+                    if (startFlag) {
+                        startText += element.childNodes[index].textContent;
+                    } else {
+                        endText += element.childNodes[index].textContent;
+                    }
+                } else {
+                    startFlag = false;
+                }
+            }
+            while (textNode.length) {
+                if (textNode[0].parentNode) {
+                    textNode[0].parentNode.removeChild(textNode[0]);
+                }
+                textNode.splice(0, 1);
+            }
+            let allSpans = document.getElementsByClassName('TempSpan')[0].getElementsByClassName('codeNoHighlightLine');
+            if (allSpans.length) {
+                if (startText != '') {
+                    allSpans[0].innerHTML = startText + allSpans[0].innerHTML;
+                }
+                if (endText != '') {
+                    allSpans[allSpans.length - 1].innerHTML = allSpans[allSpans.length - 1].innerHTML + endText;
+                }
+            }
+            let innerHTML = document.getElementsByClassName('TempSpan')[0].innerHTML;
+            document.getElementsByClassName('TempSpan')[0].outerHTML = innerHTML;
+        }
+        let remainSpans = document.getElementsByClassName('codeNoHighlightLineOne');
+        while (remainSpans.length) {
+            remainSpans[0].parentNode.removeChild(remainSpans[0]);
+        }
+        spanHandlers.handleExtraTags(this.props.elementId, 'code', 'codeNoHighlightLine');
     }
 
     /**
@@ -1240,7 +1360,7 @@ export class TinyMceEditor extends Component {
      * Saves glossary/footnote on creation
      */
     saveContent = () => {
-        const { glossaryFootnoteValue , poetryField} = this.props;
+        const { glossaryFootnoteValue, poetryField } = this.props;
         let { elementType, glossaryfootnoteid, type, elementSubType, glossaryTermText } = glossaryFootnoteValue;
         let typeWithPopup = this.props.element ? this.props.element.type : "";
         let term = null;
@@ -1253,8 +1373,8 @@ export class TinyMceEditor extends Component {
         definition = definition.replace(/<br data-mce-bogus="1">/g, "")
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
         customEvent.subscribe('glossaryFootnoteSave', (elementWorkId) => {
-            saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType, typeWithPopup,poetryField)
-                customEvent.unsubscribe('glossaryFootnoteSave');
+            saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType, typeWithPopup, poetryField)
+            customEvent.unsubscribe('glossaryFootnoteSave');
         })
         this.handleBlur(null, true); //element saving before creating G/F (as per java team)
         //this.handleBlur(null, true);
@@ -1371,7 +1491,7 @@ export class TinyMceEditor extends Component {
 
 
                 if (this.editorRef.current) {
-                    if ( !(this.props.element && this.props.element.figuretype === "codelisting" && this.props.element.figuredata.programlanguage && this.props.element.figuredata.programlanguage === "Select")) {
+                    if (!(this.props.element && this.props.element.figuretype === "codelisting" && this.props.element.figuredata.programlanguage && this.props.element.figuredata.programlanguage === "Select")) {
                         this.editorRef.current.style.caretColor = 'transparent';
                         this.editorRef.current.focus();
                     }
@@ -1383,7 +1503,7 @@ export class TinyMceEditor extends Component {
                 if (this.editorRef.current && document.getElementById(this.editorRef.current.id) && newElement) {
                     config.editorRefID = this.editorRef.current.id;
                     let timeoutId = setTimeout(() => {
-                        if ( !(this.props.element && this.props.element.figuretype === "codelisting" && this.props.element.figuredata.programlanguage && this.props.element.figuredata.programlanguage === "Select")) {
+                        if (!(this.props.element && this.props.element.figuretype === "codelisting" && this.props.element.figuredata.programlanguage && this.props.element.figuredata.programlanguage === "Select")) {
                             document.getElementById(this.editorRef.current.id).click();
                         }
                         clearTimeout(timeoutId)
@@ -1536,10 +1656,10 @@ export class TinyMceEditor extends Component {
 
         } else if (this.props.placeholder === "Enter block code...") {
             let syntaxEnabled = document.querySelector('.panel_syntax_highlighting .switch input');
-            if(syntaxEnabled && syntaxEnabled.checked){
+            if (syntaxEnabled && syntaxEnabled.checked) {
                 toolbar = config.codeListingToolbarDisabled;
             }
-            else{
+            else {
                 toolbar = config.codeListingToolbarEnabled;
             }
         } else if (this.props.placeholder === "Enter Show text" || this.props.placeholder === "Enter revel text") {
@@ -1626,13 +1746,13 @@ export class TinyMceEditor extends Component {
         let currentActiveNode = null
         let activeContainerNode = document.querySelector('div .active')
         let activeShowHideNode = document.querySelector('.show-hide-active .cypress-editable.mce-content-body.mce-edit-focus')
-        if(activeContainerNode){
+        if (activeContainerNode) {
             currentActiveNode = activeContainerNode
         }
-        else if(activeShowHideNode){
+        else if (activeShowHideNode) {
             currentActiveNode = activeShowHideNode
         }
-       
+
         let currentElementId = this.props.currentElement && !(currentTarget && currentTarget.classList.contains('formatted-text')) ? this.props.currentElement.id : this.props.element.id
 
         if (currentActiveNode && currentActiveNode.getAttribute('data-id') === currentElementId) {
