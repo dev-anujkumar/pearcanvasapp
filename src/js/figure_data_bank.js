@@ -26,6 +26,7 @@ export default {
         "numbered": true,
         "startNumber": "1",
         "programlanguage": "Select",
+        "syntaxhighlighting" : true,
         "preformattedtext": [
             ""
         ]

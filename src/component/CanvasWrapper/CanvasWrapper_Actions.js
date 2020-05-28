@@ -86,7 +86,8 @@ const findElementType = (element, index) => {
                             elementType: elementDataBank[element.type][element.figuretype]["elementType"],
                             primaryOption: elementDataBank[element.type][element.figuretype]["primaryOption"],
                             numbered: element.figuredata.numbered,
-                            startNumber: element.figuredata.startNumber
+                            startNumber: element.figuredata.startNumber,
+                            syntaxhighlighting: element.figuredata.syntaxhighlighting
                         }
                         if(element.figuredata && !element.figuredata.programlanguage) {
                             element.figuredata.programlanguage = 'Select';

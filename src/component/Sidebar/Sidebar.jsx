@@ -48,10 +48,12 @@ class Sidebar extends Component {
             let elementDropdown = prevState.elementDropdown;
             let numberStartFrom = prevState.bceNumberStartFrom;
             let bceToggle = prevState.bceToggleValue;
+            let bceSyntaxHighlight = prevState.syntaxHighlightingToggleValue;
             if(nextProps.activeElement.elementId !== prevState.activeElementId) {
                 elementDropdown = '';
                 numberStartFrom = nextProps.activeElement.startNumber || "1";
-                bceToggle = nextProps.activeElement.numbered || true
+                bceToggle = nextProps.activeElement.numbered || true;
+                bceSyntaxHighlight = nextProps.activeElement.syntaxhighlighting || true;
             }
             
             return {
@@ -62,7 +64,8 @@ class Sidebar extends Component {
                 activeSecondaryOption: nextProps.activeElement.secondaryOption,
                 activeLabelText: nextProps.activeElement.tag,
                 bceNumberStartFrom : numberStartFrom,
-                bceToggleValue : bceToggle
+                bceToggleValue : bceToggle,
+                syntaxHighlightingToggleValue : bceSyntaxHighlight
             };
         }
 
@@ -305,6 +308,7 @@ class Sidebar extends Component {
                 if( attrNode ){
                     attrNode.setAttribute("numbered", this.state.bceToggleValue)
                     attrNode.setAttribute("startNumber", this.state.bceNumberStartFrom)
+                    attrNode.setAttribute("syntaxhighlighting", this.state.syntaxHighlightingToggleValue)
                 }
                 attributions = <div>
                     <div className="panel_show_module">
@@ -383,7 +387,7 @@ class Sidebar extends Component {
         else {
             this.setState({
                 syntaxHighlightingToggleValue: currentToggleValue
-            })
+            },() => this.handleBceBlur())
         }
     }
 

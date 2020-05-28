@@ -256,8 +256,12 @@ class ElementContainer extends Component {
         let getAttributeBCE = document.querySelector(`div.element-container.active[data-id="${previousElementData.id}"] div.blockCodeFigure`)
         let startNumber = getAttributeBCE && getAttributeBCE.getAttribute("startnumber")
         let isNumbered = getAttributeBCE && getAttributeBCE.getAttribute("numbered")
+        let isSyntaxhighlighted = getAttributeBCE && getAttributeBCE.getAttribute("syntaxhighlighting")
         if (typeof (isNumbered) == "string") {
             isNumbered = JSON.parse(isNumbered)
+        }
+        if (typeof (isSyntaxhighlighted) == "string") {
+            isSyntaxhighlighted = JSON.parse(isSyntaxhighlighted)
         }
         captionHTML = captionHTML.match(/<p>/g) ? captionHTML : `<p>${captionHTML}</p>`
         creditsHTML = creditsHTML.match(/<p>/g) ? creditsHTML : `<p>${creditsHTML}</p>`
@@ -289,7 +293,8 @@ class ElementContainer extends Component {
             creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
             preformattedText !== this.removeClassesFromHtml(previousElementData.html.preformattedtext) ||
             Number(startNumber) !== Number(previousElementData.figuredata.startNumber) ||
-            isNumbered !== previousElementData.figuredata.numbered
+            isNumbered !== previousElementData.figuredata.numbered || 
+            isSyntaxhighlighted !== previousElementData.figuredata.syntaxhighlighting
         );
     }
 
