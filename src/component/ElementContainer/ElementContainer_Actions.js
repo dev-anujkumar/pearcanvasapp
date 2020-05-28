@@ -261,7 +261,8 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
         return ;
     }
-
+    prepareDataForTcmUpdate(updatedData,updatedData.id, elementIndex, asideData, getState, updatedData.type, poetryData);
+    updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, null, elementIndex, showHideType, parentElement, poetryData)
     let updatedData1 = JSON.parse(JSON.stringify(updatedData))
     if (showHideType && showHideType === "postertextobject" && !(updatedData1.elementdata.text.trim().length || updatedData1.html.text.match(/<img/))) {
         updatedData1 = {
@@ -275,8 +276,6 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
             }
         }
     }
-    prepareDataForTcmUpdate(updatedData1,updatedData1.id, elementIndex, asideData, getState, updatedData1.type, poetryData);
-    updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, null, elementIndex, showHideType, parentElement, poetryData)
     return axios.put(`${config.REACT_APP_API_URL}v1/slate/element`,
     updatedData1,
         {
