@@ -86,7 +86,6 @@ export class TinyMceEditor extends Component {
                 this.editorExecCommand(editor);
                 this.insertListButtonIcon(editor);
                 this.clearUndoStack(editor);
-                this.beforeAddUndo(editor);
                 editor.on('init', function (e) {
                     if (config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType !== "container-introduction") {
                         if (document.getElementsByClassName("slate-tag-icon").length) {
@@ -543,17 +542,6 @@ export class TinyMceEditor extends Component {
     toggleGlossaryandFootnoteIcon = (flag) => {
         this.glossaryBtnInstance && this.glossaryBtnInstance.setDisabled(flag)
         this.footnoteBtnInstance && this.footnoteBtnInstance.setDisabled(flag)
-    }
-
-    beforeAddUndo = (editor) => {
-        editor.on('BeforeAddUndo', function(e) {
-            let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
-            if (activeElement.nodeName === "CODE") {
-                if(e && e.originalEvent && e.originalEvent.command && e.originalEvent.command === '"mceInsertContent"') {
-                    return;
-                }
-            }
-        });
     }
 
     editorPaste = (editor) => {
@@ -1116,12 +1104,14 @@ export class TinyMceEditor extends Component {
             }
             let innerHTML = document.getElementsByClassName('TempSpan')[0].innerHTML;
             document.getElementsByClassName('TempSpan')[0].outerHTML = innerHTML;
+            
         }
         let remainSpans = document.getElementsByClassName('codeNoHighlightLineOne');
         while (remainSpans.length) {
             remainSpans[0].parentNode.removeChild(remainSpans[0]);
         }
         spanHandlers.handleExtraTags(this.props.elementId, 'code', 'codeNoHighlightLine');
+        tinymce.activeEditor.undoManager.clear();
     }
 
     /**
