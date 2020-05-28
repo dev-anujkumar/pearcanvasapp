@@ -86,6 +86,7 @@ export class TinyMceEditor extends Component {
                 this.editorExecCommand(editor);
                 this.insertListButtonIcon(editor);
                 this.clearUndoStack(editor);
+                this.beforeAddUndo(editor);
                 editor.on('init', function (e) {
                     if (config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType !== "container-introduction") {
                         if (document.getElementsByClassName("slate-tag-icon").length) {
@@ -542,6 +543,17 @@ export class TinyMceEditor extends Component {
     toggleGlossaryandFootnoteIcon = (flag) => {
         this.glossaryBtnInstance && this.glossaryBtnInstance.setDisabled(flag)
         this.footnoteBtnInstance && this.footnoteBtnInstance.setDisabled(flag)
+    }
+
+    beforeAddUndo = (editor) => {
+        editor.on('BeforeAddUndo', function(e) {
+            let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
+            if (activeElement.nodeName === "CODE") {
+                if(e && e.originalEvent && e.originalEvent.command && e.originalEvent.command === '"mceInsertContent"') {
+                    return;
+                }
+            }
+        });
     }
 
     editorPaste = (editor) => {
@@ -1037,7 +1049,6 @@ export class TinyMceEditor extends Component {
             args.node.appendChild(nodesFragment);
             let self = this;
             setTimeout(() => { self.makeReplace(); }, 0);
-            //args.node.innerHTML=finalText;
         }
     }
 
