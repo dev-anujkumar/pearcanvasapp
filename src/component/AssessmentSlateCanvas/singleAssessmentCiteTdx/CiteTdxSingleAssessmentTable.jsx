@@ -37,7 +37,7 @@ class CiteTdxTable extends Component {
         const { singleAssessmentData, isLoading, assessmenterrFlag } = this.props;
         return (
             <div>
-                <div className='main-div'>
+                <div className='cite-tdx-wrapper main-div'>
                 <CiteLoader isLoading={this.props.isLoading} citeErrorFlag={this.props.citeErrorFlag} />
                         <table className='assessment-table-class single-assessment'>
                             <thead>
