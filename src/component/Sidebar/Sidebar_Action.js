@@ -225,7 +225,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         conversionDataToSend["sectionType"] = showHideObj.showHideType
         conversionDataToSend["elementParentEntityUrn"] = showHideObj.element.contentUrn
     }
-    let parentEntityUrn = conversionDataToSend.elementParentEntityUrn || appStore.asideData && appStore.asideData.contentUrn || config.slateEntityURN
+    let parentEntityUrn = conversionDataToSend.elementParentEntityUrn || appStore.parentUrn && appStore.parentUrn.contentUrn || config.slateEntityURN
     conversionDataToSend["elementParentEntityUrn"] = parentEntityUrn
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
     config.conversionInProcess = true
