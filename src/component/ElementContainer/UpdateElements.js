@@ -203,9 +203,9 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
         subtitleHTML = replaceUnwantedtags(subtitleHTML)
         titleHTML = replaceUnwantedtags(titleHTML)
 
-        preformattedText = preformattedText.replace(/&lt;/g, "<")
-        preformattedText = preformattedText.replace(/&gt;/g, ">")
-        preformattedText = preformattedText.trimEnd();
+        // preformattedText = preformattedText.replace(/&lt;/g, "<")
+        // preformattedText = preformattedText.replace(/&gt;/g, ">")
+        // preformattedText = preformattedText.trimEnd();
 
     let data = {
         ...previousElementData,
