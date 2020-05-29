@@ -1853,10 +1853,10 @@ export class TinyMceEditor extends Component {
 
         } else if (this.props.placeholder === "Enter block code...") {
             toolbar = config.codeListingToolbar;
-        } else if (this.props.placeholder === "Enter Show text" || (this.props && this.props.showHideType && this.props.showHideType == 'revel')) {
+        } else if (this.props.placeholder === "Enter Show text" || (this.props && this.props.showHideType && this.props.showHideType == 'revel')||(this.props.placeholder === "Enter Hide text")) {
             toolbar = config.showHideToolbar
-        } else if (this.props.placeholder === "Enter Hide text") {
-            toolbar = config.hideToolbar
+        // } else if (this.props.placeholder === "Enter Hide text") {
+        //     toolbar = config.showHideToolbar
         } else if (this.props.placeholder == "Type Something..." && this.props.element && this.props.element.type == 'stanza') {
             toolbar = config.poetryStanzaToolbar;
         } else {
