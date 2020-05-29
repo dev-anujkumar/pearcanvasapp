@@ -356,12 +356,28 @@ class Sidebar extends Component {
         //remove all formatting from code
 
         tinymce.$(`[data-id='${this.props.activeElement.elementId}'] .codeNoHighlightLineWrapper span.codeNoHighlightLine`).each(function () {
-            this.innerHTML = this.innerText;
+            // this.innerHTML = this.innerText;
+            let boldTags = this.getElementsByTagName('STRONG');
+            while (boldTags.length) {
+                let innerHTML = boldTags[0].innerHTML;
+                boldTags[0].outerHTML = innerHTML;
+            }
+            let uTags = this.getElementsByTagName('U');
+            while (uTags.length) {
+                let innerHTML = uTags[0].innerHTML;
+                uTags[0].outerHTML = innerHTML;
+            }
+            let emTags = this.getElementsByTagName('EM');
+            while (emTags.length) {
+                let innerHTML = emTags[0].innerHTML;
+                emTags[0].outerHTML = innerHTML;
+            }
         })
         this.setState({
             syntaxHighlightingToggleValue: !this.state.syntaxHighlightingToggleValue
         }, () => {
             this.handleSyntaxHighlightingPopup(false);
+            this.handleBceBlur();
             customEvent.trigger('clearUndoStack');
         })
     }
@@ -387,7 +403,7 @@ class Sidebar extends Component {
         else {
             this.setState({
                 syntaxHighlightingToggleValue: currentToggleValue
-            },() => this.handleBceBlur())
+            }, () => this.handleBceBlur())
         }
     }
 

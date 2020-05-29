@@ -246,8 +246,9 @@ class ElementContainer extends Component {
             subtitleDOM = document.getElementById(`cypress-${index}-1`),
             preformattedText = document.getElementById(`cypress-${index}-2`) ? document.getElementById(`cypress-${index}-2`).innerHTML.trim() : '<span class="codeNoHighlightLine"><br /></span>',
             captionDOM = document.getElementById(`cypress-${index}-3`),
-            creditsDOM = document.getElementById(`cypress-${index}-4`)
+            creditsDOM = document.getElementById(`cypress-${index}-4`);
 
+        preformattedText = `<p>${preformattedText}</p>`
         let titleHTML = titleDOM ? titleDOM.innerHTML : "",
             subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
             captionHTML = captionDOM ? captionDOM.innerHTML : "",
