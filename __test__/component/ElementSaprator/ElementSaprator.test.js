@@ -4,6 +4,19 @@ import ElementSaprator from '../../../src/component/ElementSaprator/'
 import {renderDropdownButtons, addMediaClickHandler} from '../../../src/component/ElementSaprator/ElementSaprator.jsx'
 import config from '../../../src/config/config.js';
 import { mount} from 'enzyme';
+import { Provider } from 'react-redux';
+import configureMockStore from 'redux-mock-store';
+
+const mockStore = configureMockStore();
+
+let initialState = {
+    appStore: {
+        setSlateParent: 'part'
+    }
+}
+
+let store = mockStore(initialState);
+
 const METADATA_ANCHOR = 'metadata-anchor',
 ELEMENT_ASIDE = 'element-aside',
 CONTAINER_INTRO = 'container-introduction',
@@ -84,7 +97,7 @@ describe('Testing ElementSaprator rendering', () => {
         let props = {
             onClickCapture: jest.fn()
         }
-        let Es = mount(<ElementSaprator {...props} esProps = {esProps} permissions ={permissions} elementType = {elementType} firstOne= {firstOne}/>);
+        let Es = mount(<Provider store={store}><ElementSaprator {...props} esProps = {esProps} permissions ={permissions} elementType = {elementType} firstOne= {firstOne}/></Provider>);
     })
 
     it('Render ElementSaprator with props elements_add_remove permission', () => {
@@ -94,7 +107,7 @@ describe('Testing ElementSaprator rendering', () => {
         let props = {
             onClickCapture: jest.fn()
         }
-        let Es = mount(<ElementSaprator {...props} esProps = {esProps} permissions ={permissions} elementType = {elementType} firstOne= {firstOne}/>);
+        let Es = mount(<Provider store={store}><ElementSaprator {...props} esProps = {esProps} permissions ={permissions} elementType = {elementType} firstOne= {firstOne}/></Provider>);
     })
 });
 describe('Testing functions', () => {
@@ -127,7 +140,7 @@ describe('Testing functions', () => {
             onClickCapture: jest.fn()
         }
         
-        tempWrapper = mount(<ElementSaprator esProps={esProps} {...props}/>)
+        tempWrapper = mount(<Provider store={store}><ElementSaprator esProps={esProps} {...props}/></Provider>)
         tempWrapper.setProps({
             toggleSplitSlatePopup : true,
             showAudioSplitPopup: jest.fn()
@@ -145,7 +158,7 @@ describe('Testing functions', () => {
             onClickCapture: jest.fn(),
             openAudio: true
         }
-        tempWrapper = mount(<ElementSaprator {...props} esProps={esProps} permissions ={permissions} elementType = {elementType} firstOne= {firstOne}/>)
+        tempWrapper = mount(<Provider store={store}><ElementSaprator {...props} esProps={esProps} permissions ={permissions} elementType = {elementType} firstOne= {firstOne}/></Provider>)
         tempWrapper.setProps({
             toggleSplitSlatePopup : jest.fn(),
             showAudioSplitPopup: jest.fn()
@@ -160,7 +173,7 @@ describe('Testing functions', () => {
         let props = {
             onClickCapture: jest.fn(),
         }
-        tempWrapper = mount(<ElementSaprator {...props} esProps={esProps} permissions ={permissions} elementType = {elementType} firstOne= {firstOne}/>)
+        tempWrapper = mount(<Provider store={store}><ElementSaprator {...props} esProps={esProps} permissions ={permissions} elementType = {elementType} firstOne= {firstOne}/></Provider>)
         tempWrapper.setProps({
             toggleSplitSlatePopup : jest.fn(),
             showAudioSplitPopup: jest.fn()
@@ -183,7 +196,7 @@ describe('Testing functions', () => {
         document.body.appendChild(samplediv);
         document.body.appendChild(samplediv1);
 
-        tempWrapper = mount(<ElementSaprator esProps={esProps} {...props}/>)
+        tempWrapper = mount(<Provider store={store}><ElementSaprator esProps={esProps} {...props}/></Provider>)
         tempWrapper.setProps({
             toggleSplitSlatePopup : true,
             showAudioSplitPopup: jest.fn()
@@ -199,7 +212,7 @@ describe('Testing functions', () => {
         let props = {
             onClickCapture: jest.fn(),
         }
-        tempWrapper = mount(<ElementSaprator {...props} esProps={esProps} permissions ={permissions} elementType = {elementType} firstOne= {firstOne}/>)
+        tempWrapper = mount(<Provider store={store}><ElementSaprator {...props} esProps={esProps} permissions ={permissions} elementType = {elementType} firstOne= {firstOne}/></Provider>)
         tempWrapper.setProps({
             toggleSplitSlatePopup : jest.fn(),
             showAudioSplitPopup: jest.fn()
