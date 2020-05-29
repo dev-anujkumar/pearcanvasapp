@@ -756,7 +756,9 @@ class Interactive extends React.Component {
                 
             }
             that.setState({itemID : itemId,
-                imagePath:posterImage.path 
+                imagePath:posterImage.path,
+                itemParentID:citeTdxObj.id,
+                interactivetitle:citeTdxObj.title
                })
           
                that.props.updateFigureData(figureData, that.props.index, that.props.elementId,()=>{               
