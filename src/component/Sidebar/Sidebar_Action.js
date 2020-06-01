@@ -342,7 +342,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         if (config.tcmStatus) {
             let elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza'];
             if (elementType.indexOf(oldElementData.type) !== -1) {
-                prepareDataForConversionTcm(res.data.id, getState, dispatch);
+                prepareDataForConversionTcm(oldElementData.id, getState, dispatch,res.data.id);
             }
         }   
         dispatch({
@@ -365,17 +365,28 @@ catch (error) {
     dispatch({type: ERROR_POPUP, payload:{show: true}})
 }
 }
-function prepareDataForConversionTcm(updatedDataID, getState, dispatch) {
+function prepareDataForConversionTcm(updatedDataID, getState, dispatch,versionid) {
     const tcmData = getState().tcmReducer.tcmSnapshot;
-    for (let i = 0; i < tcmData.length; i++) {
-        if (tcmData[i].elemURN.includes('urn:pearson:work') && tcmData[i].elemURN.indexOf(updatedDataID) !== -1) {
-            tcmData[i]["elemURN"] = updatedDataID
-            tcmData[i]["txCnt"] = tcmData[i]["txCnt"] !== 0 ? tcmData[i]["txCnt"] : 1
-            tcmData[i]["feedback"] = tcmData[i]["feedback"] !== null ? tcmData[i]["feedback"] : null
-            tcmData[i]["isPrevAcceptedTxAvailable"] = tcmData[i]["isPrevAcceptedTxAvailable"] ? tcmData[i]["isPrevAcceptedTxAvailable"] : false
-            break;
+    if(versionid && updatedDataID !== versionid){
+        tcmData.push({
+            "txCnt": 1,
+            "isPrevAcceptedTxAvailable": false,
+            "elemURN": versionid,
+            "feedback": null
+        })
+    }
+    else{
+        for (let i = 0; i < tcmData.length; i++) {
+            if (tcmData[i].elemURN.includes('urn:pearson:work') && tcmData[i].elemURN.indexOf(updatedDataID) !== -1) {
+                tcmData[i]["elemURN"] = updatedDataID
+                tcmData[i]["txCnt"] = tcmData[i]["txCnt"] !== 0 ? tcmData[i]["txCnt"] : 1
+                tcmData[i]["feedback"] = tcmData[i]["feedback"] !== null ? tcmData[i]["feedback"] : null
+                tcmData[i]["isPrevAcceptedTxAvailable"] = tcmData[i]["isPrevAcceptedTxAvailable"] ? tcmData[i]["isPrevAcceptedTxAvailable"] : false
+                break;
+            }
         }
     }
+    
     if (tcmData) {
         sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });
     }
