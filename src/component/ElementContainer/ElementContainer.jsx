@@ -99,6 +99,7 @@ class ElementContainer extends Component {
         } else if (newProps.element.type == "openerelement") {
             this.setState({
                 borderToggle: 'active',
+                btnClassName: 'activeTagBgColor'
             })
         }
         else {

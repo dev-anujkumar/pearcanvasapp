@@ -108,10 +108,10 @@
 }
 .opener-element-container .select-image-global-button{
     background-color: #ffffff;
-    padding: 8px 16px;
+    padding: 8px 12px;
     margin: 12px 0;
     cursor: pointer;
-    width: 208px; 
+    width: 240px; 
     height: 34px;  
     border-radius: 4px;
     box-shadow: 0 2px 1px 0 rgba(0, 0, 0, 0.3);
@@ -126,9 +126,9 @@
     margin-right: auto;
 }
 .opener-element-container .select-image-alresco-button{
-    padding: 8px 16px;
+    padding: 8px 12px;
     cursor: pointer;
-    width: 208px;
+    width: 240px;
     height: 34px;  
     border-radius: 4px;
     box-shadow: 0 2px 1px 0 rgba(0, 0, 0, 0.3);
@@ -180,7 +180,7 @@
     z-index: 1;
     right: 21px;
     top:143px;
-    width: 213px;
+    width: 260px;
     text-align:center;
     margin: 0;
     padding: 8px 0;

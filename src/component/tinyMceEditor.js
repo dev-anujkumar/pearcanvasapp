@@ -1485,6 +1485,9 @@ export class TinyMceEditor extends Component {
                         this.editorRef.current.style.caretColor = 'transparent';
                         this.editorRef.current.focus();
                     }
+                    else {
+                        this.props.handleEditorFocus("", null, null)
+                    }
                 }
 
 
@@ -1652,10 +1655,10 @@ export class TinyMceEditor extends Component {
             else {
                 toolbar = config.codeListingToolbarEnabled;
             }
-        } else if (this.props.placeholder === "Enter Show text" || this.props.placeholder === "Enter revel text") {
+        } else if (this.props.placeholder === "Enter Show text" || (this.props && this.props.showHideType && this.props.showHideType == 'revel')||(this.props.placeholder === "Enter Hide text")) {
             toolbar = config.showHideToolbar
-        } else if (this.props.placeholder === "Enter Hide text") {
-            toolbar = config.hideToolbar
+        // } else if (this.props.placeholder === "Enter Hide text") {
+        //     toolbar = config.showHideToolbar
         } else if (this.props.placeholder == "Type Something..." && this.props.element && this.props.element.type == 'stanza') {
             toolbar = config.poetryStanzaToolbar;
         } else {

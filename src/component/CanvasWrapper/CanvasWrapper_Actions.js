@@ -231,6 +231,8 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
 
 		if(slateData.data && slateData.data[newVersionManifestId] && slateData.data[newVersionManifestId].type === "popup"){
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
+            config.slateManifestURN= Object.values(slateData.data)[0].id
+            manifestURN= Object.values(slateData.data)[0].id
             config.isPopupSlate = true;
             config.savingInProgress = false;
 			if (config.slateManifestURN === Object.values(slateData.data)[0].id) {

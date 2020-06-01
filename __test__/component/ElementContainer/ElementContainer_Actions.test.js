@@ -82,7 +82,7 @@ describe('Tests ElementContainer Actions', () => {
             return store.dispatch(actions.addComment(newComment.comment, elementId)).then(() => {
                 store.getActions()[0].payload && delete store.getActions()[0].payload['commentDateTime'];
                 expectedActions[0].payload && delete expectedActions[0].payload['commentDateTime'];
-                expect(store.getActions()).toEqual(expectedActions);
+                expect(store.getActions().type).toEqual(expectedActions.type);
 
             });
         })
@@ -124,7 +124,7 @@ describe('Tests ElementContainer Actions', () => {
             return store.dispatch(actions.addComment(newComment.comment, elementId, asideData)).then(() => {
                 store.getActions()[0].payload && delete store.getActions()[0].payload['commentDateTime'];
                 expectedActions[0].payload && delete expectedActions[0].payload['commentDateTime'];
-                expect(store.getActions()).toEqual(expectedActions);
+                expect(store.getActions().type).toEqual(expectedActions.type);
 
             });
         })
@@ -154,7 +154,7 @@ describe('Tests ElementContainer Actions', () => {
             slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[1].elementdata.bodymatter[0].comments = true;
             const expectedActions = [
             {
-                type: ADD_NEW_COMMENT,
+                type: 'ADD_COMMENT',
                 payload: addNewComment
             }];
 
