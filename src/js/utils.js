@@ -1,3 +1,5 @@
+import { func } from "prop-types";
+
 var _ = require("lodash");
 
 export const utils = {
@@ -260,7 +262,7 @@ export const spanHandlers = {
                 if (key === 46) {
                     e.preventDefault();
                 } else {
-                    if(currentElement.previousSibling.innerHTML != '<br>') {
+                    if (currentElement.previousSibling.innerHTML != '<br>') {
                         currentElement.previousSibling.innerHTML += '&nbsp;';
                     }
                 }
@@ -332,13 +334,13 @@ export const spanHandlers = {
             }
         }
     },
-    handleSelectAllRemoveFormatting: (id, parentTag, childClass) =>{
+    handleSelectAllRemoveFormatting: (id, parentTag, childClass) => {
         tinymce.$(`${parentTag}#cypress-${id} .${childClass}`).each(function () {
             this.innerHTML = this.innerText;
         })
     },
 
-    splitOnTag: function(bound, cutElement) {
+    splitOnTag: function (bound, cutElement) {
         for (let parent = cutElement.parentNode; bound != parent; parent = grandparent) {
             let right = parent.cloneNode(false);
             while (cutElement.nextSibling)
@@ -349,7 +351,7 @@ export const spanHandlers = {
         }
     },
 
-    setContentOfSpan: function(childNodes) {
+    setContentOfSpan: function (childNodes) {
         for (let index = 0; index < childNodes.length; index++) {
             let innerNodes = childNodes[index].childNodes;
             if (innerNodes) {
@@ -372,7 +374,7 @@ export const spanHandlers = {
         }
     },
 
-    setContentOfBlankChild: function(childNodes) {
+    setContentOfBlankChild: function (childNodes) {
         for (let index = 0; index < childNodes.length; index++) {
             let innerNodes = childNodes[index].childNodes;
             if (innerNodes) {
@@ -399,7 +401,7 @@ export const spanHandlers = {
         }
     },
 
-    addAndSplitSpan: function(editor, elementId, parentTag, childClass) {
+    addAndSplitSpan: function (editor, elementId, parentTag, childClass) {
         let position = 'next';
         let elementSearch = editor.selection.getNode();
         if (editor.selection.getNode().tagName.toLowerCase() !== 'span' || editor.selection.getNode().className.toLowerCase() !== childClass) {
@@ -411,7 +413,7 @@ export const spanHandlers = {
                 if (editor.selection.getRng().startOffset === 0) {
                     elementSearch.parentNode.insertBefore(elm, elementSearch);
                     editor.selection.setCursorLocation(elementSearch.previousSibling, 0);
-                    if(elementSearch.innerHTML === '<br>') {
+                    if (elementSearch.innerHTML === '<br>') {
                         position = 'current';
                     } else {
                         position = 'previous';
@@ -510,5 +512,75 @@ export const spanHandlers = {
                 }
             });
         }
+    },
+
+    pasteSplit: function (element) {
+        let commentNodes = this.findComments(element);
+        for (let index = 0; index < commentNodes.length; index++) {
+            this.splitOnTag(element.parentNode, commentNodes[index]);
+        }
+        commentNodes = this.findComments(element.parentNode);
+        for (let index = 0; index < commentNodes.length; index++) {
+            if (commentNodes[index].nextSibling) {
+                if (commentNodes[index].nextSibling.textContent == '') {
+                    if (commentNodes[index].nextSibling.innerHTML == '') {
+                        commentNodes[index].nextSibling.innerHTML = '<br/>';
+                    } else {
+                        let childNodes = commentNodes[index].nextSibling.childNodes;
+                        if (childNodes.length) {
+                            if (childNodes.length > 1) {
+                                this.setContentOfSpan(childNodes);
+                            } else {
+                                if (childNodes[0].tagName) {
+                                    this.setContentOfSpan(childNodes);
+                                } else {
+                                    commentNodes[index].nextSibling.innerHTML = '<br/>';
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    let childNodes = commentNodes[index].nextSibling.childNodes;
+                    this.setContentOfBlankChild(childNodes)
+                }
+            }
+            if (commentNodes[index].previousSibling) {
+                if (commentNodes[index].previousSibling.textContent == '') {
+                    if (commentNodes[index].previousSibling.innerHTML == '') {
+                        commentNodes[index].previousSibling.innerHTML = '<br/>';
+                    } else {
+                        let childNodes = commentNodes[index].previousSibling.childNodes;
+                        if (childNodes.length) {
+                            if (childNodes.length > 1) {
+                                this.setContentOfSpan(childNodes);
+                            } else {
+                                if (childNodes[0].tagName) {
+                                    this.setContentOfSpan(childNodes);
+                                } else {
+                                    commentNodes[index].previousSibling.innerHTML = '<br/>';
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    let childNodes = commentNodes[index].previousSibling.childNodes;
+                    this.setContentOfBlankChild(childNodes)
+                }
+            }
+        }
+        element.parentNode.innerHTML = element.parentNode.innerHTML.replace(/<\!--.*?-->/g, "");
+    },
+
+    findComments : function(element) {
+        var elemArr = [];
+        for(var index = 0; index < element.childNodes.length; index++) {
+            var node = element.childNodes[index];
+            if(node.nodeType === 8) {
+                elemArr.push(node);
+            } else {
+                elemArr.push.apply(elemArr, this.findComments(node));
+            }
+        }
+        return elemArr;
     }
 }

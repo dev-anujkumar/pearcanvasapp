@@ -550,7 +550,7 @@ export class TinyMceEditor extends Component {
             if (activeElement.nodeName === "CODE") {
                 let text = e.clipboardData.getData("text/plain");
                 text = String(text).replace(/</g, '&lt;').replace(/>/g, '&gt;');
-                text = String(text).replace(/\r|\n/g, '<br>');
+                text = String(text).replace(/\r|\n/g, '<!--break-->');
                 text = String(text).replace(/ /g, '&nbsp;');
                 this.copyContent = text;
             }
@@ -1024,94 +1024,22 @@ export class TinyMceEditor extends Component {
 
     pastePostProcess = (plugin, args) => {
         if (this.props.element && this.props.element.figuretype && this.props.element.figuretype === "codelisting") {
-            let paste_content = args.node.innerHTML;
-            let tempArr = paste_content.split("<br>");
-            let nodesFragment = document.createDocumentFragment();
-            for (let index = 0; index < tempArr.length; index++) {
-                let newSpan = document.createElement('span');
-                newSpan.innerHTML = tempArr[index];
-                newSpan.className = 'codeNoHighlightLineOne';
-                nodesFragment.appendChild(newSpan);
-            }
-            args.node.innerHTML = "";
-            args.node.appendChild(nodesFragment);
             let self = this;
             setTimeout(() => { self.makeReplace(); }, 0);
         }
     }
 
     makeReplace = () => {
-        let innerSpans = document.getElementsByClassName('codeNoHighlightLineOne');
-        if (innerSpans.length) {
-            let parentNode = innerSpans[0].parentNode;
-            let elem = innerSpans[0];
-            if (parentNode.nodeName !== 'SPAN' && parentNode.className !== 'codeNoHighlightLine') {
-                while (elem.parentNode.className !== 'codeNoHighlightLine' && elem.parentNode.nodeName.toLowerCase() != 'span') {
-                    elem = elem.parentNode;
-                }
-                parentNode = elem.parentElement;
-            }
-            parentNode.className = "TempSpan";
-            let boldTags = parentNode.getElementsByTagName('STRONG');
-            while (boldTags.length) {
-                let innerHTML = boldTags[0].innerHTML;
-                boldTags[0].outerHTML = innerHTML;
-            }
-            let uTags = parentNode.getElementsByTagName('U');
-            while (uTags.length) {
-                let innerHTML = uTags[0].innerHTML;
-                uTags[0].outerHTML = innerHTML;
-            }
-            let emTags = parentNode.getElementsByTagName('EM');
-            while (emTags.length) {
-                let innerHTML = emTags[0].innerHTML;
-                emTags[0].outerHTML = innerHTML;
-            }
-            for (let index = 0; index < innerSpans.length; index++) {
-                innerSpans[index].className = 'codeNoHighlightLine';
-            }
-            let startText = '';
-            let endText = '';
-            let textNode = [];
-            let startFlag = true;
-            let element = document.getElementsByClassName('TempSpan')[0];
-            for (let index = 0; index < element.childNodes.length; ++index) {
-                if (element.childNodes[index].nodeType === Node.TEXT_NODE) {
-                    textNode.push(element.childNodes[index]);
-                    if (startFlag) {
-                        startText += element.childNodes[index].textContent;
-                    } else {
-                        endText += element.childNodes[index].textContent;
-                    }
-                } else {
-                    startFlag = false;
-                }
-            }
-            while (textNode.length) {
-                if (textNode[0].parentNode) {
-                    textNode[0].parentNode.removeChild(textNode[0]);
-                }
-                textNode.splice(0, 1);
-            }
-            let allSpans = document.getElementsByClassName('TempSpan')[0].getElementsByClassName('codeNoHighlightLine');
-            if (allSpans.length) {
-                if (startText != '') {
-                    allSpans[0].innerHTML = startText + allSpans[0].innerHTML;
-                }
-                if (endText != '') {
-                    allSpans[allSpans.length - 1].innerHTML = allSpans[allSpans.length - 1].innerHTML + endText;
-                }
-            }
-            let innerHTML = document.getElementsByClassName('TempSpan')[0].innerHTML;
-            document.getElementsByClassName('TempSpan')[0].outerHTML = innerHTML;
-            
+        let elementSearch = tinyMCE.activeEditor.selection.getNode();
+        if (tinyMCE.activeEditor.selection.getNode().tagName.toLowerCase() !== 'span' && tinyMCE.activeEditor.selection.getNode().className.toLowerCase() !== 'codeNoHighlightLine') {
+            elementSearch = tinyMCE.activeEditor.selection.getNode().closest(`.codeNoHighlightLine`);
         }
-        let remainSpans = document.getElementsByClassName('codeNoHighlightLineOne');
-        while (remainSpans.length) {
-            remainSpans[0].parentNode.removeChild(remainSpans[0]);
+        if (elementSearch) {
+            spanHandlers.pasteSplit(elementSearch)
+            spanHandlers.handleExtraTags(this.props.elementId, 'code', 'codeNoHighlightLine');
+            //tinymce.activeEditor.undoManager.clear();
         }
-        spanHandlers.handleExtraTags(this.props.elementId, 'code', 'codeNoHighlightLine');
-        tinymce.activeEditor.undoManager.clear();
+
     }
 
     /**
@@ -1655,10 +1583,10 @@ export class TinyMceEditor extends Component {
             else {
                 toolbar = config.codeListingToolbarEnabled;
             }
-        } else if (this.props.placeholder === "Enter Show text" || (this.props && this.props.showHideType && this.props.showHideType == 'revel')||(this.props.placeholder === "Enter Hide text")) {
+        } else if (this.props.placeholder === "Enter Show text" || (this.props && this.props.showHideType && this.props.showHideType == 'revel') || (this.props.placeholder === "Enter Hide text")) {
             toolbar = config.showHideToolbar
-        // } else if (this.props.placeholder === "Enter Hide text") {
-        //     toolbar = config.showHideToolbar
+            // } else if (this.props.placeholder === "Enter Hide text") {
+            //     toolbar = config.showHideToolbar
         } else if (this.props.placeholder == "Type Something..." && this.props.element && this.props.element.type == 'stanza') {
             toolbar = config.poetryStanzaToolbar;
         } else {
