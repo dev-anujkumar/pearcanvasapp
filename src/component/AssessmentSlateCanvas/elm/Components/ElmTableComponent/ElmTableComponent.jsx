@@ -299,7 +299,6 @@ class ElmTableComponent extends Component {
             this.setState({ 
                 sortIcon: elmSortDown, 
                 tableValue: tableDataSorting(this.state.openItemTable,this.state.tableValue,'desc'),
-                // tableValue: this.state.tableValue.sort(this.dynamicSort("title")).reverse(), 
                 addFlag: false, 
                 isActive: null, 
                 sortFlag: true 
@@ -309,7 +308,6 @@ class ElmTableComponent extends Component {
             this.setState({ 
                 sortIcon: elmSortUp, 
                 tableValue:  tableDataSorting(this.state.openItemTable,this.state.tableValue,'asc'),
-                // tableValue: this.state.tableValue.sort(this.dynamicSort("title")).reverse(),  
                 addFlag: false, 
                 isActive: null, 
                 sortFlag: false });

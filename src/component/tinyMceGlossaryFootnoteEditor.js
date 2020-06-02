@@ -46,6 +46,7 @@ export class ReactEditor extends React.Component {
           }
         });
         editor.on('init', (e) => {
+          console.log('init GF',e)
             if(document.querySelector('div.glossary-toolbar-wrapper')){
               setFormattingToolbar('disableTinymceToolbar')
               setFormattingToolbar('removeGlossaryFootnoteSuperscript')
@@ -54,12 +55,13 @@ export class ReactEditor extends React.Component {
           });      
       },
       init_instance_callback: (editor) => {
+        console.log('init GF callback',editor)
         if (hasReviewerRole() && !hasProjectPermission('elements_add_remove')) {        // when user doesn't have edit permission
           if (editor && editor.id) {
             document.getElementById(editor.id).setAttribute('contenteditable', false)
           }
         }
-        editor.on('Change', (e) => { this.editorOnChange(e, editor) });
+        editor.on('Change', (e) => {  console.log(' GF Change',e), this.editorOnChange(e, editor) });
         if(document.querySelector('div.glossary-toolbar-wrapper')){
           setFormattingToolbar('disableTinymceToolbar')
           setFormattingToolbar('removeTinymceSuperscript')
@@ -293,6 +295,7 @@ export class ReactEditor extends React.Component {
         _isEditorPlaced = true;
       }
     }
+    console.log('GF Didmount')
     setFormattingToolbar('disableTinymceToolbar')
     if (!_isEditorPlaced) {
       this.editorRef.current.focus();
@@ -310,6 +313,7 @@ export class ReactEditor extends React.Component {
   }
 
   componentDidUpdate() {
+    console.log('GF Didupdate')
     let tinyMCEInstancesNodes = document.getElementsByClassName('tox tox-tinymce tox-tinymce-inline');
     setFormattingToolbar('disableTinymceToolbar')
     if(tinyMCEInstancesNodes.length>1){
