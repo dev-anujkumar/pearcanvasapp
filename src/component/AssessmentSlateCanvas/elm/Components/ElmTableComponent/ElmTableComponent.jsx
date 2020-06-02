@@ -316,30 +316,6 @@ class ElmTableComponent extends Component {
         }
     }
 
-    /*** @description - This function is to sort table data based on parameters
-         * @param property- sorting criteria
-         * @param event- event triggered
-        */
-    dynamicSort = (property, event) => {
-        let sortOrder = 1;
-        if (property[0] === "-") {
-            sortOrder = -1;
-            property = property.substr(1);
-        }
-        return (a, b) => {
-            let result;
-            let first = (a[property] ? a[property] : a.urn).toLowerCase();
-            let second = (b[property] ? b[property] : b.urn).toLowerCase();
-            if (this.state.sortFlag) {
-                result = (first < second) ? -1 : (first > second) ? 1 : 0;
-            }
-            else {
-                result = (first > second) ? -1 : 0;
-            }
-            return result * sortOrder;
-        }
-    }
-
     /*** @description - This function is to show table data based on parameters
          * @param e- event triggered
          * @param versionUrn- version urn of current item selected
