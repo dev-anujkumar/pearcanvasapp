@@ -184,6 +184,7 @@ export const dynamicSort = (property,sortByRelevance) => {
 /*** @description - This is function to dynamically sort the table data based on multiple properties
     * Here the number of arguments is dynamic.
     * @arguments is an array that consists of properties in sequence in which the sorting is to be applied
+    * In case of search results an extra argument is passed to sort search results based on relevance
   */
 function dynamicSortMultiple() {
 
