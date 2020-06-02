@@ -30,6 +30,7 @@ export const REMOVE_LINKED_AUDIO = "Do you want to remove the linked Audio Book 
 export const SPLIT_SLATE_WITH_ADDED_AUDIO = "There is an audio file linked with this slate. If you want to split the slate, you will need to re-do the narrative audio file for this slate and the newly generated split slate. Do you want to proceed with Split action?"
 export const NOT_AUDIO_ASSET = "Selected alfresco media type is not an Audio."
 export const LOCK_DURATION = 900000   //900000ms = 15mins
+export const SYNTAX_HIGHLIGHTING = "Turning auto-highlighting on will clear any formating in this content. Are you sure?"
 
 export const ERROR_CREATING_GLOSSARY = "You can not apply Glossary over multiple lines of stanza!!!"
 export const ERROR_CREATING_ASSETPOPOVER = "You can not apply Asset PopOver over multiple lines of stanza!!!"

@@ -10,6 +10,10 @@ import { setCurrentModule } from '../ElementMetaDataAnchor/ElementMetaDataAnchor
 import './../../styles/Sidebar/Sidebar.css';
 import { hasReviewerRole } from '../../constants/utility.js'
 import config from '../../../src/config/config.js';
+import PopUp from '../PopUp/index.js';
+import { SYNTAX_HIGHLIGHTING } from '../SlateWrapper/SlateWrapperConstants.js';
+import { showBlocker,hideBlocker } from '../../js/toggleLoader';
+import { customEvent } from '../../js/utils.js';
 
 class Sidebar extends Component {
     constructor(props) {
@@ -22,6 +26,7 @@ class Sidebar extends Component {
         let labelText = elementTypeList[primaryFirstOption].subtype[secondaryFirstOption].labelText;
         let numbered = this.props.activeElement.numbered || true;
         let startNumber = this.props.activeElement.startNumber || "1";
+        let syntaxhighlighting =  this.props.syntaxhighlighting || true;
         
         this.state = {
             elementDropdown: '',
@@ -32,6 +37,8 @@ class Sidebar extends Component {
             activeLabelText: labelText,
             attrInput: "",
             bceToggleValue: numbered,
+            syntaxHighlightingToggleValue: syntaxhighlighting,
+            showSyntaxHighlightingPopup : false,
             bceNumberStartFrom : startNumber
         };
     }
@@ -41,10 +48,12 @@ class Sidebar extends Component {
             let elementDropdown = prevState.elementDropdown;
             let numberStartFrom = prevState.bceNumberStartFrom;
             let bceToggle = prevState.bceToggleValue;
+            let bceSyntaxHighlight = prevState.syntaxHighlightingToggleValue;
             if(nextProps.activeElement.elementId !== prevState.activeElementId) {
                 elementDropdown = '';
                 numberStartFrom = nextProps.activeElement.startNumber || "1";
-                bceToggle = nextProps.activeElement.numbered || true
+                bceToggle = nextProps.activeElement.numbered || true;
+                bceSyntaxHighlight = nextProps.activeElement.syntaxhighlighting || true;
             }
             
             return {
@@ -55,7 +64,8 @@ class Sidebar extends Component {
                 activeSecondaryOption: nextProps.activeElement.secondaryOption,
                 activeLabelText: nextProps.activeElement.tag,
                 bceNumberStartFrom : numberStartFrom,
-                bceToggleValue : bceToggle
+                bceToggleValue : bceToggle,
+                syntaxHighlightingToggleValue : bceSyntaxHighlight
             };
         }
 
@@ -298,6 +308,7 @@ class Sidebar extends Component {
                 if( attrNode ){
                     attrNode.setAttribute("numbered", this.state.bceToggleValue)
                     attrNode.setAttribute("startNumber", this.state.bceNumberStartFrom)
+                    attrNode.setAttribute("syntaxhighlighting", this.state.syntaxHighlightingToggleValue)
                 }
                 attributions = <div>
                     <div className="panel_show_module">
@@ -339,6 +350,61 @@ class Sidebar extends Component {
         this.setState({
             bceToggleValue : !this.state.bceToggleValue
         }, () => this.handleBceBlur() )
+    }
+
+    handleSyntaxHighligtingRemove = () => {
+        //remove all formatting from code
+
+        tinymce.$(`[data-id='${this.props.activeElement.elementId}'] .codeNoHighlightLineWrapper span.codeNoHighlightLine`).each(function () {
+            // this.innerHTML = this.innerText;
+            let boldTags = this.getElementsByTagName('STRONG');
+            while (boldTags.length) {
+                let innerHTML = boldTags[0].innerHTML;
+                boldTags[0].outerHTML = innerHTML;
+            }
+            let uTags = this.getElementsByTagName('U');
+            while (uTags.length) {
+                let innerHTML = uTags[0].innerHTML;
+                uTags[0].outerHTML = innerHTML;
+            }
+            let emTags = this.getElementsByTagName('EM');
+            while (emTags.length) {
+                let innerHTML = emTags[0].innerHTML;
+                emTags[0].outerHTML = innerHTML;
+            }
+        })
+        this.setState({
+            syntaxHighlightingToggleValue: !this.state.syntaxHighlightingToggleValue
+        }, () => {
+            this.handleSyntaxHighlightingPopup(false);
+            this.handleBceBlur();
+            customEvent.trigger('clearUndoStack');
+        })
+    }
+
+    handleSyntaxHighlightingPopup = (value) => {
+        if(value){
+            showBlocker();
+        }
+        else {
+            hideBlocker()
+        }
+        this.props.showCanvasBlocker(value);
+        this.setState({
+            showSyntaxHighlightingPopup: value
+        })
+    }
+
+    handleSyntaxHighlightingToggle = () => {
+        let currentToggleValue = !this.state.syntaxHighlightingToggleValue
+        if (currentToggleValue) {
+            this.handleSyntaxHighlightingPopup(true);
+        }
+        else {
+            this.setState({
+                syntaxHighlightingToggleValue: currentToggleValue
+            }, () => this.handleBceBlur())
+        }
     }
 
     /**
@@ -392,6 +458,19 @@ class Sidebar extends Component {
 
     }}
 
+    renderSyntaxHighlighting = (tag) => {
+        if (tag === 'BCE') {
+            return <div className="panel_syntax_highlighting">
+                <div className="toggle-value-bce">Syntax-highlighting</div>
+                <label className="switch">
+                    <input type="checkbox" checked={this.state.syntaxHighlightingToggleValue} onClick={!hasReviewerRole() && this.handleSyntaxHighlightingToggle} />
+                    <span className="slider round"></span>
+                </label>
+            </div>
+        }
+        return null
+    }
+
     renderLanguageLabel = (tag) => {
         if (tag === 'BCE') {
             return <div className='lang-lbl'>Language<label>*</label></div>
@@ -404,9 +483,11 @@ class Sidebar extends Component {
             <div className="canvas-sidebar">
                 <div className="canvas-sidebar-heading">Settings</div>
                 {this.primaryOption()}
+                {this.renderSyntaxHighlighting(this.props.activeElement && this.props.activeElement.tag || '')}
                 {this.renderLanguageLabel(this.props.activeElement && this.props.activeElement.tag || '')}
                 {this.secondaryOption()}
                 {this.attributions()}
+                {this.state.showSyntaxHighlightingPopup && <PopUp confirmCallback={this.handleSyntaxHighligtingRemove} togglePopup={(value)=>{this.handleSyntaxHighlightingPopup(value)}} dialogText={SYNTAX_HIGHLIGHTING} slateLockClass="lock-message" sytaxHighlight={true}/>}
             </div>
         );
     }

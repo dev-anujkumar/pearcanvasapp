@@ -245,10 +245,11 @@ class ElementContainer extends Component {
     figureDifferenceBlockCode = (index, previousElementData) => {
         let titleDOM = document.getElementById(`cypress-${index}-0`),
             subtitleDOM = document.getElementById(`cypress-${index}-1`),
-            preformattedText = document.getElementById(`cypress-${index}-2`) ? document.getElementById(`cypress-${index}-2`).innerText.trim() : "",
+            preformattedText = document.getElementById(`cypress-${index}-2`) ? document.getElementById(`cypress-${index}-2`).innerHTML.trim() : '<span class="codeNoHighlightLine"><br /></span>',
             captionDOM = document.getElementById(`cypress-${index}-3`),
-            creditsDOM = document.getElementById(`cypress-${index}-4`)
+            creditsDOM = document.getElementById(`cypress-${index}-4`);
 
+        preformattedText = `<p>${preformattedText}</p>`
         let titleHTML = titleDOM ? titleDOM.innerHTML : "",
             subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
             captionHTML = captionDOM ? captionDOM.innerHTML : "",
@@ -257,8 +258,12 @@ class ElementContainer extends Component {
         let getAttributeBCE = document.querySelector(`div.element-container.active[data-id="${previousElementData.id}"] div.blockCodeFigure`)
         let startNumber = getAttributeBCE && getAttributeBCE.getAttribute("startnumber")
         let isNumbered = getAttributeBCE && getAttributeBCE.getAttribute("numbered")
+        let isSyntaxhighlighted = getAttributeBCE && getAttributeBCE.getAttribute("syntaxhighlighting")
         if (typeof (isNumbered) == "string") {
             isNumbered = JSON.parse(isNumbered)
+        }
+        if (typeof (isSyntaxhighlighted) == "string") {
+            isSyntaxhighlighted = JSON.parse(isSyntaxhighlighted)
         }
         captionHTML = captionHTML.match(/<p>/g) ? captionHTML : `<p>${captionHTML}</p>`
         creditsHTML = creditsHTML.match(/<p>/g) ? creditsHTML : `<p>${creditsHTML}</p>`
@@ -288,9 +293,10 @@ class ElementContainer extends Component {
             subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
             captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
             creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
-            preformattedText !== this.removeClassesFromHtml(previousElementData.figuredata.preformattedtext.join('\n').trim()) ||
+            preformattedText !== this.removeClassesFromHtml(previousElementData.html.preformattedtext) ||
             Number(startNumber) !== Number(previousElementData.figuredata.startNumber) ||
-            isNumbered !== previousElementData.figuredata.numbered
+            isNumbered !== previousElementData.figuredata.numbered || 
+            isSyntaxhighlighted !== previousElementData.figuredata.syntaxhighlighting
         );
     }
 
