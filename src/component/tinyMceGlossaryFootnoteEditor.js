@@ -59,7 +59,7 @@ export class ReactEditor extends React.Component {
             document.getElementById(editor.id).setAttribute('contenteditable', false)
           }
         }
-        editor.on('Change', (e) => {  this.editorOnChange(e, editor) });
+        editor.on('Change', (e) => { this.editorOnChange(e, editor) });
         if(document.querySelector('div.glossary-toolbar-wrapper')){
           setFormattingToolbar('disableTinymceToolbar')
           setFormattingToolbar('removeTinymceSuperscript')
