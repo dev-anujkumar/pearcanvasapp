@@ -1037,7 +1037,7 @@ export class TinyMceEditor extends Component {
         if (elementSearch) {
             spanHandlers.pasteSplit(elementSearch)
             spanHandlers.handleExtraTags(this.props.elementId, 'code', 'codeNoHighlightLine');
-            //tinymce.activeEditor.undoManager.clear();
+            tinymce.activeEditor.undoManager.clear();
         }
 
     }
