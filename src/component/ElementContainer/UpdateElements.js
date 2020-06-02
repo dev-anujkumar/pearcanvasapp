@@ -203,10 +203,6 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
         subtitleHTML = replaceUnwantedtags(subtitleHTML)
         titleHTML = replaceUnwantedtags(titleHTML)
 
-        // preformattedText = preformattedText.replace(/&lt;/g, "<")
-        // preformattedText = preformattedText.replace(/&gt;/g, ">")
-        // preformattedText = preformattedText.trimEnd();
-
     let data = {
         ...previousElementData,
         title :{
@@ -247,7 +243,7 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
             startNumber: startNumber,
             programlanguage: previousElementData.figuredata.programlanguage,
             syntaxhighlighting: (typeof (isSyntaxhighlighted ) == "string") ? JSON.parse(isSyntaxhighlighted): isSyntaxhighlighted,
-            // preformattedtext: [...preformattedText.split("\n")]
+
         },
         inputType : elementTypes[elementType][primaryOption]['enum'],
         inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']    
