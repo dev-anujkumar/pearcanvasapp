@@ -1063,6 +1063,21 @@ export class TinyMceEditor extends Component {
                 parentNode = elem.parentElement;
             }
             parentNode.className = "TempSpan";
+            let boldTags = parentNode.getElementsByTagName('STRONG');
+            while (boldTags.length) {
+                let innerHTML = boldTags[0].innerHTML;
+                boldTags[0].outerHTML = innerHTML;
+            }
+            let uTags = parentNode.getElementsByTagName('U');
+            while (uTags.length) {
+                let innerHTML = uTags[0].innerHTML;
+                uTags[0].outerHTML = innerHTML;
+            }
+            let emTags = parentNode.getElementsByTagName('EM');
+            while (emTags.length) {
+                let innerHTML = emTags[0].innerHTML;
+                emTags[0].outerHTML = innerHTML;
+            }
             for (let index = 0; index < innerSpans.length; index++) {
                 innerSpans[index].className = 'codeNoHighlightLine';
             }
