@@ -363,7 +363,7 @@ export default {
                     labelText: 'BCE',
                     enum: 'LISP'
                 },
-                'secondary-blockcode-language-objective-c': {
+                'secondary-blockcode-language-objective_c': {
                     text: 'Objective C',
                     labelText: 'BCE',
                     enum: 'OBJECTIVE_C'
