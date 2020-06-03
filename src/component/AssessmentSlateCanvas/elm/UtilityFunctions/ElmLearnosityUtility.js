@@ -146,8 +146,8 @@ const sortSearchResults = (preparedData, searchAssessmentData) => {
 }
 
 /*** @description - This is function to group the table data based on property
-    * @param arrayData- The table data
-    * @param property- property used to group array items into sub-arrays
+    * @param arrayData - The table data
+    * @param property - property used to group array items into sub-arrays
    */
 export const groupTableDataBy = (arrayData, property) => {
     return arrayData.reduce((acc, cur) => {
@@ -157,7 +157,8 @@ export const groupTableDataBy = (arrayData, property) => {
 }
 
 /*** @description - This is function to dynamically sort the table data based on given property
-    * @param property property based on which sorting is applied
+    * @param property - property based on which sorting is applied
+    * @param sortByRelevance - details to sort data based on relevance (for search results)
   */
 export const dynamicSort = (property,sortByRelevance) => {
     var sortOrder = 1;
