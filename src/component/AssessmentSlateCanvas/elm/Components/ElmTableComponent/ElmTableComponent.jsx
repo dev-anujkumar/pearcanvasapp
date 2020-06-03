@@ -455,7 +455,7 @@ class ElmTableComponent extends Component {
         let sortedTableData = [];
         if(tableValue && sortIcon==elmSortUp && !openSearch){
             sortedTableData = tableDataSorting(openItemTable,tableValue,'asc')
-            console.log('Table Data after Sorting :::::',sortedTableData)
+            //console.log('Table Data after Sorting :::::',sortedTableData)
         }else{
             sortedTableData = tableValue
         }
@@ -468,7 +468,7 @@ class ElmTableComponent extends Component {
         let showErrorStatus =((( openItemTable==false && !itemApiStatus && errFlag ) || 
         (openItemTable == true&& (itemErrorFlag ||(itemErrorFlag==false && itemApiStatus!=200)) && itemApiStatus!=200 && !showLoader) ) &&
         (tableValue.length <=0))||(filterResults=='No Results') ? true:false
-        let showTable = tableValue.length ?true:sortedTableData? true:false
+        let showTable = tableValue.length ?true:sortedTableData.length? true:false
   
         // console.log("showErrorStatus",showErrorStatus,"showTable",showTable,"showLoader",showLoader)
 
