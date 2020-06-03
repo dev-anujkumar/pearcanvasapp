@@ -310,17 +310,6 @@ class ElementFigure extends Component {
             if (!preformattedText || preformattedText === '<p></p>'){
                 processedText = '<span class="codeNoHighlightLine"><br /></span>' 
             }
-            // if (preformattedText.length === 1 && preformattedText[0] === "") {
-            //     processedText = `<br />`;
-            // else {
-            //     preformattedText.forEach(function (item) {
-            //         let encodedItem1 = item.replace(/</g, "&lt;")             //Encoded '<' and '>' to prevent TinyMCE to treat them as HTML tags.
-            //         let encodedItem2 = encodedItem1.replace(/>/g, "&gt;")
-            //         if (encodedItem2) {
-            //             processedText += `<span>${encodedItem2}</span>`;
-            //         }
-            //     })
-            // }
 
             /**JSX for Block Code Editor*/
             figureJsx = <div className={`${divClass} blockCodeFigure`}>
