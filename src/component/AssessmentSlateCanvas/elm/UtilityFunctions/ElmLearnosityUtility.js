@@ -83,11 +83,7 @@ export const setStatus = (condition, assessmentFormat, propsValue, stateValue) =
     let tableData = []
     preparedData = []
     if (assessmentType === LEARNOSITY_BETA || assessmentType === LEARNOSITY) {
-        // if (searchAssessmentData.trim() != "") {
             tableData = filterAssessmentsFromApiData(apiData, "", searchAssessmentData)
-        // } else {
-            // tableData = []
-        // }
     }
     sortSearchResults(tableData,searchAssessmentData)
     return tableData
@@ -142,7 +138,6 @@ const sortSearchResults = (preparedData, searchAssessmentData) => {
         key2 = "urn";
     /** Sort search result based on most relevant results */
     preparedData.sort(dynamicSortMultiple(key1, key2, sortByRelevance));
-    // console.log('preparedData',preparedData)
 }
 
 /*** @description - This is function to group the table data based on property
@@ -170,7 +165,7 @@ export const dynamicSort = (property,sortByRelevance) => {
         var result;
         let first = (a[property] ? a[property] : a.urn).toLowerCase();
         let second = (b[property] ? b[property] : b.urn).toLowerCase();
-        if(sortByRelevance && sortByRelevance.status && sortByRelevance.status===true){
+        if (sortByRelevance && sortByRelevance.status && sortByRelevance.status === true && sortByRelevance.sortKeyword && sortByRelevance.sortKeyword.trim() != "") {
             let dataKey = sortByRelevance.sortKeyword.toLowerCase()
             result = (first.indexOf(dataKey) < second.indexOf(dataKey))? -1 : (first.indexOf(dataKey) > second.indexOf(dataKey)) ? 1 : 0;
         }
@@ -237,7 +232,9 @@ export const tableDataSorting = (openInnerTable, tableValue, order) => {
     }
 
     if (openInnerTable == true) {
-        sortedData = typeBasedData && typeBasedData['assessmentItem'] ? typeBasedData['assessmentItem'].sort(dynamicSortMultiple(key1, key2)) : []
+        if(typeBasedData && typeBasedData['assessmentItem']){
+            sortedData = typeBasedData['assessmentItem'].sort(dynamicSortMultiple(key1, key2))
+        }
 
     } else {
         let sortedContainers = [],sortedAssessments = []
@@ -248,7 +245,6 @@ export const tableDataSorting = (openInnerTable, tableValue, order) => {
             sortedAssessments = typeBasedData['assessment'].sort(dynamicSortMultiple(key1, key2))
         }
         sortedData = sortedContainers.concat(sortedAssessments)
-        // console.log('sortedData',sortedData)
     }
 
     return sortedData

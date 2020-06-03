@@ -220,7 +220,6 @@ class ElmTableComponent extends Component {
         if (data.contents && data.contents.bodyMatter && data.contents.bodyMatter.length) {
             data.contents.bodyMatter.forEach((item) => {
                 if (item && ((item.alignments && item.alignments != null) || (item.contents && item.contents != null))) {
-                    // this.preparedData.push({ "type": item.label, "urn": item.versionUrn, "title": item.unformattedTitle ? item.unformattedTitle.en : "" })
                     this.preparedData.push({ "type": item.type, "urn": item.versionUrn, "title": item.unformattedTitle ? item.unformattedTitle.en : "" , "label":item.label?item.label :""})
                 }
             })
@@ -229,7 +228,8 @@ class ElmTableComponent extends Component {
             this.getAssessmentItemsData(data, this.state.activeAssessmentId, this.state.parentTitle)
         } else {
             setParentTitle = (data.unformattedTitle && data.unformattedTitle.en) ? data.unformattedTitle.en : this.state.firstName;
-            return this.setState({ tableValue: this.preparedData, parentUrn: parentUrn, parentTitle: setParentTitle})
+            this.preparedData = tableDataSorting(false, this.preparedData, 'asc')
+            return this.setState({ tableValue: this.preparedData, parentUrn: parentUrn, parentTitle: setParentTitle })
         }
     }
 
@@ -241,9 +241,9 @@ class ElmTableComponent extends Component {
     getAssessmentItemsData = (itemsData, assessmentId, assessmentTitle) => {
         if (itemsData && itemsData.length) {
             itemsData.forEach((item) => {
-                this.preparedData.push({ "type": "assessmentitem", "title": item.name ? item.name : "", "urn": item.versionUrn, "assessmentId": assessmentId })
-                // this.preparedData.push({ "type": "assessmentitem", "urn": item.versionUrn, "assessmentTitle": item.name ? item.name : "", "assessmentId": assessmentId })
+                this.preparedData.push({ "type": "assessmentItem", "title": item.name ? item.name : "", "urn": item.versionUrn, "assessmentId": assessmentId })
             })
+            this.preparedData = tableDataSorting(true, this.preparedData, 'asc')
             return this.setState({ tableValue: this.preparedData, parentTitle: assessmentTitle })
         }
 
@@ -270,7 +270,6 @@ class ElmTableComponent extends Component {
             this.openAssessmentSearchBar(true);
             this.setState({
                 openItemTable: false,
-                // sortIcon: elmSortUp,
                 tableValue:this.searchData,
             })
             
@@ -334,14 +333,12 @@ class ElmTableComponent extends Component {
             })
             this.props.fetchAssessmentItem(this.state.activeAssessmentId)
             this.setParentAssessment(this.state.currentAssessmentSelected.urn, this.state.currentAssessmentSelected.title, this.state.currentAssessmentSelected.previousUrn)
-            // this.setParentAssessment(this.state.currentAssessmentSelected.urn, this.state.currentAssessmentSelected.assessmentTitle, this.state.currentAssessmentSelected.previousUrn)
         }
         else{
             if (this.state.openedFrom === "slateAssessment") {
                 obj = {
                     id: this.state.currentAssessmentSelected.urn,
                     title: this.state.currentAssessmentSelected && this.state.currentAssessmentSelected.title ? this.state.currentAssessmentSelected.title : "PUF assessment",//PCAT-6326-ELM assessment default title added
-                    // title: this.state.currentAssessmentSelected && this.state.currentAssessmentSelected.assessmentTitle ? this.state.currentAssessmentSelected.assessmentTitle : "PUF assessment",//PCAT-6326-ELM assessment default title added
                     assessmentFormat: "puf",
                     usagetype: this.props.activeUsageType
                 }
@@ -369,7 +366,7 @@ class ElmTableComponent extends Component {
         this.setState({
             isActive: index,
         });
-        if ((openedFrom === "singleAssessment" && type === "assessmentitem")|| openedFrom === 'slateAssessment') {
+        if ((openedFrom === "singleAssessment" && type === "assessmentItem") || openedFrom === 'slateAssessment') {
             this.addAssessment(item);
         } 
         else if ((openedFrom === "singleAssessment" && type === "assessment")) {
@@ -417,7 +414,7 @@ class ElmTableComponent extends Component {
     setElmTableJsx = (item, index, openedFrom) => {
         let elmTableBody,
             elmIcon = item.type == "assessment" ? elmAssessmentItem : singleAssessmentItemIcon;
-        if ((item.type == "assessment" || item.type == "assessmentitem") && item.urn.includes("work")) {
+        if ((item.type == "assessment" || item.type == "assessmentItem") && item.urn.includes("work")) {
             elmTableBody = <tr key={index} className={`row-class ${this.state.isActive === index ? 'select' : 'not-select'}`}>
                 <td className='td-class elm-text-assesment' key={index} >
                     <div className="icon-div">
@@ -425,7 +422,6 @@ class ElmTableComponent extends Component {
                     <span className="elmAssessmentItem-icon">{elmIcon}</span>
                     </div>
                     <span className="elm-data-span"><b className='elm-assessment-title'> {item.title ? item.title : item.urn}</b></span>
-                    {/* <span className="elm-data-span"><b className='elm-assessment-title'> {item.assessmentTitle ? item.assessmentTitle : item.urn}</b></span> */}
                 </td>
                 <td className='td-class'><b className="elm-text-assesment">{item.urn}</b></td>
             </tr>
@@ -452,13 +448,6 @@ class ElmTableComponent extends Component {
         const { isLoading, itemApiStatus, errFlag, elmLoading, itemErrorFlag, openSearch,searchTerm } = this.props.elmReducer;
         const { tableValue, openItemTable, parentUrn, parentTitle, sortIcon, openedFrom, addFlag,filterResults } = this.state;
         let assessmentFormat = (this.props.activeAssessmentType == FULL_ASSESSMENT_PUF || this.props.activeAssessmentType == PUF) ? PUF : LEARNOSITY_BETA;
-        let sortedTableData = [];
-        if(tableValue && sortIcon==elmSortUp && !openSearch){
-            sortedTableData = tableDataSorting(openItemTable,tableValue,'asc')
-            //console.log('Table Data after Sorting :::::',sortedTableData)
-        }else{
-            sortedTableData = tableValue
-        }
         /** Set render condition variables using setStatus function */
         let hideSearch = setStatus('setSearchButtonStatus', assessmentFormat, this.props.elmReducer, this.state)
         let showNavigationBar = setStatus('setNavigationBarStatus', assessmentFormat, this.props.elmReducer, this.state)
@@ -468,9 +457,9 @@ class ElmTableComponent extends Component {
         let showErrorStatus =((( openItemTable==false && !itemApiStatus && errFlag ) || 
         (openItemTable == true&& (itemErrorFlag ||(itemErrorFlag==false && itemApiStatus!=200)) && itemApiStatus!=200 && !showLoader) ) &&
         (tableValue.length <=0))||(filterResults=='No Results') ? true:false
-        let showTable = tableValue.length ?true:sortedTableData.length? true:false
+        let showTable = tableValue.length ? true:false
   
-        // console.log("showErrorStatus",showErrorStatus,"showTable",showTable,"showLoader",showLoader)
+        //console.log("showErrorStatus",showErrorStatus,"showTable",showTable,"showLoader",showLoader)
 
         {
             if (errFlag == true) {
@@ -510,7 +499,7 @@ class ElmTableComponent extends Component {
                                         <th className='row-class assessment-id'>Assessment URN</th>
                                     </thead>
                                     <tbody>
-                                        {sortedTableData.map((item, index) => {
+                                        {tableValue.map((item, index) => {
                                             return this.setElmTableJsx(item, index, openedFrom)
                                         })}
                                     </tbody>
