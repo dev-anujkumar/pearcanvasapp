@@ -64,7 +64,6 @@ export class TinyMceEditor extends Component {
             forced_root_block: '',
             remove_linebreaks: false,
             paste_preprocess: this.pastePreProcess,
-            paste_postprocess: this.pastePostProcess,
             force_p_newlines: false,
             setup: (editor) => {
                 if (this.props.permissions && this.props.permissions.includes('authoring_mathml')) {
@@ -81,7 +80,6 @@ export class TinyMceEditor extends Component {
                 this.editorClick(editor);
                 this.editorKeydown(editor);
                 this.editorKeyup(editor);
-                this.editorPaste(editor);
                 this.editorBeforeExecCommand(editor);
                 this.editorExecCommand(editor);
                 this.insertListButtonIcon(editor);
@@ -544,18 +542,6 @@ export class TinyMceEditor extends Component {
         this.footnoteBtnInstance && this.footnoteBtnInstance.setDisabled(flag)
     }
 
-    editorPaste = (editor) => {
-        editor.on('paste', (e) => {
-            let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
-            if (activeElement.nodeName === "CODE") {
-                let text = e.clipboardData.getData("text/plain");
-                text = String(text).replace(/</g, '&lt;').replace(/>/g, '&gt;');
-                text = String(text).replace(/\r|\n/g, '<br>');
-                text = String(text).replace(/ /g, '&nbsp;');
-                this.copyContent = text;
-            }
-        });
-    }
 
     /**
      * This method is called on keyUp.
@@ -1005,11 +991,6 @@ export class TinyMceEditor extends Component {
      * @param {*} args
      */
     pastePreProcess = (plugin, args) => {
-        if (this.props.element && this.props.element.figuretype && this.props.element.figuretype === "codelisting") {
-            args.content = this.copyContent;
-            this.copyContent = '';
-            return;
-        }
         if (this.props.element && this.props.element.type && this.props.element.type === 'element-list') {
             args.content = args.content.replace(/<ul>.*?<\/ul>/g, "")
         }
@@ -1020,99 +1001,6 @@ export class TinyMceEditor extends Component {
         } else {
             args.content = tinymce.activeEditor.selection.getContent();
         }
-    }
-
-    pastePostProcess = (plugin, args) => {
-        if (this.props.element && this.props.element.figuretype && this.props.element.figuretype === "codelisting") {
-            let paste_content = args.node.innerHTML;
-            let tempArr = paste_content.split("<br>");
-            let nodesFragment = document.createDocumentFragment();
-            for (let index = 0; index < tempArr.length; index++) {
-                let newSpan = document.createElement('span');
-                newSpan.innerHTML = tempArr[index];
-                newSpan.className = 'codeNoHighlightLineOne';
-                nodesFragment.appendChild(newSpan);
-            }
-            args.node.innerHTML = "";
-            args.node.appendChild(nodesFragment);
-            let self = this;
-            setTimeout(() => { self.makeReplace(); }, 0);
-        }
-    }
-
-    makeReplace = () => {
-        console.log(tinymce.activeEditor.selection.getNode());
-        let innerSpans = document.getElementsByClassName('codeNoHighlightLineOne');
-        if (innerSpans.length) {
-            let parentNode = innerSpans[0].parentNode;
-            let elem = innerSpans[0];
-            if (parentNode.nodeName !== 'SPAN' && parentNode.className !== 'codeNoHighlightLine') {
-                while (elem.parentNode.className !== 'codeNoHighlightLine' && elem.parentNode.nodeName.toLowerCase() != 'span') {
-                    elem = elem.parentNode;
-                }
-                parentNode = elem.parentElement;
-            }
-            parentNode.className = "TempSpan";
-            let boldTags = parentNode.getElementsByTagName('STRONG');
-            while (boldTags.length) {
-                let innerHTML = boldTags[0].innerHTML;
-                boldTags[0].outerHTML = innerHTML;
-            }
-            let uTags = parentNode.getElementsByTagName('U');
-            while (uTags.length) {
-                let innerHTML = uTags[0].innerHTML;
-                uTags[0].outerHTML = innerHTML;
-            }
-            let emTags = parentNode.getElementsByTagName('EM');
-            while (emTags.length) {
-                let innerHTML = emTags[0].innerHTML;
-                emTags[0].outerHTML = innerHTML;
-            }
-            for (let index = 0; index < innerSpans.length; index++) {
-                innerSpans[index].className = 'codeNoHighlightLine';
-            }
-            let startText = '';
-            let endText = '';
-            let textNode = [];
-            let startFlag = true;
-            let element = document.getElementsByClassName('TempSpan')[0];
-            for (let index = 0; index < element.childNodes.length; ++index) {
-                if (element.childNodes[index].nodeType === Node.TEXT_NODE) {
-                    textNode.push(element.childNodes[index]);
-                    if (startFlag) {
-                        startText += element.childNodes[index].textContent;
-                    } else {
-                        endText += element.childNodes[index].textContent;
-                    }
-                } else {
-                    startFlag = false;
-                }
-            }
-            while (textNode.length) {
-                if (textNode[0].parentNode) {
-                    textNode[0].parentNode.removeChild(textNode[0]);
-                }
-                textNode.splice(0, 1);
-            }
-            let allSpans = document.getElementsByClassName('TempSpan')[0].getElementsByClassName('codeNoHighlightLine');
-            if (allSpans.length) {
-                if (startText != '') {
-                    allSpans[0].innerHTML = startText + allSpans[0].innerHTML;
-                }
-                if (endText != '') {
-                    allSpans[allSpans.length - 1].innerHTML = allSpans[allSpans.length - 1].innerHTML + endText;
-                }
-            }
-            let innerHTML = document.getElementsByClassName('TempSpan')[0].innerHTML;
-            document.getElementsByClassName('TempSpan')[0].outerHTML = innerHTML;
-            
-        }
-        let remainSpans = document.getElementsByClassName('codeNoHighlightLineOne');
-        while (remainSpans.length) {
-            remainSpans[0].parentNode.removeChild(remainSpans[0]);
-        }
-        spanHandlers.handleExtraTags(this.props.elementId, 'code', 'codeNoHighlightLine');
-        tinymce.activeEditor.undoManager.clear();
     }
 
     /**
