@@ -217,8 +217,8 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                 break;
         }
     }
-    else if(appStore.asideData && appStore.asideData.contentUrn) { // For Aside/WE
-        parentEntityUrn = appStore.asideData.contentUrn
+    else if(appStore.parentUrn && appStore.parentUrn.contentUrn) { // For Aside/WE
+        parentEntityUrn = appStore.parentUrn.contentUrn
     }
     else { // elements in a slate
         parentEntityUrn = config.slateEntityURN

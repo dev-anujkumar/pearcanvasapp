@@ -222,7 +222,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
     }
     config.page = page;
     /** Project level and element level TCM status */
-    if (page === 0 && config.tcmStatus) {
+    if (page === 0 && config.tcmStatus && versioning === "") {
         /** Show TCM icon header if TCM is on for project level*/
         let messageTcmStatus = {
             TcmStatus: {

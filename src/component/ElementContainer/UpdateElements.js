@@ -472,6 +472,7 @@ const validateRevealAnswerData = (showHideType, node, elementType) => {
  * @param {*} containerContext 
  */
 export const createUpdatedData = (type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext,parentElement,showHideType,asideData, poetryData) => {
+    let appStore = store.getState().appStore
     let dataToReturn = {}
     switch (type){
         case elementTypeConstant.AUTHORED_TEXT:
@@ -599,7 +600,8 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
             dataToReturn.parentEntityId = poetryData.contentUrn;
         } 
     }
-    let slateEntityUrn = dataToReturn.elementParentEntityUrn || asideData && asideData.contentUrn || config.slateEntityURN
+    
+    let slateEntityUrn = dataToReturn.elementParentEntityUrn || appStore.parentUrn && appStore.parentUrn.contentUrn || config.slateEntityURN
     dataToReturn = { ...dataToReturn, index: index.toString().split('-')[index.toString().split('-').length - 1], elementParentEntityUrn: slateEntityUrn }
     return dataToReturn
 }
