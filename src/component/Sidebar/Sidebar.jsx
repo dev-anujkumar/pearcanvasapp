@@ -51,9 +51,9 @@ class Sidebar extends Component {
             let bceSyntaxHighlight = prevState.syntaxHighlightingToggleValue;
             if(nextProps.activeElement.elementId !== prevState.activeElementId) {
                 elementDropdown = '';
-                numberStartFrom = nextProps.activeElement.startNumber || "1";
-                bceToggle = nextProps.activeElement.numbered || true;
-                bceSyntaxHighlight = nextProps.activeElement.syntaxhighlighting || true;
+                numberStartFrom = nextProps.activeElement.startNumber;
+                bceToggle = nextProps.activeElement.numbered;
+                bceSyntaxHighlight = nextProps.activeElement.syntaxhighlighting ;
             }
             
             return {
