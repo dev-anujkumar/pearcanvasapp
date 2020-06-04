@@ -266,6 +266,7 @@ class ElmTableComponent extends Component {
             this.setState({
                 openItemTable: false,
                 tableValue:this.searchData,
+                sortIcon: elmSortUp
             })
             
         }
