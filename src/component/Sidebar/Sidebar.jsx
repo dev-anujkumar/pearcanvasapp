@@ -306,20 +306,20 @@ class Sidebar extends Component {
                 let activeElement = document.querySelector(`[data-id="${this.props.activeElement.elementId}"]`)
                 let attrNode = activeElement ? activeElement.querySelector(".blockCodeFigure") : null
                 if( attrNode ){
-                    attrNode.setAttribute("numbered", this.state.bceToggleValue)
-                    attrNode.setAttribute("startNumber", this.state.bceNumberStartFrom)
-                    attrNode.setAttribute("syntaxhighlighting", this.state.syntaxHighlightingToggleValue)
+                    attrNode.setAttribute("numbered", ((this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true))
+                    attrNode.setAttribute("startNumber", (this.state.bceNumberStartFrom ? this.state.bceNumberStartFrom : '1'))
+                    attrNode.setAttribute("syntaxhighlighting", ((this.state.syntaxHighlightingToggleValue || this.state.syntaxHighlightingToggleValue === false) ? this.state.syntaxHighlightingToggleValue : true))
                 }
                 attributions = <div>
                     <div className="panel_show_module">
                         <div className="toggle-value-bce">Use Line Numbers</div>
-                        <label className="switch"><input type="checkbox" checked={this.state.bceToggleValue} onClick={ !hasReviewerRole() && this.handleBceToggle}/>
+                        <label className="switch"><input type="checkbox" checked={(this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true} onClick={ !hasReviewerRole() && this.handleBceToggle}/>
                         <span className="slider round"></span></label>
                     </div>
                     <div className="alt-Text-LineNumber" >
                         <div className="toggle-value-bce">Start numbering from</div>
-                        <input type="number" id="line-number" className="line-number" min="1" onChange={this.handleBceNumber} value={this.state.bceNumberStartFrom}
-                        disabled={!this.state.bceToggleValue || hasReviewerRole()} onBlur={this.handleBceBlur}/>
+                        <input type="number" id="line-number" className="line-number" min="1" onChange={this.handleBceNumber} value={this.state.bceNumberStartFrom ? this.state.bceNumberStartFrom : '1'}
+                        disabled={!((this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true) || hasReviewerRole()} onBlur={this.handleBceBlur}/>
                     </div>
                 </div>
                     return attributions;
@@ -396,7 +396,7 @@ class Sidebar extends Component {
     }
 
     handleSyntaxHighlightingToggle = () => {
-        let currentToggleValue = !this.state.syntaxHighlightingToggleValue
+        let currentToggleValue = !((this.state.syntaxHighlightingToggleValue || this.state.syntaxHighlightingToggleValue == false) ? this.state.syntaxHighlightingToggleValue : true);
         if (currentToggleValue) {
             this.handleSyntaxHighlightingPopup(true);
         }
@@ -463,7 +463,7 @@ class Sidebar extends Component {
             return <div className="panel_syntax_highlighting">
                 <div className="toggle-value-bce">Syntax-highlighting</div>
                 <label className="switch">
-                    <input type="checkbox" checked={this.state.syntaxHighlightingToggleValue} onClick={!hasReviewerRole() && this.handleSyntaxHighlightingToggle} />
+                    <input type="checkbox" checked={(this.state.syntaxHighlightingToggleValue || this.state.syntaxHighlightingToggleValue === false) ? this.state.syntaxHighlightingToggleValue : true} onClick={!hasReviewerRole() && this.handleSyntaxHighlightingToggle} />
                     <span className="slider round"></span>
                 </label>
             </div>
