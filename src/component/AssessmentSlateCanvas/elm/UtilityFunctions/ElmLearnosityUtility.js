@@ -165,12 +165,12 @@ const filterAssessmentsFromApiData = (data, parentUrn, searchAssessmentData) => 
 }
 
 /*** @description - This is function to sort the seach and filter operation results
-    * @param preparedData- The search results 
+    * @param preparedTableData- The search results 
     * @param searchAssessmentData- value to be searched in the API data
    */
-const sortSearchResults = (preparedData, searchAssessmentData) => {
+const sortSearchResults = (preparedTableData, searchAssessmentData) => {
     let keyword = searchAssessmentData;
-    preparedData.sort((a, b) => {
+    preparedTableData.sort((a, b) => {
         if ((a.assessmentTitle.toLowerCase().indexOf(keyword.toLowerCase()) > b.assessmentTitle.toLowerCase().indexOf(keyword.toLowerCase())) || (a.urn.toLowerCase().indexOf(keyword.toLowerCase()) > b.urn.toLowerCase().indexOf(keyword.toLowerCase()))
         ) {
             return 1;
