@@ -313,7 +313,7 @@ class Sidebar extends Component {
                 attributions = <div>
                     <div className="panel_show_module">
                         <div className="toggle-value-bce">Use Line Numbers</div>
-                        <label className="switch"><input type="checkbox" checked={(this.state.bceToggleValue === undefined) ? true : this.state.bceToggleValue} onClick={ !hasReviewerRole() && this.handleBceToggle}/>
+                        <label className="switch"><input type="checkbox" checked={this.state.bceToggleValue} onClick={ !hasReviewerRole() && this.handleBceToggle}/>
                         <span className="slider round"></span></label>
                     </div>
                     <div className="alt-Text-LineNumber" >
@@ -463,7 +463,7 @@ class Sidebar extends Component {
             return <div className="panel_syntax_highlighting">
                 <div className="toggle-value-bce">Syntax-highlighting</div>
                 <label className="switch">
-                    <input type="checkbox" checked={(this.state.syntaxHighlightingToggleValue === undefined) ? true : this.state.syntaxHighlightingToggleValue} onClick={!hasReviewerRole() && this.handleSyntaxHighlightingToggle} />
+                    <input type="checkbox" checked={this.state.syntaxHighlightingToggleValue} onClick={!hasReviewerRole() && this.handleSyntaxHighlightingToggle} />
                     <span className="slider round"></span>
                 </label>
             </div>
