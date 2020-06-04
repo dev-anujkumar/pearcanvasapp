@@ -63,6 +63,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         }
         if(oldElementData.figuretype && oldElementData.figuretype === "codelisting" && newElementData['primaryOption'] === "primary-blockcode-equation") {
             oldElementData.figuredata.programlanguage = elementTypes[newElementData['elementType']][newElementData['primaryOption']].subtype[newElementData['secondaryOption']].text;
+             oldElementData.figuredata.preformattedtext = [];
         }
     }
 
