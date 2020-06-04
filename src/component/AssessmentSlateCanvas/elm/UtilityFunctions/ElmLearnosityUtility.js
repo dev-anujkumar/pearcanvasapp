@@ -138,6 +138,7 @@ const sortSearchResults = (preparedData, searchAssessmentData) => {
         key2 = "urn";
     /** Sort search result based on most relevant results */
     preparedData.sort(dynamicSortMultiple(key1, key2, sortByRelevance));
+    // preparedData.sort(dynamicSortMultiple(key1, key2));
 }
 
 /*** @description - This is function to group the table data based on property

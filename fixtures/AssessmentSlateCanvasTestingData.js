@@ -2920,3 +2920,137 @@ export const newElmData = {
         ]
     }
 }
+export const sortingData = [{
+        type: "container",
+        urn: "urn:pearson:manifest:9a333f60-0b23-4763-9879-a02c79607714",
+        title: "Chapter Alpha",
+        label: "chapter"
+    },
+    {
+        type: "container",
+        urn: "urn:pearson:manifest:6dbc57f3-1210-4851-a8bf-fd6077121a42",
+        title: "Part 1",
+        label: "part"
+    },
+    {
+        parentUrn: undefined,
+        previousUrn: "urn:pearson:distributable:2f0630e1-35eb-4fac-89b7-84f36ecce392",
+        title: "test execution",
+        type: "assessment",
+        urn: "urn:pearson:work:5e2a7a5a-cfdf-47a4-9580-f6552ed137d8"
+    }, {
+        parentUrn: undefined,
+        previousUrn: "urn:pearson:distributable:2f0630e1-35eb-4fac-89b7-84f36ecce392",
+        title: "Elm Learnosity Assessment 1 patch renamed",
+        type: "assessment",
+        urn: "urn:pearson:work:2eedb903-0433-4782-bfe6-8b78c834f979"
+    }, {
+        parentUrn: undefined,
+        previousUrn: "urn:pearson:distributable:2f0630e1-35eb-4fac-89b7-84f36ecce392",
+        title: "Elm Learnosity Assessment 2 patch",
+        type: "assessment",
+        urn: "urn:pearson:work:77af8360-f8f5-49dd-b59c-2d13dc945b8f"
+    }, {
+        parentUrn: undefined,
+        previousUrn: "urn:pearson:distributable:2f0630e1-35eb-4fac-89b7-84f36ecce392",
+        title: "Elm Learnosity Assessment 4 patch retest",
+        type: "assessment",
+        urn: "urn:pearson:work:f774b6a5-b234-494b-b95f-be2f78502f70"
+    }, {
+        parentUrn: undefined,
+        previousUrn: "urn:pearson:distributable:2f0630e1-35eb-4fac-89b7-84f36ecce392",
+        title: "Untitled",
+        type: "assessment",
+        urn: "urn:pearson:work:7f35047f-2c4a-4c87-b040-93f82ad9c3dd"
+    }, {
+        parentUrn: undefined,
+        previousUrn: "urn:pearson:distributable:2f0630e1-35eb-4fac-89b7-84f36ecce392",
+        title: "Untitled",
+        type: "assessment",
+        urn: "urn:pearson:work:0a3fabde-8a0f-401c-bde0-9230f46f036b"
+    }, {
+        parentUrn: undefined,
+        previousUrn: "urn:pearson:distributable:2f0630e1-35eb-4fac-89b7-84f36ecce392",
+        title: "Activity 03-June",
+        type: "assessment",
+        urn: "urn:pearson:work:87d664a4-fda5-4b1a-bfa6-78a47175304b"
+    }, {
+        parentUrn: undefined,
+        previousUrn: "urn:pearson:distributable:2f0630e1-35eb-4fac-89b7-84f36ecce392",
+        title: "Untitled",
+        type: "assessment",
+        urn: "urn:pearson:work:4cd7d2d9-d563-4104-9b0c-b88c85a4cc0a"
+    }, {
+        parentUrn: undefined,
+        previousUrn: "urn:pearson:distributable:2f0630e1-35eb-4fac-89b7-84f36ecce392",
+        title: "Untitled",
+        type: "assessment",
+        urn: "urn:pearson:work:097bd3ef-c109-4bcc-8d6e-df3fc730d69a"
+    }, {
+        parentUrn: undefined,
+        previousUrn: "urn:pearson:distributable:2f0630e1-35eb-4fac-89b7-84f36ecce392",
+        title: "Untitled",
+        type: "assessment",
+        urn: "urn:pearson:work:0c70ba5a-2f9e-44ec-95e5-a2cbcf72e6a9"
+    }, {
+        parentUrn: undefined,
+        previousUrn: "urn:pearson:distributable:2f0630e1-35eb-4fac-89b7-84f36ecce392",
+        title: "Untitled",
+        type: "assessment",
+        urn: "urn:pearson:work:7cb78d83-afd6-492d-be3e-d12e85591947"
+    }, {
+        parentUrn: undefined,
+        previousUrn: "urn:pearson:distributable:2f0630e1-35eb-4fac-89b7-84f36ecce392",
+        title: "Untitled",
+        type: "assessment",
+        urn: "urn:pearson:work:ec621d57-124a-4934-a64f-9d8f2ac77468"
+    }
+]
+export const sortingItemData = [{
+    assessmentId: "urn:pearson:work:5e2a7a5a-cfdf-47a4-9580-f6552ed137d8",
+    title: "Copy of Elm Learnosity item 1 patch",
+    type: "assessmentItem",
+    urn: "urn:pearson:work:3dfba269-45b2-4963-bda9-48a74ca3136f"
+},
+{
+    assessmentId: "urn:pearson:work:5e2a7a5a-cfdf-47a4-9580-f6552ed137d8",
+    title: "GGGG1",
+    type: "assessmentItem",
+    urn: "urn:pearson:work:ac578853-c6b3-440d-9bb0-8a6d975dece3"
+},{
+    assessmentId: "urn:pearson:work:5e2a7a5a-cfdf-47a4-9580-f6552ed137d8",
+    title: "GGGG",
+    type: "assessmentItem",
+    urn: "urn:pearson:work:eb190948-b7b2-456a-a799-1accf7b31d6e"
+}, {
+    assessmentId: "urn:pearson:work:5e2a7a5a-cfdf-47a4-9580-f6552ed137d8",
+    title: "Elm Learnosity item 3 patch",
+    type: "assessmentItem",
+    urn: "urn:pearson:work:9796d139-0b5d-4aa1-a62a-67970a78ce1e"
+}, {
+    assessmentId: "urn:pearson:work:5e2a7a5a-cfdf-47a4-9580-f6552ed137d8",
+    title: "Copy of Elm Learnosity item 3 patch",
+    type: "assessmentItem",
+    urn: "urn:pearson:work:ff69f469-0159-4906-aa8f-0118ab59e8ea"
+}, {
+    assessmentId: "urn:pearson:work:5e2a7a5a-cfdf-47a4-9580-f6552ed137d8",
+    title: "Copy of Elm Learnosity item 1 patch",
+    type: "assessmentItem",
+    urn: "urn:pearson:work:cecbbc7c-3f7c-48ca-8bb4-cb7481711568",
+}, {
+    assessmentId: "urn:pearson:work:5e2a7a5a-cfdf-47a4-9580-f6552ed137d8",
+    title: "Elm Learnosity item 2 patch",
+    type: "assessmentItem",
+    urn: "urn:pearson:work:1792412f-13f6-4d2c-8836-ed893ba64017",
+}, {
+    assessmentId: "urn:pearson:work:5e2a7a5a-cfdf-47a4-9580-f6552ed137d8",
+    title: "Elm Learnosity item 1 patch",
+    type: "assessmentItem",
+    urn: "urn:pearson:work:ef533db2-e5a7-4f20-b831-ba6aeab0abc7"
+}, {
+    assessmentId: "urn:pearson:work:5e2a7a5a-cfdf-47a4-9580-f6552ed137d8",
+    title: "test",
+    type: "assessmentItem",
+    urn: "urn:pearson:work:8023cd7d-0c06-4322-af4f-d46920b54587"
+}
+]

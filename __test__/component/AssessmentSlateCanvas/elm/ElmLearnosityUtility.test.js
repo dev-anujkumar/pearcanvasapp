@@ -1,7 +1,7 @@
 // IMPORT - Module dependencies
 import config from '../../../../src/config/config.js';
 import * as utilityFunctions from '../../../../src/component/AssessmentSlateCanvas/elm/UtilityFunctions/ElmLearnosityUtility.js';
-import { newElmData, CurrentSlateAncestor } from '../../../../fixtures/AssessmentSlateCanvasTestingData';
+import { newElmData, CurrentSlateAncestor, sortingData, sortingItemData } from '../../../../fixtures/AssessmentSlateCanvasTestingData';
 
 describe('Test Elm-Learnosity Utility Functions', () => {
 
@@ -35,6 +35,16 @@ describe('Test Elm-Learnosity Utility Functions', () => {
         const spyFunction = jest.spyOn(utilityFunctions, 'searchAndFilterAssessmentData');
         utilityFunctions.searchAndFilterAssessmentData('learnosity', 'assessment', newElmData)
         expect(spyFunction).toHaveBeenCalledWith('learnosity', 'assessment', newElmData)
+    })
+    it('Test-tableDataSorting - Assessment Data in Ascending Order', () => {
+        const spyFunction = jest.spyOn(utilityFunctions, 'tableDataSorting');
+        utilityFunctions.tableDataSorting(false, sortingData, 'asc')
+        expect(spyFunction).toHaveBeenCalledWith(false, sortingData, 'asc')
+    })
+    it('Test-tableDataSorting - Item Data in Descending Order', () => {
+        const spyFunction = jest.spyOn(utilityFunctions, 'tableDataSorting');
+        utilityFunctions.tableDataSorting(true, sortingItemData, 'desc')
+        expect(spyFunction).toHaveBeenCalledWith(true, sortingItemData, 'desc')
     })
 })
 

@@ -83,27 +83,22 @@ class ElmTableComponent extends Component {
     */
     searchAssessmentData = (assessmentType, searchAssessmentTitle) => {
         let searchResults = [];
-        this.searchData=[];
-        this.props.setSearchTerm(assessmentType,searchAssessmentTitle);
-        this.setState({ isActive: null, addFlag:false })
+        this.searchData = [];
+        this.props.setSearchTerm(assessmentType, searchAssessmentTitle);
+        this.setState({ isActive: null, addFlag: false })
         searchResults = searchAndFilterAssessmentData(assessmentType, searchAssessmentTitle, this.props.elmReducer.elmData)
         this.searchData = searchResults
-        // if(searchAssessmentTitle.trim()!=""){
-            if(searchResults.length!=0){
-                return this.setState({
-                    tableValue: searchResults,
-                    filterResults:'Search Results Exist'
-                })
-            }else{
-                return this.setState({
-                    tableValue: [],
-                    filterResults:'No Results'
-                })
-            }
-        // }else{
-        //     let parent= setParentUrn(JSON.stringify(this.props.elmReducer.elmData),this.props.setCurrentSlateAncestorData)
-        //     this.filterData(false, parent, this.props.elmReducer.elmData);
-        // }
+        if (searchResults.length != 0) {
+            return this.setState({
+                tableValue: searchResults,
+                filterResults: 'Search Results Exist'
+            })
+        } else {
+            return this.setState({
+                tableValue: [],
+                filterResults: 'No Results'
+            })
+        }
     }
 
     /*** @description - This function is to render elm table data
@@ -133,7 +128,6 @@ class ElmTableComponent extends Component {
     else if(this.state.openedFrom == "slateAssessment" && !errFlag && elmLoading){
         parent= setParentUrn(apiData,this.props.currentSlateAncestorData)
         this.filterData(false, parent, elmData);
-        //this.filterData(false,config.parentContainerUrn, elmData);
     }               
     else {
         this.filterData(false,this.state.currentUrn, elmData);
@@ -211,7 +205,6 @@ class ElmTableComponent extends Component {
                         }
                         if(assessments && assessments.type && assessments.type !="assessmentItem"){
                             this.preparedData.push({ "type": assessments.type? assessments.type:"assessment", "title": title, "urn": assessments.urn, "parentUrn": parentUrn, previousUrn: data.versionUrn }) // "assessment" is added as type for resources where type-key is missing
-                            // this.preparedData.push({ "type": assessments.type? assessments.type:"assessment", "urn": assessments.urn, "assessmentTitle": title, "parentUrn": parentUrn, previousUrn: data.versionUrn }) // "assessment" is added as type for resources where type-key is missing
                         }
                     })
                 }
@@ -280,13 +273,11 @@ class ElmTableComponent extends Component {
     /*** @description - This function is to navigate back to parent hierarchy */
     navigateBack = () => {
         if (this.state.openItemTable == true) {
-             this.navigateFromItemsTable()            
+            this.navigateFromItemsTable()
         } else {
-
             this.setState({
                 sortIcon: elmSortUp
             }, this.filterData(false, this.state.parentUrn, this.props.elmReducer.elmData))
-           
         }
     }
 
