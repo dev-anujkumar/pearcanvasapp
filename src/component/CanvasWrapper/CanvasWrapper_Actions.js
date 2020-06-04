@@ -256,8 +256,8 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             config.isPopupSlate = true;
             config.savingInProgress = false;
 			if (config.slateManifestURN === Object.values(slateData.data)[0].id) {
-				config.totalPageCount = slateData.data[newVersionManifestId].pageCount;
-				config.pageLimit = slateData.data[newVersionManifestId].pageLimit;
+				config.totalPageCount = slateData.data[newVersionManifestId].pageCount? slateData.data[newVersionManifestId].pageCount: 0;
+				config.pageLimit = slateData.data[newVersionManifestId].pageLimit ? slateData.data[newVersionManifestId].pageLimit :0;
 				let parentData = getState().appStore.slateLevelData;
 				let currentParentData;
 				if ((slateData.data[newVersionManifestId]) && (!config.fromTOC) && slateData.data[newVersionManifestId].pageNo > 0) {

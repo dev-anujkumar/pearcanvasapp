@@ -61,22 +61,21 @@ class SlateWrapper extends Component {
         window.addEventListener('scroll',this.handleScroll)
     }
 
-    handleScroll = (e) =>{
-        if (this.props.slateData[config.slateManifestURN] && (this.props.slateData[config.slateManifestURN].type !== 'popup')) {
-            if (config.totalPageCount <= config.page) return false;
-            // const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;        
-            let scrollPosition = Number(e.target.scrollTop + e.target.clientHeight + 100);
-            let scrollingPosition = Number(e.target.scrollTop);
-            if (this.props.slateData[config.slateManifestURN] && (this.props.slateData[config.slateManifestURN].type === 'manifest')) {
-                config.scrollPosition = scrollingPosition;
-            }
-            if ((scrollPosition >= e.target.scrollHeight) && config.scrolling) {
-                config.scrolling = false;
-                config.fromTOC = false;
-                this.props.loadMorePages();
-            }
+    handleScroll = (e) => {
+        if (config.totalPageCount <= config.page) return false;
+        // const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;        
+        let scrollPosition = Number(e.target.scrollTop + e.target.clientHeight + 100);
+        let scrollingPosition = Number(e.target.scrollTop);
+        if (this.props.slateData[config.slateManifestURN] && (this.props.slateData[config.slateManifestURN].type === 'manifest')) {
+            config.scrollPosition = scrollingPosition;
+        }
+        if ((scrollPosition >= e.target.scrollHeight) && config.scrolling) {
+            config.scrolling = false;
+            config.fromTOC = false;
+            this.props.loadMorePages();
         }
     }
+    
 
     /**
      * setListDropRef | sets list drop ref to listDropRef
@@ -329,9 +328,7 @@ class SlateWrapper extends Component {
                                     {this['cloneCOSlateControlledSource_' + random]}
                                 </Sortable>
                             </div>
-                           {_slateData[config.slateManifestURN].type !== "popup" &&
                             <SlateFooter elements={_slateBodyMatter} />
-                        } 
                         </div>
                     )
                 }
