@@ -1031,6 +1031,9 @@ export class TinyMceEditor extends Component {
         } else {
             args.content = tinymce.activeEditor.selection.getContent();
         }
+        if (this.props.element && this.props.element.figuretype && this.props.element.figuretype === "codelisting" && !this.notFormatting) {
+            args.content = args.content.replace(/\r|\n/g, '');
+        }
     }
 
     pastePostProcess = (plugin, args) => {
