@@ -1849,13 +1849,6 @@ export class TinyMceEditor extends Component {
                         termText = tinyMCE.$("#" + currentTarget.id).html();
                     }
 
-                    /**
-                     * [BG-2125] | Cursor overlap issue on stanza element
-                     */
-                    // if('type' in this.props.element && this.props.element.type === "stanza" && termText.search(/^(<span [^>]*>&nbsp;<\/span>)+$/g) >= 0) {
-                    //     termText = termText.replace('&nbsp;', '<br>');
-                    // }
-
                     /* Reverting data-temp-mathml to data-mathml and class Wirisformula to temp_WirisFormula */
                     termText = termText.replace(/data-temp-mathml/g, 'data-mathml').replace(/temp_Wirisformula/g, 'Wirisformula');
                     document.getElementById(currentTarget.id).innerHTML = termText
