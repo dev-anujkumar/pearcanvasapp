@@ -126,10 +126,10 @@ const filterAssessmentsFromApiData = (data, parentUrn, searchAssessmentData) => 
 }
 
 /*** @description - This is function to sort the seach and filter operation results
-    * @param preparedData- The search results 
+    * @param preparedTableData- The search results 
     * @param searchAssessmentData- value to be searched in the API data
    */
-const sortSearchResults = (preparedData, searchAssessmentData) => {
+const sortSearchResults = (preparedTableData, searchAssessmentData) => {
     let sortByRelevance = {
             status: true,
             sortKeyword: searchAssessmentData
@@ -137,8 +137,8 @@ const sortSearchResults = (preparedData, searchAssessmentData) => {
         key1 = "title",
         key2 = "urn";
     /** Sort search result based on most relevant results */
-    preparedData.sort(dynamicSortMultiple(key1, key2, sortByRelevance));
-    // preparedData.sort(dynamicSortMultiple(key1, key2));
+    preparedTableData.sort(dynamicSortMultiple(key1, key2, sortByRelevance));
+    // preparedTableData.sort(dynamicSortMultiple(key1, key2));
 }
 
 /*** @description - This is function to group the table data based on property
