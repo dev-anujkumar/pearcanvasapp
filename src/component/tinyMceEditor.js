@@ -46,6 +46,7 @@ export class TinyMceEditor extends Component {
         this.clearFormateText = '';
         this.isctrlPlusV = false;
         this.fromtinyInitBlur = false;
+        this.notFormatting = true;
         this.editorConfig = {
             plugins: EditorConfig.plugins,
             selector: '#cypress-0',
@@ -545,18 +546,6 @@ export class TinyMceEditor extends Component {
         this.footnoteBtnInstance && this.footnoteBtnInstance.setDisabled(flag)
     }
 
-    editorPaste = (editor) => {
-        editor.on('paste', (e) => {
-            let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
-            if (activeElement.nodeName === "CODE") {
-                let text = e.clipboardData.getData("text/plain");
-                text = String(text).replace(/</g, '&lt;').replace(/>/g, '&gt;');
-                text = String(text).replace(/\r|\n/g, '<br>');
-                text = String(text).replace(/ /g, '&nbsp;');
-                this.copyContent = text;
-            }
-        });
-    }
 
     /**
      * This method is called on keyUp.
@@ -1000,13 +989,35 @@ export class TinyMceEditor extends Component {
         });
     }
 
+    editorPaste = (editor) => {
+        editor.on('paste', (e) => {
+            let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
+            if (activeElement.nodeName === "CODE") {
+                let syntaxEnabled = document.querySelector('.panel_syntax_highlighting .switch input');
+                if (syntaxEnabled && syntaxEnabled.checked) {
+                    this.notFormatting = true;
+                }
+                else {
+                    this.notFormatting = false;
+                }
+                if (this.notFormatting) {
+                    let text = e.clipboardData.getData("text/plain");
+                    text = String(text).replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                    text = String(text).replace(/\r|\n/g, '<br>');
+                    text = String(text).replace(/ /g, '&nbsp;');
+                    this.copyContent = text;
+                }
+            }
+        });
+    }
+
     /**
      * Called before paste process
      * @param {*} plugin
      * @param {*} args
      */
     pastePreProcess = (plugin, args) => {
-        if (this.props.element && this.props.element.figuretype && this.props.element.figuretype === "codelisting") {
+        if (this.props.element && this.props.element.figuretype && this.props.element.figuretype === "codelisting" && this.notFormatting) {
             args.content = this.copyContent;
             this.copyContent = '';
             return;
@@ -1024,7 +1035,7 @@ export class TinyMceEditor extends Component {
     }
 
     pastePostProcess = (plugin, args) => {
-        if (this.props.element && this.props.element.figuretype && this.props.element.figuretype === "codelisting") {
+        if (this.props.element && this.props.element.figuretype && this.props.element.figuretype === "codelisting" && this.notFormatting) {
             let paste_content = args.node.innerHTML;
             let tempArr = paste_content.split("<br>");
             let nodesFragment = document.createDocumentFragment();
@@ -1042,7 +1053,6 @@ export class TinyMceEditor extends Component {
     }
 
     makeReplace = () => {
-        console.log(tinymce.activeEditor.selection.getNode());
         let innerSpans = document.getElementsByClassName('codeNoHighlightLineOne');
         if (innerSpans.length) {
             let parentNode = innerSpans[0].parentNode;
@@ -1089,6 +1099,8 @@ export class TinyMceEditor extends Component {
                     startFlag = false;
                 }
             }
+            startText = String(startText).replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            endText = String(endText).replace(/</g, '&lt;').replace(/>/g, '&gt;');
             while (textNode.length) {
                 if (textNode[0].parentNode) {
                     textNode[0].parentNode.removeChild(textNode[0]);
@@ -1106,13 +1118,12 @@ export class TinyMceEditor extends Component {
             }
             let innerHTML = document.getElementsByClassName('TempSpan')[0].innerHTML;
             document.getElementsByClassName('TempSpan')[0].outerHTML = innerHTML;
-            
+
         }
         let remainSpans = document.getElementsByClassName('codeNoHighlightLineOne');
         while (remainSpans.length) {
             remainSpans[0].parentNode.removeChild(remainSpans[0]);
         }
-        spanHandlers.handleExtraTags(this.props.elementId, 'code', 'codeNoHighlightLine');
         tinymce.activeEditor.undoManager.clear();
     }
 
@@ -1486,6 +1497,8 @@ export class TinyMceEditor extends Component {
                     if (!(this.props.element && this.props.element.figuretype === "codelisting" && this.props.element.figuredata.programlanguage && this.props.element.figuredata.programlanguage === "Select")) {
                         this.editorRef.current.style.caretColor = 'transparent';
                         this.editorRef.current.focus();
+                    } else {
+                        this.props.handleEditorFocus("", null, null)
                     }
                 }
 
@@ -1654,10 +1667,10 @@ export class TinyMceEditor extends Component {
             else {
                 toolbar = config.codeListingToolbarEnabled;
             }
-        } else if (this.props.placeholder === "Enter Show text" || this.props.placeholder === "Enter revel text") {
+        } else if (this.props.placeholder === "Enter Show text" || (this.props && this.props.showHideType && this.props.showHideType == 'revel') || (this.props.placeholder === "Enter Hide text")) {
             toolbar = config.showHideToolbar
-        } else if (this.props.placeholder === "Enter Hide text") {
-            toolbar = config.hideToolbar
+            // } else if (this.props.placeholder === "Enter Hide text") {
+            //     toolbar = config.showHideToolbar
         } else if (this.props.placeholder == "Type Something..." && this.props.element && this.props.element.type == 'stanza') {
             toolbar = config.poetryStanzaToolbar;
         } else {
