@@ -698,7 +698,7 @@ describe('Test convertElement- ASIDE-CONTAINER -MMI to ShowHide', () => {
 
     });
 });
-describe('Test convertElement- singleAssessment', () => {
+xdescribe('Test convertElement- singleAssessment', () => {
     let store = mockStore(() => initialState2);
     it('Test convertElement  -assessment type', () => {
         store = mockStore(() => initialState2);
@@ -739,7 +739,7 @@ describe('Test convertElement- singleAssessment', () => {
         spyconversionElement.mockClear()
     });
 });
-describe('Test convertElement- MOCK API CALL', () => {
+xdescribe('Test convertElement- MOCK API CALL', () => {
 
 
     let assessmentDiv2 = document.createElement('div');
