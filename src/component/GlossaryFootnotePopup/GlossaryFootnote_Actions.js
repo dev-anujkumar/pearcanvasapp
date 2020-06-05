@@ -8,7 +8,7 @@ const {
     REACT_APP_API_URL
 } = config
 
-import { OPEN_GLOSSARY_FOOTNOTE, UPDATE_FOOTNOTEGLOSSARY, ERROR_POPUP } from "./../../constants/Action_Constants";
+import { OPEN_GLOSSARY_FOOTNOTE, UPDATE_FOOTNOTEGLOSSARY, ERROR_POPUP, GET_TCM_RESOURCES } from "./../../constants/Action_Constants";
 
 export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, typeWithPopup, poetryField) => async (dispatch) => {
     
@@ -419,12 +419,20 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                 }
             }
         }
+        //tcm update code  for glossary/footnote 
+        if (config.tcmStatus) {
+            let elementTypeData = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza'];
+            if (elementTypeData.indexOf(elementType) !== -1) {
+                prepareDataForUpdateTcm(elementWorkId, res.data.id);
+            }
+        }
         store.dispatch({
             type: UPDATE_FOOTNOTEGLOSSARY,
             payload: {
                 slateLevelData: newParentData
             }
         })
+        
         sendDataToIframe({'type': HideLoader,'message': { status: false }});  
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
     }).catch(err => {
@@ -433,6 +441,38 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         sendDataToIframe({'type': HideLoader,'message': { status: false }});
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
     })
+}
+//TCM Update
+function prepareDataForUpdateTcm(updatedDataID,versionedData) {
+    const tcmData = store.getState().tcmReducer.tcmSnapshot;
+    if(versionedData && updatedDataID !== versionedData){
+        tcmData.push({
+            "txCnt": 1,
+            "isPrevAcceptedTxAvailable": false,
+            "elemURN": versionedData,
+            "feedback": null
+        })
+    }
+    else{
+        tcmData.forEach(function (element,index) {
+            if(element.elemURN.includes('urn:pearson:work') && element.elemURN.indexOf(updatedDataID) !== -1){
+                tcmData[index]["elemURN"]=updatedDataID
+                tcmData[index]["txCnt"]=tcmData[index]["txCnt"] !== 0 ? tcmData[index]["txCnt"]: 1
+                tcmData[index]["feedback"]=tcmData[index]["feedback"] !== null ? tcmData[index]["feedback"]:null
+                tcmData[index]["isPrevAcceptedTxAvailable"] = tcmData[index]["isPrevAcceptedTxAvailable"]  ? tcmData[index]["isPrevAcceptedTxAvailable"]:false
+            }
+        });
+    }
+  
+if (tcmData) {
+    sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });
+}
+store.dispatch({
+    type: GET_TCM_RESOURCES,
+    payload: {
+        data: tcmData
+    }
+})
 }
 
 /**
