@@ -363,7 +363,6 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
         let bodymatter = storeElement.contents.bodymatter;
         let indexes = activeElement.index;
         indexes = indexes.toString().split("-");
-        
         //Separate case for element conversion in showhide
         if(showHideObj) {
             let oldElementData

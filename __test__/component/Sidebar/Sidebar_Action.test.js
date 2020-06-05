@@ -99,7 +99,6 @@ const initialState12 = {
         }
     },
 }
-
 const initialState13 = {
     appStore: {
         slateLevelData: slateData.SlateData2,
@@ -132,6 +131,18 @@ const initialState15 = {
             elementType: "element-aside"
         },
     },
+}
+const initialState16 = {
+    appStore: {
+        slateLevelData: slateData.SlateData4,
+        activeElement: activeElementData.SH_ActiveElement,
+    }
+}
+const initialState17 = {
+    appStore: {
+        slateLevelData: slateData.SlateData4,
+        activeElement: activeElementData.SH_Aside,
+    }
 }
 describe('Test convertElement- paragraph', () => {
     let store = mockStore(() => initialState);
@@ -170,7 +181,6 @@ describe('Test convertElement- paragraph', () => {
         spyconversionElement.mockClear()
     });
 });
-
 describe('Test convertElement- figure-IMAGE', () => {
     let store = mockStore(() => initialState3);
     it('Test convertElement  -figure-IMAGE to TABLE', () => {
@@ -542,9 +552,9 @@ describe('Test convertElement- ASIDE-CONTAINER-internal conversion', () => {
     });
 });
 describe('Test convertElement- MOCK API CALL-catch', () => {
-    let store = mockStore(() => initialState4);
+    // let store = mockStore(() => initialState4);
     it('Test convertElement  -MOCK API CALL',async () => {
-        store = mockStore(() => initialState4);
+        // store = mockStore(() => initialState4);
         let getState = () => {
             return initialState;
            }
@@ -688,7 +698,7 @@ describe('Test convertElement- ASIDE-CONTAINER -MMI to ShowHide', () => {
 
     });
 });
-xdescribe('Test convertElement- singleAssessment', () => {
+describe('Test convertElement- singleAssessment', () => {
     let store = mockStore(() => initialState2);
     it('Test convertElement  -assessment type', () => {
         store = mockStore(() => initialState2);
@@ -729,7 +739,7 @@ xdescribe('Test convertElement- singleAssessment', () => {
         spyconversionElement.mockClear()
     });
 });
-xdescribe('Test convertElement- MOCK API CALL', () => {
+describe('Test convertElement- MOCK API CALL', () => {
 
 
     let assessmentDiv2 = document.createElement('div');
@@ -858,5 +868,65 @@ describe('Test convertElement- we MOCK API CALL', () => {
                
             }
          },1000)
+    });
+});
+xdescribe('Test convertElement- codelisting MOCK API CALL', () => {
+
+    it('Test convertElement  -we MOCK API CALL',async () => {
+        let expectedRes = {
+            status: 200,
+            statusText: "",
+            data: activeElementData.BlockCode_OldData
+        }
+        let getState = () => {
+            return initialState13;
+           }
+        axios.post.mockImplementation(() => Promise.resolve(expectedRes));
+        let elemData={}
+        let dispatch=(obj)=>{
+            if(obj.type==='FETCH_SLATE_DATA'){
+                expect(obj.type).toEqual('FETCH_SLATE_DATA');
+                elemData=obj
+            }
+            else{
+                expect(obj.type).toEqual('SET_ACTIVE_ELEMENT');
+                elemData=obj
+            }
+        }
+        let store = mockStore(() => initialState13);
+        let result =   await sidebarAction.convertElement(activeElementData.BlockCode_OldData,activeElementData.BlockCode_NewData,activeElementData.BlockCode_OldInfo,slateData.SlateData2,["1"])
+        result(dispatch,getState);
+        setTimeout(()=>{
+            if(elemData.type==='FETCH_SLATE_DATA'){
+                expect(elemData.type).toEqual('FETCH_SLATE_DATA')
+
+            }
+            else{
+                expect(elemData.type).toEqual('SET_ACTIVE_ELEMENT');
+               
+            }
+         },1000)
+    });
+});
+describe('Test convertElement- ShowHide -Paragraph to List', () => {
+    let store1 = mockStore(() => initialState16);
+    it('Test convertElement- ShowHide -Paragraph to List', () => {
+        store1 = mockStore(() => initialState16);        
+        let nextStore = slateData.SlateData4
+        const spyconversionElement = jest.spyOn(sidebarAction, 'handleElementConversion')
+        store1.dispatch(sidebarAction.handleElementConversion(activeElementData.Showhide_Para_ElementData,nextStore,activeElementData.SH_ActiveElement,true,activeElementData.showHideObject1));
+        expect(spyconversionElement).toHaveBeenCalled()
+        spyconversionElement.mockClear()
+    });
+});
+describe('Test convertElement- ShowHide -Paragraph to List', () => {
+    let store1 = mockStore(() => initialState17);
+    it('Test convertElement- ShowHide -Paragraph to List', () => {
+        store1 = mockStore(() => initialState17);
+        let nextStore = slateData.SlateData4
+        const spyconversionElement = jest.spyOn(sidebarAction, 'handleElementConversion')
+        store1.dispatch(sidebarAction.handleElementConversion(activeElementData.SH_Aside_ElementData,nextStore,activeElementData.SH_Aside,true,activeElementData.showHideObject2));
+        expect(spyconversionElement).toHaveBeenCalled()
+        spyconversionElement.mockClear()
     });
 });
