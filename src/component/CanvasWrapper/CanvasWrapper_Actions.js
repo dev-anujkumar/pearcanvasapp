@@ -80,7 +80,7 @@ const findElementType = (element, index) => {
                         break;
                     case "codelisting":
                         if(element.subtype == "" || element.subtype == undefined) {
-                            element.subtype = "codelisting"
+                           // element.subtype = "codelisting"    // As per requirement removing Subtype key from codelisting
                         }
                         elementType = {
                             elementType: elementDataBank[element.type][element.figuretype]["elementType"],
