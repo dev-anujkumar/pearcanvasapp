@@ -19,5 +19,8 @@ export default {
     BACK_MATTER : 'Back Matter',
     FRONT_MATTER : 'Front Matter',
     CONTAINER_INTRO : 'container-introduction',
-    ELEMENT_ASIDE : 'element-aside'
+    ELEMENT_ASIDE : 'element-aside',
+    MULTI_COLUMN_CONTAINER : "groupedcontent",
+    MULTI_COLUMN : "multi-column-group",
+    SINGLE_COLUMN : "group"
 }

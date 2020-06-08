@@ -32,7 +32,10 @@ const { TEXT,
     CONTAINER_BUTTON, 
     BACK_MATTER, 
     FRONT_MATTER, 
-    CONTAINER_INTRO } = elementTypeConstant
+    CONTAINER_INTRO,
+    MULTI_COLUMN_CONTAINER,
+    SINGLE_COLUMN
+ } = elementTypeConstant
 
 export function ElementSaprator(props) {
     const [showClass, setShowClass] = useState(false);
@@ -273,10 +276,6 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
             })
         }
     }
-
-    // useEffect(()=>{
-    //     setshowInteractiveOption({status:false,type:showInteractiveOption.type})
-    // },[showInteractiveOption])
 
     return updatedEsProps.map((elem, key) => {
         function buttonHandlerFunc() {
