@@ -47,6 +47,7 @@ export class TinyMceEditor extends Component {
         this.isctrlPlusV = false;
         this.fromtinyInitBlur = false;
         this.notFormatting = true;
+        this.gRange = null;
         this.editorConfig = {
             plugins: EditorConfig.plugins,
             selector: '#cypress-0',
@@ -300,6 +301,7 @@ export class TinyMceEditor extends Component {
      */
     editorBeforeExecCommand = (editor) => {
         editor.on('BeforeExecCommand', (e) => {
+            console.log('evenst', e);
             let content = e.target.getContent()
             let keyDownEvent = null
             switch (e.command) {
@@ -591,6 +593,13 @@ export class TinyMceEditor extends Component {
                     else if (key != undefined && (key === 8 || key === 46)) {
                         spanHandlers.handleBackSpaceAndDeleteKyeUp(editor, key, 'codeNoHighlightLine');
                     }
+                    else if (e.ctrlKey) {
+                        if (key != undefined && (key === 66 || key === 98 || key === 73 || key === 105 || key === 85 || key === 117)) {
+                            //this.gRange = editor.selection.getRng();
+                            let codeParent = tinymce.$(`code[id="cypress-${this.props.index}"]`).children();
+                            spanHandlers.handleFormattingTags(editor, this.props.elementId, 'code', codeParent, 'codeNoHighlightLine', this.gRange);
+                        }
+                    }
                 }
                 if (activeElement.nodeName == "DIV" && this.props.element.type === 'stanza') {
                     let key = e.keyCode || e.which;
@@ -729,6 +738,10 @@ export class TinyMceEditor extends Component {
                 } else {
                     if (key != undefined && key === 9) {
                         e.preventDefault();
+                    } else if (e.ctrlKey) {
+                        if (key != undefined && (key === 66 || key === 98 || key === 73 || key === 105 || key === 85 || key === 117)) {
+                            this.gRange = editor.selection.getRng();
+                        }
                     }
                 }
             }
