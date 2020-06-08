@@ -171,9 +171,9 @@ function renderConditionalButtons(esProps,sectionBreak,elementType){
         else if (elementType == SINGLE_COLUMN) {                     /** Container : Multi-Column Element*/
             return buttonType == TEXT && buttonType == IMAGE && buttonType == AUDIO && buttonType == INTERACTIVE && buttonType == ASSESSMENT && buttonType == BLOCK_TEXT && buttonType == METADATA_ANCHOR
         } else {
-        if (sectionBreak) {                                          /** Container : Section in Wored Example*/
+        if (sectionBreak) {                                          /** Container : Other cases in Wored Example*/
             return buttonType !== WORKED_EXP && buttonType !== CONTAINER_BUTTON && buttonType !== OPENER &&  buttonType !== CITATION && buttonType !== STANZA_ELEMENT && buttonType !== POETRY_ELEMENT && buttonType !== MULTI_COLUMN_CONTAINER;
-        } else {                                                     /** Container : Aside| Other cases in WE*/
+        } else {                                                     /** Container : Aside| Section in WE*/
             return buttonType !== OPENER && buttonType !== SECTION_BREAK && buttonType !== WORKED_EXP && buttonType !== CONTAINER_BUTTON && buttonType !== CITATION && buttonType !== STANZA_ELEMENT && buttonType !== POETRY_ELEMENT && buttonType !== MULTI_COLUMN_CONTAINER;
         }
     }
