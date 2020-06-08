@@ -8,7 +8,7 @@ import Button from '../ElementButtons'
 import Tooltip from '../Tooltip'
 import config from '../../config/config';
 import { hasReviewerRole } from '../../constants/utility.js';
-import elementTypeConstant from './ElementSepratorConstants.js';
+import elementTypeConstant, { containerTypeArray } from './ElementSepratorConstants.js';
 import '../../styles/ElementSaprator/ElementSaprator.css'
 import ElementContainerType from '../ElementContainerType/ElementContainerType.jsx'
 
@@ -34,6 +34,7 @@ const { TEXT,
     FRONT_MATTER, 
     CONTAINER_INTRO,
     MULTI_COLUMN_CONTAINER,
+    MULTI_COLUMN,
     SINGLE_COLUMN
  } = elementTypeConstant
 
@@ -161,13 +162,15 @@ export function addMediaClickHandler() {
 function asideButton(esProps,sectionBreak,elementType){
     let updatedEsProps = esProps.filter((btnObj) => {        
       let  buttonType = btnObj.buttonType;
-      if(elementType==CITATION_GROUP_ELEMENT && sectionBreak){
-        return buttonType == CITATION;//citation element
-      }else{
-        if (sectionBreak) {
-            return buttonType !== WORKED_EXP && buttonType !== CONTAINER_BUTTON && buttonType !== OPENER &&  buttonType !== CITATION && buttonType !== STANZA_ELEMENT && buttonType !== POETRY_ELEMENT;
+        if (elementType == CITATION_GROUP_ELEMENT && sectionBreak) {
+            return buttonType == CITATION;//citation element
+        } else if (elementType == SINGLE_COLUMN) { // show these icons in picker for single column
+            return buttonType == TEXT && buttonType == IMAGE && buttonType == AUDIO && buttonType == INTERACTIVE && buttonType == ASSESSMENT && buttonType == BLOCK_TEXT && buttonType == METADATA_ANCHOR
         } else {
-            return buttonType !== OPENER && buttonType !== SECTION_BREAK && buttonType !== WORKED_EXP && buttonType !== CONTAINER_BUTTON && buttonType !== CITATION && buttonType !== STANZA_ELEMENT && buttonType !== POETRY_ELEMENT;
+        if (sectionBreak) {
+            return buttonType !== WORKED_EXP && buttonType !== CONTAINER_BUTTON && buttonType !== OPENER &&  buttonType !== CITATION && buttonType !== STANZA_ELEMENT && buttonType !== POETRY_ELEMENT && buttonType !== MULTI_COLUMN_CONTAINER;
+        } else {
+            return buttonType !== OPENER && buttonType !== SECTION_BREAK && buttonType !== WORKED_EXP && buttonType !== CONTAINER_BUTTON && buttonType !== CITATION && buttonType !== STANZA_ELEMENT && buttonType !== POETRY_ELEMENT && buttonType !== MULTI_COLUMN_CONTAINER;
         }
     }
     })
@@ -203,7 +206,7 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
                 renderConditionalButton(esProps,elementType);
             updatedEsProps = esProps.filter((btnObj) => {
                 buttonType = btnObj.buttonType;
-                return buttonType !== METADATA_ANCHOR && buttonType !== CITATION;
+                return buttonType !== METADATA_ANCHOR && buttonType !== CITATION && buttonType !== MULTI_COLUMN_CONTAINER;
             })
         } else if(elementType == CITATION_GROUP_ELEMENT){
             esProps = asideButton(esProps, sectionBreak,elementType);
@@ -254,7 +257,7 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
                     renderConditionalButton(esProps, elementType);
                 updatedEsProps = esProps.filter((btnObj) => {
                     buttonType = btnObj.buttonType;
-                    return buttonType !== METADATA_ANCHOR && buttonType !== CITATION;
+                    return buttonType !== METADATA_ANCHOR && buttonType !== CITATION && buttonType !== MULTI_COLUMN_CONTAINER;
                 })
             }else if (elementType == CITATION_GROUP_ELEMENT){
                 esProps = asideButton(esProps, sectionBreak,elementType);
@@ -318,25 +321,7 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
   
 function typeOfContainerElements(elem, props) {
     const { index, firstOne, parentUrn, asideData, parentIndex, splithandlerfunction } = props
-    let containerArray = {
-        "container-elem-button": {
-            "Add Aside": "container-elem",
-            "Add Citation Group": "citations-group-elem"
-        },
-        "interactive-elem-button":
-        {
-            "Add MMI": "interactive-elem",
-            "Add Smart Link": "smartlink-elem",
-            "Add Show Hide": "show-hide-elem",
-            "Add Pop Up": "popup-elem",
-        },
-        "block-text-button": {
-            "Block Math": "figure-mml-elem",
-            "Block Code": "blockcode-elem",
-            "Block Poetry": "poetry-elem"
-        }
-    }
-    let newData = containerArray[elem.buttonType];
+    let newData = containerTypeArray[elem.buttonType];
     if(newData){
         let data = Object.entries(newData).map(function (num) {
             return {
