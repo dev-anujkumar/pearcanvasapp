@@ -157,9 +157,9 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             case "SIDEBAR_05":
                 elemDesigntype = "asideSidebar05"
                 break;
-            case "SIDEBAR_06":
-                elemDesigntype = "asideSidebar06"
-                break;
+            // case "SIDEBAR_06":
+            //     elemDesigntype = "asideSidebar06"
+            //     break;
             case "SIDEBAR_01":
             default:
                 elemDesigntype = "asideSidebar01"

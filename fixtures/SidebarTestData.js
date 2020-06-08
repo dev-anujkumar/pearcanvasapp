@@ -1176,6 +1176,188 @@ const slateData  ={
                             frontmatter: [],
                             schema: "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest"
                         }
+                    },
+                    {
+                        comments: false,
+                        contentUrn: "urn:pearson:entity:5d6c4a51-2587-4250-8423-061b67aebe5e",
+                        designtype: "workedexample1",
+                        feedback: false,
+                        id: "urn:pearson:manifest:bc9d51e0-f0df-4127-b09e-9d5e4f75cc36",
+                        pageNo: 0,
+                        schema: "http://schemas.pearson.com/wip-authoring/element/1",
+                        status: "wip",
+                        subtype: "workedexample",
+                        tcm: false,
+                        type: "element-aside",
+                        versionUrn: "urn:pearson:manifest:bc9d51e0-f0df-4127-b09e-9d5e4f75cc36",
+                        elementdata: {
+                            backmatter: [],
+                            bodymatter: [{
+                                comments: false,
+                                contentUrn: "urn:pearson:entity:ddc270b9-e608-4516-baed-2515c37b6f6e",
+                                elementdata: {
+                                    schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                    text: "",
+                                    headers: []
+                                },
+                                feedback: false,
+                                html: {
+                                    text: "<h4 class='heading4NummerEins'><br></h4>",
+                                    footnotes: {},
+                                    glossaryentries: {},
+                                    assetspopover: {}
+                                },
+                                id: "urn:pearson:work:f31729e1-947e-4aa2-be40-66f7748db352",
+                                schema: "http://schemas.pearson.com/wip-authoring/element/1",
+                                status: "wip",
+                                tcm: false,
+                                type: "element-authoredtext",
+                                versionUrn: "urn:pearson:work:f31729e1-947e-4aa2-be40-66f7748db352",
+                            }, {
+                                comments: false,
+                                contentUrn: "urn:pearson:entity:a97b8cae-237b-4703-8427-2da520fbb70a",
+                                contents: {
+                                    schema: "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest",
+                                    frontmatter: [],
+                                    backmatter: [],
+                                    bodymatter: [{
+                                        contentUrn: "urn:pearson:entity:bb90f4a4-5e4b-4266-918e-2ca4afd2e84b",
+                                        id: "urn:pearson:manifest:4e715681-f591-4fa8-ae8e-51009773e32c",
+                                        interactivedata: {
+                                            show: [{
+                                                comments: false,
+                                                contentUrn: "urn:pearson:entity:56693fd8-7ffe-45db-8d18-3301791a4a86",
+                                                elementdata: {
+                                                    schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                    text: "sample text"
+                                                },
+                                                feedback: false,
+                                                html: {
+                                                    text: "<p class='paragraphNumeroUno'>sample text</p>",
+                                                    footnotes: {},
+                                                    glossaryentries: {}
+                                                },
+                                                id: "urn:pearson:work:dbe7e159-4ef0-4bdf-a337-9de13b063345",
+                                                schema: "http://schemas.pearson.com/wip-authoring/element/1",
+                                                status: "wip",
+                                                tcm: false,
+                                                type: "element-authoredtext",
+                                                versionUrn: "urn:pearson:work:dbe7e159-4ef0-4bdf-a337-9de13b063345"
+                                            }],
+                                            hide: [{
+                                                comments: false,
+                                                contentUrn: "urn:pearson:entity:9feac74d-577b-48b4-af91-a446260d2ecf",
+                                                elementdata: {
+                                                    schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                    text: "sample text"
+                                                },
+                                                feedback: false,
+                                                html: {
+                                                    text: "<p class='paragraphNumeroUno'>sample text</p>",
+                                                    footnotes: {},
+                                                    glossaryentries: {}
+                                                },
+                                                id: "urn:pearson:work:d88ad143-95ba-497e-af82-976c36d2445e",
+                                                schema: "http://schemas.pearson.com/wip-authoring/element/1",
+                                                status: "wip",
+                                                tcm: false,
+                                                type: "element-authoredtext",
+                                                versionUrn: "urn:pearson:work:d88ad143-95ba-497e-af82-976c36d2445e"
+                                            }],
+                                            postertextobject: [{
+                                                comments: false,
+                                                contentUrn: "urn:pearson:entity:f4dcc925-c910-4bab-aa47-f8417acd2a07",
+                                                elementdata: {
+                                                    schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                    text: "sample text"
+                                                },
+                                                feedback: false,
+                                                html: {
+                                                    text: "<p class='paragraphNumeroUno'>sample text</p>",
+                                                    footnotes: {},
+                                                    glossaryentries: {}
+                                                },
+                                                id: "urn:pearson:work:3ce4325e-d04a-4bac-835d-5965bb396cfc",
+                                                schema: "http://schemas.pearson.com/wip-authoring/element/1",
+                                                status: "wip",
+                                                tcm: false,
+                                                type: "element-authoredtext",
+                                                versionUrn: "urn:pearson:work:3ce4325e-d04a-4bac-835d-5965bb396cfc"
+                                            }]
+                                        },
+                                        schema: "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/showhide",
+                                        type: "showhide",
+                                        versionUrn: "urn:pearson:manifest:4e715681-f591-4fa8-ae8e-51009773e32c"
+                                    }],
+                                    creditsarray: []
+                                },
+                                designtype: "",
+                                feedback: false,
+                                id: "urn:pearson:manifest:bcfc586a-21ce-4048-8dc7-e3c9df9e2805",
+                                pageNo: 0,
+                                schema: "http://schemas.pearson.com/wip-authoring/manifest/1",
+                                status: "wip",
+                                subtype: "",
+                                tcm: false,
+                                type: "manifest",
+                                versionUrn: "urn:pearson:manifest:bcfc586a-21ce-4048-8dc7-e3c9df9e2805"
+                            }],
+                            frontmatter: [],
+                            schema: "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest"
+                        }
+                    },
+                    {
+                        captions: {
+                            schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                            text: "",
+                            textsemantics: [],
+                            mathml: []
+                        },
+                        comments: false,
+                        contentUrn: "urn:pearson:entity:8d4147c6-216a-4e58-b478-41b3b8ec3e84",
+                        credits: {
+                            schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                            text: "",
+                            textsemantics: [],
+                            mathml: []
+                        },
+                        feedback: false,
+                        figuredata: {
+                            numbered: true,
+                            preformattedtext: [],
+                            programlanguage: "C++",
+                            schema: "http://schemas.pearson.com/wip-authoring/preformatted/1#/definitions/preformatted",
+                            startNumber: "1",
+                            syntaxhighlighting: true,
+                
+                        },
+                        figuretype: "codelisting",
+                        html: {
+                            title: "<p><br></p>",
+                            subtitle: "<p><br></p>",
+                            postertext: "",
+                            preformattedtext: "<p></p>",
+                            captions: "<p><br></p>",
+                            credits: "<p><br></p>"
+                        },
+                        id: "urn:pearson:work:3ab338ed-ae5a-45aa-a4a3-d8131814459d",
+                        schema: "http://schemas.pearson.com/wip-authoring/figure/1",
+                        status: "wip",
+                        subtitle: {
+                            schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                            text: "",
+                            textsemantics: [],
+                            mathml: []
+                        },
+                        subtype: "codelisting",
+                        title: {
+                            schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                            text: "",
+                            textsemantics: [],
+                            mathml: []
+                        },
+                        type: "figure",
+                        versionUrn: "urn:pearson:work:3ab338ed-ae5a-45aa-a4a3-d8131814459d"
                     }
                 ]
             },
