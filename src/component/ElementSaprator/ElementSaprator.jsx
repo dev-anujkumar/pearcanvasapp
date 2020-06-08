@@ -155,41 +155,28 @@ export function addMediaClickHandler() {
     console.log('add media button clicked')
 }
 
-
 /**
- * @description: rendering the aside dropdown
+ * @description: Rendering the element picker dropdown based on type of Container Element
  */
-function asideButton(esProps,sectionBreak,elementType){
+
+function renderConditionalButtons(esProps,sectionBreak,elementType){
     let updatedEsProps = esProps.filter((btnObj) => {        
       let  buttonType = btnObj.buttonType;
-        if (elementType == CITATION_GROUP_ELEMENT && sectionBreak) {
-            return buttonType == CITATION;//citation element
-        } else if (elementType == SINGLE_COLUMN) { // show these icons in picker for single column
+        
+        if (elementType == CITATION_GROUP_ELEMENT && sectionBreak) { /** Container : Citation Group |Render Citation Element*/
+            return buttonType == CITATION;
+        } else if (elementType == POETRY){                           /** Container : Poetry Element |Render Stanza Element*/
+            return buttonType === STANZA_ELEMENT;
+        }
+        else if (elementType == SINGLE_COLUMN) {                     /** Container : Multi-Column Element*/
             return buttonType == TEXT && buttonType == IMAGE && buttonType == AUDIO && buttonType == INTERACTIVE && buttonType == ASSESSMENT && buttonType == BLOCK_TEXT && buttonType == METADATA_ANCHOR
         } else {
-        if (sectionBreak) {
+        if (sectionBreak) {                                          /** Container : Section in Wored Example*/
             return buttonType !== WORKED_EXP && buttonType !== CONTAINER_BUTTON && buttonType !== OPENER &&  buttonType !== CITATION && buttonType !== STANZA_ELEMENT && buttonType !== POETRY_ELEMENT && buttonType !== MULTI_COLUMN_CONTAINER;
-        } else {
+        } else {                                                     /** Container : Aside| Other cases in WE*/
             return buttonType !== OPENER && buttonType !== SECTION_BREAK && buttonType !== WORKED_EXP && buttonType !== CONTAINER_BUTTON && buttonType !== CITATION && buttonType !== STANZA_ELEMENT && buttonType !== POETRY_ELEMENT && buttonType !== MULTI_COLUMN_CONTAINER;
         }
     }
-    })
-    return updatedEsProps;
-}
-
-/**
- * @description: rendering the element picker dropdown
- */
-
-function renderConditionalButton(esProps, elementType) {
-    let updatedEsProps = esProps.filter((btnObj) => {
-        let buttonType = btnObj.buttonType;
-        return buttonType === STANZA_ELEMENT
-        /* return buttonType === OPENER && buttonType !== SECTION_BREAK && buttonType !== WORKED_EXP &&
-            buttonType !== CONTAINER && buttonType !== TEXT && buttonType !== IMAGE &&
-            buttonType !== AUDIO && buttonType !== INTERACTIVE && buttonType !== ASSESSMENT &&
-            buttonType !== METADATA_ANCHOR && buttonType !== POETRY_ELEMENT && buttonType !== INTERACTIVE_BUTTON
-            && buttonType !== CITATION && buttonType !== CONTAINER_BUTTON; */
     })
     return updatedEsProps;
 }
@@ -201,19 +188,13 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
     let {data,setData,showInteractiveOption,setshowInteractiveOption,props} =propsData
     let updatedEsProps, buttonType;
     if (config.parentEntityUrn == FRONT_MATTER || config.parentEntityUrn == BACK_MATTER) {
-        if (elementType == ELEMENT_ASIDE || elementType == POETRY) {
-            esProps = (elementType == ELEMENT_ASIDE) ? asideButton(esProps, sectionBreak,elementType) : 
-                renderConditionalButton(esProps,elementType);
-            updatedEsProps = esProps.filter((btnObj) => {
-                buttonType = btnObj.buttonType;
-                return buttonType !== METADATA_ANCHOR && buttonType !== CITATION && buttonType !== MULTI_COLUMN_CONTAINER;
-            })
-        } else if(elementType == CITATION_GROUP_ELEMENT){
-            esProps = asideButton(esProps, sectionBreak,elementType);
-            updatedEsProps = esProps.filter((btnObj) => {
-                buttonType = btnObj.buttonType;
-                return buttonType == CITATION;
-            })
+        if (elementType == ELEMENT_ASIDE || elementType == POETRY || elementType == CITATION_GROUP_ELEMENT) {
+            esProps = renderConditionalButtons(esProps, sectionBreak,elementType);
+                updatedEsProps = esProps.filter((btnObj) => {
+                    buttonType = btnObj.buttonType;
+                    return buttonType !== METADATA_ANCHOR;
+                })
+            
         }else {            
             updatedEsProps = esProps.filter((btnObj) => {
                 buttonType = btnObj.buttonType;
@@ -252,25 +233,17 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
                     && buttonType !== CITATION && btnObj.buttonType !== STANZA_ELEMENT;
                 })
             }
-            if (elementType == ELEMENT_ASIDE || elementType == POETRY) {
-                esProps = (elementType == ELEMENT_ASIDE) ? asideButton(esProps, sectionBreak,elementType) :
-                    renderConditionalButton(esProps, elementType);
-                updatedEsProps = esProps.filter((btnObj) => {
-                    buttonType = btnObj.buttonType;
-                    return buttonType !== METADATA_ANCHOR && buttonType !== CITATION && buttonType !== MULTI_COLUMN_CONTAINER;
-                })
-            }else if (elementType == CITATION_GROUP_ELEMENT){
-                esProps = asideButton(esProps, sectionBreak,elementType);
-                updatedEsProps = esProps.filter((btnObj) => {
-                    buttonType = btnObj.buttonType;
-                    return buttonType == CITATION;
-                })
+            if (elementType == ELEMENT_ASIDE || elementType == POETRY || elementType == CITATION_GROUP_ELEMENT) {
+                esProps = renderConditionalButtons(esProps, sectionBreak,elementType);
+                    updatedEsProps = esProps.filter((btnObj) => {
+                        buttonType = btnObj.buttonType;
+                        return buttonType !== METADATA_ANCHOR;
+                    })
+                
             }
         }
         else if (elementType == ELEMENT_ASIDE || elementType == CITATION_GROUP_ELEMENT || elementType === POETRY) {
-            updatedEsProps = (elementType === POETRY) ?
-                renderConditionalButton(esProps, elementType) :
-                asideButton(esProps, sectionBreak, elementType);
+                updatedEsProps = renderConditionalButtons(esProps, sectionBreak, elementType);
         }          
         else {
             updatedEsProps = esProps.filter((btnObj) => {
