@@ -301,10 +301,10 @@ export class TinyMceEditor extends Component {
      */
     editorBeforeExecCommand = (editor) => {
         editor.on('BeforeExecCommand', (e) => {
-            console.log('evenst', e);
             let content = e.target.getContent()
             let keyDownEvent = null
             let syntaxEnabled = document.querySelector('.panel_syntax_highlighting .switch input');
+            let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
             switch (e.command) {
                 case "indent":
                     if (editor.targetElm.findChildren('ol').length || editor.targetElm.findChildren('ul').length) {
@@ -444,9 +444,11 @@ export class TinyMceEditor extends Component {
                 case 'Bold':
                 case 'Italic':
                 case 'Underline':
-                    if (syntaxEnabled && syntaxEnabled.checked) {
-                        e.preventDefault();
-                        e.stopPropagation();
+                    if (activeElement.nodeName === "CODE") { 
+                        if (syntaxEnabled && syntaxEnabled.checked) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                        }
                     }
                 break;
             }
