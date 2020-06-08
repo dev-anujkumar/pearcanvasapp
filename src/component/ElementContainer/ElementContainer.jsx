@@ -42,6 +42,9 @@ import CitationGroup from '../CitationGroup'
 import CitationElement from '../CitationElement'
 import ElementPoetry from '../ElementPoetry';
 import ElementPoetryStanza from '../ElementPoetry/ElementPoetryStanza.jsx';
+import MultiColumnContext from "./MultiColumnContext.js"
+import MultiColumnContainer from "../MultiColumnElement"
+
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -1111,7 +1114,7 @@ class ElementContainer extends Component {
                         index: index,
                         element: element,
                         slateLockInfo: slateLockInfo,
-                        updatePageNumber: this.props.updatePageNumber,
+                        // updatePageNumber: this.props.updatePageNumber,
                         handleCommentspanel : handleCommentspanel,
                         isBlockerActive : this.props.isBlockerActive,
                         onClickCapture : this.props.onClickCapture,
@@ -1197,6 +1200,28 @@ class ElementContainer extends Component {
                     glossaryFootnoteValue={this.props.glossaryFootnoteValue} 
                     glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}/>
                     labelText = 'ST'
+                    break;
+                
+                case elementTypeConstant.MULTI_COLUMN:
+                    editor = <MultiColumnContext.Provider value={{
+                        activeElement: this.props.activeElement,
+                        showBlocker: this.props.showBlocker,
+                        permissions: permissions,
+                        index: index,
+                        element: element,
+                        slateLockInfo: slateLockInfo,
+                        updatePageNumber: this.props.updatePageNumber,
+                        handleCommentspanel : handleCommentspanel,
+                        isBlockerActive : this.props.isBlockerActive,
+                        onClickCapture : this.props.onClickCapture,
+                        elementSeparatorProps : elementSepratorProps,
+                        setActiveElement : this.props.setActiveElement,
+                        handleFocus: this.handleFocus,
+                        handleBlur: this.handleBlur,
+                        deleteElement: this.deleteElement
+                    }}><MultiColumnContainer />
+                    </MultiColumnContext.Provider>;
+                    labelText = '2C'
                     break;
             }
         } else {

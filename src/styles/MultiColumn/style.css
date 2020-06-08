@@ -1,0 +1,36 @@
+.multi-column-container {
+    /* display: flex; */
+}
+
+.container-multi-column-group {
+
+}
+
+.column-0 {
+    /* display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: nowrap;
+    margin: 0 auto;
+    background: transparent;
+    margin-top: .50em;
+    margin-bottom: 2.25em;
+    padding-left: 1em;
+    padding-right: 1em;
+    width: 1080px;
+    word-break: normal; */
+}
+.column-1 {
+    /* display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: nowrap;
+    margin: 0 auto;
+    background: transparent;
+    margin-top: .50em;
+    margin-bottom: 2.25em;
+    padding-left: 1em;
+    padding-right: 1em;
+    width: 680px;
+    word-break: normal; */
+}
