@@ -144,8 +144,58 @@ class ElementAsideContainer extends Component {
     }
 
     /**
+     * Sortable onUpdate callback for section and section-break
+     * @param {Object} evt Event object
+     * @param {Object} _containerBodyMatter bodymatter object
+     * @param {Number} index index of section/section break
+     * @param {String} sectionType type - section or section-break
+     */
+    onSectionDragUpdate = (evt, _containerBodyMatter, index, sectionType) => {
+        let swappedElementData;
+        let bodyMatterObj = [];
+        let contentURN;
+        if(this.props.element.contents){
+            contentURN = this.props.element.contentUrn;
+            bodyMatterObj = this.props.element.contents.bodymatter;
+        } else {
+            contentURN = this.props.element.elementdata.bodymatter[index].contentUrn;
+            bodyMatterObj = this.props.element.elementdata.bodymatter[index].contents.bodymatter;
+        }
+
+        if(bodyMatterObj[evt.oldDraggableIndex]) {
+            swappedElementData = bodyMatterObj[evt.oldDraggableIndex];
+        } else {
+            if (sectionType === "section") {
+                this.sectionBodyMatter = _containerBodyMatter;
+                swappedElementData = this.sectionBodyMatter[evt.oldDraggableIndex]
+            }
+            else if (sectionType === "section-break") {
+                this.sectionBreakBodyMatter = _containerBodyMatter;
+                swappedElementData = this.sectionBreakBodyMatter[evt.oldDraggableIndex]
+            }
+        }
+
+        let dataObj = {
+            oldIndex: evt.oldDraggableIndex,
+            newIndex: evt.newDraggableIndex,
+            swappedElementData: swappedElementData,
+            currentSlateEntityUrn: contentURN,
+            containerTypeElem: 'section',
+            asideId: this.props.element.id
+        }
+
+        this.props.swapElement(dataObj, (bodyObj) => { })
+        this.props.setActiveElement(dataObj.swappedElementData, dataObj.newIndex);
+        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+        let showHideNode = document.querySelector('.show-hide-active')
+        if(showHideNode){
+            showHideNode.classList.remove("show-hide-active")
+        }
+    }
+    
+    /**
     * 
-    * @discription - This function is section break
+    * @description - This function is section break
     * @param {string} element -object of element
     */
     section(element, index) {
@@ -186,40 +236,7 @@ class ElementAsideContainer extends Component {
                         },
                         // Element dragging ended
                         onUpdate: (/**Event*/evt) => {
-                            let swappedElementData;
-                            let bodyMatterObj = [];
-                            let contentURN;
-                            if(this.props.element.contents){
-                                contentURN = this.props.element.contentUrn;
-                                bodyMatterObj = this.props.element.contents.bodymatter;
-                            } else {
-                                contentURN = this.props.element.elementdata.bodymatter[index].contentUrn;
-                                bodyMatterObj = this.props.element.elementdata.bodymatter[index].contents.bodymatter;
-                            }
-
-                            if(bodyMatterObj[evt.oldDraggableIndex]) {
-                                swappedElementData = bodyMatterObj[evt.oldDraggableIndex];
-                            } else {
-                                this.sectionBodyMatter = _containerBodyMatter;
-                                swappedElementData = this.sectionBodyMatter[evt.oldDraggableIndex]
-                            }
-
-                            let dataObj = {
-                                oldIndex: evt.oldDraggableIndex,
-                                newIndex: evt.newDraggableIndex,
-                                swappedElementData: swappedElementData,
-                                currentSlateEntityUrn: contentURN,
-                                containerTypeElem: 'section',
-                                asideId: this.props.element.id
-                            }
-
-                            this.props.swapElement(dataObj, (bodyObj) => { })
-                            this.props.setActiveElement(dataObj.swappedElementData, dataObj.newIndex);
-                            sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                            let showHideNode = document.querySelector('.show-hide-active')
-                            if(showHideNode){
-                                showHideNode.classList.remove("show-hide-active")
-                            }
+                            this.onSectionDragUpdate(evt, _containerBodyMatter, index, "section")
                         },
                     }}
                     ref={(c) => {
@@ -238,10 +255,10 @@ class ElementAsideContainer extends Component {
     }
 
     /**
-  * 
-  * @discription - This function is section break
-  * @param {string} _elements -object of element
-  */
+     * 
+     * @description - This function is section break
+     * @param {string} _elements -object of element
+     */
 
     sectionBreak(_element, index) {
         let { id: _elementId, type: _elementType, contents: _containerContent, elementdata: _elementData } = _element;
@@ -289,40 +306,7 @@ class ElementAsideContainer extends Component {
                         },
                         // Element dragging ended
                         onUpdate: (/**Event*/evt) => {
-                            let swappedElementData;
-                            let bodyMatterObj = [];
-                            let contentURN;
-                            if(this.props.element.contents){
-                                contentURN = this.props.element.contentUrn;
-                                bodyMatterObj = this.props.element.contents.bodymatter;
-                            } else {
-                                contentURN = this.props.element.elementdata.bodymatter[index].contentUrn;
-                                bodyMatterObj = this.props.element.elementdata.bodymatter[index].contents.bodymatter;
-                            }
-
-                            if(bodyMatterObj[evt.oldDraggableIndex]) {
-                                swappedElementData = bodyMatterObj[evt.oldDraggableIndex];
-                            } else {
-                                this.sectionBreakBodyMatter = _containerBodyMatter;
-                                swappedElementData = this.sectionBreakBodyMatter[evt.oldDraggableIndex]
-                            }                           
-                            
-                            let dataObj = {
-                                oldIndex: evt.oldDraggableIndex,
-                                newIndex: evt.newDraggableIndex,
-                                swappedElementData: swappedElementData,
-                                currentSlateEntityUrn: contentURN,
-                                containerTypeElem: 'section',
-                                asideId: this.props.element.id,
-                            }
-
-                            this.props.swapElement(dataObj, (bodyObj) => { })
-                            this.props.setActiveElement(dataObj.swappedElementData, dataObj.newIndex);
-                            sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                            let showHideNode = document.querySelector('.show-hide-active')
-                            if(showHideNode){
-                                showHideNode.classList.remove("show-hide-active")
-                            }
+                            this.onSectionDragUpdate(evt, _containerBodyMatter, index, "section-break")
                         },
                     }}
                     ref={(c) => {
