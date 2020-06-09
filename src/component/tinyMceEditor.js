@@ -770,18 +770,41 @@ export class TinyMceEditor extends Component {
     }
 
     /**
-     * Adds inline code formatting option to the toolbar
+     * Adds custom inline code formatting option to the toolbar
      * @param {*} editor  editor instance
      */
+
     addInlineCodeIcon = (editor) => {
+        let self = this;
         editor.ui.registry.addToggleButton('code', {
-            text: '<i class="fa fa-code" aria-hidden="true"></i>',
+            text: '<i class="fa fa-code"></i>',
             tooltip: "Inline code",
-            onAction: () => {
-                this.addInlineCode(editor)
+            onAction: function () {
+                // Add the custom formatting
+                if (editor.selection.getNode().nodeName === 'CODE' && self.props.element.type === 'stanza') {
+                    let selectedNode = editor.selection.getNode();
+                    let innerHTML = selectedNode.innerHTML;
+                    selectedNode.outerHTML = innerHTML;
+                }
+                else {
+                    let range = editor.selection.getRng();
+                    let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
+                    editor.undoManager.transact(() => {
+                        editor.formatter.toggle('custom_code');
+                        if (activeElement.nodeName == "DIV" && self.props.element.type === 'stanza') {
+                            let divParent = tinymce.$(`div[id="cypress-${self.props.index}"]`).children();
+                            spanHandlers.handleFormattingTags(editor, self.props.elementId, 'div', divParent, 'poetryLine', range);
+                        }
+                    });
+                }
             },
-            onSetup: (api) => {
-                this.handleFocussingInlineCode(api, editor)
+            onSetup: function (api) {
+                // responsible for highligting the icon when inline formatting already applied
+                api.setActive(editor.formatter.match('code'));
+                var unbind = editor.formatter.formatChanged('code', api.setActive).unbind;
+                return function () {
+                    if (unbind) unbind();
+                };
             }
         });
     }
@@ -835,32 +858,6 @@ export class TinyMceEditor extends Component {
                 this.footnoteBtnInstance = btnRef;
             }
         });
-    }
-
-    /**
-     * Adds inline code formatting.
-     * @param {*} editor  editor instance
-     */
-    addInlineCode = (editor) => {
-        let selectedText = window.getSelection().anchorNode.parentNode.nodeName;
-        let hasCodeTag = window.getSelection().anchorNode.parentNode.innerHTML.includes('<code data-mce-selected="inline-boundary">')
-        if (editor.selection.getContent() != "" && selectedText != "CODE" && !hasCodeTag) {
-            editor.selection.setContent('<code>' + editor.selection.getContent() + '</code>');
-        }
-        else {
-            editor.selection.getContent() === "" && editor.selection.setContent('');
-        }
-    }
-
-    /*
-    *  handleFocussingInlineCode function is responsible for focussing inline Code Formatting button
-    */
-    handleFocussingInlineCode = (api, editor) => {
-        api.setActive(editor.formatter.match('code'));
-        var unbind = editor.formatter.formatChanged('code', api.setActive).unbind;
-        return function () {
-            if (unbind) unbind();
-        };
     }
 
     /**

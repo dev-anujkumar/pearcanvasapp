@@ -17,6 +17,7 @@ export const EditorConfig = {
         'LO': { block: 'h2', classes: 'heading2learningObjectiveItem' },
         'strikethrough' : {inline : 's', exact : true},
         'underline' : {inline : 'u', exact : true},
+        custom_code: {title: 'inline code', inline: 'code'},
         removeformat: [
             { selector: 'abbr,dfn,a,strong,em,s,u,sub,sup,code', remove: 'all',split: true, expand: false, deep: true },
             { selector: 'span', remove: 'empty', split: false }
