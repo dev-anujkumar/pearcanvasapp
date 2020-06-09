@@ -1,36 +1,23 @@
+/* Multi column Container class */
 .multi-column-container {
-    /* display: flex; */
+    display: flex;
+    max-width: 100%;
 }
 
+/* Common class for column groups */
 .container-multi-column-group {
-
+    width: 50%;
+    border-right: 1px solid black;
 }
 
-.column-0 {
-    /* display: flex;
-    flex-direction: row;
-    justify-content: center;
-    flex-wrap: nowrap;
-    margin: 0 auto;
-    background: transparent;
-    margin-top: .50em;
-    margin-bottom: 2.25em;
-    padding-left: 1em;
-    padding-right: 1em;
-    width: 1080px;
-    word-break: normal; */
+/* Specific class for 1st column group */
+.container-multi-column-group.column-1 {
+    /* Phase 1 */
+    padding-left: 10px;
+    border-right: none;
 }
-.column-1 {
-    /* display: flex;
-    flex-direction: row;
-    justify-content: center;
-    flex-wrap: nowrap;
-    margin: 0 auto;
-    background: transparent;
-    margin-top: .50em;
-    margin-bottom: 2.25em;
-    padding-left: 1em;
-    padding-right: 1em;
-    width: 680px;
-    word-break: normal; */
+
+/* Element container class specific to Multi-Column container */
+.container-multi-column-group .element-container {
+    max-width: 83%;
 }

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import constants from "./constants.js"
 import { guid } from '../../constants/utility.js'
 import ElementSaprator from '../ElementSaprator'
@@ -10,11 +10,18 @@ import MultiColumnContainerContext from '../ElementContainer/MultiColumnContext.
 import './../../styles/MultiColumn/style.css'
 
 let random = guid();
-class MultiColumnContainer extends Component {
 
+class MultiColumnContainer extends PureComponent {
+
+    /**
+     * Render elements in a column group
+     * @param {Array} _elements - Array of elements in the group
+     * @param {object} parentUrn - object containing immediate parent information
+     * @param {Number} parentIndex - Index of column
+     */
     renderElement = (_elements, parentUrn, parentIndex) => {
         let asideData = {
-            type: "multi-column",
+            type: "groupedcontent",
             id: this.context.element.id,
             contentUrn: this.context.element.contentUrn,
             element : this.context.element
@@ -46,16 +53,14 @@ class MultiColumnContainer extends Component {
                                 onClickCapture={this.context.onClickCapture}
                                 parentElement = {this.context.element}
                             />
-                            {
-                                <ElementSaprator
-                                    index={index}
-                                    esProps={this.context.elementSeparatorProps(index, false, parentUrn, asideData, parentIndex)}
-                                    elementType="group"
-                                    sectionBreak={true}
-                                    permissions={this.context.permissions}
-                                    onClickCapture={this.context.onClickCapture}                                       
-                                />
-                            }    
+                            <ElementSaprator
+                                index={index}
+                                esProps={this.context.elementSeparatorProps(index, false, parentUrn, asideData, parentIndex)}
+                                elementType="group"
+                                sectionBreak={true}
+                                permissions={this.context.permissions}
+                                onClickCapture={this.context.onClickCapture}                                       
+                            />  
                         </React.Fragment>
                         
                     )
@@ -70,8 +75,32 @@ class MultiColumnContainer extends Component {
         }
     }
     
+    /**
+     * Prepares data of elements to be swapped
+     * @param {object} event - event object
+     * @param {object} parentUrn - contains data about parent container
+     */
+    prepareSwapData = (event, parentUrn) => {
+        let swappedElementData;
+        let bodyMatterObj = [];
+        bodyMatterObj = this.context.element.contents.bodymatter || [];
+        swappedElementData = bodyMatterObj[event.oldDraggableIndex]
+        let dataObj = {
+            oldIndex: event.oldDraggableIndex,
+            newIndex: event.newDraggableIndex,
+            swappedElementData: swappedElementData,
+            currentSlateEntityUrn: parentUrn.contentUrn,
+            containerTypeElem: '2C',
+        }
+        return dataObj
+    }
+
+    /**
+     * Renders column group
+     * @param {object} group - event object
+     * @param {Number} columnIndex - Index of column
+     */
     renderGroup = (group, columnIndex) => {
-        // const groupDataBodymatter = group.groupdata.bodymatter || []
         try {
             let { id: _containerId, type: _containerType, groupdata: _groupdata } = group
             let { bodymatter: _bodyMatter } = _groupdata
@@ -81,13 +110,9 @@ class MultiColumnContainer extends Component {
                 contentUrn: group.contentUrn,
                 elementType: _containerType
             }
-                /* if(!_bodyMatter.length && this.context.deleteElement && config.citationDefaultElement==false){
-                config.citationDefaultElement=true;
-                this.context.deleteElement();
-            } */
             this['cloneCOSlateControlledSource_4' + random] = this.renderElement(_bodyMatter, parentUrn, index)
             return (
-                <div className="container-multi-column-group" data-id={_containerId} container-type={_containerType}>
+                <div className={`container-multi-column-group column-${index}`} data-id={_containerId} container-type={_containerType}>
                     <Sortable
                         options={{
                             ...constants.sortableOptions,
@@ -103,9 +128,9 @@ class MultiColumnContainer extends Component {
                                     return false
                                 }
                                 let dataObj = this.prepareSwapData(evt, parentUrn)
-                                cgThis.props.swapElement(dataObj, () => { })
-                                cgThis.context.setActiveElement(dataObj.swappedElementData, dataObj.newIndex);
-                                sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } }); 
+                                // this.props.swapElement(dataObj, () => { })
+                                // this.context.setActiveElement(dataObj.swappedElementData, dataObj.newIndex);
+                                // sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } }); 
                             },
                         }}  
                         tag="div"
@@ -120,23 +145,29 @@ class MultiColumnContainer extends Component {
         }
     }
 
+    /**
+     * Renders MultiColumn container
+     * @param {object} context - Context (Data about container)
+     */
     renderContainer = (context) => {
         const groupedDataBodymatter = context.element && context.element.groupeddata && context.element.groupeddata.bodymatter || []
 
         return groupedDataBodymatter.map((group, index) => {
             return (
-                <div className = {`column-${index}`} key = {index}>
+                <React.Fragment key={index}>
                     { this.renderGroup(group, index) }
-                </div>
+                </React.Fragment>
             )
         })
         
     }
     
     render() {
+        const { context } = this
+
         return (
             <div className = "multi-column-container">
-                { this.renderContainer(this.context) }
+                { this.renderContainer(context) }
             </div>
         )
     }
