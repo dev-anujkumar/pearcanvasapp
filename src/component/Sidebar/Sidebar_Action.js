@@ -4,7 +4,8 @@ import config  from './../../config/config';
 import {
     FETCH_SLATE_DATA,
     SET_ACTIVE_ELEMENT,
-    ERROR_POPUP
+    ERROR_POPUP,
+    GET_TCM_RESOURCES
 } from './../../constants/Action_Constants';
 import elementTypes from './../Sidebar/elementTypes';
 import figureDataBank from '../../js/figure_data_bank';
