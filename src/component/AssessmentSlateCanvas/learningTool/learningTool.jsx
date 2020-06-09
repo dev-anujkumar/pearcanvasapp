@@ -269,7 +269,7 @@ class LearningTool extends React.Component {
                                 <option value="myvirtual-child">MyVirtualChild</option>
                                 <option value="myvirtual-life">MyVirtualLife</option>
                                 <option value="knowdl">Personal Finance </option>
-                                <option value="political-science-sims">Political Sims</option>
+                                <option value="political-science-sims">Political Science Sims</option>
                                 <option value="qual-sims">Qualitative Business Sims</option>
                                 <option value="soundbytes">Sound Bytes</option>
                                 <option value="socialexplorer-surveys">Surveys and Inventories</option>
