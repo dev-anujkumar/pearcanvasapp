@@ -651,6 +651,10 @@ class SlateWrapper extends Component {
             case 'table-editor-elem-button':
                 this.props.createElement(TABLE_EDITOR, indexToinsert, parentUrn, asideData, null, null);
                 break;
+            case 'multi-column-group'://
+                this.props.createElement(WORKED_EXAMPLE, indexToinsert, parentUrn, null, null, null, null)
+                // this.props.createElement(WORKED_EXAMPLE, indexToinsert, parentUrn, null, null, null, null)
+                break;
             case 'text-elem':
             default:
                 this.props.createElement(TEXT, indexToinsert, parentUrn, asideData, null, null, null);
@@ -712,6 +716,12 @@ class SlateWrapper extends Component {
                 buttonType: 'worked-exp-elem',
                 buttonHandler: () => this.splithandlerfunction('worked-exp-elem', index, firstOne, parentUrn),
                 tooltipText: 'Worked Example',
+                tooltipDirection: 'left'
+            },
+            {
+                buttonType: 'multi-column-group',
+                buttonHandler: () => this.splithandlerfunction('multi-column-group', index, firstOne, parentUrn),
+                tooltipText: 'Multi column',
                 tooltipDirection: 'left'
             },
             {

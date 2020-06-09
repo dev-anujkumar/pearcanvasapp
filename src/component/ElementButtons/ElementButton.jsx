@@ -27,7 +27,8 @@ import {
     citationElement,
     stanzaIcon,
     blockTextIcon,
-    tableElemIcon
+    tableElemIcon,
+    multiColumnContainer
 } from '../../images/ElementButtons/ElementButtons.jsx';
 import deleteIcon from '../../images/ElementButtons/deleteIcon.png'
 import forwardNavActive from '../../images/ElementButtons/forwardNavActive.png'
@@ -196,6 +197,12 @@ class ElementButton extends Component {
                 buttonJSX = <span className="btn-element table-editor-elem" onClick={clickHandlerFn}>
                     {tableElemIcon}
                 </span>
+                break;
+            case buttonTypes.MULTI_COLUMN_CONTAINER:
+                buttonJSX = <span className="btn-element multi-column-group" onClick={clickHandlerFn}>
+                    {multiColumnContainer}
+                </span>
+                break;
         }
         return buttonJSX
     }
