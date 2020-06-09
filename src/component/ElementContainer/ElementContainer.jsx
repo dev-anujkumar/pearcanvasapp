@@ -1253,7 +1253,7 @@ class ElementContainer extends Component {
                     {this.renderColorTextButton(element)}
                 </div>
                     : ''}
-                <div className={`element-container ${labelText.toLowerCase()} ${borderToggle}`} data-id={element.id} onFocus={() => this.toolbarHandling('remove')} onBlur={() => this.toolbarHandling('add')}>
+                <div className={`element-container ${labelText.toLowerCase()=="2c"? "multi-column":labelText.toLowerCase()} ${borderToggle}`} data-id={element.id} onFocus={() => this.toolbarHandling('remove')} onBlur={() => this.toolbarHandling('add')}>
                     {elementOverlay}{bceOverlay}{editor}
                 </div>
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>

@@ -21,3 +21,16 @@
 .container-multi-column-group .element-container {
     max-width: 83%;
 }
+
+/*style for element picker inside Multi-Column element*/
+.container-multi-column-group .horizontalLine {
+    margin-left: -4%;
+    width: 100%;
+}
+.container-multi-column-group .dropdown {
+    /* margin-left: -23px; */
+    cursor: pointer;
+}
+.container-multi-column-group .elemDiv-expand{
+    right: 2%;
+}

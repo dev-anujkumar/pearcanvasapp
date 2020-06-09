@@ -167,12 +167,13 @@ function renderConditionalButtons(esProps,sectionBreak,elementType){
         } else if (elementType == POETRY){                           /** Container : Poetry Element |Render Stanza Element*/
             return buttonType === STANZA_ELEMENT;
         }
-        else if (elementType == SINGLE_COLUMN) {                     /** Container : C1/C2 in Multi-Column Element*/
-            return buttonType == TEXT && buttonType == IMAGE && buttonType == AUDIO && buttonType == INTERACTIVE && buttonType == ASSESSMENT && buttonType == BLOCK_TEXT && buttonType == METADATA_ANCHOR
-        } else {
+        // else if (elementType == SINGLE_COLUMN) {                     /** Container : C1/C2 in Multi-Column Element*/
+        //     return buttonType == TEXT && buttonType == IMAGE && buttonType == AUDIO && buttonType == INTERACTIVE && buttonType == ASSESSMENT && buttonType == BLOCK_TEXT && buttonType == METADATA_ANCHOR
+        // } 
+        else {
         if (sectionBreak) {                                          /** Container : Other cases in Wored Example*/
             return buttonType !== WORKED_EXP && buttonType !== CONTAINER_BUTTON && buttonType !== OPENER &&  buttonType !== CITATION && buttonType !== STANZA_ELEMENT && buttonType !== POETRY_ELEMENT && buttonType !== MULTI_COLUMN_CONTAINER;
-        } else {                                                     /** Container : Aside| Section in WE*/
+        } else {                                                     /** Container : Aside| Section in WE| C1/C2 in Multi-Column Element*/
             return buttonType !== OPENER && buttonType !== SECTION_BREAK && buttonType !== WORKED_EXP && buttonType !== CONTAINER_BUTTON && buttonType !== CITATION && buttonType !== STANZA_ELEMENT && buttonType !== POETRY_ELEMENT && buttonType !== MULTI_COLUMN_CONTAINER;
         }
     }
@@ -187,7 +188,7 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
     let {data,setData,showInteractiveOption,setshowInteractiveOption,props} =propsData
     let updatedEsProps, buttonType;
     if (config.parentEntityUrn == FRONT_MATTER || config.parentEntityUrn == BACK_MATTER) {
-        if (elementType == ELEMENT_ASIDE || elementType == POETRY || elementType == CITATION_GROUP_ELEMENT) {
+        if (elementType == ELEMENT_ASIDE || elementType == POETRY || elementType == CITATION_GROUP_ELEMENT || elementType == SINGLE_COLUMN) {
             esProps = renderConditionalButtons(esProps, sectionBreak,elementType);
                 updatedEsProps = esProps.filter((btnObj) => {
                     buttonType = btnObj.buttonType;
@@ -232,7 +233,7 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
                     && buttonType !== CITATION && btnObj.buttonType !== STANZA_ELEMENT;
                 })
             }
-            if (elementType == ELEMENT_ASIDE || elementType == POETRY || elementType == CITATION_GROUP_ELEMENT) {
+            if (elementType == ELEMENT_ASIDE || elementType == POETRY || elementType == CITATION_GROUP_ELEMENT || elementType == SINGLE_COLUMN) {
                 esProps = renderConditionalButtons(esProps, sectionBreak,elementType);
                     updatedEsProps = esProps.filter((btnObj) => {
                         buttonType = btnObj.buttonType;
@@ -241,7 +242,7 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
                 
             }
         }
-        else if (elementType == ELEMENT_ASIDE || elementType == CITATION_GROUP_ELEMENT || elementType === POETRY) {
+        else if (elementType == ELEMENT_ASIDE || elementType == CITATION_GROUP_ELEMENT || elementType === POETRY || elementType == SINGLE_COLUMN) {
                 updatedEsProps = renderConditionalButtons(esProps, sectionBreak, elementType);
         }          
         else {
