@@ -61,6 +61,7 @@ export class TinyMceEditor extends Component {
             fixed_toolbar_container: '#tinymceToolbar',
             content_style: EditorConfig.contentStyle,
             toolbar: EditorConfig.toolbar,
+            padd_empty_with_br: true,
             image_advtab: false,
             force_br_newlines: true,
             forced_root_block: '',
@@ -1871,19 +1872,20 @@ export class TinyMceEditor extends Component {
             currentTarget.focus();
             let termText = tinyMCE.$("#" + currentTarget.id) && tinyMCE.$("#" + currentTarget.id).html();
             tinymce.init(this.editorConfig).then(() => {
-                if (termText && termText.length && this.props.element.type !== 'poetry' && this.props.element.type !== 'element-list' && !(
-                    this.props.element.type === "showhide" && this.props.currentElement.type === 'element-list')) {
-                    if (termText.search(/^(<.*>(<br.*>)<\/.*>)+$/g) < 0 &&
-                        (tinyMCE.$("#" + currentTarget.id).html()).search(/^(<.*>(<br.*>)<\/.*>)+$/g) >= 0) {
+                if (termText && termText.length && 'type' in this.props.element && this.props.element.type !== 'poetry' && this.props.element.type !== 'element-list' &&
+                !(this.props.element.type === "showhide" && this.props.currentElement.type === 'element-list')) {
+                    if (termText.search(/^(<.*>(<br.*>)<\/.*>)+$/g) < 0 && 
+                    (tinyMCE.$("#" + currentTarget.id).html()).search(/^(<.*>(<br.*>)<\/.*>)+$/g) >= 0) {
                         termText = tinyMCE.$("#" + currentTarget.id).html();
                     }
                     /***
                      * [BG-2225] | Unwanted saving calls in video element
                      */
-                    if (this.props.element.type === "figure" && termText.search(/^(<.*>(<br.*>)<\/.*>)+$/g) < 0 &&
+                    if ('type' in this.props.element && this.props.element.type === "figure" && termText.search(/^(<.*>(<br.*>)<\/.*>)+$/g) < 0 &&
                         (tinyMCE.$("#" + currentTarget.id).html()).search(/^(<br.*>)+$/g) >= 0) {
                         termText = tinyMCE.$("#" + currentTarget.id).html();
                     }
+
                     /* Reverting data-temp-mathml to data-mathml and class Wirisformula to temp_WirisFormula */
                     termText = termText.replace(/data-temp-mathml/g, 'data-mathml').replace(/temp_Wirisformula/g, 'Wirisformula');
                     document.getElementById(currentTarget.id).innerHTML = termText
