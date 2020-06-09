@@ -5,7 +5,7 @@ import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import {
     fetchSlateData
 } from '../CanvasWrapper/CanvasWrapper_Actions';
-import {  AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP, OPEN_GLOSSARY_FOOTNOTE,DELETE_SHOW_HIDE_ELEMENT, GET_TCM_RESOURCES} from "./../../constants/Action_Constants";
+import {  ADD_COMMENT, AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP, OPEN_GLOSSARY_FOOTNOTE,DELETE_SHOW_HIDE_ELEMENT, GET_TCM_RESOURCES} from "./../../constants/Action_Constants";
 import { customEvent } from '../../js/utils';
 
 export const addComment = (commentString, elementId, asideData, parentUrn) => (dispatch, getState) => {
@@ -40,7 +40,39 @@ export const addComment = (commentString, elementId, asideData, parentUrn) => (d
     )
         .then(response => {
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
+            const parentData = getState().appStore.slateLevelData;
+            const newslateData = JSON.parse(JSON.stringify(parentData));
+            let _slateObject = Object.values(newslateData)[0];
+            let { contents: _slateContent } = _slateObject;
+            let { bodymatter: _slateBodyMatter } = _slateContent;
             Comment.commentUrn = response.data.commentUrn
+            //const elementBM = _slateBodyMatter.map(element => {
+            _slateBodyMatter.map(element => {
+                if (element.id === elementId) {
+                    element['comments'] = true
+                } else if (asideData && asideData.type == 'element-aside') {
+                    if (element.id == asideData.id) {
+                        element.elementdata.bodymatter.map((nestedEle) => {
+                            /*This condition add comment in element in aside */
+                            if (nestedEle.id == elementId) {
+                                nestedEle['comments'] = true;
+                            } else if (nestedEle.type == "manifest" && nestedEle.id == parentUrn.manifestUrn) {
+                                /*This condition add comment in element in section of aside */
+                                nestedEle.contents.bodymatter.map((ele) => {
+                                    if (ele.id == elementId) {
+                                        ele['comments'] = true;
+                                    }
+                                })
+                            }
+                        })
+                    }
+                }
+            }
+            );
+            dispatch({
+                type: ADD_COMMENT,
+                payload: newslateData
+            });
            
             dispatch({
                 type: ADD_NEW_COMMENT,
@@ -48,9 +80,10 @@ export const addComment = (commentString, elementId, asideData, parentUrn) => (d
             });
 
         }).catch(error => {
-            dispatch({type: ERROR_POPUP, payload:{show: true}})
+            showError(error, dispatch, "Failed to add comment")
+            /* dispatch({type: ERROR_POPUP, payload:{show: true}})
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
-            console.log("Failed to add comment", error);
+            console.log("Failed to add comment", error); */
         })
 }
 
@@ -109,7 +142,8 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
 
             return false;
         }
-            let bodymatter = newParentData[config.slateManifestURN].contents.bodymatter
+        config.citationDefaultElement=false;    
+        let bodymatter = newParentData[config.slateManifestURN].contents.bodymatter
             bodymatter.forEach((element, key) => {
                 if (element.id === elmId) {
                     bodymatter.splice(key, 1);
@@ -158,16 +192,17 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
                     slateLevelData: newParentData
                 }
             })
-            /** Delete Tcm data on element delete*/
-            if (config.tcmStatus) {
+              /** Delete Tcm data on element delete*/
+              if (config.tcmStatus) {
                 prepareTCMforDelete(elmId, dispatch,getState);
             }
         }
 
     }).catch(error => {
-        dispatch({type: ERROR_POPUP, payload:{show: true}})
+        showError(error, dispatch, "delete Api fail")
+        /* dispatch({type: ERROR_POPUP, payload:{show: true}})
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
-        console.log("delete Api fail", error);
+        console.log("delete Api fail", error); */
     })
 }
 /** Delete Tcm data on element delete*/
@@ -259,7 +294,6 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
         return ;
     }
-
     prepareDataForTcmUpdate(updatedData,updatedData.id, elementIndex, asideData, getState, updatedData.type, poetryData);
     updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, null, elementIndex, showHideType, parentElement, poetryData)
     let updatedData1 = JSON.parse(JSON.stringify(updatedData))
@@ -796,9 +830,10 @@ export const getTableEditorData = (elementId) => (dispatch, getState) => {
             }
         })
     }).catch(error => {
-        dispatch({type: ERROR_POPUP, payload:{show: true}})
+        showError(error, dispatch, "getTableEditorData Api fail")
+        /* dispatch({type: ERROR_POPUP, payload:{show: true}})
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
-        console.log("getTableEditorData Api fail", error);
+        console.log("getTableEditorData Api fail", error); */
     })
 }
 
@@ -883,9 +918,10 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
             cb("create",index);
         }
     }).catch(error => {
-        dispatch({type: ERROR_POPUP, payload:{show: true}})
+        showError(error, dispatch, "error while createing element")
+        /* dispatch({type: ERROR_POPUP, payload:{show: true}})
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
-        console.log("error while createing element",error)
+        console.log("error while createing element",error) */
     })
 }
 
@@ -950,10 +986,17 @@ export const deleteShowHideUnit = (elementId, type, parentUrn, index,eleIndex, p
         })
   
     }).catch(error => {
-        dispatch({type: ERROR_POPUP, payload:{show: true}})
+        showError(error, dispatch, "error while creating element")
+        /* dispatch({type: ERROR_POPUP, payload:{show: true}})
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
-        console.log("error while createing element",error)
+        console.log("error while createing element",error) */
     })
+}
+
+const showError = (error, dispatch, errorMessage) => {
+    dispatch({type: ERROR_POPUP, payload:{show: true}})
+    sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
+    console.log(errorMessage, error)
 }
 
 const cascadeElement = (parentElement, dispatch, parentElementIndex) => {

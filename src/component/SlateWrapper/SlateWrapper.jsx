@@ -138,6 +138,8 @@ class SlateWrapper extends Component {
     }
 
     static getDerivedStateFromProps = (props, state) => {
+         /** Default Red Dot indicator to false */
+         sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'false'});  
         /**
          * updateTimer is for updating Time for slate refresh
          */
@@ -757,7 +759,7 @@ class SlateWrapper extends Component {
                     active={true}
                     togglePopup={this.toggleSplitSlatePopup}
                     isSplitSlatePopup={true}
-                    handleSplit={this.handleSplitSlate}
+                    confirmCallback={this.handleSplitSlate}
                     isInputDisabled={true}
                     splitSlateClass="split-slate"
                 />

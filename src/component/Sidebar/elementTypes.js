@@ -363,7 +363,7 @@ export default {
                     labelText: 'BCE',
                     enum: 'LISP'
                 },
-                'secondary-blockcode-language-objective-c': {
+                'secondary-blockcode-language-objective_c': {
                     text: 'Objective C',
                     labelText: 'BCE',
                     enum: 'OBJECTIVE_C'
@@ -602,7 +602,7 @@ export default {
                     enum: 'SINGLE_ASSESSMENT_PUF'
                 },
                 'secondary-single-assessment-learnosity': {
-                    text: 'Learnosity Beta',
+                    text: 'Learnosity',
                     labelText: 'Qu',
                     enum: 'SINGLE_ASSESSMENT_LEARNOSITY'
                 }

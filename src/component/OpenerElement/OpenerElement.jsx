@@ -36,6 +36,8 @@ class OpenerElement extends Component {
             projectMetadata: false,
             updateImageOptions:false
         }
+        this.setWrapperRef = this.setWrapperRef.bind(this);
+        this.handleClickOutside = this.handleClickOutside.bind(this);
     }
 
     dataFromAlfresco = (data) => {
@@ -446,8 +448,8 @@ class OpenerElement extends Component {
             <span className="color_Dropdown_arrow">{dropdownArrow}</span>
             </div>
           {this.state.updateImageOptions? <ul className="image-global-button">
-                <li onClick={this.handleC2GlobalCO}>Choose from Global CO site</li>
-                <li onClick={this.handleC2MediaClick}>Choose from an Alfresco site</li>
+                <li onClick={this.handleC2GlobalCO}>Global Opener Element Site</li>
+                <li onClick={this.handleC2MediaClick}>Choose from project's Alfresco site</li>
             </ul>:null} 
         </div> 
         return COImg
@@ -456,11 +458,36 @@ class OpenerElement extends Component {
         let COImg = <div className="empty-opener-element-view">
             <div className="select-image-label">Select an Image</div>
             <div className="select-image-co-buttons">
-                <div className="select-image-global-button" onClick={this.handleC2GlobalCO}>Choose from Global CO site</div>
-                <div className="select-image-alresco-button" onClick={this.handleC2MediaClick}>Choose from an Alfresco site</div>
+                <div className="select-image-global-button" onClick={this.handleC2GlobalCO}>Global Opener Element Site</div>
+                <div className="select-image-alresco-button" onClick={this.handleC2MediaClick}>Choose from project's Alfresco site</div>
             </div>
         </div>
         return COImg
+    }
+    componentDidMount() {
+        document.addEventListener('mousedown', this.handleClickOutside);
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener('mousedown', this.handleClickOutside);
+    }
+
+    /**
+     * Set the wrapper ref
+     */
+    setWrapperRef(node) {
+        this.wrapperRef = node;
+    }
+
+    /**
+     * Remove Update Button Popup if clicked on outside of element
+     */
+    handleClickOutside(event) {
+        if (this.state.updateImageOptions == true && this.wrapperRef && !this.wrapperRef.contains(event.target)) {
+            this.setState({
+                updateImageOptions: false
+            })
+        }
     }
     render() {
         const { imgSrc, width } = this.state
@@ -468,7 +495,7 @@ class OpenerElement extends Component {
         let isDisable = hasReviewerRole() ? " disable-role" : ""
         const styleObj = this.getBGStyle(imgSrc, width)
         return (
-            <div className = "opener-element-container" onClickCapture={(e) => this.handleOpenerClick(slateLockInfo, e)}>
+            <div className = "opener-element-container" ref={this.setWrapperRef} onClickCapture={(e) => this.handleOpenerClick(slateLockInfo, e)}>
                 <div className = "input-box-container">
                     <div className="opener-label-box">
                         <div className="opener-label-text">Label</div>

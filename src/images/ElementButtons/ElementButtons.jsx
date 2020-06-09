@@ -21,7 +21,7 @@ export const textIcon = (function () {
 /****************************************************Poetry Element***********************************************************/
 
 export const blockTextIcon = (function () {
-    return (<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    return (<svg id="blockTextIcon" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
     <g id="poetry-icon/hover-copy" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
         <rect id="Rectangle" fill="#EEEEEE" opacity="0.100000001" x="0" y="0" width="24" height="24"></rect>
         <g id="Group-10-Copy-3" transform="translate(10.667262, 13.667262) rotate(-135.000000) translate(-10.667262, -13.667262) translate(4.667262, 3.167262)">
@@ -58,7 +58,7 @@ export const imageIcon = (function () {
 })();
 
 export const interativeIcon = (function () {
-    return (<svg viewBox="0 0 18 18" width="18" height="18" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    return (<svg id="interativeIcon" viewBox="0 0 18 18" width="18" height="18" version="1.1" xmlns="http://www.w3.org/2000/svg">
         <rect width="18" height="18" fill="none" />
         <path d="M9.2,18.3H8.9a.87.87,0,0,1-.6-.8V11.7H4.2a1,1,0,0,1-.8-.5,1,1,0,0,1,.1-.9L10.2,2a.81.81,0,0,1,.9-.3.87.87,0,0,1,.6.8V8.3h4.2a1,1,0,0,1,.8.5.76.76,0,0,1-.1.9L9.8,18A.71.71,0,0,1,9.2,18.3ZM5.9,10H9.2a.79.79,0,0,1,.8.8v4.3L14.1,10H10.8a.86.86,0,0,1-.8-.8V4.9Z" />
     </svg>)
@@ -151,7 +151,7 @@ export const lockIcon = (() => {
 })();
 export const metaDataAnchor = (function(){
     return (
-        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="20" viewBox="10 10 50 50">
+        <svg id="metaDataAnchorIcon" xmlns="http://www.w3.org/2000/svg" width="25" height="20" viewBox="10 10 50 50">
         <defs>
           <clipPath id="clip-Anchor">
             <rect width="64" height="64"/>
@@ -280,7 +280,7 @@ export const citationElement = (() => {
 
 export const tableElemIcon = (() => {
     return ( 
-        <svg style ={{width: "20px", height: "20px", fill: "#9e9e9e"}} xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 24 24">
+        <svg id="tableIcon" style ={{width: "20px", height: "20px", fill: "#9e9e9e"}} xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 24 24">
             <path d="M5,4H19A2,2 0 0,1 21,6V18A2,2 0 0,1 19,20H5A2,2 0 0,1 3,18V6A2,2 0 0,1 5,4M5,8V12H11V8H5M13,8V12H19V8H13M5,14V18H11V14H5M13,14V18H19V14H13Z" />
         </svg>
     )

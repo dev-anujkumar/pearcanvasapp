@@ -4,8 +4,7 @@ import config  from './../../config/config';
 import {
     FETCH_SLATE_DATA,
     SET_ACTIVE_ELEMENT,
-    ERROR_POPUP,
-    GET_TCM_RESOURCES
+    ERROR_POPUP
 } from './../../constants/Action_Constants';
 import elementTypes from './../Sidebar/elementTypes';
 import figureDataBank from '../../js/figure_data_bank';
@@ -64,6 +63,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         }
         if(oldElementData.figuretype && oldElementData.figuretype === "codelisting" && newElementData['primaryOption'] === "primary-blockcode-equation") {
             oldElementData.figuredata.programlanguage = elementTypes[newElementData['elementType']][newElementData['primaryOption']].subtype[newElementData['secondaryOption']].text;
+             oldElementData.figuredata.preformattedtext = [];
         }
     }
 
@@ -74,7 +74,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         outputPrimaryOptionEnum=outputSubType['enum'];
         outputSubTypeEnum = usageType.toUpperCase().replace(" ", "_").replace("-", "_");
         oldElementData.figuredata.elementdata.usagetype=usageType;
-        let assessmentFormat = outputSubType.text !== 'Learnosity Beta' ? outputSubType.text.toLowerCase() : 'learnosity';
+        let assessmentFormat = outputSubType.text.toLowerCase();
         let assessmentItemType ="";
         if(assessmentFormat==="cite" || assessmentFormat==="puf" || assessmentFormat==="learnosity"){
             assessmentItemType ="assessmentItem";
@@ -157,9 +157,9 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             case "SIDEBAR_05":
                 elemDesigntype = "asideSidebar05"
                 break;
-            case "SIDEBAR_06":
-                elemDesigntype = "asideSidebar06"
-                break;
+            // case "SIDEBAR_06":
+            //     elemDesigntype = "asideSidebar06"
+            //     break;
             case "SIDEBAR_01":
             default:
                 elemDesigntype = "asideSidebar01"
@@ -405,7 +405,6 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
         let bodymatter = storeElement.contents.bodymatter;
         let indexes = activeElement.index;
         indexes = indexes.toString().split("-");
-        
         //Separate case for element conversion in showhide
         if(showHideObj) {
             let oldElementData

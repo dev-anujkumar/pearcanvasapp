@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import ReactDOMServer from 'react-dom/server'
 import { Provider } from 'react-redux';
-import { slateData, emptySlateData, slateDataForIntro, slateDataForAssess } from '../../../fixtures/slateTestingData.js'
+import { slateData, emptySlateData, slateDataForIntro, slateDataForAssess, slateDataVer } from '../../../fixtures/slateTestingData.js'
 import SlateWrapper from '../../../src/component/SlateWrapper';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
@@ -395,6 +395,7 @@ describe('Testing <SlateWrapper> Component', () => {
                 element : {},
                 index : 0
             }
+            config.tempSlateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
             const spyclosePopup = jest.spyOn(slateWrapperInstance, 'closePopup')
             slateWrapperInstance.closePopup()
             expect(spyclosePopup).toHaveBeenCalled()

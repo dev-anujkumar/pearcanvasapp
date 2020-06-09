@@ -20,6 +20,7 @@ import elementDataBank from './elementDataBank'
 import figureData from '../ElementFigure/figureTypes.js';
 import { fetchAllSlatesData, setCurrentSlateAncestorData } from '../../js/getAllSlatesData.js';
 import { handleTCMData, tcmSnapshot } from '../../component/ElementContainer/TcmSnapshot_Actions';
+
 const findElementType = (element, index) => {
     let elementType = {};
     elementType['tag'] = '';
@@ -81,13 +82,14 @@ const findElementType = (element, index) => {
                         break;
                     case "codelisting":
                         if(element.subtype == "" || element.subtype == undefined) {
-                            element.subtype = "codelisting"
+                           // element.subtype = "codelisting"    // As per requirement removing Subtype key from codelisting
                         }
                         elementType = {
                             elementType: elementDataBank[element.type][element.figuretype]["elementType"],
                             primaryOption: elementDataBank[element.type][element.figuretype]["primaryOption"],
                             numbered: element.figuredata.numbered,
-                            startNumber: element.figuredata.startNumber
+                            startNumber: element.figuredata.startNumber,
+                            syntaxhighlighting: element.figuredata.syntaxhighlighting
                         }
                         if(element.figuredata && !element.figuredata.programlanguage) {
                             element.figuredata.programlanguage = 'Select';
@@ -253,6 +255,8 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
 
 		if(slateData.data && slateData.data[newVersionManifestId] && slateData.data[newVersionManifestId].type === "popup"){
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
+            config.slateManifestURN= Object.values(slateData.data)[0].id
+            manifestURN= Object.values(slateData.data)[0].id
             config.isPopupSlate = true;
             config.savingInProgress = false;
 			if (config.slateManifestURN === Object.values(slateData.data)[0].id) {

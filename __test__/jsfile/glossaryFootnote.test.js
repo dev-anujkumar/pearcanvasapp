@@ -3,7 +3,7 @@ import axios from 'axios';
 jest.mock('../../src/config/config.js', () => ({
     slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
     ASSET_POPOVER_ENDPOINT:"https://contentapis-staging.pearsoncms.net/manifest-api/",
-    REACT_APP_API_URL :"https://10.11.7.24:8443/cypress-api/",
+    REACT_APP_API_URL :"https://10.11.7.246:8443/cypress-api/",
     STRUCTURE_APIKEY:'Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld',
     PRODUCTAPI_ENDPOINT:"https://contentapis-staging.pearsoncms.net/product-api/",
     projectUrn: "urn:pearson:distributable:3e872df6-834c-45f5-b5c7-c7b525fab1ef",

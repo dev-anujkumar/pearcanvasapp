@@ -177,13 +177,14 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
  */
 const generateCommonFigureDataBlockCode = (index, previousElementData, elementType, primaryOption, secondaryOption) => {
 
-    let getAttributeBCE = document.querySelector(`div.element-container.active[data-id="${previousElementData.id}"] div.blockCodeFigure`)
+    let getAttributeBCE = document.querySelector(`div.element-container.active[data-id="${previousElementData.id}"] div.blockCodeFigure`) || document.querySelector(`div.element-container.bce.showBorder[data-id="${previousElementData.id}"] div.blockCodeFigure`)
     let startNumber = getAttributeBCE && getAttributeBCE.getAttribute("startnumber")
-    let isNumbered = getAttributeBCE && getAttributeBCE.getAttribute("numbered")
+    let isNumbered = getAttributeBCE && getAttributeBCE.getAttribute("numbered") || true;
+    let isSyntaxhighlighted = getAttributeBCE && getAttributeBCE.getAttribute("syntaxhighlighting") || true ;
 
     let titleDOM = document.getElementById(`cypress-${index}-0`),
         subtitleDOM = document.getElementById(`cypress-${index}-1`),
-        preformattedText = document.getElementById(`cypress-${index}-2`).innerText ? document.getElementById(`cypress-${index}-2`).innerText : "",
+        preformattedText = document.getElementById(`cypress-${index}-2`).innerHTML ? document.getElementById(`cypress-${index}-2`).innerHTML : '<span class="codeNoHighlightLine"><br /></span>',
         captionDOM = document.getElementById(`cypress-${index}-3`),
         creditsDOM = document.getElementById(`cypress-${index}-4`)
 
@@ -201,10 +202,6 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
         creditsHTML = replaceUnwantedtags(creditsHTML)
         subtitleHTML = replaceUnwantedtags(subtitleHTML)
         titleHTML = replaceUnwantedtags(titleHTML)
-    
-        preformattedText = preformattedText.replace(/&lt;/g, "<")
-        preformattedText = preformattedText.replace(/&gt;/g, ">")
-        preformattedText = preformattedText.trimEnd();
 
     let data = {
         ...previousElementData,
@@ -236,15 +233,17 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
             title: matchHTMLwithRegex(titleHTML)?titleHTML:`<p>${titleHTML}</p>`,
             postertext: "",
             tableasHTML: "",
-            text: ""
+            text: "",
+            preformattedtext: matchHTMLwithRegex(preformattedText)?preformattedText:`<p>${preformattedText}</p>`
         }, 
         figuredata:{
             schema : "http://schemas.pearson.com/wip-authoring/preformatted/1#/definitions/preformatted",
-            type: previousElementData.figuretype,
+            type: "codelistingformatted",
             numbered: (typeof (isNumbered ) == "string") ? JSON.parse(isNumbered): isNumbered,
             startNumber: startNumber,
             programlanguage: previousElementData.figuredata.programlanguage,
-            preformattedtext: [...preformattedText.split("\n")]
+            syntaxhighlighting: (typeof (isSyntaxhighlighted ) == "string") ? JSON.parse(isSyntaxhighlighted): isSyntaxhighlighted,
+
         },
         inputType : elementTypes[elementType][primaryOption]['enum'],
         inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']    

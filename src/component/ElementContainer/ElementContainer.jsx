@@ -100,6 +100,7 @@ class ElementContainer extends Component {
         } else if (newProps.element.type == "openerelement") {
             this.setState({
                 borderToggle: 'active',
+                btnClassName: 'activeTagBgColor'
             })
         }
         else {
@@ -245,20 +246,25 @@ class ElementContainer extends Component {
     figureDifferenceBlockCode = (index, previousElementData) => {
         let titleDOM = document.getElementById(`cypress-${index}-0`),
             subtitleDOM = document.getElementById(`cypress-${index}-1`),
-            preformattedText = document.getElementById(`cypress-${index}-2`) ? document.getElementById(`cypress-${index}-2`).innerText.trim() : "",
+            preformattedText = document.getElementById(`cypress-${index}-2`) ? document.getElementById(`cypress-${index}-2`).innerHTML.trim() : '<span class="codeNoHighlightLine"><br /></span>',
             captionDOM = document.getElementById(`cypress-${index}-3`),
-            creditsDOM = document.getElementById(`cypress-${index}-4`)
+            creditsDOM = document.getElementById(`cypress-${index}-4`);
 
+        preformattedText = `<p>${preformattedText}</p>`
         let titleHTML = titleDOM ? titleDOM.innerHTML : "",
             subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
             captionHTML = captionDOM ? captionDOM.innerHTML : "",
             creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
 
-        let getAttributeBCE = document.querySelector(`div.element-container.active[data-id="${previousElementData.id}"] div.blockCodeFigure`)
+        let getAttributeBCE = document.querySelector(`div.element-container.active[data-id="${previousElementData.id}"] div.blockCodeFigure`) || document.querySelector(`div.element-container.bce.showBorder[data-id="${previousElementData.id}"] div.blockCodeFigure`)
         let startNumber = getAttributeBCE && getAttributeBCE.getAttribute("startnumber")
         let isNumbered = getAttributeBCE && getAttributeBCE.getAttribute("numbered")
+        let isSyntaxhighlighted = getAttributeBCE && getAttributeBCE.getAttribute("syntaxhighlighting")
         if (typeof (isNumbered) == "string") {
             isNumbered = JSON.parse(isNumbered)
+        }
+        if (typeof (isSyntaxhighlighted) == "string") {
+            isSyntaxhighlighted = JSON.parse(isSyntaxhighlighted)
         }
         captionHTML = captionHTML.match(/<p>/g) ? captionHTML : `<p>${captionHTML}</p>`
         creditsHTML = creditsHTML.match(/<p>/g) ? creditsHTML : `<p>${creditsHTML}</p>`
@@ -271,6 +277,9 @@ class ElementContainer extends Component {
         titleHTML = this.removeClassesFromHtml(titleHTML)
         preformattedText = this.removeClassesFromHtml(preformattedText)
 
+        if(previousElementData.html && previousElementData.html.preformattedtext === '<p></p>'){
+            previousElementData.html.preformattedtext = '<p><span class="codeNoHighlightLine"></span></p>'
+        }
         // if (titleHTML !== previousElementData.html.title ||
         //     subtitleHTML !== previousElementData.html.subtitle ||
         //     captionHTML !== previousElementData.html.captions ||
@@ -288,9 +297,10 @@ class ElementContainer extends Component {
             subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
             captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
             creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
-            preformattedText !== this.removeClassesFromHtml(previousElementData.figuredata.preformattedtext.join('\n').trim()) ||
+            preformattedText !== this.removeClassesFromHtml(previousElementData.html.preformattedtext) ||
             Number(startNumber) !== Number(previousElementData.figuredata.startNumber) ||
-            isNumbered !== previousElementData.figuredata.numbered
+            isNumbered !== previousElementData.figuredata.numbered || 
+            isSyntaxhighlighted !== previousElementData.figuredata.syntaxhighlighting
         );
     }
 
@@ -950,7 +960,7 @@ class ElementContainer extends Component {
         feedback = tcmData.filter(tcm => {
             let elementUrn = tcm.elemURN;
             return (element.id.includes('urn:pearson:work') && elementUrn.indexOf(element.id) !== -1) && tcm.feedback !== null}).length>0;
-        /* TODO need better handling with a function and dynamic component rendering with label text*/
+       /* TODO need better handling with a function and dynamic component rendering with label text*/
         if (labelText) {
             switch (element.type) {
                 case elementTypeConstant.ASSESSMENT_SLATE:
@@ -1106,6 +1116,7 @@ class ElementContainer extends Component {
                         setActiveElement : this.props.setActiveElement,
                         handleFocus: this.handleFocus,
                         handleBlur: this.handleBlur,
+                        deleteElement: this.deleteElement
                     }}><CitationGroup />
                     </CitationGroupContext.Provider >;
                     labelText = 'CG'

@@ -10,10 +10,11 @@ import { GET_TCM_RESOURCES } from '../../constants/Action_Constants';
   */
 export const handleTCMData = (slateManifestUrn) => (dispatch, getState) => {
     sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'false' });
-    let url = `${config.REACT_APP_API_URL}v1/slate/tcm/${config.projectUrn}/${slateManifestUrn}`;
+    let url = `/cypress/trackchanges-srvr/tcstats/proj/${config.projectUrn}/slate/${slateManifestUrn}`;
     return axios.get(url, {
         headers: {
-            PearsonSSOSession: config.ssoToken
+            PearsonSSOSession: config.ssoToken,
+            withCredentials: true
         }
     }).then((response) => {
         if (response && response.data && response.data.elements) {
