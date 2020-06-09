@@ -138,5 +138,58 @@ describe('Tests commentsPanel action', () => {
        });
    })
 
+   it('await functionalityglossaaryFootnotePopup Footnote- when tempindex equal to 2 typeWithPopup is popup --', async() => {
+    let result = await actions.glossaaryFootnotePopup(true,"footnote",'urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','figure2222','0-0','image','term text--','popup');
+    result(store.dispatch).then((item)=>{
+        expect(typeof(item)).toEqual('object');
+        expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+        expect(item.payload.elementIndex).toEqual("0-0");
+    });
+   });
+   it('await functionalityglossaaryFootnotePopup Footnote- when tempindex equal to 3 typeWithPopup is popup   --', async() => {
+    let result = await actions.glossaaryFootnotePopup(true,"footnote",'urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','figure2222','0-0-0','image','term text--','popup');
+    result(store.dispatch).then((item)=>{
+        expect(typeof(item)).toEqual('object');
+        expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+        expect(item.payload.elementIndex).toEqual("0-0-0");
+    });
+   });
+   it('await functionalityglossaaryFootnotePopup Footnote- when tempindex equal to 4 typeWithPopup is popup   --', async() => {
+    let result = await actions.glossaaryFootnotePopup(true,"footnote",'urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','figure2222','0-0-0-0','image','term text--','popup');
+    result(store.dispatch).then((item)=>{
+        expect(typeof(item)).toEqual('object');
+        expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+        expect(item.payload.elementIndex).toEqual("0-0-0-0");
+    }).catch((err) =>{
+        expect(err).toEqual(err)
+       });
+   });
+
+   it('await functionalityglossaaryFootnotePopup Footnote- when tempindex equal to 2 typeWithPopup is poetry   --', async() => {
+    let result = await actions.glossaaryFootnotePopup(true,"footnote",'urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','element-authoredtext','1-1','image','term text--','poetry');
+    result(store.dispatch).then((item)=>{
+        expect(typeof(item)).toEqual('object');
+        expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+        expect(item.payload.elementIndex).toEqual("1-1");
+    });
+   });
+
+   it('await functionalityglossaaryFootnotePopup Footnote- when tempindex equal to 4 and element type image  --', async() => {
+    let result = await actions.glossaaryFootnotePopup(true,"footnote",'urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','poetry','1-4','image','term text--','poetry');
+    result(store.dispatch).then((item)=>{
+        expect(typeof(item)).toEqual('object');
+        expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+        expect(item.payload.elementIndex).toEqual("1-4");
+    });
+   });
+
+   it('await functionalityglossaaryFootnotePopup Footnote- when tempindex equal to 4 and element type image  --', async() => {
+    let result = await actions.glossaaryFootnotePopup(true,"footnote",'urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','stanza','0-3-0','image','term text--','stanza');
+    result(store.dispatch).then((item)=>{
+        expect(typeof(item)).toEqual('object');
+        expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+        expect(item.payload.elementIndex).toEqual("0-3-0");
+    });
+   });
 })
 
