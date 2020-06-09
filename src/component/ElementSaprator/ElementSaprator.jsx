@@ -162,14 +162,12 @@ export function addMediaClickHandler() {
 function renderConditionalButtons(esProps,sectionBreak,elementType){
     let updatedEsProps = esProps.filter((btnObj) => {        
       let  buttonType = btnObj.buttonType;
-      console.log("OUSIDE  if", elementType)   
         if (elementType == CITATION_GROUP_ELEMENT && sectionBreak) { /** Container : Citation Group |Render Citation Element*/
             return buttonType == CITATION;
         } else if (elementType == POETRY){                           /** Container : Poetry Element |Render Stanza Element*/
             return buttonType === STANZA_ELEMENT;
         }
         else if (elementType == SINGLE_COLUMN) {
-            console.log("Inside SINGLE_COLUMN if", elementType)                     /** Container : C1/C2 in Multi-Column Element*/
             return buttonType == TEXT && buttonType == IMAGE && buttonType == AUDIO && buttonType == INTERACTIVE && buttonType == ASSESSMENT && buttonType == BLOCK_TEXT && buttonType == METADATA_ANCHOR
         } else {
         if (sectionBreak) {                                          /** Container : Other cases in Wored Example*/
