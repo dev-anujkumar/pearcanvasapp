@@ -102,11 +102,11 @@ class SlateWrapper extends Component {
     }
 
     componentDidUpdate() {
-        this.renderDefaultElement();
+        // this.renderDefaultElement();
     }
 
 
-    renderDefaultElement = () => {
+    /* renderDefaultElement = () => {
         if(this.isDefaultElementInProgress){
             // condition added to detect if element creationis already in progress and to avoid multiple default element creation
             return false;
@@ -116,10 +116,10 @@ class SlateWrapper extends Component {
             if(_slateData[config.slateManifestURN] && config.slateType !== 'assessment'){
                 let _slateObject =_slateData[config.slateManifestURN];
                 let _slateContent = _slateObject.contents
-                let { bodymatter: _slateBodyMatter } = _slateContent /* || _slateData.popupdata; */
+                let { bodymatter: _slateBodyMatter } = _slateContent
                 if (_slateBodyMatter.length == 0) {
                     this.isDefaultElementInProgress = true;
-                    /* For showing the spinning loader send HideLoader message to Wrapper component */
+                    // For showing the spinning loader send HideLoader message to Wrapper component
                     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
                     this.props.createElement(TEXT, "0", '', '', '','',()=>{
                         this.isDefaultElementInProgress = false;
@@ -133,7 +133,7 @@ class SlateWrapper extends Component {
                 });
             }            
         }
-    }
+    } */
 
     static getDerivedStateFromProps = (props, state) => {
          /** Default Red Dot indicator to false */
@@ -873,6 +873,22 @@ class SlateWrapper extends Component {
 
     }
 
+    renderBlankSlate = (_slateType, _props) => {
+        return (
+            <>
+                <ElementSaprator
+                    firstOne={true}
+                    index={0}
+                    esProps={this.elementSepratorProps(0, true)}
+                    elementType=""
+                    permissions={_props.permissions}
+                    showAudioSplitPopup={_props.showAudioSplitPopup}
+                    openAudio={_props.openAudio}
+                    onClickCapture={this.checkSlateLockStatus}
+                />
+            </>
+        )
+    }
 
     /**
      * renderElement | renders single element according to its type
@@ -881,6 +897,9 @@ class SlateWrapper extends Component {
         const { pageLoading } = this.props;
         try {
             if (_elements !== null && _elements !== undefined) {
+                if (_elements.length === 0) {
+                    return this.renderBlankSlate(_slateType, this.props)
+                }
                 this.renderButtonsonCondition(_elements);
                 return _elements.map((element, index) => {
                         return (

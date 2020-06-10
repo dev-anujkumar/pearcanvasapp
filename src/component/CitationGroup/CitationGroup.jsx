@@ -17,6 +17,23 @@ import { checkSlateLock } from '../../js/slateLockUtility.js'
 let random = guid();
 export class CitationGroup extends Component {
 
+    renderBlankContainer = (_context, parentUrn, asideData, parentIndex) => {
+        let index = 0
+        return (
+            <>
+                <ElementSaprator
+                    index={index}
+                    firstOne={true}
+                    esProps={_context.elementSeparatorProps(index, true, parentUrn, asideData, parentIndex)}
+                    elementType="citations"
+                    // sectionBreak={true}
+                    permissions={_context.permissions}
+                    onClickCapture={_context.onClickCapture}     
+                />
+            </> 
+        )
+    }
+    
     /**
      * Renders Citation elements
      * @param {object} _slateBodyMatter - Bodymatter containing an array of citation elements
@@ -32,7 +49,9 @@ export class CitationGroup extends Component {
         };
         try {
             if (_elements !== null && _elements !== undefined) {
-                // this.renderButtonsonCondition(_elements);
+                if (_elements.length === 0) {
+                    return this.renderBlankContainer(this.context, parentUrn, asideData, parentIndex)
+                }
                 return _elements.map((element, index) => {
                         return (
                            <React.Fragment key={element.id}>

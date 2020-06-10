@@ -111,13 +111,30 @@ class ElementPoetry extends Component {
         }
     }
 
+    renderBlankContainer = (_props, parentUrn, parentIndex, poetryData) => {
 
-/**
-* @description - renderStanzas is a function for rendering the stanza element inside poetry element
-* @param {*} stanzas is the array of stanza element
-* @param {*} parentIndex is the index of poetry element
-* @param {*} parentUrn is the URN of poetry elememt
-*/
+        return (
+            <>
+                <ElementSaprator
+                    index={index}
+                    esProps={_props.elementSepratorProps(0, true, parentUrn, "", parentIndex, poetryData)}
+                    elementType="poetry"
+                    poetryData={poetryData}
+                    // sectionBreak= {false}
+                    permissions={_props.permissions}
+                    onClickCapture={_props.onClickCapture}
+                />
+            </>
+        )
+    }
+    
+
+    /**
+    * @description - renderStanzas is a function for rendering the stanza element inside poetry element
+    * @param {*} stanzas is the array of stanza element
+    * @param {*} parentIndex is the index of poetry element
+    * @param {*} parentUrn is the URN of poetry elememt
+    */
     renderStanzas = (stanzas, parentIndex, parentUrn) => {
         let poetryData = {
             type: "poetry",
@@ -128,57 +145,60 @@ class ElementPoetry extends Component {
         };
         try {
             if (stanzas !== undefined) {
-                    return stanzas.map((element, index) => {
-                            return (
-                                <React.Fragment key={element.id}>                                   
-                                    {index === 0 && <ElementSaprator
-                                        index={index}
-                                        esProps={this.props.elementSepratorProps(0, true, parentUrn, "", parentIndex, poetryData)}
-                                        elementType="poetry"
-                                        poetryData={poetryData}
-                                        sectionBreak= {false}
-                                        permissions={this.props.permissions}
-                                        onClickCapture={this.props.onClickCapture}
-                                    />}
-                                    <ElementContainer
-                                        element={element}
-                                        index={`${parentIndex}-3-${index}`}
-                                        parentUrn={parentUrn}
-                                        showBlocker={this.props.showBlocker}
-                                        poetryData={poetryData}
-                                        permissions={this.props.permissions}
-                                        handleCommentspanel={this.props.handleCommentspanel}
-                                        isBlockerActive={this.props.isBlockerActive}
-                                        onClickCapture={this.props.onClickCapture}
-                                        showDeleteElemPopup={this.props.showDeleteElemPopup}
-                                        parentElement = {this.props.element}
-                                        onListSelect={this.props.onListSelect}>
-                                        {
-                                            (isHovered, isPageNumberEnabled, activeElement) => (
-                                                <PageNumberElement
-                                                    updatePageNumber={this.props.updatePageNumber}
-                                                    poetryData={poetryData}
-                                                    parentUrn={parentUrn}
-                                                    element={element}
-                                                    isHovered={isHovered}
-                                                    isPageNumberEnabled={isPageNumberEnabled}
-                                                    activeElement={activeElement}
-                                                    permissions={this.props.permissions} />
-                                            )
-                                        }
-                                    </ElementContainer>
-                                    <ElementSaprator
-                                        index={index}
-                                        esProps={this.props.elementSepratorProps(index, false, parentUrn, "", parentIndex, poetryData)}
-                                        elementType="poetry"
-                                        sectionBreak= {false}
-                                        permissions={this.props.permissions}
-                                        onClickCapture={this.props.onClickCapture}
-                                    />
-                                </React.Fragment>
-                            )
+                if (_elements.length === 0) {
+                    return this.renderBlankContainer(this.props, parentUrn, parentIndex, poetryData)
+                }
+                return stanzas.map((element, index) => {
+                    return (
+                        <React.Fragment key={element.id}>                                   
+                            {index === 0 && <ElementSaprator
+                                index={index}
+                                esProps={this.props.elementSepratorProps(0, true, parentUrn, "", parentIndex, poetryData)}
+                                elementType="poetry"
+                                poetryData={poetryData}
+                                sectionBreak= {false}
+                                permissions={this.props.permissions}
+                                onClickCapture={this.props.onClickCapture}
+                            />}
+                            <ElementContainer
+                                element={element}
+                                index={`${parentIndex}-3-${index}`}
+                                parentUrn={parentUrn}
+                                showBlocker={this.props.showBlocker}
+                                poetryData={poetryData}
+                                permissions={this.props.permissions}
+                                handleCommentspanel={this.props.handleCommentspanel}
+                                isBlockerActive={this.props.isBlockerActive}
+                                onClickCapture={this.props.onClickCapture}
+                                showDeleteElemPopup={this.props.showDeleteElemPopup}
+                                parentElement = {this.props.element}
+                                onListSelect={this.props.onListSelect}>
+                                {
+                                    (isHovered, isPageNumberEnabled, activeElement) => (
+                                        <PageNumberElement
+                                            updatePageNumber={this.props.updatePageNumber}
+                                            poetryData={poetryData}
+                                            parentUrn={parentUrn}
+                                            element={element}
+                                            isHovered={isHovered}
+                                            isPageNumberEnabled={isPageNumberEnabled}
+                                            activeElement={activeElement}
+                                            permissions={this.props.permissions} />
+                                    )
+                                }
+                            </ElementContainer>
+                            <ElementSaprator
+                                index={index}
+                                esProps={this.props.elementSepratorProps(index, false, parentUrn, "", parentIndex, poetryData)}
+                                elementType="poetry"
+                                sectionBreak= {false}
+                                permissions={this.props.permissions}
+                                onClickCapture={this.props.onClickCapture}
+                            />
+                        </React.Fragment>
+                    )
 
-                    })
+                })
 
             }
 
