@@ -333,7 +333,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
             else if (showHideType && showHideType === "postertextobject") {
                 updateStoreInCanvas({ ...updatedData, ...response.data }, asideData, parentUrn, dispatch, getState, null, elementIndex, showHideType, parentElement, poetryData)
                 let revelDOM = document.querySelector(`div[data-id="${response.data.id}"]`)
-                if (revelDOM) revelDOM.click()
+                if (revelDOM) revelDOM.classList.remove("place-holder")
             }
         }
         
