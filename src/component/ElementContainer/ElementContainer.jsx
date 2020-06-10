@@ -958,7 +958,7 @@ class ElementContainer extends Component {
             let elementUrn = tcmelm.elemURN;
             return (element.id.includes('urn:pearson:work') && elementUrn.indexOf(element.id) !== -1) && tcmelm.txCnt && tcmelm.txCnt > 0}).length>0;
         feedback = tcmData.filter(feedbackelm => {
-            let elementUrn = tcm.elemURN;
+            let elementUrn = feedbackelm.elemURN;
             return (element.id.includes('urn:pearson:work') && elementUrn.indexOf(element.id) !== -1) && feedbackelm.feedback && feedbackelm.feedback !== null}).length>0;
        /* TODO need better handling with a function and dynamic component rendering with label text*/
         if (labelText) {
