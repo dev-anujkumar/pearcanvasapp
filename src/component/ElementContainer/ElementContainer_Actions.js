@@ -815,11 +815,10 @@ export const getTableEditorData = (elementId) => (dispatch, getState) => {
         console.log(response, "<<<<<<<<<<<<")
         let parentData = getState().appStore.slateLevelData
         const newParentData = JSON.parse(JSON.stringify(parentData));
-        let status = response.data[elementId].status
-        if (status === 'wip') {
+        if (newParentData[config.slateManifestURN].status === 'wip') {
             newParentData[config.slateManifestURN].contents.bodymatter = updateTableEditorData(elementId, response.data[elementId], newParentData[config.slateManifestURN].contents.bodymatter)
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
-        } else if (status === 'approved') {
+        } else if (newParentData[config.slateManifestURN].status === 'approved') {
             sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
         }
         
