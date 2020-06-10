@@ -48,7 +48,7 @@ let cypressConfig = {
     totalPageCount : 0,
     pageLimit : 0,
     fromTOC : false,
-    CYPRESS_API_ENDPOINT : 'https://10.11.7.246:8443/cypress-api/',
+    CYPRESS_API_ENDPOINT : 'https://10.11.7.246:9443/cypress-api/',
     CYPRESS_TOC_JAVA_ENDPOINT : 'https://10.11.7.246:8443/app/toc-javaapp/',
     WRAPPER_URL: process.env.NODE_ENV === 'production' ? `${window.parent.origin}/toc-wrapper/index.html` : 'https://localhost:4000',
     LOCK_API_BASE_URL : process.env.NODE_ENV === 'production' ? `${window.parent.origin}/cypress/dashboard-srvr` : 'https://dev-structuredauthoring.pearson.com/cypress/dashboard-srvr',
@@ -61,7 +61,8 @@ let cypressConfig = {
     citationFlag: false,
     lastActiveElementId:'',
     popupCreationCallInProgress : false,
-    citationDefaultElement: false
+    citationDefaultElement: false,
+    pageNumberInProcess:true,
 }
 
 

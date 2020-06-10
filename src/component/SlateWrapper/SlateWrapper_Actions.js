@@ -16,6 +16,7 @@ import {
     SET_PARENT_NODE,
     ERROR_POPUP,
     GET_TCM_RESOURCES,
+    GET_CURRENT_PAGE_NUMBER
 
 } from '../../constants/Action_Constants';
 
@@ -525,7 +526,22 @@ export const updatePageNumber = (pagenumber, elementId, asideData, parentUrn) =>
                 }
                 return element
             })
-
+            let pageNumberData = getState().appStore.pageNumberData;
+            pageNumberData.forEach(function (element,index) {
+                if(element.id.indexOf(elementId) !== -1){
+                    pageNumberData[index]["id"]=elementId
+                    pageNumberData[index]["pagenumber"]=pagenumber }
+                    else{
+                        pageNumberData.push({
+                            "id": elementId,
+                            "pagenumber": pagenumber
+                        })
+                    }
+            });
+            dispatch({
+                type: GET_PAGE_NUMBER,
+                payload: pageNumberData
+            });
             dispatch({
                 type: FETCH_SLATE_DATA,
                 payload: newslateData
@@ -610,5 +626,35 @@ export const setSlateParent = (setSlateParentParams) => (dispatch, getState) => 
     return dispatch({
         type: SET_PARENT_NODE,
         payload: setSlateParentParams
+    })
+}
+export const getPageNumber = (elementID) => (dispatch, getState) => {
+    let pageNumberData = getState().appStore.pageNumberData;
+    let url = `https://contentapis-qa.pearsoncms.net/print-api/v2/pageNumberMapping/${elementID}`;
+    return axios.get(url, {
+        headers: {
+            PearsonSSOSession: config.ssoToken
+        }
+    }).then((response) => {
+        let newPageNumber = {
+            id: elementID,
+            pageNumber: response.data.pageNumber
+        }
+        pageNumberData.push(newPageNumber)
+        config.pageNumberInProcess= true;
+        dispatch({
+            type: GET_PAGE_NUMBER,
+            payload: pageNumberData
+        });
+        dispatch({
+            type: GET_CURRENT_PAGE_NUMBER,
+            payload: response.data
+        });
+    }).catch((error) => {
+        config.pageNumberInProcess= true;
+        // dispatch({
+        //     type: GET_PAGE_NUMBER,
+        //     payload: {}
+        // });
     })
 }

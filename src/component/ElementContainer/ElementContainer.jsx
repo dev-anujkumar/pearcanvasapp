@@ -959,7 +959,7 @@ class ElementContainer extends Component {
             return (element.id.includes('urn:pearson:work') && elementUrn.indexOf(element.id) !== -1) && tcm.txCnt > 0}).length>0;
         feedback = tcmData.filter(tcm => {
             let elementUrn = tcm.elemURN;
-            return (element.id.includes('urn:pearson:work') && elementUrn.indexOf(element.id) !== -1) && tcm.feedback !== null}).length>0;
+            return (element.id.includes('urn:pearson:work') && elementUrn.indexOf(element.id) !== -1) && tcm.feedback && tcm.feedback !== null}).length>0;
        /* TODO need better handling with a function and dynamic component rendering with label text*/
         if (labelText) {
             switch (element.type) {

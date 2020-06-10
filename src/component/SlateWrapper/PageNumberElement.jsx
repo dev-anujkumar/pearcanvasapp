@@ -6,14 +6,46 @@
 // IMPORT - Plugins //
 import React from 'react';
 import { hasReviewerRole } from '../../constants/utility.js'
+import { connect } from 'react-redux';
+import { getPageNumber } from '../SlateWrapper/SlateWrapper_Actions';
+import config from '../../config/config.js';
+
 
 class PageNumberElement extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            inputValue: this.props.element.pageNumberRef && this.props.element.pageNumberRef.pageNumber,
+            inputValue: "",
             loader: false
         }
+    }
+
+    componentDidUpdate(prevProps) {
+        let newArray
+        let that=this;
+        // Typical usage (don't forget to compare props):
+        // if(config.pageNumberInProcess && prevProps.element.id != this.props.element.id){
+            if(this.props.isPageNumberEnabled && this.props.isHovered === true ){
+                if(this.props.pageNumberData && this.props.pageNumberData.length > 0){
+                     newArray = this.props.pageNumberData.filter(function(item) {
+                        return item.id === that.props.element.id;
+                      });
+                      if(newArray && newArray.length === 0){
+                        config.pageNumberInProcess = false;
+                        this.props.getPageNumber(this.props.element.id)
+                      }
+                }
+                else{
+                    config.pageNumberInProcess = false;
+                    this.props.getPageNumber(this.props.element.id)
+                
+            }
+
+        // }
+       if(prevProps.currentPageNumberData != this.props.currentPageNumberData){
+        this.setState({inputValue:this.props.currentPageNumberData.pageNumber})
+       }
+      }
     }
 
 
@@ -52,6 +84,7 @@ class PageNumberElement extends React.Component {
     }
 
     render() {
+        console.log("kanika")
         let { element, isHovered, isPageNumberEnabled, activeElement, permissions, _slateType } = this.props;
         let loader = this.props.pageLoading;
         let content = null;
@@ -98,4 +131,17 @@ class PageNumberElement extends React.Component {
 }
 
 PageNumberElement.displayName = "PageNumberElement"
-export default PageNumberElement;
+const mapActionToProps = {
+    getPageNumber: getPageNumber
+}
+const mapStateToProps = state => {
+    return {
+        pageNumberData: state.appStore.pageNumberData,
+        currentPageNumberData: state.appStore.currentPageNumberData
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    mapActionToProps
+)(PageNumberElement);
