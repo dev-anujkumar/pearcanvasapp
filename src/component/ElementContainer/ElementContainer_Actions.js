@@ -382,7 +382,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
     //tcm update code   
     if (config.tcmStatus) {
         let elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza'];
-        if (elementType.indexOf(updatedData.type) !== -1) {
+        if (elementType.indexOf(updatedData.type) !== -1 && !updatedData.metaDataField) {
             prepareDataForUpdateTcm(updatedData.id, getState, dispatch, versionedData);
         }
     }
