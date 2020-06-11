@@ -407,3 +407,22 @@ export const setAssessmentTitle = (props) => {
     }
     return assessmentTitle;
 }
+
+/** This is a function to set Assessment Title for Quad Assessment
+ */
+export const setAssessmentUsageType = (props) => {
+    let usagetype = "";
+    if (props.model && props.model.type && props.model.type === "element-assessment" && props.model.elementdata && props.model.elementdata.usagetype) {
+        usagetype = props.model.elementdata.usagetype
+    } else if (props.model && props.model.figuretype && props.model.figuretype === "assessment" && props.model.figuredata && props.model.figuredata.elementdata && props.model.figuredata.elementdata.usagetype) {
+        usagetype = props.model.figuredata.elementdata.usagetype
+    } else if (props && props.usageTypeListData && props.usageTypeListData.usageTypeList) {
+        let listObj = props.usageTypeListData.usageTypeList
+        if (!(Object.keys(listObj).length === 0 && listObj.constructor === Object)) {  //object is not empty
+            usagetype = Object.values(listObj)[0];
+        } else {
+            usagetype = "Concept Check"
+        }
+    }
+    return usagetype;
+}

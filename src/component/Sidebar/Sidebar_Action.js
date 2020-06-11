@@ -71,8 +71,11 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     outputPrimaryOptionEnum = outputPrimaryOptionType['enum']
     if (oldElementData.figuretype === "assessment") {
         let usageType=document.querySelector(`div[data-id='${oldElementData.id}'] span.singleAssessment_Dropdown_currentLabel`).innerText;
+        let nextUsageType = "";
+        let obj= store.getState().appStore.usageTypeListData.usageTypeList
+        nextUsageType =Object.keys(obj).find(key => obj[key] === usageType).toUpperCase().replace("-", "_");
         outputPrimaryOptionEnum=outputSubType['enum'];
-        outputSubTypeEnum = usageType.toUpperCase().replace(" ", "_").replace("-", "_");
+        outputSubTypeEnum = nextUsageType//usageType.toUpperCase().replace(" ", "_").replace("-", "_");
         oldElementData.figuredata.elementdata.usagetype=usageType;
         let assessmentFormat = outputSubType.text.toLowerCase();
         let assessmentItemType ="";

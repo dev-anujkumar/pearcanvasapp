@@ -34,7 +34,8 @@ import {
     DELETE_SHOW_HIDE_ELEMENT,
     SET_PARENT_SHOW_DATA,
     GET_ALL_SLATES_DATA,
-    SET_CURRENT_SLATE_DATA
+    SET_CURRENT_SLATE_DATA,
+    GET_USAGE_TYPE
 } from '../constants/Action_Constants';
 
 /**
@@ -58,7 +59,8 @@ const INITIAL_STATE = {
     asideData: {},
     showHideObj:{},
     allSlateData:{},
-    currentSlateAncestorData:{}
+    currentSlateAncestorData:{},
+    usageTypeListData:{}
 };
 
 const INITIAL_ACTION = {
@@ -202,6 +204,11 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
             return {
                 ...state,
                 currentSlateAncestorData: action.payload.currentSlateAncestorData
+            }
+        case GET_USAGE_TYPE:
+            return {
+                ...state,
+                usageTypeListData: action.payload
             }
         default:
             return state;

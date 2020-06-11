@@ -386,10 +386,13 @@ export const generateAssessmentData = (index, previousElementData, elementType, 
          delete previousElementData.figuredata.elementdata.posterimage
     }
 
-
     let usageType = document.querySelector(assessmentNodeSelector + 'span.singleAssessment_Dropdown_currentLabel').innerText;
+    let nextUsageType = "";
+    let obj= store.getState().appStore.usageTypeListData.usageTypeList
+    nextUsageType =Object.keys(obj).find(key => obj[key] === usageType).toUpperCase().replace("-", "_");
+
     dataToSend.figuredata.elementdata.usagetype = usageType;
-    dataToSend.inputSubType = usageType && usageType.toUpperCase().replace(" ", "_").replace("-", "_");
+    dataToSend.inputSubType = nextUsageType;
 
     return dataToSend;
 }
@@ -402,11 +405,16 @@ export const generateAssessmentData = (index, previousElementData, elementType, 
  * @param {*} secondaryOption 
  */
 export const generateAssessmentSlateData = (index, previousElementData, elementType, primaryOption, secondaryOption)=>{
-    let dataToSend = {...previousElementData,
+    let obj= store.getState().appStore.usageTypeListData.usageTypeList;
+    let usageType = previousElementData.elementdata.usagetype;
+    let nextUsageType = Object.keys(obj).find(key => obj[key] === usageType).toUpperCase().replace("-", "_");
+    let assessmenttitle = previousElementData.elementdata.assessmentformat == 'learningtemplate' ? previousElementData.elementdata.templatelabel : previousElementData.elementdata.assessmenttitle;
+    let dataToSend = {
+        ...previousElementData,
         inputType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
-        inputSubType : previousElementData.elementdata.usagetype.toUpperCase().replace(" ", "_").replace("-", "_"),
+        inputSubType : nextUsageType,//previousElementData.elementdata.usagetype.toUpperCase().replace(" ", "_").replace("-", "_"),
         html: {
-            title: "<p></p>"
+            title: `<p>${assessmenttitle}</p>`
         }}
         return dataToSend;
 }

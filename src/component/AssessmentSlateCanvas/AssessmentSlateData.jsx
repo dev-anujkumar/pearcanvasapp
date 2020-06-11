@@ -10,7 +10,7 @@ import { assessmentUsageType, assessmentType, FULL_ASSESSMENT_PUF, LEARNING_APP_
 import RootElmSingleAssessment from '../AssessmentSlateCanvas/elm/RootElmSingleComponent.jsx';
 import RootCiteTdxComponent from './assessmentCiteTdx/RootCiteTdxComponent.jsx';
 import LearningTool from './learningTool/learningTool.jsx';
-import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, setAssessmentUsageType } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import  {setCurrentCiteTdx,assessmentSorting}  from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
 import { connect } from 'react-redux';
@@ -20,7 +20,7 @@ import { connect } from 'react-redux';
         super(props);
         this.state = {
             activeAssessmentType: this.props.model && this.props.model.elementdata && this.props.model.elementdata.assessmentformat && this.props.model.elementdata.assessmentformat!== 'fpo'? this.props.model.elementdata.assessmentformat : 'Select',
-            activeAssessmentUsageType: this.props.model && this.props.model.elementdata && this.props.model.elementdata.usagetype ? this.props.model.elementdata.usagetype : "Quiz",
+            activeAssessmentUsageType: setAssessmentUsageType(this.props),//this.props.model && this.props.model.elementdata && this.props.model.elementdata.usagetype ? this.props.model.elementdata.usagetype : "Quiz",
             showElmComponent: false,
             changeLearningData: false,
             learningToolStatus: false,
@@ -324,11 +324,16 @@ import { connect } from 'react-redux';
 
     /*** @description - This function is to select the Assessment usage-type from dropdown*/
     selectAssessmentUsageType = () => {
-        if (assessmentUsageType.length > 0) {
-            var usageTypeValue = assessmentUsageType.map((usageType, i) =>
-                <li key={i} className="slate_assessment_metadata_dropdown_name" onClick={(e) => !hasReviewerRole() && this.handleAssessmentUsageTypeChange(usageType, e)}>{usageType}</li>
-            )
-        }
+         const { usageTypeListData } = this.props;
+         let usageTypeDropdown = [], usageTypeValue = [];
+
+         if (usageTypeListData && usageTypeListData.entityType == "assessment" && !(Object.keys(usageTypeListData.usageTypeList).length === 0 && usageTypeListData.usageTypeList.constructor === Object)) {
+             usageTypeDropdown = Object.values(usageTypeListData.usageTypeList);
+         }
+         usageTypeValue = usageTypeDropdown && usageTypeDropdown.map((usageType, i) =>
+             <li key={i} className="slate_assessment_metadata_dropdown_name" onClick={(e) => !hasReviewerRole() && this.handleAssessmentUsageTypeChange(usageType, e)}>{usageType}</li>
+         )
+
         return usageTypeValue
     }
 
