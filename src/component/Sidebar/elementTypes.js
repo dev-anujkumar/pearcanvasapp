@@ -597,7 +597,7 @@ export default {
                     enum: 'SINGLE_ASSESSMENT_TDX'
                 },
                 'secondary-single-assessment-puf': {
-                    text: 'PUF',
+                    text: 'Elm',
                     labelText: 'Qu',
                     enum: 'SINGLE_ASSESSMENT_PUF'
                 },
@@ -623,7 +623,7 @@ export default {
                     enum: 'ELEMENT_ASSESSMENT'		
                 },
                 'secondary-assessment-puf' : {
-                    text: 'PUF',		
+                    text: 'ELM',		
                     labelText: 'As',
                     enum: 'ELEMENT_ASSESSMENT'	
                 },

@@ -77,7 +77,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         outputPrimaryOptionEnum=outputSubType['enum'];
         outputSubTypeEnum = nextUsageType//usageType.toUpperCase().replace(" ", "_").replace("-", "_");
         oldElementData.figuredata.elementdata.usagetype=usageType;
-        let assessmentFormat = outputSubType.text.toLowerCase();
+        let assessmentFormat = outputSubType.text == "Elm" ? "puf" :outputSubType.text.toLowerCase();
         let assessmentItemType ="";
         if(assessmentFormat==="cite" || assessmentFormat==="puf" || assessmentFormat==="learnosity"){
             assessmentItemType ="assessmentItem";
