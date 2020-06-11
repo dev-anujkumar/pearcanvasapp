@@ -42,10 +42,10 @@ class ElementPoetry extends Component {
                         contentUrn: this.props.model.contentUrn ,
                         elementType: "poetry"
                     }
-                    if(!_bodyMatter.length && this.props.deleteElement){
+                    /* if(!_bodyMatter.length && this.props.deleteElement){
                         this.props.deleteElement();
-                    }
-                    this['cloneCOSlateControlledSource_2' + random] = this.renderStanzas(_bodyMatter, index ,parentUrn)
+                    } */
+                    this['cloneCOSlateControlledSource_2' + random] = this.renderStanzas(_bodyMatter, index, parentUrn)
                     return (
                         <div>
                             <Sortable
@@ -112,15 +112,15 @@ class ElementPoetry extends Component {
     }
 
     renderBlankContainer = (_props, parentUrn, parentIndex, poetryData) => {
-
+        let index = 0
         return (
             <>
                 <ElementSaprator
                     index={index}
-                    esProps={_props.elementSepratorProps(0, true, parentUrn, "", parentIndex, poetryData)}
+                    esProps={_props.elementSepratorProps(index, true, parentUrn, "", parentIndex, poetryData)}
                     elementType="poetry"
                     poetryData={poetryData}
-                    // sectionBreak= {false}
+                    sectionBreak= {false}
                     permissions={_props.permissions}
                     onClickCapture={_props.onClickCapture}
                 />
@@ -145,7 +145,7 @@ class ElementPoetry extends Component {
         };
         try {
             if (stanzas !== undefined) {
-                if (_elements.length === 0) {
+                if (stanzas.length === 0) {
                     return this.renderBlankContainer(this.props, parentUrn, parentIndex, poetryData)
                 }
                 return stanzas.map((element, index) => {

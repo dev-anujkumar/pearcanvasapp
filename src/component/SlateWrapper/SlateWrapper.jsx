@@ -102,38 +102,23 @@ class SlateWrapper extends Component {
     }
 
     componentDidUpdate() {
-        // this.renderDefaultElement();
+        this.renderDefaultElement();
     }
 
-
-    /* renderDefaultElement = () => {
+    renderDefaultElement = () => {
         if(this.isDefaultElementInProgress){
-            // condition added to detect if element creationis already in progress and to avoid multiple default element creation
+            // condition added to detect if element creation is already in progress and to avoid multiple default element creation
             return false;
         }
         let _slateData = this.props.slateData;
-        if (_slateData !== null && _slateData !== undefined) {
-            if(_slateData[config.slateManifestURN] && config.slateType !== 'assessment'){
-                let _slateObject =_slateData[config.slateManifestURN];
-                let _slateContent = _slateObject.contents
-                let { bodymatter: _slateBodyMatter } = _slateContent
-                if (_slateBodyMatter.length == 0) {
-                    this.isDefaultElementInProgress = true;
-                    // For showing the spinning loader send HideLoader message to Wrapper component
-                    sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                    this.props.createElement(TEXT, "0", '', '', '','',()=>{
-                        this.isDefaultElementInProgress = false;
-                    });
-                }
-            } else if (Object.values(_slateData).length > 0 && Object.values(_slateData)[0].contents.bodymatter < 1 && config.slateType === 'assessment') {
-                this.isDefaultElementInProgress = true;
-                sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                this.props.createElement(ELEMENT_ASSESSMENT, "0", '', '', '','',()=>{
-                    this.isDefaultElementInProgress = false;
-                });
-            }            
+        if (Object.values(_slateData).length > 0 && Object.values(_slateData)[0].contents.bodymatter < 1 && config.slateType === 'assessment') {
+            this.isDefaultElementInProgress = true;
+            sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+            this.props.createElement(ELEMENT_ASSESSMENT, "0", '', '', '', '', ()=>{
+                this.isDefaultElementInProgress = false;
+            });
         }
-    } */
+    }
 
     static getDerivedStateFromProps = (props, state) => {
          /** Default Red Dot indicator to false */
@@ -885,6 +870,7 @@ class SlateWrapper extends Component {
                     showAudioSplitPopup={_props.showAudioSplitPopup}
                     openAudio={_props.openAudio}
                     onClickCapture={this.checkSlateLockStatus}
+                    splithandlerfunction={this.splithandlerfunction}
                 />
             </>
         )

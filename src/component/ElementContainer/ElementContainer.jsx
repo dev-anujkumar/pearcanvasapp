@@ -510,8 +510,8 @@ class ElementContainer extends Component {
                     let titleHTML = titleDOMNode && titleDOMNode.innerHTML,
                         subtitleHTML = subtitleDOMNode && subtitleDOMNode.innerHTML
 
-                    titleHTML = titleHTML.replace(/<br>/g, "").replace(/<br data-mce-bogus="1">/g, "")
-                    subtitleHTML = subtitleHTML.replace(/<br>/g, "").replace(/<br data-mce-bogus="1">/g, "")
+                    titleHTML = titleHTML && titleHTML.replace(/<br>/g, "").replace(/<br data-mce-bogus="1">/g, "")
+                    subtitleHTML = subtitleHTML && subtitleHTML.replace(/<br>/g, "").replace(/<br data-mce-bogus="1">/g, "")
 
                     let imgTaginLabel = titleDOMNode && titleDOMNode.getElementsByTagName("img")
                     let imgTaginTitle = subtitleDOMNode && subtitleDOMNode.getElementsByTagName("img")

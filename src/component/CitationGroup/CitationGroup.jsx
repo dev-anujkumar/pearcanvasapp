@@ -26,7 +26,7 @@ export class CitationGroup extends Component {
                     firstOne={true}
                     esProps={_context.elementSeparatorProps(index, true, parentUrn, asideData, parentIndex)}
                     elementType="citations"
-                    // sectionBreak={true}
+                    sectionBreak={true}
                     permissions={_context.permissions}
                     onClickCapture={_context.onClickCapture}     
                 />
@@ -155,10 +155,10 @@ export class CitationGroup extends Component {
                         elementType: _containerType
                     }
                     const cgThis = this
-                     if(!_bodyMatter.length && this.context.deleteElement && config.citationDefaultElement==false){
+                     /* if(!_bodyMatter.length && this.context.deleteElement && config.citationDefaultElement==false){
                         config.citationDefaultElement=true;
                         this.context.deleteElement();
-                    }
+                    } */
                     this['cloneCOSlateControlledSource_3' + random] = this.renderElement(_bodyMatter, parentUrn, index)
                     return (
                         <div className="container-citation" data-id={_containerId} container-type={_containerType}>
