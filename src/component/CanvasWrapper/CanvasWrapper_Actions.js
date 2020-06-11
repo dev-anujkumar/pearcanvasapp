@@ -15,6 +15,7 @@ import {
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
 import { sendDataToIframe, requestConfigURI, createTitleSubtitleModel } from '../../constants/utility.js';
+import { sendToDataLayer } from '../../constants/ga';
 import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 import elementDataBank from './elementDataBank'
 import figureData from '../ElementFigure/figureTypes.js';
@@ -149,7 +150,7 @@ const findElementType = (element, index) => {
                         break;
                     case "codelisting":
                         if(element.subtype == "" || element.subtype == undefined) {
-                            element.subtype = "codelisting"
+                           // element.subtype = "codelisting"    // As per requirement removing Subtype key from codelisting
                         }
                         elementType = {
                             elementType: elementDataBank[element.type][element.figuretype]["elementType"],
@@ -281,6 +282,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
     //  return false;
     // }
     /** [TK-3289]- Fetch Data for All Slates */
+    const startTime = performance.now();
     dispatch(fetchAllSlatesData());
     /**sendDataToIframe({ 'type': 'fetchAllSlatesData', 'message': {} }); */
     // sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
@@ -454,6 +456,15 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
                 'message': setSlateDetail(slateTitle, newVersionManifestId)
             });
         }
+
+        const elapsedTime = performance.now() - startTime;
+        
+        sendToDataLayer('slate-load', {
+            elapsedTime,
+            manifestURN,
+            entityURN,
+            projectURN: config.projectUrn,
+        });
     });
 };
 

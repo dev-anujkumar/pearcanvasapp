@@ -37,7 +37,7 @@ class MultiColumnContainer extends PureComponent {
                                     firstOne={index === 0}
                                     esProps={this.context.elementSeparatorProps(index, true, parentUrn, asideData, parentIndex)}
                                     elementType="group"
-                                    sectionBreak={true}
+                                    sectionBreak={false}
                                     permissions={this.context.permissions}
                                     onClickCapture={this.context.onClickCapture}
                                 />
@@ -57,7 +57,7 @@ class MultiColumnContainer extends PureComponent {
                                 index={index}
                                 esProps={this.context.elementSeparatorProps(index, false, parentUrn, asideData, parentIndex)}
                                 elementType="group"
-                                sectionBreak={true}
+                                sectionBreak={false}
                                 permissions={this.context.permissions}
                                 onClickCapture={this.context.onClickCapture}                                       
                             />  
