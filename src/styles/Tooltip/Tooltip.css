@@ -131,3 +131,15 @@
     border-style: solid;
     border-color: transparent transparent black transparent;
 }
+
+.tooltip .poetry-elem {
+    opacity: 0.4 !important;
+    border: solid 1px;
+}
+
+.tooltip .poetry-elem:hover {
+    opacity: 1 !important;
+    fill: black !important;
+    border: solid 1px #434343;
+}
+

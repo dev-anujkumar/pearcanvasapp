@@ -5,7 +5,7 @@ import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import {
     fetchSlateData
 } from '../CanvasWrapper/CanvasWrapper_Actions';
-import { ADD_COMMENT, AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP, OPEN_GLOSSARY_FOOTNOTE,DELETE_SHOW_HIDE_ELEMENT,CURRENT_SHOW_HIDE_ELEMENT} from "./../../constants/Action_Constants";
+import {  AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP, OPEN_GLOSSARY_FOOTNOTE,DELETE_SHOW_HIDE_ELEMENT} from "./../../constants/Action_Constants";
 import { customEvent } from '../../js/utils';
 
 export const addComment = (commentString, elementId, asideData, parentUrn) => (dispatch, getState) => {
@@ -40,39 +40,8 @@ export const addComment = (commentString, elementId, asideData, parentUrn) => (d
     )
         .then(response => {
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
-            const parentData = getState().appStore.slateLevelData;
-            const newslateData = JSON.parse(JSON.stringify(parentData));
-            let _slateObject = Object.values(newslateData)[0];
-            let { contents: _slateContent } = _slateObject;
-            let { bodymatter: _slateBodyMatter } = _slateContent;
             Comment.commentUrn = response.data.commentUrn
-            //const elementBM = _slateBodyMatter.map(element => {
-            _slateBodyMatter.map(element => {
-                if (element.id === elementId) {
-                    element['comments'] = true
-                } else if (asideData && asideData.type == 'element-aside') {
-                    if (element.id == asideData.id) {
-                        element.elementdata.bodymatter.map((nestedEle) => {
-                            /*This condition add comment in element in aside */
-                            if (nestedEle.id == elementId) {
-                                nestedEle['comments'] = true;
-                            } else if (nestedEle.type == "manifest" && nestedEle.id == parentUrn.manifestUrn) {
-                                /*This condition add comment in element in section of aside */
-                                nestedEle.contents.bodymatter.map((ele) => {
-                                    if (ele.id == elementId) {
-                                        ele['comments'] = true;
-                                    }
-                                })
-                            }
-                        })
-                    }
-                }
-            }
-            );
-            dispatch({
-                type: ADD_COMMENT,
-                payload: newslateData
-            });
+           
             dispatch({
                 type: ADD_NEW_COMMENT,
                 payload: Comment
@@ -86,7 +55,7 @@ export const addComment = (commentString, elementId, asideData, parentUrn) => (d
 }
 
 
-export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, index) => (dispatch, getState) => {
+export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, index, poetryData) => (dispatch, getState) => {
 
     const prepareDeleteRequestData = (elementType) => {
         switch (elementType) {
@@ -94,6 +63,8 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
             case "element-aside":
             case "showhide":
             case "popup":
+            case "citations":
+            case "poetry":
                 return {
                     "projectUrn": config.projectUrn,
                     "entityUrn": contentUrn
@@ -110,7 +81,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
     let _requestData = prepareDeleteRequestData(type)
     let indexToBeSent = index || "0"
     _requestData = { ..._requestData, index: indexToBeSent.toString().split('-')[indexToBeSent.toString().split('-').length - 1] }
-    prepareDataForTcmUpdate(_requestData, elmId, index, asideData, getState, type);
+    prepareDataForTcmUpdate(_requestData, elmId, index, asideData, getState, type, poetryData);
 
     return axios.post(`${config.REACT_APP_API_URL}v1/slate/deleteElement`,
         JSON.stringify(_requestData),
@@ -150,7 +121,16 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
                             }
                         })
                     }
-                } else if (parentUrn && parentUrn.elementType == "manifest") {
+                } else if(poetryData && poetryData.type == 'poetry') {
+                    if (element.id === poetryData.parentUrn) {
+                        element.contents.bodymatter.forEach((ele, indexInner) => {
+                            if (ele.id === elmId) {
+                                element.contents.bodymatter.splice(indexInner, 1);
+                            }
+                        })
+                    }
+                }
+                else if (parentUrn && parentUrn.elementType == "manifest") {
                     if (element.id === asideData.id) {
                         element.elementdata.bodymatter.forEach((ele) => {
                             if (ele.id == parentUrn.manifestUrn) {
@@ -162,6 +142,11 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
                             }
 
                         })
+                    }
+                } else if (parentUrn && parentUrn.elementType == "citations"){
+                    if (element.id === parentUrn.manifestUrn) {
+                        let innerIndex = index.split("-")
+                        element.contents.bodymatter.splice([innerIndex[1] - 1], 1)
                     }
                 }
 
@@ -192,20 +177,32 @@ function contentEditableFalse (updatedData){
     }
 }
 
-function prepareDataForTcmUpdate (updatedData,id, elementIndex, asideData, getState, type) {
+function prepareDataForTcmUpdate (updatedData,id, elementIndex, asideData, getState, type, poetryData) {
     updatedData = (updatedData.type == "element-blockfeature") ? contentEditableFalse(updatedData): updatedData;
     let indexes = elementIndex && elementIndex.length > 0 ? elementIndex.split('-') : 0;
     let storeData = getState().appStore.slateLevelData;
     let slateData = JSON.parse(JSON.stringify(storeData));
     let slateBodyMatter = slateData[config.slateManifestURN].contents.bodymatter;
-    if (indexes.length === 2) {
-        if (slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].id === id) {
+    if((type && type === "element-citation") || (updatedData.type === "element-citation")){
+        if (slateBodyMatter[indexes[0]].contents.bodymatter[indexes[1] - 1].id === id) {
+            updatedData.isHead = true;
+            updatedData.parentType = "citations";
+        }
+    } else if (indexes.length === 2) {
+        if (((!poetryData) || (poetryData.type != "poetry")) && slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].id === id) {
+        //if (slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].id === id) {
             updatedData.isHead = true;
         }
     } else if (indexes.length === 3) {
-        if (slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].id === id) {
+        if (((!poetryData) || (poetryData.type != "poetry")) && slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].id === id) {
             updatedData.isHead = false;
-        }
+        } else if (((poetryData && poetryData.type === "poetry") || (type === "stanza")) && slateBodyMatter[indexes[0]].contents.bodymatter[indexes[2]].id === id) {
+            updatedData.isHead = false;
+        } 
+        /** else if(type==="stanza" && slateBodyMatter[indexes[0]].contents.bodymatter[indexes[2]].id === id){
+            updatedData.isHead = false;
+        }*/
+        
     }
     if (asideData && asideData.type === "element-aside") {
         if (asideData.subtype === "workedexample") {
@@ -213,10 +210,8 @@ function prepareDataForTcmUpdate (updatedData,id, elementIndex, asideData, getSt
         } else {
             updatedData.parentType = "element-aside";
         }
-    }
-
-    if(config.tempSlateManifestURN){
-        updatedData.parentType = "popup"
+    } else if (poetryData && poetryData.type === 'poetry'){
+        updatedData.parentType = "poetry";
     }
     updatedData.projectURN = config.projectUrn;
     updatedData.slateEntity = config.slateEntityURN;
@@ -227,13 +222,13 @@ function prepareDataForTcmUpdate (updatedData,id, elementIndex, asideData, getSt
  * @param {*} updatedData the updated content
  * @param {*} elementIndex index of the element on the slate
  */
-export const updateElement = (updatedData, elementIndex, parentUrn, asideData, showHideType, parentElement) => (dispatch, getState) => {
+export const updateElement = (updatedData, elementIndex, parentUrn, asideData, showHideType, parentElement, poetryData) => (dispatch, getState) => {
     if(hasReviewerRole()){
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
         return ;
     }
-    prepareDataForTcmUpdate(updatedData,updatedData.id, elementIndex, asideData, getState);
-    updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, null, null, showHideType, parentElement)
+    prepareDataForTcmUpdate(updatedData,updatedData.id, elementIndex, asideData, getState, updatedData.type, poetryData);
+    updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, null, elementIndex, showHideType, parentElement, poetryData)
     return axios.put(`${config.REACT_APP_API_URL}v1/slate/element`,
         updatedData,
         {
@@ -272,14 +267,10 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
                             }
                             break;
                         }
-                       
-                   
                 }
-              
-                
             } else if(response.data.id !== updatedData.id){
                 if(currentSlateData.status === 'wip'){
-                    updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, response.data, elementIndex, null, parentElement);
+                    updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, response.data, elementIndex, null, parentElement, poetryData);
                     config.savingInProgress = false
                 }else if(currentSlateData.status === 'approved'){
                     if(currentSlateData.type==="popup"){
@@ -290,6 +281,9 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
                     }
                 }
             }
+            // else if (updatedData.type === 'stanza') {
+            //     updateStoreInCanvas({ ...updatedData, ...response.data }, asideData, parentUrn, dispatch, getState, null, elementIndex, showHideType, parentElement, poetryData)
+            // }
         }
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
         
@@ -324,7 +318,7 @@ function updateLOInStore(updatedData, versionedData, getState, dispatch) {
     
 
 }
-function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getState, versionedData, elementIndex, showHideType, parentElement){
+function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getState, versionedData, elementIndex, showHideType, parentElement, poetryData){
     //direct dispatching in store
     let parentData = getState().appStore.slateLevelData;
     let newslateData = JSON.parse(JSON.stringify(parentData));
@@ -346,12 +340,21 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                 // }else if(indexes.length === 3){
                 //     dispatch(fetchSlateData(asideData.id,asideData.contentUrn, 0, asideData));
                 }
+            } else if(parentElement && parentElement.type == 'poetry'){
+
+                // if(indexes.length === 2 || indexes.length === 3 || indexes === 2 || indexes === 3){
+                    parentElement.index = elementIndex;
+                    dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:parentElement.id, parentElement.contentUrn, 0, parentElement));
+                // }
             } 
-            else if(parentElement && parentElement.type === "popup" && updatedData.popupEntityUrn && (updatedData.metaDataField || updatedData.section === "postertextobject") ){
+            else if(parentElement && parentElement.type === "popup" && updatedData.elementParentEntityUrn && (updatedData.metaDataField || updatedData.section === "postertextobject") ){
                 dispatch(fetchSlateData(updatedData.slateUrn, updatedData.slateEntity, 0)); }
             else if(parentElement && parentElement.type === "showhide"){
                 parentElement.indexes =elementIndex;
                 dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:parentElement.id, parentElement.contentUrn, 0, parentElement)); 
+            }
+            else if(parentElement && parentElement.type === "citations"){
+                dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:parentElement.id, parentElement.contentUrn, 0, parentElement));
             }
             else {
                 elementIndex = indexes.length == 2 ?indexes[0] : elementIndex
@@ -365,178 +368,246 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
         })
     }
     else {
-        _slateBodyMatter = _slateBodyMatter.map(element => {
-            if (element.id === elementId) {
-               
-                if(element.type !== "openerelement"){
-                    element  = {
-                        ...element,
-                        ...updatedData,
-                        elementdata : {
-                            ...element.elementdata,
-                            text : updatedData.elementdata?updatedData.elementdata.text:null
-                        },
-                        tcm : _slateObject.tcm?true:false,
-                        html : updatedData.html
-                    };
+        if(parentElement && parentElement.type === "citations"){
+            if(updatedData.type === "element-citation"){
+                let indexes = elementIndex.split("-")
+                _slateBodyMatter[indexes[0]].contents.bodymatter[indexes[1] - 1] = {...updatedData,
+                    tcm: _slateObject.tcm ? true : false
                 }
-                else{
-                    element  = {
-                        ...element,
-                        ...updatedData,
-                        tcm : _slateObject.tcm?true:false,
-                        html : updatedData.html
-                    };
+            }
+            else {
+                if(updatedData.type === "element-authoredtext"){
+                    _slateBodyMatter[elementIndex].contents["formatted-title"] = {...updatedData}     
                 }
-            }else if(asideData && asideData.type == 'element-aside'){
-                if(element.id == asideData.id){
-                   let nestedBodyMatter =  element.elementdata.bodymatter.map((nestedEle)=>{
-                        /*This condition add object of element in existing element  in aside */
-                        if(nestedEle.id == elementId) {
-                            nestedEle  = {
-                                ...nestedEle,
-                                ...updatedData,
-                                elementdata: {
-                                    ...nestedEle.elementdata,
-                                    text: updatedData.elementdata ? updatedData.elementdata.text : null
-                                },
-                                tcm: _slateObject.tcm ? true : false,
-                                html: updatedData.html
-                            };
-                        }
-                        else if(nestedEle.type === "popup"){
-                            if(nestedEle.popupdata["formatted-title"] && nestedEle.popupdata["formatted-title"]["id"] === elementId){
-                                nestedEle  = {
+            }
+        }
+        else {
+            _slateBodyMatter = _slateBodyMatter.map(element => {
+                if (element.id === elementId) {
+
+                    if (element.type !== "openerelement") {
+                        element = {
+                            ...element,
+                            ...updatedData,
+                            elementdata: {
+                                ...element.elementdata,
+                                text: updatedData.elementdata ? updatedData.elementdata.text : null
+                            },
+                            tcm: _slateObject.tcm ? true : false,
+                            html: updatedData.html
+                        };
+                    }
+                    else {
+                        element = {
+                            ...element,
+                            ...updatedData,
+                            tcm: _slateObject.tcm ? true : false,
+                            html: updatedData.html
+                        };
+                    }
+                } else if (asideData && asideData.type == 'element-aside') {
+                    if (element.id == asideData.id) {
+                        let nestedBodyMatter = element.elementdata.bodymatter.map((nestedEle) => {
+                            /*This condition add object of element in existing element  in aside */
+                            if (nestedEle.id == elementId) {
+                                nestedEle = {
                                     ...nestedEle,
-                                    popupdata : {
-                                        ...nestedEle.popupdata,
-                                        "formatted-title" : {...updatedData}
-                                    }
-                                };
-                            } else if(nestedEle.popupdata["formatted-subtitle"] && nestedEle.popupdata["formatted-subtitle"]["id"] === elementId){
-                                nestedEle  = {
-                                    ...nestedEle,
-                                    popupdata : {
-                                        ...nestedEle.popupdata,
-                                        "formatted-subtitle" : {...updatedData}
-                                    }
-                                };
-                            } else if(nestedEle.popupdata.postertextobject[0].id === elementId){
-                                nestedEle  = {
-                                    ...nestedEle,
-                                    popupdata : {
-                                        ...nestedEle.popupdata,
-                                        postertextobject : [{...updatedData}]
-                                    }
+                                    ...updatedData,
+                                    elementdata: {
+                                        ...nestedEle.elementdata,
+                                        text: updatedData.elementdata ? updatedData.elementdata.text : null
+                                    },
+                                    tcm: _slateObject.tcm ? true : false,
+                                    html: updatedData.html
                                 };
                             }
-                        }else if(nestedEle.type == "showhide" && showHideType){
-                            nestedEle.interactivedata[showHideType].map((showHideData,index)=>{
-                                if(showHideData.id == updatedData.id){
-                                    showHideData.elementdata.text =  updatedData.elementdata.text;
-                                    showHideData.html = updatedData.html;
-                                }
-                            })
-                        }
-                         else if(nestedEle.type == "manifest" && nestedEle.id == parentUrn.manifestUrn) {
-                            /*This condition add object of element in existing element  in section of aside */
-                            let elementObject =  nestedEle.contents.bodymatter.map((ele)=>{
-                                if(ele.id == elementId) {
-                                    ele = {
-                                        ...ele,
-                                        ...updatedData,
-                                        elementdata: {
-                                            ...ele.elementdata,
-                                            text: updatedData.elementdata ? updatedData.elementdata.text : null
-                                        },
-                                        tcm: _slateObject.tcm ? true : false,
-                                        html: updatedData.html
+                            else if (nestedEle.type === "popup") {
+                                if (nestedEle.popupdata["formatted-title"] && nestedEle.popupdata["formatted-title"]["id"] === elementId) {
+                                    nestedEle = {
+                                        ...nestedEle,
+                                        popupdata: {
+                                            ...nestedEle.popupdata,
+                                            "formatted-title": { ...updatedData }
+                                        }
+                                    };
+                                } else if (nestedEle.popupdata["formatted-subtitle"] && nestedEle.popupdata["formatted-subtitle"]["id"] === elementId) {
+                                    nestedEle = {
+                                        ...nestedEle,
+                                        popupdata: {
+                                            ...nestedEle.popupdata,
+                                            "formatted-subtitle": { ...updatedData }
+                                        }
+                                    };
+                                } else if (nestedEle.popupdata.postertextobject[0].id === elementId) {
+                                    nestedEle = {
+                                        ...nestedEle,
+                                        popupdata: {
+                                            ...nestedEle.popupdata,
+                                            postertextobject: [{ ...updatedData }]
+                                        }
                                     };
                                 }
-                                else if(ele.type === "popup"){
-                                    if(ele.popupdata["formatted-title"] && ele.popupdata["formatted-title"]["id"] === elementId){
-                                        ele  = {
+                            } else if (nestedEle.type == "showhide" && showHideType) {
+                                nestedEle.interactivedata[showHideType].map((showHideData, index) => {
+                                    if (showHideData.id == updatedData.id) {
+                                        showHideData.elementdata.text = updatedData.elementdata.text;
+                                        showHideData.html = updatedData.html;
+                                    }
+                                })
+                            }
+                            else if (nestedEle.type == "manifest" && nestedEle.id == parentUrn.manifestUrn) {
+                                /*This condition add object of element in existing element  in section of aside */
+                                let elementObject = nestedEle.contents.bodymatter.map((ele) => {
+                                    if (ele.id == elementId) {
+                                        ele = {
                                             ...ele,
-                                            popupdata : {
-                                                ...ele.popupdata,
-                                                "formatted-title" : {...updatedData}
-                                            }
-                                        };
-                                    } else if(ele.popupdata["formatted-subtitle"] && ele.popupdata["formatted-subtitle"]["id"] === elementId){
-                                        ele  = {
-                                            ...ele,
-                                            popupdata : {
-                                                ...ele.popupdata,
-                                                "formatted-subtitle" : {...updatedData}
-                                            }
-                                        };
-                                    } else if(ele.popupdata.postertextobject[0].id === elementId){
-                                        ele  = {
-                                            ...ele,
-                                            popupdata : {
-                                                ...ele.popupdata,
-                                                postertextobject : [{...updatedData}]
-                                            }
+                                            ...updatedData,
+                                            elementdata: {
+                                                ...ele.elementdata,
+                                                text: updatedData.elementdata ? updatedData.elementdata.text : null
+                                            },
+                                            tcm: _slateObject.tcm ? true : false,
+                                            html: updatedData.html
                                         };
                                     }
-                                }else if(ele.type == "showhide" && showHideType){
-                                    ele.interactivedata[showHideType].map((showHideData,index)=>{
-                                        if(showHideData.id == updatedData.id){
-                                            showHideData.elementdata.text =  updatedData.elementdata.text;
-                                            showHideData.html = updatedData.html;
+                                    else if (ele.type === "popup") {
+                                        if (ele.popupdata["formatted-title"] && ele.popupdata["formatted-title"]["id"] === elementId) {
+                                            ele = {
+                                                ...ele,
+                                                popupdata: {
+                                                    ...ele.popupdata,
+                                                    "formatted-title": { ...updatedData }
+                                                }
+                                            };
+                                        } else if (ele.popupdata["formatted-subtitle"] && ele.popupdata["formatted-subtitle"]["id"] === elementId) {
+                                            ele = {
+                                                ...ele,
+                                                popupdata: {
+                                                    ...ele.popupdata,
+                                                    "formatted-subtitle": { ...updatedData }
+                                                }
+                                            };
+                                        } else if (ele.popupdata.postertextobject[0].id === elementId) {
+                                            ele = {
+                                                ...ele,
+                                                popupdata: {
+                                                    ...ele.popupdata,
+                                                    postertextobject: [{ ...updatedData }]
+                                                }
+                                            };
                                         }
-                                    })
-                                   
-                                }
-                                return ele;
-                            })
-                            nestedEle.contents.bodymatter = elementObject;
-                        }
-                        return nestedEle;
-                    })
-                    element.elementdata.bodymatter = nestedBodyMatter;
+                                    } else if (ele.type == "showhide" && showHideType) {
+                                        ele.interactivedata[showHideType].map((showHideData, index) => {
+                                            if (showHideData.id == updatedData.id) {
+                                                showHideData.elementdata.text = updatedData.elementdata.text;
+                                                showHideData.html = updatedData.html;
+                                            }
+                                        })
+
+                                    }
+                                    return ele;
+                                })
+                                nestedEle.contents.bodymatter = elementObject;
+                            }
+                            return nestedEle;
+                        })
+                        element.elementdata.bodymatter = nestedBodyMatter;
+                    }
                 }
-            }
-            else if(element.type === "popup"){
-                if(element.popupdata["formatted-title"] && element.popupdata["formatted-title"]["id"] === elementId){
-                    element  = {
-                        ...element,
-                        popupdata : {
-                            ...element.popupdata,
-                            "formatted-title" : {...updatedData}
-                        }
-                    };
-                } else if(element.popupdata["formatted-subtitle"] && element.popupdata["formatted-subtitle"]["id"] === elementId){
-                    element  = {
-                        ...element,
-                        popupdata : {
-                            ...element.popupdata,
-                            "formatted-subtitle" : {...updatedData}
-                        }
-                    };
-                } else if(element.popupdata.postertextobject[0].id === elementId){
-                    element  = {
-                        ...element,
-                        popupdata : {
-                            ...element.popupdata,
-                            postertextobject : [{...updatedData}]
-                        }
-                    };
+                else if (element.type === "popup") {
+                    if (element.popupdata["formatted-title"] && element.popupdata["formatted-title"]["id"] === elementId) {
+                        element = {
+                            ...element,
+                            popupdata: {
+                                ...element.popupdata,
+                                "formatted-title": { ...updatedData }
+                            }
+                        };
+                    } else if (element.popupdata["formatted-subtitle"] && element.popupdata["formatted-subtitle"]["id"] === elementId) {
+                        element = {
+                            ...element,
+                            popupdata: {
+                                ...element.popupdata,
+                                "formatted-subtitle": { ...updatedData }
+                            }
+                        };
+                    } else if (element.popupdata.postertextobject[0].id === elementId) {
+                        element = {
+                            ...element,
+                            popupdata: {
+                                ...element.popupdata,
+                                postertextobject: [{ ...updatedData }]
+                            }
+                        };
+                    }
                 }
-            }
-            else if(element.type === "showhide"){
-                if(showHideType){
-                    element.interactivedata[showHideType].forEach((showHideElement, index) => {
-                        if(showHideElement.id === elementId){
-                            showHideElement = {...updatedData}
-                            element.interactivedata[showHideType][index] = showHideElement
-                        }
-                    })
+                else if (element.type === "poetry") {
+                    if (element.contents["formatted-title"] && element.contents["formatted-title"]["id"] === elementId) {
+                        element = {
+                            ...element,
+                            contents: {
+                                ...element.contents,
+                                "formatted-title": { ...updatedData }
+                            }
+                        };
+                    } 
+                    /* else if (element.contents["formatted-subtitle"] && element.contents["formatted-subtitle"]["id"] === elementId) {
+                        element = {
+                            ...element,
+                            contents: {
+                                ...element.contents,
+                                "formatted-subtitle": { ...updatedData }
+                            }
+                        };
+                    }  */
+                    // else if (element.contents["formattedCaption"] && element.contents["formattedCaption"]["id"] === elementId) {
+                    //     element = {
+                    //         ...element,
+                    //         contents: {
+                    //             ...element.contents,
+                    //             "formattedCaption": { ...updatedData }
+                    //         }
+                    //     };
+                    // }
+                     else if (element.contents["creditsarray"] && element.contents["creditsarray"][0] && element.contents["creditsarray"][0]["id"] === elementId) {
+                         element = {
+                             ...element,
+                             contents: {
+                                 ...element.contents,
+                             }
+                         };
+                         element.contents.creditsarray[0] = updatedData;
+                     }
+                    else {
+                        let newPoetryBodymatter = element.contents.bodymatter.map((stanza) => {
+                            if (stanza.id === elementId) {
+                                stanza = {
+                                    ...stanza,
+                                    ...updatedData,
+                                    tcm: _slateObject.tcm ? true : false,
+                                };
+                            }
+                            return stanza;
+                        })
+                        element.contents.bodymatter = newPoetryBodymatter;
+                    }
                 }
-                
-            }
-            return element
-        })
+                else if (element.type === "showhide") {
+                    if (showHideType) {
+                        element.interactivedata[showHideType].forEach((showHideElement, index) => {
+                            if (showHideElement.id == updatedData.id) {
+                                showHideElement.elementdata.text = updatedData.elementdata.text;
+                                showHideElement.html = updatedData.html;
+                            }
+                        })
+                    }
+                }
+
+                return element
+            })
+
+
+        }
         _slateContent.bodymatter = _slateBodyMatter
         _slateObject.contents = _slateContent
 
@@ -799,13 +870,4 @@ export const deleteShowHideUnit = (elementId, type, parentUrn, index,eleIndex, p
 const cascadeElement = (parentElement, dispatch, parentElementIndex) => {
     parentElement.indexes = parentElementIndex;
     dispatch(fetchSlateData(parentElement.id, parentElement.contentUrn, 0, parentElement)); 
-}
-
-export const currentSHowHideElement = (element) => (dispatch, getState) => {
-    dispatch({
-        type: CURRENT_SHOW_HIDE_ELEMENT,
-        payload: {
-            currentShowhideElement:element
-        }
-    })
 }

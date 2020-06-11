@@ -1,0 +1,30 @@
+.poetryLine:nth-of-type(even){
+     background-color:#fff;
+} 
+.poetryLine{
+    display: block;
+    min-height: 22px;
+    color: #000;
+    font-family: Palatino, Palatino Linotype, Palatino LT STD, Georgia, serif !important;
+}
+.element-container.pe .horizontalLine  {
+    margin-left: -30px;
+}
+.element-container.pe .dropdown  {
+    margin-left: -23px;
+}
+.poetryLineLevel1{
+    display: block;
+    padding-left: 40px !important;
+}
+.poetryLineLevel2 {
+    padding-left: 80px !important;
+}
+
+.poetryLineLevel3 {
+    padding-left: 120px !important;
+}
+
+.poetryHideLabel {
+    display: none;
+}

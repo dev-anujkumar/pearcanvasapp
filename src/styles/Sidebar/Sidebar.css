@@ -3,7 +3,7 @@
     background-color: #fafafa;
     overflow-y: auto;
     position: relative;
-    height: 100%;
+    height: 95%;
     color: #424242;
     font-family: 'Open Sans', sans-serif;
 }
@@ -28,11 +28,15 @@
     margin: 24px 0;
     outline: none;
     position: relative;
-    cursor: pointer;
+    /* cursor: pointer; */
     border-bottom: 1px solid #e0e0e0;
     -webkit-appearance: none; 
     -moz-appearance: none;
     appearance: none;
+}
+
+.canvas-sidebar .element-dropdown .element-dropdown-title:not(.st):not(.pe) *{
+    cursor: pointer;
 }
 
 .canvas-sidebar .element-dropdown .element-dropdown-title .dropdown-arrow {
@@ -131,6 +135,9 @@
 .canvas-sidebar .sidebar-disable{
     pointer-events: none;
 }
-.element-dropdown-title.disabled .dropdown-arrow{
+.element-dropdown-title.disabled .dropdown-arrow,.element-dropdown.sidebar-disable .dropdown-arrow{
     opacity:0.2
+}
+.canvas-sidebar .element-dropdown .element-dropdown-title.disabled{
+    cursor: default;
 }

@@ -407,6 +407,11 @@ export default {
                     text: 'SML',
                     labelText: 'BCE',
                     enum: 'SML'
+                },
+                'secondary-blockcode-language-verilog': {
+                    text: 'Verilog',
+                    labelText: 'BCE',
+                    enum: 'VERILOG'
                 }
             }
         },
@@ -687,6 +692,7 @@ export default {
     "popup": {
         "primary-popup": {
             text: 'Pop up window',
+            toolbar: ['assetpopover', 'glossary'],
             dropdownDisabled: true,
             subtype: {
                 'secondary-popup': {
@@ -730,6 +736,64 @@ export default {
                 long_description: {
                     text: 'Long Description',
                     isEditable: false
+                }
+            }
+        } 
+    },
+    'citations' : {
+        'primary-citations-group': {
+            text: 'Citation Group',
+            enum: 'CITATION',
+            toolbar: ['footnote', 'increaseindent', 'decreaseindent', 'glossary', 'assetpopover', 'orderedlist', 'unorderedlist'],
+            subtype: {
+                'secondary-citations-group': {
+                    text: 'Citation Group',
+                    labelText: 'CG',
+                    enum: 'NA',
+                }
+            }
+        }
+    },
+    'element-citation' : {
+        'primary-element-citation': {
+            text: 'Citation',
+            enum: 'ELEMENT_CITATION',
+            toolbar: ['footnote', 'increaseindent', 'decreaseindent', 'glossary', 'assetpopover', 'orderedlist', 'unorderedlist'],
+            subtype: {
+                'secondary-element-citation': {
+                    text: 'Citation element',
+                    labelText: 'CT',
+                    enum: 'NA',
+                }
+            }
+        }
+    },   
+    "poetry" : {
+        "primary-poetry": {
+            text: 'Poetry Editor',
+            enum: 'POETRY',
+            toolbar: ['assetpopover','decreaseindent','glossary', 'orderedlist', 'unorderedlist'],
+            dropdownDisabled: true,
+            subtype: {
+                'secondary-poetry': {
+                    text: 'Poetry Editor',
+                    labelText: 'PE',
+                    enum: 'NA',
+                }
+            }
+        } 
+    },
+    "stanza" : {
+        "primary-stanza": {
+            text: 'Stanza',
+            enum: 'STANZA',
+            toolbar: ['orderedlist', 'unorderedlist'],
+            dropdownDisabled: true,
+            subtype: {
+                'secondary-stanza': {
+                    text: 'Stanza',
+                    labelText: 'PE',
+                    enum: 'NA',
                 }
             }
         } 

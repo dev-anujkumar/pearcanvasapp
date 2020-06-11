@@ -8,6 +8,7 @@ import '../../styles/GlossaryFootnotePopup/GlossaryFootnotePopup.css';
 import ReactEditor from "../tinyMceGlossaryFootnoteEditor"
 import { checkforToolbarClick } from '../../js/utils'
 import { hasReviewerRole } from '../../constants/utility.js'
+import { setFormattingToolbar } from './GlossaryFootnote_Actions.js';
 class GlossaryFootnotePopup extends Component {
     constructor() {
         super();
@@ -17,15 +18,21 @@ class GlossaryFootnotePopup extends Component {
 
     toolbarHandling = (e, action = "") => {
         let relatedTargets = (e && e.relatedTarget && e.relatedTarget.classList) ? e.relatedTarget.classList : [];
-        if(e && checkforToolbarClick(relatedTargets)){
+        if (e && checkforToolbarClick(relatedTargets)) {
             e.stopPropagation();
             return;
         }
-        if(document.querySelector('div#toolbarGlossaryFootnote .tox-toolbar')) {
-            if(action === "add") {
-                document.querySelector('div#toolbarGlossaryFootnote .tox-toolbar').classList.add("disable");
-            } else if(action === "remove") {
-                document.querySelector('div#toolbarGlossaryFootnote .tox-toolbar').classList.remove("disable");
+        if (e && e.type == 'blur') {
+            /** to disable both toolbars on glossary editor blur */
+            setFormattingToolbar('disableTinymceToolbar')
+            setFormattingToolbar('disableGlossaryFootnoteToolbar')
+        }
+        if (document.querySelector('div#toolbarGlossaryFootnote .tox-toolbar')) {
+            if (action === "add") {
+                setFormattingToolbar('disableGlossaryFootnoteToolbar')
+            } else if (action === "remove") {
+                setFormattingToolbar('disableTinymceToolbar')
+                setFormattingToolbar('enableGlossaryFootnoteToolbar')
             }
         }
     }

@@ -7,6 +7,7 @@ import {
   tinymceFormulaChemistryIcon
 }  from '../images/TinyMce/TinyMce.jsx';
 import { hasReviewerRole, hasProjectPermission } from '../constants/utility.js'
+import { setFormattingToolbar } from './GlossaryFootnotePopup/GlossaryFootnote_Actions.js';
 export class ReactEditor extends React.Component {
   constructor(props) {
     super(props);
@@ -44,6 +45,13 @@ export class ReactEditor extends React.Component {
             this.handleFocussingInlineCode(api, editor)
           }
         });
+        editor.on('init', (e) => {
+            if(document.querySelector('div.glossary-toolbar-wrapper')){
+              setFormattingToolbar('disableTinymceToolbar')
+              setFormattingToolbar('removeGlossaryFootnoteSuperscript')
+              setFormattingToolbar('removeTinymceSuperscript')
+            }
+          });      
       },
       init_instance_callback: (editor) => {
         if (hasReviewerRole() && !hasProjectPermission('elements_add_remove')) {        // when user doesn't have edit permission
@@ -52,7 +60,10 @@ export class ReactEditor extends React.Component {
           }
         }
         editor.on('Change', (e) => { this.editorOnChange(e, editor) });
-
+        if(document.querySelector('div.glossary-toolbar-wrapper')){
+          setFormattingToolbar('disableTinymceToolbar')
+          setFormattingToolbar('removeTinymceSuperscript')
+        }
         /* Reverting data-temp-mathml to data-mathml and class Wirisformula to temp_WirisFormula */ 
         this.revertingTempContainerHtml(editor)
       },
@@ -156,6 +167,10 @@ export class ReactEditor extends React.Component {
 
   onEditorBlur = (editor) => {
     editor.on('blur', (e) => {
+      setFormattingToolbar('disableTinymceToolbar')
+      setFormattingToolbar('disableGlossaryFootnoteToolbar')
+      setFormattingToolbar('removeGlossaryFootnoteSuperscript')
+      setFormattingToolbar('removeTinymceSuperscript')
       e.stopImmediatePropagation();
       e.preventDefault();
     });
@@ -263,10 +278,10 @@ export class ReactEditor extends React.Component {
 
   setGlossaryFootnoteNode = (id, glossaryNode, footnoteNode) => {
     if(id === "glossary-0" && glossaryNode && this.termtext){
-      glossaryNode.innerHTML = this.termtext.replace(/data-temp-mathml/g,'data-mathml').replace(/temp_Wirisformula/g,'Wirisformula');;
+      glossaryNode.innerHTML = this.termtext.replace(/data-temp-mathml/g,'data-mathml').replace(/temp_Wirisformula/g,'Wirisformula');
     }
     else if(id === "footnote-0" && footnoteNode && this.termtext){
-      footnoteNode.innerHTML = this.termtext.replace(/data-temp-mathml/g,'data-mathml').replace(/temp_Wirisformula/g,'Wirisformula');;
+      footnoteNode.innerHTML = this.termtext.replace(/data-temp-mathml/g,'data-mathml').replace(/temp_Wirisformula/g,'Wirisformula');
     }
   }
   
@@ -278,6 +293,7 @@ export class ReactEditor extends React.Component {
         _isEditorPlaced = true;
       }
     }
+    setFormattingToolbar('disableTinymceToolbar')
     if (!_isEditorPlaced) {
       this.editorRef.current.focus();
       this.editorConfig.selector = '#' + this.editorRef.current.id;
@@ -285,6 +301,8 @@ export class ReactEditor extends React.Component {
       let footnoteNode = document.getElementById('footnote-0')
       this.setGlossaryFootnoteTerm(this.props.id, glossaryNode, footnoteNode)      
       tinymce.init(this.editorConfig).then((d) => {
+        setFormattingToolbar('removeTinymceSuperscript')
+        setFormattingToolbar('removeGlossaryFootnoteSuperscript')
         this.handlePlaceholer();
         this.setGlossaryFootnoteNode(this.props.id, glossaryNode, footnoteNode)
       });
@@ -293,7 +311,7 @@ export class ReactEditor extends React.Component {
 
   componentDidUpdate() {
     let tinyMCEInstancesNodes = document.getElementsByClassName('tox tox-tinymce tox-tinymce-inline');
-
+    setFormattingToolbar('disableTinymceToolbar')
     if(tinyMCEInstancesNodes.length>1){
       if(tinyMCEInstancesNodes[1].parentElement.id!=="tinymceToolbar"){
         tinyMCEInstancesNodes[0].remove()
@@ -302,6 +320,8 @@ export class ReactEditor extends React.Component {
     this.handlePlaceholer()
     let glossaryNode = document.getElementById('glossary-0')
     let footnoteNode = document.getElementById('footnote-0')
+    setFormattingToolbar('removeTinymceSuperscript')
+    setFormattingToolbar('removeGlossaryFootnoteSuperscript')
     this.setGlossaryFootnoteNode(this.props.id, glossaryNode, footnoteNode)
   }
 
@@ -355,6 +375,7 @@ export class ReactEditor extends React.Component {
     this.editorConfig.selector = '#' + currentTarget.id;
     let termText = document.getElementById(currentTarget.id)&&document.getElementById(currentTarget.id).innerHTML;
     tinymce.init(this.editorConfig).then((d)=>{
+      setFormattingToolbar('removeTinymceSuperscript')
      if(termText) {
       /**
        * BG-1907 -[PCAT-7395] Temp classes in mathml cause issue in opening wiris editor.
@@ -368,7 +389,13 @@ export class ReactEditor extends React.Component {
 
   render() {
     let propsGlossaryFootNoteCurrentValue = this.props.glossaryFootNoteCurrentValue && this.props.glossaryFootNoteCurrentValue.replace(/&nbsp;/g, ' ');
-    let glossaryFootNoteCurrentValue = (propsGlossaryFootNoteCurrentValue && tinyMCE.$(propsGlossaryFootNoteCurrentValue).length) ? (tinyMCE.$(propsGlossaryFootNoteCurrentValue))[0].innerHTML : propsGlossaryFootNoteCurrentValue;
+    let glossaryFootNoteCurrentValue;
+    try{
+      glossaryFootNoteCurrentValue = (propsGlossaryFootNoteCurrentValue && tinyMCE.$(propsGlossaryFootNoteCurrentValue.trim()).length) ? (tinyMCE.$(propsGlossaryFootNoteCurrentValue))[0].innerHTML : propsGlossaryFootNoteCurrentValue;
+    }
+    catch(err){
+      glossaryFootNoteCurrentValue = propsGlossaryFootNoteCurrentValue;
+    }
     glossaryFootNoteCurrentValue = glossaryFootNoteCurrentValue && glossaryFootNoteCurrentValue.replace(/^(\ |&nbsp;|&#160;)+|(\ |&nbsp;|&#160;)+$/g, '&nbsp;');
     
     return (

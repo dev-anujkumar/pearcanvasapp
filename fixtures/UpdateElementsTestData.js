@@ -174,7 +174,8 @@ export const interactiveData = {
     figuredata: {
         interactiveformat: "mmi",
         interactivetype: "fpo",
-        schema: "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive"
+        schema: "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+        "posterimage":"test"
     },
     figuretype: "interactive",
     html: {
@@ -419,4 +420,154 @@ export const openerElementData = {
         text: '<p class="paragraphNumeroUno"></p>'
     },
     type: "openerelement"
+}
+export const citationElementData = {
+    "id": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636",
+    "type": "element-citation",
+    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+    "elementdata": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
+    },
+    "html" : {
+        "text":`<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4e" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</p>`
+    },
+    "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4e",
+    "versionUrn": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636"
+}
+export const asideElementData = {
+    "id": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636",
+    "type": "element-aside",
+    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+    "elementdata": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
+    },
+    "html" : {
+        "text":`<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4e" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</p>`
+    },
+    "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4e",
+    "versionUrn": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636",
+    "status":"approved"
+}
+export const interactiveDataPDF = {
+    captions: {
+        footnotes: [],
+        mathml: [],
+        schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        text: "↵",
+        textsemantics: [],
+    },
+    comments: false,
+    contentUrn: "urn:pearson:entity:d0dd381d-ca8c-4651-9cf9-e7bbb4c6fd8d",
+    credits: {
+        footnotes: [],
+        mathml: [],
+        schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        text: "↵",
+        textsemantics: [],
+    },
+    elementdata: {
+        text: null
+    },
+    feedback: false,
+    figuredata: {
+        interactiveformat: "mmi",
+        interactivetype: "pdf",
+        schema: "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+        "posterimage":"test"
+    },
+    figuretype: "interactive",
+    html: {
+        captions: '<p></p><p class="paragraphNumeroUno"><br></p><p></p>',
+        credits: '<p></p><p class="paragraphNumeroUno"><br></p><p></p>',
+        footnotes: {},
+        glossaryentries: {},
+        postertext: "",
+        subtitle: '<p></p><p class="paragraphNumeroUno"><br></p><p></p>',
+        text: "",
+        title: '<p></p><p class="paragraphNumeroUno"><br></p><p></p>'
+    },
+    id: "urn:pearson:work:febc9dd3-e259-4743-8ff3-404860bd9757",
+    index: "1",
+    inputSubType: "FLASHCARDS",
+    inputType: "MMI",
+    schema: "http://schemas.pearson.com/wip-authoring/figure/1",
+    status: "wip",
+    subtitle: {
+        footnotes: [],
+        mathml: [],
+        schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        text: "gdg",
+        textsemantics: []
+    },
+    tcm: false,
+    title: {
+        mathml: [],
+        schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        text: "dgdg",
+        textsemantics: []
+    },
+    type: "figure",
+    versionUrn: "urn:pearson:work:f8d3bbf0-33bc-4272-8f88-27cb4dfd5203",
+    
+}
+
+export const singleAssessmentDataPUF = {
+    comments: false,
+    contentUrn: "urn:pearson:entity:d0dd381d-ca8c-4651-9cf9-e7bbb4c6fd8d",
+    elementdata: {
+        text: null
+    },
+    feedback: false,
+    figuredata: {
+        elementdata: {
+            assessmentformat: "puf",
+            assessmentid: undefined,
+            assessmentitemid: undefined,
+            assessmentitemtype: "assessmentItem",
+            posterimage: { path: "https://cite-media-stg.pearson.com/legacy_paths/8e…41-4ed3-44a3-8310-1106d3715c3e/FPO-assessment.png" },
+            schema: "http://schemas.pearson.com/wip-authoring/assessment/1#/definitions/assessment",
+            usagetype: "Quiz"
+        },
+        height: "501",
+        schema: "http://schemas.pearson.com/wip-authoring/assessment/1#/definitions/assessment",
+        subtype: "assessment",
+        type: "element-assessment",
+        width: "840",
+    },
+    figuretype: "assessment",
+    id: "urn:pearson:work:7b027839-60ae-4673-a80b-00d5a6567bd9",
+    index: "0",
+    inputSubType: "QUIZ",
+    inputType: "SINGLE_ASSESSMENT_CITE",
+    schema: "http://schemas.pearson.com/wip-authoring/figure/1",
+    status: "wip",
+    tcm: false,
+    title: {
+        mathml: [],
+        schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        text: "",
+        textsemantics: []
+    },
+    html: {
+        title: ""
+    },
+    type: "figure",
+    versionUrn: "urn:pearson:work:f8d3bbf0-33bc-4272-8f88-27cb4dfd5203",
+}
+
+export const poetryElementData = {
+    "id": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636",
+    "type": "poetry",
+    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+    "elementdata": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
+    },
+    "html" : {
+        "text":`<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4e" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</p>`
+    },
+    "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4e",
+    "versionUrn": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636"
 }

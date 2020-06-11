@@ -199,7 +199,7 @@ img.imageFullscreen, img.imageFullscreenTableImage, img.imageFullscreenMathImage
     margin-block-end: 1em !important; 
     margin-inline-start: 0px !important; 
     margin-inline-end: 1em !important; 
-    padding-inline-start: 40px !important; 
+    padding-inline-start: 15px !important; 
 }
 .pearson-component.image.figureData.table-figure-data table a{
     pointer-events:none !important;
@@ -209,9 +209,6 @@ img.imageFullscreen, img.imageFullscreenTableImage, img.imageFullscreenMathImage
  }
  table ul li{
     margin-bottom: 0px !important;
- }
- .pearson-component.image.figureData.table-figure-data ul {
-    padding-inline-start: 15px!important;
  }
  .mce-item-table caption{
      border: none !important;

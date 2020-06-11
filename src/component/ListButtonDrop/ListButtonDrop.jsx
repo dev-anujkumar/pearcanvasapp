@@ -1,15 +1,11 @@
 /**
  * Module - ListButtonDrop
  * Description - memoized funtional component for list drop element
- * Developer - Abhay Singh
- * Last modified - 04-09-2019
  */
 
 // IMPORT - Plugins //
 import React from 'react';
 import PropTypes from 'prop-types';
-// IMPORT - Components //
-// IMPORT - Assets //
 import '../../styles/CanvasWrapper/ListButtonDrop.css';
 
 /**
@@ -73,14 +69,6 @@ const DecimalListIconBox = (props) => {
             <span className="list-option-row">3.</span>
             <span className="list-option-row">4.</span>
             <span className="list-opt-tooltip">{_listFor}</span>
-            {
-                /* 
-                <button onClick={() => { this.onListOptionSelect('decimal') }} id="decimal-1" type="button" tabIndex="-1" role="button" className="fr-command fr-btn fr-btn-font_awesome custom-button decimal-button lazyloaded active" data-cmd="decimal">
-                    <i className="fa fa-decimal" aria-hidden="true"></i>
-                    <span className="fr-sr-only">decimal</span>
-                </button> 
-                */
-            }
         </div>
     )
 }

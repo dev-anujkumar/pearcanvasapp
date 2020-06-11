@@ -1,7 +1,7 @@
 import axios from 'axios';
 import config from '../../config/config';
 import store from '../../appstore/store.js'
-import { sendDataToIframe } from '../../constants/utility.js';
+import { sendDataToIframe, createTitleSubtitleModel } from '../../constants/utility.js';
 import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 
 const {
@@ -29,7 +29,7 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
         const parentData = store.getState().appStore.slateLevelData;
         let newParentData = JSON.parse(JSON.stringify(parentData));
         let newBodymatter = newParentData[slateId].contents.bodymatter;
-        var footnoteContentText, glossaryFootElem, glossaryContentText, tempGlossaryContentText;
+        var footnoteContentText, glossaryFootElem = {}, glossaryContentText, tempGlossaryContentText;
         let tempIndex = index && typeof (index) !== 'number' && index.split('-');
         if(tempIndex.length == 4 && elementType == 'figure'){ //Figure inside WE
             glossaryFootElem = newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]]
@@ -42,7 +42,7 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
             glossaryFootElem = newBodymatter[updatedIndex]
         }
         else if (typeWithPopup && typeWithPopup === "popup" ){
-            let tempIndex = index.split('-');
+            // let tempIndex = index.split('-');
             let indexesLen = tempIndex.length;
             switch (indexesLen){
                 case 2:
@@ -58,6 +58,23 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                     break;
             }   
         }
+        else if (typeWithPopup && typeWithPopup === 'poetry') {
+            // let tempIndex = index.split('-');
+            let indexesLen = tempIndex.length;
+            if (indexesLen === 2) {
+                switch (tempIndex[1]) {
+                    case "1":
+                        glossaryFootElem = newBodymatter[tempIndex[0]].contents['formatted-title'] || {};
+                        break;
+                    // case "3":
+                    //     glossaryFootElem = newBodymatter[tempIndex[0]].contents['formatted-caption'] || {};
+                    //     break;
+                    case "4":
+                        glossaryFootElem = (newBodymatter[tempIndex[0]].contents['creditsarray'] ? newBodymatter[tempIndex[0]].contents['creditsarray'][0] : {});
+                        break;
+                }
+            }
+        }
          else {
             if (typeof (index) == 'number') { 
                 if (newBodymatter[index].versionUrn == elementWorkId) {
@@ -72,7 +89,12 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                         glossaryFootElem = condition
                     }
                 } else if (indexesLen == 3) {
-                    condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
+                    if(elementType==='stanza'){
+                        condition = newBodymatter[indexes[0]].contents.bodymatter[indexes[2]]
+                    }
+                    else{
+                        condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
+                    }
                     if (condition.versionUrn == elementWorkId) {
                         glossaryFootElem = condition
                     }
@@ -170,8 +192,29 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         figureDataObj = {
             "text": workContainer
         }
+        if(elementType == 'stanza'){
+            figureDataObj.text = `<p>${figureDataObj.text}</p>`
+        }
     }
-
+    let parentEntityUrn
+    if (typeWithPopup === "popup" || typeWithPopup === "poetry") {
+        let elemIndex = index &&  typeof (index) !== 'number' && index.split('-');
+        let indexesLen = elemIndex.length
+        switch (indexesLen){
+            case 2:
+                parentEntityUrn = newBodymatter[elemIndex[0]].contentUrn
+                break;
+    
+            case 3:
+                parentEntityUrn = newBodymatter[elemIndex[0]].elementdata.bodymatter[elemIndex[1]].contentUrn
+                break;
+    
+            case 4:
+                parentEntityUrn = newBodymatter[elemIndex[0]].elementdata.bodymatter[elemIndex[1]].contents.bodymatter[elemIndex[2]].contentUrn
+                break;
+        }
+    }
+    
     switch (semanticType) {
         case "FOOTNOTE":
             footnoteEntry[glossaryfootnoteid] = definition
@@ -214,8 +257,11 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             }
             break;
     }
-
-    if(index &&  typeof (index) !== 'number' && elementType !== 'figure'  && typeWithPopup !== 'popup'){
+    if(typeWithPopup === 'poetry' || typeWithPopup === 'popup'){
+        data.metaDataField = "formattedTitle"
+        data.elementParentEntityUrn = parentEntityUrn
+    }
+    if(index &&  typeof (index) !== 'number' && elementType !== 'figure'  && typeWithPopup !== 'popup' && typeWithPopup !== 'poetry'){
         let tempIndex =  index.split('-');
         if(tempIndex.length === 2){
             if(newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].id === elementWorkId){
@@ -227,7 +273,13 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                 }
             }
         }else if(tempIndex.length === 3){
-            if(newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]].id === elementWorkId){
+            if(elementType==='stanza'){
+                if (newBodymatter[tempIndex[0]].contents.bodymatter[tempIndex[2]].id === elementWorkId){
+                    data.isHead = false;
+                    data.parentType = "poetry";
+                }
+            }
+            else if(newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]].id === elementWorkId){
                 data.isHead = false;
                 if(newBodymatter[tempIndex[0]].subtype === "workedexample"){
                     data.parentType = "workedexample";
@@ -246,8 +298,8 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             "PearsonSSOSession": config.ssoToken
         }
     }).then(res => {
-        let parentData = store.getState().appStore.slateLevelData;
-        let currentParentData = JSON.parse(JSON.stringify(parentData));
+        let parentData1 = store.getState().appStore.slateLevelData;
+        let currentParentData = JSON.parse(JSON.stringify(parentData1));
         let currentSlateData = currentParentData[config.slateManifestURN];
         if(res.data.id !== data.id && currentSlateData.status === 'approved'){
             sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
@@ -262,7 +314,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             newBodymatter[updatedIndex] = res.data;
         } 
         else if (typeWithPopup && typeWithPopup === "popup"){
-            let tempIndex = index.split('-');
+            // let tempIndex = index.split('-');
             let indexesLen = tempIndex.length
             switch (indexesLen){
                 case 2:
@@ -276,6 +328,36 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                 case 4:
                     newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]].popupdata["formatted-subtitle"] = res.data;
                     break;
+            }
+        }
+        else if (typeWithPopup && typeWithPopup === 'poetry') {
+            // let tempIndex = index.split('-');
+            let indexesLen = tempIndex.length;
+            if (indexesLen === 2) {
+                switch (tempIndex[1]) {
+                    case "1":
+                        let responseElement = {...res.data}
+                        newBodymatter[tempIndex[0]].contents['formatted-title']
+                        let labelHTML = newBodymatter[tempIndex[0]].contents['formatted-title'].html.text
+                        if(labelHTML.match(/<label>.*?<\/label>/g)){
+                            labelHTML = labelHTML.match(/<label>.*?<\/label>/g)[0].replace(/<label>|<\/label>/g, "")
+                        }
+                        else{
+                            labelHTML = ""
+                        }
+                        responseElement.html.text = createTitleSubtitleModel(labelHTML, res.data.html.text)
+                        newBodymatter[tempIndex[0]].contents['formatted-title'] = responseElement;
+                        break;
+                    // case "3":
+                    //     newBodymatter[tempIndex[0]].contents['formatted-caption'] = res.data;
+                    //     break;
+                    case "4":
+                        if(!newBodymatter[tempIndex[0]].contents['creditsarray']){
+                            newBodymatter[tempIndex[0]].contents['creditsarray'] = [];
+                        }
+                        newBodymatter[tempIndex[0]].contents['creditsarray'][0] = res.data;
+                        break;
+                }
             }
         }
         else {
@@ -292,9 +374,19 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                         newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]] = res.data
                     }
                 } else if (indexesLen == 3) {
-                    condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
+                    if(elementType==='stanza'){
+                        condition = newBodymatter[indexes[0]].contents.bodymatter[indexes[2]]
+                    }
+                    else{
+                        condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
+                    }
                     if (condition.versionUrn == elementWorkId) {
-                        newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]] = res.data
+                        if(elementType==='stanza'){
+                            newBodymatter[indexes[0]].contents.bodymatter[indexes[2]] = res.data
+                        }
+                        else{
+                            newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]] = res.data
+                        }
                     }
                 }
             }
@@ -313,4 +405,40 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         sendDataToIframe({'type': HideLoader,'message': { status: false }});
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
     })
+}
+
+/**
+ * setFormattingToolbar | this method is used to enable/disable the formatting toolbars
+ * @param {*} action, type of action to be performed
+ */
+export const setFormattingToolbar = (action) => {
+    let tinymceToolbar = document.querySelector('div#tinymceToolbar .tox-toolbar') ? document.querySelector('div#tinymceToolbar .tox-toolbar') : ""
+    let glossaryFootnoteToolbar = document.querySelector('div#toolbarGlossaryFootnote .tox-toolbar') ? document.querySelector('div#toolbarGlossaryFootnote .tox-toolbar') : ""
+    switch (action) {
+        case 'enableTinymceToolbar':
+            tinymceToolbar && tinymceToolbar.classList.remove("toolbar-disabled");
+            tinymceToolbar && tinymceToolbar.classList.remove("disable");
+            break;
+        case 'disableTinymceToolbar':
+            tinymceToolbar && tinymceToolbar.classList.add("disable");
+            break;
+        case 'enableGlossaryFootnoteToolbar':
+            glossaryFootnoteToolbar && glossaryFootnoteToolbar.classList.remove("disable");
+            break;
+        case 'disableGlossaryFootnoteToolbar':
+            glossaryFootnoteToolbar && glossaryFootnoteToolbar.classList.add("disable");
+            break;
+        case 'removeTinymceSuperscript':
+            let tinymceSuperscript = document.querySelector('div#tinymceToolbar .tox-toolbar button[title="Superscript"]') ? document.querySelector('div#tinymceToolbar .tox-toolbar button[title="Superscript"]') : ""
+            tinymceSuperscript && tinymceSuperscript.removeAttribute('aria-pressed')
+            tinymceSuperscript && tinymceSuperscript.classList.remove('tox-tbtn--enabled')
+            tinymceSuperscript && tinymceSuperscript.classList.add('tox-tbtn--select')
+            break;
+        case 'removeGlossaryFootnoteSuperscript':
+            let isSuperscriptButton = document.querySelector('div#toolbarGlossaryFootnote .tox-toolbar button[title="Superscript"]') ? document.querySelector('div#toolbarGlossaryFootnote .tox-toolbar button[title="Superscript"]') : ""
+            isSuperscriptButton && isSuperscriptButton.removeAttribute('aria-pressed')
+            isSuperscriptButton && isSuperscriptButton.classList.remove('tox-tbtn--enabled')
+            isSuperscriptButton && isSuperscriptButton.classList.add('tox-tbtn--select')
+            break;
+    }
 }

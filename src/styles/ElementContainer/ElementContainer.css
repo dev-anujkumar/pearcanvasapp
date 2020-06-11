@@ -12,11 +12,16 @@
     /* border: 1.5px solid #aaa; */
 }
 
-.element-container.active {
+.element-container.active:not(.ct) {
+    border: 1.5px solid #149632;
+    padding: 1px 7px !important;
+}
+
+.element-container.ct.active {
     border: 1.5px solid #149632;
 }
 
-.element-container.hideBorder:not(.as):not(.we) *, .element-container.showBorder:not(.as):not(.we) * {
+.element-container.hideBorder:not(.as):not(.we):not(.cg):not(.pe) *, .element-container.showBorder:not(.as):not(.we):not(.cg):not(.pe) * {
     cursor: default !important;
 }
 
@@ -44,7 +49,7 @@
 }
 
 .showBorder {
-    border: 0.5px solid #737373;
+    border: 1px solid #737373;
 }
 
 .hideBorder {
@@ -112,20 +117,20 @@ abbr.AssetPopoverTerm{
     color: #007FA3;
     font-family: inherit;
     /* font-style: normal; */
-  }
-  abbr.AssetPopoverTerm:hover {
+}
+abbr.AssetPopoverTerm:hover {
     color: #9E007E;
     text-decoration: underline;
     cursor: pointer;
-  }
+}
 
-  /* Alfresco Buttons */
-  button#assetSelectBtn{
-      font-size: 14px
-  }
-  button.SearchLibraryStyles__btnCancel___1G1qN, button.BrowseStyles__btnCancel___2wiLt, button.modalStyles__btnCancel___3b7HW{
+/* Alfresco Buttons */
+button#assetSelectBtn{
     font-size: 14px
-  }
-  .ignore-for-drag{
-      cursor: default!important;
-  }
+}
+button.SearchLibraryStyles__btnCancel___1G1qN, button.BrowseStyles__btnCancel___2wiLt, button.modalStyles__btnCancel___3b7HW{
+    font-size: 14px
+}
+.ignore-for-drag{
+    cursor: default!important;
+}

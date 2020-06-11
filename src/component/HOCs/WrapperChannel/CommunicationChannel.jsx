@@ -1,8 +1,6 @@
 /**
- * Module - WithWrapperCommunication
+ * Module - CommunicationChannel
  * Description - HOC to inherit channel communication functionalities with wrapper
- * Developer - Abhay Singh
- * Last modified - 09-09-2019
  */
 
 // IMPORT - Plugins //
@@ -16,7 +14,7 @@ import { releaseSlateLockWithCallback, getSlateLockStatusWithCallback } from '..
 import PopUp from '../../PopUp';
 import {loadTrackChanges} from '../../CanvasWrapper/TCM_Integration_Actions';
 import { ALREADY_USED_SLATE_TOC } from '../../SlateWrapper/SlateWrapperConstants'
-function WithWrapperCommunication(WrappedComponent) {
+function CommunicationChannel(WrappedComponent) {
     class CommunicationWrapper extends Component {
         constructor(props) {
             super(props);
@@ -60,6 +58,8 @@ function WithWrapperCommunication(WrappedComponent) {
                     this.sendingPermissions();
                     break;
                 case 'selectedSlate':
+                case 'titleChanging':
+                    message['parentId'] = this.state.project_urn;
                     this.setCurrentSlate(message);
                     break;
                 case 'deleteTocItem':
@@ -70,11 +70,6 @@ function WithWrapperCommunication(WrappedComponent) {
                     break;
                 case 'showSingleContainerDelete':
                     this.onSingleContainerDelete(message);
-                    break;
-                case 'titleChanging': {
-                    message['parentId'] = this.state.project_urn;
-                    this.setCurrentSlate(message);
-                }
                     break;
                 case 'newSplitedSlate':
                     setTimeout(()=>{this.hanndleSplitSlate(message)}, 1000)
@@ -90,19 +85,15 @@ function WithWrapperCommunication(WrappedComponent) {
                     });
                     break;
                 case 'enablePrev':
-                    // config.disablePrev = message.enablePrev;
                     config.disablePrev = false;//message.enablePrev;
                     break;
                 case 'enableNext':
-                    // config.disablePrev = message.enableNext;
                     config.disableNext = false;//message.enableNext;
                     break;
                 case 'disablePrev':
-                    // config.disablePrev = message.disablePrev;
                     config.disablePrev = true;//message.disablePrev;
                     break;
                 case 'disableNext':
-                    // config.disableNext = message.disableNext;
                     config.disableNext = true;//message.disableNext;
                     break;
                 // case 'swappedIS':
@@ -116,10 +107,6 @@ function WithWrapperCommunication(WrappedComponent) {
                 //     break;
                 case 'refreshElementWithTable':
                     {
-                        // this.showCanvasBlocker(true);
-                        // showHeaderBlocker();
-                        // sendDataToIframe({'type': ShowLoader,'message': { status: true }});
-                        // this.props.fetchSlateData(config.slateManifestURN);
                         this.setTableData(message.elementId, message.updatedData);
                     }
                     break;
@@ -192,14 +179,10 @@ function WithWrapperCommunication(WrappedComponent) {
                         showBlocker: false
                     });
                  break;
-                 case 'slatePreview':
-                    if(!config.savingInProgress){
-                        this.props.publishContent('slatePreview');
-                    }
-                    break;
+                case 'slatePreview':
                 case 'projectPreview':
                     if(!config.savingInProgress){
-                        this.props.publishContent('projectPreview');
+                        this.props.publishContent(messageType);
                     }
                     break;
                 case 'getSlateLockStatus' :
@@ -311,10 +294,6 @@ function WithWrapperCommunication(WrappedComponent) {
         }
 
         handleRefreshSlate = () => {
-            // if(config.isFetchSlateInProgress){
-            //     sendDataToIframe({ 'type': 'stopRefreshSpin', 'message': false }); 
-            //     return false;
-            // }
             localStorage.removeItem('newElement');
             config.slateManifestURN = config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
             config.slateEntityURN = config.tempSlateEntityURN ? config.tempSlateEntityURN : config.slateEntityURN
@@ -356,9 +335,6 @@ function WithWrapperCommunication(WrappedComponent) {
                     let tocAdd = this.props.permissions.includes('toc_add_pages') ? 'toc_add_pages' : ""
                     permissionObj.permissions = [tocEditTitle , tocDelete , tocRearrage , tocAdd]
                 }
-                // permissionObj.permissions = [
-                //     'toc_edit_title', 'toc_delete_entry', 'toc_rearrange_entry', 'toc_add_pages'
-                // ];
                 permissionObj.roleId = 'admin';
             }
 
@@ -622,4 +598,4 @@ function WithWrapperCommunication(WrappedComponent) {
     return CommunicationWrapper;
 }
 
-export default WithWrapperCommunication;
+export default CommunicationChannel;

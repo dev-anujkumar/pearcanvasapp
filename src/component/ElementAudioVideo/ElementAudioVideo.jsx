@@ -104,7 +104,8 @@ class ElementAudioVideo extends Component {
             let figureData = {
                 height : height,
                 width : width,
-                srctype: this.props.model.figuredata.srctype
+                srctype: this.props.model.figuredata.srctype,
+                figureType: figureType || smartLinkAssetType,
             }
             if (!uniqID) {
                 let uniqIDString = imageData && imageData.req && imageData.req.url;
@@ -195,6 +196,20 @@ class ElementAudioVideo extends Component {
             e.stopPropagation();
             return;
         }
+
+        const figureData = this.props.model.figuredata;
+        let currentAsset = null;
+
+        if (figureData) {
+            const id = figureData.videoid || figureData.audioid;
+        
+            currentAsset = id ? {
+                id: id.split(':').pop(), // get last
+                type: figureData.figureType,
+            } : null;
+        }
+        
+
         let that = this;
         let alfrescoPath = config.alfrescoMetaData;
         if (alfrescoPath && this.state.projectMetadata) {
@@ -205,6 +220,7 @@ class ElementAudioVideo extends Component {
             if (alfrescoPath.alfresco.nodeRef) {
                 if (this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco')) {
                     data_1 = alfrescoPath.alfresco;
+                    data_1.currentAsset = currentAsset;
                     /*
                         data according to new project api 
                     */
@@ -232,7 +248,11 @@ class ElementAudioVideo extends Component {
         else {
             if (this.props.permissions.includes('alfresco_crud_access')) {
                 c2MediaModule.onLaunchAddAnAsset(function (alfrescoData) {
-                    data_1 = { ...alfrescoData };
+                    data_1 = { 
+                        ...alfrescoData,
+                        currentAsset: currentAsset,
+                    };
+                    
                     let request = {
                         eTag: alfrescoPath.etag,
                         projectId: alfrescoPath.id,

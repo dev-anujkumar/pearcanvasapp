@@ -105,9 +105,9 @@ describe('Testing Button component with props', () => {
     })
     it('render Container element Button component  ', () => {
         const component = mount(<Button type={buttonTypes.CONTAINER_ELEMENT} />);
-        expect(component.find('span.btn-element').hasClass('interactive-elem-button')).toBe(false);
-        expect(component.find('span.btn-element').hasClass('backward-nav-disable')).toBe(false);
         expect(component.find('span.btn-element').hasClass('container-elem-button')).toBe(true);
+        expect(component.find('span.btn-element').hasClass('backward-nav-disable')).toBe(false);
+        expect(component.find('svg#containerIcon').exists()).toBe(true);
     })
     it('render Worked example Button component  ', () => {
         const component = mount(<Button type={buttonTypes.WORKED_EXAMPLE_ELEMENT} />);
@@ -140,18 +140,44 @@ describe('Testing Button component with props', () => {
         expect(component.find('span.btn-element').hasClass('worked-exp-elem')).toBe(false);
         expect(component.find('svg#sectionBreakElement').exists()).toBe(true);
     })
-    it('render Metadata Anchor  Button component  ', () => {
-        const component = mount(<Button type={buttonTypes.METADATA_ANCHOR} />);
-        expect(component.find('span.btn-element').hasClass('metadata-anchor')).toBe(true);
-        expect(component.find('span.btn-element').hasClass('backward-nav-disable')).toBe(false);
-        expect(component.find('svg#audioIcon').exists()).toBe(false);
-        expect(component.find('rect').exists()).toBe(true);
-    })
-    it('render ELM Close Window  Button component  ', () => {
-        const component = mount(<Button type={buttonTypes.ELM_CLOSE_WINDOW} />);
-    })
-    it('render LOCK Window  Button component  ', () => {
+    it('render Lock icon Button component  ', () => {
         const component = mount(<Button type={buttonTypes.LOCK} />);
         expect(component.find('span.btn-element').hasClass('lock-icon')).toBe(true);
+        expect(component.find('svg.slate-lock-icon-svg').exists()).toBe(true);
+    })
+    it('render METADATA_ANCHOR element Button component  ', () => {
+        const component = mount(<Button type={buttonTypes.METADATA_ANCHOR} />);
+        expect(component.find('span.btn-element').hasClass('metadata-anchor')).toBe(true);
+        expect(component.find('rect').exists()).toBe(true);
+        expect(component.find('span.btn-element').hasClass('backward-nav-disable')).toBe(false);
+        expect(component.find('span.btn-element').hasClass('worked-exp-elem')).toBe(false);
+    })
+    it('render ELM_CLOSE_WINDOW Button component  ', () => {
+        const component = mount(<Button type={buttonTypes.ELM_CLOSE_WINDOW} />);
+        expect(component.find('span')).toBeDefined();
+        expect(component.find('svg#elm_CloseWindow').exists()).toBe(true);
+        expect(component.find('polygon').exists()).toBe(true);
+    })
+    it('render ASSESSMENT_CLOSE_WINDOW Button component  ', () => {
+        const component = mount(<Button type={buttonTypes.ASSESSMENT_CLOSE_WINDOW} />);
+        expect(component.find('span')).toBeDefined();
+        expect(component.find('svg#assessment_CloseWindow').exists()).toBe(true);
+        expect(component.find('polygon').exists()).toBe(true);
+    })
+    it('render ELM_ASSESSMENT_ITEM Button component  ', () => {
+        const component = mount(<Button type={buttonTypes.ELM_ASSESSMENT_ITEM} />);
+        expect(component.find('span')).toBeDefined();
+        expect(component.find('svg#assessmentSlate-item-icon').exists()).toBe(true);
+    })
+    it('render FEEDBACK Button component  ', () => {
+        const component = mount(<Button type={buttonTypes.FEEDBACK} />);
+        expect(component.find('span.btn-element').hasClass('feedback')).toBe(true);
+        expect(component.find('svg.feedback-icon-svg').exists()).toBe(true);
+    })
+    it('render CITATION_ELEMENT Button component  ', () => {
+        const component = mount(<Button type={buttonTypes.CITATION_ELEMENT} />);
+        expect(component.find('span.btn-element').hasClass('citation-elem')).toBe(true);
+        expect(component.find('rect').exists()).toBe(true);
+        expect(component.find('tspan').exists()).toBe(true);
     })
 })

@@ -5,19 +5,80 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { elmAssessmentItem } from './../../../../../images/ElementButtons/ElementButtons.jsx';
 import CiteLoader from './../CiteLoader/CiteLoader.jsx';
-import { setCurrentCiteTdx } from '../../Actions/CiteTdxActions'
 import moment from 'moment'
+import { elmSortDown, elmSortUp } from './../../../../../images/ElementButtons/ElementButtons.jsx';
+import { getCiteTdxData, assessmentSorting, setCurrentCiteTdx, specialCharacterDecode } from './../../Actions/CiteTdxActions.js'
 
 class CiteTdxTable extends Component {
     constructor(props) {
         super(props);
-
-
+        this.sortingArray = {
+            "Title": "name",
+            "Date Modified": "modifiedDate"
+        }
+        let sortingData = Object.keys(this.sortingArray).map((item, index) => {
+            return {
+                [item]: {
+                    sortIcon: elmSortDown,
+                    sortFlag: true,
+                    className: item === 'Title' ?' active' : 'inactive'
+                }
+            }
+        })
+        sortingData = sortingData.reduce((a, b) => Object.assign(a, b), {})
+        this.state = {
+            sortBy: sortingData
+        };
     }
+    componentDidMount() {
+        if (this.props.sortingData.sortBy) {
+            let sortByParameter = Object.keys(this.sortingArray).find(key => this.sortingArray[key] === this.props.sortingData.sortBy);
+            let sortingData = Object.keys(this.state.sortBy).map((ele, index) => {
+                return {
+                    [ele]: {
+                        sortIcon: sortByParameter === ele ? this.props.sortingData.sortOrder ? elmSortUp : elmSortDown : this.state.sortBy[sortByParameter].sortFlag ? elmSortDown : elmSortUp,
+                        sortFlag: sortByParameter === ele ? this.props.sortingData.sortOrder ? false : true : this.state.sortBy[sortByParameter].sortFlag,
+                        className: sortByParameter === ele ? 'active' : 'inactive'
+                    }
+                }
+            })
+            sortingData = sortingData.reduce((a, b) => Object.assign(a, b), {})
+            this.setState({
+                sortBy: sortingData
+            })
+        }
+    }
+    
     addAssessment = (addedValue) => {
         this.props.setCurrentCiteTdx(addedValue);
     }
+    /*** @description - This function is to set the sort icon and call dynamicSort function
+      * @param e- event triggered
+     */
+    setSort = (item) => {
+        if (item && this.sortingArray[item]) {
+            let sortByParameter = this.sortingArray[item] ? this.sortingArray[item] : "";
+            let sortOrder = this.state.sortBy[item].sortFlag == true ? 1 : this.state.sortBy[item].sortFlag == false ? 0 : ''
+            let sortingData = Object.keys(this.state.sortBy).map((ele, index) => {
+                return {
+                    [ele]: {
+                        sortIcon: ele === item ? this.state.sortBy[ele].sortFlag ? elmSortUp : elmSortDown : this.state.sortBy[ele].sortFlag ? elmSortDown : elmSortUp,
+                        sortFlag: ele === item ? !this.state.sortBy[ele].sortFlag : this.state.sortBy[ele].sortFlag,
+                        className: ele === item ? 'active' : 'inactive'
+                    }
+                }
+            })
+            sortingData = sortingData.reduce((a, b) => Object.assign(a, b), {})
+            this.setState({
+                sortBy: sortingData
+            })
+        this.props.assessmentSorting(sortByParameter,sortOrder);
+        this.props.getCiteTdxData(this.props.assessmentType, this.props.searchTitle, this.props.filterUUID,this.props.currentPageNo);
+        }
+        
+    }
     tableHeaders = ["Title", "Type", "Date Modified", "Modified By", "UUID"];
+
 
     render() {
         const { citeApiData, tdxApiData, mmiApiData, isLoading, assessmenterrFlag } = this.props;
@@ -31,7 +92,11 @@ class CiteTdxTable extends Component {
                             <thead>
                                 {this.tableHeaders.map(item => (
                                     <th className={`assessment-row-class ${item.toLowerCase()}`}>{item}
+                                    {(item === "Title" || item === "Date Modified")  && this.state.sortBy[item] &&
+                                    <div className={`sort-icon ${this.state.sortBy[item].className} ${apiData.assessments.length > 1 ? '':'disabled'}`} onClick={() => this.setSort(item)}>{this.state.sortBy[item].sortIcon}</div>
+                                    }
                                     </th>
+
                                 ))}
                             </thead>
                             <tbody>
@@ -42,7 +107,7 @@ class CiteTdxTable extends Component {
                                                 <td className="td-class">
                                                     <input type="radio" className="radio-button" name="assessment-radio" value={item.versionUrn} onClick={() => this.addAssessment(item)} checked={this.props.currentAssessmentSelected.versionUrn=== item.versionUrn} />
                                                     <span className="elmAssessmentItem-icon">{elmAssessmentItem}</span>
-                                                    <span className="assessment-titles" title={item.name}>{item.name}</span>
+                                                    <span className="assessment-titles" title={specialCharacterDecode(item.name)}>{specialCharacterDecode(item.name)}</span>
                                                 </td>
                                                 <td><span className="assessment-type">{this.props.assessmentType === "Full Assessment CITE" ? "CITE" : this.props.assessmentType === "Full Assessment TDX"? "TDX" : "MMI"}</span></td>
                                                 <td><span className="modifiedby-date" title={item.modifiedDate ? moment(item.modifiedDate).format('DD MMM YYYY, hh:MMA') : ""}>{item.modifiedDate ? moment(item.modifiedDate).format('DD MMM YYYY, hh:MMA') : 'NA'}</span></td>
@@ -65,6 +130,8 @@ class CiteTdxTable extends Component {
 
 const mapActionToProps = {
     setCurrentCiteTdx: setCurrentCiteTdx,
+    getCiteTdxData: getCiteTdxData,
+    assessmentSorting:assessmentSorting
 }
 
 const mapStateToProps = (state) => {
@@ -75,7 +142,8 @@ const mapStateToProps = (state) => {
         citeErrorFlag: state.citeTdxReducer.assessmenterrFlag,
         isLoading: state.citeTdxReducer.isLoading,
         currentAssessmentSelected: state.citeTdxReducer.currentAssessmentSelected,
-        assessmenterrFlag: state.citeTdxReducer.assessmenterrFlag
+        assessmenterrFlag: state.citeTdxReducer.assessmenterrFlag,
+        sortingData:state.citeTdxReducer
     }
 }
 

@@ -10,7 +10,6 @@ import {
     SET_ACTIVE_ELEMENT,
     AUTHORING_ELEMENT_CREATED,
     AUTHORING_ELEMENT_UPDATE,
-    ADD_COMMENT,
     DELETE_ELEMENT,
     SWAP_ELEMENT,
     SET_SPLIT_INDEX,
@@ -52,7 +51,7 @@ const INITIAL_STATE = {
     accesDeniedPopup: false,
     popupSlateData: null,
     roleId: '',
-    oldImage: "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
+    oldImage: "",
     showHideId: "",
     parentUrn: {},
     asideData: {},
@@ -74,7 +73,6 @@ const INITIAL_ACTION = {
 export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
     switch (action.type) {
         case FETCH_SLATE_DATA:
-        case ADD_COMMENT:
             return {
                 ...state,
                 slateLevelData: action.payload

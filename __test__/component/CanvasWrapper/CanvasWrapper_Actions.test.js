@@ -24,6 +24,9 @@ jest.mock('../../../src/config/config.js', () => ({
     fromTOC:false
 }));
 let initialState = {
+    appStore : {
+        slateLevelData : slateDataNew.data
+    },
     slateLevelData: {},
     // elementsTag: {},
     activeElement: {},
@@ -33,7 +36,7 @@ let initialState = {
 jest.mock('axios');
 describe('action file test', () => {
     let store = mockStore(() => initialState);
-
+    let initialState2;
     beforeEach(() => {
         initialState = {
             slateLevelData: {},
@@ -100,7 +103,15 @@ describe('action file test', () => {
             splittedElementIndex: 0,
             pageNumberData: {}
         };
-
+        initialState2 = {
+            slateLevelData: {},
+            appStore:{
+                slateLevelData: slateDataNew.data
+                },
+            activeElement: {},
+            splittedElementIndex: 0,
+            pageNumberData: {}
+        };
         moxios.install();
     });
 
@@ -128,7 +139,7 @@ describe('action file test', () => {
         result(dispatch,getState);
     })
 
-    it('testing---createPopupUnit action',async () => {
+    it('testing---createPopupUnit action - popup',async () => {
         store = mockStore(() => initialState);
         let manifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
         const expectedActions = [{
@@ -145,12 +156,35 @@ describe('action file test', () => {
         };
         let getState = () => {
             return initialState;
-           }
+        }
+        let cb = jest.fn()
         axios.post.mockImplementation(() => Promise.resolve(data));
-        let result = await selectActions.createPopupUnit(manifestURN,2);
+        let result = await selectActions.createPopupUnit("formatted-title", slateDataNew.data[manifestURN].contents.bodymatter[2], cb ,"2-0", manifestURN);
         result(dispatch,getState);
     })
+    it('testing---createPopupUnit action - citations',async () => {
+        store = mockStore(() => initialState2);
+        let manifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+        const expectedActions = [{
+            type: AUTHORING_ELEMENT_UPDATE,
+            payload: { slateDataNew }
 
+        }];
+        let data = slateDataNew;
+        let dispatch = (obj) =>{
+            if(obj.type === AUTHORING_ELEMENT_UPDATE){
+              expect(obj).toEqual(expectedActions);
+            }
+
+        };
+        let getState = () => {
+            return initialState2;
+        }
+        let cb = jest.fn()
+        axios.post.mockImplementation(() => Promise.resolve(data));
+        let result = await selectActions.createPopupUnit(null, slateDataNew.data[manifestURN].contents.bodymatter[3], cb ,"3-0", manifestURN);
+        result(dispatch,getState);
+    })
 
     xit('fetchSlateData', () => {
         const manifestURN = 'urn:9324dsfds23432dsf45';
@@ -982,7 +1016,7 @@ describe('action file test', () => {
             selectActions.setActiveElement(wip.smartLink, 1)(dispatch,getState);
     
         });
-        it('setActiveElement for with show hide', () => {
+        xit('setActiveElement for with show hide', () => {
             let expectedActions = [{
                 type: SET_ACTIVE_ELEMENT,
                 payload: {
@@ -1231,8 +1265,6 @@ describe('action file test', () => {
             }]
 
             expect(store.getActions().type).toEqual(expectedActions.type);
-
         });
-
     })
 });

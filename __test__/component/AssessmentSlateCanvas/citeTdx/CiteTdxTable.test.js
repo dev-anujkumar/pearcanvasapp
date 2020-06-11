@@ -18,7 +18,8 @@ let initialState = {
         isLoading:false,
         currentSingleAssessmentSelected:{},
         citeErrorFlag:"",
-        assessmenterrFlag:false
+        assessmenterrFlag:false,
+        sortBy:"modifiedDate"
 
  },
 };
@@ -30,6 +31,7 @@ describe('Table component', () => {
         citeApiData:{assessments:{"dfsarfw":"Sdfa"}},
         tdxApiData:{assessments:{"dfsarfw":"Sdfa"}},
         mmiApiData:{assessments:{"dfsarfw":"Sdfa"}},
+        sortingData:{sortBy:"modifiedDate"}
 
     }
     let store = mockStore(initialState);
@@ -52,6 +54,12 @@ describe('Table component', () => {
         expect(spyaddAssessment).toHaveBeenCalled()
         spyaddAssessment.mockClear()
     })
+    it('sorting', () => { 
+         const spysetSorting = jest.spyOn(componentInstance, 'setSort')
+         componentInstance.setSort("Title");
+        expect(spysetSorting).toHaveBeenCalled()
+        spysetSorting.mockClear()
+    })
 
     it('TDX', () => {
         let props = {
@@ -61,6 +69,7 @@ describe('Table component', () => {
         citeApiData:{assessments:{"dfsarfw":"Sdfa"}},
         tdxApiData:{assessments:{"dfsarfw":"Sdfa"}},
         mmiApiData:{assessments:{"dfsarfw":"Sdfa"}},
+        sortingData:{sortBy:"modifiedDate"}
     
         }
         let store = mockStore(initialState);
@@ -77,11 +86,13 @@ describe('Table component', () => {
         citeApiData:{assessments:{"dfsarfw":"Sdfa"}},
         tdxApiData:{assessments:{"dfsarfw":"Sdfa"}},
         mmiApiData:{assessments:{"dfsarfw":"Sdfa"}},
+        sortingData:{sortBy:"modifiedDate"}
     
         }
         let store = mockStore(initialState);
         const component = mount(<Provider store={store}><CiteTdxTable {...props} /></Provider>);
         expect(component).toHaveLength(1);
     })
+    
 
 });

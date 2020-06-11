@@ -14,7 +14,7 @@ import {
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
-import { sendDataToIframe, requestConfigURI } from '../../constants/utility.js';
+import { sendDataToIframe, requestConfigURI, createTitleSubtitleModel } from '../../constants/utility.js';
 import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 import elementDataBank from './elementDataBank'
 import figureData from '../ElementFigure/figureTypes.js';
@@ -27,6 +27,7 @@ const findElementType = (element, index) => {
     try {
         switch (element.type) {
             case 'element-authoredtext':
+            case 'stanza':
                 elementType['elementType'] = elementDataBank[element.type]["elementType"];
                 if ('elementdata' in element && 'headers' in element.elementdata && element.elementdata.headers) {
                     elementType['primaryOption'] = elementDataBank["element-authoredtext-heading"]["primaryOption"];
@@ -115,11 +116,13 @@ const findElementType = (element, index) => {
                         }
                         break;
                     case "assessment":
+                        let assessmentFormat = element.figuredata.elementdata.assessmentformat.toLowerCase()
                         elementType = {
                             elementType: elementDataBank[element.type][element.figuretype]["elementType"],
                             primaryOption: elementDataBank[element.type][element.figuretype]["primaryOption"],
-                            ...elementDataBank[element.type][element.figuretype][element.figuredata.elementdata.assessmentformat]
+                            ...elementDataBank[element.type][element.figuretype][assessmentFormat]
                         }
+                        element.figuredata.elementdata.assessmentformat = assessmentFormat 
                         break;
                 }
                 break;
@@ -164,6 +167,9 @@ const findElementType = (element, index) => {
                 }
                 break;
             case "showhide":
+            case "citations":
+            case "element-citation":
+            case  'poetry':
                 elementType = {
                     elementType: elementDataBank[element.type]["elementType"],
                     primaryOption: elementDataBank[element.type]["primaryOption"],
@@ -221,10 +227,11 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
         }
     }).then(slateData => {
         let newVersionManifestId=Object.values(slateData.data)[0].id
-        
-        if(slateData.data && slateData.data[newVersionManifestId] && slateData.data[newVersionManifestId].type === "popup"){
+
+		if(slateData.data && slateData.data[newVersionManifestId] && slateData.data[newVersionManifestId].type === "popup"){
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
-            config.isPopupSlate = true
+            config.isPopupSlate = true;
+            config.savingInProgress = false;
 			if (config.slateManifestURN === Object.values(slateData.data)[0].id) {
 				let messageTcmStatus = {
 					TcmStatus: {
@@ -286,7 +293,25 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
                             slateLevelData: newslateData
                         }
                     })
-                }else if (config.slateManifestURN === Object.values(slateData.data)[0].id) {
+                } else if (versioning.type === 'citations' || versioning.type === 'poetry') {
+                    let parentData = getState().appStore.slateLevelData;
+                    let newslateData = JSON.parse(JSON.stringify(parentData));
+                    let index
+                    if(typeof versioning.index === "number"){
+                        index = versioning.index;
+                    }
+                    else if(typeof versioning.index === "string"){
+                        index = versioning.index.split("-")[0];
+                    }
+                    newslateData[config.slateManifestURN].contents.bodymatter[index] = Object.values(slateData.data)[0];
+                    return dispatch({
+                        type: AUTHORING_ELEMENT_UPDATE,
+                        payload: {
+                            slateLevelData: newslateData
+                        }
+                    })
+
+                } else if (config.slateManifestURN === Object.values(slateData.data)[0].id) {
                     sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
                     let contentUrn = slateData.data[manifestURN].contentUrn;
                     let title = slateData.data[manifestURN].contents.title ? slateData.data[manifestURN].contents.title.text : '';
@@ -349,12 +374,12 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
         
         if(slateData.data && Object.values(slateData.data).length > 0) {
             let slateTitle = SLATE_TITLE;
-            if('title' in slateData.data[manifestURN].contents && 'text' in slateData.data[manifestURN].contents.title) {
-                slateTitle = slateData.data[manifestURN].contents.title.text || SLATE_TITLE;
+            if('title' in slateData.data[newVersionManifestId].contents && 'text' in slateData.data[newVersionManifestId].contents.title) {
+                slateTitle = slateData.data[newVersionManifestId].contents.title.text || SLATE_TITLE;
             }
             sendDataToIframe({
                 'type': "setSlateDetails",
-                'message': setSlateDetail(slateTitle, manifestURN)
+                'message': setSlateDetail(slateTitle, newVersionManifestId)
             });
         }
     });
@@ -479,7 +504,7 @@ const setOldinteractiveIdPath = (getState, activeElement, elementIndex) => {
     }
     return oldPath || ""
 }
-export const setActiveElement = (activeElement = {}, index = 0,parentUrn = {},asideData={} , updateFromC2Flag = false,showHideObj) => (dispatch, getState) => {
+export const setActiveElement = (activeElement = {}, index = 0,parentUrn = {},asideData={} , updateFromC2Flag = false, showHideObj = undefined) => (dispatch, getState) => {
     dispatch({
         type: SET_ACTIVE_ELEMENT,
         payload: findElementType(activeElement, index)
@@ -575,22 +600,100 @@ export const openPopupSlate = (element, popupId) => dispatch => {
 	}
 }
 
+/**
+ * Appends the created Unit element to the parent element and then to the slate.
+ * @param {*} paramObj 
+ * @param {*} responseData 
+ */
+const appendCreatedElement = (paramObj, responseData) => {
+    let {
+        popupElementIndex,
+        getState,
+        slateManifestURN,
+        parentElement,
+        dispatch,
+        cb,
+        popupField
+    } = paramObj
+
+    let elemIndex = `cypress-${popupElementIndex}`
+    let elemNode = document.getElementById(elemIndex)
+    popupElementIndex = popupElementIndex.split("-")
+    const parentData = getState().appStore.slateLevelData
+    let newslateData = JSON.parse(JSON.stringify(parentData))
+    let _slateObject = newslateData[slateManifestURN]
+
+    if(parentElement.type === "popup"){
+        let targetPopupElement=_slateObject.contents.bodymatter[popupElementIndex[0]];
+        if(popupElementIndex.length === 3){
+            targetPopupElement = targetPopupElement.elementdata.bodymatter[popupElementIndex[1]]
+        }
+        else if(popupElementIndex.length === 4){
+            targetPopupElement = targetPopupElement.elementdata.bodymatter[popupElementIndex[1]].contents.bodymatter[popupElementIndex[2]]
+        }
+        if(targetPopupElement){
+            targetPopupElement.popupdata[popupField] = responseData
+            targetPopupElement.popupdata[popupField].html.text = elemNode.innerHTML
+            targetPopupElement.popupdata[popupField].elementdata.text = elemNode.innerText
+            _slateObject.contents.bodymatter[popupElementIndex] = targetPopupElement
+        }
+    }
+    else if(parentElement.type === "citations"){
+        let targetCG = _slateObject.contents.bodymatter[popupElementIndex[0]]
+        if(targetCG){
+            targetCG.contents["formatted-title"] = responseData
+            targetCG.contents["formatted-title"].html.text = elemNode.innerHTML
+            targetCG.contents["formatted-title"].elementdata.text = elemNode.innerText
+            _slateObject.contents.bodymatter[popupElementIndex] = targetCG
+        }
+    }
+    dispatch({
+        type: AUTHORING_ELEMENT_UPDATE,
+        payload: {
+            slateLevelData: newslateData
+        }
+    })
+    if(cb) cb(responseData)
+}
+
+/**
+ * Creates request data for creating popup/citation unit.
+ * @param {*} parentElement Parent popup element/ citation group container
+ * @param {*} popupField formatted title or formatted-subtitle
+ */
+const getRequestData = (parentElement, popupField) => {
+    let dataToSend = {}
+    if(parentElement.type === "popup"){
+        let popupFieldType = ""
+        if(popupField === "formatted-subtitle"){
+            popupFieldType = "formattedSubtitle"
+        }
+        else{
+            popupFieldType = "formattedTitle"
+        }
+        
+        dataToSend = {
+            "projectUrn": config.projectUrn,
+            "slateEntityUrn": parentElement.contentUrn,
+            "slateUrn": parentElement.id,
+            "type": "TEXT",
+            "metaDataField" : popupFieldType
+        }
+    }
+    else if(parentElement.type === "citations"){
+        let citationField = "formattedTitle"
+        dataToSend = {
+            "projectUrn": config.projectUrn,
+            "slateEntityUrn": parentElement.contentUrn,
+            "slateUrn": parentElement.id,
+            "type": "TEXT",
+            "metaDataField" : citationField
+        }
+    }
+    return dataToSend
+}
 export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex, slateManifestURN) => (dispatch, getState) => {
-    let popupFieldType = ""
-    if(popupField === "formatted-subtitle"){
-        popupFieldType = "formattedSubtitle"
-    }
-    else{
-        popupFieldType = "formattedTitle"
-    }
-    
-    let _requestData = {
-        "projectUrn": config.projectUrn,
-        "slateEntityUrn": parentElement.contentUrn,
-        "slateUrn": parentElement.id,
-        "type": "TEXT",
-        "metaDataField" : popupFieldType
-    };
+    let _requestData =  getRequestData(parentElement, popupField)
     let url = `${config.REACT_APP_API_URL}v1/slate/element`
     return axios.post(url, 
         JSON.stringify(_requestData),
@@ -601,24 +704,78 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
             }
         })
     .then((response) => {
-        let elemIndex = `cypress-${popupElementIndex}`
+        let argObj = {
+            popupElementIndex,
+            getState,
+            slateManifestURN,
+            parentElement,
+            dispatch,
+            cb,
+            popupField
+        }
+        appendCreatedElement(argObj, response.data)
+
+    })
+    .catch((error) => {
+        console.log("%c ERROR RESPONSE", "font: 30px; color: red; background: black", error)
+        dispatch({type: ERROR_POPUP, payload:{show: true}})
+        config.savingInProgress = false
+    })
+}
+
+export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, slateManifestURN) => (dispatch, getState) => {
+    let _requestData = {
+        "projectUrn": config.projectUrn,
+        "slateEntityUrn": parentElement.contentUrn,
+        "slateUrn": parentElement.id,
+        "type": "TEXT"
+    }
+    if (poetryField === 'creditsarray') {
+        _requestData.sectionType = 'creditsarray';
+    } else {
+        _requestData.metaDataField = "formattedTitle";
+        // _requestData.metaDataField = poetryField ==="formatted-title"?"formattedTitle":"formattedSubtitle";
+    }
+    
+    let url = `${config.REACT_APP_API_URL}v1/slate/element`
+    return axios.post(url, 
+        JSON.stringify(_requestData),
+        {
+            headers: {
+                "Content-Type": "application/json",
+                "PearsonSSOSession": config.ssoToken
+            }
+        })
+    .then((response) => {
+
+        let elemIndex = `cypress-${ElementIndex}`
         let elemNode = document.getElementById(elemIndex)
-        popupElementIndex = popupElementIndex.split("-")
+        ElementIndex = Number(ElementIndex.split("-")[0])
         const parentData = getState().appStore.slateLevelData
         let newslateData = JSON.parse(JSON.stringify(parentData))
         let _slateObject = newslateData[slateManifestURN]
-        let targetPopupElement=_slateObject.contents.bodymatter[popupElementIndex[0]];
-        if(popupElementIndex.length === 3){
-            targetPopupElement = targetPopupElement.elementdata.bodymatter[popupElementIndex[1]]
-        }
-        else if(popupElementIndex.length === 4){
-            targetPopupElement = targetPopupElement.elementdata.bodymatter[popupElementIndex[1]].contents.bodymatter[popupElementIndex[2]]
-        }
-        if(targetPopupElement){
-            targetPopupElement.popupdata[popupField] = response.data
-            targetPopupElement.popupdata[popupField].html.text = elemNode.innerHTML
-            targetPopupElement.popupdata[popupField].elementdata.text = elemNode.innerText
-            _slateObject.contents.bodymatter[popupElementIndex] = targetPopupElement
+        let targetPoetryElement = _slateObject.contents.bodymatter[ElementIndex]
+
+        if(targetPoetryElement){
+            if(poetryField==="creditsarray"){
+                if(!targetPoetryElement.contents[poetryField]){
+                    targetPoetryElement.contents[poetryField] = [];
+                }
+                targetPoetryElement.contents[poetryField][0] = response.data
+                targetPoetryElement.contents[poetryField][0].html.text  = elemNode.innerHTML
+                targetPoetryElement.contents[poetryField][0].elementdata.text = elemNode.innerText
+            }
+            else if(poetryField==="formatted-title"){
+                targetPoetryElement.contents[poetryField] = response.data
+                targetPoetryElement.contents[poetryField].html.text = createTitleSubtitleModel(elemNode.innerHTML, "")
+                targetPoetryElement.contents[poetryField].elementdata.text = elemNode.innerText
+            }
+            else if(poetryField==="formatted-subtitle"){
+                targetPoetryElement.contents["formatted-title"] = response.data
+                targetPoetryElement.contents["formatted-title"].html.text = createTitleSubtitleModel("", elemNode.innerHTML)
+                // targetPoetryElement.contents["formatted-title"].elementdata.text = elemNode.innerText
+            }
+            _slateObject.contents.bodymatter[ElementIndex] = targetPoetryElement
         }
         dispatch({
             type: AUTHORING_ELEMENT_UPDATE,
@@ -626,11 +783,11 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
                 slateLevelData: newslateData
             }
         })
-        if(cb) cb(response.data)
+       if(cb) cb(response.data)
     })
     .catch((error) => {
         console.log("%c ERROR RESPONSE", "font: 30px; color: red; background: black", error)
-        dispatch({type: ERROR_POPUP, payload:{show: true}})
+       // dispatch({type: ERROR_POPUP, payload:{show: true}})
         config.savingInProgress = false
     })
 }

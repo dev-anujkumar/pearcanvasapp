@@ -11,7 +11,6 @@ import {
     GET_PROJECT_USER,
     UPDATE_ASSIGNEE,
     DELETE_COMMENT,
-    AUTHORING_ELEMENT_UPDATE,
     ERROR_POPUP
 } from '../../constants/Action_Constants';
 
@@ -274,11 +273,11 @@ export const deleteComment = (commentUrn, elementId) => (dispatch, getState) => 
                 PearsonSSOSession: config.ssoToken
             }
         }).then(response => {
-            const parentData = getState().appStore.slateLevelData;
+            /*const parentData = getState().appStore.slateLevelData;
             const newParentData = JSON.parse(JSON.stringify(parentData));
             let newBodymatter = newParentData[config.slateManifestURN].contents.bodymatter;
             const index = getState().commentsPanelReducer.index;
-            if(index){
+             if(index){
                 if (typeof (index) == 'number') {
                     if (newBodymatter[index].versionUrn == elementId) {
                         newBodymatter[index].comments = false;
@@ -298,17 +297,17 @@ export const deleteComment = (commentUrn, elementId) => (dispatch, getState) => 
                         }
                     }
                 }
-            }   
+            } */   
             dispatch({
                 type: DELETE_COMMENT,
                 payload: commentUrn
             });
-            dispatch({
+            /* dispatch({
                 type: AUTHORING_ELEMENT_UPDATE,
                 payload: {
                     slateLevelData: newParentData
                 }
-            })
+            }) */
         }).catch(error => {
             dispatch({type: ERROR_POPUP, payload:{show: true}})
             console.log("error while deleting user", error);

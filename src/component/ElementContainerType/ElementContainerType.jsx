@@ -1,22 +1,22 @@
 /**
- * Component for Conatiner Type Elements
+ * Component for Container Type Elements
  */
-import React, {useEffect, useState, useRef} from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import '../../styles/ElementContainerType/ElementContainerType.css'
 export default function ElementContainerType(props) {
-    const { closeDropDown,data } = props
+    const { closeDropDown, data } = props
     const [top, setTop] = useState('0px');
     let myListContainer = useRef(null)
 
-    useEffect(()=>{
+    useEffect(() => {
         let { clientHeight } = myListContainer.current;
         /**
          * Based upon the element picker position we need to add type and it's position
          */
         let elementPickerPosition = 1
         switch (props.text) {
-            case 'interactive-elem-button': elementPickerPosition = 4; break; 
-            case 'container-elem-button': elementPickerPosition = 6; break;
+            case 'interactive-elem-button': elementPickerPosition = 5; break;
+            case 'container-elem-button': elementPickerPosition = 7; break;
         }
 
         let onePickerHeight = 34;   // default pixel size of one picker element
@@ -24,23 +24,22 @@ export default function ElementContainerType(props) {
         let pickerPosition = ((elementPickerPosition - 1) * onePickerHeight + (onePickerHeight / 2)) - listItemHeight;
         let dataPos = `${pickerPosition}px`;
         setTop(dataPos);
-    },[])
-    
+    }, [])
+
+    const buttonHandlerFunc = (item) => {
+        closeDropDown();
+        item.buttonHandler();
+    }
     return (
-        <div className="conatiner-other-elements" ref={myListContainer} style={{top}}>
+        <div className="conatiner-other-elements" ref={myListContainer} style={{ top }}>
             <ul className="other-elements-inner">
                 {data && data.map((item, index) => {
-                    function buttonHandlerFunc() {
-                        closeDropDown();
-                        item.buttonHandler();
-                    }
                     return (
-                        <React.Fragment> <li key={index} onClick={buttonHandlerFunc}>{item.text}</li></React.Fragment>
-
-                    )
+                        <li key={index} onClick={() =>buttonHandlerFunc(item)}>{item.text}</li>)
                 })}
             </ul>
         </div>
 
     )
 }
+

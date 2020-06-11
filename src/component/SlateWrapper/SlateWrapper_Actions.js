@@ -22,13 +22,13 @@ import { sendDataToIframe } from '../../constants/utility.js';
 import { HideLoader, ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
 
-
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
 };
 
-function prepareDataForTcmUpdate(updatedData, parentData, asideData) {
-    if (parentData && parentData.elementType === "element-aside") {
+function prepareDataForTcmUpdate(updatedData, parentData, asideData, poetryData) {
+    if (parentData && (parentData.elementType === "element-aside" || parentData.elementType === "citations" 
+        || parentData.elementType === "poetry")) {
         updatedData.isHead = true;
     } else if (parentData && parentData.elementType === "manifest") {
         updatedData.isHead = false;
@@ -42,9 +42,11 @@ function prepareDataForTcmUpdate(updatedData, parentData, asideData) {
         } else {
             updatedData.parentType = "element-aside";
         }
+    } else if ((poetryData && poetryData.type === 'poetry') || (parentData && parentData.elementType === "poetry")){
+        updatedData.parentType = "poetry";
     }
     updatedData.projectURN = config.projectUrn;
-    updatedData.slateEntity = config.slateEntityURN;
+    updatedData.slateEntity = poetryData && poetryData.contentUrn || config.slateEntityURN;
 }
 
 function createNewVersionOfSlate(){
@@ -63,13 +65,13 @@ function createNewVersionOfSlate(){
         })
 }
 
-export const createElement = (type, index, parentUrn, asideData, outerAsideIndex, loref,cb) => (dispatch, getState) => {
+export const createElement = (type, index, parentUrn, asideData, outerAsideIndex, loref, cb,poetryData) => (dispatch, getState) => {
     config.currentInsertedIndex = index;
     config.currentInsertedType = type;
     let  popupSlateData = getState().appStore.popupSlateData
     localStorage.setItem('newElement', 1);
-    let slateEntityUrn = parentUrn && parentUrn.contentUrn || popupSlateData && popupSlateData.contentUrn|| config.slateEntityURN,
-    slateUrn =  parentUrn && parentUrn.manifestUrn || popupSlateData && popupSlateData.id || config.slateManifestURN
+    let slateEntityUrn = parentUrn && parentUrn.contentUrn || popupSlateData && popupSlateData.contentUrn || poetryData && poetryData.contentUrn || config.slateEntityURN,
+    slateUrn =  parentUrn && parentUrn.manifestUrn || popupSlateData && popupSlateData.id || poetryData && poetryData.id || config.slateManifestURN
     let _requestData = {
         "projectUrn": config.projectUrn,
         "slateEntityUrn":slateEntityUrn,
@@ -80,9 +82,12 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
 
     if (type == "LO") {
         _requestData.loref = loref ? loref : ""
+    } 
+    else if (type == 'ELEMENT_CITATION') {
+        _requestData.parentType = "citations"
     }
 
-    prepareDataForTcmUpdate(_requestData, parentUrn, asideData)
+    prepareDataForTcmUpdate(_requestData, parentUrn, asideData, poetryData)
     return axios.post(`${config.REACT_APP_API_URL}v1/slate/element`,
         JSON.stringify(_requestData),
         {
@@ -115,7 +120,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                     item.elementdata.bodymatter.splice(outerAsideIndex, 0, createdElementData)
                 }
             })
-        } else if (asideData && asideData.type == 'element-aside' && type !== 'SECTION_BREAK') {
+        } else if (asideData && asideData.type == 'element-aside'  && type !== 'SECTION_BREAK') {
             newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
                 if (item.id == parentUrn.manifestUrn) {
                     item.elementdata.bodymatter.splice(index, 0, createdElementData)
@@ -129,6 +134,27 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
             })
         }else if (popupSlateData && popupSlateData.type == "popup"){
             newPopupSlateData.popupdata.bodymatter.splice(index, 0, createdElementData);
+        }
+        else if(asideData && asideData.type == 'citations'){
+            newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
+                if (item.id == parentUrn.manifestUrn) {
+                    item.contents.bodymatter.splice(index, 0, createdElementData)
+                }
+            })
+        }
+        else if (poetryData && poetryData.type == "poetry"){
+            newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
+                if (item.id == poetryData.parentUrn) {
+                    item.contents.bodymatter.splice(index, 0, createdElementData)
+                } 
+                else if (item.type == "poetry" && item.id == poetryData.id) {
+                    item.contents.bodymatter && item.contents.bodymatter.map((ele) => {
+                        if (ele.id === poetryData.parentUrn) {
+                            ele.contents.bodymatter.splice(index, 0, createdElementData)
+                        }
+                    })
+                }
+            })  
         }
         else {
             newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
@@ -149,7 +175,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
             }
         if (cb) {
             cb();
-        }
+        }   
     }).catch(error => {
         // Opener Element mock creation
         if (type == "OPENER") {
@@ -175,7 +201,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
 }
 
 export const swapElement = (dataObj, cb) => (dispatch, getState) => {
-    const { oldIndex, newIndex, currentSlateEntityUrn, swappedElementData, containerTypeElem, asideId } = dataObj;
+    const { oldIndex, newIndex, currentSlateEntityUrn, swappedElementData, containerTypeElem, asideId, poetryId} = dataObj;
     const slateId = config.slateManifestURN;
 
     let _requestData = {
@@ -193,7 +219,7 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
     let currentSlateData = currentParentData[config.slateManifestURN];
     config.swappedElementType = _requestData.type;
     config.swappedElementIndex = _requestData.index;
-
+    config.citationFlag= true;
     return axios.post(`${config.REACT_APP_API_URL}v1/slate/swap`,
         JSON.stringify(_requestData),
         {
@@ -207,8 +233,6 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
 
                 /* For hiding the spinning loader send HideLoader message to Wrapper component */
                 sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
-
-                const parentData = getState().appStore.slateLevelData;
                 let newParentData = JSON.parse(JSON.stringify(parentData));
                 if (currentSlateData.status === 'approved') {
                     if(currentSlateData.type==="popup"){
@@ -239,7 +263,23 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                             })
                         }
                     });
-                } else {
+                } 
+                /** ----------Swapping elements inside Citations Group Element----------------- */
+                else if (containerTypeElem && containerTypeElem == 'cg') {
+                    for (let i in newBodymatter) {
+                        if (newBodymatter[i].contentUrn == currentSlateEntityUrn) {
+                            newBodymatter[i].contents.bodymatter.move(oldIndex, newIndex);
+                        }
+                    }
+                }
+                else if (containerTypeElem && containerTypeElem == 'pe') {
+                    newBodymatter.forEach(element => {
+                        if (element.id == poetryId) {
+                            element.contents.bodymatter.move(oldIndex, newIndex);
+                        }
+                    });
+                }
+                else {
                     newParentData[slateId].contents.bodymatter.move(oldIndex, newIndex);
                 }
 

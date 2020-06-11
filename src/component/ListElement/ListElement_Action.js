@@ -60,7 +60,7 @@ let _ullistObjectTemplate_ = {
 // ************************************************************************
 
 export const convertToListElement = (type, startvalue) => (dispatch, getState) => {
-    const { activeElement } = getState().appStore;
+    const { activeElement, asideData } = getState().appStore;
     // const newParentData = JSON.parse(JSON.stringify(parentData));
     // const slateObject = Object.values(newParentData)[0];
     // const { contents } = slateObject;
@@ -97,7 +97,8 @@ export const convertToListElement = (type, startvalue) => (dispatch, getState) =
         labelText: LIST_TYPE_MAPPINGS[type].tag,
         toolbar: elementList[activeElement.elementType]['primary-list'].toolbar,
         elementWipType: "element-list",
-        startvalue
+        startvalue,
+        asideData
     }, true));
 
     // dispatch(updateElementType(activeElement, type));

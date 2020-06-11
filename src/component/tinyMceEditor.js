@@ -21,9 +21,12 @@ import {
 } from '../images/TinyMce/TinyMce.jsx';
 import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
 import { checkforToolbarClick, customEvent } from '../js/utils';
-import { saveGlossaryAndFootnote } from "./GlossaryFootnotePopup/GlossaryFootnote_Actions"
-import { ShowLoader } from '../constants/IFrameMessageTypes';
+import { saveGlossaryAndFootnote, setFormattingToolbar } from "./GlossaryFootnotePopup/GlossaryFootnote_Actions"
+import { ShowLoader, HideLoader } from '../constants/IFrameMessageTypes';
 import { sendDataToIframe, hasReviewerRole } from '../constants/utility.js';
+import store from '../appstore/store';
+import { MULTIPLE_LINE_POETRY_ERROR_POPUP } from '../constants/Action_Constants';
+import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER } from '../component/SlateWrapper/SlateWrapperConstants.js';
 let context = {};
 let clickedX = 0;
 let clickedY = 0;
@@ -32,6 +35,8 @@ export class TinyMceEditor extends Component {
         super(props);
         context = this;
         this.placeHolderClass = ''
+        this.indentRun = false;
+        this.outdentRun = false;
         this.chemistryMlMenuButton = null;
         this.mathMlMenuButton = null;
         this.assetPopoverButtonState = null;
@@ -99,10 +104,10 @@ export class TinyMceEditor extends Component {
             init_instance_callback: (editor) => {
                 tinymce.$('.blockquote-editor').attr('contenteditable', false)
 
-                if (this.props.permissions && !(this.props.permissions.includes('access_formatting_bar')||this.props.permissions.includes('elements_add_remove') )) {        // when user doesn't have edit permission
+                if (this.props.permissions && !(this.props.permissions.includes('access_formatting_bar') || this.props.permissions.includes('elements_add_remove'))) {        // when user doesn't have edit permission
                     if (editor && editor.id) {
-                    document.getElementById(editor.id).setAttribute('contenteditable', false);
-                           if(tinymce.$('.blockquoteMarginaliaAttr .paragraphNummerEins')){
+                        document.getElementById(editor.id).setAttribute('contenteditable', false);
+                        if (tinymce.$('.blockquoteMarginaliaAttr .paragraphNummerEins')) {
                             tinymce.$('.blockquoteMarginaliaAttr .paragraphNummerEins').attr('contenteditable', false)
                         }
                     }
@@ -119,43 +124,45 @@ export class TinyMceEditor extends Component {
                         //     this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
                         //     this.naturalWidth && this.setAttribute('width', this.naturalWidth)
                         // }) 
-                        if(!config.savingInProgress){
-                            if(this.props.element.type === "popup" && !this.props.currentElement){
-                                this.props.createPopupUnit(this.props.popupField, null, this.props.index, this.props.element) 
+                        if (!config.savingInProgress) {
+                            if ((this.props.element.type === "popup" || this.props.element.type === "citations") && !this.props.currentElement) {
+                                this.props.createPopupUnit(this.props.popupField, null, this.props.index, this.props.element)
+                            } else if (this.props.element && this.props.element.type === "poetry" && !this.props.currentElement) {
+                                this.props.createPoetryElements(this.props.poetryField, true, this.props.index, this.props.element)
                             } else {
                                 let showHideType = this.props.showHideType || null
                                 showHideType = showHideType === "revel" ? "postertextobject" : showHideType
-                                this.props.handleBlur(null,this.props.currentElement,this.props.index, showHideType)
+                                this.props.handleBlur(null, this.props.currentElement, this.props.index, showHideType)
                             }
                         }
-                        editor.selection.placeCaretAt(clickedX,clickedY);                       
-                    }                   
+                        editor.selection.placeCaretAt(clickedX, clickedY);
+                    }
 
                     let content = e.target.getContent({ format: 'text' }),
                         contentHTML = e.target.getContent(),
                         activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
 
-                    if (activeElement && activeElement.getAttribute('id') === 'cypress-'+this.props.index) {
-                        let currentNode = document.getElementById('cypress-'+this.props.index)
-                        let isContainsMath = contentHTML.match(/<img/)?(contentHTML.match(/<img/).input.includes('class="Wirisformula')||contentHTML.match(/<img/).input.includes('class="temp_Wirisformula')):false
-                        let nodeContent = (currentNode && !currentNode.innerText.trim().length)?true:false
-                        if(content.trim().length || activeElement.querySelectorAll('ol').length || activeElement.querySelectorAll('ul').length || contentHTML.match(/<math/g) || isContainsMath){
-                            if(nodeContent){
+                    if (activeElement && activeElement.getAttribute('id') === 'cypress-' + this.props.index) {
+                        let currentNode = document.getElementById('cypress-' + this.props.index)
+                        let isContainsMath = contentHTML.match(/<img/) ? (contentHTML.match(/<img/).input.includes('class="Wirisformula') || contentHTML.match(/<img/).input.includes('class="temp_Wirisformula')) : false
+                        let nodeContent = (currentNode && !currentNode.innerText.trim().length) ? true : false
+                        if (content.trim().length || activeElement.querySelectorAll('ol').length || activeElement.querySelectorAll('ul').length || contentHTML.match(/<math/g) || isContainsMath) {
+                            if (nodeContent) {
                                 activeElement.classList.remove('place-holder')
                             }
                         }
                         else {
                             activeElement.classList.add('place-holder')
                         }
-                    } 
-                    
+                    }
+
                     if (this.props.element && this.props.element.type === "element-blockfeature" && this.props.element.subtype === "quote" && tinymce.activeEditor && tinymce.activeEditor.id && !tinyMCE.activeEditor.id.includes("footnote")) {
-                        let blockqtText = document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins')?document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').innerText:"";
+                        let blockqtText = document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins') ? document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').innerText : "";
                         if (!blockqtText.trim()) {
-                            var MLtext = document.querySelector('#'+ tinymce.activeEditor.id +' > p > img') || document.querySelector('#'+ tinymce.activeEditor.id +' > img')
-                            if(MLtext){
+                            var MLtext = document.querySelector('#' + tinymce.activeEditor.id + ' > p > img') || document.querySelector('#' + tinymce.activeEditor.id + ' > img')
+                            if (MLtext) {
                                 tinyMCE.$('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').find('br').remove();
-                                document.querySelector('#'+ tinymce.activeEditor.id +' blockquote p.paragraphNummerEins').append(MLtext)
+                                document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').append(MLtext)
                                 tinyMCE.$('#' + tinymce.activeEditor.id).find('p[data-mce-caret="before"]').remove();
                                 tinyMCE.$('#' + tinymce.activeEditor.id).find('span#mce_1_start').remove();
                                 tinyMCE.$('#' + tinymce.activeEditor.id).find('div.mce-visual-caret').remove();
@@ -163,7 +170,7 @@ export class TinyMceEditor extends Component {
 
                             }
                         }
-                    } 
+                    }
                 });
 
                 tinymce.$('.cypress-editable').on('drop', (e, ui) => {
@@ -245,19 +252,86 @@ export class TinyMceEditor extends Component {
      */
     editorExecCommand = (editor) => {
         editor.on('ExecCommand', (e) => {
+            let range = editor.selection.getRng();
             let content = e.target.getContent()
+            let node = editor.selection.getNode();
+            if (this.props.element.type === 'stanza') {
+                if (editor.selection.getNode().tagName.toLowerCase() !== 'span' || editor.selection.getNode().className.toLowerCase() !== 'poetryLine') {
+                    node = editor.selection.getNode().closest('.poetryLine');
+                }
+            }
             switch (e.command) {
                 case "indent":
-                    this.handleIndent(e, editor, content)
+                    this.handleIndent(e, editor, content, this.props.element.type, node)
                     break;
-
                 case "outdent":
-                    this.handleOutdent(e, editor, content)
+                    this.handleOutdent(e, editor, content, this.props.element.type, node)
                     break;
                 case "updateFormula":
                     editor.selection.bookmarkManager.moveToBookmark(this.currentCursorBookmark);
                     break;
             }
+            if (this.props && this.props.element && this.props.element.type && this.props.element.type === 'stanza' && e.command === 'mceToggleFormat') {
+                let divParent = tinymce.$(`div[id="cypress-${this.props.index}"]`).children();
+                let havingExtraChild = false;
+                for (let index = 0; index < divParent.length; index++) {
+                    if (divParent[index].tagName && divParent[index].tagName.toLowerCase() !== 'span') {
+                        havingExtraChild = true;
+                        break;
+                    }
+                }
+                if (havingExtraChild) {
+                    let sText = editor.selection.getContent();
+                    let parser = new DOMParser();
+                    let htmlDoc = parser.parseFromString(sText, 'text/html');
+                    let spans = htmlDoc.getElementsByClassName("poetryLine");
+                    let startNode = null;
+                    let endNode = null;
+                    let startOffSet = 0;
+                    let endOffSet = -1;
+                    if (!spans.length) {
+                        if (editor.selection.getNode().tagName && editor.selection.getNode().tagName.toLowerCase() === 'stanza') {
+                            spans = [editor.selection.getNode()];
+                        } else {
+                            spans = [editor.selection.getNode().closest('.poetryLine')];
+                        }
+                    }
+                    if (spans.length) {
+                        startNode = spans[0];
+                        endNode = spans[spans.length - 1];
+                    }
+                    let mainParent = null;
+                    let allLines = tinymce.$(`div[data-id="${this.props.elementId}"] .poetryLine`);
+                    let nodesFragment = document.createDocumentFragment();
+                    for (let index = 0; index < allLines.length; index++) {
+                        if (startNode && startNode.isEqualNode(allLines[index])) {
+                            startOffSet = index;
+                        }
+                        if (endNode && endNode.isEqualNode(allLines[index])) {
+                            endOffSet = index;
+                        }
+                        let parents = [];
+                        let elem = allLines[index];
+                        while (elem.parentNode && elem.parentNode.nodeName.toLowerCase() != 'div') {
+                            elem = elem.parentNode;
+                            parents.push(elem.nodeName.toLowerCase());
+                        }
+                        mainParent = elem.parentElement;
+                        for (let innerIndex = 0; innerIndex < parents.length; innerIndex++) {
+                            allLines[index].innerHTML = '<' + parents[innerIndex] + '>' + allLines[index].innerHTML + '</' + parents[innerIndex] + '>';
+                        }
+                        nodesFragment.appendChild(allLines[index]);
+                    }
+                    if (mainParent) {
+                        mainParent.innerHTML = "";
+                        mainParent.appendChild(nodesFragment);
+                        range.setStart(mainParent, startOffSet);
+                        range.setEnd(mainParent, endOffSet + 1);
+                        editor.selection.setRng(range);
+                    }
+                }
+            }
+
         });
     }
 
@@ -278,7 +352,13 @@ export class TinyMceEditor extends Component {
                         editor.targetElm.dispatchEvent(keyDownEvent)
                         return false
                     }
-                    this.onBeforeIndent(e, content)
+                    let selectedNode = editor.selection.getNode();
+                    if (this.props.element.type === 'stanza') {
+                        if (editor.selection.getNode().tagName.toLowerCase() !== 'span' || editor.selection.getNode().className.toLowerCase() !== 'poetryLine') {
+                            selectedNode = editor.selection.getNode().closest('.poetryLine');
+                        }
+                    }
+                    this.onBeforeIndent(e, content, this.props.element.type, selectedNode)
                     break;
                 case "outdent":
                     if (editor.targetElm.findChildren('ol').length || editor.targetElm.findChildren('ul').length) {
@@ -288,7 +368,13 @@ export class TinyMceEditor extends Component {
                         editor.targetElm.dispatchEvent(keyDownEvent)
                         return false
                     }
-                    this.onBeforeOutdent(e, content)
+                    let node = editor.selection.getNode();
+                    if (this.props.element.type === 'stanza') {
+                        if (editor.selection.getNode().tagName.toLowerCase() !== 'span' || editor.selection.getNode().className.toLowerCase() !== 'poetryLine') {
+                            node = editor.selection.getNode().closest('.poetryLine');
+                        }
+                    }
+                    this.onBeforeOutdent(e, content, this.props.element.type, node)
                     break;
                 case "RemoveFormat":
                     let selectedText = window.getSelection().toString();
@@ -304,25 +390,52 @@ export class TinyMceEditor extends Component {
                                 this.clearFormateText = '';
                             }
                         }
-                        if (e.target.targetElm.children[0].classList.contains('blockquoteMarginaliaAttr') || e.target.targetElm.children[0].classList.contains('blockquoteMarginalia')) {
+                        if (e.target.targetElm.children && e.target.targetElm.children.length && (e.target.targetElm.children[0].classList.contains('blockquoteMarginaliaAttr') || e.target.targetElm.children[0].classList.contains('blockquoteMarginalia'))) {
                             e.target.targetElm.children[0].children[0].innerHTML = textToReplace;
                         }
-                        else if (
-                            e.target.targetElm.children[0].classList.contains("heading1NummerEins") ||
-                            e.target.targetElm.children[0].classList.contains("heading2NummerEins") ||
-                            e.target.targetElm.children[0].classList.contains("heading3NummerEins") ||
-                            e.target.targetElm.children[0].classList.contains("heading4NummerEins") ||
-                            e.target.targetElm.children[0].classList.contains("heading5NummerEins") ||
-                            e.target.targetElm.children[0].classList.contains("heading6NummerEins") ||
-                            e.target.targetElm.children[0].classList.contains("paragraphNumeroUno") ||
-                            e.target.targetElm.children[0].classList.contains("pullQuoteNumeroUno") ||
-                            e.target.targetElm.children[0].classList.contains("heading2learningObjectiveItem")
+                        else if ((e && e.target && e.target.targetElm && e.target.targetElm.children && e.target.targetElm.children.length) &&
+                            (
+                                e.target.targetElm.children[0].classList.contains("paragraphNumeroUnoCitation") ||
+                                e.target.targetElm.children[0].classList.contains("heading1NummerEins") ||
+                                e.target.targetElm.children[0].classList.contains("heading2NummerEins") ||
+                                e.target.targetElm.children[0].classList.contains("heading3NummerEins") ||
+                                e.target.targetElm.children[0].classList.contains("heading4NummerEins") ||
+                                e.target.targetElm.children[0].classList.contains("heading5NummerEins") ||
+                                e.target.targetElm.children[0].classList.contains("heading6NummerEins") ||
+                                e.target.targetElm.children[0].classList.contains("paragraphNumeroUno") ||
+                                e.target.targetElm.children[0].classList.contains("pullQuoteNumeroUno") ||
+                                e.target.targetElm.children[0].classList.contains("heading2learningObjectiveItem"))
                         ) {
                             e.target.targetElm.children[0].innerHTML = textToReplace;
+                        }
+                        else if (this.props.element.type === 'stanza') {
+                            tinymce.$(`div[data-id="${this.props.elementId}"] .poetryLine`).each(function () {
+                                this.innerHTML = this.innerText;
+                            })
                         }
                         /*  For Figure type*/
                         else {
                             e.target.targetElm.innerHTML = textToReplace;
+                        }
+                    }
+                    else if (this.props.element.type === 'stanza') {
+                        let selection = window.getSelection();
+                        if (selection.anchorNode.parentNode.nodeName === "SPAN" && selection.anchorNode.parentNode.classList.contains('poetryLine')) {
+                            if (selectedText !== "") {
+                                selection.anchorNode.parentNode.innerHTML = selection.anchorNode.parentNode.innerText;
+                            }
+                            let spanNode = selection.anchorNode;
+                            let outerNode = selection.anchorNode;
+                            if (spanNode.nodeName == "SPAN" || (spanNode.className && !spanNode.className.toLowerCase() == 'poetryLine')) {
+                                //spanNode = selection.anchorNode.closest('.poetryLine');
+                                while (outerNode.parentElement && outerNode.parentElement.tagName.toLowerCase() != 'div') {
+                                    outerNode = outerNode.parentElement;
+                                }
+                                outerNode.parentNode.replaceChild(spanNode, outerNode);
+                                e.preventDefault();
+                                e.stopPropagation();
+                                return false;
+                            }
                         }
                     }
                     /**
@@ -414,9 +527,10 @@ export class TinyMceEditor extends Component {
 
         if (e.target.parentElement && e.target.parentElement.nodeName == "SUP" && e.target.dataset.uri) {
             let uri = e.target.dataset.uri;
-            this.glossaryBtnInstance.setDisabled(true)
+            this.glossaryBtnInstance && this.glossaryBtnInstance.setDisabled(true)
             if (alreadyExist) {
                 cbFunc = () => {
+                    setFormattingToolbar('disableTinymceToolbar')                  
                     this.toggleGlossaryandFootnoteIcon(true);
                     this.toggleGlossaryandFootnotePopup(true, "Footnote", uri);
                 }
@@ -447,8 +561,8 @@ export class TinyMceEditor extends Component {
          * Case - clicking over Asset text
          */
         else if (e.target.nodeName == 'ABBR' || e.target.parentNode && e.target.parentNode.tagName === 'ABBR') {
-            let assetId = (e.target.attributes['asset-id']&&e.target.attributes['asset-id'].nodeValue) || e.target.parentNode.attributes['asset-id'].nodeValue ;
-            let dataUrn = (e.target.attributes['data-uri']&&e.target.attributes['data-uri'].nodeValue) || e.target.parentNode.attributes['data-uri'].nodeValue;
+            let assetId = (e.target.attributes['asset-id'] && e.target.attributes['asset-id'].nodeValue) || e.target.parentNode.attributes['asset-id'].nodeValue;
+            let dataUrn = (e.target.attributes['data-uri'] && e.target.attributes['data-uri'].nodeValue) || e.target.parentNode.attributes['data-uri'].nodeValue;
             let apoObject = {
                 'assetId': assetId,
                 'dataUrn': dataUrn
@@ -492,10 +606,10 @@ export class TinyMceEditor extends Component {
                 isContainsMath = activeElement.innerHTML.match(/<img/) ? (activeElement.innerHTML.match(/<img/).input.includes('class="Wirisformula') || activeElement.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula')) : false;
             }
 
-            if (activeElement) { 
+            if (activeElement) {
                 let lastCont = this.lastContent;
                 this.lastContent = activeElement.innerHTML;
-                if (!isMediaElement && !activeElement.children.length || (activeElement.children.length === 1 && activeElement.children[0].tagName === "BR" && activeElement.nodeName !== "CODE")) {
+                if (!isMediaElement && !activeElement.children.length && this.props.element.type !== "citations" && this.props.element.type !== 'poetry' || (activeElement.children.length === 1 && activeElement.children[0].tagName === "BR" && activeElement.nodeName !== "CODE")) {
                     //code to avoid deletion of editor first child(like p,h1,blockquote etc)
                     let div = document.createElement('div');
                     div.innerHTML = lastCont;
@@ -520,8 +634,235 @@ export class TinyMceEditor extends Component {
                         activeElement.append(' ')
                     }
                 }
+                if (activeElement.nodeName == "DIV" && this.props.element.type === 'stanza') {
+                    let key = e.keyCode || e.which;
+                    if (key != undefined && key === 13) {
+                        //activeElement.innerHTML += '<span class="poetryLine"><br /></span>';
+                        let position = 'next';
+                        let elementSearch = editor.selection.getNode();
+                        if (editor.selection.getNode().tagName.toLowerCase() !== 'span' || editor.selection.getNode().className.toLowerCase() !== 'poetryLine') {
+                            elementSearch = editor.selection.getNode().closest('.poetryLine');
+                        }
+                        tinymce.$(`div[data-id="${this.props.elementId}"] .poetryLine`).each(function () {
+                            let imgTag = this && this.getElementsByTagName("img")
+                            if ((this.innerHTML === '' || this.innerHTML === "<br>" || this.textContent.trim() == '') && !(imgTag && imgTag.length)) {
+                                this.remove();
+                            }
+                        })
+                        if (elementSearch && elementSearch.tagName.toLowerCase() === 'span' && elementSearch.innerHTML != '<br>') {
+                            editor.undoManager.transact(() => {
+                                let elm = editor.dom.create('span', { 'class': 'poetryLine' }, '<br />');
+                                if (editor.selection.getRng().startOffset === 0) {
+                                    elementSearch.parentNode.insertBefore(elm, elementSearch);
+                                    editor.selection.setCursorLocation(elementSearch.previousSibling, 0);
+                                    position = 'previous';
+                                } else {
+                                    if (editor.selection.getContent() !== '' || editor.selection.getNode().tagName.toLowerCase() === 'img' || editor.selection.getNode().tagName.toLowerCase() === 'dfn' || editor.selection.getNode().tagName.toLowerCase() === 'abbr' || editor.selection.getNode().tagName.toLowerCase() === 'a') {
+                                        if (elementSearch.nextSibling) {
+                                            elementSearch.parentNode.insertBefore(elm, elementSearch.nextSibling)
+                                            editor.selection.setCursorLocation(elementSearch.nextSibling, 0);
+                                        } else {
+                                            elementSearch.parentNode.appendChild(elm);
+                                            editor.selection.setCursorLocation(elementSearch.nextSibling, 0);
+                                        }
+                                    } else {
+                                        editor.selection.setContent('<!--break-->');
+                                        let comment = document.createNodeIterator(elementSearch.parentNode, NodeFilter.SHOW_COMMENT, null, true).nextNode();
+                                        this.splitOnTag(elementSearch.parentNode, comment);
+                                        elementSearch.nextSibling.remove();
+                                        let innerSpans = elementSearch.getElementsByTagName('span');
+                                        for (let index = 0; index < innerSpans.length; index++) {
+                                            let innerHtml = innerSpans[index].innerHTML;
+                                            innerSpans[index].outerHTML = innerHtml;
+                                        }
+                                        if (elementSearch.textContent.trim() == '') {
+                                            if (elementSearch.innerHTML == '') {
+                                                position = 'current';
+                                                elementSearch.innerHTML = '<br/>';
+                                            } else {
+                                                let childNodes = elementSearch.childNodes;
+                                                if (childNodes.length) {
+                                                    if (childNodes.length > 1) {
+                                                        this.setContentOfSpan(childNodes);
+                                                    } else {
+                                                        if (childNodes[0].tagName) {
+                                                            this.setContentOfSpan(childNodes);
+                                                        } else {
+                                                            elementSearch.innerHTML = '<br/>';
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        } else {
+                                            let childNodes = elementSearch.childNodes;
+                                            this.setContentOfBlankChild(childNodes)
+                                        }
+                                        innerSpans = elementSearch.getElementsByTagName('span');
+                                        for (let index = 0; index < innerSpans.length; index++) {
+                                            let innerHtml = innerSpans[index].innerHTML;
+                                            innerSpans[index].outerHTML = innerHtml;
+                                        }
+                                        let innerSpansSibling = elementSearch.nextSibling.getElementsByTagName('span');
+                                        for (let index = 0; index < innerSpansSibling.length; index++) {
+                                            let innerHtml = innerSpansSibling[index].innerHTML;
+                                            innerSpansSibling[index].outerHTML = innerHtml;
+                                        }
+                                        if (elementSearch.nextSibling.textContent.trim() == '') {
+                                            if (elementSearch.nextSibling.innerHTML == '') {
+                                                elementSearch.nextSibling.innerHTML = '<br/>';
+                                            } else {
+                                                let childNodes = elementSearch.nextSibling.childNodes;
+                                                if (childNodes.length) {
+                                                    if (childNodes.length > 1) {
+                                                        this.setContentOfSpan(childNodes);
+                                                    } else {
+                                                        if (childNodes[0].tagName) {
+                                                            this.setContentOfSpan(childNodes);
+                                                        } else {
+                                                            elementSearch.nextSibling.innerHTML = '<br/>';
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        } else {
+                                            let childNodes = elementSearch.nextSibling.childNodes;
+                                            this.setContentOfBlankChild(childNodes)
+                                        }
+                                        innerSpansSibling = elementSearch.nextSibling.getElementsByTagName('span');
+                                        for (let index = 0; index < innerSpansSibling.length; index++) {
+                                            let innerHtml = innerSpansSibling[index].innerHTML;
+                                            innerSpansSibling[index].outerHTML = innerHtml;
+                                        }
+                                        elementSearch.nextSibling.removeAttribute("data-id");
+                                        elementSearch.nextSibling.className = 'poetryLine';
+                                        elementSearch.innerHTML = elementSearch.innerHTML.replace(/^\s+|\s+$/g, '&nbsp;');
+                                        elementSearch.nextSibling.innerHTML = elementSearch.nextSibling.innerHTML.replace(/^\s+|\s+$/g, '&nbsp;');
+                                        editor.selection.setCursorLocation(elementSearch.nextSibling, 0);
+                                    }
+                                }
+                                let mainParent = null;
+                                let allLines = tinymce.$(`div[data-id="${this.props.elementId}"] .poetryLine`);
+                                let nodesFragment = document.createDocumentFragment();
+                                for (let index = 0; index < allLines.length; index++) {
+                                    let parents = [];
+                                    let elem = allLines[index];
+                                    while (elem.parentNode && elem.parentNode.nodeName.toLowerCase() != 'div') {
+                                        elem = elem.parentNode;
+                                        parents.push(elem.nodeName.toLowerCase());
+                                    }
+                                    mainParent = elem.parentElement;
+                                    for (let innerIndex = 0; innerIndex < parents.length; innerIndex++) {
+                                        allLines[index].innerHTML = '<' + parents[innerIndex] + '>' + allLines[index].innerHTML + '</' + parents[innerIndex] + '>';
+                                    }
+                                    nodesFragment.appendChild(allLines[index]);
+                                }
+                                if (mainParent) {
+                                    mainParent.innerHTML = "";
+                                    mainParent.appendChild(nodesFragment);
+                                }
+                                if (position === 'next') {
+                                    editor.selection.setCursorLocation(elementSearch.nextSibling, 0);
+                                } else if (position === 'previous') {
+                                    editor.selection.setCursorLocation(elementSearch.previousSibling, 0);
+                                } else if (position === 'current') {
+                                    editor.selection.setCursorLocation(elementSearch, 0);
+                                }
+                            });
+                        }
+                    } else if (key != undefined && (key === 8 || key === 46)) {
+                        let currentElement = editor.selection.getNode();
+                        if (editor.selection.getNode().tagName.toLowerCase() !== 'span' || editor.selection.getNode().className.toLowerCase() !== 'poetryLine') {
+                            currentElement = editor.selection.getNode().closest('.poetryLine');
+                        }
+                        if (currentElement) {
+                            if (key === 46) {
+                                let innerSpans = currentElement.getElementsByTagName('span');
+                                for (let index = 0; index < innerSpans.length; index++) {
+                                    let innerHtml = innerSpans[index].innerHTML;
+                                    innerSpans[index].outerHTML = innerHtml;
+                                }
+                            }
+                            let brs = currentElement.getElementsByTagName('br');
+                            while (brs.length) {
+                                brs[0].parentNode.removeChild(brs[0]);
+                            }
+                        } else {
+                            currentElement = editor.selection.getNode();
+                            let checkSpan = currentElement.getElementsByClassName("poetryLine");
+                            if (!checkSpan.length) {
+                                currentElement.innerHTML = '<span class="poetryLine"><br/></span>';
+                                checkSpan = currentElement.getElementsByClassName("poetryLine");
+                                editor.selection.setCursorLocation(checkSpan[0], 0);
+                            } else if (checkSpan.length === 1) {
+                                editor.selection.setCursorLocation(checkSpan[0], 0);
+                            }
+                        }
+                    }
+                }
             }
         });
+    }
+
+    splitOnTag = (bound, cutElement) => {
+        // cutElement must be a descendant of bound
+        for (let parent = cutElement.parentNode; bound != parent; parent = grandparent) {
+            let right = parent.cloneNode(false);
+            while (cutElement.nextSibling)
+                right.appendChild(cutElement.nextSibling);
+            var grandparent = parent.parentNode;
+            grandparent.insertBefore(right, parent.nextSibling);
+            grandparent.insertBefore(cutElement, right);
+        }
+    }
+
+    setContentOfSpan = (childNodes) => {
+        for (let index = 0; index < childNodes.length; index++) {
+            let innerNodes = childNodes[index].childNodes;
+            if (innerNodes) {
+                if (innerNodes.length) {
+                    if (innerNodes.length > 1) {
+                        this.setContentOfSpan(innerNodes);
+                    } else {
+                        if (innerNodes[0].tagName && !(innerNodes[0].id && innerNodes[0].id === '_mce_caret' && innerNodes[0].innerHTML === '')) {
+                            this.setContentOfSpan(innerNodes);
+                        } else {
+                            childNodes[index].innerHTML = '<br/>';
+                        }
+                    }
+                } else {
+                    if (childNodes[index] && childNodes[index].tagName && childNodes[index].tagName.toLowerCase() !== 'img') {
+                        childNodes[index].innerHTML = '<br/>';
+                    }
+                }
+            }
+        }
+    }
+
+    setContentOfBlankChild = (childNodes) => {
+        for (let index = 0; index < childNodes.length; index++) {
+            let innerNodes = childNodes[index].childNodes;
+            if (innerNodes) {
+                if (innerNodes.length) {
+                    if (innerNodes.length > 1) {
+                        this.setContentOfBlankChild(innerNodes);
+                    } else {
+                        if (innerNodes[0].tagName) {
+                            if (!(innerNodes[0].id && innerNodes[0].id === '_mce_caret' && innerNodes[0].innerHTML === '')) {
+                                this.setContentOfBlankChild(innerNodes);
+                            } else {
+                                if (childNodes[index].textContent === '') {
+                                    childNodes[index].innerHTML = '&#65279;';
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    if (childNodes[index] && childNodes[index].tagName && childNodes[index].tagName.toLowerCase() !== 'img' && childNodes[index].textContent === '') {
+                        childNodes[index].innerHTML = '&#65279;';
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -557,6 +898,17 @@ export class TinyMceEditor extends Component {
                 this.props.createShowHideElement(this.props.showHideType, this.props.index, this.props.id);
             });
             let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
+
+            /** [BG-2134] | This block is to clear selection when CT element is blank before paste process*/
+            if ((e.keyCode == 86 || e.key == 'v') && e.ctrlKey && this.props.currentElement && this.props.currentElement.type == 'element-citation' && activeElement) {
+                if (activeElement.innerText && activeElement.innerText.trim() == "" && window.getSelection().toString().trim() == '') {        // Other Browsers
+                    window.getSelection().removeAllRanges()
+                }
+                else if (document.selection && document.selection.empty) {
+                    document.selection.empty();                             // IE
+                }
+            }
+            
             if (activeElement) {
                 if (!activeElement.children.length ||
                     (activeElement.children.length <= 1 && activeElement.children[0].tagName === 'BR' && activeElement.nodeName !== "CODE")) {
@@ -568,34 +920,139 @@ export class TinyMceEditor extends Component {
                         activeElement.innerHTML = div.children[0].outerHTML;
                     }
                 }
-                // else if (activeElement.children.length <= 1 && activeElement.children[0].tagName === 'BR' && activeElement.nodeName !== "CODE") {
-                //     let div = document.createElement('div');
-                //     div.innerHTML = this.lastContent;
-                //     if(div.children && div.children[0]){
-                //         div.children[0].innerHTML = '<br/>';
-                //         activeElement.innerHTML = div.children[0].outerHTML;
-                //     }
-                // }
                 this.lastContent = activeElement.innerHTML;
             }
 
             let key = e.keyCode || e.which;
-            let isContainsMath = false ;
+            let isContainsMath = false;
             if (activeElement) {
-               isContainsMath = activeElement.innerHTML.match(/<img/) ? (activeElement.innerHTML.match(/<img/).input.includes('class="Wirisformula') || activeElement.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula')) : false;
-             }
-            if(key === 13 && this.props.element.type !== 'element-list' && activeElement.nodeName !== "CODE" && this.props.element.type!=='showhide') {
+                isContainsMath = activeElement.innerHTML.match(/<img/) ? (activeElement.innerHTML.match(/<img/).input.includes('class="Wirisformula') || activeElement.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula')) : false;
+            }
+            if (key === 13 && this.props.element.type !== 'element-list' && activeElement.nodeName !== "CODE" && this.props.element.type !== 'showhide' && this.props.element.type !== "stanza") {
                 let activeEditor = document.getElementById(tinymce.activeEditor.id);
-                activeEditor.blur();
+                if('element' in this.props && 'status' in this.props.element && this.props.element.status == "wip") {
+                    activeEditor.blur();
+                }
+                
                 let nextSaparator = (activeEditor.closest('.editor')).nextSibling;
-                let textPicker = nextSaparator.querySelector('#myDropdown li > .text-elem');
+                let textPicker;
+                if (this.props.element.type == 'citations') {
+                    textPicker = nextSaparator.querySelector('#myDropdown li > .citation-elem');
+                } else {
+                    textPicker = nextSaparator.querySelector('#myDropdown li > .text-elem');
+                }
                 textPicker.click();
-            }else if (key === 13 && this.props.element.type === 'showhide' && this.props.showHideType != 'revel' && this.props.currentElement.type !== 'element-list') {
+            } else if (key === 13 && this.props.element.type === 'showhide' && this.props.showHideType != 'revel' && this.props.currentElement.type !== 'element-list') {
                 this.props.createShowHideElement(this.props.showHideType, this.props.index, this.props.id);
             }
-            else if((this.props.element && this.props.element.type ==='showhide' && this.props.showHideType !== 'revel' && !editor.bodyElement.innerText.trim().length && e.keyCode === 8 && this.props.element.interactivedata) && ((this.props.showHideType === "show" && this.props.element.interactivedata.show.length >1) || (this.props.showHideType === "hide" && this.props.element.interactivedata.hide.length >1 ))&& !isContainsMath ){
-                this.props.deleteShowHideUnit(this.props.currentElement.id, this.props.showHideType, this.props.element.contentUrn, this.props.innerIndex,this.props.index,this.props.element.id)
-             }   
+            else if ((this.props.element && this.props.element.type === 'showhide' && this.props.showHideType !== 'revel' && !editor.bodyElement.innerText.trim().length && e.keyCode === 8 && this.props.element.interactivedata) && ((this.props.showHideType === "show" && this.props.element.interactivedata.show.length > 1) || (this.props.showHideType === "hide" && this.props.element.interactivedata.hide.length > 1)) && !isContainsMath) {
+                this.props.deleteShowHideUnit(this.props.currentElement.id, this.props.showHideType, this.props.element.contentUrn, this.props.innerIndex, this.props.index, this.props.element.id)
+            }
+            else if (key === 13 && this.props.element.type === 'stanza') {
+                let currentElement = editor.selection.getNode();
+                if (editor.selection.getNode().tagName.toLowerCase() !== 'span' || editor.selection.getNode().className.toLowerCase() !== 'poetryLine') {
+                    currentElement = editor.selection.getNode().closest('.poetryLine');
+                }
+                if (!currentElement) {
+                    currentElement = editor.selection.getNode();
+                    let checkSpan = currentElement.getElementsByClassName("poetryLine");
+                    if (checkSpan.length) {
+                        currentElement = checkSpan[0];
+                    }
+                }
+                let imgTag = currentElement && currentElement.getElementsByTagName("img")
+                if (currentElement && currentElement.tagName == 'SPAN' &&
+                    (currentElement == '<br>' || currentElement.textContent.trim() == '') && !(imgTag && imgTag.length)) {
+                    let poetryStanza = tinymce.$(`div[data-id="${this.props.elementId}"] .poetryLine`);
+                    if (poetryStanza && poetryStanza.length > 1) {
+                        currentElement.remove();
+                    }
+                    let activeEditor = document.getElementById(tinymce.activeEditor.id);
+                    activeEditor.blur();
+                    let nextSaparator = (activeEditor.closest('.editor')).nextSibling;
+                    let textPicker = nextSaparator.querySelector('#myDropdown li > .stanza-elem');
+                    textPicker.click();
+                }
+            }
+            if (activeElement.nodeName == "DIV" && this.props.element.type === 'stanza') {
+                // let key = e.keyCode || e.which;
+                if (key != undefined && (key === 8 || key === 46)) {
+                    let currentElement = editor.selection.getNode();
+                    if (editor.selection.getNode().tagName.toLowerCase() !== 'span' || editor.selection.getNode().className.toLowerCase() !== 'poetryLine') {
+                        currentElement = editor.selection.getNode().closest('.poetryLine');
+                    }
+                    if (key === 8 && editor.selection.getRng().startOffset === 0 && currentElement && currentElement.innerHTML !== '<br>' && editor.selection.getContent() === '' && currentElement.textContent.trim() != '') {
+                        e.preventDefault();
+                    } else if (currentElement && ((currentElement.innerHTML && (currentElement.innerHTML.length === 1 || currentElement.textContent.trim().length === 1)) || (key === 8 && currentElement.tagName == 'SPAN' && (currentElement.innerHTML == '<br>' || currentElement.textContent.trim() === '')))) {
+                        if (currentElement.previousSibling) {
+                            if (key === 46) {
+                                e.preventDefault();
+                            } else {
+                                currentElement.previousSibling.innerHTML += '&nbsp;';
+                            }
+                            let temElm = editor.dom.create('br');
+                            currentElement.previousSibling.appendChild(temElm);
+                            let childNodes = currentElement.previousSibling.childNodes;
+                            editor.selection.setCursorLocation(currentElement.previousSibling.childNodes[childNodes.length - 1], 0);
+                            currentElement.remove();
+                        } else {
+                            let elm = editor.dom.create('span', { 'class': 'poetryLine' }, '<br />');
+                            currentElement.parentNode.insertBefore(elm, currentElement);
+                            editor.selection.setCursorLocation(currentElement.previousSibling, 0);
+                            currentElement.remove();
+                            if (key === 46) {
+                                e.preventDefault();
+                            }
+                        }
+                    }
+                } else {
+                    if (key != undefined && key === 9) {
+                        e.preventDefault();
+
+                        // Disable Indent and Outdent For Poetry-Stanza
+
+                        /*let currentElement = editor.selection.getNode();
+                        if (editor.selection.getNode().tagName.toLowerCase() !== 'span' || editor.selection.getNode().className.toLowerCase() !== 'poetryLine') {
+                            currentElement = editor.selection.getNode().closest('.poetryLine');
+                        }
+                        if (currentElement) {
+                            let className = null;
+                            className = currentElement.className;
+                            if (e.shiftKey) {
+                                if (!this.outdentRun) {
+                                    if (className && className.trim() === 'poetryLine poetryLineLevel1') {
+                                        currentElement.className = 'poetryLine';
+                                    }
+                                    else if (className && className.trim() === 'poetryLine poetryLineLevel2') {
+                                        currentElement.className = 'poetryLine poetryLineLevel1';
+                                    }
+                                    else if (className && className.trim() === 'poetryLine poetryLineLevel3') {
+                                        currentElement.className = 'poetryLine poetryLineLevel2';
+                                    }
+                                    e.preventDefault();
+                                } else {
+                                    this.outdentRun = false;
+                                }
+                            } else {
+                                if (!this.indentRun) {
+                                    if (className && className.trim() === 'poetryLine') {
+                                        currentElement.className = 'poetryLine poetryLineLevel1';
+                                    }
+                                    else if (className && className.trim() === 'poetryLine poetryLineLevel1') {
+                                        currentElement.className = 'poetryLine poetryLineLevel2';
+                                    }
+                                    else if (className && className.trim() === 'poetryLine poetryLineLevel2') {
+                                        currentElement.className = 'poetryLine poetryLineLevel3';
+                                    }
+                                    e.preventDefault();
+                                } else {
+                                    this.indentRun = false;
+                                }
+                            }
+                        }*/
+                    }
+                }
+            }
         });
     }
 
@@ -723,11 +1180,29 @@ export class TinyMceEditor extends Component {
      * @param {*} editor  editor instance
      */
     addChemistryFormulaButton = editor => {
+        let self = this;
         editor.ui.registry.addButton("tinyMcewirisformulaEditorChemistry", {
             text: "",
             icon: "tinymceformulachemistryicon",
             tooltip: "WIRIS EDITOR chemistry",
             onAction: function (_) {
+                if (self && self.props && self.props.element && self.props.element.type === 'stanza') {
+                    let currentElement = editor.selection.getNode();
+                    if ((editor.selection.getNode().tagName && editor.selection.getNode().tagName.toLowerCase() !== 'span') || (editor.selection.getNode().className && editor.selection.getNode().className.toLowerCase() !== 'poetryLine')) {
+                        currentElement = editor.selection.getNode().closest('.poetryLine');
+                    }
+                    if (!currentElement) {
+                        currentElement = editor.selection.getNode();
+                        let checkSpan = currentElement.getElementsByClassName("poetryLine");
+                        if (!checkSpan.length) {
+                            currentElement.innerHTML = '<span class="poetryLine"><br/></span>';
+                            checkSpan = currentElement.getElementsByClassName("poetryLine");
+                            editor.selection.setCursorLocation(checkSpan[0], 0);
+                        } else {
+                            editor.selection.setCursorLocation(checkSpan[0], 0);
+                        }
+                    }
+                }
                 this.currentCursorBookmark = editor.selection.bookmarkManager.getBookmark();
                 /*
                     Enabling chemistry ML
@@ -753,11 +1228,29 @@ export class TinyMceEditor extends Component {
      * @param {*} editor  editor instance
      */
     addMathmlFormulaButton = editor => {
+        let self = this;
         editor.ui.registry.addButton("tinyMcewirisformulaEditor", {
             text: "",
             icon: "tinymceformulaicon",
             tooltip: "WIRIS EDITOR math",
             onAction: function (_) {
+                if (self && self.props && self.props.element && self.props.element.type === 'stanza') {
+                    let currentElement = editor.selection.getNode();
+                    if ((editor.selection.getNode().tagName && editor.selection.getNode().tagName.toLowerCase() !== 'span') || (editor.selection.getNode().className && editor.selection.getNode().className.toLowerCase() !== 'poetryLine')) {
+                        currentElement = editor.selection.getNode().closest('.poetryLine');
+                    }
+                    if (!currentElement) {
+                        currentElement = editor.selection.getNode();
+                        let checkSpan = currentElement.getElementsByClassName("poetryLine");
+                        if (!checkSpan.length) {
+                            currentElement.innerHTML = '<span class="poetryLine"><br/></span>';
+                            checkSpan = currentElement.getElementsByClassName("poetryLine");
+                            editor.selection.setCursorLocation(checkSpan[0], 0);
+                        } else {
+                            editor.selection.setCursorLocation(checkSpan[0], 0);
+                        }
+                    }
+                }
                 this.currentCursorBookmark = editor.selection.bookmarkManager.getBookmark();
                 var wirisPluginInstance = window.WirisPlugin.instances[editor.id];
                 wirisPluginInstance.core.getCustomEditors().disable();
@@ -840,7 +1333,11 @@ export class TinyMceEditor extends Component {
      * @param {*} editor  editor instance
      * @param {*} content  content inside editor
      */
-    handleIndent = (e, editor, content) => {
+    handleIndent = (e, editor, content, type, selectedNode) => {
+        let className = null;
+        if (type && type === 'stanza' && selectedNode) {
+            className = selectedNode.className;
+        }
         if (content.match(/paragraphNumeroUno\b/)) {
             content = content.replace(/paragraphNumeroUno\b/, "paragraphNumeroUnoIndentLevel1")
         }
@@ -850,7 +1347,24 @@ export class TinyMceEditor extends Component {
         else if (content.match(/paragraphNumeroUnoIndentLevel2\b/)) {
             content = content.replace(/paragraphNumeroUnoIndentLevel2\b/, "paragraphNumeroUnoIndentLevel3")
         }
-        this.setContentAndPlaceCaret(editor, content)
+
+        // Disable Indent For Poetry-Stanza
+
+        /*else if (className && className.trim() === 'poetryLine') {
+            selectedNode.className = 'poetryLine poetryLineLevel1';
+            this.indentRun = true;
+        }
+        else if (className && className.trim() === 'poetryLine poetryLineLevel1') {
+            selectedNode.className = 'poetryLine poetryLineLevel2';
+            this.indentRun = true;
+        }
+        else if (className && className.trim() === 'poetryLine poetryLineLevel2') {
+            selectedNode.className = 'poetryLine poetryLineLevel3';
+            this.indentRun = true;
+        }*/
+        if (!className) {
+            this.setContentAndPlaceCaret(editor, content)
+        }
     }
 
     /**
@@ -859,7 +1373,11 @@ export class TinyMceEditor extends Component {
      * @param {*} editor  editor instance
      * @param {*} content  content inside editor
      */
-    handleOutdent = (e, editor, content) => {
+    handleOutdent = (e, editor, content, type, selectedNode) => {
+        let className = null;
+        if (type && type === 'stanza' && selectedNode) {
+            className = selectedNode.className;
+        }
         if (content.match(/paragraphNumeroUnoIndentLevel3\b/)) {
             content = content.replace(/paragraphNumeroUnoIndentLevel3\b/, "paragraphNumeroUnoIndentLevel2")
         }
@@ -869,7 +1387,24 @@ export class TinyMceEditor extends Component {
         else if (content.match(/paragraphNumeroUnoIndentLevel1\b/)) {
             content = content.replace(/paragraphNumeroUnoIndentLevel1\b/, "paragraphNumeroUno")
         }
-        this.setContentAndPlaceCaret(editor, content)
+
+        // Disable Outdent For Poetry-Stanza
+
+        /*else if (className && className.trim() === 'poetryLine poetryLineLevel1') {
+            selectedNode.className = 'poetryLine';
+            this.outdentRun = true;
+        }
+        else if (className && className.trim() === 'poetryLine poetryLineLevel2') {
+            selectedNode.className = 'poetryLine poetryLineLevel1';
+            this.outdentRun = true;
+        }
+        else if (className && className.trim() === 'poetryLine poetryLineLevel3') {
+            selectedNode.className = 'poetryLine poetryLineLevel2';
+            this.outdentRun = true;
+        }*/
+        if (!className) {
+            this.setContentAndPlaceCaret(editor, content)
+        }
     }
 
     /**
@@ -877,11 +1412,15 @@ export class TinyMceEditor extends Component {
      * @param {*} e  event object
      * @param {*} content  content inside editor
      */
-    onBeforeIndent = (e, content) => {
-        if (!content.match(/paragraphNumeroUno\b/) && !content.match(/paragraphNumeroUnoIndentLevel1\b/) && !content.match(/paragraphNumeroUnoIndentLevel2\b/) && !content.match(/paragraphNumeroUnoIndentLevel3\b/)) {
+    onBeforeIndent = (e, content, type, selectedNode) => {
+        let className = null;
+        if (type && type === 'stanza' && selectedNode) {
+            className = selectedNode.className;
+        }
+        if (!content.match(/paragraphNumeroUno\b/) && !content.match(/paragraphNumeroUnoIndentLevel1\b/) && !content.match(/paragraphNumeroUnoIndentLevel2\b/) && !content.match(/paragraphNumeroUnoIndentLevel3\b/) && !className) {
             e.preventDefault()
         }
-        if (content.match(/paragraphNumeroUnoIndentLevel3\b/)) {
+        if (content.match(/paragraphNumeroUnoIndentLevel3\b/) || (className && className.trim() === 'poetryLine poetryLineLevel3')) {
             e.preventDefault()
         }
     }
@@ -891,11 +1430,15 @@ export class TinyMceEditor extends Component {
      * @param {*} e  event object
      * @param {*} content  content inside editor 
      */
-    onBeforeOutdent = (e, content) => {
-        if (!content.match(/paragraphNumeroUno\b/) && !content.match(/paragraphNumeroUnoIndentLevel1\b/) && !content.match(/paragraphNumeroUnoIndentLevel2\b/) && !content.match(/paragraphNumeroUnoIndentLevel3\b/)) {
+    onBeforeOutdent = (e, content, type, selectedNode) => {
+        let className = null;
+        if (type && type === 'stanza' && selectedNode) {
+            className = selectedNode.className;
+        }
+        if (!content.match(/paragraphNumeroUno\b/) && !content.match(/paragraphNumeroUnoIndentLevel1\b/) && !content.match(/paragraphNumeroUnoIndentLevel2\b/) && !content.match(/paragraphNumeroUnoIndentLevel3\b/) && !className) {
             e.preventDefault()
         }
-        if (content.match(/paragraphNumeroUno\b/)) {
+        if (content.match(/paragraphNumeroUno\b/) || (className && className.trim() === 'poetryLine')) {
             e.preventDefault()
         }
     }
@@ -905,16 +1448,39 @@ export class TinyMceEditor extends Component {
      * @param {*} editor  editor instance
      */
     addFootnote = (editor) => {
-        if(config.savingInProgress || config.popupCreationCallInProgress){
+        if (config.savingInProgress || config.popupCreationCallInProgress) {
             return false
         }
         let elementId = ""
         if (this.props.element.type === "popup") {
-            if((this.props.popupField === "formatted-title" || this.props.popupField === "formatted-subtitle") && !this.props.currentElement){
+            if ((this.props.popupField === "formatted-title" || this.props.popupField === "formatted-subtitle") && !this.props.currentElement) {
                 return false
             } else {
                 elementId = this.props.currentElement.id
             }
+        }
+        else if (this.props.element.type === "poetry") {
+            let tempIndex = this.props.index.split('-');
+            let indexesLen = tempIndex.length;
+            if (indexesLen === 2) {
+                switch (tempIndex[1]) {
+                    case "1":
+                        if (!this.props.element.contents['formatted-title']) {
+                            return false;
+                        }
+                        break;
+                    // case "3":
+                    //     if (!this.props.element.contents['formatted-caption']) {
+                    //         return false;
+                    //     }
+                    //     break;
+                    case "4":
+                        if (!(this.props.element.contents['creditsarray'] ? this.props.element.contents['creditsarray'][0] : null)) {
+                            return false;
+                        }
+                }
+            }
+            elementId = this.props.elementId
         }
         else {
             elementId = this.props.elementId
@@ -951,6 +1517,19 @@ export class TinyMceEditor extends Component {
      * @param {*} editor  editor instance 
      */
     addGlossary = (editor) => {
+        let sText = editor.selection.getContent();
+        let parser = new DOMParser();
+        let htmlDoc = parser.parseFromString(sText, 'text/html');
+        let spans = htmlDoc.getElementsByClassName("poetryLine");
+        if (spans && spans.length) {
+           store.dispatch({
+               type: MULTIPLE_LINE_POETRY_ERROR_POPUP, 
+               payload:{
+                   show: true , 
+                   message: ERROR_CREATING_GLOSSARY
+                }})
+            return false;
+        }
         let selectedText = window.getSelection().toString()
         this.glossaryTermText = selectedText;
         if (selectedText.trim() === "") {
@@ -984,8 +1563,12 @@ export class TinyMceEditor extends Component {
         definition = definition.replace(/<br data-mce-bogus="1">/g, "")
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
         customEvent.subscribe('glossaryFootnoteSave', (elementWorkId) => {
-            saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType, typeWithPopup)
-            customEvent.unsubscribe('glossaryFootnoteSave');
+            if (definition !== '<p></p>') {
+                saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType, typeWithPopup)
+                customEvent.unsubscribe('glossaryFootnoteSave');
+            } else {
+                sendDataToIframe({'type': HideLoader,'message': { status: false }});  
+            }
         })
         this.handleBlur(null, true); //element saving before creating G/F (as per java team)
         //this.handleBlur(null, true);
@@ -998,11 +1581,25 @@ export class TinyMceEditor extends Component {
      * @param {*} selectedText  selected text
      */
     addAssetPopover = (editor, selectedText) => {
-
-        let selectedTag = window.getSelection().anchorNode.parentNode.nodeName;
-        if(selectedTag!=="LI"&&selectedTag!=="P"&&selectedTag!=="H3"&&selectedTag!=="BLOCKQUOTE"){
+        let sText = editor.selection.getContent();
+        let parser = new DOMParser();
+        let htmlDoc = parser.parseFromString(sText, 'text/html');
+        let spans = htmlDoc.getElementsByClassName("poetryLine");
+        if (spans && spans.length) {
+            store.dispatch({
+                type: MULTIPLE_LINE_POETRY_ERROR_POPUP, 
+                payload:{
+                    show: true , 
+                    message: ERROR_CREATING_ASSETPOPOVER
+                }})
+            return false;
+        }
+        let selection = window.getSelection().anchorNode.parentNode;
+        let selectedTag = selection.nodeName;
+        let selectedTagClass = selection.classList;
+        if (selectedTag !== "LI" && selectedTag !== "P" && selectedTag !== "H3" && selectedTag !== "BLOCKQUOTE" && (!selectedTagClass.contains('poetryLine'))) {
             //selectedText = window.getSelection().anchorNode.parentNode.outerHTML;
-            selectedText = '<'+selectedTag.toLocaleLowerCase()+'>'+selectedText+'</'+selectedTag.toLocaleLowerCase()+'>'
+            selectedText = '<' + selectedTag.toLocaleLowerCase() + '>' + selectedText + '</' + selectedTag.toLocaleLowerCase() + '>'
         }
         let insertionText = '<span id="asset-popover-attacher">' + selectedText + '</span>';
         // editor.insertContent(insertionText);
@@ -1091,13 +1688,7 @@ export class TinyMceEditor extends Component {
                     this.editorRef.current.focus();
                 }
 
-                // element must be focused before
-                /**
-                 * This particular logic is now moved at SlateWrapper
-                 */
-                // if(!newElement){
-                //     document.getElementById('slateWrapper').scrollTop=0;
-                // }
+               
                 this.setToolbarByElementType();
                 // Make element active on element create, set toolbar for same and remove localstorage values
                 if (this.editorRef.current && document.getElementById(this.editorRef.current.id) && newElement) {
@@ -1108,7 +1699,8 @@ export class TinyMceEditor extends Component {
                     }, 0)
                     localStorage.removeItem('newElement');
                 }
-                this.editorConfig.selector = '#' + (this.editorRef.current ? this.editorRef.current.id : 'cypress-0');
+                let currentId = (this.editorRef.current ? this.editorRef.current.id : 'cypress-0');
+                this.editorConfig.selector = '#' + currentId;
 
                 /**
                  * Before removing the current tinymce instance, update wiris image attribute data-mathml to data-temp-mathml and class Wirisformula to temp_Wirisformula
@@ -1122,21 +1714,24 @@ export class TinyMceEditor extends Component {
                     document.getElementById(this.editorRef.current.id).innerHTML = tempFirstContainerHtml;
                 }
 
+                let termText = tinyMCE.$("#" + currentId) && tinyMCE.$("#" + currentId).html();
                 tinymce.init(this.editorConfig).then((d) => {
                     if (this.editorRef.current) {
+                        if (termText && termText.length && this.props.element.type === 'figure') {
+                            document.getElementById(currentId).innerHTML = termText;
+                        }
+
                         /*
                             Making blinking cursor color again to black
                         */
                         this.editorRef.current.style.caretColor = "rgb(0, 0, 0)";
-                        if(!newElement) {
+                        if (!newElement) {
                             this.fromtinyInitBlur = true;
                             this.editorRef.current.focus();
                             this.editorRef.current.blur();
                             this.fromtinyInitBlur = false;
                         }
                     }
-
-
                 })
             }
         }
@@ -1203,19 +1798,12 @@ export class TinyMceEditor extends Component {
      * React's lifecycle method. Called immediately after updating occurs. Not called for the initial render.
      */
     componentDidUpdate() {
-        if (!tinymce.editors.length) {
-            //console.log('tiny update')
-            //tinymce.init(this.editorConfig)
-        }
         let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");
         if (isBlockQuote) {
             this.lastContent = document.getElementById('cypress-' + this.props.index).innerHTML;
         }
         this.removeMultiTinyInstance();
         this.handlePlaceholder()
-        /* if(document.getElementById('cypress-'+this.props.index) && !document.getElementById('cypress-'+this.props.index).innerText.trim().length){
-            this.handlePlaceholder()
-        } */
         tinymce.$('.blockquote-editor').attr('contenteditable', false)
     }
 
@@ -1250,17 +1838,19 @@ export class TinyMceEditor extends Component {
     setInstanceToolbar = () => {
         let toolbar = [];
         if (this.props.placeholder === "Enter Label..." || this.props.placeholder === 'Enter call to action...' || (this.props.element && this.props.element.subtype == 'mathml' && this.props.placeholder === "Type something...")) {
-            toolbar = config.labelToolbar;
+            toolbar = (this.props.element && this.props.element.type === 'poetry') ? config.poetryLabelToolbar : config.labelToolbar;
         }
         else if (this.props.placeholder === "Enter Caption..." || this.props.placeholder === "Enter Credit...") {
-            toolbar = config.captionToolbar;
+            toolbar = (this.props.element && this.props.element.type === 'poetry') ? config.poetryCaptionToolbar : config.captionToolbar;
 
         } else if (this.props.placeholder === "Enter block code...") {
             toolbar = config.codeListingToolbar;
         } else if (this.props.placeholder === "Enter Show text" || this.props.placeholder === "Enter revel text") {
             toolbar = config.showHideToolbar
-        } else if(this.props.placeholder === "Enter Hide text") {
+        } else if (this.props.placeholder === "Enter Hide text") {
             toolbar = config.hideToolbar
+        } else if (this.props.placeholder == "Type Something..." && this.props.element && this.props.element.type == 'stanza') {
+            toolbar = config.poetryStanzaToolbar;
         } else {
             toolbar = config.elementToolbar;
         }
@@ -1292,18 +1882,18 @@ export class TinyMceEditor extends Component {
         /*
         * In IS slate removing the toolbar disabled class which was applied in case of OE
         */
-        if(config && config.slateType === "container-introduction" && document.getElementById('tinymceToolbar') && document.getElementById('tinymceToolbar').classList){
+        if (config && config.slateType === "container-introduction" && document.getElementById('tinymceToolbar') && document.getElementById('tinymceToolbar').classList) {
             document.getElementById('tinymceToolbar').classList.remove('toolbar-disabled')
         }
         let showHideObj;
         if (this.props.showHideType) {
             showHideObj =
-                {
-                    currentElement: this.props.currentElement,
-                    index: this.props.index,
-                    element: this.props.element,
-                    showHideType: this.props.showHideType
-                }
+            {
+                currentElement: this.props.currentElement,
+                index: this.props.index,
+                element: this.props.element,
+                showHideType: this.props.showHideType
+            }
         }
         clickedX = e.clientX;
         clickedY = e.clientY;
@@ -1312,28 +1902,17 @@ export class TinyMceEditor extends Component {
         /*
             Adding br tag in lists because on first conversion from p tag to list, br tag gets removed
         */
-        // if( tinymce.$(e.target).find('li').length   ){
-        //     tinymce.$(e.target).find('li').each(function(a,b){
-        //         if( this.innerHTML.trim() == '' ){
-        //             tinymce.$(this).append('<br/>')
-        //         } 
-        //     })
-        // }
-        // else if( tinymce.$(e.target).closest('li') && tinymce.$(e.target).closest('li').length && !tinymce.$(e.target).closest('li').html().trim() && !tinymce.$(e.target).closest('li').find('br').length ){
-        //     tinymce.$(e.target).closest('li').append('<br/>');
-        // }
-        if (this.props.permissions && !(this.props.permissions.includes('access_formatting_bar')||this.props.permissions.includes('elements_add_remove'))) {        // when user doesn't have edit permission
+        
+        if (this.props.permissions && !(this.props.permissions.includes('access_formatting_bar') || this.props.permissions.includes('elements_add_remove'))) {        // when user doesn't have edit permission
             if (tinymce.activeEditor && tinymce.activeEditor.id) {
                 document.getElementById(tinymce.activeEditor.id).setAttribute('contenteditable', false)
             }
         }
-        this.props.handleEditorFocus("", showHideObj,e);
-        let isSameTarget = false;
+        this.props.handleEditorFocus("", showHideObj, e);
+        let isSameTarget = false, isSameByElementId = false;
         let event = Object.assign({}, e);
         let currentTarget = event.currentTarget;
         let isSameTargetBasedOnDataId = true;
-        // let termText = document.getElementById(currentTarget.id)&&document.getElementById(currentTarget.id).innerHTML;
-
         /*
             checking for same target based on data-id not id
         */
@@ -1347,12 +1926,31 @@ export class TinyMceEditor extends Component {
             this.setToolbarByElementType();
             isSameTarget = true;
         }
+        // let currentActiveNode = document.querySelector('div .active')
+        // let currentElementId = this.props.currentElement && this.props.currentElement.type === "element-citation" ? this.props.currentElement.id : this.props.element.id
+        /*** PCAT-8087| After Versioning - Wiris editor is not loaded on clicking the MathML/ChemMl image added in the ShowHide element after versioning. */
+        let currentActiveNode = null
+        let activeContainerNode = document.querySelector('div .active')
+        let activeShowHideNode = document.querySelector('.show-hide-active .cypress-editable.mce-content-body.mce-edit-focus')
+        if(activeContainerNode){
+            currentActiveNode = activeContainerNode
+        }
+        else if(activeShowHideNode){
+            currentActiveNode = activeShowHideNode
+        }
+       
+        let currentElementId = this.props.currentElement && !(currentTarget && currentTarget.classList.contains('formatted-text')) ? this.props.currentElement.id : this.props.element.id
+
+
+        if (currentActiveNode && currentActiveNode.getAttribute('data-id') === currentElementId) {
+            isSameByElementId = true;
+        }
         /**
          * case - if tinymce already has an active editor then...
          * first remove current tinymce instance then prepare element currently being focused to get tinymce intialized
          */
         let activeEditorId = '';
-        if ((!isSameTargetBasedOnDataId || !isSameTarget) && tinymce.activeEditor && document.getElementById(tinyMCE.activeEditor.id) && !(tinymce.activeEditor.id.includes('glossary') || tinymce.activeEditor.id.includes('footnote'))) {
+        if ((!isSameTargetBasedOnDataId || !isSameTarget || !isSameByElementId) && currentActiveNode && tinymce.activeEditor && document.getElementById(tinyMCE.activeEditor.id) && !(tinymce.activeEditor.id.includes('glossary') || tinymce.activeEditor.id.includes('footnote'))) {
             activeEditorId = tinymce.activeEditor.id;
             /**
              * Before removing the current tinymce instance, update wiris image attribute data-mathml to data-temp-mathml and class Wirisformula to temp_Wirisformula
@@ -1362,8 +1960,12 @@ export class TinyMceEditor extends Component {
             let tempNewContainerHtml = tinyMCE.$("#" + currentTarget.id).html()
             let previousTargetId = '';
             let currentTargetId = '';
-            if (!isSameTargetBasedOnDataId) {
-                previousTargetId = tinymce.activeEditor.targetElm.closest('.element-container').getAttribute('data-id');
+            if (!isSameTargetBasedOnDataId || !isSameByElementId) {
+                if (!isSameTargetBasedOnDataId) {
+                    previousTargetId = tinymce.activeEditor.targetElm.closest('.element-container').getAttribute('data-id');
+                } else {
+                    previousTargetId = currentActiveNode.getAttribute('data-id');
+                }
                 currentTargetId = e.currentTarget.closest('.element-container').getAttribute('data-id');
                 tempContainerHtml = tinyMCE.$("[data-id='" + previousTargetId + "'] .cypress-editable").html()
                 tempNewContainerHtml = tinyMCE.$("[data-id='" + currentTargetId + "'] .cypress-editable").html()
@@ -1377,7 +1979,7 @@ export class TinyMceEditor extends Component {
             */
             let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");
             if (!isBlockQuote) {
-                if (!isSameTargetBasedOnDataId) {
+                if (!isSameTargetBasedOnDataId || !isSameByElementId) {
                     if (document.querySelectorAll('.element-container[data-id="' + previousTargetId + '"] .cypress-editable').length)
                         document.querySelectorAll('.element-container[data-id="' + previousTargetId + '"] .cypress-editable')[0].innerHTML = tempContainerHtml;
                     document.querySelectorAll('.element-container[data-id="' + currentTargetId + '"] .cypress-editable')[0].innerHTML = tempNewContainerHtml;
@@ -1394,7 +1996,7 @@ export class TinyMceEditor extends Component {
          * first remove all existing non-glossary&footnote tinymce instances keeping contentEditable to true
          * then mark current target id as tinymce selector and instantiate tinymce on this target again
          */
-        if (!isSameTarget || !isSameTargetBasedOnDataId) {
+        if (!isSameTarget || !isSameTargetBasedOnDataId || !isSameByElementId) {
             /*
                 Remove all instaces of wiris on changing element on basis of there data-ids not on id 
                 because on inserting new element id changes
@@ -1426,12 +2028,29 @@ export class TinyMceEditor extends Component {
              * Using timeout - init tinymce instance only when default events stack becomes empty
              */
             currentTarget.focus();
-            tinymce.init(this.editorConfig).then(() => { 
-                if(clickedX!==0&&clickedY!==0){
-                    tinymce.activeEditor.selection.placeCaretAt(clickedX,clickedY) //Placing exact cursor position on clicking.
+            let termText = tinyMCE.$("#" + currentTarget.id) && tinyMCE.$("#" + currentTarget.id).html();
+            tinymce.init(this.editorConfig).then(() => {
+                if (termText && termText.length && this.props.element.type !== 'poetry' && this.props.element.type !== 'element-list' && !(
+                this.props.element.type === "showhide" && this.props.currentElement.type === 'element-list')) {
+                    if (termText.search(/^(<.*>(<br.*>)<\/.*>)+$/g) < 0 && 
+                    (tinyMCE.$("#" + currentTarget.id).html()).search(/^(<.*>(<br.*>)<\/.*>)+$/g) >= 0) {
+                        termText = tinyMCE.$("#" + currentTarget.id).html();
+                    }
+                    /***
+                     * [BG-2225] | Unwanted saving calls in video element
+                     */
+                    if (this.props.element.type === "figure" && termText.search(/^(<.*>(<br.*>)<\/.*>)+$/g) < 0 &&
+                        (tinyMCE.$("#" + currentTarget.id).html()).search(/^(<br.*>)+$/g) >= 0) {
+                        termText = tinyMCE.$("#" + currentTarget.id).html();
+                    }
+                    termText = termText.replace(/data-temp-mathml/g, 'data-mathml').replace(/temp_Wirisformula/g, 'Wirisformula');
+                    document.getElementById(currentTarget.id).innerHTML = termText
                 }
-                tinymce.$('.blockquote-editor').attr('contenteditable',false)
-                this.editorOnClick(event); 
+                if (clickedX !== 0 && clickedY !== 0) {
+                    tinymce.activeEditor.selection.placeCaretAt(clickedX, clickedY) //Placing exact cursor position on clicking.
+                }
+                tinymce.$('.blockquote-editor').attr('contenteditable', false)
+                this.editorOnClick(event);
                 if (currentTarget && currentTarget.querySelectorAll('li') && currentTarget.querySelectorAll('li').length) {
                     currentTarget.querySelectorAll('li').forEach((li) => {
                         if (li.innerHTML.trim() == '') {
@@ -1439,15 +2058,12 @@ export class TinyMceEditor extends Component {
                         }
                     })
                 }
-                // if(termText) {
-                //     document.getElementById(currentTarget.id).innerHTML = termText;
-                // }
             });
             this.setToolbarByElementType();
         }
         /**
          * case - continuing with toggling glossary & footnote popup
-         */      
+         */
         let timeoutInstance = setTimeout(() => {
             clearTimeout(timeoutInstance);
             tinymce.init(this.editorConfig).then((d) => {
@@ -1497,7 +2113,7 @@ export class TinyMceEditor extends Component {
             let node = document.getElementById('cypress-' + currentId);
             tempdiv.innerHTML = node ? node.innerHTML : '';
             if (!tinymce.$(tempdiv).find('.paragraphNummerEins').length || !tinymce.$(tempdiv).find('.paragraphNummerEins').text().length) {
-                if(!tinymce.$(tempdiv).find('.blockquoteTextCredit') || !tinymce.$(tempdiv).find('.blockquoteTextCredit').text().length){
+                if (!tinymce.$(tempdiv).find('.blockquoteTextCredit') || !tinymce.$(tempdiv).find('.blockquoteTextCredit').text().length) {
                     node.innerHTML = this.lastContent;
                 }
             }
@@ -1517,14 +2133,53 @@ export class TinyMceEditor extends Component {
                 this.outerHTML = innerHtml;
             })
         }
+        tinymce.$('div[data-mce-bogus="all"]').each(function () {
+            this.outerHTML = '';
+        })
         let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
-        if(!assetPopoverPopupIsVisible){
+        if (!assetPopoverPopupIsVisible) {
             tinymce.$('#asset-popover-attacher').each(function () {
                 let innerHtml = this.innerHTML;
                 this.outerHTML = innerHtml;
             })
         }
-        
+        if (this.props.elementId && !this.props.elementId.includes("manifest")) {
+            let poetryStanza = tinymce.$(`div[data-id="${this.props.elementId}"] .poetryLine`);
+            if (poetryStanza.length > 1) {
+                poetryStanza.each(function () {
+                    let imgTag = this && this.getElementsByTagName("img")
+                    if ((this.innerHTML === '' || this.innerHTML === "<br>" || this.textContent.trim() == '') && !(imgTag && imgTag.length)) {
+                        this.remove();
+                    }
+                })
+            }
+            else if (poetryStanza.length === 1 && poetryStanza[0].innerHTML === "&nbsp;") {
+                poetryStanza[0].innerHTML = "<br>"
+                e.stopPropagation();
+                return;
+            }
+            let mainParent = null;
+            let allLines = tinymce.$(`div[data-id="${this.props.elementId}"] .poetryLine`);
+            let nodesFragment = document.createDocumentFragment();
+            for (let index = 0; index < allLines.length; index++) {
+                let parents = [];
+                let elem = allLines[index];
+                while (elem.parentNode && elem.parentNode.nodeName.toLowerCase() != 'div') {
+                    elem = elem.parentNode;
+                    parents.push(elem.nodeName.toLowerCase());
+                }
+                mainParent = elem.parentElement;
+                for (let innerIndex = 0; innerIndex < parents.length; innerIndex++) {
+                    allLines[index].innerHTML = '<' + parents[innerIndex] + '>' + allLines[index].innerHTML + '</' + parents[innerIndex] + '>';
+                }
+                nodesFragment.appendChild(allLines[index]);
+            }
+            if (mainParent) {
+                mainParent.innerHTML = "";
+                mainParent.appendChild(nodesFragment);
+            }
+        }
+
         tinyMCE.$('.Wirisformula').each(function () {
             this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
             this.naturalWidth && this.setAttribute('width', this.naturalWidth)
@@ -1532,23 +2187,31 @@ export class TinyMceEditor extends Component {
         let showHideType = this.props.showHideType || null
         showHideType = showHideType === "revel" ? "postertextobject" : showHideType
 
-        if(!this.fromtinyInitBlur && !config.savingInProgress){
-            let elemNode = document.getElementById(`cypress-${this.props.index}`) 
+        if (!this.fromtinyInitBlur && !config.savingInProgress) {
+            let elemNode = document.getElementById(`cypress-${this.props.index}`)
             elemNode.innerHTML = elemNode.innerHTML.replace(/<br data-mce-bogus="1">/g, "")
-            if(this.props.element && this.props.element.type === "popup" && !this.props.currentElement && elemNode && elemNode.innerHTML !== ""){
+            if (
+                this.props.element &&
+                (this.props.element.type === "popup" || this.props.element.type === "citations") &&
+                !this.props.currentElement &&
+                elemNode &&
+                elemNode.innerHTML !== ""
+            ) {
                 this.props.createPopupUnit(this.props.popupField, forceupdate, this.props.index, this.props.element)
+            } else if (this.props.element && this.props.element.type === "poetry" && !this.props.currentElement && elemNode && elemNode.innerHTML !== "") {
+                this.props.createPoetryElements(this.props.poetryField, true, this.props.index, this.props.element)
             } else {
-                this.props.handleBlur(forceupdate,this.props.currentElement,this.props.index, showHideType)
+                this.props.handleBlur(forceupdate, this.props.currentElement, this.props.index, showHideType)
             }
-         }
-         else{
-            this.fromtinyInitBlur=false;
-         }
+        }
+        else {
+            this.fromtinyInitBlur = false;
+        }
     }
-    
-    toggleGlossaryandFootnotePopup = (status, popupType, glossaryfootnoteid, callback)=>{
-        if(config.savingInProgress) return false
-        
+
+    toggleGlossaryandFootnotePopup = (status, popupType, glossaryfootnoteid, callback) => {
+        if (config.savingInProgress) return false
+
         let typeWithPopup = this.props.element ? this.props.element.type : "";
         let elementId = this.props.currentElement ? this.props.currentElement.id : this.props.element ? this.props.element.id : "";
         let elementType = this.props.currentElement ? this.props.currentElement.type : this.props.element ? this.props.element.type : "";
@@ -1573,20 +2236,37 @@ export class TinyMceEditor extends Component {
                 );
             case 'h4':
                 let model = ""
-                if(this.props.element && this.props.element.type === "popup"){
+                if (this.props.element && this.props.element.type === "popup") {
                     model = this.props.model && this.props.model.replace(/class="paragraphNumeroUno"/g, "")
                 }
+                /* else if (this.props.element && this.props.element.type === "citations") {
+                    model = this.props.model
+                }
+                else if (this.props.element && this.props.element.type === "poetry") {
+                    if (this.props.poetryField === 'formatted-title') {
+                        model = this.props.model
+                    }
+                } */
                 else {
                     model = this.props.model;
                 }
                 let tempDiv = document.createElement('div');
                 tempDiv.innerHTML = model;
-                if( tempDiv && tempDiv.children && tempDiv.children.length && tempDiv.children[0].tagName==='P'){
+                if (tempDiv && tempDiv.children && tempDiv.children.length && tempDiv.children[0].tagName === 'P') {
                     model = tempDiv.children[0].innerHTML;
                 }
-                return (
-                    <h4 ref={this.editorRef} id={id} onKeyDown={this.normalKeyDownHandler} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: model }} >{/*htmlToReactParser.parse(this.props.model) */}</h4>
-                )
+                if (this.props.poetryField && this.props.poetryField === 'formatted-title') {
+                    if( !classes.includes('poetryHideLabel')) {
+                        classes = classes + ' poetryHideLabel';
+                    }
+                    return (
+                        <h4 ref={this.editorRef} id={id} onKeyDown={this.normalKeyDownHandler} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: model }} >{/*htmlToReactParser.parse(this.props.model) */}</h4>
+                    )
+                } else {
+                    return (
+                        <h4 ref={this.editorRef} id={id} onKeyDown={this.normalKeyDownHandler} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: model }} >{/*htmlToReactParser.parse(this.props.model) */}</h4>
+                    )
+                }
             case 'code':
                 return (
                     <code ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model }}>{/*htmlToReactParser.parse(this.props.model) */}</code>
@@ -1600,7 +2280,7 @@ export class TinyMceEditor extends Component {
                     }
                     tinymce.$(temDiv).find('blockquote').attr('contenteditable', 'false');
                     tinymce.$(temDiv).find('.paragraphNummerEins').attr('contenteditable', !lockCondition);
-                    if(tinymce.$(temDiv).find('.paragraphNummerEins') && tinymce.$(temDiv).find('.paragraphNummerEins')[0]){
+                    if (tinymce.$(temDiv).find('.paragraphNummerEins') && tinymce.$(temDiv).find('.paragraphNummerEins')[0]) {
                         tinymce.$(temDiv).find('.paragraphNummerEins')[0].addEventListener('blur', this.handleBlur);
                     }
                     tinymce.$(temDiv).find('.blockquoteTextCredit').attr('contenteditable', 'false');
@@ -1632,6 +2312,10 @@ export class TinyMceEditor extends Component {
                 return (
                     <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onKeyDown={this.normalKeyDownHandler} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model }} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
                 )
+            case 'element-citation':
+                return (
+                    <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onKeyDown={this.normalKeyDownHandler} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model && this.props.model.text ? this.props.model.text : '<p class="paragraphNumeroUnoCitation"><br/></p>' }} onChange={this.handlePlaceholder}></div>
+                )
             default:
                 return (
                     <div ref={this.editorRef} data-id={this.props.currentElement ? this.props.currentElement.id : ''} onKeyDown={this.normalKeyDownHandler} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model && this.props.model.text ? this.props.model.text : (typeof (this.props.model) === 'string' ? this.props.model : '<p class="paragraphNumeroUno"><br/></p>') }} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
@@ -1639,12 +2323,12 @@ export class TinyMceEditor extends Component {
         }
     }
     normalKeyDownHandler = (e) => {
-        if (this.props.permissions && !(this.props.permissions.includes('access_formatting_bar')||this.props.permissions.includes('elements_add_remove'))) {        // when user doesn't have edit permission
-           if (tinymce.activeEditor && tinymce.activeEditor.id) {
-               document.getElementById(tinymce.activeEditor.id).setAttribute('contenteditable', false)
+        if (this.props.permissions && !(this.props.permissions.includes('access_formatting_bar') || this.props.permissions.includes('elements_add_remove'))) {        // when user doesn't have edit permission
+            if (tinymce.activeEditor && tinymce.activeEditor.id) {
+                document.getElementById(tinymce.activeEditor.id).setAttribute('contenteditable', false)
             }
-         }
-        if(tinymce.activeEditor && tinymce.activeEditor.id !== e.target.id && (this.props.element.subtype && this.props.element.subtype !== "mathml")){
+        }
+        if (tinymce.activeEditor && tinymce.activeEditor.id !== e.target.id && (this.props.element.subtype && this.props.element.subtype !== "mathml")) {
             e.preventDefault();
             e.stopPropagation();
             return false;

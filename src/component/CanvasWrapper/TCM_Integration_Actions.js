@@ -37,7 +37,8 @@ export const loadTrackChanges = (elementId) => {
               obj.index = index;
               obj.urn = element.id;
               if(obj.urn.includes('manifest')){
-                let childData = await createManifestObject(element,'elementdata')
+                let newType = (element.type == 'citations' || element.type == 'poetry') ? 'contents' : 'elementdata'; 
+                let childData = await createManifestObject(element,newType)
                 obj.child = childData;
               }
               return list.push(obj);

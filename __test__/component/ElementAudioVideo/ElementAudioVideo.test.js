@@ -334,7 +334,7 @@ describe('Testing Element Audio-Video component', () => {
             const elementAudioVideo = mount(<ElementAudioVideo {...props} />)
             let elementAudioVideoInstance = elementAudioVideo.find('ElementAudioVideo').instance();
             const spydataFromAlfresco = jest.spyOn(elementAudioVideoInstance, 'dataFromAlfresco')    
-            const defaultPath="https://d12m40tknrppbi.cloudfront.net/cite/images/FPO-audio_video.png";
+            const defaultPath="https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png";
             it('Test- if case workflow', () =>{
                 let data={
                     'assetType': "video",
@@ -352,7 +352,7 @@ describe('Testing Element Audio-Video component', () => {
             it('Test- if case workflow-  epsURL given, clipinfo given-English subtitles', () =>{
                 let data={
                     'assetType': "video",
-                     epsUrl: "https://d12m40tknrppbi.cloudfront.net/cite/images/FPO-audio_video.png",
+                     epsUrl: "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png",
                     'alt-text': "ält-text",
                     'longDescription':"longDescription",
                     smartLinkURl: "https://cite-media-stg.pearson.com/legacy_paths/42333091-7625-4317-b095-1f450207961f/dipe.mp4",
@@ -375,7 +375,7 @@ describe('Testing Element Audio-Video component', () => {
             it('Test- if case workflow-  epsURL given, clipinfo given-French subtitles', () =>{
                 let data={
                     'assetType': "video",
-                     epsUrl: "https://d12m40tknrppbi.cloudfront.net/cite/images/FPO-audio_video.png",
+                     epsUrl: "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png",
                     'alt-text': "ält-text",
                     'longDescription':"longDescription",
                     smartLinkURl: "https://cite-media-stg.pearson.com/legacy_paths/42333091-7625-4317-b095-1f450207961f/dipe.mp4",

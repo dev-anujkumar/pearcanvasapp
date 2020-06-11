@@ -1,8 +1,6 @@
 /**
  * Module - ListButtonDropPortal
  * Description - portal component for ListButtonDrop element
- * Developer - Abhay Singh
- * Last modified - 04-09-2019
  */
 
 // IMPORT - Plugins //
@@ -10,7 +8,7 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-
+import config from '../../config/config.js'
 class ListButtonDropPortal extends Component {
     constructor(props) {
         super(props);
@@ -65,7 +63,7 @@ class ListButtonDropPortal extends Component {
             this.startValue = null;
             this.selectedOption = null;
             if (activeElement.elementWipType === 'element-list') {
-                const slateObject = Object.values(slateData)[0];
+                const slateObject = slateData[config.slateManifestURN];
                 const { contents } = slateObject;
                 const { bodymatter } = contents;
                 let listElement = Object.create(null, {})
@@ -83,11 +81,27 @@ class ListButtonDropPortal extends Component {
                                         isMatched = nestedElement.type === 'element-list'
                                         isMatched && (listElement = nestedElement)
                                     }
+                                    else if(nestedElement.type === "showhide" && this.props.showHideObj && this.props.showHideObj.index){
+                                        let indexes = this.props.showHideObj.index.split("-")
+                                        let targetShowhideElem = nestedElement.interactivedata[this.props.showHideObj.showHideType][indexes[3]]
+                                        if(targetShowhideElem && targetShowhideElem.id === activeElement.elementId){
+                                            isMatched = targetShowhideElem.type === 'element-list'
+                                            isMatched && (listElement = targetShowhideElem)
+                                        }
+                                    }
                                     else if (nestedElement.type === "manifest") {
                                         nestedElement.contents.bodymatter.find((leafElement) => {
                                             if (leafElement.id === activeElement.elementId) {
                                                 isMatched = leafElement.type === 'element-list'
                                                 isMatched && (listElement = leafElement)
+                                            }
+                                            else if(leafElement.type === "showhide" && this.props.showHideObj && this.props.showHideObj.index){
+                                                let indexes = this.props.showHideObj.index.split("-")
+                                                let targetShowhideElem = leafElement.interactivedata[this.props.showHideObj.showHideType][indexes[4]]
+                                                if(targetShowhideElem && targetShowhideElem.id === activeElement.elementId){
+                                                    isMatched = targetShowhideElem.type === 'element-list'
+                                                    isMatched && (listElement = targetShowhideElem)
+                                                }
                                             }
                                         })
                                     }
@@ -96,12 +110,13 @@ class ListButtonDropPortal extends Component {
                           
                         }else if (element.type === "showhide"){
                             element.interactivedata[this.props.showHideObj.showHideType].find(
-                                    (nselement) => {
-                                        let isMatched = false
-                                        if (nselement.id === activeElement.elementId) {
-                                            isMatched = nselement.type === 'element-list'
-                                            isMatched && (listElement = nselement)
-                                        }}
+                                (nselement) => {
+                                    // let isMatched = false
+                                    if (nselement.id === activeElement.elementId) {
+                                        isMatched = nselement.type === 'element-list'
+                                        isMatched && (listElement = nselement)
+                                    }
+                                }
                             )
                         }
                         return isMatched

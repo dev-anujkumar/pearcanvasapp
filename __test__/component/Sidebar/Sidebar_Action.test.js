@@ -17,9 +17,10 @@ jest.mock('../../../src/config/config.js', () => ({
     projectUrn: "urn:pearson:distributable:977c95a8-e16a-413c-bfd0-788fd2a3698d",
     projectEntityUrn: "urn:pearson:entity:3d9363f1-36bb-47ea-8842-9b142027692c",
     REACT_APP_API_URL: "https://10.11.7.24:8443/cypress-api/",
-    ssoToken: "IZaFs6qIbKAo1yX0WaRCz6fagzA.*AAJTSQACMDIAAlNLABw5WUNuT3h6MEN0OHRFRUlEZUxFamxQa1EyNm89AAJTMQACMDE.*"
+    ssoToken: "IZaFs6qIbKAo1yX0WaRCz6fagzA.*AAJTSQACMDIAAlNLABw5WUNuT3h6MEN0OHRFRUlEZUxFamxQa1EyNm89AAJTMQACMDE.*",
+    conversionInProcess : false,
+    savingnInProcess : false
 }))
-
 const initialState = {
     appStore: {
         slateLevelData: slateData.SlateData1,
@@ -29,7 +30,8 @@ const initialState = {
 const initialState2 = {
     appStore: {
         slateLevelData: slateData.SlateData1,
-        activeElement: activeElementData.assessment
+        activeElement: activeElementData.assessment,
+        parentUrn:{}
     },
 }
 const initialState3 = {
@@ -168,68 +170,7 @@ describe('Test convertElement- paragraph', () => {
         spyconversionElement.mockClear()
     });
 });
-describe('Test convertElement- singleAssessment', () => {
-    let store = mockStore(() => initialState2);
-    it('Test convertElement  -assessment type', () => {
-        store = mockStore(() => initialState2);
-        let newData = {
-            elementId: "urn:pearson:work:fa8ebea3-d9ba-4aec-8658-2f944841404a",
-            elementType: "element-assessment",
-            labelText: "Qu",
-            primaryOption: "primary-single-assessment",
-            secondaryOption: "secondary-single-assessment-tdx",
-            toolbar: ["bold", "italic", "underline", "strikethrough", "clearformatting", "increaseindent", "decreaseindent", "footnote", "glossary", "orderedlist", "unorderedlist", "mathml", "chemml", "inlinecode", "superscript", "subscript", "specialcharactor", "undo", "redo", "assetpopover", "slatetag"]
-        }
-        let acElem={
-            elementId: "urn:pearson:work:fa8ebea3-d9ba-4aec-8658-2f944841404a",
-            elementType: "element-assessment",
-            elementWipType: "figure",
-            index: 3,
-            primaryOption: "primary-single-assessment",
-            secondaryOption: "secondary-single-assessment-cite",
-            tag: "Qu",
-            toolbar: ["bold", "italic", "underline", "strikethrough", "clearformatting", "increaseindent", "decreaseindent", "footnote", "glossary", "orderedlist", "unorderedlist", "mathml", "chemml", "inlinecode", "superscript", "subscript", "specialcharactor", "undo", "redo", "assetpopover", "slatetag"]
-        }
-        let oldData={
-            "comments": false,
-            "contentUrn": "urn:pearson:entity:3880c07d-2740-4768-822b-a719c9303f93",
-            "elementdata": { text: null },
-            "feedback": false,
-            "figuredata": {
-                "elementdata": {
-                    "assessmentformat": "tdx",
-                    "assessmentitemtype": "tdxAssessmentItem",
-                    "posterimage": { "path": "https://cite-media-stg.pearson.com/legacy_paths/8e…41-4ed3-44a3-8310-1106d3715c3e/FPO-assessment.png" },
-                    "schema": "http://schemas.pearson.com/wip-authoring/assessment/1#/definitions/assessment",
-                    "usagetype": "Quiz",
-              },
-                "schema": "http://schemas.pearson.com/wip-authoring/assessment/1#/definitions/assessment",
-                "type": "element-assessment",
-                "subtype": "assessment"
-            },
-            "figuretype": "assessment",
-            "html": { "title": "" },
-            "id": "urn:pearson:work:fa8ebea3-d9ba-4aec-8658-2f944841404a",
-            "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
-            "title": { "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", "text": "" },
-            "type": "figure",
-            "tcm": false,
-            "versionUrn": "urn:pearson:work:fa8ebea3-d9ba-4aec-8658-2f944841404a",
-        }
-        let assessmentDiv = document.createElement('div');
-        assessmentDiv.setAttribute('data-id', 'urn:pearson:work:fa8ebea3-d9ba-4aec-8658-2f944841404a')
-        let usageTypeSpan = document.createElement('span');
-        usageTypeSpan.className = 'singleAssessment_Dropdown_currentLabel';
-        //usageTypeSpan.innerText = 'Quiz';
-        assessmentDiv.appendChild(usageTypeSpan)
-        document.body.appendChild(assessmentDiv)
-        let store = mockStore(() => initialState2);
-        const spyconversionElement = jest.spyOn(sidebarAction, 'conversionElement')
-        store.dispatch(sidebarAction.conversionElement(newData));
-        expect(spyconversionElement).toHaveBeenCalled()
-        spyconversionElement.mockClear()
-    });
-});
+
 describe('Test convertElement- figure-IMAGE', () => {
     let store = mockStore(() => initialState3);
     it('Test convertElement  -figure-IMAGE to TABLE', () => {
@@ -600,208 +541,6 @@ describe('Test convertElement- ASIDE-CONTAINER-internal conversion', () => {
 
     });
 });
-xdescribe('Test convertElement- MOCK API CALL', () => {
-    let store = mockStore(() => initialState4);
-    xit('Test convertElement  -MOCK API CALL', async () => {
-        store = mockStore(() => initialState4);
-        let getState = () => {
-            return initialState;
-           }
-        let elementData = {
-            elementId: "urn:pearson:work:e4d3e2ce-71f6-4ffa-9868-3d0b00a69f75",
-            elementType: "video-audio",
-            labelText: "VID",
-            primaryOption: "primary-video",
-            secondaryOption: "secondary-video-smartlink",
-            toolbar: ["assetpopover", "glossary"],
-            altText: "",
-            longDesc: "",
-            tag: "VID"
-        }
-        let activeElement = {
-            elementId: "urn:pearson:work:e4d3e2ce-71f6-4ffa-9868-3d0b00a69f75",
-            elementType: "video-audio",
-            elementWipType: "figure",
-            index: 5,
-            primaryOption: "primary-video",
-            secondaryOption: "secondary-video-alfresco",
-            tag: "VID",
-            toolbar: ["assetpopover", "glossary"]
-        }
-        let oldData = {
-            captions: {
-                footnotes: [],
-                mathml: [],
-                schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                text: "↵",
-                textsemantics: []
-            },
-            comments: false,
-            contentUrn: "urn:pearson:entity:a3838838-ad6a-4061-907a-c2dd9165d9b8",
-            credits: {
-                mathml: [],
-                schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                text: "↵",
-                textsemantics: [],
-                footnotes: []
-            },
-            elementdata: {
-                text: null
-            },
-            feedback: false,
-            figuredata: {
-                clipinfo: {},
-                height: "399",
-                posterimage: { path: "https://d12m40tknrppbi.cloudfront.net/cite/images/FPO-audio_video.png" },
-                schema: "http://schemas.pearson.com/wip-authoring/video/1#/definitions/video",
-                srctype: "internal",
-                videos: [{
-                    path: "",
-                    format: ""
-                }
-                ],
-                width: "600",
-            },
-            figuretype: "video",
-            html: {
-                captions: "<p><br></p>",
-                credits: "<p><br></p>",
-                footnotes: {},
-                glossaryentries: {},
-                postertext: "",
-                subtitle: "<p><br></p>",
-                text: "",
-                title: "<p><br></p>",
-            },
-            id: "urn:pearson:work:e4d3e2ce-71f6-4ffa-9868-3d0b00a69f75",
-            subtitle: {
-                mathml: [],
-                schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                text: "↵",
-                textsemantics: [],
-                footnotes: []
-            },
-            subtype: "figureVideo",
-            status: "wip",
-            title: {
-                mathml: [],
-                schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                text: "↵",
-                textsemantics: [],
-                footnotes: []
-            },
-            type: "figure",
-            versionUrn: "urn:pearson:work:e4d3e2ce-71f6-4ffa-9868-3d0b00a69f75",
-        }
-        let expectedRes = {
-            status: 200,
-            statusText: "",
-            data: {
-                captions: {
-                    footnotes: [],
-                    mathml: [],
-                    schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                    text: "↵",
-                    textsemantics: []
-                },
-                comments: false,
-                contentUrn: "urn:pearson:entity:a3838838-ad6a-4061-907a-c2dd9165d9b8",
-                credits: {
-                    mathml: [],
-                    schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                    text: "↵",
-                    textsemantics: [],
-                    footnotes: []
-                },
-                elementdata: {
-                    text: null
-                },
-                feedback: false,
-                figuredata: {
-                    clipinfo: {},
-                    height: "399",
-                    posterimage: { path: "https://d12m40tknrppbi.cloudfront.net/cite/images/FPO-audio_video.png" },
-                    schema: "http://schemas.pearson.com/wip-authoring/video/1#/definitions/video",
-                    srctype: "externallink",
-                    videos: [{
-                        path: "",
-                        format: ""
-                    }
-                    ],
-                    width: "600",
-                },
-                figuretype: "video",
-                html: {
-                    captions: "<p><br></p>",
-                    credits: "<p><br></p>",
-                    footnotes: {},
-                    glossaryentries: {},
-                    postertext: "",
-                    subtitle: "<p><br></p>",
-                    text: "",
-                    title: "<p><br></p>",
-                },
-                id: "urn:pearson:work:e4d3e2ce-71f6-4ffa-9868-3d0b00a69f75",
-                subtitle: {
-                    mathml: [],
-                    schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                    text: "↵",
-                    textsemantics: [],
-                    footnotes: []
-                },
-                subtype: "figureVideo",
-                status: "wip",
-                title: {
-                    mathml: [],
-                    schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                    text: "↵",
-                    textsemantics: [],
-                    footnotes: []
-                },
-                type: "figure",
-                versionUrn: "urn:pearson:work:e4d3e2ce-71f6-4ffa-9868-3d0b00a69f75",
-            }
-        }
-        let store = mockStore(() => initialState4);
-        let expectedRess= {
-            elementId: 'urn:pearson:work:e4d3e2ce-71f6-4ffa-9868-3d0b00a69f75',
-            index: '5',
-            elementType: 'video-audio',
-            primaryOption: 'primary-video',
-            secondaryOption: 'secondary-video-smartlink',
-            tag: 'VID',
-            toolbar: [ 'assetpopover', 'glossary' ],
-            elementWipType: undefined,
-            altText: '',
-            longDesc: ''
-          }
-      
-        axios.post.mockImplementation(() => Promise.resolve(expectedRes));
-        let elemData={}
-        let dispatch=(obj)=>{
-            if(obj.type==='FETCH_SLATE_DATA'){
-                expect(obj.type).toEqual('FETCH_SLATE_DATA');
-                elemData=obj
-            }
-            else{
-                expect(obj.type).toEqual('ERROR_POPUP');
-                elemData=obj
-            }
-        }
-         let result = await sidebarAction.convertElement(oldData, elementData, activeElement, slateData,["5"]);
-         result(dispatch,getState);
-         setTimeout(()=>{
-            if(elemData.type==='FETCH_SLATE_DATA'){
-                expect(elemData.type).toEqual('FETCH_SLATE_DATA')
-
-            }
-            else{
-                expect(elemData.type).toEqual('SET_ACTIVE_ELEMENT');
-               
-            }
-         },1000)
-    });
-});
 describe('Test convertElement- MOCK API CALL-catch', () => {
     let store = mockStore(() => initialState4);
     it('Test convertElement  -MOCK API CALL',async () => {
@@ -947,5 +686,177 @@ describe('Test convertElement- ASIDE-CONTAINER -MMI to ShowHide', () => {
         expect(spyconversionElement).toHaveBeenCalled()
         spyconversionElement.mockClear()
 
+    });
+});
+xdescribe('Test convertElement- singleAssessment', () => {
+    let store = mockStore(() => initialState2);
+    it('Test convertElement  -assessment type', () => {
+        store = mockStore(() => initialState2);
+        let newData = {
+            elementId: "urn:pearson:work:fa8ebea3-d9ba-4aec-8658-2f944841404a",
+            elementType: "element-assessment",
+            labelText: "Qu",
+            primaryOption: "primary-single-assessment",
+            secondaryOption: "secondary-single-assessment-tdx",
+            toolbar: ["bold", "italic", "underline", "strikethrough", "clearformatting", "increaseindent", "decreaseindent", "footnote", "glossary", "orderedlist", "unorderedlist", "mathml", "chemml", "inlinecode", "superscript", "subscript", "specialcharactor", "undo", "redo", "assetpopover", "slatetag"]
+        }
+        let assessmentDiv = document.createElement('div');
+        assessmentDiv.setAttribute('data-id', 'urn:pearson:work:fa8ebea3-d9ba-4aec-8658-2f944841404a')
+        let usageTypeSpan = document.createElement('span');
+        usageTypeSpan.className = 'singleAssessment_Dropdown_currentLabel';
+        usageTypeSpan.innerText = 'Quiz';
+        assessmentDiv.appendChild(usageTypeSpan)
+        document.body.appendChild(assessmentDiv)
+        let store = mockStore(() => initialState2);
+        const spyconversionElement = jest.spyOn(sidebarAction, 'conversionElement')
+        store.dispatch(sidebarAction.conversionElement(newData));
+        expect(spyconversionElement).toHaveBeenCalled()
+        spyconversionElement.mockClear()
+    });
+    it('Test convertElement  -assessment type 2', () => {
+        store = mockStore(() => initialState2);
+        let assessmentDiv2 = document.createElement('div');
+        assessmentDiv2.setAttribute('data-id', 'urn:pearson:work:fa8ebea3-d9ba-4aec-8658-2f944841404a')
+        let usageTypeSpan2 = document.createElement('span');
+        usageTypeSpan2.className = 'singleAssessment_Dropdown_currentLabel';
+        usageTypeSpan2.innerText = 'Quiz';
+        assessmentDiv2.appendChild(usageTypeSpan2)
+        document.body.appendChild(assessmentDiv2)
+        store = mockStore(() => initialState2);
+        const spyconversionElement = jest.spyOn(sidebarAction, 'convertElement')
+        store.dispatch(sidebarAction.convertElement(activeElementData.SingleAssessment_OldData,activeElementData.SingleAssessment_NewData,activeElementData.SingleAssessment_OldInfo,slateData.slateData1,3));
+        expect(spyconversionElement).toHaveBeenCalled()
+        spyconversionElement.mockClear()
+    });
+});
+xdescribe('Test convertElement- MOCK API CALL', () => {
+
+
+    let assessmentDiv2 = document.createElement('div');
+    assessmentDiv2.setAttribute('data-id', 'urn:pearson:work:fa8ebea3-d9ba-4aec-8658-2f944841404a')
+    let usageTypeSpan2 = document.createElement('span');
+    usageTypeSpan2.className = 'singleAssessment_Dropdown_currentLabel';
+    usageTypeSpan2.innerText = 'Quiz';
+    assessmentDiv2.appendChild(usageTypeSpan2)
+    document.body.appendChild(assessmentDiv2)
+    let store = mockStore(() => initialState2);
+    it('Test convertElement  -MOCK API CALL',async () => {
+
+        store = mockStore(() => initialState2);
+        let expectedRes = {
+            status: 200,
+            statusText: "",
+            data: activeElementData.sidebarExpectedRes
+        }
+        let getState = () => {
+            return initialState2;
+           }
+        const expectedActions = [
+            {
+                type: 'FETCH_SLATE_DATA',
+                payload: {}
+            }];
+
+        axios.post.mockImplementation(() => Promise.resolve(expectedRes));
+        let elemData={}
+        let dispatch=(obj)=>{
+            if(obj.type==='FETCH_SLATE_DATA'){
+                expect(obj.type).toEqual('FETCH_SLATE_DATA');
+                elemData=obj
+            }
+            else{
+                expect(obj.type).toEqual('SET_ACTIVE_ELEMENT');
+                elemData=obj
+            }
+        }
+
+        let result =   await sidebarAction.convertElement(activeElementData.SingleAssessment_OldData, activeElementData.SingleAssessment_NewData, activeElementData.SingleAssessment_OldInfo, slateData.SlateData1,"3")
+        result(dispatch,getState);
+        setTimeout(()=>{
+            if(elemData.type==='FETCH_SLATE_DATA'){
+                expect(elemData.type).toEqual('FETCH_SLATE_DATA')
+
+            }
+            else{
+                expect(elemData.type).toEqual('SET_ACTIVE_ELEMENT');
+               
+            }
+         },1000)
+    });
+});
+xdescribe('Test convertElement- aside MOCK API CALL', () => {
+
+    it('Test convertElement  -aside MOCK API CALL',async () => {
+        let expectedRes = {
+            status: 200,
+            statusText: "",
+            data: activeElementData.Aside_MMI_OldData
+        }
+        let getState = () => {
+            return initialState15;
+           }
+        axios.post.mockImplementation(() => Promise.resolve(expectedRes));
+        let elemData={}
+        let dispatch=(obj)=>{
+            if(obj.type==='FETCH_SLATE_DATA'){
+                expect(obj.type).toEqual('FETCH_SLATE_DATA');
+                elemData=obj
+            }
+            else{
+                expect(obj.type).toEqual('SET_ACTIVE_ELEMENT');
+                elemData=obj
+            }
+        }
+        let store = mockStore(() => initialState15);
+        let result =   await sidebarAction.convertElement(activeElementData.Aside_MMI_OldData,activeElementData.Aside_MMI_NewData,activeElementData.Aside_MMI_OldInfo,slateData.SlateData3,["0", "2"])
+        result(dispatch,getState);
+        setTimeout(()=>{
+            if(elemData.type==='FETCH_SLATE_DATA'){
+                expect(elemData.type).toEqual('FETCH_SLATE_DATA')
+
+            }
+            else{
+                expect(elemData.type).toEqual('SET_ACTIVE_ELEMENT');
+               
+            }
+         },1000)
+    });
+});
+describe('Test convertElement- we MOCK API CALL', () => {
+
+    it('Test convertElement  -we MOCK API CALL',async () => {
+        let expectedRes = {
+            status: 200,
+            statusText: "",
+            data: activeElementData.Aside_MMI_OldData
+        }
+        let getState = () => {
+            return initialState13;
+           }
+        axios.post.mockImplementation(() => Promise.resolve(expectedRes));
+        let elemData={}
+        let dispatch=(obj)=>{
+            if(obj.type==='FETCH_SLATE_DATA'){
+                expect(obj.type).toEqual('FETCH_SLATE_DATA');
+                elemData=obj
+            }
+            else{
+                expect(obj.type).toEqual('SET_ACTIVE_ELEMENT');
+                elemData=obj
+            }
+        }
+        let store = mockStore(() => initialState13);
+        let result =   await sidebarAction.convertElement(activeElementData.Section_OldData,activeElementData.Section_NewData,activeElementData.Section_OldInfo,slateData.SlateData2,["0", "1", "0"])
+        result(dispatch,getState);
+        setTimeout(()=>{
+            if(elemData.type==='FETCH_SLATE_DATA'){
+                expect(elemData.type).toEqual('FETCH_SLATE_DATA')
+
+            }
+            else{
+                expect(elemData.type).toEqual('SET_ACTIVE_ELEMENT');
+               
+            }
+         },1000)
     });
 });

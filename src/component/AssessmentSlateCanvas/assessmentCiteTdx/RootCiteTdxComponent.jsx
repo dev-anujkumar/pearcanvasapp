@@ -72,7 +72,7 @@ class RootCiteTdxComponent extends Component {
           <CiteComponentError>
             <CiteTdxHeader headerProps={this.headerProps} resetPage={this.props.resetPage} />
             <FilterAssessmentData assessmentType={this.props.assessmentType} AssessmentSearchTitle={this.props.AssessmentSearchTitle} resetPage={this.props.resetPage} currentPageNo={this.state.currentPageNo}  searchTitle={this.props.searchTitle} filterUUID={this.props.filterUUID} />
-            <CiteTdxTable assessmentType={this.props.assessmentType} searchAssessment={this.searchAssessment}/>
+            <CiteTdxTable assessmentType={this.props.assessmentType} searchAssessment={this.searchAssessment} currentPageNo={this.state.currentPageNo} searchTitle={this.props.searchTitle} filterUUID={this.props.filterUUID}/>
             <CiteTdxFooter closeWindowAssessment={this.headerProps.closeWindowAssessment} addCiteTdxFunction={this.props.addCiteTdxFunction} usageTypeMetadata={this.props.usageTypeMetadata} searchTitle={this.props.searchTitle} filterUUID={this.state.filterUUID} assessmentType={this.props.assessmentType} isReset={this.props.isReset} resetPage={this.props.resetPage} getCurrentPageNo={this.getCurrentPageNo} openedFrom = {this.props.openedFrom} currentPageNo={this.state.currentPageNo} />
           </CiteComponentError>
         </div>

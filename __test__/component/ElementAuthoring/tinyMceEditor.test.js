@@ -5,6 +5,7 @@ import TinyMceEditor from '../../../src/component/tinyMceEditor'
 import elementData from './elementData';
 import { JSDOM } from 'jsdom'
 import config from '../../../src/config/config.js';
+
 global.document = (new JSDOM()).window.Element;
 if(!global.Element.prototype.hasOwnProperty("innerText")){
     Object.defineProperty(global.Element.prototype, 'innerText', {
@@ -22,14 +23,7 @@ jest.mock('../../../src/js/utils', () => {
         
     }
 })
-jest.mock('../../../src/js/utils', () => {
-    return {
-        checkforToolbarClick: () => {
-            return true
-        },
-        
-    }
-})
+
 jest.mock('../../../src/component/GlossaryFootnotePopup/GlossaryFootnote_Actions', () => {
     return {
         saveGlossaryAndFootnote: () => {
@@ -122,7 +116,7 @@ describe('Testing TinyMCE Editor', () => {
             clientTop: 0,
             clientWidth: 670,
             contentEditable: "true",
-        }
+        },
     }
     const component = mount(<TinyMceEditor {...props} />, { attachTo: document.body })
     let instance = component.instance();
@@ -132,25 +126,93 @@ describe('Testing TinyMCE Editor', () => {
         expect(instance).toBeDefined();
         instance.editorRef = editorInstance
     }) 
-    xit('Test-Function- normalKeyDownHandler---> for paragraph element', () => {
+    it('Test-Function- normalKeyDownHandler---> for pullquote element', () => {
         let event = {
             preventDefault: jest.fn(),
             stopPropagation: jest.fn(),
             target: {
-                id: elementData.id
+                id: elementData.pullquote.id
+            }
+        }
+        
+        tinymce.activeEditor = {
+            id: ""
+        }
+        let newPermissions = [
+            "login", "logout"]
+        let props = {
+            permissions: newPermissions,
+            slateLockInfo: {
+                isLocked: false,
+                userId: 'c5Test02'
+            },
+            tagName: "p",
+            className: "",
+            index: 1,
+            element: elementData.pullquote,
+            model: elementData.pullquote.html,
+            handleBlur: jest.fn(),
+            onListSelect: jest.fn(),
+            learningObjectiveOperations: jest.fn(),
+            elementId: elementData.pullquote.id,
+            openAssetPopoverPopUp: jest.fn(),
+            placeholder: "Enter you text here",
+            handleEditorFocus: jest.fn(),
+            openGlossaryFootnotePopUp: jest.fn(),
+        }
+        const component = mount(<TinyMceEditor {...props} />)
+        let instance = component.instance();
+        instance.editorRef = editorInstance
+        const spynormalKeyDownHandler = jest.spyOn(instance, 'normalKeyDownHandler')
+        instance.normalKeyDownHandler(event);
+        expect(spynormalKeyDownHandler).toHaveBeenCalledWith(event);
+        spynormalKeyDownHandler.mockClear()
+    })
+    it('Test-Function- handleBlur---> for paragraph element', () => {
+        let event = {
+            preventDefault: jest.fn(),
+            stopPropagation: jest.fn(),
+            relatedTarget: {
+                classList: []
             }
         }
         instance.editorRef = editorInstance
         tinymce.activeEditor = {
-            id: ""
+            id: "",
+            getContent: jest.fn(),
+            setContent: jest.fn()
         }
-        const spynormalKeyDownHandler = jest.spyOn(instance, 'normalKeyDownHandler')
-        instance.normalKeyDownHandler(event);
-        expect(spynormalKeyDownHandler).toHaveBeenCalledWith(event);
-        expect(spynormalKeyDownHandler).toHaveReturnedWith(false);
-        spynormalKeyDownHandler.mockClear()
+        //     utilFunction.checkforToolbarClick=()=>{
+        //         return true        
+        // }
+        const spyhandleBlur = jest.spyOn(instance, 'handleBlur')
+        instance.handleBlur(event);
+        expect(spyhandleBlur).toHaveBeenCalledWith(event);
+        spyhandleBlur.mockClear()
     })
-    it('Test-Function- handleBlur---> for paragraph element', () => {
+    it('Test-Function- handleBlur---> for show hide element', () => {
+        let props = {
+            permissions: permissions,
+            slateLockInfo: {
+                isLocked: false,
+                userId: 'c5Test02'
+            },
+            tagName: "p",
+            className: "",
+            index: 1,
+            element: elementData.showHide,
+            model: elementData.showHide.html,
+            handleBlur: jest.fn(),
+            onListSelect: jest.fn(),
+            learningObjectiveOperations: jest.fn(),
+            elementId: elementData.showHide.id,
+            openAssetPopoverPopUp: jest.fn(),
+            placeholder: "Enter you text here",
+            handleEditorFocus: jest.fn(),
+            openGlossaryFootnotePopUp: jest.fn(),
+        }
+        const component = mount(<TinyMceEditor {...props} />)
+        let instance = component.instance();
         let event = {
             preventDefault: jest.fn(),
             stopPropagation: jest.fn(),
@@ -180,6 +242,28 @@ describe('Testing TinyMCE Editor', () => {
                 classList: []
             }
         }
+        
+        instance.editorRef = editorInstance
+        tinymce.activeEditor = {
+            id: ""
+        }
+        let status = true,
+            popupType = "Footnote",
+            glossaryfootnoteid = "urn:pearson:work:a9735d80-fe6c-43ce-8265-5cc27893db00";
+        const spytoggleGlossaryandFootnotePopup = jest.spyOn(instance, 'toggleGlossaryandFootnotePopup')
+        instance.toggleGlossaryandFootnotePopup(status, popupType, glossaryfootnoteid, callback);
+        expect(spytoggleGlossaryandFootnotePopup).toHaveBeenCalled();
+        spytoggleGlossaryandFootnotePopup.mockClear()
+    })
+    it('Test-Function- toggleGlossaryandFootnotePopup with savin progress true', () => {
+        let event = {
+            preventDefault: jest.fn(),
+            stopPropagation: jest.fn(),
+            relatedTarget: {
+                classList: []
+            }
+        }
+        config.savingInProgress=true;
         instance.editorRef = editorInstance
         tinymce.activeEditor = {
             id: ""
@@ -205,6 +289,7 @@ describe('Testing TinyMCE Editor', () => {
         expect(spytoggleGlossaryandFootnotePopup).toHaveBeenCalled();
         spytoggleGlossaryandFootnotePopup.mockClear()
     })
+    
     xit('Test editorMousedown ', () => {
         let event = {
             preventDefault: () => { },
@@ -256,6 +341,9 @@ describe('Testing tinyMce  component with  props', () => {
             isLocked: false,
             userId: 'c5Test03'
         },
+        element : {
+            type : 'stanza'
+        },
         permissions: permissions,
         onListSelect: () => { }
     }
@@ -298,6 +386,45 @@ describe('Testing tinyMce  component with  props', () => {
         tinyMceEditor.instance().editorConfig.init_instance_callback(editor);
         expect(callback).toHaveBeenCalled()
     });
+    it('Test Tinymce Setup Callback Call with props', () => {
+        let editor = {
+            on: () => { },
+            shortcuts: {
+                add: () => { }
+            },
+            getContentAreaContainer: () => {
+                return true;
+            }
+        }
+        let newPermissions = [
+            "login", "logout"]
+        let props = {
+            permissions: newPermissions,
+            slateLockInfo: {
+                isLocked: false,
+                userId: 'c5Test04'
+            },
+            tagName: "",
+            className: "",
+            index: 1,
+            element: elementData.figure,
+            model: elementData.figure.html,
+            handleBlur: jest.fn(),
+            onListSelect: jest.fn(),
+            learningObjectiveOperations: jest.fn(),
+            elementId: elementData.figure.id,
+            openAssetPopoverPopUp: jest.fn(),
+            placeholder: "Enter Label...",
+            handleEditorFocus: jest.fn(),
+            openGlossaryFootnotePopUp: jest.fn(),
+            activeShowHide:jest.fn()
+        }
+        
+        const component = mount(<TinyMceEditor {...props} />)
+        const callback = jest.spyOn(component.instance().editorConfig, 'init_instance_callback');
+        component.instance().editorConfig.init_instance_callback(editor);
+        expect(callback).toHaveBeenCalled()
+    });
     it('Test the method innerTextWithMathMl ', () => {
         let node = {
             childNodes: [
@@ -331,6 +458,23 @@ describe('Testing tinyMce  component with  props', () => {
                 },
                 placeCaretAt : (a,b) => {
                     return true
+                },
+                getNode: () => {
+                    return {
+                        tagName: 'span',
+                        className: 'poetryLine',
+                        closest : () => {}
+                    }
+                },
+                getRng: () => {
+                    return {
+                        setStart: () => {
+
+                        },
+                        setEnd: () => {
+                            
+                        }
+                    }
                 }
             }
         }
@@ -356,6 +500,23 @@ describe('Testing tinyMce  component with  props', () => {
                 },
                 placeCaretAt : (a,b) => {
                     return true
+                },
+                getNode: () => {
+                    return {
+                        tagName: 'span',
+                        className: 'poetryLine',
+                        closest : () => {}
+                    }
+                },
+                getRng: () => {
+                    return {
+                        setStart: () => {
+
+                        },
+                        setEnd: () => {
+                            
+                        }
+                    }
                 }
             }
         }
@@ -383,6 +544,23 @@ describe('Testing tinyMce  component with  props', () => {
                 },
                 placeCaretAt : (a,b) => {
                     return true
+                },
+                getNode: () => {
+                    return {
+                        tagName: 'span',
+                        className: 'poetryLine',
+                        closest : () => {}
+                    }
+                },
+                getRng: () => {
+                    return {
+                        setStart: () => {
+
+                        },
+                        setEnd: () => {
+                            
+                        }
+                    }
                 }
             }
         }
@@ -569,6 +747,15 @@ describe('Testing tinyMce  component with  props', () => {
                 },
                 dispatchEvent: () => { }
             },
+            selection : {
+                getNode: () => {
+                    return {
+                        tagName: 'span',
+                        className: 'poetryLine',
+                        closest : () => {}
+                    }
+                }
+            }
         }
         const getContent = jest.spyOn(event.target, 'getContent');
         tinyMceEditor.instance().editorBeforeExecCommand(editor);
@@ -650,6 +837,15 @@ describe('Testing tinyMce  component with  props', () => {
                 },
                 dispatchEvent: () => { }
             },
+            selection: {
+                getNode: () => {
+                    return {
+                        tagName: 'span',
+                        className: 'poetryLine',
+                        closest : () => {}
+                    }
+                }
+            }
         }
         const getContent = jest.spyOn(event.target, 'getContent');
         tinyMceEditor.instance().editorBeforeExecCommand(editor);
@@ -945,6 +1141,51 @@ describe('Testing tinyMce  component with  props', () => {
         }
         tinyMceEditor.instance().editorOnClick(event);
     });
+    it('Test editorOnClick method with alreadyExist true for props', () => {
+        let event = {
+            target: {
+                nodeName: 'DFN',
+                dataset: {
+                    uri: "abcd"
+            }
+        }
+    }
+        
+        let props = {
+            permissions: permissions,
+            slateLockInfo: {
+                isLocked: false,
+                userId: 'c5Test04'
+            },
+            tagName: "",
+            className: "",
+            index: 1,
+            element: elementData.figure,
+            model: elementData.figure.html,
+            handleBlur: jest.fn(),
+            onListSelect: jest.fn(),
+            learningObjectiveOperations: jest.fn(),
+            elementId: elementData.figure.id,
+            openAssetPopoverPopUp: jest.fn(),
+            placeholder: "Enter Label...",
+            handleEditorFocus: jest.fn(),
+            openGlossaryFootnotePopUp: jest.fn(),
+            activeShowHide:jest.fn()
+        }
+        
+        const component = mount(<TinyMceEditor {...props} />)
+        document.getElementsByClassName = () => {
+            return {
+                length: 0
+            }
+        }
+        component.instance().glossaryBtnInstance = {
+            setDisabled: () => { }
+        }
+       // const setDisabled = jest.spyOn(component.instance().glossaryBtnInstance, 'setDisabled');
+        component.instance().editorOnClick(event);
+       // expect(setDisabled).toHaveBeenCalled();
+    });
     it('Test toggleGlossaryandFootnoteIcon method', () => {
         tinyMceEditor.instance().glossaryBtnInstance = {
             setDisabled: () => { }
@@ -1058,6 +1299,64 @@ describe('Test-Function-setInstanceToolbar -------->', () => {
             elementId: elementData.codeEditor.id,
             openAssetPopoverPopUp: jest.fn(),
             placeholder: "Enter block code...",
+            handleEditorFocus: jest.fn(),
+            openGlossaryFootnotePopUp: jest.fn(),
+        }
+        component.setProps(props);
+        let instance = component.find('TinyMceEditor').instance();
+        instance.editorRef = editorInstance
+        const spysetInstanceToolbar = jest.spyOn(instance, 'setInstanceToolbar')
+        instance.setInstanceToolbar();
+        expect(spysetInstanceToolbar).toHaveBeenCalled();
+        spysetInstanceToolbar.mockClear()
+    })
+    it('Test- Show ', () => {
+        let props = {
+            permissions: permissions,
+            slateLockInfo: {
+                isLocked: false,
+                userId: 'c5Test18'
+            },
+            tagName: "figureCredit",
+            className: "",
+            index: 1,
+            element: elementData.figure,
+            model: elementData.figure.html,
+            handleBlur: jest.fn(),
+            onListSelect: jest.fn(),
+            learningObjectiveOperations: jest.fn(),
+            elementId: elementData.figure.id,
+            openAssetPopoverPopUp: jest.fn(),
+            placeholder: "Enter Show text",
+            handleEditorFocus: jest.fn(),
+            openGlossaryFootnotePopUp: jest.fn(),
+        }
+        component.setProps(props);
+        let instance = component.find('TinyMceEditor').instance();
+        instance.editorRef = editorInstance
+        const spysetInstanceToolbar = jest.spyOn(instance, 'setInstanceToolbar')
+        instance.setInstanceToolbar();
+        expect(spysetInstanceToolbar).toHaveBeenCalled();
+        spysetInstanceToolbar.mockClear()
+    })
+    it('Test- Hide ', () => {
+        let props = {
+            permissions: permissions,
+            slateLockInfo: {
+                isLocked: false,
+                userId: 'c5Test18'
+            },
+            tagName: "figureCredit",
+            className: "",
+            index: 1,
+            element: elementData.figure,
+            model: elementData.figure.html,
+            handleBlur: jest.fn(),
+            onListSelect: jest.fn(),
+            learningObjectiveOperations: jest.fn(),
+            elementId: elementData.figure.id,
+            openAssetPopoverPopUp: jest.fn(),
+            placeholder: "Enter Hide text",
             handleEditorFocus: jest.fn(),
             openGlossaryFootnotePopUp: jest.fn(),
         }
@@ -1395,6 +1694,33 @@ describe('Test-TinyMCE Editor for Other Elements', () => {
         expect(instance).toBeDefined();
         instance.editorRef = editorInstance
     })
+    xit('Test-BlockQuote-H4 with popup element', () => {
+        let props = {
+            permissions: permissions,
+            slateLockInfo: {
+                isLocked: false,
+                userId: 'c5Test15'
+            },
+            tagName: "h4",
+            className: "",
+            index: 1,
+            element: elementData.popUp,
+            model: elementData.popUp.html,
+            handleBlur: jest.fn(),
+            onListSelect: jest.fn(),
+            learningObjectiveOperations: jest.fn(),
+            elementId: elementData.popUp.id,
+            openAssetPopoverPopUp: jest.fn(),
+            placeholder: "Enter you text here",
+            handleEditorFocus: jest.fn(),
+            openGlossaryFootnotePopUp: jest.fn(),
+        }
+        component.setProps(props)
+        let instance = component.instance();
+        expect(component).toHaveLength(1);
+        expect(instance).toBeDefined();
+        instance.editorRef = editorInstance
+    })
     it('Test editorBeforeExecCommand  method for RemoveFormat', () => {
         let event = {
             target: {
@@ -1575,7 +1901,7 @@ describe('Testing -Editor Key events', () => {
     it('Test editorKeyup ', () => {
         let event = {
             preventDefault: () => { },
-            stopPropagation: () => { }
+            stopPropagation: () => { },
         }
         let editor = {
             on: (temp, cb) => { cb(event) },
@@ -1687,14 +2013,142 @@ describe('Testing -Editor Key events', () => {
         expect(spyFunction).toHaveBeenCalled()
         expect(spyisTabPressed).toHaveBeenCalled()
     });
+    it('Test editorKeydown - keyCode :86', () => {
+        let event = {
+            preventDefault: () => { },
+            stopPropagation: () => { },
+            ctrlKey : true ,
+            keyCode :86
+        }
+        let editor = {
+            on: (temp, cb) => { cb(event) },
+            targetElm: {
+                findChildren: () => {
+                    return {
+                        length: 0
+                    };
+                },
+                dispatchEvent: () => { }
+            },
+            selection: {
+                bookmarkManager: {
+                    moveToBookmark: jest.fn(),
+                    getBookmark: jest.fn()
+                },
+                getStart:jest.fn()
+            },
+            dom: {
+                getParent: () => {
+                    return {
+                        innerHTML: '<p class="paragraphNumeroUno place-holder">hello<ol></ol><ul></ul></p>',
+                        children: [
+                            {
+                                tagName: 'BR'
+                            }
+                        ],
+                        innerText: "hello",
+                        querySelectorAll: jest.fn(),
+                        classList: {
+                            remove:jest.fn()
+                        }
+                    }
+                }
+            },
+            children: ['<p class="paragraphNumeroUno">hello</p>'],
+            classList: ["cypress-editable", "mce-content-body", "mce-edit-focus", 'place-holder']
+        }
+        const spyisTabPressed = jest.spyOn(instance,'isTabPressed')
+        const spyFunction = jest.spyOn(instance, 'editorKeydown')
+        instance.isTabPressed(event);
+        instance.editorKeydown(editor);
+        expect(spyFunction).toHaveBeenCalled()
+        expect(spyisTabPressed).toHaveBeenCalled()
+    });
+
+    it('Test editorKeydown - keyCode :13', () => {
+        let event = {
+            preventDefault: () => { },
+            stopPropagation: () => { },
+            ctrlKey : true ,
+            keyCode :13
+        }
+        let editor = {
+            on: (temp, cb) => { cb(event) },
+            targetElm: {
+                findChildren: () => {
+                    return {
+                        length: 0
+                    };
+                },
+                dispatchEvent: () => { }
+            },
+            selection: {
+                bookmarkManager: {
+                    moveToBookmark: jest.fn(),
+                    getBookmark: jest.fn()
+                },
+                getStart:jest.fn()
+            },
+            dom: {
+                getParent: () => {
+                    return {
+                        innerHTML: '<p class="paragraphNumeroUno place-holder">hello<ol></ol><ul></ul></p>',
+                        children: [
+                            {
+                                tagName: 'BR'
+                            }
+                        ],
+                        innerText: "hello",
+                        querySelectorAll: jest.fn(),
+                        classList: {
+                            remove:jest.fn()
+                        }
+                    }
+                }
+            },
+            children: ['<p class="paragraphNumeroUno">hello</p>'],
+            classList: ["cypress-editable", "mce-content-body", "mce-edit-focus", 'place-holder']
+        }
+        let props = {
+            permissions: permissions,
+            slateLockInfo: {
+                isLocked: false,
+                userId: 'c5Test16'
+            },
+            tagName: "p",
+            className: "",
+            index: 1,
+            element: elementData.showHide,
+            model: elementData.showHide.html,
+            handleBlur: jest.fn(),
+            onListSelect: jest.fn(),
+            learningObjectiveOperations: jest.fn(),
+            elementId: elementData.showHide.id,
+            openAssetPopoverPopUp: jest.fn(),
+            placeholder: "Enter you text here",
+            handleEditorFocus: jest.fn(),
+            openGlossaryFootnotePopUp: jest.fn(),
+            currentElement:{
+                type:"paragraph"
+            },
+            createShowHideElement:jest.fn()
+        }
+        const component = mount(<TinyMceEditor {...props} />)
+        let instance = component.instance();
+        const spyFunction = jest.spyOn(instance, 'editorKeydown')
+        instance.editorKeydown(editor);
+        expect(spyFunction).toHaveBeenCalled()
+    });
     it('Test isTabPressed - keyCode :88', () => {
         let keyDownEvent = {
             which: 88,
+            ctrlKey : true ,
         }
         const spyisTabPressed = jest.spyOn(instance, 'isTabPressed')
         instance.isTabPressed(keyDownEvent);
         expect(spyisTabPressed).toHaveBeenCalled()
     });
+    
     it('Test addInlineCode ', () => {
         window.getSelection().anchorNode.parentNode.innerHTML="Hello"
         let event = {
@@ -2060,11 +2514,36 @@ describe('Testing -Editor Key events', () => {
             children: ['p.paragraphNumeroUno'],
             classList: ["cypress-editable", "mce-content-body", "mce-edit-focus"]
         }
+        config.savingInProgress= true
+        let props = {
+            permissions: permissions,
+            slateLockInfo: {
+                isLocked: false,
+                userId: 'c5Test02'
+            },
+            tagName: "p",
+            className: "",
+            index: 1,
+            element: elementData.popUp,
+            model: elementData.popUp.html,
+            handleBlur: jest.fn(),
+            onListSelect: jest.fn(),
+            learningObjectiveOperations: jest.fn(),
+            elementId: elementData.popUp.id,
+            openAssetPopoverPopUp: jest.fn(),
+            placeholder: "Enter you text here",
+            handleEditorFocus: jest.fn(),
+            openGlossaryFootnotePopUp: jest.fn(),
+            showHideType:jest.fn()
+        }
+        const component = mount(<TinyMceEditor {...props} />)
+        let instance=component.instance()
         const spyaddFootnote = jest.spyOn(instance, 'addFootnote')
         instance.addFootnote(editor);
         expect(spyaddFootnote).toHaveBeenCalled()
     });
-    it('Test addGlossary ', () => {
+
+    it('Test addFootnote witth saving call false', () => {
         let event = {
             preventDefault: () => { },
             stopPropagation: () => { }
@@ -2087,6 +2566,193 @@ describe('Testing -Editor Key events', () => {
                 getStart: () => {
                     
                 }
+            },
+            insertContent:()=>{
+                return '<sup><a href="#" id = "${res.data.id}" data-uri="${res.data.id}" data-footnoteelementid="${res.data.id}" class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>'
+            },
+            dom: {
+                getParent: () => {
+                    return {
+                        innerHTML: '<p class="paragraphNumeroUno place-holder">hello<ol></ol><ul></ul></p>',
+                        children: [
+                            {
+                                tagName: 'BR'
+                            }
+                        ],
+                        innerText: "hello",
+                        querySelectorAll: jest.fn(),
+                        classList: {
+                            remove:jest.fn()
+                        }
+                    }
+                }
+            },
+            children: ['<p class="paragraphNumeroUno">hello</p>'],
+            classList: ["cypress-editable", "mce-content-body", "mce-edit-focus", 'place-holder']
+        }
+        tinymce.activeEditor = {
+            innerHTML: '<p class="paragraphNumeroUno">hello</p>',
+            innerText: "hello",
+            textContent: "hello",
+            outerHTML: '<div id="cypress-0" class="cypress-editable mce-content-body mce-edit-focus" placeholder="Type Something..." contenteditable="true" style="caret-color: black;" spellcheck="false"><p class="paragraphNumeroUno">hello</p></div>',
+            selection: {
+                getStart: () => {
+                    return tinymce.activeEditor.innerHTML;
+                },
+                getContent:() => {
+                    return '<p class="paragraphNumeroUno">hello</p>'
+                }
+            },
+            children: ['p.paragraphNumeroUno'],
+            classList: ["cypress-editable", "mce-content-body", "mce-edit-focus"]
+        }
+        config.savingInProgress= false
+        let props = {
+            permissions: permissions,
+            slateLockInfo: {
+                isLocked: false,
+                userId: 'c5Test02'
+            },
+            tagName: "p",
+            className: "",
+            index: 1,
+            element: elementData.popUp,
+            model: elementData.popUp.html,
+            handleBlur: jest.fn(),
+            onListSelect: jest.fn(),
+            learningObjectiveOperations: jest.fn(),
+            elementId: elementData.popUp.id,
+            openAssetPopoverPopUp: jest.fn(),
+            placeholder: "Enter you text here",
+            handleEditorFocus: jest.fn(),
+            openGlossaryFootnotePopUp: jest.fn(),
+            showHideType:jest.fn(),
+            currentElement:{
+                id:""
+            }
+        }
+        const component = mount(<TinyMceEditor {...props} />)
+        let instance=component.instance()
+        const spyaddFootnote = jest.spyOn(instance, 'addFootnote')
+        instance.addFootnote(editor);
+        expect(spyaddFootnote).toHaveBeenCalled()
+    });
+    it('Test addFootnote witth saving call false except for popup', () => {
+        let event = {
+            preventDefault: () => { },
+            stopPropagation: () => { }
+        }
+        let editor = {
+            on: (temp, cb) => { cb(event) },
+            targetElm: {
+                findChildren: () => {
+                    return {
+                        length: 0
+                    };
+                },
+                dispatchEvent: () => { }
+            },
+            selection: {
+                bookmarkManager: {
+                    moveToBookmark: jest.fn(),
+                    getBookmark: jest.fn()
+                },
+                getStart: () => {
+                    
+                }
+            },
+            insertContent:()=>{
+                return '<sup><a href="#" id = "${res.data.id}" data-uri="${res.data.id}" data-footnoteelementid="${res.data.id}" class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>'
+            },
+            dom: {
+                getParent: () => {
+                    return {
+                        innerHTML: '<p class="paragraphNumeroUno place-holder">hello<ol></ol><ul></ul></p>',
+                        children: [
+                            {
+                                tagName: 'BR'
+                            }
+                        ],
+                        innerText: "hello",
+                        querySelectorAll: jest.fn(),
+                        classList: {
+                            remove:jest.fn()
+                        }
+                    }
+                }
+            },
+            children: ['<p class="paragraphNumeroUno">hello</p>'],
+            classList: ["cypress-editable", "mce-content-body", "mce-edit-focus", 'place-holder']
+        }
+        tinymce.activeEditor = {
+            innerHTML: '<p class="paragraphNumeroUno">hello</p>',
+            innerText: "hello",
+            textContent: "hello",
+            outerHTML: '<div id="cypress-0" class="cypress-editable mce-content-body mce-edit-focus" placeholder="Type Something..." contenteditable="true" style="caret-color: black;" spellcheck="false"><p class="paragraphNumeroUno">hello</p></div>',
+            selection: {
+                getStart: () => {
+                    return tinymce.activeEditor.innerHTML;
+                },
+                getContent:() => {
+                    return '<p class="paragraphNumeroUno">hello</p>'
+                }
+            },
+            children: ['p.paragraphNumeroUno'],
+            classList: ["cypress-editable", "mce-content-body", "mce-edit-focus"]
+        }
+        config.savingInProgress= false
+        let props = {
+            permissions: permissions,
+            slateLockInfo: {
+                isLocked: false,
+                userId: 'c5Test02'
+            },
+            tagName: "p",
+            className: "",
+            index: 1,
+            element: elementData.paragraph,
+            model: elementData.paragraph.html,
+            handleBlur: jest.fn(),
+            onListSelect: jest.fn(),
+            learningObjectiveOperations: jest.fn(),
+            elementId: elementData.paragraph.id,
+            openAssetPopoverPopUp: jest.fn(),
+            placeholder: "Enter you text here",
+            handleEditorFocus: jest.fn(),
+            openGlossaryFootnotePopUp: jest.fn(),
+            showHideType:jest.fn(),
+            currentElement:{
+                id:""
+            }
+        }
+        const component = mount(<TinyMceEditor {...props} />)
+        let instance=component.instance()
+        const spyaddFootnote = jest.spyOn(instance, 'addFootnote')
+        instance.addFootnote(editor);
+        expect(spyaddFootnote).toHaveBeenCalled()
+    });
+    xit('Test addGlossary ', () => {
+        let event = {
+            preventDefault: () => { },
+            stopPropagation: () => { }
+        }
+        let editor = {
+            on: (temp, cb) => { cb(event) },
+            targetElm: {
+                findChildren: () => {
+                    return {
+                        length: 0
+                    };
+                },
+                dispatchEvent: () => { }
+            },
+            selection: {
+                bookmarkManager: {
+                    moveToBookmark: jest.fn(),
+                    getBookmark: jest.fn()
+                },
+                getStart: () => { },
+                getContent: () => { }
             },
             insertContent:()=>{
                 return '<dfn data-uri= ${res.data.id} class="Pearson-Component GlossaryTerm">${selectedText}</dfn>'
@@ -2131,5 +2797,157 @@ describe('Testing -Editor Key events', () => {
         instance.addGlossary(editor);
         expect(spyaddGlossary).toHaveBeenCalled()
     });
+    xit('Test saveContent   method for ', () => {
+      
+        const spyhandleBlur = jest.spyOn(instance, 'saveContent')
+        instance.saveContent();
+        expect(spyhandleBlur).toHaveBeenCalled(event);
+        spyhandleBlur.mockClear()
+    });
+    it('Test learningObjectiveDropdown   method for ', () => {
+      
+        const spyhandleBlur = jest.spyOn(instance, 'learningObjectiveDropdown')
+        instance.learningObjectiveDropdown("add");
+        expect(spyhandleBlur).toHaveBeenCalled();
+        spyhandleBlur.mockClear()
+    });
+    it('Test handleClick method for ', () => {
+        let newPermissions = [
+            "login", "logout"]
+        let props = {
+            permissions: newPermissions,
+            slateLockInfo: {
+                isLocked: false,
+                userId: 'c5Test02'
+            },
+            tagName: "p",
+            className: "",
+            index: 1,
+            element: elementData.showHide,
+            model: elementData.showHide.html,
+            handleBlur: jest.fn(),
+            onListSelect: jest.fn(),
+            learningObjectiveOperations: jest.fn(),
+            elementId: elementData.showHide.id,
+            openAssetPopoverPopUp: jest.fn(),
+            placeholder: "Enter you text here",
+            handleEditorFocus: jest.fn(),
+            openGlossaryFootnotePopUp: jest.fn(),
+            showHideType:jest.fn()
+        }
+        const component = mount(<TinyMceEditor {...props} />)
+        let instance = component.instance();
+      
+        let event={
+            clientX:jest.fn(),
+            clientY:jest.fn(),
+            currentTarget:{id:"123", focus: jest.fn()},
+            target: {
+                parentElement: {
+                    nodeName: 'SUP'
+                },
+                dataset: {
+                    uri: "abcd"
+                }
+            }
+        }
+        
+        tinymce.activeEditor = {
+            id: "",
+            targetElm:{
+                closest: jest.fn(),
+                getAttribute:() => {
+                    return {
+                        length: 0
+                    };
+                },
+                setAttribute:()=>{
+                    return{
+                        length:1
+                    }
+                },
+                dispatchEvent: () => { }
+            }
+        }
+        instance.glossaryBtnInstance = {
+            setDisabled: () => { }
+        }
+        const spyhandleBlur = jest.spyOn(instance, 'handleClick')
+        instance.handleClick(event);
+        expect(spyhandleBlur).toHaveBeenCalled();
+        spyhandleBlur.mockClear()
+        
+        
+    });
+    it('Test handleClick different target method for ', () => {
+        let newPermissions = [
+            "login", "logout"]
+        let props = {
+            permissions: newPermissions,
+            slateLockInfo: {
+                isLocked: false,
+                userId: 'c5Test02'
+            },
+            tagName: "p",
+            className: "",
+            index: 1,
+            element: elementData.showHide,
+            model: elementData.showHide.html,
+            handleBlur: jest.fn(),
+            onListSelect: jest.fn(),
+            learningObjectiveOperations: jest.fn(),
+            elementId: elementData.showHide.id,
+            openAssetPopoverPopUp: jest.fn(),
+            placeholder: "Enter you text here",
+            handleEditorFocus: jest.fn(),
+            openGlossaryFootnotePopUp: jest.fn(),
+            showHideType:jest.fn()
+        }
+        const component = mount(<TinyMceEditor {...props} />)
+        let instance = component.instance();
+      
+        let event={
+            clientX:jest.fn(),
+            clientY:jest.fn(),
+            currentTarget:{id:"89966",focus:jest.fn()},
+            target: {
+                parentElement: {
+                    nodeName: 'SUP'
+                },
+                dataset: {
+                    uri: "abcd"
+                }
+            }
+        }
+        
+        tinymce.activeEditor = {
+            id: "",
+            targetElm:{
+                closest: jest.fn(),
+                getAttribute:() => {
+                    return {
+                        length: 0
+                    };
+                },
+                setAttribute:()=>{
+                    return{
+                        length:1
+                    }
+                },
+                dispatchEvent: () => { }
+            }
+        }
+        instance.glossaryBtnInstance = {
+            setDisabled: () => { }
+        }
+        const spyhandleBlur = jest.spyOn(instance, 'handleClick')
+        instance.handleClick(event);
+        expect(spyhandleBlur).toHaveBeenCalled();
+        spyhandleBlur.mockClear()
+        
+        
+    });
+   
 })
+
 

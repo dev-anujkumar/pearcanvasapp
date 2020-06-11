@@ -374,8 +374,19 @@ export const generateAssessmentData = (index, previousElementData, elementType, 
     
 
     dataToSend.figuredata.elementdata.assessmentid = getAsid ? getAsid : "";
-    dataToSend.figuredata.id = getAsid ? getAsid : "";                             //PCAT-6792 fixes
-    dataToSend.figuredata.elementdata.posterimage.imageid = getAsid ? getAsid : ""; //PCAT-6792 fixes
+    // dataToSend.figuredata.id = getAsid ? getAsid : "";   //PCAT-6792 fixes
+    // dataToSend.figuredata.elementdata.posterimage.imageid = getAsid ? getAsid : ""; //PCAT-6792 fixes
+
+    /** [PCAT-7961] | case(1) - As no unique figuredata.id is present for the assessment,the  'figuredata.id' key is removed */
+    if (previousElementData && previousElementData.figuredata && (previousElementData.figuredata.id || previousElementData.figuredata.id == "")) {
+        delete previousElementData.figuredata.id;
+    }
+    /** [PCAT-7961] | case(2) - As no image is present for the assessment,the  'posterimage' key is removed */
+    let isPosterImage = previousElementData && previousElementData.figuredata && previousElementData.figuredata.elementdata && previousElementData.figuredata.elementdata.posterimage                          
+    if(isPosterImage){
+         delete previousElementData.figuredata.elementdata.posterimage
+    }
+
 
     let usageType = document.querySelector(assessmentNodeSelector + 'span.singleAssessment_Dropdown_currentLabel').innerText;
     dataToSend.figuredata.elementdata.usagetype = usageType;
@@ -402,12 +413,38 @@ export const generateAssessmentSlateData = (index, previousElementData, elementT
 }
 
 /**
+ * Data preparation for Citation element
+ * @param {*} index 
+ * @param {*} previousElementData 
+ * @param {*} elementType 
+ * @param {*} primaryOption 
+ * @param {*} secondaryOption 
+ */
+const generateCitationElementData = (index, previousElementData, elementType, primaryOption, secondaryOption, node, parentElement) => {
+    let { innerHTML, innerText } = node;
+    let citationElementData = {
+        ...previousElementData,
+        elementdata : {
+            text : innerText
+        },
+        html : {
+            text : innerHTML
+        },
+        inputType : elementTypes[elementType][primaryOption]['enum'],
+        inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
+        slateUrn : parentElement.id,
+        parentType : parentElement.type
+    }
+    return citationElementData
+}
+
+/**
  * Detects postertext/reveal answer section of ShowHide and check for empty content in it
  * @param {*} showHideType Section in ShowHide
  * @param {*} node HTML node containing content
  */
 const validateRevealAnswerData = (showHideType, node, elementType) => {
-    if(showHideType && showHideType === "postertextobject" && !node.innerText.trim().length){
+    if(showHideType && showHideType === "postertextobject" && !(node.innerText.trim().length || node.innerHTML.match(/<img/))){
         return {
             innerHTML : "<p class=\"paragraphNumeroUno\">Reveal Answer:</p>",
             innerText : "Reveal Answer:"
@@ -438,15 +475,16 @@ const validateRevealAnswerData = (showHideType, node, elementType) => {
  * @param {*} index 
  * @param {*} containerContext 
  */
-export const createUpdatedData = (type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext,parentElement,showHideType,asideData) => {
+export const createUpdatedData = (type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext,parentElement,showHideType,asideData, poetryData) => {
     let dataToReturn = {}
     switch (type){
         case elementTypeConstant.AUTHORED_TEXT:
         case elementTypeConstant.LEARNING_OBJECTIVE_ITEM:
         case elementTypeConstant.BLOCKFEATURE:
         case elementTypeConstant.ELEMENT_LIST:
+        case elementTypeConstant.POETRY_STANZA:
             tinyMCE.$(node).find('.blockquote-hidden').remove();
-            let { innerHTML, innerText } = node;
+            let innerHTML, innerText;
             let revealTextData = validateRevealAnswerData(showHideType, node, type)
             innerHTML = revealTextData.innerHTML
             innerText = revealTextData.innerText
@@ -460,13 +498,17 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                     footnotes : previousElementData.html.footnotes || {},
                     glossaryentries : previousElementData.html.glossaryentries || {},
                 },
-                inputType : parentElement && (parentElement.type === "popup" || parentElement.type === "showhide" && previousElementData.type === "element-authoredtext") ? "AUTHORED_TEXT" : elementTypes[elementType][primaryOption]['enum'],
-                inputSubType : parentElement && parentElement.type == "popup" ? "NA" : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
+                inputType : parentElement && (parentElement.type === "popup" || parentElement.type === "citations" || parentElement.type === "showhide" && previousElementData.type === "element-authoredtext" || parentElement.type === "poetry" && previousElementData.type === "element-authoredtext") ? "AUTHORED_TEXT" : elementTypes[elementType][primaryOption]['enum'],
+                inputSubType : parentElement && (parentElement.type == "popup" || parentElement.type === "poetry") ? "NA" : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
                 slateUrn: parentElement && (parentElement.type === "showhide" || parentElement.type === "popup") ? parentElement.id: config.slateManifestURN  
             }
-            
+
+            if(type==="stanza"){
+                dataToReturn.html.text=`<p>${innerHTML}</p>`
+                delete dataToReturn.poetrylines;
+            } 
             if(parentElement && parentElement.type === "popup"){
-                dataToReturn.popupEntityUrn = parentElement.contentUrn;
+                dataToReturn.elementParentEntityUrn = parentElement.contentUrn;
                 if(parentElement.popupdata["formatted-title"] && parentElement.popupdata["formatted-title"]["id"] === previousElementData.id){
                     dataToReturn.metaDataField = "formattedTitle";
                 } 
@@ -476,8 +518,26 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                 else if(parentElement.popupdata["postertextobject"][0]["id"] === previousElementData.id){
                     dataToReturn.section = "postertextobject";
                 }
-            }
-            if(parentElement && parentElement.type === "showhide" && showHideType){
+            } else if(parentElement && parentElement.type === "poetry"){
+                // dataToReturn.poetryEntityUrn = parentElement.contentUrn;
+                if(parentElement.contents && parentElement.contents["formatted-title"] && parentElement.contents["formatted-title"]["id"] === previousElementData.id){
+                    dataToReturn["metaDataField"] = "formattedTitle";
+                } 
+                /* else if(parentElement.contents && parentElement.contents["formatted-subtitle"] && parentElement.contents["formatted-subtitle"]["id"] === previousElementData.id){
+                    dataToReturn["metaDataField"] = "formattedSubtitle";
+                } */
+                // else if(parentElement.contents && parentElement.contents["formatted-caption"] && parentElement.contents["formatted-caption"]["id"] === previousElementData.id){
+                //     dataToReturn.updatepoetryField = "formattedCaption";
+                // }
+                else if(parentElement.contents && parentElement.contents["creditsarray"] && parentElement.contents["creditsarray"].length && parentElement.contents["creditsarray"][0]["id"] === previousElementData.id){
+                    dataToReturn["section"] = "creditsarray";
+                }
+                dataToReturn["elementParentEntityUrn"] = parentElement.contentUrn
+                
+            } else if(parentElement && parentElement.type === "citations") {
+                dataToReturn["metaDataField"] = "formattedTitle"
+                dataToReturn["elementParentEntityUrn"] = parentElement.contentUrn
+            } else if(parentElement && parentElement.type === "showhide" && showHideType){
                 dataToReturn.section = showHideType;
             }
             break;
@@ -532,6 +592,9 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
         case elementTypeConstant.ASSESSMENT_SLATE:
             dataToReturn = generateAssessmentSlateData(index, previousElementData, elementType, primaryOption, secondaryOption)
             break;
+        case elementTypeConstant.CITATION_ELEMENT:
+            dataToReturn = generateCitationElementData(index, previousElementData, elementType, primaryOption, secondaryOption, node, parentElement)
+            break;
     }
     dataToReturn.slateUrn = config.slateManifestURN;
     if (previousElementData.status == "approved") {
@@ -542,7 +605,9 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
             dataToReturn.parentEntityId = asideData.contentUrn;
         } else if (parentElement && parentElement.type === "showhide" && showHideType && parentElement.contentUrn) {
             dataToReturn.parentEntityId = parentElement.contentUrn;
-        }
+        } else if (poetryData && poetryData.contentUrn) {
+            dataToReturn.parentEntityId = poetryData.contentUrn;
+        } 
     }
     dataToReturn = { ...dataToReturn, index: index.toString().split('-')[index.toString().split('-').length - 1] }
     return dataToReturn

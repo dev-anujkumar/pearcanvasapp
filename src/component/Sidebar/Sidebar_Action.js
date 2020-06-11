@@ -81,22 +81,23 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             assessmentItemType = "tdxAssessmentItem";
         }
         // oldElementData['html']['title'] = "";
-        oldElementData.figuredata.id = "";                                              //PCAT-6792 fixes
-        oldElementData.figuredata.elementdata.posterimage.imageid = "";
+        // oldElementData.figuredata.id = "";                                           //PCAT-6792 fixes
+        // oldElementData.figuredata.elementdata.posterimage.imageid = "";              //PCAT-7961 fixes
         oldElementData.figuredata.elementdata.assessmentid = "";
         oldElementData.figuredata.elementdata.assessmentitemid = "";
         oldElementData.figuredata.elementdata.assessmentformat=assessmentFormat;
         oldElementData.figuredata.elementdata.assessmentitemtype=assessmentItemType;
-        oldElementData.html.title="";
+        oldElementData && oldElementData.html && oldElementData.html.title ? oldElementData.html.title ="": null;
         oldElementData && oldElementData.title && oldElementData.title.text ? oldElementData.title.text ="": null;
-        // if(assessmentFormat==="puf"){
-        //     delete oldElementData.figuredata.elementdata.posterimage
-        // }else{
-        //     oldElementData.figuredata.elementdata.posterimage ={
-        //         imageid : "",
-        //         path: "https://cite-media-stg.pearson.com/legacy_paths/8efb9941-4ed3-44a3-8310-1106d3715c3e/FPO-assessment.png"
-        //     }
-        // }
+        /** [PCAT-7961] | case(1) - As no unique figuredata.id is present for the assessment,the  'figuredata.id' key is removed */
+        if (oldElementData && oldElementData.figuredata && (oldElementData.figuredata.id || oldElementData.figuredata.id=="")) {
+            delete oldElementData.figuredata.id;
+        }
+        /** [PCAT-7961] | case(2) - As no image is present for the assessment,the  'posterimage' key is removed */
+        let isPosterImage = oldElementData && oldElementData.figuredata && oldElementData.figuredata.elementdata && oldElementData.figuredata.elementdata.posterimage
+        if(isPosterImage){
+            delete oldElementData.figuredata.elementdata.posterimage
+        }
     }
     /**
      * Patch [code in If block] - in case list is being converted from toolbar and there are some unsaved changes in current element
@@ -113,6 +114,9 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         let domHtml = editableDom ? editableDom.innerHTML : "<ol></ol>"
         if(showHideObj){
             containerDom = document.getElementById(`cypress-${showHideObj.index}`)
+            if(containerDom){
+                tinyMCE.$(containerDom).find('ol').removeAttr('data-mce-style')
+            }
             domHtml = containerDom ? containerDom.innerHTML : "<ol></ol>"
         }
         if (storeHtml !== domHtml) {
@@ -261,18 +265,37 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         let storeElement = store[config.slateManifestURN];
         let bodymatter = storeElement.contents.bodymatter;
         let focusedElement = bodymatter;
-        indexes.forEach(index => {
-            if(focusedElement[index]){
-            if(newElementData.elementId === focusedElement[index].id) {
-                focusedElement[index] = res.data
-            } else {
-                if(('elementdata' in focusedElement[index] && 'bodymatter' in focusedElement[index].elementdata) || ('contents' in focusedElement[index] && 'bodymatter' in focusedElement[index].contents) || 'interactivedata' in bodymatter[index]) {
-                    //  focusedElement = focusedElement[index].elementdata.bodymatter;
-                    focusedElement = focusedElement[index].elementdata && focusedElement[index].elementdata.bodymatter ||  focusedElement[index].contents && focusedElement[index].contents.bodymatter ||  bodymatter[index].interactivedata[showHideObj.showHideType]
+        //Separate case for element conversion in showhide
+        if (showHideObj) {//newElementData.asideData && newElementData.asideData.hasOwnProperty('type') &&
+            switch (indexes.length) {
+                case 3:
+                    /**
+                     * [PCAT-7808] | Conversion to a List element in Show is not reflected immediately on converting the element type after versioning. 
+                     *             Browser refresh is required for the element to be converted to a list in canvas.
+                     */
+                    focusedElement[indexes[0]].interactivedata[showHideObj.showHideType][indexes[2]] = res.data
+                    break;
+                case 4:
+                    focusedElement[indexes[0]].elementdata.bodymatter[indexes[1]].interactivedata[showHideObj.showHideType][indexes[3]] = res.data
+                    break
+                case 5:
+                    focusedElement[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].interactivedata[showHideObj.showHideType][indexes[4]] = res.data
+                    break
+            }
+        } else {
+            indexes.forEach(index => {
+                if(focusedElement[index]){
+                if(newElementData.elementId === focusedElement[index].id) {
+                    focusedElement[index] = res.data
+                } else {
+                    if(('elementdata' in focusedElement[index] && 'bodymatter' in focusedElement[index].elementdata) || ('contents' in focusedElement[index] && 'bodymatter' in focusedElement[index].contents) || 'interactivedata' in bodymatter[index]) {
+                        //  focusedElement = focusedElement[index].elementdata.bodymatter;
+                        focusedElement = focusedElement[index].elementdata && focusedElement[index].elementdata.bodymatter ||  focusedElement[index].contents && focusedElement[index].contents.bodymatter ||  bodymatter[index].interactivedata[showHideObj.showHideType]
+                    }
                 }
             }
+            });
         }
-        });
         store[config.slateManifestURN].contents.bodymatter = bodymatter;//res.data;
         let altText="";
         let longDesc="";
@@ -283,7 +306,6 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
 
         let activeElementObject = {
             elementId: res.data.id,
-            // elementId: newElementData.elementId,
             index: indexes.join("-"),
             elementType: newElementData.elementType,
             primaryOption: newElementData.primaryOption,
@@ -299,18 +321,24 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             payload: store
         });
 
+        /**
+         * PCAT-7902 || ShowHide - Content is removed completely when clicking the unordered list button twice.
+         * Setting the correct active element to solve this issue.
+         */
+        if(showHideObj && res.data.type === "element-authoredtext"){
+            activeElementObject = {
+                ...activeElementObject,
+                primaryOption: "primary-paragraph",
+                secondaryOption: "secondary-paragraph",
+                tag: "P",
+                toolbar: [],
+                elementWipType: "element-authoredtext"
+            }
+        }
         dispatch({
             type: SET_ACTIVE_ELEMENT,
             payload: activeElementObject
         });
-
-        if(activeElementObject.primaryOption === "primary-showhide"){
-           let showHideRevealElement = document.getElementById(`cypress-${indexes[0]}-2-0`)
-           if(showHideRevealElement){
-                showHideRevealElement.focus()
-                showHideRevealElement.blur()
-           } 
-        }
     })
     
     .catch(err =>{
@@ -336,20 +364,37 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
         let indexes = activeElement.index;
         indexes = indexes.toString().split("-");
         
-        indexes.forEach(index => {
-            if(bodymatter[index]){
-                if(elementData.elementId === bodymatter[index].id) {
-                    dispatch(convertElement(bodymatter[index], elementData, activeElement, store, indexes, fromToolbar,showHideObj));
-                } else {
-                    if( bodymatter[index] && (('elementdata' in bodymatter[index] && 'bodymatter' in bodymatter[index].elementdata) || ('contents' in bodymatter[index] && 'bodymatter' in bodymatter[index].contents) || 'interactivedata' in bodymatter[index])) {
-                        
-                        bodymatter = bodymatter[index].elementdata && bodymatter[index].elementdata.bodymatter ||   bodymatter[index].contents && bodymatter[index].contents.bodymatter ||  bodymatter[index].interactivedata[showHideObj.showHideType]
-                    }
-                    
-                }
+        //Separate case for element conversion in showhide
+        if(showHideObj) {
+            let oldElementData
+            switch(indexes.length) {
+                case 3:
+                    oldElementData = bodymatter[indexes[0]].interactivedata[showHideObj.showHideType][indexes[2]]
+                    break;
+                case 4:
+                    oldElementData = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].interactivedata[showHideObj.showHideType][indexes[3]]
+                    break;
+                case 5:
+                    oldElementData = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].interactivedata[showHideObj.showHideType][indexes[4]]
+                    break;
             }
-       
-        });
+            dispatch(convertElement(oldElementData, elementData, activeElement, store, indexes, fromToolbar, showHideObj))
+        } else {
+            indexes.forEach(index => {
+                if(bodymatter[index]){
+                    if(elementData.elementId === bodymatter[index].id) {
+                        dispatch(convertElement(bodymatter[index], elementData, activeElement, store, indexes, fromToolbar,showHideObj));
+                    } else {
+                        if( bodymatter[index] && (('elementdata' in bodymatter[index] && 'bodymatter' in bodymatter[index].elementdata) || ('contents' in bodymatter[index] && 'bodymatter' in bodymatter[index].contents) || 'interactivedata' in bodymatter[index])) {
+                            
+                            bodymatter = bodymatter[index].elementdata && bodymatter[index].elementdata.bodymatter ||   bodymatter[index].contents && bodymatter[index].contents.bodymatter ||  bodymatter[index].interactivedata[showHideObj.showHideType]
+                        }
+                        
+                    }
+                }
+            
+            });
+        }
     }
     
     return store;

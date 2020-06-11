@@ -20,11 +20,19 @@ describe('Filter Assessment component', () => {
         resetPage:jest.fn()
 
     }
-    let store = mockStore();
+    let initialState={
+        citeTdxReducer:{
+            sortBy:"name",
+            sortOrder:1
+        }
+    }
+    let store = mockStore(initialState);
     const component = mount(<Provider store={store}><FilterAssessmentData {...props} /></Provider>);
     let componentInstance = component.find('FilterAssessmentData').instance();
     const spyHandleChange = jest.spyOn(componentInstance, 'handleChange')
     const spyHandleSearch = jest.spyOn(componentInstance, 'handleSearch')
+    const spyhandleBlur = jest.spyOn(componentInstance, 'handleBlur')
+    const spyhandleFocus = jest.spyOn(componentInstance, 'handleFocus')
 
     it('renders without crashing', () => {
         expect(component).toHaveLength(1);
@@ -49,6 +57,28 @@ describe('Filter Assessment component', () => {
         componentInstance.handleSearch(event);
         expect(spyHandleSearch).toHaveBeenCalled()
         spyHandleSearch.mockClear()
+    })
+    it('handleBlur Function', () => {
+        const event = {
+            preventDefault() { },
+            target:{
+                id:"assessTitleFocus"
+            },
+        }
+        componentInstance.handleBlur(event);
+        expect(spyhandleBlur).toHaveBeenCalled()
+        spyhandleBlur.mockClear()
+    })
+    it('handleFocus Function', () => {
+        const event = {
+            target:{
+                id:"assessUUIDFocus"
+            },
+            preventDefault() { }
+        }
+        componentInstance.handleFocus(event);
+        expect(spyhandleFocus).toHaveBeenCalled()
+        spyhandleFocus.mockClear()
     })
 
 });

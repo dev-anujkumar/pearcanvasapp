@@ -15,7 +15,8 @@ const mockStore = configureMockStore(middlewares);
 describe('Tests Slate Wrapper Actions', () => {
     let store;
     let initialState={appStore : {}};
-
+    let store2;
+    let initialState2={appStore : {}};
     beforeEach(() => {
         initialState = {
             appStore : {
@@ -30,7 +31,20 @@ describe('Tests Slate Wrapper Actions', () => {
             }
         };
         store = mockStore(() => initialState);
+        initialState2 = {
+            appStore : {
+                slateLevelData: createstoreWithFigure.slateLevelData,
+                activeElement: {},
+                splittedElementIndex: 0,
+                pageNumberData: {},
+                popupSlateData: {
+                    type: ""
+                }
+            }
+        };
+        store2 = mockStore(() => initialState2);
         moxios.install();
+        
     });
     afterEach(() => moxios.uninstall());
 
@@ -201,11 +215,135 @@ describe('Tests Slate Wrapper Actions', () => {
         return store.dispatch(actions.createElement(type, index, parentUrn, {},0)).then(() => {
             let { type, payload } = store.getActions()[0];
 
-            console.log("data:::", payload.slateLevelData[config.slateManifestURN].contents.bodymatter);
-            console.log("===========================================")
-            console.log("expected:::", expectedActions.payload.slateLevelData[config.slateManifestURN].contents.bodymatter);
+          //  console.log("data:::", payload.slateLevelData[config.slateManifestURN].contents.bodymatter);
+         //   console.log("===========================================")
+         //   console.log("expected:::", expectedActions.payload.slateLevelData[config.slateManifestURN].contents.bodymatter);
             expect(type).toBe(expectedActions.type);
             expect(payload).toStrictEqual(expectedActions.payload);
+        });
+    });
+    it('testing------- Create Element ------action -Citation Element', () => {
+        //let store = mockStore(() => initialState);
+        config.slateManifestURN = "urn:pearson:manifest:d91706aa-0e9b-4015-aaef-fb3a9cf46ec0";
+        config.projectUrn = "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f"
+        config.slateEntityURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5"
+        const slateLevelData = createstoreWithFigure.slateLevelData2
+        const expectedActions = {
+            type: AUTHORING_ELEMENT_CREATED,
+            payload: { slateLevelData }
+
+        };
+        let citationData=                    {
+            "id": "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e",
+            "schema": "http://schemas.pearson.com/wip-authoring/citations/1",
+            "type": "citations",
+            "contents": {
+                "formatted-title": {
+                    "id":"urn:pearson:work:3247d017-9f4b-4260-b3f2-7d9b175ccd76","type":"element-authoredtext","schema":"http://schemas.pearson.com/wip-authoring/element/1","elementdata":{"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext","text":""},"html":{"text":`This is the optional title for Citations. It would be taken from the element-authoredtext object referenced by the formatted-title.`},"versionUrn":"urn:pearson:work:3247d017-9f4b-4260-b3f2-7d9b175ccd76","contentUrn":"urn:pearson:entity:0ab3a13b-4045-4389-b8da-911e2e2701d7","status":"wip","tcm":false,"feedback":false,"comments":false
+                },
+                "bodymatter": [
+                {
+                    "id": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635",
+                    "type": "element-citation",
+                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                    "elementdata": {
+                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                        "text": "Allport, G. W., &amp; Odbert, H. S. (1936). Trait names: A psycho-lexical study. Psychological Monographs, 47(211).",
+                        "textsemantics":
+                        [
+                            {
+                                "type": "strong",
+                                "charStart": 81,
+                                "charEnd": 105
+                            }
+                        ]
+                    },
+                    "html" : {
+                        "text":`<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4d" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635">Allport, G. W., &amp; Odbert, H. S. (1936). Trait names: A psycho-lexical study. <em>Psychological Monographs,</em> 47(211). The CITE classes for the containing the WiP's "element-citation" content should be decided based on the context of usage as described below. It follows the same logic as when paragraphNumeroUno and paragraphNummerEins. If the citation grouping.</p>`
+                    },
+                    "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4d",
+                    "versionUrn": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635"
+                },
+                {
+                    "id": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636",
+                    "type": "element-citation",
+                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                    "elementdata": {
+                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                        "text": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
+                    },
+                    "html" : {
+                        "text":`<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4e" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</p>`
+                    },
+                    "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4e",
+                    "versionUrn": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636"
+                },
+                {id: "urn:pearson:work:005d9c0a-c549-41bb-8d60-7ea1cd80e4a5",
+                type: "element-citation",
+                schema: "http://schemas.pearson.com/wip-authoring/element/1",
+                elementdata: {schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", text: ""},
+                html: {text: '<p class="paragraphNumeroUnoCitation"><br></p>'},
+                versionUrn: "urn:pearson:work:005d9c0a-c549-41bb-8d60-7ea1cd80e4a5",
+                contentUrn: "urn:pearson:entity:5aa8dad2-5ea4-4d69-8383-d71def8615fb",
+                status: "wip",
+                tcm: true,
+                feedback: false,
+                comments: false},
+                {
+                    "id": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27637",
+                    "type": "element-citation",
+                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                    "elementdata": {
+                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                        "text": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
+                    },
+                    "html" : {
+                        "text":`<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4e" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</p>`
+                    },
+                    "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r43",
+                    "versionUrn": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27637"
+                }
+            ]
+            },
+            "contentUrn": "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5",
+            "versionUrn": "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e"
+        }
+        let resData ={
+            id: "urn:pearson:work:005d9c0a-c549-41bb-8d60-7ea1cd80e4a5",
+            type: "element-citation",
+            schema: "http://schemas.pearson.com/wip-authoring/element/1",
+            elementdata: { schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", text: "" },
+            html: { text: '<p class="paragraphNumeroUnoCitation"><br></p>' },
+            versionUrn: "urn:pearson:work:005d9c0a-c549-41bb-8d60-7ea1cd80e4a5",
+            contentUrn: "urn:pearson:entity:5aa8dad2-5ea4-4d69-8383-d71def8615fb",
+            status: "wip",
+            tcm: true,
+            feedback: false,
+            comments: false
+        }
+        moxios.wait(() => {
+            const request = moxios.requests.mostRecent();
+            request.respondWith({
+                status: 200,
+                response: {
+                    data: resData
+                }
+            });
+        });
+        let  parentUrn2= {
+            elementType: "citations",
+            manifestUrn:"urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e",
+            contentUrn: "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5"
+        }
+        let asideData2 = {
+            type: 'citations', 
+            id: 'urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e',
+            contentUrn: "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5",
+            element: citationData }
+        return store2.dispatch(actions.createElement("ELEMENT_CITATION", 3, parentUrn2,asideData2)).then(() => {          
+            let { type, payload } = store2.getActions()[0];
+            expect(type).toEqual(expectedActions.type);
+
         });
     });
     it('testing------- POPUP ------action when fails', () => {
@@ -242,8 +380,6 @@ describe('Tests Slate Wrapper Actions', () => {
             expect(payload).toStrictEqual(expectedActions.payload);
         });
     });
-    
-
     it('testing------- SWAP ELEMENT ------action - then', () => {
         //let store = mockStore(() => initialState);
         const type = "element-authoredtext";
@@ -272,6 +408,40 @@ describe('Tests Slate Wrapper Actions', () => {
             workedExample : false   
         }
 
+
+        const expectedActions = {
+            type: SWAP_ELEMENT
+        };
+        moxios.wait(() => {
+            const request = moxios.requests.mostRecent();
+            request.respondWith({
+                status: 200
+            });
+        });
+
+        return store.dispatch(actions.swapElement(dataObj,()=>{})).then(() => {
+            const { type } = store.getActions()[0];
+            expect(type).toBe(expectedActions.type);
+
+        });
+    });
+    it('testing------- SWAP ELEMENT ------action - then- citation element', () => {
+        let swappedElementData = {
+            "id" : "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636",
+            "contentUrn" : "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4e",
+            "type": "element-citation"
+        }
+
+        config.projectUrn = "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f"
+        config.slateEntityURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5"
+        
+        let dataObj = {
+            oldIndex : 0,
+            newIndex : 1,
+            swappedElementData : swappedElementData,
+            containerTypeElem: 'cg' ,
+            currentSlateEntityUrn:"urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5"
+        }
 
         const expectedActions = {
             type: SWAP_ELEMENT
@@ -334,7 +504,6 @@ describe('Tests Slate Wrapper Actions', () => {
         const { type } = store.getActions()[0];
         expect(type).toBe(SET_SPLIT_INDEX);
         });
-   
     it('testing------- handleSplitSlate ------action - then', () => {
 
         moxios.wait(() => {

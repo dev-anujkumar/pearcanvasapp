@@ -10,19 +10,15 @@ import ElementContainer from '../ElementContainer';
 import ElementSaprator from '../ElementSaprator';
 import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
 import { SlateFooter } from './SlateFooter.jsx';
-import {
-    createElement, swapElement,
-    setSplittedElementIndex,
-    updatePageNumber,
-    accessDenied
-} from './SlateWrapper_Actions';
+import { createElement, swapElement, setSplittedElementIndex, updatePageNumber, accessDenied } from './SlateWrapper_Actions';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader, SplitCurrentSlate } from '../../constants/IFrameMessageTypes.js';
 import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
 import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
 import config from '../../config/config';
 import { TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER, WORKED_EXAMPLE, SECTION_BREAK, METADATA_ANCHOR, LO_LIST, ELEMENT_ASSESSMENT, OPENER,
-    ALREADY_USED_SLATE , REMOVE_LINKED_AUDIO, NOT_AUDIO_ASSET, SPLIT_SLATE_WITH_ADDED_AUDIO , ACCESS_DENIED_CONTACT_ADMIN, IN_USE_BY, LOCK_DURATION, SHOW_HIDE,POP_UP, SMARTLINK } from './SlateWrapperConstants';
+    ALREADY_USED_SLATE , REMOVE_LINKED_AUDIO, NOT_AUDIO_ASSET, SPLIT_SLATE_WITH_ADDED_AUDIO , ACCESS_DENIED_CONTACT_ADMIN, IN_USE_BY, LOCK_DURATION, SHOW_HIDE,POP_UP ,
+    CITATION, ELEMENT_CITATION,SMARTLINK,POETRY ,STANZA} from './SlateWrapperConstants';
 import PageNumberElement from './PageNumberElement.jsx';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
@@ -118,17 +114,8 @@ class SlateWrapper extends Component {
         let _slateData = this.props.slateData;
         if (_slateData !== null && _slateData !== undefined) {
             if(_slateData[config.slateManifestURN] && config.slateType !== 'assessment'){
-            // if (Object.values(_slateData).length > 0 && config.slateType !== 'assessment') {
-                // let _slateObject = Object.values(_slateData)[0];
                 let _slateObject =_slateData[config.slateManifestURN];
                 let _slateContent = _slateObject.contents
-                /* if(_slateData[config.slateManifestURN].type === "popup"){
-                    _slateContent = _slateObject.popupdata
-                }
-                else {
-                    _slateContent = _slateObject.contents
-                } */
-                // let { contents: _slateContent } = _slateObject;
                 let { bodymatter: _slateBodyMatter } = _slateContent /* || _slateData.popupdata; */
                 if (_slateBodyMatter.length == 0) {
                     this.isDefaultElementInProgress = true;
@@ -150,7 +137,7 @@ class SlateWrapper extends Component {
 
     static getDerivedStateFromProps = (props, state) => {
         /** Default Red Dot indicator to false */
-        sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'false'});  
+        sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'false' });
 
         /**
          * updateTimer is for updating Time for slate refresh
@@ -171,7 +158,7 @@ class SlateWrapper extends Component {
         if (_slateObject) {
             let { id: _slateId } = _slateObject;
             if (_slateId !== state.previousSlateId) {
-                if(document.getElementById('slateWrapper')){
+                if (document.getElementById('slateWrapper')) {
                     document.getElementById('slateWrapper').scrollTop = 0;
                 }
                 _state = {
@@ -190,7 +177,7 @@ class SlateWrapper extends Component {
         /**
          * This chunk manages slatelock info
          */
-        const { slateLockInfo: { isLocked, userId, userFirstName, userLastName} } = props
+        const { slateLockInfo: { isLocked, userId, userFirstName, userLastName } } = props
         if (!isLocked) {
             _state = {
                 ..._state,
@@ -201,19 +188,19 @@ class SlateWrapper extends Component {
         if (stateChanged) {
             return _state;
         }
-        if(props.showSlateLockPopupValue){
+        if (props.showSlateLockPopupValue) {
             _state = {
-            ..._state,
-            showLockPopup: true,
-            lockOwner: userId,
-            lockOwnerName: `${userFirstName} ${userLastName}`
+                ..._state,
+                showLockPopup: true,
+                lockOwner: userId,
+                lockOwnerName: `${userFirstName} ${userLastName}`
+            }
+            return _state;
         }
-        return _state;
-    }
         else {
             return null
         }
-        
+
     }
 
     /**
@@ -571,12 +558,12 @@ class SlateWrapper extends Component {
         this.prohibitPropagation(event)
     }
 
-    splithandlerfunction = (type, index, firstOne, parentUrn, asideData, outerAsideIndex) => {
+    splithandlerfunction = (type, index, firstOne, parentUrn, asideData, outerAsideIndex ,poetryData) => {
         if (this.checkLockStatus()) {
             this.togglePopup(true)
             return false
         }
-        if(config.savingInProgress){
+        if (config.savingInProgress) {
             return false
         }
         let indexToinsert
@@ -588,33 +575,28 @@ class SlateWrapper extends Component {
             indexToinsert = Number(index + 1)
         }
         /* For showing the spinning loader send HideLoader message to Wrapper component */
-        if(type){sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });}
-        
-
+        if (type) { sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } }); }
         switch (type) {
-            case 'text-elem':
-                this.props.createElement(TEXT, indexToinsert, parentUrn, asideData,null,null,null);
-                break;
             case 'image-elem':
-                this.props.createElement(IMAGE, indexToinsert, parentUrn, asideData,null,null,null);
+                this.props.createElement(IMAGE, indexToinsert, parentUrn, asideData, null, null, null);
                 break;
             case 'audio-elem':
-                this.props.createElement(VIDEO, indexToinsert, parentUrn, asideData,null,null,null);
+                this.props.createElement(VIDEO, indexToinsert, parentUrn, asideData, null, null, null);
                 break;
             case 'interactive-elem':
-                this.props.createElement(INTERACTIVE, indexToinsert, parentUrn, asideData,null,null,null);
+                this.props.createElement(INTERACTIVE, indexToinsert, parentUrn, asideData, null, null, null);
                 break;
             case 'assessment-elem':
-                this.props.createElement(ASSESSMENT, indexToinsert, parentUrn, asideData,null,null,null);
+                this.props.createElement(ASSESSMENT, indexToinsert, parentUrn, asideData, null, null, null);
                 break;
             case 'container-elem':
-                this.props.createElement(CONTAINER, indexToinsert, parentUrn, asideData,null,null,null)
+                this.props.createElement(CONTAINER, indexToinsert, parentUrn, asideData, null, null, null)
                 break;
             case 'worked-exp-elem':
-                this.props.createElement(WORKED_EXAMPLE, indexToinsert, parentUrn,null,null,null,null)
+                this.props.createElement(WORKED_EXAMPLE, indexToinsert, parentUrn, null, null, null, null)
                 break;
             case 'opener-elem':
-                this.props.createElement(OPENER, indexToinsert, parentUrn,null,null,null,null)
+                this.props.createElement(OPENER, indexToinsert, parentUrn, null, null, null, null)
                 break;
             case 'section-break-elem':
                 parentUrn.contentUrn = asideData.contentUrn
@@ -627,33 +609,48 @@ class SlateWrapper extends Component {
                 } else {
                     outerIndex = indexToinsert;
                 }
-                this.props.createElement(SECTION_BREAK, indexToinsert, parentUrn, asideData, outerIndex,null,null)
+                this.props.createElement(SECTION_BREAK, indexToinsert, parentUrn, asideData, outerIndex, null, null)
                 break;
-                case 'metadata-anchor':
-                    if(config.slateType == "container-introduction"){
-                        this.props.createElement(LO_LIST, indexToinsert,parentUrn,null,null,null,null);
-                        
-                    }
-                    else{
-                        let LOUrn = this.props.currentSlateLOData.id?this.props.currentSlateLOData.id:this.props.currentSlateLOData.loUrn;
-                        this.props.createElement(METADATA_ANCHOR, indexToinsert,parentUrn,asideData,null,LOUrn,null)
-                    }
-                   
+            case 'metadata-anchor':
+                if (config.slateType == "container-introduction") {
+                    this.props.createElement(LO_LIST, indexToinsert, parentUrn, null, null, null, null);
+
+                }
+                else {
+                    let LOUrn = this.props.currentSlateLOData.id ? this.props.currentSlateLOData.id : this.props.currentSlateLOData.loUrn;
+                    this.props.createElement(METADATA_ANCHOR, indexToinsert, parentUrn, asideData, null, LOUrn, null)
+                }
+
                 break;
-                case 'show-hide-elem':
-                this.props.createElement(SHOW_HIDE, indexToinsert, parentUrn, asideData,null,null);
+            case 'citation-elem':
+                this.props.createElement(ELEMENT_CITATION, indexToinsert, parentUrn, asideData, null, null);
                 break;
-                case 'popup-elem':
-                this.props.createElement(POP_UP, indexToinsert, parentUrn, asideData,null,null);
+            case 'citations-group-elem':
+                this.props.createElement(CITATION, indexToinsert, parentUrn, asideData, null, null);
                 break;
-                case 'smartlink-elem':
-                    this.props.createElement(SMARTLINK, indexToinsert, parentUrn, asideData,null,null);
-                    break;
+            case 'show-hide-elem':
+                this.props.createElement(SHOW_HIDE, indexToinsert, parentUrn, asideData, null, null);
+                break;
+            case 'popup-elem':
+                this.props.createElement(POP_UP, indexToinsert, parentUrn, asideData, null, null);
+                break;
+            case 'smartlink-elem':
+                this.props.createElement(SMARTLINK, indexToinsert, parentUrn, asideData, null, null);
+                break;
+            case 'poetry-elem':
+                this.props.createElement(POETRY, indexToinsert, parentUrn,null,null,null,null,poetryData);
+                break;
+            case 'stanza-elem':
+                this.props.createElement(STANZA, indexToinsert, parentUrn,null,null,null,null,poetryData);
+                break;
+            case 'text-elem':
             default:
+                this.props.createElement(TEXT, indexToinsert, parentUrn, asideData, null, null, null);
+                break;
         }
     }
 
-    elementSepratorProps = (index, firstOne, parentUrn, asideData, outerAsideIndex) => {
+    elementSepratorProps = (index, firstOne, parentUrn, asideData, outerAsideIndex , poetryData) => {
         return [
             {
                 buttonType: 'text-elem',
@@ -674,6 +671,12 @@ class SlateWrapper extends Component {
                 tooltipDirection: 'left'
             },
             {
+                buttonType: 'poetry-elem',
+                buttonHandler: () => this.splithandlerfunction('poetry-elem',index, firstOne, parentUrn,"",outerAsideIndex,poetryData),
+                tooltipText: 'Poetry',
+                tooltipDirection: 'left'
+            },
+            {
                 buttonType: 'interactive-elem-button',
                 buttonHandler: () => this.splithandlerfunction('interactive-elem-button'),
                 tooltipText: 'Interactive',
@@ -685,10 +688,9 @@ class SlateWrapper extends Component {
                 tooltipText: 'Assessment',
                 tooltipDirection: 'left'
             },
-            
             {
-                buttonType: 'container-elem',
-                buttonHandler: () => this.splithandlerfunction('container-elem', index, firstOne, parentUrn),
+                buttonType: 'container-elem-button',
+                buttonHandler: () => this.splithandlerfunction('container-elem-button'),
                 tooltipText: 'Container',
                 tooltipDirection: 'left'
             },
@@ -716,6 +718,18 @@ class SlateWrapper extends Component {
                 tooltipText: 'Opener Element',
                 tooltipDirection: 'left'
             },
+            {
+                buttonType: 'citation-elem',
+                buttonHandler: () => this.splithandlerfunction('citation-elem', index, firstOne, parentUrn, asideData),
+                tooltipText: 'Citation Element',
+                tooltipDirection: 'left'
+            },
+            {
+                buttonType: 'stanza-elem',
+                buttonHandler: () => this.splithandlerfunction('stanza-elem', index, firstOne, parentUrn, "", outerAsideIndex, poetryData),
+                tooltipText: 'Stanza',
+                tooltipDirection: 'left'
+            }
         ]
 
     }
@@ -850,14 +864,11 @@ class SlateWrapper extends Component {
      * renderElement | renders single element according to its type
      */
     renderElement(_elements, _slateType, slateLockInfo) {
-        const { updatePageNumber, pageLoading } = this.props;
+        const { pageLoading } = this.props;
         try {
             if (_elements !== null && _elements !== undefined) {
                 this.renderButtonsonCondition(_elements);
                 return _elements.map((element, index) => {
-                    // if (element.type === "element-aside" && element.subtype !== "workedexample" && element.elementdata.bodymatter && element.elementdata.bodymatter.length === 0) {
-                    //     return null;
-                    // } else {
                         return (
                            <React.Fragment key={element.id}>
                                 {
@@ -892,7 +903,7 @@ class SlateWrapper extends Component {
                                     {
                                         (isHovered, isPageNumberEnabled, activeElement, permissions) => (
                                             <PageNumberElement pageLoading={pageLoading}
-                                                updatePageNumber={updatePageNumber}
+                                                updatePageNumber={this.props.updatePageNumber}
                                                 element={element} _slateType={_slateType}
                                                 isHovered={isHovered}
                                                 isPageNumberEnabled={isPageNumberEnabled}
@@ -920,9 +931,6 @@ class SlateWrapper extends Component {
                             </React.Fragment>
                           
                         )
-                   // }
-
-
                 })
             }
             else {
@@ -1088,7 +1096,7 @@ class SlateWrapper extends Component {
         setTimeout(() => {
             let elementDom = document.querySelector(`[data-id="${config.cachedActiveElement.element.id}"]`)
             if(elementDom){
-                elementDom.querySelector(`#cypress-${config.cachedActiveElement.index}-0`).focus()
+                elementDom.querySelector(`#cypress-${config.cachedActiveElement.index}-0`).click()
             }
         },0);
     }

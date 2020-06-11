@@ -1,5 +1,5 @@
 import * as updateFunction from '../../../src/component/ElementContainer/UpdateElements';
-import { elementAuthoredText, figureData, audioVideoData, interactiveData, mathMLData, blockCodeEditorData, singleAssessmentData, assessmentSlateData, openerElementData } from '../../../fixtures/UpdateElementsTestData';
+import { citationElementData, elementAuthoredText, figureData, audioVideoData, interactiveData, mathMLData, blockCodeEditorData, singleAssessmentData, assessmentSlateData, openerElementData,asideElementData, interactiveDataPDF,poetryElementData } from '../../../fixtures/UpdateElementsTestData';
 import tinyMCE from 'tinymce/tinymce'
 describe('Test for UpdateElements Functions', () => {
     it('Test for ELEMENT-TYPE----->element-authoredtext', () => {
@@ -112,7 +112,7 @@ describe('Test for UpdateElements Functions', () => {
                 type: 'popup',
                 id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y',
                 popupdata : {
-                    "formatted-title" : { id : "urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f3133" },
+                    "formatted-title" : { id : "urn:pearson:work:681c7a22-e40a-451f-9f87-dae336cfb2c0" },
                     "formatted-subtitle" : { id : "urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f3134" },
                     "postertextobject" : [ { id : "urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f3135" } ] ,
                 }
@@ -236,4 +236,293 @@ describe('Test for UpdateElements Functions', () => {
         updateFunction.createOpenerElementData(elementData, elementType, primaryOption, secondaryOption);
         expect(updateFunction.createOpenerElementData).toHaveBeenCalledWith(elementData, elementType, primaryOption, secondaryOption)
     })
+    it('Test for ELEMENT-TYPE----->element-citation', () => {
+        let type = "element-citation",
+            previousElementData = citationElementData,
+            node = {},
+            elementType = "citations",
+            primaryOption = "primary-citations-group",
+            secondaryOption = "secondary-citations-group",
+            activeEditorId = "cypress-0-1",
+            index = "0-1",
+            containerContext = {},
+            parentElement = {
+                type: 'citations',
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y'
+            };
+        jest.spyOn(updateFunction, 'createUpdatedData')
+        updateFunction.createUpdatedData(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement);
+        expect(updateFunction.createUpdatedData).toHaveBeenCalledWith(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement)
+    })
+    it('Test for ELEMENT-TYPE----->element-aside', () => {
+        let type = "element-aside",
+            previousElementData = asideElementData,
+            node = {},
+            elementType = "element-aside",
+            primaryOption = "primary-aside-aside",
+            secondaryOption = "secondary-aside-sb1",
+            activeEditorId = "cypress-0-1",
+            index = "0-1",
+            containerContext = {},
+            asideData={
+                contentUrn:"80"
+            },
+            parentElement = {
+                type: 'citations',
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y'
+            };
+        jest.spyOn(updateFunction, 'createUpdatedData')
+        updateFunction.createUpdatedData(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement,"",asideData);
+        expect(updateFunction.createUpdatedData).toHaveBeenCalledWith(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement,"",asideData)
+    })
+    it('Test for ELEMENT-TYPE----->element-aside with approved', () => {
+        let type = "element-aside",
+            previousElementData = asideElementData,
+            node = {},
+            elementType = "element-aside",
+            primaryOption = "primary-aside-aside",
+            secondaryOption = "secondary-aside-sb1",
+            activeEditorId = "cypress-0-1",
+            index = "0-1",
+            containerContext = {},
+            parentElement = {
+                type: 'citations',
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y'
+            };
+        jest.spyOn(updateFunction, 'createUpdatedData')
+        updateFunction.createUpdatedData(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement);
+        expect(updateFunction.createUpdatedData).toHaveBeenCalledWith(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement)
+    })
+    it('Test for ELEMENT-TYPE----->show hide', () => {
+        let type = "element-aside",
+            previousElementData = asideElementData,
+            node = {},
+            elementType = "element-aside",
+            primaryOption = "primary-aside-aside",
+            secondaryOption = "secondary-aside-sb1",
+            activeEditorId = "cypress-0-1",
+            index = "0-1",
+            containerContext = {},
+            parentElement = {
+                type: 'showhide',
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y',
+                contentUrn:"80"
+            };
+        jest.spyOn(updateFunction, 'createUpdatedData')
+        updateFunction.createUpdatedData(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement,"show");
+        expect(updateFunction.createUpdatedData).toHaveBeenCalledWith(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement,"show")
+    })
+    it('Test for ELEMENT-TYPE----->figure---->interactive pdf', () => {
+        let type = "figure",
+            previousElementData = interactiveDataPDF,
+            node = {},
+            elementType = "element-interactive",
+            primaryOption = "primary-mmi",
+            secondaryOption = "secondary-interactive-mmi",
+            activeEditorId = "cypress-7-1",
+            index = 7,
+            containerContext = {},
+            parentElement = {
+                type: 'showhide',
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y'
+            };
+        jest.spyOn(updateFunction, 'createUpdatedData')
+        updateFunction.createUpdatedData(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement);
+        expect(updateFunction.createUpdatedData).toHaveBeenCalledWith(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement)
+    })
+    it('Test for ELEMENT-TYPE----->figure---->stanza', () => {
+        let type = "stanza",
+            previousElementData = interactiveDataPDF,
+            node = {},
+            elementType = "element-interactive",
+            primaryOption = "primary-mmi",
+            secondaryOption = "secondary-interactive-mmi",
+            activeEditorId = "cypress-7-1",
+            index = 7,
+            containerContext = {},
+            parentElement = {
+                type: 'showhide',
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y'
+            };
+        jest.spyOn(updateFunction, 'createUpdatedData')
+        updateFunction.createUpdatedData(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement);
+        expect(updateFunction.createUpdatedData).toHaveBeenCalledWith(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement)
+    })
+    it('Test for ELEMENT-TYPE----->poetry', () => {
+        let type = "stanza",
+            previousElementData = poetryElementData,
+            node = {},
+            elementType = "poetry",
+            primaryOption = "primary-poetry",
+            secondaryOption = "secondary-poetry",
+            activeEditorId = "cypress-0-1",
+            index = "0-1",
+            containerContext = {},
+            parentElement = {
+                type: 'poetry',
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y'
+            };
+        jest.spyOn(updateFunction, 'createUpdatedData')
+        updateFunction.createUpdatedData(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement);
+        expect(updateFunction.createUpdatedData).toHaveBeenCalledWith(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement)
+    })
+    it('Test for ELEMENT-TYPE----->Popup subtitle', () => {
+        const element = document.createElement('div');
+        element.id = "cypress-7-1";
+        document.body.appendChild(element);
+        let type = "element-authoredtext",
+            previousElementData = elementAuthoredText,
+            node = {},
+            elementType = "element-authoredtext",
+            primaryOption = "primary-paragraph",
+            secondaryOption = "secondary-paragraph",
+            activeEditorId = "cypress-7-1",
+            index = 7,
+            containerContext = {},
+            parentElement = {
+                type: 'popup',
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y',
+                popupdata : {
+                    "formatted-title" : { id : "urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f3135" },
+                    "formatted-subtitle" : { id : "urn:pearson:work:681c7a22-e40a-451f-9f87-dae336cfb2c0" },
+                    "postertextobject" : [ { id : "urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f3135" } ] ,
+                }
+            };
+        jest.spyOn(updateFunction, 'createUpdatedData')
+        updateFunction.createUpdatedData(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement);
+        expect(updateFunction.createUpdatedData).toHaveBeenCalledWith(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement)
+    })
+    it('Test for ELEMENT-TYPE----->Popup postertextobject', () => {
+        const element = document.createElement('div');
+        element.id = "cypress-7-1";
+        document.body.appendChild(element);
+        let type = "element-authoredtext",
+            previousElementData = elementAuthoredText,
+            node = {},
+            elementType = "element-authoredtext",
+            primaryOption = "primary-paragraph",
+            secondaryOption = "secondary-paragraph",
+            activeEditorId = "cypress-7-1",
+            index = 7,
+            containerContext = {},
+            parentElement = {
+                type: 'popup',
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y',
+                popupdata : {
+                    "formatted-title" : { id : "urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f3135" },
+                    "formatted-subtitle" : { id : "urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f3135" },
+                    "postertextobject" : [ { id : "urn:pearson:work:681c7a22-e40a-451f-9f87-dae336cfb2c0" } ] ,
+                }
+            };
+        jest.spyOn(updateFunction, 'createUpdatedData')
+        updateFunction.createUpdatedData(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement);
+        expect(updateFunction.createUpdatedData).toHaveBeenCalledWith(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement)
+    })
+    it('Test for ELEMENT-TYPE----->poetry title', () => {
+        let type = "stanza",
+            previousElementData = poetryElementData,
+            node = {},
+            elementType = "poetry",
+            primaryOption = "primary-poetry",
+            secondaryOption = "secondary-poetry",
+            activeEditorId = "cypress-0-1",
+            index = "0-1",
+            containerContext = {},
+            parentElement = {
+                type: 'poetry',
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y',
+                contents : {
+                    "formatted-title" : { id : "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636" },
+                    "formatted-subtitle" : { id : "urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f3135" },
+                    "postertextobject" : [ { id : "urn:pearson:work:681c7a22-e40a-451f-9f87-dae336cfb2c0" } ] ,
+                }
+            };
+        jest.spyOn(updateFunction, 'createUpdatedData')
+        updateFunction.createUpdatedData(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement);
+        expect(updateFunction.createUpdatedData).toHaveBeenCalledWith(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement)
+    })
+    it('Test for ELEMENT-TYPE----->poetry subtitle', () => {
+        let type = "stanza",
+            previousElementData = poetryElementData,
+            node = {},
+            elementType = "poetry",
+            primaryOption = "primary-poetry",
+            secondaryOption = "secondary-poetry",
+            activeEditorId = "cypress-0-1",
+            index = "0-1",
+            containerContext = {},
+            parentElement = {
+                type: 'poetry',
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y',
+                contents : {
+                    "formatted-title" : { id : "urn:pearson:work:681c7a22-e40a-451f-9f87-dae336cfb2c0" },
+                    "formatted-subtitle" : { id : "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636" },
+                    "postertextobject" : [ { id : "urn:pearson:work:681c7a22-e40a-451f-9f87-dae336cfb2c0" } ] ,
+                }
+            };
+        jest.spyOn(updateFunction, 'createUpdatedData')
+        updateFunction.createUpdatedData(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement);
+        expect(updateFunction.createUpdatedData).toHaveBeenCalledWith(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement)
+    })
+    it('Test for ELEMENT-TYPE----->poetry credits summary', () => {
+        let type = "stanza",
+            previousElementData = poetryElementData,
+            node = {},
+            elementType = "poetry",
+            primaryOption = "primary-poetry",
+            secondaryOption = "secondary-poetry",
+            activeEditorId = "cypress-0-1",
+            index = "0-1",
+            containerContext = {},
+            parentElement = {
+                type: 'poetry',
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y',
+                contents : {
+                    "formatted-title" : { id : "urn:pearson:work:681c7a22-e40a-451f-9f87-dae336cfb2c0" },
+                    "formatted-subtitle" : { id : "urn:pearson:work:681c7a22-e40a-451f-9f87-dae336cfb2c0" },
+                    "creditsarray" : [ { id : "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636" } ] ,
+                }
+            };
+        jest.spyOn(updateFunction, 'createUpdatedData')
+        updateFunction.createUpdatedData(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement);
+        expect(updateFunction.createUpdatedData).toHaveBeenCalledWith(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement)
+    })
+    it('Test for ELEMENT-TYPE----->element-citation parent', () => {
+        let type = "element-authoredtext",
+            previousElementData = citationElementData,
+            node = {},
+            elementType = "citations",
+            primaryOption = "primary-citations-group",
+            secondaryOption = "secondary-citations-group",
+            activeEditorId = "cypress-0-1",
+            index = "0-1",
+            containerContext = {},
+            parentElement = {
+                type: 'citations',
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y'
+            };
+        jest.spyOn(updateFunction, 'createUpdatedData')
+        updateFunction.createUpdatedData(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement);
+        expect(updateFunction.createUpdatedData).toHaveBeenCalledWith(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement)
+    })
+    it('Test for ELEMENT-TYPE----->show hide parent', () => {
+        let type = "element-authoredtext",
+            previousElementData = asideElementData,
+            node = {},
+            elementType = "element-aside",
+            primaryOption = "primary-aside-aside",
+            secondaryOption = "secondary-aside-sb1",
+            activeEditorId = "cypress-0-1",
+            index = "0-1",
+            containerContext = {},
+            parentElement = {
+                type: 'showhide',
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y',
+                contentUrn:"80"
+            };
+        jest.spyOn(updateFunction, 'createUpdatedData')
+        updateFunction.createUpdatedData(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement,"show");
+        expect(updateFunction.createUpdatedData).toHaveBeenCalledWith(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement,"show")
+    })
+  
 })

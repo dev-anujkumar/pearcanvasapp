@@ -60,4 +60,5 @@
 .locked-slate-title{
     align-self: center;
     margin-top: 8px;
+    text-transform: capitalize;
 }

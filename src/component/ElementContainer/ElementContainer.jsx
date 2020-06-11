@@ -18,15 +18,15 @@ import { addComment, deleteElement, updateElement, createShowHideElement, delete
 import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
-import { setActiveElement, fetchElementTag, openPopupSlate } from './../CanvasWrapper/CanvasWrapper_Actions';
+import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } from './../CanvasWrapper/CanvasWrapper_Actions';
 import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
-import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris } from '../../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
 import AssessmentSlateCanvas from './../AssessmentSlateCanvas';
-import PageNumberContext from '../CanvasWrapper/CanvasContexts.js';
+import PageNumberContext from '../CanvasWrapper/PageNumberContext.js';
 import { authorAssetPopOver } from '../AssetPopover/openApoFunction.js';
 import { LABELS } from './ElementConstants.js';
 import { updateFigureData } from './ElementContainer_Actions.js';
@@ -37,6 +37,11 @@ import { updatePageNumber, accessDenied } from '../SlateWrapper/SlateWrapper_Act
 import { releaseSlateLock } from '../CanvasWrapper/SlateLock_Actions.js';
 import ElementShowHide from '../ElementShowHide';
 import ElementContainerContext from './ElementContainerContext'
+import { CitationGroupContext } from './ElementCitationContext'
+import CitationGroup from '../CitationGroup'
+import CitationElement from '../CitationElement'
+import ElementPoetry from '../ElementPoetry';
+import ElementPoetryStanza from '../ElementPoetry/ElementPoetryStanza.jsx';
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -95,17 +100,19 @@ class ElementContainer extends Component {
             })
         }
         else {
-            this.setState({
-                borderToggle: 'active',
-                btnClassName: 'activeTagBgColor'
-            })
+            if ((newProps.element.type !== "element-citation") || (newProps.element.type == "element-citation" && config.citationFlag == true)) {
+                this.setState({
+                    borderToggle: 'active',
+                    btnClassName: 'activeTagBgColor'
+                })
+            }
         }
     }
 
     /**
      * function will be called on element focus of tinymce instance
      */
-    handleFocus = (updateFromC2Flag, showHideObj,event) => {
+    handleFocus = (updateFromC2Flag, showHideObj, event) => {
         if(event){
             event.stopPropagation();
         }
@@ -385,13 +392,7 @@ class ElementContainer extends Component {
     }
 
     figureDifferenceAudioVideo = (index, previousElementData) => {
-        // let newAudioVideoId = ""  can be removed after regression testing
-        // if (previousElementData.figuretype === "audio") {
-        //     newAudioVideoId = previousElementData.figuredata.audio && previousElementData.figuredata.audio.path || ""
-        // }
-        // else {
-        //     newAudioVideoId = previousElementData.figuredata.videos[0].path
-        // }
+
         let titleDOM = document.getElementById(`cypress-${index}-0`),
             subtitleDOM = document.getElementById(`cypress-${index}-1`),
             captionDOM = document.getElementById(`cypress-${index}-2`),
@@ -454,7 +455,8 @@ class ElementContainer extends Component {
             case elementTypeConstant.AUTHORED_TEXT:
             case elementTypeConstant.LEARNING_OBJECTIVE_ITEM:
             case elementTypeConstant.BLOCKFEATURE:
-            let index  = parentElement.type == "showhide" ||  parentElement.type == "popup"? activeEditorId:`cypress-${this.props.index}`
+            case elementTypeConstant.POETRY_STANZA:
+            let index  = (parentElement.type == "showhide" ||  parentElement.type == "popup" || parentElement.type == "poetry" || parentElement.type == "citations")? activeEditorId:`cypress-${this.props.index}`
             if (this.props.element && this.props.element.type === "element-blockfeature" && this.props.element.subtype === "quote" && tinyMCE.activeEditor && tinyMCE.activeEditor.id  && !tinyMCE.activeEditor.id.includes("footnote")) {
                 let blockqtText = document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins')?document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').innerText:"";
                 if (!blockqtText.trim()) {
@@ -475,21 +477,70 @@ class ElementContainer extends Component {
                 tempDiv.innerHTML = html;
                 //tinyMCE.$(tempDiv).find('.blockquote-hidden').remove();
                 html = tempDiv.innerHTML;
-                if(parentElement.type === "popup"){
+                /** [BG-2293 - mathML/chemML is not captured in postertextobject field in show-hide */
+                if (parentElement.type == "showhide" && index && showHideType == 'postertextobject' && html.match(/<img/)) {
+                    tinyMCE.$(tempDiv).find('br').remove()
+                    tinyMCE.$(html).find('br').remove()
+                }
+                let poetryData;
+                if(parentElement && parentElement.type === "poetry"){
+                    poetryData = {
+                        type: "poetry",
+                        parentUrn: parentElement.id,
+                        id: parentElement.id,
+                        contentUrn : parentElement.contentUrn           
+                    };
+                }
+                if((parentElement.type === "poetry" && previousElementData.type !== "stanza" && !(parentElement.contents["creditsarray"] && parentElement.contents["creditsarray"].length && parentElement.contents.creditsarray[0].id === previousElementData.id)) || parentElement.type === "citations"){
+                    let titleDOMNode = document.getElementById(`cypress-${this.props.index}-0`),
+                        subtitleDOMNode = document.getElementById(`cypress-${this.props.index}-1`)
+
+                    let titleHTML = titleDOMNode && titleDOMNode.innerHTML,
+                        subtitleHTML = subtitleDOMNode && subtitleDOMNode.innerHTML
+
+                    titleHTML = titleHTML.replace(/<br>/g, "").replace(/<br data-mce-bogus="1">/g, "")
+                    subtitleHTML = subtitleHTML.replace(/<br>/g, "").replace(/<br data-mce-bogus="1">/g, "")
+
+                    let imgTaginLabel = titleDOMNode && titleDOMNode.getElementsByTagName("img")
+                    let imgTaginTitle = subtitleDOMNode && subtitleDOMNode.getElementsByTagName("img")
+                    if (parentElement.type === "poetry") {
+                        if((titleDOMNode.textContent === '') && !(imgTaginLabel && imgTaginLabel.length)){
+                            titleHTML = ""
+                        }
+                        if ((subtitleDOMNode.textContent === '') && !(imgTaginTitle && imgTaginTitle.length)) {
+                            subtitleHTML = ""
+                        }
+                        tempDiv.innerHTML = createTitleSubtitleModel(titleHTML, subtitleHTML)
+                    }
+                    else if(parentElement.type === "citations"){
+                        if((titleDOMNode.textContent === '') && !(imgTaginLabel && imgTaginLabel.length)){
+                            titleHTML = ""
+                        }
+                        tempDiv.innerHTML = createTitleSubtitleModel("", titleHTML)
+                    }
+                    html = tempDiv.innerHTML
+                    // html = html.replace(/<br data-mce-bogus="1">/g, "<br>")
+                    parentElement["index"] = this.props.index
+                }
+                else if(parentElement.type === "popup" || (parentElement.type === "poetry" && parentElement.contents["creditsarray"] && parentElement.contents["creditsarray"].length && parentElement.contents.creditsarray[0].id === previousElementData.id)){
                     tempDiv.innerHTML = matchHTMLwithRegex(tempDiv.innerHTML) ? tempDiv.innerHTML : `<p class="paragraphNumeroUno">${tempDiv.innerHTML}</p>`
                     html = html.replace(/<br data-mce-bogus="1">/g, "<br>")
                     html = matchHTMLwithRegex(html) ? html : `<p class="paragraphNumeroUno">${html}</p>`
+                    parentElement["index"] = this.props.index
+                }
+                else if (previousElementData.type === "stanza") {
+                        html = `<p>${html}</p>`                                      
                 }
                 html =html.replace(/(\r\n|\n|\r)/gm, '')
                 previousElementData.html.text= previousElementData.html.text.replace(/<br data-mce-bogus="1">/g, "<br>").replace(/(\r\n|\n|\r)/gm, '');
                 previousElementData.html.text = previousElementData.html.text.replace(/data-mce-bogus="all"/g, '')
                 if (html && previousElementData.html && (this.replaceUnwantedtags(html) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate) && !assetPopoverPopupIsVisible && !config.savingInProgress) {
-                    dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDiv, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,parentElement,showHideType, asideData)
+                    dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDiv, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,parentElement,showHideType, asideData, poetryData)
                     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                     if(dataToSend.status === "approved"){
                         config.savingInProgress = true
                     }
-                    this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, showHideType, parentElement);
+                    this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, showHideType, parentElement, poetryData);
                 }
                 break;
 
@@ -561,7 +612,6 @@ class ElementContainer extends Component {
                 }
                 break;
 
-
             case elementTypeConstant.ASSESSMENT_SLATE:
                 dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, undefined, undefined, undefined)
                 this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, undefined, undefined);
@@ -573,20 +623,44 @@ class ElementContainer extends Component {
                     let currentListNode = document.getElementById(parentIndex)
                     tinyMCE.$(currentListNode).find('ol').removeAttr('data-mce-style');
                     currentListNode.innerHTML = currentListNode.innerHTML.replace(/counter-increment:section/g, "counter-increment: section")
-                    let nodehtml = currentListNode.innerHTML;
                     for (let i = 0; i < tinyMCE.$(currentListNode).find('li').length; i++) {
+                        tinyMCE.$(currentListNode).find('li')[i].innerHTML= tinyMCE.$(currentListNode).find('li')[i].innerHTML.replace( /[\r\n]+/gm, "" ); 
                         tinyMCE.$(currentListNode).find('li')[i].innerHTML = tinyMCE.$(currentListNode).find('li')[i].innerHTML.replace(/^\s+|\s+$/g, '&nbsp;');
-                    }                    
-                    if (nodehtml && previousElementData.html && (this.replaceUnwantedtags(nodehtml) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate && !config.savingInProgress) && !assetPopoverPopupIsVisible) {
-                        dataToSend = createUpdatedData(previousElementData.type, previousElementData, currentListNode, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, showHideType,undefined)
+                    } 
+                    let nodehtml = currentListNode.innerHTML;
+                    if(nodehtml && previousElementData.html) {
+                        let prevData = this.replaceUnwantedtags(previousElementData.html.text);
+                        prevData = prevData.replace(/(reset | reset|↵)/g, "");
+                        let nodeData = this.replaceUnwantedtags(nodehtml);
+                        nodeData = nodeData.replace(/(reset | reset|↵)/g, "");
+                        if ((nodeData !== prevData || forceupdate && !config.savingInProgress) && !assetPopoverPopupIsVisible) {
+                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, currentListNode, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, showHideType,undefined)
+                            sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+                            if(dataToSend.status === "approved"){
+                                config.savingInProgress = true
+                            }
+                            this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, showHideType, parentElement);
+                        }
+                    }
+                    break;
+                }
+                case elementTypeConstant.CITATION_ELEMENT:
+                    let ceIndex  = `cypress-${this.props.index}`
+                    let ceCurrentNode = document.getElementById(ceIndex)
+                    let ceHtml = ceCurrentNode && ceCurrentNode.innerHTML;
+                    let tempDivForCE = document.createElement('div');
+                    tempDivForCE.innerHTML = ceHtml;
+                    ceHtml = tempDivForCE.innerHTML;
+                    if (ceHtml && previousElementData.html && (this.replaceUnwantedtags(ceHtml) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate) && !config.savingInProgress) {
+                        dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDivForCE, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, showHideType, asideData)
                         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                         if(dataToSend.status === "approved"){
                             config.savingInProgress = true
                         }
+                        parentElement["index"] = this.props.index
                         this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, showHideType, parentElement);
                     }
                     break;
-                }
         }
     }
 
@@ -598,7 +672,8 @@ class ElementContainer extends Component {
         let activeEditorId = elemIndex ? `cypress-${elemIndex}` : (tinyMCE.activeEditor ? tinyMCE.activeEditor.id : '')
         let node = document.getElementById(activeEditorId);
         let element = currrentElement ? currrentElement : this.props.element
-        this.handleContentChange(node, element, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, this.props.element, showHideType)
+        let parentElement = ((currrentElement && currrentElement.type === elementTypeConstant.CITATION_ELEMENT) || (this.props.parentElement && this.props.parentElement.type === 'poetry')) ? this.props.parentElement : this.props.element
+        this.handleContentChange(node, element, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType)
     }
 
     /**
@@ -723,7 +798,7 @@ class ElementContainer extends Component {
      */
     deleteElement = () => {
         let { id, type } = this.props.element;
-        let { parentUrn, asideData, element } = this.props;
+        let { parentUrn, asideData, element, poetryData } = this.props;
         let { contentUrn } = this.props.element
         let index = this.props.index
 
@@ -739,15 +814,22 @@ class ElementContainer extends Component {
         this.handleCommentPopup(false);
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
 
+        /** This condition is to delete whole Container Group element when only one element is left and that too getting deleted */
+        if (this.props.parentElement && this.props.parentElement.type === "citations" && this.props.parentElement.contents && this.props.parentElement.contents.bodymatter.length === 1) {
+            id = this.props.parentElement.id
+            type = this.props.parentElement.type
+            contentUrn = this.props.parentElement.contentUrn
+            index = index.split("-")[0]
+        }
         /** This condition to delete whole aside element when only one element in it deleted */
-        if (this.props.parentElement && this.props.parentElement.subtype !== "workedexample" && this.props.parentElement.elementdata.bodymatter.length === 1) {
+        else if (this.props.parentElement && this.props.parentElement.subtype !== "workedexample" && this.props.parentElement.elementdata && this.props.parentElement.elementdata.bodymatter.length === 1) {
             id = this.props.parentElement.id
             type = this.props.parentElement.type
             contentUrn = this.props.parentElement.contentUrn
         }
 
         // api needs to run from here
-        this.props.deleteElement(id, type, parentUrn, asideData, contentUrn, index);
+        this.props.deleteElement(id, type, parentUrn, asideData, contentUrn, index, poetryData);
         this.setState({
             sectionBreak: null
         })
@@ -773,20 +855,32 @@ class ElementContainer extends Component {
         }
     }
 
+     /**
+    * @description - createPoetryElements is responsible for creating the Label,title,caption.credit for poetry element
+    * @param {*} poetryField is value of the field ie. label, title etc of poetry element
+    * @param {*} index
+    * @param {*} parentElement
+    */
+    createPoetryElements = (poetryField, forceupdate, index, parentElement) => {
+         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+        this.props.createPoetryUnit(poetryField, parentElement, (currentElementData) =>
+        this.handleBlur(forceupdate, currentElementData, index, null), index, config.slateManifestURN)
+    }
+
     /**
      * Render Element function takes current element from bodymatter and render it into currnet slate 
      * @param {element} 
     */
     renderElement = (element = {}) => {
         let editor = '';
-        let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions, updatePageNumber, accessDenied, allComments, splithandlerfunction} = this.props;
+        let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions, allComments, splithandlerfunction} = this.props;
         let labelText = fetchElementTag(element, index);
         config.elementToolbar = this.props.activeElement.toolbar || [];
         let anyOpenComment = allComments.filter(({ commentStatus, commentOnEntity }) => commentOnEntity === element.id && commentStatus.toLowerCase() === "open").length > 0
         /** Handle TCM for tcm enable elements */
         let tcm = false;
         let feedback = false;
-        if (element.type == 'element-authoredtext' || element.type == 'element-list' || element.type == 'element-blockfeature' || element.type == 'element-learningobjectives') {
+        if (element.type == 'element-authoredtext' || element.type == 'element-list' || element.type == 'element-blockfeature' || element.type == 'element-learningobjectives' || element.type == 'element-citation' || element.type === 'stanza') {
             if (element.tcm) {
                 tcm = element.tcm;
                 sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });
@@ -806,7 +900,7 @@ class ElementContainer extends Component {
                     break;
                 case elementTypeConstant.OPENER:
                     const { activeColorIndex } = this.state
-                    editor = <OpenerElement accessDenied={accessDenied} permissions={permissions} backgroundColor={config.colors[activeColorIndex]} index={index} onClick={this.handleFocus} handleBlur={this.handleBlur} elementId={element.id} element={element} slateLockInfo={slateLockInfo} updateElement={this.updateOpenerElement} />
+                    editor = <OpenerElement accessDenied={this.props.accessDenied} permissions={permissions} backgroundColor={config.colors[activeColorIndex]} index={index} onClick={this.handleFocus} handleBlur={this.handleBlur} elementId={element.id} element={element} slateLockInfo={slateLockInfo} updateElement={this.updateOpenerElement} />
                     labelText = 'OE'
                     break;
                 case elementTypeConstant.AUTHORED_TEXT:
@@ -826,27 +920,27 @@ class ElementContainer extends Component {
                         case elementTypeConstant.FIGURE_AUTHORED_TEXT:
                         case elementTypeConstant.FIGURE_CODELISTING:
                         case elementTypeConstant.FIGURE_TABLE_EDITOR:
-                            editor = <ElementFigure accessDenied={accessDenied} updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} elementId={element.id} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} />;
+                            editor = <ElementFigure accessDenied={this.props.accessDenied} updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} elementId={element.id} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} />;
                             //labelText = LABELS[element.figuretype];
                             break;
                         case elementTypeConstant.FIGURE_AUDIO:
                         case elementTypeConstant.FIGURE_VIDEO:
-                            editor = <ElementAudioVideo accessDenied={accessDenied} updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} elementId={element.id} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} />;
+                            editor = <ElementAudioVideo accessDenied={this.props.accessDenied} updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} elementId={element.id} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} />;
                             //labelText = LABELS[element.figuretype];
                             break;
                         case elementTypeConstant.FIGURE_ASSESSMENT:
-                            editor = <ElementSingleAssessment openCustomPopup={this.props.openCustomPopup} accessDenied={accessDenied} updateFigureData={this.updateFigureData} showBlocker={this.props.showBlocker} permissions={permissions} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} elementId={element.id} slateLockInfo={slateLockInfo} />;
+                            editor = <ElementSingleAssessment openCustomPopup={this.props.openCustomPopup} accessDenied={this.props.accessDenied} updateFigureData={this.updateFigureData} showBlocker={this.props.showBlocker} permissions={permissions} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} elementId={element.id} slateLockInfo={slateLockInfo} />;
                             labelText = 'Qu';
                             break;
                         case elementTypeConstant.INTERACTIVE:
                             switch (element.figuredata.interactiveformat) {
                                 case elementTypeConstant.INTERACTIVE_MMI:
-                                    editor = <ElementInteractive accessDenied={accessDenied} showBlocker={this.props.showBlocker} updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} />;
+                                    editor = <ElementInteractive accessDenied={this.props.accessDenied} showBlocker={this.props.showBlocker} updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} />;
                                     labelText = element.figuredata.interactivetype == 'showhide' ? 'SH' : 'MMI';
                                     break;
                                 case elementTypeConstant.INTERACTIVE_EXTERNAL_LINK:
                                 case elementTypeConstant.INTERACTIVE_NARRATIVE_LINK:
-                                    editor = <ElementInteractive accessDenied={accessDenied} showBlocker={this.props.showBlocker} updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} />;
+                                    editor = <ElementInteractive accessDenied={this.props.accessDenied} showBlocker={this.props.showBlocker} updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} />;
                                     labelText = LABELS[element.figuredata.interactiveformat];
                                     break;
                             }
@@ -877,7 +971,7 @@ class ElementContainer extends Component {
                         elementId={element.id}
                         type={element.type}
                         slateLockInfo={slateLockInfo}
-                        updatePageNumber={updatePageNumber}
+                        updatePageNumber={this.props.updatePageNumber}
                         isBlockerActive={this.props.isBlockerActive}
                         onClickCapture={this.props.onClickCapture}
                         glossaryFootnoteValue={this.props.glossaryFootnoteValue}
@@ -905,7 +999,7 @@ class ElementContainer extends Component {
                         slateLockInfo={slateLockInfo}
                         onClick={this.handleFocus}
                         openPopupSlate={this.props.openPopupSlate}
-                        accessDenied={accessDenied}
+                        accessDenied={this.props.accessDenied}
                         openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}
                         glossaryFootnoteValue={this.props.glossaryFootnoteValue}
                         glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
@@ -935,6 +1029,101 @@ class ElementContainer extends Component {
                     }}><ElementShowHide />
                     </ElementContainerContext.Provider >;
                     labelText = 'SH'
+                    break;
+
+                case elementTypeConstant.CITATION_GROUP:
+                    editor = <CitationGroupContext.Provider value={{
+                        activeElement: this.props.activeElement,
+                        showBlocker: this.props.showBlocker,
+                        permissions: permissions,
+                        index: index,
+                        element: element,
+                        slateLockInfo: slateLockInfo,
+                        updatePageNumber: this.props.updatePageNumber,
+                        handleCommentspanel : handleCommentspanel,
+                        isBlockerActive : this.props.isBlockerActive,
+                        onClickCapture : this.props.onClickCapture,
+                        elementSeparatorProps : elementSepratorProps,
+                        setActiveElement : this.props.setActiveElement,
+                        handleFocus: this.handleFocus,
+                        handleBlur: this.handleBlur,
+                    }}><CitationGroup />
+                    </CitationGroupContext.Provider >;
+                    labelText = 'CG'
+                    break;
+                case elementTypeConstant.CITATION_ELEMENT:
+                    editor = <CitationElement
+                        activeElement = {this.props.activeElement}
+                        showBlocker = {this.props.showBlocker}
+                        permissions = {permissions}
+                        index = {index}
+                        element = {this.props.parentElement}
+                        model = {element.html}
+                        slateLockInfo = {slateLockInfo}
+                        updatePageNumber = {this.props.updatePageNumber}
+                        currentElement = {element}
+                        handleFocus = {this.handleFocus}
+                        handleBlur = {this.handleBlur}
+                    />
+                    labelText = 'CT'
+                    break;
+                case elementTypeConstant.POETRY_ELEMENT:
+                    editor = <ElementPoetry index={index} 
+                    accessDenied={this.props.accessDenied} 
+                    handleCommentspanel={handleCommentspanel}
+                    updateFigureData={this.updateFigureData} 
+                    permissions={permissions} 
+                    showBlocker={this.props.showBlocker}
+                    openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} 
+                    handleFocus={this.handleFocus} 
+                    showDeleteElemPopup={this.showDeleteElemPopup}
+                    handleBlur={this.handleBlur} 
+                    model={element} 
+                    element={element}
+                    slateLockInfo={slateLockInfo} 
+                    setActiveElement={this.props.setActiveElement}
+                    deleteElement={this.deleteElement}
+                    btnClassName={this.state.btnClassName}
+                    isBlockerActive={this.props.isBlockerActive}
+                    tagName={"div"}
+                    currentElement = {element}
+                    updatePageNumber={this.props.updatePageNumber}
+                    borderToggle={this.state.borderToggle}
+                    elemBorderToggle={this.props.elemBorderToggle}
+                    elementId={element.id} 
+                    createPoetryElements={this.createPoetryElements}
+                    glossaryFootnoteValue={this.props.glossaryFootnoteValue} 
+                    onClickCapture={this.props.onClickCapture}
+                    onListSelect={this.props.onListSelect} 
+                    glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
+                    elementSepratorProps={elementSepratorProps} />
+                    labelText = 'PE'
+                    break;
+                case elementTypeConstant.POETRY_STANZA:
+                    editor = <ElementPoetryStanza index={index}
+                    permissions={permissions} 
+                    openAssetPopoverPopUp={this.openAssetPopoverPopUp} 
+                    openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} 
+                    handleFocus={this.handleFocus} 
+                    showDeleteElemPopup={this.showDeleteElemPopup}
+                    handleBlur={this.handleBlur} 
+                    setActiveElement={this.props.setActiveElement}
+                    handleCommentspanel={handleCommentspanel}
+                    deleteElement={this.deleteElement}
+                    updatePageNumber={this.props.updatePageNumber}
+                    btnClassName={this.state.btnClassName}
+                    borderToggle={this.state.borderToggle}
+                    elemBorderToggle={this.props.elemBorderToggle}
+                    elementId={element.id} 
+                    tagName={"div"}
+                    element={element} 
+                    model={element} 
+                    parentElement = {this.props.parentElement}
+                    slateLockInfo={slateLockInfo} 
+                    onListSelect={this.props.onListSelect} 
+                    glossaryFootnoteValue={this.props.glossaryFootnoteValue} 
+                    glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}/>
+                    labelText = 'ST'
                     break;
             }
         } else {
@@ -984,7 +1173,7 @@ class ElementContainer extends Component {
                     sectionBreak={this.state.sectionBreak}
                     deleteElement={this.deleteElement}
                 />}
-                {
+                {this.props.children &&
                     <PageNumberContext.Consumer>
                         {
                             ({ isPageNumberEnabled }) => this.props.children(this.state.isHovered, isPageNumberEnabled, this.props.activeElement, this.props.permissions)
@@ -1095,7 +1284,7 @@ ElementContainer.defaultProps = {
 ElementContainer.propTypes = {
     /** Detail of element in JSON object */
     element: PropTypes.object,
-    elemBorderToggle: PropTypes.string
+    elemBorderToggle: PropTypes.bool
 }
 
 const mapDispatchToProps = (dispatch) => {
@@ -1109,8 +1298,8 @@ const mapDispatchToProps = (dispatch) => {
         setActiveElement: (element, index, parentUrn, asideData, updateFromC2Flag, showHideObj) => {
             dispatch(setActiveElement(element, index, parentUrn, asideData, updateFromC2Flag, showHideObj))
         },
-        deleteElement: (id, type, parentUrn, asideData, contentUrn, index) => {
-            dispatch(deleteElement(id, type, parentUrn, asideData, contentUrn, index))
+        deleteElement: (id, type, parentUrn, asideData, contentUrn, index, poetryData) => {
+            dispatch(deleteElement(id, type, parentUrn, asideData, contentUrn, index, poetryData))
         },
         glossaaryFootnotePopup: (glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, callback, typeWithPopup) => {
             dispatch(glossaaryFootnotePopup(glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, typeWithPopup)).then(() => {
@@ -1119,8 +1308,8 @@ const mapDispatchToProps = (dispatch) => {
                 }
             })
         },
-        updateElement: (updatedData, elementIndex, parentUrn, asideData, showHideType, parentElement) => {
-            dispatch(updateElement(updatedData, elementIndex, parentUrn, asideData, showHideType, parentElement))
+        updateElement: (updatedData, elementIndex, parentUrn, asideData, showHideType, parentElement, poetryData) => {
+            dispatch(updateElement(updatedData, elementIndex, parentUrn, asideData, showHideType, parentElement, poetryData))
         },
         updateFigureData: (figureData, index, elementId, cb) => {
             dispatch(updateFigureData(figureData, index, elementId, cb))
@@ -1141,7 +1330,10 @@ const mapDispatchToProps = (dispatch) => {
         },
         deleteShowHideUnit: (id, type, contentUrn, index, eleIndex, parentId, cb, parentElement, parentElementIndex) => {
             dispatch(deleteShowHideUnit(id, type, contentUrn, index, eleIndex, parentId, cb, parentElement, parentElementIndex))
-        }
+        },
+        createPoetryUnit: (poetryField, parentElement,cb, popupElementIndex, slateManifestURN) => {
+            dispatch(createPoetryUnit(poetryField, parentElement,cb, popupElementIndex, slateManifestURN))
+        },
 
     }
 }

@@ -33,6 +33,9 @@ let cypressConfig = {
     asideToolbar: ['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag'],
     labelToolbar:['footnote','decreaseindent','glossary','assetpopover'],
     captionToolbar:['decreaseindent','glossary','assetpopover'],
+    poetryLabelToolbar:['footnote','decreaseindent','glossary','assetpopover','orderedlist','unorderedlist','mathml','chemml'],
+    poetryCaptionToolbar:['decreaseindent','glossary','assetpopover','orderedlist','unorderedlist'],
+    poetryStanzaToolbar:['increaseindent','decreaseindent'],
     APO_API_KEY : '7ij8zrLkCNR9DtAXx3KJ6yutoYnk4SAx',
     editorRefID:"",
     releaseCallCount: 0,
@@ -52,6 +55,7 @@ let cypressConfig = {
     sitePointing : 'dev',
     conversionInProcess : false,
     savingInProgress: false,
+    citationFlag: false,
     lastActiveElementId:'',
     popupCreationCallInProgress : false
 }

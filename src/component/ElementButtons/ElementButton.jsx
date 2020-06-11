@@ -23,7 +23,10 @@ import {
     elmCloseWindowIcon,
     elmAssessmentItem,
     feedbackIcon,
-    assessmentCloseWindowIcon
+    assessmentCloseWindowIcon,
+    citationElement,
+    poetryIcon,
+    stanzaIcon
 } from '../../images/ElementButtons/ElementButtons.jsx';
 import deleteIcon from '../../images/ElementButtons/deleteIcon.png'
 import forwardNavActive from '../../images/ElementButtons/forwardNavActive.png'
@@ -36,7 +39,7 @@ import colorPalette from '../../images/ElementButtons/colorPalette.png'
 import closeContainer from '../../images/ElementButtons/container_close.png';
 import ButtonTypes from './ButtonTypes.js';
 
-class Button extends Component {
+class ElementButton extends Component {
    
   /**
   * Responsible for rendering Button component according to the props received
@@ -109,13 +112,13 @@ class Button extends Component {
                     {audioIcon}
                     </span>
                 break;
-            case buttonTypes.INTERACTIVE_ELEMENT:
+            case buttonTypes.INTERACTIVE_ELEMENT:                
                 buttonJSX = <span className="btn-element interactive-elem-button" onClick={clickHandlerFn}>
                     {interativeIcon}
                     </span>
                 break;
             case buttonTypes.CONTAINER_ELEMENT:
-                buttonJSX = <span className="btn-element container-elem" onClick={clickHandlerFn}>
+                buttonJSX = <span className="btn-element container-elem-button" onClick={clickHandlerFn}>
                     {containerIcon}
                     </span>
                 break;
@@ -169,6 +172,21 @@ class Button extends Component {
                     {feedbackIcon}
                 </span>
                 break;
+            case ButtonTypes.CITATION_ELEMENT:
+                buttonJSX = <span className="btn-element citation-elem" onClick={clickHandlerFn}>
+                    {citationElement}
+                </span>
+                break;
+            case buttonTypes.POETRY_ELEMENT:
+                buttonJSX = <span className="btn-element poetry-elem" onClick={clickHandlerFn}>
+                    {poetryIcon}
+                </span>
+                break;
+            case buttonTypes.STANZA_ELEMENT:
+                buttonJSX = <span className="btn-element stanza-elem" onClick={clickHandlerFn}>
+                    {stanzaIcon}
+                </span>
+                break;
                 
         }
         return buttonJSX
@@ -185,12 +203,12 @@ class Button extends Component {
     }
 }
 
-Button.defaultProps = {
+ElementButton.defaultProps = {
     type: "expand",
     labelText: "P"
 }
 
-Button.propTypes = {
+ElementButton.propTypes = {
     /** Type of button to be rendered */
     type : PropTypes.string.isRequired,
     /** Handler to attach on button click */
@@ -201,6 +219,6 @@ Button.propTypes = {
     btnClassName : PropTypes.string
 }
 
-Button.displayName = 'ElementButton'
+ElementButton.displayName = 'ElementButton'
 
-export default Button
+export default ElementButton
