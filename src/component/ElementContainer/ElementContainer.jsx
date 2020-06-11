@@ -42,6 +42,9 @@ import CitationGroup from '../CitationGroup'
 import CitationElement from '../CitationElement'
 import ElementPoetry from '../ElementPoetry';
 import ElementPoetryStanza from '../ElementPoetry/ElementPoetryStanza.jsx';
+import MultiColumnContext from "./MultiColumnContext.js"
+import MultiColumnContainer from "../MultiColumnElement"
+
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -1198,6 +1201,28 @@ class ElementContainer extends Component {
                     glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}/>
                     labelText = 'ST'
                     break;
+                
+                case elementTypeConstant.MULTI_COLUMN:
+                    editor = <MultiColumnContext.Provider value={{
+                        activeElement: this.props.activeElement,
+                        showBlocker: this.props.showBlocker,
+                        permissions: permissions,
+                        index: index,
+                        element: element,
+                        slateLockInfo: slateLockInfo,
+                        updatePageNumber: this.props.updatePageNumber,
+                        handleCommentspanel : handleCommentspanel,
+                        isBlockerActive : this.props.isBlockerActive,
+                        onClickCapture : this.props.onClickCapture,
+                        elementSeparatorProps : elementSepratorProps,
+                        setActiveElement : this.props.setActiveElement,
+                        handleFocus: this.handleFocus,
+                        handleBlur: this.handleBlur,
+                        deleteElement: this.deleteElement
+                    }}><MultiColumnContainer />
+                    </MultiColumnContext.Provider>;
+                    labelText = '2C'
+                    break;
             }
         } else {
             editor = <p className="incorrect-data">Incorrect Data - {element.id}</p>;
@@ -1228,7 +1253,7 @@ class ElementContainer extends Component {
                     {this.renderColorTextButton(element)}
                 </div>
                     : ''}
-                <div className={`element-container ${labelText.toLowerCase()} ${borderToggle}`} data-id={element.id} onFocus={() => this.toolbarHandling('remove')} onBlur={() => this.toolbarHandling('add')}>
+                <div className={`element-container ${labelText.toLowerCase()=="2c"? "multi-column":labelText.toLowerCase()} ${borderToggle}`} data-id={element.id} onFocus={() => this.toolbarHandling('remove')} onBlur={() => this.toolbarHandling('add')}>
                     {elementOverlay}{bceOverlay}{editor}
                 </div>
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>

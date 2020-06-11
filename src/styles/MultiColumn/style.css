@@ -1,0 +1,36 @@
+/* Multi column Container class */
+.multi-column-container {
+    display: flex;
+    max-width: 100%;
+}
+
+/* Common class for column groups */
+.container-multi-column-group {
+    width: 50%;
+    border-right: 1px solid black;
+}
+
+/* Specific class for 1st column group */
+.container-multi-column-group.column-1 {
+    /* Phase 1 */
+    padding-left: 10px;
+    border-right: none;
+}
+
+/* Element container class specific to Multi-Column container */
+.container-multi-column-group .element-container {
+    max-width: 83%;
+}
+
+/*style for element picker inside Multi-Column element*/
+.container-multi-column-group .horizontalLine {
+    margin-left: -4%;
+    width: 100%;
+}
+.container-multi-column-group .dropdown {
+    /* margin-left: -23px; */
+    cursor: pointer;
+}
+.container-multi-column-group .elemDiv-expand{
+    right: 2%;
+}

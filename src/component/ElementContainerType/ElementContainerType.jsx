@@ -34,7 +34,8 @@ export default function ElementContainerType(props) {
 
     const renderMenu = (data) => {
         return data && data.map((item, index) => {
-            if(props.elementType === "element-aside" && props.text === "block-text-button" && item.text === "Block Poetry"){
+            if (((props.elementType === "element-aside" || props.elementType === "group") && props.text === "block-text-button" && item.text === "Block Poetry") ||
+                (props.elementType === "group" && props.text === "interactive-elem-button" && (item.text === "Add Show Hide" || item.text === "Add Pop Up"))) {
                 return null
             }
             else {

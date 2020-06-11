@@ -20,6 +20,75 @@ import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 import elementDataBank from './elementDataBank'
 import figureData from '../ElementFigure/figureTypes.js';
 import { fetchAllSlatesData, setCurrentSlateAncestorData } from '../../js/getAllSlatesData.js';
+
+//MOCK DATA. TO BE REMOVED AFTER API INTEGRATION
+const multiColumnData = {
+    "id": "urn:pearson:manifest:84a2137b-da6d-4577-8a17-8c9806c888u6",
+    "type": "groupedcontent",
+    "schema": "http://schemas.pearson.com/wip-authoring/groupedcontent/1",
+    "versionUrn": "urn:pearson:manifest:84a2137b-da6d-4577-8a17-8c9806c888u6",
+    "contentUrn": "urn:pearson:entity:7bbe434f-039a-4525-996d-44fa424c1k76",
+    "width": "wider",
+    "groupproportions": "50-50",
+    "groupeddata": {
+        "bodymatter": [
+            {
+                "id": "urn:pearson:manifest:e1b59ae0-b04a-4b6e-a1a4-33e21073kn6e",
+                "schema": "http://schemas.pearson.com/wip-authoring/groupedcontent/1",
+                "versionUrn": "urn:pearson:manifest:e1b59ae0-b04a-4b6e-a1a4-33e21073kn6e",
+                "contentUrn": "urn:pearson:entity:e1b59ae0-b04a-4b6e-a1a4-33e210738j9o",
+                "type": "group",
+                "groupdata": {
+                    "bodymatter": [{
+                        "id": "urn:pearson:work:8a49e877-144a-4750-91d2-81d5188d8e0a",
+                        "type": "element-authoredtext",
+                        "subtype": "",
+                        "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                        "elementdata": {
+                            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                            "text": "Column 1 para element"
+                        },
+                        "html": {
+                            "text": "<p class=\"paragraphNumeroUno\">Column 1 para element</p>"
+                        },
+                        "comments": true,
+                        "tcm": true,
+                        "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                        "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+                    }]
+                }
+            },
+            {
+                "id": "urn:pearson:manifest:e1b59ae0-b04a-4b6e-a1a4-33e21073j659",
+                "schema": "http://schemas.pearson.com/wip-authoring/groupedcontent/1",
+                "versionUrn": "urn:pearson:manifest:e1b59ae0-b04a-4b6e-a1a4-33e21073j659",
+                "contentUrn": "urn:pearson:entity:e1b59ae0-b04a-4b6e-a1a4-33e2107378j6",
+                "type": "group",
+                "groupdata": {
+                    "bodymatter": [
+                        {
+                            "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0b",
+                            "type": "element-authoredtext",
+                            "subtype": "",
+                            "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                            "elementdata": {
+                                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                "text": "Column 2 para element"
+                            },
+                            "html": {
+                                "text": "<p class=\"paragraphNumeroUno\">Column 2 para element</p>"
+                            },
+                            "comments": true,
+                            "tcm": true,
+                            "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0b",
+                            "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c528"
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}
 const findElementType = (element, index) => {
     let elementType = {};
     elementType['tag'] = '';
@@ -356,6 +425,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
                         config.scrolling = true;
                     } else {
                         currentParentData = slateData.data[manifestURN];
+                        currentParentData.contents.bodymatter.push(multiColumnData)
                     }
                     dispatch({
                         type: FETCH_SLATE_DATA,
