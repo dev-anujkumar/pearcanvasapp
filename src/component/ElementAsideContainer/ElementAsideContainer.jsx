@@ -353,9 +353,10 @@ class ElementAsideContainer extends Component {
                             parentIndex={parentIndex}
                             esProps={this.props.elementSepratorProps(index, true, parentUrn, asideData, parentIndex)}
                             elementType="element-aside"
-                            sectionBreak={true}
+                            sectionBreak={this.props.element.subtype == "workedexample" ? true : false}
                             permissions={this.props.permissions}
                             onClickCapture={this.props.onClickCapture}
+                            splithandlerfunction={this.props.splithandlerfunction}
                         />
                     )
                 } else {
