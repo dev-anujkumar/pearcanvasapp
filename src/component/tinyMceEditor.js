@@ -23,7 +23,7 @@ import {
 import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
 import { checkforToolbarClick, customEvent, spanHandlers } from '../js/utils';
 import { saveGlossaryAndFootnote, setFormattingToolbar } from "./GlossaryFootnotePopup/GlossaryFootnote_Actions"
-import { ShowLoader } from '../constants/IFrameMessageTypes';
+import { ShowLoader, LaunchTOCForCrossLinking} from '../constants/IFrameMessageTypes';
 import { sendDataToIframe, hasReviewerRole } from '../constants/utility.js';
 import store from '../appstore/store';
 import { MULTIPLE_LINE_POETRY_ERROR_POPUP } from '../constants/Action_Constants';
@@ -1493,6 +1493,25 @@ export class TinyMceEditor extends Component {
         })
         this.handleBlur(null, true); //element saving before creating G/F (as per java team)
         //this.handleBlur(null, true);
+    }
+
+    /**
+     * Called when page link option is clicked. Responsible for adding page link
+     * @param {*} editor  editor instance
+     * @param {*} selectedText  selected text
+     */
+    addPageLink = (editor, selectedText) => {
+        let selection = window.getSelection().anchorNode.parentNode;
+        let selectedTag = selection.nodeName;
+        let selectedTagClass = selection.classList;
+        if (selectedTag !== "LI" && selectedTag !== "P" && selectedTag !== "H3" && selectedTag !== "BLOCKQUOTE" && (!selectedTagClass.contains('poetryLine'))) {
+            //selectedText = window.getSelection().anchorNode.parentNode.outerHTML;
+            selectedText = '<' + selectedTag.toLocaleLowerCase() + '>' + selectedText + '</' + selectedTag.toLocaleLowerCase() + '>'
+        }
+        let insertionText = '<span id="page-link-attacher">' + selectedText + '</span>';
+        // editor.insertContent(insertionText);
+        editor.selection.setContent(insertionText);
+        sendDataToIframe({ 'type': LaunchTOCForCrossLinking, 'message': { open: true, case: 'new', blockCanvas: true, crossLink: true } });
     }
 
 
