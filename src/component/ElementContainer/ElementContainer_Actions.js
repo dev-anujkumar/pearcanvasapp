@@ -80,9 +80,10 @@ export const addComment = (commentString, elementId, asideData, parentUrn) => (d
             });
 
         }).catch(error => {
-            dispatch({type: ERROR_POPUP, payload:{show: true}})
+            showError(error, dispatch, "Failed to add comment")
+            /* dispatch({type: ERROR_POPUP, payload:{show: true}})
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
-            console.log("Failed to add comment", error);
+            console.log("Failed to add comment", error); */
         })
 }
 
@@ -194,9 +195,10 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
         }
 
     }).catch(error => {
-        dispatch({type: ERROR_POPUP, payload:{show: true}})
+        showError(error, dispatch, "delete Api fail")
+        /* dispatch({type: ERROR_POPUP, payload:{show: true}})
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
-        console.log("delete Api fail", error);
+        console.log("delete Api fail", error); */
     })
 }
 
@@ -331,7 +333,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
             else if (showHideType && showHideType === "postertextobject") {
                 updateStoreInCanvas({ ...updatedData, ...response.data }, asideData, parentUrn, dispatch, getState, null, elementIndex, showHideType, parentElement, poetryData)
                 let revelDOM = document.querySelector(`div[data-id="${response.data.id}"]`)
-                if (revelDOM) revelDOM.click()
+                if (revelDOM) revelDOM.classList.remove("place-holder")
             }
         }
         
@@ -757,9 +759,10 @@ export const getTableEditorData = (elementId) => (dispatch, getState) => {
             }
         })
     }).catch(error => {
-        dispatch({type: ERROR_POPUP, payload:{show: true}})
+        showError(error, dispatch, "getTableEditorData Api fail")
+        /* dispatch({type: ERROR_POPUP, payload:{show: true}})
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
-        console.log("getTableEditorData Api fail", error);
+        console.log("getTableEditorData Api fail", error); */
     })
 }
 
@@ -845,9 +848,10 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
             cb("create",index);
         }
     }).catch(error => {
-        dispatch({type: ERROR_POPUP, payload:{show: true}})
+        showError(error, dispatch, "error while createing element")
+        /* dispatch({type: ERROR_POPUP, payload:{show: true}})
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
-        console.log("error while createing element",error)
+        console.log("error while createing element",error) */
     })
 }
 
@@ -911,10 +915,17 @@ export const deleteShowHideUnit = (elementId, type, parentUrn, index,eleIndex, p
         })
   
     }).catch(error => {
-        dispatch({type: ERROR_POPUP, payload:{show: true}})
+        showError(error, dispatch, "error while creating element")
+        /* dispatch({type: ERROR_POPUP, payload:{show: true}})
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
-        console.log("error while createing element",error)
+        console.log("error while createing element",error) */
     })
+}
+
+const showError = (error, dispatch, errorMessage) => {
+    dispatch({type: ERROR_POPUP, payload:{show: true}})
+    sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
+    console.log(errorMessage, error)
 }
 
 const cascadeElement = (parentElement, dispatch, parentElementIndex) => {

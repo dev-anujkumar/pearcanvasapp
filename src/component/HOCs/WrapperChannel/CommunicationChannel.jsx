@@ -210,6 +210,11 @@ function CommunicationChannel(WrappedComponent) {
                         this.props.getAllSlatesData(message)
                         break;
                     }
+                case 'customDimensions':
+                    if (window && window.dataLayer) {
+                        window.dataLayer.push(message);
+                    }
+                    break;
             }
         }
 

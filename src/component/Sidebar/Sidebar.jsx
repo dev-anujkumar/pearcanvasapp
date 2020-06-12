@@ -24,9 +24,9 @@ class Sidebar extends Component {
         let primaryFirstOption = Object.keys(elementTypeList)[0];
         let secondaryFirstOption = Object.keys(elementTypeList[primaryFirstOption].subtype)[0];
         let labelText = elementTypeList[primaryFirstOption].subtype[secondaryFirstOption].labelText;
-        let numbered = this.props.activeElement.numbered || true;
+        let numbered = this.props.activeElement.numbered;
         let startNumber = this.props.activeElement.startNumber || "1";
-        let syntaxhighlighting =  this.props.syntaxhighlighting || true;
+        let syntaxhighlighting =  this.props.activeElement.syntaxhighlighting;
         
         this.state = {
             elementDropdown: '',
@@ -318,7 +318,7 @@ class Sidebar extends Component {
                     </div>
                     <div className="alt-Text-LineNumber" >
                         <div className="toggle-value-bce">Start numbering from</div>
-                        <input type="number" id="line-number" className="line-number" min="1" onChange={this.handleBceNumber} value={this.state.bceNumberStartFrom ? this.state.bceNumberStartFrom : '1'}
+                        <input type="number" id="line-number" className="line-number" min="1" onChange={this.handleBceNumber} value={this.state.bceNumberStartFrom}
                         disabled={!((this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true) || hasReviewerRole()} onBlur={this.handleBceBlur}/>
                     </div>
                 </div>

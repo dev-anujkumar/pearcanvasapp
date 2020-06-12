@@ -1,146 +1,177 @@
-export const elementAsideWorkExample = 
-{
-    "id": "urn:pearson:manifest:c047b586-c963-47b7-bc59-9ec595c2c6ec",
-    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
-    "type": "element-aside",
-    "subtype": "workedexample",
-    "designtype": "workedexample1",
-    "elementdata": {
-        "schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest",
-        "frontmatter": [],
-        "bodymatter": [
-            {
-				"id": "urn:pearson:work:8a49e877-144a-4750-91d2-81d5188d8e0a",
-				"type": "element-authoredtext",
-				"subtype": "",
-				"schema": "http://schemas.pearson.com/wip-authoring/element/1",
-				"elementdata": {
-					"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-					"text": "asdfasdfasdf"
-				},
-				"html": {
-					"text": " \\/JSX< abc >?kk<lk> lk l is one of the most commonly used syntax extensions out there. Originally JSX was parsed via a Facebook fork of Esprima — a JavaScript syntax parser developed by jQuery. As it gained momentum, Acorn took things to their hands and decided to make their own version of the parser which ended up being 1.5–2x faster than Esprima-fb, and is now being used by officially Babel."
-				},
-				"comments": true,
-				"tcm": true,
-				"versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-				"contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+export const elementAsideWorkExample = {
+	"id": "urn:pearson:manifest:cfebae33-2236-4325-a822-f52077592b09",
+	"type": "element-aside",
+	"subtype": "workedexample",
+	"designtype": "workedexample1",
+	"schema": "http://schemas.pearson.com/wip-authoring/element/1",
+	"elementdata": {
+		"schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest",
+		"frontmatter": [],
+		"backmatter": [],
+		"bodymatter": [{
+			"id": "urn:pearson:work:ee2b0c11-75eb-4a21-87aa-578750b5301d",
+			"type": "element-authoredtext",
+			"schema": "http://schemas.pearson.com/wip-authoring/element/1",
+			"elementdata": {
+				"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+				"text": "test 1",
+				"headers": [{
+					"charStart": 0,
+					"charEnd": 5,
+					"level": 4
+				}]
 			},
-			{
-				"id": "urn:pearson:manifest:f0c610b8-337d-47b0-9680-83b73481289c",
-				"schema": "http://schemas.pearson.com/wip-authoring/manifest/1",
-				"type": "manifest",
-				"contents": {
-					"schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest",
-					"frontmatter": [],
-					"bodymatter": [
-						{
-							"id": "urn:pearson:work:8a49e877-144a-4850-92d2-81d5188d8e0a",
-							"type": "element-authoredtext",
-							"subtype": "",
-							"schema": "http://schemas.pearson.com/wip-authoring/element/1",
-							"elementdata": {
-								"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-								"text": "asdfasdfasdf"
-							},
-							"html": {
-								"text": " \\/JSX< abc >?kk<lk> lk l is one of the most commonly used syntax extensions out there. Originally JSX was parsed via a Facebook fork of Esprima — a JavaScript syntax parser developed by jQuery. As it gained momentum, Acorn took things to their hands and decided to make their own version of the parser which ended up being 1.5–2x faster than Esprima-fb, and is now being used by officially Babel."
-							},
-							"comments": true,
-							"tcm": true,
-							"versionUrn": "urn:pearson:work:8a48e877-144a-4750-92d2-81d5188d8e0a",
-							"contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
-						},
-						{
-							"id": "urn:pearson:work:8a49e877-143a-4750-92d2-81d5188d8e0a",
-							"type": "element-authoredtext",
-							"subtype": "",
-							"schema": "http://schemas.pearson.com/wip-authoring/element/1",
-							"elementdata": {
-								"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-								"text": "asdfasdfasdf"
-							},
-							"html": {
-								"text": " \\/JSX< abc >?kk<lk> lk l is one of the most commonly used syntax extensions out there. Originally JSX was parsed via a Facebook fork of Esprima — a JavaScript syntax parser developed by jQuery. As it gained momentum, Acorn took things to their hands and decided to make their own version of the parser which ended up being 1.5–2x faster than Esprima-fb, and is now being used by officially Babel."
-							},
-							"comments": true,
-							"tcm": true,
-							"versionUrn": "urn:pearson:work:8a49e677-144a-4750-92d2-81d5188d8e0a",
-							"contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
-						}
-					],
-					"backmatter": []
-				},
-				"contentUrn": "urn:pearson:entity:08942f6d-8fd3-4a39-b72d-8bdc33eb289a",
-				"versionUrn": "urn:pearson:manifest:f0c610b8-337d-47b0-9680-83b73481289c"
-			}, 
-			{
-				"id": "urn:pearson:manifest:f0c610b8-337d-47b0-9680-83b73481289c",
-				"schema": "http://schemas.pearson.com/wip-authoring/manifest/1",
-				"type": "manifest",
-				"contents": {
-					"schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest",
-					"frontmatter": [],
-					"bodymatter": [
-						{
-							"id": "urn:pearson:work:8a49e877-144a-4850-92d2-81d5188d8e0a",
-							"type": "element-authoredtext",
-							"subtype": "",
-							"schema": "http://schemas.pearson.com/wip-authoring/element/1",
-							"elementdata": {
-								"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-								"text": "asdfasdfasdf"
-							},
-							"html": {
-								"text": " \\/JSX< abc >?kk<lk> lk l is one of the most commonly used syntax extensions out there. Originally JSX was parsed via a Facebook fork of Esprima — a JavaScript syntax parser developed by jQuery. As it gained momentum, Acorn took things to their hands and decided to make their own version of the parser which ended up being 1.5–2x faster than Esprima-fb, and is now being used by officially Babel."
-							},
-							"comments": true,
-							"tcm": true,
-							"versionUrn": "urn:pearson:work:8a49e876-144a-4750-92d2-81d5188d8e0a",
-							"contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
-						}
-					],
-					"backmatter": []
-				},
-				"contentUrn": "urn:pearson:entity:08942f6d-8fd3-4a39-b72d-8bdc33eb289a",
-				"versionUrn": "urn:pearson:manifest:f0c610b8-337d-47b0-9680-83b73481289c"
+			"versionUrn": "urn:pearson:work:ee2b0c11-75eb-4a21-87aa-578750b5301d",
+			"contentUrn": "urn:pearson:entity:2c6c408e-f85f-4804-87bc-9a23e83201e1",
+			"html": {
+				"text": "<h4 class=\"heading4NummerEins\">test 1</h4>",
+				"footnotes": {},
+				"glossaryentries": {},
+				"assetspopover": {}
 			},
-			{
-				"id": "urn:pearson:manifest:f0c610b8-337d-47b0-9680-83b73481289c",
-				"schema": "http://schemas.pearson.com/wip-authoring/manifest/1",
-				"type": "manifest",
-				"contents": {
-					"schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest",
-					"frontmatter": [],
-					"bodymatter": [
-						{
-							"id": "urn:pearson:work:8a49e873-144a-4750-92d2-81d5188d8e0a",
-							"type": "element-authoredtext",
-							"subtype": "",
-							"schema": "http://schemas.pearson.com/wip-authoring/element/1",
-							"elementdata": {
-								"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-								"text": "asdfasdfasdf"
-							},
-							"html": {
-								"text": " \\/JSX< abc >?kk<lk> lk l is one of the most commonly used syntax extensions out there. Originally JSX was parsed via a Facebook fork of Esprima — a JavaScript syntax parser developed by jQuery. As it gained momentum, Acorn took things to their hands and decided to make their own version of the parser which ended up being 1.5–2x faster than Esprima-fb, and is now being used by officially Babel."
-							},
-							"comments": true,
-							"tcm": true,
-							"versionUrn": "urn:pearson:work:8a49e873-144a-4750-92d2-81d5188d8e0a",
-							"contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
-						}
-					],
-					"backmatter": []
-				},
-				"contentUrn": "urn:pearson:entity:08942f6d-8fd3-4a39-b72d-8bdc33eb289a",
-				"versionUrn": "urn:pearson:manifest:f0c610b8-337d-47b0-9680-83b73481289c"
-			}
-		],
-        "backmatter": []
-    },
-    "contentUrn": "urn:pearson:entity:b4cbda8f-7a22-4df5-965a-18623a581ec1",
-    "versionUrn": "urn:pearson:manifest:c047b586-c963-47b7-bc59-9ec595c2c6ec"
+			"tcm": true,
+			"comments": false,
+			"status": "wip",
+			"feedback": false
+		}, {
+			"id": "urn:pearson:manifest:e462c3f0-8e5c-440a-a95e-333a15f11444",
+			"type": "manifest",
+			"subtype": "",
+			"designtype": "",
+			"schema": "http://schemas.pearson.com/wip-authoring/manifest/1",
+			"contents": {
+				"schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest",
+				"frontmatter": [],
+				"backmatter": [],
+				"bodymatter": [{
+					"id": "urn:pearson:work:7316eb86-7a6c-4712-b965-9829e07cb9b0",
+					"type": "element-authoredtext",
+					"schema": "http://schemas.pearson.com/wip-authoring/element/1",
+					"elementdata": {
+						"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+						"text": "test 2",
+						"headers": [{
+							"charStart": 0,
+							"charEnd": 5,
+							"level": 5
+						}]
+					},
+					"versionUrn": "urn:pearson:work:7316eb86-7a6c-4712-b965-9829e07cb9b0",
+					"contentUrn": "urn:pearson:entity:47f81eda-030f-497c-913f-b8a351be4373",
+					"html": {
+						"text": "<h5 class=\"heading5NummerEins\">test 2</h5>",
+						"footnotes": {},
+						"glossaryentries": {},
+						"assetspopover": {}
+					},
+					"tcm": true,
+					"comments": false,
+					"status": "wip",
+					"feedback": false
+				}, {
+					"id": "urn:pearson:work:654b79e6-d271-4d8c-8663-4804212e6460",
+					"type": "element-authoredtext",
+					"schema": "http://schemas.pearson.com/wip-authoring/element/1",
+					"elementdata": {
+						"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+						"text": "test 3"
+					},
+					"versionUrn": "urn:pearson:work:654b79e6-d271-4d8c-8663-4804212e6460",
+					"contentUrn": "urn:pearson:entity:6a0937af-f8b6-4481-b1ee-4f9b5a199a7b",
+					"html": {
+						"text": "<p class=\"paragraphNumeroUno\">test 3</p>",
+						"footnotes": {},
+						"glossaryentries": {},
+						"assetspopover": {}
+					},
+					"tcm": true,
+					"comments": false,
+					"status": "wip",
+					"feedback": false
+				}],
+				"creditsarray": []
+			},
+			"contentUrn": "urn:pearson:entity:30fb07fe-119c-4b0a-a8ca-8fae1cc2ad5e",
+			"versionUrn": "urn:pearson:manifest:e462c3f0-8e5c-440a-a95e-333a15f11444",
+			"pageNo": 0,
+			"tcm": false,
+			"comments": false,
+			"status": "wip",
+			"feedback": false
+		}, {
+			"id": "urn:pearson:manifest:acd0d4a9-f25b-4c2b-8739-3ffb2649864e",
+			"type": "manifest",
+			"subtype": "",
+			"designtype": "",
+			"schema": "http://schemas.pearson.com/wip-authoring/manifest/1",
+			"contents": {
+				"schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest",
+				"frontmatter": [],
+				"backmatter": [],
+				"bodymatter": [{
+					"id": "urn:pearson:work:81ed7f99-ccdb-46a4-b305-53af815ae762",
+					"type": "element-authoredtext",
+					"schema": "http://schemas.pearson.com/wip-authoring/element/1",
+					"elementdata": {
+						"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+						"text": "test 4",
+						"headers": [{
+							"charStart": 0,
+							"charEnd": 5,
+							"level": 5
+						}]
+					},
+					"versionUrn": "urn:pearson:work:81ed7f99-ccdb-46a4-b305-53af815ae762",
+					"contentUrn": "urn:pearson:entity:37ecff9e-7bc9-4de8-8564-0083240b296c",
+					"html": {
+						"text": "<h5 class=\"heading5NummerEins\">test 4</h5>",
+						"footnotes": {},
+						"glossaryentries": {},
+						"assetspopover": {}
+					},
+					"tcm": true,
+					"comments": false,
+					"status": "wip",
+					"feedback": false
+				}, {
+					"id": "urn:pearson:work:b19c268c-af90-422d-b6f1-99dcd31d124e",
+					"type": "element-authoredtext",
+					"schema": "http://schemas.pearson.com/wip-authoring/element/1",
+					"elementdata": {
+						"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+						"text": "test 5"
+					},
+					"versionUrn": "urn:pearson:work:b19c268c-af90-422d-b6f1-99dcd31d124e",
+					"contentUrn": "urn:pearson:entity:4bcd9db7-0302-4a7b-a9bd-ff12f38f7ae4",
+					"html": {
+						"text": "<p class=\"paragraphNumeroUno\">test 5</p>",
+						"footnotes": {},
+						"glossaryentries": {},
+						"assetspopover": {}
+					},
+					"tcm": true,
+					"comments": false,
+					"status": "wip",
+					"feedback": false
+				}],
+				"creditsarray": []
+			},
+			"contentUrn": "urn:pearson:entity:cc632835-34f0-4afa-a04e-2c9ec1c3ab15",
+			"versionUrn": "urn:pearson:manifest:acd0d4a9-f25b-4c2b-8739-3ffb2649864e",
+			"pageNo": 0,
+			"tcm": false,
+			"comments": false,
+			"status": "wip",
+			"feedback": false
+		}]
+	},
+	"contentUrn": "urn:pearson:entity:1f4906dd-3a94-4294-b0db-0e0cda248209",
+	"versionUrn": "urn:pearson:manifest:cfebae33-2236-4325-a822-f52077592b09",
+	"pageNo": 0,
+	"tcm": false,
+	"comments": false,
+	"status": "wip",
+	"feedback": false
 }
 export const elementWorkExample = 
 {

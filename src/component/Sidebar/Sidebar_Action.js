@@ -157,9 +157,9 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             case "SIDEBAR_05":
                 elemDesigntype = "asideSidebar05"
                 break;
-            case "SIDEBAR_06":
-                elemDesigntype = "asideSidebar06"
-                break;
+            // case "SIDEBAR_06":
+            //     elemDesigntype = "asideSidebar06"
+            //     break;
             case "SIDEBAR_01":
             default:
                 elemDesigntype = "asideSidebar01"
@@ -363,7 +363,6 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
         let bodymatter = storeElement.contents.bodymatter;
         let indexes = activeElement.index;
         indexes = indexes.toString().split("-");
-        
         //Separate case for element conversion in showhide
         if(showHideObj) {
             let oldElementData

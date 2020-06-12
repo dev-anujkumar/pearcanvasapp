@@ -57,7 +57,9 @@ class ElmTableComponent extends Component {
         if ((prevProps.elmReducer.elmItemData != this.props.elmReducer.elmItemData) ||
             (prevProps.elmReducer.elmData != this.props.elmReducer.elmData)) {
             let _self = this;
-            _self.renderTableData(this.props);
+            // if(this.props.elmReducer.openSearch !=true){
+                _self.renderTableData(this.props);
+            // }
         }
     }
 
@@ -237,7 +239,7 @@ class ElmTableComponent extends Component {
                 this.preparedData.push({ "type": "assessmentItem", "title": item.name ? item.name : "", "urn": item.versionUrn, "assessmentId": assessmentId })
             })
             this.preparedData = tableDataSorting(true, this.preparedData, 'asc')
-            return this.setState({ tableValue: this.preparedData, parentTitle: assessmentTitle })
+            return this.setState({ tableValue: this.preparedData, parentTitle: assessmentTitle, sortIcon: elmSortUp })
         }
 
     }
@@ -264,6 +266,7 @@ class ElmTableComponent extends Component {
             this.setState({
                 openItemTable: false,
                 tableValue:this.searchData,
+                sortIcon: elmSortUp
             })
             
         }
