@@ -579,8 +579,8 @@ function CommunicationChannel(WrappedComponent) {
             }
         }
 
-        setTableData = (elementId) => {
-            this.props.getTableEditorData(elementId);
+        setTableData = (elementId,updatedData) => {
+            this.props.getTableEditorData(elementId,updatedData);
         }
         
 
