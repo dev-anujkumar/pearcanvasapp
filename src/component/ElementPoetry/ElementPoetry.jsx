@@ -42,9 +42,6 @@ class ElementPoetry extends Component {
                         contentUrn: this.props.model.contentUrn ,
                         elementType: "poetry"
                     }
-                    /* if(!_bodyMatter.length && this.props.deleteElement){
-                        this.props.deleteElement();
-                    } */
                     this['cloneCOSlateControlledSource_2' + random] = this.renderStanzas(_bodyMatter, index, parentUrn)
                     return (
                         <div>
@@ -111,6 +108,13 @@ class ElementPoetry extends Component {
         }
     }
 
+    /**
+     * Renders blank container with one element picker (Separator)
+     * @param {object} _context Poetry container props
+     * @param {object} parentUrn Immediate parent data (Poetry container)
+     * @param {object} asideData parent data (Poetry container)
+     * @param {Number} parentIndex Container index
+     */
     renderBlankContainer = (_props, parentUrn, parentIndex, poetryData) => {
         let index = 0
         return (
@@ -128,7 +132,6 @@ class ElementPoetry extends Component {
         )
     }
     
-
     /**
     * @description - renderStanzas is a function for rendering the stanza element inside poetry element
     * @param {*} stanzas is the array of stanza element

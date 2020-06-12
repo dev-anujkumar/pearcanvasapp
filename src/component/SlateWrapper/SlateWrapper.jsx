@@ -858,7 +858,11 @@ class SlateWrapper extends Component {
 
     }
 
-    renderBlankSlate = (_slateType, _props) => {
+    /**
+     * Renders blank slate with one element picker (Separator)
+     * @param {object} _props Slatewrapper props
+     */
+    renderBlankSlate = (_props) => {
         return (
             <>
                 <ElementSaprator
@@ -884,7 +888,7 @@ class SlateWrapper extends Component {
         try {
             if (_elements !== null && _elements !== undefined) {
                 if (_elements.length === 0) {
-                    return this.renderBlankSlate(_slateType, this.props)
+                    return this.renderBlankSlate(this.props)
                 }
                 this.renderButtonsonCondition(_elements);
                 return _elements.map((element, index) => {

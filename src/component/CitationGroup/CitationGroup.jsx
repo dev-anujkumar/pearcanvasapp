@@ -17,6 +17,13 @@ import { checkSlateLock } from '../../js/slateLockUtility.js'
 let random = guid();
 export class CitationGroup extends Component {
 
+    /**
+     * Renders blank container with one element picker (Separator)
+     * @param {object} _context Context data of CG container
+     * @param {object} parentUrn Immediate parent data (CG container)
+     * @param {object} asideData parent data (CG container)
+     * @param {Number} parentIndex Container index
+     */
     renderBlankContainer = (_context, parentUrn, asideData, parentIndex) => {
         let index = 0
         return (
@@ -155,10 +162,6 @@ export class CitationGroup extends Component {
                         elementType: _containerType
                     }
                     const cgThis = this
-                     /* if(!_bodyMatter.length && this.context.deleteElement && config.citationDefaultElement==false){
-                        config.citationDefaultElement=true;
-                        this.context.deleteElement();
-                    } */
                     this['cloneCOSlateControlledSource_3' + random] = this.renderElement(_bodyMatter, parentUrn, index)
                     return (
                         <div className="container-citation" data-id={_containerId} container-type={_containerType}>
