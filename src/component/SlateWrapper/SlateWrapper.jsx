@@ -721,7 +721,7 @@ class SlateWrapper extends Component {
             {
                 buttonType: 'multi-column-group',
                 buttonHandler: () => this.splithandlerfunction('multi-column-group', index, firstOne, parentUrn),
-                tooltipText: 'Multi column',
+                tooltipText: 'Multi Column',
                 tooltipDirection: 'left'
             },
             {
