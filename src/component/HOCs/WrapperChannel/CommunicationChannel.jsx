@@ -107,7 +107,8 @@ function CommunicationChannel(WrappedComponent) {
                 //     break;
                 case 'refreshElementWithTable':
                     {
-                        this.setTableData(message.elementId, message.updatedData);
+                        this.setTableData(message.elementId,message.updatedData);
+                       
                     }
                     break;
                 case 'canvasBlocker':
@@ -579,8 +580,8 @@ function CommunicationChannel(WrappedComponent) {
             }
         }
 
-        setTableData = (elementId) => {
-            this.props.getTableEditorData(elementId);
+        setTableData = (elementId,updatedData) => {
+            this.props.getTableEditorData(elementId,updatedData);
         }
         
 

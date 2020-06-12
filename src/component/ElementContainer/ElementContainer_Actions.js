@@ -414,7 +414,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
     //tcm update code   
     if (config.tcmStatus) {
         let elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza'];
-        if (elementType.indexOf(updatedData.type) !== -1 && !updatedData.metaDataField) {
+        if (elementType.indexOf(updatedData.type) !== -1 && !updatedData.metaDataField  && !updatedData.sectionType) {
             prepareDataForUpdateTcm(updatedData.id, getState, dispatch, versionedData);
         }
     }
@@ -801,8 +801,12 @@ export const updateFigureData = (figureData, elementIndex, elementId, cb) => (di
     }, 300)
 }
 
-export const getTableEditorData = (elementId) => (dispatch, getState) => {
+export const getTableEditorData = (elementid,updatedData) => (dispatch, getState) => {
     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
+    let elementId = elementid
+    if(updatedData && elementid !== updatedData){
+        elementId = updatedData;
+    }
     console.log(elementId, config.projectUrn, ">>>>>")
     return axios.get(`${config.REACT_APP_API_URL}v1/slate/narrative/data/${config.projectUrn}/${elementId}`,
         {
@@ -816,7 +820,7 @@ export const getTableEditorData = (elementId) => (dispatch, getState) => {
         let parentData = getState().appStore.slateLevelData
         const newParentData = JSON.parse(JSON.stringify(parentData));
         if (newParentData[config.slateManifestURN].status === 'wip') {
-            newParentData[config.slateManifestURN].contents.bodymatter = updateTableEditorData(elementId, response.data[elementId], newParentData[config.slateManifestURN].contents.bodymatter)
+            newParentData[config.slateManifestURN].contents.bodymatter = updateTableEditorData(elementid, response.data[elementId], newParentData[config.slateManifestURN].contents.bodymatter)
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         } else if (newParentData[config.slateManifestURN].status === 'approved') {
             sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
@@ -839,7 +843,7 @@ export const getTableEditorData = (elementId) => (dispatch, getState) => {
 const updateTableEditorData = (elementId, tableData, slateBodyMatter) => {
 
     return slateBodyMatter = slateBodyMatter.map(elm => {
-        if (elm.id === elementId) {
+        if (elm.id === elementId ) {
             elm = {
                 ...elm,
                 ...tableData

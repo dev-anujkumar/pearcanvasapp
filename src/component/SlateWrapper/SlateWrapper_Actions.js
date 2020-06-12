@@ -650,6 +650,7 @@ export const getPageNumber = (elementID) => (dispatch, getState) => {
             type: GET_CURRENT_PAGE_NUMBER,
             payload: response.data
         });
+        return response.data;
     }).catch((error) => {
         config.pageNumberInProcess= true;
         // dispatch({

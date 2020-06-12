@@ -16,36 +16,42 @@ class PageNumberElement extends React.Component {
         super(props);
         this.state = {
             inputValue: "",
-            loader: false
+            loader: false,
+            id:this.props.element.id
         }
     }
-
-    componentDidUpdate(prevProps) {
-        let newArray
-        let that=this;
-        // Typical usage (don't forget to compare props):
-        // if(config.pageNumberInProcess && prevProps.element.id != this.props.element.id){
-            if(this.props.isPageNumberEnabled && this.props.isHovered === true ){
-                if(this.props.pageNumberData && this.props.pageNumberData.length > 0){
-                     newArray = this.props.pageNumberData.filter(function(item) {
-                        return item.id === that.props.element.id;
-                      });
-                      if(newArray && newArray.length === 0){
-                        config.pageNumberInProcess = false;
-                        this.props.getPageNumber(this.props.element.id)
-                      }
-                }
-                else{
+    componentDidUpdate() {
+        this.pagenumberData();
+    }
+    
+    pagenumberData = () => {
+        let newpageNumberData
+        let that = this;
+        if (config.pageNumberInProcess && this.props.isPageNumberEnabled && this.props.isHovered === true) {
+            if (this.props.pageNumberData && this.props.pageNumberData.length > 0) {
+                console.log("inside if")
+                newpageNumberData = this.props.pageNumberData.filter(function (item) {
+                    return item.id === that.props.element.id;
+                });
+                if (newpageNumberData && newpageNumberData.length === 0) {
                     config.pageNumberInProcess = false;
-                    this.props.getPageNumber(this.props.element.id)
-                
+                    this.props.getPageNumber(this.props.element.id).then((response) => {
+                        if (response) {
+                            this.setState({ inputValue: response.pageNumber, id: this.props.element.id })
+                        }
+                    })
+                }
             }
-
-        // }
-       if(prevProps.currentPageNumberData != this.props.currentPageNumberData){
-        this.setState({inputValue:this.props.currentPageNumberData.pageNumber})
-       }
-      }
+            else {
+                console.log("inside else")
+                config.pageNumberInProcess = false;
+                this.props.getPageNumber(this.props.element.id).then((response) => {
+                    if (response) {
+                        this.setState({ inputValue: response.pageNumber })
+                    }
+                })
+            }
+        }
     }
 
 
