@@ -641,7 +641,7 @@ export default {
         },
         enumType: 'assessment',		
     },
-    'element-interactive': {
+     'element-interactive': {
         'primary-mmi': {
             text: 'MMI',
             toolbar: ['assetpopover', 'glossary'],
@@ -802,5 +802,36 @@ export default {
                 }
             }
         } 
-    }
+    },
+
+      'groupedcontent': {		
+        'primary-multicolumn': {		
+            text: '2 Column',
+            toolbar:[],
+            enum: 'NA',		
+            subtype: {		
+                'secondary-multicolumn-wider': {
+                    text: 'Wider Than text width 65/35%',
+                    labelText: '2C',
+                    enum: 'NA'
+                },
+                'secondary-multicolumn-half': {
+                    text: 'Wider Than text width 50/50%',
+                    labelText: '2C',
+                    enum: 'NA'
+                },
+                'secondary-multicolumn-wider-text': {
+                    text: 'Text Width 60/40%',
+                    labelText: '2C',
+                    enum: 'NA'
+                },
+                'secondary-multicolumn-half-text': {
+                    text: 'Text Width 50/50%',
+                    labelText: '2C',
+                    enum: 'NA'
+                }
+            }		
+        },
+        enumType: 'NA'		
+    },
 };

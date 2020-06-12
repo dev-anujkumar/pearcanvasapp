@@ -380,6 +380,23 @@ const elementDataBank = {
         "elementType" : "stanza",
         "primaryOption" : "primary-stanza",
         "secondaryOption" : "secondary-stanza"
+    },
+    "groupedcontent":{
+        "elementType" : "groupedcontent",
+        "primaryOption" : "primary-multicolumn",
+        "secondaryOption" : "secondary-multicolumn-wider"
+        // "wider65" : {
+        //     "secondaryOption" : "secondary-multicolumn-wider"
+        // },
+        // "wider50" : {
+        //     "secondaryOption" : "secondary-multicolumn-half"
+        // },
+        // "textwidth60" : {
+        //     "secondaryOption" : "secondary-multicolumn-wider-text"
+        // },
+        // "textwidth50" : {
+        //     "secondaryOption" : "secondary-multicolumn-half-text"
+        // }
     }
 }
 

@@ -166,7 +166,7 @@ class MultiColumnContainer extends PureComponent {
         const { context } = this
 
         return (
-            <div className = "multi-column-container">
+            <div className = "multi-column-container" onMouseUp = {this.context.handleFocus}>
                 { this.renderContainer(context) }
             </div>
         )
