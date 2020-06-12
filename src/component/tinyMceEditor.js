@@ -127,7 +127,7 @@ export class TinyMceEditor extends Component {
                     if (!e.level && editor.selection.getBoundingClientRect()) {
                         clickedX = editor.selection.getBoundingClientRect().left;
                         clickedY = editor.selection.getBoundingClientRect().top;
-
+                    
                         //BG-2376 - removing span bookmark from content
                         tinymce.$('span[data-mce-type="bookmark"]').each(function () {
                             let innerHtml = this.innerHTML;
@@ -1890,8 +1890,12 @@ export class TinyMceEditor extends Component {
                     termText = termText.replace(/data-temp-mathml/g, 'data-mathml').replace(/temp_Wirisformula/g, 'Wirisformula');
                     document.getElementById(currentTarget.id).innerHTML = termText
                 }
-                if (clickedX !== 0 && clickedY !== 0) {
+                if (clickedX !== 0 && clickedY !== 0) {     //User generated click event
                     tinymce.activeEditor.selection.placeCaretAt(clickedX, clickedY) //Placing exact cursor position on clicking.
+                }
+                else {                                      //Programmatic click event. Placing cursor at the end
+                    tinymce.activeEditor.selection.select(tinymce.activeEditor.getBody(), true);
+                    tinymce.activeEditor.selection.collapse(false);
                 }
                 tinymce.$('.blockquote-editor').attr('contenteditable', false)
                 this.editorOnClick(event);
