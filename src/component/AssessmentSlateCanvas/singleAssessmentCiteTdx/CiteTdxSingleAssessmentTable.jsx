@@ -85,11 +85,9 @@ const mapStateToProps = (state) => {
     return {
         singleAssessmentData: state.citeTdxReducer.singleAssessmentData,
         isLoading: state.citeTdxReducer.isLoading,
-        currentSingleAssessmentSelected:state.citeTdxReducer.currentSingleAssessmentSelected,
         citeErrorFlag: state.citeTdxReducer.assessmenterrFlag,
         assessmenterrFlag: state.citeTdxReducer.assessmenterrFlag,
-        currentSingleAssessmentSelected: state.citeTdxReducer.currentSingleAssessmentSelected
-        
+        currentSingleAssessmentSelected: state.citeTdxReducer.currentSingleAssessmentSelected   
     }
 }
 
