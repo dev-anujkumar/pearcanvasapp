@@ -118,8 +118,9 @@ export const addAudioNarrationForContainer = (audioData) => async(dispatch, getS
     let fileName, fileExtension;
     fileName = audioData.location;
     fileExtension = fileName.replace(/^.*\./, '');
+    audioData.format= audioData.format? audioData.format: fileExtension ?`audio/${fileExtension}`:"audio/mpeg"
     try {
-        if (fileExtension != 'mp3' || fileExtension != 'ogg' || fileExtension != 'opus' || fileExtension != 'wav') {
+        if (fileExtension != 'mp3' && fileExtension != 'ogg' && fileExtension != 'opus' && fileExtension != 'wav') {
           //  document.getElementsByClassName('.audio-block').style.pointerEvents  = "none"
             let redirectionURL = await fetch(fileName);
             let mp3LocationData = redirectionURL.url;

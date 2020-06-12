@@ -61,6 +61,7 @@ export class TinyMceEditor extends Component {
             fixed_toolbar_container: '#tinymceToolbar',
             content_style: EditorConfig.contentStyle,
             toolbar: EditorConfig.toolbar,
+            padd_empty_with_br: true,
             image_advtab: false,
             force_br_newlines: true,
             forced_root_block: '',
@@ -301,9 +302,10 @@ export class TinyMceEditor extends Component {
      */
     editorBeforeExecCommand = (editor) => {
         editor.on('BeforeExecCommand', (e) => {
-            console.log('evenst', e);
             let content = e.target.getContent()
             let keyDownEvent = null
+            let syntaxEnabled = document.querySelector('.panel_syntax_highlighting .switch input');
+            let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
             switch (e.command) {
                 case "indent":
                     if (editor.targetElm.findChildren('ol').length || editor.targetElm.findChildren('ul').length) {
@@ -440,6 +442,16 @@ export class TinyMceEditor extends Component {
                         return false
                     }
                     break;
+                case 'Bold':
+                case 'Italic':
+                case 'Underline':
+                    if (activeElement.nodeName === "CODE") { 
+                        if (syntaxEnabled && syntaxEnabled.checked) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                        }
+                    }
+                break;
             }
         })
     }
@@ -759,18 +771,41 @@ export class TinyMceEditor extends Component {
     }
 
     /**
-     * Adds inline code formatting option to the toolbar
+     * Adds custom inline code formatting option to the toolbar
      * @param {*} editor  editor instance
      */
+
     addInlineCodeIcon = (editor) => {
+        let self = this;
         editor.ui.registry.addToggleButton('code', {
-            text: '<i class="fa fa-code" aria-hidden="true"></i>',
+            text: '<i class="fa fa-code"></i>',
             tooltip: "Inline code",
-            onAction: () => {
-                this.addInlineCode(editor)
+            onAction: function () {
+                // Add the custom formatting
+                if (editor.selection.getNode().nodeName === 'CODE' && self.props.element.type === 'stanza') {
+                    let selectedNode = editor.selection.getNode();
+                    let innerHTML = selectedNode.innerHTML;
+                    selectedNode.outerHTML = innerHTML;
+                }
+                else {
+                    let range = editor.selection.getRng();
+                    let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
+                    editor.undoManager.transact(() => {
+                        editor.formatter.toggle('custom_code');
+                        if (activeElement.nodeName == "DIV" && self.props.element.type === 'stanza') {
+                            let divParent = tinymce.$(`div[id="cypress-${self.props.index}"]`).children();
+                            spanHandlers.handleFormattingTags(editor, self.props.elementId, 'div', divParent, 'poetryLine', range);
+                        }
+                    });
+                }
             },
-            onSetup: (api) => {
-                this.handleFocussingInlineCode(api, editor)
+            onSetup: function (api) {
+                // responsible for highligting the icon when inline formatting already applied
+                api.setActive(editor.formatter.match('code'));
+                var unbind = editor.formatter.formatChanged('code', api.setActive).unbind;
+                return function () {
+                    if (unbind) unbind();
+                };
             }
         });
     }
@@ -824,32 +859,6 @@ export class TinyMceEditor extends Component {
                 this.footnoteBtnInstance = btnRef;
             }
         });
-    }
-
-    /**
-     * Adds inline code formatting.
-     * @param {*} editor  editor instance
-     */
-    addInlineCode = (editor) => {
-        let selectedText = window.getSelection().anchorNode.parentNode.nodeName;
-        let hasCodeTag = window.getSelection().anchorNode.parentNode.innerHTML.includes('<code data-mce-selected="inline-boundary">')
-        if (editor.selection.getContent() != "" && selectedText != "CODE" && !hasCodeTag) {
-            editor.selection.setContent('<code>' + editor.selection.getContent() + '</code>');
-        }
-        else {
-            editor.selection.getContent() === "" && editor.selection.setContent('');
-        }
-    }
-
-    /*
-    *  handleFocussingInlineCode function is responsible for focussing inline Code Formatting button
-    */
-    handleFocussingInlineCode = (api, editor) => {
-        api.setActive(editor.formatter.match('code'));
-        var unbind = editor.formatter.formatChanged('code', api.setActive).unbind;
-        return function () {
-            if (unbind) unbind();
-        };
     }
 
     /**
@@ -1863,19 +1872,20 @@ export class TinyMceEditor extends Component {
             currentTarget.focus();
             let termText = tinyMCE.$("#" + currentTarget.id) && tinyMCE.$("#" + currentTarget.id).html();
             tinymce.init(this.editorConfig).then(() => {
-                if (termText && termText.length && this.props.element.type !== 'poetry' && this.props.element.type !== 'element-list' && !(
-                    this.props.element.type === "showhide" && this.props.currentElement.type === 'element-list')) {
-                    if (termText.search(/^(<.*>(<br.*>)<\/.*>)+$/g) < 0 &&
-                        (tinyMCE.$("#" + currentTarget.id).html()).search(/^(<.*>(<br.*>)<\/.*>)+$/g) >= 0) {
+                if (termText && termText.length && 'type' in this.props.element && this.props.element.type !== 'poetry' && this.props.element.type !== 'element-list' &&
+                !(this.props.element.type === "showhide" && this.props.currentElement.type === 'element-list')) {
+                    if (termText.search(/^(<.*>(<br.*>)<\/.*>)+$/g) < 0 && 
+                    (tinyMCE.$("#" + currentTarget.id).html()).search(/^(<.*>(<br.*>)<\/.*>)+$/g) >= 0) {
                         termText = tinyMCE.$("#" + currentTarget.id).html();
                     }
                     /***
                      * [BG-2225] | Unwanted saving calls in video element
                      */
-                    if (this.props.element.type === "figure" && termText.search(/^(<.*>(<br.*>)<\/.*>)+$/g) < 0 &&
+                    if ('type' in this.props.element && this.props.element.type === "figure" && termText.search(/^(<.*>(<br.*>)<\/.*>)+$/g) < 0 &&
                         (tinyMCE.$("#" + currentTarget.id).html()).search(/^(<br.*>)+$/g) >= 0) {
                         termText = tinyMCE.$("#" + currentTarget.id).html();
                     }
+
                     /* Reverting data-temp-mathml to data-mathml and class Wirisformula to temp_WirisFormula */
                     termText = termText.replace(/data-temp-mathml/g, 'data-mathml').replace(/temp_Wirisformula/g, 'Wirisformula');
                     document.getElementById(currentTarget.id).innerHTML = termText
@@ -1993,6 +2003,7 @@ export class TinyMceEditor extends Component {
                 return;
             }
             spanHandlers.handleExtraTags(this.props.elementId, 'div', 'poetryLine');
+            spanHandlers.handleExtraTags(this.props.elementId, 'code', 'codeNoHighlightLine')
         }
 
         tinyMCE.$('.Wirisformula').each(function () {
