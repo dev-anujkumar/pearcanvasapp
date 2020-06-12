@@ -17,7 +17,8 @@ import { authorAssetPopOver } from './AssetPopover/openApoFunction.js';
 import {
     tinymceFormulaIcon,
     tinymceFormulaChemistryIcon,
-    assetPopoverIcon
+    assetPopoverIcon,
+    crossLinkIcon
 } from '../images/TinyMce/TinyMce.jsx';
 import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
 import { checkforToolbarClick, customEvent, spanHandlers } from '../js/utils';
@@ -76,6 +77,8 @@ export class TinyMceEditor extends Component {
                     this.addChemistryFormulaButton(editor);
                     this.addMathmlFormulaButton(editor);
                 }
+                this.setCrossLinkingIcon(editor);
+                this.addCrossLinkingIcon(editor);
                 this.setAssetPopoverIcon(editor);
                 this.addAssetPopoverIcon(editor);
                 this.addFootnoteIcon(editor);
@@ -862,6 +865,17 @@ export class TinyMceEditor extends Component {
     }
 
     /**
+     * Adds Cross Linking icon to the toolbar.
+     * @param {*} editor  editor instance
+     */
+    setCrossLinkingIcon = editor => {
+        editor.ui.registry.addIcon(
+            "crossLinkingIcon",
+            crossLinkIcon
+        );
+    }
+
+    /**
      * Adds Asset popover icon to the toolbar.
      * @param {*} editor  editor instance
      */
@@ -980,6 +994,80 @@ export class TinyMceEditor extends Component {
             }
         });
     };
+
+    /**
+     * Adding button for Cross Linking
+     * @param {*} editor  editor instance
+     */
+    addCrossLinkingIcon = editor => {
+
+        editor.ui.registry.addMenuButton("crossLinkingIcon", {
+            text: "",
+            icon: "crosslinkingicon",
+            tooltip: "Cross Linking",
+            fetch: cb => {
+                let items = [];
+                
+                if('element' in this.props && 'type' in this.props.element) {
+                    if(this.props.element.type !== 'showhide') {
+                        items = [
+                            {
+                                type: 'menuitem',
+                                text: 'Figure Link',
+                                tooltip: "Figure Link",
+                                onAction: () => {
+                                    let selectedText = window.getSelection().toString();
+                                    if (selectedText.length) {
+                                        this.addAssetPopover(editor, selectedText)
+                                    }
+                                },
+                                onSetup: (buttonApi) => {
+                                    /*
+                                    make merge menu button apis available globally among compnenet
+                                    */
+                                    let selectedText = window.getSelection().toString();
+                                    this.assetPopoverButtonState = buttonApi;
+                                    if (!selectedText.length) {
+                                        this.assetPopoverButtonState.setDisabled();
+                                    }
+                                }
+                            }
+                        ];
+                    }
+                
+                
+                    if(this.props.element.type == 'element-authoredtext' || this.props.element.type == 'element-list' || this.props.element.type == 'showhide') {
+                        items = [
+                            ...items,
+                            {
+                                type: 'menuitem',
+                                text: "Page Link",
+                                tooltip: "Page Link",
+                                onAction: () => {
+                                    let selectedText = window.getSelection().toString();
+                                    if (selectedText.length) {
+                                        this.addAssetPopover(editor, selectedText)
+                                    }
+                                },
+                                onSetup: (buttonApi) => {
+                                    /*
+                                    make merge menu button apis available globally among compnenet
+                                    */
+                                    let selectedText = window.getSelection().toString();
+                                    this.assetPopoverButtonState = buttonApi;
+                                    if (!selectedText.length) {
+                                        this.assetPopoverButtonState.setDisabled();
+                                    }
+                                }
+                            }
+                        ];
+                    }
+                }
+
+                cb(items)
+            },
+        });
+    }
 
     /**
      * Adding button for asset popover
