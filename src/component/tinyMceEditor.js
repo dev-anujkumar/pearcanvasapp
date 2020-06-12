@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 //IMPORT TINYMCE 
 import tinymce from 'tinymce/tinymce';
@@ -23,7 +23,7 @@ import {
 import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
 import { checkforToolbarClick, customEvent, spanHandlers } from '../js/utils';
 import { saveGlossaryAndFootnote, setFormattingToolbar } from "./GlossaryFootnotePopup/GlossaryFootnote_Actions"
-import { ShowLoader, HideLoader } from '../constants/IFrameMessageTypes';
+import { ShowLoader } from '../constants/IFrameMessageTypes';
 import { sendDataToIframe, hasReviewerRole } from '../constants/utility.js';
 import store from '../appstore/store';
 import { MULTIPLE_LINE_POETRY_ERROR_POPUP } from '../constants/Action_Constants';
