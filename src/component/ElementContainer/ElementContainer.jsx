@@ -788,8 +788,9 @@ class ElementContainer extends Component {
      * Renders color-palette button for opener element 
      * @param {e} event
      */
-    renderColorPaletteButton = (element) => {
-        if (element.type === elementTypeConstant.OPENER) {
+    renderColorPaletteButton = (element, permissions) => {
+        const isPermitted = permissions.includes('elements_add_remove')
+        if (element.type === elementTypeConstant.OPENER && isPermitted) {
             return (
                 <>
                     <Button onClick={this.toggleColorPaletteList} type="color-palette" />
@@ -838,8 +839,9 @@ class ElementContainer extends Component {
      * Renders color-text button for opener element 
      * @param {e} event
      */
-    renderColorTextButton = (element) => {
-        if (element.type === elementTypeConstant.OPENER) {
+    renderColorTextButton = (element, permissions) => {
+        const isPermitted = permissions.includes('elements_add_remove')
+        if (element.type === elementTypeConstant.OPENER && isPermitted) {
             return (
                 <>
                     <Button onClick={this.toggleColorTextList} type="color-text" />
@@ -1224,8 +1226,8 @@ class ElementContainer extends Component {
                     <Button type="element-label" btnClassName={`${btnClassName} ${this.state.isOpener ? ' ignore-for-drag' : ''}`} labelText={labelText} />
                     {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && config.slateType !== 'assessment' ? (<Button type="delete-element" onClick={() => this.showDeleteElemPopup(true)} />)
                         : null}
-                    {this.renderColorPaletteButton(element)}
-                    {this.renderColorTextButton(element)}
+                    {this.renderColorPaletteButton(element, permissions)}
+                    {this.renderColorTextButton(element, permissions)}
                 </div>
                     : ''}
                 <div className={`element-container ${labelText.toLowerCase()} ${borderToggle}`} data-id={element.id} onFocus={() => this.toolbarHandling('remove')} onBlur={() => this.toolbarHandling('add')}>
