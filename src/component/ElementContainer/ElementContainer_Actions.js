@@ -811,7 +811,7 @@ export const getTableEditorData = (elementid,updatedData) => (dispatch, getState
 const updateTableEditorData = (elementId, tableData, slateBodyMatter) => {
 
     return slateBodyMatter = slateBodyMatter.map(elm => {
-        if (elm.id === elementId ) {
+        if (elm.id === elementId) {
             elm = {
                 ...elm,
                 ...tableData

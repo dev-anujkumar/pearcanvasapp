@@ -79,7 +79,6 @@ class PageNumberElement extends React.Component {
     }
 
     render() {
-        console.log("kanika")
         let { element, isHovered, isPageNumberEnabled, activeElement, permissions, _slateType } = this.props;
         let loader = this.props.pageLoading;
         let content = null;

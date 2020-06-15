@@ -10,7 +10,7 @@ import ElementContainer from '../ElementContainer';
 import ElementSaprator from '../ElementSaprator';
 import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
 import { SlateFooter } from './SlateFooter.jsx';
-import { createElement, swapElement, setSplittedElementIndex, updatePageNumber, accessDenied, pageNumberReset } from './SlateWrapper_Actions';
+import { createElement, swapElement, setSplittedElementIndex, updatePageNumber, accessDenied } from './SlateWrapper_Actions';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader, SplitCurrentSlate } from '../../constants/IFrameMessageTypes.js';
 import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';

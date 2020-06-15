@@ -107,7 +107,7 @@ function CommunicationChannel(WrappedComponent) {
                 //     break;
                 case 'refreshElementWithTable':
                     {
-                        this.setTableData(message.elementId,message.updatedData);
+                        this.setTableData(message.elementId, message.updatedData);
                        
                     }
                     break;
