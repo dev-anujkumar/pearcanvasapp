@@ -37,7 +37,6 @@ export const INTERACTIVE_ELEMENT_CREATED = "INTERACTIVE_ELEMENT_CREATED"
 export const AUTHORING_ELEMENT_UPDATE = "AUTHORING_ELEMENT_UPDATE"
 export const SET_OLD_IMAGE_PATH = "SET_OLD_IMAGE_PATH"
 /*---------------Element Container ----------------------*/
-export const ADD_COMMENT = "ADD_COMMENT"
 export const DELETE_ELEMENT = "DELETE_ELEMENT"
 export const OPEN_GLOSSARY_FOOTNOTE = "OPEN_GLOSSARY_FOOTNOTE"
 export const ADD_GLOSSARY_FOOTNOTE = "ADD_GLOSSARY_FOOTNOTE"
@@ -110,3 +109,6 @@ export const DELETE_SHOW_HIDE_ELEMENT = "DELETE_SHOW_HIDE_ELEMENT"
 
 /*--------------- Slate Title -------------------*/
 export const SLATE_TITLE = 'Title'
+/*--------------- TCM Snapshot -------------------*/
+export const GET_TCM_RESOURCES = 'GET_TCM_RESOURCES'
+export const GET_TCM_STATUS_OF_PROJECT = 'GET_TCM_STATUS_OF_PROJECT'

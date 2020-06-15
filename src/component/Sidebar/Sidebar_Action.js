@@ -4,7 +4,8 @@ import config  from './../../config/config';
 import {
     FETCH_SLATE_DATA,
     SET_ACTIVE_ELEMENT,
-    ERROR_POPUP
+    ERROR_POPUP,
+    GET_TCM_RESOURCES
 } from './../../constants/Action_Constants';
 import elementTypes from './../Sidebar/elementTypes';
 import figureDataBank from '../../js/figure_data_bank';
@@ -180,8 +181,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         outputType : outputPrimaryOptionEnum,
         outputSubType: outputSubTypeEnum,
         projectUrn : config.projectUrn,
-        projectURN : config.projectUrn,
-        slateUrn:Object.keys(appStore.parentUrn).length !== 0 ? appStore.parentUrn.manifestUrn: config.slateManifestURN,
+        slateVersionUrn:Object.keys(appStore.parentUrn).length !== 0 ? appStore.parentUrn.manifestUrn: config.slateManifestURN,
         counterIncrement: (newElementData.startvalue > 0) ? (newElementData.startvalue) : 1, // earlier default by 0
         index: indexes[indexes.length - 1],
         slateEntity : Object.keys(appStore.parentUrn).length !== 0 ?appStore.parentUrn.contentUrn:config.slateEntityURN
@@ -211,7 +211,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             if(elem.type==="element-aside"){
                 elem.elementdata.bodymatter.forEach((nestElem)=>{
                     if(nestElem.id===conversionDataToSend.id){
-                        conversionDataToSend.slateUrn = elem.versionUrn;
+                        conversionDataToSend.slateVersionUrn = elem.versionUrn;
                         conversionDataToSend.slateEntity = elem.contentUrn;
                     }
                 })
@@ -223,8 +223,11 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         return;
     }
     if(showHideObj){
-        conversionDataToSend["section"] = showHideObj.showHideType
+        conversionDataToSend["sectionType"] = showHideObj.showHideType
+        conversionDataToSend["elementParentEntityUrn"] = showHideObj.element.contentUrn
     }
+    let parentEntityUrn = conversionDataToSend.elementParentEntityUrn || appStore.parentUrn && appStore.parentUrn.contentUrn || config.slateEntityURN
+    conversionDataToSend["elementParentEntityUrn"] = parentEntityUrn
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
     config.conversionInProcess = true
     if(conversionDataToSend.status === "approved"){
@@ -248,7 +251,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         if (currentSlateData.status === 'approved') {
             if(currentSlateData.type==="popup"){
                 sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
-                dispatch(fetchSlateData(config.slateManifestURN,conversionDataToSend.slateEntity, 0,currentSlateData));
+                dispatch(fetchSlateData(config.slateManifestURN,conversionDataToSend.slateEntity, 0,currentSlateData,""));
             }
             else{
                 sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
@@ -335,6 +338,13 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                 toolbar: [],
                 elementWipType: "element-authoredtext"
             }
+        }
+        //tcm conversion code   
+        if (config.tcmStatus) {
+            let elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza'];
+            if (elementType.indexOf(oldElementData.type) !== -1) {
+                prepareDataForConversionTcm(oldElementData.id, getState, dispatch,res.data.id);
+            }
         }   
         dispatch({
             type: SET_ACTIVE_ELEMENT,
@@ -356,6 +366,39 @@ catch (error) {
     dispatch({type: ERROR_POPUP, payload:{show: true}})
 }
 }
+function prepareDataForConversionTcm(updatedDataID, getState, dispatch,versionid) {
+    const tcmData = getState().tcmReducer.tcmSnapshot;
+    if(versionid && updatedDataID !== versionid){
+        tcmData.push({
+            "txCnt": 1,
+            "isPrevAcceptedTxAvailable": false,
+            "elemURN": versionid,
+            "feedback": null
+        })
+    }
+    else{
+        for (let i = 0; i < tcmData.length; i++) {
+            if (tcmData[i].elemURN.includes('urn:pearson:work') && tcmData[i].elemURN.indexOf(updatedDataID) !== -1) {
+                tcmData[i]["elemURN"] = updatedDataID
+                tcmData[i]["txCnt"] = tcmData[i]["txCnt"] !== 0 ? tcmData[i]["txCnt"] : 1
+                tcmData[i]["feedback"] = tcmData[i]["feedback"] !== null ? tcmData[i]["feedback"] : null
+                tcmData[i]["isPrevAcceptedTxAvailable"] = tcmData[i]["isPrevAcceptedTxAvailable"] ? tcmData[i]["isPrevAcceptedTxAvailable"] : false
+                break;
+            }
+        }
+    }
+    
+    if (tcmData) {
+        sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });
+    }
+    dispatch({
+        type: GET_TCM_RESOURCES,
+        payload: {
+            data: tcmData
+        }
+    })
+}
+
 export const handleElementConversion = (elementData, store, activeElement, fromToolbar,showHideObj) => dispatch => {
     store = JSON.parse(JSON.stringify(store));
     if(Object.keys(store).length > 0) {
