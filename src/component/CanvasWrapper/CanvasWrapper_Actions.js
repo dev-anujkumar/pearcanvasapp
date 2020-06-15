@@ -52,7 +52,7 @@ const multiColumnData = {
                             "text": "<p class=\"paragraphNumeroUno\">Column 1 para element</p>"
                         },
                         "comments": true,
-                        "tcm": true,
+                        "tcm": false,
                         "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
                         "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
                     }]
@@ -79,7 +79,7 @@ const multiColumnData = {
                                 "text": "<p class=\"paragraphNumeroUno\">Column 2 para element</p>"
                             },
                             "comments": true,
-                            "tcm": true,
+                            "tcm": false,
                             "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0b",
                             "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c528"
                         }

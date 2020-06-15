@@ -1,18 +1,49 @@
+/** Libraries */
 import React, { PureComponent } from 'react'
-import constants from "./constants.js"
-import { guid } from '../../constants/utility.js'
-import ElementSaprator from '../ElementSaprator'
 import Sortable from 'react-sortablejs'
-import { sendDataToIframe } from '../../constants/utility.js'
+
+/** Contants and utitlity functions */
+import constants from "./constants.js"
+import { guid, sendDataToIframe } from '../../constants/utility.js'
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js'
-import ElementContainer from '../ElementContainer'
 import MultiColumnContainerContext from '../ElementContainer/MultiColumnContext.js'
+
+/** External Components */
+import ElementSaprator from '../ElementSaprator'
+import ElementContainer from '../ElementContainer'
+import PageNumberElement from '../SlateWrapper/PageNumberElement.jsx';
+
+/** Style/CSS */
 import './../../styles/MultiColumn/style.css'
 
 let random = guid();
 
 class MultiColumnContainer extends PureComponent {
 
+    /**
+     * Renders blank container with an element picker (Separator)
+     * @param {object} _context - React context
+     * @param {object} parentUrn - object containing immediate parent information
+     * @param {object} asideData - object containing Multicolumn container information
+     * @param {Number} parentIndex - Index of column
+     */
+    renderBlankContainer = (_context, parentUrn, asideData, parentIndex) => {
+        let index = 0
+        return (
+            <>
+                <ElementSaprator
+                    index={index}
+                    firstOne={true}
+                    esProps={_context.elementSeparatorProps(index, true, parentUrn, asideData, parentIndex)}
+                    elementType="group"
+                    sectionBreak={false}
+                    permissions={_context.permissions}
+                    onClickCapture={_context.onClickCapture}
+                />
+            </>
+        )
+    }
+    
     /**
      * Render elements in a column group
      * @param {Array} _elements - Array of elements in the group
@@ -28,6 +59,9 @@ class MultiColumnContainer extends PureComponent {
         };
         try {
             if (_elements !== null && _elements !== undefined) {
+                if (_elements.length === 0) {
+                    return this.renderBlankContainer(this.context, parentUrn, asideData, parentIndex)
+                }
                 return _elements.map((element, index) => {
                     return (
                         <React.Fragment key={element.id}>
@@ -52,7 +86,22 @@ class MultiColumnContainer extends PureComponent {
                                 isBlockerActive={this.context.isBlockerActive}
                                 onClickCapture={this.context.onClickCapture}
                                 parentElement = {this.context.element}
-                            />
+                            >
+                                {
+                                    (isHovered, isPageNumberEnabled, activeElement, permissions) => (
+                                        <PageNumberElement 
+                                            updatePageNumber={this.context.updatePageNumber}
+                                            asideData={asideData}
+                                            parentUrn={parentUrn}
+                                            element={element}
+                                            isHovered={isHovered}
+                                            isPageNumberEnabled={isPageNumberEnabled}
+                                            activeElement={activeElement}
+                                            permissions={permissions}
+                                        />
+                                    )
+                                }
+                            </ElementContainer>
                             <ElementSaprator
                                 index={index}
                                 esProps={this.context.elementSeparatorProps(index, false, parentUrn, asideData, parentIndex)}
@@ -62,7 +111,6 @@ class MultiColumnContainer extends PureComponent {
                                 onClickCapture={this.context.onClickCapture}                                       
                             />  
                         </React.Fragment>
-                        
                     )
                 })
             }
@@ -112,7 +160,7 @@ class MultiColumnContainer extends PureComponent {
             }
             this['cloneCOSlateControlledSource_4' + random] = this.renderElement(_bodyMatter, parentUrn, index)
             return (
-                <div className={`container-multi-column-group column-${index}`} data-id={_containerId} container-type={_containerType}>
+                <div className={`container-multi-column-group ${constants.setClassByElementType(this.context.element)} column-${index}`} data-id={_containerId} container-type={_containerType}>
                     <Sortable
                         options={{
                             ...constants.sortableOptions,
