@@ -35,7 +35,7 @@ import {
     SET_PARENT_SHOW_DATA,
     GET_ALL_SLATES_DATA,
     SET_CURRENT_SLATE_DATA,
-    GET_CURRENT_PAGE_NUMBER
+    SET_ALL_PAGE_NUMBER_ELEM_ID
 } from '../constants/Action_Constants';
 
 /**
@@ -59,7 +59,8 @@ const INITIAL_STATE = {
     asideData: {},
     showHideObj:{},
     allSlateData:{},
-    currentSlateAncestorData:{}
+    currentSlateAncestorData:{},
+    allElemPageData:[]
 };
 
 const INITIAL_ACTION = {
@@ -109,10 +110,10 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
                 ...state,
                 pageNumberData: action.payload
             }
-        case GET_CURRENT_PAGE_NUMBER:
+        case SET_ALL_PAGE_NUMBER_ELEM_ID:
             return {
                 ...state,
-                currentPageNumberData: action.payload
+                allElemPageData: action.payload
             }
         case SET_UPDATED_SLATE_TITLE:
             return {

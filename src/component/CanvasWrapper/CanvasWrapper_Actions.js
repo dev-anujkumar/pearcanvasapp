@@ -10,7 +10,9 @@ import {
     SET_PARENT_ASIDE_DATA,
     SET_PARENT_SHOW_DATA,
     ERROR_POPUP,
-    SLATE_TITLE
+    SLATE_TITLE,
+    GET_PAGE_NUMBER,
+    SET_ALL_PAGE_NUMBER_ELEM_ID
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
@@ -223,6 +225,16 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
         page = config.totalPageCount;
     }
     config.page = page;
+    /** Page Number removed  */
+    dispatch({
+        type: GET_PAGE_NUMBER,
+        payload: []
+    });
+    dispatch({
+        type: SET_ALL_PAGE_NUMBER_ELEM_ID,
+        payload: []
+    });
+
     /** Project level and element level TCM status */
     if (page === 0 && config.tcmStatus && versioning === "") {
         /** Show TCM icon header if TCM is on for project level*/

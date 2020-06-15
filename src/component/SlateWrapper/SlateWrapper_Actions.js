@@ -16,7 +16,7 @@ import {
     SET_PARENT_NODE,
     ERROR_POPUP,
     GET_TCM_RESOURCES,
-    GET_CURRENT_PAGE_NUMBER
+    SET_ALL_PAGE_NUMBER_ELEM_ID
 
 } from '../../constants/Action_Constants';
 
@@ -494,58 +494,17 @@ export const updatePageNumber = (pagenumber, elementId, asideData, parentUrn) =>
                 }
             }
         ).then(res => {
-            const parentData = getState().appStore.slateLevelData;
-            const newslateData = JSON.parse(JSON.stringify(parentData));
-            let _slateObject = Object.values(newslateData)[0];
-            let { contents: _slateContent } = _slateObject;
-            let { bodymatter: _slateBodyMatter } = _slateContent;
-            let pageNumberRef = {
-                pageNumber: data.pageNumber
-            }
-             _slateBodyMatter.map(element => {
-                if (element.id === elementId) {
-                    element['pageNumberRef'] = { ...pageNumberRef, urn: element.id }
-                }
-                else if (asideData && asideData.type == 'element-aside') {
-                    if (element.id == asideData.id) {
-                        element.elementdata.bodymatter.map((nestedEle) => {
-                            if (nestedEle.id == elementId) {
-                                nestedEle['pageNumberRef'] = { ...pageNumberRef, urn: nestedEle.id }
-                            }
-                            else if (nestedEle.type == "manifest" && nestedEle.id == parentUrn.manifestUrn) {
-                                nestedEle.contents.bodymatter.map((ele) => {
-                                    if (ele.id == elementId) {
-                                        ele['pageNumberRef'] = { ...pageNumberRef, urn: ele.id }
-                                    }
-                                    return ele
-                                })
-                            }
-                            return nestedEle
-                        })
-                    }
-                }
-                return element
-            })
             let pageNumberData = getState().appStore.pageNumberData;
-            pageNumberData.forEach(function (element,index) {
-                if(element.id.indexOf(elementId) !== -1){
-                    pageNumberData[index]["id"]=elementId
-                    pageNumberData[index]["pagenumber"]=pagenumber }
-                    else{
-                        pageNumberData.push({
-                            "id": elementId,
-                            "pagenumber": pagenumber
-                        })
-                    }
+            pageNumberData.forEach(function (element, index) {
+                if (element.id.indexOf(elementId) !== -1) {
+                    pageNumberData[index]["id"] = elementId
+                    pageNumberData[index]["pagenumber"] = pagenumber
+                }
             });
             dispatch({
                 type: GET_PAGE_NUMBER,
                 payload: pageNumberData
             });
-            dispatch({
-                type: FETCH_SLATE_DATA,
-                payload: newslateData
-            })
             dispatch({
                 type: UPDATE_PAGENUMBER_SUCCESS,
                 payload: {
@@ -575,6 +534,14 @@ export const updatePageNumber = (pagenumber, elementId, asideData, parentUrn) =>
                 }
             }
         ).then(res => {
+            let pageNumberData = getState().appStore.pageNumberData;
+            pageNumberData = pageNumberData && pageNumberData.filter(function (pageNumber) {
+            return !pageNumber.id.includes(elementId);
+        });
+        dispatch({
+            type: GET_PAGE_NUMBER,
+            payload: pageNumberData
+        });
             dispatch({
                 type: UPDATE_PAGENUMBER_SUCCESS,
                 payload: {
@@ -629,8 +596,16 @@ export const setSlateParent = (setSlateParentParams) => (dispatch, getState) => 
     })
 }
 export const getPageNumber = (elementID) => (dispatch, getState) => {
+    dispatch({
+        type: UPDATE_PAGENUMBER_SUCCESS,
+        payload: {
+            pageLoading: true
+        }
+    })
     let pageNumberData = getState().appStore.pageNumberData;
-    let url = `https://contentapis-qa.pearsoncms.net/print-api/v2/pageNumberMapping/${elementID}`;
+    let allElemPageData = getState().appStore.allElemPageData;
+    allElemPageData.push(elementID)
+    let url = `${config.PAGE_NUMBER_UPDATE_ENDPOINT}/v2/pageNumberMapping/${elementID}`;
     return axios.get(url, {
         headers: {
             PearsonSSOSession: config.ssoToken
@@ -641,21 +616,48 @@ export const getPageNumber = (elementID) => (dispatch, getState) => {
             pageNumber: response.data.pageNumber
         }
         pageNumberData.push(newPageNumber)
-        config.pageNumberInProcess= true;
+        config.pageNumberInProcess = true;
         dispatch({
             type: GET_PAGE_NUMBER,
             payload: pageNumberData
         });
         dispatch({
-            type: GET_CURRENT_PAGE_NUMBER,
-            payload: response.data
+            type: SET_ALL_PAGE_NUMBER_ELEM_ID,
+            payload: allElemPageData
         });
+        dispatch({
+            type: UPDATE_PAGENUMBER_SUCCESS,
+            payload: {
+                pageLoading: false
+            }
+        })
         return response.data;
     }).catch((error) => {
-        config.pageNumberInProcess= true;
-        // dispatch({
-        //     type: GET_PAGE_NUMBER,
-        //     payload: {}
-        // });
+        let newPageNumber = {
+            id: elementID,
+            pageNumber: ""
+        }
+        pageNumberData.push(newPageNumber)
+        config.pageNumberInProcess = true;
+        dispatch({
+            type: GET_PAGE_NUMBER,
+            payload: pageNumberData
+        });
+        dispatch({
+            type: SET_ALL_PAGE_NUMBER_ELEM_ID,
+            payload: allElemPageData
+        });
+        dispatch({
+            type: UPDATE_PAGENUMBER_SUCCESS,
+            payload: {
+                pageLoading: false
+            }
+        })
     })
+}
+export const pageData = (pageNumberData) => (dispatch, getState) => {
+    dispatch({
+        type: GET_PAGE_NUMBER,
+        payload: pageNumberData
+    });
 }
