@@ -29,7 +29,7 @@ const multiColumnData = {
     "versionUrn": "urn:pearson:manifest:84a2137b-da6d-4577-8a17-8c9806c888u6",
     "contentUrn": "urn:pearson:entity:7bbe434f-039a-4525-996d-44fa424c1k76",
     "width": "wider",
-    "groupproportions": "50-50",
+    "groupproportions": "60-40",
     "groupeddata": {
         "bodymatter": [
             {
@@ -256,8 +256,14 @@ const findElementType = (element, index) => {
                 case  'groupedcontent':
                 elementType = {
                     elementType: elementDataBank[element.type]["elementType"],
-                    primaryOption: elementDataBank[element.type]["primaryOption"],
-                    secondaryOption: elementDataBank[element.type][`${element.width}-${element.groupproportions}`]["secondaryOption"]
+                    primaryOption: elementDataBank[element.type]["primaryOption"]  
+                }
+                if(element.width && element.groupproportions){
+                    
+                    elementType["secondaryOption"]= elementDataBank[element.type][`${element.width}-${element.groupproportions}`]["secondaryOption"]
+                }
+                else{
+                    elementType["secondaryOption"]= elementDataBank[element.type]["wider-60-40"]["secondaryOption"] 
                 }
                 break;
             default:

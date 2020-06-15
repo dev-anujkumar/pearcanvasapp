@@ -50,3 +50,15 @@
 .container-multi-column-group.wider-60-40.column-1 {
     width: 40%;
 }
+
+/* Subtype: text-width-50-50 */
+.container-multi-column-group.text-width-50-50 {
+    width: 50%;
+}
+/* Subtype: text-width-60-40 */
+.container-multi-column-group.text-width-60-40.column-0 {
+    width: 60%;
+}
+.container-multi-column-group.text-width-60-40.column-1 {
+    width: 40%;
+}
