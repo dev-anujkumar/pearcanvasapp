@@ -447,7 +447,8 @@ class ElementContainer extends Component {
     /**
      * This function opens TCM w.r.t. current Element
      */
-    handleTCM = () => {
+    handleTCM = (e) => {
+        e.stopPropagation();
         loadTrackChanges(this.props.element.id)
     }
     /**
@@ -1238,7 +1239,7 @@ class ElementContainer extends Component {
                        // console.log("event",event)
                         handleCommentspanel(event,element.id, this.props.index)
                         }} type="comment-flag" />}
-                    {feedback ? <Button elementId={element.id} type="feedback" onClick={this.handleTCM} /> : (tcm && <Button type="tcm" onClick={this.handleTCM} />)}
+                    {feedback ? <Button elementId={element.id} type="feedback" onClick={(event) => this.handleTCM(event)} /> : (tcm && <Button type="tcm" onClick={(event) => this.handleTCM(event)} />)}
                 </div> : ''}
                 {this.state.popup && <PopUp
                     togglePopup={this.handleCommentPopup}
