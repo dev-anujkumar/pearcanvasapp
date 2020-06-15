@@ -257,7 +257,7 @@ const findElementType = (element, index) => {
                 elementType = {
                     elementType: elementDataBank[element.type]["elementType"],
                     primaryOption: elementDataBank[element.type]["primaryOption"],
-                    secondaryOption: elementDataBank[element.type]["secondaryOption"]
+                    secondaryOption: elementDataBank[element.type][`${element.width}-${element.groupproportions}`]["secondaryOption"]
                 }
                 break;
             default:

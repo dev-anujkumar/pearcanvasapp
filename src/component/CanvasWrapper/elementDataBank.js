@@ -384,19 +384,19 @@ const elementDataBank = {
     "groupedcontent":{
         "elementType" : "groupedcontent",
         "primaryOption" : "primary-multicolumn",
-        "secondaryOption" : "secondary-multicolumn-wider"
-        // "wider65" : {
-        //     "secondaryOption" : "secondary-multicolumn-wider"
-        // },
-        // "wider50" : {
-        //     "secondaryOption" : "secondary-multicolumn-half"
-        // },
-        // "textwidth60" : {
-        //     "secondaryOption" : "secondary-multicolumn-wider-text"
-        // },
-        // "textwidth50" : {
-        //     "secondaryOption" : "secondary-multicolumn-half-text"
-        // }
+        
+        "wider-65-35" : {
+            "secondaryOption" : "secondary-multicolumn-wider"
+        },
+        "wider-50-50" : {
+            "secondaryOption" : "secondary-multicolumn-half"
+        },
+        "text-width-60-40" : {
+            "secondaryOption" : "secondary-multicolumn-wider-text"
+        },
+        "text-width-50-50" : {
+            "secondaryOption" : "secondary-multicolumn-half-text"
+        }
     }
 }
 
