@@ -15,6 +15,10 @@ let constants = {
         preventOnFilter: false,
         draggable: ".editor",
         forceFallback: true
+    },
+    setClassByElementType: (parentElement) => {
+        let { width, groupproportions } = parentElement
+        return `${width}-${groupproportions}`
     }
 }
 
