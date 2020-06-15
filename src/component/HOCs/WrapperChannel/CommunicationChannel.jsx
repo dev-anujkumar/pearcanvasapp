@@ -108,6 +108,7 @@ function CommunicationChannel(WrappedComponent) {
                 case 'refreshElementWithTable':
                     {
                         this.setTableData(message.elementId, message.updatedData);
+                       
                     }
                     break;
                 case 'canvasBlocker':

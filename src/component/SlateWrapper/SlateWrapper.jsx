@@ -32,6 +32,7 @@ import { setActiveElement,openPopupSlate } from '../CanvasWrapper/CanvasWrapper_
 import { showSlateLockPopup } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import { handleTCMData } from '../ElementContainer/TcmSnapshot_Actions'
 
+
 let random = guid();
 class SlateWrapper extends Component {
     constructor(props) {
@@ -1223,7 +1224,7 @@ export default connect(
         accessDenied,
         openPopupSlate,
         showSlateLockPopup,
-        handleTCMData,
+        handleTCMData
 
     }
 )(SlateWrapper);

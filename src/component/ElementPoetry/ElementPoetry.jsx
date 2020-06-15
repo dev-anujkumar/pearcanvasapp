@@ -153,19 +153,6 @@ class ElementPoetry extends Component {
                                         showDeleteElemPopup={this.props.showDeleteElemPopup}
                                         parentElement = {this.props.element}
                                         onListSelect={this.props.onListSelect}>
-                                        {
-                                            (isHovered, isPageNumberEnabled, activeElement) => (
-                                                <PageNumberElement
-                                                    updatePageNumber={this.props.updatePageNumber}
-                                                    poetryData={poetryData}
-                                                    parentUrn={parentUrn}
-                                                    element={element}
-                                                    isHovered={isHovered}
-                                                    isPageNumberEnabled={isPageNumberEnabled}
-                                                    activeElement={activeElement}
-                                                    permissions={this.props.permissions} />
-                                            )
-                                        }
                                     </ElementContainer>
                                     <ElementSaprator
                                         index={index}

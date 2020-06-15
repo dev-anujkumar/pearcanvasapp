@@ -33,7 +33,8 @@ import {
     DELETE_SHOW_HIDE_ELEMENT,
     SET_PARENT_SHOW_DATA,
     GET_ALL_SLATES_DATA,
-    SET_CURRENT_SLATE_DATA
+    SET_CURRENT_SLATE_DATA,
+    SET_ALL_PAGE_NUMBER_ELEM_ID
 } from '../constants/Action_Constants';
 
 /**
@@ -46,7 +47,7 @@ const INITIAL_STATE = {
     // elementsTag: {},
     activeElement: {},
     splittedElementIndex: 0,
-    pageNumberData: {},
+    pageNumberData: [],
     permissions: [],
     accesDeniedPopup: false,
     popupSlateData: null,
@@ -57,7 +58,8 @@ const INITIAL_STATE = {
     asideData: {},
     showHideObj:{},
     allSlateData:{},
-    currentSlateAncestorData:{}
+    currentSlateAncestorData:{},
+    allElemPageData:[]
 };
 
 const INITIAL_ACTION = {
@@ -105,6 +107,11 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
             return {
                 ...state,
                 pageNumberData: action.payload
+            }
+        case SET_ALL_PAGE_NUMBER_ELEM_ID:
+            return {
+                ...state,
+                allElemPageData: action.payload
             }
         case SET_UPDATED_SLATE_TITLE:
             return {
