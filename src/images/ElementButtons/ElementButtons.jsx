@@ -291,7 +291,7 @@ export const tableElemIcon = (() => {
 export const multiColumnContainer = (() => {
     return (
         <svg width="18px" height="18px" viewBox="0 0 18 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
-            <title>icon/element/MultiColumn</title>
+            {/* <title>icon/element/MultiColumn</title> */}
             <g id="Multi-column-group" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
                 <g id="02" transform="translate(-934.000000, -582.000000)">
                     <g id="Group" transform="translate(203.000000, 296.000000)">

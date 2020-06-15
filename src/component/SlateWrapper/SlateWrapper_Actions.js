@@ -27,10 +27,10 @@ Array.prototype.move = function (from, to) {
 };
 
 function prepareDataForTcmUpdate(updatedData, parentData, asideData, poetryData) {
-    if (parentData && (parentData.elementType === "element-aside" || parentData.elementType === "citations" 
-        || parentData.elementType === "poetry")) {
+    if (parentData && (parentData.elementType === "element-aside" || parentData.elementType === "citations"
+        || parentData.elementType === "poetry" || parentData.elementType === "groupedcontent")) {
         updatedData.isHead = true;
-    } else if (parentData && parentData.elementType === "manifest") {
+    } else if (parentData && (parentData.elementType === "manifest" || parentData.elementType === "group" )) {
         updatedData.isHead = false;
     }
     if(updatedData.type === "POP_UP" || updatedData.type === "SHOW_HIDE"){
@@ -44,6 +44,8 @@ function prepareDataForTcmUpdate(updatedData, parentData, asideData, poetryData)
         }
     } else if ((poetryData && poetryData.type === 'poetry') || (parentData && parentData.elementType === "poetry")){
         updatedData.parentType = "poetry";
+    } else if (asideData && asideData.type === "groupedcontent") {
+        updatedData.parentType = "groupedcontent";
     }
     updatedData.projectURN = config.projectUrn;
     updatedData.slateEntity = poetryData && poetryData.contentUrn || config.slateEntityURN;

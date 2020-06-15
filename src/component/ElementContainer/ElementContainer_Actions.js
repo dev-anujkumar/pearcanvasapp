@@ -230,10 +230,13 @@ function prepareDataForTcmUpdate (updatedData,id, elementIndex, asideData, getSt
             updatedData.isHead = true;
         }
     } else if (indexes.length === 3) {
-        if (((!poetryData) || (poetryData.type != "poetry")) && slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].id === id) {
+        if (((!poetryData) || (poetryData.type != "poetry")) && asideData.type !== 'groupedcontent' && slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].id === id) {
             updatedData.isHead = false;
         } else if (((poetryData && poetryData.type === "poetry") || (type === "stanza")) && slateBodyMatter[indexes[0]].contents.bodymatter[indexes[2]].id === id) {
             updatedData.isHead = false;
+        } else if ((asideData && asideData.type == 'groupedcontent') && slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].id === id) {
+            updatedData.isHead = true;
+            updatedData.parentType = "groupedcontent";
         } 
         /** else if(type==="stanza" && slateBodyMatter[indexes[0]].contents.bodymatter[indexes[2]].id === id){
             updatedData.isHead = false;
