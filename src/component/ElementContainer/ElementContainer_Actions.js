@@ -902,7 +902,8 @@ export const deleteShowHideUnit = (elementId, type, parentUrn, index,eleIndex, p
         entityUrn : parentUrn,
         workUrn : elementId,
         index : index.toString(),
-        elementParentEntityUrn: parentUrn
+        elementParentEntityUrn: parentUrn,
+        sectionType: type
         // slateEntity : config.slateEntityURN
     }
     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
