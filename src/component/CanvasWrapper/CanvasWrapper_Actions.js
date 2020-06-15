@@ -29,7 +29,7 @@ const multiColumnData = {
     "versionUrn": "urn:pearson:manifest:84a2137b-da6d-4577-8a17-8c9806c888u6",
     "contentUrn": "urn:pearson:entity:7bbe434f-039a-4525-996d-44fa424c1k76",
     "width": "wider",
-    "groupproportions": "60-40",
+    "groupproportions": "50-50",
     "groupeddata": {
         "bodymatter": [
             {
