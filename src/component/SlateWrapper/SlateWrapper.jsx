@@ -30,6 +30,7 @@ import { setSlateLock, releaseSlateLock, setLockPeriodFlag, getSlateLockStatus }
 import { setActiveElement,openPopupSlate } from '../CanvasWrapper/CanvasWrapper_Actions';
 // import { OPEN_AM } from '../../js/auth_module';
 import { showSlateLockPopup } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
+import { handleTCMData } from '../ElementContainer/TcmSnapshot_Actions'
 
 let random = guid();
 class SlateWrapper extends Component {
@@ -60,20 +61,21 @@ class SlateWrapper extends Component {
         window.addEventListener('scroll',this.handleScroll)
     }
 
-    handleScroll = (e) =>{
-        if(config.totalPageCount <= config.page) return false;
+    handleScroll = (e) => {
+        if (config.totalPageCount <= config.page) return false;
         // const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;        
-        let scrollPosition = Number(e.target.scrollTop+e.target.clientHeight+100);
+        let scrollPosition = Number(e.target.scrollTop + e.target.clientHeight + 100);
         let scrollingPosition = Number(e.target.scrollTop);
-        if(this.props.slateData[config.slateManifestURN] && (this.props.slateData[config.slateManifestURN].type === 'manifest')){
+        if (this.props.slateData[config.slateManifestURN] && (this.props.slateData[config.slateManifestURN].type === 'manifest')) {
             config.scrollPosition = scrollingPosition;
         }
-        if ((scrollPosition >= e.target.scrollHeight) && config.scrolling) { 
+        if ((scrollPosition >= e.target.scrollHeight) && config.scrolling) {
             config.scrolling = false;
             config.fromTOC = false;
             this.props.loadMorePages();
         }
     }
+    
 
     /**
      * setListDropRef | sets list drop ref to listDropRef
@@ -136,8 +138,6 @@ class SlateWrapper extends Component {
     }
 
     static getDerivedStateFromProps = (props, state) => {
-         /** Default Red Dot indicator to false */
-         sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'false'});  
         /**
          * updateTimer is for updating Time for slate refresh
          */
@@ -1093,7 +1093,8 @@ class SlateWrapper extends Component {
     }
     closePopup = () =>{
         let popupId = config.slateManifestURN
-        if(this.props.slateData[config.tempSlateManifestURN].status === "approved" && this.props.slateData[config.slateManifestURN].status === "wip"){
+        let newVersionManifestId = document.getElementsByClassName('slate-content ')[0];
+        if( newVersionManifestId && newVersionManifestId.getAttribute('data-id')!==popupId){
             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
             sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
         }
@@ -1104,6 +1105,7 @@ class SlateWrapper extends Component {
         config.isPopupSlate = false
         this.props.openPopupSlate(undefined, popupId)
         this.props.setActiveElement(config.cachedActiveElement.element, config.cachedActiveElement.index)
+        this.props.handleTCMData(config.slateManifestURN)
         // Scrolling to the previous element after SAVE  & CLOSE is clicked
         setTimeout(() => {
             let elementDom = document.querySelector(`[data-id="${config.cachedActiveElement.element.id}"]`)
@@ -1220,7 +1222,8 @@ export default connect(
         getSlateLockStatus,
         accessDenied,
         openPopupSlate,
-        showSlateLockPopup
+        showSlateLockPopup,
+        handleTCMData,
 
     }
 )(SlateWrapper);

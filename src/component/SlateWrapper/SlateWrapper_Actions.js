@@ -14,7 +14,8 @@ import {
     ACCESS_DENIED_POPUP,
     FETCH_SLATE_DATA,
     SET_PARENT_NODE,
-    ERROR_POPUP
+    ERROR_POPUP,
+    GET_TCM_RESOURCES,
 
 } from '../../constants/Action_Constants';
 
@@ -45,8 +46,8 @@ function prepareDataForTcmUpdate(updatedData, parentData, asideData, poetryData)
     } else if ((poetryData && poetryData.type === 'poetry') || (parentData && parentData.elementType === "poetry")){
         updatedData.parentType = "poetry";
     }
-    updatedData.projectURN = config.projectUrn;
-    updatedData.slateEntity = poetryData && poetryData.contentUrn || config.slateEntityURN;
+    // updatedData.projectURN = config.projectUrn;
+    // updatedData.slateEntity = poetryData && poetryData.contentUrn || config.slateEntityURN;
 }
 
 function createNewVersionOfSlate(){
@@ -70,14 +71,13 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
     config.currentInsertedType = type;
     let  popupSlateData = getState().appStore.popupSlateData
     localStorage.setItem('newElement', 1);
-    let slateEntityUrn = parentUrn && parentUrn.contentUrn || popupSlateData && popupSlateData.contentUrn || poetryData && poetryData.contentUrn || config.slateEntityURN,
-    slateUrn =  parentUrn && parentUrn.manifestUrn || popupSlateData && popupSlateData.id || poetryData && poetryData.id || config.slateManifestURN
+    let slateEntityUrn = parentUrn && parentUrn.contentUrn || popupSlateData && popupSlateData.contentUrn || poetryData && poetryData.contentUrn || config.slateEntityURN
+
     let _requestData = {
         "projectUrn": config.projectUrn,
         "slateEntityUrn":slateEntityUrn,
-        "slateUrn": slateUrn,
         "index": outerAsideIndex ? outerAsideIndex : index,
-        "type": type,
+        "type": type
     };
 
     if (type == "LO") {
@@ -104,7 +104,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         if (currentSlateData.status === 'approved') {
             if(currentSlateData.type==="popup"){
                 sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
-                dispatch(fetchSlateData(config.slateManifestURN,_requestData.slateEntity, 0,currentSlateData));
+                dispatch(fetchSlateData(config.slateManifestURN,_requestData.slateEntity, 0,currentSlateData,""));
             } else {
             // createNewVersionOfSlate();
             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
@@ -159,6 +159,12 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         else {
             newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
         }
+        if (config.tcmStatus) {
+            let elementType = ['WORKED_EXAMPLE', 'CONTAINER', 'SECTION_BREAK', 'TEXT', 'CITATION', 'ELEMENT_CITATION', 'POETRY', 'STANZA'];
+            if (elementType.indexOf(type) !== -1) {
+                prepareDataForTcmCreate(type, createdElementData, getState, dispatch);
+            }
+        }
         
 
         dispatch({
@@ -201,6 +207,49 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
     })
 }
 
+function prepareDataForTcmCreate(type, createdElementData, getState, dispatch) {
+    let elmUrn = [];
+    const tcmData = getState().tcmReducer.tcmSnapshot;
+    if (type === "WORKED_EXAMPLE" || type === "CONTAINER") {
+        createdElementData.elementdata.bodymatter.map((item) => {
+            if (item.type == "manifest") {
+                item.contents.bodymatter.map((ele) => {
+                    elmUrn.push(ele.id)
+                })
+            }
+            else {
+                elmUrn.push(item.id)
+            }
+
+        })
+    }
+    else if (type === 'SECTION_BREAK' || type == "CITATION" || type === "POETRY") {
+        createdElementData.contents.bodymatter.map((item) => {
+            elmUrn.push(item.id)
+        })
+    }
+    else if (type === 'TEXT' || type === 'ELEMENT_CITATION' || type === "STANZA") {
+        elmUrn.push(createdElementData.id)
+    }
+
+    elmUrn.map((item) => {
+        return tcmData.push({
+            "txCnt": 1,
+            "isPrevAcceptedTxAvailable": false,
+            "elemURN": item,
+            "feedback": null
+        })
+    })
+    if(tcmData.length > 0 ){
+        sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });}
+    dispatch({
+        type: GET_TCM_RESOURCES,
+        payload: {
+            data: tcmData
+        }
+    })
+}
+
 export const swapElement = (dataObj, cb) => (dispatch, getState) => {
     const { oldIndex, newIndex, currentSlateEntityUrn, swappedElementData, containerTypeElem, asideId, poetryId} = dataObj;
     const slateId = config.slateManifestURN;
@@ -238,7 +287,7 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                 if (currentSlateData.status === 'approved') {
                     if(currentSlateData.type==="popup"){
                         sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
-                        dispatch(fetchSlateData(config.slateManifestURN,_requestData.currentSlateEntityUrn, 0,currentSlateData));
+                        dispatch(fetchSlateData(config.slateManifestURN,_requestData.currentSlateEntityUrn, 0,currentSlateData,""));
                     }
                     else{
                         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
