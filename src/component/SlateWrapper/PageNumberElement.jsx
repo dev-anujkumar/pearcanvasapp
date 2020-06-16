@@ -25,7 +25,9 @@ class PageNumberElement extends React.Component {
     }
      /* Page Number Functionality on hover */
     pagenumberData = () => {
-        if (config.pageNumberInProcess && this.props.isPageNumberEnabled && this.props.isHovered === true && (this.props.allElemPageData.length == 0 || this.props.allElemPageData.indexOf(this.props.element.id) == -1)) {
+        if (config.pageNumberInProcess && this.props.isPageNumberEnabled && this.props.isHovered === true &&
+            (this.props.allElemPageData.length == 0 || this.props.allElemPageData.indexOf(this.props.element.id) == -1) &&
+            this.props._slateType !== 'assessment' && config.isPopupSlate === false) {
             config.pageNumberInProcess = false;
             this.props.getPageNumber(this.props.element.id).then((response) => {
                 if (response) {
@@ -105,7 +107,7 @@ class PageNumberElement extends React.Component {
                 }
             </div>
         }
-        if (isPageNumberEnabled && activeElement && element.id === activeElement.elementId && _slateType !== 'assessment') {
+        if (isPageNumberEnabled && activeElement && element.id === activeElement.elementId && _slateType !== 'assessment' && config.isPopupSlate === false) {
             return (
                 <form id="pageNumberForm">
                     <div className={'pageNumberCover focusedNumberCover'}>
@@ -114,7 +116,7 @@ class PageNumberElement extends React.Component {
                 </form>
             )
         }
-        else if (isHovered && isPageNumberEnabled && _slateType !== 'assessment') {
+        else if (isHovered && isPageNumberEnabled && _slateType !== 'assessment' && config.isPopupSlate === false) {
             if(loader) return <div className='pageNumberBoxLoader'><div className='loadingpagenumber'></div></div>
             else{
                 return (
