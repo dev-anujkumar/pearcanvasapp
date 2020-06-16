@@ -2007,7 +2007,7 @@ export class TinyMceEditor extends Component {
                 return;
             }
             spanHandlers.handleExtraTags(this.props.elementId, 'div', 'poetryLine');
-            spanHandlers.handleExtraTags(this.props.elementId, 'code', 'codeNoHighlightLine')
+            //spanHandlers.handleExtraTags(this.props.elementId, 'code', 'codeNoHighlightLine')
         }
 
         tinyMCE.$('.Wirisformula').each(function () {
