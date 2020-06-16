@@ -218,7 +218,8 @@ class ElementFigure extends Component {
         let slateData = {
             elementId : this.props.elementId,
             currentProjectId: config.projectUrn,
-            slateEntityUrn: config.slateEntityURN
+            slateEntityUrn: config.slateEntityURN,
+            parentEntityUrn: this.props.parentEntityUrn
         }
          sendDataToIframe({ 'type': 'launchTableSPA', 'message': {}, "id": this.props.elementId, editable ,slateData});
     }
