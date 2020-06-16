@@ -48,10 +48,9 @@ class PageNumberElement extends React.Component {
     }
     pageNoChangeHandler = (e) => {
         let data=  this.props.pageNumberData;
-        let that= this
         /* To update the corresponding value */
-        this.props.pageNumberData.forEach(function (elements,index) {
-            if(elements.id.indexOf(that.props.element.id) !== -1){
+        this.props.pageNumberData && this.props.pageNumberData.forEach((elements, index) => {
+            if(elements.id.indexOf(this.props.element.id) !== -1){
                 elements.pageNumber = e.target.value }
         });
         this.props.pageData(data)
@@ -87,7 +86,7 @@ class PageNumberElement extends React.Component {
         let pageNumber;
         let elemid;
         //check the page number and show on the basis of data
-        this.props.pageNumberData && this.props.pageNumberData.forEach(function (elements, index) {
+        this.props.pageNumberData && this.props.pageNumberData.forEach((elements, index) => {
             if (elements.id.indexOf(element.id) !== -1) {
                 elemid = elements.id
                 pageNumber = elements.pageNumber
