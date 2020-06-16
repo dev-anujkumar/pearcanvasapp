@@ -36,6 +36,9 @@ describe('Tests ElementContainer Actions', () => {
             glossaryFootnoteValue: { elementWorkId: "4343653" },
             glossaryFootNoteCurrentValue: "",
             elementIndex: ""
+        },
+        tcmReducer:{
+            tcmSnapshot:{}
         }
     };
     let initialState2 ={...initialState,
@@ -1880,7 +1883,7 @@ describe('Tests ElementContainer Actions', () => {
             });
         
             let elementId = "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27637";
-            (slateWithCitationElement.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].contents.bodymatter).splice(3, 1);
+            (slateWithCitationElement.slateLevelData["urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"].contents.bodymatter[0].contents.bodymatter).splice(3, 1);
             const expectedActions = [{
                 type: AUTHORING_ELEMENT_CREATED,
                 payload: { slateLevelData: slateWithCitationElement.slateLevelData}
