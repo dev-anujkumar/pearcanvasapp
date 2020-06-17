@@ -104,7 +104,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         if (currentSlateData.status === 'approved') {
             if(currentSlateData.type==="popup"){
                 sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
-                dispatch(fetchSlateData(config.slateManifestURN,_requestData.slateEntity, 0,currentSlateData,""));
+                dispatch(fetchSlateData(currentSlateData.id, currentSlateData.contentUrn, 0, currentSlateData, ""));
             } else {
             // createNewVersionOfSlate();
             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
@@ -287,7 +287,7 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                 if (currentSlateData.status === 'approved') {
                     if(currentSlateData.type==="popup"){
                         sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
-                        dispatch(fetchSlateData(config.slateManifestURN,_requestData.currentSlateEntityUrn, 0,currentSlateData,""));
+                        dispatch(fetchSlateData(currentSlateData.id, currentSlateData.contentUrn, 0, currentSlateData, ""));
                     }
                     else{
                         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
