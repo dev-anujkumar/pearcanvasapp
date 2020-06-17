@@ -167,8 +167,10 @@ export const dynamicSort = (property,sortByRelevance) => {
         let first = (a[property] ? a[property] : a.urn).toLowerCase();
         let second = (b[property] ? b[property] : b.urn).toLowerCase();
         if (sortByRelevance && sortByRelevance.status && sortByRelevance.status === true && sortByRelevance.sortKeyword && sortByRelevance.sortKeyword.trim() != "") {
-            let dataKey = sortByRelevance.sortKeyword.toLowerCase()
-            result = (first.indexOf(dataKey) < second.indexOf(dataKey))? -1 : (first.indexOf(dataKey) > second.indexOf(dataKey)) ? 1 : 0;
+            let dataKey = sortByRelevance.sortKeyword//.toLowerCase()
+            result = (first.indexOf(dataKey) < second.indexOf(dataKey))? -1 : 
+            (first.indexOf(dataKey) > second.indexOf(dataKey)) ? 1 :
+            (first < second) ? -1 : (first > second) ? 1 : 0;
         }
         else{
             result = (first < second) ? -1 : (first > second) ? 1 : 0;

@@ -93,7 +93,8 @@ class ElmTableComponent extends Component {
         if (searchResults.length != 0) {
             return this.setState({
                 tableValue: searchResults,
-                filterResults: 'Search Results Exist'
+                filterResults: 'Search Results Exist',
+                sortIcon: elmSortUp
             })
         } else {
             return this.setState({
