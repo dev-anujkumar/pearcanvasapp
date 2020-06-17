@@ -4,7 +4,7 @@ import { mount } from 'enzyme';
 import ElmHeader from ' ../../../src/component/AssessmentSlateCanvas/elm/Components/ElmHeader';
 
 describe('Testing ELM Header component', () => {
-    it('renders without crashing', () => {
+    it('ELM Header-learnosity', () => {
         let props={
             activeAssessmentType : 'learnosity',
             closeElmWindow : function(){}
@@ -13,7 +13,7 @@ describe('Testing ELM Header component', () => {
         expect(component).toHaveLength(1);
       
     })
-    it('renders without crashing', () => {
+    it('ELM Header-Elm', () => {
         let props={
             activeAssessmentType : 'puf',
             closeElmWindow : function(){}
