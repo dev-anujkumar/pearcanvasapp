@@ -355,7 +355,8 @@ export const generateAssessmentData = (index, previousElementData, elementType, 
     let assessmenttTitleHTML = `<p>${assessmenttitle}</p>`;
     let dataToSend = {
         ...previousElementData,
-        inputType: elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
+        inputType : elementTypes[elementType][primaryOption]['enum'],
+        inputSubType: elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
         html: {
             title: assessmenttTitleHTML
         }
@@ -387,17 +388,7 @@ export const generateAssessmentData = (index, previousElementData, elementType, 
     }
 
     let usageType = document.querySelector(assessmentNodeSelector + 'span.singleAssessment_Dropdown_currentLabel').innerText;
-    let nextUsageType = "";
-    let obj= store.getState().appStore.usageTypeListData.usageTypeList
-
-    if (Object.keys(obj).find(key => obj[key] === usageType)){
-        nextUsageType = Object.keys(obj).find(key => obj[key] === usageType).toUpperCase().replace("-", "_");
-    } else {
-        nextUsageType = usageType.toUpperCase().replace(" ", "_").replace("-", "_");
-    }
-
     dataToSend.figuredata.elementdata.usagetype = usageType;
-    dataToSend.inputSubType = nextUsageType;
 
     return dataToSend;
 }
@@ -409,26 +400,17 @@ export const generateAssessmentData = (index, previousElementData, elementType, 
  * @param {*} primaryOption 
  * @param {*} secondaryOption 
  */
-export const generateAssessmentSlateData = (index, previousElementData, elementType, primaryOption, secondaryOption)=>{
-    let obj= store.getState().appStore.usageTypeListData.usageTypeList;
-    let usageType = previousElementData.elementdata.usagetype;
-    let nextUsageType = "";
-       
-    if (Object.keys(obj).find(key => obj[key] === usageType)){
-        nextUsageType = Object.keys(obj).find(key => obj[key] === usageType).toUpperCase().replace("-", "_");
-    } else {
-        nextUsageType = usageType.toUpperCase().replace(" ", "_").replace("-", "_");
-    }
-    
+export const generateAssessmentSlateData = (index, previousElementData, elementType, primaryOption, secondaryOption) => {
     let assessmenttitle = previousElementData.elementdata.assessmentformat == 'learningtemplate' ? previousElementData.elementdata.templatelabel : previousElementData.elementdata.assessmenttitle;
     let dataToSend = {
         ...previousElementData,
-        inputType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
-        inputSubType : nextUsageType,//previousElementData.elementdata.usagetype.toUpperCase().replace(" ", "_").replace("-", "_"),
+        inputType: elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
+        inputSubType: "NA", /** The usageType dependency on inputSubType removed */
         html: {
             title: `<p>${assessmenttitle}</p>`
-        }}
-        return dataToSend;
+        }
+    }
+    return dataToSend;
 }
 
 /**

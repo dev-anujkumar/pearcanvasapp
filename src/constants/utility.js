@@ -418,11 +418,13 @@ export const setAssessmentUsageType = (props) => {
         usagetype = props.model.figuredata.elementdata.usagetype
     } else if (props && props.usageTypeListData && props.usageTypeListData.usageTypeList) {
         let listObj = props.usageTypeListData.usageTypeList
-        if (!(Object.keys(listObj).length === 0 && listObj.constructor === Object)) {  //object is not empty
-            usagetype = Object.values(listObj)[0];
+        if (!(Object.keys(listObj).length === 0 && listObj.constructor === Object) && Object.values(listObj).find(type => type === "Quiz")) {  //object is not empty
+            usagetype = Object.values(listObj).find(type => type === "Quiz");
         } else {
-            usagetype = "Concept Check"
+            usagetype = "Quiz"
         }
+    } else {
+        usagetype = "Quiz"
     }
     return usagetype;
 }

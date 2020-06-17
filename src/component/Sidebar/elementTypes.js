@@ -584,7 +584,7 @@ export default {
         'primary-single-assessment': {		
             text: 'Single Assessment',
             toolbar:['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag'],
-            enum: '',		
+            enum: 'SINGLE_ASSESSMENT',		
             subtype: {		
                 'secondary-single-assessment-cite': {
                     text: 'CITE',
