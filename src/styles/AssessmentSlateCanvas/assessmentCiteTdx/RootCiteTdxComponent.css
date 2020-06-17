@@ -337,7 +337,7 @@
   -webkit-user-select: none; /* Safari */
   user-select: none; /* Non-prefixed version, currently supported by Chrome, Opera and Firefox */
 }
-.assessment-uuid, .modifiedby-date, .modifiedby-data, .assessment-titles,.assessment-type,.assessment-titles{
+.assessment-uuid, .modifiedby-date, .modifiedby-data, .assessment-titles, .assessment-type {
   display: inline-block;
   white-space: initial;
   word-break: break-all;

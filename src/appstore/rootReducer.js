@@ -11,6 +11,7 @@ import elmReducer from './elmReducer';
 import audioReducer from './audioNarrationReducer';
 import errorPopup from './errorPopupReducer';
 import citeTdxReducer from './citeTdxReducer';
+import tcmReducer from './tcmReducer';
 
 export default combineReducers({
     appStore: appReducer,
@@ -25,4 +26,5 @@ export default combineReducers({
     audioReducer,
     errorPopup,
     citeTdxReducer,
+    tcmReducer,
 });

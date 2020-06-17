@@ -42,6 +42,7 @@ import CitationGroup from '../CitationGroup'
 import CitationElement from '../CitationElement'
 import ElementPoetry from '../ElementPoetry';
 import ElementPoetryStanza from '../ElementPoetry/ElementPoetryStanza.jsx';
+import {handleTCMData} from './TcmSnapshot_Actions';
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -788,8 +789,9 @@ class ElementContainer extends Component {
      * Renders color-palette button for opener element 
      * @param {e} event
      */
-    renderColorPaletteButton = (element) => {
-        if (element.type === elementTypeConstant.OPENER) {
+    renderColorPaletteButton = (element, permissions) => {
+        const isPermitted = permissions.includes('elements_add_remove')
+        if (element.type === elementTypeConstant.OPENER && isPermitted) {
             return (
                 <>
                     <Button onClick={this.toggleColorPaletteList} type="color-palette" />
@@ -838,8 +840,9 @@ class ElementContainer extends Component {
      * Renders color-text button for opener element 
      * @param {e} event
      */
-    renderColorTextButton = (element) => {
-        if (element.type === elementTypeConstant.OPENER) {
+    renderColorTextButton = (element, permissions) => {
+        const isPermitted = permissions.includes('elements_add_remove')
+        if (element.type === elementTypeConstant.OPENER && isPermitted) {
             return (
                 <>
                     <Button onClick={this.toggleColorTextList} type="color-text" />
@@ -946,23 +949,19 @@ class ElementContainer extends Component {
     */
     renderElement = (element = {}) => {
         let editor = '';
-        let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions, allComments, splithandlerfunction} = this.props;
+        let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions, allComments, splithandlerfunction, tcmData} = this.props;
         let labelText = fetchElementTag(element, index);
         config.elementToolbar = this.props.activeElement.toolbar || [];
         let anyOpenComment = allComments.filter(({ commentStatus, commentOnEntity }) => commentOnEntity === element.id && commentStatus.toLowerCase() === "open").length > 0
         /** Handle TCM for tcm enable elements */
         let tcm = false;
         let feedback = false;
-        if (element.type == 'element-authoredtext' || element.type == 'element-list' || element.type == 'element-blockfeature' || element.type == 'element-learningobjectives' || element.type == 'element-citation' || element.type === 'stanza') {
-            if (element.tcm) {
-                tcm = element.tcm;
-                sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });
-            }
-            if (element.feedback) {
-                feedback = element.feedback;
-                sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });
-            }
-        }
+        tcm = tcmData.filter(tcmelm => {
+            let elementUrn = tcmelm.elemURN;
+            return (element.id.includes('urn:pearson:work') && elementUrn.indexOf(element.id) !== -1) && tcmelm.txCnt && tcmelm.txCnt > 0}).length>0;
+        feedback = tcmData.filter(feedbackelm => {
+            let elementUrn = feedbackelm.elemURN;
+            return (element.id.includes('urn:pearson:work') && elementUrn.indexOf(element.id) !== -1) && feedbackelm.feedback && feedbackelm.feedback !== null}).length>0;
        /* TODO need better handling with a function and dynamic component rendering with label text*/
         if (labelText) {
             switch (element.type) {
@@ -992,7 +991,7 @@ class ElementContainer extends Component {
                         case elementTypeConstant.FIGURE_AUTHORED_TEXT:
                         case elementTypeConstant.FIGURE_CODELISTING:
                         case elementTypeConstant.FIGURE_TABLE_EDITOR:
-                            editor = <ElementFigure accessDenied={this.props.accessDenied} updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} elementId={element.id} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} />;
+                            editor = <ElementFigure accessDenied={this.props.accessDenied} updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} elementId={element.id} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}  parentEntityUrn={this.props.parentUrn}  />;
                             //labelText = LABELS[element.figuretype];
                             break;
                         case elementTypeConstant.FIGURE_AUDIO:
@@ -1224,8 +1223,8 @@ class ElementContainer extends Component {
                     <Button type="element-label" btnClassName={`${btnClassName} ${this.state.isOpener ? ' ignore-for-drag' : ''}`} labelText={labelText} />
                     {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && config.slateType !== 'assessment' ? (<Button type="delete-element" onClick={() => this.showDeleteElemPopup(true)} />)
                         : null}
-                    {this.renderColorPaletteButton(element)}
-                    {this.renderColorTextButton(element)}
+                    {this.renderColorPaletteButton(element, permissions)}
+                    {this.renderColorTextButton(element, permissions)}
                 </div>
                     : ''}
                 <div className={`element-container ${labelText.toLowerCase()} ${borderToggle}`} data-id={element.id} onFocus={() => this.toolbarHandling('remove')} onBlur={() => this.toolbarHandling('add')}>
@@ -1407,7 +1406,10 @@ const mapDispatchToProps = (dispatch) => {
         },
         createPoetryUnit: (poetryField, parentElement,cb, popupElementIndex, slateManifestURN) => {
             dispatch(createPoetryUnit(poetryField, parentElement,cb, popupElementIndex, slateManifestURN))
-        }
+        },
+        handleTCMData: () => {
+            dispatch(handleTCMData())
+        },
 
     }
 }
@@ -1421,7 +1423,8 @@ const mapStateToProps = (state) => {
         oldImage: state.appStore.oldImage,
         glossaryFootnoteValue: state.glossaryFootnoteReducer.glossaryFootnoteValue,
         allComments: state.commentsPanelReducer.allComments,
-        showHideId: state.appStore.showHideId
+        showHideId: state.appStore.showHideId,
+        tcmData: state.tcmReducer.tcmSnapshot
     }
 }
 

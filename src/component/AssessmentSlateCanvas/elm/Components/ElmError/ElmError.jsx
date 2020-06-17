@@ -3,7 +3,7 @@
 */
 import React from 'react';
 import '../../../../../styles/AssessmentSlateCanvas/elm/ElmTable.css';
-import { ERROR_MESSAGE_ELM_RESOURCE, ERROR_MESSAGE_ELM_ITEMS, ERROR_MESSAGE_LEARNOSITY, ERROR_MESSAGE_ELM_DEFAULT, PUF, FULL_ASSESSMENT_PUF, LEARNOSITY, LEARNOSITY_BETA } from '../../../AssessmentSlateConstants.js'
+import { ERROR_MESSAGE_ELM_RESOURCE, ERROR_MESSAGE_ELM_ITEMS, ERROR_MESSAGE_LEARNOSITY, ERROR_MESSAGE_ELM_DEFAULT, PUF, LEARNOSITY_BETA } from '../../../AssessmentSlateConstants.js'
 
 const ElmError = (props) => {
 

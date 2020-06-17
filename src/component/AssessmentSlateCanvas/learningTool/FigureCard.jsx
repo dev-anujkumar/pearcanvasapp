@@ -20,6 +20,7 @@ class FigureCard extends React.Component {
                 "qual-sims": "Qualitative Business Sims",
                 "soundbytes": "Sound Bytes",
                 "Personal Finance": "Personal Finance",
+                "political-science-sims":"Political Science Sims",
                 "Psychology Sims": "Psychology Sims",
                 "video-submission": "Shared Media",
                 "video-quiz": "Media Quiz",
