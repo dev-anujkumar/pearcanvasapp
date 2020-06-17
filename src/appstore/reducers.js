@@ -10,7 +10,6 @@ import {
     SET_ACTIVE_ELEMENT,
     AUTHORING_ELEMENT_CREATED,
     AUTHORING_ELEMENT_UPDATE,
-    ADD_COMMENT,
     DELETE_ELEMENT,
     SWAP_ELEMENT,
     SET_SPLIT_INDEX,
@@ -48,7 +47,7 @@ const INITIAL_STATE = {
     // elementsTag: {},
     activeElement: {},
     splittedElementIndex: 0,
-    pageNumberData: {},
+    pageNumberData: [],
     permissions: [],
     accesDeniedPopup: false,
     popupSlateData: null,
@@ -60,7 +59,9 @@ const INITIAL_STATE = {
     showHideObj:{},
     allSlateData:{},
     currentSlateAncestorData:{},
+    allElemPageData:[],
     usageTypeListData:{}
+
 };
 
 const INITIAL_ACTION = {
@@ -76,7 +77,6 @@ const INITIAL_ACTION = {
 export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
     switch (action.type) {
         case FETCH_SLATE_DATA:
-        case ADD_COMMENT:
             return {
                 ...state,
                 slateLevelData: action.payload
@@ -108,7 +108,8 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
         case GET_PAGE_NUMBER:
             return {
                 ...state,
-                pageNumberData: action.payload
+                pageNumberData: action.payload.pageNumberData,
+                allElemPageData: action.payload.allElemPageData
             }
         case SET_UPDATED_SLATE_TITLE:
             return {

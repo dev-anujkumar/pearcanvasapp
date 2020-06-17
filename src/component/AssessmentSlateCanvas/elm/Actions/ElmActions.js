@@ -1,5 +1,5 @@
 import config from '../../../../config/config';
-import {FULL_ASSESSMENT_PUF, PUF, LEARNOSITY, LEARNOSITY_BETA} from '../../AssessmentSlateConstants';
+import {FULL_ASSESSMENT_PUF, LEARNOSITY, LEARNOSITY_BETA} from '../../AssessmentSlateConstants';
 import axios from 'axios';
 
 /**

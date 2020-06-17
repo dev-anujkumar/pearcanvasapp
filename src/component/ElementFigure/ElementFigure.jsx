@@ -102,10 +102,10 @@ class ElementFigure extends Component {
             return;
         }
 
-        const figureData = this.props.model.figuredata;
-        const currentAsset = figureData ? {
-            id: figureData.imageid.split(':').pop(), // get last
-            type: figureData.type,
+        const figureDataObj = this.props.model.figuredata;
+        const currentAsset = figureDataObj ? {
+            id: figureDataObj.imageid.split(':').pop(), // get last
+            type: figureDataObj.type,
         } : null;
 
         let that = this;
@@ -218,7 +218,8 @@ class ElementFigure extends Component {
         let slateData = {
             elementId : this.props.elementId,
             currentProjectId: config.projectUrn,
-            slateEntityUrn: config.slateEntityURN
+            slateEntityUrn: config.slateEntityURN,
+            parentEntityUrn: this.props.parentEntityUrn
         }
          sendDataToIframe({ 'type': 'launchTableSPA', 'message': {}, "id": this.props.elementId, editable ,slateData});
     }

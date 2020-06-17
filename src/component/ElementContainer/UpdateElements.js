@@ -439,8 +439,9 @@ const generateCitationElementData = (index, previousElementData, elementType, pr
         },
         inputType : elementTypes[elementType][primaryOption]['enum'],
         inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
-        slateUrn : parentElement.id,
-        parentType : parentElement.type
+        slateVersionUrn : parentElement.id,
+        parentType : parentElement.type,
+        elementParentEntityUrn: parentElement.contentUrn
     }
     return citationElementData
 }
@@ -478,6 +479,7 @@ const validateRevealAnswerData = (showHideType, node, elementType) => {
  * @param {*} containerContext 
  */
 export const createUpdatedData = (type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext,parentElement,showHideType,asideData, poetryData) => {
+    let appStore = store.getState().appStore
     let dataToReturn = {}
     switch (type){
         case elementTypeConstant.AUTHORED_TEXT:
@@ -501,8 +503,8 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                     glossaryentries : previousElementData.html.glossaryentries || {},
                 },
                 inputType : parentElement && (parentElement.type === "popup" || parentElement.type === "citations" || parentElement.type === "showhide" && previousElementData.type === "element-authoredtext" || parentElement.type === "poetry" && previousElementData.type === "element-authoredtext") ? "AUTHORED_TEXT" : elementTypes[elementType][primaryOption]['enum'],
-                inputSubType : parentElement && (parentElement.type == "popup" || parentElement.type === "poetry") ? "NA" : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
-                slateUrn: parentElement && (parentElement.type === "showhide" || parentElement.type === "popup") ? parentElement.id: config.slateManifestURN  
+                inputSubType : parentElement && (parentElement.type == "popup" || parentElement.type === "poetry") ? "NA" : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']
+                // slateVersionUrn: parentElement && (parentElement.type === "showhide" || parentElement.type === "popup") ? parentElement.id: config.slateManifestURN  
             }
 
             if(type==="stanza"){
@@ -518,21 +520,14 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                     dataToReturn.metaDataField = "formattedSubtitle";
                 }
                 else if(parentElement.popupdata["postertextobject"][0]["id"] === previousElementData.id){
-                    dataToReturn.section = "postertextobject";
+                    dataToReturn.sectionType = "postertextobject";
                 }
             } else if(parentElement && parentElement.type === "poetry"){
-                // dataToReturn.poetryEntityUrn = parentElement.contentUrn;
                 if(parentElement.contents && parentElement.contents["formatted-title"] && parentElement.contents["formatted-title"]["id"] === previousElementData.id){
                     dataToReturn["metaDataField"] = "formattedTitle";
-                } 
-                /* else if(parentElement.contents && parentElement.contents["formatted-subtitle"] && parentElement.contents["formatted-subtitle"]["id"] === previousElementData.id){
-                    dataToReturn["metaDataField"] = "formattedSubtitle";
-                } */
-                // else if(parentElement.contents && parentElement.contents["formatted-caption"] && parentElement.contents["formatted-caption"]["id"] === previousElementData.id){
-                //     dataToReturn.updatepoetryField = "formattedCaption";
-                // }
+                }
                 else if(parentElement.contents && parentElement.contents["creditsarray"] && parentElement.contents["creditsarray"].length && parentElement.contents["creditsarray"][0]["id"] === previousElementData.id){
-                    dataToReturn["section"] = "creditsarray";
+                    dataToReturn["sectionType"] = "creditsarray";
                 }
                 dataToReturn["elementParentEntityUrn"] = parentElement.contentUrn
                 
@@ -540,7 +535,8 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                 dataToReturn["metaDataField"] = "formattedTitle"
                 dataToReturn["elementParentEntityUrn"] = parentElement.contentUrn
             } else if(parentElement && parentElement.type === "showhide" && showHideType){
-                dataToReturn.section = showHideType;
+                dataToReturn.sectionType = showHideType;
+                dataToReturn["elementParentEntityUrn"] = parentElement.contentUrn
             }
             break;
 
@@ -598,7 +594,7 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
             dataToReturn = generateCitationElementData(index, previousElementData, elementType, primaryOption, secondaryOption, node, parentElement)
             break;
     }
-    dataToReturn.slateUrn = config.slateManifestURN;
+    dataToReturn.slateVersionUrn = config.slateManifestURN;
     if (previousElementData.status == "approved") {
         let parentData = store.getState().appStore.slateLevelData;
         if (config.isPopupSlate && parentData[config.slateManifestURN].status === "approved") {
@@ -611,7 +607,9 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
             dataToReturn.parentEntityId = poetryData.contentUrn;
         } 
     }
-    dataToReturn = { ...dataToReturn, index: index.toString().split('-')[index.toString().split('-').length - 1] }
+    
+    let slateEntityUrn = dataToReturn.elementParentEntityUrn || appStore.parentUrn && appStore.parentUrn.contentUrn || config.slateEntityURN
+    dataToReturn = { ...dataToReturn, index: index.toString().split('-')[index.toString().split('-').length - 1], elementParentEntityUrn: slateEntityUrn }
     return dataToReturn
 }
 
@@ -622,7 +620,8 @@ export const createOpenerElementData = (elementData, elementType, primaryOption,
             ...elementData,
             inputType: elementTypes[elementType][primaryOption]['enum'],
             inputSubType: elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
-            slateUrn: config.slateManifestURN 
+            slateVersionUrn: config.slateManifestURN,
+            elementParentEntityUrn: config.slateEntityURN
         }
     }
 

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 //IMPORT TINYMCE 
 import tinymce from 'tinymce/tinymce';
@@ -22,7 +22,7 @@ import {
 import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
 import { checkforToolbarClick, customEvent, spanHandlers } from '../js/utils';
 import { saveGlossaryAndFootnote, setFormattingToolbar } from "./GlossaryFootnotePopup/GlossaryFootnote_Actions"
-import { ShowLoader, HideLoader } from '../constants/IFrameMessageTypes';
+import { ShowLoader } from '../constants/IFrameMessageTypes';
 import { sendDataToIframe, hasReviewerRole } from '../constants/utility.js';
 import store from '../appstore/store';
 import { MULTIPLE_LINE_POETRY_ERROR_POPUP } from '../constants/Action_Constants';
@@ -127,7 +127,7 @@ export class TinyMceEditor extends Component {
                     if (!e.level && editor.selection.getBoundingClientRect()) {
                         clickedX = editor.selection.getBoundingClientRect().left;
                         clickedY = editor.selection.getBoundingClientRect().top;
-
+                    
                         //BG-2376 - removing span bookmark from content
                         tinymce.$('span[data-mce-type="bookmark"]').each(function () {
                             let innerHtml = this.innerHTML;
@@ -1890,8 +1890,12 @@ export class TinyMceEditor extends Component {
                     termText = termText.replace(/data-temp-mathml/g, 'data-mathml').replace(/temp_Wirisformula/g, 'Wirisformula');
                     document.getElementById(currentTarget.id).innerHTML = termText
                 }
-                if (clickedX !== 0 && clickedY !== 0) {
+                if (clickedX !== 0 && clickedY !== 0) {     //User generated click event
                     tinymce.activeEditor.selection.placeCaretAt(clickedX, clickedY) //Placing exact cursor position on clicking.
+                }
+                else {                                      //Programmatic click event. Placing cursor at the end
+                    tinymce.activeEditor.selection.select(tinymce.activeEditor.getBody(), true);
+                    tinymce.activeEditor.selection.collapse(false);
                 }
                 tinymce.$('.blockquote-editor').attr('contenteditable', false)
                 this.editorOnClick(event);
@@ -2003,7 +2007,7 @@ export class TinyMceEditor extends Component {
                 return;
             }
             spanHandlers.handleExtraTags(this.props.elementId, 'div', 'poetryLine');
-            spanHandlers.handleExtraTags(this.props.elementId, 'code', 'codeNoHighlightLine')
+            //spanHandlers.handleExtraTags(this.props.elementId, 'code', 'codeNoHighlightLine')
         }
 
         tinyMCE.$('.Wirisformula').each(function () {
