@@ -215,6 +215,9 @@ function CommunicationChannel(WrappedComponent) {
                         window.dataLayer.push(message);
                     }
                     break;
+                case 'PageLink':
+                    console.log('canvas page link:::', message);
+                    break;
             }
         }
 

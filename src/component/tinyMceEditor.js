@@ -1046,18 +1046,18 @@ export class TinyMceEditor extends Component {
                                 onAction: () => {
                                     let selectedText = window.getSelection().toString();
                                     if (selectedText.length) {
-                                        this.addAssetPopover(editor, selectedText)
+                                        this.addPageLink(editor, selectedText)
                                     }
                                 },
                                 onSetup: (buttonApi) => {
                                     /*
                                     make merge menu button apis available globally among compnenet
                                     */
-                                    let selectedText = window.getSelection().toString();
-                                    this.assetPopoverButtonState = buttonApi;
-                                    if (!selectedText.length) {
-                                        this.assetPopoverButtonState.setDisabled();
-                                    }
+                                    // let selectedText = window.getSelection().toString();
+                                    // this.assetPopoverButtonState = buttonApi;
+                                    // if (!selectedText.length) {
+                                    //     this.assetPopoverButtonState.setDisabled();
+                                    // }
                                 }
                             }
                         ];
