@@ -156,6 +156,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
     if (elementType == 'figure') {
         let label, title, captions, credits, elementIndex, text;
         let preformattedtext = null;
+        let tableAsHTML = null;
         let tempIndex = index &&  typeof (index) !== 'number' && index.split('-');
         if(tempIndex.length == 4){//Figure inside a WE
             elementIndex = tempIndex[0]+'-'+tempIndex[1]+'-'+tempIndex[2]
@@ -171,6 +172,11 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         if(elementSubType == 'image' || elementSubType === 'tableasmarkup' || elementSubType === "audio" || elementSubType === "video" || elementSubType === 'table' || elementSubType === "mathImage"){
             captions = document.getElementById('cypress-' + elementIndex + '-2').innerHTML //cypress-1-2
             credits = document.getElementById('cypress-' + elementIndex + '-3').innerHTML //cypress-1-3
+            if (elementSubType === 'tableasmarkup') {
+                if(document.getElementById(elementIndex + '-tableData')) {
+                    tableAsHTML = document.getElementById(elementIndex + '-tableData').innerHTML;
+                }
+            }
         }else if (elementSubType === 'interactive' || elementSubType === "codelisting" || elementSubType === "authoredtext"){
             captions = document.getElementById('cypress-' + elementIndex + '-3').innerHTML //cypress-1-3
             credits = document.getElementById('cypress-' + elementIndex + '-4').innerHTML //cypress-1-4
@@ -187,7 +193,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             "subtitle": title.match(/<p>/g) ? title : `<p>${title}</p>`,
             "text": text ? text : "",
             "postertext": "",
-            "tableasHTML": "",
+            "tableasHTML": tableAsHTML ? tableAsHTML : '',
             "captions": captions ? captions.match(/<p>/g) ? captions : `<p>${captions}</p>` : "<p></p>",
             "credits": credits ? credits.match(/<p>/g) ? credits : `<p>${credits}</p>` : "<p></p>"
         }
