@@ -33,8 +33,7 @@ import {
     DELETE_SHOW_HIDE_ELEMENT,
     SET_PARENT_SHOW_DATA,
     GET_ALL_SLATES_DATA,
-    SET_CURRENT_SLATE_DATA,
-    SET_ALL_PAGE_NUMBER_ELEM_ID
+    SET_CURRENT_SLATE_DATA
 } from '../constants/Action_Constants';
 
 /**
@@ -106,12 +105,8 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
         case GET_PAGE_NUMBER:
             return {
                 ...state,
-                pageNumberData: action.payload
-            }
-        case SET_ALL_PAGE_NUMBER_ELEM_ID:
-            return {
-                ...state,
-                allElemPageData: action.payload
+                pageNumberData: action.payload.pageNumberData,
+                allElemPageData: action.payload.allElemPageData
             }
         case SET_UPDATED_SLATE_TITLE:
             return {

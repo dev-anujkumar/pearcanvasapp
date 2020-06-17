@@ -11,8 +11,7 @@ import {
     SET_PARENT_SHOW_DATA,
     ERROR_POPUP,
     SLATE_TITLE,
-    GET_PAGE_NUMBER,
-    SET_ALL_PAGE_NUMBER_ELEM_ID
+    GET_PAGE_NUMBER
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
@@ -230,12 +229,12 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
     /** Page Number removed  */
     dispatch({
         type: GET_PAGE_NUMBER,
-        payload: []
+        payload: {
+            pageNumberData: [],
+            allElemPageData: []
+        }
     });
-    dispatch({
-        type: SET_ALL_PAGE_NUMBER_ELEM_ID,
-        payload: []
-    });
+   
 
     /** Project level and element level TCM status */
     if (page === 0 && config.tcmStatus && versioning === "") {
