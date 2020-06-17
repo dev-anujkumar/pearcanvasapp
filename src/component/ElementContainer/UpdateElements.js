@@ -389,7 +389,12 @@ export const generateAssessmentData = (index, previousElementData, elementType, 
     let usageType = document.querySelector(assessmentNodeSelector + 'span.singleAssessment_Dropdown_currentLabel').innerText;
     let nextUsageType = "";
     let obj= store.getState().appStore.usageTypeListData.usageTypeList
-    nextUsageType =Object.keys(obj).find(key => obj[key] === usageType).toUpperCase().replace("-", "_");
+
+    if (Object.keys(obj).find(key => obj[key] === usageType)){
+        nextUsageType = Object.keys(obj).find(key => obj[key] === usageType).toUpperCase().replace("-", "_");
+    } else {
+        nextUsageType = usageType.toUpperCase().replace(" ", "_").replace("-", "_");
+    }
 
     dataToSend.figuredata.elementdata.usagetype = usageType;
     dataToSend.inputSubType = nextUsageType;
@@ -407,7 +412,14 @@ export const generateAssessmentData = (index, previousElementData, elementType, 
 export const generateAssessmentSlateData = (index, previousElementData, elementType, primaryOption, secondaryOption)=>{
     let obj= store.getState().appStore.usageTypeListData.usageTypeList;
     let usageType = previousElementData.elementdata.usagetype;
-    let nextUsageType = Object.keys(obj).find(key => obj[key] === usageType).toUpperCase().replace("-", "_");
+    let nextUsageType = "";
+       
+    if (Object.keys(obj).find(key => obj[key] === usageType)){
+        nextUsageType = Object.keys(obj).find(key => obj[key] === usageType).toUpperCase().replace("-", "_");
+    } else {
+        nextUsageType = usageType.toUpperCase().replace(" ", "_").replace("-", "_");
+    }
+    
     let assessmenttitle = previousElementData.elementdata.assessmentformat == 'learningtemplate' ? previousElementData.elementdata.templatelabel : previousElementData.elementdata.assessmenttitle;
     let dataToSend = {
         ...previousElementData,

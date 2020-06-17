@@ -73,7 +73,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     if (oldElementData.figuretype === "assessment") {
         let usageType=document.querySelector(`div[data-id='${oldElementData.id}'] span.singleAssessment_Dropdown_currentLabel`).innerText;
         let nextUsageType = "";
-        let obj= store.getState().appStore.usageTypeListData.usageTypeList
+        let obj= appStore.usageTypeListData.usageTypeList
         nextUsageType =Object.keys(obj).find(key => obj[key] === usageType).toUpperCase().replace("-", "_");
         outputPrimaryOptionEnum=outputSubType['enum'];
         outputSubTypeEnum = nextUsageType//usageType.toUpperCase().replace(" ", "_").replace("-", "_");
@@ -92,8 +92,14 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         oldElementData.figuredata.elementdata.assessmentitemid = "";
         oldElementData.figuredata.elementdata.assessmentformat=assessmentFormat;
         oldElementData.figuredata.elementdata.assessmentitemtype=assessmentItemType;
-        oldElementData && oldElementData.html && oldElementData.html.title ? oldElementData.html.title ="": null;
-        oldElementData && oldElementData.title && oldElementData.title.text ? oldElementData.title.text ="": null;
+        if(oldElementData && oldElementData.html && oldElementData.html.title){
+            oldElementData.html.title ="";
+        }
+        if(oldElementData && oldElementData.title && oldElementData.title.text){
+            oldElementData.title.text ="";
+        }
+        // oldElementData && oldElementData.html && oldElementData.html.title ? oldElementData.html.title ="": null;
+        // oldElementData && oldElementData.title && oldElementData.title.text ? oldElementData.title.text ="": null;
         /** [PCAT-7961] | case(1) - As no unique figuredata.id is present for the assessment,the  'figuredata.id' key is removed */
         if (oldElementData && oldElementData.figuredata && (oldElementData.figuredata.id || oldElementData.figuredata.id=="")) {
             delete oldElementData.figuredata.id;
