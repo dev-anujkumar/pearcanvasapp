@@ -141,9 +141,11 @@ export class ReactEditor extends React.Component {
 
   pastePostProcess = (plugin, args) => {
     /** Data with &nsbp; creating unwanted saving call as tinymce converts it in space at the time of rendering */
-    let content = args.node && args.node.innerHTML
-    content = content.replace(/\&nbsp;/g, ' ');
-    args.node.innerHTML = content;
+    if(args.node && args.node.innerHTML){
+      let content = args.node.innerHTML
+      content = content.replace(/\&nbsp;/g, ' ');
+      args.node.innerHTML = content;
+    }   
   }
 
   /*
