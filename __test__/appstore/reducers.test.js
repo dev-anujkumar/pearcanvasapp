@@ -30,8 +30,9 @@ const initialState = {
     slateLevelData: {},
     activeElement: {},
     splittedElementIndex: 0,
-    pageNumberData: {},
-    permissions: []
+    pageNumberData: [],
+    permissions: [],
+    allElemPageData:[]
 };
 
 const splittedElementIndexValue = "5";
@@ -186,11 +187,16 @@ describe('testing SLATE LEVEL REDUCER cases -->', () => {
     it('case 8- GET PAGE NUMBER', () => {
         let output = {
             ...initialState,
-            pageNumberData: {}
+            pageNumberData: [],
+            allElemPageData:[]
+            
         };
         expect(reducer(initialState, {
             type: GET_PAGE_NUMBER,
-            payload: {}
+            payload: {
+                pageNumberData: [],
+                allElemPageData:[]
+            }
         })).toEqual(output)
     });
     it('case 9- SET_UPDATED_SLATE_TITLE', () => {

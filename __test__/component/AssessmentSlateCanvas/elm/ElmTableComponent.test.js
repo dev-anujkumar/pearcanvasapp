@@ -115,7 +115,7 @@ describe('ELM Actions test', () => {
         expect(spy).toHaveBeenCalled()
         spy.mockClear()
     });
-    it('TEST- sorting functions', () => {
+    xit('TEST- sorting functions', () => {
         let store = mockStore(initialState);
         let props = {
             errFlag: true,
@@ -148,7 +148,7 @@ describe('ELM Actions test', () => {
         expect(spy2).toHaveBeenCalled()
         spy2.mockClear()
     });
-    it('TEST- setSort function', () => {
+    xit('TEST- setSort function', () => {
         let store = mockStore(initialState);
         let props = {
             errFlag: true,

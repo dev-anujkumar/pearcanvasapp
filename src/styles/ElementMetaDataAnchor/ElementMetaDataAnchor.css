@@ -61,10 +61,13 @@ width:230px;
     font-size: 12px;
     font-weight: 700;
 }
+.panel_syntax_highlighting {
+    margin-bottom: 70px;
+}
 .panel_show_module .learning-obejective-text {
     padding-bottom: 20px;
 }
-.panel_show_module .switch{
+.panel_show_module .switch, .panel_syntax_highlighting .switch{
     float: right;
     margin-top:0;
 }

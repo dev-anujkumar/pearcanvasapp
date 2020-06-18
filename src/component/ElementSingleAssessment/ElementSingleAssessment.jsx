@@ -13,6 +13,7 @@ import { FULL_ASSESSMENT_CITE, FULL_ASSESSMENT_TDX } from '../AssessmentSlateCan
 import RootSingleAssessmentComponent from '../AssessmentSlateCanvas/singleAssessmentCiteTdx/RootSingleAssessmentComponent.jsx'
 import { setCurrentCiteTdx, setCurrentInnerCiteTdx, assessmentSorting, specialCharacterDecode } from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
 import RootElmSingleAssessment from '../AssessmentSlateCanvas/elm/RootElmSingleComponent.jsx'
+import { assessmentUsageType } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 // import { sendDataToIframe } from './../../constants/utility.js';
 /*** @description - ElementSingleAssessment is a class based component. It is defined simply to make a skeleton of the assessment-type element .*/
 
@@ -280,7 +281,7 @@ static getDerivedStateFromProps(nextProps, prevState) {
     */
     renderAssessmentType = (model) => {
         var assessmentJSX;
-        var assessmentUsageType = ['Quiz', 'Test', 'Practice', 'Homework', 'Diagnostic', 'Journal', 'Shared Writing', 'Concept Check', 'Non-Scored', 'Study Tool']
+        // var assessmentUsageType = ['Quiz', 'Test', 'Practice', 'Homework', 'Diagnostic', 'Journal', 'Shared Writing', 'Concept Check', 'Non-Scored', 'Study Tool', 'Remediation']
         if (assessmentUsageType.length > 0) {
             var assessmentType = assessmentUsageType.map((usageType, i) =>
                 <li key={i} className="singleAssessment_Dropdown_item" onClick={(e) => this.handleAssessmentTypeChange(usageType, e)}>{usageType}</li>

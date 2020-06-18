@@ -1,7 +1,7 @@
 /**
 * Search and Filter Assessments Component of Learnosity Assessment
 */
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import '../../../../../styles/AssessmentSlateCanvas/elm/ElmTable.css';
 
 export const AssessmentSearchBar = (props) => {

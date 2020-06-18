@@ -5,6 +5,7 @@ var callback = function (status, responseText) { response = { status: status, re
 let IF_MATCH = "";
 import store from '../appstore/store';
 import config_object from '../config/config';
+import { sendToDataLayer } from '../constants/ga';
 ajax.x = function () {
     if ('withCredentials' in new XMLHttpRequest()) {
         return new XMLHttpRequest();
@@ -115,6 +116,7 @@ export function publishTitleDelay(project, section, cite, callBack, isPreview) {
 export const c4PublishObj = {
 
     publishSlate: function (project, section, cite) {
+        const startTime = performance.now();
         var content_url = config_object.CTOOL_PUBSLATE;
         let content_data = {};
         content_data["projectManifest"] = project;
@@ -134,6 +136,14 @@ export const c4PublishObj = {
         console.log("parsedResponse in c4_module", parsedResponse)
         if (parsedResponse.data && parsedResponse.data.previewURL) {
             let previewURL = parsedResponse.data.previewURL;
+            
+            const elapsedTime = performance.now() - startTime;
+            sendToDataLayer('slate-preview', {
+                elapsedTime,
+                slateURN: section,
+                projectURN: project,
+            });
+            
             _.delay(() => {
                 window.open(previewURL, '_blank');
                 $("#blocker.blocker, #loader.loader").css({

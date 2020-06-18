@@ -7,11 +7,20 @@ import ElementAsideContainer from '../../../src/component/ElementAsideContainer/
 import { elementAsideWorkExample, element, section } from '../../../fixtures/elementAsideData';
 import { swapElement} from '../../../src/component/SlateWrapper/SlateWrapper_Actions';
 import { Provider } from 'react-redux';
+import config from '../../../src/config/config.js';
+import tinyMCE from "tinymce"
+
 jest.mock('../../../src/component/ElementSaprator/ElementSaprator.jsx', () => {
     return function () {
         return (<div>null</div>)
     }
 });
+jest.mock('../../../src/component/tinyMceEditor.js',()=>{
+    return function () {
+        return (<div>null</div>)
+    }
+})
+config.asideToolbar = ['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag']
 const mockStore = configureMockStore(middlewares);
 let initialState = {
     appStore: {
@@ -46,6 +55,9 @@ let initialState = {
     },
     commentsPanelReducer:{
         allComments: []
+    },
+    tcmReducer:{
+        tcmSnapshot:{}
     }
 };
 
@@ -178,31 +190,57 @@ describe('Testing ElementAside component with props', () => {
             expect(borderTop.props.className).toEqual('asideFeatureBorderTop');
         })
 
-    it(' handleFocus function testing', () => {
-        const wrapper = mount(<Provider store={store}>< ElementAsideContainer {...props} /> </Provider>)
-        const instance = wrapper.find('ElementAsideContainer').instance();
-        let el = document.createElement('div');
-        el.classList.add("elemDiv-ha");
-        let event = {
-            target:el
-        };
-        instance.handleFocus(event);
-        let el2 = document.createElement('div');
-        el2.classList.add('aside-container');
-        let event2 = {
-            target:el
-        };
-        instance.handleFocus(event2);
-        let booleanCheck = event.target === event2.target;
-        expect(booleanCheck).toEqual(true);
-    })
+        it(' handleFocus function testing', () => {
+            const wrapper = mount(<Provider store={store}>< ElementAsideContainer {...props} /> </Provider>)
+            const instance = wrapper.find('ElementAsideContainer').instance();
+            let el = document.createElement('div');
+            el.classList.add("elemDiv-ha");
+            let event = {
+                target:el
+            };
+            instance.handleFocus(event);
+            let el2 = document.createElement('div');
+            el2.classList.add('aside-container');
+            let event2 = {
+                target:el
+            };
+            instance.handleFocus(event2);
+            let booleanCheck = event.target === event2.target;
+            expect(booleanCheck).toEqual(true);
+        })
 
-    it(' componentWillMount  testing', () => {
-        const tempWrapper = mount(<Provider store={store}>< ElementAsideContainer {...props} /> </Provider>)
-        const componentWillUnmount = jest.spyOn(tempWrapper.instance(), 'componentWillUnmount');
-        tempWrapper.unmount();
-        expect(componentWillUnmount).toHaveBeenCalled();
-    })
+        it(' componentWillMount  testing', () => {
+            const tempWrapper = mount(<Provider store={store}>< ElementAsideContainer {...props} /> </Provider>)
+            const componentWillUnmount = jest.spyOn(tempWrapper.instance(), 'componentWillUnmount');
+            tempWrapper.unmount();
+            expect(componentWillUnmount).toHaveBeenCalled();
+        })
+        it("onSectionDragUpdate test for section", () => {
+            const wrapper = mount(<Provider store={store}>< ElementAsideContainer {...props} /> </Provider>)
+            const instance = wrapper.find('ElementAsideContainer').instance();
+            const spyOnSectionDragUpdate = jest.spyOn(instance, 'onSectionDragUpdate');
+
+            let event = {
+                oldDraggableIndex: 0,
+                newDraggableIndex: 1
+            }
+            let containerBodyMatter = props.element.elementdata
+            instance.onSectionDragUpdate(event, containerBodyMatter, 2, "section");
+            expect(spyOnSectionDragUpdate).toHaveBeenCalled();
+        })
+        it("onSectionDragUpdate test for section-break", () => {
+            const wrapper = mount(<Provider store={store}>< ElementAsideContainer {...props} /> </Provider>)
+            const instance = wrapper.find('ElementAsideContainer').instance();
+            const spyOnSectionDragUpdate = jest.spyOn(instance, 'onSectionDragUpdate');
+
+            let event = {
+                oldDraggableIndex: 0,
+                newDraggableIndex: 1
+            }
+            let containerBodyMatter = props.element.elementdata
+            instance.onSectionDragUpdate(event, containerBodyMatter, 2, "section-break");
+            expect(spyOnSectionDragUpdate).toHaveBeenCalled();
+        })
     })
 })
 

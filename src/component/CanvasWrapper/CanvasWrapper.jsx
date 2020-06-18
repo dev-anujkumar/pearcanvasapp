@@ -45,7 +45,7 @@ export class CanvasWrapper extends Component {
 
     static getDerivedStateFromProps(nextProps, prevState){
         if(nextProps.isConfigLoaded && prevState.isConfigLoaded){
-            nextProps.fetchSlateData(config.slateManifestURN,config.slateEntityURN,config.page,'');
+            nextProps.fetchSlateData(config.slateManifestURN,config.slateEntityURN,config.page,'',"");
             return {
                 isConfigLoaded : false
             };
@@ -145,7 +145,7 @@ export class CanvasWrapper extends Component {
     loadMorePages = () => {
         config.page++;
         if(config.totalPageCount <= config.page) return false;
-        this.props.fetchSlateData(config.slateManifestURN,config.slateEntityURN, config.page, '');
+        this.props.fetchSlateData(config.slateManifestURN,config.slateEntityURN, config.page, '',"");
     }
     
     ReleaseErrorPopup = () => {
@@ -202,7 +202,7 @@ export class CanvasWrapper extends Component {
                                             return (<GlossaryFootnoteMenu permissions={this.props.permissions} glossaryFootnoteValue={this.props.glossaryFootnoteValue} showGlossaaryFootnote={this.props.glossaaryFootnotePopup} glossaryFootNoteCurrentValue = {this.props.glossaryFootNoteCurrentValue}/>)
                                         }
                                         else {
-                                            return (<Sidebar showPopUp={this.showPopUp} />)
+                                            return (<Sidebar showCanvasBlocker= {this.props.showCanvasBlocker} showPopUp={this.showPopUp} />)
                                         }
                                     }
                                 }

@@ -31,7 +31,8 @@ let cypressConfig = {
     showHideToolbar: ['footnote','glossary','assetpopover'],
     hideToolbar : ['footnote','glossary','assetpopover','orderedlist','unorderedlist'],
     headingToolbar : ['italic','clearformatting','increaseindent','footnote','mathml','chemml','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag'],
-    codeListingToolbar: ['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag'],
+    codeListingToolbarEnabled: ['strikethrough','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag'],
+    codeListingToolbarDisabled: ['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag'],
     asideToolbar: ['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag'],
     labelToolbar:['footnote','decreaseindent','glossary','assetpopover'],
     captionToolbar:['decreaseindent','glossary','assetpopover'],
@@ -47,12 +48,12 @@ let cypressConfig = {
     totalPageCount : 0,
     pageLimit : 0,
     fromTOC : false,
-    CYPRESS_API_ENDPOINT : 'https://10.11.7.24:8443/cypress-api/',
-    CYPRESS_TOC_JAVA_ENDPOINT : 'https://10.11.7.24:8443/app/toc-javaapp/',
+    CYPRESS_API_ENDPOINT : 'https://10.11.7.246:8443/cypress-api/',
+    CYPRESS_TOC_JAVA_ENDPOINT : 'https://10.11.7.246:8443/app/toc-javaapp/',
     WRAPPER_URL: process.env.NODE_ENV === 'production' ? `${window.parent.origin}/toc-wrapper/index.html` : 'https://localhost:4000',
     LOCK_API_BASE_URL : process.env.NODE_ENV === 'production' ? `${window.parent.origin}/cypress/dashboard-srvr` : 'https://dev-structuredauthoring.pearson.com/cypress/dashboard-srvr',
     TCM_DASHBOARD_UI_URL: process.env.NODE_ENV === 'production' ? `${window.parent.origin}/cypress/trackchanges/index.html` :"https://dev-structuredauthoring.pearson.com/cypress/trackchanges/index.html",
-    getENVConfig: process.env.NODE_ENV === "development" ? 'https://10.11.7.24:8443/cypress-api/' : '/cypress/canvas-srvr/cypress-api/',
+    getENVConfig: process.env.NODE_ENV === "development" ? 'https://10.11.7.246:8443/cypress-api/' : '/cypress/canvas-srvr/cypress-api/',
     prodUrl : 'https://structuredauthoring.pearson.com',
     sitePointing : 'dev',
     conversionInProcess : false,
@@ -60,7 +61,8 @@ let cypressConfig = {
     citationFlag: false,
     lastActiveElementId:'',
     popupCreationCallInProgress : false,
-    citationDefaultElement: false
+    citationDefaultElement: false,
+    pageNumberInProcess:true
 }
 
 

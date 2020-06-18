@@ -1,5 +1,5 @@
 import config from '../../../../config/config';
-import {FULL_ASSESSMENT_PUF, PUF, LEARNOSITY, LEARNOSITY_BETA} from '../../AssessmentSlateConstants';
+import {FULL_ASSESSMENT_PUF, LEARNOSITY, LEARNOSITY_BETA} from '../../AssessmentSlateConstants';
 import axios from 'axios';
 
 /**
@@ -80,7 +80,7 @@ export const fetchAssessmentItem = (assessmentId) => (dispatch) => {
             payload: {
                 data: [],
                 errFlag: true,
-                apiStatus: error.response.status,
+                apiStatus: "404",
                 isLoading: false
             }
         })

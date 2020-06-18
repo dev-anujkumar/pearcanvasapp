@@ -52,7 +52,7 @@ class ElementPopup extends React.Component {
             element: {...element}
         }
         sendDataToIframe({'type': ShowLoader,'message': { status: true }});
-        this.props.fetchSlateData(config.slateManifestURN, config.slateEntityURN, 0, false);
+        this.props.fetchSlateData(config.slateManifestURN, config.slateEntityURN, 0, false,"");
     }
 
     /**

@@ -10,15 +10,19 @@ import {
     SET_PARENT_ASIDE_DATA,
     SET_PARENT_SHOW_DATA,
     ERROR_POPUP,
-    SLATE_TITLE
+    SLATE_TITLE,
+    GET_PAGE_NUMBER
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
 import { sendDataToIframe, requestConfigURI, createTitleSubtitleModel } from '../../constants/utility.js';
+import { sendToDataLayer } from '../../constants/ga';
 import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 import elementDataBank from './elementDataBank'
 import figureData from '../ElementFigure/figureTypes.js';
 import { fetchAllSlatesData, setCurrentSlateAncestorData } from '../../js/getAllSlatesData.js';
+import { handleTCMData, tcmSnapshot } from '../../component/ElementContainer/TcmSnapshot_Actions';
+
 const findElementType = (element, index) => {
     let elementType = {};
     elementType['tag'] = '';
@@ -80,13 +84,14 @@ const findElementType = (element, index) => {
                         break;
                     case "codelisting":
                         if(element.subtype == "" || element.subtype == undefined) {
-                            element.subtype = "codelisting"
+                           // element.subtype = "codelisting"    // As per requirement removing Subtype key from codelisting
                         }
                         elementType = {
                             elementType: elementDataBank[element.type][element.figuretype]["elementType"],
                             primaryOption: elementDataBank[element.type][element.figuretype]["primaryOption"],
                             numbered: element.figuredata.numbered,
-                            startNumber: element.figuredata.startNumber
+                            startNumber: element.figuredata.startNumber,
+                            syntaxhighlighting: element.figuredata.syntaxhighlighting
                         }
                         if(element.figuredata && !element.figuredata.programlanguage) {
                             element.figuredata.programlanguage = 'Select';
@@ -206,11 +211,12 @@ export const fetchElementTag = (element, index = 0) => {
         return findElementType(element, index).tag || "";
     }
 }
-export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dispatch, getState) => {
+export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledFrom, versionPopupReload) => (dispatch, getState) => {
     // if(config.isFetchSlateInProgress){
     //  return false;
     // }
     /** [TK-3289]- Fetch Data for All Slates */
+    const startTime = performance.now();
     dispatch(fetchAllSlatesData());
     /**sendDataToIframe({ 'type': 'fetchAllSlatesData', 'message': {} }); */
     // sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
@@ -220,7 +226,39 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
         page = config.totalPageCount;
     }
     config.page = page;
-    return axios.get(`${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}`, {
+    /** Page Number removed  */
+    dispatch({
+        type: GET_PAGE_NUMBER,
+        payload: {
+            pageNumberData: [],
+            allElemPageData: []
+        }
+    });
+   
+
+    /** Project level and element level TCM status */
+    if (page === 0 && config.tcmStatus && versioning === "") {
+        /** Show TCM icon header if TCM is on for project level*/
+        let messageTcmStatus = {
+            TcmStatus: {
+                tc_activated: "true"
+            }
+        }
+        sendDataToIframe({
+            'type': "TcmStatusUpdated",
+            'message': messageTcmStatus
+        })
+
+        dispatch(handleTCMData(manifestURN));
+        if (calledFrom !== "slateRefresh") {
+            dispatch(tcmSnapshot(manifestURN, entityURN))
+        }
+    }
+    let apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}`
+    if (versionPopupReload) {
+        apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}&metadata=true`
+    } 
+    return axios.get(apiUrl, {
         headers: {
             "Content-Type": "application/json",
             "PearsonSSOSession": config.ssoToken
@@ -230,20 +268,13 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
 
 		if(slateData.data && slateData.data[newVersionManifestId] && slateData.data[newVersionManifestId].type === "popup"){
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
+            config.slateManifestURN= Object.values(slateData.data)[0].id
+            manifestURN= Object.values(slateData.data)[0].id
             config.isPopupSlate = true;
             config.savingInProgress = false;
 			if (config.slateManifestURN === Object.values(slateData.data)[0].id) {
-                let messageTcmStatus = {
-					TcmStatus: {
-						tc_activated: JSON.stringify(slateData.data[manifestURN].tcm)
-					}
-				}
-                sendDataToIframe({
-                    'type': "TcmStatusUpdated",
-                    'message': messageTcmStatus
-                })
-				config.totalPageCount = slateData.data[newVersionManifestId].pageCount;
-				config.pageLimit = slateData.data[newVersionManifestId].pageLimit;
+				config.totalPageCount = slateData.data[newVersionManifestId].pageCount? slateData.data[newVersionManifestId].pageCount: 0;
+				config.pageLimit = slateData.data[newVersionManifestId].pageLimit ? slateData.data[newVersionManifestId].pageLimit :0;
 				let parentData = getState().appStore.slateLevelData;
 				let currentParentData;
 				if ((slateData.data[newVersionManifestId]) && (!config.fromTOC) && slateData.data[newVersionManifestId].pageNo > 0) {
@@ -267,6 +298,17 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
                     type: SET_ACTIVE_ELEMENT,
                     payload: {}
                 });
+            }
+            else if (versionPopupReload) {
+                let parentData = getState().appStore.slateLevelData;
+                let newslateData = JSON.parse(JSON.stringify(parentData));
+                newslateData[config.slateManifestURN].contents.bodymatter[versioning.index] = Object.values(slateData.data)[0];
+                return dispatch({
+                    type: AUTHORING_ELEMENT_UPDATE,
+                    payload: {
+                        slateLevelData: newslateData
+                    }
+                })
             }
             else if(versioning && versioning.type==="popup"){
                 let parentData = getState().appStore.slateLevelData;
@@ -315,28 +357,21 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
                     sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
                     let contentUrn = slateData.data[manifestURN].contentUrn;
                     let title = slateData.data[manifestURN].contents.title ? slateData.data[manifestURN].contents.title.text : '';
-                    let messageTcmStatus = {
-                        TcmStatus: {
-                            tc_activated: JSON.stringify(slateData.data[manifestURN].tcm)
-                        }
-                    }
-                    sendDataToIframe({
-                        'type': "TcmStatusUpdated",
-                        'message': messageTcmStatus
-                    })
                      /**
                      * [BG-1522]- On clicking the Notes icon, only the comments of last active element should be 
                      * displayed in the Comments Panel, when user navigates back to the slate or refreshes the slate 
                      */
                     // let appData =  appData1 && appData1.id? appData1.id : appData1;
                     let appData =  config.lastActiveElementId;
-                    if(appData){
-                        dispatch(fetchComments(contentUrn, title))
-                        dispatch(fetchCommentByElement(appData))
-                    }
-                    else{
-                        dispatch(fetchComments(contentUrn, title))
-                    }
+                    if (page === 0) {
+                        if (appData) {
+                            dispatch(fetchComments(contentUrn, title))
+                            dispatch(fetchCommentByElement(appData))
+                        }
+                        else {
+                            dispatch(fetchComments(contentUrn, title))
+                        }
+                    }                   
                     config.totalPageCount = slateData.data[manifestURN].pageCount;
                     config.pageLimit = slateData.data[manifestURN].pageLimit;
                     let parentData = getState().appStore.slateLevelData;
@@ -381,6 +416,15 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
                 'message': setSlateDetail(slateTitle, newVersionManifestId)
             });
         }
+
+        const elapsedTime = performance.now() - startTime;
+        
+        sendToDataLayer('slate-load', {
+            elapsedTime,
+            manifestURN,
+            entityURN,
+            projectURN: config.projectUrn,
+        });
     });
 };
 
@@ -676,6 +720,31 @@ const getRequestData = (parentElement) => {
         "type": "TEXT",
         "metaDataField" : metaDataField
     }
+    /* if(parentElement.type === "popup"){
+        let popupFieldType = ""
+        if(popupField === "formatted-subtitle"){
+            popupFieldType = "formattedSubtitle"
+        }
+        else{
+            popupFieldType = "formattedTitle"
+        }
+        
+        dataToSend = {
+            "projectUrn": config.projectUrn,
+            "slateEntityUrn": parentElement.contentUrn,
+            "type": "TEXT",
+            "metaDataField" : popupFieldType
+        }
+    }
+    else if(parentElement.type === "citations"){
+        let citationField = "formattedTitle"
+        dataToSend = {
+            "projectUrn": config.projectUrn,
+            "slateEntityUrn": parentElement.contentUrn,
+            "type": "TEXT",
+            "metaDataField" : citationField
+        }
+    } */
     return dataToSend
 }
 
@@ -714,14 +783,12 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
     let _requestData = {
         "projectUrn": config.projectUrn,
         "slateEntityUrn": parentElement.contentUrn,
-        "slateUrn": parentElement.id,
         "type": "TEXT"
     }
     if (poetryField === 'creditsarray') {
         _requestData.sectionType = 'creditsarray';
     } else {
         _requestData.metaDataField = "formattedTitle";
-        // _requestData.metaDataField = poetryField ==="formatted-title"?"formattedTitle":"formattedSubtitle";
     }
     
     let url = `${config.REACT_APP_API_URL}v1/slate/element`
@@ -760,7 +827,6 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
             else if(poetryField==="formatted-subtitle"){
                 targetPoetryElement.contents["formatted-title"] = response.data
                 targetPoetryElement.contents["formatted-title"].html.text = createTitleSubtitleModel("", elemNode.innerHTML)
-                // targetPoetryElement.contents["formatted-title"].elementdata.text = elemNode.innerText
             }
             _slateObject.contents.bodymatter[ElementIndex] = targetPoetryElement
         }
