@@ -132,7 +132,7 @@ export class ReactEditor extends React.Component {
       let testElement = document.createElement('div');
       testElement.innerHTML = args.content;
       if(testElement.innerText && testElement.innerText.trim().length){
-          args.content = testElement.innerText;
+          args.content = testElement.innerText.replace(/</g, "&lt;").replace(/>/g, "&gt;"); //testElement.innerText;
       }else{
           args.content = tinymce.activeEditor.selection.getContent();
       } 
