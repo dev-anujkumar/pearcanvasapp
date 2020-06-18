@@ -13,9 +13,8 @@ import { FULL_ASSESSMENT_CITE, FULL_ASSESSMENT_TDX } from '../AssessmentSlateCan
 import RootSingleAssessmentComponent from '../AssessmentSlateCanvas/singleAssessmentCiteTdx/RootSingleAssessmentComponent.jsx'
 import { setCurrentCiteTdx, setCurrentInnerCiteTdx, assessmentSorting, specialCharacterDecode } from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
 import RootElmSingleAssessment from '../AssessmentSlateCanvas/elm/RootElmSingleComponent.jsx'
-import { assessmentUsageType } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
-import {fetchUsageTypeData} from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
-// import { sendDataToIframe } from './../../constants/utility.js';
+import { fetchUsageTypeData } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
+
 /*** @description - ElementSingleAssessment is a class based component. It is defined simply to make a skeleton of the assessment-type element .*/
 
 class ElementSingleAssessment extends Component {
@@ -27,8 +26,6 @@ class ElementSingleAssessment extends Component {
             assessmentItemId : null,
             showAssessmentPopup: false,
             asseessmentUsageTypeDropdown: false,
-            //activeAsseessmentUsageType: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.usagetype ? this.props.model.figuredata.elementdata.usagetype : "Quiz",
-            // assessmentTitle: this.props.model && this.props.model.html && this.props.model.html.title? this.props.model.html.title : null,
             activeAsseessmentUsageType: setAssessmentUsageType(this.props),
             assessmentTitle: setAssessmentTitle(this.props),
             elementType: this.props.model.figuredata.elementdata.assessmentformat || "",
@@ -63,12 +60,10 @@ class ElementSingleAssessment extends Component {
         this.props.fetchUsageTypeData("assessment");
         let title =setAssessmentTitle(this.props) != null?  setAssessmentTitle(this.props).replace(/<\/?[^>]+(>|$)/g,""): null;
         this.setState({
-            // assessmentTitle: this.props.model && this.props.model.html && this.props.model.html.title? title : null,
             assessmentTitle: title,
+            activeAsseessmentUsageType: setAssessmentUsageType(this.props),
             assessmentId: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.assessmentid ? this.props.model.figuredata.elementdata.assessmentid : null,
-            assessmentItemId: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.assessmentitemid ? this.props.model.figuredata.elementdata.assessmentitemid : null,
-            // activeAsseessmentUsageType: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.usagetype ? this.props.model.figuredata.elementdata.usagetype : "Quiz"
-            activeAsseessmentUsageType: setAssessmentUsageType(this.props)
+            assessmentItemId: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.assessmentitemid ? this.props.model.figuredata.elementdata.assessmentitemid : null
         })
         let newElement = localStorage.getItem('newElement');
         if (newElement) {
@@ -82,11 +77,10 @@ class ElementSingleAssessment extends Component {
 static getDerivedStateFromProps(nextProps, prevState) {
 
     if('figuredata' in nextProps.model && 'elementdata' in nextProps.model.figuredata && 'assessmentformat' in nextProps.model.figuredata.elementdata && nextProps.model.figuredata.elementdata.assessmentformat !== prevState.elementType) {
-        let title = setAssessmentTitle(nextProps) != null?  setAssessmentTitle(nextProps).replace(/<\/?[^>]+(>|$)/g,""): null;//nextProps.model.html && nextProps.model.html.title? nextProps.model.html.title.replace(/<\/?[^>]+(>|$)/g,""):null;
+        let title = setAssessmentTitle(nextProps) != null?  setAssessmentTitle(nextProps).replace(/<\/?[^>]+(>|$)/g,""): null;
         return {
             assessmentId: nextProps.model.figuredata && nextProps.model.figuredata.elementdata && nextProps.model.figuredata.elementdata.assessmentid ? nextProps.model.figuredata.elementdata.assessmentid : "",
             assessmentItemId: nextProps.model.figuredata && nextProps.model.figuredata.elementdata && nextProps.model.figuredata.elementdata.assessmentitemid ? nextProps.model.figuredata.elementdata.assessmentitemid : "",
-            // assessmentTitle :nextProps.model && nextProps.model.html && nextProps.model.html.title? title : null,
             assessmentTitle: title,
             elementType: nextProps.model.figuredata.elementdata.assessmentformat || ""
         };
