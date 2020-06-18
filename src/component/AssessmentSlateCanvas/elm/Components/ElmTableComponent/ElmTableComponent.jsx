@@ -222,7 +222,11 @@ class ElmTableComponent extends Component {
         }
         if (this.state.openedFrom === "singleAssessment" && getItems == true && this.state.openItemTable === true) {
             this.getAssessmentItemsData(data, this.state.activeAssessmentId, this.state.parentTitle)
-        } else {
+        } 
+        else if(this.props && this.props.elmReducer && this.props.elmReducer.openSearch && this.props.elmReducer.openSearch ==true){
+            return this.setState({ tableValue: [], parentUrn: parentUrn, parentTitle: setParentTitle })
+        }
+        else {
             setParentTitle = (data.unformattedTitle && data.unformattedTitle.en) ? data.unformattedTitle.en : this.state.firstName;
             this.preparedData = tableDataSorting(false, this.preparedData, 'asc')
             return this.setState({ tableValue: this.preparedData, parentUrn: parentUrn, parentTitle: setParentTitle })
