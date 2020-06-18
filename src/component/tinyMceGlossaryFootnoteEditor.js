@@ -26,6 +26,7 @@ export class ReactEditor extends React.Component {
       object_resizing: false,
       fixed_toolbar_container: '#toolbarGlossaryFootnote',
       paste_preprocess: this.pastePreProcess,
+      paste_postprocess: this.pastePostProcess,
       setup: (editor) => {
         if (this.props.permissions && this.props.permissions.includes('authoring_mathml')) {  // when user doesn't have edit permission
           this.setChemistryFormulaIcon(editor);
@@ -136,6 +137,15 @@ export class ReactEditor extends React.Component {
       }else{
           args.content = tinymce.activeEditor.selection.getContent();
       } 
+  }
+
+  pastePostProcess = (plugin, args) => {
+    /** Data with &nsbp; creating unwanted saving call as tinymce converts it in space at the time of rendering */
+    if(args.node && args.node.innerHTML){
+      let content = args.node.innerHTML
+      content = content.replace(/\&nbsp;/g, ' ');
+      args.node.innerHTML = content;
+    }   
   }
 
   /*
