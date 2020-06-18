@@ -811,22 +811,22 @@ export default {
             enum: 'NA',		
             subtype: {		
                 'secondary-multicolumn-wider': {
-                    text: 'Wider Than text width 65/35%',
+                    text: 'Wider than text width 65/35%',
                     labelText: '2C',
                     enum: 'NA'
                 },
                 'secondary-multicolumn-half': {
-                    text: 'Wider Than text width 50/50%',
+                    text: 'Wider than text width 50/50%',
                     labelText: '2C',
                     enum: 'NA'
                 },
                 'secondary-multicolumn-wider-text': {
-                    text: 'Text Width 60/40%',
+                    text: 'Text width 60/40%',
                     labelText: '2C',
                     enum: 'NA'
                 },
                 'secondary-multicolumn-half-text': {
-                    text: 'Text Width 50/50%',
+                    text: 'Text width 50/50%',
                     labelText: '2C',
                     enum: 'NA'
                 }
