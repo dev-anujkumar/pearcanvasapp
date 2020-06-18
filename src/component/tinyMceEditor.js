@@ -1368,6 +1368,7 @@ export class TinyMceEditor extends Component {
             return false;
         }
         let selectedText = window.getSelection().toString()
+        selectedText = String(selectedText).replace(/</g, '&lt;').replace(/>/g, '&gt;');
         this.glossaryTermText = selectedText;
         if (selectedText.trim() === "") {
             return false
@@ -1377,7 +1378,7 @@ export class TinyMceEditor extends Component {
             if (res.data && res.data.id) {
                 insertionText = `<dfn data-uri= ${res.data.id} class="Pearson-Component GlossaryTerm">${selectedText}</dfn>`
             }
-            editor.insertContent(insertionText);
+            editor.selection.setContent(insertionText);
             this.toggleGlossaryandFootnotePopup(true, "Glossary", res.data && res.data.id || null, () => { this.toggleGlossaryandFootnoteIcon(true); });
             this.saveContent()
         })
