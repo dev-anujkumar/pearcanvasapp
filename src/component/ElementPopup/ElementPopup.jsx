@@ -136,7 +136,7 @@ class ElementPopup extends React.Component {
                                     className = {"actionPU formatted-text"} 
                                     id = {this.props.id}
                                     element = {element}
-                                    currentElement = {popupdata && popupdata.postertextobject[0]}
+                                    currentElement = {popupdata && popupdata.postertextobject && popupdata.postertextobject[0]}
                                     model = {popupdata && popupdata.postertextobject ? popupdata.postertextobject[0].html.text : "" }
                                     handleEditorFocus = {this.props.handleFocus}
                                     handleBlur = {this.props.handleBlur} 

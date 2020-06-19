@@ -459,6 +459,27 @@ const validateRevealAnswerData = (showHideType, node, elementType) => {
 }
 
 /**
+ * Returns MetaDataField
+ * @param {*} popupdata Popup container data 
+ * @param {*} _previousElementData element data inside popup
+ */
+const getMetaDataFieldForPopup = ({ popupdata: _popupdata }, _previousElementData) => {
+    let hasFormattedTitle = _popupdata.hasOwnProperty("formatted-title"),
+        hasFormattedSubtitle = _popupdata.hasOwnProperty("formatted-subtitle");
+
+    if (hasFormattedTitle && hasFormattedSubtitle) {
+        return "formattedTitle"
+    }
+    else if(hasFormattedTitle && !hasFormattedSubtitle) {
+        return "formattedTitleOnly"
+    }
+    else if(!hasFormattedTitle && hasFormattedSubtitle) {
+        return "formattedSubtitle"
+    }
+    return "formattedTitle"
+}
+
+/**
  * Prepares new element data for all elements
  * @param {*} type 
  * @param {*} previousElementData 
@@ -505,12 +526,18 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
             } 
             if(parentElement && parentElement.type === "popup"){
                 dataToReturn.elementParentEntityUrn = parentElement.contentUrn;
-                if(parentElement.popupdata["formatted-title"] && parentElement.popupdata["formatted-title"]["id"] === previousElementData.id){
-                    dataToReturn.metaDataField = "formattedTitle";
-                }
-                else if(parentElement.popupdata["postertextobject"][0]["id"] === previousElementData.id){
+                if(parentElement.popupdata["postertextobject"][0]["id"] === previousElementData.id){
                     dataToReturn.sectionType = "postertextobject";
                 }
+                else {
+                    dataToReturn.metaDataField = getMetaDataFieldForPopup(parentElement, previousElementData)
+                }
+                /* if(parentElement.popupdata["formatted-title"] && parentElement.popupdata["formatted-title"]["id"] === previousElementData.id){
+                    dataToReturn.metaDataField = "formattedTitle";
+                } 
+                else if(parentElement.popupdata["postertextobject"][0]["id"] === previousElementData.id){
+                    dataToReturn.sectionType = "postertextobject";
+                }*/
             } else if(parentElement && parentElement.type === "poetry"){
                 if(parentElement.contents && parentElement.contents["formatted-title"] && parentElement.contents["formatted-title"]["id"] === previousElementData.id){
                     dataToReturn["metaDataField"] = "formattedTitle";
