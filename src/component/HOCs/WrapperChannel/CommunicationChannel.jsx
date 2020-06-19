@@ -50,7 +50,7 @@ function CommunicationChannel(WrappedComponent) {
          * handleIncommingMessages | Listen for any incomming message from wrapper application
          * @param {object} e | received message event from wrapper application
          */
-        handleIncommingMessages = (e) => {            
+        handleIncommingMessages = (e) => {
             let messageType = e.data.type;
             let message = e.data.message;
             switch (messageType) {
@@ -215,10 +215,29 @@ function CommunicationChannel(WrappedComponent) {
                         window.dataLayer.push(message);
                     }
                     break;
-                case 'PageLink':
-                    console.log('canvas page link:::', message);
+                case 'pageLink':
+                    this.updatePageLink(message);
                     break;
             }
+        }
+
+        /**
+         * Handle the element update action on linking a page
+         */
+        updatePageLink = (linkData) => {
+            let activeElement, linkNode, linkHTML;
+            if('containerId' in linkData && 'linkId' in linkData) {
+                activeElement = document.getElementById(linkData.containerId);
+                linkNode = activeElement.querySelector('#' + linkData.linkId);
+                linkHTML = linkNode.innerHTML || '';
+            }
+
+            if('link' in linkData && linkData.link && linkNode && linkHTML) {
+                linkNode.outerHTML = '<abbr title="Page Link" class="Pearson-Component">' + linkHTML + '</abbr>';
+            } else {
+                linkNode.outerHTML = linkHTML;
+            }
+            console.log('update page link:::', activeElement,linkNode);
         }
 
         /**

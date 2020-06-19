@@ -1504,14 +1504,17 @@ export class TinyMceEditor extends Component {
         let selection = window.getSelection().anchorNode.parentNode;
         let selectedTag = selection.nodeName;
         let selectedTagClass = selection.classList;
+        let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
+        let linkCount = tinymce.$(activeElement).find('.page-link-attacher').length;
+        // console.log('1:::', tinymce.$(activeElement).find('.page-link-attacher'), tinymce.$(activeElement).find('.page-link-attacher').length);
         if (selectedTag !== "LI" && selectedTag !== "P" && selectedTag !== "H3" && selectedTag !== "BLOCKQUOTE" && (!selectedTagClass.contains('poetryLine'))) {
             //selectedText = window.getSelection().anchorNode.parentNode.outerHTML;
             selectedText = '<' + selectedTag.toLocaleLowerCase() + '>' + selectedText + '</' + selectedTag.toLocaleLowerCase() + '>'
         }
-        let insertionText = '<span id="page-link-attacher">' + selectedText + '</span>';
+        let insertionText = '<span id="page-link-' + linkCount +'" class="page-link-attacher" container-id="' + activeElement.getAttribute('id') + '">' + selectedText + '</span>';
         // editor.insertContent(insertionText);
         editor.selection.setContent(insertionText);
-        sendDataToIframe({ 'type': LaunchTOCForCrossLinking, 'message': { open: true, case: 'new', blockCanvas: true, crossLink: true } });
+        sendDataToIframe({ 'type': LaunchTOCForCrossLinking, 'message': { open: true, case: 'new', container: activeElement.getAttribute('id'), link: 'page-link-' + linkCount, blockCanvas: true, crossLink: true } });
     }
 
 
