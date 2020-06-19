@@ -584,7 +584,7 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
             break;
     }
     dataToReturn.slateVersionUrn = config.slateManifestURN;
-    if (previousElementData.status == "approved") {
+    /* if (previousElementData.status == "approved") {
         let parentData = store.getState().appStore.slateLevelData;
         if (config.isPopupSlate && parentData[config.slateManifestURN].status === "approved") {
             dataToReturn.parentEntityId = config.slateEntityURN;
@@ -595,7 +595,7 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
         } else if (poetryData && poetryData.contentUrn) {
             dataToReturn.parentEntityId = poetryData.contentUrn;
         } 
-    }
+    } */
     
     let slateEntityUrn = dataToReturn.elementParentEntityUrn || appStore.parentUrn && appStore.parentUrn.contentUrn || config.slateEntityURN
     dataToReturn = { ...dataToReturn, index: index.toString().split('-')[index.toString().split('-').length - 1], elementParentEntityUrn: slateEntityUrn }

@@ -101,7 +101,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
             if (currentSlateData.status === 'approved') {
                 if(currentSlateData.type==="popup"){
                     sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
-                    dispatch(fetchSlateData(config.slateManifestURN,_requestData.entityUrn, 0,currentSlateData,""));
+                    dispatch(fetchSlateData(currentSlateData.id, currentSlateData.contentUrn, 0, currentSlateData, ""));
                 }
                 else{
                     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
@@ -323,7 +323,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
                 }else if(currentSlateData.status === 'approved'){
                     if(currentSlateData.type==="popup"){
                         sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
-                        dispatch(fetchSlateData(response.data.newParentVersion,updatedData.parentEntityId, 0,currentSlateData, "", false));
+                        dispatch(fetchSlateData(currentSlateData.id, currentSlateData.contentUrn, 0, currentSlateData, "", false));
                     }else{
                         sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' }); 
                     }

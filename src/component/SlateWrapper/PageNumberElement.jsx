@@ -116,7 +116,7 @@ class PageNumberElement extends React.Component {
             )
         }
         else if (isHovered && isPageNumberEnabled && _slateType !== 'assessment' && config.isPopupSlate === false) {
-            if(loader) return <div className='pageNumberBoxLoader'><div className='loadingpagenumber'></div></div>
+            if(this.props.pageNumberLoading) return <div className='pageNumberBoxLoader'><div className='loadingpagenumber'></div></div>
             else{
                 return (
                     <div className='pageNumberCover hoverNumberCover'>
@@ -146,7 +146,8 @@ const mapActionToProps = {
 const mapStateToProps = state => {
     return {
         pageNumberData: state.appStore.pageNumberData,
-        allElemPageData: state.appStore.allElemPageData
+        allElemPageData: state.appStore.allElemPageData,
+        pageNumberLoading:state.appStore.pageNumberLoading
     };
 };
 
