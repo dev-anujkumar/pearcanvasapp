@@ -268,38 +268,9 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
 
 		if(slateData.data && slateData.data[newVersionManifestId] && slateData.data[newVersionManifestId].type === "popup"){
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
-            config.slateManifestURN= Object.values(slateData.data)[0].id
-            manifestURN= Object.values(slateData.data)[0].id
             config.isPopupSlate = true;
             config.savingInProgress = false;
-			if (config.slateManifestURN === Object.values(slateData.data)[0].id) {
-				config.totalPageCount = slateData.data[newVersionManifestId].pageCount? slateData.data[newVersionManifestId].pageCount: 0;
-				config.pageLimit = slateData.data[newVersionManifestId].pageLimit ? slateData.data[newVersionManifestId].pageLimit :0;
-				let parentData = getState().appStore.slateLevelData;
-				let currentParentData;
-				if ((slateData.data[newVersionManifestId]) && (!config.fromTOC) && slateData.data[newVersionManifestId].pageNo > 0) {
-					currentParentData = JSON.parse(JSON.stringify(parentData));
-					let currentContent = currentParentData[config.slateManifestURN].contents
-					let oldbodymatter = currentContent.bodymatter;
-					let newbodymatter = slateData.data[newVersionManifestId].contents.bodymatter;
-					currentContent.bodymatter = [...oldbodymatter, ...newbodymatter];
-					currentParentData = currentParentData[manifestURN];
-					config.scrolling = true;
-				} else {
-					currentParentData = slateData.data[newVersionManifestId];
-				}
-				dispatch({
-					type: OPEN_POPUP_SLATE,
-					payload: {
-						[manifestURN]: currentParentData
-					}
-                });
-                dispatch({
-                    type: SET_ACTIVE_ELEMENT,
-                    payload: {}
-                });
-            }
-            else if (versionPopupReload) {
+            if (versionPopupReload) {
                 let parentData = getState().appStore.slateLevelData;
                 let newslateData = JSON.parse(JSON.stringify(parentData));
                 newslateData[config.slateManifestURN].contents.bodymatter[versioning.index] = Object.values(slateData.data)[0];
@@ -321,6 +292,38 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                     }
                 })
             }
+			else {
+                config.slateManifestURN= Object.values(slateData.data)[0].id
+                manifestURN= Object.values(slateData.data)[0].id
+                if (config.slateManifestURN === Object.values(slateData.data)[0].id) {
+                    config.totalPageCount = slateData.data[newVersionManifestId].pageCount? slateData.data[newVersionManifestId].pageCount: 0;
+                    config.pageLimit = slateData.data[newVersionManifestId].pageLimit ? slateData.data[newVersionManifestId].pageLimit :0;
+                    let parentData = getState().appStore.slateLevelData;
+                    let currentParentData;
+                    if ((slateData.data[newVersionManifestId]) && (!config.fromTOC) && slateData.data[newVersionManifestId].pageNo > 0) {
+                        currentParentData = JSON.parse(JSON.stringify(parentData));
+                        let currentContent = currentParentData[config.slateManifestURN].contents
+                        let oldbodymatter = currentContent.bodymatter;
+                        let newbodymatter = slateData.data[newVersionManifestId].contents.bodymatter;
+                        currentContent.bodymatter = [...oldbodymatter, ...newbodymatter];
+                        currentParentData = currentParentData[manifestURN];
+                        config.scrolling = true;
+                    } else {
+                        currentParentData = slateData.data[newVersionManifestId];
+                    }
+                    dispatch({
+                        type: OPEN_POPUP_SLATE,
+                        payload: {
+                            [manifestURN]: currentParentData
+                        }
+                    });
+                    dispatch({
+                        type: SET_ACTIVE_ELEMENT,
+                        payload: {}
+                    });
+                }
+            }
+            
 		}
 		else{
 			if (Object.values(slateData.data).length > 0) {
