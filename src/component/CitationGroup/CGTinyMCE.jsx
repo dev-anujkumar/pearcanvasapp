@@ -50,5 +50,5 @@ export default CGTinyMCE
 export const createPopupUnit = (popupField, forceupdate, index, parentElement, props, context) => {
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
     config.popupCreationCallInProgress = true
-    props.createPopupUnit(popupField, parentElement, (currentElementData) => context.handleBlur(forceupdate, currentElementData, index, null), index, config.slateManifestURN)
+    props.createPopupUnit(popupField, parentElement, (currentElementData) => context.handleBlur(true, currentElementData, index, null), index, config.slateManifestURN)
 }

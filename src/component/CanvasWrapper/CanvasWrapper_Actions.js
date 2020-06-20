@@ -685,9 +685,9 @@ const appendCreatedElement = (paramObj, responseData) => {
         let targetCG = _slateObject.contents.bodymatter[popupElementIndex[0]]
         if(targetCG){
             targetCG.contents["formatted-title"] = responseData
-            targetCG.contents["formatted-title"].html.text = elemNode.innerHTML
+            targetCG.contents["formatted-title"].html.text = createTitleSubtitleModel("",elemNode.innerHTML)
             targetCG.contents["formatted-title"].elementdata.text = elemNode.innerText
-            _slateObject.contents.bodymatter[popupElementIndex] = targetCG
+            _slateObject.contents.bodymatter[popupElementIndex[0]] = targetCG
         }
     }
     dispatch({
@@ -734,6 +734,7 @@ const getRequestData = (parentElement, popupField) => {
     return dataToSend
 }
 export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex, slateManifestURN) => (dispatch, getState) => {
+    console.log("popupField, parentElement, cb, popupElementIndex, slateManifestURN",popupField, parentElement, cb, popupElementIndex, slateManifestURN)
     let _requestData =  getRequestData(parentElement, popupField)
     let url = `${config.REACT_APP_API_URL}v1/slate/element`
     return axios.post(url, 
