@@ -734,7 +734,6 @@ const getRequestData = (parentElement, popupField) => {
     return dataToSend
 }
 export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex, slateManifestURN) => (dispatch, getState) => {
-    console.log("popupField, parentElement, cb, popupElementIndex, slateManifestURN",popupField, parentElement, cb, popupElementIndex, slateManifestURN)
     let _requestData =  getRequestData(parentElement, popupField)
     let url = `${config.REACT_APP_API_URL}v1/slate/element`
     return axios.post(url, 
