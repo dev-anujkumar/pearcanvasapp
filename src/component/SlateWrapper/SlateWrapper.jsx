@@ -1105,7 +1105,9 @@ class SlateWrapper extends Component {
         config.isPopupSlate = false
         this.props.openPopupSlate(undefined, popupId)
         this.props.setActiveElement(config.cachedActiveElement.element, config.cachedActiveElement.index)
-        this.props.handleTCMData(config.slateManifestURN)
+        if(config.tcmStatus){
+            this.props.handleTCMData(config.slateManifestURN)
+        }
         // Scrolling to the previous element after SAVE  & CLOSE is clicked
         setTimeout(() => {
             let elementDom = document.querySelector(`[data-id="${config.cachedActiveElement.element.id}"]`)
