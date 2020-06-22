@@ -459,26 +459,28 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
 //TCM Update
 function prepareDataForUpdateTcm(updatedDataID,versionedData) {
     const tcmData = store.getState().tcmReducer.tcmSnapshot;
-    if(versionedData && updatedDataID !== versionedData){
+    let indexes = []
+    tcmData.filter(function (element, index) {
+    if (element.elemURN.indexOf(updatedDataID) !== -1 && element.elemURN.includes('urn:pearson:work')) {
+            indexes.push(index)
+        }
+    });
+    if (indexes.length == 0 || (versionedData && updatedDataID !== versionedData)) {
         tcmData.push({
             "txCnt": 1,
             "isPrevAcceptedTxAvailable": false,
-            "elemURN": versionedData,
+            "elemURN": versionedData && updatedDataID !== versionedData ? versionedData : updatedDataID,
             "feedback": null
         })
     }
-    else{
-        tcmData.forEach(function (element,index) {
-            if(element.elemURN.includes('urn:pearson:work') && element.elemURN.indexOf(updatedDataID) !== -1){
-                tcmData[index]["elemURN"]=updatedDataID
-                tcmData[index]["txCnt"]=tcmData[index]["txCnt"] !== 0 ? tcmData[index]["txCnt"]: 1
-                tcmData[index]["feedback"]=tcmData[index]["feedback"] !== null ? tcmData[index]["feedback"]:null
-                tcmData[index]["isPrevAcceptedTxAvailable"] = tcmData[index]["isPrevAcceptedTxAvailable"]  ? tcmData[index]["isPrevAcceptedTxAvailable"]:false
-            }
-        });
+    else {
+        tcmData[indexes]["elemURN"] = updatedDataID
+        tcmData[indexes]["txCnt"] = tcmData[indexes]["txCnt"] !== 0 ? tcmData[indexes]["txCnt"] : 1
+        tcmData[indexes]["feedback"] = tcmData[indexes]["feedback"] !== null ? tcmData[indexes]["feedback"] : null
+        tcmData[indexes]["isPrevAcceptedTxAvailable"] = tcmData[indexes]["isPrevAcceptedTxAvailable"] ? tcmData[indexes]["isPrevAcceptedTxAvailable"] : false
     }
   
-if (tcmData) {
+if (tcmData.length > 0) {
     sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });
 }
 store.dispatch({
