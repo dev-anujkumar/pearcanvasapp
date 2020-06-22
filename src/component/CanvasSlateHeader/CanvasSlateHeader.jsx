@@ -29,7 +29,7 @@ import { sendDataToIframe } from '../../constants/utility.js';
      */
 
     handleNavClick(nav) {
-        if(config.savingInProgress){
+        if(config.savingInProgress || config.popupCreationCallInProgress){
             return false
         }
         config.currentInsertedType = "";
