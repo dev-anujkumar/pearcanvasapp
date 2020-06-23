@@ -15,7 +15,8 @@ import {
     FETCH_SLATE_DATA,
     SET_PARENT_NODE,
     ERROR_POPUP,
-    GET_TCM_RESOURCES
+    GET_TCM_RESOURCES,
+    PAGE_NUMBER_LOADER
 
 } from '../../constants/Action_Constants';
 
@@ -104,7 +105,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         if (currentSlateData.status === 'approved') {
             if(currentSlateData.type==="popup"){
                 sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
-                dispatch(fetchSlateData(config.slateManifestURN,_requestData.slateEntity, 0,currentSlateData,""));
+                dispatch(fetchSlateData(currentSlateData.id, currentSlateData.contentUrn, 0, currentSlateData, ""));
             } else {
             // createNewVersionOfSlate();
             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
@@ -287,7 +288,7 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                 if (currentSlateData.status === 'approved') {
                     if(currentSlateData.type==="popup"){
                         sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
-                        dispatch(fetchSlateData(config.slateManifestURN,_requestData.currentSlateEntityUrn, 0,currentSlateData,""));
+                        dispatch(fetchSlateData(currentSlateData.id, currentSlateData.contentUrn, 0, currentSlateData, ""));
                     }
                     else{
                         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
@@ -606,9 +607,9 @@ export const setSlateParent = (setSlateParentParams) => (dispatch, getState) => 
 }
 export const getPageNumber = (elementID) => (dispatch, getState) => {
     dispatch({
-        type: UPDATE_PAGENUMBER_SUCCESS,
+        type: PAGE_NUMBER_LOADER,
         payload: {
-            pageLoading: true
+            pageNumberLoading: true
         }
     })
     let pageNumberData = getState().appStore.pageNumberData;
@@ -635,13 +636,14 @@ export const getPageNumber = (elementID) => (dispatch, getState) => {
             }
         });
         dispatch({
-            type: UPDATE_PAGENUMBER_SUCCESS,
+            type: PAGE_NUMBER_LOADER,
             payload: {
-                pageLoading: false
+                pageNumberLoading: false
             }
         })
-        return response.data;
+       return response.data;
     }).catch((error) => {
+        console.log(error,"error")
         let newPageNumber = {
             id: elementID,
             pageNumber: ""
@@ -656,9 +658,9 @@ export const getPageNumber = (elementID) => (dispatch, getState) => {
             }
         });
         dispatch({
-            type: UPDATE_PAGENUMBER_SUCCESS,
+            type: PAGE_NUMBER_LOADER,
             payload: {
-                pageLoading: false
+                pageNumberLoading: false
             }
         })
     })
