@@ -394,6 +394,7 @@ function CommunicationChannel(WrappedComponent) {
                 this.props.setSlateType(config.slateType);
                 this.props.setSlateEntity(config.slateEntityURN);
                 this.props.setSlateParent(message.node.nodeParentLabel);
+                this.props.fetchUsageTypeData('assessment');    /** [PCAT-8125] | Assessment UsageType List API Call  */
                 this.props.glossaaryFootnotePopup(false);
                 let apiKeys = [config.ASSET_POPOVER_ENDPOINT,config.STRUCTURE_APIKEY,config.PRODUCTAPI_ENDPOINT];
                 if(config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType =="section"){

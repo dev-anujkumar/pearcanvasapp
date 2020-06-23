@@ -32,6 +32,7 @@ import {publishContent,logout} from '../../js/header'
 import store from './../../appstore/store'
 import { hideBlocker } from '../../js/toggleLoader';
 import {getAllSlatesData} from '../../js/getAllSlatesData'
+import { fetchUsageTypeData } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 export class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
@@ -268,6 +269,7 @@ export default connect(
         setSlateParent,
         openPopupSlate,
         getTableEditorData,
-        getAllSlatesData
+        getAllSlatesData,
+        fetchUsageTypeData
     }
 )(CommunicationChannelWrapper(CanvasWrapper));
