@@ -12,6 +12,7 @@ export const assessmentSlateDefault = {
     "versionUrn": "urn:pearson:work:4da32e71-a6b5-4daa-84ed-fb72d6b0aa74",
     "contentUrn": "urn:pearson:entity:30e2df12-8683-4ef7-b064-d889d4d480f6"
 }
+
 export const assessmentSlateWithData = {
     "id": "urn:pearson:work:4da32e71-a6b5-4daa-84ed-fb72d6b0aa74",
     "type": "element-assessment",
@@ -3054,3 +3055,85 @@ export const sortingItemData = [{
     urn: "urn:pearson:work:8023cd7d-0c06-4322-af4f-d46920b54587"
 }
 ]
+
+export const usageTypeAPI_Data =[
+    {
+        "entitytype": "assessment",
+        "usagetype": "conceptcheck",
+        "label": {
+            "en": "Concept Check"
+        }
+    },
+    {
+        "entitytype": "assessment",
+        "usagetype": "diagnostic",
+        "label": {
+            "en": "Diagnostic"
+        }
+    },
+    {
+        "entitytype": "assessment",
+        "usagetype": "homework",
+        "label": {
+            "en": "Homework"
+        }
+    },
+    {
+        "entitytype": "assessment",
+        "usagetype": "journal",
+        "label": {
+            "en": "Journal"
+        }
+    },
+    {
+        "entitytype": "assessment",
+        "usagetype": "non-scored",
+        "label": {
+            "en": "Non Scored"
+        }
+    },
+    {
+        "entitytype": "assessment",
+        "usagetype": "practice",
+        "label": {
+            "en": "Practice"
+        }
+    },
+    {
+        "entitytype": "assessment",
+        "usagetype": "quiz",
+        "label": {
+            "en": "Quiz"
+        }
+    },
+    {
+        "entitytype": "assessment",
+        "usagetype": "remediation",
+        "label": {
+            "en": "Remediation"
+        }
+    },
+    {
+        "entitytype": "assessment",
+        "usagetype": "sharedwriting",
+        "label": {
+            "en": "Shared Writing"
+        }
+    },
+    {
+        "entitytype": "assessment",
+        "usagetype": "studytools",
+        "label": {
+            "en": "Study Tools"
+        }
+    },
+    {
+        "entitytype": "assessment",
+        "usagetype": "test",
+        "label": {
+            "en": "Test"
+        }
+    }
+]
+
+export const MockUsageTypeList_Data = ["Concept Check", "Diagnostic", "Homework", "Journal", "Non Scored", "Practice", "Quiz", "Remediation", "Shared Writing", "Study Tools", "Test"]
