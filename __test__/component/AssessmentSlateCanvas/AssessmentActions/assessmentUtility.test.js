@@ -1,32 +1,7 @@
 /**************************Import Plugins**************************/
 import React from 'react';
 /**************************Import Modules**************************/
-import config from '../../../../src/config/config';
 import * as assessment_UtiltyFn from '../../../../src/component/AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
-/*************************Import Constants*************************/
-import { MockUsageTypeList_Data } from '../../../../fixtures/AssessmentSlateCanvasTestingData.js';
-
-/**************************Mock Helper Functions**************************/
-jest.mock('../../../../src/appstore/store.js', () => {
-    return {
-        getState: () => {
-            return {
-                appStore: {
-                    usageTypeListData: {
-                        usageTypeList: MockUsageTypeList_Data
-                    }
-                }
-            }
-        }
-    }
-})
-jest.mock('../../../../src/constants/utility.js', () => {
-    return {
-        hasReviewerRole: () => {
-            return false
-        }
-    }
-})
 
 describe('Test---Assessment Utility Functions', () => {
     describe('Test 1---setAssessmentTitle Function', () => {
@@ -158,23 +133,5 @@ describe('Test---Assessment Utility Functions', () => {
             expect(spyFunction).toHaveBeenCalledWith(elementType);
             spyFunction.mockClear();
         });
-    });
-    describe('Test 4---setUsageTypeDropdown Function', () => {
-        const clickHandlerFn = jest.fn();
-        it('Test 4.1---setUsageTypeDropdown- Single_Assessment', () => {
-            config.slateType === "section"
-            const spyFunction = jest.spyOn(assessment_UtiltyFn, 'setUsageTypeDropdown');
-            assessment_UtiltyFn.setUsageTypeDropdown(clickHandlerFn);
-            expect(spyFunction).toHaveBeenCalledWith(clickHandlerFn);
-            spyFunction.mockClear();
-        });
-        it('Test 4.2---setUsageTypeDropdown- Assessment_Slate', () => {
-            config.slateType === "assessment"
-            const spyFunction = jest.spyOn(assessment_UtiltyFn, 'setUsageTypeDropdown');
-            assessment_UtiltyFn.setUsageTypeDropdown(clickHandlerFn);
-            expect(spyFunction).toHaveBeenCalledWith(clickHandlerFn);
-            spyFunction.mockClear();
-        });
-
     });
 });

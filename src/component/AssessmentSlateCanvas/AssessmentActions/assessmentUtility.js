@@ -3,13 +3,6 @@
  * Description - This file contains utility functions related to assessments (full and embedded)
  */
 
-/**************************Import Modules**************************/
-import React from 'react';
-import store from '../../../appstore/store';
-import config from '../../../config/config';
-import { hasReviewerRole } from '../../../constants/utility.js';
-
-
 /** This is a function to set Assessment Title for Embedded Assessment
  * * @param model - object containig element data
 */
@@ -35,22 +28,6 @@ export const setAssessmentUsageType = (model) => {
     }
     return usagetype;
 }
-
-
-/*** @description - This function is to set UsageType Dropdown JSX for Embedded & Full Assessment
-* @param clickHandlerFn - Function to be called during Click Eventsss 
-*/
-export const setUsageTypeDropdown = (clickHandlerFn) => {
-    const { usageTypeList } = store.getState().appStore.usageTypeListData
-    const { slateType } = config;
-    let listClass = slateType === "assessment" ? "slate_assessment_metadata_dropdown_name" : "singleAssessment_Dropdown_item";
-
-    let assessmentType = usageTypeList.map((usageType, i) =>
-        <li key={i} className={listClass} onClick={(e) => !hasReviewerRole() && clickHandlerFn(usageType, e)}>{usageType}</li>
-    )
-    return assessmentType
-}
-
 
 /***
 * @description - This is the function to set Attributes baesd on assessment-format for Embedded Assessment

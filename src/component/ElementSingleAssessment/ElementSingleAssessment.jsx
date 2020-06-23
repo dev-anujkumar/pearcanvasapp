@@ -8,12 +8,13 @@ import { dropdownArrow } from './../../images/ElementButtons/ElementButtons.jsx'
 import { connect } from 'react-redux';
 import { showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';
 import { hasReviewerRole, sendDataToIframe } from '../../constants/utility.js';
+import { UsageTypeDropdown } from '../AssessmentSlateCanvas/UsageTypeDropdown/UsageTypeDropdown.jsx';
 import RootCiteTdxComponent from '../AssessmentSlateCanvas/assessmentCiteTdx/RootCiteTdxComponent.jsx';
 import { FULL_ASSESSMENT_CITE, FULL_ASSESSMENT_TDX } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import RootSingleAssessmentComponent from '../AssessmentSlateCanvas/singleAssessmentCiteTdx/RootSingleAssessmentComponent.jsx'
 import { setCurrentCiteTdx, setCurrentInnerCiteTdx, assessmentSorting, specialCharacterDecode } from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
 import RootElmSingleAssessment from '../AssessmentSlateCanvas/elm/RootElmSingleComponent.jsx'
-import { setAssessmentTitle, setAssessmentUsageType, setAssessmentProperties, setUsageTypeDropdown } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
+import { setAssessmentTitle, setAssessmentUsageType, setAssessmentProperties } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 
 /*** @description - ElementSingleAssessment is a class based component. It is defined simply to make a skeleton of the assessment-type element .*/
 
@@ -277,7 +278,7 @@ static getDerivedStateFromProps(nextProps, prevState) {
                 {
                     this.state.asseessmentUsageTypeDropdown ? (
                         <ul className="singleAssessment_Dropdown_options">
-                            {setUsageTypeDropdown(this.handleAssessmentTypeChange)}
+                            {<UsageTypeDropdown usageTypeList={this.props.usageTypeList} clickHandlerFn={this.handleAssessmentTypeChange} />}
                         </ul>
                     ) : null
                 }
@@ -334,6 +335,12 @@ ElementSingleAssessment.propTypes = {
     /** Detail of element in JSON object */
 }
 
+const mapStateToProps = state => {
+    return {
+        usageTypeList: state.appStore.usageTypeListData.usageTypeList,
+    };
+};
+
 const mapActionToProps = {
     setCurrentCiteTdx: setCurrentCiteTdx,
     setCurrentInnerCiteTdx: setCurrentInnerCiteTdx,
@@ -342,7 +349,7 @@ const mapActionToProps = {
 
 
 export default connect(
-    null,
+    mapStateToProps,
     mapActionToProps
 )(ElementSingleAssessment);
 

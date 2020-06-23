@@ -10,10 +10,11 @@ import { assessmentType, FULL_ASSESSMENT_PUF, LEARNING_APP_TYPE, LEARNOSITY, LEA
 import RootElmSingleAssessment from '../AssessmentSlateCanvas/elm/RootElmSingleComponent.jsx';
 import RootCiteTdxComponent from './assessmentCiteTdx/RootCiteTdxComponent.jsx';
 import LearningTool from './learningTool/learningTool.jsx';
+import { UsageTypeDropdown } from './UsageTypeDropdown/UsageTypeDropdown.jsx';
 import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import  {setCurrentCiteTdx,assessmentSorting}  from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
-import { setAssessmentUsageType, setUsageTypeDropdown } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
+import { setAssessmentUsageType } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
  class AssessmentSlateData extends Component {
     constructor(props) {
         super(props);
@@ -369,7 +370,7 @@ import { setAssessmentUsageType, setUsageTypeDropdown } from '../AssessmentSlate
                 </div>
                 {
                     <ul className="slate_assessment_metadata_type_dropdown_options notselect" ref={this.usageTypeDropdownRef}>
-                        {setUsageTypeDropdown(this.handleAssessmentUsageTypeChange)}
+                        {<UsageTypeDropdown usageTypeList={this.props.usageTypeList} clickHandlerFn={this.handleAssessmentUsageTypeChange} />}
                     </ul>
                 }
                 <div className="clr"></div>
@@ -422,12 +423,19 @@ import { setAssessmentUsageType, setUsageTypeDropdown } from '../AssessmentSlate
     }
 }
 AssessmentSlateData.displayName = "AssessmentSlateData"
+
+const mapStateToProps = state => {
+    return {
+        usageTypeList: state.appStore.usageTypeListData.usageTypeList,
+    };
+};
+
 const mapActionToProps = {
     setCurrentCiteTdx: setCurrentCiteTdx,
     assessmentSorting:assessmentSorting
 }
 
 export default connect(
-    null,
+    mapStateToProps,
     mapActionToProps
 )(AssessmentSlateData);
