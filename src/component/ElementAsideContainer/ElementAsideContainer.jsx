@@ -31,9 +31,9 @@ class ElementAsideContainer extends Component {
     }
 
     handleFocus = (e) => {
-        if(e.target && !(e.target.classList.contains('elemDiv-hr') || e.target.classList.contains('aside-container'))){
-            return false;
-        }
+        // if(e.target && !(e.target.classList.contains('elemDiv-hr') )){
+        //     return false;
+        // }
 
         if (checkSlateLock(this.props.slateLockInfo)) {
             return false
@@ -529,7 +529,7 @@ class ElementAsideContainer extends Component {
         let designtype = element.hasOwnProperty("designtype") ? element.designtype : "",
             subtype = element.hasOwnProperty("subtype") ? element.subtype : "";
         return (
-            <aside onMouseUp = {this.handleFocus} className={`${designtype} aside-container`} tabIndex="0" onBlur={this.props.handleBlur} ref={this.asideRef}>
+            <aside className={`${designtype} aside-container`} tabIndex="0" onBlur={this.props.handleBlur} ref={this.asideRef}>
                 {subtype == "workedexample" ? this.renderWorkExample(designtype) : this.renderAside(designtype)}
             </aside>
         );
