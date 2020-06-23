@@ -1283,14 +1283,16 @@ export class TinyMceEditor extends Component {
      * Called when footnote button is clicked. Responsible for adding footnote
      * @param {*} editor  editor instance
      */
-    addFootnote = (editor) => {
+    addFootnote = async (editor) => {
         if (config.savingInProgress || config.popupCreationCallInProgress) {
             return false
         }
         let elementId = ""
         if (this.props.element.type === "popup") {
             if ((this.props.popupField === "formatted-title" || this.props.popupField === "formatted-subtitle") && !this.props.currentElement) {
-                return false
+               await this.props.createPopupUnit(this.props.popupField, true, this.props.index, this.props.element)
+               console.log("ID::>>>>", id)
+                elementId = this.props.currentElement && this.props.currentElement.id
             } else {
                 elementId = this.props.currentElement.id
             }

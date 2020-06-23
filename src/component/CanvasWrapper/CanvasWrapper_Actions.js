@@ -651,7 +651,7 @@ export const openPopupSlate = (element, popupId) => dispatch => {
  * @param {*} paramObj 
  * @param {*} responseData 
  */
-const appendCreatedElement = (paramObj, responseData) => {
+const appendCreatedElement = async (paramObj, responseData) => {
     let {
         popupElementIndex,
         getState,
@@ -699,7 +699,7 @@ const appendCreatedElement = (paramObj, responseData) => {
             slateLevelData: newslateData
         }
     })
-    if(cb) cb(responseData)
+    if(cb) await cb(responseData)
 }
 
 /**
