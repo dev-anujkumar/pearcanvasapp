@@ -26,8 +26,8 @@ class ElementSingleAssessment extends Component {
             assessmentItemId : null,
             showAssessmentPopup: false,
             asseessmentUsageTypeDropdown: false,
-            activeAsseessmentUsageType: setAssessmentUsageType(this.props.model),
-            assessmentTitle: setAssessmentTitle(this.props.model),
+            activeAsseessmentUsageType:this.props.model &&  setAssessmentUsageType(this.props.model),
+            assessmentTitle: this.props.model && setAssessmentTitle(this.props.model),
             elementType: this.props.model.figuredata.elementdata.assessmentformat || "",
             showElmComponent: false,
             showSinglePopup:false,
@@ -57,10 +57,10 @@ class ElementSingleAssessment extends Component {
     }
 
     componentDidMount() {
-        let title =setAssessmentTitle(this.props.model) != null?  setAssessmentTitle(this.props.model).replace(/<\/?[^>]+(>|$)/g,""): null;
+        let title = this.props.model && setAssessmentTitle(this.props.model) != null?  setAssessmentTitle(this.props.model).replace(/<\/?[^>]+(>|$)/g,""): null;
         this.setState({
             assessmentTitle: title,
-            activeAsseessmentUsageType: setAssessmentUsageType(this.props.model),
+            activeAsseessmentUsageType: this.props.model && setAssessmentUsageType(this.props.model),
             assessmentId: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.assessmentid ? this.props.model.figuredata.elementdata.assessmentid : null,
             assessmentItemId: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.assessmentitemid ? this.props.model.figuredata.elementdata.assessmentitemid : null
         })
@@ -75,8 +75,8 @@ class ElementSingleAssessment extends Component {
     
 static getDerivedStateFromProps(nextProps, prevState) {
 
-    if('figuredata' in nextProps.model && 'elementdata' in nextProps.model.figuredata && 'assessmentformat' in nextProps.model.figuredata.elementdata && nextProps.model.figuredata.elementdata.assessmentformat !== prevState.elementType) {
-        let title = setAssessmentTitle(nextProps) != null?  setAssessmentTitle(nextProps).replace(/<\/?[^>]+(>|$)/g,""): null;
+    if('model' in nextProps && 'figuredata' in nextProps.model && 'elementdata' in nextProps.model.figuredata && 'assessmentformat' in nextProps.model.figuredata.elementdata && nextProps.model.figuredata.elementdata.assessmentformat !== prevState.elementType) {
+        let title = setAssessmentTitle(nextProps.model) != null?  setAssessmentTitle(nextProps.model).replace(/<\/?[^>]+(>|$)/g,""): null;
         return {
             assessmentId: nextProps.model.figuredata && nextProps.model.figuredata.elementdata && nextProps.model.figuredata.elementdata.assessmentid ? nextProps.model.figuredata.elementdata.assessmentid : "",
             assessmentItemId: nextProps.model.figuredata && nextProps.model.figuredata.elementdata && nextProps.model.figuredata.elementdata.assessmentitemid ? nextProps.model.figuredata.elementdata.assessmentitemid : "",
@@ -348,11 +348,6 @@ ElementSingleAssessment.propTypes = {
     handleC2AssessmentClick: PropTypes.func,
     /** Detail of element in JSON object */
 }
-const mapStateToProps = (state) => {
-    return  {
-      usageTypeList: state.appStore.usageTypeListData.usageTypeList
-    }
-  }
 
 const mapActionToProps = {
     setCurrentCiteTdx: setCurrentCiteTdx,
@@ -362,7 +357,7 @@ const mapActionToProps = {
 
 
 export default connect(
-    mapStateToProps,
+    null,
     mapActionToProps
 )(ElementSingleAssessment);
 
