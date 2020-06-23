@@ -42,10 +42,7 @@ class ElementPoetry extends Component {
                         contentUrn: this.props.model.contentUrn ,
                         elementType: "poetry"
                     }
-                    if(!_bodyMatter.length && this.props.deleteElement){
-                        this.props.deleteElement();
-                    }
-                    this['cloneCOSlateControlledSource_2' + random] = this.renderStanzas(_bodyMatter, index ,parentUrn)
+                    this['cloneCOSlateControlledSource_2' + random] = this.renderStanzas(_bodyMatter, index, parentUrn)
                     return (
                         <div>
                             <Sortable
@@ -111,13 +108,36 @@ class ElementPoetry extends Component {
         }
     }
 
-
-/**
-* @description - renderStanzas is a function for rendering the stanza element inside poetry element
-* @param {*} stanzas is the array of stanza element
-* @param {*} parentIndex is the index of poetry element
-* @param {*} parentUrn is the URN of poetry elememt
-*/
+    /**
+     * Renders blank container with one element picker (Separator)
+     * @param {object} _context Poetry container props
+     * @param {object} parentUrn Immediate parent data (Poetry container)
+     * @param {object} asideData parent data (Poetry container)
+     * @param {Number} parentIndex Container index
+     */
+    renderBlankContainer = (_props, parentUrn, parentIndex, poetryData) => {
+        let index = 0
+        return (
+            <>
+                <ElementSaprator
+                    index={index}
+                    esProps={_props.elementSepratorProps(index, true, parentUrn, "", parentIndex, poetryData)}
+                    elementType="poetry"
+                    poetryData={poetryData}
+                    sectionBreak= {false}
+                    permissions={_props.permissions}
+                    onClickCapture={_props.onClickCapture}
+                />
+            </>
+        )
+    }
+    
+    /**
+    * @description - renderStanzas is a function for rendering the stanza element inside poetry element
+    * @param {*} stanzas is the array of stanza element
+    * @param {*} parentIndex is the index of poetry element
+    * @param {*} parentUrn is the URN of poetry elememt
+    */
     renderStanzas = (stanzas, parentIndex, parentUrn) => {
         let poetryData = {
             type: "poetry",
@@ -128,44 +148,47 @@ class ElementPoetry extends Component {
         };
         try {
             if (stanzas !== undefined) {
-                    return stanzas.map((element, index) => {
-                            return (
-                                <React.Fragment key={element.id}>                                   
-                                    {index === 0 && <ElementSaprator
-                                        index={index}
-                                        esProps={this.props.elementSepratorProps(0, true, parentUrn, "", parentIndex, poetryData)}
-                                        elementType="poetry"
-                                        poetryData={poetryData}
-                                        sectionBreak= {false}
-                                        permissions={this.props.permissions}
-                                        onClickCapture={this.props.onClickCapture}
-                                    />}
-                                    <ElementContainer
-                                        element={element}
-                                        index={`${parentIndex}-3-${index}`}
-                                        parentUrn={parentUrn}
-                                        showBlocker={this.props.showBlocker}
-                                        poetryData={poetryData}
-                                        permissions={this.props.permissions}
-                                        handleCommentspanel={this.props.handleCommentspanel}
-                                        isBlockerActive={this.props.isBlockerActive}
-                                        onClickCapture={this.props.onClickCapture}
-                                        showDeleteElemPopup={this.props.showDeleteElemPopup}
-                                        parentElement = {this.props.element}
-                                        onListSelect={this.props.onListSelect}>
-                                    </ElementContainer>
-                                    <ElementSaprator
-                                        index={index}
-                                        esProps={this.props.elementSepratorProps(index, false, parentUrn, "", parentIndex, poetryData)}
-                                        elementType="poetry"
-                                        sectionBreak= {false}
-                                        permissions={this.props.permissions}
-                                        onClickCapture={this.props.onClickCapture}
-                                    />
-                                </React.Fragment>
-                            )
+                if (stanzas.length === 0) {
+                    return this.renderBlankContainer(this.props, parentUrn, parentIndex, poetryData)
+                }
+                return stanzas.map((element, index) => {
+                    return (
+                        <React.Fragment key={element.id}>                                   
+                            {index === 0 && <ElementSaprator
+                                index={index}
+                                esProps={this.props.elementSepratorProps(0, true, parentUrn, "", parentIndex, poetryData)}
+                                elementType="poetry"
+                                poetryData={poetryData}
+                                sectionBreak= {false}
+                                permissions={this.props.permissions}
+                                onClickCapture={this.props.onClickCapture}
+                            />}
+                            <ElementContainer
+                                element={element}
+                                index={`${parentIndex}-3-${index}`}
+                                parentUrn={parentUrn}
+                                showBlocker={this.props.showBlocker}
+                                poetryData={poetryData}
+                                permissions={this.props.permissions}
+                                handleCommentspanel={this.props.handleCommentspanel}
+                                isBlockerActive={this.props.isBlockerActive}
+                                onClickCapture={this.props.onClickCapture}
+                                showDeleteElemPopup={this.props.showDeleteElemPopup}
+                                parentElement = {this.props.element}
+                                onListSelect={this.props.onListSelect}>
+                            </ElementContainer>
+                            <ElementSaprator
+                                index={index}
+                                esProps={this.props.elementSepratorProps(index, false, parentUrn, "", parentIndex, poetryData)}
+                                elementType="poetry"
+                                sectionBreak= {false}
+                                permissions={this.props.permissions}
+                                onClickCapture={this.props.onClickCapture}
+                            />
+                        </React.Fragment>
+                    )
 
-                    })
+                })
 
             }
 

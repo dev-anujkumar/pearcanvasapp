@@ -110,7 +110,6 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
 
             return false;
         }
-        config.citationDefaultElement=false;    
         let bodymatter = newParentData[config.slateManifestURN].contents.bodymatter
             bodymatter.forEach((element, key) => {
                 if (element.id === elmId) {

@@ -110,7 +110,8 @@ export class CanvasWrapper extends Component {
             observer.observe(targetNode, config);
     }
     
-    handleCommentspanel = (elementId,index) => {
+    handleCommentspanel = (event,elementId,index) => {
+         event.stopPropagation();
         this.props.toggleCommentsPanel(true);
         this.props.fetchCommentByElement(elementId,index);
         sendDataToIframe({

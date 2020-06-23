@@ -117,6 +117,14 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             outputSubTypeEnum = "NA"
         }
     }
+        /**
+         * case - if element list is being converted into paragraph from sidepanel
+         * [BG-2515] | Remove subtype during list to paragraph or heading conversion
+         */
+        if (oldElementInfo.primaryOption === "primary-list" && (newElementData.primaryOption === "primary-paragraph" || newElementData.primaryOption === "primary-heading") && oldElementData.subtype) {
+            delete oldElementData.subtype
+        }
+
     if (oldElementData.subtype && oldElementData.subtype === "workedexample") {
         if (outputSubTypeEnum && outputSubTypeEnum === "WORK_EXAMPLE_2") {
             oldElementData.designtype = "workedexample2"
