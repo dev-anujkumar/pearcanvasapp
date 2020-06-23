@@ -767,6 +767,16 @@ export class TinyMceEditor extends Component {
                     }
                 }
             }
+            if(this.props.element.type === 'figure' && activeElement.nodeName == "H4"){
+                let key = e.keyCode || e.which;
+                if (key != undefined && (key === 8)) {
+                    let selectedText = window.getSelection().toString();
+                    let currentElement = editor.selection.getNode();
+                    if(selectedText && activeElement && activeElement.innerText && selectedText == currentElement.innerText){
+                        setFormattingToolbar('removeTinymceSuperscript')
+                    }
+                } 
+            }
         });
     }
 

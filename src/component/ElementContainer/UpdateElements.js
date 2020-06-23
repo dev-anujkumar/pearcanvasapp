@@ -2,6 +2,7 @@ import elementTypeConstant from './ElementConstants'
 import elementTypes from './../Sidebar/elementTypes';
 import config from '../../config/config';
 import { matchHTMLwithRegex } from '../../constants/utility.js'
+import { setFormattingToolbar } from '../GlossaryFootnotePopup/GlossaryFootnote_Actions.js';
 import store from '../../appstore/store'
 
 let indivisualData = {
@@ -16,6 +17,22 @@ const replaceUnwantedtags = (html) => {
     tinyMCE.$(tempDiv).find('br').remove();
     return tempDiv.innerHTML;
 }
+
+/** This function removes empty tags from innerHTML and removes unwanted characters from innerText */
+const replaceEmptyTags = (html, text) => {
+    // html.replace(/(<sup><\/sup>|<sup><br><\/sup>)/g, "");
+    let tempData = {};
+    html.replace(/<br>/g, "");
+    html = html.replace(/(<sup><\/sup>)/g, "");
+    text = text.replace(/(\r\n|\n|\r)/gm, '');
+    tempData = {
+        html: html,
+        text: text
+    }
+
+    return tempData
+}
+
 /**
  * Generates updated element data for figure element
  * @param {*} index 
@@ -44,6 +61,16 @@ export const generateCommonFigureData = (index, previousElementData, elementType
     creditsHTML = replaceUnwantedtags(creditsHTML)
     subtitleHTML = replaceUnwantedtags(subtitleHTML)
     titleHTML = replaceUnwantedtags(titleHTML)
+
+    /** [ BG-2528 ]|On deleting footnote and its data wip is showing invalid properties for Char fields */
+    captionHTML = replaceEmptyTags(captionHTML, captionText).html;
+    creditsHTML = replaceEmptyTags(creditsHTML, creditsText).html;
+    subtitleHTML = replaceEmptyTags(subtitleHTML, subtitleText).html;
+
+    subtitleText = replaceEmptyTags(subtitleHTML, subtitleText).text;
+    captionText = replaceEmptyTags(captionHTML, captionText).text;
+    creditsText = replaceEmptyTags(creditsHTML, creditsText).text;
+
 
     let data = {
         ...previousElementData,
@@ -110,6 +137,15 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
         creditsHTML = replaceUnwantedtags(creditsHTML)
         subtitleHTML = replaceUnwantedtags(subtitleHTML)
         titleHTML = replaceUnwantedtags(titleHTML)
+
+    /** [ BG-2528 ]|On deleting footnote and its data wip is showing invalid properties for Char fields */
+    captionHTML = replaceEmptyTags(captionHTML, captionText).html;
+    creditsHTML = replaceEmptyTags(creditsHTML, creditsText).html;
+    subtitleHTML = replaceEmptyTags(subtitleHTML, subtitleText).html;
+
+    subtitleText = replaceEmptyTags(subtitleHTML, subtitleText).text;
+    captionText = replaceEmptyTags(captionHTML, captionText).text;
+    creditsText = replaceEmptyTags(creditsHTML, creditsText).text;
 
         if('posterimage' in previousElementData.figuredata && typeof(previousElementData.figuredata.posterimage)!=="object"){
             delete previousElementData.figuredata.posterimage;
@@ -203,6 +239,15 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
         subtitleHTML = replaceUnwantedtags(subtitleHTML)
         titleHTML = replaceUnwantedtags(titleHTML)
 
+    /** [ BG-2528 ]|On deleting footnote and its data wip is showing invalid properties for Char fields */
+    captionHTML = replaceEmptyTags(captionHTML, captionText).html;
+    creditsHTML = replaceEmptyTags(creditsHTML, creditsText).html;
+    subtitleHTML = replaceEmptyTags(subtitleHTML, subtitleText).html;
+
+    subtitleText = replaceEmptyTags(subtitleHTML, subtitleText).text;
+    captionText = replaceEmptyTags(captionHTML, captionText).text;
+    creditsText = replaceEmptyTags(creditsHTML, creditsText).text;
+
     let data = {
         ...previousElementData,
         title :{
@@ -285,6 +330,15 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
     titleHTML = replaceUnwantedtags(titleHTML)
     textHTML = replaceUnwantedtags(textHTML)
     
+    /** [ BG-2528 ]|On deleting footnote and its data wip is showing invalid properties for Char fields */
+    captionHTML = replaceEmptyTags(captionHTML, captionText).html;
+    creditsHTML = replaceEmptyTags(creditsHTML, creditsText).html;
+    subtitleHTML = replaceEmptyTags(subtitleHTML, subtitleText).html;
+
+    subtitleText = replaceEmptyTags(subtitleHTML, subtitleText).text;
+    captionText = replaceEmptyTags(captionHTML, captionText).text;
+    creditsText = replaceEmptyTags(creditsHTML, creditsText).text;
+
     let data = {
         ...previousElementData,
         title :{
