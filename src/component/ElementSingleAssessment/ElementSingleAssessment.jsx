@@ -251,21 +251,6 @@ static getDerivedStateFromProps(nextProps, prevState) {
     /** ----------------------------------------------------------------------------------------------------------- */
 
 
-
-    /*** @description - This function is to set UsageType Dropdown */
-    setUsageTypeDropdown = () => {
-        const { usageTypeListData } = this.props
-        let usageTypeDropdown = []
-        if (usageTypeListData && usageTypeListData.entityType == "assessment") {
-            usageTypeDropdown = Object.values(usageTypeListData.usageTypeList)
-        }
-
-        let assessmentType = usageTypeDropdown.map((usageType, i) =>
-            <li key={i} className="singleAssessment_Dropdown_item" onClick={(e) => this.handleAssessmentTypeChange(usageType, e)}>{usageType}</li>
-        )
-        return assessmentType
-    }
-
     /*** @description - This function is for handling the different types of figure-element.
     * @param model object that defined the type of element
     */

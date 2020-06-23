@@ -321,21 +321,6 @@ import { setAssessmentUsageType, setUsageTypeDropdown } from '../AssessmentSlate
     
     }
 
-    /*** @description - This function is to select the Assessment usage-type from dropdown*/
-    selectAssessmentUsageType = () => {
-         const { usageTypeListData } = this.props;
-         let usageTypeDropdown = [], usageTypeValue = [];
-
-         if (usageTypeListData && usageTypeListData.entityType == "assessment" && !(Object.keys(usageTypeListData.usageTypeList).length === 0 && usageTypeListData.usageTypeList.constructor === Object)) {
-             usageTypeDropdown = Object.values(usageTypeListData.usageTypeList);
-         }
-         usageTypeValue = usageTypeDropdown && usageTypeDropdown.map((usageType, i) =>
-             <li key={i} className="slate_assessment_metadata_dropdown_name" onClick={(e) => !hasReviewerRole() && this.handleAssessmentUsageTypeChange(usageType, e)}>{usageType}</li>
-         )
-
-        return usageTypeValue
-    }
-
     /*** @description - This function is to render the Assessment Slate Element*/
     assessmentSlateContent = () => {
         if (document.getElementsByClassName("slate-tag-icon").length) {
