@@ -2,7 +2,6 @@ import elementTypeConstant from './ElementConstants'
 import elementTypes from './../Sidebar/elementTypes';
 import config from '../../config/config';
 import { matchHTMLwithRegex } from '../../constants/utility.js'
-import { setFormattingToolbar } from '../GlossaryFootnotePopup/GlossaryFootnote_Actions.js';
 import store from '../../appstore/store'
 
 let indivisualData = {
