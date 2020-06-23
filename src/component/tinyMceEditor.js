@@ -1327,7 +1327,7 @@ export class TinyMceEditor extends Component {
                 tempDiv.innerHTML = tinyMCE.activeEditor.getContent();
                 tinymce.$(tempDiv).find('.blockquote-hidden').remove()
                 if (this.props.model && this.props.model.text && this.props.model.text.includes("blockquoteMarginaliaAttr") && !tempDiv.innerText.trim()) {
-                    let insertText = `<blockquote class="blockquoteMarginaliaAttr" contenteditable="false"><p class="paragraphNummerEins" contenteditable="true"><sup><a href="#" id = "${res.data.id}" data-uri="${res.data.id}" data-footnoteelementid="${res.data.id}" class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup></p><p class="blockquoteTextCredit" contenteditable="false">${document.getElementsByClassName('attribution-editor')[0].innerHTML}</p></blockquote>`
+                    let insertText = `<blockquote class="blockquoteMarginaliaAttr" contenteditable="false"><p class="paragraphNummerEins" contenteditable="true"><sup><a href="#" id = "${res.data.id}" data-uri="${res.data.id}" data-footnoteelementid="${res.data.id}" class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup></p><p class="blockquoteTextCredit" contenteditable="false">${document.getElementsByClassName('attribution-editor')[0].innerHTML.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</p></blockquote>`
                     tinymce.activeEditor.setContent(insertText);
                     document.getElementById(tinyMCE.activeEditor.id).classList.remove("place-holder")
                 }
@@ -2020,7 +2020,10 @@ export class TinyMceEditor extends Component {
 
         if (!this.fromtinyInitBlur && !config.savingInProgress) {
             let elemNode = document.getElementById(`cypress-${this.props.index}`)
-            elemNode.innerHTML = elemNode.innerHTML.replace(/<br data-mce-bogus="1">/g, "")
+            elemNode.innerHTML = elemNode.innerHTML.replace(/<br data-mce-bogus="1">/g, "");
+            if(this.props.element && this.props.element.type === "citations"){
+                elemNode.innerHTML = elemNode.innerHTML.replace(/<\s*\/?br\s*[\/]?>/g, "");  /**[BG-2578] */
+            }
             if (
                 this.props.element &&
                 (this.props.element.type === "popup" || this.props.element.type === "citations") &&

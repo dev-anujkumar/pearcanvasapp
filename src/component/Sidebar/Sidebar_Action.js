@@ -259,7 +259,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         if (currentSlateData.status === 'approved') {
             if(currentSlateData.type==="popup"){
                 sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
-                dispatch(fetchSlateData(config.slateManifestURN,conversionDataToSend.slateEntity, 0,currentSlateData,""));
+                dispatch(fetchSlateData(currentSlateData.id, currentSlateData.contentUrn, 0, currentSlateData, ""));
             }
             else{
                 sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
@@ -376,27 +376,28 @@ catch (error) {
 }
 function prepareDataForConversionTcm(updatedDataID, getState, dispatch,versionid) {
     const tcmData = getState().tcmReducer.tcmSnapshot;
-    if(versionid && updatedDataID !== versionid){
+    let indexes = []
+    tcmData.filter(function (element, index) {
+    if (element.elemURN.indexOf(updatedDataID) !== -1 && element.elemURN.includes('urn:pearson:work')) {
+            indexes.push(index)
+        }
+    });
+    if (indexes.length == 0 || (versionid && updatedDataID !== versionid)) {
         tcmData.push({
             "txCnt": 1,
             "isPrevAcceptedTxAvailable": false,
-            "elemURN": versionid,
+            "elemURN": versionid && updatedDataID !== versionid ? versionid : updatedDataID,
             "feedback": null
         })
     }
-    else{
-        for (let i = 0; i < tcmData.length; i++) {
-            if (tcmData[i].elemURN.includes('urn:pearson:work') && tcmData[i].elemURN.indexOf(updatedDataID) !== -1) {
-                tcmData[i]["elemURN"] = updatedDataID
-                tcmData[i]["txCnt"] = tcmData[i]["txCnt"] !== 0 ? tcmData[i]["txCnt"] : 1
-                tcmData[i]["feedback"] = tcmData[i]["feedback"] !== null ? tcmData[i]["feedback"] : null
-                tcmData[i]["isPrevAcceptedTxAvailable"] = tcmData[i]["isPrevAcceptedTxAvailable"] ? tcmData[i]["isPrevAcceptedTxAvailable"] : false
-                break;
-            }
-        }
+    else {
+        tcmData[indexes]["elemURN"] = updatedDataID
+        tcmData[indexes]["txCnt"] = tcmData[indexes]["txCnt"] !== 0 ? tcmData[indexes]["txCnt"] : 1
+        tcmData[indexes]["feedback"] = tcmData[indexes]["feedback"] !== null ? tcmData[indexes]["feedback"] : null
+        tcmData[indexes]["isPrevAcceptedTxAvailable"] = tcmData[indexes]["isPrevAcceptedTxAvailable"] ? tcmData[indexes]["isPrevAcceptedTxAvailable"] : false
+
     }
-    
-    if (tcmData) {
+    if (tcmData.length>0) {
         sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });
     }
     dispatch({

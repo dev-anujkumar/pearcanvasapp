@@ -1453,7 +1453,6 @@ describe('Tests ElementContainer Actions', () => {
             }];
             return store.dispatch(actions.createShowHideElement(elementId, type, index, parentContentUrn, cb, parentElement, parentElementIndex)).then(() => {
                 expect(store.getActions()[0].type).toEqual('GET_PAGE_NUMBER');
-                expect(store.getActions()[1].type).toEqual('SET_ALL_PAGE_NUMBER_ELEM_ID');
             });
         })
     })
@@ -1488,7 +1487,6 @@ describe('Tests ElementContainer Actions', () => {
             return store.dispatch(actions.deleteShowHideUnit(elementId, type, parentUrn, index, eleIndex, parentId, cb, parentElement, parentElementIndex)).then(() => {
                 expect(cb).toBeCalled();
                 expect(store.getActions()[0].type).toEqual('GET_PAGE_NUMBER');
-                expect(store.getActions()[1].type).toEqual('SET_ALL_PAGE_NUMBER_ELEM_ID');
             });
 
         })
