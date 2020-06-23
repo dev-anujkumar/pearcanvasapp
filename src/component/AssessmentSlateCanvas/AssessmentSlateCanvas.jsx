@@ -16,7 +16,6 @@ import TinyMceEditor from "./../tinyMceEditor"
 import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { specialCharacterDecode } from './assessmentCiteTdx/Actions/CiteTdxActions';
-
 /*** @description - AssessmentSlateCanvas is a class*/
 export class AssessmentSlateCanvas extends Component {
     constructor(props) {
@@ -257,14 +256,14 @@ const mapStateToProps = (state, props) => {
         selectedResultFormApi: state.learningToolReducer.selectedResultFormApi,
         permissions: state.appStore.permissions,
         setSlateParent: state.appStore.setSlateParent,
-        setSlateEntity:state.appStore.setSlateEntity,
+        setSlateEntity:state.appStore.setSlateEntity
     }
 }
 const mapActionToProps = {
     openLtAction: openLtAction,
     closeLtAction: closeLtAction,
     getDiscipline: getDiscipline,
-    openLTFunction:openLTFunction,
+    openLTFunction:openLTFunction
 }
 
 
