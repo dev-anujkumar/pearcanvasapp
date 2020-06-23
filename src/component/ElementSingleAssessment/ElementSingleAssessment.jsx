@@ -7,13 +7,13 @@ import './../../styles/ElementSingleAssessment/ElementSingleAssessment.css';
 import { dropdownArrow } from './../../images/ElementButtons/ElementButtons.jsx';
 import { connect } from 'react-redux';
 import { showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';
-import { hasReviewerRole, sendDataToIframe, setAssessmentTitle, setAssessmentUsageType } from '../../constants/utility.js';
+import { hasReviewerRole, sendDataToIframe } from '../../constants/utility.js';
 import RootCiteTdxComponent from '../AssessmentSlateCanvas/assessmentCiteTdx/RootCiteTdxComponent.jsx';
 import { FULL_ASSESSMENT_CITE, FULL_ASSESSMENT_TDX } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import RootSingleAssessmentComponent from '../AssessmentSlateCanvas/singleAssessmentCiteTdx/RootSingleAssessmentComponent.jsx'
 import { setCurrentCiteTdx, setCurrentInnerCiteTdx, assessmentSorting, specialCharacterDecode } from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
 import RootElmSingleAssessment from '../AssessmentSlateCanvas/elm/RootElmSingleComponent.jsx'
-import { fetchUsageTypeData } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
+import { setAssessmentTitle, setAssessmentUsageType, setAssessmentProperties, setUsageTypeDropdown } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 
 /*** @description - ElementSingleAssessment is a class based component. It is defined simply to make a skeleton of the assessment-type element .*/
 
@@ -26,8 +26,8 @@ class ElementSingleAssessment extends Component {
             assessmentItemId : null,
             showAssessmentPopup: false,
             asseessmentUsageTypeDropdown: false,
-            activeAsseessmentUsageType: setAssessmentUsageType(this.props),
-            assessmentTitle: setAssessmentTitle(this.props),
+            activeAsseessmentUsageType: setAssessmentUsageType(this.props.model),
+            assessmentTitle: setAssessmentTitle(this.props.model),
             elementType: this.props.model.figuredata.elementdata.assessmentformat || "",
             showElmComponent: false,
             showSinglePopup:false,
@@ -57,11 +57,10 @@ class ElementSingleAssessment extends Component {
     }
 
     componentDidMount() {
-        this.props.fetchUsageTypeData("assessment");
-        let title =setAssessmentTitle(this.props) != null?  setAssessmentTitle(this.props).replace(/<\/?[^>]+(>|$)/g,""): null;
+        let title =setAssessmentTitle(this.props.model) != null?  setAssessmentTitle(this.props.model).replace(/<\/?[^>]+(>|$)/g,""): null;
         this.setState({
             assessmentTitle: title,
-            activeAsseessmentUsageType: setAssessmentUsageType(this.props),
+            activeAsseessmentUsageType: setAssessmentUsageType(this.props.model),
             assessmentId: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.assessmentid ? this.props.model.figuredata.elementdata.assessmentid : null,
             assessmentItemId: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.assessmentitemid ? this.props.model.figuredata.elementdata.assessmentitemid : null
         })
@@ -251,33 +250,7 @@ static getDerivedStateFromProps(nextProps, prevState) {
     }
     /** ----------------------------------------------------------------------------------------------------------- */
 
-    /***
-    * @description - This is the function to set Attributes baesd on assessment-format 
-    * @param elementType - assessment-format
-    */
-    setAssessmentProperties = (elementType) => {
-        let assessmentClasses = { divMainClass: '', divInnerClass: '' }
-        switch (elementType) {
-            case 'puf':
-                assessmentClasses.divMainClass = 'divPUFItem';
-                assessmentClasses.assessmentItemType = 'pufItem';
-                break;
-            case 'learnosity':
-                assessmentClasses.divMainClass = 'divLearnosityItem';
-                assessmentClasses.assessmentItemType = 'learnosityItem'
-                break;
-            case 'tdx':
-                assessmentClasses.divMainClass = 'divTdxAssessmentItem';
-                assessmentClasses.assessmentItemType = 'tdxAssessmentItem';
-                break;
-            case 'cite':
-            default:
-                assessmentClasses.divMainClass = 'divAssessmentItem'
-                assessmentClasses.assessmentItemType = 'assessmentItem'
-                break;
-        }
-        return assessmentClasses
-    }
+
 
     /*** @description - This function is to set UsageType Dropdown */
     setUsageTypeDropdown = () => {
@@ -296,9 +269,10 @@ static getDerivedStateFromProps(nextProps, prevState) {
     /*** @description - This function is for handling the different types of figure-element.
     * @param model object that defined the type of element
     */
+
     renderAssessmentType = (model) => {
         var assessmentJSX;
-        let assessmentKeys = this.setAssessmentProperties(this.state.elementType)
+        let assessmentKeys = setAssessmentProperties(this.state.elementType)
         /*JSX for the Single Assessment Element */
         assessmentJSX = <div className={`divAssessment ${assessmentKeys && assessmentKeys.divMainClass ? assessmentKeys.divMainClass : ""}`} >
             <figure className={`figureAssessment ${this.state.elementType !== "tdx" ? "figureAssessmentItem" : "figureTdxAssessmentItem"}`}>
@@ -318,7 +292,7 @@ static getDerivedStateFromProps(nextProps, prevState) {
                 {
                     this.state.asseessmentUsageTypeDropdown ? (
                         <ul className="singleAssessment_Dropdown_options">
-                            {this.setUsageTypeDropdown()}
+                            {setUsageTypeDropdown(this.handleAssessmentTypeChange)}
                         </ul>
                     ) : null
                 }
@@ -376,15 +350,14 @@ ElementSingleAssessment.propTypes = {
 }
 const mapStateToProps = (state) => {
     return  {
-      usageTypeListData: state.appStore.usageTypeListData
+      usageTypeList: state.appStore.usageTypeListData.usageTypeList
     }
   }
 
 const mapActionToProps = {
     setCurrentCiteTdx: setCurrentCiteTdx,
     setCurrentInnerCiteTdx: setCurrentInnerCiteTdx,
-    assessmentSorting: assessmentSorting,
-    fetchUsageTypeData:fetchUsageTypeData
+    assessmentSorting: assessmentSorting
 }
 
 

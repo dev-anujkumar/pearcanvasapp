@@ -16,7 +16,6 @@ import TinyMceEditor from "./../tinyMceEditor"
 import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { specialCharacterDecode } from './assessmentCiteTdx/Actions/CiteTdxActions';
-import { fetchUsageTypeData } from "./AssessmentActions/assessmentActions";
 /*** @description - AssessmentSlateCanvas is a class*/
 export class AssessmentSlateCanvas extends Component {
     constructor(props) {
@@ -236,7 +235,6 @@ export class AssessmentSlateCanvas extends Component {
                     setSlateParent={this.props.setSlateParent}
                     setSlateEntity={this.props.setSlateEntity}
                     addCiteTdxAssessment={this.addCiteTdxAssessment}
-                    usageTypeListData={this.props.usageTypeListData}
                     />
                 <TinyMceEditor
                     slateLockInfo={this.props.slateLockInfo}
@@ -263,7 +261,6 @@ const mapStateToProps = (state, props) => {
         permissions: state.appStore.permissions,
         setSlateParent: state.appStore.setSlateParent,
         setSlateEntity:state.appStore.setSlateEntity,
-        usageTypeListData: state.appStore.usageTypeListData
     }
 }
 const mapActionToProps = {
@@ -271,7 +268,6 @@ const mapActionToProps = {
     closeLtAction: closeLtAction,
     getDiscipline: getDiscipline,
     openLTFunction:openLTFunction,
-    fetchUsageTypeData:fetchUsageTypeData
 }
 
 
