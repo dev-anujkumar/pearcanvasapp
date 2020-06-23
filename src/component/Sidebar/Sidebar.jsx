@@ -452,7 +452,8 @@ class Sidebar extends Component {
             "metaDataAnchorID": [this.props.activeElement.elementId],
             "elementVersionType": "element-generateLOlist",
             "loIndex" : this.props.activeElement.index,
-            "slateVersionUrn": config.slateManifestURN
+            "slateVersionUrn": config.slateManifestURN,
+            "elementParentEntityUrn":config.slateEntityURN
         }
         this.props.updateElement(data)
 
