@@ -16,6 +16,7 @@ import TinyMceEditor from "./../tinyMceEditor"
 import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { specialCharacterDecode } from './assessmentCiteTdx/Actions/CiteTdxActions';
+
 /*** @description - AssessmentSlateCanvas is a class*/
 export class AssessmentSlateCanvas extends Component {
     constructor(props) {
@@ -42,10 +43,6 @@ export class AssessmentSlateCanvas extends Component {
             assessmentFormat: nextProps.model && nextProps.model.elementdata && nextProps.model.elementdata.assessmentformat ?nextProps.model.elementdata.assessmentformat :"",
             learningTemplateLabel: nextProps.model && nextProps.model.elementdata && nextProps.model.elementdata.templatelabel ?nextProps.model.elementdata.templatelabel :"",
               })             
-    }
-
-    componentDidMount(){
-            this.props.fetchUsageTypeData("assessment");
     }
 
     /*** @description - This function is to toggle the Assessment PopUp for C2 media*/

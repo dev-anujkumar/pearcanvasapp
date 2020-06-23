@@ -19,7 +19,7 @@ import { setAssessmentUsageType, setUsageTypeDropdown } from '../AssessmentSlate
         super(props);
         this.state = {
             activeAssessmentType: this.props.model && this.props.model.elementdata && this.props.model.elementdata.assessmentformat && this.props.model.elementdata.assessmentformat!== 'fpo'? this.props.model.elementdata.assessmentformat : 'Select',
-            activeAssessmentUsageType: this.props.model && setAssessmentUsageType(this.props.model),//this.props.model && this.props.model.elementdata && this.props.model.elementdata.usagetype ? this.props.model.elementdata.usagetype : "Quiz",
+            activeAssessmentUsageType: this.props.model && setAssessmentUsageType(this.props.model),
             showElmComponent: false,
             changeLearningData: false,
             learningToolStatus: false,
