@@ -142,7 +142,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
          * case - if element list is being converted into paragraph from sidepanel
          * [BG-2515] | Remove subtype during list to paragraph or heading conversion
          */
-        if (oldElementInfo.primaryOption === "primary-list" && (newElementData.primaryOption === "primary-paragraph" || newElementData.primaryOption === "primary-heading")) {
+        if (oldElementInfo.primaryOption === "primary-list" && (newElementData.primaryOption === "primary-paragraph" || newElementData.primaryOption === "primary-heading") && oldElementData.subtype) {
             delete oldElementData.subtype
         }
 
