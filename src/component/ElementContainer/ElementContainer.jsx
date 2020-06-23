@@ -448,7 +448,8 @@ class ElementContainer extends Component {
     /**
      * This function opens TCM w.r.t. current Element
      */
-    handleTCM = () => {
+    handleTCM = (e) => {
+        e.stopPropagation();
         loadTrackChanges(this.props.element.id)
     }
     /**
@@ -859,7 +860,8 @@ class ElementContainer extends Component {
      * show Delete element Popup 
      * @param {elementId} 
      */
-    showDeleteElemPopup = (popup, sectionBreak) => {
+    showDeleteElemPopup = (e,popup, sectionBreak) => {
+        e.stopPropagation();
         this.props.showBlocker(true);
         showTocBlocker();
         this.setState({
@@ -872,7 +874,7 @@ class ElementContainer extends Component {
     /**
      * For deleting slate level element
      */
-    deleteElement = () => {
+    deleteElement = (e) => {
         let { id, type } = this.props.element;
         let { parentUrn, asideData, element, poetryData } = this.props;
         let { contentUrn } = this.props.element
@@ -887,7 +889,7 @@ class ElementContainer extends Component {
             contentUrn = this.state.sectionBreak.contentUrn
             id = this.state.sectionBreak.id
         }
-        this.handleCommentPopup(false);
+        this.handleCommentPopup(false,e);
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
 
         /** This condition is to delete whole Container Group element when only one element is left and that too getting deleted */
@@ -1221,22 +1223,24 @@ class ElementContainer extends Component {
             <div className="editor" data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                     <Button type="element-label" btnClassName={`${btnClassName} ${this.state.isOpener ? ' ignore-for-drag' : ''}`} labelText={labelText} />
-                    {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && config.slateType !== 'assessment' ? (<Button type="delete-element" onClick={() => this.showDeleteElemPopup(true)} />)
+                    {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && config.slateType !== 'assessment' ? (<Button type="delete-element" onClick={(e) => this.showDeleteElemPopup(e,true)} />)
                         : null}
                     {this.renderColorPaletteButton(element, permissions)}
                     {this.renderColorTextButton(element, permissions)}
                 </div>
                     : ''}
-                <div className={`element-container ${labelText.toLowerCase()} ${borderToggle}`} data-id={element.id} onFocus={() => this.toolbarHandling('remove')} onBlur={() => this.toolbarHandling('add')}>
+                <div className={`element-container ${labelText.toLowerCase()} ${borderToggle}`} data-id={element.id} onFocus={() => this.toolbarHandling('remove')} onBlur={() => this.toolbarHandling('add')} onClick = {this.handleFocus}>
                     {elementOverlay}{bceOverlay}{editor}
                 </div>
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
-                    {permissions && permissions.includes('notes_adding') && <Button type="add-comment" btnClassName={btnClassName} onClick={() => this.handleCommentPopup(true)} />}
-                    {permissions && permissions.includes('note_viewer') && anyOpenComment && <Button elementId={element.id} onClick={() => handleCommentspanel(element.id, this.props.index)} type="comment-flag" />}
-                    {feedback ? <Button elementId={element.id} type="feedback" onClick={this.handleTCM} /> : (tcm && <Button type="tcm" onClick={this.handleTCM} />)}
+                    {permissions && permissions.includes('notes_adding') && <Button type="add-comment" btnClassName={btnClassName} onClick={(e) => this.handleCommentPopup(true, e)} />}
+                    {permissions && permissions.includes('note_viewer') && anyOpenComment && <Button elementId={element.id} onClick={(event) => {
+                        handleCommentspanel(event,element.id, this.props.index)
+                        }} type="comment-flag" />}
+                    {feedback ? <Button elementId={element.id} type="feedback" onClick={(event) => this.handleTCM(event)} /> : (tcm && <Button type="tcm" onClick={(event) => this.handleTCM(event)} />)}
                 </div> : ''}
                 {this.state.popup && <PopUp
-                    togglePopup={e => this.handleCommentPopup(e, this)}
+                    togglePopup={this.handleCommentPopup}
                     active={this.state.popup}
                     handleChange={this.handleCommentChange}
                     saveContent={this.saveNewComment}
@@ -1261,7 +1265,8 @@ class ElementContainer extends Component {
      * @description - This function is for handling the closing and opening of popup.
      * @param {event} popup
      */
-    handleCommentPopup(popup) {
+    handleCommentPopup = (popup,event) => {
+       event.stopPropagation();
         this.setState({
             popup,
             showDeleteElemPopup: false,
@@ -1277,7 +1282,7 @@ class ElementContainer extends Component {
      * @description - This function is for handleChange of popup.
      * @param newComment
      */
-    handleCommentChange = (newComment) => {
+    handleCommentChange = (newComment) => {        
         this.setState({
             comment: newComment
         })
@@ -1286,14 +1291,14 @@ class ElementContainer extends Component {
     /**
      * @description - This function is for ADD COMMENT API.
      */
-    saveNewComment = () => {
+    saveNewComment = (e) => {
         const { comment } = this.state;
         const { id } = this.props.element;
         if (comment.trim() !== '') {
             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
             this.props.addComment(comment, id, this.props.asideData, this.props.parentUrn);
         }
-        this.handleCommentPopup(false);
+        this.handleCommentPopup(false,e);
     }
 
     /**
