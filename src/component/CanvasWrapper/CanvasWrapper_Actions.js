@@ -11,8 +11,7 @@ import {
     SET_PARENT_SHOW_DATA,
     ERROR_POPUP,
     SLATE_TITLE,
-    GET_PAGE_NUMBER,
-    SET_ALL_PAGE_NUMBER_ELEM_ID
+    GET_PAGE_NUMBER
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
@@ -230,12 +229,12 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
     /** Page Number removed  */
     dispatch({
         type: GET_PAGE_NUMBER,
-        payload: []
+        payload: {
+            pageNumberData: [],
+            allElemPageData: []
+        }
     });
-    dispatch({
-        type: SET_ALL_PAGE_NUMBER_ELEM_ID,
-        payload: []
-    });
+   
 
     /** Project level and element level TCM status */
     if (page === 0 && config.tcmStatus && versioning === "") {
@@ -269,38 +268,9 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
 
 		if(slateData.data && slateData.data[newVersionManifestId] && slateData.data[newVersionManifestId].type === "popup"){
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
-            config.slateManifestURN= Object.values(slateData.data)[0].id
-            manifestURN= Object.values(slateData.data)[0].id
             config.isPopupSlate = true;
             config.savingInProgress = false;
-			if (config.slateManifestURN === Object.values(slateData.data)[0].id) {
-				config.totalPageCount = slateData.data[newVersionManifestId].pageCount? slateData.data[newVersionManifestId].pageCount: 0;
-				config.pageLimit = slateData.data[newVersionManifestId].pageLimit ? slateData.data[newVersionManifestId].pageLimit :0;
-				let parentData = getState().appStore.slateLevelData;
-				let currentParentData;
-				if ((slateData.data[newVersionManifestId]) && (!config.fromTOC) && slateData.data[newVersionManifestId].pageNo > 0) {
-					currentParentData = JSON.parse(JSON.stringify(parentData));
-					let currentContent = currentParentData[config.slateManifestURN].contents
-					let oldbodymatter = currentContent.bodymatter;
-					let newbodymatter = slateData.data[newVersionManifestId].contents.bodymatter;
-					currentContent.bodymatter = [...oldbodymatter, ...newbodymatter];
-					currentParentData = currentParentData[manifestURN];
-					config.scrolling = true;
-				} else {
-					currentParentData = slateData.data[newVersionManifestId];
-				}
-				dispatch({
-					type: OPEN_POPUP_SLATE,
-					payload: {
-						[manifestURN]: currentParentData
-					}
-                });
-                dispatch({
-                    type: SET_ACTIVE_ELEMENT,
-                    payload: {}
-                });
-            }
-            else if (versionPopupReload) {
+            if (versionPopupReload) {
                 let parentData = getState().appStore.slateLevelData;
                 let newslateData = JSON.parse(JSON.stringify(parentData));
                 newslateData[config.slateManifestURN].contents.bodymatter[versioning.index] = Object.values(slateData.data)[0];
@@ -322,6 +292,38 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                     }
                 })
             }
+			else {
+                config.slateManifestURN= Object.values(slateData.data)[0].id
+                manifestURN= Object.values(slateData.data)[0].id
+                if (config.slateManifestURN === Object.values(slateData.data)[0].id) {
+                    config.totalPageCount = slateData.data[newVersionManifestId].pageCount? slateData.data[newVersionManifestId].pageCount: 0;
+                    config.pageLimit = slateData.data[newVersionManifestId].pageLimit ? slateData.data[newVersionManifestId].pageLimit :0;
+                    let parentData = getState().appStore.slateLevelData;
+                    let currentParentData;
+                    if ((slateData.data[newVersionManifestId]) && (!config.fromTOC) && slateData.data[newVersionManifestId].pageNo > 0) {
+                        currentParentData = JSON.parse(JSON.stringify(parentData));
+                        let currentContent = currentParentData[config.slateManifestURN].contents
+                        let oldbodymatter = currentContent.bodymatter;
+                        let newbodymatter = slateData.data[newVersionManifestId].contents.bodymatter;
+                        currentContent.bodymatter = [...oldbodymatter, ...newbodymatter];
+                        currentParentData = currentParentData[manifestURN];
+                        config.scrolling = true;
+                    } else {
+                        currentParentData = slateData.data[newVersionManifestId];
+                    }
+                    dispatch({
+                        type: OPEN_POPUP_SLATE,
+                        payload: {
+                            [manifestURN]: currentParentData
+                        }
+                    });
+                    dispatch({
+                        type: SET_ACTIVE_ELEMENT,
+                        payload: {}
+                    });
+                }
+            }
+            
 		}
 		else{
 			if (Object.values(slateData.data).length > 0) {
@@ -686,9 +688,9 @@ const appendCreatedElement = (paramObj, responseData) => {
         let targetCG = _slateObject.contents.bodymatter[popupElementIndex[0]]
         if(targetCG){
             targetCG.contents["formatted-title"] = responseData
-            targetCG.contents["formatted-title"].html.text = elemNode.innerHTML
+            targetCG.contents["formatted-title"].html.text = createTitleSubtitleModel("",elemNode.innerHTML)
             targetCG.contents["formatted-title"].elementdata.text = elemNode.innerText
-            _slateObject.contents.bodymatter[popupElementIndex] = targetCG
+            _slateObject.contents.bodymatter[popupElementIndex[0]] = targetCG
         }
     }
     dispatch({

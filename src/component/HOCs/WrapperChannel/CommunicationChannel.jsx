@@ -284,7 +284,7 @@ function CommunicationChannel(WrappedComponent) {
                     "metaDataAnchorID": LOElements,
                     "elementVersionType": "element-learningobjectivemapping",
                     "loIndex" : loIndex,
-                    "slateUrn": config.slateManifestURN
+                    "slateVersionUrn": config.slateManifestURN
                 }
                 if(LOElements.length){
                 this.props.updateElement(LOWipData)

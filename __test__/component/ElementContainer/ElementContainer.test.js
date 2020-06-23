@@ -119,6 +119,9 @@ const store = mockStore({
     glossaryFootnoteReducer:{
         glossaryFootnoteValue: { "type": "", "popUpStatus": false }
     },
+    tcmReducer:{
+        tcmSnapshot:{}
+    }
 });
 describe('Test for element container component', () => {
     it('Render Element Container without crashing ', () => {      

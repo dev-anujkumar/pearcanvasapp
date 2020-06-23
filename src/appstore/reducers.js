@@ -34,7 +34,7 @@ import {
     SET_PARENT_SHOW_DATA,
     GET_ALL_SLATES_DATA,
     SET_CURRENT_SLATE_DATA,
-    SET_ALL_PAGE_NUMBER_ELEM_ID
+    PAGE_NUMBER_LOADER
 } from '../constants/Action_Constants';
 
 /**
@@ -59,7 +59,8 @@ const INITIAL_STATE = {
     showHideObj:{},
     allSlateData:{},
     currentSlateAncestorData:{},
-    allElemPageData:[]
+    allElemPageData:[],
+    pageNumberLoading:false
 };
 
 const INITIAL_ACTION = {
@@ -106,12 +107,8 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
         case GET_PAGE_NUMBER:
             return {
                 ...state,
-                pageNumberData: action.payload
-            }
-        case SET_ALL_PAGE_NUMBER_ELEM_ID:
-            return {
-                ...state,
-                allElemPageData: action.payload
+                pageNumberData: action.payload.pageNumberData,
+                allElemPageData: action.payload.allElemPageData
             }
         case SET_UPDATED_SLATE_TITLE:
             return {
@@ -155,6 +152,11 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
             return {
                 ...state,
                 pageLoading: action.payload.pageLoading
+            };
+        case PAGE_NUMBER_LOADER:
+            return {
+                ...state,
+                pageNumberLoading: action.payload.pageNumberLoading
             };
         case ACCESS_DENIED_POPUP:
             return {

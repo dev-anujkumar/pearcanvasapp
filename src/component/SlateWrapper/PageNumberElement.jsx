@@ -25,7 +25,9 @@ class PageNumberElement extends React.Component {
     }
      /* Page Number Functionality on hover */
     pagenumberData = () => {
-        if (config.pageNumberInProcess && this.props.isPageNumberEnabled && this.props.isHovered === true && (this.props.allElemPageData.length == 0 || this.props.allElemPageData.indexOf(this.props.element.id) == -1)) {
+        if (config.pageNumberInProcess && this.props.isPageNumberEnabled && this.props.isHovered === true &&
+            (this.props.allElemPageData.length == 0 || this.props.allElemPageData.indexOf(this.props.element.id) == -1) &&
+            this.props._slateType !== 'assessment' && config.isPopupSlate === false) {
             config.pageNumberInProcess = false;
             this.props.getPageNumber(this.props.element.id).then((response) => {
                 if (response) {
@@ -46,10 +48,9 @@ class PageNumberElement extends React.Component {
     }
     pageNoChangeHandler = (e) => {
         let data=  this.props.pageNumberData;
-        let that= this
         /* To update the corresponding value */
-        this.props.pageNumberData.forEach(function (elements,index) {
-            if(elements.id.indexOf(that.props.element.id) !== -1){
+        this.props.pageNumberData && this.props.pageNumberData.forEach((elements, index) => {
+            if(elements.id.indexOf(this.props.element.id) !== -1){
                 elements.pageNumber = e.target.value }
         });
         this.props.pageData(data)
@@ -85,7 +86,7 @@ class PageNumberElement extends React.Component {
         let pageNumber;
         let elemid;
         //check the page number and show on the basis of data
-        this.props.pageNumberData && this.props.pageNumberData.forEach(function (elements, index) {
+        this.props.pageNumberData && this.props.pageNumberData.forEach((elements, index) => {
             if (elements.id.indexOf(element.id) !== -1) {
                 elemid = elements.id
                 pageNumber = elements.pageNumber
@@ -105,7 +106,7 @@ class PageNumberElement extends React.Component {
                 }
             </div>
         }
-        if (isPageNumberEnabled && activeElement && element.id === activeElement.elementId && _slateType !== 'assessment') {
+        if (isPageNumberEnabled && activeElement && element.id === activeElement.elementId && _slateType !== 'assessment' && config.isPopupSlate === false) {
             return (
                 <form id="pageNumberForm">
                     <div className={'pageNumberCover focusedNumberCover'}>
@@ -114,8 +115,8 @@ class PageNumberElement extends React.Component {
                 </form>
             )
         }
-        else if (isHovered && isPageNumberEnabled && _slateType !== 'assessment') {
-            if(loader) return <div className='pageNumberBoxLoader'><div className='loadingpagenumber'></div></div>
+        else if (isHovered && isPageNumberEnabled && _slateType !== 'assessment' && config.isPopupSlate === false) {
+            if(this.props.pageNumberLoading) return <div className='pageNumberBoxLoader'><div className='loadingpagenumber'></div></div>
             else{
                 return (
                     <div className='pageNumberCover hoverNumberCover'>
@@ -145,7 +146,8 @@ const mapActionToProps = {
 const mapStateToProps = state => {
     return {
         pageNumberData: state.appStore.pageNumberData,
-        allElemPageData: state.appStore.allElemPageData
+        allElemPageData: state.appStore.allElemPageData,
+        pageNumberLoading:state.appStore.pageNumberLoading
     };
 };
 

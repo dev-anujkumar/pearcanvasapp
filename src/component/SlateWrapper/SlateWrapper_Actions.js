@@ -16,7 +16,7 @@ import {
     SET_PARENT_NODE,
     ERROR_POPUP,
     GET_TCM_RESOURCES,
-    SET_ALL_PAGE_NUMBER_ELEM_ID
+    PAGE_NUMBER_LOADER
 
 } from '../../constants/Action_Constants';
 
@@ -105,7 +105,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         if (currentSlateData.status === 'approved') {
             if(currentSlateData.type==="popup"){
                 sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
-                dispatch(fetchSlateData(config.slateManifestURN,_requestData.slateEntity, 0,currentSlateData,""));
+                dispatch(fetchSlateData(currentSlateData.id, currentSlateData.contentUrn, 0, currentSlateData, ""));
             } else {
             // createNewVersionOfSlate();
             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
@@ -288,7 +288,7 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                 if (currentSlateData.status === 'approved') {
                     if(currentSlateData.type==="popup"){
                         sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
-                        dispatch(fetchSlateData(config.slateManifestURN,_requestData.currentSlateEntityUrn, 0,currentSlateData,""));
+                        dispatch(fetchSlateData(currentSlateData.id, currentSlateData.contentUrn, 0, currentSlateData, ""));
                     }
                     else{
                         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
@@ -498,12 +498,16 @@ export const updatePageNumber = (pagenumber, elementId, asideData, parentUrn) =>
             pageNumberData.forEach(function (element, index) {
                 if (element.id.indexOf(elementId) !== -1) {
                     pageNumberData[index]["id"] = elementId
-                    pageNumberData[index]["pagenumber"] = pagenumber
+                    pageNumberData[index]["pageNumber"] = pagenumber
                 }
             });
             dispatch({
                 type: GET_PAGE_NUMBER,
-                payload: pageNumberData
+                payload: {
+                    pageNumberData: pageNumberData,
+                    allElemPageData : getState().appStore.allElemPageData
+
+                }
             });
             dispatch({
                 type: UPDATE_PAGENUMBER_SUCCESS,
@@ -535,12 +539,18 @@ export const updatePageNumber = (pagenumber, elementId, asideData, parentUrn) =>
             }
         ).then(res => {
             let pageNumberData = getState().appStore.pageNumberData;
+            let allElemPageData = getState().appStore.allElemPageData;
             pageNumberData = pageNumberData && pageNumberData.filter(function (pageNumber) {
             return !pageNumber.id.includes(elementId);
         });
+        if(allElemPageData && allElemPageData.length >0){
+            allElemPageData = allElemPageData.filter(ele => { return ele != elementId;});
+        }
+       
         dispatch({
             type: GET_PAGE_NUMBER,
-            payload: pageNumberData
+            payload: {pageNumberData: pageNumberData,
+                allElemPageData : allElemPageData}
         });
             dispatch({
                 type: UPDATE_PAGENUMBER_SUCCESS,
@@ -597,9 +607,9 @@ export const setSlateParent = (setSlateParentParams) => (dispatch, getState) => 
 }
 export const getPageNumber = (elementID) => (dispatch, getState) => {
     dispatch({
-        type: UPDATE_PAGENUMBER_SUCCESS,
+        type: PAGE_NUMBER_LOADER,
         payload: {
-            pageLoading: true
+            pageNumberLoading: true
         }
     })
     let pageNumberData = getState().appStore.pageNumberData;
@@ -617,22 +627,23 @@ export const getPageNumber = (elementID) => (dispatch, getState) => {
         }
         pageNumberData.push(newPageNumber)
         config.pageNumberInProcess = true;
+
         dispatch({
             type: GET_PAGE_NUMBER,
-            payload: pageNumberData
-        });
-        dispatch({
-            type: SET_ALL_PAGE_NUMBER_ELEM_ID,
-            payload: allElemPageData
-        });
-        dispatch({
-            type: UPDATE_PAGENUMBER_SUCCESS,
             payload: {
-                pageLoading: false
+                pageNumberData:pageNumberData,
+                allElemPageData:allElemPageData
+            }
+        });
+        dispatch({
+            type: PAGE_NUMBER_LOADER,
+            payload: {
+                pageNumberLoading: false
             }
         })
-        return response.data;
+       return response.data;
     }).catch((error) => {
+        console.log(error,"error")
         let newPageNumber = {
             id: elementID,
             pageNumber: ""
@@ -641,16 +652,15 @@ export const getPageNumber = (elementID) => (dispatch, getState) => {
         config.pageNumberInProcess = true;
         dispatch({
             type: GET_PAGE_NUMBER,
-            payload: pageNumberData
-        });
-        dispatch({
-            type: SET_ALL_PAGE_NUMBER_ELEM_ID,
-            payload: allElemPageData
-        });
-        dispatch({
-            type: UPDATE_PAGENUMBER_SUCCESS,
             payload: {
-                pageLoading: false
+                pageNumberData:pageNumberData,
+                allElemPageData:allElemPageData
+            }
+        });
+        dispatch({
+            type: PAGE_NUMBER_LOADER,
+            payload: {
+                pageNumberLoading: false
             }
         })
     })
@@ -658,6 +668,9 @@ export const getPageNumber = (elementID) => (dispatch, getState) => {
 export const pageData = (pageNumberData) => (dispatch, getState) => {
     dispatch({
         type: GET_PAGE_NUMBER,
-        payload: pageNumberData
+        payload: {
+            pageNumberData:pageNumberData,
+            allElemPageData : getState().appStore.allElemPageData
+        }
     });
 }
