@@ -628,8 +628,66 @@ export class TinyMceEditor extends Component {
                         spanHandlers.handleBackSpaceAndDeleteKyeUp(editor, key, 'poetryLine');
                     }
                 }
+                let olList = activeElement.getElementsByTagName('OL');
+                let ulList = activeElement.getElementsByTagName('UL');
+                if (olList.length || ulList.length) {
+                    let key = e.keyCode || e.which;
+                    if (key != undefined && key === 8) {
+                        let currentElement = editor.selection.getNode();
+                        let childNodes = currentElement.childNodes;
+                        if (childNodes.length > 1) {
+                            if (childNodes[childNodes.length - 1].tagName) {
+                                if (childNodes[childNodes.length - 1].tagName === 'BR') {
+                                    let position = 2;
+                                    while (!childNodes[childNodes.length - position].innerHTML) {
+                                        position = position + 1;
+                                    }
+                                    this.setCursorOnCode(childNodes[childNodes.length - position], editor);
+                                    childNodes[childNodes.length - 1].parentNode.removeChild(childNodes[childNodes.length - 1]);
+                                }
+                            }
+                        }
+
+                    } else if (key != undefined && key === 39) {
+                        let currentElement = editor.selection.getNode();
+                        let childNodes = currentElement.childNodes;
+                        if (childNodes.length > 1) {
+                            let innerHTML = currentElement.innerHTML;
+                            let pomString = encodeURI(innerHTML);
+                            pomString = pomString.replace(/%EF%BB%BF/g, '');
+                            innerHTML = decodeURI(pomString)
+                            if (childNodes[childNodes.length - 2].tagName) {
+                                if (childNodes[childNodes.length - 2].tagName === 'CODE') {
+                                    if (innerHTML.endsWith('</code>')) {
+                                        this.setCursorOnCode(childNodes[childNodes.length - 2], editor);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         });
+    }
+
+    setCursorOnCode = (element, editor) => {
+        if (element.tagName) {
+            if (element.tagName === 'CODE') {
+                let temElm = editor.dom.create('br');
+                element.appendChild(temElm);
+                let tempChildNodes = element.childNodes;
+                editor.selection.setCursorLocation(element.childNodes[tempChildNodes.length - 1], 0);
+                let brs = element.getElementsByTagName('br');
+                while (brs.length) {
+                    brs[0].parentNode.removeChild(brs[0]);
+                }
+            } else {
+                let child = element.childNodes;
+                if (child.length) {
+                    this.setCursorOnCode(child[child.length - 1], editor);
+                }
+            }
+        }
     }
 
     /**
