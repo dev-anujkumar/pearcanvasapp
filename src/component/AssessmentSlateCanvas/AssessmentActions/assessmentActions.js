@@ -22,7 +22,6 @@ export const fetchUsageTypeData = (entityType) => (dispatch) => {
                 usageTypeList.push(usageType.label.en)
             })
         }
-        console.log('usageTypeList',usageTypeList)
         dispatch({
             type: GET_USAGE_TYPE,
             payload: {
