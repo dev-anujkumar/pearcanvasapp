@@ -60,7 +60,8 @@ let cypressConfig = {
     savingInProgress: false,
     citationFlag: false,
     lastActiveElementId:'',
-    popupCreationCallInProgress : false
+    popupCreationCallInProgress : false,
+    pageNumberInProcess: true
 }
 
 

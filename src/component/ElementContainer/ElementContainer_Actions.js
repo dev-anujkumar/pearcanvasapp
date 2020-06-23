@@ -101,7 +101,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
             if (currentSlateData.status === 'approved') {
                 if(currentSlateData.type==="popup"){
                     sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
-                    dispatch(fetchSlateData(config.slateManifestURN,_requestData.entityUrn, 0,currentSlateData,""));
+                    dispatch(fetchSlateData(currentSlateData.id, currentSlateData.contentUrn, 0, currentSlateData, ""));
                 }
                 else{
                     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
@@ -322,7 +322,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
                 }else if(currentSlateData.status === 'approved'){
                     if(currentSlateData.type==="popup"){
                         sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
-                        dispatch(fetchSlateData(response.data.newParentVersion,updatedData.parentEntityId, 0,currentSlateData, "", false));
+                        dispatch(fetchSlateData(currentSlateData.id, currentSlateData.contentUrn, 0, currentSlateData, "", false));
                     }else{
                         sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' }); 
                     }
@@ -588,7 +588,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                                 "formatted-subtitle": { ...updatedData }
                             }
                         };
-                    } else if (element.popupdata.postertextobject[0].id === elementId) {
+                    } else if (element.popupdata.postertextobject && element.popupdata.postertextobject[0].id === elementId) {
                         element = {
                             ...element,
                             popupdata: {
@@ -683,26 +683,29 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
 //TCM Update
 function prepareDataForUpdateTcm(updatedDataID, getState, dispatch,versionedData) {
     const tcmData = getState().tcmReducer.tcmSnapshot;
-    if(versionedData && updatedDataID !== versionedData.id){
+    let indexes = []
+    tcmData.filter(function (element, index) {
+    if (element.elemURN.indexOf(updatedDataID) !== -1 && element.elemURN.includes('urn:pearson:work')) {
+            indexes.push(index)
+        }
+    });
+    if (indexes.length == 0 || (versionedData && updatedDataID !== versionedData.id)) {
         tcmData.push({
             "txCnt": 1,
             "isPrevAcceptedTxAvailable": false,
-            "elemURN": versionedData.id,
+            "elemURN": versionedData && updatedDataID !== versionedData.id ? versionedData.id : updatedDataID,
             "feedback": null
         })
     }
-    else{
-        tcmData.forEach(function (element,index) {
-            if(element.elemURN.includes('urn:pearson:work') && element.elemURN.indexOf(updatedDataID) !== -1){
-                tcmData[index]["elemURN"]=updatedDataID
-                tcmData[index]["txCnt"]=tcmData[index]["txCnt"] !== 0 ? tcmData[index]["txCnt"]: 1
-                tcmData[index]["feedback"]=tcmData[index]["feedback"] !== null ? tcmData[index]["feedback"]:null
-                tcmData[index]["isPrevAcceptedTxAvailable"] = tcmData[index]["isPrevAcceptedTxAvailable"]  ? tcmData[index]["isPrevAcceptedTxAvailable"]:false
-            }
-        });
+    else {
+        tcmData[indexes]["elemURN"] = updatedDataID
+        tcmData[indexes]["txCnt"] = tcmData[indexes]["txCnt"] !== 0 ? tcmData[indexes]["txCnt"] : 1
+        tcmData[indexes]["feedback"] = tcmData[indexes]["feedback"] !== null ? tcmData[indexes]["feedback"] : null
+        tcmData[indexes]["isPrevAcceptedTxAvailable"] = tcmData[indexes]["isPrevAcceptedTxAvailable"] ? tcmData[indexes]["isPrevAcceptedTxAvailable"] : false
+
     }
   
-if (tcmData) {
+if (tcmData.length >0) {
     sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });
 }
 dispatch({
@@ -901,7 +904,8 @@ export const deleteShowHideUnit = (elementId, type, parentUrn, index,eleIndex, p
         entityUrn : parentUrn,
         workUrn : elementId,
         index : index.toString(),
-        elementParentEntityUrn: parentUrn
+        elementParentEntityUrn: parentUrn,
+        sectionType: type
         // slateEntity : config.slateEntityURN
     }
     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });

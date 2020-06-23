@@ -16,6 +16,7 @@ import {
     SET_PARENT_NODE,
     ERROR_POPUP,
     GET_TCM_RESOURCES,
+    PAGE_NUMBER_LOADER
 
 } from '../../constants/Action_Constants';
 
@@ -104,7 +105,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         if (currentSlateData.status === 'approved') {
             if(currentSlateData.type==="popup"){
                 sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
-                dispatch(fetchSlateData(config.slateManifestURN,_requestData.slateEntity, 0,currentSlateData,""));
+                dispatch(fetchSlateData(currentSlateData.id, currentSlateData.contentUrn, 0, currentSlateData, ""));
             } else {
             // createNewVersionOfSlate();
             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
@@ -287,7 +288,7 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                 if (currentSlateData.status === 'approved') {
                     if(currentSlateData.type==="popup"){
                         sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
-                        dispatch(fetchSlateData(config.slateManifestURN,_requestData.currentSlateEntityUrn, 0,currentSlateData,""));
+                        dispatch(fetchSlateData(currentSlateData.id, currentSlateData.contentUrn, 0, currentSlateData, ""));
                     }
                     else{
                         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
@@ -493,43 +494,21 @@ export const updatePageNumber = (pagenumber, elementId, asideData, parentUrn) =>
                 }
             }
         ).then(res => {
-            const parentData = getState().appStore.slateLevelData;
-            const newslateData = JSON.parse(JSON.stringify(parentData));
-            let _slateObject = Object.values(newslateData)[0];
-            let { contents: _slateContent } = _slateObject;
-            let { bodymatter: _slateBodyMatter } = _slateContent;
-            let pageNumberRef = {
-                pageNumber: data.pageNumber
-            }
-             _slateBodyMatter.map(element => {
-                if (element.id === elementId) {
-                    element['pageNumberRef'] = { ...pageNumberRef, urn: element.id }
+            let pageNumberData = getState().appStore.pageNumberData;
+            pageNumberData.forEach(function (element, index) {
+                if (element.id.indexOf(elementId) !== -1) {
+                    pageNumberData[index]["id"] = elementId
+                    pageNumberData[index]["pageNumber"] = pagenumber
                 }
-                else if (asideData && asideData.type == 'element-aside') {
-                    if (element.id == asideData.id) {
-                        element.elementdata.bodymatter.map((nestedEle) => {
-                            if (nestedEle.id == elementId) {
-                                nestedEle['pageNumberRef'] = { ...pageNumberRef, urn: nestedEle.id }
-                            }
-                            else if (nestedEle.type == "manifest" && nestedEle.id == parentUrn.manifestUrn) {
-                                nestedEle.contents.bodymatter.map((ele) => {
-                                    if (ele.id == elementId) {
-                                        ele['pageNumberRef'] = { ...pageNumberRef, urn: ele.id }
-                                    }
-                                    return ele
-                                })
-                            }
-                            return nestedEle
-                        })
-                    }
-                }
-                return element
-            })
-
+            });
             dispatch({
-                type: FETCH_SLATE_DATA,
-                payload: newslateData
-            })
+                type: GET_PAGE_NUMBER,
+                payload: {
+                    pageNumberData: pageNumberData,
+                    allElemPageData : getState().appStore.allElemPageData
+
+                }
+            });
             dispatch({
                 type: UPDATE_PAGENUMBER_SUCCESS,
                 payload: {
@@ -559,6 +538,20 @@ export const updatePageNumber = (pagenumber, elementId, asideData, parentUrn) =>
                 }
             }
         ).then(res => {
+            let pageNumberData = getState().appStore.pageNumberData;
+            let allElemPageData = getState().appStore.allElemPageData;
+            pageNumberData = pageNumberData && pageNumberData.filter(function (pageNumber) {
+            return !pageNumber.id.includes(elementId);
+        });
+        if(allElemPageData && allElemPageData.length >0){
+            allElemPageData = allElemPageData.filter(ele => { return ele != elementId;});
+        }
+       
+        dispatch({
+            type: GET_PAGE_NUMBER,
+            payload: {pageNumberData: pageNumberData,
+                allElemPageData : allElemPageData}
+        });
             dispatch({
                 type: UPDATE_PAGENUMBER_SUCCESS,
                 payload: {
@@ -611,4 +604,73 @@ export const setSlateParent = (setSlateParentParams) => (dispatch, getState) => 
         type: SET_PARENT_NODE,
         payload: setSlateParentParams
     })
+}
+export const getPageNumber = (elementID) => (dispatch, getState) => {
+    dispatch({
+        type: PAGE_NUMBER_LOADER,
+        payload: {
+            pageNumberLoading: true
+        }
+    })
+    let pageNumberData = getState().appStore.pageNumberData;
+    let allElemPageData = getState().appStore.allElemPageData;
+    allElemPageData.push(elementID)
+    let url = `${config.PAGE_NUMBER_UPDATE_ENDPOINT}/v2/pageNumberMapping/${elementID}`;
+    return axios.get(url, {
+        headers: {
+            PearsonSSOSession: config.ssoToken
+        }
+    }).then((response) => {
+        let newPageNumber = {
+            id: elementID,
+            pageNumber: response.data.pageNumber
+        }
+        pageNumberData.push(newPageNumber)
+        config.pageNumberInProcess = true;
+
+        dispatch({
+            type: GET_PAGE_NUMBER,
+            payload: {
+                pageNumberData:pageNumberData,
+                allElemPageData:allElemPageData
+            }
+        });
+        dispatch({
+            type: PAGE_NUMBER_LOADER,
+            payload: {
+                pageNumberLoading: false
+            }
+        })
+       return response.data;
+    }).catch((error) => {
+        console.log(error,"error")
+        let newPageNumber = {
+            id: elementID,
+            pageNumber: ""
+        }
+        pageNumberData.push(newPageNumber)
+        config.pageNumberInProcess = true;
+        dispatch({
+            type: GET_PAGE_NUMBER,
+            payload: {
+                pageNumberData:pageNumberData,
+                allElemPageData:allElemPageData
+            }
+        });
+        dispatch({
+            type: PAGE_NUMBER_LOADER,
+            payload: {
+                pageNumberLoading: false
+            }
+        })
+    })
+}
+export const pageData = (pageNumberData) => (dispatch, getState) => {
+    dispatch({
+        type: GET_PAGE_NUMBER,
+        payload: {
+            pageNumberData:pageNumberData,
+            allElemPageData : getState().appStore.allElemPageData
+        }
+    });
 }

@@ -22,7 +22,7 @@ if (!global.Element.prototype.hasOwnProperty("innerText")) {
 jest.mock('../../../src/js/utils', () => {
     return {
         checkforToolbarClick: () => {
-            return true
+            return false
         },
         spanHandlers: {
             handleFormattingTags: jest.fn(),
@@ -83,7 +83,8 @@ jest.mock('../../../src/component/GlossaryFootnotePopup/GlossaryFootnote_Actions
     return {
         saveGlossaryAndFootnote: () => {
             return;
-        }
+        },
+        setFormattingToolbar: () => { return; }
     }
 })
 /**************************Declare Common Variables**************************/
@@ -901,7 +902,8 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                 permissions: ["login", "logout"],
                 tagName: "CODE",
                 elementId: "work:urn",
-                element: { type: "figure", figuretype: "codelisting" }
+                element: { type: "figure", figuretype: "codelisting" },
+                tagName: 'code'
             })
             component.update();
             const getContent = jest.spyOn(event.target, 'getContent');
@@ -1365,7 +1367,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
             component.setProps({
                 ...props,
                 permissions: ["login", "logout"],
-                tagName: "P",
+                tagName: "h4",
                 elementId: "work:urn",
                 element: { type: "figure", subtype: "mathml" },
                 placeholder: "Type something..."
@@ -1380,7 +1382,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
             component.setProps({
                 ...props,
                 permissions: ["login", "logout"],
-                tagName: "P",
+                tagName: "figureCredit",
                 elementId: "work:urn",
                 element: { type: "figure", subtype: "tableImage" },
                 placeholder: "Enter Caption..."
@@ -1395,7 +1397,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
             component.setProps({
                 ...props,
                 permissions: ["login", "logout"],
-                tagName: "P",
+                tagName: "p",
                 elementId: "work:urn",
                 element: { type: "showhide" },
                 placeholder: "Enter Show text"
@@ -1410,7 +1412,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
             component.setProps({
                 ...props,
                 permissions: ["login", "logout"],
-                tagName: "P",
+                tagName: "code",
                 elementId: "work:urn",
                 element: { type: "figure", figuretype: "codelisting" },
                 placeholder: "Enter block code..."
@@ -1425,12 +1427,32 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
             component.setProps({
                 ...props,
                 permissions: ["login", "logout"],
-                tagName: "P",
+                tagName: "p",
                 elementId: "work:urn",
                 element: { type: "stanza" },
                 placeholder: "Type Something..."
             })
             component.update();
+            const spysetInstanceToolbar = jest.spyOn(instance, 'setInstanceToolbar')
+            instance.setInstanceToolbar();
+            expect(spysetInstanceToolbar).toHaveBeenCalled();
+            spysetInstanceToolbar.mockClear()
+        })
+        it('Test-15.4-Method--13--setInstanceToolbar  --BCE Toolbar -Syntax Checked', () => {
+            component.setProps({
+                ...props,
+                permissions: ["login", "logout"],
+                tagName: "code",
+                elementId: "work:urn",
+                element: { type: "figure", figuretype: "codelisting" },
+                placeholder: "Enter block code..."
+            })
+            component.update();
+            document.querySelector = () => {
+                return {
+                    checked: true
+                };
+            }
             const spysetInstanceToolbar = jest.spyOn(instance, 'setInstanceToolbar')
             instance.setInstanceToolbar();
             expect(spysetInstanceToolbar).toHaveBeenCalled();
@@ -1451,62 +1473,6 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
         instance.setToolbarByElementType();
         expect(spysetInstanceToolbar).toHaveBeenCalled();
         spysetInstanceToolbar.mockClear()
-    })
-    xit('Removed Test-17-Method--15--addInlineCode', () => {
-        window.getSelection = () => {
-            return {
-                removeAllRanges: () => { },
-                toString: () => {
-                    return "hello TEST"
-                },
-                anchorNode: {
-                    parentNode: {
-                        nodeName: "CODE",
-                        innerHTML: "<code>Hello</code>",
-                        outerHTML: "<pre><code>Hello</code></pre>"
-                    }
-                }
-            }
-        }
-        let event = {
-            preventDefault: () => { },
-            stopPropagation: () => { }
-        }
-        let nextEditor = {
-            on: (temp, cb) => { cb(event) },
-            selection: editor.selection,
-            setContent: () => { },
-        }
-        const spyaddInlineCode = jest.spyOn(instance, 'addInlineCode')
-        instance.addInlineCode(nextEditor);
-        expect(spyaddInlineCode).toHaveBeenCalled()
-        spyaddInlineCode.mockClear()
-    })
-    xit('Removed Test-18-Method--16--handleFocussingInlineCode', () => {
-        let apiData = {
-            isActive: jest.fn(),
-            isDisabled: jest.fn(),
-            setActive: jest.fn(),
-            setDisabled: jest.fn(),
-        }
-        let event = {
-            preventDefault: () => { },
-            stopPropagation: () => { }
-        }
-        let nextEditor = {
-            on: (temp, cb) => { cb(event) },
-            selection: editor.selection,
-            setContent: () => { },
-            formatter: {
-                match: () => { },
-                formatChanged: () => { return jest.fn() },
-                unbind: () => { }
-            }
-        }
-        const spyhandleFocussingInlineCode = jest.spyOn(instance, 'handleFocussingInlineCode')
-        instance.handleFocussingInlineCode(apiData, nextEditor);
-        expect(spyhandleFocussingInlineCode).toHaveBeenCalled()
-        spyhandleFocussingInlineCode.mockClear()
     })
     it('Test-17-Method--15--learningObjectiveDropdown', () => {
         const spylearningObjectiveDropdown = jest.spyOn(instance, 'learningObjectiveDropdown')
@@ -1609,11 +1575,12 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
             component.setProps({
                 ...props,
                 permissions: ["login", "logout"],
-                tagName: "SPAN",
+                tagName: "h4",
                 elementId: "work:urn",
                 element: { type: "popup" },
                 popupField: "formatted-title",
-                currentElement: undefined
+                currentElement: undefined,
+                model: { replace: () => { } }
             })
             component.update();
             const spyaddFootnote = jest.spyOn(instance, 'addFootnote')
@@ -1884,11 +1851,11 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                 glossaryfootnoteid: "footnote:id",
                 type: "Footnote",
                 elementSubType: "stanza",
-                glossaryTermText: "this is footnote in poetry"
-            }
+                glossaryTermText: { replace: () => { } }
+            },
+            createPoetryElements: () => { }
         })
         component.update();
-        instance.handleBlur = jest.fn()
         const spysaveContent = jest.spyOn(instance, 'saveContent')
         instance.saveContent();
         expect(spysaveContent).toHaveBeenCalled();
@@ -1930,7 +1897,6 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
             }
         })
         component.update();
-        instance.handleBlur = jest.fn()
         instance.editorRef = { current: { id: "active:editor:id" } }
         window.localStorage = {
             getItem: () => { return { "mockElement": "sample" }; }
@@ -1967,7 +1933,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
             component.setProps({
                 ...props,
                 permissions: ["login", "logout"],
-                tagName: "SPAN",
+                tagName: "p",
                 elementId: "work:urn",
                 element: {
                     "type": "element-authoredtext",
@@ -2286,7 +2252,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                 target: {
                     id: ""
                 },
-                type: "paste",
+                type: "click",
                 clipboardData: {
                     getData: () => { return pasteString }
                 }
@@ -2325,7 +2291,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                 target: {
                     id: ""
                 },
-                type: "paste",
+                type: "click",
                 clipboardData: {
                     getData: () => { return; }
                 }
@@ -2788,7 +2754,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
             component.setProps({
                 ...props,
                 permissions: ["login", "logout"],
-                tagName: "SPAN",
+                tagName: "element-citation",
                 elementId: "work:urn",
                 currentElement: {
                     "type": "element-citation"
@@ -3463,55 +3429,1257 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
             instance.editorKeydown(nextEditor);
             expect(spyFunction).toHaveBeenCalled()
         });
-
-    });
-    xit('Test-NA-Method--NA--makeReplace', () => {
-        let formattingdata = {
-            innerHTML: "<bold>THIS IS BCE</bold>",
-        },
-            parentNodeData = {
-                nodeName: 'SPAN', className: 'notBCE',
-                parentElement: {
-                    nodeName: 'SPAN', className: 'notBCE',
-                    parentNode: { nodeName: 'SPAN', className: 'notBCE' }
-                },
-                getElementsByTagName: () => {
-                    return formattingdata
-                },
-                removeChild: () => { },
-                innerHTML: "<span>THIS IS BCE</span>",
-
-            };
-
-        let innerSpanData = [
-            {
-                parentNode: {
-                    nodeName: 'IMG', className: 'class1',
-                    parentNode: parentNodeData,
-                    parentElement: {
-                        nodeName: 'SPAN', className: 'class2',
-                        parentNode: parentNodeData,
-                        getElementsByTagName: () => { return formattingdata },
-                        // removeChild:()=>{}
-                    },
-                    removeChild: () => { }
-                },
-                parentElement: {
-                    nodeName: 'IMG', className: 'class3', parentNode: parentNodeData, getElementsByTagName: () => { return formattingdata },
-                    removeChild: () => { }
-                },
-                childNodes: [{ nodeType: "SPAN", textContent: "SampleText" }],
-                getElementsByClassName: () => { return {} },
-                // removeChild:()=>{}
+        xit('Test-29.6.3-Method--27--editorKeydown-POETRY Element-KeyCode=13', () => {
+            let event = {
+                preventDefault: () => { },
+                stopPropagation: () => { },
+                type: 'keydown',
+                which: 13
             }
-        ]
+            let nextEditor3 = {
+                on: (temp, cb) => { cb(event) },
+                targetElm: {
+                    findChildren: () => {
+                        return {
+                            length: 0
+                        };
+                    },
+                    dispatchEvent: () => { }
+                },
+                selection: {
+                    getStart: () => {
+                        return {
+                            innerHTML: '<p class="paragraphNumeroUno place-holder">hello<ol></ol><ul></ul></p>',
+                            children: [
+                                {
+                                    tagName: 'BR'
+                                }
+                            ],
+                            innerText: "hello",
+                            querySelectorAll: jest.fn(),
+                            classList: {
+                                remove: jest.fn()
+                            }
+                        }
+                    },
+                    getNode: () => {
+                        return {
+                            tagName: 'SPAN',
+                            className: 'poetryLine',
+                            closest: () => { },
+                            textContent: () => { return { trim: () => { return "" } } },
+                            getElementsByClassName: () => {
+                                return [{
+                                    tagName: 'SPAN',
+                                    getElementsByTagName: () => {
+                                        return {
+                                            tagName: 'SPAN',
+                                            className: 'poetryLine',
+                                            textContent: () => { return { trim: () => { return "" } } }
+                                        }
+                                    },
+                                    className: 'poetryLine',
+                                    textContent: () => { return { trim: () => { return "" } } }
+                                }]
+                            }
+                        }
+                    }
+                },
+                dom: {
+                    getParent: () => {
+                        return {
+                            innerHTML: '<span class="bce place-holder">SampleCode</span>',
+                            children: [
+                                {
+                                    tagName: 'DIV'
+                                }
+                            ],
+                            innerText: "hello",
+                            querySelectorAll: jest.fn(),
+                            classList: {
+                                remove: jest.fn(),
+                                contains: jest.fn(),
+                            },
+                            nodeName: "DIV"
 
-        document.getElementsByClassName = () => {
-            return innerSpanData
+                        }
+                    }
+                },
+                children: ['<code class="bce place-holder">hello<ol></code>'],
+                classList: ["cypress-editable", "mce-content-body", "mce-edit-focus", 'place-holder']
+            }
+            let newObj = { click: () => { } };
+            let elementByIdData = {
+                closest: () => {
+                    return { nextSibling: { querySelector: () => { return newObj } } }
+                },
+                blur: () => { }, ...editor
+            }
+            document.getElementById = () => {
+                return elementByIdData
+            }
+            component.setProps({
+                ...props,
+                permissions: ["login", "logout"],
+                tagName: "SPAN",
+                elementId: "work:urn",
+                element: {
+                    "type": "stanza"
+                },
+                model: {},
+                placeholder: "",
+            })
+            component.update();
+            const spyFunction = jest.spyOn(instance, 'editorKeydown')
+            instance.editorKeydown(nextEditor3);
+            expect(spyFunction).toHaveBeenCalled()
+        });
+    });
+    describe('Test-30-Method--28--editorOnClick', () => {
+        component.setProps({
+            ...props,
+            permissions: ["login", "logout"],
+            tagName: "SPAN",
+            elementId: "work:urn",
+            currentElement: {
+                "type": "element-citation"
+            },
+            element: { type: "citation", status: "wip" },
+            model: {},
+            placeholder: "",
+            activeElement: false
+        })
+        component.update();
+        it('Test-30.1.1-Method--28--editorOnClick--nodeName:SUP & alreadyExist:FALSE', () => {
+            document.querySelector = () => { return false; }
+            let event1 = {
+                preventDefault: jest.fn(),
+                stopPropagation: jest.fn(),
+                target: {
+                    id: "",
+                    parentElement: { nodeName: "SUP" },
+                    dataset: { uri: "uri" },
+                    nodeName: "SUP"
+                },
+                type: "click",
+                clipboardData: {
+                    getData: () => { return pasteString }
+                }
+            }
+            instance.glossaryBtnInstance = {
+                setDisabled: () => { }
+            }
+            instance.footnoteBtnInstance = {
+                setDisabled: () => { }
+            }
+            const setDisabled = jest.spyOn(instance.glossaryBtnInstance, 'setDisabled');
+            const spyeditorOnClick = jest.spyOn(instance, 'editorOnClick')
+            instance.editorOnClick(event1);
+            expect(spyeditorOnClick).toHaveBeenCalled()
+            expect(setDisabled).toHaveBeenCalled()
+        });
+        it('Test-30.1.2-Method--28--editorOnClick--nodeName:SUP & alreadyExist:TRUE', () => {
+            document.querySelector = () => { return false; }
+            let event = {
+                preventDefault: jest.fn(),
+                stopPropagation: jest.fn(),
+                target: {
+                    id: "",
+                    parentElement: { nodeName: "SUP" },
+                    dataset: { uri: "uri" },
+                    nodeName: "SUP",
+                    closest: () => { return false; }
+                },
+                type: "click",
+                clipboardData: {
+                    getData: () => { return pasteString }
+                }
+            }
+            instance.glossaryBtnInstance = {
+                setDisabled: () => { }
+            }
+            instance.footnoteBtnInstance = {
+                setDisabled: () => { }
+            }
+            document.getElementsByClassName = () => {
+                return {
+                    length: 1
+                }
+            }
+            const setDisabled = jest.spyOn(instance.glossaryBtnInstance, 'setDisabled');
+            const spyeditorOnClick = jest.spyOn(instance, 'editorOnClick')
+            instance.editorOnClick(event);
+            expect(spyeditorOnClick).toHaveBeenCalled()
+            expect(setDisabled).toHaveBeenCalled()
+        });
+        it('Test-30.2.1-Method--28--editorOnClick--nodeName:DFN & alreadyExist:FALSE', () => {
+            document.querySelector = () => { return false; }
+            let event1 = {
+                preventDefault: jest.fn(),
+                stopPropagation: jest.fn(),
+                target: {
+                    id: "",
+                    dataset: { uri: "uri" },
+                    nodeName: "DFN",
+                    closest: () => { return false; }
+                },
+                type: "click",
+                clipboardData: {
+                    getData: () => { return pasteString }
+                }
+            }
+            instance.glossaryBtnInstance = {
+                setDisabled: () => { }
+            }
+            instance.footnoteBtnInstance = {
+                setDisabled: () => { }
+            }
+            const setDisabled = jest.spyOn(instance.glossaryBtnInstance, 'setDisabled');
+            const spyeditorOnClick = jest.spyOn(instance, 'editorOnClick')
+            instance.editorOnClick(event1);
+            expect(spyeditorOnClick).toHaveBeenCalled()
+            expect(setDisabled).toHaveBeenCalled()
+        });
+        it('Test-30.2.2-Method--28--editorOnClick--nodeName:DFN & alreadyExist:TRUE', () => {
+            document.querySelector = () => { return false; }
+            let event = {
+                preventDefault: jest.fn(),
+                stopPropagation: jest.fn(),
+                target: {
+                    id: "",
+                    dataset: { uri: "uri" },
+                    nodeName: "DFNN",
+                    closest: () => { return true; }
+                },
+                type: "click",
+                clipboardData: {
+                    getData: () => { return pasteString }
+                }
+            }
+            instance.glossaryBtnInstance = {
+                setDisabled: () => { }
+            }
+            instance.footnoteBtnInstance = {
+                setDisabled: () => { }
+            }
+            document.getElementsByClassName = () => {
+                return {
+                    length: 1
+                }
+            }
+            const setDisabled = jest.spyOn(instance.glossaryBtnInstance, 'setDisabled');
+            const spyeditorOnClick = jest.spyOn(instance, 'editorOnClick')
+            instance.editorOnClick(event);
+            expect(spyeditorOnClick).toHaveBeenCalled()
+            expect(setDisabled).toHaveBeenCalled()
+        });
+        it('Test-30.3-Method--28--editorOnClick--nodeName:ABBR', () => {
+            document.querySelector = () => { return { classList: { remove: () => { } } }; }
+            let event1 = {
+                preventDefault: jest.fn(),
+                stopPropagation: jest.fn(),
+                target: {
+                    id: "",
+                    dataset: { uri: "uri" },
+                    parentNode: {
+                        nodeName: 'ABBR',
+                        attributes: {
+                            'asset-id': { nodeValue: "yes" },
+                            'data-uri': { nodeValue: "AP" }
+                        }
+                    },
+                    nodeName: 'ABBR',
+                    attributes: {
+                        'asset-id': { nodeValue: "yes" },
+                        'data-uri': { nodeValue: "AP" }
+                    },
+                    closest: () => { return false; }
+
+                },
+                type: "click",
+                clipboardData: {
+                    getData: () => { return pasteString }
+                }
+            }
+            instance.glossaryBtnInstance = {
+                setDisabled: () => { }
+            }
+            instance.footnoteBtnInstance = {
+                setDisabled: () => { }
+            }
+            const spyeditorOnClick = jest.spyOn(instance, 'editorOnClick')
+            instance.editorOnClick(event1);
+            expect(spyeditorOnClick).toHaveBeenCalled()
+        });
+        it('Test-30.4-Method--28--editorOnClick--ELSE Case', () => {
+            document.querySelector = () => { return false; }
+            let event1 = {
+                preventDefault: jest.fn(),
+                stopPropagation: jest.fn(),
+                target: {
+                    id: "",
+                    dataset: { uri: "uri" },
+                    parentNode: {
+                        nodeName: 'IMG'
+                    },
+                    nodeName: 'IMG',
+                    closest: () => { return false; }
+
+                },
+                type: "click",
+            }
+            component.setProps({
+                permissions: ["login", "logout"],
+                tagName: "SPAN",
+                elementId: "work:urn",
+                currentElement: {
+                    "type": "element-citation"
+                },
+                element: { type: "citation", status: "wip" },
+                model: {},
+                placeholder: "",
+                activeShowHide: () => { return true; },
+                ...props
+            })
+            component.update();
+            const spyeditorOnClick = jest.spyOn(instance, 'editorOnClick')
+            instance.editorOnClick(event1);
+            expect(spyeditorOnClick).toHaveBeenCalled()
+        });
+    });
+    it('Test-31-Method--29--removeMultiTinyInstance', () => {
+        let toolbar = { parentElement: { id: "toolbar" }, remove: () => { } }
+        document.getElementsByClassName = () => { return [toolbar, toolbar]; }
+        const spyremoveMultiTinyInstance = jest.spyOn(instance, 'removeMultiTinyInstance')
+        instance.removeMultiTinyInstance();
+        expect(spyremoveMultiTinyInstance).toHaveBeenCalled();
+        spyremoveMultiTinyInstance.mockClear()
+    });
+    it('Test-32-Method--30--componentWillUnmount', () => {
+        tinymce.editors = [editor]
+        const spyFunction = jest.spyOn(instance, 'componentWillUnmount')
+        instance.componentWillUnmount();
+        expect(spyFunction).toHaveBeenCalled();
+        spyFunction.mockClear()
+    });
+    describe('Test-33-Method--31--handleBlur', () => {
+        document = {
+            createElement: () => {
+                return { innerHTML: "" }
+            },
+            getElementById: () => {
+                return {
+                    innerHTML: "<div>paragraph</div>"
+                }
+            },
+            getElementsByTagName: () => {
+                return {
+                    innerHTML: "<div>poetry</div>"
+                }
+            }
         }
+        it('Test-33.1-Method--31--handleBlur-POETRY Element', () => {
+            let event = {
+                preventDefault: jest.fn(),
+                stopPropagation: jest.fn(),
+                relatedTarget: {
+                    classList: []
+                }
+            }
+            instance.fromtinyInitBlur = true;
+            const spyhandleBlur = jest.spyOn(instance, 'handleBlur')
+            instance.handleBlur(event);
+            expect(spyhandleBlur).toHaveBeenCalledWith(event);
+            spyhandleBlur.mockClear()
+        });
+        it('Test-33.2.1-Method--31--handleBlur-BLOCKQUOTE MARGINALIA Element-isctrlPlusV:TRUE', () => {
+            let event = {
+                preventDefault: jest.fn(),
+                stopPropagation: jest.fn(),
+                relatedTarget: {
+                    classList: []
+                },
+                type: 'blur'
+            }
+            component.setProps({
+                ...props,
+                permissions: ["login", "logout"],
+                tagName: "blockquote",
+                elementId: "work:urn",
+                element: { type: "element-authoredtext", status: "wip", elementdata: { type: "marginalia" } },
+                model: {},
+                placeholder: "",
+            })
+            component.update();
+            instance.isctrlPlusV = true;
+            instance.lastContent = "blockquote";
+            document = {
+                createElement: () => {
+                    return { innerHTML: "" }
+                },
+                getElementById: () => {
+                    return {
+                        innerHTML: "<div>blockquote</div>"
+                    }
+                }
+            }
+            instance.fromtinyInitBlur = true;
+            const spyhandleBlur = jest.spyOn(instance, 'handleBlur')
+            instance.handleBlur(event);
+            expect(spyhandleBlur).toHaveBeenCalledWith(event);
+            spyhandleBlur.mockClear()
+        });
+        it('Test-33.2.2-Method--31--handleBlur-BLOCKQUOTE MARGINALIA Element-isctrlPlusV:FALSE', () => {
+            let event = {
+                preventDefault: jest.fn(),
+                stopPropagation: jest.fn(),
+                relatedTarget: {
+                    classList: []
+                },
+                type: 'blur'
+            }
+            component.setProps({
+                ...props,
+                permissions: ["login", "logout"],
+                tagName: "blockquote",
+                elementId: "work:urn",
+                element: { type: "element-authoredtext", status: "wip", elementdata: { type: "blockquote" } },
+                model: {},
+                placeholder: "",
+            })
+            component.update();
+            instance.isctrlPlusV = false;
+            instance.lastContent = "blockquote";
+            document = {
+                createElement: () => {
+                    return { innerHTML: "" }
+                },
+                getElementById: () => {
+                    return {
+                        innerHTML: "<div>blockquote</div>"
+                    }
+                }
+            }
+            instance.fromtinyInitBlur = true;
+            const spyhandleBlur = jest.spyOn(instance, 'handleBlur')
+            instance.handleBlur(event);
+            expect(spyhandleBlur).toHaveBeenCalledWith(event);
+            spyhandleBlur.mockClear()
+        });
+        it('Test-33.3-Method--31--handleBlur-SHOWHIDE Element', () => {
+            let event = {
+                preventDefault: jest.fn(),
+                stopPropagation: jest.fn(),
+                relatedTarget: {
+                    classList: []
+                },
+                type: 'blur'
+            }
+            component.setProps({
+                ...props,
+                permissions: ["login", "logout"],
+                tagName: "blockquote",
+                elementId: "work:urn",
+                element: { type: "showhide", status: "wip" },
+                model: {},
+                placeholder: "",
+                showHideType: "show"
+            })
+            component.update();
+            instance.isctrlPlusV = false;
+            instance.lastContent = "showhide";
+            document = {
+                createElement: () => {
+                    return { innerHTML: "" }
+                },
+                getElementById: () => {
+                    return {
+                        innerHTML: "<div>blockquote</div>"
+                    }
+                }
+            }
+            instance.fromtinyInitBlur = true;
+            const spyhandleBlur = jest.spyOn(instance, 'handleBlur')
+            instance.handleBlur(event);
+            expect(spyhandleBlur).toHaveBeenCalledWith(event);
+            spyhandleBlur.mockClear()
+        });
+    });
+    describe('Test-34-Method--32--handleClick', () => {
+        document = {
+            querySelector: () => {
+                return true
+            },
+            getElementById: () => {
+                return {
+                    innerHTML: "<div>blockquote</div>",
+                    classList: {
+                        remove: () => { }
+                    },
+                    setAttribute: () => { }
+                }
+            }
+        }
+        it('Test-34.1-Method--32--handleClick-(!isSameTargetBasedOnDataId || !isSameTarget || !isSameByElementId)-FALSE', () => {
 
-        const spymakeReplace = jest.spyOn(instance, 'makeReplace')
-        instance.makeReplace();
-        expect(spymakeReplace).toHaveBeenCalled()
+            let event = {
+                preventDefault: jest.fn(),
+                stopPropagation: jest.fn(),
+                relatedTarget: {
+                    classList: []
+                },
+                clientX: jest.fn(),
+                clientY: jest.fn(),
+                currentTarget: {
+                    id: "work:urn:1",
+                    focus: jest.fn(),
+                    closest: () => {
+                        return {
+                            getAttribute: () => { }
+                        }
+                    },
+                    classList: {
+                        contains: () => { },
+                        remove: () => { }
+                    }
+                },
+                type: 'click',
+                target: {
+                    id: "",
+                    parentElement: { nodeName: "SUP" },
+                    dataset: { uri: "uri" },
+                    nodeName: "SUP"
+                },
+                clipboardData: {
+                    getData: () => { return pasteString }
+                }
+            }
+            let editor2 = {
+                on: (temp, cb) => {
+                    cb(event)
+                },
+                setContent: () => { },
+                children: ['<p class="paragraphNumeroUno">hello</p>'],
+                classList: { remove: () => { }, setAttribute: () => { } },
+                getContentAreaContainer: () => {
+                    return true;
+                },
+                targetElm: {
+                    findChildren: () => {
+                        return {
+                            length: 0
+                        };
+                    },
+                    closest: () => {
+                        return {
+                            getAttribute: () => { }
+                        }
+                    },
+                    getAttribute: () => {
+                        return {
+                            length: 0
+                        };
+                    },
+                    setAttribute: () => {
+                        return {
+                            length: 1
+                        }
+                    }
+                },
+                // ...tinymce.activeEditor
+            }
+            component.setProps({
+                ...props,
+                permissions: ["login", "logout"],
+                tagName: "blockquote",
+                elementId: "work:urn",
+                element: { type: "showhide", status: "wip" },
+                currentElement: { type: "element-authoredtext", status: "wip" },
+                model: {},
+                placeholder: "",
+                showHideType: "show",
+                handleEditorFocus: () => { }
+            })
+            component.update();
+
+            document.querySelector = () => {
+                return {
+                    getAttribute: () => { },
+                    classList: { remove: () => { } }
+                }
+            }
+            document.getElementById = () => {
+                return {
+                    innerHTML: "<div>blockquote</div>",
+                    classList: {
+                        remove: () => { }
+                    },
+                    setAttribute: () => { },
+                    getAttribute: () => { }
+                }
+            }
+            tinymce.activeEditor = {
+                id: "work:urn:1",
+                targetElm: {
+                    findChildren: () => {
+                        return {
+                            length: 0
+                        };
+                    },
+                    closest: () => {
+                        return {
+                            getAttribute: () => { }
+                        }
+                    },
+                    getAttribute: () => {
+                        return {
+                            length: 0
+                        };
+                    },
+                    setAttribute: () => {
+                        return {
+                            length: 1
+                        }
+                    }
+                },
+                selection: tinyMceEditor.selection,
+                dom: domObj,
+                on: (temp, cb) => {
+                    cb(event)
+                },
+                setContent: () => { },
+                children: ['<p class="paragraphNumeroUno">hello</p>'],
+                classList: { remove: () => { }, setAttribute: () => { } },
+                getContentAreaContainer: () => {
+                    return true;
+                },
+                ...editor2
+            }
+            instance.glossaryBtnInstance = {
+                setDisabled: () => { }
+            }
+            instance.footnoteBtnInstance = {
+                setDisabled: () => { }
+            }
+            const spyhandleClick = jest.spyOn(instance, 'handleClick')
+            instance.handleClick(event);
+            expect(spyhandleClick).toHaveBeenCalledWith(event);
+            spyhandleClick.mockClear()
+        });
+        it('Test-34.2-Method--32--handleClick-(!isSameTargetBasedOnDataId || !isSameTarget || !isSameByElementId)-TRUE-TermText==""', () => {
+
+            let event = {
+                preventDefault: jest.fn(),
+                stopPropagation: jest.fn(),
+                relatedTarget: {
+                    classList: []
+                },
+                clientX: jest.fn(),
+                clientY: jest.fn(),
+                currentTarget: {
+                    id: "work:urn:1",
+                    focus: jest.fn(),
+                    closest: () => {
+                        return {
+                            getAttribute: () => { return false }
+                        }
+                    },
+                    classList: {
+                        contains: () => { },
+                        remove: () => { }
+                    }
+                },
+                type: 'click',
+                target: {
+                    id: "",
+                    parentElement: { nodeName: "SUP" },
+                    dataset: { uri: "uri" },
+                    nodeName: "SUP"
+                },
+                clipboardData: {
+                    getData: () => { return pasteString }
+                },
+                getAttribute: () => { return true }
+            }
+            let editor2 = {
+                on: (temp, cb) => {
+                    cb(event)
+                },
+                setContent: () => { },
+                children: ['<p class="paragraphNumeroUno">hello</p>'],
+                classList: { remove: () => { }, setAttribute: () => { } },
+                getContentAreaContainer: () => {
+                    return true;
+                },
+                targetElm: {
+                    findChildren: () => {
+                        return {
+                            length: 0
+                        };
+                    },
+                    closest: () => {
+                        return {
+                            getAttribute: () => { }
+                        }
+                    },
+                    getAttribute: () => {
+                        return {
+                            length: 0
+                        };
+                    },
+                    setAttribute: () => {
+                        return {
+                            length: 1
+                        }
+                    }
+                }
+            }
+            component.setProps({
+                ...props,
+                permissions: ["login", "logout"],
+                tagName: "blockquote",
+                elementId: "work:urn",
+                element: { type: "showhide", status: "wip" },
+                currentElement: { type: "element-authoredtext", status: "wip" },
+                model: {},
+                placeholder: "",
+                showHideType: "show",
+                handleEditorFocus: () => { }
+            })
+            component.update();
+
+            document.querySelector = () => {
+                return {
+                    getAttribute: () => { },
+                    classList: { remove: () => { } }
+                }
+            }
+            document.querySelectorAll = () => {
+                return [{ innerHTML: "1in if condition" }, { innerHTML: "2in if condition" }]
+
+            }
+            document.getElementById = () => {
+                return {
+                    innerHTML: "<div>blockquote</div>",
+                    classList: {
+                        remove: () => { }
+                    },
+                    setAttribute: () => { },
+                    getAttribute: () => { }
+                }
+            }
+            tinymce.activeEditor = {
+                id: "work:urn:1",
+                targetElm: {
+                    findChildren: () => {
+                        return {
+                            length: 0
+                        };
+                    },
+                    closest: () => {
+                        return {
+                            getAttribute: () => { }
+                        }
+                    },
+                    getAttribute: () => {
+                        return {
+                            length: 0
+                        };
+                    },
+                    setAttribute: () => {
+                        return {
+                            length: 1
+                        }
+                    }
+                },
+                selection: tinyMceEditor.selection,
+                dom: domObj,
+                on: (temp, cb) => {
+                    cb(event)
+                },
+                setContent: () => { },
+                children: ['<p class="paragraphNumeroUno">hello</p>'],
+                classList: { remove: () => { }, setAttribute: () => { } },
+                getContentAreaContainer: () => {
+                    return true;
+                },
+                ...editor2
+            }
+            instance.glossaryBtnInstance = {
+                setDisabled: () => { }
+            }
+            instance.footnoteBtnInstance = {
+                setDisabled: () => { }
+            }
+            const spyhandleClick = jest.spyOn(instance, 'handleClick')
+            instance.handleClick(event);
+            expect(spyhandleClick).toHaveBeenCalledWith(event);
+            spyhandleClick.mockClear()
+        });
+        it('Test-34.3-Method--32--handleClick-(!isSameTargetBasedOnDataId || !isSameTarget || !isSameByElementId)-TRUE-TermText!=""', () => {
+            let event = {
+                preventDefault: jest.fn(),
+                stopPropagation: jest.fn(),
+                relatedTarget: {
+                    classList: []
+                },
+                clientX: jest.fn(),
+                clientY: jest.fn(),
+                currentTarget: {
+                    id: "work:urn:1",
+                    focus: jest.fn(),
+                    closest: () => {
+                        return {
+                            getAttribute: () => { return false }
+                        }
+                    },
+                    classList: {
+                        contains: () => { },
+                        remove: () => { }
+                    }
+                },
+                type: 'click',
+                target: {
+                    id: "",
+                    parentElement: { nodeName: "SUP" },
+                    dataset: { uri: "uri" },
+                    nodeName: "SUP"
+                },
+                clipboardData: {
+                    getData: () => { return pasteString }
+                },
+                getAttribute: () => { return true }
+            }
+            let editor2 = {
+                on: (temp, cb) => {
+                    cb(event)
+                },
+                setContent: () => { },
+                children: ['<p class="paragraphNumeroUno">hello</p>'],
+                classList: { remove: () => { }, setAttribute: () => { } },
+                getContentAreaContainer: () => {
+                    return true;
+                },
+                targetElm: {
+                    findChildren: () => {
+                        return {
+                            length: 0
+                        };
+                    },
+                    closest: () => {
+                        return {
+                            getAttribute: () => { }
+                        }
+                    },
+                    getAttribute: () => {
+                        return {
+                            length: 0
+                        };
+                    },
+                    setAttribute: () => {
+                        return {
+                            length: 1
+                        }
+                    }
+                }
+            }
+            document.querySelector = () => {
+                return {
+                    getAttribute: () => { },
+                    classList: { remove: () => { } }
+                }
+            }
+            document.querySelectorAll = () => {
+                return [{ innerHTML: "HEllo" }]
+
+            }
+            document.getElementById = () => {
+                return {
+                    innerHTML: "<div>blockquote</div>",
+                    classList: {
+                        remove: () => { }
+                    },
+                    setAttribute: () => { },
+                    getAttribute: () => { }
+                }
+            }
+            tinymce.$ = () => {
+                return {
+                    html: () => {
+                        return "termText"
+                    },
+                    find: () => {
+                        return {
+                            removeClass: () => { }
+                        }
+                    },
+                    remove: () => { },
+                    css: () => { }
+                }
+            }
+            tinymce.activeEditor = {
+                id: "work:urn:1",
+                targetElm: {
+                    findChildren: () => {
+                        return {
+                            length: 0
+                        };
+                    },
+                    closest: () => {
+                        return {
+                            getAttribute: () => { }
+                        }
+                    },
+                    getAttribute: () => {
+                        return {
+                            length: 0
+                        };
+                    },
+                    setAttribute: () => {
+                        return {
+                            length: 1
+                        }
+                    }
+                },
+                selection: tinyMceEditor.selection,
+                dom: domObj,
+                on: (temp, cb) => {
+                    cb(event)
+                },
+                setContent: () => { },
+                children: ['<p class="paragraphNumeroUno">hello</p>'],
+                classList: { remove: () => { }, setAttribute: () => { } },
+                getContentAreaContainer: () => {
+                    return true;
+                },
+                ...editor2
+            }
+
+            instance.glossaryBtnInstance = {
+                setDisabled: () => { }
+            }
+            instance.footnoteBtnInstance = {
+                setDisabled: () => { }
+            }
+            const spyhandleClick = jest.spyOn(instance, 'handleClick')
+            instance.handleClick(event);
+            expect(spyhandleClick).toHaveBeenCalledWith(event);
+            spyhandleClick.mockClear()
+        });
+        it('Test-34.4-Method--32--handleClick-config.slateType:"container-introduction"', () => {
+            config.slateType = "container-introduction"
+            let event = {
+                preventDefault: jest.fn(),
+                stopPropagation: jest.fn(),
+                relatedTarget: {
+                    classList: []
+                },
+                clientX: jest.fn(),
+                clientY: jest.fn(),
+                currentTarget: {
+                    id: "work:urn:1",
+                    focus: jest.fn(),
+                    closest: () => {
+                        return {
+                            getAttribute: () => { return false }
+                        }
+                    },
+                    classList: {
+                        contains: () => { },
+                        remove: () => { }
+                    }
+                },
+                type: 'click',
+                target: {
+                    id: "",
+                    parentElement: { nodeName: "SUP" },
+                    dataset: { uri: "uri" },
+                    nodeName: "SUP"
+                },
+                clipboardData: {
+                    getData: () => { return pasteString }
+                },
+                getAttribute: () => { return true }
+            }
+            let editor2 = {
+                on: (temp, cb) => {
+                    cb(event)
+                },
+                setContent: () => { },
+                children: ['<p class="paragraphNumeroUno">hello</p>'],
+                classList: { remove: () => { }, setAttribute: () => { } },
+                getContentAreaContainer: () => {
+                    return true;
+                },
+                targetElm: {
+                    findChildren: () => {
+                        return {
+                            length: 0
+                        };
+                    },
+                    closest: () => {
+                        return {
+                            getAttribute: () => { }
+                        }
+                    },
+                    getAttribute: () => {
+                        return {
+                            length: 0
+                        };
+                    },
+                    setAttribute: () => {
+                        return {
+                            length: 1
+                        }
+                    }
+                }
+            }
+            document.querySelector = () => {
+                return {
+                    getAttribute: () => { },
+                    classList: { remove: () => { } }
+                }
+            }
+            document.querySelectorAll = () => {
+                return [{ innerHTML: "HEllo" }]
+
+            }
+            document.getElementById = () => {
+                return {
+                    innerHTML: "<div>blockquote</div>",
+                    classList: {
+                        remove: () => { }
+                    },
+                    setAttribute: () => { },
+                    getAttribute: () => { }
+                }
+            }
+            tinymce.$ = () => {
+                return {
+                    html: () => {
+                        return "termText"
+                    },
+                    find: () => {
+                        return {
+                            removeClass: () => { }
+                        }
+                    },
+                    remove: () => { },
+                    css: () => { }
+                }
+            }
+            tinymce.activeEditor = {
+                id: "work:urn:1",
+                targetElm: {
+                    findChildren: () => {
+                        return {
+                            length: 0
+                        };
+                    },
+                    closest: () => {
+                        return {
+                            getAttribute: () => { }
+                        }
+                    },
+                    getAttribute: () => {
+                        return {
+                            length: 0
+                        };
+                    },
+                    setAttribute: () => {
+                        return {
+                            length: 1
+                        }
+                    }
+                },
+                selection: tinyMceEditor.selection,
+                dom: domObj,
+                on: (temp, cb) => {
+                    cb(event)
+                },
+                setContent: () => { },
+                children: ['<p class="paragraphNumeroUno">hello</p>'],
+                classList: { remove: () => { }, setAttribute: () => { } },
+                getContentAreaContainer: () => {
+                    return true;
+                },
+                ...editor2
+            }
+
+            instance.glossaryBtnInstance = {
+                setDisabled: () => { }
+            }
+            instance.footnoteBtnInstance = {
+                setDisabled: () => { }
+            }
+            const spyhandleClick = jest.spyOn(instance, 'handleClick')
+            instance.handleClick(event);
+            expect(spyhandleClick).toHaveBeenCalledWith(event);
+            spyhandleClick.mockClear()
+        });
+    });
+    describe('Test-35-Method--33--componentDidMount', () => {
+        it('Test-35-Method--33--componentDidMount-FIGURE Element', () => {
+
+            let event = {
+                preventDefault: jest.fn(),
+                stopPropagation: jest.fn(),
+                relatedTarget: {
+                    classList: []
+                },
+                clientX: jest.fn(),
+                clientY: jest.fn(),
+                currentTarget: {
+                    id: "work:urn:1",
+                    focus: jest.fn(),
+                    closest: () => {
+                        return {
+                            getAttribute: () => { return false }
+                        }
+                    },
+                    classList: {
+                        contains: () => { },
+                        remove: () => { }
+                    }
+                },
+                type: 'click',
+                target: {
+                    id: "",
+                    parentElement: { nodeName: "SUP" },
+                    dataset: { uri: "uri" },
+                    nodeName: "SUP"
+                },
+                clipboardData: {
+                    getData: () => { return pasteString }
+                },
+                getAttribute: () => { return true }
+            }
+            let editor2 = {
+                on: (temp, cb) => {
+                    cb(event)
+                },
+                setContent: () => { },
+                children: ['<p class="paragraphNumeroUno">hello</p>'],
+                classList: { remove: () => { }, setAttribute: () => { } },
+                getContentAreaContainer: () => {
+                    return true;
+                },
+                targetElm: {
+                    findChildren: () => {
+                        return {
+                            length: 0
+                        };
+                    },
+                    closest: () => {
+                        return {
+                            getAttribute: () => { }
+                        }
+                    },
+                    getAttribute: () => {
+                        return {
+                            length: 0
+                        };
+                    },
+                    setAttribute: () => {
+                        return {
+                            length: 1
+                        }
+                    }
+                }
+            }
+            document.querySelector = () => {
+                return {
+                    getAttribute: () => { },
+                    classList: { remove: () => { } }
+                }
+            }
+            document.querySelectorAll = () => {
+                return [{ innerHTML: "HEllo" }]
+
+            }
+            document.getElementById = () => {
+                return {
+                    innerHTML: "<div>blockquote</div>",
+                    classList: {
+                        remove: () => { },
+                        contains: () => { return true; }
+                    },
+                    setAttribute: () => { },
+                    getAttribute: () => { },
+
+                }
+            }
+            tinymce.$ = () => {
+                return {
+                    html: () => {
+                        return "termText"
+                    },
+                    find: () => {
+                        return {
+                            removeClass: () => { }
+                        }
+                    },
+                    remove: () => { },
+                    css: () => { },
+                    attr: () => { }
+                }
+            }
+            tinymce.activeEditor = {
+                id: "work:urn:1",
+                targetElm: {
+                    findChildren: () => {
+                        return {
+                            length: 0
+                        };
+                    },
+                    closest: () => {
+                        return {
+                            getAttribute: () => { }
+                        }
+                    },
+                    getAttribute: () => {
+                        return {
+                            length: 0
+                        };
+                    },
+                    setAttribute: () => {
+                        return {
+                            length: 1
+                        }
+                    }
+                },
+                selection: tinyMceEditor.selection,
+                dom: domObj,
+                on: (temp, cb) => {
+                    cb(event)
+                },
+                setContent: () => { },
+                children: ['<p class="paragraphNumeroUno">hello</p>'],
+                classList: { remove: () => { }, setAttribute: () => { } },
+                getContentAreaContainer: () => {
+                    return true;
+                },
+                ...editor2
+            }
+            component.setProps({
+                ...props,
+                permissions: ["login", "logout"],
+                tagName: "SPAN",
+                elementId: "work:urn",
+                element: { type: "figure", status: "wip" },
+                model: {},
+                placeholder: "",
+                activeElement: false
+            })
+            component.update();
+            jest.spyOn(window.localStorage.__proto__, 'setItem');
+            window.localStorage.__proto__.getItem = () => { return { "mockElement": "sample" }; };
+            instance.editorRef = { current: { id: "active:editor:id", style: { caretColor: "red" }, focus: () => { } } }
+            const spyFunction = jest.spyOn(instance, 'componentDidMount')
+            instance.componentDidMount();
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear()
+        });
     });
 });
+

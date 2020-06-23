@@ -82,20 +82,6 @@ export class CitationGroup extends Component {
                                     onClickCapture={this.context.onClickCapture}
                                     parentElement = {this.context.element}
                                 >
-                                     {
-                                        (isHovered, isPageNumberEnabled, activeElement, permissions) => (
-                                            <PageNumberElement 
-                                            updatePageNumber={this.context.updatePageNumber}
-                                            asideData={asideData}
-                                            parentUrn={parentUrn}
-                                            element={element}
-                                            isHovered={isHovered}
-                                            isPageNumberEnabled={isPageNumberEnabled}
-                                            activeElement={activeElement}
-                                            permissions={permissions}
-                                           />
-                                        )
-                                    }
                                 </ElementContainer>
                                 {
                                     <ElementSaprator

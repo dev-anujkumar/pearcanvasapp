@@ -108,6 +108,7 @@ function CommunicationChannel(WrappedComponent) {
                 case 'refreshElementWithTable':
                     {
                         this.setTableData(message.elementId, message.updatedData);
+                       
                     }
                     break;
                 case 'canvasBlocker':
@@ -283,7 +284,7 @@ function CommunicationChannel(WrappedComponent) {
                     "metaDataAnchorID": LOElements,
                     "elementVersionType": "element-learningobjectivemapping",
                     "loIndex" : loIndex,
-                    "slateUrn": config.slateManifestURN
+                    "slateVersionUrn": config.slateManifestURN
                 }
                 if(LOElements.length){
                 this.props.updateElement(LOWipData)
