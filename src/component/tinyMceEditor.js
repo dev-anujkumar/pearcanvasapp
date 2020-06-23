@@ -771,8 +771,7 @@ export class TinyMceEditor extends Component {
                 let key = e.keyCode || e.which;
                 if (key != undefined && (key === 8)) {
                     let selectedText = window.getSelection().toString();
-                    let currentElement = editor.selection.getNode();
-                    if(selectedText && activeElement && activeElement.innerText && selectedText == currentElement.innerText){
+                    if(selectedText && activeElement && activeElement.innerText && selectedText == activeElement.innerText){
                         setFormattingToolbar('removeTinymceSuperscript')
                     }
                 } 
