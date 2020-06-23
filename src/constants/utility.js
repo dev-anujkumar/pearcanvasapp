@@ -395,36 +395,3 @@ const htmlEntityList = {
     "§#9182;": ["⏞", ""],
     "§#9183;": ["⏟", ""],
 }
-
-/** This is a function to set Assessment Title for Quad Assessment
- */
-export const setAssessmentTitle = (props) => {
-    let assessmentTitle = null;
-    if (props && props.model && props.model.html && props.model.html.title) {
-        assessmentTitle = props.model.html.title
-    } else if (props && props.model && props.model.title && props.model.title.text) {
-        assessmentTitle = props.model.title.text
-    }
-    return assessmentTitle;
-}
-
-/** This is a function to set Assessment Title for Quad Assessment
- */
-export const setAssessmentUsageType = (props) => {
-    let usagetype = "";
-    if (props.model && props.model.type && props.model.type === "element-assessment" && props.model.elementdata && props.model.elementdata.usagetype) {
-        usagetype = props.model.elementdata.usagetype
-    } else if (props.model && props.model.figuretype && props.model.figuretype === "assessment" && props.model.figuredata && props.model.figuredata.elementdata && props.model.figuredata.elementdata.usagetype) {
-        usagetype = props.model.figuredata.elementdata.usagetype
-    } else if (props && props.usageTypeListData && props.usageTypeListData.usageTypeList) {
-        let listObj = props.usageTypeListData.usageTypeList
-        if (!(Object.keys(listObj).length === 0 && listObj.constructor === Object) && Object.values(listObj).find(type => type === "Quiz")) {  //object is not empty
-            usagetype = Object.values(listObj).find(type => type === "Quiz");
-        } else {
-            usagetype = "Quiz"
-        }
-    } else {
-        usagetype = "Quiz"
-    }
-    return usagetype;
-}
