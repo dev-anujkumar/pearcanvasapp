@@ -57,10 +57,10 @@ class ElementPopup extends React.Component {
     /**
      * Creates Title/Subtitle element if not present.
      */
-    createPopupUnit = (popupField, forceupdate, index, parentElement) => {
+    createPopupUnit = async (popupField, forceupdate, index, parentElement) => {
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
         config.popupCreationCallInProgress = true
-        this.props.createPopupUnit(popupField, parentElement, (currentElementData) => this.props.handleBlur(forceupdate, currentElementData, index, null), index, config.slateManifestURN)
+        await this.props.createPopupUnit(popupField, parentElement, (currentElementData) => this.props.handleBlur(forceupdate, currentElementData, index, null), index, config.slateManifestURN)
     }
     renderPopup = ()=>{        
         const {index, element, slateLockInfo} = this.props

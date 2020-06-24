@@ -1362,8 +1362,7 @@ export class TinyMceEditor extends Component {
         let elementId = ""
         if (this.props.element.type === "popup") {
             if ((this.props.popupField === "formatted-title" || this.props.popupField === "formatted-subtitle") && !this.props.currentElement) {
-               await this.props.createPopupUnit(this.props.popupField, true, this.props.index, this.props.element)
-               console.log("ID::>>>>", id)
+                await this.props.createPopupUnit(this.props.popupField, true, this.props.index, this.props.element)
                 elementId = this.props.currentElement && this.props.currentElement.id
             } else {
                 elementId = this.props.currentElement.id
