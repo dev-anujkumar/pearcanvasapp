@@ -27,10 +27,6 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
 
     let inputSubTypeEnum = inputSubType['enum'],
     inputPrimaryOptionEnum = inputPrimaryOptionType['enum']
-    if(oldElementData.figuretype==="assessment"){
-        inputPrimaryOptionEnum=inputSubType['enum'];
-        inputSubTypeEnum=document.querySelector(`div[data-id='${oldElementData.id}'] span.singleAssessment_Dropdown_currentLabel`).innerText.toUpperCase().replace(" ", "_").replace("-", "_");
-    }
     
     // Output Element
     const outputPrimaryOptionsList = elementTypes[newElementData['elementType']],
@@ -70,37 +66,15 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
 
     let outputSubTypeEnum = outputSubType['enum'],
     outputPrimaryOptionEnum = outputPrimaryOptionType['enum']
-    if (oldElementData.figuretype === "assessment") {
-        let usageType=document.querySelector(`div[data-id='${oldElementData.id}'] span.singleAssessment_Dropdown_currentLabel`).innerText;
-        outputPrimaryOptionEnum=outputSubType['enum'];
-        outputSubTypeEnum = usageType.toUpperCase().replace(" ", "_").replace("-", "_");
-        oldElementData.figuredata.elementdata.usagetype=usageType;
-        let assessmentFormat = outputSubType.text.toLowerCase();
-        let assessmentItemType ="";
-        if(assessmentFormat==="cite" || assessmentFormat==="puf" || assessmentFormat==="learnosity"){
-            assessmentItemType ="assessmentItem";
-        }else{
-            assessmentItemType = "tdxAssessmentItem";
+
+        if (oldElementData.figuretype === "assessment") {
+            /**-----------Sidebar Conversion fro Single Assessment-----------*/
+            let assessmentData = prepareAssessmentDataForConversion(oldElementData, outputSubType.text)
+            oldElementData = assessmentData.oldElementData;
+            inputSubTypeEnum = inputSubType['enum'];
+            outputSubTypeEnum = outputSubType['enum'];
         }
-        // oldElementData['html']['title'] = "";
-        // oldElementData.figuredata.id = "";                                           //PCAT-6792 fixes
-        // oldElementData.figuredata.elementdata.posterimage.imageid = "";              //PCAT-7961 fixes
-        oldElementData.figuredata.elementdata.assessmentid = "";
-        oldElementData.figuredata.elementdata.assessmentitemid = "";
-        oldElementData.figuredata.elementdata.assessmentformat=assessmentFormat;
-        oldElementData.figuredata.elementdata.assessmentitemtype=assessmentItemType;
-        oldElementData && oldElementData.html && oldElementData.html.title ? oldElementData.html.title ="": null;
-        oldElementData && oldElementData.title && oldElementData.title.text ? oldElementData.title.text ="": null;
-        /** [PCAT-7961] | case(1) - As no unique figuredata.id is present for the assessment,the  'figuredata.id' key is removed */
-        if (oldElementData && oldElementData.figuredata && (oldElementData.figuredata.id || oldElementData.figuredata.id=="")) {
-            delete oldElementData.figuredata.id;
-        }
-        /** [PCAT-7961] | case(2) - As no image is present for the assessment,the  'posterimage' key is removed */
-        let isPosterImage = oldElementData && oldElementData.figuredata && oldElementData.figuredata.elementdata && oldElementData.figuredata.elementdata.posterimage
-        if(isPosterImage){
-            delete oldElementData.figuredata.elementdata.posterimage
-        }
-    }
+
     /**
      * Patch [code in If block] - in case list is being converted from toolbar and there are some unsaved changes in current element
      * then send dom html data instead of sending store data
@@ -138,6 +112,14 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             outputSubTypeEnum = "NA"
         }
     }
+        /**
+         * case - if element list is being converted into paragraph from sidepanel
+         * [BG-2515] | Remove subtype during list to paragraph or heading conversion
+         */
+        if (oldElementInfo.primaryOption === "primary-list" && (newElementData.primaryOption === "primary-paragraph" || newElementData.primaryOption === "primary-heading") && oldElementData.subtype) {
+            delete oldElementData.subtype
+        }
+
     if (oldElementData.subtype && oldElementData.subtype === "workedexample") {
         if (outputSubTypeEnum && outputSubTypeEnum === "WORK_EXAMPLE_2") {
             oldElementData.designtype = "workedexample2"
@@ -398,6 +380,44 @@ function prepareDataForConversionTcm(updatedDataID, getState, dispatch,versionid
             data: tcmData
         }
     })
+}
+
+const prepareAssessmentDataForConversion = (oldElementData, format) => {
+
+    let usageType = document.querySelector(`div[data-id='${oldElementData.id}'] span.singleAssessment_Dropdown_currentLabel`).innerText;
+    let assessmentFormat = format == "Elm" ? "puf" : format.toLowerCase();
+    let assessmentItemType = assessmentFormat == 'tdx' ? "tdxAssessmentItem" : "assessmentItem";
+
+    oldElementData.figuredata.elementdata={
+        usagetype : usageType,
+        assessmentid : "",
+        assessmentitemid : "",
+        assessmentformat : assessmentFormat,
+        assessmentitemtype : assessmentItemType
+    }
+
+    if (oldElementData && oldElementData.html && oldElementData.html.title) {
+        oldElementData.html.title = "";
+    }
+    if (oldElementData && oldElementData.title && oldElementData.title.text) {
+        oldElementData.title.text = "";
+    }
+    
+    /** [PCAT-6792] | WIP changes in embedded assessment */
+    /** [PCAT-7961] | case(1) - As no unique figuredata.id is present for the assessment,the  'figuredata.id' key is removed */
+    if (oldElementData && oldElementData.figuredata && (oldElementData.figuredata.id || oldElementData.figuredata.id == "")) {
+        delete oldElementData.figuredata.id;
+    }
+    /** [PCAT-7961] | case(2) - As no image is present for the assessment,the  'posterimage' key is removed */
+    let isPosterImage = oldElementData && oldElementData.figuredata && oldElementData.figuredata.elementdata && oldElementData.figuredata.elementdata.posterimage;
+    if (isPosterImage) {
+        delete oldElementData.figuredata.elementdata.posterimage
+    }
+    let asessmentConversionData = {
+        oldElementData: oldElementData
+    }
+
+    return asessmentConversionData
 }
 
 export const handleElementConversion = (elementData, store, activeElement, fromToolbar,showHideObj) => dispatch => {

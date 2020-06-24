@@ -32,6 +32,7 @@ import {publishContent,logout} from '../../js/header'
 import store from './../../appstore/store'
 import { hideBlocker } from '../../js/toggleLoader';
 import {getAllSlatesData} from '../../js/getAllSlatesData'
+import { fetchUsageTypeData } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 export class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
@@ -109,7 +110,8 @@ export class CanvasWrapper extends Component {
             observer.observe(targetNode, config);
     }
     
-    handleCommentspanel = (elementId,index) => {
+    handleCommentspanel = (event,elementId,index) => {
+         event.stopPropagation();
         this.props.toggleCommentsPanel(true);
         this.props.fetchCommentByElement(elementId,index);
         sendDataToIframe({
@@ -268,6 +270,7 @@ export default connect(
         setSlateParent,
         openPopupSlate,
         getTableEditorData,
-        getAllSlatesData
+        getAllSlatesData,
+        fetchUsageTypeData
     }
 )(CommunicationChannelWrapper(CanvasWrapper));
