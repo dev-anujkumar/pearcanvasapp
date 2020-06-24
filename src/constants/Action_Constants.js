@@ -12,6 +12,7 @@ export const SET_PARENT_ASIDE_DATA = "SET_PARENT_ASIDE_DATA"
 export const SET_PARENT_SHOW_DATA = "SET_PARENT_SHOW_DATA"
 export const GET_ALL_SLATES_DATA = "GET_ALL_SLATES_DATA"
 export const SET_CURRENT_SLATE_DATA = "SET_CURRENT_SLATE_DATA"
+export const GET_USAGE_TYPE = "GET_USAGE_TYPE"
 
 /*---------------Comments Panel ----------------------*/
 export const FETCH_COMMENTS = 'FETCH_COMMENTS'

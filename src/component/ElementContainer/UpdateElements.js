@@ -355,7 +355,8 @@ export const generateAssessmentData = (index, previousElementData, elementType, 
     let assessmenttTitleHTML = `<p>${assessmenttitle}</p>`;
     let dataToSend = {
         ...previousElementData,
-        inputType: elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
+        inputType : elementTypes[elementType][primaryOption]['enum'],
+        inputSubType: elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
         html: {
             title: assessmenttTitleHTML
         }
@@ -386,10 +387,8 @@ export const generateAssessmentData = (index, previousElementData, elementType, 
          delete previousElementData.figuredata.elementdata.posterimage
     }
 
-
     let usageType = document.querySelector(assessmentNodeSelector + 'span.singleAssessment_Dropdown_currentLabel').innerText;
     dataToSend.figuredata.elementdata.usagetype = usageType;
-    dataToSend.inputSubType = usageType && usageType.toUpperCase().replace(" ", "_").replace("-", "_");
 
     return dataToSend;
 }
@@ -401,14 +400,17 @@ export const generateAssessmentData = (index, previousElementData, elementType, 
  * @param {*} primaryOption 
  * @param {*} secondaryOption 
  */
-export const generateAssessmentSlateData = (index, previousElementData, elementType, primaryOption, secondaryOption)=>{
-    let dataToSend = {...previousElementData,
-        inputType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
-        inputSubType : previousElementData.elementdata.usagetype.toUpperCase().replace(" ", "_").replace("-", "_"),
+export const generateAssessmentSlateData = (index, previousElementData, elementType, primaryOption, secondaryOption) => {
+    let assessmenttitle = previousElementData.elementdata.assessmentformat == 'learningtemplate' ? previousElementData.elementdata.templatelabel : previousElementData.elementdata.assessmenttitle;
+    let dataToSend = {
+        ...previousElementData,
+        inputType: elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
+        inputSubType: "NA", /** The usageType dependency on inputSubType removed */
         html: {
-            title: "<p></p>"
-        }}
-        return dataToSend;
+            title: `<p>${assessmenttitle}</p>`
+        }
+    }
+    return dataToSend;
 }
 
 /**

@@ -1,0 +1,16 @@
+/** -------------------------------------------UsageType Scrollbar CSS--------------------------------------------------- **/
+
+ul.singleAssessment_Dropdown_options::-webkit-scrollbar-track, ul.slate_assessment_metadata_type_dropdown_options::-webkit-scrollbar-track {
+    border-radius: 21px;
+    background-color: #E5E5E5;
+}
+
+ul.singleAssessment_Dropdown_options::-webkit-scrollbar, ul.slate_assessment_metadata_type_dropdown_options::-webkit-scrollbar {
+    width: 7px;
+    background-color: #E5E5E5;
+}
+
+ul.singleAssessment_Dropdown_options::-webkit-scrollbar-thumb, ul.slate_assessment_metadata_type_dropdown_options::-webkit-scrollbar-thumb {
+    border-radius: 21px;
+    background-color: #4E4E4E;
+}
