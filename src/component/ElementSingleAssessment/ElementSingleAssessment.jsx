@@ -270,7 +270,7 @@ static getDerivedStateFromProps(nextProps, prevState) {
                 <div className="singleAssessment_Dropdown_Container">
                     <div className="singleAssessment_Dropdown_SelectLabel">Select usage type</div>
                     <div className={this.state.asseessmentUsageTypeDropdown ? "singleAssessment_Dropdown_activeDropdown select" : "singleAssessment_Dropdown_activeDropdown notselect"} onClick={ !hasReviewerRole() && this.toggleUsageTypeDropdown} >
-                        <span className="singleAssessment_Dropdown_currentLabel">{this.state.activeAsseessmentUsageType}</span>
+                        <span className="singleAssessment_Dropdown_currentLabel">{this.state.activeAsseessmentUsageType?this.state.activeAsseessmentUsageType:'Quiz'}</span>
                         <span className="singleAssessment_Dropdown_arrow">{dropdownArrow}</span>
                     </div>
 
