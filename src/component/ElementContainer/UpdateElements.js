@@ -10,26 +10,14 @@ let indivisualData = {
     mathml: [ ]
 }
 
-const replaceUnwantedtags = (html) => {
+const replaceUnwantedtags = (html,flag) => {
     let tempDiv = document.createElement('div'); 
     tempDiv.innerHTML = html;
     tinyMCE.$(tempDiv).find('br').remove();
-    return tempDiv.innerHTML;
-}
-
-/** This function removes empty tags from innerHTML and removes unwanted characters from innerText */
-const replaceEmptyTags = (html, text) => {
-    // html.replace(/(<sup><\/sup>|<sup><br><\/sup>)/g, "");
-    let tempData = {};
-    html.replace(/<br>/g, "");
-    html = html.replace(/(<sup><\/sup>)/g, "");
-    text = text.replace(/(\r\n|\n|\r)/gm, '');
-    tempData = {
-        html: html,
-        text: text
+    if(flag){
+        tempDiv.innerHTML = tempDiv.innerHTML.replace(/<br>/g, "").replace(/(<sup><\/sup>)/g, "");
     }
-
-    return tempData
+    return tempDiv.innerHTML;
 }
 
 /**
@@ -56,19 +44,15 @@ export const generateCommonFigureData = (index, previousElementData, elementType
         captionText = captionDOM ? captionDOM.innerText : "",
         creditsText = creditsDOM ? creditsDOM.innerText : ""
 
-    captionHTML = replaceUnwantedtags(captionHTML)
-    creditsHTML = replaceUnwantedtags(creditsHTML)
-    subtitleHTML = replaceUnwantedtags(subtitleHTML)
-    titleHTML = replaceUnwantedtags(titleHTML)
+    captionHTML = replaceUnwantedtags(captionHTML,true)
+    creditsHTML = replaceUnwantedtags(creditsHTML,true)
+    subtitleHTML = replaceUnwantedtags(subtitleHTML,true)
+    titleHTML = replaceUnwantedtags(titleHTML,false)
 
     /** [ BG-2528 ]|On deleting footnote and its data wip is showing invalid properties for Char fields */
-    captionHTML = replaceEmptyTags(captionHTML, captionText).html;
-    creditsHTML = replaceEmptyTags(creditsHTML, creditsText).html;
-    subtitleHTML = replaceEmptyTags(subtitleHTML, subtitleText).html;
-
-    subtitleText = replaceEmptyTags(subtitleHTML, subtitleText).text;
-    captionText = replaceEmptyTags(captionHTML, captionText).text;
-    creditsText = replaceEmptyTags(creditsHTML, creditsText).text;
+    subtitleText = subtitleText.replace(/(\r\n|\n|\r)/gm, '');
+    captionText = captionText.replace(/(\r\n|\n|\r)/gm, '');
+    creditsText = creditsText.replace(/(\r\n|\n|\r)/gm, '');
 
 
     let data = {
@@ -132,19 +116,15 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
         captionText = captionDOM ? captionDOM.innerText : "",
         creditsText = creditsDOM ? creditsDOM.innerText : ""
 
-        captionHTML = replaceUnwantedtags(captionHTML)
-        creditsHTML = replaceUnwantedtags(creditsHTML)
-        subtitleHTML = replaceUnwantedtags(subtitleHTML)
-        titleHTML = replaceUnwantedtags(titleHTML)
-
-    /** [ BG-2528 ]|On deleting footnote and its data wip is showing invalid properties for Char fields */
-    captionHTML = replaceEmptyTags(captionHTML, captionText).html;
-    creditsHTML = replaceEmptyTags(creditsHTML, creditsText).html;
-    subtitleHTML = replaceEmptyTags(subtitleHTML, subtitleText).html;
-
-    subtitleText = replaceEmptyTags(subtitleHTML, subtitleText).text;
-    captionText = replaceEmptyTags(captionHTML, captionText).text;
-    creditsText = replaceEmptyTags(creditsHTML, creditsText).text;
+        captionHTML = replaceUnwantedtags(captionHTML,true)
+        creditsHTML = replaceUnwantedtags(creditsHTML,true)
+        subtitleHTML = replaceUnwantedtags(subtitleHTML,true)
+        titleHTML = replaceUnwantedtags(titleHTML,false)
+    
+        /** [ BG-2528 ]|On deleting footnote and its data wip is showing invalid properties for Char fields */
+        subtitleText = subtitleText.replace(/(\r\n|\n|\r)/gm, '');
+        captionText = captionText.replace(/(\r\n|\n|\r)/gm, '');
+        creditsText = creditsText.replace(/(\r\n|\n|\r)/gm, '');
 
         if('posterimage' in previousElementData.figuredata && typeof(previousElementData.figuredata.posterimage)!=="object"){
             delete previousElementData.figuredata.posterimage;
@@ -233,19 +213,15 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
         captionText = captionDOM ? captionDOM.innerText : "",
         creditsText = creditsDOM ? creditsDOM.innerText : ""
 
-        captionHTML = replaceUnwantedtags(captionHTML)
-        creditsHTML = replaceUnwantedtags(creditsHTML)
-        subtitleHTML = replaceUnwantedtags(subtitleHTML)
-        titleHTML = replaceUnwantedtags(titleHTML)
-
-    /** [ BG-2528 ]|On deleting footnote and its data wip is showing invalid properties for Char fields */
-    captionHTML = replaceEmptyTags(captionHTML, captionText).html;
-    creditsHTML = replaceEmptyTags(creditsHTML, creditsText).html;
-    subtitleHTML = replaceEmptyTags(subtitleHTML, subtitleText).html;
-
-    subtitleText = replaceEmptyTags(subtitleHTML, subtitleText).text;
-    captionText = replaceEmptyTags(captionHTML, captionText).text;
-    creditsText = replaceEmptyTags(creditsHTML, creditsText).text;
+        captionHTML = replaceUnwantedtags(captionHTML,true)
+        creditsHTML = replaceUnwantedtags(creditsHTML,true)
+        subtitleHTML = replaceUnwantedtags(subtitleHTML,true)
+        titleHTML = replaceUnwantedtags(titleHTML,false)
+    
+        /** [ BG-2528 ]|On deleting footnote and its data wip is showing invalid properties for Char fields */
+        subtitleText = subtitleText.replace(/(\r\n|\n|\r)/gm, '');
+        captionText = captionText.replace(/(\r\n|\n|\r)/gm, '');
+        creditsText = creditsText.replace(/(\r\n|\n|\r)/gm, '');
 
     let data = {
         ...previousElementData,
@@ -323,20 +299,16 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
         creditsText = creditsDOM ? creditsDOM.innerText : "",
         eleText = textDOM ? textDOM.innerText : ""
 
-    captionHTML = replaceUnwantedtags(captionHTML)
-    creditsHTML = replaceUnwantedtags(creditsHTML)
-    subtitleHTML = replaceUnwantedtags(subtitleHTML)
-    titleHTML = replaceUnwantedtags(titleHTML)
-    textHTML = replaceUnwantedtags(textHTML)
-    
-    /** [ BG-2528 ]|On deleting footnote and its data wip is showing invalid properties for Char fields */
-    captionHTML = replaceEmptyTags(captionHTML, captionText).html;
-    creditsHTML = replaceEmptyTags(creditsHTML, creditsText).html;
-    subtitleHTML = replaceEmptyTags(subtitleHTML, subtitleText).html;
+    captionHTML = replaceUnwantedtags(captionHTML, true)
+    creditsHTML = replaceUnwantedtags(creditsHTML, true)
+    subtitleHTML = replaceUnwantedtags(subtitleHTML, true)
+    titleHTML = replaceUnwantedtags(titleHTML, false)
+    textHTML = replaceUnwantedtags(textHTML, false)
 
-    subtitleText = replaceEmptyTags(subtitleHTML, subtitleText).text;
-    captionText = replaceEmptyTags(captionHTML, captionText).text;
-    creditsText = replaceEmptyTags(creditsHTML, creditsText).text;
+    /** [ BG-2528 ]|On deleting footnote and its data wip is showing invalid properties for Char fields */
+    subtitleText = subtitleText.replace(/(\r\n|\n|\r)/gm, '');
+    captionText = captionText.replace(/(\r\n|\n|\r)/gm, '');
+    creditsText = creditsText.replace(/(\r\n|\n|\r)/gm, '');
 
     let data = {
         ...previousElementData,
