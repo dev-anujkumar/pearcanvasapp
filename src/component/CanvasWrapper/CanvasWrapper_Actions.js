@@ -659,7 +659,8 @@ const appendCreatedElement = async (paramObj, responseData) => {
         parentElement,
         dispatch,
         cb,
-        popupField
+        popupField,
+        createdFromFootnote
     } = paramObj
 
     let elemIndex = `cypress-${popupElementIndex}`
@@ -699,7 +700,7 @@ const appendCreatedElement = async (paramObj, responseData) => {
             slateLevelData: newslateData
         }
     })
-    if(cb) await cb(responseData)
+    if(cb && !createdFromFootnote) await cb(responseData)
 }
 
 /**
@@ -736,7 +737,7 @@ const getRequestData = (parentElement, popupField) => {
     }
     return dataToSend
 }
-export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex, slateManifestURN) => (dispatch, getState) => {
+export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex, slateManifestURN, createdFromFootnote) => (dispatch, getState) => {
     let _requestData =  getRequestData(parentElement, popupField)
     let url = `${config.REACT_APP_API_URL}v1/slate/element`
     return axios.post(url, 
@@ -755,7 +756,8 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
             parentElement,
             dispatch,
             cb,
-            popupField
+            popupField,
+            createdFromFootnote
         }
         appendCreatedElement(argObj, response.data)
 

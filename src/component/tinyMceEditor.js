@@ -839,6 +839,8 @@ export class TinyMceEditor extends Component {
                     }
                 }
             }
+            clickedX = editor.selection.getBoundingClientRect() && editor.selection.getBoundingClientRect().left || 0;
+            clickedY = editor.selection.getBoundingClientRect() && editor.selection.getBoundingClientRect().top || 0;
         });
     }
 
@@ -1362,7 +1364,7 @@ export class TinyMceEditor extends Component {
         let elementId = ""
         if (this.props.element.type === "popup") {
             if ((this.props.popupField === "formatted-title" || this.props.popupField === "formatted-subtitle") && !this.props.currentElement) {
-                await this.props.createPopupUnit(this.props.popupField, true, this.props.index, this.props.element)
+                await this.props.createPopupUnit(this.props.popupField, true, this.props.index, this.props.element, true)
                 elementId = this.props.currentElement && this.props.currentElement.id
             } else {
                 elementId = this.props.currentElement.id
@@ -1410,6 +1412,9 @@ export class TinyMceEditor extends Component {
                     document.getElementById(tinyMCE.activeEditor.id).classList.remove("place-holder")
                 }
                 else {
+                    if (this.props.element.type === "popup") {
+                        editor.selection.setCursorLocation(editor.selection.getRng().startContainer, editor.selection.getRng().startOffset)
+                    }
                     editor.insertContent(`<sup><a href="#" id = "${res.data.id}" data-uri="${res.data.id}" data-footnoteelementid="${res.data.id}" class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>`);
                 }
                 this.toggleGlossaryandFootnotePopup(true, "Footnote", res.data.id, () => { this.toggleGlossaryandFootnoteIcon(true); });
