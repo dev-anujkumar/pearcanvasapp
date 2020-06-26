@@ -55,56 +55,58 @@ export const apoSearchSaveAction = (apoObject, args) => {
   }
 }
 
-export const getCurrentlyLinkedImage = (id, cb) => {
+// export const getCurrentlyLinkedImage = (id, cb) => {
 
-  let url = config.NARRATIVE_API_ENDPOINT+"entity/" + id + "/versions";
-  let currentlyLinkedData = {};
+//   let url = config.NARRATIVE_API_ENDPOINT+"entity/" + id + "/versions";
+//   let currentlyLinkedData = {};
 
-  sendDataToIframe({'type': ShowLoader,'message': { status: true }});
+//   sendDataToIframe({'type': ShowLoader,'message': { status: true }});
 
-  return axios.get(url, {
-    headers: {
-      ApiKey: config.STRUCTURE_APIKEY,
-      PearsonSSOSession: config.ssoToken
-    }
-  }).then((res) => {
-    if (res.data.length) {
+//   return axios.get(url,{
+//     headers: {
+//       'Content-Type': 'application/json',
+//       ApiKey: config.STRUCTURE_APIKEY,
+//       PearsonSSOSession: config.ssoToken
+//     }
+//   }).then((res) => {
+//     if (res.data.length) {
 
-      let workId = res.data[res.data.length - 1].versionUrn;
+//       let workId = res.data[res.data.length - 1].versionUrn;
 
-      let workUrl = config.NARRATIVE_API_ENDPOINT+"v2/" + workId + "/content"
-      axios.get(workUrl, {
-        headers: {
-          ApiKey: config.STRUCTURE_APIKEY,
-          PearsonSSOSession: config.ssoToken
-        }
-      }).then((res1) => {
-        sendDataToIframe({'type': HideLoader,'message': { status: false }});
-        currentlyLinkedData.id=res1.data.id;
-        currentlyLinkedData.title=res1.data.title.text;
-        cb(currentlyLinkedData)
-      }).catch((err) => {
-        sendDataToIframe({'type': HideLoader,'message': { status: false }});
-        cb(currentlyLinkedData);
-        console.log("err from narrative api", err)
-      })
+//       let workUrl = config.NARRATIVE_API_ENDPOINT+"v2/" + workId + "/content"
+//       axios.get(workUrl, {
+//         headers: {
+//           'Content-Type': 'application/json',
+//           ApiKey: config.STRUCTURE_APIKEY,
+//           PearsonSSOSession: config.ssoToken
+//         }
+//       }).then((res1) => {
+//         sendDataToIframe({'type': HideLoader,'message': { status: false }});
+//         currentlyLinkedData.id=res1.data.id;
+//         currentlyLinkedData.title=res1.data.title.text;
+//         cb(currentlyLinkedData)
+//       }).catch((err) => {
+//         sendDataToIframe({'type': HideLoader,'message': { status: false }});
+//         cb(currentlyLinkedData);
+//         console.log("err from narrative api", err)
+//       })
 
-    }
-    else{
-      sendDataToIframe({'type': HideLoader,'message': { status: false }});
-      cb(currentlyLinkedData);
-    }
+//     }
+//     else{
+//       sendDataToIframe({'type': HideLoader,'message': { status: false }});
+//       cb(currentlyLinkedData);
+//     }
 
-  }).catch((err) => {
-    sendDataToIframe({'type': HideLoader,'message': { status: false }});
-    cb(currentlyLinkedData);
-    console.log("err from vesion api", err)
-  })
+//   }).catch((err) => {
+//     sendDataToIframe({'type': HideLoader,'message': { status: false }});
+//     cb(currentlyLinkedData);
+//     console.log("err from vesion api", err)
+//   })
 
-  // return cb(mockData.images.filter((value, key) => {
-  //   return value.entityUrn == id
-  // }))
-}
+//   // return cb(mockData.images.filter((value, key) => {
+//   //   return value.entityUrn == id
+//   // }))
+// }
 
 /**
  * Get images from manifest Api
@@ -196,4 +198,67 @@ export async function getAssetPopoverId(workUrn) {
     sendDataToIframe({'type': HideLoader,'message': { status: false }});
     console.log('Error in Create assetpopover id Api', err)
   }
+}
+
+export const getCurrentlyLinkedImage = async (id, cb) => {
+
+  let url = config.NARRATIVE_API_ENDPOINT + "entity/" + id + "/versions";
+  let currentlyLinkedData = {};
+
+  try {
+    sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+    let response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'PearsonSSOSession': config.ssoToken,
+        'apikey': config.APO_API_KEY,
+      }
+    })
+
+    let data = await response.json()
+    if (data.length) {
+
+      let workId = data[data.length - 1].versionUrn;
+
+        currentlyLinkedData = await getElementVersionContent(workId)
+        cb(currentlyLinkedData)
+ 
+    } else {
+      sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
+      cb(currentlyLinkedData);
+    }
+
+  } catch (err) {
+    sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
+    cb(currentlyLinkedData);
+    console.log("err from narrative api", err)
+  }
+
+
+}
+
+export const getElementVersionContent = async (workId) =>{
+  let workUrl = config.NARRATIVE_API_ENDPOINT+"v2/" + workId + "/content"
+  let currentlyLinkedData = {};
+  try {
+      sendDataToIframe({'type': ShowLoader,'message': { status: true }});
+      let response = await fetch(workUrl, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'PearsonSSOSession': config.ssoToken,
+          'apikey': config.APO_API_KEY,
+        }
+      })    
+      let data = await response.json()
+          sendDataToIframe({'type': HideLoader,'message': { status: false }});
+          currentlyLinkedData.id=data.id;
+          currentlyLinkedData.title=data.title.text;
+          return currentlyLinkedData
+    } catch (err) {
+      sendDataToIframe({'type': HideLoader,'message': { status: false }});        
+      console.log("err from narrative api", err)
+      return currentlyLinkedData
+    }
 }
