@@ -16,6 +16,7 @@ import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import config from '../../config/config.js'
 const { REACT_APP_API_URL, API_URL, projectUrn, STRUCTURE_APIKEY, ssoToken, GET_ASSETPOPOVER_ID, APO_API_KEY } = config;
 import searchIcon from './asset_popover_search_icon.svg';
+import { customEvent } from '../../js/utils';
 class AssetPopoverSearch extends React.Component {
     constructor(props) {
         super(props);
