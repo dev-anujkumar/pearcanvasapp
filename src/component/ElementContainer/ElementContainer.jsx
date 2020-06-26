@@ -940,7 +940,8 @@ class ElementContainer extends Component {
     * @param {*} parentElement
     */
     createPoetryElements = (poetryField, forceupdate, index, parentElement) => {
-         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+        config.popupCreationCallInProgress = true
         this.props.createPoetryUnit(poetryField, parentElement, (currentElementData) =>
         this.handleBlur(forceupdate, currentElementData, index, null), index, config.slateManifestURN)
     }

@@ -1110,7 +1110,8 @@ export class TinyMceEditor extends Component {
      * @param {*} args
      */
     pastePreProcess = (plugin, args) => {
-        if (this.props.element && this.props.element.figuretype && this.props.element.figuretype === "codelisting" && this.notFormatting) {
+        let activeElement = tinymce.activeEditor.dom.getParent(tinymce.activeEditor.selection.getStart(), '.cypress-editable');
+        if (this.props.element && this.props.element.figuretype && this.props.element.figuretype === "codelisting" && this.notFormatting && (activeElement && activeElement.nodeName === 'CODE')) {
             args.content = this.copyContent;
             this.copyContent = '';
             return;
@@ -1131,7 +1132,8 @@ export class TinyMceEditor extends Component {
     }
 
     pastePostProcess = (plugin, args) => {
-        if (this.props.element && this.props.element.figuretype && this.props.element.figuretype === "codelisting" && this.notFormatting) {
+        let activeElement = tinymce.activeEditor.dom.getParent(tinymce.activeEditor.selection.getStart(), '.cypress-editable');
+        if (this.props.element && this.props.element.figuretype && this.props.element.figuretype === "codelisting" && this.notFormatting && (activeElement && activeElement.nodeName === 'CODE')) {
             let paste_content = args.node.innerHTML;
             let tempArr = paste_content.split("<br>");
             let nodesFragment = document.createDocumentFragment();
