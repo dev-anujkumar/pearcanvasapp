@@ -62,7 +62,7 @@ class ElementButton extends Component {
                     </span>
                 break;
             case buttonTypes.COMMENT_FLAG:
-                buttonJSX = <span className="btn-element small flag-icon" title="flag" onClick={()=>clickHandlerFn(elementId)}>
+                buttonJSX = <span className="btn-element small flag-icon" title="flag" onClick={(e)=>clickHandlerFn(e,elementId)}>
                     {noteFlag}
                     </span>
                 break;

@@ -21,7 +21,7 @@ import {
 
 export const toolTypeFilterSelectedAction = (toolType, learningSystem) => dispatch => {
 
-  let url = config.COREAPI_ENDPOINT + `/learningtemplate/v2/?learningsystem= ${learningSystem}&&type=${toolType}`
+  let url = config.ASSESSMENT_ENDPOINT + `learningtemplate/v2/?learningsystem= ${learningSystem}&&type=${toolType}`
   return axios.get(url,
     {
       headers: {
@@ -63,7 +63,7 @@ export const toolTypeFilterSelectedAction = (toolType, learningSystem) => dispat
 
 export const learningToolSearchAction = (learningToolSearchValue, toolType1, learningSystem) => dispatch => {
 
-  let url = config.COREAPI_ENDPOINT + `/learningtemplate/v2/?learningsystem= ${learningSystem}&&type=${toolType1}&&keyword=${learningToolSearchValue}`
+  let url = config.ASSESSMENT_ENDPOINT + `learningtemplate/v2/?learningsystem= ${learningSystem}&&type=${toolType1}&&keyword=${learningToolSearchValue}`
   if (learningToolSearchValue) {
     return axios.get(url,
       {
@@ -99,7 +99,7 @@ export const learningToolSearchAction = (learningToolSearchValue, toolType1, lea
 
 export const openLTFunction = () => dispatch => {
 
-  let url = config.COREAPI_ENDPOINT + '/learningtemplate/v2/taxonomy/disciplines?locale=en';
+  let url = config.ASSESSMENT_ENDPOINT + 'learningtemplate/v2/taxonomy/disciplines?locale=en';
     return axios.get(url,
       {
         headers: {

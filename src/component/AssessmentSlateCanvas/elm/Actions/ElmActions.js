@@ -80,7 +80,7 @@ export const fetchAssessmentItem = (assessmentId) => (dispatch) => {
             payload: {
                 data: [],
                 errFlag: true,
-                apiStatus: error.response.status,
+                apiStatus: "404",
                 isLoading: false
             }
         })

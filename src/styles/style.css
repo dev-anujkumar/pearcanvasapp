@@ -281,6 +281,7 @@ P.paragraphNumeroUnoIndentLevel1, P.paragraphNumeroUnoIndentLevel2, P.paragraphN
     margin-top: 0.5em !important;
     margin-bottom: 0.5em !important;
     padding: 0px;
+    font-family: Georgia, serif, Palatino, Palatino Linotype, Palatino LT STD !important;
 }
 
 .paragraphNumeroUnoIndentLevel1 {

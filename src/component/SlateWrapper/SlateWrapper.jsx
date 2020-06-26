@@ -30,6 +30,8 @@ import { setSlateLock, releaseSlateLock, setLockPeriodFlag, getSlateLockStatus }
 import { setActiveElement,openPopupSlate } from '../CanvasWrapper/CanvasWrapper_Actions';
 // import { OPEN_AM } from '../../js/auth_module';
 import { showSlateLockPopup } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
+import { handleTCMData } from '../ElementContainer/TcmSnapshot_Actions'
+
 
 let random = guid();
 class SlateWrapper extends Component {
@@ -60,20 +62,21 @@ class SlateWrapper extends Component {
         window.addEventListener('scroll',this.handleScroll)
     }
 
-    handleScroll = (e) =>{
-        if(config.totalPageCount <= config.page) return false;
+    handleScroll = (e) => {
+        if (config.totalPageCount <= config.page) return false;
         // const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;        
-        let scrollPosition = Number(e.target.scrollTop+e.target.clientHeight+100);
+        let scrollPosition = Number(e.target.scrollTop + e.target.clientHeight + 100);
         let scrollingPosition = Number(e.target.scrollTop);
-        if(this.props.slateData[config.slateManifestURN] && (this.props.slateData[config.slateManifestURN].type === 'manifest')){
+        if (this.props.slateData[config.slateManifestURN] && (this.props.slateData[config.slateManifestURN].type === 'manifest')) {
             config.scrollPosition = scrollingPosition;
         }
-        if ((scrollPosition >= e.target.scrollHeight) && config.scrolling) { 
+        if ((scrollPosition >= e.target.scrollHeight) && config.scrolling) {
             config.scrolling = false;
             config.fromTOC = false;
             this.props.loadMorePages();
         }
     }
+    
 
     /**
      * setListDropRef | sets list drop ref to listDropRef
@@ -105,39 +108,22 @@ class SlateWrapper extends Component {
         this.renderDefaultElement();
     }
 
-
     renderDefaultElement = () => {
         if(this.isDefaultElementInProgress){
-            // condition added to detect if element creationis already in progress and to avoid multiple default element creation
+            // condition added to detect if element creation is already in progress and to avoid multiple default element creation
             return false;
         }
         let _slateData = this.props.slateData;
-        if (_slateData !== null && _slateData !== undefined) {
-            if(_slateData[config.slateManifestURN] && config.slateType !== 'assessment'){
-                let _slateObject =_slateData[config.slateManifestURN];
-                let _slateContent = _slateObject.contents
-                let { bodymatter: _slateBodyMatter } = _slateContent /* || _slateData.popupdata; */
-                if (_slateBodyMatter.length == 0) {
-                    this.isDefaultElementInProgress = true;
-                    /* For showing the spinning loader send HideLoader message to Wrapper component */
-                    sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                    this.props.createElement(TEXT, "0", '', '', '','',()=>{
-                        this.isDefaultElementInProgress = false;
-                    });
-                }
-            } else if (Object.values(_slateData).length > 0 && Object.values(_slateData)[0].contents.bodymatter < 1 && config.slateType === 'assessment') {
-                this.isDefaultElementInProgress = true;
-                sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                this.props.createElement(ELEMENT_ASSESSMENT, "0", '', '', '','',()=>{
-                    this.isDefaultElementInProgress = false;
-                });
-            }            
+        if (Object.values(_slateData).length > 0 && Object.values(_slateData)[0].contents.bodymatter < 1 && config.slateType === 'assessment') {
+            this.isDefaultElementInProgress = true;
+            sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+            this.props.createElement(ELEMENT_ASSESSMENT, "0", '', '', '', '', ()=>{
+                this.isDefaultElementInProgress = false;
+            });
         }
     }
 
     static getDerivedStateFromProps = (props, state) => {
-         /** Default Red Dot indicator to false */
-         sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'false'});  
         /**
          * updateTimer is for updating Time for slate refresh
          */
@@ -873,6 +859,27 @@ class SlateWrapper extends Component {
 
     }
 
+    /**
+     * Renders blank slate with one element picker (Separator)
+     * @param {object} _props Slatewrapper props
+     */
+    renderBlankSlate = (_props) => {
+        return (
+            <>
+                <ElementSaprator
+                    firstOne={true}
+                    index={0}
+                    esProps={this.elementSepratorProps(0, true)}
+                    elementType=""
+                    permissions={_props.permissions}
+                    showAudioSplitPopup={_props.showAudioSplitPopup}
+                    openAudio={_props.openAudio}
+                    onClickCapture={this.checkSlateLockStatus}
+                    splithandlerfunction={this.splithandlerfunction}
+                />
+            </>
+        )
+    }
 
     /**
      * renderElement | renders single element according to its type
@@ -881,6 +888,9 @@ class SlateWrapper extends Component {
         const { pageLoading } = this.props;
         try {
             if (_elements !== null && _elements !== undefined) {
+                if (_elements.length === 0) {
+                    return this.renderBlankSlate(this.props)
+                }
                 this.renderButtonsonCondition(_elements);
                 return _elements.map((element, index) => {
                         return (
@@ -1104,6 +1114,9 @@ class SlateWrapper extends Component {
         config.isPopupSlate = false
         this.props.openPopupSlate(undefined, popupId)
         this.props.setActiveElement(config.cachedActiveElement.element, config.cachedActiveElement.index)
+        if(config.tcmStatus){
+            this.props.handleTCMData(config.slateManifestURN)
+        }
         // Scrolling to the previous element after SAVE  & CLOSE is clicked
         setTimeout(() => {
             let elementDom = document.querySelector(`[data-id="${config.cachedActiveElement.element.id}"]`)
@@ -1221,7 +1234,8 @@ export default connect(
         getSlateLockStatus,
         accessDenied,
         openPopupSlate,
-        showSlateLockPopup
+        showSlateLockPopup,
+        handleTCMData
 
     }
 )(SlateWrapper);

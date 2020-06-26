@@ -254,8 +254,8 @@ class Sidebar extends Component {
             attrInput: event.target.value
         })
         let activeElement = document.querySelector(`[data-id="${this.props.activeElement.elementId}"]`)
-        let attrNode = activeElement.querySelector(".blockquoteTextCredit")
-        attrNode.innerHTML = event.target.value
+        let attrNode = activeElement.querySelector(".blockquoteTextCredit");
+        attrNode.innerHTML = event.target.value.replace(/</g, "&lt;").replace(/>/g, "&gt;");
     }
     
     attributions = () => {
@@ -287,7 +287,7 @@ class Sidebar extends Component {
             if(attributionsList.length > 0) {
                 let activeElement = document.querySelector(`[data-id="${this.props.activeElement.elementId}"]`)
                 let attrNode = activeElement ? activeElement.querySelector(".blockquoteTextCredit") : null
-                let attrValue = attrNode && attrNode.innerHTML!=null ? attrNode.innerHTML.replace(/<br>/g, "") : ""
+                let attrValue = attrNode && attrNode.innerHTML!=null ? attrNode.innerHTML.replace(/<br>/g, "").replace(/&lt;/g, "<").replace(/&gt;/g, ">") : ""
                 attributions = attributionsList.map(item => {
                     let isDisable = (item === 'attribution' ? hasReviewerRole() : !attributionsObject[item].isEditable) 
                     if(item==="alt_text"){
@@ -334,13 +334,19 @@ class Sidebar extends Component {
     }
 
     handleBceBlur = () => {
-        document.getElementById(`cypress-${this.props.activeElement.index}-0`).focus()
-        document.getElementById(`cypress-${this.props.activeElement.index}-0`).blur()
+        let activeBCEElementNode = document.getElementById(`cypress-${this.props.activeElement.index}-0`)
+        if (activeBCEElementNode) {
+            activeBCEElementNode.focus()
+            activeBCEElementNode.blur()
+        }
     }
 
     handleBQAttributionBlur = () => {
-        document.querySelector(`#cypress-${this.props.activeElement.index} p`).focus()
-        document.querySelector(`#cypress-${this.props.activeElement.index} p`).blur()
+        let activeBQNode = document.querySelector(`#cypress-${this.props.activeElement.index} p`)
+        if (activeBQNode) {
+            activeBQNode.focus()
+            activeBQNode.blur()
+        }  
     }
 
     /**
@@ -452,7 +458,8 @@ class Sidebar extends Component {
             "metaDataAnchorID": [this.props.activeElement.elementId],
             "elementVersionType": "element-generateLOlist",
             "loIndex" : this.props.activeElement.index,
-            "slateUrn": config.slateManifestURN
+            "slateVersionUrn": config.slateManifestURN,
+            "elementParentEntityUrn":config.slateEntityURN
         }
         this.props.updateElement(data)
 

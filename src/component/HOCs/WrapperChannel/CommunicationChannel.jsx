@@ -108,6 +108,7 @@ function CommunicationChannel(WrappedComponent) {
                 case 'refreshElementWithTable':
                     {
                         this.setTableData(message.elementId, message.updatedData);
+                       
                     }
                     break;
                 case 'canvasBlocker':
@@ -332,7 +333,7 @@ function CommunicationChannel(WrappedComponent) {
                     "metaDataAnchorID": LOElements,
                     "elementVersionType": "element-learningobjectivemapping",
                     "loIndex" : loIndex,
-                    "slateUrn": config.slateManifestURN
+                    "slateVersionUrn": config.slateManifestURN
                 }
                 if(LOElements.length){
                 this.props.updateElement(LOWipData)
@@ -436,8 +437,9 @@ function CommunicationChannel(WrappedComponent) {
                     currentProjectId: config.projectUrn,
                     slateEntityUrn: config.slateEntityURN
                 }
-                this.props.fetchAudioNarrationForContainer(slateData)  
-                this.props.fetchSlateData(message.node.containerUrn,config.slateEntityURN, config.page,'');
+                this.props.fetchUsageTypeData('assessment');    /** [PCAT-8125] | Assessment UsageType List API Call  */
+                this.props.fetchAudioNarrationForContainer(slateData)
+                this.props.fetchSlateData(message.node.containerUrn,config.slateEntityURN, config.page,'',"");
                 config.savingInProgress = false
                 this.props.setSlateType(config.slateType);
                 this.props.setSlateEntity(config.slateEntityURN);
@@ -633,8 +635,8 @@ function CommunicationChannel(WrappedComponent) {
             }
         }
 
-        setTableData = (elementId) => {
-            this.props.getTableEditorData(elementId);
+        setTableData = (elementId,updatedData) => {
+            this.props.getTableEditorData(elementId,updatedData);
         }
         
 

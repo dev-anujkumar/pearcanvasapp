@@ -42,6 +42,7 @@ import CitationGroup from '../CitationGroup'
 import CitationElement from '../CitationElement'
 import ElementPoetry from '../ElementPoetry';
 import ElementPoetryStanza from '../ElementPoetry/ElementPoetryStanza.jsx';
+import {handleTCMData} from './TcmSnapshot_Actions';
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -447,7 +448,8 @@ class ElementContainer extends Component {
     /**
      * This function opens TCM w.r.t. current Element
      */
-    handleTCM = () => {
+    handleTCM = (e) => {
+        e.stopPropagation();
         loadTrackChanges(this.props.element.id)
     }
     /**
@@ -511,8 +513,8 @@ class ElementContainer extends Component {
                     let titleHTML = titleDOMNode && titleDOMNode.innerHTML,
                         subtitleHTML = subtitleDOMNode && subtitleDOMNode.innerHTML
 
-                    titleHTML = titleHTML.replace(/<br>/g, "").replace(/<br data-mce-bogus="1">/g, "")
-                    subtitleHTML = subtitleHTML.replace(/<br>/g, "").replace(/<br data-mce-bogus="1">/g, "")
+                    titleHTML = titleHTML && titleHTML.replace(/<br>/g, "").replace(/<br data-mce-bogus="1">/g, "")
+                    subtitleHTML = subtitleHTML && subtitleHTML.replace(/<br>/g, "").replace(/<br data-mce-bogus="1">/g, "")
 
                     let imgTaginLabel = titleDOMNode && titleDOMNode.getElementsByTagName("img")
                     let imgTaginTitle = subtitleDOMNode && subtitleDOMNode.getElementsByTagName("img")
@@ -859,7 +861,8 @@ class ElementContainer extends Component {
      * show Delete element Popup 
      * @param {elementId} 
      */
-    showDeleteElemPopup = (popup, sectionBreak) => {
+    showDeleteElemPopup = (e,popup, sectionBreak) => {
+        e.stopPropagation();
         this.props.showBlocker(true);
         showTocBlocker();
         this.setState({
@@ -872,7 +875,7 @@ class ElementContainer extends Component {
     /**
      * For deleting slate level element
      */
-    deleteElement = () => {
+    deleteElement = (e) => {
         let { id, type } = this.props.element;
         let { parentUrn, asideData, element, poetryData } = this.props;
         let { contentUrn } = this.props.element
@@ -887,22 +890,22 @@ class ElementContainer extends Component {
             contentUrn = this.state.sectionBreak.contentUrn
             id = this.state.sectionBreak.id
         }
-        this.handleCommentPopup(false);
+        this.handleCommentPopup(false,e);
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
 
-        /** This condition is to delete whole Container Group element when only one element is left and that too getting deleted */
+        /* // This condition is to delete whole Container Group element when only one element is left and that too getting deleted
         if (this.props.parentElement && this.props.parentElement.type === "citations" && this.props.parentElement.contents && this.props.parentElement.contents.bodymatter.length === 1) {
             id = this.props.parentElement.id
             type = this.props.parentElement.type
             contentUrn = this.props.parentElement.contentUrn
             index = index.split("-")[0]
         }
-        /** This condition to delete whole aside element when only one element in it deleted */
+        // This condition to delete whole aside element when only one element in it deleted
         else if (this.props.parentElement && this.props.parentElement.subtype !== "workedexample" && this.props.parentElement.elementdata && this.props.parentElement.elementdata.bodymatter.length === 1) {
             id = this.props.parentElement.id
             type = this.props.parentElement.type
             contentUrn = this.props.parentElement.contentUrn
-        }
+        } */
 
         // api needs to run from here
         this.props.deleteElement(id, type, parentUrn, asideData, contentUrn, index, poetryData);
@@ -938,7 +941,8 @@ class ElementContainer extends Component {
     * @param {*} parentElement
     */
     createPoetryElements = (poetryField, forceupdate, index, parentElement) => {
-         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+        config.popupCreationCallInProgress = true
         this.props.createPoetryUnit(poetryField, parentElement, (currentElementData) =>
         this.handleBlur(forceupdate, currentElementData, index, null), index, config.slateManifestURN)
     }
@@ -949,23 +953,19 @@ class ElementContainer extends Component {
     */
     renderElement = (element = {}) => {
         let editor = '';
-        let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions, allComments, splithandlerfunction} = this.props;
+        let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions, allComments, splithandlerfunction, tcmData} = this.props;
         let labelText = fetchElementTag(element, index);
         config.elementToolbar = this.props.activeElement.toolbar || [];
         let anyOpenComment = allComments.filter(({ commentStatus, commentOnEntity }) => commentOnEntity === element.id && commentStatus.toLowerCase() === "open").length > 0
         /** Handle TCM for tcm enable elements */
         let tcm = false;
         let feedback = false;
-        if (element.type == 'element-authoredtext' || element.type == 'element-list' || element.type == 'element-blockfeature' || element.type == 'element-learningobjectives' || element.type == 'element-citation' || element.type === 'stanza') {
-            if (element.tcm) {
-                tcm = element.tcm;
-                sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });
-            }
-            if (element.feedback) {
-                feedback = element.feedback;
-                sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });
-            }
-        }
+        tcm = tcmData.filter(tcmelm => {
+            let elementUrn = tcmelm.elemURN;
+            return (element.id.includes('urn:pearson:work') && elementUrn.indexOf(element.id) !== -1) && tcmelm.txCnt && tcmelm.txCnt > 0}).length>0;
+        feedback = tcmData.filter(feedbackelm => {
+            let elementUrn = feedbackelm.elemURN;
+            return (element.id.includes('urn:pearson:work') && elementUrn.indexOf(element.id) !== -1) && feedbackelm.feedback && feedbackelm.feedback !== null}).length>0;
        /* TODO need better handling with a function and dynamic component rendering with label text*/
         if (labelText) {
             switch (element.type) {
@@ -995,7 +995,7 @@ class ElementContainer extends Component {
                         case elementTypeConstant.FIGURE_AUTHORED_TEXT:
                         case elementTypeConstant.FIGURE_CODELISTING:
                         case elementTypeConstant.FIGURE_TABLE_EDITOR:
-                            editor = <ElementFigure accessDenied={this.props.accessDenied} updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} elementId={element.id} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} />;
+                            editor = <ElementFigure accessDenied={this.props.accessDenied} updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} elementId={element.id} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}  parentEntityUrn={this.props.parentUrn}  />;
                             //labelText = LABELS[element.figuretype];
                             break;
                         case elementTypeConstant.FIGURE_AUDIO:
@@ -1225,22 +1225,24 @@ class ElementContainer extends Component {
             <div className="editor" data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                     <Button type="element-label" btnClassName={`${btnClassName} ${this.state.isOpener ? ' ignore-for-drag' : ''}`} labelText={labelText} />
-                    {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && config.slateType !== 'assessment' ? (<Button type="delete-element" onClick={() => this.showDeleteElemPopup(true)} />)
+                    {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && config.slateType !== 'assessment' ? (<Button type="delete-element" onClick={(e) => this.showDeleteElemPopup(e,true)} />)
                         : null}
                     {this.renderColorPaletteButton(element, permissions)}
                     {this.renderColorTextButton(element, permissions)}
                 </div>
                     : ''}
-                <div className={`element-container ${labelText.toLowerCase()} ${borderToggle}`} data-id={element.id} onFocus={() => this.toolbarHandling('remove')} onBlur={() => this.toolbarHandling('add')}>
+                <div className={`element-container ${labelText.toLowerCase()} ${borderToggle}`} data-id={element.id} onFocus={() => this.toolbarHandling('remove')} onBlur={() => this.toolbarHandling('add')} onClick = {this.handleFocus}>
                     {elementOverlay}{bceOverlay}{editor}
                 </div>
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
-                    {permissions && permissions.includes('notes_adding') && <Button type="add-comment" btnClassName={btnClassName} onClick={() => this.handleCommentPopup(true)} />}
-                    {permissions && permissions.includes('note_viewer') && anyOpenComment && <Button elementId={element.id} onClick={() => handleCommentspanel(element.id, this.props.index)} type="comment-flag" />}
-                    {feedback ? <Button elementId={element.id} type="feedback" onClick={this.handleTCM} /> : (tcm && <Button type="tcm" onClick={this.handleTCM} />)}
+                    {permissions && permissions.includes('notes_adding') && <Button type="add-comment" btnClassName={btnClassName} onClick={(e) => this.handleCommentPopup(true, e)} />}
+                    {permissions && permissions.includes('note_viewer') && anyOpenComment && <Button elementId={element.id} onClick={(event) => {
+                        handleCommentspanel(event,element.id, this.props.index)
+                        }} type="comment-flag" />}
+                    {feedback ? <Button elementId={element.id} type="feedback" onClick={(event) => this.handleTCM(event)} /> : (tcm && <Button type="tcm" onClick={(event) => this.handleTCM(event)} />)}
                 </div> : ''}
                 {this.state.popup && <PopUp
-                    togglePopup={e => this.handleCommentPopup(e, this)}
+                    togglePopup={this.handleCommentPopup}
                     active={this.state.popup}
                     handleChange={this.handleCommentChange}
                     saveContent={this.saveNewComment}
@@ -1265,7 +1267,8 @@ class ElementContainer extends Component {
      * @description - This function is for handling the closing and opening of popup.
      * @param {event} popup
      */
-    handleCommentPopup(popup) {
+    handleCommentPopup = (popup,event) => {
+       event.stopPropagation();
         this.setState({
             popup,
             showDeleteElemPopup: false,
@@ -1281,7 +1284,7 @@ class ElementContainer extends Component {
      * @description - This function is for handleChange of popup.
      * @param newComment
      */
-    handleCommentChange = (newComment) => {
+    handleCommentChange = (newComment) => {        
         this.setState({
             comment: newComment
         })
@@ -1290,14 +1293,14 @@ class ElementContainer extends Component {
     /**
      * @description - This function is for ADD COMMENT API.
      */
-    saveNewComment = () => {
+    saveNewComment = (e) => {
         const { comment } = this.state;
         const { id } = this.props.element;
         if (comment.trim() !== '') {
             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
             this.props.addComment(comment, id, this.props.asideData, this.props.parentUrn);
         }
-        this.handleCommentPopup(false);
+        this.handleCommentPopup(false,e);
     }
 
     /**
@@ -1410,7 +1413,10 @@ const mapDispatchToProps = (dispatch) => {
         },
         createPoetryUnit: (poetryField, parentElement,cb, popupElementIndex, slateManifestURN) => {
             dispatch(createPoetryUnit(poetryField, parentElement,cb, popupElementIndex, slateManifestURN))
-        }
+        },
+        handleTCMData: () => {
+            dispatch(handleTCMData())
+        },
 
     }
 }
@@ -1424,7 +1430,8 @@ const mapStateToProps = (state) => {
         oldImage: state.appStore.oldImage,
         glossaryFootnoteValue: state.glossaryFootnoteReducer.glossaryFootnoteValue,
         allComments: state.commentsPanelReducer.allComments,
-        showHideId: state.appStore.showHideId
+        showHideId: state.appStore.showHideId,
+        tcmData: state.tcmReducer.tcmSnapshot
     }
 }
 

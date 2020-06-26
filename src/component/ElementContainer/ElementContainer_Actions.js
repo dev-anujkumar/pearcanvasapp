@@ -5,7 +5,7 @@ import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import {
     fetchSlateData
 } from '../CanvasWrapper/CanvasWrapper_Actions';
-import {  ADD_COMMENT, AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP, OPEN_GLOSSARY_FOOTNOTE,DELETE_SHOW_HIDE_ELEMENT} from "./../../constants/Action_Constants";
+import { AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP, OPEN_GLOSSARY_FOOTNOTE,DELETE_SHOW_HIDE_ELEMENT, GET_TCM_RESOURCES} from "./../../constants/Action_Constants";
 import { customEvent } from '../../js/utils';
 
 export const addComment = (commentString, elementId, asideData, parentUrn) => (dispatch, getState) => {
@@ -40,39 +40,7 @@ export const addComment = (commentString, elementId, asideData, parentUrn) => (d
     )
         .then(response => {
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
-            const parentData = getState().appStore.slateLevelData;
-            const newslateData = JSON.parse(JSON.stringify(parentData));
-            let _slateObject = Object.values(newslateData)[0];
-            let { contents: _slateContent } = _slateObject;
-            let { bodymatter: _slateBodyMatter } = _slateContent;
             Comment.commentUrn = response.data.commentUrn
-            //const elementBM = _slateBodyMatter.map(element => {
-            _slateBodyMatter.map(element => {
-                if (element.id === elementId) {
-                    element['comments'] = true
-                } else if (asideData && asideData.type == 'element-aside') {
-                    if (element.id == asideData.id) {
-                        element.elementdata.bodymatter.map((nestedEle) => {
-                            /*This condition add comment in element in aside */
-                            if (nestedEle.id == elementId) {
-                                nestedEle['comments'] = true;
-                            } else if (nestedEle.type == "manifest" && nestedEle.id == parentUrn.manifestUrn) {
-                                /*This condition add comment in element in section of aside */
-                                nestedEle.contents.bodymatter.map((ele) => {
-                                    if (ele.id == elementId) {
-                                        ele['comments'] = true;
-                                    }
-                                })
-                            }
-                        })
-                    }
-                }
-            }
-            );
-            dispatch({
-                type: ADD_COMMENT,
-                payload: newslateData
-            });
            
             dispatch({
                 type: ADD_NEW_COMMENT,
@@ -110,10 +78,10 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
                 }
         }
     }
-
+    let elementParentEntityUrn = parentUrn && parentUrn.contentUrn || config.slateEntityURN
     let _requestData = prepareDeleteRequestData(type)
     let indexToBeSent = index || "0"
-    _requestData = { ..._requestData, index: indexToBeSent.toString().split('-')[indexToBeSent.toString().split('-').length - 1] }
+    _requestData = { ..._requestData, index: indexToBeSent.toString().split('-')[indexToBeSent.toString().split('-').length - 1], elementParentEntityUrn }
     prepareDataForTcmUpdate(_requestData, elmId, index, asideData, getState, type, poetryData);
 
     return axios.post(`${config.REACT_APP_API_URL}v1/slate/deleteElement`,
@@ -133,7 +101,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
             if (currentSlateData.status === 'approved') {
                 if(currentSlateData.type==="popup"){
                     sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
-                    dispatch(fetchSlateData(config.slateManifestURN,_requestData.entityUrn, 0,currentSlateData));
+                    dispatch(fetchSlateData(currentSlateData.id, currentSlateData.contentUrn, 0, currentSlateData, ""));
                 }
                 else{
                     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
@@ -142,7 +110,6 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
 
             return false;
         }
-        config.citationDefaultElement=false;    
         let bodymatter = newParentData[config.slateManifestURN].contents.bodymatter
             bodymatter.forEach((element, key) => {
                 if (element.id === elmId) {
@@ -192,6 +159,10 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
                     slateLevelData: newParentData
                 }
             })
+              /** Delete Tcm data on element delete*/
+              if (config.tcmStatus) {
+                prepareTCMforDelete(elmId, dispatch,getState);
+            }
         }
 
     }).catch(error => {
@@ -201,7 +172,34 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
         console.log("delete Api fail", error); */
     })
 }
-
+/** Delete Tcm data on element delete*/
+function prepareTCMforDelete(elmId, dispatch,getState) {
+        let tcmData = getState().tcmReducer.tcmSnapshot;
+        tcmData = tcmData && tcmData.filter(function (tcm) {
+            return !tcm.elemURN.includes(elmId);
+        });
+        dispatch({
+            type: GET_TCM_RESOURCES,
+            payload: {
+                data: tcmData
+            }
+        });
+        if(tcmData.length > 0){
+            tcmData.some(function (elem) {
+                if (elem.txCnt > 0) {
+                    sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });
+                    return true;
+                }
+                else {
+                    sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'false' });
+                }
+            });
+        }
+        else{
+            sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'false' });
+        }
+        
+}
 
 function contentEditableFalse (updatedData){
     if(updatedData.type == "element-blockfeature"){
@@ -249,8 +247,8 @@ function prepareDataForTcmUpdate (updatedData,id, elementIndex, asideData, getSt
     } else if (poetryData && poetryData.type === 'poetry'){
         updatedData.parentType = "poetry";
     }
-    updatedData.projectURN = config.projectUrn;
-    updatedData.slateEntity = config.slateEntityURN;
+    updatedData.projectUrn = config.projectUrn;
+    // updatedData.slateEntity = config.slateEntityURN;
 }
 
 /**
@@ -305,7 +303,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         });
         }
         
-        if(config.slateManifestURN === updatedData.slateUrn){  //Check applied so that element does not gets copied to next slate while navigating
+        if(config.slateManifestURN === updatedData.slateVersionUrn){  //Check applied so that element does not gets copied to next slate while navigating
             if (updatedData.elementVersionType === "element-learningobjectivemapping" || updatedData.elementVersionType === "element-generateLOlist") {
                 for(let i=0;i <updatedData.metaDataAnchorID.length; i++){
                         if(updatedData.metaDataAnchorID[i] !==  response.data.metaDataAnchorID[i] ){
@@ -324,7 +322,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
                 }else if(currentSlateData.status === 'approved'){
                     if(currentSlateData.type==="popup"){
                         sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
-                        dispatch(fetchSlateData(response.data.newParentVersion,updatedData.parentEntityId, 0,currentSlateData));
+                        dispatch(fetchSlateData(currentSlateData.id, currentSlateData.contentUrn, 0, currentSlateData, "", false));
                     }else{
                         sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' }); 
                     }
@@ -383,12 +381,19 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
     //direct dispatching in store
     let parentData = getState().appStore.slateLevelData;
     let newslateData = JSON.parse(JSON.stringify(parentData));
-    let _slateObject = newslateData[updatedData.slateUrn];
+    let _slateObject = newslateData[updatedData.slateVersionUrn];
    
     // let _slateObject = Object.values(newslateData)[0];
     let { contents: _slateContent } = _slateObject;
     let { bodymatter: _slateBodyMatter } = _slateContent;
     let elementId = updatedData.id;
+    //tcm update code   
+    if (config.tcmStatus) {
+        let elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza'];
+        if (elementType.indexOf(updatedData.type) !== -1 && !updatedData.metaDataField  && !updatedData.sectionType) {
+            prepareDataForUpdateTcm(updatedData.id, getState, dispatch, versionedData);
+        }
+    }
     if(versionedData){
         if (updatedData && updatedData.pageNumberRef) {
             versionedData.pageNumberRef = updatedData.pageNumberRef
@@ -397,7 +402,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
             if(asideData && asideData.type == 'element-aside'){
                 asideData.indexes = indexes;
                 if(indexes.length === 2 || indexes.length === 3){
-                    dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:asideData.id, asideData.contentUrn, 0, asideData));
+                    dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:asideData.id, asideData.contentUrn, 0, asideData,"", false));
                 // }else if(indexes.length === 3){
                 //     dispatch(fetchSlateData(asideData.id,asideData.contentUrn, 0, asideData));
                 }
@@ -405,17 +410,17 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
 
                 // if(indexes.length === 2 || indexes.length === 3 || indexes === 2 || indexes === 3){
                     parentElement.index = elementIndex;
-                    dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:parentElement.id, parentElement.contentUrn, 0, parentElement));
+                    dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:parentElement.id, parentElement.contentUrn, 0, parentElement,"", false));
                 // }
             } 
-            else if(parentElement && parentElement.type === "popup" && updatedData.elementParentEntityUrn && (updatedData.metaDataField || updatedData.section === "postertextobject") ){
-                dispatch(fetchSlateData(updatedData.slateUrn, updatedData.slateEntity, 0)); }
+            else if(parentElement && parentElement.type === "popup" && updatedData.elementParentEntityUrn && (updatedData.metaDataField || updatedData.sectionType === "postertextobject") ){
+                dispatch(fetchSlateData(updatedData.slateVersionUrn, updatedData.elementParentEntityUrn, 0, parentElement, "", true)); }
             else if(parentElement && parentElement.type === "showhide"){
                 parentElement.indexes =elementIndex;
-                dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:parentElement.id, parentElement.contentUrn, 0, parentElement)); 
+                dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:parentElement.id, parentElement.contentUrn, 0, parentElement,"", false)); 
             }
             else if(parentElement && parentElement.type === "citations"){
-                dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:parentElement.id, parentElement.contentUrn, 0, parentElement));
+                dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:parentElement.id, parentElement.contentUrn, 0, parentElement,"", false));
             }
             else {
                 elementIndex = indexes.length == 2 ?indexes[0] : elementIndex
@@ -592,7 +597,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                                 "formatted-subtitle": { ...updatedData }
                             }
                         };
-                    } else if (element.popupdata.postertextobject[0].id === elementId) {
+                    } else if (element.popupdata.postertextobject && element.popupdata.postertextobject[0].id === elementId) {
                         element = {
                             ...element,
                             popupdata: {
@@ -672,7 +677,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
         _slateContent.bodymatter = _slateBodyMatter
         _slateObject.contents = _slateContent
 
-        //console.log("saving new data dispatched") 
+        //console.log("saving new data dispatched")   
         return dispatch({
             type: AUTHORING_ELEMENT_UPDATE,
             payload: {
@@ -682,6 +687,42 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
     
     } 
     //diret dispatching in store
+    
+}
+//TCM Update
+function prepareDataForUpdateTcm(updatedDataID, getState, dispatch,versionedData) {
+    const tcmData = getState().tcmReducer.tcmSnapshot;
+    let indexes = []
+    tcmData.filter(function (element, index) {
+    if (element.elemURN.indexOf(updatedDataID) !== -1 && element.elemURN.includes('urn:pearson:work')) {
+            indexes.push(index)
+        }
+    });
+    if (indexes.length == 0 || (versionedData && updatedDataID !== versionedData.id)) {
+        tcmData.push({
+            "txCnt": 1,
+            "isPrevAcceptedTxAvailable": false,
+            "elemURN": versionedData && updatedDataID !== versionedData.id ? versionedData.id : updatedDataID,
+            "feedback": null
+        })
+    }
+    else {
+        tcmData[indexes]["elemURN"] = updatedDataID
+        tcmData[indexes]["txCnt"] = tcmData[indexes]["txCnt"] !== 0 ? tcmData[indexes]["txCnt"] : 1
+        tcmData[indexes]["feedback"] = tcmData[indexes]["feedback"] !== null ? tcmData[indexes]["feedback"] : null
+        tcmData[indexes]["isPrevAcceptedTxAvailable"] = tcmData[indexes]["isPrevAcceptedTxAvailable"] ? tcmData[indexes]["isPrevAcceptedTxAvailable"] : false
+
+    }
+  
+if (tcmData.length >0) {
+    sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });
+}
+dispatch({
+    type: GET_TCM_RESOURCES,
+    payload: {
+        data: tcmData
+    }
+})
 }
 export const updateFigureData = (figureData, elementIndex, elementId, cb) => (dispatch, getState) => {
     let parentData = getState().appStore.slateLevelData,
@@ -739,8 +780,12 @@ export const updateFigureData = (figureData, elementIndex, elementId, cb) => (di
     }, 300)
 }
 
-export const getTableEditorData = (elementId) => (dispatch, getState) => {
+export const getTableEditorData = (elementid,updatedData) => (dispatch, getState) => {
     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
+    let elementId = elementid
+    if(updatedData && elementid !== updatedData){
+        elementId = updatedData;
+    }
     console.log(elementId, config.projectUrn, ">>>>>")
     return axios.get(`${config.REACT_APP_API_URL}v1/slate/narrative/data/${config.projectUrn}/${elementId}`,
         {
@@ -753,11 +798,10 @@ export const getTableEditorData = (elementId) => (dispatch, getState) => {
         console.log(response, "<<<<<<<<<<<<")
         let parentData = getState().appStore.slateLevelData
         const newParentData = JSON.parse(JSON.stringify(parentData));
-        let status = response.data[elementId].status
-        if (status === 'wip') {
-            newParentData[config.slateManifestURN].contents.bodymatter = updateTableEditorData(elementId, response.data[elementId], newParentData[config.slateManifestURN].contents.bodymatter)
+        if (newParentData[config.slateManifestURN].status === 'wip') {
+            newParentData[config.slateManifestURN].contents.bodymatter = updateTableEditorData(elementid, response.data[elementId], newParentData[config.slateManifestURN].contents.bodymatter)
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
-        } else if (status === 'approved') {
+        } else if (newParentData[config.slateManifestURN].status === 'approved') {
             sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
         }
         
@@ -802,7 +846,6 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
     let _requestData = {
         "projectUrn": config.projectUrn,
         "slateEntityUrn": parentContentUrn,
-        "slateUrn":  elementId,
         "index": newShowhideIndex,
         "type": "TEXT",
         "parentType":"showhide",
@@ -870,7 +913,9 @@ export const deleteShowHideUnit = (elementId, type, parentUrn, index,eleIndex, p
         entityUrn : parentUrn,
         workUrn : elementId,
         index : index.toString(),
-        slateEntity : config.slateEntityURN
+        elementParentEntityUrn: parentUrn,
+        sectionType: type
+        // slateEntity : config.slateEntityURN
     }
     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
     return axios.post(`${config.REACT_APP_API_URL}v1/slate/deleteElement`,
@@ -939,5 +984,5 @@ const showError = (error, dispatch, errorMessage) => {
 
 const cascadeElement = (parentElement, dispatch, parentElementIndex) => {
     parentElement.indexes = parentElementIndex;
-    dispatch(fetchSlateData(parentElement.id, parentElement.contentUrn, 0, parentElement)); 
+    dispatch(fetchSlateData(parentElement.id, parentElement.contentUrn, 0, parentElement,"")); 
 }

@@ -4,7 +4,8 @@ import config  from './../../config/config';
 import {
     FETCH_SLATE_DATA,
     SET_ACTIVE_ELEMENT,
-    ERROR_POPUP
+    ERROR_POPUP,
+    GET_TCM_RESOURCES
 } from './../../constants/Action_Constants';
 import elementTypes from './../Sidebar/elementTypes';
 import figureDataBank from '../../js/figure_data_bank';
@@ -26,10 +27,6 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
 
     let inputSubTypeEnum = inputSubType['enum'],
     inputPrimaryOptionEnum = inputPrimaryOptionType['enum']
-    if(oldElementData.figuretype==="assessment"){
-        inputPrimaryOptionEnum=inputSubType['enum'];
-        inputSubTypeEnum=document.querySelector(`div[data-id='${oldElementData.id}'] span.singleAssessment_Dropdown_currentLabel`).innerText.toUpperCase().replace(" ", "_").replace("-", "_");
-    }
     
     // Output Element
     const outputPrimaryOptionsList = elementTypes[newElementData['elementType']],
@@ -69,37 +66,15 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
 
     let outputSubTypeEnum = outputSubType['enum'],
     outputPrimaryOptionEnum = outputPrimaryOptionType['enum']
-    if (oldElementData.figuretype === "assessment") {
-        let usageType=document.querySelector(`div[data-id='${oldElementData.id}'] span.singleAssessment_Dropdown_currentLabel`).innerText;
-        outputPrimaryOptionEnum=outputSubType['enum'];
-        outputSubTypeEnum = usageType.toUpperCase().replace(" ", "_").replace("-", "_");
-        oldElementData.figuredata.elementdata.usagetype=usageType;
-        let assessmentFormat = outputSubType.text.toLowerCase();
-        let assessmentItemType ="";
-        if(assessmentFormat==="cite" || assessmentFormat==="puf" || assessmentFormat==="learnosity"){
-            assessmentItemType ="assessmentItem";
-        }else{
-            assessmentItemType = "tdxAssessmentItem";
+
+        if (oldElementData.figuretype === "assessment") {
+            /**-----------Sidebar Conversion fro Single Assessment-----------*/
+            let assessmentData = prepareAssessmentDataForConversion(oldElementData, outputSubType.text)
+            oldElementData = assessmentData.oldElementData;
+            inputSubTypeEnum = inputSubType['enum'];
+            outputSubTypeEnum = outputSubType['enum'];
         }
-        // oldElementData['html']['title'] = "";
-        // oldElementData.figuredata.id = "";                                           //PCAT-6792 fixes
-        // oldElementData.figuredata.elementdata.posterimage.imageid = "";              //PCAT-7961 fixes
-        oldElementData.figuredata.elementdata.assessmentid = "";
-        oldElementData.figuredata.elementdata.assessmentitemid = "";
-        oldElementData.figuredata.elementdata.assessmentformat=assessmentFormat;
-        oldElementData.figuredata.elementdata.assessmentitemtype=assessmentItemType;
-        oldElementData && oldElementData.html && oldElementData.html.title ? oldElementData.html.title ="": null;
-        oldElementData && oldElementData.title && oldElementData.title.text ? oldElementData.title.text ="": null;
-        /** [PCAT-7961] | case(1) - As no unique figuredata.id is present for the assessment,the  'figuredata.id' key is removed */
-        if (oldElementData && oldElementData.figuredata && (oldElementData.figuredata.id || oldElementData.figuredata.id=="")) {
-            delete oldElementData.figuredata.id;
-        }
-        /** [PCAT-7961] | case(2) - As no image is present for the assessment,the  'posterimage' key is removed */
-        let isPosterImage = oldElementData && oldElementData.figuredata && oldElementData.figuredata.elementdata && oldElementData.figuredata.elementdata.posterimage
-        if(isPosterImage){
-            delete oldElementData.figuredata.elementdata.posterimage
-        }
-    }
+
     /**
      * Patch [code in If block] - in case list is being converted from toolbar and there are some unsaved changes in current element
      * then send dom html data instead of sending store data
@@ -137,6 +112,14 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             outputSubTypeEnum = "NA"
         }
     }
+        /**
+         * case - if element list is being converted into paragraph from sidepanel
+         * [BG-2515] | Remove subtype during list to paragraph or heading conversion
+         */
+        if (oldElementInfo.primaryOption === "primary-list" && (newElementData.primaryOption === "primary-paragraph" || newElementData.primaryOption === "primary-heading") && oldElementData.subtype) {
+            delete oldElementData.subtype
+        }
+
     if (oldElementData.subtype && oldElementData.subtype === "workedexample") {
         if (outputSubTypeEnum && outputSubTypeEnum === "WORK_EXAMPLE_2") {
             oldElementData.designtype = "workedexample2"
@@ -180,8 +163,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         outputType : outputPrimaryOptionEnum,
         outputSubType: outputSubTypeEnum,
         projectUrn : config.projectUrn,
-        projectURN : config.projectUrn,
-        slateUrn:Object.keys(appStore.parentUrn).length !== 0 ? appStore.parentUrn.manifestUrn: config.slateManifestURN,
+        slateVersionUrn:Object.keys(appStore.parentUrn).length !== 0 ? appStore.parentUrn.manifestUrn: config.slateManifestURN,
         counterIncrement: (newElementData.startvalue > 0) ? (newElementData.startvalue) : 1, // earlier default by 0
         index: indexes[indexes.length - 1],
         slateEntity : Object.keys(appStore.parentUrn).length !== 0 ?appStore.parentUrn.contentUrn:config.slateEntityURN
@@ -211,7 +193,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             if(elem.type==="element-aside"){
                 elem.elementdata.bodymatter.forEach((nestElem)=>{
                     if(nestElem.id===conversionDataToSend.id){
-                        conversionDataToSend.slateUrn = elem.versionUrn;
+                        conversionDataToSend.slateVersionUrn = elem.versionUrn;
                         conversionDataToSend.slateEntity = elem.contentUrn;
                     }
                 })
@@ -223,8 +205,11 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         return;
     }
     if(showHideObj){
-        conversionDataToSend["section"] = showHideObj.showHideType
+        conversionDataToSend["sectionType"] = showHideObj.showHideType
+        conversionDataToSend["elementParentEntityUrn"] = showHideObj.element.contentUrn
     }
+    let parentEntityUrn = conversionDataToSend.elementParentEntityUrn || appStore.parentUrn && appStore.parentUrn.contentUrn || config.slateEntityURN
+    conversionDataToSend["elementParentEntityUrn"] = parentEntityUrn
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
     config.conversionInProcess = true
     if(conversionDataToSend.status === "approved"){
@@ -248,7 +233,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         if (currentSlateData.status === 'approved') {
             if(currentSlateData.type==="popup"){
                 sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
-                dispatch(fetchSlateData(config.slateManifestURN,conversionDataToSend.slateEntity, 0,currentSlateData));
+                dispatch(fetchSlateData(currentSlateData.id, currentSlateData.contentUrn, 0, currentSlateData, ""));
             }
             else{
                 sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
@@ -335,6 +320,13 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                 toolbar: [],
                 elementWipType: "element-authoredtext"
             }
+        }
+        //tcm conversion code   
+        if (config.tcmStatus) {
+            let elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza'];
+            if (elementType.indexOf(oldElementData.type) !== -1) {
+                prepareDataForConversionTcm(oldElementData.id, getState, dispatch,res.data.id);
+            }
         }   
         dispatch({
             type: SET_ACTIVE_ELEMENT,
@@ -356,6 +348,78 @@ catch (error) {
     dispatch({type: ERROR_POPUP, payload:{show: true}})
 }
 }
+function prepareDataForConversionTcm(updatedDataID, getState, dispatch,versionid) {
+    const tcmData = getState().tcmReducer.tcmSnapshot;
+    let indexes = []
+    tcmData.filter(function (element, index) {
+    if (element.elemURN.indexOf(updatedDataID) !== -1 && element.elemURN.includes('urn:pearson:work')) {
+            indexes.push(index)
+        }
+    });
+    if (indexes.length == 0 || (versionid && updatedDataID !== versionid)) {
+        tcmData.push({
+            "txCnt": 1,
+            "isPrevAcceptedTxAvailable": false,
+            "elemURN": versionid && updatedDataID !== versionid ? versionid : updatedDataID,
+            "feedback": null
+        })
+    }
+    else {
+        tcmData[indexes]["elemURN"] = updatedDataID
+        tcmData[indexes]["txCnt"] = tcmData[indexes]["txCnt"] !== 0 ? tcmData[indexes]["txCnt"] : 1
+        tcmData[indexes]["feedback"] = tcmData[indexes]["feedback"] !== null ? tcmData[indexes]["feedback"] : null
+        tcmData[indexes]["isPrevAcceptedTxAvailable"] = tcmData[indexes]["isPrevAcceptedTxAvailable"] ? tcmData[indexes]["isPrevAcceptedTxAvailable"] : false
+
+    }
+    if (tcmData.length>0) {
+        sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });
+    }
+    dispatch({
+        type: GET_TCM_RESOURCES,
+        payload: {
+            data: tcmData
+        }
+    })
+}
+
+const prepareAssessmentDataForConversion = (oldElementData, format) => {
+
+    let usageType = document.querySelector(`div[data-id='${oldElementData.id}'] span.singleAssessment_Dropdown_currentLabel`).innerText;
+    let assessmentFormat = format == "Elm" ? "puf" : format.toLowerCase();
+    let assessmentItemType = assessmentFormat == 'tdx' ? "tdxAssessmentItem" : "assessmentItem";
+
+    oldElementData.figuredata.elementdata={
+        usagetype : usageType,
+        assessmentid : "",
+        assessmentitemid : "",
+        assessmentformat : assessmentFormat,
+        assessmentitemtype : assessmentItemType
+    }
+
+    if (oldElementData && oldElementData.html && oldElementData.html.title) {
+        oldElementData.html.title = "";
+    }
+    if (oldElementData && oldElementData.title && oldElementData.title.text) {
+        oldElementData.title.text = "";
+    }
+    
+    /** [PCAT-6792] | WIP changes in embedded assessment */
+    /** [PCAT-7961] | case(1) - As no unique figuredata.id is present for the assessment,the  'figuredata.id' key is removed */
+    if (oldElementData && oldElementData.figuredata && (oldElementData.figuredata.id || oldElementData.figuredata.id == "")) {
+        delete oldElementData.figuredata.id;
+    }
+    /** [PCAT-7961] | case(2) - As no image is present for the assessment,the  'posterimage' key is removed */
+    let isPosterImage = oldElementData && oldElementData.figuredata && oldElementData.figuredata.elementdata && oldElementData.figuredata.elementdata.posterimage;
+    if (isPosterImage) {
+        delete oldElementData.figuredata.elementdata.posterimage
+    }
+    let asessmentConversionData = {
+        oldElementData: oldElementData
+    }
+
+    return asessmentConversionData
+}
+
 export const handleElementConversion = (elementData, store, activeElement, fromToolbar,showHideObj) => dispatch => {
     store = JSON.parse(JSON.stringify(store));
     if(Object.keys(store).length > 0) {

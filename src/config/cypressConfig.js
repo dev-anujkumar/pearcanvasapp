@@ -61,7 +61,7 @@ let cypressConfig = {
     citationFlag: false,
     lastActiveElementId:'',
     popupCreationCallInProgress : false,
-    citationDefaultElement: false
+    pageNumberInProcess: true
 }
 
 
