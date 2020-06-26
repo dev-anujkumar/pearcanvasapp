@@ -117,7 +117,6 @@ export const encodeHTMLInWiris = (str) => {
                 str = str.replace(imageObj[i], imageObjNew[i]);
             }
         }
-        // console.log('encodeHTMLInWiris:::', str);
         return str;
     }
 }

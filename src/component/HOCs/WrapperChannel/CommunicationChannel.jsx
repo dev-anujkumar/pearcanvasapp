@@ -226,18 +226,45 @@ function CommunicationChannel(WrappedComponent) {
          */
         updatePageLink = (linkData) => {
             let activeElement, linkNode, linkHTML;
-            if('containerId' in linkData && 'linkId' in linkData) {
-                activeElement = document.getElementById(linkData.containerId);
+            let linkId = "", elementId = "", pageId = "";
+            let linkNotification = '';
+
+            document.getElementById('link-notification').innerText = "";
+            if('link' in linkData && linkData.link == "link" && 'elementId' in linkData && 
+                'linkId' in linkData && 'pageId' in linkData && 'pageName' in linkData) {
+                let elementContainer = document.querySelector('.element-container[data-id="' + linkData.elementId + '"]');
+                activeElement = elementContainer.querySelector('.cypress-editable');
+                activeElement.focus();
                 linkNode = activeElement.querySelector('#' + linkData.linkId);
                 linkHTML = linkNode.innerHTML || '';
+                linkId = linkData.linkId || "";
+                elementId = linkData.elementId || ""
+                pageId = linkData.pageId || "";
+                linkNode.outerHTML = '<abbr title="Page Link" class="Pearson-Component AssetPopoverTerm" id="' + linkId + '" element-id="' + elementId + '" data-uri="' + pageId + '">' + linkHTML + '</abbr>';
+                if(/(<abbr [^>]*id="page-link-[^"]*"[^>]*>.*<\/abbr>)/gi.test(linkNode.outerHTML)) {
+                    linkNotification = "Link updated to slate '" + linkData.pageName + "'.";
+                } else {
+                    linkNotification = "Link added to slate '" + linkData.pageName + "'.";
+                }
+            } else if('link' in linkData && (linkData.link == "cancel" || linkData.link == "unlink") && 
+                'elementId' in linkData && 'linkId' in linkData) {
+                let elementContainer = document.querySelector('.element-container[data-id="' + linkData.elementId + '"]');
+                activeElement = elementContainer.querySelector('.cypress-editable');
+                activeElement.focus();
+                linkNode = activeElement.querySelector('#' + linkData.linkId);
+                linkHTML = linkNode.innerHTML || '';
+                linkNode.outerHTML = linkHTML;
+                if(linkData.link == "unlink") {
+                    linkNotification = "Link removed.";
+                }
             }
 
-            if('link' in linkData && linkData.link && linkNode && linkHTML) {
-                linkNode.outerHTML = '<abbr title="Page Link" class="Pearson-Component">' + linkHTML + '</abbr>';
-            } else {
-                linkNode.outerHTML = linkHTML;
-            }
-            console.log('update page link:::', activeElement,linkNode);
+            document.getElementById('link-notification').innerText = linkNotification;
+            sendDataToIframe({ 'type': TocToggle, 'message': { "open": false } });
+            setTimeout(async () => {
+                await activeElement.click();
+                activeElement.blur();
+            }, 4000);
         }
 
         /**

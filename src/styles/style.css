@@ -271,6 +271,11 @@ i.fa.fa-asterisk,.fa .fa-bookmark {
     min-width: 681px;
 }
 
+#tinymceToolbar .tox .tox-collection--list .tox-collection__item[title="Figure Link"],
+#tinymceToolbar .tox .tox-collection--list .tox-collection__item[title="Page Link"] {
+    width: 100px;
+}
+
 P.paragraphNumeroUnoIndentLevel1, P.paragraphNumeroUnoIndentLevel2, P.paragraphNumeroUnoIndentLevel3{
     font-size: 100% !important;
     margin-top: 0.5em !important;

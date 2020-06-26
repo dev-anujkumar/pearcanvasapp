@@ -532,13 +532,25 @@ export class TinyMceEditor extends Component {
          * Case - clicking over Asset text
          */
         else if (e.target.nodeName == 'ABBR' || e.target.parentNode && e.target.parentNode.tagName === 'ABBR') {
-            let assetId = (e.target.attributes['asset-id'] && e.target.attributes['asset-id'].nodeValue) || e.target.parentNode.attributes['asset-id'].nodeValue;
-            let dataUrn = (e.target.attributes['data-uri'] && e.target.attributes['data-uri'].nodeValue) || e.target.parentNode.attributes['data-uri'].nodeValue;
-            let apoObject = {
-                'assetId': assetId,
-                'dataUrn': dataUrn
+            let linkTitle = (e.target.attributes['title'] && e.target.attributes['title'].nodeValue) || e.target.parentNode.attributes['title'].nodeValue;
+            if(linkTitle == "Asset Popover") {
+                let assetId = (e.target.attributes['asset-id'] && e.target.attributes['asset-id'].nodeValue) || e.target.parentNode.attributes['asset-id'].nodeValue;
+                let dataUrn = (e.target.attributes['data-uri'] && e.target.attributes['data-uri'].nodeValue) || e.target.parentNode.attributes['data-uri'].nodeValue;
+                let apoObject = {
+                    'assetId': assetId,
+                    'dataUrn': dataUrn
+                }
+                authorAssetPopOver(true, apoObject);
             }
-            authorAssetPopOver(true, apoObject);
+
+            if(linkTitle == "Page Link") {
+                let linkId = (e.target.attributes['id'] && e.target.attributes['id'].nodeValue) || e.target.parentNode.attributes['id'].nodeValue;
+                let elementId = (e.target.attributes['element-id'] && e.target.attributes['element-id'].nodeValue) || e.target.parentNode.attributes['element-id'].nodeValue;
+                let pageId = (e.target.attributes['data-uri'] && e.target.attributes['data-uri'].nodeValue) || e.target.parentNode.attributes['data-uri'].nodeValue;
+
+                sendDataToIframe({ 'type': LaunchTOCForCrossLinking, 'message': { open: true, case: 'update', link: linkId, element: elementId, page: pageId, blockCanvas: true, crossLink: true } });
+            }
+            
         }
         /**
          *  Case - otherwise close glossary & footnote popup  
@@ -1049,16 +1061,6 @@ export class TinyMceEditor extends Component {
                                         this.addPageLink(editor, selectedText)
                                     }
                                 },
-                                onSetup: (buttonApi) => {
-                                    /*
-                                    make merge menu button apis available globally among compnenet
-                                    */
-                                    // let selectedText = window.getSelection().toString();
-                                    // this.assetPopoverButtonState = buttonApi;
-                                    // if (!selectedText.length) {
-                                    //     this.assetPopoverButtonState.setDisabled();
-                                    // }
-                                }
                             }
                         ];
                     }
@@ -1504,17 +1506,16 @@ export class TinyMceEditor extends Component {
         let selection = window.getSelection().anchorNode.parentNode;
         let selectedTag = selection.nodeName;
         let selectedTagClass = selection.classList;
-        let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
+        let activeElement = tinymce.activeEditor.targetElm.closest('.element-container');
         let linkCount = tinymce.$(activeElement).find('.page-link-attacher').length;
-        // console.log('1:::', tinymce.$(activeElement).find('.page-link-attacher'), tinymce.$(activeElement).find('.page-link-attacher').length);
         if (selectedTag !== "LI" && selectedTag !== "P" && selectedTag !== "H3" && selectedTag !== "BLOCKQUOTE" && (!selectedTagClass.contains('poetryLine'))) {
             //selectedText = window.getSelection().anchorNode.parentNode.outerHTML;
             selectedText = '<' + selectedTag.toLocaleLowerCase() + '>' + selectedText + '</' + selectedTag.toLocaleLowerCase() + '>'
         }
-        let insertionText = '<span id="page-link-' + linkCount +'" class="page-link-attacher" container-id="' + activeElement.getAttribute('id') + '">' + selectedText + '</span>';
+        let insertionText = '<span id="page-link-' + linkCount +'" class="page-link-attacher" element-id="' + activeElement.getAttribute('data-id') + '">' + selectedText + '</span>';
         // editor.insertContent(insertionText);
         editor.selection.setContent(insertionText);
-        sendDataToIframe({ 'type': LaunchTOCForCrossLinking, 'message': { open: true, case: 'new', container: activeElement.getAttribute('id'), link: 'page-link-' + linkCount, blockCanvas: true, crossLink: true } });
+        sendDataToIframe({ 'type': LaunchTOCForCrossLinking, 'message': { open: true, case: 'new', element: activeElement.getAttribute('data-id'), link: 'page-link-' + linkCount, blockCanvas: true, crossLink: true } });
     }
 
 
