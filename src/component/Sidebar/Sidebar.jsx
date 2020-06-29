@@ -347,6 +347,9 @@ class Sidebar extends Component {
     * handleBceToggle function responsible for handling toggle value for BCE element
     */
     handleBceToggle = () => {
+        if (config.savingInProgress) {
+            return false
+        }
         this.setState({
             bceToggleValue : !this.state.bceToggleValue
         }, () => this.handleBceBlur() )
@@ -396,6 +399,9 @@ class Sidebar extends Component {
     }
 
     handleSyntaxHighlightingToggle = () => {
+        if (config.savingInProgress) {
+            return false
+        }
         let currentToggleValue = !((this.state.syntaxHighlightingToggleValue || this.state.syntaxHighlightingToggleValue == false) ? this.state.syntaxHighlightingToggleValue : true);
         if (currentToggleValue) {
             this.handleSyntaxHighlightingPopup(true);
@@ -411,6 +417,9 @@ class Sidebar extends Component {
     * handleBceNumber function responsible for handling Number start from field value in BCE element
     */
     handleBceNumber = (e) => {
+        if (config.savingInProgress) {
+            return false
+        }
         const regex = /^[0-9]*(?:\.\d{1,2})?$/
         if(regex.test(e.target.value)){                              // applying regex that will validate the value coming is only number
             this.setState({ bceNumberStartFrom: e.target.value }, () => {
@@ -420,6 +429,9 @@ class Sidebar extends Component {
 
     
     showModuleName = (e) => {
+        if (config.savingInProgress) {
+            return false
+        }
        if(this.props.activeElement.elementId){
         this.props.setCurrentModule(e.currentTarget.checked);
         let els = document.getElementsByClassName('moduleContainer');
@@ -454,6 +466,9 @@ class Sidebar extends Component {
             "loIndex" : this.props.activeElement.index,
             "slateVersionUrn": config.slateManifestURN,
             "elementParentEntityUrn":config.slateEntityURN
+        }
+        if (this.props.elementStatus[this.props.activeElement.elementId] === "approved") {
+            config.savingInProgress = true
         }
         this.props.updateElement(data)
 
@@ -508,7 +523,8 @@ const mapStateToProps = state => {
         activeElement: state.appStore.activeElement,
         showModule:state.metadataReducer.showModule,
         permissions : state.appStore.permissions,
-        showHideObj:state.appStore.showHideObj
+        showHideObj:state.appStore.showHideObj,
+        elementStatus: state.elementStatusReducer
     };
 };
 
