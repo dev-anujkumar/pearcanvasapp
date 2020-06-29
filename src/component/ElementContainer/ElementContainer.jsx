@@ -1096,8 +1096,10 @@ class ElementContainer extends Component {
                         slateLockInfo: slateLockInfo,
                         onClick: this.handleFocus,
                         glossaryFootnoteValue: this.props.glossaryFootnoteValue,
+                        elementStatus: this.props.elementStatus,
                         openAssetPopoverPopUp: this.openAssetPopoverPopUp,
                         openGlossaryFootnotePopUp: this.openGlossaryFootnotePopUp,
+                        getElementStatus: this.props.getElementStatus
                     }}><ElementShowHide />
                     </ElementContainerContext.Provider >;
                     labelText = 'SH'

@@ -2,7 +2,7 @@
 * Root Component of Interactive Element Component.
 */
 
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types'
 import TinyMceEditor from "../tinyMceEditor";
@@ -11,6 +11,7 @@ import config from '../../config/config';
 import '../../styles/ElementShowHide/ElementShowHide.css'
 import ListElement from '../ListElement'
 import ElementContainerContext from '../ElementContainer/ElementContainerContext.js'
+
 const ShowHideTinyMce = (props) => {
     const context = useContext(ElementContainerContext)
     const { permissions,
@@ -23,9 +24,27 @@ const ShowHideTinyMce = (props) => {
         slateLockInfo,
         onListSelect,
         glossaryFootnoteValue,
-        glossaaryFootnotePopup
+        glossaaryFootnotePopup,
+        elementStatus,
+        getElementStatus
     } = context;
     const { currentElement, activeShowHide, createShowHideElement, deleteShowHideUnit, innerIndex, placeholder, showHideType } = props;
+
+    /**
+     * UseEffect callback function - Fetches versioning status of each element present in show, hide and reveal section
+     */
+    const effectCallback = () => {
+        if (currentElement && currentElement.id.match(/work/g) && !elementStatus[currentElement.id]) {
+            // call element status API
+           getElementStatus(currentElement.id, innerIndex)
+        }
+    }
+
+    /**
+     * Similar to componentDidMount and componentDidUpdate
+     */
+    useEffect(effectCallback, [currentElement.id])
+
     if (currentElement.type == 'element-list') {
         <ListElement
             permissions={permissions}
