@@ -546,6 +546,10 @@ class ElementContainer extends Component {
                 else if (previousElementData.type === "stanza") {
                         html = `<p>${html}</p>`                                      
                 }
+                if(parentElement && parentElement.type === "popup"){
+                    html = html.replace(/(<sup><\/sup>)|(<sup><br><\/sup>)/g, "<br>");
+                    tempDiv.innerHTML = html
+                }
                 html =html.replace(/(\r\n|\n|\r)/gm, '')
                 previousElementData.html.text= previousElementData.html.text.replace(/<br data-mce-bogus="1">/g, "<br>").replace(/(\r\n|\n|\r)/gm, '');
                 previousElementData.html.text = previousElementData.html.text.replace(/data-mce-bogus="all"/g, '')
@@ -641,6 +645,7 @@ class ElementContainer extends Component {
                     for (let i = 0; i < tinyMCE.$(currentListNode).find('li').length; i++) {
                         tinyMCE.$(currentListNode).find('li')[i].innerHTML= tinyMCE.$(currentListNode).find('li')[i].innerHTML.replace( /[\r\n]+/gm, "" ); 
                         tinyMCE.$(currentListNode).find('li')[i].innerHTML = tinyMCE.$(currentListNode).find('li')[i].innerHTML.replace(/^\s+|\s+$/g, '&nbsp;');
+                        tinyMCE.$(currentListNode).find('li')[i].innerHTML = tinyMCE.$(currentListNode).find('li')[i].innerHTML.replace(/(<sup><\/sup>)|(<sup><br><\/sup>)/g, "");
                     } 
                     let nodehtml = currentListNode.innerHTML;
                     if(nodehtml && previousElementData.html) {
@@ -1224,7 +1229,7 @@ class ElementContainer extends Component {
         return (
             <div className="editor" data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
-                    <Button type="element-label" btnClassName={`${btnClassName} ${this.state.isOpener ? ' ignore-for-drag' : ''}`} labelText={labelText} />
+                    <Button type="element-label" btnClassName={`${btnClassName} ${this.state.isOpener ? ' ignore-for-drag' : ''}`} labelText={labelText}  onClick={(event) => this.labelClickHandler(event)} />
                     {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && config.slateType !== 'assessment' ? (<Button type="delete-element" onClick={(e) => this.showDeleteElemPopup(e,true)} />)
                         : null}
                     {this.renderColorPaletteButton(element, permissions)}
@@ -1278,6 +1283,14 @@ class ElementContainer extends Component {
             this.props.showBlocker(false)
             hideBlocker();
         }
+    }
+
+    /**
+     * @description - This function is for handling click event on the label button.
+     * @param {event}
+     */
+    labelClickHandler = (event) => {
+        event.stopPropagation();
     }
 
     /**
