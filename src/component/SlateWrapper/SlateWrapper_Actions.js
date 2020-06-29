@@ -23,6 +23,7 @@ import {
 import { sendDataToIframe } from '../../constants/utility.js';
 import { HideLoader, ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
+import { prepareTcmSnapshots, prepareElementAncestorData } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
@@ -102,6 +103,14 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         const parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
         let currentSlateData = newParentData[config.slateManifestURN];
+
+        /** [PCAT-8289]
+         * ---------------------------------- TCM Snapshot Data handling ----------------------------------
+         */
+        let elemParentData= prepareElementAncestorData(currentSlateData)
+        dispatch(prepareTcmSnapshots(createdElemData.data,'create',elemParentData))
+        /**------------------------------------------------------------------------------------------------*/
+
         if (currentSlateData.status === 'approved') {
             if(currentSlateData.type==="popup"){
                 sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });

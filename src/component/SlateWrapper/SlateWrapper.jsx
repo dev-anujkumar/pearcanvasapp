@@ -30,7 +30,7 @@ import { setSlateLock, releaseSlateLock, setLockPeriodFlag, getSlateLockStatus }
 import { setActiveElement,openPopupSlate } from '../CanvasWrapper/CanvasWrapper_Actions';
 // import { OPEN_AM } from '../../js/auth_module';
 import { showSlateLockPopup } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
-import { handleTCMData } from '../ElementContainer/TcmSnapshot_Actions'
+import { handleTCMData } from '../TcmSnapshots/TcmSnapshot_Actions.js'
 
 
 let random = guid();

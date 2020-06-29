@@ -42,7 +42,7 @@ import CitationGroup from '../CitationGroup'
 import CitationElement from '../CitationElement'
 import ElementPoetry from '../ElementPoetry';
 import ElementPoetryStanza from '../ElementPoetry/ElementPoetryStanza.jsx';
-import {handleTCMData} from './TcmSnapshot_Actions';
+import {handleTCMData} from '../TcmSnapshots/TcmSnapshot_Actions.js';
 class ElementContainer extends Component {
     constructor(props) {
         super(props);

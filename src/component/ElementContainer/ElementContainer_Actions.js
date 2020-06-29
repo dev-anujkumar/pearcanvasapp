@@ -7,6 +7,7 @@ import {
 } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP, OPEN_GLOSSARY_FOOTNOTE,DELETE_SHOW_HIDE_ELEMENT, GET_TCM_RESOURCES} from "./../../constants/Action_Constants";
 import { customEvent } from '../../js/utils';
+import { prepareTcmSnapshots, prepareElementAncestorData } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 
 export const addComment = (commentString, elementId, asideData, parentUrn) => (dispatch, getState) => {
     let url = `${config.STRUCTURE_API_URL}narrative-api/v2/${elementId}/comment/`
@@ -152,7 +153,12 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
                 }
 
             })
-
+            /** [PCAT-8289]
+            * --------------------------------- TCM Snapshot Data handling --------------------------------*
+            */
+            let elemParentData = prepareElementAncestorData(currentSlateData)//send slatedata to set parentData
+            dispatch(prepareTcmSnapshots(_requestData, 'delete', elemParentData))//currentSlateData = its bodymatter
+            /**-----------------------------------------------------------------------------------------------*/
             dispatch({
                 type: AUTHORING_ELEMENT_CREATED,
                 payload: {
@@ -303,6 +309,13 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         });
         }
         
+        /** [PCAT-8289]
+        * --------------------------------- TCM Snapshot Data handling --------------------------------*
+        */
+        let elemParentData = prepareElementAncestorData({})//send slatedata to set parentData
+        dispatch(prepareTcmSnapshots(updatedData, 'update', elemParentData))
+       /**-----------------------------------------------------------------------------------------------*/
+
         if(config.slateManifestURN === updatedData.slateVersionUrn){  //Check applied so that element does not gets copied to next slate while navigating
             if (updatedData.elementVersionType === "element-learningobjectivemapping" || updatedData.elementVersionType === "element-generateLOlist") {
                 for(let i=0;i <updatedData.metaDataAnchorID.length; i++){

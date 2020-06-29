@@ -11,6 +11,8 @@ import elementTypes from './../Sidebar/elementTypes';
 import figureDataBank from '../../js/figure_data_bank';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
+import { prepareTcmSnapshots, prepareElementAncestorData } from '../TcmSnapshots/TcmSnapshots_Utility.js';
+
 let imageSource = ['image','table','mathImage'],imageDestination = ['primary-image-figure','primary-image-table','primary-image-equation']
 
 export const convertElement = (oldElementData, newElementData, oldElementInfo, store, indexes, fromToolbar,showHideObj) => (dispatch,getState) => {
@@ -222,6 +224,15 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             "PearsonSSOSession": config.ssoToken
         }
     }).then(res =>{
+
+        /** [PCAT-8289]
+        * ---------------------------------- TCM Snapshot Data handling ----------------------------------*
+        */
+        let elemParentData = prepareElementAncestorData({})//send slatedata to set parentData
+        dispatch(prepareTcmSnapshots(res.data, 'conversion', elemParentData))
+        /**-----------------------------------------------------------------------------------------------*/
+
+        
         if (res && res.data && res.data.type && res.data.type === 'figure' && res.data.figuretype && res.data.figuretype === 'codelisting') {
             if (res.data.figuredata && !res.data.figuredata.programlanguage) {
                 res.data.figuredata.programlanguage = 'Select';

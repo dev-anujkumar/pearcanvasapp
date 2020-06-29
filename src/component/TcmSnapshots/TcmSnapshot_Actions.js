@@ -1,7 +1,6 @@
 import axios from 'axios';
 import config from '../../config/config';
 import { sendDataToIframe } from '../../constants/utility.js';
-
 import { GET_TCM_RESOURCES } from '../../constants/Action_Constants';
 
  /**
@@ -65,3 +64,10 @@ export const tcmSnapshot = (slateManifestUrn,slateEntityUrn) => (dispatch, getSt
 
 }
 
+export const sendElementTcmSnapshot = (snapshotData)=> (dispatch, getState) =>{
+    /** requestBody = snapshotData
+     * API CALL HERE
+     */
+    console.log('snapshotData',snapshotData)
+
+}

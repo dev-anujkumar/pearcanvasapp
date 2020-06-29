@@ -21,7 +21,7 @@ import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 import elementDataBank from './elementDataBank'
 import figureData from '../ElementFigure/figureTypes.js';
 import { fetchAllSlatesData, setCurrentSlateAncestorData } from '../../js/getAllSlatesData.js';
-import { handleTCMData, tcmSnapshot } from '../../component/ElementContainer/TcmSnapshot_Actions';
+import { handleTCMData, tcmSnapshot } from '../TcmSnapshots/TcmSnapshot_Actions';
 
 const findElementType = (element, index) => {
     let elementType = {};
