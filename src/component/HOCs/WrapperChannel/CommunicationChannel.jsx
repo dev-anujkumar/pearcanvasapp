@@ -369,6 +369,9 @@ function CommunicationChannel(WrappedComponent) {
                 currentSlateObject = {
                     title: message.node.unformattedTitle ? message.node.unformattedTitle.en : ''
                 }
+                this.setState({
+                    showBlocker : false
+                }) 
                 this.props.setUpdatedSlateTitle(currentSlateObject)
                 config.staleTitle = message.node.unformattedTitle ? message.node.unformattedTitle.en : '';
                 config.slateEntityURN = message.node.entityUrn;
