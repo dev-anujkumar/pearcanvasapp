@@ -545,6 +545,10 @@ class ElementContainer extends Component {
                 else if (previousElementData.type === "stanza") {
                         html = `<p>${html}</p>`                                      
                 }
+                if(parentElement && parentElement.type === "popup"){
+                    html = html.replace(/(<sup><\/sup>)|(<sup><br><\/sup>)/g, "<br>");
+                    tempDiv.innerHTML = html
+                }
                 html =html.replace(/(\r\n|\n|\r)/gm, '')
                 previousElementData.html.text= previousElementData.html.text.replace(/<br data-mce-bogus="1">/g, "<br>").replace(/(\r\n|\n|\r)/gm, '');
                 previousElementData.html.text = previousElementData.html.text.replace(/data-mce-bogus="all"/g, '')
@@ -640,6 +644,7 @@ class ElementContainer extends Component {
                     for (let i = 0; i < tinyMCE.$(currentListNode).find('li').length; i++) {
                         tinyMCE.$(currentListNode).find('li')[i].innerHTML= tinyMCE.$(currentListNode).find('li')[i].innerHTML.replace( /[\r\n]+/gm, "" ); 
                         tinyMCE.$(currentListNode).find('li')[i].innerHTML = tinyMCE.$(currentListNode).find('li')[i].innerHTML.replace(/^\s+|\s+$/g, '&nbsp;');
+                        tinyMCE.$(currentListNode).find('li')[i].innerHTML = tinyMCE.$(currentListNode).find('li')[i].innerHTML.replace(/(<sup><\/sup>)|(<sup><br><\/sup>)/g, "");
                     } 
                     let nodehtml = currentListNode.innerHTML;
                     if(nodehtml && previousElementData.html) {

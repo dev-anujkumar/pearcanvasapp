@@ -36,7 +36,10 @@ const _Toolbar = props => {
     function hideSlateTagIcon() {
         if (document.getElementsByClassName("slate-tag-icon").length) {
             document.getElementsByClassName("slate-tag-icon")[0].style.display = "block";
-        }
+            if (config.slateType == "section") {
+                document.getElementsByClassName("slate-tag-icon")[0].classList.remove("disable");
+            }
+        } 
     }
       
 
