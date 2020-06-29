@@ -34,7 +34,7 @@ class ElementPopup extends React.Component {
             return false
         }
         if(event.target.classList[0] !== "paragraphNumeroUno" && event.target.classList[0] !== "actionPU"){
-            if(!(checkSlateLock(this.props.slateLockInfo) || this.props.activeElement.elementId !== this.props.element.id)){
+            if(!(checkSlateLock(this.props.slateLockInfo) || this.props.activeElement.elementId !== this.props.element.id || config.savingInProgress)){
                 this.renderSlate()
             }
         } 
@@ -77,7 +77,7 @@ class ElementPopup extends React.Component {
                     <div className="pearson-component pu"  data-uri="" data-type="pu" data-width="600" data-height="399" ref={this.popupBorderRef}>
                         {
                             <a className="buttonWidgetPU">
-                            <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-2`} placeholder="Enter call to action..." className={"actionPU"} id={this.props.id} element={element} currentElement = {element.popupdata && element.popupdata.postertextobject[0]} model={element.popupdata && element.popupdata.postertextobject? element.popupdata.postertextobject[0].html.text : "" } 
+                            <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-2`} placeholder="Enter call to action..." className={"actionPU"} id={this.props.id} element={element} currentElement = {element.popupdata && element.popupdata.postertextobject && element.popupdata.postertextobject[0]} model={element.popupdata && element.popupdata.postertextobject? element.popupdata.postertextobject[0].html.text : "" } 
                             handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} elementId={this.props.elementId} popupField = "postertextobject" createPopupUnit={this.createPopupUnit}/>
                             </a>
                         }

@@ -1093,6 +1093,9 @@ class SlateWrapper extends Component {
         }
     }
     closePopup = () =>{
+        if (config.savingInProgress) {
+            return false
+        }
         let popupId = config.slateManifestURN
         if(this.props.slateData[config.tempSlateManifestURN].status === "approved" && this.props.slateData[config.slateManifestURN].status === "wip"){
             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })

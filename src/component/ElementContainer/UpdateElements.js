@@ -471,7 +471,7 @@ const validateRevealAnswerData = (showHideType, node, elementType) => {
  * @param {*} containerContext 
  */
 export const createUpdatedData = (type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext,parentElement,showHideType,asideData, poetryData) => {
-    let appStore = store.getState().appStore
+    let { appStore, elementStatusReducer } = store.getState()
     let dataToReturn = {}
     switch (type){
         case elementTypeConstant.AUTHORED_TEXT:
@@ -602,10 +602,14 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
     
     let slateEntityUrn = dataToReturn.elementParentEntityUrn || appStore.parentUrn && appStore.parentUrn.contentUrn || config.slateEntityURN
     dataToReturn = { ...dataToReturn, index: index.toString().split('-')[index.toString().split('-').length - 1], elementParentEntityUrn: slateEntityUrn }
+    if (elementStatusReducer[dataToReturn.id] && elementStatusReducer[dataToReturn.id] === "approved") {
+        config.savingInProgress = true
+    }
     return dataToReturn
 }
 
 export const createOpenerElementData = (elementData, elementType, primaryOption, secondaryOption) => {
+    let { elementStatusReducer } = store.getState()
     let dataToReturn = {};
     if(elementData) {
         dataToReturn = {
@@ -616,6 +620,9 @@ export const createOpenerElementData = (elementData, elementType, primaryOption,
             elementParentEntityUrn: config.slateEntityURN
         }
     }
-
+    
+    if (elementStatusReducer[dataToReturn.id] && elementStatusReducer[dataToReturn.id] === "approved") {
+        config.savingInProgress = true
+    }
     return dataToReturn;
 }

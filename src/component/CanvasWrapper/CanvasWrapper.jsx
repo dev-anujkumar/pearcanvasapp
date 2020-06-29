@@ -16,7 +16,7 @@ import { sendDataToIframe , hasReviewerRole} from '../../constants/utility.js';
 import { CanvasIframeLoaded, ShowHeader,TocToggle } from '../../constants/IFrameMessageTypes.js';
 import { getSlateLockStatus, releaseSlateLock } from './SlateLock_Actions'
 import GlossaryFootnoteMenu from '../GlossaryFootnotePopup/GlossaryFootnoteMenu.jsx';
-import {updateElement,getTableEditorData}from '../../component/ElementContainer/ElementContainer_Actions'
+import {updateElement, getTableEditorData, clearElementStatus}from '../../component/ElementContainer/ElementContainer_Actions'
 // IMPORT - Actions //
 import { fetchSlateData, fetchAuthUser, openPopupSlate } from './CanvasWrapper_Actions';
 import {toggleCommentsPanel,fetchComments,fetchCommentByElement} from '../CommentsPanel/CommentsPanel_Action'
@@ -268,6 +268,7 @@ export default connect(
         setSlateParent,
         openPopupSlate,
         getTableEditorData,
-        getAllSlatesData
+        getAllSlatesData,
+        clearElementStatus
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

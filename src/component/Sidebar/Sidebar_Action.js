@@ -14,7 +14,7 @@ import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
 let imageSource = ['image','table','mathImage'],imageDestination = ['primary-image-figure','primary-image-table','primary-image-equation']
 
 export const convertElement = (oldElementData, newElementData, oldElementInfo, store, indexes, fromToolbar,showHideObj) => (dispatch,getState) => {
-    let appStore =  getState().appStore;
+    let { appStore, elementStatusReducer } =  getState();
     try {
         let conversionDataToSend = {};
     // Input Element
@@ -230,7 +230,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     conversionDataToSend["elementParentEntityUrn"] = parentEntityUrn
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
     config.conversionInProcess = true
-    if(conversionDataToSend.status === "approved"){
+    if(elementStatusReducer[conversionDataToSend.id] === "approved"){
         config.savingInProgress = true
     }
     const url = `${config.REACT_APP_API_URL}v1/slate/elementTypeConversion/${overallType}`
