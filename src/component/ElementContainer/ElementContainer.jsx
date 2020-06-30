@@ -163,7 +163,7 @@ class ElementContainer extends Component {
         if (!(this.props.permissions && (this.props.permissions.includes('access_formatting_bar') || this.props.permissions.includes('elements_add_remove'))) && !hasReviewerRole()) {
             return true
         }
-        if (updateFromC2Flag) {
+        if (updateFromC2Flag == "updateFromC2") {
             if (this.props.element.type === "openerelement") {
                 this.setState({
                     borderToggle: 'active'
@@ -176,7 +176,7 @@ class ElementContainer extends Component {
                 })
             }
             config.lastActiveElementId=element.id
-            this.props.setActiveElement(element, index, "", "", true, showHideObj);
+            this.props.setActiveElement(element, index, this.props.parentUrn, this.props.asideData, true, showHideObj);
         }
         else {
             if (this.props.element.type === "openerelement") {
