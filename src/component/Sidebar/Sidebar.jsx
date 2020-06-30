@@ -177,7 +177,7 @@ class Sidebar extends Component {
             primaryOptions = <div className="panel_show_module">
                     <div className="learning-obejective-text"><b>Metadata Anchor</b></div>
                         <p>Show Module Name</p>
-                        <label className="switch"><input type="checkbox" onClick={this.showModuleName} checked={this.props.showModule? true : false} /><span className="slider round"></span></label>
+                        <label className="switch"><input type="checkbox" onClick={!config.savingInProgress && this.showModuleName} checked={this.props.showModule? true : false} /><span className="slider round"></span></label>
                         </div>;
             return primaryOptions;
         }
@@ -313,12 +313,12 @@ class Sidebar extends Component {
                 attributions = <div>
                     <div className="panel_show_module">
                         <div className="toggle-value-bce">Use Line Numbers</div>
-                        <label className="switch"><input type="checkbox" checked={(this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true} onClick={ !hasReviewerRole() && this.handleBceToggle}/>
+                        <label className="switch"><input type="checkbox" checked={(this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true} onClick={ !hasReviewerRole() && !config.savingInProgress && this.handleBceToggle}/>
                         <span className="slider round"></span></label>
                     </div>
                     <div className="alt-Text-LineNumber" >
                         <div className="toggle-value-bce">Start numbering from</div>
-                        <input type="number" id="line-number" className="line-number" min="1" onChange={this.handleBceNumber} value={this.state.bceNumberStartFrom}
+                        <input type="number" id="line-number" className="line-number" min="1" onChange={!config.savingInProgress && this.handleBceNumber} value={this.state.bceNumberStartFrom}
                         disabled={!((this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true) || hasReviewerRole()} onBlur={this.handleBceBlur}/>
                     </div>
                 </div>
@@ -353,9 +353,6 @@ class Sidebar extends Component {
     * handleBceToggle function responsible for handling toggle value for BCE element
     */
     handleBceToggle = () => {
-        if (config.savingInProgress) {
-            return false
-        }
         this.setState({
             bceToggleValue : !this.state.bceToggleValue
         }, () => this.handleBceBlur() )
@@ -405,9 +402,6 @@ class Sidebar extends Component {
     }
 
     handleSyntaxHighlightingToggle = () => {
-        if (config.savingInProgress) {
-            return false
-        }
         let currentToggleValue = !((this.state.syntaxHighlightingToggleValue || this.state.syntaxHighlightingToggleValue == false) ? this.state.syntaxHighlightingToggleValue : true);
         if (currentToggleValue) {
             this.handleSyntaxHighlightingPopup(true);
@@ -423,9 +417,6 @@ class Sidebar extends Component {
     * handleBceNumber function responsible for handling Number start from field value in BCE element
     */
     handleBceNumber = (e) => {
-        if (config.savingInProgress) {
-            return false
-        }
         const regex = /^[0-9]*(?:\.\d{1,2})?$/
         if(regex.test(e.target.value)){                              // applying regex that will validate the value coming is only number
             this.setState({ bceNumberStartFrom: e.target.value }, () => {
@@ -435,9 +426,6 @@ class Sidebar extends Component {
 
     
     showModuleName = (e) => {
-        if (config.savingInProgress) {
-            return false
-        }
        if(this.props.activeElement.elementId){
         this.props.setCurrentModule(e.currentTarget.checked);
         let els = document.getElementsByClassName('moduleContainer');
@@ -485,7 +473,7 @@ class Sidebar extends Component {
             return <div className="panel_syntax_highlighting">
                 <div className="toggle-value-bce">Syntax-highlighting</div>
                 <label className="switch">
-                    <input type="checkbox" checked={(this.state.syntaxHighlightingToggleValue || this.state.syntaxHighlightingToggleValue === false) ? this.state.syntaxHighlightingToggleValue : true} onClick={!hasReviewerRole() && this.handleSyntaxHighlightingToggle} />
+                    <input type="checkbox" checked={(this.state.syntaxHighlightingToggleValue || this.state.syntaxHighlightingToggleValue === false) ? this.state.syntaxHighlightingToggleValue : true} onClick={!hasReviewerRole() && !config.savingInProgress && this.handleSyntaxHighlightingToggle} />
                     <span className="slider round"></span>
                 </label>
             </div>
