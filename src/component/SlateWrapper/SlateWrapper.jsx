@@ -888,10 +888,10 @@ class SlateWrapper extends Component {
         const { pageLoading } = this.props;
         try {
             if (_elements !== null && _elements !== undefined) {
+                this.renderButtonsonCondition(_elements);
                 if (_elements.length === 0) {
                     return this.renderBlankSlate(this.props)
                 }
-                this.renderButtonsonCondition(_elements);
                 return _elements.map((element, index) => {
                         return (
                            <React.Fragment key={element.id}>
