@@ -37,7 +37,7 @@ class CiteTdxTable extends Component {
         const { singleAssessmentData, isLoading, assessmenterrFlag } = this.props;
         return (
             <div>
-                <div className='main-div'>
+                <div className='cite-tdx-wrapper main-div'>
                 <CiteLoader isLoading={this.props.isLoading} citeErrorFlag={this.props.citeErrorFlag} />
                         <table className='assessment-table-class single-assessment'>
                             <thead>
@@ -85,11 +85,9 @@ const mapStateToProps = (state) => {
     return {
         singleAssessmentData: state.citeTdxReducer.singleAssessmentData,
         isLoading: state.citeTdxReducer.isLoading,
-        currentSingleAssessmentSelected:state.citeTdxReducer.currentSingleAssessmentSelected,
         citeErrorFlag: state.citeTdxReducer.assessmenterrFlag,
         assessmenterrFlag: state.citeTdxReducer.assessmenterrFlag,
-        currentSingleAssessmentSelected: state.citeTdxReducer.currentSingleAssessmentSelected
-        
+        currentSingleAssessmentSelected: state.citeTdxReducer.currentSingleAssessmentSelected   
     }
 }
 

@@ -12,6 +12,7 @@ export const SET_PARENT_ASIDE_DATA = "SET_PARENT_ASIDE_DATA"
 export const SET_PARENT_SHOW_DATA = "SET_PARENT_SHOW_DATA"
 export const GET_ALL_SLATES_DATA = "GET_ALL_SLATES_DATA"
 export const SET_CURRENT_SLATE_DATA = "SET_CURRENT_SLATE_DATA"
+export const GET_USAGE_TYPE = "GET_USAGE_TYPE"
 
 /*---------------Comments Panel ----------------------*/
 export const FETCH_COMMENTS = 'FETCH_COMMENTS'
@@ -37,7 +38,6 @@ export const INTERACTIVE_ELEMENT_CREATED = "INTERACTIVE_ELEMENT_CREATED"
 export const AUTHORING_ELEMENT_UPDATE = "AUTHORING_ELEMENT_UPDATE"
 export const SET_OLD_IMAGE_PATH = "SET_OLD_IMAGE_PATH"
 /*---------------Element Container ----------------------*/
-export const ADD_COMMENT = "ADD_COMMENT"
 export const DELETE_ELEMENT = "DELETE_ELEMENT"
 export const OPEN_GLOSSARY_FOOTNOTE = "OPEN_GLOSSARY_FOOTNOTE"
 export const ADD_GLOSSARY_FOOTNOTE = "ADD_GLOSSARY_FOOTNOTE"
@@ -91,6 +91,7 @@ export const GET_PROJECT_PERMISSIONS = 'GET_PROJECT_PERMISSIONS'
 
 /*--------------- Page Numbering -------------------*/
 export const UPDATE_PAGENUMBER_SUCCESS = 'UPDATE_PAGENUMBER_SUCCESS'
+export const PAGE_NUMBER_LOADER = 'PAGE_NUMBER_LOADER'
 export const UPDATE_PAGENUMBER = 'UPDATE_PAGENUMBER'
 export const UPDATE_PAGENUMBER_FAIL = 'UPDATE_PAGENUMBER_FAIL'
 
@@ -110,3 +111,6 @@ export const DELETE_SHOW_HIDE_ELEMENT = "DELETE_SHOW_HIDE_ELEMENT"
 
 /*--------------- Slate Title -------------------*/
 export const SLATE_TITLE = 'Title'
+/*--------------- TCM Snapshot -------------------*/
+export const GET_TCM_RESOURCES = 'GET_TCM_RESOURCES'
+export const GET_TCM_STATUS_OF_PROJECT = 'GET_TCM_STATUS_OF_PROJECT'

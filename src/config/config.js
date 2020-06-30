@@ -1,6 +1,6 @@
 let config = {
     NODE_ENV : process.env.NODE_ENV || "development",
-    REACT_APP_API_URL :"https://10.11.7.24:8443/cypress-api/",
+    REACT_APP_API_URL :"https://10.11.7.246:8443/cypress-api/",
     STRUCTURE_API_URL :"https://contentapis-staging.pearsoncms.net/",
     LEARNING_OBJECTIVES_ENDPOINT:"https://contentapis-staging.pearsoncms.net/lo-api/",
     ASSET_POPOVER_ENDPOINT: "https://contentapis-staging.pearsoncms.net/manifest-api/",
@@ -12,12 +12,13 @@ let config = {
     SLATE_REFRESH_URL : "https://contentapis-staging.pearsoncms.net/structure-api/container/v2/",
     AUDIO_NARRATION_URL : 'https://contentapis-staging.pearsoncms.net/structure-api/',
     PAGE_NUMBER_UPDATE_ENDPOINT : "https://contentapis-staging.pearsoncms.net/print-api",
+    NARRATIVE_API_ENDPOINT:"https://contentapis-qa.pearsoncms.net/narrative-api/",
     OPENER_ELEMENT_COREAPI_KEY:  "PAMkIwLGoPIJtNZHc1SzowG7GFlHDZHJ",
     AUDIO_API_KEY : "Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld",
     API_URL: "./api",
     COREAPI_ENDPOINT: "https://contentapis-staging.pearsoncms.net/core-api",
     CONTENT_SCAPI_ENDPOINT : "https://staging.api.pearson.com/content/scapi",
-    JAVA_API_URL: "https://10.11.7.24:8443/app/toc-javaapp/",
+    JAVA_API_URL: "https://10.11.7.246:8443/app/toc-javaapp/",
     STRUCTURE_APIKEY:'Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld',
     MANIFEST_APIKEY: 'YFeLXDGqbBj2GZf85jpcZOQCEasAK5hc',
     TCM_DASHBOARD_UI_URL: process.env.NODE_ENV === 'production' ? `${window.parent.origin}/cypress/trackchanges/index.html` :"https://test-structuredauthoring.pearson.com/cypress/trackchanges/index.html",
@@ -62,7 +63,8 @@ let config = {
         CITE_NODE_REF: "ebaaf975-a68b-4ca6-9604-3d37111b847a",
         CITE_REPO_INSTANCC:"https://staging.api.pearson.com/content/cmis/uswip-aws",
         CITE_REPO_NAME:"AWS US"
-    } 
+    },
+    NARRATIVE_API_ENDPOINT: "https://contentapis-qa.pearsoncms.net/narrative-api/" 
 };
 
 if (process.env.NODE_ENV === "development") {

@@ -239,6 +239,7 @@ export class AssessmentSlateCanvas extends Component {
                     handleEditorFocus={this.props.handleFocus}
                     className="addLOdata"
                     permissions={this.props.permissions}
+                    element={this.props.model}
                 />
                     
                 {this.state.showAssessmentPopup ? <PopUp handleC2Click={this.handleC2AssessmentClick} togglePopup={this.toggleAssessmentPopup} assessmentAndInteractive={"assessmentAndInteractive"} dialogText={'PLEASE ENTER A PRODUCT UUID'} /> : ''}

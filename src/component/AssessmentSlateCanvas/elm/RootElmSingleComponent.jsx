@@ -4,7 +4,7 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import './../../../styles/AssessmentSlateCanvas/elm/RootElmComponent.css';
-import { insertElmResourceAction, fetchAssessmentItem, openAssessmentSearchBar,setSearchBlock } from './Actions/ElmActions';
+import { insertElmResourceAction, fetchAssessmentItem, openAssessmentSearchBar } from './Actions/ElmActions';
 import ElmHeader from './Components/ElmHeader';
 import ElmTableComponent from './Components/ElmTableComponent';
 
@@ -17,10 +17,6 @@ const RootElmSingleAssessment = (props) => {
         props.elmResource(props.activeAssessmentType);
     },[])
 
-    /*** @description - This function is to pass props to elm-Header component*/
-    const elmHeaderProps = {
-        title: 'Pearson Unified Format Assessments'
-    };
     const closeElmLearnosityWindow =()=>{
         props.openAssessmentSearchBar(props.activeAssessmentType, false)
         props.closeElmWindow();
@@ -28,7 +24,7 @@ const RootElmSingleAssessment = (props) => {
     return (
         <div className="vex-overlay elm-wrapper">
             <div className="root-container">
-                <ElmHeader elmHeaderProps={elmHeaderProps} closeElmWindow={closeElmLearnosityWindow}/>
+                <ElmHeader closeElmWindow={closeElmLearnosityWindow} activeAssessmentType={props.activeAssessmentType}/>
                 {props.elmReducer.errFlag == null ?
                     <div className="elm-loader"></div> :
                     <ElmTableComponent
@@ -54,7 +50,6 @@ const RootElmSingleAssessment = (props) => {
 const mapActionToProps = {
     elmResource: insertElmResourceAction,
     fetchAssessmentItem: fetchAssessmentItem,
-    setSearchBlock:setSearchBlock,
     openAssessmentSearchBar:openAssessmentSearchBar
 }
 

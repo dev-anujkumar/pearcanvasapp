@@ -363,7 +363,7 @@ export default {
                     labelText: 'BCE',
                     enum: 'LISP'
                 },
-                'secondary-blockcode-language-objective-c': {
+                'secondary-blockcode-language-objective_c': {
                     text: 'Objective C',
                     labelText: 'BCE',
                     enum: 'OBJECTIVE_C'
@@ -584,7 +584,7 @@ export default {
         'primary-single-assessment': {		
             text: 'Single Assessment',
             toolbar:['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag'],
-            enum: '',		
+            enum: 'SINGLE_ASSESSMENT',		
             subtype: {		
                 'secondary-single-assessment-cite': {
                     text: 'CITE',
@@ -597,7 +597,7 @@ export default {
                     enum: 'SINGLE_ASSESSMENT_TDX'
                 },
                 'secondary-single-assessment-puf': {
-                    text: 'PUF',
+                    text: 'Elm',
                     labelText: 'Qu',
                     enum: 'SINGLE_ASSESSMENT_PUF'
                 },
@@ -623,7 +623,7 @@ export default {
                     enum: 'ELEMENT_ASSESSMENT'		
                 },
                 'secondary-assessment-puf' : {
-                    text: 'PUF',		
+                    text: 'ELM',		
                     labelText: 'As',
                     enum: 'ELEMENT_ASSESSMENT'	
                 },

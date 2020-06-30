@@ -16,7 +16,7 @@ export const getCiteTdxData = (assessmentType, assessmentTitle, filterUUID, page
     var assessmentDispatchType = (assessmentType === FULL_ASSESSMENT_CITE)? 'GET_CITE_RESOURCES': (assessmentType === FULL_ASSESSMENT_TDX)?'GET_TDX_RESOURCES': 'GET_MMI_RESOURCES';
     let pageSize=25;
 
-    let url = `${config.ASSESSMENT_ENDPOINT}assessments/v3/search?taxonomicTypes=${assessmentType === FULL_ASSESSMENT_CITE ? `CITE` : assessmentType === FULL_ASSESSMENT_TDX? `TDX` :'MMI'}&status=approved&name=${searchTitle}&page=${startPage}&pageSize=${pageSize}&sortAttribute=${sortBy}&sortOrder=${sortOrder}`;
+    let url = `${config.ASSESSMENT_ENDPOINT}assessments/v3/search?taxonomicTypes=${assessmentType === FULL_ASSESSMENT_CITE ? `CITE` : assessmentType === FULL_ASSESSMENT_TDX? `TDX` :'MMI'}&status=approved&name=${searchTitle}&page=${startPage}&pageSize=${pageSize}&sortAttribute=${sortBy}&sortOrder=${sortOrder}&collation.caseSensitivity=false&groupByEntity=true`;
 
     return axios.get(url, {
         headers: {

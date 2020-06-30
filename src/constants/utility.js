@@ -395,15 +395,3 @@ const htmlEntityList = {
     "§#9182;": ["⏞", ""],
     "§#9183;": ["⏟", ""],
 }
-
-/** This is a function to set Assessment Title for Quad Assessment
- */
-export const setAssessmentTitle = (props) => {
-    let assessmentTitle = null;
-    if (props && props.model && props.model.html && props.model.html.title) {
-        assessmentTitle = props.model.html.title
-    } else if (props && props.model && props.model.title && props.model.title.text) {
-        assessmentTitle = props.model.title.text
-    }
-    return assessmentTitle;
-}

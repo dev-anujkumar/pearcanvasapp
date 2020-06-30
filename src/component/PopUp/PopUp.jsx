@@ -71,14 +71,14 @@ class PopUp extends React.Component {
             return(
                 <div  className={`dialog-buttons ${props.assessmentClass}`}>
                     <span className="save-button" onClick={props.deleteElement}>{props.yesButton}</span>
-                    <span className="cancel-button" id='close-container' onClick={() => props.togglePopup(false)}>{props.cancelBtnText}</span>
+                    <span className="cancel-button" id='close-container' onClick={(e) => props.togglePopup(false,e)}>{props.cancelBtnText}</span>
                 </div>
             )            
         }
-        if(props.isSplitSlatePopup){
+        if(props.isSplitSlatePopup || props.sytaxHighlight){
             return(
                 <div className={`dialog-buttons ${props.splitSlateClass}`}>
-                    <span className={`save-button ${props.splitSlateClass}`} onClick={props.handleSplit}>Yes</span>
+                    <span className={`save-button ${props.splitSlateClass}`} onClick={props.confirmCallback}>Yes</span>
                     <span className={`cancel-button ${props.splitSlateClass}`} id='close-container' onClick={(e) => props.togglePopup(false, e)}>Cancel</span>
                 </div>
             )
@@ -105,7 +105,7 @@ class PopUp extends React.Component {
     * @param {event} 
     */
     renderInputBox = (props) => {
-        if(props.showDeleteElemPopup || props.isLockReleasePopup ||  props.isSplitSlatePopup || props.tocDelete || props.removeConfirmation || props.wrongAudio || props.lockForTOC){
+        if(props.showDeleteElemPopup || props.isLockReleasePopup ||  props.isSplitSlatePopup || props.tocDelete || props.removeConfirmation || props.wrongAudio || props.lockForTOC || props.sytaxHighlight){
             return null
         }
         else if(props.isLockPopup && props.withInputBox && !props.lockForTOC){
@@ -121,18 +121,23 @@ class PopUp extends React.Component {
         }
         else{
           return (
-            <textarea autoFocus className={`dialog-input-textarea ${props.assessmentClass}`} type="text" onChange={(event)=>props.handleChange(event.target.value)}
+            <textarea autoFocus className={`dialog-input-textarea ${props.assessmentClass}`} type="text" onChange={(event)=>props.handleChange(event.target.value)} onClick={(event) => this.handleClickTextArea(event)}
             placeholder={props.placeholder} disabled={props.isInputDisabled} value={props.inputValue} rows={props.rows} cols={props.cols} maxLength={props.maxLength}/>
           )  
         }
     }
+
+    handleClickTextArea = (event) => {
+        event.stopPropagation();
+    }
+    
     renderCloseSymbol = (props) => {
-        if(props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.tocDelete || props.assessmentAndInteractive || props.removeConfirmation){
+        if(props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.tocDelete || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight){
             return null
         }
         else{
             return (
-                <span className={`close ${props.assessmentClass}`} onClick={() => props.togglePopup(false)}>&times;</span>
+                <span className={`close ${props.assessmentClass}`} onClick={(e) => props.togglePopup(false, e)}>&times;</span>
             )
         }
     }
@@ -174,7 +179,7 @@ class PopUp extends React.Component {
                 <div className={`dialog-window ${props.splitSlateClass}`} >{props.dialogText}</div>
             )
         }
-        else if(props.isLockPopup){
+        else if(props.isLockPopup || props.sytaxHighlight){
             return (
                 <div className={`dialog-window ${props.slateLockClass}`} >{props.dialogText}</div>
             )  
@@ -205,7 +210,7 @@ class PopUp extends React.Component {
                             <div className={`dialog-input ${assessmentClass}`}>
                                 {this.renderInputBox(this.props)}
                             </div>
-                            <div class="popup-note-message">{this.props.note?this.props.note:''}</div>
+                            <div className="popup-note-message">{this.props.note?this.props.note:''}</div>
                             {this.renderButtons(this.props)}
                         </div>
                     </div>

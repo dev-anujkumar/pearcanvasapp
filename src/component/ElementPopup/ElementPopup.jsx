@@ -35,7 +35,7 @@ class ElementPopup extends React.Component {
             return false
         }
         if(event.target.classList.contains("buttonWidgetPU")){
-            if(!(checkSlateLock(this.props.slateLockInfo) || this.props.activeElement.elementId !== this.props.element.id)){
+            if(!(checkSlateLock(this.props.slateLockInfo) || this.props.activeElement.elementId !== this.props.element.id  || config.savingInProgress)){
                 this.renderSlate()
             }
         } 
@@ -52,7 +52,7 @@ class ElementPopup extends React.Component {
             element: {...element}
         }
         sendDataToIframe({'type': ShowLoader,'message': { status: true }});
-        this.props.fetchSlateData(config.slateManifestURN, config.slateEntityURN, 0, false);
+        this.props.fetchSlateData(config.slateManifestURN, config.slateEntityURN, 0, false,"");
     }
 
     /**
@@ -130,7 +130,7 @@ class ElementPopup extends React.Component {
                                     className = {"actionPU formatted-text"} 
                                     id = {this.props.id}
                                     element = {element}
-                                    currentElement = {popupdata && popupdata.postertextobject[0]}
+                                    currentElement = {popupdata && popupdata.postertextobject && popupdata.postertextobject[0]}
                                     model = {popupdata && popupdata.postertextobject ? popupdata.postertextobject[0].html.text : "" }
                                     handleEditorFocus = {this.props.handleFocus}
                                     handleBlur = {this.props.handleBlur} 

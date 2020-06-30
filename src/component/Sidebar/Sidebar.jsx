@@ -10,6 +10,10 @@ import { setCurrentModule } from '../ElementMetaDataAnchor/ElementMetaDataAnchor
 import './../../styles/Sidebar/Sidebar.css';
 import { hasReviewerRole } from '../../constants/utility.js'
 import config from '../../../src/config/config.js';
+import PopUp from '../PopUp/index.js';
+import { SYNTAX_HIGHLIGHTING } from '../SlateWrapper/SlateWrapperConstants.js';
+import { showBlocker,hideBlocker } from '../../js/toggleLoader';
+import { customEvent } from '../../js/utils.js';
 
 class Sidebar extends Component {
     constructor(props) {
@@ -20,8 +24,9 @@ class Sidebar extends Component {
         let primaryFirstOption = Object.keys(elementTypeList)[0];
         let secondaryFirstOption = Object.keys(elementTypeList[primaryFirstOption].subtype)[0];
         let labelText = elementTypeList[primaryFirstOption].subtype[secondaryFirstOption].labelText;
-        let numbered = this.props.activeElement.numbered || true;
+        let numbered = this.props.activeElement.numbered;
         let startNumber = this.props.activeElement.startNumber || "1";
+        let syntaxhighlighting =  this.props.activeElement.syntaxhighlighting;
         
         this.state = {
             elementDropdown: '',
@@ -32,6 +37,8 @@ class Sidebar extends Component {
             activeLabelText: labelText,
             attrInput: "",
             bceToggleValue: numbered,
+            syntaxHighlightingToggleValue: syntaxhighlighting,
+            showSyntaxHighlightingPopup : false,
             bceNumberStartFrom : startNumber
         };
     }
@@ -41,10 +48,12 @@ class Sidebar extends Component {
             let elementDropdown = prevState.elementDropdown;
             let numberStartFrom = prevState.bceNumberStartFrom;
             let bceToggle = prevState.bceToggleValue;
+            let bceSyntaxHighlight = prevState.syntaxHighlightingToggleValue;
             if(nextProps.activeElement.elementId !== prevState.activeElementId) {
                 elementDropdown = '';
-                numberStartFrom = nextProps.activeElement.startNumber || "1";
-                bceToggle = nextProps.activeElement.numbered || true
+                numberStartFrom = nextProps.activeElement.startNumber;
+                bceToggle = nextProps.activeElement.numbered;
+                bceSyntaxHighlight = nextProps.activeElement.syntaxhighlighting ;
             }
             
             return {
@@ -55,7 +64,8 @@ class Sidebar extends Component {
                 activeSecondaryOption: nextProps.activeElement.secondaryOption,
                 activeLabelText: nextProps.activeElement.tag,
                 bceNumberStartFrom : numberStartFrom,
-                bceToggleValue : bceToggle
+                bceToggleValue : bceToggle,
+                syntaxHighlightingToggleValue : bceSyntaxHighlight
             };
         }
 
@@ -167,7 +177,7 @@ class Sidebar extends Component {
             primaryOptions = <div className="panel_show_module">
                     <div className="learning-obejective-text"><b>Metadata Anchor</b></div>
                         <p>Show Module Name</p>
-                        <label className="switch"><input type="checkbox" onClick={this.showModuleName} checked={this.props.showModule? true : false} /><span className="slider round"></span></label>
+                        <label className="switch"><input type="checkbox" onClick={!config.savingInProgress && this.showModuleName} checked={this.props.showModule? true : false} /><span className="slider round"></span></label>
                         </div>;
             return primaryOptions;
         }
@@ -244,8 +254,8 @@ class Sidebar extends Component {
             attrInput: event.target.value
         })
         let activeElement = document.querySelector(`[data-id="${this.props.activeElement.elementId}"]`)
-        let attrNode = activeElement.querySelector(".blockquoteTextCredit")
-        attrNode.innerHTML = event.target.value
+        let attrNode = activeElement.querySelector(".blockquoteTextCredit");
+        attrNode.innerHTML = event.target.value.replace(/</g, "&lt;").replace(/>/g, "&gt;");
     }
     
     attributions = () => {
@@ -277,7 +287,7 @@ class Sidebar extends Component {
             if(attributionsList.length > 0) {
                 let activeElement = document.querySelector(`[data-id="${this.props.activeElement.elementId}"]`)
                 let attrNode = activeElement ? activeElement.querySelector(".blockquoteTextCredit") : null
-                let attrValue = attrNode && attrNode.innerHTML!=null ? attrNode.innerHTML.replace(/<br>/g, "") : ""
+                let attrValue = attrNode && attrNode.innerHTML!=null ? attrNode.innerHTML.replace(/<br>/g, "").replace(/&lt;/g, "<").replace(/&gt;/g, ">") : ""
                 attributions = attributionsList.map(item => {
                     let isDisable = (item === 'attribution' ? hasReviewerRole() : !attributionsObject[item].isEditable) 
                     if(item==="alt_text"){
@@ -296,19 +306,20 @@ class Sidebar extends Component {
                 let activeElement = document.querySelector(`[data-id="${this.props.activeElement.elementId}"]`)
                 let attrNode = activeElement ? activeElement.querySelector(".blockCodeFigure") : null
                 if( attrNode ){
-                    attrNode.setAttribute("numbered", this.state.bceToggleValue)
-                    attrNode.setAttribute("startNumber", this.state.bceNumberStartFrom)
+                    attrNode.setAttribute("numbered", ((this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true))
+                    attrNode.setAttribute("startNumber", (this.state.bceNumberStartFrom ? this.state.bceNumberStartFrom : '1'))
+                    attrNode.setAttribute("syntaxhighlighting", ((this.state.syntaxHighlightingToggleValue || this.state.syntaxHighlightingToggleValue === false) ? this.state.syntaxHighlightingToggleValue : true))
                 }
                 attributions = <div>
                     <div className="panel_show_module">
                         <div className="toggle-value-bce">Use Line Numbers</div>
-                        <label className="switch"><input type="checkbox" checked={this.state.bceToggleValue} onClick={ !hasReviewerRole() && this.handleBceToggle}/>
+                        <label className="switch"><input type="checkbox" checked={(this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true} onClick={ !hasReviewerRole() && !config.savingInProgress && this.handleBceToggle}/>
                         <span className="slider round"></span></label>
                     </div>
                     <div className="alt-Text-LineNumber" >
                         <div className="toggle-value-bce">Start numbering from</div>
-                        <input type="number" id="line-number" className="line-number" min="1" onChange={this.handleBceNumber} value={this.state.bceNumberStartFrom}
-                        disabled={!this.state.bceToggleValue || hasReviewerRole()} onBlur={this.handleBceBlur}/>
+                        <input type="number" id="line-number" className="line-number" min="1" onChange={!config.savingInProgress && this.handleBceNumber} value={this.state.bceNumberStartFrom}
+                        disabled={!((this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true) || hasReviewerRole()} onBlur={this.handleBceBlur}/>
                     </div>
                 </div>
                     return attributions;
@@ -323,13 +334,19 @@ class Sidebar extends Component {
     }
 
     handleBceBlur = () => {
-        document.getElementById(`cypress-${this.props.activeElement.index}-0`).focus()
-        document.getElementById(`cypress-${this.props.activeElement.index}-0`).blur()
+        let activeBCEElementNode = document.getElementById(`cypress-${this.props.activeElement.index}-0`)
+        if (activeBCEElementNode) {
+            activeBCEElementNode.focus()
+            activeBCEElementNode.blur()
+        }
     }
 
     handleBQAttributionBlur = () => {
-        document.querySelector(`#cypress-${this.props.activeElement.index} p`).focus()
-        document.querySelector(`#cypress-${this.props.activeElement.index} p`).blur()
+        let activeBQNode = document.querySelector(`#cypress-${this.props.activeElement.index} p`)
+        if (activeBQNode) {
+            activeBQNode.focus()
+            activeBQNode.blur()
+        }  
     }
 
     /**
@@ -339,6 +356,61 @@ class Sidebar extends Component {
         this.setState({
             bceToggleValue : !this.state.bceToggleValue
         }, () => this.handleBceBlur() )
+    }
+
+    handleSyntaxHighligtingRemove = () => {
+        //remove all formatting from code
+
+        tinymce.$(`[data-id='${this.props.activeElement.elementId}'] .codeNoHighlightLineWrapper span.codeNoHighlightLine`).each(function () {
+            // this.innerHTML = this.innerText;
+            let boldTags = this.getElementsByTagName('STRONG');
+            while (boldTags.length) {
+                let innerHTML = boldTags[0].innerHTML;
+                boldTags[0].outerHTML = innerHTML;
+            }
+            let uTags = this.getElementsByTagName('U');
+            while (uTags.length) {
+                let innerHTML = uTags[0].innerHTML;
+                uTags[0].outerHTML = innerHTML;
+            }
+            let emTags = this.getElementsByTagName('EM');
+            while (emTags.length) {
+                let innerHTML = emTags[0].innerHTML;
+                emTags[0].outerHTML = innerHTML;
+            }
+        })
+        this.setState({
+            syntaxHighlightingToggleValue: !this.state.syntaxHighlightingToggleValue
+        }, () => {
+            this.handleSyntaxHighlightingPopup(false);
+            this.handleBceBlur();
+            customEvent.trigger('clearUndoStack');
+        })
+    }
+
+    handleSyntaxHighlightingPopup = (value) => {
+        if(value){
+            showBlocker();
+        }
+        else {
+            hideBlocker()
+        }
+        this.props.showCanvasBlocker(value);
+        this.setState({
+            showSyntaxHighlightingPopup: value
+        })
+    }
+
+    handleSyntaxHighlightingToggle = () => {
+        let currentToggleValue = !((this.state.syntaxHighlightingToggleValue || this.state.syntaxHighlightingToggleValue == false) ? this.state.syntaxHighlightingToggleValue : true);
+        if (currentToggleValue) {
+            this.handleSyntaxHighlightingPopup(true);
+        }
+        else {
+            this.setState({
+                syntaxHighlightingToggleValue: currentToggleValue
+            }, () => this.handleBceBlur())
+        }
     }
 
     /**
@@ -386,11 +458,28 @@ class Sidebar extends Component {
             "metaDataAnchorID": [this.props.activeElement.elementId],
             "elementVersionType": "element-generateLOlist",
             "loIndex" : this.props.activeElement.index,
-            "slateUrn": config.slateManifestURN
+            "slateVersionUrn": config.slateManifestURN,
+            "elementParentEntityUrn":config.slateEntityURN
+        }
+        if (this.props.elementStatus[this.props.activeElement.elementId] === "approved") {
+            config.savingInProgress = true
         }
         this.props.updateElement(data)
 
     }}
+
+    renderSyntaxHighlighting = (tag) => {
+        if (tag === 'BCE') {
+            return <div className="panel_syntax_highlighting">
+                <div className="toggle-value-bce">Syntax-highlighting</div>
+                <label className="switch">
+                    <input type="checkbox" checked={(this.state.syntaxHighlightingToggleValue || this.state.syntaxHighlightingToggleValue === false) ? this.state.syntaxHighlightingToggleValue : true} onClick={!hasReviewerRole() && !config.savingInProgress && this.handleSyntaxHighlightingToggle} />
+                    <span className="slider round"></span>
+                </label>
+            </div>
+        }
+        return null
+    }
 
     renderLanguageLabel = (tag) => {
         if (tag === 'BCE') {
@@ -404,9 +493,11 @@ class Sidebar extends Component {
             <div className="canvas-sidebar">
                 <div className="canvas-sidebar-heading">Settings</div>
                 {this.primaryOption()}
+                {this.renderSyntaxHighlighting(this.props.activeElement && this.props.activeElement.tag || '')}
                 {this.renderLanguageLabel(this.props.activeElement && this.props.activeElement.tag || '')}
                 {this.secondaryOption()}
                 {this.attributions()}
+                {this.state.showSyntaxHighlightingPopup && <PopUp confirmCallback={this.handleSyntaxHighligtingRemove} togglePopup={(value)=>{this.handleSyntaxHighlightingPopup(value)}} dialogText={SYNTAX_HIGHLIGHTING} slateLockClass="lock-message" sytaxHighlight={true}/>}
             </div>
         );
     }
@@ -426,7 +517,8 @@ const mapStateToProps = state => {
         activeElement: state.appStore.activeElement,
         showModule:state.metadataReducer.showModule,
         permissions : state.appStore.permissions,
-        showHideObj:state.appStore.showHideObj
+        showHideObj:state.appStore.showHideObj,
+        elementStatus: state.elementStatusReducer
     };
 };
 

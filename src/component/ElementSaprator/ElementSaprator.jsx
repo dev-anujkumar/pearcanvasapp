@@ -2,6 +2,7 @@
  * Root Component for Element Picker
  */
 import React, { useEffect, useState, useRef } from 'react'
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types'
 import Button from '../ElementButtons'
 import Tooltip from '../Tooltip'
@@ -33,7 +34,7 @@ const { TEXT,
     FRONT_MATTER, 
     CONTAINER_INTRO } = elementTypeConstant
 
-export default function ElementSaprator(props) {
+export function ElementSaprator(props) {
     const [showClass, setShowClass] = useState(false);
     const [data, setData] = useState([]);
     const [showInteractiveOption, setshowInteractiveOption] = useState({status:false,type:""});
@@ -61,7 +62,8 @@ export default function ElementSaprator(props) {
      * state to render the dropdown. First close all open dropdowns
      * then open new one
      */
-    function toggleElementList() {
+    function toggleElementList(event) {
+        event.stopPropagation()
         let openDropdowns = document.getElementsByClassName("show")
         for (let i = 0; i < openDropdowns.length; i++) {
             let openDropdown = openDropdowns[i]
@@ -113,7 +115,7 @@ export default function ElementSaprator(props) {
     return (
         <div className={showClass ? 'elementSapratorContainer opacityClassOn ignore-for-drag' : 'elementSapratorContainer ignore-for-drag'}>
             <div className='elemDiv-split' onClickCapture={(e) => props.onClickCapture(e)}>
-                {permissions && permissions.includes('split_slate') && (elementType !== 'element-aside' && elementType !== 'citations' && elementType !== 'poetry') && !config.isPopupSlate && !props.firstOne ? <Tooltip direction='right' tooltipText='Split Slate'>
+                {permissions && permissions.includes('split_slate') && (elementType !== 'element-aside' && elementType !== 'citations' && elementType !== 'poetry') && !config.isPopupSlate && !props.firstOne && !(props.setSlateParent == 'part' && config.slateType == CONTAINER_INTRO) ? <Tooltip direction='right' tooltipText='Split Slate'>
                     {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && <Button type='split' onClick={splitSlateClickHandler} />} </Tooltip> : ''}
             </div>
             <div className='elemDiv-hr'>
@@ -122,7 +124,7 @@ export default function ElementSaprator(props) {
             <div className='elemDiv-expand'>
                 <div className="dropdown" ref={buttonRef}>
                     <Tooltip direction='left' tooltipText='Element Picker'>
-                        {permissions.includes('elements_add_remove') && !hasReviewerRole() && <Button onClick={toggleElementList} className="dropbtn" type="expand" />}
+                        {permissions.includes('elements_add_remove') && !hasReviewerRole() && <Button onClick={(event) => toggleElementList(event)} className="dropbtn" type="expand" />}
                     </Tooltip>
                     <div id="myDropdown" className={showClass ? 'dropdown-content show' : 'dropdown-content'}>
                         <ul>
@@ -278,7 +280,10 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
     // },[showInteractiveOption])
 
     return updatedEsProps.map((elem, key) => {
-        function buttonHandlerFunc() {
+        function buttonHandlerFunc(event) {
+            if(event){
+                event.stopPropagation();
+            }
             if (elem.buttonType === "interactive-elem-button" || elem.buttonType === "container-elem-button" || elem.buttonType === "block-text-button") {
                 setData(typeOfContainerElements(elem, props));
                 if(elem.buttonType !== showInteractiveOption.type){
@@ -307,7 +312,7 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
             }
                 <Tooltip key={key} direction={elem.tooltipDirection} tooltipText={elem.tooltipText}>
                     <li>
-                        <Button type={elem.buttonType} onClick={buttonHandlerFunc} />
+                        <Button type={elem.buttonType} onClick={(event) => buttonHandlerFunc(event)} />
                     </li>
 
                 </Tooltip>
@@ -352,3 +357,9 @@ function typeOfContainerElements(elem, props) {
     }
     
 }
+
+const mapStateToProps = (state) => ({
+    setSlateParent :  state.appStore.setSlateParent
+})
+
+export default connect(mapStateToProps, {})(ElementSaprator)
