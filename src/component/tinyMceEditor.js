@@ -2084,6 +2084,15 @@ export class TinyMceEditor extends Component {
                 return;
             }
             spanHandlers.handleExtraTags(this.props.elementId, 'div', 'poetryLine');
+            let codeLine = tinymce.$(`div[data-id="${this.props.elementId}"] .codeNoHighlightLine`);
+            if(codeLine.length) {
+                for(let index = 0; index < codeLine.length; index++) {
+                    if(codeLine[index] && codeLine[index].innerHTML) {
+                        codeLine[index].innerHTML = String(codeLine[index].innerHTML).replace(/ /g, '&nbsp;');
+                    }
+                }
+                
+            }
             //spanHandlers.handleExtraTags(this.props.elementId, 'code', 'codeNoHighlightLine')
         }
 
