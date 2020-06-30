@@ -230,7 +230,7 @@ class LearningTool extends React.Component {
    validateSearch =(e) => {
        this.setState({ searchValue: e.target.value })
         let searchValue = e.target.value
-        let regex = /^[A-Za-z0-9 " "]{0,100}$/
+        let regex = /^[A-Za-z0-9 " "\-]{0,100}$/
         if (!regex.test(searchValue)) {
           this.setState({showError:true})
         } else {

@@ -62,7 +62,8 @@ export function ElementSaprator(props) {
      * state to render the dropdown. First close all open dropdowns
      * then open new one
      */
-    function toggleElementList() {
+    function toggleElementList(event) {
+        event.stopPropagation()
         let openDropdowns = document.getElementsByClassName("show")
         for (let i = 0; i < openDropdowns.length; i++) {
             let openDropdown = openDropdowns[i]
@@ -123,7 +124,7 @@ export function ElementSaprator(props) {
             <div className='elemDiv-expand'>
                 <div className="dropdown" ref={buttonRef}>
                     <Tooltip direction='left' tooltipText='Element Picker'>
-                        {permissions.includes('elements_add_remove') && !hasReviewerRole() && <Button onClick={toggleElementList} className="dropbtn" type="expand" />}
+                        {permissions.includes('elements_add_remove') && !hasReviewerRole() && <Button onClick={(event) => toggleElementList(event)} className="dropbtn" type="expand" />}
                     </Tooltip>
                     <div id="myDropdown" className={showClass ? 'dropdown-content show' : 'dropdown-content'}>
                         <ul>

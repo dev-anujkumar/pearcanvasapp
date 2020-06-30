@@ -62,7 +62,7 @@ class SectionSeperator extends Component {
                 {(elemBorderToggle !== 'undefined' && elemBorderToggle) || borderToggle == 'active' ?
                     <div> 
                         <Button btnClassName={btnClassName} type="element-label" labelText="SB" />
-                      {this.props.permissions.includes('elements_add_remove') && !hasReviewerRole() && <Button  onClick={() => this.props.showDeleteElemPopup(true, element)} type="delete-element" />}
+                      {this.props.permissions.includes('elements_add_remove') && !hasReviewerRole() && <Button  onClick={(e) => this.props.showDeleteElemPopup(e,true, element)} type="delete-element" />}
                     </div>:""
                  }
                 <hr className="section-break" />

@@ -108,33 +108,18 @@ class SlateWrapper extends Component {
         this.renderDefaultElement();
     }
 
-
     renderDefaultElement = () => {
         if(this.isDefaultElementInProgress){
-            // condition added to detect if element creationis already in progress and to avoid multiple default element creation
+            // condition added to detect if element creation is already in progress and to avoid multiple default element creation
             return false;
         }
         let _slateData = this.props.slateData;
-        if (_slateData !== null && _slateData !== undefined) {
-            if(_slateData[config.slateManifestURN] && config.slateType !== 'assessment'){
-                let _slateObject =_slateData[config.slateManifestURN];
-                let _slateContent = _slateObject.contents
-                let { bodymatter: _slateBodyMatter } = _slateContent /* || _slateData.popupdata; */
-                if (_slateBodyMatter.length == 0) {
-                    this.isDefaultElementInProgress = true;
-                    /* For showing the spinning loader send HideLoader message to Wrapper component */
-                    sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                    this.props.createElement(TEXT, "0", '', '', '','',()=>{
-                        this.isDefaultElementInProgress = false;
-                    });
-                }
-            } else if (Object.values(_slateData).length > 0 && Object.values(_slateData)[0].contents.bodymatter < 1 && config.slateType === 'assessment') {
-                this.isDefaultElementInProgress = true;
-                sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                this.props.createElement(ELEMENT_ASSESSMENT, "0", '', '', '','',()=>{
-                    this.isDefaultElementInProgress = false;
-                });
-            }            
+        if (Object.values(_slateData).length > 0 && Object.values(_slateData)[0].contents.bodymatter < 1 && config.slateType === 'assessment') {
+            this.isDefaultElementInProgress = true;
+            sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+            this.props.createElement(ELEMENT_ASSESSMENT, "0", '', '', '', '', ()=>{
+                this.isDefaultElementInProgress = false;
+            });
         }
     }
 
@@ -874,6 +859,27 @@ class SlateWrapper extends Component {
 
     }
 
+    /**
+     * Renders blank slate with one element picker (Separator)
+     * @param {object} _props Slatewrapper props
+     */
+    renderBlankSlate = (_props) => {
+        return (
+            <>
+                <ElementSaprator
+                    firstOne={true}
+                    index={0}
+                    esProps={this.elementSepratorProps(0, true)}
+                    elementType=""
+                    permissions={_props.permissions}
+                    showAudioSplitPopup={_props.showAudioSplitPopup}
+                    openAudio={_props.openAudio}
+                    onClickCapture={this.checkSlateLockStatus}
+                    splithandlerfunction={this.splithandlerfunction}
+                />
+            </>
+        )
+    }
 
     /**
      * renderElement | renders single element according to its type
@@ -882,6 +888,9 @@ class SlateWrapper extends Component {
         const { pageLoading } = this.props;
         try {
             if (_elements !== null && _elements !== undefined) {
+                if (_elements.length === 0) {
+                    return this.renderBlankSlate(this.props)
+                }
                 this.renderButtonsonCondition(_elements);
                 return _elements.map((element, index) => {
                         return (
