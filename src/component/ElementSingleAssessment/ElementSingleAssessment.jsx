@@ -7,14 +7,15 @@ import './../../styles/ElementSingleAssessment/ElementSingleAssessment.css';
 import { dropdownArrow } from './../../images/ElementButtons/ElementButtons.jsx';
 import { connect } from 'react-redux';
 import { showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';
-import { hasReviewerRole, sendDataToIframe, setAssessmentTitle } from '../../constants/utility.js';
+import { hasReviewerRole, sendDataToIframe } from '../../constants/utility.js';
+import { UsageTypeDropdown } from '../AssessmentSlateCanvas/UsageTypeDropdown/UsageTypeDropdown.jsx';
 import RootCiteTdxComponent from '../AssessmentSlateCanvas/assessmentCiteTdx/RootCiteTdxComponent.jsx';
 import { FULL_ASSESSMENT_CITE, FULL_ASSESSMENT_TDX } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import RootSingleAssessmentComponent from '../AssessmentSlateCanvas/singleAssessmentCiteTdx/RootSingleAssessmentComponent.jsx'
 import { setCurrentCiteTdx, setCurrentInnerCiteTdx, assessmentSorting, specialCharacterDecode } from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
 import RootElmSingleAssessment from '../AssessmentSlateCanvas/elm/RootElmSingleComponent.jsx'
-import { assessmentUsageType } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
-// import { sendDataToIframe } from './../../constants/utility.js';
+import { setAssessmentTitle, setAssessmentUsageType, setAssessmentProperties } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
+
 /*** @description - ElementSingleAssessment is a class based component. It is defined simply to make a skeleton of the assessment-type element .*/
 
 class ElementSingleAssessment extends Component {
@@ -26,9 +27,8 @@ class ElementSingleAssessment extends Component {
             assessmentItemId : null,
             showAssessmentPopup: false,
             asseessmentUsageTypeDropdown: false,
-            activeAsseessmentUsageType: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.usagetype ? this.props.model.figuredata.elementdata.usagetype : "Quiz",
-            // assessmentTitle: this.props.model && this.props.model.html && this.props.model.html.title? this.props.model.html.title : null,
-            assessmentTitle: setAssessmentTitle(this.props),
+            activeAsseessmentUsageType:this.props.model &&  setAssessmentUsageType(this.props.model),
+            assessmentTitle: this.props.model && setAssessmentTitle(this.props.model),
             elementType: this.props.model.figuredata.elementdata.assessmentformat || "",
             showElmComponent: false,
             showSinglePopup:false,
@@ -58,13 +58,12 @@ class ElementSingleAssessment extends Component {
     }
 
     componentDidMount() {
-        let title =setAssessmentTitle(this.props) != null?  setAssessmentTitle(this.props).replace(/<\/?[^>]+(>|$)/g,""): null;
+        let title = this.props.model && setAssessmentTitle(this.props.model) != null?  setAssessmentTitle(this.props.model).replace(/<\/?[^>]+(>|$)/g,""): null;
         this.setState({
-            // assessmentTitle: this.props.model && this.props.model.html && this.props.model.html.title? title : null,
             assessmentTitle: title,
+            activeAsseessmentUsageType: this.props.model && setAssessmentUsageType(this.props.model),
             assessmentId: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.assessmentid ? this.props.model.figuredata.elementdata.assessmentid : null,
-            assessmentItemId: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.assessmentitemid ? this.props.model.figuredata.elementdata.assessmentitemid : null,
-            activeAsseessmentUsageType: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.usagetype ? this.props.model.figuredata.elementdata.usagetype : "Quiz"
+            assessmentItemId: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.assessmentitemid ? this.props.model.figuredata.elementdata.assessmentitemid : null
         })
         let newElement = localStorage.getItem('newElement');
         if (newElement) {
@@ -77,12 +76,11 @@ class ElementSingleAssessment extends Component {
     
 static getDerivedStateFromProps(nextProps, prevState) {
 
-    if('figuredata' in nextProps.model && 'elementdata' in nextProps.model.figuredata && 'assessmentformat' in nextProps.model.figuredata.elementdata && nextProps.model.figuredata.elementdata.assessmentformat !== prevState.elementType) {
-        let title = setAssessmentTitle(nextProps) != null?  setAssessmentTitle(nextProps).replace(/<\/?[^>]+(>|$)/g,""): null;//nextProps.model.html && nextProps.model.html.title? nextProps.model.html.title.replace(/<\/?[^>]+(>|$)/g,""):null;
+    if('model' in nextProps && 'figuredata' in nextProps.model && 'elementdata' in nextProps.model.figuredata && 'assessmentformat' in nextProps.model.figuredata.elementdata && nextProps.model.figuredata.elementdata.assessmentformat !== prevState.elementType) {
+        let title = setAssessmentTitle(nextProps.model) != null?  setAssessmentTitle(nextProps.model).replace(/<\/?[^>]+(>|$)/g,""): null;
         return {
             assessmentId: nextProps.model.figuredata && nextProps.model.figuredata.elementdata && nextProps.model.figuredata.elementdata.assessmentid ? nextProps.model.figuredata.elementdata.assessmentid : "",
             assessmentItemId: nextProps.model.figuredata && nextProps.model.figuredata.elementdata && nextProps.model.figuredata.elementdata.assessmentitemid ? nextProps.model.figuredata.elementdata.assessmentitemid : "",
-            // assessmentTitle :nextProps.model && nextProps.model.html && nextProps.model.html.title? title : null,
             assessmentTitle: title,
             elementType: nextProps.model.figuredata.elementdata.assessmentformat || ""
         };
@@ -233,7 +231,7 @@ static getDerivedStateFromProps(nextProps, prevState) {
     }
 
     /***
-    *  @description - This is the function to add embedded-assessment based on  
+    * @description - This is the function to add embedded-assessment based on assessment-format
     * @param e - The event triggered
     */
     addAssessmentResource = (e) => {
@@ -253,41 +251,14 @@ static getDerivedStateFromProps(nextProps, prevState) {
     }
     /** ----------------------------------------------------------------------------------------------------------- */
 
-    setAssessmentProperties = (elementType) => {
-        let assessmentClasses = { divMainClass: '', divInnerClass: '' }
-        switch (elementType) {
-            case 'puf':
-                assessmentClasses.divMainClass = 'divPUFItem';
-                assessmentClasses.assessmentItemType = 'pufItem';
-                break;
-            case 'learnosity':
-                assessmentClasses.divMainClass = 'divLearnosityItem';
-                assessmentClasses.assessmentItemType = 'learnosityItem'
-                break;
-            case 'tdx':
-                assessmentClasses.divMainClass = 'divTdxAssessmentItem';
-                assessmentClasses.assessmentItemType = 'tdxAssessmentItem';
-                break;
-            case 'cite':
-            default:
-                assessmentClasses.divMainClass = 'divAssessmentItem'
-                assessmentClasses.assessmentItemType = 'assessmentItem'
-                break;
-        }
-        return assessmentClasses
-    }
+
     /*** @description - This function is for handling the different types of figure-element.
     * @param model object that defined the type of element
     */
+
     renderAssessmentType = (model) => {
         var assessmentJSX;
-        // var assessmentUsageType = ['Quiz', 'Test', 'Practice', 'Homework', 'Diagnostic', 'Journal', 'Shared Writing', 'Concept Check', 'Non-Scored', 'Study Tool', 'Remediation']
-        if (assessmentUsageType.length > 0) {
-            var assessmentType = assessmentUsageType.map((usageType, i) =>
-                <li key={i} className="singleAssessment_Dropdown_item" onClick={(e) => this.handleAssessmentTypeChange(usageType, e)}>{usageType}</li>
-            )
-        }
-        let assessmentKeys = this.setAssessmentProperties(this.state.elementType)
+        let assessmentKeys = setAssessmentProperties(this.state.elementType)
         /*JSX for the Single Assessment Element */
         assessmentJSX = <div className={`divAssessment ${assessmentKeys && assessmentKeys.divMainClass ? assessmentKeys.divMainClass : ""}`} >
             <figure className={`figureAssessment ${this.state.elementType !== "tdx" ? "figureAssessmentItem" : "figureTdxAssessmentItem"}`}>
@@ -299,7 +270,7 @@ static getDerivedStateFromProps(nextProps, prevState) {
                 <div className="singleAssessment_Dropdown_Container">
                     <div className="singleAssessment_Dropdown_SelectLabel">Select usage type</div>
                     <div className={this.state.asseessmentUsageTypeDropdown ? "singleAssessment_Dropdown_activeDropdown select" : "singleAssessment_Dropdown_activeDropdown notselect"} onClick={ !hasReviewerRole() && this.toggleUsageTypeDropdown} >
-                        <span className="singleAssessment_Dropdown_currentLabel">{model.figuredata.elementdata ? this.state.activeAsseessmentUsageType : "Quiz"}</span>
+                        <span className="singleAssessment_Dropdown_currentLabel">{this.state.activeAsseessmentUsageType?this.state.activeAsseessmentUsageType:'Quiz'}</span>
                         <span className="singleAssessment_Dropdown_arrow">{dropdownArrow}</span>
                     </div>
 
@@ -307,7 +278,7 @@ static getDerivedStateFromProps(nextProps, prevState) {
                 {
                     this.state.asseessmentUsageTypeDropdown ? (
                         <ul className="singleAssessment_Dropdown_options">
-                            {assessmentType}
+                            {<UsageTypeDropdown usageTypeList={this.props.usageTypeList} clickHandlerFn={this.handleAssessmentTypeChange} />}
                         </ul>
                     ) : null
                 }
@@ -363,6 +334,13 @@ ElementSingleAssessment.propTypes = {
     handleC2AssessmentClick: PropTypes.func,
     /** Detail of element in JSON object */
 }
+
+const mapStateToProps = state => {
+    return {
+        usageTypeList: state.appStore.usageTypeListData.usageTypeList,
+    };
+};
+
 const mapActionToProps = {
     setCurrentCiteTdx: setCurrentCiteTdx,
     setCurrentInnerCiteTdx: setCurrentInnerCiteTdx,
@@ -371,7 +349,7 @@ const mapActionToProps = {
 
 
 export default connect(
-    null,
+    mapStateToProps,
     mapActionToProps
 )(ElementSingleAssessment);
 

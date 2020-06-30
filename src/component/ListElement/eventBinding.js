@@ -85,11 +85,11 @@ export const bindKeyDownEvent = (editor, e, element,showHideCallback) => {
         e.target.closest('.code-listing')) {
         return false;
     }
-
+    let nodeNames = ["STRONG", "EM", "U", "SUP", "SUB"]  /** [BG-2573] | Tagnames resulting in distorted List */
     /**
      * Case - pressing Enter on blank list item
      */
-    if (anchorNode.tagName === "LI" || anchorNode.tagName === "BR") {
+    if (anchorNode.tagName === "LI" || anchorNode.tagName === "BR" || (nodeNames.includes(anchorNode.tagName))) {
         if ((e.metaKey && e.which === 13) || (e.which === 13)) {
             // if only mathml image is present in editor //
             if ((editor.targetElm.textContent.length === 0) ||
@@ -124,7 +124,19 @@ export const bindKeyDownEvent = (editor, e, element,showHideCallback) => {
                     prohibitEventBubling(e);
                     /** case - remove last created blank list row before creating new paragraph */
                     if (editor.targetElm.querySelectorAll('li').length > 1) {
-                        anchorNode && anchorNode.remove();
+                        /** [ BG-2573 ] | IF CASE :: List gets distorted when empty formatting tags are present */
+                        if (nodeNames.includes(anchorNode.tagName)) {
+                            let currentNode = anchorNode;
+                            while (currentNode.nodeName !== "LI") {
+                                if (currentNode.hasAttribute('data-mce-bogus') || currentNode.innerText.trim() == "" || (anchorNode.firstChild.nodeName ==
+                                    'BR')) {
+                                    currentNode = currentNode.parentNode
+                                }
+                            }
+                            currentNode && currentNode.remove(); // Remove the "li" which contains empty tags
+                        } else {
+                            anchorNode && anchorNode.remove();
+                        }
                     }
                 
                     if(newNode)

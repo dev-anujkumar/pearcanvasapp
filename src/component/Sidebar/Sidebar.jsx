@@ -334,13 +334,19 @@ class Sidebar extends Component {
     }
 
     handleBceBlur = () => {
-        document.getElementById(`cypress-${this.props.activeElement.index}-0`).focus()
-        document.getElementById(`cypress-${this.props.activeElement.index}-0`).blur()
+        let activeBCEElementNode = document.getElementById(`cypress-${this.props.activeElement.index}-0`)
+        if (activeBCEElementNode) {
+            activeBCEElementNode.focus()
+            activeBCEElementNode.blur()
+        }
     }
 
     handleBQAttributionBlur = () => {
-        document.querySelector(`#cypress-${this.props.activeElement.index} p`).focus()
-        document.querySelector(`#cypress-${this.props.activeElement.index} p`).blur()
+        let activeBQNode = document.querySelector(`#cypress-${this.props.activeElement.index} p`)
+        if (activeBQNode) {
+            activeBQNode.focus()
+            activeBQNode.blur()
+        }  
     }
 
     /**
