@@ -144,7 +144,9 @@ static getDerivedStateFromProps(nextProps, prevState) {
     }
 
     /*** @description - This function is to handle Focus on the Assessment element on click*/
-    handleAssessmentFocus = () => {
+    
+    handleAssessmentFocus = (event) => {
+        event.stopPropagation();
         this.props.handleFocus();
     }
     /*** @description - This function is to handle Blur on the Assessment element on blur*/       

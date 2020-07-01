@@ -1098,6 +1098,7 @@ export class TinyMceEditor extends Component {
                     text = String(text).replace(/</g, '&lt;').replace(/>/g, '&gt;');
                     text = String(text).replace(/\r|\n/g, '<br>');
                     text = String(text).replace(/ /g, '&nbsp;');
+                    text = String(text).replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;');
                     this.copyContent = text;
                 }
             }
