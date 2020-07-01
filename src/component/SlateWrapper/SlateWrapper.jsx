@@ -104,25 +104,6 @@ class SlateWrapper extends Component {
         // *********************************************************************
     }
 
-    componentDidUpdate() {
-        this.renderDefaultElement();
-    }
-
-    renderDefaultElement = () => {
-        if(this.isDefaultElementInProgress){
-            // condition added to detect if element creation is already in progress and to avoid multiple default element creation
-            return false;
-        }
-        let _slateData = this.props.slateData;
-        if (Object.values(_slateData).length > 0 && Object.values(_slateData)[0].contents.bodymatter < 1 && config.slateType === 'assessment') {
-            this.isDefaultElementInProgress = true;
-            sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-            this.props.createElement(ELEMENT_ASSESSMENT, "0", '', '', '', '', ()=>{
-                this.isDefaultElementInProgress = false;
-            });
-        }
-    }
-
     static getDerivedStateFromProps = (props, state) => {
         /**
          * updateTimer is for updating Time for slate refresh
@@ -888,10 +869,17 @@ class SlateWrapper extends Component {
         const { pageLoading } = this.props;
         try {
             if (_elements !== null && _elements !== undefined) {
-                if (_elements.length === 0) {
+                this.renderButtonsonCondition(_elements);
+                if (_elements.length === 0 && _slateType == "assessment") {
+                    this.isDefaultElementInProgress = true;
+                    sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+                    this.props.createElement(ELEMENT_ASSESSMENT, "0", '', '', '', '', () => {
+                        this.isDefaultElementInProgress = false;
+                    });
+                }
+                else if (_elements.length === 0 && _slateType != "assessment") {
                     return this.renderBlankSlate(this.props)
                 }
-                this.renderButtonsonCondition(_elements);
                 return _elements.map((element, index) => {
                         return (
                            <React.Fragment key={element.id}>
