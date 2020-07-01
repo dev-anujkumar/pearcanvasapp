@@ -387,19 +387,25 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                         currentContent.bodymatter = [...oldbodymatter, ...newbodymatter];
                         currentParentData = currentParentData[manifestURN];
                         config.scrolling = true;
+                        dispatch({
+                            type: FETCH_SLATE_DATA,
+                            payload: {
+                                [manifestURN]: currentParentData
+                            }
+                        });
                     } else {
                         currentParentData = slateData.data[manifestURN];
+                        dispatch({
+                            type: FETCH_SLATE_DATA,
+                            payload: {
+                                [manifestURN]: currentParentData
+                            }
+                        });
+                        dispatch({
+                            type: SET_ACTIVE_ELEMENT,
+                            payload: {}
+                        });
                     }
-                    dispatch({
-                        type: FETCH_SLATE_DATA,
-                        payload: {
-                            [manifestURN]: currentParentData
-                        }
-                    });
-                    dispatch({
-                        type: SET_ACTIVE_ELEMENT,
-                        payload: {}
-                    });
                     //}
                     // config.isFetchSlateInProgress = false;
                 }else{
