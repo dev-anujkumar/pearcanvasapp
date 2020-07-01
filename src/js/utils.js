@@ -427,6 +427,9 @@ export const spanHandlers = {
                         }
                     } else {
                         editor.selection.setContent('<!--break-->');
+                      	if (parentTag === 'code'){
+                            elementSearch.innerHTML = String(elementSearch.innerHTML).replace(/ /g, '&nbsp;');
+                        }
                         let comment = document.createNodeIterator(elementSearch.parentNode, NodeFilter.SHOW_COMMENT, null, true).nextNode();
                         this.splitOnTag(elementSearch.parentNode, comment);
                         elementSearch.nextSibling.remove();
