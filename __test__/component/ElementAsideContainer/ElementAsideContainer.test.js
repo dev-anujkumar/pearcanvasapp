@@ -55,6 +55,9 @@ let initialState = {
     },
     commentsPanelReducer:{
         allComments: []
+    },
+    tcmReducer:{
+        tcmSnapshot:{}
     }
 };
 

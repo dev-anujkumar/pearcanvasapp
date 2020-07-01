@@ -71,7 +71,7 @@ class PopUp extends React.Component {
             return(
                 <div  className={`dialog-buttons ${props.assessmentClass}`}>
                     <span className="save-button" onClick={props.deleteElement}>{props.yesButton}</span>
-                    <span className="cancel-button" id='close-container' onClick={() => props.togglePopup(false)}>{props.cancelBtnText}</span>
+                    <span className="cancel-button" id='close-container' onClick={(e) => props.togglePopup(false,e)}>{props.cancelBtnText}</span>
                 </div>
             )            
         }
@@ -121,18 +121,23 @@ class PopUp extends React.Component {
         }
         else{
           return (
-            <textarea autoFocus className={`dialog-input-textarea ${props.assessmentClass}`} type="text" onChange={(event)=>props.handleChange(event.target.value)}
+            <textarea autoFocus className={`dialog-input-textarea ${props.assessmentClass}`} type="text" onChange={(event)=>props.handleChange(event.target.value)} onClick={(event) => this.handleClickTextArea(event)}
             placeholder={props.placeholder} disabled={props.isInputDisabled} value={props.inputValue} rows={props.rows} cols={props.cols} maxLength={props.maxLength}/>
           )  
         }
     }
+
+    handleClickTextArea = (event) => {
+        event.stopPropagation();
+    }
+    
     renderCloseSymbol = (props) => {
         if(props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.tocDelete || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight){
             return null
         }
         else{
             return (
-                <span className={`close ${props.assessmentClass}`} onClick={() => props.togglePopup(false)}>&times;</span>
+                <span className={`close ${props.assessmentClass}`} onClick={(e) => props.togglePopup(false, e)}>&times;</span>
             )
         }
     }

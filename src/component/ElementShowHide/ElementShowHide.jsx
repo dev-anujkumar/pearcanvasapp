@@ -3,9 +3,7 @@
 */
 
 import React from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types'
-import config from '../../config/config';
 import '../../styles/ElementShowHide/ElementShowHide.css'
 import ElementContainerContext from '../ElementContainer/ElementContainerContext.js'
 import ShowHideTinyMce from './ShowHideTinyMce.jsx'
@@ -29,10 +27,11 @@ class ElementShowHide extends React.Component {
             newIndex[newIndex.length - 1] = parseInt(newIndex[newIndex.length - 1]) - 1
         }
 
-         newshowIndex = newIndex.join("-");
-        if (document.querySelector(`#cypress-${newshowIndex}`)) {
+        newshowIndex = newIndex.join("-");
+        let nodeToFocus = document.getElementById(`cypress-${newshowIndex}`)
+        if (nodeToFocus) {
             setTimeout(()=>{
-                document.querySelector(`#cypress-${newshowIndex}`).click();
+                nodeToFocus.click();
             },0)
         }
     }

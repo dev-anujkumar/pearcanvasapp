@@ -32,15 +32,15 @@ export default function ElementContainerType(props) {
         item.buttonHandler();
     }
 
-    const renderMenu = (data) => {
-        return data && data.map((item, index) => {
+    const renderMenu = (propsData) => {
+        return propsData && propsData.map((item, index) => {
             if (((props.elementType === "element-aside" || props.elementType === "group") && props.text === "block-text-button" && item.text === "Block Poetry") ||
                 (props.elementType === "group" && props.text === "interactive-elem-button" && (item.text === "Add Show Hide" || item.text === "Add Pop Up"))) {
                 return null
             }
             else {
                 return (
-                    <li key={index} onClick={() =>buttonHandlerFunc(item)}>{item.text}</li>
+                    <li key={index} onClick={() => buttonHandlerFunc(item)}>{item.text}</li>
                 )
             }
         })

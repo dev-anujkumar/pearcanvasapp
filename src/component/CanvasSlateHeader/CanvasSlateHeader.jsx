@@ -11,10 +11,10 @@ import { NextSlate, PreviousSlate, ShowLoader} from '../../constants/IFrameMessa
 import { sendDataToIframe } from '../../constants/utility.js';
 
 /**
-* @description - SlateHeader is a class based component. It is defined simply
+* @description - CanvasSlateHeader is a class based component. It is defined simply
 * to make a skeleton of the Header of Slate.
 */
- class SlateHeader extends Component {
+ class CanvasSlateHeader extends Component {
     constructor(props) {
         super(props);
         this.state ={}
@@ -29,7 +29,7 @@ import { sendDataToIframe } from '../../constants/utility.js';
      */
 
     handleNavClick(nav) {
-        if(config.savingInProgress){
+        if(config.savingInProgress || config.popupCreationCallInProgress){
             return false
         }
         config.currentInsertedType = "";
@@ -134,18 +134,18 @@ import { sendDataToIframe } from '../../constants/utility.js';
     }
 }
 
-SlateHeader.displayName = "SlateHeader";
+CanvasSlateHeader.displayName = "SlateHeader";
 
-SlateHeader.defaultProps = {
+CanvasSlateHeader.defaultProps = {
     slateType: "section",
     slateTitle: {}
 }
 
-SlateHeader.propTypes = {
+CanvasSlateHeader.propTypes = {
       /** Type of slate to be rendered */
       slateType : PropTypes.string.isRequired,
       /** Title of slate to be rendered */
       slateTitle : PropTypes.object
 }
 
-export default  SlateHeader ;
+export default  CanvasSlateHeader ;

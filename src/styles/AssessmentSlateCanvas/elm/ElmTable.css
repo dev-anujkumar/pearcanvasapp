@@ -7,7 +7,7 @@
   }
   .assessment-id{
     text-align:left;
-    padding-left: 9px;;
+    padding-left: 9px;
     /* font-size: 13px; */
   }
   .assessment-title{
@@ -16,7 +16,7 @@
   }
   .elm-data-span{
     text-overflow: ellipsis;
-    white-space: nowrap;
+    /* white-space: nowrap; */
     /* overflow: hidden; */
     overflow: visible;
     white-space: normal;
@@ -137,7 +137,7 @@
     border-radius: 4px;
     display: inline-block;
     cursor: pointer;
-    font-family: Open sans, sans serif;
+    font-family: Open sans, sans-serif;
     font-weight: 700;
     left: 64%;
     padding: 10px 24px;
@@ -284,10 +284,9 @@
 }
 
 .learnosity-search-block .filter-block {
-  width: 100%;
+  /* width: 100%; */
   margin: 11px 20px 11px 20px;
   width: 80%;
-  display: inline-block;
   display: inline-block;
   /* width: 95%; */
   /* border: solid 1px #a9a9a9; */
