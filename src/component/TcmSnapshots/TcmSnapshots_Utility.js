@@ -11,10 +11,10 @@ import { sendElementTcmSnapshot } from './TcmSnapshot_Actions.js';
  * @description-This is the root function to preapare the data for TCM Snapshots
  * @param {Object} allSlateData  
 */
-export const prepareTcmSnapshots = (wipData,action) => (dispatch) => {
+export const prepareTcmSnapshots = (wipData, assettype, action) => (dispatch) => {
     let tcmSnapshot = {};
-    let commonKeys = setCommonKeys_TCM_Snapshots(action,wipData)
-    let elementDetails = {type:"list",id:"123"}
+    let commonKeys = setCommonKeys_TCM_Snapshots(action, wipData)
+    let elementDetails = { type: "list", id: "123" }
     // let elementDetails = setElementTypeAndUrn(ancestorData)
     /**
      * Functions called here to prepapre TCM snapshots data based on action/type/etc
@@ -26,7 +26,7 @@ export const prepareTcmSnapshots = (wipData,action) => (dispatch) => {
         elementUrn: elementDetails.elementUrn,
         snapshotUrn: elementDetails.elementUrn,
         elementType: elementDetails.elementType,
-        elementSnapshot: prepareElementSnapshots(wipData),
+        elementSnapshot: prepareElementSnapshots(commonKeys.status,wipData, assettype),
         ...commonKeys
     }
 
@@ -74,12 +74,12 @@ export const setCommonKeys_TCM_Snapshots = (action, wipData) => {
     }
     return tcmKeys
 }
-export const prepareElementSnapshots = (element, hasAsset,assetData) => {
+export const prepareElementSnapshots = (status,element, hasAsset) => {
     let elementSnapshot = {}
     // call setGlossaryFootnoteSnapshots/setAssetPopoverSnapshots
     elementSnapshot = {
         contentSnapshot: element,
-        glossorySnapshot: hasAsset ? setGlossarySnapshots(element) : [],
+        glossorySnapshot: hasAsset ? setGlossarySnapshots(status,element.elementdata.glossaryentries) : [],
         footnoteSnapshot: hasAsset ? setFootnoteSnapshots(element) : [],
         assetPopOverSnapshot: hasAsset ? setAssetPopoverSnapshots(element) : []
     }
@@ -87,12 +87,27 @@ export const prepareElementSnapshots = (element, hasAsset,assetData) => {
 
 }
 
-export const setGlossarySnapshots = (assetData) => {
-    let glossaryData = assetData
-    /**
-     * Glossary snapshot function 
-     */
-    return glossaryData
+export const setGlossarySnapshots = (status, glossaryList) => {
+    let glossarySnap = []
+    console.log('glossaryList', glossaryList)
+    glossaryList && glossaryList.length && glossaryList.map(glossaryItem => {
+        let glossaryData = {
+            changeStatus: status,
+            changeType: "Update",
+            charAt: glossaryItem.charAt,
+            glossaryId: glossaryItem.itemid
+        }
+        if (glossaryItem.glossaryentry && glossaryItem.glossaryentry[0]) {
+            glossaryData.glossaryTerm = `<p>${glossaryItem.glossaryentry[0].term.text}</p>`
+            glossaryData.glossaryDefinition = `<p>${glossaryItem.glossaryentry[0].definition.text}</p>`
+        }
+        if (glossaryItem.glossaryentry && glossaryItem.glossaryentry[0] && glossaryItem.glossaryentry[0].narrativeform) {
+            glossaryData.glossaryNarrative = `<p>${glossaryItem.glossaryentry[0].narrativeform.text}</p>`
+        }
+        glossarySnap.push(glossaryData)
+    })
+    console.log('glossarySnap', glossarySnap)
+    return glossarySnap
 }
 
 export const setFootnoteSnapshots = (assetData) => {
@@ -110,7 +125,7 @@ export const setAssetPopoverSnapshots = (assetData) => {
     return assetPopoverData
 }
 
-export const prepareElementAncestorData = (index,slateData) => {
+export const prepareElementAncestorData = (slateData, index = "1") => {
     let indexes = index.split('-');
     let ancestorData = {}
     switch (indexes.length) {

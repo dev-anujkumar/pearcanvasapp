@@ -445,7 +445,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
          * ---------------------------------- TCM Snapshot Data handling ----------------------------------
          */
         let elemParentData= prepareElementAncestorData(currentSlateData)
-        dispatch(prepareTcmSnapshots(res.data,semanticType,elemParentData))
+        store.dispatch(prepareTcmSnapshots(res.data,semanticType,elemParentData))
         /**------------------------------------------------------------------------------------------------*/
         store.dispatch({
             type: UPDATE_FOOTNOTEGLOSSARY,
