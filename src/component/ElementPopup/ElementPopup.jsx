@@ -96,7 +96,7 @@ class ElementPopup extends React.Component {
                             placeholder = "Enter Label..."
                             tagName = {'h4'}
                             model = {formattedTitle}
-                            currentElement = {popupdata && popupdata["formatted-title"]}
+                            currentElement = {popupdata && (popupdata["formatted-title"] || popupdata["formatted-subtitle"])}
                             handleEditorFocus = {this.props.handleFocus}
                             handleBlur = {this.props.handleBlur}
                             slateLockInfo = {slateLockInfo}
@@ -115,7 +115,7 @@ class ElementPopup extends React.Component {
                             placeholder = "Enter Title..."
                             tagName = {'h4'}
                             model={formattedSubtitle} 
-                            currentElement = {popupdata && popupdata["formatted-title"]}
+                            currentElement = {popupdata && (popupdata["formatted-title"] || popupdata["formatted-subtitle"])}
                             handleEditorFocus = {this.props.handleFocus}
                             handleBlur = {this.props.handleBlur}
                             slateLockInfo = {slateLockInfo}
