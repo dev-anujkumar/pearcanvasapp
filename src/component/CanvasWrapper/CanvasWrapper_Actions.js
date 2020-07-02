@@ -700,7 +700,9 @@ const appendCreatedElement = async (paramObj, responseData) => {
             slateLevelData: newslateData
         }
     })
-    if(cb && !createdFromFootnote) await cb(responseData)
+    if(cb && !createdFromFootnote){
+        await cb(responseData)
+    }
 }
 
 /**
