@@ -264,6 +264,10 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             "PearsonSSOSession": config.ssoToken
         }
     }).then(slateData => {
+        /* Slate tag issue */
+        if (document.getElementsByClassName("slate-tag-icon").length) {
+           document.getElementsByClassName("slate-tag-icon")[0].classList.remove("disable");
+        } 
         let newVersionManifestId=Object.values(slateData.data)[0].id
 
 		if(slateData.data && slateData.data[newVersionManifestId] && slateData.data[newVersionManifestId].type === "popup"){

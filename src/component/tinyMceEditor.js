@@ -90,14 +90,6 @@ export class TinyMceEditor extends Component {
                 this.insertListButtonIcon(editor);
                 this.clearUndoStack(editor);
                 editor.on('init', function (e) {
-                    if (config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType !== "container-introduction") {
-                        if (document.getElementsByClassName("slate-tag-icon").length) {
-                            document.getElementsByClassName("slate-tag-icon")[0].style.display = "block";
-                            if (config.slateType == "section") {
-                                document.getElementsByClassName("slate-tag-icon")[0].classList.remove("disable");
-                            }
-                        }
-                    }
                     if (document.querySelector('.audio')) {
                         document.querySelector('.audio').style.display = "block";
                     }
