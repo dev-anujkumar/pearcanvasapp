@@ -3673,7 +3673,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
             expect(spyeditorOnClick).toHaveBeenCalled()
             expect(setDisabled).toHaveBeenCalled()
         });
-        it('Test-30.3-Method--28--editorOnClick--nodeName:ABBR', () => {
+        it('Test-30.3-Method--28--editorOnClick--nodeName:ABBR - Asset Popover', () => {
             document.querySelector = () => { return { classList: { remove: () => { } } }; }
             let event1 = {
                 preventDefault: jest.fn(),
@@ -3684,12 +3684,55 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                     parentNode: {
                         nodeName: 'ABBR',
                         attributes: {
+                            'title': { nodeValue: 'Asset Popover' },
                             'asset-id': { nodeValue: "yes" },
                             'data-uri': { nodeValue: "AP" }
                         }
                     },
                     nodeName: 'ABBR',
                     attributes: {
+                        'title': { nodeValue: 'Asset Popover' },
+                        'asset-id': { nodeValue: "yes" },
+                        'data-uri': { nodeValue: "AP" }
+                    },
+                    closest: () => { return false; }
+
+                },
+                type: "click",
+                clipboardData: {
+                    getData: () => { return pasteString }
+                }
+            }
+            instance.glossaryBtnInstance = {
+                setDisabled: () => { }
+            }
+            instance.footnoteBtnInstance = {
+                setDisabled: () => { }
+            }
+            const spyeditorOnClick = jest.spyOn(instance, 'editorOnClick')
+            instance.editorOnClick(event1);
+            expect(spyeditorOnClick).toHaveBeenCalled()
+        });
+        it('Test-30.3-Method--28--editorOnClick--nodeName:ABBR - Page Link', () => {
+            document.querySelector = () => { return { classList: { remove: () => { } } }; }
+            let event1 = {
+                preventDefault: jest.fn(),
+                stopPropagation: jest.fn(),
+                target: {
+                    id: "",
+                    dataset: { uri: "uri" },
+                    parentNode: {
+                        nodeName: 'ABBR',
+                        attributes: {
+                            'title': { nodeValue: 'Page Link' },
+                            'id': { nodeValue: 'page-link-0' },
+                            'element-id': { nodeValue: "urn:pearson:work:22e2dd42-8fac-481c-8832-ad5d542b985b" },
+                            'data-uri': { nodeValue: "AP" }
+                        }
+                    },
+                    nodeName: 'ABBR',
+                    attributes: {
+                        'title': { nodeValue: 'Page Link' },
                         'asset-id': { nodeValue: "yes" },
                         'data-uri': { nodeValue: "AP" }
                     },
