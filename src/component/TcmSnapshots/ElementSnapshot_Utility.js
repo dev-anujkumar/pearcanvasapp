@@ -67,7 +67,7 @@ export const setSemanticsSnapshots = (status, element) => {
 }
 
 /** 
- * @function setSnapshotsInList
+ * @function setSnapshotsInListAndPoetry
  * @description-This is a recursive function to prepare snapshot content for each Glossary entry in a List element
  * @param {String} status - status of the action performed
  * @param {Array} elementList - List of Glossary entries in a list element
