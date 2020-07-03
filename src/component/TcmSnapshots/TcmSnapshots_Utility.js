@@ -87,7 +87,7 @@ export const prepareElementSnapshots = (status, action, element) => {
         assetPopOverSnapshot: isEmpty(semanticSnapshots) === false ? semanticSnapshots.assetPopoverSnapshot : []
     }
 
-    return JSON.stringify(elementSnapshot);
+    return elementSnapshot;
 }
 /**
  * @function isEmpty

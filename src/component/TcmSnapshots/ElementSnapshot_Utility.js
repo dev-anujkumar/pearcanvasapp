@@ -15,15 +15,15 @@
  * @returns {Object}
 */
 export const setSemanticsSnapshots = (status, element) => {
-    let glossarySnap, footnoteSnap, assetPopoverSnap;
+    let glossarySnap, footnoteSnap, assetPopoverSnap, glossaryList, footnoteList;
     let semanticSnapshots = {};
     switch (element.type) {
         case 'element-authoredtext':
-            let glossaryList = element.elementdata && element.elementdata.glossaryentries && !element.elementdata.headers ? element.elementdata.glossaryentries : [];
+            glossaryList = element.elementdata && element.elementdata.glossaryentries && !element.elementdata.headers ? element.elementdata.glossaryentries : [];
             glossarySnap = prepareGlossarySnapshotContent(status, glossaryList);
-            let footnoteList = element.elementdata && element.elementdata.footnotes ? element.elementdata.footnotes : [];
+            footnoteList = element.elementdata && element.elementdata.footnotes ? element.elementdata.footnotes : [];
             footnoteSnap = prepareFootnoteSnapshotContent(status, footnoteList);
-            assetPopoverSnap = []//assetPopover allowed in paraheading
+            assetPopoverSnap = []//assetPopover allowed in para-heading
             break;
 
         case 'element-list':
@@ -34,7 +34,7 @@ export const setSemanticsSnapshots = (status, element) => {
 
         case 'element-blockfeature':
             glossarySnap = [];
-            let footnoteList = element.elementdata && element.elementdata.authoredtext && element.elementdata.authoredtext.footnotes ? element.elementdata.authoredtext.footnotes : [];
+            footnoteList = element.elementdata && element.elementdata.authoredtext && element.elementdata.authoredtext.footnotes ? element.elementdata.authoredtext.footnotes : [];
             footnoteSnap = prepareFootnoteSnapshotContent(status, footnoteList)
             assetPopoverSnap = []//assetPopover allowed in BQ
             break;
@@ -137,7 +137,7 @@ const prepareFootnoteSnapshotContent = (status, footnoteList) => {
         }
         if (footnoteItem.footnotecontent && footnoteItem.footnotecontent[0] && footnoteItem.footnotecontent[0].elementdata) {
             let footnoteText = footnoteItem.footnotecontent[0].elementdata.text ? footnoteItem.footnotecontent[0].elementdata.text : "";
-            footnoteData.footnote = `"<p class="paragraphNumeroUno">${footnoteText}</p>`
+            footnoteData.footnote = `<p class="paragraphNumeroUno">${footnoteText}</p>`
         }
         footnoteSnap.push(footnoteData)
     })
