@@ -282,6 +282,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
             }
         }
     }
+    console.log('from container actions')
     return axios.put(`${config.REACT_APP_API_URL}v1/slate/element`,
     updatedData1,
         {
@@ -313,7 +314,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         * --------------------------------- TCM Snapshot Data handling --------------------------------*
         */
         let elemParentData = prepareElementAncestorData({})//send slatedata to set parentData
-        dispatch(prepareTcmSnapshots(updatedData, 'update', elemParentData))
+        //dispatch(prepareTcmSnapshots(updatedData,'glossary', 'update'))
        /**-----------------------------------------------------------------------------------------------*/
 
         if(config.slateManifestURN === updatedData.slateVersionUrn){  //Check applied so that element does not gets copied to next slate while navigating

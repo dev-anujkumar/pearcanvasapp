@@ -53,7 +53,7 @@ export const apoSearchSaveAction = (apoObject, args) => {
     * --------------------------------- TCM Snapshot Data handling --------------------------------*
     */
   let elemParentData = prepareElementAncestorData({})//send slatedata to set parentData
-  prepareTcmSnapshots(apoObject,'ASSET_POPOVER',elemParentData)//call apis to prepare assetpopover snapshot data
+  prepareTcmSnapshots(apoObject,elemParentData)//call apis to prepare assetpopover snapshot data
   /**-----------------------------------------------------------------------------------------------*/
 
   return {

@@ -69,5 +69,16 @@ export const sendElementTcmSnapshot = (snapshotData)=> (dispatch, getState) =>{
      * API CALL HERE
      */
     console.log('snapshotData',snapshotData)
+    //     let url = `http://localhost:3000/tctx/proj/urn:pearson:distributable:764e139b-621e-48fc-a451-cb50878f48e1/slate/urn:pearson:manifest:ba874ceb-0536-4965-9e4a-d7241f88bfad/elem/urn:pearson:work:93714c08-1a76-4ca8-9c94-5a0b515b6ce0`;
+    // return axios.post(url, snapshotData, {
+    //     headers: {
+    //         PearsonSSOSession: config.ssoToken
+    //     }
+    // }).then((res) => {
+    //     console.log("success")
+    //     console.log('snapshotData',snapshotData)
+    // }).catch((error) => {
+    //     console.log("error")
+    // })
 
 }

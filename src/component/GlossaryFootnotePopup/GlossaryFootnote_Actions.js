@@ -322,7 +322,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })  //show saving spinner
     
     let url = `${config.REACT_APP_API_URL}v1/slate/element?type=${type.toUpperCase()}&id=${glossaryfootnoteid}`
-    
+    console.log('from footnote actions')
     return axios.put(url, JSON.stringify(data), {
         headers: {
             "Content-Type": "application/json",
@@ -445,7 +445,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
          * ---------------------------------- TCM Snapshot Data handling ----------------------------------
          */
         let elemParentData= prepareElementAncestorData(currentSlateData)
-        store.dispatch(prepareTcmSnapshots(res.data,semanticType,elemParentData))
+        store.dispatch(prepareTcmSnapshots(res.data,'update'))
         /**------------------------------------------------------------------------------------------------*/
         store.dispatch({
             type: UPDATE_FOOTNOTEGLOSSARY,

@@ -6,31 +6,24 @@
 /**************************Import Modules**************************/
 import config from '../../config/config.js';
 import { sendElementTcmSnapshot } from './TcmSnapshot_Actions.js';
+import { setSemanticsSnapshots } from './ElementSnapshot_Utility.js';
 /**
  * @function prepareTcmSnapshots
  * @description-This is the root function to preapare the data for TCM Snapshots
  * @param {Object} allSlateData  
 */
-export const prepareTcmSnapshots = (wipData, assettype, action) => (dispatch) => {
+export const prepareTcmSnapshots = (wipData, action, asideData) => (dispatch) => {
     let tcmSnapshot = {};
     let commonKeys = setCommonKeys_TCM_Snapshots(action, wipData)
     let elementDetails = { type: "list", id: "123" }
     // let elementDetails = setElementTypeAndUrn(ancestorData)
-    /**
-     * Functions called here to prepapre TCM snapshots data based on action/type/etc
-     * 
-     * 
-     * 
-     */
     tcmSnapshot = {
         elementUrn: elementDetails.elementUrn,
         snapshotUrn: elementDetails.elementUrn,
         elementType: elementDetails.elementType,
-        elementSnapshot: prepareElementSnapshots(commonKeys.status,wipData, assettype),
+        elementSnapshot: prepareElementSnapshots(commonKeys.status, action, wipData),
         ...commonKeys
     }
-
-
     console.log('final data in prepare Function', tcmSnapshot)
 
     /** TCM SNAPSHOTS API CALLED HERE */
@@ -53,76 +46,58 @@ const setElementTypeAndUrn = (element) => {
 /**
  * @function setCommonKeys_TCM
  * @description-This function is to set the common keys for tcm snapshots
- * @param {Object} action - type of action performed
+ * @param {String} action - type of action performed
  * @param {Object} wipData - wipData for element
  * @returns {Object}  
 */
-export const setCommonKeys_TCM_Snapshots = (action, wipData) => {
+const setCommonKeys_TCM_Snapshots = (action, wipData) => {
     let tcmKeys = {}
     /**
      * Set common parameters here
      */
     tcmKeys = {
-        slateID: "abc",
-        slateUrn: "abc",//same as slateID
-        projectUrn: "def",//from config
+        slateID: config.slateManifestUrn,
+        slateUrn: config.slateManifestUrn,
+        projectUrn: config.projectUrn,
         index: 0,
         action: action,
-        status: "pending",//set based on action
+        status: (config.tcmStatus && config.tcmStatus == true && action !== 'delete') ? "pending" : "accepted",
         slateType: "container",//set based on condition
-        elementWip: wipData//wipData
+        elementWip: wipData
     }
     return tcmKeys
 }
-export const prepareElementSnapshots = (status,element, hasAsset) => {
-    let elementSnapshot = {}
-    // call setGlossaryFootnoteSnapshots/setAssetPopoverSnapshots
+
+/**
+ * @function prepareElementSnapshots
+ * @description-This function is to set the common keys for tcm snapshots
+ * @param {String} status - status of action performed
+ * @param {Object} action - type of action performed
+ * @param {String} element - wipData for element
+ * @returns {Object}  
+*/
+export const prepareElementSnapshots = (status, action, element) => {
+    let elementSnapshot = {};
+    let semanticSnapshots = (action !== 'create' && element.type !== 'element-citation') ? setSemanticsSnapshots(status, element) : {};
+
     elementSnapshot = {
         contentSnapshot: element,
-        glossorySnapshot: hasAsset ? setGlossarySnapshots(status,element.elementdata.glossaryentries) : [],
-        footnoteSnapshot: hasAsset ? setFootnoteSnapshots(element) : [],
-        assetPopOverSnapshot: hasAsset ? setAssetPopoverSnapshots(element) : []
+        glossorySnapshot: isEmpty(semanticSnapshots) === false ? semanticSnapshots.glossarySnapshot : [],
+        footnoteSnapshot: isEmpty(semanticSnapshots) === false ? semanticSnapshots.footnoteSnapshot : [],
+        assetPopOverSnapshot: isEmpty(semanticSnapshots) === false ? semanticSnapshots.assetPopoverSnapshot : []
     }
-    return elementSnapshot
 
+    return JSON.stringify(elementSnapshot);
 }
-
-export const setGlossarySnapshots = (status, glossaryList) => {
-    let glossarySnap = []
-    console.log('glossaryList', glossaryList)
-    glossaryList && glossaryList.length && glossaryList.map(glossaryItem => {
-        let glossaryData = {
-            changeStatus: status,
-            changeType: "Update",
-            charAt: glossaryItem.charAt,
-            glossaryId: glossaryItem.itemid
-        }
-        if (glossaryItem.glossaryentry && glossaryItem.glossaryentry[0]) {
-            glossaryData.glossaryTerm = `<p>${glossaryItem.glossaryentry[0].term.text}</p>`
-            glossaryData.glossaryDefinition = `<p>${glossaryItem.glossaryentry[0].definition.text}</p>`
-        }
-        if (glossaryItem.glossaryentry && glossaryItem.glossaryentry[0] && glossaryItem.glossaryentry[0].narrativeform) {
-            glossaryData.glossaryNarrative = `<p>${glossaryItem.glossaryentry[0].narrativeform.text}</p>`
-        }
-        glossarySnap.push(glossaryData)
-    })
-    console.log('glossarySnap', glossarySnap)
-    return glossarySnap
-}
-
-export const setFootnoteSnapshots = (assetData) => {
-    let footnoteData = assetData
-    /**
-     * Footnote snapshot function 
-     */
-    return footnoteData
-}
-export const setAssetPopoverSnapshots = (assetData) => {
-    let assetPopoverData = assetData
-    /**
-     * AssetPopover snapshot function 
-     */
-    return assetPopoverData
+/**
+ * @function isEmpty
+ * @description-This function is to check if an object is empty
+ * @param {Object} obj - object to be checked
+ * @returns {Boolean}
+*/
+const isEmpty = (obj) => {
+    for (let key in obj) { return false; }
+    return true;
 }
 
 export const prepareElementAncestorData = (slateData, index = "1") => {
