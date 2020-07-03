@@ -310,12 +310,6 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         });
         }
         
-        /** [PCAT-8289]
-        * --------------------------------- TCM Snapshot Data handling --------------------------------*
-        */
-        let elemParentData = prepareElementAncestorData({})//send slatedata to set parentData
-        //dispatch(prepareTcmSnapshots(updatedData,'glossary', 'update'))
-       /**-----------------------------------------------------------------------------------------------*/
 
         if(config.slateManifestURN === updatedData.slateVersionUrn){  //Check applied so that element does not gets copied to next slate while navigating
             if (updatedData.elementVersionType === "element-learningobjectivemapping" || updatedData.elementVersionType === "element-generateLOlist") {
@@ -353,6 +347,13 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         
         customEvent.trigger('glossaryFootnoteSave', response.data.id); 
         config.popupCreationCallInProgress = false
+
+        /** [PCAT-8289]
+        * --------------------------------- TCM Snapshot Data handling --------------------------------*
+        */
+       let elemParentData = prepareElementAncestorData({})//send slatedata to set parentData
+       dispatch(prepareTcmSnapshots(response.data,'update'))
+      /**-----------------------------------------------------------------------------------------------*/
     }).catch(error => {
         dispatch({type: ERROR_POPUP, payload:{show: true}})
         config.savingInProgress = false

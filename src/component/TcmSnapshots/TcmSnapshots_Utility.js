@@ -74,12 +74,12 @@ const setCommonKeys_TCM_Snapshots = (action, wipData) => {
  * @param {String} status - status of action performed
  * @param {Object} action - type of action performed
  * @param {String} element - wipData for element
- * @returns {Object}  
+ * @returns {Object}
 */
 export const prepareElementSnapshots = (status, action, element) => {
     let elementSnapshot = {};
     let semanticSnapshots = (action !== 'create' && element.type !== 'element-citation') ? setSemanticsSnapshots(status, element) : {};
-    console.log(action,'semanticSnapshots',semanticSnapshots)
+    
     elementSnapshot = {
         contentSnapshot: element,
         glossorySnapshot: isEmpty(semanticSnapshots) === false ? semanticSnapshots.glossarySnapshot : [],
