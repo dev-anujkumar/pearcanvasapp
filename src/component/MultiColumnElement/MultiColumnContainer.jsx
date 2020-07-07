@@ -1,10 +1,12 @@
 /** Libraries */
 import React, { PureComponent } from 'react'
 import Sortable from 'react-sortablejs'
+import { connect } from 'react-redux'
 
 /** Contants and utitlity functions */
 import constants from "./constants.js"
 import { guid, sendDataToIframe } from '../../constants/utility.js'
+import config from "../../config/config.js"
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js'
 import MultiColumnContainerContext from '../ElementContainer/MultiColumnContext.js'
 
@@ -12,6 +14,9 @@ import MultiColumnContainerContext from '../ElementContainer/MultiColumnContext.
 import ElementSaprator from '../ElementSaprator'
 import ElementContainer from '../ElementContainer'
 import PageNumberElement from '../SlateWrapper/PageNumberElement.jsx';
+
+/** Action Creators */
+import { swapElement } from '../SlateWrapper/SlateWrapper_Actions'
 
 /** Style/CSS */
 import './../../styles/MultiColumn/style.css'
@@ -39,6 +44,7 @@ class MultiColumnContainer extends PureComponent {
                     sectionBreak={false}
                     permissions={_context.permissions}
                     onClickCapture={_context.onClickCapture}
+                    splithandlerfunction={_context.splithandlerfunction}
                 />
             </>
         )
@@ -74,6 +80,10 @@ class MultiColumnContainer extends PureComponent {
                                     sectionBreak={false}
                                     permissions={this.context.permissions}
                                     onClickCapture={this.context.onClickCapture}
+                                    asideData={asideData}
+                                    parentUrn={parentUrn}
+                                    parentIndex={parentIndex}
+                                    splithandlerfunction={this.context.splithandlerfunction}
                                 />
                             }
                             <ElementContainer
@@ -98,6 +108,9 @@ class MultiColumnContainer extends PureComponent {
                                             isPageNumberEnabled={isPageNumberEnabled}
                                             activeElement={activeElement}
                                             permissions={permissions}
+                                            asideData={asideData}
+                                            parentUrn={parentUrn}
+                                            parentIndex={parentIndex}
                                         />
                                     )
                                 }
@@ -108,7 +121,11 @@ class MultiColumnContainer extends PureComponent {
                                 elementType="group"
                                 sectionBreak={false}
                                 permissions={this.context.permissions}
-                                onClickCapture={this.context.onClickCapture}                                       
+                                onClickCapture={this.context.onClickCapture}
+                                asideData={asideData}
+                                parentUrn={parentUrn}
+                                parentIndex={parentIndex}
+                                splithandlerfunction={this.context.splithandlerfunction}
                             />  
                         </React.Fragment>
                     )
@@ -131,7 +148,7 @@ class MultiColumnContainer extends PureComponent {
     prepareSwapData = (event, parentUrn) => {
         let swappedElementData;
         let bodyMatterObj = [];
-        bodyMatterObj = this.context.element.contents.bodymatter || [];
+        bodyMatterObj = this.context.element.groupeddata.bodymatter[parentUrn.columnIndex].groupdata.bodymatter || [];
         swappedElementData = bodyMatterObj[event.oldDraggableIndex]
         let dataObj = {
             oldIndex: event.oldDraggableIndex,
@@ -139,6 +156,8 @@ class MultiColumnContainer extends PureComponent {
             swappedElementData: swappedElementData,
             currentSlateEntityUrn: parentUrn.contentUrn,
             containerTypeElem: '2C',
+            columnIndex: parentUrn.columnIndex,
+            containerIndex: this.context.index
         }
         return dataObj
     }
@@ -154,6 +173,8 @@ class MultiColumnContainer extends PureComponent {
             let { bodymatter: _bodyMatter } = _groupdata
             let index = columnIndex
             let parentUrn = {
+                columnName: index === 0 ? "C1" : "C2",
+                columnIndex: index,
                 manifestUrn: _containerId,
                 contentUrn: group.contentUrn,
                 elementType: _containerType
@@ -176,9 +197,9 @@ class MultiColumnContainer extends PureComponent {
                                     return false
                                 }
                                 let dataObj = this.prepareSwapData(evt, parentUrn)
-                                // this.props.swapElement(dataObj, () => { })
-                                // this.context.setActiveElement(dataObj.swappedElementData, dataObj.newIndex);
-                                // sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } }); 
+                                this.props.swapElement(dataObj, () => { })
+                                //  this.context.setActiveElement(dataObj.swappedElementData, dataObj.newIndex);
+                                sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } }); 
                             },
                         }}  
                         tag="div"
@@ -202,8 +223,8 @@ class MultiColumnContainer extends PureComponent {
 
         return groupedDataBodymatter.map((group, index) => {
             return (
-                <React.Fragment key={index}>
-                    { this.renderGroup(group, index) }
+                <React.Fragment key={group.id}>
+                    {this.renderGroup(group, index)}
                 </React.Fragment>
             )
         })
@@ -212,15 +233,19 @@ class MultiColumnContainer extends PureComponent {
     
     render() {
         const { context } = this
-
+        console.log("MULTICOLUMN CONTAINER RENDER inside mutlicolumn JSX::::::::::::")
         return (
             <div className = "multi-column-container">
-                { this.renderContainer(context) }
+                {this.renderContainer(context)}
             </div>
         )
     }
 }
 
+const mapDispatchToProps = {
+    swapElement
+}
+
 MultiColumnContainer.contextType = MultiColumnContainerContext;
 MultiColumnContainer.displayName = "MultiColumnContainer";
-export default MultiColumnContainer
+export default connect(null, mapDispatchToProps)(MultiColumnContainer)

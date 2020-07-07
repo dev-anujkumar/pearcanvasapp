@@ -2,6 +2,7 @@
 .multi-column-container {
     display: flex;
     max-width: 100%;
+    height: 100%;
 }
 
 /* Common class for column groups */

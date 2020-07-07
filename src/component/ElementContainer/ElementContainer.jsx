@@ -1203,6 +1203,7 @@ class ElementContainer extends Component {
                     break;
                 
                 case elementTypeConstant.MULTI_COLUMN:
+                    console.log("MULTICOLUMN CONTAINER RENDER>>>")
                     editor = <MultiColumnContext.Provider value={{
                         activeElement: this.props.activeElement,
                         showBlocker: this.props.showBlocker,
@@ -1218,7 +1219,8 @@ class ElementContainer extends Component {
                         setActiveElement : this.props.setActiveElement,
                         handleFocus: this.handleFocus,
                         handleBlur: this.handleBlur,
-                        deleteElement: this.deleteElement
+                        deleteElement: this.deleteElement,
+                        splithandlerfunction: {splithandlerfunction}
                     }}><MultiColumnContainer />
                     </MultiColumnContext.Provider>;
                     labelText = '2C'

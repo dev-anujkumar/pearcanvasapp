@@ -45,8 +45,8 @@ function prepareDataForTcmUpdate(updatedData, parentData, asideData, poetryData)
     } else if ((poetryData && poetryData.type === 'poetry') || (parentData && parentData.elementType === "poetry")){
         updatedData.parentType = "poetry";
     }
-    updatedData.projectURN = config.projectUrn;
-    updatedData.slateEntity = poetryData && poetryData.contentUrn || config.slateEntityURN;
+    /* updatedData.projectURN = config.projectUrn;
+    updatedData.slateEntity = poetryData && poetryData.contentUrn || config.slateEntityURN; */
 }
 
 function createNewVersionOfSlate(){
@@ -85,6 +85,10 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
     } 
     else if (type == 'ELEMENT_CITATION') {
         _requestData.parentType = "citations"
+    }
+    else if (parentUrn && parentUrn.elementType === 'group') {
+        _requestData["parentType"] = "groupedcontent"
+        _requestData["columnName"] = parentUrn.columnName
     }
 
     prepareDataForTcmUpdate(_requestData, parentUrn, asideData, poetryData)
@@ -155,6 +159,19 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                     })
                 }
             })  
+        }
+        else if (asideData && asideData.type === 'groupedcontent') {
+            newParentData[config.slateManifestURN].contents.bodymatter.map((item, i) => {
+                if (item.id === asideData.id) {
+                     /*item.groupeddata.bodymatter.map(groupItem => {
+                        if (groupItem.id === parentUrn.manifestUrn) {
+                            groupItem.groupdata.bodymatter.splice(index, 0, createdElementData)
+                        }
+                    }) */
+                    item.groupeddata.bodymatter[parentUrn.columnIndex].groupdata.bodymatter.splice(index, 0, createdElementData)
+                }
+            })
+            newParentData[config.slateManifestURN].contents["multiColumnUpdateFlag"] = Math.random()
         }
         else {
             newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
@@ -280,6 +297,14 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                         }
                     });
                 }
+                else if (containerTypeElem && containerTypeElem == '2C') {
+                    newBodymatter[dataObj.containerIndex].groupeddata.bodymatter[dataObj.columnIndex].groupdata.bodymatter.move(oldIndex, newIndex);
+                    /* newBodymatter.forEach(element => {
+                        if (element.id == poetryId) {
+                            element.contents.bodymatter.move(oldIndex, newIndex);
+                        }
+                    }); */
+                }
                 else {
                     newParentData[slateId].contents.bodymatter.move(oldIndex, newIndex);
                 }
@@ -302,7 +327,7 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
             /* For hiding the spinning loader send HideLoader message to Wrapper component */
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
             dispatch({type: ERROR_POPUP, payload:{show: true}})
-            // console.log('Error occured while swaping element', err)
+            console.log('Error occured while swaping element', err)
         })
 }
 

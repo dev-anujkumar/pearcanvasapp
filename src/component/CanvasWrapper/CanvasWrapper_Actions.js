@@ -425,7 +425,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
                         config.scrolling = true;
                     } else {
                         currentParentData = slateData.data[manifestURN];
-                        currentParentData.contents.bodymatter.push(multiColumnData)
+                        // currentParentData.contents.bodymatter.push(multiColumnData)
                     }
                     dispatch({
                         type: FETCH_SLATE_DATA,
