@@ -533,7 +533,8 @@ class ElementContainer extends Component {
                         contentUrn : parentElement.contentUrn           
                     };
                 }
-                if((parentElement.type === "poetry" && previousElementData.type !== "stanza" && !(parentElement.contents["creditsarray"] && parentElement.contents["creditsarray"].length && parentElement.contents.creditsarray[0].id === previousElementData.id)) || parentElement.type === "citations"){
+                let isPosterTextSelected = parentElement && parentElement.type === "popup" && parentElement.popupdata["postertextobject"] && parentElement.popupdata["postertextobject"].length && parentElement.popupdata["postertextobject"][0].id === previousElementData.id
+                if((parentElement.type === "poetry" && previousElementData.type !== "stanza" && !(parentElement.contents["creditsarray"] && parentElement.contents["creditsarray"].length && parentElement.contents.creditsarray[0].id === previousElementData.id)) || parentElement.type === "citations" || (parentElement.type === "popup" && !isPosterTextSelected)) {
                     let titleDOMNode = document.getElementById(`cypress-${this.props.index}-0`),
                         subtitleDOMNode = document.getElementById(`cypress-${this.props.index}-1`)
 
@@ -545,7 +546,7 @@ class ElementContainer extends Component {
 
                     let imgTaginLabel = titleDOMNode && titleDOMNode.getElementsByTagName("img")
                     let imgTaginTitle = subtitleDOMNode && subtitleDOMNode.getElementsByTagName("img")
-                    if (parentElement.type === "poetry") {
+                    if (parentElement.type === "poetry" || parentElement.type === "popup") {
                         if((titleDOMNode.textContent === '') && !(imgTaginLabel && imgTaginLabel.length)){
                             titleHTML = ""
                         }
@@ -564,14 +565,14 @@ class ElementContainer extends Component {
                     // html = html.replace(/<br data-mce-bogus="1">/g, "<br>")
                     parentElement["index"] = this.props.index
                 }
-                else if(parentElement.type === "popup" || (parentElement.type === "poetry" && parentElement.contents["creditsarray"] && parentElement.contents["creditsarray"].length && parentElement.contents.creditsarray[0].id === previousElementData.id)){
+                else if ((parentElement.type === "poetry" && parentElement.contents["creditsarray"] && parentElement.contents["creditsarray"].length && parentElement.contents.creditsarray[0].id === previousElementData.id) || isPosterTextSelected) {
                     tempDiv.innerHTML = matchHTMLwithRegex(tempDiv.innerHTML) ? tempDiv.innerHTML : `<p class="paragraphNumeroUno">${tempDiv.innerHTML}</p>`
                     html = html.replace(/<br data-mce-bogus="1">/g, "<br>")
                     html = matchHTMLwithRegex(html) ? html : `<p class="paragraphNumeroUno">${html}</p>`
                     parentElement["index"] = this.props.index
                 }
                 else if (previousElementData.type === "stanza") {
-                        html = `<p>${html}</p>`                                      
+                    html = `<p>${html}</p>`
                 }
                 if(parentElement && parentElement.type === "popup"){
                     html = html.replace(/(<sup><\/sup>)|(<sup><br><\/sup>)/g, "<br>");

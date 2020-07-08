@@ -679,10 +679,16 @@ const appendCreatedElement = (paramObj, responseData) => {
         else if(popupElementIndex.length === 4){
             targetPopupElement = targetPopupElement.elementdata.bodymatter[popupElementIndex[1]].contents.bodymatter[popupElementIndex[2]]
         }
-        if(targetPopupElement){
-            targetPopupElement.popupdata[popupField] = responseData
-            targetPopupElement.popupdata[popupField].html.text = elemNode.innerHTML
-            targetPopupElement.popupdata[popupField].elementdata.text = elemNode.innerText
+        if (targetPopupElement) {
+            targetPopupElement.popupdata["formatted-title"] = responseData
+            if (popupField === "formatted-title") {
+                
+                targetPopupElement.popupdata["formatted-title"].html.text = createTitleSubtitleModel(elemNode.innerHTML, "")
+            }
+            else {
+                targetPopupElement.popupdata["formatted-title"].html.text = createTitleSubtitleModel("", elemNode.innerHTML)
+            }
+            targetPopupElement.popupdata["formatted-title"].elementdata.text = elemNode.innerText
             _slateObject.contents.bodymatter[popupElementIndex] = targetPopupElement
         }
     }
@@ -709,37 +715,21 @@ const appendCreatedElement = (paramObj, responseData) => {
  * @param {*} parentElement Parent popup element/ citation group container
  * @param {*} popupField formatted title or formatted-subtitle
  */
-const getRequestData = (parentElement, popupField) => {
+const getRequestData = (parentElement) => {
     let dataToSend = {}
-    if(parentElement.type === "popup"){
-        let popupFieldType = ""
-        if(popupField === "formatted-subtitle"){
-            popupFieldType = "formattedSubtitle"
-        }
-        else{
-            popupFieldType = "formattedTitle"
-        }
-        
-        dataToSend = {
-            "projectUrn": config.projectUrn,
-            "slateEntityUrn": parentElement.contentUrn,
-            "type": "TEXT",
-            "metaDataField" : popupFieldType
-        }
-    }
-    else if(parentElement.type === "citations"){
-        let citationField = "formattedTitle"
-        dataToSend = {
-            "projectUrn": config.projectUrn,
-            "slateEntityUrn": parentElement.contentUrn,
-            "type": "TEXT",
-            "metaDataField" : citationField
-        }
+    let metaDataField = "formattedTitle" 
+    dataToSend = {
+        "projectUrn": config.projectUrn,
+        "slateEntityUrn": parentElement.contentUrn,
+        "slateUrn": parentElement.id,
+        "type": "TEXT",
+        "metaDataField" : metaDataField
     }
     return dataToSend
 }
+
 export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex, slateManifestURN) => (dispatch, getState) => {
-    let _requestData =  getRequestData(parentElement, popupField)
+    let _requestData =  getRequestData(parentElement)
     let url = `${config.REACT_APP_API_URL}v1/slate/element`
     return axios.post(url, 
         JSON.stringify(_requestData),
