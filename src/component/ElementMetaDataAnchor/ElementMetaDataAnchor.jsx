@@ -90,6 +90,7 @@ export class ElementMetaDataAnchor extends Component {
     * @param {object} loldata
  */
   onLOClickHandle = (loData, e) => {
+    e.stopPropagation();
     this.props.handleFocus();
     if (config.editorRefID == e.target.id) {
       config.editorRefID = "";
