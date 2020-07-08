@@ -601,6 +601,34 @@ export class TinyMceEditor extends Component {
                     }
                     else if (key != undefined && key === 13) {
                         spanHandlers.addAndSplitSpan(editor, this.props.elementId, 'code', 'codeNoHighlightLine');
+                        let elementSearch = editor.selection.getNode();
+                        if (editor.selection.getNode().tagName.toLowerCase() !== 'span' || editor.selection.getNode().className.toLowerCase() !== 'codeNoHighlightLine') {
+                            elementSearch = editor.selection.getNode().closest(`.codeNoHighlightLine`);
+                        }
+                        if(elementSearch) {
+                            if (elementSearch.innerHTML != '<br>' && elementSearch.textContent.trim() != '') {
+                                let brs = elementSearch.getElementsByTagName('br');
+                                while (brs.length) {
+                                    brs[0].parentNode.removeChild(brs[0]);
+                                }
+                            }
+                            if(elementSearch.nextSibling) {
+                                if (elementSearch.nextSibling.innerHTML != '<br>' && elementSearch.nextSibling.textContent.trim() != '') {
+                                    let brs = elementSearch.nextSibling.getElementsByTagName('br');
+                                    while (brs.length) {
+                                        brs[0].parentNode.removeChild(brs[0]);
+                                    }
+                                }
+                            }
+                            if(elementSearch.previousSibling) {
+                                if (elementSearch.previousSibling.innerHTML != '<br>' && elementSearch.previousSibling.textContent.trim() != '') {
+                                    let brs = elementSearch.previousSibling.getElementsByTagName('br');
+                                    while (brs.length) {
+                                        brs[0].parentNode.removeChild(brs[0]);
+                                    }
+                                }
+                            }
+                        }
                     }
                     else if (key != undefined && (key === 8 || key === 46)) {
                         spanHandlers.handleBackSpaceAndDeleteKyeUp(editor, key, 'codeNoHighlightLine');
@@ -1099,6 +1127,7 @@ export class TinyMceEditor extends Component {
                     text = String(text).replace(/\r|\n/g, '<br>');
                     text = String(text).replace(/ /g, '&nbsp;');
                     text = String(text).replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;');
+                    text = String(text).replace(/<br><br>/g, '<br>');
                     this.copyContent = text;
                 }
             }
@@ -1165,21 +1194,21 @@ export class TinyMceEditor extends Component {
             parentNode.className = "TempSpan";
             let boldTags = parentNode.getElementsByTagName('STRONG');
             while (boldTags.length) {
-                let innerHTML = boldTags[0].innerHTML;
-                boldTags[0].outerHTML = innerHTML;
+                let tempInnerHTML = boldTags[0].innerHTML;
+                boldTags[0].outerHTML = tempInnerHTML;
             }
             let uTags = parentNode.getElementsByTagName('U');
             while (uTags.length) {
-                let innerHTML = uTags[0].innerHTML;
-                uTags[0].outerHTML = innerHTML;
+                let tempInnerHTML = uTags[0].innerHTML;
+                uTags[0].outerHTML = tempInnerHTML;
             }
             let emTags = parentNode.getElementsByTagName('EM');
             while (emTags.length) {
-                let innerHTML = emTags[0].innerHTML;
-                emTags[0].outerHTML = innerHTML;
+                let tempInnerHTML = emTags[0].innerHTML;
+                emTags[0].outerHTML = tempInnerHTML;
             }
-            for (let index = 0; index < innerSpans.length; index++) {
-                innerSpans[index].className = 'codeNoHighlightLine';
+            while(innerSpans.length) {
+                innerSpans[0].className = 'codeNoHighlightLine';
             }
             let startText = '';
             let endText = '';
