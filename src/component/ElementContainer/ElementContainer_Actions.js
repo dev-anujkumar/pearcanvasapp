@@ -66,6 +66,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
             case "popup":
             case "citations":
             case "poetry":
+            case "groupedcontent":
                 return {
                     "projectUrn": config.projectUrn,
                     "entityUrn": contentUrn

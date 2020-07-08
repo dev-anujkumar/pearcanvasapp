@@ -242,11 +242,9 @@ class MultiColumnContainer extends PureComponent {
         if(checkSlateLock(this.context.slateLockInfo)){
             return false
         }
-        console.log("%c event.target.classList", "background: black; color: white", event.target.classList)
-        console.log("%c event", "background: black; color: yellow", event)
-        /* if(event && event.target && !(event.target.classList.contains('citationTitle'))){
+        if(event && event.target && !(event.target.classList.contains('container-multi-column-group'))){
             return false
-        } */
+        }
         this.context.handleFocus("", "", event)
     }
     

@@ -384,7 +384,7 @@ const elementDataBank = {
     "groupedcontent": {
         "elementType" : "groupedcontent",
         "primaryOption" : "primary-multicolumn",
-        "wider-60-40" : {
+        "wider-65-35" : {
             "secondaryOption" : "secondary-multicolumn-wider"
         },
         "wider-50-50" : {

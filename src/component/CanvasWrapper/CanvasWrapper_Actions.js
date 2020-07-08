@@ -260,12 +260,11 @@ const findElementType = (element, index) => {
                     elementType: elementDataBank[element.type]["elementType"],
                     primaryOption: elementDataBank[element.type]["primaryOption"]  
                 }
-                if(element.width && element.groupproportions){
-                    
-                    elementType["secondaryOption"]= elementDataBank[element.type][`${element.width}-${element.groupproportions}`]["secondaryOption"]
+                if (element.width && element.groupproportions) {
+                    elementType["secondaryOption"] = elementDataBank[element.type][`${element.width}-${element.groupproportions}`]["secondaryOption"]
                 }
-                else{
-                    elementType["secondaryOption"]= elementDataBank[element.type]["wider-60-40"]["secondaryOption"] 
+                else {
+                    elementType["secondaryOption"] = elementDataBank[element.type]["wider-50-50"]["secondaryOption"] 
                 }
                 break;
             default:

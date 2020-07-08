@@ -18,7 +18,7 @@ let constants = {
     },
     setClassByElementType: (parentElement) => {
         let { width, groupproportions } = parentElement
-        return `${width}-${groupproportions}`
+        return width ? `${width}-${groupproportions}` : "wider-50-50"
     }
 }
 

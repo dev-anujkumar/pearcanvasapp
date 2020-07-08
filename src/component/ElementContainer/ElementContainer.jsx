@@ -694,7 +694,7 @@ class ElementContainer extends Component {
         let activeEditorId = elemIndex ? `cypress-${elemIndex}` : (tinyMCE.activeEditor ? tinyMCE.activeEditor.id : '')
         let node = document.getElementById(activeEditorId);
         let element = currrentElement ? currrentElement : this.props.element
-        let parentElement = ((currrentElement && currrentElement.type === elementTypeConstant.CITATION_ELEMENT) || (this.props.parentElement && this.props.parentElement.type === 'poetry' || this.props.parentElement.type === "groupedcontent")) ? this.props.parentElement : this.props.element
+        let parentElement = ((currrentElement && currrentElement.type === elementTypeConstant.CITATION_ELEMENT) || (this.props.parentElement && (this.props.parentElement.type === 'poetry' || this.props.parentElement.type === "groupedcontent"))) ? this.props.parentElement : this.props.element
         this.handleContentChange(node, element, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType)
     }
 

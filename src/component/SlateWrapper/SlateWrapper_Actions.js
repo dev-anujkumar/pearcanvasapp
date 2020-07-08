@@ -174,7 +174,6 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                     item.groupeddata.bodymatter[parentUrn.columnIndex].groupdata.bodymatter.splice(index, 0, createdElementData)
                 }
             })
-            newParentData[config.slateManifestURN].contents["multiColumnUpdateFlag"] = Math.random()
         }
         else {
             newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
