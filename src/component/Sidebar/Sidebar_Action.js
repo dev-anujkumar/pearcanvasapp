@@ -401,7 +401,8 @@ const prepareAssessmentDataForConversion = (oldElementData, format) => {
         assessmentid : "",
         assessmentitemid : "",
         assessmentformat : assessmentFormat,
-        assessmentitemtype : assessmentItemType
+        assessmentitemtype : assessmentItemType,
+        schema: "http://schemas.pearson.com/wip-authoring/assessment/1#/definitions/assessment"
     }
 
     if (oldElementData && oldElementData.html && oldElementData.html.title) {
