@@ -47,15 +47,15 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
             let indexesLen = tempIndex.length;
             switch (indexesLen){
                 case 2:
-                    glossaryFootElem = newBodymatter[tempIndex[0]].popupdata["formatted-subtitle"];
+                    glossaryFootElem = newBodymatter[tempIndex[0]].popupdata["formatted-title"];
                     break;
 
                 case 3:
-                    glossaryFootElem = newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].popupdata["formatted-subtitle"];
+                    glossaryFootElem = newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].popupdata["formatted-title"];
                     break;
 
                 case 4:
-                    glossaryFootElem = newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]].popupdata["formatted-subtitle"];
+                    glossaryFootElem = newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]].popupdata["formatted-title"];
                     break;
             }   
         }
@@ -182,10 +182,9 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             credits = document.getElementById('cypress-' + elementIndex + '-4').innerHTML //cypress-1-4
             if(elementSubType === 'codelisting') {
                 preformattedtext = document.getElementById('cypress-' + elementIndex + '-2').innerHTML ;
+            } else if (elementSubType === 'authoredtext') {
+                text = document.getElementById('cypress-' + elementIndex + '-2').innerHTML ;
             }
-        }
-        if(document.querySelector('div[data-type="mathml"] p')){
-            text = document.querySelector('div[data-type="mathml"] p').innerHTML;
         }
        
         figureDataObj = {
@@ -207,7 +206,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         figureDataObj = {
             "text": workContainer
         }
-        if(elementType == 'stanza' || (typeWithPopup === "poetry" && poetryField === 'formatted-subtitle')){
+        if(elementType == 'stanza' || (typeWithPopup === "poetry" && poetryField === 'formatted-subtitle' || typeWithPopup === "popup")){
             figureDataObj.text = `<p>${figureDataObj.text}</p>`
         }
     }
@@ -347,18 +346,40 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         else if (typeWithPopup && typeWithPopup === "popup"){
             // let tempIndex = index.split('-');
             let indexesLen = tempIndex.length
+            let responseElement = {...res.data}
+            responseElement.html.text = responseElement.html.text.replace(/<p>|<\/p>/g, "")
+            
             switch (indexesLen){
-                case 2:
-                    newBodymatter[tempIndex[0]].popupdata["formatted-subtitle"] = res.data;
+                case 2: {
+                    let titleDOM = document.getElementById(`cypress-${tempIndex[0]}-0`)
+                    let titleHTML = ""
+                    if (titleDOM) {
+                        titleHTML = titleDOM.innerHTML
+                    }
+                    responseElement.html.text = createTitleSubtitleModel(titleHTML, responseElement.html.text)
+                    newBodymatter[tempIndex[0]].popupdata["formatted-title"] = responseElement;
                     break;
-
-                case 3:
-                    newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].popupdata["formatted-subtitle"] = res.data;
+                }
+                case 3: {
+                    let titleDOM = document.getElementById(`cypress-${tempIndex[0]}-${tempIndex[1]}-0`)
+                    let titleHTML = ""
+                    if (titleDOM) {
+                        titleHTML = titleDOM.innerHTML
+                    }
+                    responseElement.html.text = createTitleSubtitleModel(titleHTML, responseElement.html.text)
+                    newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].popupdata["formatted-title"] = responseElement;
                     break;
-
-                case 4:
-                    newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]].popupdata["formatted-subtitle"] = res.data;
+                }
+                case 4: {
+                    let titleDOM = document.getElementById(`cypress-${tempIndex[0]}-${tempIndex[1]}-${tempIndex[2]}-0`)
+                    let titleHTML = ""
+                    if (titleDOM) {
+                        titleHTML = titleDOM.innerHTML
+                    }
+                    responseElement.html.text = createTitleSubtitleModel(titleHTML, responseElement.html.text)
+                    newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]].popupdata["formatted-title"] = responseElement;
                     break;
+                }    
             }
         }
         else if (typeWithPopup && typeWithPopup === 'poetry') {
