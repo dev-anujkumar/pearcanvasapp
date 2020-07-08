@@ -38,6 +38,7 @@ class LearningTool extends React.Component {
                 "Psychology Sims":"knowdl",
                 "qual-sims":"knowdl",
                 "soundbytes":"knowdl",
+                "political-science-sims":"knowdl",
                 "video-submission":"mediashare",
                 "video-quiz":"mediashare",
                 "myvirtual-child":"myvirtual-x",
@@ -229,7 +230,7 @@ class LearningTool extends React.Component {
    validateSearch =(e) => {
        this.setState({ searchValue: e.target.value })
         let searchValue = e.target.value
-        let regex = /^[A-Za-z0-9 " "]{0,100}$/
+        let regex = /^[A-Za-z0-9 " "\-]{0,100}$/
         if (!regex.test(searchValue)) {
           this.setState({showError:true})
         } else {
@@ -268,6 +269,7 @@ class LearningTool extends React.Component {
                                 <option value="myvirtual-child">MyVirtualChild</option>
                                 <option value="myvirtual-life">MyVirtualLife</option>
                                 <option value="knowdl">Personal Finance </option>
+                                <option value="political-science-sims">Political Science Sims</option>
                                 <option value="qual-sims">Qualitative Business Sims</option>
                                 <option value="soundbytes">Sound Bytes</option>
                                 <option value="socialexplorer-surveys">Surveys and Inventories</option>

@@ -71,9 +71,9 @@ class ElementAsideContainer extends Component {
                     }
                     let filterElement = _bodyMatter.filter((ele) => ele.type == "manifest");
                     let elementLength = _bodyMatter.length - filterElement.length;
-                    if(!_bodyMatter.length && this.props.deleteElement){
+                    /* if(!_bodyMatter.length && this.props.deleteElement){
                         this.props.deleteElement();
-                    }
+                    } */
                     this['cloneCOSlateControlledSource_2' + random] = this.renderElement(_bodyMatter, parentUrn, index, elementLength)
                     return (
                         <div className="container-aside" data-id={_containerId} container-type={_containerType}>
@@ -345,21 +345,20 @@ class ElementAsideContainer extends Component {
                     let index = 0
                     return(
                         <ElementSaprator
-                        index= {index}
-                        upperOne={true}
-                        firstOne={index === 0}
-                        parentUrn={parentUrn}
-                        asideData={asideData}
-                        parentIndex={parentIndex}
-                        esProps={this.props.elementSepratorProps(index, true, parentUrn, asideData, parentIndex)}
-                        elementType="element-aside"
-                        sectionBreak={true}
-                        permissions={this.props.permissions}
-                        onClickCapture={this.props.onClickCapture}
-                        splithandlerfunction={this.props.splithandlerfunction}
-                    />
-                    ) 
-                 
+                            index= {index}
+                            upperOne={true}
+                            firstOne={true}
+                            parentUrn={parentUrn}
+                            asideData={asideData}
+                            parentIndex={parentIndex}
+                            esProps={this.props.elementSepratorProps(index, true, parentUrn, asideData, parentIndex)}
+                            elementType="element-aside"
+                            sectionBreak={this.props.element.subtype == "workedexample" ? true : false}
+                            permissions={this.props.permissions}
+                            onClickCapture={this.props.onClickCapture}
+                            splithandlerfunction={this.props.splithandlerfunction}
+                        />
+                    )
                 } else {
                     return _elements.map((element, index) => {
                         if (element.type == "manifest" && firstSection) {
@@ -423,19 +422,6 @@ class ElementAsideContainer extends Component {
                                         parentElement = {this.props.element}
                                         onListSelect={this.props.onListSelect}
                                     >
-                                        {
-                                            (isHovered, isPageNumberEnabled, activeElement) => (
-                                                <PageNumberElement
-                                                    updatePageNumber={this.props.updatePageNumber}
-                                                    asideData={asideData}
-                                                    parentUrn={parentUrn}
-                                                    element={element}
-                                                    isHovered={isHovered}
-                                                    isPageNumberEnabled={isPageNumberEnabled}
-                                                    activeElement={activeElement}
-                                                    permissions={this.props.permissions} />
-                                            )
-                                        }
                                     </ElementContainer>
                                     <ElementSaprator
                                         index={index}

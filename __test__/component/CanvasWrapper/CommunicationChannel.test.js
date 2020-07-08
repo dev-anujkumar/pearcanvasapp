@@ -819,7 +819,7 @@ describe('Testing communication channel', () => {
         expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
         spyhandleIncommingMessages.mockClear()
     })
-    test('Test for statusForSave if case', () => {
+    xtest('Test for statusForSave if case', () => {
         const div = document.createElement('div');
         const loChild = document.createElement('div');
         loChild.classList.add("learning-objective");
@@ -844,7 +844,7 @@ describe('Testing communication channel', () => {
         expect(channelInstance.handleLOData).toHaveBeenCalled()
         spyhandleLOData.mockClear()
     })
-    test('Test for statusForSave if-else case', () => {
+    xtest('Test for statusForSave if-else case', () => {
         const div = document.createElement('div');
         const loChild = document.createElement('div');
         loChild.classList.add("learning-objective");
