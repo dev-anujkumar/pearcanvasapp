@@ -145,8 +145,8 @@ class ElementContainer extends Component {
     /**
      * function will be called on element focus of tinymce instance
      */
-    handleFocus = (updateFromC2Flag, showHideObj, event) => {
-        if(event){
+    handleFocus = (updateFromC2Flag, showHideObj, event, labelText) => {
+        if(event && labelText !== 'fg'){
             event.stopPropagation();
         }
         let element = this.props.element,
@@ -1238,7 +1238,7 @@ class ElementContainer extends Component {
                     {this.renderColorTextButton(element, permissions)}
                 </div>
                     : ''}
-                <div className={`element-container ${labelText.toLowerCase()} ${borderToggle}`} data-id={element.id} onFocus={() => this.toolbarHandling('remove')} onBlur={() => this.toolbarHandling('add')} onClick = {this.handleFocus}>
+                <div className={`element-container ${labelText.toLowerCase()} ${borderToggle}`} data-id={element.id} onFocus={() => this.toolbarHandling('remove')} onBlur={() => this.toolbarHandling('add')} onClick = {(e)=>this.handleFocus("","",e,labelText)}>
                     {elementOverlay}{bceOverlay}{editor}
                 </div>
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>

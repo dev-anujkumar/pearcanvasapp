@@ -263,9 +263,11 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             "Content-Type": "application/json",
             "PearsonSSOSession": config.ssoToken
         }
-    }).then(slateData => {
+    }).then(slateData => {      
         let newVersionManifestId=Object.values(slateData.data)[0].id
-
+        if(config.slateManifestURN !== newVersionManifestId){
+            config.slateManifestURN = newVersionManifestId
+        }
 		if(slateData.data && slateData.data[newVersionManifestId] && slateData.data[newVersionManifestId].type === "popup"){
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
             config.isPopupSlate = true;
