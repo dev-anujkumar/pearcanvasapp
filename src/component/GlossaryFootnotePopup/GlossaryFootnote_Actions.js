@@ -182,10 +182,9 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             credits = document.getElementById('cypress-' + elementIndex + '-4').innerHTML //cypress-1-4
             if(elementSubType === 'codelisting') {
                 preformattedtext = document.getElementById('cypress-' + elementIndex + '-2').innerHTML ;
+            } else if (elementSubType === 'authoredtext') {
+                text = document.getElementById('cypress-' + elementIndex + '-2').innerHTML ;
             }
-        }
-        if(document.querySelector('div[data-type="mathml"] p')){
-            text = document.querySelector('div[data-type="mathml"] p').innerHTML;
         }
        
         figureDataObj = {
