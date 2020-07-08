@@ -108,6 +108,7 @@ function CommunicationChannel(WrappedComponent) {
                 case 'refreshElementWithTable':
                     {
                         this.setTableData(message.elementId, message.updatedData);
+                       
                     }
                     break;
                 case 'canvasBlocker':
@@ -283,7 +284,7 @@ function CommunicationChannel(WrappedComponent) {
                     "metaDataAnchorID": LOElements,
                     "elementVersionType": "element-learningobjectivemapping",
                     "loIndex" : loIndex,
-                    "slateUrn": config.slateManifestURN
+                    "slateVersionUrn": config.slateManifestURN
                 }
                 if(LOElements.length){
                 this.props.updateElement(LOWipData)
@@ -368,6 +369,9 @@ function CommunicationChannel(WrappedComponent) {
                 currentSlateObject = {
                     title: message.node.unformattedTitle ? message.node.unformattedTitle.en : ''
                 }
+                this.setState({
+                    showBlocker : false
+                }) 
                 this.props.setUpdatedSlateTitle(currentSlateObject)
                 config.staleTitle = message.node.unformattedTitle ? message.node.unformattedTitle.en : '';
                 config.slateEntityURN = message.node.entityUrn;
@@ -388,7 +392,9 @@ function CommunicationChannel(WrappedComponent) {
                     slateEntityUrn: config.slateEntityURN
                 }
                 this.props.fetchAudioNarrationForContainer(slateData)  
-                this.props.fetchSlateData(message.node.containerUrn,config.slateEntityURN, config.page,'');
+                this.props.clearElementStatus()
+                this.props.fetchUsageTypeData('assessment');
+                this.props.fetchSlateData(message.node.containerUrn,config.slateEntityURN, config.page,'',"");
                 config.savingInProgress = false
                 this.props.setSlateType(config.slateType);
                 this.props.setSlateEntity(config.slateEntityURN);
@@ -584,8 +590,8 @@ function CommunicationChannel(WrappedComponent) {
             }
         }
 
-        setTableData = (elementId) => {
-            this.props.getTableEditorData(elementId);
+        setTableData = (elementId,updatedData) => {
+            this.props.getTableEditorData(elementId,updatedData);
         }
         
 

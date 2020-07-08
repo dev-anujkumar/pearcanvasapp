@@ -24,9 +24,9 @@ class Sidebar extends Component {
         let primaryFirstOption = Object.keys(elementTypeList)[0];
         let secondaryFirstOption = Object.keys(elementTypeList[primaryFirstOption].subtype)[0];
         let labelText = elementTypeList[primaryFirstOption].subtype[secondaryFirstOption].labelText;
-        let numbered = this.props.activeElement.numbered;
+        let numbered = this.props.activeElement.numbered || true;
         let startNumber = this.props.activeElement.startNumber || "1";
-        let syntaxhighlighting =  this.props.activeElement.syntaxhighlighting;
+        let syntaxhighlighting =  this.props.syntaxhighlighting || true;
         
         this.state = {
             elementDropdown: '',
@@ -103,7 +103,7 @@ class Sidebar extends Component {
         }
         const { activePrimaryOption } = this.state
         if(e.target.dataset && e.target.dataset.element !== "secondary"){
-            let disabledPrimaryOption=["primary-openerelement", "primary-single-assessment" ,"primary-popup", "primary-showhide", "primary-mmi", "primary-smartlink","primary-citations-group", "primary-element-citation", "primary-poetry", "primary-stanza", "primary-editor-table-equation", "primary-blockcode-equation", "primary-mathml-equation"];
+            let disabledPrimaryOption=["primary-openerelement", "primary-single-assessment" ,"primary-popup", "primary-showhide", "primary-mmi", "primary-smartlink","primary-citations-group", "primary-element-citation", "primary-poetry", "primary-stanza", "primary-editor-table-equation", "primary-blockcode-equation", "primary-mathml-equation","primary-multicolumn"];
             if( disabledPrimaryOption.indexOf(activePrimaryOption) !== -1 ){
                 e.stopPropagation()
                 return false
@@ -153,7 +153,7 @@ class Sidebar extends Component {
                     className={`element-dropdown ${this.props.showHideObj && this.props.activeElement.elementType? "sidebar-disable": ""}`}>
                     <div className={`element-dropdown-title ${className}`} data-element="primary" onClick={this.toggleElementDropdown}>
                         {primaryOptionObject[this.state.activePrimaryOption].text}
-                        { activePrimaryOption === "primary-single-assessment" || activePrimaryOption === "primary-citations-group" || activePrimaryOption === "primary-element-citation" || activePrimaryOption === "primary-poetry" || activePrimaryOption === "primary-stanza" || activePrimaryOption === "primary-mathml-equation" || activePrimaryOption === "primary-blockcode-equation" || activePrimaryOption === "primary-editor-table-equation"
+                        { activePrimaryOption === "primary-single-assessment" || activePrimaryOption === "primary-citations-group" || activePrimaryOption === "primary-element-citation" || activePrimaryOption === "primary-poetry" || activePrimaryOption === "primary-stanza" || activePrimaryOption === "primary-mathml-equation" || activePrimaryOption === "primary-blockcode-equation" || activePrimaryOption === "primary-editor-table-equation"  || activePrimaryOption === "primary-multicolumn"
                          ? null : dropdownArrow }
                     </div>
                     <ul className={`element-dropdown-content primary-options ${active}`}>
@@ -177,7 +177,7 @@ class Sidebar extends Component {
             primaryOptions = <div className="panel_show_module">
                     <div className="learning-obejective-text"><b>Metadata Anchor</b></div>
                         <p>Show Module Name</p>
-                        <label className="switch"><input type="checkbox" onClick={this.showModuleName} checked={this.props.showModule? true : false} /><span className="slider round"></span></label>
+                        <label className="switch"><input type="checkbox" onClick={!config.savingInProgress && this.showModuleName} checked={this.props.showModule? true : false} /><span className="slider round"></span></label>
                         </div>;
             return primaryOptions;
         }
@@ -254,8 +254,8 @@ class Sidebar extends Component {
             attrInput: event.target.value
         })
         let activeElement = document.querySelector(`[data-id="${this.props.activeElement.elementId}"]`)
-        let attrNode = activeElement.querySelector(".blockquoteTextCredit")
-        attrNode.innerHTML = event.target.value
+        let attrNode = activeElement.querySelector(".blockquoteTextCredit");
+        attrNode.innerHTML = event.target.value.replace(/</g, "&lt;").replace(/>/g, "&gt;");
     }
     
     attributions = () => {
@@ -287,7 +287,7 @@ class Sidebar extends Component {
             if(attributionsList.length > 0) {
                 let activeElement = document.querySelector(`[data-id="${this.props.activeElement.elementId}"]`)
                 let attrNode = activeElement ? activeElement.querySelector(".blockquoteTextCredit") : null
-                let attrValue = attrNode && attrNode.innerHTML!=null ? attrNode.innerHTML.replace(/<br>/g, "") : ""
+                let attrValue = attrNode && attrNode.innerHTML!=null ? attrNode.innerHTML.replace(/<br>/g, "").replace(/&lt;/g, "<").replace(/&gt;/g, ">") : ""
                 attributions = attributionsList.map(item => {
                     let isDisable = (item === 'attribution' ? hasReviewerRole() : !attributionsObject[item].isEditable) 
                     if(item==="alt_text"){
@@ -313,12 +313,12 @@ class Sidebar extends Component {
                 attributions = <div>
                     <div className="panel_show_module">
                         <div className="toggle-value-bce">Use Line Numbers</div>
-                        <label className="switch"><input type="checkbox" checked={(this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true} onClick={ !hasReviewerRole() && this.handleBceToggle}/>
+                        <label className="switch"><input type="checkbox" checked={(this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true} onClick={ !hasReviewerRole() && !config.savingInProgress && this.handleBceToggle}/>
                         <span className="slider round"></span></label>
                     </div>
                     <div className="alt-Text-LineNumber" >
                         <div className="toggle-value-bce">Start numbering from</div>
-                        <input type="number" id="line-number" className="line-number" min="1" onChange={this.handleBceNumber} value={this.state.bceNumberStartFrom}
+                        <input type="number" id="line-number" className="line-number" min="1" onChange={!config.savingInProgress && this.handleBceNumber} value={this.state.bceNumberStartFrom}
                         disabled={!((this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true) || hasReviewerRole()} onBlur={this.handleBceBlur}/>
                     </div>
                 </div>
@@ -334,13 +334,19 @@ class Sidebar extends Component {
     }
 
     handleBceBlur = () => {
-        document.getElementById(`cypress-${this.props.activeElement.index}-0`).focus()
-        document.getElementById(`cypress-${this.props.activeElement.index}-0`).blur()
+        let activeBCEElementNode = document.getElementById(`cypress-${this.props.activeElement.index}-0`)
+        if (activeBCEElementNode) {
+            activeBCEElementNode.focus()
+            activeBCEElementNode.blur()
+        }
     }
 
     handleBQAttributionBlur = () => {
-        document.querySelector(`#cypress-${this.props.activeElement.index} p`).focus()
-        document.querySelector(`#cypress-${this.props.activeElement.index} p`).blur()
+        let activeBQNode = document.querySelector(`#cypress-${this.props.activeElement.index} p`)
+        if (activeBQNode) {
+            activeBQNode.focus()
+            activeBQNode.blur()
+        }  
     }
 
     /**
@@ -452,7 +458,11 @@ class Sidebar extends Component {
             "metaDataAnchorID": [this.props.activeElement.elementId],
             "elementVersionType": "element-generateLOlist",
             "loIndex" : this.props.activeElement.index,
-            "slateUrn": config.slateManifestURN
+            "slateVersionUrn": config.slateManifestURN,
+            "elementParentEntityUrn":config.slateEntityURN
+        }
+        if (this.props.elementStatus[this.props.activeElement.elementId] === "approved") {
+            config.savingInProgress = true
         }
         this.props.updateElement(data)
 
@@ -463,7 +473,7 @@ class Sidebar extends Component {
             return <div className="panel_syntax_highlighting">
                 <div className="toggle-value-bce">Syntax-highlighting</div>
                 <label className="switch">
-                    <input type="checkbox" checked={(this.state.syntaxHighlightingToggleValue || this.state.syntaxHighlightingToggleValue === false) ? this.state.syntaxHighlightingToggleValue : true} onClick={!hasReviewerRole() && this.handleSyntaxHighlightingToggle} />
+                    <input type="checkbox" checked={(this.state.syntaxHighlightingToggleValue || this.state.syntaxHighlightingToggleValue === false) ? this.state.syntaxHighlightingToggleValue : true} onClick={!hasReviewerRole() && !config.savingInProgress && this.handleSyntaxHighlightingToggle} />
                     <span className="slider round"></span>
                 </label>
             </div>
@@ -507,7 +517,8 @@ const mapStateToProps = state => {
         activeElement: state.appStore.activeElement,
         showModule:state.metadataReducer.showModule,
         permissions : state.appStore.permissions,
-        showHideObj:state.appStore.showHideObj
+        showHideObj:state.appStore.showHideObj,
+        elementStatus: state.elementStatusReducer
     };
 };
 

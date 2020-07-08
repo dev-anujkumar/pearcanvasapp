@@ -1,26 +1,26 @@
 // IMPORT - Plugins //
 import React, { Component } from 'react';
-
+import { connect } from 'react-redux';
 // IMPORT - Assets //
 import config from '../../config/config';
 import './../../styles/AssessmentSlateCanvas/AssessmentSlateCanvas.css';
 import { showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';
-import { assessmentUsageType, assessmentType, FULL_ASSESSMENT_PUF, LEARNING_APP_TYPE, LEARNOSITY, LEARNING_TEMPLATE, PUF, FULL_ASSESSMENT_CITE, FULL_ASSESSMENT_TDX  } from './AssessmentSlateConstants.js';
+import { assessmentType, FULL_ASSESSMENT_PUF, LEARNING_APP_TYPE, LEARNOSITY, LEARNING_TEMPLATE, PUF, FULL_ASSESSMENT_CITE, FULL_ASSESSMENT_TDX  } from './AssessmentSlateConstants.js';
 // import RootElmComponent from './elm/RootElmComponent.jsx';
 import RootElmSingleAssessment from '../AssessmentSlateCanvas/elm/RootElmSingleComponent.jsx';
 import RootCiteTdxComponent from './assessmentCiteTdx/RootCiteTdxComponent.jsx';
 import LearningTool from './learningTool/learningTool.jsx';
+import { UsageTypeDropdown } from './UsageTypeDropdown/UsageTypeDropdown.jsx';
 import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import  {setCurrentCiteTdx,assessmentSorting}  from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
-import { connect } from 'react-redux';
-
+import { setAssessmentUsageType } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
  class AssessmentSlateData extends Component {
     constructor(props) {
         super(props);
         this.state = {
             activeAssessmentType: this.props.model && this.props.model.elementdata && this.props.model.elementdata.assessmentformat && this.props.model.elementdata.assessmentformat!== 'fpo'? this.props.model.elementdata.assessmentformat : 'Select',
-            activeAssessmentUsageType: this.props.model && this.props.model.elementdata && this.props.model.elementdata.usagetype ? this.props.model.elementdata.usagetype : "Quiz",
+            activeAssessmentUsageType: this.props.model && setAssessmentUsageType(this.props.model),
             showElmComponent: false,
             changeLearningData: false,
             learningToolStatus: false,
@@ -138,6 +138,7 @@ import { connect } from 'react-redux';
         if(hasReviewerRole()){
             return true
         }
+        e.stopPropagation();
         let assessmentFormat = this.state.activeAssessmentType;
         if (assessmentFormat === FULL_ASSESSMENT_PUF || assessmentFormat == PUF ) {
             this.setState({
@@ -322,16 +323,6 @@ import { connect } from 'react-redux';
     
     }
 
-    /*** @description - This function is to select the Assessment usage-type from dropdown*/
-    selectAssessmentUsageType = () => {
-        if (assessmentUsageType.length > 0) {
-            var usageTypeValue = assessmentUsageType.map((usageType, i) =>
-                <li key={i} className="slate_assessment_metadata_dropdown_name" onClick={(e) => !hasReviewerRole() && this.handleAssessmentUsageTypeChange(usageType, e)}>{usageType}</li>
-            )
-        }
-        return usageTypeValue
-    }
-
     /*** @description - This function is to render the Assessment Slate Element*/
     assessmentSlateContent = () => {
         if (document.getElementsByClassName("slate-tag-icon").length) {
@@ -380,7 +371,7 @@ import { connect } from 'react-redux';
                 </div>
                 {
                     <ul className="slate_assessment_metadata_type_dropdown_options notselect" ref={this.usageTypeDropdownRef}>
-                        {this.selectAssessmentUsageType()}
+                        {<UsageTypeDropdown usageTypeList={this.props.usageTypeList} clickHandlerFn={this.handleAssessmentUsageTypeChange} />}
                     </ul>
                 }
                 <div className="clr"></div>
@@ -425,7 +416,6 @@ import { connect } from 'react-redux';
         return assessmentSlateJSX
     }
     render() {
-        // const { type } = this.props;
         return (
             <div className="AssessmentSlateCanvas">
                 {this.assessmentSlateContent()}
@@ -434,12 +424,19 @@ import { connect } from 'react-redux';
     }
 }
 AssessmentSlateData.displayName = "AssessmentSlateData"
+
+const mapStateToProps = state => {
+    return {
+        usageTypeList: state.appStore.usageTypeListData.usageTypeList,
+    };
+};
+
 const mapActionToProps = {
     setCurrentCiteTdx: setCurrentCiteTdx,
     assessmentSorting:assessmentSorting
 }
 
 export default connect(
-    null,
+    mapStateToProps,
     mapActionToProps
 )(AssessmentSlateData);

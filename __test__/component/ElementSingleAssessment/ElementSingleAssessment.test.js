@@ -68,7 +68,7 @@ test('renders without crashing', () => {
         expect(spyrenderAssessmentType).toHaveBeenCalledWith(singleAssessmentCITEDefault) 
         spyrenderAssessmentType.mockClear()
     });
-    it('onClick Event-Select Assessment usage type', () => {
+    xit('onClick Event-Select Assessment usage type', () => {
         singleAssessmentInstance.setState({
             asseessmentUsageTypeDropdown: false,
             activeAsseessmentUsageType: 'Quiz',
@@ -112,7 +112,7 @@ test('renders without crashing', () => {
         expect(singleAssessmentInstance.state.showAssessmentPopup).toBe(true)
         spytoggleAssessmentPopup.mockClear()
     });
-    it('Test-toggleUsageTypeDropdown function', () => {
+    xit('Test-toggleUsageTypeDropdown function', () => {
         singleAssessmentInstance.setState({
             asseessmentUsageTypeDropdown: true
         });

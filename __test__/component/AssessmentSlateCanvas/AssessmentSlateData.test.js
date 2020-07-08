@@ -5,10 +5,9 @@ import thunk from 'redux-thunk';
 const middlewares = [thunk];
 import configureMockStore from 'redux-mock-store';
 import AssessmentSlateData from '../../../src/component/AssessmentSlateCanvas/AssessmentSlateData';
-import { assessmentSlateDefault, assessmentSlateWithData, DefaultSlateData, assessmentSlateWithNewData } from "./../../../fixtures/AssessmentSlateCanvasTestingData";
+import { assessmentSlateDefault, assessmentSlateWithData, DefaultSlateData, assessmentSlateWithNewData,MockUsageTypeList_Data } from "./../../../fixtures/AssessmentSlateCanvasTestingData";
 import { Provider } from 'react-redux';
 import {selectedResult} from '../../../fixtures/learningTool';
-import {sendDataToIframe} from '../../../src/constants/utility.js';
 const mockStore = configureMockStore(middlewares);
 jest.mock('../../../src/config/config.js', () => ({
     slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
@@ -40,7 +39,10 @@ let initialState = {
     },
     appStore: {
         pageNumberData: {},
-        slateLevelData: DefaultSlateData
+        slateLevelData: DefaultSlateData,
+        usageTypeListData: {
+            usageTypeList: MockUsageTypeList_Data
+        }
     },
     learningToolReducer:{
         learningTypeSelected:""
@@ -69,7 +71,7 @@ describe('Testing Assessment Slate Data component', () => {
         assessmentSlate.find('ul.slate_assessment_type_dropdown_options>li:first-child').simulate('click');
         expect(assessmentSlateDataInstance.state.activeAssessmentType).toBe('Full Assessment CITE');
     });
-    it('onClick UsageType Event', () => {
+    xit('onClick UsageType Event', () => {
         let props = {
             getAssessmentDataPopup: false,
             assessmentId: "urn:pearson:work:4da32e71-a6b5-4daa-84ed-fb72d6b0aa74",
@@ -130,7 +132,7 @@ describe('Testing Assessment Slate Data component', () => {
             selectAssessmentType: jest.fn(),
             isLOExist: jest.fn()
         }
-        const component = mount(<Provider store={store}><AssessmentSlateData {...props} /></Provider>);
+        const component = shallow(<Provider store={store}><AssessmentSlateData {...props} /></Provider>);
         let assessmentSlateDataInstance = component.find('AssessmentSlateData').instance();
         assessmentSlateDataInstance.setState({
             activeAssessmentType: "Learning App Type"
@@ -361,12 +363,12 @@ describe('Testing Assessment Slate Data component', () => {
         let assessmentSlateDataInstance = component.find('AssessmentSlateData').instance();
         const spycloseElmWindow = jest.spyOn(assessmentSlateDataInstance, 'closeElmWindow')
         assessmentSlateDataInstance.setState({
-            activeAssessmentType: "Full Assessment PUF",
+            activeAssessmentType: "Full Assessment Elm",
             showElmComponent: true
         });
         assessmentSlateDataInstance.forceUpdate();
         component.update();
-        expect(assessmentSlateDataInstance.state.activeAssessmentType).toBe('Full Assessment PUF');
+        expect(assessmentSlateDataInstance.state.activeAssessmentType).toBe('Full Assessment Elm');
         expect(assessmentSlateDataInstance.state.showElmComponent).toBe(true);
         assessmentSlateDataInstance.closeElmWindow();
         assessmentSlateDataInstance.forceUpdate();
@@ -398,13 +400,13 @@ describe('Testing Assessment Slate Data component', () => {
         let assessmentSlateDataInstance = component.find('AssessmentSlateData').instance();
         const spyaddPufAssessment = jest.spyOn(assessmentSlateDataInstance, 'addPufAssessment')
         assessmentSlateDataInstance.setState({
-            activeAssessmentType: "Full Assessment PUF",
+            activeAssessmentType: "Full Assessment Elm",
             showElmComponent: true
         });
         assessmentSlateDataInstance.addPufAssessment (pufObj);
         assessmentSlateDataInstance.forceUpdate();
         component.update();
-        expect(assessmentSlateDataInstance.state.activeAssessmentType).toBe('Full Assessment PUF');
+        expect(assessmentSlateDataInstance.state.activeAssessmentType).toBe('Full Assessment Elm');
         expect(assessmentSlateDataInstance.state.showElmComponent).toBe(true);
         expect(spyaddPufAssessment).toHaveBeenCalledWith(pufObj);
         spyaddPufAssessment.mockClear(); 

@@ -7,7 +7,7 @@ div.cypress-editable ol, div.cypress-editable ul {
 div.cypress-editable ol li, div.cypress-editable ul li {
     /* font-size: 1em !important; */
     list-style-type: none !important;
-    font-family: Palatino, Palatino Linotype, Palatino LT STD, Georgia, serif;
+    font-family: Georgia, serif, Palatino, Palatino Linotype, Palatino LT STD !important;
     font-weight: normal;
     line-height: 1.90em;
     letter-spacing: 0.01em;
@@ -48,7 +48,7 @@ ol li.listItemNumeroUnoLowerRoman::before {
 
 div.cypress-editable li.listItemNumeroUnoBullet {
     color: #000;
-    font-family: Palatino, Palatino Linotype, Palatino LT STD, Georgia, serif;
+    font-family: Georgia, serif, Palatino, Palatino Linotype, Palatino LT STD !important;
     font-size: 1.180em;
     font-weight: normal;
     line-height: 1.70em;

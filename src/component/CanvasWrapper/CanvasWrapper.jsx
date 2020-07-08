@@ -16,7 +16,7 @@ import { sendDataToIframe , hasReviewerRole} from '../../constants/utility.js';
 import { CanvasIframeLoaded, ShowHeader,TocToggle } from '../../constants/IFrameMessageTypes.js';
 import { getSlateLockStatus, releaseSlateLock } from './SlateLock_Actions'
 import GlossaryFootnoteMenu from '../GlossaryFootnotePopup/GlossaryFootnoteMenu.jsx';
-import {updateElement,getTableEditorData}from '../../component/ElementContainer/ElementContainer_Actions'
+import {updateElement, getTableEditorData, clearElementStatus}from '../../component/ElementContainer/ElementContainer_Actions'
 // IMPORT - Actions //
 import { fetchSlateData, fetchAuthUser, openPopupSlate } from './CanvasWrapper_Actions';
 import {toggleCommentsPanel,fetchComments,fetchCommentByElement} from '../CommentsPanel/CommentsPanel_Action'
@@ -32,6 +32,7 @@ import {publishContent,logout} from '../../js/header'
 import store from './../../appstore/store'
 import { hideBlocker } from '../../js/toggleLoader';
 import {getAllSlatesData} from '../../js/getAllSlatesData'
+import { fetchUsageTypeData } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 export class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
@@ -45,7 +46,7 @@ export class CanvasWrapper extends Component {
 
     static getDerivedStateFromProps(nextProps, prevState){
         if(nextProps.isConfigLoaded && prevState.isConfigLoaded){
-            nextProps.fetchSlateData(config.slateManifestURN,config.slateEntityURN,config.page,'');
+            nextProps.fetchSlateData(config.slateManifestURN,config.slateEntityURN,config.page,'',"");
             return {
                 isConfigLoaded : false
             };
@@ -109,7 +110,8 @@ export class CanvasWrapper extends Component {
             observer.observe(targetNode, config);
     }
     
-    handleCommentspanel = (elementId,index) => {
+    handleCommentspanel = (event,elementId,index) => {
+         event.stopPropagation();
         this.props.toggleCommentsPanel(true);
         this.props.fetchCommentByElement(elementId,index);
         sendDataToIframe({
@@ -145,7 +147,7 @@ export class CanvasWrapper extends Component {
     loadMorePages = () => {
         config.page++;
         if(config.totalPageCount <= config.page) return false;
-        this.props.fetchSlateData(config.slateManifestURN,config.slateEntityURN, config.page, '');
+        this.props.fetchSlateData(config.slateManifestURN,config.slateEntityURN, config.page, '',"");
     }
     
     ReleaseErrorPopup = () => {
@@ -268,6 +270,8 @@ export default connect(
         setSlateParent,
         openPopupSlate,
         getTableEditorData,
-        getAllSlatesData
+        getAllSlatesData,
+        clearElementStatus,
+        fetchUsageTypeData
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

@@ -184,7 +184,7 @@ class MultiColumnContainer extends PureComponent {
             }
             this['cloneCOSlateControlledSource_4' + random] = this.renderElement(_bodyMatter, parentUrn, index)
             return (
-                <div className={`container-multi-column-group column-${columnIndex}`} data-id={_containerId} container-type={_containerType}>
+                <div className={`container-multi-column-group ${constants.setClassByElementType(this.context.element)} column-${columnIndex}`} data-id={_containerId} container-type={_containerType}>
                     <Sortable
                         options={{
                             ...constants.sortableOptions,
@@ -234,6 +234,10 @@ class MultiColumnContainer extends PureComponent {
         
     }
 
+    /**
+     * Handles focus
+     * @param {Object} event 
+     */
     handleFocus = (event) => {
         if(checkSlateLock(this.context.slateLockInfo)){
             return false

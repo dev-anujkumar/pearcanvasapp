@@ -18,6 +18,30 @@ let random = guid();
 export class CitationGroup extends Component {
 
     /**
+     * Renders blank container with one element picker (Separator)
+     * @param {object} _context Context data of CG container
+     * @param {object} parentUrn Immediate parent data (CG container)
+     * @param {object} asideData parent data (CG container)
+     * @param {Number} parentIndex Container index
+     */
+    renderBlankContainer = (_context, parentUrn, asideData, parentIndex) => {
+        let index = 0
+        return (
+            <>
+                <ElementSaprator
+                    index={index}
+                    firstOne={true}
+                    esProps={_context.elementSeparatorProps(index, true, parentUrn, asideData, parentIndex)}
+                    elementType="citations"
+                    sectionBreak={true}
+                    permissions={_context.permissions}
+                    onClickCapture={_context.onClickCapture}     
+                />
+            </> 
+        )
+    }
+    
+    /**
      * Renders Citation elements
      * @param {object} _slateBodyMatter - Bodymatter containing an array of citation elements
      * @param {object} parentUrn - Data about container element
@@ -32,7 +56,9 @@ export class CitationGroup extends Component {
         };
         try {
             if (_elements !== null && _elements !== undefined) {
-                // this.renderButtonsonCondition(_elements);
+                if (_elements.length === 0) {
+                    return this.renderBlankContainer(this.context, parentUrn, asideData, parentIndex)
+                }
                 return _elements.map((element, index) => {
                         return (
                            <React.Fragment key={element.id}>
@@ -56,20 +82,6 @@ export class CitationGroup extends Component {
                                     onClickCapture={this.context.onClickCapture}
                                     parentElement = {this.context.element}
                                 >
-                                     {
-                                        (isHovered, isPageNumberEnabled, activeElement, permissions) => (
-                                            <PageNumberElement 
-                                            updatePageNumber={this.context.updatePageNumber}
-                                            asideData={asideData}
-                                            parentUrn={parentUrn}
-                                            element={element}
-                                            isHovered={isHovered}
-                                            isPageNumberEnabled={isPageNumberEnabled}
-                                            activeElement={activeElement}
-                                            permissions={permissions}
-                                           />
-                                        )
-                                    }
                                 </ElementContainer>
                                 {
                                     <ElementSaprator
@@ -136,10 +148,6 @@ export class CitationGroup extends Component {
                         elementType: _containerType
                     }
                     const cgThis = this
-                     if(!_bodyMatter.length && this.context.deleteElement && config.citationDefaultElement==false){
-                        config.citationDefaultElement=true;
-                        this.context.deleteElement();
-                    }
                     this['cloneCOSlateControlledSource_3' + random] = this.renderElement(_bodyMatter, parentUrn, index)
                     return (
                         <div className="container-citation" data-id={_containerId} container-type={_containerType}>
