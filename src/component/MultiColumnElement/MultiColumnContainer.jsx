@@ -9,6 +9,8 @@ import { guid, sendDataToIframe } from '../../constants/utility.js'
 import config from "../../config/config.js"
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js'
 import MultiColumnContainerContext from '../ElementContainer/MultiColumnContext.js'
+import { checkSlateLock } from '../../js/slateLockUtility.js'
+
 
 /** External Components */
 import ElementSaprator from '../ElementSaprator'
@@ -89,6 +91,7 @@ class MultiColumnContainer extends PureComponent {
                             <ElementContainer
                                 element={element}
                                 index={`${parentIndex}-${index}`}
+                                asideData={asideData}
                                 parentUrn={parentUrn}
                                 showBlocker={this.context.showBlocker}
                                 permissions={this.context.permissions}
@@ -171,17 +174,17 @@ class MultiColumnContainer extends PureComponent {
         try {
             let { id: _containerId, type: _containerType, groupdata: _groupdata } = group
             let { bodymatter: _bodyMatter } = _groupdata
-            let index = columnIndex
+            let index = `${this.context.index}-${columnIndex}`
             let parentUrn = {
                 columnName: index === 0 ? "C1" : "C2",
-                columnIndex: index,
+                columnIndex: columnIndex,
                 manifestUrn: _containerId,
                 contentUrn: group.contentUrn,
                 elementType: _containerType
             }
             this['cloneCOSlateControlledSource_4' + random] = this.renderElement(_bodyMatter, parentUrn, index)
             return (
-                <div className={`container-multi-column-group column-${index}`} data-id={_containerId} container-type={_containerType}>
+                <div className={`container-multi-column-group column-${columnIndex}`} data-id={_containerId} container-type={_containerType}>
                     <Sortable
                         options={{
                             ...constants.sortableOptions,
@@ -198,7 +201,7 @@ class MultiColumnContainer extends PureComponent {
                                 }
                                 let dataObj = this.prepareSwapData(evt, parentUrn)
                                 this.props.swapElement(dataObj, () => { })
-                                //  this.context.setActiveElement(dataObj.swappedElementData, dataObj.newIndex);
+                                 this.context.setActiveElement(dataObj.swappedElementData, dataObj.newIndex);
                                 sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } }); 
                             },
                         }}  
@@ -230,12 +233,23 @@ class MultiColumnContainer extends PureComponent {
         })
         
     }
+
+    handleFocus = (event) => {
+        if(checkSlateLock(this.context.slateLockInfo)){
+            return false
+        }
+        console.log("%c event.target.classList", "background: black; color: white", event.target.classList)
+        console.log("%c event", "background: black; color: yellow", event)
+        /* if(event && event.target && !(event.target.classList.contains('citationTitle'))){
+            return false
+        } */
+        this.context.handleFocus("", "", event)
+    }
     
     render() {
         const { context } = this
-        console.log("MULTICOLUMN CONTAINER RENDER inside mutlicolumn JSX::::::::::::")
         return (
-            <div className = "multi-column-container">
+            <div className = "multi-column-container" onMouseUp = {this.handleFocus}>
                 {this.renderContainer(context)}
             </div>
         )

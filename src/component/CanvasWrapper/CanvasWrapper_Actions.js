@@ -253,6 +253,19 @@ const findElementType = (element, index) => {
                 }
                 elementType = { ...elementDataBank["element-authoredtext"] }
                 break;
+            case  'groupedcontent':
+                elementType = {
+                    elementType: elementDataBank[element.type]["elementType"],
+                    primaryOption: elementDataBank[element.type]["primaryOption"]  
+                }
+                if(element.width && element.groupproportions){
+                    
+                    elementType["secondaryOption"]= elementDataBank[element.type][`${element.width}-${element.groupproportions}`]["secondaryOption"]
+                }
+                else{
+                    elementType["secondaryOption"]= elementDataBank[element.type]["wider-60-40"]["secondaryOption"] 
+                }
+                break;
             default:
                 elementType = { ...elementDataBank["element-authoredtext"] }
         }

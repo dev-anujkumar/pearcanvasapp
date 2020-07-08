@@ -187,6 +187,12 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         slateEntity : Object.keys(appStore.parentUrn).length !== 0 ?appStore.parentUrn.contentUrn:config.slateEntityURN
     }
 
+    //For elements inside multi-column container
+    if (appStore && appStore.parentUrn && appStore.parentUrn.elementType === "group") {
+        conversionDataToSend["parentType"] = "groupedcontent"
+        conversionDataToSend["columnName"] = appStore.parentUrn.columnName
+    }
+    
     let elmIndexes = indexes ? indexes : 0;
     let slateBodyMatter = store[config.slateManifestURN].contents.bodymatter;
     if(elmIndexes.length === 2 && slateBodyMatter[elmIndexes[0]].subtype == "workedexample" ){
@@ -356,7 +362,8 @@ catch (error) {
     dispatch({type: ERROR_POPUP, payload:{show: true}})
 }
 }
-export const handleElementConversion = (elementData, store, activeElement, fromToolbar,showHideObj) => dispatch => {
+export const handleElementConversion = (elementData, store, activeElement, fromToolbar,showHideObj) => (dispatch, getState) => {
+    let { appStore } = getState()
     store = JSON.parse(JSON.stringify(store));
     if(Object.keys(store).length > 0) {
         let storeElement = store[config.slateManifestURN];
@@ -378,6 +385,9 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
                     break;
             }
             dispatch(convertElement(oldElementData, elementData, activeElement, store, indexes, fromToolbar, showHideObj))
+        } else if (appStore && appStore.parentUrn && appStore.parentUrn.elementType === "group") {
+            let elementOldData = bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
+            dispatch(convertElement(elementOldData, elementData, activeElement, store, indexes, fromToolbar, showHideObj))
         } else {
             indexes.forEach(index => {
                 if(bodymatter[index]){

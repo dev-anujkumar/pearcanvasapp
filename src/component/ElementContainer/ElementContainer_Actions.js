@@ -229,7 +229,7 @@ function prepareDataForTcmUpdate (updatedData,id, elementIndex, asideData, getSt
         //if (slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].id === id) {
             updatedData.isHead = true;
         }
-    } else if (indexes.length === 3) {
+    } else if (indexes.length === 3 && asideData && asideData.type !== "groupedcontent") {
         if (((!poetryData) || (poetryData.type != "poetry")) && slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].id === id) {
             updatedData.isHead = false;
         } else if (((poetryData && poetryData.type === "poetry") || (type === "stanza")) && slateBodyMatter[indexes[0]].contents.bodymatter[indexes[2]].id === id) {
@@ -248,6 +248,9 @@ function prepareDataForTcmUpdate (updatedData,id, elementIndex, asideData, getSt
         }
     } else if (poetryData && poetryData.type === 'poetry'){
         updatedData.parentType = "poetry";
+    } else if (asideData && asideData.type === "groupedcontent"){
+        updatedData.parentType = asideData.type;
+        updatedData.columnName = indexes[1] === "0" ? "C1" : "C2"
     }
     updatedData.projectURN = config.projectUrn;
     updatedData.slateEntity = config.slateEntityURN;
@@ -408,7 +411,9 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
             else if(parentElement && parentElement.type === "citations"){
                 dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:parentElement.id, parentElement.contentUrn, 0, parentElement));
             }
-            else {
+            else if (parentElement && parentElement.type === "groupedcontent") {
+                dispatch(fetchSlateData(parentElement.id, parentElement.contentUrn, 0, parentElement));
+            } else {
                 elementIndex = indexes.length == 2 ?indexes[0] : elementIndex
                 newslateData[config.slateManifestURN].contents.bodymatter[elementIndex] = versionedData;
             }
@@ -432,8 +437,13 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                     _slateBodyMatter[elementIndex].contents["formatted-title"] = {...updatedData}     
                 }
             }
-        }
-        else {
+        } else if (parentElement && parentElement.type === "groupedcontent") {
+            let indexes = elementIndex.split("-")
+            _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]] = {
+                ...updatedData,
+                tcm: _slateObject.tcm ? true : false
+            }
+        } else {
             _slateBodyMatter = _slateBodyMatter.map(element => {
                 if (element.id === elementId) {
 
