@@ -133,7 +133,8 @@ export class ReactEditor extends React.Component {
       let testElement = document.createElement('div');
       testElement.innerHTML = args.content;
       if(testElement.innerText && testElement.innerText.trim().length){
-          args.content = testElement.innerText.replace(/</g, "&lt;").replace(/>/g, "&gt;"); //testElement.innerText;
+        let tempContent = testElement.innerText.replace(/&/g, "&amp;");
+        args.content = tempContent.replace(/</g, "&lt;").replace(/>/g, "&gt;");
       }else{
           args.content = tinymce.activeEditor.selection.getContent();
       } 
@@ -398,7 +399,8 @@ export class ReactEditor extends React.Component {
   }
 
   render() {
-    let propsGlossaryFootNoteCurrentValue = this.props.glossaryFootNoteCurrentValue && this.props.glossaryFootNoteCurrentValue.replace(/&nbsp;/g, ' ');
+    let propsGlossaryFootNoteCurrentValue = this.props.glossaryFootNoteCurrentValue 
+    // && this.props.glossaryFootNoteCurrentValue.replace(/&nbsp;/g, ' ');      //BG-2552 
     let glossaryFootNoteCurrentValue;
     try{
       glossaryFootNoteCurrentValue = (propsGlossaryFootNoteCurrentValue && tinyMCE.$(propsGlossaryFootNoteCurrentValue.trim()).length) ? (tinyMCE.$(propsGlossaryFootNoteCurrentValue))[0].innerHTML : propsGlossaryFootNoteCurrentValue;

@@ -15,7 +15,7 @@ export default {
         'primary-heading': {
             text: 'Headings',
             enum: 'HEADERS',
-            toolbar: ['bold','underline','strikethrough','orderedlist','unorderedlist','increaseindent','decreaseindent','glossary','assetpopover','slatetag'],//PCAT-6725 fixed
+            toolbar: ['bold','underline','strikethrough','orderedlist','unorderedlist','increaseindent','decreaseindent','glossary','crossLinkingIcon','assetpopover','slatetag'],//PCAT-6725 fixed
             subtype: {
                 'secondary-heading-1': {
                     text: 'Heading 1',
@@ -51,7 +51,7 @@ export default {
         },
         'primary-learning-objective': {
             text: 'Learning Objective Item',
-            toolbar: ['bold', 'italic','underline','strikethrough','orderedlist','unorderedlist','increaseindent','decreaseindent','footnote', 'glossary','assetpopover'],
+            toolbar: ['bold', 'italic','underline','strikethrough','orderedlist','unorderedlist','increaseindent','decreaseindent','footnote', 'glossary','crossLinkingIcon','assetpopover'],
             enum: 'LEARNING_OBJECTIVE',
             subtype: {
                 'secondary-learning-objective': {
@@ -137,7 +137,7 @@ export default {
     'figure': {
         'primary-image-figure': {
             text: 'Figure Image',
-            toolbar: ['assetpopover','decreaseindent','glossary'],
+            toolbar: ['crossLinkingIcon','assetpopover','decreaseindent','glossary'],
             enum: 'IMAGE',
             subtype: {
                 'secondary-image-figure-width': {
@@ -179,7 +179,7 @@ export default {
         },
         'primary-image-table': {
             text: 'Table Image',
-            toolbar: ['assetpopover','decreaseindent','glossary'],
+            toolbar: ['crossLinkingIcon','assetpopover','decreaseindent','glossary'],
             enum: 'TABLE',
             subtype: {
                 'secondary-image-table-half': {
@@ -216,7 +216,7 @@ export default {
         },
         'primary-image-equation': {
             text: 'Math Image',
-            toolbar: ['assetpopover','decreaseindent','glossary'],
+            toolbar: ['crossLinkingIcon','assetpopover','decreaseindent','glossary'],
             enum: 'MATH',
             subtype: {
                 'secondary-image-equation-half': {
@@ -253,7 +253,7 @@ export default {
         },
         'primary-mathml-equation': {
             text: 'Block Math',
-            toolbar: ['assetpopover','decreaseindent','glossary'],
+            toolbar: ['crossLinkingIcon','assetpopover','decreaseindent','glossary'],
             enum: 'MATH_ML_CHEM_EDITOR',
             subtype: {
                 'secondary-mathml-equation': {
@@ -265,7 +265,7 @@ export default {
         },
         'primary-blockcode-equation': {
             text: 'Block Code',
-            toolbar: ['assetpopover','decreaseindent','glossary'],
+            toolbar: ['crossLinkingIcon','assetpopover','decreaseindent','glossary'],
             enum: 'BLOCK_CODE_EDITOR',
             subtype: {
                 'secondary-blockcode-language-default': {
@@ -417,7 +417,7 @@ export default {
         },
         'primary-editor-table-equation': {
             text: 'Table Editor',
-            toolbar: ['assetpopover','decreaseindent', 'glossary'],
+            toolbar: ['crossLinkingIcon','assetpopover','decreaseindent', 'glossary'],
             enum: 'TABLE_EDITOR',
             subtype: {
                 'secondary-editor-table-equation': {
@@ -432,7 +432,7 @@ export default {
     'video-audio': {
         'primary-video': {
             text: 'Video',
-            toolbar: ['assetpopover', 'glossary'],
+            toolbar: ['crossLinkingIcon','assetpopover', 'glossary'],
             enum: 'VIDEO',
             subtype: {
                 'secondary-video-smartlink': {
@@ -451,7 +451,7 @@ export default {
         },
         'primary-audio': {
             text: 'Audio',
-            toolbar: ['assetpopover', 'glossary'],
+            toolbar: ['crossLinkingIcon','assetpopover', 'glossary'],
             enum: 'AUDIO',
             subtype: {
                 'secondary-audio-smartlink': {
@@ -473,7 +473,7 @@ export default {
     'element-aside': {
         'primary-aside-aside': {
             text: 'Aside',
-            toolbar:['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag'],
+            toolbar:['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','crossLinkingIcon','assetpopover','slatetag'],
             enum: 'ASIDE',
             subtype: {
                 'secondary-aside-sb1': {
@@ -505,7 +505,7 @@ export default {
         },
         'primary-aside-feature': {
             text: 'Feature',
-            toolbar:['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag'],
+            toolbar:['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','crossLinkingIcon','assetpopover','slatetag'],
             enum: 'FEATURE',
             subtype: {
                 'secondary-aside-feature': {
@@ -517,7 +517,7 @@ export default {
         },
         'primary-aside-activity': {
             text: 'Activity',
-            toolbar:['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag'],
+            toolbar:['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','crossLinkingIcon','assetpopover','slatetag'],
             enum: 'ACTIVITY',
             subtype: {
                 'secondary-aside-activity': {
@@ -529,7 +529,7 @@ export default {
         },
         'primary-aside-tactic': {
             text: 'Tactic Box',
-            toolbar:['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag'],
+            toolbar:['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','crossLinkingIcon','assetpopover','slatetag'],
             enum: 'TACTIC_BOX',
             subtype: {
                 'secondary-aside-tactic': {
@@ -541,7 +541,7 @@ export default {
         },
         'primary-aside-lol': {
             text: 'Learning Objective List',
-            toolbar:['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag'],
+            toolbar:['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','crossLinkingIcon','assetpopover','slatetag'],
             enum: 'LEARNING_OBJECTIVE_LIST',
             subtype: {
                 'secondary-aside-lol': {
@@ -556,7 +556,7 @@ export default {
     'element-workedexample': {
         'primary-workedexample-we1': {
             text: 'Worked Example 1',
-            toolbar:['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag'],
+            toolbar:['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','crossLinkingIcon','assetpopover','slatetag'],
             enum: 'WORKED_EXAMPLE',
             subtype: {
                 'secondary-workedexample-we1': {
@@ -568,7 +568,7 @@ export default {
         },
         'primary-workedexample-we2': {
             text: 'Worked Example 2',
-            toolbar:['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag'],
+            toolbar:['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','crossLinkingIcon','assetpopover','slatetag'],
             enum: 'WORKED_EXAMPLE',
             subtype: {
                 'secondary-workedexample-we2': {
@@ -583,7 +583,7 @@ export default {
 	'element-assessment': {		
         'primary-single-assessment': {		
             text: 'Single Assessment',
-            toolbar:['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag'],
+            toolbar:['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','crossLinkingIcon','assetpopover','slatetag'],
             enum: 'SINGLE_ASSESSMENT',		
             subtype: {		
                 'secondary-single-assessment-cite': {
@@ -644,7 +644,7 @@ export default {
     'element-interactive': {
         'primary-mmi': {
             text: 'MMI',
-            toolbar: ['assetpopover', 'glossary'],
+            toolbar: ['crossLinkingIcon','assetpopover', 'glossary'],
             enum: 'MMI',
             subtype: {
                 'secondary-interactive-mmi': {
@@ -657,7 +657,7 @@ export default {
         },
         'primary-smartlink': {
             text: 'Smart Link',
-            toolbar: ['assetpopover', 'glossary'],
+            toolbar: ['crossLinkingIcon','assetpopover', 'glossary'],
             enum: 'EXTERNAL_LINK',
             subtype: {
                 'secondary-interactive-smartlink-third': {
@@ -697,7 +697,7 @@ export default {
     "popup": {
         "primary-popup": {
             text: 'Pop up window',
-            toolbar: ['assetpopover', 'glossary'],
+            toolbar: ['crossLinkingIcon', 'assetpopover','decreaseindent','glossary', 'orderedlist', 'unorderedlist'],
             dropdownDisabled: true,
             subtype: {
                 'secondary-popup': {
@@ -749,7 +749,7 @@ export default {
         'primary-citations-group': {
             text: 'Citation Group',
             enum: 'CITATION',
-            toolbar: ['footnote', 'increaseindent', 'decreaseindent', 'glossary', 'assetpopover', 'orderedlist', 'unorderedlist'],
+            toolbar: ['footnote', 'increaseindent', 'decreaseindent', 'glossary', 'crossLinkingIcon', 'assetpopover', 'orderedlist', 'unorderedlist'],
             subtype: {
                 'secondary-citations-group': {
                     text: 'Citation Group',
@@ -763,7 +763,7 @@ export default {
         'primary-element-citation': {
             text: 'Citation',
             enum: 'ELEMENT_CITATION',
-            toolbar: ['footnote', 'increaseindent', 'decreaseindent', 'glossary', 'assetpopover', 'orderedlist', 'unorderedlist'],
+            toolbar: ['footnote', 'increaseindent', 'decreaseindent', 'glossary', 'crossLinkingIcon', 'assetpopover', 'orderedlist', 'unorderedlist'],
             subtype: {
                 'secondary-element-citation': {
                     text: 'Citation element',
@@ -777,7 +777,7 @@ export default {
         "primary-poetry": {
             text: 'Block Poetry',
             enum: 'POETRY',
-            toolbar: ['assetpopover','decreaseindent','glossary', 'orderedlist', 'unorderedlist'],
+            toolbar: ['crossLinkingIcon','assetpopover','decreaseindent','glossary', 'orderedlist', 'unorderedlist'],
             dropdownDisabled: true,
             subtype: {
                 'secondary-poetry': {

@@ -227,3 +227,169 @@ img.imageFullscreen, img.imageFullscreenTableImage, img.imageFullscreenMathImage
      padding: 0px 7px !important; 
      font: inherit !important; 
   } */
+
+  th li.listItemNumeroUno,
+th li.listItemNumeroUnoNumber,
+th li.listItemNumeroUnoLowerAlpha,
+th li.listItemNumeroUnoUpperAlpha,
+th li.listItemNumeroUnoUpperRoman,
+th li.listItemNumeroUnoLowerRoman,
+th li.listItemNumeroUnoNone {
+  color: #000;
+  font-family: Palatino, Palatino Linotype, Palatino LT Sth, Georgia, serif;
+  font-size: .95em;
+  font-weight: normal;
+  line-height: 1.65em;
+  letter-spacing: 0.01em;
+  margin-top: 0em;
+  margin-bottom: 0.5em;
+}
+
+th li li.listItemNumeroUno,
+th li li.listItemNumeroUnoNumber,
+th li li.listItemNumeroUnoLowerAlpha,
+th li li.listItemNumeroUnoUpperAlpha,
+th li li.listItemNumeroUnoUpperRoman,
+th li li.listItemNumeroUnoLowerRoman,
+th li li.listItemNumeroUnoNone {
+  font-size: 100%;
+}
+
+
+/* Nested Lists in Tables */
+th ol ol {
+  margin-top: 0.5em;
+  margin-left: 1.25em;
+  margin-bottom: 0.5em;
+}
+
+
+th ol ul {
+  margin-top: 0.5em;
+  margin-left: 1.0em;
+  margin-bottom: 0em;
+}
+
+
+th ol ol ol {
+  margin-top: 0.5em;
+  margin-left: 1.25em;
+  margin-bottom: 0.5em;
+}
+
+th ol ol ol ol {
+  margin-top: 0.5em;
+  margin-left: 1.25em;
+  margin-bottom: 0.5em;
+}
+
+th ul ul:first-child li.listItemNumeroUno {
+  margin-top: 0.5em;
+  margin-left: 0em;
+  margin-bottom: 0.5em;
+}
+
+th ul ul ul:first-child li.listItemNumeroUno {
+  margin-top: 0.5em;
+  margin-left: 0em;
+  margin-bottom: 0.5em;
+}
+
+th ul ul ul ul:first-child li.listItemNumeroUno {
+  margin-top: 0.5em;
+  margin-left: 0em;
+  margin-bottom: 0.5em;
+}
+
+th ul ul,
+th ul ul ul,
+th ul ul ul ul {
+  margin-bottom: 0.5em;
+}
+
+
+
+/* Bold list numbering */
+
+th ol, ul {
+ counter-reset: item;
+}
+
+th ol li { 
+ display: block;
+ padding: 0 0 0 0.5em;
+ text-indent: 0em;
+}
+
+
+th ol li:before {
+ counter-increment: item;
+}
+
+/* ----- Counter resets for lists not starting at 1 ----- */
+th ol[start="2"] { counter-reset: item 1; }
+th ol[start="3"] { counter-reset: item 2; }
+th ol[start="4"] { counter-reset: item 3; }
+th ol[start="5"] { counter-reset: item 4; }
+th ol[start="6"] { counter-reset: item 5; }
+th ol[start="7"] { counter-reset: item 6; }
+th ol[start="8"] { counter-reset: item 7; }
+th ol[start="9"] { counter-reset: item 8; }
+th ol[start="10"] { counter-reset: item 9; }
+th ol[start="11"] { counter-reset: item 10; }
+th ol[start="12"] { counter-reset: item 11; }
+th ol[start="13"] { counter-reset: item 12; }
+th ol[start="14"] { counter-reset: item 13; }
+th ol[start="15"] { counter-reset: item 14; }
+th ol[start="16"] { counter-reset: item 15; }
+th ol[start="17"] { counter-reset: item 16; }
+th ol[start="18"] { counter-reset: item 17; }
+th ol[start="19"] { counter-reset: item 18; }
+th ol[start="20"] { counter-reset: item 19; }
+th ol[start="21"] { counter-reset: item 20; }
+th ol[start="22"] { counter-reset: item 21; }
+th ol[start="23"] { counter-reset: item 22; }
+th ol[start="24"] { counter-reset: item 23; }
+th ol[start="25"] { counter-reset: item 24; }
+th ol[start="26"] { counter-reset: item 25; }
+
+
+/* --- Global ol styles --- */
+th ol li.listItemNumeroUno:before,
+th ol li.listItemNumeroUnoNumber:before,
+th ol li.listItemNumeroUnoLowerAlpha:before,
+th ol li.listItemNumeroUnoUpperAlpha:before,
+th ol li.listItemNumeroUnoUpperRoman:before,
+th ol li.listItemNumeroUnoLowerRoman:before,
+th ol li.listItemNumeroUnoNone:before {
+ content: counter(item) ". ";
+ counter-increment: item;
+ color: #000;
+ font-weight: bold;
+ padding-right: 0.1em;      
+ text-align: right;
+ position: relative;
+ width: 4.5em;
+ margin: 0 0 1em -4.90em;
+}
+
+
+th ol li.listItemNumeroUnoUpperAlpha:before {
+    content: counter(item, upper-alpha) ". ";
+}
+
+th ol li.listItemNumeroUnoLowerAlpha:before {
+    content: counter(item, lower-alpha) ". ";
+}
+
+th ol li.listItemNumeroUnoUpperRoman:before {
+    content: counter(item, upper-roman) ". ";
+}
+
+th ol li.listItemNumeroUnoLowerRoman:before {
+    content: counter(item, lower-roman) ". ";
+}
+
+th ol li.listItemNumeroUnoNone:before {
+    content: none;
+}

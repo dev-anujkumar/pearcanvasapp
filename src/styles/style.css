@@ -271,6 +271,11 @@ i.fa.fa-asterisk,.fa .fa-bookmark {
     min-width: 681px;
 }
 
+#tinymceToolbar .tox .tox-collection--list .tox-collection__item[title="Figure Link"],
+#tinymceToolbar .tox .tox-collection--list .tox-collection__item[title="Slate Link"] {
+    width: 100px;
+}
+
 P.paragraphNumeroUnoIndentLevel1, P.paragraphNumeroUnoIndentLevel2, P.paragraphNumeroUnoIndentLevel3{
     font-size: 100% !important;
     margin-top: 0.5em !important;
@@ -304,4 +309,21 @@ P.paragraphNumeroUnoIndentLevel1, P.paragraphNumeroUnoIndentLevel2, P.paragraphN
 }
 table code {
     color: unset !important;
+}
+
+/*  Cross Link Content Design  */
+
+abbr[title="Slate Link"] {
+    /* border: 2px solid red; */
+    padding-right: 15px;
+}
+
+abbr[title="Slate Link"]::after {
+    content: url('./../images/PageLink/link.svg');
+    height: 85%;
+    top: 0;
+    padding-left: 1px;
+    position: absolute;
+    text-decoration: underline dotted;
+    border-bottom: 1.5px dotted #007FA3;
 }
