@@ -12,6 +12,14 @@ jest.mock('../../../src/constants/utility.js', () => ({
     sendDataToIframe: jest.fn(),
     hasReviewerRole: jest.fn()
 }))
+
+jest.setTimeout(4000);
+
+const element = document.createElement('div');
+    element.id = "link-notification";
+    element.innerText = "Link Notification";
+    document.body.appendChild(element);
+    
 describe('Tests ElementContainer Actions', () => {
     let initialState = {
         slateLevelData: slateLevelData,

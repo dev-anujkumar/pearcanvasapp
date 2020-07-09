@@ -1155,6 +1155,7 @@ class SlateWrapper extends Component {
                         this.renderSlate(this.props)
                     }
                 </div>
+                <div id="link-notification"></div>
                 <ListButtonDropPortal slateData={this.props.slateData}>
                     {
                         (selectedType, startValue, inputRef) => (

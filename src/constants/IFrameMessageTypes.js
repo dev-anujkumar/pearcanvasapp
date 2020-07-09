@@ -16,6 +16,7 @@ export const AddEditLearningObjective ="CHOOSE FROM EXISTING LEARNING OBJECTIVE"
 export const NoSlateTagIS ="NO SLATE TAG AVAILABLE"
 export const UnlinkSlate ="UNLINK SLATE"
 export const NoSlateTagOnSlate ="SLATE TAG NOT FOUND"
+export const LaunchTOCForCrossLinking = "launchTOCForCrossLinking"
 //dropdown values of slate tag
 export const AddLearningObjectiveSlateDropdown ="Add a New Learning Objective"
 export const AddEditLearningObjectiveDropdown ="Add From Existing or Edit"
