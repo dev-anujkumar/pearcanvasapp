@@ -7,7 +7,10 @@ import {
 } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP, OPEN_GLOSSARY_FOOTNOTE,DELETE_SHOW_HIDE_ELEMENT, GET_TCM_RESOURCES} from "./../../constants/Action_Constants";
 import { customEvent } from '../../js/utils';
-import { prepareTcmSnapshots, prepareElementAncestorData } from '../TcmSnapshots/TcmSnapshots_Utility.js';
+import { prepareTcmSnapshots } from '../TcmSnapshots/TcmSnapshots_Utility.js';
+import { fetchElementWipData } from '../TcmSnapshots/ElementSnapshot_Utility.js';
+let elementTypeTCM = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza'];
+let containerType = ['element-aside', 'manifest', 'citations', 'poetry'];
 
 export const addComment = (commentString, elementId, asideData, parentUrn) => (dispatch, getState) => {
     let url = `${config.STRUCTURE_API_URL}narrative-api/v2/${elementId}/comment/`
@@ -97,6 +100,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
         if (deleteElemData.status === 200) {
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
             const parentData = getState().appStore.slateLevelData;
+            const deleteParentData = JSON.parse(JSON.stringify(parentData));
             const newParentData = JSON.parse(JSON.stringify(parentData));
             let currentSlateData = newParentData[config.slateManifestURN];
             if (currentSlateData.status === 'approved') {
@@ -112,6 +116,15 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
             return false;
         }
         let bodymatter = newParentData[config.slateManifestURN].contents.bodymatter
+
+            /** [PCAT-8289] -------------------------- TCM Snapshot Data handling ----------------------------*/
+            let deleteBodymatter = deleteParentData[config.slateManifestURN].contents.bodymatter
+            if (elementTypeTCM.indexOf(type) !== -1 || containerType.indexOf(type) !== -1) {
+                let deleteData = fetchElementWipData(deleteBodymatter, index, type, contentUrn)
+                dispatch(prepareTcmSnapshots(deleteData, 'delete', asideData, parentUrn, poetryData, type))
+            }
+            /**-----------------------------------------------------------------------------------------------*/
+
             bodymatter.forEach((element, key) => {
                 if (element.id === elmId) {
                     bodymatter.splice(key, 1);
@@ -309,7 +322,12 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
             }
         });
         }
-        
+
+        /** [PCAT-8289] -------------------------- TCM Snapshot Data handling ----------------------------*/
+        if (elementTypeTCM.indexOf(response.data.type) !== -1) {
+            dispatch(prepareTcmSnapshots(response.data, 'update', asideData, parentUrn, poetryData, ""))
+        }
+        /**-----------------------------------------------------------------------------------------------*/
 
         if(config.slateManifestURN === updatedData.slateVersionUrn){  //Check applied so that element does not gets copied to next slate while navigating
             if (updatedData.elementVersionType === "element-learningobjectivemapping" || updatedData.elementVersionType === "element-generateLOlist") {
@@ -348,12 +366,6 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         customEvent.trigger('glossaryFootnoteSave', response.data.id); 
         config.popupCreationCallInProgress = false
 
-        /** [PCAT-8289]
-        * --------------------------------- TCM Snapshot Data handling --------------------------------*
-        */
-       let elemParentData = prepareElementAncestorData({})//send slatedata to set parentData
-       dispatch(prepareTcmSnapshots(response.data,'update'))
-      /**-----------------------------------------------------------------------------------------------*/
     }).catch(error => {
         dispatch({type: ERROR_POPUP, payload:{show: true}})
         config.savingInProgress = false
@@ -395,8 +407,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
     let elementId = updatedData.id;
     //tcm update code   
     if (config.tcmStatus) {
-        let elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza'];
-        if (elementType.indexOf(updatedData.type) !== -1 && !updatedData.metaDataField  && !updatedData.sectionType) {
+        if (elementTypeTCM.indexOf(updatedData.type) !== -1 && !updatedData.metaDataField  && !updatedData.sectionType) {
             prepareDataForUpdateTcm(updatedData.id, getState, dispatch, versionedData);
         }
     }

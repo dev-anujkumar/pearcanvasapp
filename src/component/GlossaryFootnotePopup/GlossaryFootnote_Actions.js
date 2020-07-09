@@ -3,7 +3,8 @@ import config from '../../config/config';
 import store from '../../appstore/store.js'
 import { sendDataToIframe, createTitleSubtitleModel } from '../../constants/utility.js';
 import { HideLoader } from '../../constants/IFrameMessageTypes.js';
-import { prepareTcmSnapshots, prepareElementAncestorData } from '../TcmSnapshots/TcmSnapshots_Utility.js';
+import { prepareTcmSnapshots } from '../TcmSnapshots/TcmSnapshots_Utility.js';
+
 const {
     REACT_APP_API_URL
 } = config
@@ -441,12 +442,11 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             }
         }
 
-        /** [PCAT-8289]
-         * ---------------------------------- TCM Snapshot Data handling ----------------------------------
-         */
-        let elemParentData= prepareElementAncestorData(currentSlateData)
+
+        /** [PCAT-8289] -------------------------- TCM Snapshot Data handling ----------------------------*/
         store.dispatch(prepareTcmSnapshots(res.data,'update'))
         /**------------------------------------------------------------------------------------------------*/
+        
         store.dispatch({
             type: UPDATE_FOOTNOTEGLOSSARY,
             payload: {

@@ -23,8 +23,8 @@ import {
 import { sendDataToIframe } from '../../constants/utility.js';
 import { HideLoader, ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
-import { prepareTcmSnapshots, prepareElementAncestorData } from '../TcmSnapshots/TcmSnapshots_Utility.js';
-
+sssimport { prepareTcmSnapshots } from '../TcmSnapshots/TcmSnapshots_Utility.js';
+let elementType = ['WORKED_EXAMPLE', 'CONTAINER', 'SECTION_BREAK', 'TEXT', 'CITATION', 'ELEMENT_CITATION', 'POETRY', 'STANZA'];
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
 };
@@ -104,12 +104,11 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         const newParentData = JSON.parse(JSON.stringify(parentData));
         let currentSlateData = newParentData[config.slateManifestURN];
 
-        /** [PCAT-8289]
-         * ---------------------------------- TCM Snapshot Data handling ----------------------------------
-         */
-        let elemParentData= prepareElementAncestorData(currentSlateData)
-        dispatch(prepareTcmSnapshots(createdElemData.data,'create',elemParentData))
-        /**------------------------------------------------------------------------------------------------*/
+        /** [PCAT-8289] ---------------------------- TCM Snapshot Data handling ------------------------------*/
+        if (elementType.indexOf(type) !== -1) {
+            dispatch(prepareTcmSnapshots(createdElemData.data,'create', asideData,parentUrn,poetryData,type))
+            }
+        /**---------------------------------------------------------------------------------------------------*/
 
         if (currentSlateData.status === 'approved') {
             if(currentSlateData.type==="popup"){
@@ -170,7 +169,6 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
             newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
         }
         if (config.tcmStatus) {
-            let elementType = ['WORKED_EXAMPLE', 'CONTAINER', 'SECTION_BREAK', 'TEXT', 'CITATION', 'ELEMENT_CITATION', 'POETRY', 'STANZA'];
             if (elementType.indexOf(type) !== -1) {
                 prepareDataForTcmCreate(type, createdElementData, getState, dispatch);
             }
