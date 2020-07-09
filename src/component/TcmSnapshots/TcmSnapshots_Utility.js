@@ -6,28 +6,108 @@
 /**************************Import Modules**************************/
 import config from '../../config/config.js';
 import { sendElementTcmSnapshot } from './TcmSnapshot_Actions.js';
-import { setSemanticsSnapshots } from './ElementSnapshot_Utility.js';
+import { setSemanticsSnapshots, fetchElementsTag } from './ElementSnapshot_Utility.js';
+
+let elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza'];
+let containerType = ['element-aside', 'manifest', 'citations', 'poetry'];
+
 /**
  * @function prepareTcmSnapshots
  * @description-This is the root function to preapare the data for TCM Snapshots
- * @param {Object} allSlateData  
+ * @param {Object}   
 */
-export const prepareTcmSnapshots = (wipData, action, asideData) => (dispatch) => {
-    let tcmSnapshot = {};
-    let commonKeys = setCommonKeys_TCM_Snapshots(action, wipData)
-    let elementDetails = { type: "list", id: "123" }
-    // let elementDetails = setElementTypeAndUrn(ancestorData)
-    tcmSnapshot = {
+export const prepareTcmSnapshots = (wipData, action, asideData, parentUrn, poetryData, type) => (dispatch) => {
+    let tcmSnapshot = [];
+    let defaultKeys = setDefaultKeys(action)
+    let elementDetails;
+    /* Tag of elements*/
+    let tag = {
+        parentTag: fetchElementsTag(wipData)
+    }
+    /* ID of elements*/
+    let elementId = {
+        parentId: wipData.id
+    }
+    /* For WE creation*/
+    if (wipData.type === "element-aside" && type != "SECTION_BREAK") {
+        wipData.elementdata.bodymatter && wipData.elementdata.bodymatter.map((item) => {
+            if (item.type === "manifest") {
+                item.contents.bodymatter.map((ele) => {
+                    if(elementType.indexOf(ele.type) !== -1){
+                        elementId.childId = ele.id
+                        tag.childTag = fetchElementsTag(ele)
+                        elementDetails = setElementTypeAndUrn(elementId, tag, wipData.subtype === "workedexample" ? 'BODY' : "", item.id);
+                        prepareTcmData(elementDetails, ele, defaultKeys, tcmSnapshot)
+                    }
+                })
+            }
+            else if(elementType.indexOf(item.type) !== -1){
+                elementId.childId = item.id;
+                tag.childTag = fetchElementsTag(item)
+                elementDetails = setElementTypeAndUrn(elementId, tag, wipData.subtype === "workedexample" ? "HEAD" : "", "");
+                prepareTcmData(elementDetails, item, defaultKeys, tcmSnapshot)
+            }
+        })
+    }
+    /* action on Section break in WE*/
+    else if (type === "SECTION_BREAK" || wipData.type === "manifest") {
+        tag.parentTag = asideData && fetchElementsTag(asideData) ? fetchElementsTag(asideData) : fetchElementsTag(wipData)
+        elementId.parentId = asideData && asideData.id ? asideData.id : parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "";
+        wipData.contents.bodymatter.map((item) => {
+            if (elementType.indexOf(item.type) !== -1) {
+                elementId.childId = item.id
+                tag.childTag = fetchElementsTag(item)
+                elementDetails = setElementTypeAndUrn(elementId, tag, "BODY", wipData.id);
+                prepareTcmData(elementDetails, item, defaultKeys, tcmSnapshot)
+            }
+        })
+    }
+    /* action on element in WE/PE/CG */
+    else if ((poetryData || asideData || parentUrn)) {
+        let parentElement = asideData ? asideData : poetryData ? poetryData : parentUrn ? parentUrn : ""
+        elementId.parentId = parentElement && parentElement.id ? parentElement.id : parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "";
+        elementId.childId = wipData.id;
+        tag.parentTag = fetchElementsTag(parentElement)
+        tag.childTag = fetchElementsTag(wipData)
+        let isHead = asideData && asideData.type === "element-aside" && asideData.subtype === "workedexample" ? parentUrn.manifestUrn == asideData.id ? "HEAD" : "BODY" : ""
+        elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn.manifestUrn)
+        prepareTcmData(elementDetails, wipData, defaultKeys, tcmSnapshot)
+    }
+    /* action on PE and CG */
+    else if (wipData.type === "citations" || wipData.type === "poetry") {
+        wipData.contents.bodymatter.map((item) => {
+            elementId.childId = item.id;
+            tag.childTag = fetchElementsTag(item)
+            elementDetails = setElementTypeAndUrn(elementId, tag, "", "")
+            prepareTcmData(elementDetails, item, defaultKeys, tcmSnapshot)
+        })
+    }
+    else  {
+        elementDetails = setElementTypeAndUrn(elementId, tag)
+        prepareTcmData(elementDetails, wipData, defaultKeys, tcmSnapshot)
+    }
+    console.log('final data in prepare Function', tcmSnapshot)
+    /** TCM SNAPSHOTS API CALLED HERE */
+    dispatch(sendElementTcmSnapshot(tcmSnapshot))
+}
+
+/**
+ * @function prepareTcmData
+ * @description-This function is to all keys for tcm snapshots
+ * @param {Object}  - Object containing the details for Element type & parentData
+ * @returns {Object}  
+*/
+const prepareTcmData = (elementDetails, wipData, defaultKeys, tcmSnapshot) => {
+    let res = Object.assign({}, wipData)
+    delete res["html"];
+    return tcmSnapshot.push({
         elementUrn: elementDetails.elementUrn,
         snapshotUrn: elementDetails.elementUrn,
         elementType: elementDetails.elementType,
-        elementSnapshot: prepareElementSnapshots(commonKeys.status, action, wipData),
-        ...commonKeys
-    }
-    console.log('final data in prepare Function', tcmSnapshot)
-
-    /** TCM SNAPSHOTS API CALLED HERE */
-    dispatch(sendElementTcmSnapshot(tcmSnapshot))
+        elementWip: res,
+        elementSnapshot: prepareElementSnapshots(wipData, defaultKeys.action, defaultKeys.status),
+        ...defaultKeys
+    })
 }
 
 /**
@@ -37,35 +117,50 @@ export const prepareTcmSnapshots = (wipData, action, asideData) => (dispatch) =>
  * @returns {Object}  
 */
 
-const setElementTypeAndUrn = (element) => {
+const setElementTypeAndUrn = (eleId, tag, isHead, sectionId) => {
     let elementData = {}
-    /** switch case to set elementType & elementUrn*///snapshotUrn/elementUrn
+    let elementTag = `${tag.parentTag}${isHead ? ":" + isHead : ""}${tag.childTag ? ":" + tag.childTag : ""}`;
+    let elementId = `${eleId.parentId}${sectionId && isHead === "BODY" ? "+" + sectionId : ""}${eleId.childId ? "+" + eleId.childId : ""}`
+    elementData = {
+        elementUrn: elementId,
+        elementType: elementTag
+    }
     return elementData
 }
 
 /**
- * @function setCommonKeys_TCM
+ * @function setDefaultKeys
  * @description-This function is to set the common keys for tcm snapshots
- * @param {String} action - type of action performed
- * @param {Object} wipData - wipData for element
+ * @param {Object} action - type of action performed
  * @returns {Object}  
 */
-const setCommonKeys_TCM_Snapshots = (action, wipData) => {
+export const setDefaultKeys = (action) => {
     let tcmKeys = {}
-    /**
-     * Set common parameters here
-     */
+
     tcmKeys = {
-        slateID: config.slateManifestUrn,
-        slateUrn: config.slateManifestUrn,
+        slateID: config.slateManifestURN,
+        slateUrn: config.slateManifestURN,
         projectUrn: config.projectUrn,
         index: 0,
         action: action,
-        status: (config.tcmStatus && config.tcmStatus == true && action !== 'delete') ? "pending" : "accepted",
-        slateType: "container",//set based on condition
-        elementWip: wipData
+        status:  (config.tcmStatus && config.tcmStatus == true && action !== 'delete') ? "Pending" : "Accepted",//prepareElementStatus(action),
+        //set based on action (config.tcmStatus && config.tcmStatus == true && action !== 'delete') ? "Pending" : "Accepted")
+        slateType: "slate",//set based on condition
     }
     return tcmKeys
+}
+
+/**
+ * @function prepareElementStatus
+ * @description-This function is to set the status of element
+ * @param string action - type of action
+*/
+const prepareElementStatus = (action) => {
+    let status;
+    if (action === "create") {
+        status = config.tcmStatus === true ? "Pending" : "Accepted";
+    }
+    return status
 }
 
 /**
@@ -76,18 +171,18 @@ const setCommonKeys_TCM_Snapshots = (action, wipData) => {
  * @param {String} element - wipData for element
  * @returns {Object}
 */
-export const prepareElementSnapshots = (status, action, element) => {
+export const prepareElementSnapshots = (element, action, status) => {
     let elementSnapshot = {};
     let semanticSnapshots = (action !== 'create' && element.type !== 'element-citation') ? setSemanticsSnapshots(status, element) : {};
-    
+
     elementSnapshot = {
-        contentSnapshot: element,
+        contentSnapshot: element.html && element.html.text ? element.html.text : "",
         glossorySnapshot: isEmpty(semanticSnapshots) === false ? semanticSnapshots.glossarySnapshot : [],
         footnoteSnapshot: isEmpty(semanticSnapshots) === false ? semanticSnapshots.footnoteSnapshot : [],
         assetPopOverSnapshot: isEmpty(semanticSnapshots) === false ? semanticSnapshots.assetPopoverSnapshot : []
     }
-
-    return elementSnapshot;
+console.log('elesnap',JSON.stringify(elementSnapshot))
+    return JSON.stringify(elementSnapshot);
 }
 /**
  * @function isEmpty
@@ -98,44 +193,4 @@ export const prepareElementSnapshots = (status, action, element) => {
 const isEmpty = (obj) => {
     for (let key in obj) { return false; }
     return true;
-}
-
-export const prepareElementAncestorData = (slateData, index = "1") => {
-    let indexes = index.split('-');
-    let ancestorData = {}
-    switch (indexes.length) {
-        case 2:
-            ancestorData = {
-                id: "1",
-                type: "A",
-                ancestor: {
-                    id: "2",
-                    type: "B",
-                }
-            }
-            break;
-        case 3:
-            ancestorData = {
-                id: "1",
-                type: "A",
-                ancestor: {
-                    id: "2",
-                    type: "B",
-                    ancestor: {
-                        id: "3",
-                        type: "C"
-                    }
-                }
-            }
-            break;
-        case 1:
-        default:
-            ancestorData = {
-                id: "1",
-                type: "A",
-            }
-            break;
-    }
-
-    return ancestorData
 }
