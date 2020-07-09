@@ -11,8 +11,6 @@ import config from '../../config/config.js'
 import axios from 'axios';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader , HideLoader} from '../../constants/IFrameMessageTypes.js';
-import { prepareTcmSnapshots, prepareElementAncestorData } from '../TcmSnapshots/TcmSnapshots_Utility.js';
-
 let currentlySearching = false;
 let searchterm = "";
 
@@ -48,14 +46,6 @@ export const selectedFigureAction = (selectedFigure) => {
 
 //Action to save the links to a figure
 export const apoSearchSaveAction = (apoObject, args) => {
-
-  /** [PCAT-8289]
-    * --------------------------------- TCM Snapshot Data handling --------------------------------*
-    */
-  let elemParentData = prepareElementAncestorData({})//send slatedata to set parentData
-  prepareTcmSnapshots(apoObject,elemParentData)//call apis to prepare assetpopover snapshot data
-  /**-----------------------------------------------------------------------------------------------*/
-
   return {
     type: APO_SEARCH_SAVE,
     payload: {
