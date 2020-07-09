@@ -9,6 +9,7 @@ import {
 import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js'
 import { checkSlateLock } from '../../js/slateLockUtility.js'
+import { getTitleSubtitleModel } from "../../constants/utility.js"
 /**
 * @description - Interactive is a class based component. It is defined simply
 * to make a skeleton of the Interactive Element.
@@ -33,8 +34,8 @@ class ElementPopup extends React.Component {
         if(config.popupCreationCallInProgress){
             return false
         }
-        if(event.target.classList[0] !== "paragraphNumeroUno" && event.target.classList[0] !== "actionPU"){
-            if(!(checkSlateLock(this.props.slateLockInfo) || this.props.activeElement.elementId !== this.props.element.id || config.savingInProgress)){
+        if(event.target.classList.contains("buttonWidgetPU")){
+            if(!(checkSlateLock(this.props.slateLockInfo) || this.props.activeElement.elementId !== this.props.element.id  || config.savingInProgress)){
                 this.renderSlate()
             }
         } 
@@ -62,49 +63,108 @@ class ElementPopup extends React.Component {
         config.popupCreationCallInProgress = true
         await this.props.createPopupUnit(popupField, parentElement, (currentElementData) => this.props.handleBlur(forceupdate, currentElementData, index, null), index, config.slateManifestURN, createdFromFootnote)
     }
-    renderPopup = ()=>{        
+    renderPopup = () => {        
         const {index, element, slateLockInfo} = this.props
-            return(
-                <div className="divWidgetPU" resource="">
+        const { popupdata } = element
+        let formattedTitle, formattedSubtitle
+
+        /** If both formatted-title and subtitle or only formatted-title is present */
+        if (popupdata && popupdata.hasOwnProperty('formatted-title')) {
+            formattedTitle = getTitleSubtitleModel(popupdata["formatted-title"].html.text, "formatted-title").replace(/&nbsp;/g, "")
+            formattedSubtitle = getTitleSubtitleModel(popupdata["formatted-title"].html.text, "formatted-subtitle")
+        }
+        /** If only formatted-subtitle is present */
+        else if (popupdata && popupdata.hasOwnProperty('formatted-subtitle') && !popupdata.hasOwnProperty('formatted-title')) {
+            formattedTitle = `<p class="paragraphNumeroUno"><br/></p>`
+            formattedSubtitle = getTitleSubtitleModel(popupdata["formatted-subtitle"].html.text, "formatted-subtitle")
+        }
+        else {
+            formattedTitle = `<p class="paragraphNumeroUno"><br/></p>`
+            formattedSubtitle = `<p class="paragraphNumeroUno"><br/></p>`
+        }
+
+        return(
+            <div className="divWidgetPU" resource="">
                 <figure className="figureWidgetPU" resource="">
                     <header>
-                            <TinyMceEditor  permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={element} index={`${index}-0`} className="heading4WidgetPUNumberLabel figureLabel formatted-text" id={this.props.id} placeholder="Enter Label..." tagName={'h4'} model={element.popupdata && element.popupdata["formatted-title"] && element.popupdata["formatted-title"].html.text ? element.popupdata["formatted-title"].html.text : '' } currentElement = {element.popupdata && element.popupdata["formatted-title"]}
-                              handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} popupField = "formatted-title" createPopupUnit={this.createPopupUnit} />
-                            <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={element} index={`${index}-1`} className='heading4WidgetPUTitle figureTitle formatted-text' id={this.props.id} placeholder="Enter Title..." tagName={'h4'} model={element.popupdata && element.popupdata["formatted-subtitle"] && element.popupdata["formatted-subtitle"].html.text ? element.popupdata["formatted-subtitle"].html.text : ''} currentElement = {element.popupdata && element.popupdata["formatted-subtitle"]}
-                             handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} popupField = "formatted-subtitle" createPopupUnit={this.createPopupUnit} />
+                        <TinyMceEditor permissions = {this.props.permissions}
+                            openGlossaryFootnotePopUp = {this.props.openGlossaryFootnotePopUp}
+                            element = {element}
+                            index = {`${index}-0`}
+                            className = "heading4WidgetPUNumberLabel figureLabel formatted-text"
+                            id = {this.props.id}
+                            placeholder = "Enter Label..."
+                            tagName = {'h4'}
+                            model = {formattedTitle}
+                            currentElement = {popupdata && (popupdata["formatted-title"] || popupdata["formatted-subtitle"])}
+                            handleEditorFocus = {this.props.handleFocus}
+                            handleBlur = {this.props.handleBlur}
+                            slateLockInfo = {slateLockInfo}
+                            glossaryFootnoteValue = {this.props.glossaryFootnoteValue}
+                            glossaaryFootnotePopup = {this.props.glossaaryFootnotePopup}
+                            elementId = {this.props.elementId}
+                            popupField = "formatted-title"
+                            createPopupUnit = {this.createPopupUnit}
+                        />
+                        <TinyMceEditor permissions = {this.props.permissions} 
+                            openGlossaryFootnotePopUp = {this.props.openGlossaryFootnotePopUp} 
+                            element = {element}
+                            index = {`${index}-1`}
+                            className = 'heading4WidgetPUTitle figureTitle formatted-text'
+                            id = {this.props.id}
+                            placeholder = "Enter Title..."
+                            tagName = {'h4'}
+                            model={formattedSubtitle} 
+                            currentElement = {popupdata && (popupdata["formatted-title"] || popupdata["formatted-subtitle"])}
+                            handleEditorFocus = {this.props.handleFocus}
+                            handleBlur = {this.props.handleBlur}
+                            slateLockInfo = {slateLockInfo}
+                            glossaryFootnoteValue = {this.props.glossaryFootnoteValue}
+                            glossaaryFootnotePopup = {this.props.glossaaryFootnotePopup}
+                            elementId = {this.props.elementId} 
+                            popupField = "formatted-subtitle" 
+                            createPopupUnit = {this.createPopupUnit}
+                        />
                     </header>
-                   {/*  <div className={id}><strong>{path ? path : 'ITEM ID: '} </strong>{this.state.itemID?this.state.itemID : itemId}</div> */}
                     <div className="pearson-component pu"  data-uri="" data-type="pu" data-width="600" data-height="399" ref={this.popupBorderRef}>
                         {
                             <a className="buttonWidgetPU">
-                            <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-2`} placeholder="Enter call to action..." className={"actionPU"} id={this.props.id} element={element} currentElement = {element.popupdata && element.popupdata.postertextobject && element.popupdata.postertextobject[0]} model={element.popupdata && element.popupdata.postertextobject? element.popupdata.postertextobject[0].html.text : "" } 
-                            handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} elementId={this.props.elementId} popupField = "postertextobject" createPopupUnit={this.createPopupUnit}/>
+                                <TinyMceEditor permissions = {this.props.permissions}
+                                    openGlossaryFootnotePopUp = {this.props.openGlossaryFootnotePopUp}
+                                    index = {`${index}-2`} 
+                                    placeholder = "Enter call to action..." 
+                                    className = {"actionPU formatted-text"} 
+                                    id = {this.props.id}
+                                    element = {element}
+                                    currentElement = {popupdata && popupdata.postertextobject && popupdata.postertextobject[0]}
+                                    model = {popupdata && popupdata.postertextobject ? popupdata.postertextobject[0].html.text : "" }
+                                    handleEditorFocus = {this.props.handleFocus}
+                                    handleBlur = {this.props.handleBlur} 
+                                    slateLockInfo = {slateLockInfo} 
+                                    elementId = {this.props.elementId}
+                                    popupField = "postertextobject" 
+                                    createPopupUnit = {this.createPopupUnit}
+                                />
                             </a>
                         }
                     </div>
-    
                 </figure>
             </div>
-            )
-        
+        )
     }
-    render(){
-      return (
-        <div className="interactive-element">
-            { this.renderPopup() }
-        </div>  
-      )
+
+    render() {
+        return (
+            <div className="interactive-element">
+                { this.renderPopup() }
+            </div>
+        )
     }
 }
 ElementPopup.displayName = "ElementPopup"
 
-const mapStateToProps = state => {
-    return {}
-};
-
-
 export default connect(
-    mapStateToProps,
+    null,
     {
         fetchSlateData,
         createPopupUnit
