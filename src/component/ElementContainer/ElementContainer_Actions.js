@@ -437,7 +437,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                 dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:parentElement.id, parentElement.contentUrn, 0, parentElement,"", false));
             }
             else if (parentElement && parentElement.type === "groupedcontent") {
-                dispatch(fetchSlateData(parentElement.id, parentElement.contentUrn, 0, parentElement));
+                dispatch(fetchSlateData(parentElement.id, parentElement.contentUrn, 0, parentElement, "", false));
             } else {
                 elementIndex = indexes.length == 2 ?indexes[0] : elementIndex
                 newslateData[config.slateManifestURN].contents.bodymatter[elementIndex] = versionedData;

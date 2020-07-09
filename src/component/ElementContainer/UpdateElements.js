@@ -650,7 +650,9 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
             dataToReturn.parentEntityId = poetryData.contentUrn;
         } 
     } */
-    
+    if (parentElement) {
+        parentElement["index"] = index
+    }
     let slateEntityUrn = dataToReturn.elementParentEntityUrn || appStore.parentUrn && appStore.parentUrn.contentUrn || config.slateEntityURN
     dataToReturn = { ...dataToReturn, index: index.toString().split('-')[index.toString().split('-').length - 1], elementParentEntityUrn: slateEntityUrn }
     if (elementStatusReducer[dataToReturn.id] && elementStatusReducer[dataToReturn.id] === "approved") {
