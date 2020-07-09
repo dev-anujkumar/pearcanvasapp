@@ -16,7 +16,7 @@ import { prepareTcmSnapshots } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 let imageSource = ['image','table','mathImage'],imageDestination = ['primary-image-figure','primary-image-table','primary-image-equation']
 
 export const convertElement = (oldElementData, newElementData, oldElementInfo, store, indexes, fromToolbar,showHideObj) => (dispatch,getState) => {
-    let appStore =  getState().appStore;
+    let { appStore, elementStatusReducer } =  getState();
     try {
         let conversionDataToSend = {};
     // Input Element
@@ -214,7 +214,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     conversionDataToSend["elementParentEntityUrn"] = parentEntityUrn
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
     config.conversionInProcess = true
-    if(conversionDataToSend.status === "approved"){
+    if(elementStatusReducer[conversionDataToSend.id] === "approved"){
         config.savingInProgress = true
     }
     const url = `${config.REACT_APP_API_URL}v1/slate/elementTypeConversion/${overallType}`
@@ -252,7 +252,9 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         }
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
         config.conversionInProcess = false
-        config.savingInProgress = false
+        if (currentSlateData.status === 'wip') {
+            config.savingInProgress = false
+        }
         tinymce.activeEditor&&tinymce.activeEditor.undoManager&&tinymce.activeEditor.undoManager.clear();
 
         let storeElement = store[config.slateManifestURN];
@@ -400,7 +402,8 @@ const prepareAssessmentDataForConversion = (oldElementData, format) => {
         assessmentid : "",
         assessmentitemid : "",
         assessmentformat : assessmentFormat,
-        assessmentitemtype : assessmentItemType
+        assessmentitemtype : assessmentItemType,
+        schema: "http://schemas.pearson.com/wip-authoring/assessment/1#/definitions/assessment"
     }
 
     if (oldElementData && oldElementData.html && oldElementData.html.title) {

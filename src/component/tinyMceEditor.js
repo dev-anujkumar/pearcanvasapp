@@ -139,7 +139,7 @@ export class TinyMceEditor extends Component {
                         // }) 
                         if (!config.savingInProgress) {
                             if ((this.props.element.type === "popup" || this.props.element.type === "citations") && !this.props.currentElement) {
-                                this.props.createPopupUnit(this.props.popupField, null, this.props.index, this.props.element)
+                                this.props.createPopupUnit(this.props.popupField, true, this.props.index, this.props.element)
                             } else if (this.props.element && this.props.element.type === "poetry" && !this.props.currentElement) {
                                 this.props.createPoetryElements(this.props.poetryField, true, this.props.index, this.props.element)
                             } else {
@@ -1098,6 +1098,7 @@ export class TinyMceEditor extends Component {
                     text = String(text).replace(/</g, '&lt;').replace(/>/g, '&gt;');
                     text = String(text).replace(/\r|\n/g, '<br>');
                     text = String(text).replace(/ /g, '&nbsp;');
+                    text = String(text).replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;');
                     this.copyContent = text;
                 }
             }
@@ -1363,7 +1364,7 @@ export class TinyMceEditor extends Component {
         }
         let elementId = ""
         if (this.props.element.type === "popup") {
-            if ((this.props.popupField === "formatted-title" || this.props.popupField === "formatted-subtitle") && !this.props.currentElement) {
+            if ((this.props.popupField === "formatted-subtitle") && !this.props.currentElement) {
                 return false
             } else {
                 elementId = this.props.currentElement.id
@@ -1754,7 +1755,7 @@ export class TinyMceEditor extends Component {
     setInstanceToolbar = () => {
         let toolbar = [];
         if (this.props.placeholder === "Enter Label..." || this.props.placeholder === 'Enter call to action...' || (this.props.element && this.props.element.subtype == 'mathml' && this.props.placeholder === "Type something...")) {
-            toolbar = (this.props.element && this.props.element.type === 'poetry') ? config.poetryLabelToolbar : config.labelToolbar;
+            toolbar = (this.props.element && (this.props.element.type === 'poetry' || this.props.element.type === 'popup')) ? config.poetryLabelToolbar : config.labelToolbar;
         }
         else if (this.props.placeholder === "Enter Caption..." || this.props.placeholder === "Enter Credit...") {
             toolbar = (this.props.element && this.props.element.type === 'poetry') ? config.poetryCaptionToolbar : config.captionToolbar;
@@ -2084,6 +2085,15 @@ export class TinyMceEditor extends Component {
                 return;
             }
             spanHandlers.handleExtraTags(this.props.elementId, 'div', 'poetryLine');
+            let codeLine = tinymce.$(`div[data-id="${this.props.elementId}"] .codeNoHighlightLine`);
+            if(codeLine.length) {
+                for(let index = 0; index < codeLine.length; index++) {
+                    if(codeLine[index] && codeLine[index].innerHTML) {
+                        codeLine[index].innerHTML = String(codeLine[index].innerHTML).replace(/ /g, '&nbsp;');
+                    }
+                }
+                
+            }
             //spanHandlers.handleExtraTags(this.props.elementId, 'code', 'codeNoHighlightLine')
         }
 
@@ -2105,9 +2115,9 @@ export class TinyMceEditor extends Component {
                 (this.props.element.type === "popup" || this.props.element.type === "citations") &&
                 !this.props.currentElement &&
                 elemNode &&
-                elemNode.innerHTML !== ""
+                elemNode.innerHTML.replace(/<br>/g, "") !== ""
             ) {
-                this.props.createPopupUnit(this.props.popupField, forceupdate, this.props.index, this.props.element)
+                this.props.createPopupUnit(this.props.popupField, true, this.props.index, this.props.element)
             } else if (this.props.element && this.props.element.type === "poetry" && !this.props.currentElement && elemNode && elemNode.innerHTML !== "") {
                 this.props.createPoetryElements(this.props.poetryField, true, this.props.index, this.props.element)
             } else {
@@ -2149,14 +2159,6 @@ export class TinyMceEditor extends Component {
                 if (this.props.element && this.props.element.type === "popup") {
                     model = this.props.model && this.props.model.replace(/class="paragraphNumeroUno"/g, "")
                 }
-                /* else if (this.props.element && this.props.element.type === "citations") {
-                    model = this.props.model
-                }
-                else if (this.props.element && this.props.element.type === "poetry") {
-                    if (this.props.poetryField === 'formatted-title') {
-                        model = this.props.model
-                    }
-                } */
                 else {
                     model = this.props.model;
                 }
