@@ -486,6 +486,27 @@ const validateRevealAnswerData = (showHideType, node, elementType) => {
 }
 
 /**
+ * Returns MetaDataField
+ * @param {*} popupdata Popup container data 
+ * @param {*} _previousElementData element data inside popup
+ */
+const getMetaDataFieldForPopup = ({ popupdata: _popupdata }, _previousElementData) => {
+    let hasFormattedTitle = _popupdata.hasOwnProperty("formatted-title"),
+        hasFormattedSubtitle = _popupdata.hasOwnProperty("formatted-subtitle");
+
+    if (hasFormattedTitle && hasFormattedSubtitle) {
+        return "formattedTitle"
+    }
+    else if(hasFormattedTitle && !hasFormattedSubtitle) {
+        return "formattedTitleOnly"
+    }
+    else if(!hasFormattedTitle && hasFormattedSubtitle) {
+        return "formattedSubtitle"
+    }
+    return "formattedTitle"
+}
+
+/**
  * Prepares new element data for all elements
  * @param {*} type 
  * @param {*} previousElementData 
@@ -498,7 +519,7 @@ const validateRevealAnswerData = (showHideType, node, elementType) => {
  * @param {*} containerContext 
  */
 export const createUpdatedData = (type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext,parentElement,showHideType,asideData, poetryData) => {
-    let appStore = store.getState().appStore
+    let { appStore, elementStatusReducer } = store.getState()
     let dataToReturn = {}
     switch (type){
         case elementTypeConstant.AUTHORED_TEXT:
@@ -532,15 +553,18 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
             } 
             if(parentElement && parentElement.type === "popup"){
                 dataToReturn.elementParentEntityUrn = parentElement.contentUrn;
-                if(parentElement.popupdata["formatted-title"] && parentElement.popupdata["formatted-title"]["id"] === previousElementData.id){
-                    dataToReturn.metaDataField = "formattedTitle";
-                } 
-                else if(parentElement.popupdata["formatted-subtitle"] && parentElement.popupdata["formatted-subtitle"]["id"] === previousElementData.id){
-                    dataToReturn.metaDataField = "formattedSubtitle";
-                }
-                else if(parentElement.popupdata["postertextobject"][0]["id"] === previousElementData.id){
+                if(parentElement.popupdata["postertextobject"][0]["id"] === previousElementData.id){
                     dataToReturn.sectionType = "postertextobject";
                 }
+                else {
+                    dataToReturn.metaDataField = getMetaDataFieldForPopup(parentElement, previousElementData)
+                }
+                /* if(parentElement.popupdata["formatted-title"] && parentElement.popupdata["formatted-title"]["id"] === previousElementData.id){
+                    dataToReturn.metaDataField = "formattedTitle";
+                } 
+                else if(parentElement.popupdata["postertextobject"][0]["id"] === previousElementData.id){
+                    dataToReturn.sectionType = "postertextobject";
+                }*/
             } else if(parentElement && parentElement.type === "poetry"){
                 if(parentElement.contents && parentElement.contents["formatted-title"] && parentElement.contents["formatted-title"]["id"] === previousElementData.id){
                     dataToReturn["metaDataField"] = "formattedTitle";
@@ -629,10 +653,14 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
     
     let slateEntityUrn = dataToReturn.elementParentEntityUrn || appStore.parentUrn && appStore.parentUrn.contentUrn || config.slateEntityURN
     dataToReturn = { ...dataToReturn, index: index.toString().split('-')[index.toString().split('-').length - 1], elementParentEntityUrn: slateEntityUrn }
+    if (elementStatusReducer[dataToReturn.id] && elementStatusReducer[dataToReturn.id] === "approved") {
+        config.savingInProgress = true
+    }
     return dataToReturn
 }
 
 export const createOpenerElementData = (elementData, elementType, primaryOption, secondaryOption) => {
+    let { elementStatusReducer } = store.getState()
     let dataToReturn = {};
     if(elementData) {
         dataToReturn = {
@@ -643,6 +671,9 @@ export const createOpenerElementData = (elementData, elementType, primaryOption,
             elementParentEntityUrn: config.slateEntityURN
         }
     }
-
+    
+    if (elementStatusReducer[dataToReturn.id] && elementStatusReducer[dataToReturn.id] === "approved") {
+        config.savingInProgress = true
+    }
     return dataToReturn;
 }

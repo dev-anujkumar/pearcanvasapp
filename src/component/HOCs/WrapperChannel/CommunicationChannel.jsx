@@ -432,6 +432,9 @@ function CommunicationChannel(WrappedComponent) {
                 currentSlateObject = {
                     title: message.node.unformattedTitle ? message.node.unformattedTitle.en : ''
                 }
+                this.setState({
+                    showBlocker : false
+                }) 
                 this.props.setUpdatedSlateTitle(currentSlateObject)
                 config.staleTitle = message.node.unformattedTitle ? message.node.unformattedTitle.en : '';
                 config.slateEntityURN = message.node.entityUrn;
@@ -451,8 +454,9 @@ function CommunicationChannel(WrappedComponent) {
                     currentProjectId: config.projectUrn,
                     slateEntityUrn: config.slateEntityURN
                 }
-                this.props.fetchUsageTypeData('assessment');    /** [PCAT-8125] | Assessment UsageType List API Call  */
-                this.props.fetchAudioNarrationForContainer(slateData)
+                this.props.fetchAudioNarrationForContainer(slateData)  
+                this.props.clearElementStatus()
+                this.props.fetchUsageTypeData('assessment');
                 this.props.fetchSlateData(message.node.containerUrn,config.slateEntityURN, config.page,'',"");
                 config.savingInProgress = false
                 this.props.setSlateType(config.slateType);

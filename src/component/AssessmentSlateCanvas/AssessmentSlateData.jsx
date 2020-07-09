@@ -138,6 +138,7 @@ import { setAssessmentUsageType } from '../AssessmentSlateCanvas/AssessmentActio
         if(hasReviewerRole()){
             return true
         }
+        e.stopPropagation();
         let assessmentFormat = this.state.activeAssessmentType;
         if (assessmentFormat === FULL_ASSESSMENT_PUF || assessmentFormat == PUF ) {
             this.setState({

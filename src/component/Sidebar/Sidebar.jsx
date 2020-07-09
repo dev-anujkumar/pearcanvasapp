@@ -177,7 +177,7 @@ class Sidebar extends Component {
             primaryOptions = <div className="panel_show_module">
                     <div className="learning-obejective-text"><b>Metadata Anchor</b></div>
                         <p>Show Module Name</p>
-                        <label className="switch"><input type="checkbox" onClick={this.showModuleName} checked={this.props.showModule? true : false} /><span className="slider round"></span></label>
+                        <label className="switch"><input type="checkbox" onClick={!config.savingInProgress && this.showModuleName} checked={this.props.showModule? true : false} /><span className="slider round"></span></label>
                         </div>;
             return primaryOptions;
         }
@@ -313,12 +313,12 @@ class Sidebar extends Component {
                 attributions = <div>
                     <div className="panel_show_module">
                         <div className="toggle-value-bce">Use Line Numbers</div>
-                        <label className="switch"><input type="checkbox" checked={(this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true} onClick={ !hasReviewerRole() && this.handleBceToggle}/>
+                        <label className="switch"><input type="checkbox" checked={(this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true} onClick={ !hasReviewerRole() && !config.savingInProgress && this.handleBceToggle}/>
                         <span className="slider round"></span></label>
                     </div>
                     <div className="alt-Text-LineNumber" >
                         <div className="toggle-value-bce">Start numbering from</div>
-                        <input type="number" id="line-number" className="line-number" min="1" onChange={this.handleBceNumber} value={this.state.bceNumberStartFrom}
+                        <input type="number" id="line-number" className="line-number" min="1" onChange={!config.savingInProgress && this.handleBceNumber} value={this.state.bceNumberStartFrom}
                         disabled={!((this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true) || hasReviewerRole()} onBlur={this.handleBceBlur}/>
                     </div>
                 </div>
@@ -461,6 +461,9 @@ class Sidebar extends Component {
             "slateVersionUrn": config.slateManifestURN,
             "elementParentEntityUrn":config.slateEntityURN
         }
+        if (this.props.elementStatus[this.props.activeElement.elementId] === "approved") {
+            config.savingInProgress = true
+        }
         this.props.updateElement(data)
 
     }}
@@ -470,7 +473,7 @@ class Sidebar extends Component {
             return <div className="panel_syntax_highlighting">
                 <div className="toggle-value-bce">Syntax-highlighting</div>
                 <label className="switch">
-                    <input type="checkbox" checked={(this.state.syntaxHighlightingToggleValue || this.state.syntaxHighlightingToggleValue === false) ? this.state.syntaxHighlightingToggleValue : true} onClick={!hasReviewerRole() && this.handleSyntaxHighlightingToggle} />
+                    <input type="checkbox" checked={(this.state.syntaxHighlightingToggleValue || this.state.syntaxHighlightingToggleValue === false) ? this.state.syntaxHighlightingToggleValue : true} onClick={!hasReviewerRole() && !config.savingInProgress && this.handleSyntaxHighlightingToggle} />
                     <span className="slider round"></span>
                 </label>
             </div>
@@ -514,7 +517,8 @@ const mapStateToProps = state => {
         activeElement: state.appStore.activeElement,
         showModule:state.metadataReducer.showModule,
         permissions : state.appStore.permissions,
-        showHideObj:state.appStore.showHideObj
+        showHideObj:state.appStore.showHideObj,
+        elementStatus: state.elementStatusReducer
     };
 };
 

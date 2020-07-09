@@ -318,6 +318,13 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
             } else if(response.data.id !== updatedData.id){
                 if(currentSlateData.status === 'wip'){
                     updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, response.data, elementIndex, null, parentElement, poetryData);
+                    dispatch({
+                        type: "SET_ELEMENT_STATUS",
+                        payload: {
+                            elementWorkId: response.data.id,
+                            elementVersioningStatus: "wip"
+                        }
+                    })
                     config.savingInProgress = false
                 }else if(currentSlateData.status === 'approved'){
                     if(currentSlateData.type==="popup"){
@@ -496,15 +503,8 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                                             "formatted-title": { ...updatedData }
                                         }
                                     };
-                                } else if (nestedEle.popupdata["formatted-subtitle"] && nestedEle.popupdata["formatted-subtitle"]["id"] === elementId) {
-                                    nestedEle = {
-                                        ...nestedEle,
-                                        popupdata: {
-                                            ...nestedEle.popupdata,
-                                            "formatted-subtitle": { ...updatedData }
-                                        }
-                                    };
-                                } else if (nestedEle.popupdata.postertextobject[0].id === elementId) {
+                                }
+                                else if (nestedEle.popupdata.postertextobject[0].id === elementId) {
                                     nestedEle = {
                                         ...nestedEle,
                                         popupdata: {
@@ -545,15 +545,8 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                                                     "formatted-title": { ...updatedData }
                                                 }
                                             };
-                                        } else if (ele.popupdata["formatted-subtitle"] && ele.popupdata["formatted-subtitle"]["id"] === elementId) {
-                                            ele = {
-                                                ...ele,
-                                                popupdata: {
-                                                    ...ele.popupdata,
-                                                    "formatted-subtitle": { ...updatedData }
-                                                }
-                                            };
-                                        } else if (ele.popupdata.postertextobject[0].id === elementId) {
+                                        }
+                                        else if (ele.popupdata.postertextobject[0].id === elementId) {
                                             ele = {
                                                 ...ele,
                                                 popupdata: {
@@ -589,15 +582,8 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                                 "formatted-title": { ...updatedData }
                             }
                         };
-                    } else if (element.popupdata["formatted-subtitle"] && element.popupdata["formatted-subtitle"]["id"] === elementId) {
-                        element = {
-                            ...element,
-                            popupdata: {
-                                ...element.popupdata,
-                                "formatted-subtitle": { ...updatedData }
-                            }
-                        };
-                    } else if (element.popupdata.postertextobject && element.popupdata.postertextobject[0].id === elementId) {
+                    }
+                    else if (element.popupdata.postertextobject[0].id === elementId) {
                         element = {
                             ...element,
                             popupdata: {
@@ -616,25 +602,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                                 "formatted-title": { ...updatedData }
                             }
                         };
-                    } 
-                    /* else if (element.contents["formatted-subtitle"] && element.contents["formatted-subtitle"]["id"] === elementId) {
-                        element = {
-                            ...element,
-                            contents: {
-                                ...element.contents,
-                                "formatted-subtitle": { ...updatedData }
-                            }
-                        };
-                    }  */
-                    // else if (element.contents["formattedCaption"] && element.contents["formattedCaption"]["id"] === elementId) {
-                    //     element = {
-                    //         ...element,
-                    //         contents: {
-                    //             ...element.contents,
-                    //             "formattedCaption": { ...updatedData }
-                    //         }
-                    //     };
-                    // }
+                    }
                      else if (element.contents["creditsarray"] && element.contents["creditsarray"][0] && element.contents["creditsarray"][0]["id"] === elementId) {
                          element = {
                              ...element,
@@ -985,4 +953,73 @@ const showError = (error, dispatch, errorMessage) => {
 const cascadeElement = (parentElement, dispatch, parentElementIndex) => {
     parentElement.indexes = parentElementIndex;
     dispatch(fetchSlateData(parentElement.id, parentElement.contentUrn, 0, parentElement,"")); 
+}
+
+/**
+ * Gets element's status of versioning (i.e wip or approved)
+ * @param {*} elementWorkId element work URN
+ * @param {*} index index of element
+ */
+export const getElementStatus = (elementWorkId, index) => (dispatch) => {
+    let apiUrl = `${config.NARRATIVE_API_ENDPOINT}v2/${elementWorkId}`
+    return fetch(apiUrl, {
+        method: 'GET', // *GET, POST, PUT, DELETE, etc.
+        headers: {
+            'Content-Type': 'application/json',
+            'PearsonSSOSession': config.ssoToken,
+            'ApiKey': config.APO_API_KEY
+        }
+      })
+      .then(resp => resp.json()).then(res => {
+            let statusString = res.status[0]
+            let splittedString = statusString.split("/")
+            let elementVersioningStatus = splittedString[splittedString.length - 1]
+
+            dispatch({
+                type: "SET_ELEMENT_STATUS",
+                payload: {
+                    elementWorkId,
+                    elementVersioningStatus
+                }
+            })
+      })
+      .catch(err => {
+        console.log(`ERROR for element at ${index}`, err)
+    })
+    /* return axios.get(apiUrl,
+        {
+            headers : {
+                'Content-Type': "application/json",
+                'PearsonSSOSession': config.ssoToken,
+                'ApiKey': config.APO_API_KEY
+            }
+        }).then(res => {
+            let statusString = res.data.status[0]
+            let splittedString = statusString.split("/")
+            let elementVersioningStatus = splittedString[splittedString.length - 1]
+
+            dispatch({
+                type: "SET_ELEMENT_STATUS",
+                payload: {
+                    elementWorkId,
+                    elementVersioningStatus
+                }
+            })
+        })
+        .catch(err => {
+            console.log(`ERROR for element at ${index}`, err)
+        }) */
+}
+
+/**
+ * Responsible for clearing element status store data
+ */
+export const clearElementStatus = () => {
+
+    return {
+        type: "SET_ELEMENT_STATUS",
+        payload: {
+            clearEntries: true
+        }
+    }
 }

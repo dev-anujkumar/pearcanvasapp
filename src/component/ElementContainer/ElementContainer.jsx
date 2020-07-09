@@ -14,7 +14,7 @@ import Button from './../ElementButtons';
 import PopUp from '../PopUp';
 import OpenerElement from "../OpenerElement";
 import { glossaaryFootnotePopup } from './../GlossaryFootnotePopup/GlossaryFootnote_Actions';
-import { addComment, deleteElement, updateElement, createShowHideElement, deleteShowHideUnit } from './ElementContainer_Actions';
+import { addComment, deleteElement, updateElement, createShowHideElement, deleteShowHideUnit, getElementStatus } from './ElementContainer_Actions';
 import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
@@ -64,7 +64,36 @@ class ElementContainer extends Component {
 
 
     }
+
+    getElementVersionStatus = (element, elementStatus) => {
+        if (element && element.id.match(/work/g) && !elementStatus[element.id]) {
+            // call element status API
+            this.props.getElementStatus(element.id, this.props.index)
+        }
+        else if (element && element.type === "popup") {
+            if (element.popupdata.hasOwnProperty("formatted-title")) {
+                !elementStatus[element.popupdata["formatted-title"].id] && this.props.getElementStatus(element.popupdata["formatted-title"].id, this.props.index)
+            }
+            if (element.popupdata.hasOwnProperty("formatted-subtitle")) {
+                !elementStatus[element.popupdata["formatted-subtitle"].id] && this.props.getElementStatus(element.popupdata["formatted-subtitle"].id, this.props.index)
+            }
+            if (element.popupdata.hasOwnProperty("postertextobject")) {
+                !elementStatus[element.popupdata["postertextobject"][0].id] && this.props.getElementStatus(element.popupdata["postertextobject"][0].id, this.props.index)
+            }
+            
+        }
+        else if (element && (element.type === "poetry" || element.type === "citations")) {
+            if (element.contents && element.contents.hasOwnProperty("formatted-title")) {
+                !elementStatus[element.contents["formatted-title"].id] && this.props.getElementStatus(element.contents["formatted-title"].id, this.props.index)
+            }
+            if (element.contents && element.contents.hasOwnProperty("creditsarray")) {
+                !elementStatus[element.contents["creditsarray"][0].id] && this.props.getElementStatus(element.contents["creditsarray"][0].id, this.props.index)
+            }
+        }
+    }
+
     componentDidMount() {
+        this.getElementVersionStatus(this.props.element, this.props.elementStatus)
         this.setState({
             ElementId: this.props.element.id,
             btnClassName: '',
@@ -116,8 +145,8 @@ class ElementContainer extends Component {
     /**
      * function will be called on element focus of tinymce instance
      */
-    handleFocus = (updateFromC2Flag, showHideObj, event) => {
-        if(event){
+    handleFocus = (updateFromC2Flag, showHideObj, event, labelText) => {
+        if(event && labelText !== 'fg'){
             event.stopPropagation();
         }
         let element = this.props.element,
@@ -134,7 +163,7 @@ class ElementContainer extends Component {
         if (!(this.props.permissions && (this.props.permissions.includes('access_formatting_bar') || this.props.permissions.includes('elements_add_remove'))) && !hasReviewerRole()) {
             return true
         }
-        if (updateFromC2Flag) {
+        if (updateFromC2Flag == "updateFromC2") {
             if (this.props.element.type === "openerelement") {
                 this.setState({
                     borderToggle: 'active'
@@ -147,7 +176,7 @@ class ElementContainer extends Component {
                 })
             }
             config.lastActiveElementId=element.id
-            this.props.setActiveElement(element, index, "", "", true, showHideObj);
+            this.props.setActiveElement(element, index, this.props.parentUrn, this.props.asideData, true, showHideObj);
         }
         else {
             if (this.props.element.type === "openerelement") {
@@ -437,12 +466,11 @@ class ElementContainer extends Component {
 
     updateOpenerElement = (dataToSend) => {
         const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
-        dataToSend = createOpenerElementData(this.props.element, elementType, primaryOption, secondaryOption)
-        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-        if(dataToSend.status === "approved"){
-            config.savingInProgress = true
-        }
-        this.props.updateElement(dataToSend, 0,undefined,undefined,undefined,undefined);
+        if (!config.savingInProgress) {
+            dataToSend = createOpenerElementData(this.props.element, elementType, primaryOption, secondaryOption)
+            sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+            this.props.updateElement(dataToSend, 0,undefined,undefined,undefined,undefined);
+        } 
     }
 
     /**
@@ -506,7 +534,8 @@ class ElementContainer extends Component {
                         contentUrn : parentElement.contentUrn           
                     };
                 }
-                if((parentElement.type === "poetry" && previousElementData.type !== "stanza" && !(parentElement.contents["creditsarray"] && parentElement.contents["creditsarray"].length && parentElement.contents.creditsarray[0].id === previousElementData.id)) || parentElement.type === "citations"){
+                let isPosterTextSelected = parentElement && parentElement.type === "popup" && parentElement.popupdata["postertextobject"] && parentElement.popupdata["postertextobject"].length && parentElement.popupdata["postertextobject"][0].id === previousElementData.id
+                if((parentElement.type === "poetry" && previousElementData.type !== "stanza" && !(parentElement.contents["creditsarray"] && parentElement.contents["creditsarray"].length && parentElement.contents.creditsarray[0].id === previousElementData.id)) || parentElement.type === "citations" || (parentElement.type === "popup" && !isPosterTextSelected)) {
                     let titleDOMNode = document.getElementById(`cypress-${this.props.index}-0`),
                         subtitleDOMNode = document.getElementById(`cypress-${this.props.index}-1`)
 
@@ -518,7 +547,7 @@ class ElementContainer extends Component {
 
                     let imgTaginLabel = titleDOMNode && titleDOMNode.getElementsByTagName("img")
                     let imgTaginTitle = subtitleDOMNode && subtitleDOMNode.getElementsByTagName("img")
-                    if (parentElement.type === "poetry") {
+                    if (parentElement.type === "poetry" || parentElement.type === "popup") {
                         if((titleDOMNode.textContent === '') && !(imgTaginLabel && imgTaginLabel.length)){
                             titleHTML = ""
                         }
@@ -537,14 +566,14 @@ class ElementContainer extends Component {
                     // html = html.replace(/<br data-mce-bogus="1">/g, "<br>")
                     parentElement["index"] = this.props.index
                 }
-                else if(parentElement.type === "popup" || (parentElement.type === "poetry" && parentElement.contents["creditsarray"] && parentElement.contents["creditsarray"].length && parentElement.contents.creditsarray[0].id === previousElementData.id)){
+                else if ((parentElement.type === "poetry" && parentElement.contents["creditsarray"] && parentElement.contents["creditsarray"].length && parentElement.contents.creditsarray[0].id === previousElementData.id) || isPosterTextSelected) {
                     tempDiv.innerHTML = matchHTMLwithRegex(tempDiv.innerHTML) ? tempDiv.innerHTML : `<p class="paragraphNumeroUno">${tempDiv.innerHTML}</p>`
                     html = html.replace(/<br data-mce-bogus="1">/g, "<br>")
                     html = matchHTMLwithRegex(html) ? html : `<p class="paragraphNumeroUno">${html}</p>`
                     parentElement["index"] = this.props.index
                 }
                 else if (previousElementData.type === "stanza") {
-                        html = `<p>${html}</p>`                                      
+                    html = `<p>${html}</p>`
                 }
                 if(parentElement && parentElement.type === "popup"){
                     html = html.replace(/(<sup><\/sup>)|(<sup><br><\/sup>)/g, "<br>");
@@ -556,9 +585,6 @@ class ElementContainer extends Component {
                 if (html && previousElementData.html && (this.replaceUnwantedtags(html) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate) && !assetPopoverPopupIsVisible && !config.savingInProgress && !checkCanvasBlocker) {
                     dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDiv, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,parentElement,showHideType, asideData, poetryData)
                     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                    if(dataToSend.status === "approved"){
-                        config.savingInProgress = true
-                    }
                     this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, showHideType, parentElement, poetryData);
                 }
                 break;
@@ -572,9 +598,6 @@ class ElementContainer extends Component {
                         if(this.figureDifference(this.props.index, previousElementData) || forceupdate && !config.savingInProgress){
                             dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,undefined,undefined, asideData)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                            if(dataToSend.status === "approved"){
-                                config.savingInProgress = true
-                            }
                             this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData,undefined,undefined);
                         }
                         break;
@@ -583,27 +606,18 @@ class ElementContainer extends Component {
                         if (this.figureDifferenceAudioVideo(this.props.index, previousElementData) || forceupdate && !config.savingInProgress) {
                             dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, undefined, undefined, asideData)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                            if(dataToSend.status === "approved"){
-                                config.savingInProgress = true
-                            }
                             this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, undefined, undefined);
                         }
                         break;
                     case elementTypeConstant.FIGURE_ASSESSMENT:
                         dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, undefined, undefined, asideData)
                         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                        if(dataToSend.status === "approved"){
-                            config.savingInProgress = true
-                        }
                         this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData,undefined,undefined);
                         break;
                     case elementTypeConstant.INTERACTIVE:
                         if(this.figureDifferenceInteractive(this.props.index, previousElementData) || forceupdate && !config.savingInProgress){
                             dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,undefined,undefined, asideData)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                            if(dataToSend.status === "approved"){
-                                config.savingInProgress = true
-                            }
                             this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData,undefined,undefined)
                         }
                         break;
@@ -612,9 +626,6 @@ class ElementContainer extends Component {
                             if(this.figureDifferenceBlockCode(this.props.index, previousElementData) || forceupdate && !config.savingInProgress){
                                 dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,undefined,undefined, asideData)
                                 sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                                if(dataToSend.status === "approved"){
-                                    config.savingInProgress = true
-                                 }
                                 this.props.updateElement(dataToSend, this.props.index,parentUrn,asideData,undefined,undefined);
                             }
                             break;
@@ -622,9 +633,6 @@ class ElementContainer extends Component {
                             if(this.figureDifferenceAT(this.props.index, previousElementData) || forceupdate && !config.savingInProgress){
                                 dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,undefined,undefined, asideData)
                                 sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                                if(dataToSend.status === "approved"){
-                                    config.savingInProgress = true
-                                }
                                 this.props.updateElement(dataToSend, this.props.index,parentUrn,asideData,undefined,undefined);
                             }
                             break;
@@ -656,9 +664,6 @@ class ElementContainer extends Component {
                         if ((nodeData !== prevData || forceupdate && !config.savingInProgress) && !assetPopoverPopupIsVisible && !checkCanvasBlocker) {
                             dataToSend = createUpdatedData(previousElementData.type, previousElementData, currentListNode, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, showHideType,undefined)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                            if(dataToSend.status === "approved"){
-                                config.savingInProgress = true
-                            }
                             this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, showHideType, parentElement);
                         }
                     }
@@ -674,9 +679,6 @@ class ElementContainer extends Component {
                     if (ceHtml && previousElementData.html && (this.replaceUnwantedtags(ceHtml) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate) && !config.savingInProgress) {
                         dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDivForCE, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, showHideType, asideData)
                         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                        if(dataToSend.status === "approved"){
-                            config.savingInProgress = true
-                        }
                         parentElement["index"] = this.props.index
                         this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, showHideType, parentElement);
                     }
@@ -1104,8 +1106,10 @@ class ElementContainer extends Component {
                         slateLockInfo: slateLockInfo,
                         onClick: this.handleFocus,
                         glossaryFootnoteValue: this.props.glossaryFootnoteValue,
+                        elementStatus: this.props.elementStatus,
                         openAssetPopoverPopUp: this.openAssetPopoverPopUp,
                         openGlossaryFootnotePopUp: this.openGlossaryFootnotePopUp,
+                        getElementStatus: this.props.getElementStatus
                     }}><ElementShowHide />
                     </ElementContainerContext.Provider >;
                     labelText = 'SH'
@@ -1220,7 +1224,7 @@ class ElementContainer extends Component {
         }
         if (element.type === elementTypeConstant.FIGURE && element.figuretype === elementTypeConstant.FIGURE_CODELISTING) {
             if ((element.figuredata && element.figuredata.programlanguage && element.figuredata.programlanguage == "Select") || (this.props.activeElement.secondaryOption === "secondary-blockcode-language-default" && this.props.activeElement.elementId === element.id)) {
-                bceOverlay = <div className="bce-overlay disabled" onClick={() => this.handleFocus()}></div>;
+                bceOverlay = <div className="bce-overlay disabled" onClick={(event) => this.handleFocus("","",event)}></div>;
                 borderToggle = (this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? 'showBorder' : 'hideBorder';
                 btnClassName = '';
             }
@@ -1236,7 +1240,7 @@ class ElementContainer extends Component {
                     {this.renderColorTextButton(element, permissions)}
                 </div>
                     : ''}
-                <div className={`element-container ${labelText.toLowerCase()} ${borderToggle}`} data-id={element.id} onFocus={() => this.toolbarHandling('remove')} onBlur={() => this.toolbarHandling('add')} onClick = {this.handleFocus}>
+                <div className={`element-container ${labelText.toLowerCase()} ${borderToggle}`} data-id={element.id} onFocus={() => this.toolbarHandling('remove')} onBlur={() => this.toolbarHandling('add')} onClick = {(e)=>this.handleFocus("","",e,labelText)}>
                     {elementOverlay}{bceOverlay}{editor}
                 </div>
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
@@ -1430,7 +1434,9 @@ const mapDispatchToProps = (dispatch) => {
         handleTCMData: () => {
             dispatch(handleTCMData())
         },
-
+        getElementStatus : (elementWorkId, index) => {
+            dispatch(getElementStatus(elementWorkId, index))
+        }
     }
 }
 
@@ -1444,7 +1450,8 @@ const mapStateToProps = (state) => {
         glossaryFootnoteValue: state.glossaryFootnoteReducer.glossaryFootnoteValue,
         allComments: state.commentsPanelReducer.allComments,
         showHideId: state.appStore.showHideId,
-        tcmData: state.tcmReducer.tcmSnapshot
+        tcmData: state.tcmReducer.tcmSnapshot,
+        elementStatus: state.elementStatusReducer
     }
 }
 

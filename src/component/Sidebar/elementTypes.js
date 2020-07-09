@@ -697,7 +697,7 @@ export default {
     "popup": {
         "primary-popup": {
             text: 'Pop up window',
-            toolbar: ['crossLinkingIcon','assetpopover', 'glossary'],
+            toolbar: ['crossLinkingIcon', 'assetpopover','decreaseindent','glossary', 'orderedlist', 'unorderedlist'],
             dropdownDisabled: true,
             subtype: {
                 'secondary-popup': {
