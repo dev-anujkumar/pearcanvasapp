@@ -138,6 +138,7 @@ export class ElementMetaLOList extends Component {
     /**
     * @description - To check is it tinymce current target and click on current element id
     */
+   e.stopPropagation();
     this.props.handleFocus();
     if (config.editorRefID == e.target.id) {
       config.editorRefID = "";

@@ -398,7 +398,8 @@ export class ReactEditor extends React.Component {
   }
 
   render() {
-    let propsGlossaryFootNoteCurrentValue = this.props.glossaryFootNoteCurrentValue && this.props.glossaryFootNoteCurrentValue.replace(/&nbsp;/g, ' ');
+    let propsGlossaryFootNoteCurrentValue = this.props.glossaryFootNoteCurrentValue 
+    // && this.props.glossaryFootNoteCurrentValue.replace(/&nbsp;/g, ' ');      //BG-2552 
     let glossaryFootNoteCurrentValue;
     try{
       glossaryFootNoteCurrentValue = (propsGlossaryFootNoteCurrentValue && tinyMCE.$(propsGlossaryFootNoteCurrentValue.trim()).length) ? (tinyMCE.$(propsGlossaryFootNoteCurrentValue))[0].innerHTML : propsGlossaryFootNoteCurrentValue;

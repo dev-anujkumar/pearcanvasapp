@@ -227,6 +227,9 @@ class ElementFigure extends Component {
      * @description function will be called on image src add and fetch resources based on figuretype
      */
     addFigureResource = (e) => {
+        if(e){
+            e.stopPropagation();
+        }
         if (this.props.model.figuretype === "tableasmarkup") {
             this.launchSPA();
         }
