@@ -371,13 +371,21 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
         
         customEvent.trigger('glossaryFootnoteSave', response.data.id); 
-        config.popupCreationCallInProgress = false
+        config.popupCreationCallInProgress = false;
 
+        if(document.getElementById('link-notification').innerText !== "") {
+            document.getElementById('link-notification').style.display = "block";
+            setTimeout(() => {
+                document.getElementById('link-notification').style.display = "none";
+                document.getElementById('link-notification').innerText = "";
+            }, 4000);
+        }
     }).catch(error => {
         dispatch({type: ERROR_POPUP, payload:{show: true}})
         config.savingInProgress = false
         config.popupCreationCallInProgress = false
         console.log("updateElement Api fail", error);
+        document.getElementById('link-notification').innerText = "";
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
     })
 }

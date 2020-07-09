@@ -210,6 +210,9 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         if(elementType == 'stanza' || (typeWithPopup === "poetry" && poetryField === 'formatted-subtitle' || typeWithPopup === "popup")){
             figureDataObj.text = `<p>${figureDataObj.text}</p>`
         }
+        else if (typeWithPopup === "popup" && elementType === "element-authoredtext") {
+            figureDataObj.text = `<p class="paragraphNumeroUno">${figureDataObj.text}</p>`
+        }
     }
     let parentEntityUrn,
         appStore = store.getState().appStore

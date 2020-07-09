@@ -1126,5 +1126,68 @@ describe('Testing communication channel', () => {
             expect(channelInstance.state.showBlocker).toBe(true)
             spytoggleLockPopup.mockClear()
         })
+        describe('Test for pageLink linking case', () => {
+            let attr1 = document.createAttribute('class');
+            let dataID = document.createAttribute('data-id');
+            const elementContainer = document.createElement('div');
+                attr1.value = "element-container";
+                elementContainer.setAttributeNode(attr1);
+                dataID.value = "urn:pearson:work:22e2dd42-8fac-481c-8832-ad5d542b985b";
+                elementContainer.setAttributeNode(dataID);
+
+            let attr2 = document.createAttribute('class');
+            const cypressEditor = document.createElement('div');
+                attr2.value = "cypress-editable";
+                cypressEditor.setAttributeNode(attr2);
+
+            const pageLinkNode = document.createElement('div');
+                pageLinkNode.id = "page-link-0";
+                pageLinkNode.innerText = "Link";
+                
+                cypressEditor.appendChild(pageLinkNode);
+                elementContainer.appendChild(cypressEditor);
+                document.body.appendChild(elementContainer);
+
+            const element = document.createElement('div');
+                element.id = "link-notification";
+                document.body.appendChild(element);
+
+            test("Slate Link - Link Case - ", () => {
+                let event = {
+                    data: {
+                        type: "pageLink",
+                        message: {
+                            "link": 'link',
+                            "elementId": "urn:pearson:work:22e2dd42-8fac-481c-8832-ad5d542b985b",
+                            "linkId" : "page-link-0",
+                            "pageId": "urn:pearson:entity:ad5f515f-0bd5-4260-a209-2d8b979a1a31",
+                            "pageName": 'Title'
+                        }
+                    }
+                }
+                const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+                channelInstance.handleIncommingMessages(event);
+                expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+                spyhandleIncommingMessages.mockClear()
+            });
+            test("Slate Link - Unlink Case - ", () => {
+                let event = {
+                    data: {
+                        type: "pageLink",
+                        message: {
+                            "link": 'unlink',
+                            "elementId": "urn:pearson:work:22e2dd42-8fac-481c-8832-ad5d542b985b",
+                            "linkId" : "page-link-0",
+                            "pageId": "urn:pearson:entity:ad5f515f-0bd5-4260-a209-2d8b979a1a31",
+                            "pageName": 'Title'
+                        }
+                    }
+                }
+                const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+                channelInstance.handleIncommingMessages(event);
+                expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+                spyhandleIncommingMessages.mockClear()
+            });
+        })
     })
 })
