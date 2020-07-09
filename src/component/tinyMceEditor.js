@@ -1123,6 +1123,7 @@ export class TinyMceEditor extends Component {
                 }
                 if (this.notFormatting) {
                     let text = e.clipboardData.getData("text/plain");
+                    text = String(text).replace(/&/g, '&amp;');
                     text = String(text).replace(/</g, '&lt;').replace(/>/g, '&gt;');
                     text = String(text).replace(/\r|\n/g, '<br>');
                     text = String(text).replace(/ /g, '&nbsp;');
@@ -1152,7 +1153,8 @@ export class TinyMceEditor extends Component {
         let testElement = document.createElement('div');
         testElement.innerHTML = args.content;
         if (testElement.innerText.trim().length) {
-            args.content = testElement.innerText.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            let tempContent = testElement.innerText.replace(/&/g, "&amp;");
+            args.content = tempContent.replace(/</g, "&lt;").replace(/>/g, "&gt;");
         } else {
             args.content = tinymce.activeEditor.selection.getContent();
         }
