@@ -31,6 +31,7 @@ import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER } from '../compone
 let context = {};
 let clickedX = 0;
 let clickedY = 0;
+
 export class TinyMceEditor extends Component {
     constructor(props) {
         super(props);
@@ -1440,14 +1441,16 @@ export class TinyMceEditor extends Component {
      * Called when footnote button is clicked. Responsible for adding footnote
      * @param {*} editor  editor instance
      */
-    addFootnote = (editor) => {
+    addFootnote = async (editor) => {
         if (config.savingInProgress || config.popupCreationCallInProgress) {
             return false
         }
         let elementId = ""
         if (this.props.element.type === "popup") {
-            if ((this.props.popupField === "formatted-subtitle") && !this.props.currentElement) {
-                return false
+            if ((this.props.popupField === "formatted-title" || this.props.popupField === "formatted-subtitle") && !this.props.currentElement) {
+                editor.selection.setContent('<span id="footnote-attacher"></span>');
+                await this.props.createPopupUnit(this.props.popupField, true, this.props.index, this.props.element, true)
+                elementId = this.props.currentElement && this.props.currentElement.id
             } else {
                 elementId = this.props.currentElement.id
             }
@@ -1462,11 +1465,6 @@ export class TinyMceEditor extends Component {
                             return false;
                         }
                         break;
-                    // case "3":
-                    //     if (!this.props.element.contents['formatted-caption']) {
-                    //         return false;
-                    //     }
-                    //     break;
                     case "4":
                         if (!(this.props.element.contents['creditsarray'] ? this.props.element.contents['creditsarray'][0] : null)) {
                             return false;
@@ -1494,7 +1492,16 @@ export class TinyMceEditor extends Component {
                     document.getElementById(tinyMCE.activeEditor.id).classList.remove("place-holder")
                 }
                 else {
-                    editor.insertContent(`<sup><a href="#" id = "${res.data.id}" data-uri="${res.data.id}" data-footnoteelementid="${res.data.id}" class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>`);
+                    /**
+                     * Case when element is created on the spot with footnote to fix position issue.
+                     * Relevant for Popup and Poetry subtitle. 
+                     */
+                    let domNode = document.getElementById('footnote-attacher');
+                    if (domNode) {
+                        domNode.outerHTML = `<sup><a href="#" id = "${res.data.id}" data-uri="${res.data.id}" data-footnoteelementid="${res.data.id}" class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>`;
+                    } else {
+                        editor.insertContent(`<sup><a href="#" id = "${res.data.id}" data-uri="${res.data.id}" data-footnoteelementid="${res.data.id}" class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>`);
+                    } 
                 }
                 this.toggleGlossaryandFootnotePopup(true, "Footnote", res.data.id, () => { this.toggleGlossaryandFootnoteIcon(true); });
                 this.saveContent()
