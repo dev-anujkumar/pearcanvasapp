@@ -269,8 +269,9 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             document.getElementsByClassName("slate-tag-icon")[0].classList.remove("disable");
          }     
         let newVersionManifestId=Object.values(slateData.data)[0].id
-        if(config.slateManifestURN !== newVersionManifestId){
+        if(config.slateManifestURN !== newVersionManifestId && slateData.data[newVersionManifestId].type === 'manifest' ){
             config.slateManifestURN = newVersionManifestId
+            manifestURN = newVersionManifestId
         }
 		if(slateData.data && slateData.data[newVersionManifestId] && slateData.data[newVersionManifestId].type === "popup"){
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
