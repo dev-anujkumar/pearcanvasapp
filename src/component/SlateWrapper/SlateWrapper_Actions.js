@@ -23,7 +23,7 @@ import {
 import { sendDataToIframe } from '../../constants/utility.js';
 import { HideLoader, ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
-sssimport { prepareTcmSnapshots } from '../TcmSnapshots/TcmSnapshots_Utility.js';
+import { prepareTcmSnapshots } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 let elementType = ['WORKED_EXAMPLE', 'CONTAINER', 'SECTION_BREAK', 'TEXT', 'CITATION', 'ELEMENT_CITATION', 'POETRY', 'STANZA'];
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
