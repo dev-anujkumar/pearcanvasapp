@@ -97,12 +97,23 @@ class GlossaryFootnoteMenu extends React.Component {
      * Checks difference in glossary/footnote data
      */
     glossaryFootnoteDifference = (newTerm, newDef, oldTerm, oldDef, type) => {
-        let domparser, newTermDom, newDefDom, oldTermDom, oldDefDom
+        let domparser, newTermDom, newDefDom, oldTermDom, oldDefDom, tempVar, tempTerm;
+        tempVar = oldDef;
+        tempTerm = oldTerm;
+        tempVar = tempVar && tempVar.replace(/\sdata-mathml/g, 'data-temp-mathml')
         domparser = new DOMParser()
         newTermDom = domparser.parseFromString(newTerm, "text/html")
-        oldTermDom = domparser.parseFromString(oldTerm, "text/html")
-        oldDefDom = domparser.parseFromString(oldDef, "text/html")
+        oldTermDom = domparser.parseFromString(tempTerm, "text/html")
+        oldDefDom = domparser.parseFromString(tempVar, "text/html")
         newDefDom = domparser.parseFromString(newDef, "text/html")
+        let defImag = oldDefDom.getElementsByTagName('img')
+        for (let index = 0; index < defImag.length; index++) {
+            defImag[index].removeAttribute('style')
+            defImag[index].removeAttribute('draggable')
+            defImag[index].removeAttribute('class')
+            defImag[index].classList.add("temp_Wirisformula")
+        }
+
         switch(type){
             case "glossary":
                 return !(newTermDom.isEqualNode(oldTermDom) && newDefDom.isEqualNode(oldDefDom))
