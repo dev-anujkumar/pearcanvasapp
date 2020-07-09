@@ -166,12 +166,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
                 }
 
             })
-            /** [PCAT-8289]
-            * --------------------------------- TCM Snapshot Data handling --------------------------------*
-            */
-            let elemParentData = prepareElementAncestorData(currentSlateData)//send slatedata to set parentData
-            dispatch(prepareTcmSnapshots(_requestData, 'delete', elemParentData))//currentSlateData = its bodymatter
-            /**-----------------------------------------------------------------------------------------------*/
+
             dispatch({
                 type: AUTHORING_ELEMENT_CREATED,
                 payload: {
