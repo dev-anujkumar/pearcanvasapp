@@ -12,6 +12,7 @@ import figureDataBank from '../../js/figure_data_bank';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { prepareTcmSnapshots } from '../TcmSnapshots/TcmSnapshots_Utility.js';
+import { fetchParentData } from '../TcmSnapshots/ElementSnapshot_Utility.js';
 
 let imageSource = ['image','table','mathImage'],imageDestination = ['primary-image-figure','primary-image-table','primary-image-equation']
 
@@ -226,7 +227,11 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     }).then(res =>{
 
         /** [PCAT-8289] -------------------------- TCM Snapshot Data handling ----------------------------*/
-        dispatch(prepareTcmSnapshots(res.data, 'Update'))
+        let convertAppStore = JSON.parse(JSON.stringify(appStore.slateLevelData));
+        let convertSlate = convertAppStore[config.slateManifestURN];
+        let convertBodymatter = convertSlate.contents.bodymatter;
+        let convertParentData = fetchParentData(convertBodymatter, indexes);
+        dispatch(prepareTcmSnapshots(res.data, 'Update', convertParentData.asideData, convertParentData.parentUrn));
         /**-----------------------------------------------------------------------------------------------*/
 
         if (res && res.data && res.data.type && res.data.type === 'figure' && res.data.figuretype && res.data.figuretype === 'codelisting') {

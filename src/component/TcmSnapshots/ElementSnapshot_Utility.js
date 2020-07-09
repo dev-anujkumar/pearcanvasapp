@@ -210,7 +210,7 @@ export const fetchElementsTag = (element) => {
             eleSubType = ""
             break;
     }
-    eleTag = eleSubType.trim() !=="" && setElementTag[eleType] ? setElementTag[eleType].subtype[eleSubType] : setElementTag[eleType]
+    eleTag = eleSubType.trim() !== "" && setElementTag[eleType] ? setElementTag[eleType].subtype[eleSubType] : setElementTag[eleType]
     labelText = `${eleTag.parentTag}${eleTag.childTag ? '+' + eleTag.childTag : ""}`
 
     return labelText;
@@ -226,8 +226,8 @@ export const fetchElementsTag = (element) => {
 */
 export const fetchElementWipData = (bodymatter, index, type, entityUrn) => {
     let eleIndex, wipData;
-    if (typeof index === "number") {                 /** Delete a container or an element at slate level */
-        eleIndex = index;
+    if (typeof index === "number" || (Array.isArray(index) && index.length == 1)) {   /** Delete a container or an element at slate level */
+        eleIndex = Array.isArray(index) ? index[0] : index;
         wipData = bodymatter[eleIndex]
         if (wipData.subtype === "workedexample") {  /** Delete Section-Break */
             wipData.elementdata.bodymatter.map((item, innerIndex) => {
@@ -238,7 +238,7 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn) => {
         }
     }
     else if (typeof index === "string") {
-        eleIndex = index.split("-");
+        eleIndex =  Array.isArray(index) ? index  :index.split("-");
         switch (type) {
             case 'element-citation':                 /** Inside Citations */
                 wipData = bodymatter[eleIndex[0]].contents.bodymatter[eleIndex[1] - 1];
@@ -376,4 +376,28 @@ const setElementTag = {
             },
         }
     }
+}
+
+export const fetchParentData = (bodymatter, indexes) => {
+    let parentData;
+    parentData = {
+        asideData: {
+            contentUrn: bodymatter[indexes[0]].contentUrn,
+            id: bodymatter[indexes[0]].id,
+            subtype: bodymatter[indexes[0]].subtype,
+            type: bodymatter[indexes[0]].type,
+            element: bodymatter[indexes[0]]
+        }
+    }
+    
+    let parentElement = indexes.length == 3 ? bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]] : bodymatter[indexes[0]]
+
+    parentData.parentUrn = {
+        manifestUrn: parentElement.id,
+        contentUrn: parentElement.contentUrn,
+        elementType: parentElement.type
+    }
+    console.log('parentData2', parentData)
+
+    return parentData;
 }
