@@ -17,12 +17,13 @@ import { authorAssetPopOver } from './AssetPopover/openApoFunction.js';
 import {
     tinymceFormulaIcon,
     tinymceFormulaChemistryIcon,
-    assetPopoverIcon
+    assetPopoverIcon,
+    crossLinkIcon
 } from '../images/TinyMce/TinyMce.jsx';
 import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
 import { checkforToolbarClick, customEvent, spanHandlers } from '../js/utils';
 import { saveGlossaryAndFootnote, setFormattingToolbar } from "./GlossaryFootnotePopup/GlossaryFootnote_Actions"
-import { ShowLoader } from '../constants/IFrameMessageTypes';
+import { ShowLoader, LaunchTOCForCrossLinking} from '../constants/IFrameMessageTypes';
 import { sendDataToIframe, hasReviewerRole } from '../constants/utility.js';
 import store from '../appstore/store';
 import { MULTIPLE_LINE_POETRY_ERROR_POPUP } from '../constants/Action_Constants';
@@ -76,6 +77,8 @@ export class TinyMceEditor extends Component {
                     this.addChemistryFormulaButton(editor);
                     this.addMathmlFormulaButton(editor);
                 }
+                this.setCrossLinkingIcon(editor);
+                this.addCrossLinkingIcon(editor);
                 this.setAssetPopoverIcon(editor);
                 this.addAssetPopoverIcon(editor);
                 this.addFootnoteIcon(editor);
@@ -521,13 +524,25 @@ export class TinyMceEditor extends Component {
          * Case - clicking over Asset text
          */
         else if (e.target.nodeName == 'ABBR' || e.target.parentNode && e.target.parentNode.tagName === 'ABBR') {
-            let assetId = (e.target.attributes['asset-id'] && e.target.attributes['asset-id'].nodeValue) || e.target.parentNode.attributes['asset-id'].nodeValue;
-            let dataUrn = (e.target.attributes['data-uri'] && e.target.attributes['data-uri'].nodeValue) || e.target.parentNode.attributes['data-uri'].nodeValue;
-            let apoObject = {
-                'assetId': assetId,
-                'dataUrn': dataUrn
+            let linkTitle = (e.target.attributes['title'] && e.target.attributes['title'].nodeValue) || e.target.parentNode.attributes['title'].nodeValue;
+            if(linkTitle == "Asset Popover") {
+                let assetId = (e.target.attributes['asset-id'] && e.target.attributes['asset-id'].nodeValue) || e.target.parentNode.attributes['asset-id'].nodeValue;
+                let dataUrn = (e.target.attributes['data-uri'] && e.target.attributes['data-uri'].nodeValue) || e.target.parentNode.attributes['data-uri'].nodeValue;
+                let apoObject = {
+                    'assetId': assetId,
+                    'dataUrn': dataUrn
+                }
+                authorAssetPopOver(true, apoObject);
             }
-            authorAssetPopOver(true, apoObject);
+
+            if(linkTitle == "Slate Link") {
+                let linkId = (e.target.attributes['id'] && e.target.attributes['id'].nodeValue) || e.target.parentNode.attributes['id'].nodeValue;
+                let elementId = (e.target.attributes['element-id'] && e.target.attributes['element-id'].nodeValue) || e.target.parentNode.attributes['element-id'].nodeValue;
+                let pageId = (e.target.attributes['data-uri'] && e.target.attributes['data-uri'].nodeValue) || e.target.parentNode.attributes['data-uri'].nodeValue;
+
+                sendDataToIframe({ 'type': LaunchTOCForCrossLinking, 'message': { open: true, case: 'update', link: linkId, element: elementId, page: pageId, blockCanvas: true, crossLink: true } });
+            }
+            
         }
         /**
          *  Case - otherwise close glossary & footnote popup  
@@ -926,6 +941,17 @@ export class TinyMceEditor extends Component {
     }
 
     /**
+     * Adds Cross Linking icon to the toolbar.
+     * @param {*} editor  editor instance
+     */
+    setCrossLinkingIcon = editor => {
+        editor.ui.registry.addIcon(
+            "crossLinkingIcon",
+            crossLinkIcon
+        );
+    }
+
+    /**
      * Adds Asset popover icon to the toolbar.
      * @param {*} editor  editor instance
      */
@@ -1044,6 +1070,70 @@ export class TinyMceEditor extends Component {
             }
         });
     };
+
+    /**
+     * Adding button for Cross Linking
+     * @param {*} editor  editor instance
+     */
+    addCrossLinkingIcon = editor => {
+
+        editor.ui.registry.addMenuButton("crossLinkingIcon", {
+            text: "",
+            icon: "crosslinkingicon",
+            tooltip: "Cross Linking",
+            fetch: cb => {
+                let items = [];
+                
+                if('element' in this.props && 'type' in this.props.element) {
+                    if(this.props.element.type !== 'showhide') {
+                        items = [
+                            {
+                                type: 'menuitem',
+                                text: 'Figure Link',
+                                tooltip: "Figure Link",
+                                onAction: () => {
+                                    let selectedText = window.getSelection().toString();
+                                    if (selectedText.length) {
+                                        this.addAssetPopover(editor, selectedText)
+                                    }
+                                },
+                                onSetup: (buttonApi) => {
+                                    /*
+                                    make merge menu button apis available globally among compnenet
+                                    */
+                                    let selectedText = window.getSelection().toString();
+                                    this.assetPopoverButtonState = buttonApi;
+                                    if (!selectedText.length) {
+                                        this.assetPopoverButtonState.setDisabled();
+                                    }
+                                }
+                            }
+                        ];
+                    }
+                
+                
+                    if(this.props.element.type == 'element-authoredtext' || this.props.element.type == 'element-list' || this.props.element.type == 'showhide') {
+                        items = [
+                            ...items,
+                            {
+                                type: 'menuitem',
+                                text: "Slate Link",
+                                tooltip: "Slate Link",
+                                onAction: () => {
+                                    let selectedText = window.getSelection().toString();
+                                    if (selectedText.length) {
+                                        this.addPageLink(editor, selectedText)
+                                    }
+                                },
+                            }
+                        ];
+                    }
+                }
+
+                cb(items)
+            },
+        });
+    }
 
     /**
      * Adding button for asset popover
@@ -1475,6 +1565,27 @@ export class TinyMceEditor extends Component {
         //this.handleBlur(null, true);
     }
 
+    /**
+     * Called when page link option is clicked. Responsible for adding page link
+     * @param {*} editor  editor instance
+     * @param {*} selectedText  selected text
+     */
+    addPageLink = (editor, selectedText) => {
+        let selection = window.getSelection().anchorNode.parentNode;
+        let selectedTag = selection.nodeName;
+        let selectedTagClass = selection.classList;
+        let activeElement = tinymce.activeEditor.targetElm.closest('.element-container');
+        let linkCount = tinymce.$(activeElement).find('.page-link-attacher').length;
+        if (selectedTag !== "LI" && selectedTag !== "P" && selectedTag !== "H3" && selectedTag !== "BLOCKQUOTE" && (!selectedTagClass.contains('poetryLine'))) {
+            //selectedText = window.getSelection().anchorNode.parentNode.outerHTML;
+            selectedText = '<' + selectedTag.toLocaleLowerCase() + '>' + selectedText + '</' + selectedTag.toLocaleLowerCase() + '>'
+        }
+        let insertionText = '<span id="page-link-' + linkCount +'" class="page-link-attacher" element-id="' + activeElement.getAttribute('data-id') + '">' + selectedText + '</span>';
+        // editor.insertContent(insertionText);
+        editor.selection.setContent(insertionText);
+        sendDataToIframe({ 'type': LaunchTOCForCrossLinking, 'message': { open: true, case: 'new', element: activeElement.getAttribute('data-id'), link: 'page-link-' + linkCount, blockCanvas: true, crossLink: true } });
+    }
+
 
     /**
      * Called when asset popover button is clicked. Responsible for adding asset popover
@@ -1839,6 +1950,20 @@ export class TinyMceEditor extends Component {
          */
         if (tinymce.activeEditor && tinymce.activeEditor.id === currentTarget.id) {
             this.setToolbarByElementType();
+
+            /**
+             * Remove extra Wiris overlay
+             */
+            let wirisNodes = document.getElementsByClassName('wrs_modal_dialogContainer');
+            let wirisNodeLength = wirisNodes.length;
+            if (wirisNodeLength > 1) {
+                for (let i = 0; i < wirisNodeLength - 1; i++) {
+                    wirisNodes[i].remove();
+                    // document.getElementsByClassName('wrs_modal_overlay').remove();
+                    document.getElementById('wrs_modal_overlay['+ i + ']').remove();
+                }
+            }
+            
             isSameTarget = true;
         }
         let currentActiveNode = null

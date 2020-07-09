@@ -214,10 +214,6 @@ describe('Tests Slate Wrapper Actions', () => {
         }
         return store.dispatch(actions.createElement(type, index, parentUrn, {},0)).then(() => {
             let { type, payload } = store.getActions()[0];
-
-          //  console.log("data:::", payload.slateLevelData[config.slateManifestURN].contents.bodymatter);
-         //   console.log("===========================================")
-         //   console.log("expected:::", expectedActions.payload.slateLevelData[config.slateManifestURN].contents.bodymatter);
             expect(type).toBe(expectedActions.type);
             expect(payload).toStrictEqual(expectedActions.payload);
         });

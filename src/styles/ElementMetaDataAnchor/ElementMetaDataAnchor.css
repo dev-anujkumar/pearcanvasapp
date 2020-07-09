@@ -34,9 +34,7 @@
 .tox-tbtn--active .tox-collection--list{
 width:230px;
 }
-.tox-toolbar button:last-child .tox-tbtn__select-chevron{
-    display:none
-}
+
 .slateTagClass svg{
    fill : #42a316;
 }
