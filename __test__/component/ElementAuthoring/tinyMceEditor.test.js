@@ -3713,7 +3713,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
             instance.editorOnClick(event1);
             expect(spyeditorOnClick).toHaveBeenCalled()
         });
-        it('Test-30.3-Method--28--editorOnClick--nodeName:ABBR - Page Link', () => {
+        it('Test-30.3-Method--28--editorOnClick--nodeName:ABBR - Slate Link', () => {
             document.querySelector = () => { return { classList: { remove: () => { } } }; }
             let event1 = {
                 preventDefault: jest.fn(),
@@ -3724,7 +3724,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                     parentNode: {
                         nodeName: 'ABBR',
                         attributes: {
-                            'title': { nodeValue: 'Page Link' },
+                            'title': { nodeValue: 'Slate Link' },
                             'id': { nodeValue: 'page-link-0' },
                             'element-id': { nodeValue: "urn:pearson:work:22e2dd42-8fac-481c-8832-ad5d542b985b" },
                             'data-uri': { nodeValue: "AP" }
@@ -3732,7 +3732,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                     },
                     nodeName: 'ABBR',
                     attributes: {
-                        'title': { nodeValue: 'Page Link' },
+                        'title': { nodeValue: 'Slate Link' },
                         'asset-id': { nodeValue: "yes" },
                         'data-uri': { nodeValue: "AP" }
                     },

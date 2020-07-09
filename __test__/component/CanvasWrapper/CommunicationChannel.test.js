@@ -1152,7 +1152,7 @@ describe('Testing communication channel', () => {
                 element.id = "link-notification";
                 document.body.appendChild(element);
 
-            test("Page Link - Link Case - ", () => {
+            test("Slate Link - Link Case - ", () => {
                 let event = {
                     data: {
                         type: "pageLink",
@@ -1170,7 +1170,7 @@ describe('Testing communication channel', () => {
                 expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
                 spyhandleIncommingMessages.mockClear()
             });
-            test("Page Link - Unlink Case - ", () => {
+            test("Slate Link - Unlink Case - ", () => {
                 let event = {
                     data: {
                         type: "pageLink",

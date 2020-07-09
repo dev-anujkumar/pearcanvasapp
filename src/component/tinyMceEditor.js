@@ -543,7 +543,7 @@ export class TinyMceEditor extends Component {
                 authorAssetPopOver(true, apoObject);
             }
 
-            if(linkTitle == "Page Link") {
+            if(linkTitle == "Slate Link") {
                 let linkId = (e.target.attributes['id'] && e.target.attributes['id'].nodeValue) || e.target.parentNode.attributes['id'].nodeValue;
                 let elementId = (e.target.attributes['element-id'] && e.target.attributes['element-id'].nodeValue) || e.target.parentNode.attributes['element-id'].nodeValue;
                 let pageId = (e.target.attributes['data-uri'] && e.target.attributes['data-uri'].nodeValue) || e.target.parentNode.attributes['data-uri'].nodeValue;
@@ -1125,8 +1125,8 @@ export class TinyMceEditor extends Component {
                             ...items,
                             {
                                 type: 'menuitem',
-                                text: "Page Link",
-                                tooltip: "Page Link",
+                                text: "Slate Link",
+                                tooltip: "Slate Link",
                                 onAction: () => {
                                     let selectedText = window.getSelection().toString();
                                     if (selectedText.length) {
@@ -1957,6 +1957,20 @@ export class TinyMceEditor extends Component {
          */
         if (tinymce.activeEditor && tinymce.activeEditor.id === currentTarget.id) {
             this.setToolbarByElementType();
+
+            /**
+             * Remove extra Wiris overlay
+             */
+            let wirisNodes = document.getElementsByClassName('wrs_modal_dialogContainer');
+            let wirisNodeLength = wirisNodes.length;
+            if (wirisNodeLength > 1) {
+                for (let i = 0; i < wirisNodeLength - 1; i++) {
+                    wirisNodes[i].remove();
+                    // document.getElementsByClassName('wrs_modal_overlay').remove();
+                    document.getElementById('wrs_modal_overlay['+ i + ']').remove();
+                }
+            }
+            
             isSameTarget = true;
         }
         let currentActiveNode = null

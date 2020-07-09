@@ -226,45 +226,59 @@ function CommunicationChannel(WrappedComponent) {
          * Handle the element update action on linking a page
          */
         updatePageLink = (linkData) => {
-            let activeElement, linkNode, linkHTML;
+            let activeElement, linkNode, linkHTML, editor;
             let linkId = "", elementId = "", pageId = "";
             let linkNotification = '';
 
             document.getElementById('link-notification').innerText = "";
             if('link' in linkData && linkData.link == "link" && 'elementId' in linkData && 
                 'linkId' in linkData && 'pageId' in linkData && 'pageName' in linkData) {
-                let elementContainer = document.querySelector('.element-container[data-id="' + linkData.elementId + '"]');
-                activeElement = elementContainer.querySelector('.cypress-editable');
-                activeElement.focus();
-                linkNode = activeElement.querySelector('#' + linkData.linkId);
-                linkHTML = linkNode.innerHTML || '';
+
                 linkId = linkData.linkId || "";
-                elementId = linkData.elementId || ""
+                elementId = linkData.elementId || "";
                 pageId = linkData.pageId || "";
-                linkNode.outerHTML = '<abbr title="Page Link" class="Pearson-Component AssetPopoverTerm" id="' + linkId + '" element-id="' + elementId + '" data-uri="' + pageId + '">' + linkHTML + '</abbr>';
-                if(/(<abbr [^>]*id="page-link-[^"]*"[^>]*>.*<\/abbr>)/gi.test(linkNode.outerHTML)) {
-                    linkNotification = "Link updated to slate '" + linkData.pageName + "'.";
-                } else {
-                    linkNotification = "Link added to slate '" + linkData.pageName + "'.";
-                }
+
+                let elementContainer = document.querySelector('.element-container[data-id="' + linkData.elementId + '"]');
+                activeElement = elementContainer.querySelectorAll('.cypress-editable');
+                activeElement.forEach((item) => {
+                    // console.log('active element:::', item, item.classList.contains('mce-content-body'));
+                    if(item.classList.contains('mce-content-body')) {
+                        item.focus();
+                        editor = item;
+                        linkNode = item.querySelector('#' + linkData.linkId);
+                        linkHTML = linkNode.innerHTML || '';
+                        linkNode.outerHTML = '<abbr title="Slate Link" class="Pearson-Component AssetPopoverTerm" id="' + linkId + '" element-id="' + elementId + '" data-uri="' + pageId + '">' + linkHTML + '</abbr>';
+                        if(/(<abbr [^>]*id="page-link-[^"]*"[^>]*>.*<\/abbr>)/gi.test(linkNode.outerHTML)) {
+                            linkNotification = "Link updated to slate '" + linkData.pageName + "'.";
+                        } else {
+                            linkNotification = "Link added to slate '" + linkData.pageName + "'.";
+                        }
+                    }
+                });
             } else if('link' in linkData && (linkData.link == "cancel" || linkData.link == "unlink") && 
                 'elementId' in linkData && 'linkId' in linkData) {
                 let elementContainer = document.querySelector('.element-container[data-id="' + linkData.elementId + '"]');
-                activeElement = elementContainer.querySelector('.cypress-editable');
-                activeElement.focus();
-                linkNode = activeElement.querySelector('#' + linkData.linkId);
-                linkHTML = linkNode.innerHTML || '';
-                linkNode.outerHTML = linkHTML;
-                if(linkData.link == "unlink") {
-                    linkNotification = "Link removed.";
-                }
+                activeElement = elementContainer.querySelectorAll('.cypress-editable');
+                activeElement.forEach((item) => {
+                    // console.log('active element:::', item, item.classList.contains('mce-content-body'));
+                    if(item.classList.contains('mce-content-body')) {
+                        item.focus();
+                        editor = item;
+                        linkNode = item.querySelector('#' + linkData.linkId);
+                        linkHTML = linkNode.innerHTML || '';
+                        linkNode.outerHTML = linkHTML;
+                        if(linkData.link == "unlink") {
+                            linkNotification = "Link removed.";
+                        }
+                    }
+                });
             }
 
             document.getElementById('link-notification').innerText = linkNotification;
             sendDataToIframe({ 'type': TocToggle, 'message': { "open": false } });
             setTimeout(async () => {
-                await activeElement.click();
-                activeElement.blur();
+                await editor.click();
+                editor.blur();
             }, 4000);
         }
 
