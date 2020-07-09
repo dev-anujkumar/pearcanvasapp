@@ -117,7 +117,6 @@ export const encodeHTMLInWiris = (str) => {
                 str = str.replace(imageObj[i], imageObjNew[i]);
             }
         }
-        // console.log('encodeHTMLInWiris:::', str);
         return str;
     }
 }
@@ -144,7 +143,7 @@ export const getTitleSubtitleModel = (model, modelType) => {
         if(modelType === "formatted-title"){
             try{
                 if(model && model.match(/<label>?.+<\/label>/g)){
-                    modelToReturn = modelToReturn = `<p class="paragraphNumeroUno">${modelDom.children[0].innerHTML}</p>`   
+                    modelToReturn = `<p class="paragraphNumeroUno">${modelDom.children[0].innerHTML}</p>`   
                 }
                 else{
                     modelToReturn = `<p class="paragraphNumeroUno"><br/></p>`

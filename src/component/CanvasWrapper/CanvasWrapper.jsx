@@ -97,7 +97,7 @@ export class CanvasWrapper extends Component {
                     if (wirisNodeLength > 1) {
                         for (let i = 0; i < wirisNodeLength - 1; i++) {
                             wirisNodes[i].remove();
-                            document.getElementsByClassName('wrs_modal_overlay').remove;
+                            document.getElementsByClassName('wrs_modal_overlay').remove();
                         }
                     }
                 }
