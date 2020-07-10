@@ -229,7 +229,6 @@ function CommunicationChannel(WrappedComponent) {
             let activeElement, linkNode, linkHTML, editor;
             let linkId = "", elementId = "", pageId = "";
             let linkNotification = '';
-            console.log('Test', document.getElementById(tinymce.activeEditor.id));
             document.getElementById('link-notification').innerText = "";
             if ('link' in linkData && linkData.link == "link" && 'elementId' in linkData &&
                 'linkId' in linkData && 'pageId' in linkData && 'pageName' in linkData) {
