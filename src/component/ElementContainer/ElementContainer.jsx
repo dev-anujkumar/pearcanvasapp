@@ -375,11 +375,12 @@ class ElementContainer extends Component {
             //     else {
             //         return 0
             //     }
+            let oldPosterText = previousElementData.html && previousElementData.html.postertext ? previousElementData.html.postertext.match(/(<p.*?>.*?<\/p>)/g) ? previousElementData.html.postertext : `<p>${previousElementData.html.postertext}</p>` : "";
             return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
                 subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
                 captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
                 creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
-                posterTextHTML !== this.removeClassesFromHtml(previousElementData.html.postertext.match(/(<p.*?>.*?<\/p>)/g)?previousElementData.html.postertext:`<p>${previousElementData.html.postertext}</p>`) ||
+                posterTextHTML !== this.removeClassesFromHtml(oldPosterText) ||
                 this.props.oldImage !== newInteractiveid
             );
         }
