@@ -280,7 +280,7 @@ function CommunicationChannel(WrappedComponent) {
             setTimeout(async () => {
                 await editor.click();
                 editor.blur();
-            }, 4000);
+            }, 500);
         }
 
         /**
