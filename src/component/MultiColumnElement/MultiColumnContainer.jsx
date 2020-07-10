@@ -201,11 +201,17 @@ class MultiColumnContainer extends PureComponent {
                                 }
                                 let dataObj = this.prepareSwapData(evt, parentUrn)
                                 this.props.swapElement(dataObj, () => { })
-                                 this.context.setActiveElement(dataObj.swappedElementData, dataObj.newIndex);
+                                this.context.setActiveElement(dataObj.swappedElementData, dataObj.newIndex);
                                 sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } }); 
                             },
                         }}  
                         tag="div"
+                        ref={(c) => {
+                            if (c) {
+                                //let sortable = c.sortable;
+                            }
+                        }}
+                        onChange={function (items, sortable, evt) { }}
                     >
                         {this['cloneCOSlateControlledSource_4' + random]}
                     </Sortable>
