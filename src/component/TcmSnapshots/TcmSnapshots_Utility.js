@@ -16,9 +16,9 @@ let containerType = ['element-aside', 'manifest', 'citations', 'poetry'];
  * @description-This is the root function to preapare the data for TCM Snapshots
  * @param {Object}   
 */
-export const prepareTcmSnapshots = (wipData, action, asideData, parentUrn, poetryData, type) => (dispatch) => {
+export const prepareTcmSnapshots = (wipData, action, asideData, parentUrn, poetryData, type, status) => (dispatch) => {
     let tcmSnapshot = [];
-    let defaultKeys = setDefaultKeys(action)
+    let defaultKeys = setDefaultKeys(action,status)
     let elementDetails;
     /* Tag of elements*/
     let tag = {
@@ -134,7 +134,7 @@ const setElementTypeAndUrn = (eleId, tag, isHead, sectionId) => {
  * @param {Object} action - type of action performed
  * @returns {Object}  
 */
-export const setDefaultKeys = (action) => {
+export const setDefaultKeys = (action,status) => {
     let tcmKeys = {}
 
     tcmKeys = {
@@ -143,7 +143,7 @@ export const setDefaultKeys = (action) => {
         projectUrn: config.projectUrn,
         index: 0,
         action: action,
-        status:  (config.tcmStatus && config.tcmStatus == true && action !== 'delete') ? "Pending" : "Accepted",//prepareElementStatus(action),
+        status:  (config.tcmStatus && config.tcmStatus == true && !status && action !== 'delete') ? "Pending" : "Accepted",//prepareElementStatus(action),
         //set based on action (config.tcmStatus && config.tcmStatus == true && action !== 'delete') ? "Pending" : "Accepted")
         slateType: "slate",//set based on condition
     }

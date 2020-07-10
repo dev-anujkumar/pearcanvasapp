@@ -275,6 +275,10 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
         return ;
     }
+    let parentData1 = getState().appStore.slateLevelData[config.slateManifestURN].contents.bodymatter;
+    
+    console.log(parentData1)
+
     prepareDataForTcmUpdate(updatedData,updatedData.id, elementIndex, asideData, getState, updatedData.type, poetryData);
     updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, null, elementIndex, showHideType, parentElement, poetryData)
     let updatedData1 = JSON.parse(JSON.stringify(updatedData))
@@ -320,7 +324,17 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
 
         /** [PCAT-8289] -------------------------- TCM Snapshot Data handling ----------------------------*/
         if (elementTypeTCM.indexOf(response.data.type) !== -1) {
-            dispatch(prepareTcmSnapshots(response.data, 'update', asideData, parentUrn, poetryData, ""))
+            dispatch(prepareTcmSnapshots(response.data, 'update', asideData, parentUrn, poetryData, "",""))
+            // if(response.data.id !== updatedData.id){
+                
+                
+                let data = fetchElementWipData(parentData1, elementIndex,response.data.type)
+                response.data.elementdata = data.elementdata
+                response.data.html = data.html
+                console.log(response.data)
+                //console.log(pick(data, ['id', 'contentUrn', 'elementdata', 'html', 'schema','type','versionUrn']));
+                dispatch(prepareTcmSnapshots(response.data, 'update', asideData, parentUrn, poetryData, "","Accepted"))
+            // }
         }
         /**-----------------------------------------------------------------------------------------------*/
 
@@ -384,6 +398,13 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
     })
 }
+const pick = (obj, keys) => 
+  Object.keys(obj)
+    .filter(i => keys.includes(i))
+    .reduce((acc, key) => {
+      acc[key] = obj[key];
+      return acc;
+    }, {})
 
 function updateLOInStore(updatedData, versionedData, getState, dispatch) {
     let parentData = getState().appStore.slateLevelData;
