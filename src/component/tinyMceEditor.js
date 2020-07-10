@@ -1575,7 +1575,7 @@ export class TinyMceEditor extends Component {
         let selectedTag = selection.nodeName;
         let selectedTagClass = selection.classList;
         let activeElement = tinymce.activeEditor.targetElm.closest('.element-container');
-        let linkCount = tinymce.$(activeElement).find('.page-link-attacher').length;
+        let linkCount = Math.floor(Math.random() * 100) + '-' + Math.floor(Math.random() * 10000); //tinymce.$(activeElement).find('.page-link-attacher').length;
         if (selectedTag !== "LI" && selectedTag !== "P" && selectedTag !== "H3" && selectedTag !== "BLOCKQUOTE" && (!selectedTagClass.contains('poetryLine'))) {
             //selectedText = window.getSelection().anchorNode.parentNode.outerHTML;
             selectedText = '<' + selectedTag.toLocaleLowerCase() + '>' + selectedText + '</' + selectedTag.toLocaleLowerCase() + '>'
@@ -1939,6 +1939,20 @@ export class TinyMceEditor extends Component {
         let event = Object.assign({}, e);
         let currentTarget = event.currentTarget;
         let isSameTargetBasedOnDataId = true;
+
+        /**
+         * Remove extra Wiris overlay
+         */
+        let wirisNodes = document.getElementsByClassName('wrs_modal_dialogContainer');
+        let wirisNodeLength = wirisNodes.length;
+        if (wirisNodeLength > 1) {
+            for (let i = 0; i < wirisNodeLength - 1; i++) {
+                wirisNodes[i].remove();
+                // document.getElementsByClassName('wrs_modal_overlay').remove();
+                document.getElementById('wrs_modal_overlay['+ i + ']').remove();
+            }
+        }
+        
         /*
             checking for same target based on data-id not id
         */
@@ -1949,21 +1963,7 @@ export class TinyMceEditor extends Component {
          * case - if active editor and editor currently being focused is same
          */
         if (tinymce.activeEditor && tinymce.activeEditor.id === currentTarget.id) {
-            this.setToolbarByElementType();
-
-            /**
-             * Remove extra Wiris overlay
-             */
-            let wirisNodes = document.getElementsByClassName('wrs_modal_dialogContainer');
-            let wirisNodeLength = wirisNodes.length;
-            if (wirisNodeLength > 1) {
-                for (let i = 0; i < wirisNodeLength - 1; i++) {
-                    wirisNodes[i].remove();
-                    // document.getElementsByClassName('wrs_modal_overlay').remove();
-                    document.getElementById('wrs_modal_overlay['+ i + ']').remove();
-                }
-            }
-            
+            this.setToolbarByElementType();            
             isSameTarget = true;
         }
         let currentActiveNode = null
