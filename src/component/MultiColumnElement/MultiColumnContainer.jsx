@@ -176,7 +176,7 @@ class MultiColumnContainer extends PureComponent {
             let { bodymatter: _bodyMatter } = _groupdata
             let index = `${this.context.index}-${columnIndex}`
             let parentUrn = {
-                columnName: index === 0 ? "C1" : "C2",
+                columnName: columnIndex === 0 ? "C1" : "C2",
                 columnIndex: columnIndex,
                 manifestUrn: _containerId,
                 contentUrn: group.contentUrn,
