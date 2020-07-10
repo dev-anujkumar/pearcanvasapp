@@ -44,8 +44,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             }
             if (oldElementData.figuredata.interactivetype) {
                 oldElementData.figuredata = {...figureDataBank[newElementData['secondaryOption']]}
-                oldElementData.html.postertext = "<p></p>" /** Remove postertext on Conversion */
-                console.log(' oldElementData.figuredata', oldElementData.figuredata)
+                oldElementData.html.postertext = "" /** Remove postertext on Conversion */
                 if (oldElementData.figuredata && oldElementData.figuredata.postertext && oldElementData.figuredata.postertext.text) {
                     oldElementData.figuredata.postertext.text = ""
                 }
@@ -255,6 +254,21 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             config.savingInProgress = false
         }
         tinymce.activeEditor&&tinymce.activeEditor.undoManager&&tinymce.activeEditor.undoManager.clear();
+/**------------------------------------- */
+let posterText = res.data.html.postertext
+let ctaNode = document.querySelector(`#cypress-${indexes[0]}-2.actionPU`)
+if (posterText === "" || posterText === '<p></p>') {
+    if (ctaNode) {
+        setTimeout(()=>{
+            ctaNode.click();
+        },0)
+        ctaNode.classList.add("place-holder")
+    }
+} 
+/**------------------------------------- */
+
+
+
 
         let storeElement = store[config.slateManifestURN];
         let bodymatter = storeElement.contents.bodymatter;
