@@ -241,10 +241,10 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn) => {
         eleIndex = Array.isArray(index) ? index : index.split("-");
         switch (type) {
             case 'element-citation':                 /** Inside Citations */
-                wipData = bodymatter[eleIndex[0]].contents.bodymatter[eleIndex[1] - 1];
+                wipData = bodymatter[eleIndex[0]].contents.bodymatter[ - 1];
                 break;
             case 'stanza':                           /** Inside Poetry */
-                wipData = bodymatter[eleIndex[0]].contents.bodymatter[eleIndex[1] - 2];
+                wipData = bodymatter[eleIndex[0]].contents.bodymatter[eleIndex[2]];
                 break;
             case 'element-learningobjectives':
             case 'element-list':
