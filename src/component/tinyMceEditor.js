@@ -31,6 +31,7 @@ import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER } from '../compone
 let context = {};
 let clickedX = 0;
 let clickedY = 0;
+
 export class TinyMceEditor extends Component {
     constructor(props) {
         super(props);
@@ -608,6 +609,34 @@ export class TinyMceEditor extends Component {
                     }
                     else if (key != undefined && key === 13) {
                         spanHandlers.addAndSplitSpan(editor, this.props.elementId, 'code', 'codeNoHighlightLine');
+                        let elementSearch = editor.selection.getNode();
+                        if (editor.selection.getNode().tagName.toLowerCase() !== 'span' || editor.selection.getNode().className.toLowerCase() !== 'codeNoHighlightLine') {
+                            elementSearch = editor.selection.getNode().closest(`.codeNoHighlightLine`);
+                        }
+                        if(elementSearch) {
+                            if (elementSearch.innerHTML != '<br>' && elementSearch.textContent.trim() != '') {
+                                let brs = elementSearch.getElementsByTagName('br');
+                                while (brs.length) {
+                                    brs[0].parentNode.removeChild(brs[0]);
+                                }
+                            }
+                            if(elementSearch.nextSibling) {
+                                if (elementSearch.nextSibling.innerHTML != '<br>' && elementSearch.nextSibling.textContent.trim() != '') {
+                                    let brs = elementSearch.nextSibling.getElementsByTagName('br');
+                                    while (brs.length) {
+                                        brs[0].parentNode.removeChild(brs[0]);
+                                    }
+                                }
+                            }
+                            if(elementSearch.previousSibling) {
+                                if (elementSearch.previousSibling.innerHTML != '<br>' && elementSearch.previousSibling.textContent.trim() != '') {
+                                    let brs = elementSearch.previousSibling.getElementsByTagName('br');
+                                    while (brs.length) {
+                                        brs[0].parentNode.removeChild(brs[0]);
+                                    }
+                                }
+                            }
+                        }
                     }
                     else if (key != undefined && (key === 8 || key === 46)) {
                         spanHandlers.handleBackSpaceAndDeleteKyeUp(editor, key, 'codeNoHighlightLine');
@@ -1177,10 +1206,12 @@ export class TinyMceEditor extends Component {
                 }
                 if (this.notFormatting) {
                     let text = e.clipboardData.getData("text/plain");
+                    text = String(text).replace(/&/g, '&amp;');
                     text = String(text).replace(/</g, '&lt;').replace(/>/g, '&gt;');
                     text = String(text).replace(/\r|\n/g, '<br>');
                     text = String(text).replace(/ /g, '&nbsp;');
                     text = String(text).replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;');
+                    text = String(text).replace(/<br><br>/g, '<br>');
                     this.copyContent = text;
                 }
             }
@@ -1205,7 +1236,8 @@ export class TinyMceEditor extends Component {
         let testElement = document.createElement('div');
         testElement.innerHTML = args.content;
         if (testElement.innerText.trim().length) {
-            args.content = testElement.innerText.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            let tempContent = testElement.innerText.replace(/&/g, "&amp;");
+            args.content = tempContent.replace(/</g, "&lt;").replace(/>/g, "&gt;");
         } else {
             args.content = tinymce.activeEditor.selection.getContent();
         }
@@ -1247,21 +1279,21 @@ export class TinyMceEditor extends Component {
             parentNode.className = "TempSpan";
             let boldTags = parentNode.getElementsByTagName('STRONG');
             while (boldTags.length) {
-                let innerHTML = boldTags[0].innerHTML;
-                boldTags[0].outerHTML = innerHTML;
+                let tempInnerHTML = boldTags[0].innerHTML;
+                boldTags[0].outerHTML = tempInnerHTML;
             }
             let uTags = parentNode.getElementsByTagName('U');
             while (uTags.length) {
-                let innerHTML = uTags[0].innerHTML;
-                uTags[0].outerHTML = innerHTML;
+                let tempInnerHTML = uTags[0].innerHTML;
+                uTags[0].outerHTML = tempInnerHTML;
             }
             let emTags = parentNode.getElementsByTagName('EM');
             while (emTags.length) {
-                let innerHTML = emTags[0].innerHTML;
-                emTags[0].outerHTML = innerHTML;
+                let tempInnerHTML = emTags[0].innerHTML;
+                emTags[0].outerHTML = tempInnerHTML;
             }
-            for (let index = 0; index < innerSpans.length; index++) {
-                innerSpans[index].className = 'codeNoHighlightLine';
+            while(innerSpans.length) {
+                innerSpans[0].className = 'codeNoHighlightLine';
             }
             let startText = '';
             let endText = '';
@@ -1440,14 +1472,16 @@ export class TinyMceEditor extends Component {
      * Called when footnote button is clicked. Responsible for adding footnote
      * @param {*} editor  editor instance
      */
-    addFootnote = (editor) => {
+    addFootnote = async (editor) => {
         if (config.savingInProgress || config.popupCreationCallInProgress) {
             return false
         }
         let elementId = ""
         if (this.props.element.type === "popup") {
-            if ((this.props.popupField === "formatted-subtitle") && !this.props.currentElement) {
-                return false
+            if ((this.props.popupField === "formatted-title" || this.props.popupField === "formatted-subtitle") && !this.props.currentElement) {
+                editor.selection.setContent('<span id="footnote-attacher"></span>');
+                await this.props.createPopupUnit(this.props.popupField, true, this.props.index, this.props.element, true)
+                elementId = this.props.currentElement && this.props.currentElement.id
             } else {
                 elementId = this.props.currentElement.id
             }
@@ -1462,11 +1496,6 @@ export class TinyMceEditor extends Component {
                             return false;
                         }
                         break;
-                    // case "3":
-                    //     if (!this.props.element.contents['formatted-caption']) {
-                    //         return false;
-                    //     }
-                    //     break;
                     case "4":
                         if (!(this.props.element.contents['creditsarray'] ? this.props.element.contents['creditsarray'][0] : null)) {
                             return false;
@@ -1494,7 +1523,16 @@ export class TinyMceEditor extends Component {
                     document.getElementById(tinyMCE.activeEditor.id).classList.remove("place-holder")
                 }
                 else {
-                    editor.insertContent(`<sup><a href="#" id = "${res.data.id}" data-uri="${res.data.id}" data-footnoteelementid="${res.data.id}" class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>`);
+                    /**
+                     * Case when element is created on the spot with footnote to fix position issue.
+                     * Relevant for Popup and Poetry subtitle. 
+                     */
+                    let domNode = document.getElementById('footnote-attacher');
+                    if (domNode) {
+                        domNode.outerHTML = `<sup><a href="#" id = "${res.data.id}" data-uri="${res.data.id}" data-footnoteelementid="${res.data.id}" class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>`;
+                    } else {
+                        editor.insertContent(`<sup><a href="#" id = "${res.data.id}" data-uri="${res.data.id}" data-footnoteelementid="${res.data.id}" class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>`);
+                    } 
                 }
                 this.toggleGlossaryandFootnotePopup(true, "Footnote", res.data.id, () => { this.toggleGlossaryandFootnoteIcon(true); });
                 this.saveContent()
