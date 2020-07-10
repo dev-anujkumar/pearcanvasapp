@@ -96,7 +96,9 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                     if(elementType==='stanza'){
                         condition = newBodymatter[indexes[0]].contents.bodymatter[indexes[2]]
                     }
-                    else{
+                    else if (newBodymatter[indexes[0]].type === "groupedcontent") { //All elements inside multi-column except figure
+                        condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
+                    } else {
                         condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
                     }
                     if (condition.versionUrn == elementWorkId) {
@@ -300,7 +302,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
     if(index &&  typeof (index) !== 'number' && elementType !== 'figure'  && typeWithPopup !== 'popup' && typeWithPopup !== 'poetry'){
         let tempIndex =  index.split('-');
         if(tempIndex.length === 2){
-            if(newBodymatter[tempIndex[0]].type !== "groupedcontent" && newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].id === elementWorkId){
+            if(newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].id === elementWorkId){
                 data.isHead = true;
                 if(newBodymatter[tempIndex[0]].subtype === "sidebar"){
                     data.parentType = "element-aside";
@@ -322,7 +324,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                 }
             }
             else if(newBodymatter[tempIndex[0]].type === "groupedcontent"){
-                if(newBodymatter[tempIndex[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].id == elementWorkId){
+                if(newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].id == elementWorkId){
                     data.isHead = false;
                     data.parentType = "groupedcontent";
                 }
@@ -347,11 +349,13 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
         }
         let tempIndex = index &&  typeof (index) !== 'number' && index.split('-');
-        if(tempIndex.length == 4 && typeWithPopup !== "popup"){//Figure inside a WE
+        if (tempIndex.length == 4 && newBodymatter[tempIndex[0]].type === "groupedcontent") { //Figure inside a Multi-column container
+            newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]] = res.data
+        } else if (tempIndex.length == 4 && typeWithPopup !== "popup") {//Figure inside a WE
             newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]] = res.data
-        }else if(tempIndex.length ==3 && elementType =='figure'){//section 2 figure in WE
+        } else if (tempIndex.length == 3 && elementType =='figure') {//section 2 figure in WE
             newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]] = res.data
-        }else if (elementType === "figure") {
+        } else if (elementType === "figure") {
             let updatedIndex = index.split('-')[0];
             newBodymatter[updatedIndex] = res.data;
         } 
@@ -452,22 +456,23 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                     if(elementType==='stanza'){
                         condition = newBodymatter[indexes[0]].contents.bodymatter[indexes[2]]
                     }
-                    else if (elementType !=='groupedcontent'){
-                        condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
-                    }
-                    else if(elementType ==='groupedcontent'){
+                    else if(newBodymatter[indexes[0]].type ==='groupedcontent'){
                         condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
+                    }
+                    else {
+                        condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
                     }
                     if (condition.versionUrn == elementWorkId) {
                         if(elementType==='stanza'){
                             newBodymatter[indexes[0]].contents.bodymatter[indexes[2]] = res.data
                         }
-                        else if(elementType !=='groupedcontent'){
-                            newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]] = res.data
-                        }
-                        else if(elementType ==='groupedcontent'){
+                        else if(newBodymatter[indexes[0]].type ==='groupedcontent'){
                             newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]] = res.data
                         }
+                        else {
+                            newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]] = res.data
+                        }
+                        
                     }
                 }
             }
