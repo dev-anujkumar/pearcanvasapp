@@ -79,7 +79,7 @@ export const hasReviewerRole = (value) => {
  */
 export const matchHTMLwithRegex = function (html) {
     if (html) {
-        let matchedTerms = [...String.prototype.matchAll.call(html, /(<p.*?>.*?<\/p>)/g)]
+        let matchedTerms = [...String.prototype.matchAll.call(html, /(<p.*?>.*?<\/p>)/gs)]
         if (matchedTerms.length > 0) {
             return true
         }
