@@ -254,22 +254,18 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             config.savingInProgress = false
         }
         tinymce.activeEditor&&tinymce.activeEditor.undoManager&&tinymce.activeEditor.undoManager.clear();
-/**------------------------------------- */
-let posterText = res.data.html.postertext
-let ctaNode = document.querySelector(`#cypress-${indexes[0]}-2.actionPU`)
-if (posterText === "" || posterText === '<p></p>') {
-    if (ctaNode) {
-        setTimeout(()=>{
-            ctaNode.click();
-        },0)
-        ctaNode.classList.add("place-holder")
-    }
-} 
-/**------------------------------------- */
-
-
-
-
+        /**------------------------------------------------[BG-2676]------------------------------------------------- */
+        let posterText = res.data.html.postertext
+        let ctaNode = document.querySelector(`#cypress-${indexes[0]}-2.actionPU`)
+        if (posterText === "" || posterText === '<p></p>') {
+            if (ctaNode) {
+                setTimeout(() => {
+                    ctaNode.click();
+                }, 0)
+                ctaNode.classList.add("place-holder")
+            }
+        } 
+        /**-------------------------------------------------------------------------------------------------------- */
         let storeElement = store[config.slateManifestURN];
         let bodymatter = storeElement.contents.bodymatter;
         let focusedElement = bodymatter;
