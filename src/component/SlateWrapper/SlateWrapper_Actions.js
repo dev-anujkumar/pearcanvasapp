@@ -166,11 +166,6 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         else if (asideData && asideData.type === 'groupedcontent') {
             newParentData[config.slateManifestURN].contents.bodymatter.map((item, i) => {
                 if (item.id === asideData.id) {
-                     /*item.groupeddata.bodymatter.map(groupItem => {
-                        if (groupItem.id === parentUrn.manifestUrn) {
-                            groupItem.groupdata.bodymatter.splice(index, 0, createdElementData)
-                        }
-                    }) */
                     item.groupeddata.bodymatter[parentUrn.columnIndex].groupdata.bodymatter.splice(index, 0, createdElementData)
                 }
             })

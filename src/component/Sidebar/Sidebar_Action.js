@@ -277,7 +277,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                     break
             }
         } else if (appStore.parentUrn.elementType === "group") {
-            focusedElement[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[1]] = res.data
+            focusedElement[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]] = res.data
         } else {
             indexes.forEach(index => {
                 if(focusedElement[index]){

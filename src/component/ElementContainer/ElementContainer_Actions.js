@@ -111,7 +111,12 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
 
             return false;
         }
-        let bodymatter = newParentData[config.slateManifestURN].contents.bodymatter
+
+        if (parentUrn && parentUrn.elementType == "group") {
+            let elIndex = index.toString().split('-') 
+            newParentData[config.slateManifestURN].contents.bodymatter[elIndex[0]].groupeddata.bodymatter[elIndex[1]].groupdata.bodymatter.splice(elIndex[2], 1)
+        } else {
+            let bodymatter = newParentData[config.slateManifestURN].contents.bodymatter
             bodymatter.forEach((element, key) => {
                 if (element.id === elmId) {
                     bodymatter.splice(key, 1);
@@ -151,8 +156,9 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
                         element.contents.bodymatter.splice([innerIndex[1] - 1], 1)
                     }
                 }
-
             })
+        }
+
 
             dispatch({
                 type: AUTHORING_ELEMENT_CREATED,
