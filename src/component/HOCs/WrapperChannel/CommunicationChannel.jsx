@@ -242,16 +242,19 @@ function CommunicationChannel(WrappedComponent) {
                 activeElement = elementContainer.querySelectorAll('.cypress-editable');
                 activeElement.forEach((item) => {
                     // console.log('active element:::', item, item.classList.contains('mce-content-body'));
-                    if(item.classList.contains('mce-content-body')) {
-                        item.focus();
-                        editor = item;
-                        linkNode = item.querySelector('#' + linkData.linkId);
-                        linkHTML = linkNode.innerHTML || '';
-                        linkNode.outerHTML = '<abbr title="Slate Link" class="Pearson-Component AssetPopoverTerm" id="' + linkId + '" element-id="' + elementId + '" data-uri="' + pageId + '">' + linkHTML + '</abbr>';
-                        if(/(<abbr [^>]*id="page-link-[^"]*"[^>]*>.*<\/abbr>)/gi.test(linkNode.outerHTML)) {
-                            linkNotification = "Link updated to slate '" + linkData.pageName + "'.";
-                        } else {
-                            linkNotification = "Link added to slate '" + linkData.pageName + "'.";
+                    if(item.classList.contains('mce-content-body') || !item.classList.contains('place-holder')) {
+                        if(item.querySelector('#' + linkData.linkId)) {
+                            item.focus();
+                            editor = item;
+
+                            linkNode = item.querySelector('#' + linkData.linkId);
+                            linkHTML = linkNode.innerHTML || '';
+                            linkNode.outerHTML = '<abbr title="Slate Link" class="Pearson-Component AssetPopoverTerm" id="' + linkId + '" element-id="' + elementId + '" data-uri="' + pageId + '">' + linkHTML + '</abbr>';
+                            if(/(<abbr [^>]*id="page-link-[^"]*"[^>]*>.*<\/abbr>)/gi.test(linkNode.outerHTML)) {
+                                linkNotification = "Link updated to slate '" + linkData.pageName + "'.";
+                            } else {
+                                linkNotification = "Link added to slate '" + linkData.pageName + "'.";
+                            }
                         }
                     }
                 });
@@ -261,14 +264,16 @@ function CommunicationChannel(WrappedComponent) {
                 activeElement = elementContainer.querySelectorAll('.cypress-editable');
                 activeElement.forEach((item) => {
                     // console.log('active element:::', item, item.classList.contains('mce-content-body'));
-                    if(item.classList.contains('mce-content-body')) {
-                        item.focus();
-                        editor = item;
-                        linkNode = item.querySelector('#' + linkData.linkId);
-                        linkHTML = linkNode.innerHTML || '';
-                        linkNode.outerHTML = linkHTML;
-                        if(linkData.link == "unlink") {
-                            linkNotification = "Link removed.";
+                    if(item.classList.contains('mce-content-body') || !item.classList.contains('place-holder')) {
+                        if(item.querySelector('#' + linkData.linkId)) {
+                            item.focus();
+                            editor = item;
+                            linkNode = item.querySelector('#' + linkData.linkId);
+                            linkHTML = linkNode.innerHTML || '';
+                            linkNode.outerHTML = linkHTML;
+                            if(linkData.link == "unlink") {
+                                linkNotification = "Link removed.";
+                            }
                         }
                     }
                 });
@@ -278,8 +283,10 @@ function CommunicationChannel(WrappedComponent) {
             sendDataToIframe({ 'type': TocToggle, 'message': { "open": false } });
             
             setTimeout(async () => {
-                await editor.click();
-                editor.blur();
+                if(editor) {
+                    await editor.click();
+                    editor.blur();
+                }
             }, 500);
         }
 
