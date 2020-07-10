@@ -192,8 +192,8 @@ export const prepareASContentSnapshot = async (elementASLinkID, assetPopoverSnap
 */
 export const fetchElementsTag = (element) => {
     let labelText = "P", eleTag, eleType, eleSubType;
-    eleType = element.type;
-    switch (element.type || element.elementType) {
+    eleType = element.type ? element.type :  element.elementType;
+    switch (eleType) {
         case 'element-authoredtext':
             eleSubType = (element.elementdata && element.elementdata.headers) ? "heading" + element.elementdata.headers[0].level : "paragraph";
             break;
@@ -238,7 +238,7 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn) => {
         }
     }
     else if (typeof index === "string") {
-        eleIndex =  Array.isArray(index) ? index  :index.split("-");
+        eleIndex = Array.isArray(index) ? index : index.split("-");
         switch (type) {
             case 'element-citation':                 /** Inside Citations */
                 wipData = bodymatter[eleIndex[0]].contents.bodymatter[eleIndex[1] - 1];
