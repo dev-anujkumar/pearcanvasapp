@@ -537,6 +537,7 @@ export class TinyMceEditor extends Component {
             }
 
             if(linkTitle == "Slate Link") {
+                sendDataToIframe({ 'type': 'tocToggle', 'message': { open: false}});
                 let linkId = (e.target.attributes['id'] && e.target.attributes['id'].nodeValue) || e.target.parentNode.attributes['id'].nodeValue;
                 let elementId = (e.target.attributes['element-id'] && e.target.attributes['element-id'].nodeValue) || e.target.parentNode.attributes['element-id'].nodeValue;
                 let pageId = (e.target.attributes['data-uri'] && e.target.attributes['data-uri'].nodeValue) || e.target.parentNode.attributes['data-uri'].nodeValue;
@@ -1609,11 +1610,12 @@ export class TinyMceEditor extends Component {
      * @param {*} selectedText  selected text
      */
     addPageLink = (editor, selectedText) => {
+        sendDataToIframe({ 'type': 'tocToggle', 'message': { open: false}});
         let selection = window.getSelection().anchorNode.parentNode;
         let selectedTag = selection.nodeName;
         let selectedTagClass = selection.classList;
         let activeElement = tinymce.activeEditor.targetElm.closest('.element-container');
-        let linkCount = tinymce.$(activeElement).find('.page-link-attacher').length;
+        let linkCount = tinymce.$(activeElement).find("select[title='Slate Link']").length;
         if (selectedTag !== "LI" && selectedTag !== "P" && selectedTag !== "H3" && selectedTag !== "BLOCKQUOTE" && (!selectedTagClass.contains('poetryLine'))) {
             //selectedText = window.getSelection().anchorNode.parentNode.outerHTML;
             selectedText = '<' + selectedTag.toLocaleLowerCase() + '>' + selectedText + '</' + selectedTag.toLocaleLowerCase() + '>'
