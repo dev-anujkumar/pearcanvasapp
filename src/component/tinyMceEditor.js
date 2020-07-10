@@ -1151,7 +1151,7 @@ export class TinyMceEditor extends Component {
                                 tooltip: "Slate Link",
                                 onAction: () => {
                                     let selectedText = window.getSelection().toString();
-                                    if (selectedText.length) {
+                                    if (!hasReviewerRole() && selectedText.length) {
                                         this.addPageLink(editor, selectedText)
                                     }
                                 },
