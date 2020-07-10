@@ -1313,7 +1313,9 @@ export class TinyMceEditor extends Component {
                     startFlag = false;
                 }
             }
+            startText = String(startText).replace(/&/g, "&amp;");
             startText = String(startText).replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            endText = String(endText).replace(/&/g, "&amp;");
             endText = String(endText).replace(/</g, '&lt;').replace(/>/g, '&gt;');
             while (textNode.length) {
                 if (textNode[0].parentNode) {
