@@ -276,6 +276,7 @@ function CommunicationChannel(WrappedComponent) {
 
             document.getElementById('link-notification').innerText = linkNotification;
             sendDataToIframe({ 'type': TocToggle, 'message': { "open": false } });
+            
             setTimeout(async () => {
                 await editor.click();
                 editor.blur();

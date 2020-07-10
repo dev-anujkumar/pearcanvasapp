@@ -349,10 +349,9 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             document.getElementsByClassName("slate-tag-icon")[0].classList.remove("disable");
          }     
         let newVersionManifestId=Object.values(slateData.data)[0].id
-        if(config.slateManifestURN !== newVersionManifestId && slateData.data[newVersionManifestId].type === "manifest"){
+        if(config.slateManifestURN !== newVersionManifestId && slateData.data[newVersionManifestId].type === 'manifest' ){
             config.slateManifestURN = newVersionManifestId
             manifestURN = newVersionManifestId
-
         }
 		if(slateData.data && slateData.data[newVersionManifestId] && slateData.data[newVersionManifestId].type === "popup"){
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
@@ -475,20 +474,26 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                         currentContent.bodymatter = [...oldbodymatter, ...newbodymatter];
                         currentParentData = currentParentData[manifestURN];
                         config.scrolling = true;
+                        dispatch({
+                            type: FETCH_SLATE_DATA,
+                            payload: {
+                                [manifestURN]: currentParentData
+                            }
+                        });
                     } else {
                         currentParentData = slateData.data[manifestURN];
                         // currentParentData.contents.bodymatter.push(multiColumnData)
+                        dispatch({
+                            type: FETCH_SLATE_DATA,
+                            payload: {
+                                [manifestURN]: currentParentData
+                            }
+                        });
+                        dispatch({
+                            type: SET_ACTIVE_ELEMENT,
+                            payload: {}
+                        });
                     }
-                    dispatch({
-                        type: FETCH_SLATE_DATA,
-                        payload: {
-                            [manifestURN]: currentParentData
-                        }
-                    });
-                    dispatch({
-                        type: SET_ACTIVE_ELEMENT,
-                        payload: {}
-                    });
                     //}
                     // config.isFetchSlateInProgress = false;
                 }else{
