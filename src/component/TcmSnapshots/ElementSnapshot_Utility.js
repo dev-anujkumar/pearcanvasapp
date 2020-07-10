@@ -397,7 +397,6 @@ export const fetchParentData = (bodymatter, indexes) => {
         contentUrn: parentElement.contentUrn,
         elementType: parentElement.type
     }
-    console.log('parentData2', parentData)
 
     return parentData;
 }
