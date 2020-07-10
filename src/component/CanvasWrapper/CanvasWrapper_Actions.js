@@ -343,9 +343,16 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             "Content-Type": "application/json",
             "PearsonSSOSession": config.ssoToken
         }
-    }).then(slateData => {
+    }).then(slateData => {  
+         /* Slate tag issue */
+         if (document.getElementsByClassName("slate-tag-icon").length) {
+            document.getElementsByClassName("slate-tag-icon")[0].classList.remove("disable");
+         }     
         let newVersionManifestId=Object.values(slateData.data)[0].id
-
+        if(config.slateManifestURN !== newVersionManifestId && slateData.data[newVersionManifestId].type === 'manifest' ){
+            config.slateManifestURN = newVersionManifestId
+            manifestURN = newVersionManifestId
+        }
 		if(slateData.data && slateData.data[newVersionManifestId] && slateData.data[newVersionManifestId].type === "popup"){
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
             config.isPopupSlate = true;
@@ -467,20 +474,26 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                         currentContent.bodymatter = [...oldbodymatter, ...newbodymatter];
                         currentParentData = currentParentData[manifestURN];
                         config.scrolling = true;
+                        dispatch({
+                            type: FETCH_SLATE_DATA,
+                            payload: {
+                                [manifestURN]: currentParentData
+                            }
+                        });
                     } else {
                         currentParentData = slateData.data[manifestURN];
                         // currentParentData.contents.bodymatter.push(multiColumnData)
+                        dispatch({
+                            type: FETCH_SLATE_DATA,
+                            payload: {
+                                [manifestURN]: currentParentData
+                            }
+                        });
+                        dispatch({
+                            type: SET_ACTIVE_ELEMENT,
+                            payload: {}
+                        });
                     }
-                    dispatch({
-                        type: FETCH_SLATE_DATA,
-                        payload: {
-                            [manifestURN]: currentParentData
-                        }
-                    });
-                    dispatch({
-                        type: SET_ACTIVE_ELEMENT,
-                        payload: {}
-                    });
                     //}
                     // config.isFetchSlateInProgress = false;
                 }else{
@@ -732,7 +745,7 @@ export const openPopupSlate = (element, popupId) => dispatch => {
  * @param {*} paramObj 
  * @param {*} responseData 
  */
-const appendCreatedElement = (paramObj, responseData) => {
+const appendCreatedElement = async (paramObj, responseData) => {
     let {
         popupElementIndex,
         getState,
@@ -740,7 +753,8 @@ const appendCreatedElement = (paramObj, responseData) => {
         parentElement,
         dispatch,
         cb,
-        popupField
+        popupField,
+        createdFromFootnote
     } = paramObj
 
     let elemIndex = `cypress-${popupElementIndex}`
@@ -758,10 +772,16 @@ const appendCreatedElement = (paramObj, responseData) => {
         else if(popupElementIndex.length === 4){
             targetPopupElement = targetPopupElement.elementdata.bodymatter[popupElementIndex[1]].contents.bodymatter[popupElementIndex[2]]
         }
-        if(targetPopupElement){
-            targetPopupElement.popupdata[popupField] = responseData
-            targetPopupElement.popupdata[popupField].html.text = elemNode.innerHTML
-            targetPopupElement.popupdata[popupField].elementdata.text = elemNode.innerText
+        if (targetPopupElement) {
+            targetPopupElement.popupdata["formatted-title"] = responseData
+            if (popupField === "formatted-title") {
+                
+                targetPopupElement.popupdata["formatted-title"].html.text = createTitleSubtitleModel(elemNode.innerHTML, "")
+            }
+            else {
+                targetPopupElement.popupdata["formatted-title"].html.text = createTitleSubtitleModel("", elemNode.innerHTML)
+            }
+            targetPopupElement.popupdata["formatted-title"].elementdata.text = elemNode.innerText
             _slateObject.contents.bodymatter[popupElementIndex] = targetPopupElement
         }
     }
@@ -780,7 +800,9 @@ const appendCreatedElement = (paramObj, responseData) => {
             slateLevelData: newslateData
         }
     })
-    if(cb) cb(responseData)
+    if(cb && !createdFromFootnote){
+        await cb(responseData)
+    }
 }
 
 /**
@@ -788,37 +810,20 @@ const appendCreatedElement = (paramObj, responseData) => {
  * @param {*} parentElement Parent popup element/ citation group container
  * @param {*} popupField formatted title or formatted-subtitle
  */
-const getRequestData = (parentElement, popupField) => {
+const getRequestData = (parentElement) => {
     let dataToSend = {}
-    if(parentElement.type === "popup"){
-        let popupFieldType = ""
-        if(popupField === "formatted-subtitle"){
-            popupFieldType = "formattedSubtitle"
-        }
-        else{
-            popupFieldType = "formattedTitle"
-        }
-        
-        dataToSend = {
-            "projectUrn": config.projectUrn,
-            "slateEntityUrn": parentElement.contentUrn,
-            "type": "TEXT",
-            "metaDataField" : popupFieldType
-        }
-    }
-    else if(parentElement.type === "citations"){
-        let citationField = "formattedTitle"
-        dataToSend = {
-            "projectUrn": config.projectUrn,
-            "slateEntityUrn": parentElement.contentUrn,
-            "type": "TEXT",
-            "metaDataField" : citationField
-        }
+    let metaDataField = "formattedTitle" 
+    dataToSend = {
+        "projectUrn": config.projectUrn,
+        "slateEntityUrn": parentElement.contentUrn,
+        "slateUrn": parentElement.id,
+        "type": "TEXT",
+        "metaDataField" : metaDataField
     }
     return dataToSend
 }
-export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex, slateManifestURN) => (dispatch, getState) => {
-    let _requestData =  getRequestData(parentElement, popupField)
+export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex, slateManifestURN, createdFromFootnote) => (dispatch, getState) => {
+    let _requestData =  getRequestData(parentElement)
     let url = `${config.REACT_APP_API_URL}v1/slate/element`
     return axios.post(url, 
         JSON.stringify(_requestData),
@@ -836,7 +841,8 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
             parentElement,
             dispatch,
             cb,
-            popupField
+            popupField,
+            createdFromFootnote
         }
         appendCreatedElement(argObj, response.data)
 

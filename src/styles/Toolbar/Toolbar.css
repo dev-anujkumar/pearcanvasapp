@@ -240,3 +240,7 @@
 .disableToolbar{
   visibility: hidden;
 }
+
+button[title="Cross Linking"] .tox-tbtn__select-label {
+  margin: 0;
+}
