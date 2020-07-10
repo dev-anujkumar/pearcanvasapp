@@ -1230,7 +1230,7 @@ class ElementContainer extends Component {
                         handleFocus: this.handleFocus,
                         handleBlur: this.handleBlur,
                         deleteElement: this.deleteElement,
-                        splithandlerfunction: {splithandlerfunction},
+                        splithandlerfunction: this.props.splithandlerfunction,
                     }}><MultiColumnContainer />
                     </MultiColumnContext.Provider>;
                     labelText = '2C'
