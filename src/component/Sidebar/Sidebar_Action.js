@@ -44,11 +44,10 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             }
             if (oldElementData.figuredata.interactivetype) {
                 oldElementData.figuredata = {...figureDataBank[newElementData['secondaryOption']]}
-                oldElementData.html.postertext = "" /** Remove postertext on Conversion */
+                oldElementData.html.postertext = ""; /** [BG-2676] - Remove postertext on Conversion */
                 if (oldElementData.figuredata && oldElementData.figuredata.postertext && oldElementData.figuredata.postertext.text) {
-                    oldElementData.figuredata.postertext.text = ""
+                    oldElementData.figuredata.postertext.text = "";
                 }
-                
             }
 
         /* on Conversion removing the tinymce instance for BCE element*/
