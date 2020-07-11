@@ -16,8 +16,8 @@ let containerType = ['element-aside', 'manifest', 'citations', 'poetry'];
  * @description-This is the root function to preapare the data for TCM Snapshots
  * @param {Object}   
 */
-export const prepareTcmSnapshots = (wipData, action, asideData, parentUrn, poetryData, type) => (dispatch) => {
-    let tcmSnapshot = [];
+export const prepareTcmSnapshots = (wipData, action, asideData, parentUrn, poetryData, type) => dispatch => {
+    // let tcmSnapshot = [];
     let defaultKeys = setDefaultKeys(action)
     let elementDetails;
     /* Tag of elements*/
@@ -33,19 +33,19 @@ export const prepareTcmSnapshots = (wipData, action, asideData, parentUrn, poetr
         wipData.elementdata.bodymatter && wipData.elementdata.bodymatter.map((item) => {
             if (item.type === "manifest") {
                 item.contents.bodymatter.map((ele) => {
-                    if(elementType.indexOf(ele.type) !== -1){
+                    if (elementType.indexOf(ele.type) !== -1) {
                         elementId.childId = ele.id
                         tag.childTag = fetchElementsTag(ele)
                         elementDetails = setElementTypeAndUrn(elementId, tag, wipData.subtype === "workedexample" ? 'BODY' : "", item.id);
-                        prepareTcmData(elementDetails, ele, defaultKeys, tcmSnapshot)
+                        prepareTcmData(elementDetails, ele, defaultKeys, dispatch)
                     }
                 })
             }
-            else if(elementType.indexOf(item.type) !== -1){
+            else if (elementType.indexOf(item.type) !== -1) {
                 elementId.childId = item.id;
                 tag.childTag = fetchElementsTag(item)
                 elementDetails = setElementTypeAndUrn(elementId, tag, wipData.subtype === "workedexample" ? "HEAD" : "", "");
-                prepareTcmData(elementDetails, item, defaultKeys, tcmSnapshot)
+                prepareTcmData(elementDetails, item, defaultKeys, dispatch)
             }
         })
     }
@@ -58,7 +58,7 @@ export const prepareTcmSnapshots = (wipData, action, asideData, parentUrn, poetr
                 elementId.childId = item.id
                 tag.childTag = fetchElementsTag(item)
                 elementDetails = setElementTypeAndUrn(elementId, tag, "BODY", wipData.id);
-                prepareTcmData(elementDetails, item, defaultKeys, tcmSnapshot)
+                prepareTcmData(elementDetails, item, defaultKeys, dispatch)
             }
         })
     }
@@ -71,24 +71,22 @@ export const prepareTcmSnapshots = (wipData, action, asideData, parentUrn, poetr
         tag.childTag = fetchElementsTag(wipData)
         let isHead = asideData && asideData.type === "element-aside" && asideData.subtype === "workedexample" ? parentUrn.manifestUrn == asideData.id ? "HEAD" : "BODY" : ""
         elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn.manifestUrn)
-        prepareTcmData(elementDetails, wipData, defaultKeys, tcmSnapshot)
+        prepareTcmData(elementDetails, wipData, defaultKeys, dispatch)
     }
     /* action on PE and CG */
     else if (wipData.type === "citations" || wipData.type === "poetry") {
-        wipData.contents.bodymatter.map((item) => {
+        wipData.contents.bodymatter.map(async (item) => {
             elementId.childId = item.id;
             tag.childTag = fetchElementsTag(item)
             elementDetails = setElementTypeAndUrn(elementId, tag, "", "")
-            prepareTcmData(elementDetails, item, defaultKeys, tcmSnapshot)
+            prepareTcmData(elementDetails, item, defaultKeys, dispatch)
         })
     }
-    else  {
+    else {
         elementDetails = setElementTypeAndUrn(elementId, tag)
-        prepareTcmData(elementDetails, wipData, defaultKeys, tcmSnapshot)
+        prepareTcmData(elementDetails, wipData, defaultKeys, dispatch)
     }
-    console.log('final data in prepare Function', tcmSnapshot)
-    /** TCM SNAPSHOTS API CALLED HERE */
-    dispatch(sendElementTcmSnapshot(tcmSnapshot))
+    console.log('final data in prepare Function')
 }
 
 /**
@@ -97,17 +95,19 @@ export const prepareTcmSnapshots = (wipData, action, asideData, parentUrn, poetr
  * @param {Object}  - Object containing the details for Element type & parentData
  * @returns {Object}  
 */
-const prepareTcmData = (elementDetails, wipData, defaultKeys, tcmSnapshot) => {
-    let res = Object.assign({}, wipData)
+const prepareTcmData = async (elementDetails, wipData, defaultKeys, dispatch) => {
+    let res = Object.assign({}, wipData);
     delete res["html"];
-    return tcmSnapshot.push({
+    let currentSnapshot = {
         elementUrn: elementDetails.elementUrn,
         snapshotUrn: elementDetails.elementUrn,
         elementType: elementDetails.elementType,
         elementWip: res,
-        elementSnapshot: prepareElementSnapshots(wipData, defaultKeys.action, defaultKeys.status),
+        elementSnapshot: await prepareElementSnapshots(wipData, defaultKeys.action, defaultKeys.status),
         ...defaultKeys
-    })
+    };
+    console.log('currentSnapshot', currentSnapshot);
+    dispatch(sendElementTcmSnapshot(currentSnapshot));
 }
 
 /**
@@ -143,7 +143,7 @@ export const setDefaultKeys = (action) => {
         projectUrn: config.projectUrn,
         index: 0,
         action: action,
-        status:  (config.tcmStatus && config.tcmStatus == true && action !== 'delete') ? "Pending" : "Accepted",//prepareElementStatus(action),
+        status: (config.tcmStatus && config.tcmStatus == true && action !== 'delete') ? "Pending" : "Accepted",//prepareElementStatus(action),
         //set based on action (config.tcmStatus && config.tcmStatus == true && action !== 'delete') ? "Pending" : "Accepted")
         slateType: "slate",//set based on condition
     }
@@ -171,9 +171,9 @@ const prepareElementStatus = (action) => {
  * @param {String} element - wipData for element
  * @returns {Object}
 */
-export const prepareElementSnapshots = (element, action, status) => {
+export const prepareElementSnapshots = async (element, action, status) => {
     let elementSnapshot = {};
-    let semanticSnapshots = (action !== 'create' && element.type !== 'element-citation') ? setSemanticsSnapshots(status, element) : {};
+    let semanticSnapshots = (action !== 'create' && element.type !== 'element-citation') ? await setSemanticsSnapshots(status, element) : {};
 
     elementSnapshot = {
         contentSnapshot: element.html && element.html.text ? element.html.text : "",
@@ -181,8 +181,8 @@ export const prepareElementSnapshots = (element, action, status) => {
         footnoteSnapshot: isEmpty(semanticSnapshots) === false ? semanticSnapshots.footnoteSnapshot : [],
         assetPopOverSnapshot: isEmpty(semanticSnapshots) === false ? semanticSnapshots.assetPopoverSnapshot : []
     }
-console.log('elesnap',JSON.stringify(elementSnapshot))
-    return JSON.stringify(elementSnapshot);
+    console.log('elesnap', elementSnapshot)
+    return elementSnapshot;
 }
 /**
  * @function isEmpty

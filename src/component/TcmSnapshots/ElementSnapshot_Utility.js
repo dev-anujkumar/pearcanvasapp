@@ -54,12 +54,12 @@ export const setSemanticsSnapshots = async (status, element) => {
     }
 
     semanticSnapshots = {
-        glossarySnapshot: JSON.stringify(glossarySnap),
+        glossarySnapshot: glossarySnap,
         footnoteSnapshot: footnoteSnap,
         assetPopoverSnapshot: assetPopoverSnap
     }
-
-    return JSON.stringify(semanticSnapshots)
+    // console.log('semanticSnapshots',semanticSnapshots)
+    return await semanticSnapshots
 }
 
 /** 
@@ -241,7 +241,7 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn) => {
         eleIndex = Array.isArray(index) ? index : index.split("-");
         switch (type) {
             case 'element-citation':                 /** Inside Citations */
-                wipData = bodymatter[eleIndex[0]].contents.bodymatter[ - 1];
+                wipData = bodymatter[eleIndex[0]].contents.bodymatter[eleIndex[1] - 1];
                 break;
             case 'stanza':                           /** Inside Poetry */
                 wipData = bodymatter[eleIndex[0]].contents.bodymatter[eleIndex[2]];
@@ -378,6 +378,13 @@ const setElementTag = {
     }
 }
 
+/**
+ * @function fetchParentData
+ * @description-This function is to set the parentData for the element
+ * @param {Object} bodymatter - bodymatter before delete  
+ * @param {String/Number} indexes - index of element converted
+ * @returns {Object}
+*/
 export const fetchParentData = (bodymatter, indexes) => {
     let parentData;
     parentData = {
