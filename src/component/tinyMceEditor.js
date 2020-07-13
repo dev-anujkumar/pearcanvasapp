@@ -489,7 +489,8 @@ export class TinyMceEditor extends Component {
          * Case - clicking over Footnote text
          */
 
-        if (e.target.parentElement && e.target.parentElement.nodeName == "SUP" && e.target.dataset.uri) {
+        if (e.target.parentElement && e.target.parentElement.nodeName == "SUP" && 
+            e.target.parentElement.childNodes[0].nodeName == 'A' && e.target.dataset.uri) {
             let uri = e.target.dataset.uri;
             this.glossaryBtnInstance && this.glossaryBtnInstance.setDisabled(true)
             if (alreadyExist) {
