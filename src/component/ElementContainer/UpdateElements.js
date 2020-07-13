@@ -174,8 +174,9 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
         let pdfPosterTextHTML = posterTextHTML.match(/(<p.*?>.*?<\/p>)/g)?posterTextHTML:`<p>${posterTextHTML}</p>`
         data.html.postertext = pdfPosterTextHTML
         data.figuredata.postertext = {
-            ...indivisualData,
-            text : posterText
+            schema : "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+            text : posterText,
+            textsemantics : [ ]
         }
     }
     return data
