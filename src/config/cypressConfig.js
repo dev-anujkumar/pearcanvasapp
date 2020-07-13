@@ -61,7 +61,8 @@ let cypressConfig = {
     citationFlag: false,
     lastActiveElementId:'',
     popupCreationCallInProgress : false,
-    pageNumberInProcess: true
+    pageNumberInProcess: true,
+    poetryElementCreationInProgress: false
 }
 
 
