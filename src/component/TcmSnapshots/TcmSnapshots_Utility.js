@@ -13,8 +13,13 @@ let containerType = ['element-aside', 'manifest', 'citations', 'poetry'];
 
 /**
  * @function prepareTcmSnapshots
- * @description-This is the root function to preapare the data for TCM Snapshots
- * @param {Object}   
+ * @description This is the root function to preapare the data for TCM Snapshots
+ * @param {Object} wipData - Element Wip Data
+ * @param {String} action - action performed
+ * @param {Object} asideData - Element Parent Data
+ * @param {Object} parentUrn - Element Parent Data
+ * @param {Object} poetryData - Poetry Parent Data
+ * @param {String} type - type of element
 */
 export const prepareTcmSnapshots = (wipData, action, asideData, parentUrn, poetryData, type) => dispatch => {
     // let tcmSnapshot = [];
@@ -91,9 +96,11 @@ export const prepareTcmSnapshots = (wipData, action, asideData, parentUrn, poetr
 
 /**
  * @function prepareTcmData
- * @description-This function is to all keys for tcm snapshots
- * @param {Object}  - Object containing the details for Element type & parentData
- * @returns {Object}  
+ * @description This function is to all keys for tcm snapshots
+ * @param {Object} elementDetails - Object containing the details for Element tag & urn
+ * @param {Object} wipData - Element Wip Data  
+ * @param {Object} defaultKeys - default tcm_snapshot keys  
+ * @param {Function} dispatch - dispatch function  
 */
 const prepareTcmData = async (elementDetails, wipData, defaultKeys, dispatch) => {
     let res = Object.assign({}, wipData);
@@ -113,8 +120,11 @@ const prepareTcmData = async (elementDetails, wipData, defaultKeys, dispatch) =>
 /**
  * @function setElementType
  * @description-This function is to set keys- [ ElementType, elementUrn, snapshotUrn ] for tcm snapshots
- * @param {Object} element - Object containing the details for Element type & parentData
- * @returns {Object}  
+ * @param {Object} eleId - Object containing the details for Element Id
+ * @param {Object} tag - Object containing the details for Element Tag
+ * @param {String} isHead - For handling WE element
+ * @param {String} sectionId - Urn for section break
+ * @returns {Object} Object that contains the element tag and elementUrn for snapshot 
 */
 const setElementTypeAndUrn = (eleId, tag, isHead, sectionId) => {
     let elementData = {}
@@ -129,9 +139,9 @@ const setElementTypeAndUrn = (eleId, tag, isHead, sectionId) => {
 
 /**
  * @function setDefaultKeys
- * @description-This function is to set the common keys for tcm snapshots
+ * @description This function is to set the common keys for tcm snapshots
  * @param {Object} action - type of action performed
- * @returns {Object}  
+ * @returns {Object} Default keys for the snapshot
 */
 export const setDefaultKeys = (action) => {
     let tcmKeys = {}
@@ -141,7 +151,7 @@ export const setDefaultKeys = (action) => {
         slateUrn: config.slateManifestURN,
         projectUrn: config.projectUrn,
         index: 0,
-        action: action,
+        action: action.toLowerCase(),
         status: (config.tcmStatus && config.tcmStatus == true && action !== 'delete') ? "Pending" : "Accepted",//prepareElementStatus(action),
         //set based on action (config.tcmStatus && config.tcmStatus == true && action !== 'delete') ? "Pending" : "Accepted")
         slateType: "slate",//set based on condition
@@ -151,7 +161,7 @@ export const setDefaultKeys = (action) => {
 
 /**
  * @function prepareElementStatus
- * @description-This function is to set the status of element
+ * @description This function is to set the status of element
  * @param string action - type of action
 */
 const prepareElementStatus = (action) => {
@@ -164,11 +174,11 @@ const prepareElementStatus = (action) => {
 
 /**
  * @function prepareElementSnapshots
- * @description-This function is to set the common keys for tcm snapshots
+ * @description This function is to set the common keys for tcm snapshots
  * @param {String} status - status of action performed
  * @param {Object} action - type of action performed
  * @param {String} element - wipData for element
- * @returns {Object}
+ * @returns {Object} Element snapshot for TCM_Snapshot
 */
 export const prepareElementSnapshots = async (element, action, status) => {
     let elementSnapshot = {};
@@ -185,7 +195,7 @@ export const prepareElementSnapshots = async (element, action, status) => {
 }
 /**
  * @function isEmpty
- * @description-This function is to check if an object is empty
+ * @description This function is to check if an object is empty
  * @param {Object} obj - object to be checked
  * @returns {Boolean}
 */

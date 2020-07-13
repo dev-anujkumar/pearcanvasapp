@@ -321,6 +321,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         /** [PCAT-8289] ---------------------------------- TCM Snapshot Data handling -----------------------------------*/
         if ((elementTypeTCM.indexOf(response.data.type) !== -1) && (parentElement && parentElement.type !=='showhide')) {
             dispatch(prepareTcmSnapshots(response.data, 'Update', asideData, parentUrn, poetryData, ""))
+            // config.sendTcmSnapshotInProgress = false;
         }
         /**--------------------------------------------------------------------------------------------------------------*/
 

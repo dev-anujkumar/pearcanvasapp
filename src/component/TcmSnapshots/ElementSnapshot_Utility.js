@@ -64,7 +64,7 @@ export const setSemanticsSnapshots = async (status, element) => {
 
 /** 
  * @function setSnapshotsInListAndPoetry
- * @description-This is a recursive function to prepare snapshot content for each Glossary/Footnote/AssetPopover entry 
+ * @description This is a recursive function to prepare snapshot content for each Glossary/Footnote/AssetPopover entry 
  *              in a List and Poetry element
  * @param {String} status - status of the action performed
  * @param {Array} elementList - List of Glossary entries in a list element
@@ -131,7 +131,7 @@ const prepareFootnoteSnapshotContent = (status, footnoteList) => {
     footnoteList && footnoteList.length && footnoteList.map(footnoteItem => {
         let footnoteData = {
             changeStatus: status,//Accepted/Pending
-            changeType: "Update",
+            changeType: status,//"Update",
             charAt: footnoteItem.charAt,
             footnoteid: footnoteItem.footnoteid
         }
