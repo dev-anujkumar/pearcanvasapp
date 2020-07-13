@@ -375,11 +375,12 @@ class ElementContainer extends Component {
             //     else {
             //         return 0
             //     }
+            let oldPosterText = previousElementData.html && previousElementData.html.postertext ? previousElementData.html.postertext.match(/(<p.*?>.*?<\/p>)/g) ? previousElementData.html.postertext : `<p>${previousElementData.html.postertext}</p>` : "<p></p>";
             return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
                 subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
                 captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
                 creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
-                posterTextHTML !== this.removeClassesFromHtml(previousElementData.html.postertext.match(/(<p.*?>.*?<\/p>)/g)?previousElementData.html.postertext:`<p>${previousElementData.html.postertext}</p>`) ||
+                posterTextHTML !== this.removeClassesFromHtml(oldPosterText) ||
                 this.props.oldImage !== newInteractiveid
             );
         }
@@ -950,8 +951,11 @@ class ElementContainer extends Component {
     createPoetryElements = (poetryField, forceupdate, index, parentElement) => {
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
         config.popupCreationCallInProgress = true
-        this.props.createPoetryUnit(poetryField, parentElement, (currentElementData) =>
-        this.handleBlur(forceupdate, currentElementData, index, null), index, config.slateManifestURN)
+        if (!config.poetryElementCreationInProgress) {
+            config.poetryElementCreationInProgress = poetryField === "creditsarray" ? true : false
+            this.props.createPoetryUnit(poetryField, parentElement, (currentElementData) =>
+            this.handleBlur(forceupdate, currentElementData, index, null), index, config.slateManifestURN)
+        }
     }
 
     /**

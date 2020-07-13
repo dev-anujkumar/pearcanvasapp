@@ -74,10 +74,58 @@ export default {
         "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
         "startNumber": 0
     },
-    "primary-smartlink" : {
+    "secondary-interactive-smartlink-third" : {
         "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
         "interactiveid": "",
         "interactivetype": "3rd-party",
+        "interactiveformat": "external-link",
+        "posterimage": {
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
+        }
+    },
+    "secondary-interactive-smartlink-pdf" : {
+        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+        "interactiveid": "",
+        "interactivetype": "pdf",
+        "interactiveformat": "external-link",
+        "posterimage": {
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
+        },
+        "postertext": {
+            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+            "text": "",
+            "textsemantics": [],
+            "mathml": []
+        }
+    },
+    "secondary-interactive-smartlink-web" : {
+        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+        "interactiveid": "",
+        "interactivetype": "web-link",
+        "interactiveformat": "external-link",
+        "postertext": {
+            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+            "text": "",
+            "textsemantics": [],
+            "mathml": []
+        }
+    },
+    "secondary-interactive-smartlink-pop-up-web-link" : {
+        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+        "interactiveid": "",
+        "interactivetype": "pop-up-web-link",
+        "interactiveformat": "external-link",
+        "postertext": {
+            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+            "text": "",
+            "textsemantics": [],
+            "mathml": []
+        }
+    },
+    "secondary-interactive-smartlink-tab" : {
+        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+        "interactiveid": "",
+        "interactivetype": "table",
         "interactiveformat": "external-link",
         "posterimage": {
         "path": "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
