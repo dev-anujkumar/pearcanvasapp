@@ -327,3 +327,7 @@ abbr[title="Slate Link"]::after {
     text-decoration: underline dotted;
     border-bottom: 1.5px dotted #007FA3;
 }
+/*  Cross Link dropdown color Design  */
+.tox .tox-collection--list .tox-collection__item--active:not(.tox-collection__item--state-disabled){
+    background-color: #007FA3 !important;
+}
