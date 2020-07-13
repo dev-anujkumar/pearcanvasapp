@@ -318,11 +318,11 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         });
         }
 
-        /** [PCAT-8289] -------------------------- TCM Snapshot Data handling ----------------------------*/
+        /** [PCAT-8289] ---------------------------------- TCM Snapshot Data handling -----------------------------------*/
         if ((elementTypeTCM.indexOf(response.data.type) !== -1) && (parentElement && parentElement.type !=='showhide')) {
-            dispatch(prepareTcmSnapshots(response.data, 'update', asideData, parentUrn, poetryData, ""))
+            dispatch(prepareTcmSnapshots(response.data, 'Update', asideData, parentUrn, poetryData, ""))
         }
-        /**-----------------------------------------------------------------------------------------------*/
+        /**--------------------------------------------------------------------------------------------------------------*/
 
         if(config.slateManifestURN === updatedData.slateVersionUrn){  //Check applied so that element does not gets copied to next slate while navigating
             if (updatedData.elementVersionType === "element-learningobjectivemapping" || updatedData.elementVersionType === "element-generateLOlist") {

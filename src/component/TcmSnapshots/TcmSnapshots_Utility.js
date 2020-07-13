@@ -116,7 +116,6 @@ const prepareTcmData = async (elementDetails, wipData, defaultKeys, dispatch) =>
  * @param {Object} element - Object containing the details for Element type & parentData
  * @returns {Object}  
 */
-
 const setElementTypeAndUrn = (eleId, tag, isHead, sectionId) => {
     let elementData = {}
     let elementTag = `${tag.parentTag}${isHead ? ":" + isHead : ""}${tag.childTag ? ":" + tag.childTag : ""}`;
@@ -157,7 +156,7 @@ export const setDefaultKeys = (action) => {
 */
 const prepareElementStatus = (action) => {
     let status;
-    if (action === "create") {
+    if (action.toLowerCase() === "create") {
         status = config.tcmStatus === true ? "Pending" : "Accepted";
     }
     return status
@@ -173,7 +172,7 @@ const prepareElementStatus = (action) => {
 */
 export const prepareElementSnapshots = async (element, action, status) => {
     let elementSnapshot = {};
-    let semanticSnapshots = (action !== 'create' && element.type !== 'element-citation') ? await setSemanticsSnapshots(status, element) : {};
+    let semanticSnapshots = (action.toLowerCase() !== 'create' && element.type !== 'element-citation') ? await setSemanticsSnapshots(status, element) : {};
 
     elementSnapshot = {
         contentSnapshot: element.html && element.html.text ? element.html.text : "",
