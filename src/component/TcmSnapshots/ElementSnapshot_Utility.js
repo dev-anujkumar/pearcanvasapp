@@ -5,7 +5,7 @@
 
 /**************************Import Modules**************************/
 import { getCurrentlyLinkedImage } from '../AssetPopover/AssetPopover_Actions.js';
-
+let elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza'];
 /**
  * @function setSemanticsSnapshots
  * @description-This function is to set the snapshots for semantics in an element
@@ -386,24 +386,24 @@ const setElementTag = {
  * @returns {Object}
 */
 export const fetchParentData = (bodymatter, indexes) => {
-    let parentData;
-    parentData = {
-        asideData: {
+    let parentData = {};
+    let isSectionBreak = elementType.indexOf(bodymatter[indexes[0]].type) === -1 ? true : false
+
+    if (isSectionBreak == true) {
+        parentData.asideData = {
             contentUrn: bodymatter[indexes[0]].contentUrn,
             id: bodymatter[indexes[0]].id,
             subtype: bodymatter[indexes[0]].subtype,
             type: bodymatter[indexes[0]].type,
             element: bodymatter[indexes[0]]
         }
-    }
-    
-    let parentElement = indexes.length == 3 ? bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]] : bodymatter[indexes[0]]
 
-    parentData.parentUrn = {
-        manifestUrn: parentElement.id,
-        contentUrn: parentElement.contentUrn,
-        elementType: parentElement.type
+        let parentElement = indexes.length == 3 ? bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]] : bodymatter[indexes[0]]
+        parentData.parentUrn = {
+            manifestUrn: parentElement.id,
+            contentUrn: parentElement.contentUrn,
+            elementType: parentElement.type
+        }
     }
-
     return parentData;
 }
