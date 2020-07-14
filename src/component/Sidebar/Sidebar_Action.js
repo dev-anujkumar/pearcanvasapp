@@ -254,7 +254,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         }
         tinymce.activeEditor&&tinymce.activeEditor.undoManager&&tinymce.activeEditor.undoManager.clear();
         /**------------------------------------------------[BG-2676]------------------------------------------------- */
-        let posterText = res.data.html.postertext
+        let posterText = res.data && res.data.html && res.data.html.postertext
         let ctaNode = document.querySelector(`#cypress-${indexes[0]}-2.actionPU`)
         if (posterText === "" || posterText === '<p></p>') {
             if (ctaNode) {
