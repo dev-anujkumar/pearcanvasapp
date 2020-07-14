@@ -29,12 +29,13 @@ export const loadTrackChanges = (elementId) => {
         } 
       let columnChildObj = [];
       let createMultiColumnObject = (groupedContent) => {
-        groupedContent && groupedContent.map((column) => {
+        groupedContent && groupedContent.map((column,columnIndex) => {
           let columnBodymatter = column.groupdata.bodymatter;
-          columnBodymatter && columnBodymatter.map((data) => {
+          columnBodymatter && columnBodymatter.map((data,index) => {
             let obj = {}
             obj.urn = data.id;
-            obj.index = columnChildObj.length
+            obj.index = index;
+            obj.column=columnIndex==0?"C1":"C2"
             columnChildObj = [...columnChildObj, obj]
           })
         })
