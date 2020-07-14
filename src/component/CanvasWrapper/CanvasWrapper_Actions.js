@@ -489,7 +489,7 @@ const setOldImagePath = (getState, activeElement, elementIndex = 0) => {
         } else if (indexesLen == 3 && parentUrn && parentUrn.elementType === "group") {
             condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
             if (condition.versionUrn == activeElement.id) {
-                oldPath = condition.figuredata.path
+                oldPath = condition.figuredata.path || ""
             }
         } else if (indexesLen == 3) {
             condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
@@ -525,7 +525,7 @@ const setOldAudioVideoPath = (getState, activeElement, elementIndex, type) => {
                 } else if (indexesLen == 3 && parentUrn && parentUrn.elementType === "group") {
                     condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
                     if (condition.versionUrn == activeElement.id) {
-                        oldPath = condition.figuredata.audio.path
+                        oldPath = condition.figuredata.audio && condition.figuredata.audio.path || ""
                     }
                 } else if (indexesLen == 3) {
                     condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
@@ -551,7 +551,7 @@ const setOldAudioVideoPath = (getState, activeElement, elementIndex, type) => {
                 } else if (indexesLen == 3 && parentUrn && parentUrn.elementType === "group") {
                     condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
                     if (condition.versionUrn == activeElement.id) {
-                        oldPath = condition.figuredata.videos[0].path
+                        oldPath = condition.figuredata.videos[0].path || ""
                     }
                 } else if (indexesLen == 3) {
                     condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
