@@ -468,7 +468,11 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
 
 
         /** [PCAT-8289] -------------------------- TCM Snapshot Data handling ----------------------------*/
-        store.dispatch(prepareTcmSnapshots(res.data,'update'))
+        // if(config.sendTcmSnapshotInProgress !== true){
+            store.dispatch(prepareTcmSnapshots(res.data,'update'))
+            // config.sendTcmSnapshotInProgress = true
+        // }
+   
         /**------------------------------------------------------------------------------------------------*/
         
         store.dispatch({

@@ -324,7 +324,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         if (elementTypeTCM.indexOf(response.data.type) !== -1 && (parentElement && parentElement.type !== 'showhide')) {
             tcmSnapshotsForUpdate(updateBodymatter, elementIndex, response.data, asideData, parentUrn, poetryData, dispatch, currentSlateData, updatedData);
         }
-        /**-----------------------------------------------------------------------------------------------*/
+        /**--------------------------------------------------------------------------------------------------------------*/
 
         if(config.slateManifestURN === updatedData.slateVersionUrn){  //Check applied so that element does not gets copied to next slate while navigating
             if (updatedData.elementVersionType === "element-learningobjectivemapping" || updatedData.elementVersionType === "element-generateLOlist") {
@@ -645,7 +645,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                             }
                         };
                     }
-                    else if (element.popupdata.postertextobject[0].id === elementId) {
+                    else if (element.popupdata && element.popupdata.postertextobject && element.popupdata.postertextobject[0].id === elementId) {
                         element = {
                             ...element,
                             popupdata: {

@@ -54,17 +54,17 @@ export const setSemanticsSnapshots = async (status, element) => {
     }
 
     semanticSnapshots = {
-        glossarySnapshot: JSON.stringify(glossarySnap),
+        glossarySnapshot: glossarySnap,
         footnoteSnapshot: footnoteSnap,
         assetPopoverSnapshot: assetPopoverSnap
     }
-
-    return JSON.stringify(semanticSnapshots)
+    // console.log('semanticSnapshots',semanticSnapshots)
+    return await semanticSnapshots
 }
 
 /** 
  * @function setSnapshotsInListAndPoetry
- * @description-This is a recursive function to prepare snapshot content for each Glossary/Footnote/AssetPopover entry 
+ * @description This is a recursive function to prepare snapshot content for each Glossary/Footnote/AssetPopover entry 
  *              in a List and Poetry element
  * @param {String} status - status of the action performed
  * @param {Array} elementList - List of Glossary entries in a list element
@@ -131,7 +131,7 @@ const prepareFootnoteSnapshotContent = (status, footnoteList) => {
     footnoteList && footnoteList.length && footnoteList.map(footnoteItem => {
         let footnoteData = {
             changeStatus: status,//Accepted/Pending
-            changeType: "Update",
+            changeType: status,//"Update",
             charAt: footnoteItem.charAt,
             footnoteid: footnoteItem.footnoteid
         }
@@ -385,6 +385,13 @@ const setElementTag = {
     }
 }
 
+/**
+ * @function fetchParentData
+ * @description-This function is to set the parentData for the element
+ * @param {Object} bodymatter - bodymatter before delete  
+ * @param {String/Number} indexes - index of element converted
+ * @returns {Object}
+*/
 export const fetchParentData = (bodymatter, indexes) => {
     let parentData;
     parentData = {

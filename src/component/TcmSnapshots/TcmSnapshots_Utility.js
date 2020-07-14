@@ -13,8 +13,13 @@ let containerType = ['element-aside', 'manifest', 'citations', 'poetry'];
 
 /**
  * @function prepareTcmSnapshots
- * @description-This is the root function to preapare the data for TCM Snapshots
- * @param {Object}   
+ * @description This is the root function to preapare the data for TCM Snapshots
+ * @param {Object} wipData - Element Wip Data
+ * @param {String} action - action performed
+ * @param {Object} asideData - Element Parent Data
+ * @param {Object} parentUrn - Element Parent Data
+ * @param {Object} poetryData - Poetry Parent Data
+ * @param {String} type - type of element
 */
 export const prepareTcmSnapshots = (wipData, action, asideData, parentUrn, poetryData, type, status) => (dispatch) => {
     let tcmSnapshot = [];
@@ -33,19 +38,19 @@ export const prepareTcmSnapshots = (wipData, action, asideData, parentUrn, poetr
         wipData.elementdata.bodymatter && wipData.elementdata.bodymatter.map((item) => {
             if (item.type === "manifest") {
                 item.contents.bodymatter.map((ele) => {
-                    if(elementType.indexOf(ele.type) !== -1){
+                    if (elementType.indexOf(ele.type) !== -1) {
                         elementId.childId = ele.id
                         tag.childTag = fetchElementsTag(ele)
                         elementDetails = setElementTypeAndUrn(elementId, tag, wipData.subtype === "workedexample" ? 'BODY' : "", item.id);
-                        prepareTcmData(elementDetails, ele, defaultKeys, tcmSnapshot)
+                        prepareTcmData(elementDetails, ele, defaultKeys, dispatch)
                     }
                 })
             }
-            else if(elementType.indexOf(item.type) !== -1){
+            else if (elementType.indexOf(item.type) !== -1) {
                 elementId.childId = item.id;
                 tag.childTag = fetchElementsTag(item)
                 elementDetails = setElementTypeAndUrn(elementId, tag, wipData.subtype === "workedexample" ? "HEAD" : "", "");
-                prepareTcmData(elementDetails, item, defaultKeys, tcmSnapshot)
+                prepareTcmData(elementDetails, item, defaultKeys, dispatch)
             }
         })
     }
@@ -58,7 +63,7 @@ export const prepareTcmSnapshots = (wipData, action, asideData, parentUrn, poetr
                 elementId.childId = item.id
                 tag.childTag = fetchElementsTag(item)
                 elementDetails = setElementTypeAndUrn(elementId, tag, "BODY", wipData.id);
-                prepareTcmData(elementDetails, item, defaultKeys, tcmSnapshot)
+                prepareTcmData(elementDetails, item, defaultKeys, dispatch)
             }
         })
     }
@@ -71,52 +76,56 @@ export const prepareTcmSnapshots = (wipData, action, asideData, parentUrn, poetr
         tag.childTag = fetchElementsTag(wipData)
         let isHead = asideData && asideData.type === "element-aside" && asideData.subtype === "workedexample" ? parentUrn.manifestUrn == asideData.id ? "HEAD" : "BODY" : ""
         elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn.manifestUrn)
-        prepareTcmData(elementDetails, wipData, defaultKeys, tcmSnapshot)
+        prepareTcmData(elementDetails, wipData, defaultKeys, dispatch)
     }
     /* action on PE and CG */
     else if (wipData.type === "citations" || wipData.type === "poetry") {
-        wipData.contents.bodymatter.map((item) => {
+        wipData.contents.bodymatter.map(async (item) => {
             elementId.childId = item.id;
             tag.childTag = fetchElementsTag(item)
             elementDetails = setElementTypeAndUrn(elementId, tag, "", "")
-            prepareTcmData(elementDetails, item, defaultKeys, tcmSnapshot)
+            prepareTcmData(elementDetails, item, defaultKeys, dispatch)
         })
     }
-    else  {
+    else {
         elementDetails = setElementTypeAndUrn(elementId, tag)
-        prepareTcmData(elementDetails, wipData, defaultKeys, tcmSnapshot)
+        prepareTcmData(elementDetails, wipData, defaultKeys, dispatch)
     }
-    console.log('final data in prepare Function', tcmSnapshot)
-    /** TCM SNAPSHOTS API CALLED HERE */
-    dispatch(sendElementTcmSnapshot(tcmSnapshot))
+    console.log('final data in prepare Function')
 }
 
 /**
  * @function prepareTcmData
- * @description-This function is to all keys for tcm snapshots
- * @param {Object}  - Object containing the details for Element type & parentData
- * @returns {Object}  
+ * @description This function is to all keys for tcm snapshots
+ * @param {Object} elementDetails - Object containing the details for Element tag & urn
+ * @param {Object} wipData - Element Wip Data  
+ * @param {Object} defaultKeys - default tcm_snapshot keys  
+ * @param {Function} dispatch - dispatch function  
 */
-const prepareTcmData = (elementDetails, wipData, defaultKeys, tcmSnapshot) => {
-    let res = Object.assign({}, wipData)
+const prepareTcmData = async (elementDetails, wipData, defaultKeys, dispatch) => {
+    let res = Object.assign({}, wipData);
     delete res["html"];
-    return tcmSnapshot.push({
+    let currentSnapshot = {
         elementUrn: elementDetails.elementUrn,
         snapshotUrn: elementDetails.elementUrn,
         elementType: elementDetails.elementType,
         elementWip: res,
-        elementSnapshot: prepareElementSnapshots(wipData, defaultKeys.action, defaultKeys.status),
+        elementSnapshot: await prepareElementSnapshots(wipData, defaultKeys.action, defaultKeys.status),
         ...defaultKeys
-    })
+    };
+    console.log('currentSnapshot', currentSnapshot);
+    dispatch(sendElementTcmSnapshot(currentSnapshot));
 }
 
 /**
  * @function setElementType
  * @description-This function is to set keys- [ ElementType, elementUrn, snapshotUrn ] for tcm snapshots
- * @param {Object} element - Object containing the details for Element type & parentData
- * @returns {Object}  
+ * @param {Object} eleId - Object containing the details for Element Id
+ * @param {Object} tag - Object containing the details for Element Tag
+ * @param {String} isHead - For handling WE element
+ * @param {String} sectionId - Urn for section break
+ * @returns {Object} Object that contains the element tag and elementUrn for snapshot 
 */
-
 const setElementTypeAndUrn = (eleId, tag, isHead, sectionId) => {
     let elementData = {}
     let elementTag = `${tag.parentTag}${isHead ? ":" + isHead : ""}${tag.childTag ? ":" + tag.childTag : ""}`;
@@ -130,9 +139,9 @@ const setElementTypeAndUrn = (eleId, tag, isHead, sectionId) => {
 
 /**
  * @function setDefaultKeys
- * @description-This function is to set the common keys for tcm snapshots
+ * @description This function is to set the common keys for tcm snapshots
  * @param {Object} action - type of action performed
- * @returns {Object}  
+ * @returns {Object} Default keys for the snapshot
 */
 export const setDefaultKeys = (action,status) => {
     let tcmKeys = {}
@@ -152,12 +161,12 @@ export const setDefaultKeys = (action,status) => {
 
 /**
  * @function prepareElementStatus
- * @description-This function is to set the status of element
+ * @description This function is to set the status of element
  * @param string action - type of action
 */
 const prepareElementStatus = (action) => {
     let status;
-    if (action === "create") {
+    if (action.toLowerCase() === "create") {
         status = config.tcmStatus === true ? "Pending" : "Accepted";
     }
     return status
@@ -165,15 +174,15 @@ const prepareElementStatus = (action) => {
 
 /**
  * @function prepareElementSnapshots
- * @description-This function is to set the common keys for tcm snapshots
+ * @description This function is to set the common keys for tcm snapshots
  * @param {String} status - status of action performed
  * @param {Object} action - type of action performed
  * @param {String} element - wipData for element
- * @returns {Object}
+ * @returns {Object} Element snapshot for TCM_Snapshot
 */
-export const prepareElementSnapshots = (element, action, status) => {
+export const prepareElementSnapshots = async (element, action, status) => {
     let elementSnapshot = {};
-    let semanticSnapshots = (action !== 'create' && element.type !== 'element-citation') ? setSemanticsSnapshots(status, element) : {};
+    let semanticSnapshots = (action.toLowerCase() !== 'create' && element.type !== 'element-citation') ? await setSemanticsSnapshots(status, element) : {};
 
     elementSnapshot = {
         contentSnapshot: element.html && element.html.text ? element.html.text : "",
@@ -181,12 +190,12 @@ export const prepareElementSnapshots = (element, action, status) => {
         footnoteSnapshot: isEmpty(semanticSnapshots) === false ? semanticSnapshots.footnoteSnapshot : [],
         assetPopOverSnapshot: isEmpty(semanticSnapshots) === false ? semanticSnapshots.assetPopoverSnapshot : []
     }
-//console.log('elesnap',JSON.stringify(elementSnapshot))
-    return JSON.stringify(elementSnapshot);
+    console.log('elesnap', elementSnapshot)
+    return elementSnapshot;
 }
 /**
  * @function isEmpty
- * @description-This function is to check if an object is empty
+ * @description This function is to check if an object is empty
  * @param {Object} obj - object to be checked
  * @returns {Boolean}
 */

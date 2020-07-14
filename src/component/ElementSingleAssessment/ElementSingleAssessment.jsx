@@ -68,7 +68,7 @@ class ElementSingleAssessment extends Component {
         let newElement = localStorage.getItem('newElement');
         if (newElement) {
             setTimeout(() => {
-                this.handleAssessmentFocus();
+                this.props.handleFocus();
                 localStorage.removeItem('newElement');
             }, 0)
         }
