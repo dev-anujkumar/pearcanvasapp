@@ -27,6 +27,19 @@ export const loadTrackChanges = (elementId) => {
           }
           return childObj;
         } 
+      let columnChildObj = [];
+      let createMultiColumnObject = (groupedContent) => {
+        groupedContent && groupedContent.map((column) => {
+          let columnBodymatter = column.groupdata.bodymatter;
+          columnBodymatter && columnBodymatter.map((data) => {
+            let obj = {}
+            obj.urn = data.id;
+            obj.index = columnChildObj.length
+            columnChildObj = [...columnChildObj, obj]
+          })
+        })
+        return columnChildObj;
+      }
         
         if (slateData && slateData[slateId] && slateData[slateId].contents && slateData[slateId].contents.bodymatter) {
           var list = [];
@@ -36,7 +49,12 @@ export const loadTrackChanges = (elementId) => {
               let obj = {};
               obj.index = index;
               obj.urn = element.id;
-              if(obj.urn.includes('manifest')){
+              if(element.type==="groupedcontent" && obj.urn.includes('manifest')){
+                let groupedContent=element.groupeddata.bodymatter;
+                let childData = await createMultiColumnObject(groupedContent)
+                obj.child = childData;
+              }
+              else if(element.type!="groupedcontent" && obj.urn.includes('manifest')){
                 let newType = (element.type == 'citations' || element.type == 'poetry') ? 'contents' : 'elementdata'; 
                 let childData = await createManifestObject(element,newType)
                 obj.child = childData;

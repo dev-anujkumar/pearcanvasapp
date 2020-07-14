@@ -866,7 +866,8 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
                 slateLevelData: newslateData
             }
         })
-       if(cb) cb(response.data)
+        config.poetryElementCreationInProgress = false
+        if(cb) cb(response.data)
     })
     .catch((error) => {
         console.log("%c ERROR RESPONSE", "font: 30px; color: red; background: black", error)
