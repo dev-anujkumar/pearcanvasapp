@@ -387,18 +387,19 @@ const setElementTag = {
 */
 export const fetchParentData = (bodymatter, indexes) => {
     let parentData = {};
-    let isSectionBreak = elementType.indexOf(bodymatter[indexes[0]].type) === -1 ? true : false
+    let tempIndex = Array.isArray(indexes) ? indexes : indexes.split("-");
+    let isChildElement = elementType.indexOf(bodymatter[tempIndex[0]].type) === -1 ? true : false
 
-    if (isSectionBreak == true) {
+    if (isChildElement == true) {
         parentData.asideData = {
-            contentUrn: bodymatter[indexes[0]].contentUrn,
-            id: bodymatter[indexes[0]].id,
-            subtype: bodymatter[indexes[0]].subtype,
-            type: bodymatter[indexes[0]].type,
-            element: bodymatter[indexes[0]]
+            contentUrn: bodymatter[tempIndex[0]].contentUrn,
+            id: bodymatter[tempIndex[0]].id,
+            subtype: bodymatter[tempIndex[0]].subtype,
+            type: bodymatter[tempIndex[0]].type,
+            element: bodymatter[tempIndex[0]]
         }
 
-        let parentElement = indexes.length == 3 ? bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]] : bodymatter[indexes[0]]
+        let parentElement = tempIndex.length == 3 ? bodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]] : bodymatter[tempIndex[0]]
         parentData.parentUrn = {
             manifestUrn: parentElement.id,
             contentUrn: parentElement.contentUrn,

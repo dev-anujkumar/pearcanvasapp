@@ -4,12 +4,13 @@ import store from '../../appstore/store.js'
 import { sendDataToIframe, createTitleSubtitleModel } from '../../constants/utility.js';
 import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 import { prepareTcmSnapshots } from '../TcmSnapshots/TcmSnapshots_Utility.js';
-
+import { fetchParentData } from '../TcmSnapshots/ElementSnapshot_Utility.js';
 const {
     REACT_APP_API_URL
 } = config
 
 import { OPEN_GLOSSARY_FOOTNOTE, UPDATE_FOOTNOTEGLOSSARY, ERROR_POPUP, GET_TCM_RESOURCES } from "./../../constants/Action_Constants";
+let elementTypeData = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza'];
 
 export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, typeWithPopup, poetryField) => async (dispatch) => {
     
@@ -335,6 +336,13 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         let parentData1 = store.getState().appStore.slateLevelData;
         let currentParentData = JSON.parse(JSON.stringify(parentData1));
         let currentSlateData = currentParentData[config.slateManifestURN];
+        /** [PCAT-8289] ----------------------------------- TCM Snapshot Data handling ----------------------------------*/
+        if (elementTypeData.indexOf(elementType) !== -1) {
+            let tcmBodymatter = currentSlateData.contents.bodymatter
+            let tcmParentData = fetchParentData(tcmBodymatter, index);
+            store.dispatch(prepareTcmSnapshots(res.data, 'Update', tcmParentData.asideData, tcmParentData.parentUrn));
+        }
+        /**-------------------------------------------------------------------------------------------------------------*/
         if(res.data.id !== data.id && currentSlateData.status === 'approved'){
             sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
         }
@@ -460,21 +468,11 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         }
         //tcm update code  for glossary/footnote 
         if (config.tcmStatus) {
-            let elementTypeData = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza'];
             if (elementTypeData.indexOf(elementType) !== -1) {
                 prepareDataForUpdateTcm(elementWorkId, res.data.id);
             }
         }
 
-
-        /** [PCAT-8289] -------------------------- TCM Snapshot Data handling ----------------------------*/
-        // if(config.sendTcmSnapshotInProgress !== true){
-            store.dispatch(prepareTcmSnapshots(res.data,'update'))
-            // config.sendTcmSnapshotInProgress = true
-        // }
-   
-        /**------------------------------------------------------------------------------------------------*/
-        
         store.dispatch({
             type: UPDATE_FOOTNOTEGLOSSARY,
             payload: {
