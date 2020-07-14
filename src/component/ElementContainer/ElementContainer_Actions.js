@@ -386,8 +386,12 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
     })
 }
+/**
+     * @description - prepare data to create snapshots on update element
+*/
 export const tcmSnapshotsForUpdate = async (updateBodymatter, elementIndex, response, asideData, parentUrn, poetryData, dispatch, currentSlateData, updatedData) => {
     let data = fetchElementWipData(updateBodymatter, elementIndex, response.type)
+    /** latest version for WE/CE/PE/AS*/
     if (data.parentUrn === "approved") {
         let contentUrn = asideData ? asideData.contentUrn : poetryData ? poetryData.contentUrn : parentUrn ? parentUrn.contentUrn : ""
         if (contentUrn) {
@@ -407,14 +411,17 @@ export const tcmSnapshotsForUpdate = async (updateBodymatter, elementIndex, resp
             }
         }
     }
+    /** latest version for SB*/
     if (data.childUrn === "approved") {
         let newdata = await getLatestVersion(parentUrn.contentUrn);
         parentUrn.manifestUrn = newdata ? newdata : parentUrn.manifestUrn
     }
+    /** latest version for slate*/
     if (currentSlateData.status === 'approved') {
         let newdata = await getLatestVersion(currentSlateData.contentUrn);
         config.slateManifestURN = newdata ? newdata : config.slateManifestURN
     }
+    /** Before versioning snapshots*/
     dispatch(prepareTcmSnapshots(response, 'update', asideData, parentUrn, poetryData, "", ""))
     if (response.id !== updatedData.id) {
         if (response.poetrylines) {
@@ -424,6 +431,7 @@ export const tcmSnapshotsForUpdate = async (updateBodymatter, elementIndex, resp
             response.elementdata = data.wipData.elementdata
         }
         response.html = data.wipData.html
+        /** After versioning snapshots*/
         dispatch(prepareTcmSnapshots(response, 'update', asideData, parentUrn, poetryData, "", "Accepted"))
     }
 }

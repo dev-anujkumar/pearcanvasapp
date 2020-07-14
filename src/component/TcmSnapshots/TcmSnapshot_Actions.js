@@ -82,3 +82,21 @@ export const sendElementTcmSnapshot = (snapshotData)=> (dispatch, getState) =>{
     // })
 
 }
+/**
+     * @description - Get latest version of comtainer elemens and slate
+     * @param {String} containerUrn | Container Entity URN
+  */
+
+export const getLatestVersion = async (containerUrn) => {
+    try {
+        let data = await axios.get(`https://contentapis-qa.pearsoncms.net/structure-api/context/v2/${config.projectUrn}/container/${containerUrn}/versions`, {
+            headers: {
+                "Content-Type": "application/json",
+                "PearsonSSOSession": config.ssoToken
+            }
+        })
+        return data.data[0];
+    } catch (err) {
+        console.log('Error in getting version', err)
+    }
+}

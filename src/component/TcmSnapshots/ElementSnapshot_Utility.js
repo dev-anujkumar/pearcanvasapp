@@ -240,9 +240,10 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn) => {
     }
     else if (typeof index === "string") {
         eleIndex = Array.isArray(index) ? index : index.split("-");
-            if( type && bodymatter[eleIndex[0]].status==="approved"){
-                data.parentUrn= "approved"
-            }
+        /** Check parent element is approved or not */
+        if (type && bodymatter[eleIndex[0]].status === "approved") {
+            data.parentUrn = "approved"
+        }
         switch (type) {
             case 'element-citation':                 /** Inside Citations */
             data.wipData = bodymatter[eleIndex[0]].contents.bodymatter[eleIndex[1]-1];
@@ -257,7 +258,7 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn) => {
                 if (eleIndex.length == 2) {          /** Inside WE-HEAD | Aside */
                     data.wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]];
                 } else if (eleIndex.length == 3) {   /** Inside WE-BODY */
-                    if(bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]].status==="approved"){
+                    if(bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]].status==="approved"){ /** Check SB element is approved or not */
                         data.childUrn= "approved"
                     }
                     data.wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]].contents.bodymatter[eleIndex[2]];
