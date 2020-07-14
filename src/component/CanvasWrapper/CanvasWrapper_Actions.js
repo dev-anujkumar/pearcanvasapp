@@ -269,8 +269,9 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             document.getElementsByClassName("slate-tag-icon")[0].classList.remove("disable");
          }     
         let newVersionManifestId=Object.values(slateData.data)[0].id
-        if(config.slateManifestURN !== newVersionManifestId){
+        if(config.slateManifestURN !== newVersionManifestId && slateData.data[newVersionManifestId].type === 'manifest' ){
             config.slateManifestURN = newVersionManifestId
+            manifestURN = newVersionManifestId
         }
 		if(slateData.data && slateData.data[newVersionManifestId] && slateData.data[newVersionManifestId].type === "popup"){
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
@@ -393,19 +394,25 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                         currentContent.bodymatter = [...oldbodymatter, ...newbodymatter];
                         currentParentData = currentParentData[manifestURN];
                         config.scrolling = true;
+                        dispatch({
+                            type: FETCH_SLATE_DATA,
+                            payload: {
+                                [manifestURN]: currentParentData
+                            }
+                        });
                     } else {
                         currentParentData = slateData.data[manifestURN];
+                        dispatch({
+                            type: FETCH_SLATE_DATA,
+                            payload: {
+                                [manifestURN]: currentParentData
+                            }
+                        });
+                        dispatch({
+                            type: SET_ACTIVE_ELEMENT,
+                            payload: {}
+                        });
                     }
-                    dispatch({
-                        type: FETCH_SLATE_DATA,
-                        payload: {
-                            [manifestURN]: currentParentData
-                        }
-                    });
-                    dispatch({
-                        type: SET_ACTIVE_ELEMENT,
-                        payload: {}
-                    });
                     //}
                     // config.isFetchSlateInProgress = false;
                 }else{
@@ -823,7 +830,8 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
                 slateLevelData: newslateData
             }
         })
-       if(cb) cb(response.data)
+        config.poetryElementCreationInProgress = false
+        if(cb) cb(response.data)
     })
     .catch((error) => {
         console.log("%c ERROR RESPONSE", "font: 30px; color: red; background: black", error)

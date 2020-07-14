@@ -604,7 +604,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                             }
                         };
                     }
-                    else if (element.popupdata.postertextobject[0].id === elementId) {
+                    else if (element.popupdata && element.popupdata.postertextobject && element.popupdata.postertextobject[0].id === elementId) {
                         element = {
                             ...element,
                             popupdata: {
