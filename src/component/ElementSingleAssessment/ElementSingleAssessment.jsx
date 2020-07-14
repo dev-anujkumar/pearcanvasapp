@@ -67,9 +67,9 @@ class ElementSingleAssessment extends Component {
         })
         let newElement = localStorage.getItem('newElement');
         if (newElement) {
+            localStorage.removeItem('newElement');
             setTimeout(() => {
-                this.props.handleFocus();
-                localStorage.removeItem('newElement');
+                this.handleAssessmentFocus();
             }, 0)
         }
     }
@@ -146,7 +146,9 @@ static getDerivedStateFromProps(nextProps, prevState) {
     /*** @description - This function is to handle Focus on the Assessment element on click*/
     
     handleAssessmentFocus = (event) => {
-        event.stopPropagation();
+        if(event){
+            event.stopPropagation();
+        }
         this.props.handleFocus();
     }
     /*** @description - This function is to handle Blur on the Assessment element on blur*/       
@@ -302,6 +304,7 @@ static getDerivedStateFromProps(nextProps, prevState) {
     }
     render() {
         const { model, index } = this.props;
+        console.log('indeex in single',index)
         return (
             <div className="figureElement" onClick = {this.handleAssessmentFocus}>
                 {this.renderAssessmentType(model, index)}
