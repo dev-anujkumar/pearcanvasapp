@@ -136,14 +136,14 @@ const setElementTypeAndUrn = (eleId, tag, isHead, sectionId) => {
 */
 export const setDefaultKeys = (action,status) => {
     let tcmKeys = {}
-
+    console.log( status === "",action,status," status ===")
     tcmKeys = {
         slateID: config.slateManifestURN,
         slateUrn: config.slateManifestURN,
         projectUrn: config.projectUrn,
         index: 0,
         action: action,
-        status:  (config.tcmStatus && config.tcmStatus == true && !status && action !== 'delete') ? "Pending" : "Accepted",//prepareElementStatus(action),
+        status:  (config.tcmStatus && config.tcmStatus == true && status === "" && action !== 'delete') ? "Pending" : "Accepted",//prepareElementStatus(action),
         //set based on action (config.tcmStatus && config.tcmStatus == true && action !== 'delete') ? "Pending" : "Accepted")
         slateType: "slate",//set based on condition
     }
@@ -181,7 +181,7 @@ export const prepareElementSnapshots = (element, action, status) => {
         footnoteSnapshot: isEmpty(semanticSnapshots) === false ? semanticSnapshots.footnoteSnapshot : [],
         assetPopOverSnapshot: isEmpty(semanticSnapshots) === false ? semanticSnapshots.assetPopoverSnapshot : []
     }
-console.log('elesnap',JSON.stringify(elementSnapshot))
+//console.log('elesnap',JSON.stringify(elementSnapshot))
     return JSON.stringify(elementSnapshot);
 }
 /**

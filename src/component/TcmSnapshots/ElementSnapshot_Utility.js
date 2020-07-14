@@ -192,8 +192,8 @@ export const prepareASContentSnapshot = async (elementASLinkID, assetPopoverSnap
 */
 export const fetchElementsTag = (element) => {
     let labelText = "P", eleTag, eleType, eleSubType;
-    eleType = element.type;
-    switch (element.type || element.elementType) {
+    eleType = element.type ? element.type :  element.elementType;
+    switch (eleType) {
         case 'element-authoredtext':
             eleSubType = (element.elementdata && element.elementdata.headers) ? "heading" + element.elementdata.headers[0].level : "paragraph";
             break;
@@ -210,7 +210,7 @@ export const fetchElementsTag = (element) => {
             eleSubType = ""
             break;
     }
-    eleTag = eleSubType.trim() !=="" && setElementTag[eleType] ? setElementTag[eleType].subtype[eleSubType] : setElementTag[eleType]
+    eleTag = eleSubType.trim() !== "" && setElementTag[eleType] ? setElementTag[eleType].subtype[eleSubType] : setElementTag[eleType]
     labelText = `${eleTag.parentTag}${eleTag.childTag ? '+' + eleTag.childTag : ""}`
 
     return labelText;
@@ -225,40 +225,47 @@ export const fetchElementsTag = (element) => {
  * @returns {Object}
 */
 export const fetchElementWipData = (bodymatter, index, type, entityUrn) => {
-    let eleIndex, wipData;
-    if (typeof index === "number") {                 /** Delete a container or an element at slate level */
-        eleIndex = index;
-        wipData = bodymatter[eleIndex]
-        if (wipData.subtype === "workedexample") {  /** Delete Section-Break */
-            wipData.elementdata.bodymatter.map((item, innerIndex) => {
+    let eleIndex;
+    let data={}
+    if (typeof index === "number" || (Array.isArray(index) && index.length == 1)) {   /** Delete a container or an element at slate level */
+        eleIndex = Array.isArray(index) ? index[0] : index;
+        data.wipData = bodymatter[eleIndex]
+        if (data.wipData.subtype === "workedexample") {  /** Delete Section-Break */
+            data.wipData.elementdata.bodymatter.map((item, innerIndex) => {
                 if (item.type == "manifest" && entityUrn == item.contentUrn) {
-                    wipData = bodymatter[eleIndex].elementdata.bodymatter[innerIndex]
+                    data.wipData = bodymatter[eleIndex].elementdata.bodymatter[innerIndex]
                 }
             })
         }
     }
     else if (typeof index === "string") {
-        eleIndex = index.split("-");
+        eleIndex = Array.isArray(index) ? index : index.split("-");
+            if( type && bodymatter[eleIndex[0]].status==="approved"){
+                data.parentUrn= "approved"
+            }
         switch (type) {
             case 'element-citation':                 /** Inside Citations */
-                wipData = bodymatter[eleIndex[0]].contents.bodymatter[eleIndex[1] - 1];
+            data.wipData = bodymatter[eleIndex[0]].contents.bodymatter[eleIndex[1]-1];
                 break;
             case 'stanza':                           /** Inside Poetry */
-                wipData = bodymatter[eleIndex[0]].contents.bodymatter[eleIndex[1] - 2];
+            data.wipData = bodymatter[eleIndex[0]].contents.bodymatter[eleIndex[2]];
                 break;
             case 'element-learningobjectives':
             case 'element-list':
             case 'element-blockfeature':
             case 'element-authoredtext':
                 if (eleIndex.length == 2) {          /** Inside WE-HEAD | Aside */
-                    wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]];
+                    data.wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]];
                 } else if (eleIndex.length == 3) {   /** Inside WE-BODY */
-                    wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]].contents.bodymatter[eleIndex[2]];
+                    if(bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]].status==="approved"){
+                        data.childUrn= "approved"
+                    }
+                    data.wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]].contents.bodymatter[eleIndex[2]];
                 }
                 break;
         }
     }
-    return wipData;
+    return data;
 }
 
 /**
@@ -376,4 +383,27 @@ const setElementTag = {
             },
         }
     }
+}
+
+export const fetchParentData = (bodymatter, indexes) => {
+    let parentData;
+    parentData = {
+        asideData: {
+            contentUrn: bodymatter[indexes[0]].contentUrn,
+            id: bodymatter[indexes[0]].id,
+            subtype: bodymatter[indexes[0]].subtype,
+            type: bodymatter[indexes[0]].type,
+            element: bodymatter[indexes[0]]
+        }
+    }
+    
+    let parentElement = indexes.length == 3 ? bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]] : bodymatter[indexes[0]]
+
+    parentData.parentUrn = {
+        manifestUrn: parentElement.id,
+        contentUrn: parentElement.contentUrn,
+        elementType: parentElement.type
+    }
+
+    return parentData;
 }
