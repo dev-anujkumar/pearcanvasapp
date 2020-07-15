@@ -246,10 +246,10 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn) => {
         }
         switch (type) {
             case 'stanza':                           /** In Poetry */
-                wipData = bodymatter[eleIndex[0]].contents.bodymatter[eleIndex[2]];
+               data.wipData = bodymatter[eleIndex[0]].contents.bodymatter[eleIndex[2]];
                 break;
             case 'element-citation':                 /** In Citations */
-                wipData = bodymatter[eleIndex[0]].contents.bodymatter[eleIndex[1] - 1];
+                data.wipData = bodymatter[eleIndex[0]].contents.bodymatter[eleIndex[1] - 1];
                 break;
             case 'element-list':
             case 'element-blockfeature':
