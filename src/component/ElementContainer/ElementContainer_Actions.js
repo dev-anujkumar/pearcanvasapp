@@ -744,16 +744,23 @@ export const updateFigureData = (figureData, elementIndex, elementId, cb) => (di
                 }
             }
         } else if (indexesLen == 3) {
-            condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
-            if (condition.versionUrn == elementId) {
-                if (newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuretype === "assessment") {
-                    newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata['elementdata'] = figureData
-                    //element = condition
-                } else {
-                    newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata = figureData
-                    //element = condition
+            if (newBodymatter[indexes[0]].type === "groupedcontent") {              //For Multi-column container
+                condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
+                if (condition.versionUrn == elementId) {
+                    condition.figuredata = figureData
                 }
-
+            } else {
+                condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
+                if (condition.versionUrn == elementId) {
+                    if (newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuretype === "assessment") {
+                        newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata['elementdata'] = figureData
+                        //element = condition
+                    } else {
+                        newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata = figureData
+                        //element = condition
+                    }
+    
+                }
             }
         }
     }
@@ -821,6 +828,12 @@ const updateTableEditorData = (elementId, tableData, slateBodyMatter) => {
         }
         else if (elm.contents && elm.contents.bodymatter) {
             elm.contents.bodymatter = updateTableEditorData(elementId, tableData, elm.contents.bodymatter)
+        }
+        else if (elm.groupeddata && elm.groupeddata.bodymatter) {
+            elm.groupeddata.bodymatter = updateTableEditorData(elementId, tableData, elm.groupeddata.bodymatter)
+        }
+        else if (elm.groupdata && elm.groupdata.bodymatter) {
+            elm.groupdata.bodymatter = updateTableEditorData(elementId, tableData, elm.groupdata.bodymatter)
         }
         return elm;
     })
