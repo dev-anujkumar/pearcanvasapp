@@ -35,16 +35,20 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     const outputSubTypeList = outputPrimaryOptionType['subtype'],
         outputSubType = outputSubTypeList[[newElementData['secondaryOption']]]
 
-    if (oldElementData.type === "figure") {
-        if (!(imageSource.includes(oldElementData.figuretype) && imageDestination.includes(newElementData['primaryOption'])) && oldElementData.figuretype !== 'codelisting'){
-            oldElementData.figuredata = {...figureDataBank[newElementData['primaryOption']]}
-        }
-        if(oldElementData.figuredata.srctype){
-            oldElementData.figuredata.srctype=outputSubType['wipValue']
-        }
-        if(oldElementData.figuredata.interactivetype){
-            oldElementData.figuredata.interactivetype=outputSubType['wipValue'];
-        }
+        if (oldElementData.type === "figure") {
+            if (!(imageSource.includes(oldElementData.figuretype) && imageDestination.includes(newElementData['primaryOption'])) && oldElementData.figuretype !== 'codelisting' && !oldElementData.figuredata.interactivetype){
+                oldElementData.figuredata = {...figureDataBank[newElementData['primaryOption']]}
+            }
+            if(oldElementData.figuredata.srctype){
+                oldElementData.figuredata.srctype=outputSubType['wipValue']
+            }
+            if (oldElementData.figuredata.interactivetype) {
+                oldElementData.figuredata = {...figureDataBank[newElementData['secondaryOption']]}
+                oldElementData.html.postertext = ""; /** [BG-2676] - Remove postertext on Conversion */
+                if (oldElementData.figuredata && oldElementData.figuredata.postertext && oldElementData.figuredata.postertext.text) {
+                    oldElementData.figuredata.postertext.text = "";
+                }
+            }
 
         /* on Conversion removing the tinymce instance for BCE element*/
         if ((outputPrimaryOptionType && outputPrimaryOptionType['enum'] === "BLOCK_CODE_EDITOR" || newElementData && newElementData['primaryOption'] === 'primary-blockcode-equation') &&
@@ -255,7 +259,18 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             config.savingInProgress = false
         }
         tinymce.activeEditor&&tinymce.activeEditor.undoManager&&tinymce.activeEditor.undoManager.clear();
-
+        /**------------------------------------------------[BG-2676]------------------------------------------------- */
+        let posterText = res.data && res.data.html && res.data.html.postertext
+        let ctaNode = document.querySelector(`#cypress-${indexes[0]}-2.actionPU`)
+        if (posterText === "" || posterText === '<p></p>') {
+            if (ctaNode) {
+                setTimeout(() => {
+                    ctaNode.click();
+                }, 0)
+                ctaNode.classList.add("place-holder")
+            }
+        } 
+        /**-------------------------------------------------------------------------------------------------------- */
         let storeElement = store[config.slateManifestURN];
         let bodymatter = storeElement.contents.bodymatter;
         let focusedElement = bodymatter;

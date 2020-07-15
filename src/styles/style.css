@@ -314,20 +314,27 @@ table code {
 /*  Cross Link Content Design  */
 
 abbr[title="Slate Link"] {
-    /* border: 2px solid red; */
     padding-right: 15px;
 }
 
 abbr[title="Slate Link"]::after {
     content: url('./../images/PageLink/link.svg');
-    height: 85%;
-    top: 0;
+    height: 10px;
+    bottom: 1px;
     padding-left: 1px;
     position: absolute;
     text-decoration: underline dotted;
-    border-bottom: 1.5px dotted #007FA3;
+    border-bottom: 1.1px dotted #007FA3;
 }
+
 /*  Cross Link dropdown color Design  */
 .tox .tox-collection--list .tox-collection__item--active:not(.tox-collection__item--state-disabled){
     background-color: #007FA3 !important;
+}
+
+.tox .tox-collection--list .tox-collection__item--active:not(.tox-collection__item--state-disabled) .tox-collection__item-label{
+    color: #ffffff !important;
+}
+p code, ul code, ol code{
+    color: inherit;
 }
