@@ -539,7 +539,7 @@ export class TinyMceEditor extends Component {
 
             if (linkTitle == "Slate Link") {
                 sendDataToIframe({ 'type': 'tocToggle', 'message': { open: false } });
-                let linkId = (e.target.attributes['id'] && e.target.attributes['id'].nodeValue) || e.target.parentNode.attributes['id'].nodeValue;
+                let linkId = (e.target.attributes['asset-id'] && e.target.attributes['asset-id'].nodeValue) || (e.target.parentNode.attributes['asset-id'] && e.target.parentNode.attributes['asset-id'].nodeValue) || (e.target.attributes['id'] && e.target.attributes['id'].nodeValue) || e.target.parentNode.attributes['id'].nodeValue;
                 let elementId = this.props.element && this.props.element.id
                 // (e.target.attributes['element-id'] && e.target.attributes['element-id'].nodeValue) || e.target.parentNode.attributes['element-id'].nodeValue;
                 let pageId = (e.target.attributes['data-uri'] && e.target.attributes['data-uri'].nodeValue) || e.target.parentNode.attributes['data-uri'].nodeValue;
@@ -1666,7 +1666,7 @@ export class TinyMceEditor extends Component {
             //selectedText = window.getSelection().anchorNode.parentNode.outerHTML;
             selectedText = '<' + selectedTag.toLocaleLowerCase() + '>' + selectedText + '</' + selectedTag.toLocaleLowerCase() + '>'
         }
-        let insertionText = '<span id="page-link-' + linkCount + '" class="page-link-attacher" element-id="' + activeElement.getAttribute('data-id') + '">' + selectedText + '</span>';
+        let insertionText = '<span asset-id="page-link-' + linkCount + '" class="page-link-attacher" element-id="' + activeElement.getAttribute('data-id') + '">' + selectedText + '</span>';
         // editor.insertContent(insertionText);
         editor.selection.setContent(insertionText);
         sendDataToIframe({ 'type': LaunchTOCForCrossLinking, 'message': { open: true, case: 'new', element: activeElement.getAttribute('data-id'), link: 'page-link-' + linkCount, blockCanvas: true, crossLink: true } });
