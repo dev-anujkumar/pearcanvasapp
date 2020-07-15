@@ -291,15 +291,7 @@ export const fetchParentData = (bodymatter, indexes) => {
             element: bodymatter[tempIndex[0]]
         }
 
-        let parentElement = bodymatter[tempIndex[0]];
-
-        if (tempIndex.length == 3) {
-            if (bodymatter[tempIndex[0]].type == 'poetry') {
-                parentElement = bodymatter[tempIndex[0]].contents.bodymatter[tempIndex[1]];
-            } else {
-                parentElement = bodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]];
-            }
-        }
+        let parentElement = tempIndex.length == 3 && bodymatter[tempIndex[0]].type !== 'poetry' ? bodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]] : bodymatter[tempIndex[0]];
 
         parentData.parentUrn = {
             manifestUrn: parentElement.id,
