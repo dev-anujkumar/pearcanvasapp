@@ -304,7 +304,6 @@ static getDerivedStateFromProps(nextProps, prevState) {
     }
     render() {
         const { model, index } = this.props;
-        console.log('indeex in single',index)
         return (
             <div className="figureElement" onClick = {this.handleAssessmentFocus}>
                 {this.renderAssessmentType(model, index)}
