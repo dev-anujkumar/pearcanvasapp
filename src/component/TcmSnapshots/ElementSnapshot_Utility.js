@@ -225,8 +225,9 @@ export const fetchElementsTag = (element) => {
  * @returns {Object}
 */
 export const fetchElementWipData = (bodymatter, index, type, entityUrn) => {
-    let eleIndex;
-    let data={}
+    let eleIndex,
+        data = {};
+
     if (typeof index === "number" || (Array.isArray(index) && index.length == 1)) {   /** Delete a container or an element at slate level */
         eleIndex = Array.isArray(index) ? index[0] : index;
         data.wipData = bodymatter[eleIndex]
@@ -245,10 +246,10 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn) => {
             data.parentUrn = "approved"
         }
         switch (type) {
-            case 'stanza':                           /** In Poetry */
-               data.wipData = bodymatter[eleIndex[0]].contents.bodymatter[eleIndex[2]];
+            case 'stanza':                           /** Inside Poetry */
+                data.wipData = bodymatter[eleIndex[0]].contents.bodymatter[eleIndex[2]];
                 break;
-            case 'element-citation':                 /** In Citations */
+            case 'element-citation':                 /** Inside Citations */
                 data.wipData = bodymatter[eleIndex[0]].contents.bodymatter[eleIndex[1] - 1];
                 break;
             case 'element-list':
@@ -290,7 +291,16 @@ export const fetchParentData = (bodymatter, indexes) => {
             element: bodymatter[tempIndex[0]]
         }
 
-        let parentElement = tempIndex.length == 3 ? bodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]] : bodymatter[tempIndex[0]]
+        let parentElement = bodymatter[tempIndex[0]];
+
+        if (tempIndex.length == 3) {
+            if (bodymatter[tempIndex[0]].type == 'poetry') {
+                parentElement = bodymatter[tempIndex[0]].contents.bodymatter[tempIndex[1]];
+            } else {
+                parentElement = bodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]];
+            }
+        }
+
         parentData.parentUrn = {
             manifestUrn: parentElement.id,
             contentUrn: parentElement.contentUrn,
