@@ -414,7 +414,6 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                         });
                     } else {
                         currentParentData = slateData.data[manifestURN];
-                        // currentParentData.contents.bodymatter.push(multiColumnData)
                         dispatch({
                             type: FETCH_SLATE_DATA,
                             payload: {

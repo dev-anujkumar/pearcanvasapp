@@ -37,18 +37,16 @@ class MultiColumnContainer extends PureComponent {
     renderBlankContainer = (_context, parentUrn, asideData, parentIndex) => {
         let index = 0
         return (
-            <>
-                <ElementSaprator
-                    index={index}
-                    firstOne={true}
-                    esProps={_context.elementSeparatorProps(index, true, parentUrn, asideData, parentIndex)}
-                    elementType="group"
-                    sectionBreak={false}
-                    permissions={_context.permissions}
-                    onClickCapture={_context.onClickCapture}
-                    splithandlerfunction={_context.splithandlerfunction}
-                />
-            </>
+            <ElementSaprator
+                index={index}
+                firstOne={true}
+                esProps={_context.elementSeparatorProps(index, true, parentUrn, asideData, parentIndex)}
+                elementType="group"
+                sectionBreak={false}
+                permissions={_context.permissions}
+                onClickCapture={_context.onClickCapture}
+                splithandlerfunction={_context.splithandlerfunction}
+            />
         )
     }
     
@@ -133,9 +131,6 @@ class MultiColumnContainer extends PureComponent {
                         </React.Fragment>
                     )
                 })
-            }
-            else {
-                // handle error
             }
         } catch (error) {
             // handle error
