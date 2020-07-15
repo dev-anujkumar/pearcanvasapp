@@ -270,7 +270,7 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn) => {
 */
 export const fetchParentData = (bodymatter, indexes) => {
     let parentData = {};
-    let tempIndex = Array.isArray(indexes) || (typeof indexes === "number") ? indexes : indexes.split("-");
+    let tempIndex = Array.isArray(indexes) ? indexes : (typeof indexes === "number") ? indexes.toString() : indexes.split("-");
     let isChildElement = elementType.indexOf(bodymatter[tempIndex[0]].type) === -1 ? true : false
 
     if (isChildElement == true) {
