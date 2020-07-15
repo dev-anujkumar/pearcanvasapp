@@ -85,8 +85,7 @@ export const sendElementTcmSnapshot = (snapshotData)=> (dispatch, getState) =>{
 /**
      * @description - Get latest version of comtainer elemens and slate
      * @param {String} containerUrn | Container Entity URN
-  */
-
+*/
 export const getLatestVersion = async (containerUrn) => {
     try {
         let data = await axios.get(`https://contentapis-qa.pearsoncms.net/structure-api/context/v2/${config.projectUrn}/container/${containerUrn}/versions`, {
@@ -100,3 +99,4 @@ export const getLatestVersion = async (containerUrn) => {
         console.log('Error in getting version', err)
     }
 }
+
