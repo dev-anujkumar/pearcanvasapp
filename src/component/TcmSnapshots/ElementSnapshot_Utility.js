@@ -245,16 +245,16 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn) => {
             data.parentUrn = "approved"
         }
         switch (type) {
-            case 'element-citation':                 /** Inside Citations */
-            data.wipData = bodymatter[eleIndex[0]].contents.bodymatter[eleIndex[1]-1];
+            case 'stanza':                           /** In Poetry */
+                wipData = bodymatter[eleIndex[0]].contents.bodymatter[eleIndex[2]];
                 break;
-            case 'stanza':                           /** Inside Poetry */
-            data.wipData = bodymatter[eleIndex[0]].contents.bodymatter[eleIndex[2]];
+            case 'element-citation':                 /** In Citations */
+                wipData = bodymatter[eleIndex[0]].contents.bodymatter[eleIndex[1] - 1];
                 break;
-            case 'element-learningobjectives':
             case 'element-list':
             case 'element-blockfeature':
             case 'element-authoredtext':
+            case 'element-learningobjectives':
                 if (eleIndex.length == 2) {          /** Inside WE-HEAD | Aside */
                     data.wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]];
                 } else if (eleIndex.length == 3) {   /** Inside WE-BODY */
@@ -267,6 +267,37 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn) => {
         }
     }
     return data;
+}
+
+/**
+ * @function fetchParentData
+ * @description-This function is to set the parentData for the element
+ * @param {Object} bodymatter - bodymatter before delete  
+ * @param {String/Number} indexes - index of element converted
+ * @returns {Object}
+*/
+export const fetchParentData = (bodymatter, indexes) => {
+    let parentData = {};
+    let tempIndex = Array.isArray(indexes) ? indexes : (typeof indexes === "number") ? indexes.toString() : indexes.split("-");
+    let isChildElement = elementType.indexOf(bodymatter[tempIndex[0]].type) === -1 ? true : false
+
+    if (isChildElement == true) {
+        parentData.asideData = {
+            contentUrn: bodymatter[tempIndex[0]].contentUrn,
+            id: bodymatter[tempIndex[0]].id,
+            subtype: bodymatter[tempIndex[0]].subtype,
+            type: bodymatter[tempIndex[0]].type,
+            element: bodymatter[tempIndex[0]]
+        }
+
+        let parentElement = tempIndex.length == 3 ? bodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]] : bodymatter[tempIndex[0]]
+        parentData.parentUrn = {
+            manifestUrn: parentElement.id,
+            contentUrn: parentElement.contentUrn,
+            elementType: parentElement.type
+        }
+    }
+    return parentData;
 }
 
 /**
@@ -386,32 +417,3 @@ const setElementTag = {
     }
 }
 
-/**
- * @function fetchParentData
- * @description-This function is to set the parentData for the element
- * @param {Object} bodymatter - bodymatter before delete  
- * @param {String/Number} indexes - index of element converted
- * @returns {Object}
-*/
-export const fetchParentData = (bodymatter, indexes) => {
-    let parentData = {};
-    let isSectionBreak = elementType.indexOf(bodymatter[indexes[0]].type) === -1 ? true : false
-
-    if (isSectionBreak == true) {
-        parentData.asideData = {
-            contentUrn: bodymatter[indexes[0]].contentUrn,
-            id: bodymatter[indexes[0]].id,
-            subtype: bodymatter[indexes[0]].subtype,
-            type: bodymatter[indexes[0]].type,
-            element: bodymatter[indexes[0]]
-        }
-
-        let parentElement = indexes.length == 3 ? bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]] : bodymatter[indexes[0]]
-        parentData.parentUrn = {
-            manifestUrn: parentElement.id,
-            contentUrn: parentElement.contentUrn,
-            elementType: parentElement.type
-        }
-    }
-    return parentData;
-}
