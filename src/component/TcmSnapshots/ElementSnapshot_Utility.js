@@ -201,7 +201,7 @@ export const fetchElementsTag = (element) => {
             eleSubType = element.subtype === "workedexample" ? "workedexample" : "aside";
             break;
         case 'element-list':
-            eleSubType = element.subtype
+            eleSubType = element.subtype? element.subtype:""
             break;
         case 'element-blockfeature':
             eleSubType = element.elementdata.type
@@ -278,6 +278,7 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn) => {
 */
 export const fetchParentData = (bodymatter, indexes) => {
     let parentData = {};
+    
     let tempIndex = Array.isArray(indexes) ? indexes : (typeof indexes === "number") ? indexes.toString() : indexes.split("-");
     let isChildElement = elementType.indexOf(bodymatter[tempIndex[0]].type) === -1 ? true : false
 
@@ -289,7 +290,13 @@ export const fetchParentData = (bodymatter, indexes) => {
             type: bodymatter[tempIndex[0]].type,
             element: bodymatter[tempIndex[0]]
         }
-
+        if(bodymatter[tempIndex[0]].status === "approved"){
+            parentData.parentData = "approved"
+        }
+        if(tempIndex.length == 3 && bodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].status === "approved"){
+            parentData.childData = "approved"
+        }
+        
         let parentElement = tempIndex.length == 3 ? bodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]] : bodymatter[tempIndex[0]]
         parentData.parentUrn = {
             manifestUrn: parentElement.id,

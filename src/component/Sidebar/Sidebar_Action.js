@@ -13,7 +13,7 @@ import { sendDataToIframe } from '../../constants/utility.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { prepareTcmSnapshots } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 import { fetchParentData } from '../TcmSnapshots/ElementSnapshot_Utility.js';
-
+import { getLatestVersion } from '../TcmSnapshots/TcmSnapshot_Actions.js';
 let imageSource = ['image','table','mathImage'],imageDestination = ['primary-image-figure','primary-image-table','primary-image-equation']
 let elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza'];
 
@@ -230,14 +230,13 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             "PearsonSSOSession": config.ssoToken
         }
     }).then(res =>{
-
+        
+        let parentData = store;
+        let currentParentData = JSON.parse(JSON.stringify(parentData));
+        let currentSlateData = currentParentData[config.slateManifestURN];
         /** [PCAT-8289] -------------------------------- TCM Snapshot Data handling ----------------------------------*/
         if (elementType.indexOf(oldElementData.type) !== -1) {
-            let convertAppStore = JSON.parse(JSON.stringify(appStore.slateLevelData));
-            let convertSlate = convertAppStore[config.slateManifestURN];
-            let convertBodymatter = convertSlate.contents.bodymatter;
-            let convertParentData = fetchParentData(convertBodymatter, indexes);
-            dispatch(prepareTcmSnapshots(res.data, 'Update', convertParentData.asideData, convertParentData.parentUrn));
+            tcmSnapshotsForConversion(currentSlateData,appStore,indexes,dispatch,res,oldElementData,conversionDataToSend)
         }
         /**-----------------------------------------------------------------------------------------------------------*/
 
@@ -246,9 +245,6 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                 res.data.figuredata.programlanguage = 'Select';
             }
         }
-        let parentData = store;
-        let currentParentData = JSON.parse(JSON.stringify(parentData));
-        let currentSlateData = currentParentData[config.slateManifestURN];
         if (currentSlateData.status === 'approved') {
             if(currentSlateData.type==="popup"){
                 sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
@@ -411,6 +407,48 @@ function prepareDataForConversionTcm(updatedDataID, getState, dispatch,versionid
             data: tcmData
         }
     })
+}
+
+export const tcmSnapshotsForConversion = async (currentSlateData,appStore,indexes,dispatch,res,oldElementData,conversionDataToSend) => {
+    let convertAppStore = JSON.parse(JSON.stringify(appStore.slateLevelData));
+    let convertSlate = convertAppStore[config.slateManifestURN];
+    let convertBodymatter = convertSlate.contents.bodymatter;
+    let convertParentData = fetchParentData(convertBodymatter, indexes);
+    /** latest version for WE/CE/PE/AS*/
+    if (convertParentData.parentData === "approved") {
+        let contentUrn = convertParentData.asideData ? convertParentData.asideData.contentUrn : convertParentData.parentUrn ? convertParentData.parentUrn.contentUrn : ""
+        if (contentUrn) {
+            let newdata = await getLatestVersion(contentUrn);
+            if (newdata) {
+                if (convertParentData.asideData) {
+                    convertParentData.asideData.id = newdata
+                    convertParentData.parentUrn.manifestUrn = newdata
+                }
+                else if (convertParentData.parentUrn) {
+                    convertParentData.parentUrn.manifestUrn = newdata
+                }
+            }
+        }
+    }
+     /** latest version for SB*/
+     if (convertParentData.childData === "approved") {
+        let newdata = await getLatestVersion(convertParentData.parentUrn.contentUrn);
+        convertParentData.parentUrn.manifestUrn = newdata ? newdata : convertParentData.parentUrn.manifestUrn
+    }
+    
+    // if (conversionDataToSend.id !== res.data.id) {
+        let oldData = Object.assign({}, res.data);
+        oldData.elementdata = oldElementData.elementdata
+        oldData.html = oldElementData.html
+        oldData.type =oldElementData.type
+        oldData.subtype = oldElementData.subtype
+        if (currentSlateData.status === 'approved') {
+            let newdata = await getLatestVersion(currentSlateData.contentUrn);
+            config.slateManifestURN = newdata ? newdata : config.slateManifestURN
+        }
+        dispatch(prepareTcmSnapshots(oldData, 'Create', convertParentData.asideData, convertParentData.parentUrn,"","","Accepted"))
+    // }
+        dispatch(prepareTcmSnapshots(res.data, 'Update', convertParentData.asideData, convertParentData.parentUrn));
 }
 
 const prepareAssessmentDataForConversion = (oldElementData, format) => {
