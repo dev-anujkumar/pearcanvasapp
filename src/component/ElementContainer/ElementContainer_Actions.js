@@ -470,8 +470,14 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
             }
         } else if (parentElement && parentElement.type === "groupedcontent") {
             let indexes = elementIndex.split("-")
+            let element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
             _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]] = {
+                ...element,
                 ...updatedData,
+                elementdata: {
+                    ...element.elementdata,
+                    text: updatedData.elementdata ? updatedData.elementdata.text : null
+                },
                 tcm: _slateObject.tcm ? true : false
             }
         } else {

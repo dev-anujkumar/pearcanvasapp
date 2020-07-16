@@ -174,7 +174,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
             newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
         }
         if (config.tcmStatus) {
-            let elementType = ['WORKED_EXAMPLE', 'CONTAINER', 'SECTION_BREAK', 'TEXT', 'CITATION', 'ELEMENT_CITATION', 'POETRY', 'STANZA'];
+            let elementType = ['WORKED_EXAMPLE', 'CONTAINER', 'SECTION_BREAK', 'TEXT', 'CITATION', 'ELEMENT_CITATION', 'POETRY', 'STANZA', "MULTI_COLUMN"];
             if (elementType.indexOf(type) !== -1) {
                 prepareDataForTcmCreate(type, createdElementData, getState, dispatch);
             }
@@ -244,6 +244,16 @@ function prepareDataForTcmCreate(type, createdElementData, getState, dispatch) {
     }
     else if (type === 'TEXT' || type === 'ELEMENT_CITATION' || type === "STANZA") {
         elmUrn.push(createdElementData.id)
+    }
+    else if (type === "MULTI_COLUMN") {
+        /** First Column */
+        createdElementData.groupeddata.bodymatter[0].groupdata.bodymatter.map(item => {
+            elmUrn.push(item.id)
+        })
+        /** Second Column */
+        createdElementData.groupeddata.bodymatter[1].groupdata.bodymatter.map(item => {
+            elmUrn.push(item.id)
+        })
     }
 
     elmUrn.map((item) => {
