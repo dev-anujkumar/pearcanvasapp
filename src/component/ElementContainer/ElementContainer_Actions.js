@@ -8,8 +8,7 @@ import {
 import { AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP, OPEN_GLOSSARY_FOOTNOTE,DELETE_SHOW_HIDE_ELEMENT, GET_TCM_RESOURCES} from "./../../constants/Action_Constants";
 import { customEvent } from '../../js/utils';
 import { prepareTcmSnapshots } from '../TcmSnapshots/TcmSnapshots_Utility.js';
-import { fetchElementWipData } from '../TcmSnapshots/ElementSnapshot_Utility.js';
-import { getLatestVersion } from '../TcmSnapshots/TcmSnapshot_Actions.js';
+import { fetchElementWipData, checkContainerElementVersion } from '../TcmSnapshots/ElementSnapshot_Utility.js';
 let elementTypeTCM = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza'];
 let containerType = ['element-aside', 'manifest', 'citations', 'poetry'];
 
@@ -122,7 +121,12 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
             let deleteBodymatter = deleteParentData[config.slateManifestURN].contents.bodymatter
             if (elementTypeTCM.indexOf(type) !== -1 || containerType.indexOf(type) !== -1) {
                 let deleteData = fetchElementWipData(deleteBodymatter, index, type, contentUrn)
-                dispatch(prepareTcmSnapshots(deleteData.wipData, 'delete', asideData, parentUrn, poetryData, type))
+                let containerElement={
+                    asideData:asideData,
+                    parentUrn:parentUrn,
+                    poetryData:poetryData
+                }
+                dispatch(prepareTcmSnapshots(deleteData.wipData, 'delete', containerElement, type, ""))
             }
             /**-----------------------------------------------------------------------------------------------*/
 
@@ -322,7 +326,19 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
 
         /** [PCAT-8289] -------------------------- TCM Snapshot Data handling ----------------------------*/
         if (elementTypeTCM.indexOf(response.data.type) !== -1 && (parentElement && parentElement.type !== 'showhide')) {
-            tcmSnapshotsForUpdate(updateBodymatter, elementIndex, response.data, asideData, parentUrn, poetryData, dispatch, currentSlateData, updatedData);
+            let containerElement={
+                asideData:asideData,
+                parentUrn:parentUrn,
+                poetryData:poetryData
+            },
+            elementUpdateData ={
+                currentSlateData:currentSlateData,
+                updateBodymatter:updateBodymatter,
+                response:response.data,
+                updatedId:updatedData.id
+            }
+            tcmSnapshotsForUpdate(elementUpdateData, elementIndex, containerElement, dispatch);
+            
         }
         /**--------------------------------------------------------------------------------------------------------------*/
 
@@ -389,52 +405,26 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
 /**
      * @description - prepare data to create snapshots on update element
 */
-export const tcmSnapshotsForUpdate = async (updateBodymatter, elementIndex, response, asideData, parentUrn, poetryData, dispatch, currentSlateData, updatedData) => {
-    let data = fetchElementWipData(updateBodymatter, elementIndex, response.type)
+export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, containerElement, dispatch) => {
+    let data = fetchElementWipData(elementUpdateData.updateBodymatter, elementIndex, elementUpdateData.response.type)
     /** latest version for WE/CE/PE/AS*/
-    if (data.parentUrn === "approved") {
-        let contentUrn = asideData ? asideData.contentUrn : poetryData ? poetryData.contentUrn : parentUrn ? parentUrn.contentUrn : ""
-        if (contentUrn) {
-            let newdata = await getLatestVersion(contentUrn);
-            if (newdata) {
-                if (poetryData) {
-                    poetryData.id = newdata;
-                    poetryData.parentUrn = newdata;
-                }
-                else if (asideData) {
-                    asideData.id = newdata
-                    parentUrn.manifestUrn = newdata
-                }
-                else if (parentUrn) {
-                    parentUrn.manifestUrn = newdata
-                }
-            }
-        }
-    }
-    /** latest version for SB*/
-    if (data.childUrn === "approved") {
-        let newdata = await getLatestVersion(parentUrn.contentUrn);
-        parentUrn.manifestUrn = newdata ? newdata : parentUrn.manifestUrn
-    }
-    /** latest version for slate*/
-    if (currentSlateData.status === 'approved') {
-        let newdata = await getLatestVersion(currentSlateData.contentUrn);
-        config.slateManifestURN = newdata ? newdata : config.slateManifestURN
-    }
-    /** Before versioning snapshots*/
-    dispatch(prepareTcmSnapshots(response, 'update', asideData, parentUrn, poetryData, "", ""))
-    if (response.id !== updatedData.id) {
-        if (response.poetrylines) {
-            response.poetrylines = data.wipData.poetrylines
+    containerElement = await checkContainerElementVersion(containerElement, data, elementUpdateData.currentSlateData)
+    let oldData = Object.assign({}, elementUpdateData.response);
+    if (elementUpdateData.response.id !== elementUpdateData.updatedDataId) {
+        if (oldData.poetrylines) {
+            oldData.poetrylines = data.wipData.poetrylines
         }
         else {
-            response.elementdata = data.wipData.elementdata
+            oldData.elementdata = data.wipData.elementdata
         }
-        response.html = data.wipData.html
+        oldData.html = data.wipData.html
         /** After versioning snapshots*/
-        dispatch(prepareTcmSnapshots(response, 'update', asideData, parentUrn, poetryData, "", "Accepted"))
+        dispatch(prepareTcmSnapshots(oldData, 'Create', containerElement, "", "Accepted"))
     }
+    /** Before versioning snapshots*/
+    dispatch(prepareTcmSnapshots(elementUpdateData.response, 'Update', containerElement, "", ""))
 }
+
 function updateLOInStore(updatedData, versionedData, getState, dispatch) {
     let parentData = getState().appStore.slateLevelData;
     let newslateData = JSON.parse(JSON.stringify(parentData));
