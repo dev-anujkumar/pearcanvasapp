@@ -50,6 +50,7 @@ export const handleTCMData = (slateManifestUrn) => (dispatch, getState) => {
     })
 
 }
+
 export const tcmSnapshot = (slateManifestUrn,slateEntityUrn) => (dispatch, getState) => {
     let url = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/tcm/${slateEntityUrn}/${slateManifestUrn}?page=0`;
     return axios.get(url, {
@@ -64,10 +65,15 @@ export const tcmSnapshot = (slateManifestUrn,slateEntityUrn) => (dispatch, getSt
 
 }
 
-export const sendElementTcmSnapshot = (snapshotData)=> (dispatch, getState) =>{
+/**
+     * @description Send TCM Snapshot for the element
+     * @param {Object} snapshotData | TCM Snapshot data
+*/
+export const sendElementTcmSnapshot = async (snapshotData) => {
     /** requestBody = snapshotData
      * API CALL HERE
      */
+    await snapshotData
     console.log('snapshotData',snapshotData)
     //     let url = `http://localhost:3000/tctx/proj/urn:pearson:distributable:764e139b-621e-48fc-a451-cb50878f48e1/slate/urn:pearson:manifest:ba874ceb-0536-4965-9e4a-d7241f88bfad/elem/urn:pearson:work:93714c08-1a76-4ca8-9c94-5a0b515b6ce0`;
     // return axios.post(url, snapshotData, {
@@ -82,13 +88,14 @@ export const sendElementTcmSnapshot = (snapshotData)=> (dispatch, getState) =>{
     // })
 
 }
+
 /**
      * @description - Get latest version of comtainer elemens and slate
      * @param {String} containerUrn | Container Entity URN
 */
 export const getLatestVersion = async (containerUrn) => {
     try {
-        let data = await axios.get(`https://contentapis-qa.pearsoncms.net/structure-api/context/v2/${config.projectUrn}/container/${containerUrn}/versions`, {
+        let data = await axios.get(`${config.AUDIO_NARRATION_URL}context/v2/${config.projectUrn}/container/${containerUrn}/versions`, {
             headers: {
                 "Content-Type": "application/json",
                 "PearsonSSOSession": config.ssoToken

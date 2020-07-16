@@ -4,7 +4,8 @@ import store from '../../appstore/store.js'
 import { sendDataToIframe, createTitleSubtitleModel } from '../../constants/utility.js';
 import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 import { prepareTcmSnapshots } from '../TcmSnapshots/TcmSnapshots_Utility.js';
-import { fetchParentData } from '../TcmSnapshots/ElementSnapshot_Utility.js';
+import { fetchParentData, fetchElementWipData } from '../TcmSnapshots/ElementSnapshot_Utility.js';
+import { getLatestVersion } from '../TcmSnapshots/TcmSnapshot_Actions.js';
 const {
     REACT_APP_API_URL
 } = config
@@ -325,6 +326,9 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
 
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })  //show saving spinner
     
+    let tcmBodymatter = store.getState().appStore.slateLevelData[config.slateManifestURN].contents.bodymatter;
+    let tcmParentData = fetchParentData(tcmBodymatter, index);
+    
     let url = `${config.REACT_APP_API_URL}v1/slate/element?type=${type.toUpperCase()}&id=${glossaryfootnoteid}`
     console.log('from footnote actions')
     return axios.put(url, JSON.stringify(data), {
@@ -336,11 +340,9 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         let parentData1 = store.getState().appStore.slateLevelData;
         let currentParentData = JSON.parse(JSON.stringify(parentData1));
         let currentSlateData = currentParentData[config.slateManifestURN];
-        /** [PCAT-8289] ----------------------------------- TCM Snapshot Data handling ----------------------------------*/
+        /** [PCAT-8289] ----------------------------------- TCM Snapshot Data handling ---------------------------------*/
         if (elementTypeData.indexOf(elementType) !== -1) {
-            let tcmBodymatter = currentSlateData.contents.bodymatter
-            let tcmParentData = fetchParentData(tcmBodymatter, index);
-            store.dispatch(prepareTcmSnapshots(res.data, 'Update', tcmParentData.asideData, tcmParentData.parentUrn));
+            tcmSnapshotsForGlossaryFootnote(tcmBodymatter, index, res.data, tcmParentData.asideData, tcmParentData.parentUrn, undefined, store.dispatch, currentSlateData, elementWorkId)
         }
         /**-------------------------------------------------------------------------------------------------------------*/
         if(res.data.id !== data.id && currentSlateData.status === 'approved'){
@@ -522,6 +524,57 @@ store.dispatch({
         data: tcmData
     }
 })
+}
+
+/**
+     * @description - prepare data to create snapshots on update element
+*/
+export const tcmSnapshotsForGlossaryFootnote = async (updateBodymatter, elementIndex, response, asideData, parentUrn, poetryData, dispatch, currentSlateData, updatedDataId) => {
+    let data = fetchElementWipData(updateBodymatter, elementIndex, response.type)
+    /** latest version for WE/CG/PE/AS*/
+    if (data.parentUrn === "approved") {
+        let contentUrn = asideData ? asideData.contentUrn : poetryData ? poetryData.contentUrn : parentUrn ? parentUrn.contentUrn : ""
+        if (contentUrn) {
+            let newdata = await getLatestVersion(contentUrn);
+            if (newdata) {
+                if (poetryData) {
+                    poetryData.id = newdata;
+                    poetryData.parentUrn = newdata;
+                }
+                else if (asideData) {
+                    asideData.id = newdata
+                    parentUrn.manifestUrn = newdata
+                }
+                else if (parentUrn) {
+                    parentUrn.manifestUrn = newdata
+                }
+            }
+        }
+    }
+    /** latest version for SB*/
+    if (data.childUrn === "approved") {
+        let newdata = await getLatestVersion(parentUrn.contentUrn);
+        parentUrn.manifestUrn = newdata ? newdata : parentUrn.manifestUrn
+    }
+    /** latest version for slate*/
+    if (currentSlateData.status === 'approved') {
+        let newdata = await getLatestVersion(currentSlateData.contentUrn);
+        config.slateManifestURN = newdata ? newdata : config.slateManifestURN
+    }
+    /** Before versioning snapshots*/
+    dispatch(prepareTcmSnapshots(response, 'update', asideData, parentUrn, poetryData, "", ""))
+    if (response.id !== updatedDataId) {
+        if (response.poetrylines) {
+            response.poetrylines = data.wipData.poetrylines
+        }
+        else {
+            response.elementdata = data.wipData.elementdata
+        }
+        response.html = data.wipData.html
+        /** After versioning snapshots*/
+        dispatch(prepareTcmSnapshots(response, 'create', asideData, parentUrn, poetryData, "", "Accepted"))
+    }
+
 }
 
 /**

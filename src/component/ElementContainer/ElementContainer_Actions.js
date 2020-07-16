@@ -391,7 +391,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
 */
 export const tcmSnapshotsForUpdate = async (updateBodymatter, elementIndex, response, asideData, parentUrn, poetryData, dispatch, currentSlateData, updatedData) => {
     let data = fetchElementWipData(updateBodymatter, elementIndex, response.type)
-    /** latest version for WE/CE/PE/AS*/
+    /** latest version for WE/CG/PE/AS*/
     if (data.parentUrn === "approved") {
         let contentUrn = asideData ? asideData.contentUrn : poetryData ? poetryData.contentUrn : parentUrn ? parentUrn.contentUrn : ""
         if (contentUrn) {
@@ -432,7 +432,7 @@ export const tcmSnapshotsForUpdate = async (updateBodymatter, elementIndex, resp
         }
         response.html = data.wipData.html
         /** After versioning snapshots*/
-        dispatch(prepareTcmSnapshots(response, 'update', asideData, parentUrn, poetryData, "", "Accepted"))
+        dispatch(prepareTcmSnapshots(response, 'create', asideData, parentUrn, poetryData, "", "accepted"))
     }
 }
 function updateLOInStore(updatedData, versionedData, getState, dispatch) {

@@ -23,13 +23,13 @@ export const setSemanticsSnapshots = async (status, element) => {
             footnoteList = element.elementdata && element.elementdata.footnotes ? element.elementdata.footnotes : [];
             footnoteSnap = prepareFootnoteSnapshotContent(status, footnoteList);
             assetPopoverList = element.elementdata && element.elementdata.internallinks ? element.elementdata.internallinks : [];
-            assetPopoverSnap = await prepareAssetPopoverSnapshotContent(assetPopoverList)
+            assetPopoverSnap = prepareAssetPopoverSnapshotContent(assetPopoverList)
             break;
 
         case 'element-list':
-            glossarySnap = await setSnapshotsInListAndPoetry(status, element.elementdata.listitems, 'glossary');
-            footnoteSnap = await setSnapshotsInListAndPoetry(status, element.elementdata.listitems, 'footnote');
-            assetPopoverSnap = await setSnapshotsInListAndPoetry(status, element.elementdata.listitems, 'assetpopover');
+            glossarySnap = setSnapshotsInListAndPoetry(status, element.elementdata.listitems, 'glossary');
+            footnoteSnap = setSnapshotsInListAndPoetry(status, element.elementdata.listitems, 'footnote');
+            assetPopoverSnap = setSnapshotsInListAndPoetry(status, element.elementdata.listitems, 'assetpopover');
             break;
 
         case 'element-blockfeature':
@@ -37,13 +37,13 @@ export const setSemanticsSnapshots = async (status, element) => {
             footnoteList = element.elementdata && element.elementdata.authoredtext && element.elementdata.authoredtext.footnotes ? element.elementdata.authoredtext.footnotes : [];
             footnoteSnap = prepareFootnoteSnapshotContent(status, footnoteList)
             assetPopoverList = element.elementdata && element.elementdata.authoredtext && element.elementdata.authoredtext.internallinks ? element.elementdata.authoredtext.internallinks : [];
-            assetPopoverSnap = await prepareAssetPopoverSnapshotContent(assetPopoverList)
+            assetPopoverSnap = prepareAssetPopoverSnapshotContent(assetPopoverList)
             break;
 
         case 'stanza':
-            glossarySnap = await setSnapshotsInListAndPoetry(status, element.poetrylines, 'glossary');
-            footnoteSnap = await setSnapshotsInListAndPoetry(status, element.poetrylines, 'footnote');
-            assetPopoverSnap = await setSnapshotsInListAndPoetry(status, element.poetrylines, 'assetpopover');
+            glossarySnap = setSnapshotsInListAndPoetry(status, element.poetrylines, 'glossary');
+            footnoteSnap = setSnapshotsInListAndPoetry(status, element.poetrylines, 'footnote');
+            assetPopoverSnap = setSnapshotsInListAndPoetry(status, element.poetrylines, 'assetpopover');
             break;
 
         default:
@@ -58,8 +58,7 @@ export const setSemanticsSnapshots = async (status, element) => {
         footnoteSnapshot: footnoteSnap,
         assetPopoverSnapshot: assetPopoverSnap
     }
-    // console.log('semanticSnapshots',semanticSnapshots)
-    return await semanticSnapshots
+    return semanticSnapshots
 }
 
 /** 
@@ -70,7 +69,7 @@ export const setSemanticsSnapshots = async (status, element) => {
  * @param {Array} elementList - List of Glossary entries in a list element
  * @returns {Array}  
 */
-const setSnapshotsInListAndPoetry = async (status, elementList, semanticType) => {
+const setSnapshotsInListAndPoetry = (status, elementList, semanticType) => {
     let snapshotsList = []
     for (let item of elementList) {
         if ((item.type == "paragraph" || item.type == "line") && item.authoredtext) {
@@ -82,10 +81,10 @@ const setSnapshotsInListAndPoetry = async (status, elementList, semanticType) =>
                 snapshotsList = snapshotsList.concat(prepareFootnoteSnapshotContent(status, footnoteArray));
             } else if (semanticType === 'assetpopover') {
                 let assetLists = item.authoredtext.internallinks ? item.authoredtext.internallinks : [];
-                snapshotsList = snapshotsList.concat(await prepareAssetPopoverSnapshotContent(assetLists));
+                snapshotsList = snapshotsList.concat(prepareAssetPopoverSnapshotContent(assetLists));
             }
         } else if (item.listitems && item.listitems.length > 0) { // for nested lists
-            snapshotsList = snapshotsList.concat(setSnapshotsInListAndPoetry(status, item.listitems, semanticType))
+            snapshotsList = snapshotsList.concat(setSnapshotsInListAndPoetry(status, item.listitems, semanticType));
         }
     }
     return snapshotsList
@@ -102,7 +101,7 @@ const prepareGlossarySnapshotContent = (status, glossaryList) => {
     let glossarySnap = []
     glossaryList && glossaryList.length && glossaryList.map(glossaryItem => {
         let glossaryData = {
-            changeStatus: status,
+            changeStatus: status.charAt(0).toUpperCase() + status.slice(1),
             changeType: "Update",
             charAt: glossaryItem.charAt,
             glossaryId: glossaryItem.itemid
@@ -130,8 +129,8 @@ const prepareFootnoteSnapshotContent = (status, footnoteList) => {
     let footnoteSnap = []
     footnoteList && footnoteList.length && footnoteList.map(footnoteItem => {
         let footnoteData = {
-            changeStatus: status,//Accepted/Pending
-            changeType: status,//"Update",
+            changeStatus: status.charAt(0).toUpperCase() + status.slice(1),
+            changeType: "Update",
             charAt: footnoteItem.charAt,
             footnoteid: footnoteItem.footnoteid
         }
@@ -164,6 +163,7 @@ const prepareAssetPopoverSnapshotContent = async (assetsList) => {
     await prepareASContentSnapshot(elementASLinkID, assetPopoverSnap)
     return assetPopoverSnap
 }
+
 /**
  * @function prepareASContentSnapshot
  * @description-This function is to prepare snapshot content for each Asset Popover entry
@@ -183,7 +183,6 @@ export const prepareASContentSnapshot = async (elementASLinkID, assetPopoverSnap
     }
     return assetPopoverSnap
 }
-
 
 /**
  * @function fetchElementsTag
@@ -418,4 +417,3 @@ const setElementTag = {
         }
     }
 }
-
