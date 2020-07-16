@@ -9,8 +9,8 @@ import { sendElementTcmSnapshot } from './TcmSnapshot_Actions.js';
 import { setSemanticsSnapshots, fetchElementsTag } from './ElementSnapshot_Utility.js';
 
 let elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza'];
-let containerType = ['element-aside', 'manifest', 'citations', 'poetry'];
-let containerElem = ['WORKED_EXAMPLE', 'CONTAINER', 'SECTION_BREAK', 'CITATION', 'POETRY']
+let containerType = ['element-aside', 'manifest', 'citations', 'poetry','WORKED_EXAMPLE', 'CONTAINER', 'SECTION_BREAK', 'CITATION', 'POETRY'];
+
 /**
  * @function prepareTcmSnapshots
  * @description This is the root function to preapare the data for TCM Snapshots
@@ -26,7 +26,7 @@ export const prepareTcmSnapshots = (wipData, action, asideData, parentUrn, poetr
     let isContainer = false
     if ((poetryData || asideData || parentUrn) ||
         (containerType.indexOf(wipData.type) !== -1) ||
-        (type && (containerType.indexOf(type) !== -1) || containerElem.indexOf(type) !== -1)) {
+        (type && (containerType.indexOf(type) !== -1))) {
         isContainer = true
     }
     let defaultKeys = setDefaultKeys(action,status,isContainer)
