@@ -41,8 +41,10 @@ jest.mock('../../../src/js/utils', () => {
             trigger: jest.fn(),
             unsubscribe: jest.fn(),
             removeListenr: jest.fn(),
-        }
+        },
+        removeBOM: () => { }
     }
+
 })
 jest.mock('../../../src/appstore/store.js', () => {
     return {
@@ -2026,6 +2028,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
             })
             component.update();
             tinymce.activeEditor.selection = editor.selection;
+            tinymce.activeEditor.dom = domObj;
             const spypastePreProcess = jest.spyOn(instance, 'pastePreProcess')
             instance.pastePreProcess(plugin, args);
             expect(spypastePreProcess).toHaveBeenCalled()
@@ -2053,6 +2056,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
             instance.notFormatting = true;
             instance.copyContent = "PasteData"
             tinymce.activeEditor.selection = editor.selection;
+            tinymce.activeEditor.dom = domObj;
             const spypastePreProcess = jest.spyOn(instance, 'pastePreProcess')
             instance.pastePreProcess(plugin, args);
             expect(spypastePreProcess).toHaveBeenCalled()
@@ -2078,6 +2082,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
             })
             component.update();
             tinymce.activeEditor.selection = editor.selection;
+            tinymce.activeEditor.dom = domObj;
             instance.notFormatting = false;
             instance.copyContent = "PasteData"
             const spypastePreProcess = jest.spyOn(instance, 'pastePreProcess')
@@ -2107,6 +2112,8 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
         component.update();
         instance.notFormatting = true;
         instance.copyContent = "PasteData"
+        tinymce.activeEditor.selection = editor.selection;
+        tinymce.activeEditor.dom = domObj;
         const spypastePostProcess = jest.spyOn(instance, 'pastePostProcess')
         instance.pastePostProcess(plugin, args);
         expect(spypastePostProcess).toHaveBeenCalled()
@@ -3557,7 +3564,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                 stopPropagation: jest.fn(),
                 target: {
                     id: "",
-                    parentElement: { nodeName: "SUP" },
+                    parentElement: { nodeName: "SUP", childNodes: [{ nodeName: 'A' }] },
                     dataset: { uri: "uri" },
                     nodeName: "SUP"
                 },
@@ -3585,7 +3592,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                 stopPropagation: jest.fn(),
                 target: {
                     id: "",
-                    parentElement: { nodeName: "SUP" },
+                    parentElement: { nodeName: "SUP", childNodes: [{ nodeName: 'A' }] },
                     dataset: { uri: "uri" },
                     nodeName: "SUP",
                     closest: () => { return false; }
@@ -3959,7 +3966,8 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                     classList: {
                         remove: () => { }
                     },
-                    setAttribute: () => { }
+                    setAttribute: () => { },
+                    remove: () => { }
                 }
             }
         }
@@ -3989,7 +3997,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                 type: 'click',
                 target: {
                     id: "",
-                    parentElement: { nodeName: "SUP" },
+                    parentElement: { nodeName: "SUP", childNodes: [{ nodeName: 'A' }] },
                     dataset: { uri: "uri" },
                     nodeName: "SUP"
                 },
@@ -4058,7 +4066,8 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                         remove: () => { }
                     },
                     setAttribute: () => { },
-                    getAttribute: () => { }
+                    getAttribute: () => { },
+                    remove: () => { }
                 }
             }
             tinymce.activeEditor = {
@@ -4135,7 +4144,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                 type: 'click',
                 target: {
                     id: "",
-                    parentElement: { nodeName: "SUP" },
+                    parentElement: { nodeName: "SUP", childNodes: [{ nodeName: 'A' }] },
                     dataset: { uri: "uri" },
                     nodeName: "SUP"
                 },
@@ -4208,7 +4217,8 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                         remove: () => { }
                     },
                     setAttribute: () => { },
-                    getAttribute: () => { }
+                    getAttribute: () => { },
+                    remove: () => { }
                 }
             }
             tinymce.activeEditor = {
@@ -4284,7 +4294,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                 type: 'click',
                 target: {
                     id: "",
-                    parentElement: { nodeName: "SUP" },
+                    parentElement: { nodeName: "SUP", childNodes: [{ nodeName: 'A' }] },
                     dataset: { uri: "uri" },
                     nodeName: "SUP"
                 },
@@ -4343,7 +4353,8 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                         remove: () => { }
                     },
                     setAttribute: () => { },
-                    getAttribute: () => { }
+                    getAttribute: () => { },
+                    remove: () => { }
                 }
             }
             tinymce.$ = () => {
@@ -4435,7 +4446,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                 type: 'click',
                 target: {
                     id: "",
-                    parentElement: { nodeName: "SUP" },
+                    parentElement: { nodeName: "SUP", childNodes: [{ nodeName: 'A' }] },
                     dataset: { uri: "uri" },
                     nodeName: "SUP"
                 },
@@ -4494,7 +4505,8 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                         remove: () => { }
                     },
                     setAttribute: () => { },
-                    getAttribute: () => { }
+                    getAttribute: () => { },
+                    remove: () => { }
                 }
             }
             tinymce.$ = () => {
@@ -4588,7 +4600,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                 type: 'click',
                 target: {
                     id: "",
-                    parentElement: { nodeName: "SUP" },
+                    parentElement: { nodeName: "SUP", childNodes: [{ nodeName: 'A' }] },
                     dataset: { uri: "uri" },
                     nodeName: "SUP"
                 },

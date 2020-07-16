@@ -58,7 +58,10 @@ let initialState = {
     },
     tcmReducer:{
         tcmSnapshot:{}
-    }
+    },
+    elementStatusReducer: {
+        "urn:pearson:work:ee2b0c11-75eb-4a21-87aa-578750b5301d": "wip"       
+    },
 };
 
 let store = mockStore(initialState);
