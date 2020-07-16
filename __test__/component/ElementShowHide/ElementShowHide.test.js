@@ -11,8 +11,9 @@ const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 const store = mockStore({
     elementStatusReducer: {
-        currentElement: { 'urn:pearson:work:32e659c2-e0bb-46e8-9605-b8433aa3836c': "wip" }
-    }
+        currentElement: { 'urn:pearson:work:32e659c2-e0bb-46e8-9605-b8433aa3836c': "wip" },
+        "urn:pearson:work:32e659c2-e0bb-46e8-9605-b8433aa3836c": "wip"        
+    },
 });
 
 jest.mock('../../../src/component/tinyMceEditor.js',()=>{

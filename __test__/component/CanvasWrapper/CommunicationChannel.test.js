@@ -35,7 +35,7 @@ const initialState = {
         }
     }
 };
-tinymce.activeEditor.undoManager= {transact : ()=>{}}
+
 jest.mock('../../../src/auth/openam.js', () => {
     return function () {
         this.isUserAuthenticated = function () { }
