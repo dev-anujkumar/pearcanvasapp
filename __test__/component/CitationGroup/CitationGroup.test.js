@@ -58,7 +58,7 @@ let initialState = {
 
 let store = mockStore(initialState);
 
-describe('Testing CitationGroup component with props', () => {
+xdescribe('Testing CitationGroup component with props', () => {
     let props = {
         swapElement : jest.fn(),
         createPopupUnit : jest.fn()
