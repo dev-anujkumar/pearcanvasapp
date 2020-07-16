@@ -20,7 +20,7 @@ const element = document.createElement('div');
     element.innerHTML = "<p>Link Notification</p>";
     document.body.appendChild(element);
     
-describe('Tests ElementContainer Actions', () => {
+xdescribe('Tests ElementContainer Actions', () => {
     let initialState = {
         slateLevelData: slateLevelData,
         appStore: slateLevelData,

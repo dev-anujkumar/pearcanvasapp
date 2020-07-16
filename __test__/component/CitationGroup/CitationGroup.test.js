@@ -25,6 +25,13 @@ jest.mock('../../../src/component/SlateWrapper/SlateWrapper_Actions.js', () => {
         }
     }
 });
+jest.mock('../../../src/component/ElementContainer/ElementContainer_Actions.js', () => {
+    return {
+        getElementStatus: function () {
+            return (<div>null</div>)
+        }
+    }
+});
 
 const mockStore = configureMockStore(middlewares)
 
@@ -61,7 +68,7 @@ let initialState = {
 
 let store = mockStore(initialState);
 
-xdescribe('Testing CitationGroup component with props', () => {
+describe('Testing CitationGroup component with props', () => {
     let props = {
         swapElement : jest.fn(),
         createPopupUnit : jest.fn()
