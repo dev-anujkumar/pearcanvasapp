@@ -45,6 +45,9 @@ class MultiColumnContainer extends PureComponent {
                 sectionBreak={false}
                 permissions={_context.permissions}
                 onClickCapture={_context.onClickCapture}
+                asideData={asideData}
+                parentUrn={parentUrn}
+                parentIndex={parentIndex}
                 splithandlerfunction={_context.splithandlerfunction}
             />
         )
