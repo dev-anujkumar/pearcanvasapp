@@ -327,6 +327,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                 if(newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].id == elementWorkId){
                     data.isHead = false;
                     data.parentType = "groupedcontent";
+                    data.columnName = appStore.parentUrn && appStore.parentUrn.columnName
                 }
             }
         }

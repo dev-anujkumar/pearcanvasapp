@@ -1231,6 +1231,7 @@ class ElementContainer extends Component {
                         onClickCapture : this.props.onClickCapture,
                         elementSeparatorProps : elementSepratorProps,
                         setActiveElement : this.props.setActiveElement,
+                        onListSelect : this.props.onListSelect,
                         handleFocus: this.handleFocus,
                         handleBlur: this.handleBlur,
                         deleteElement: this.deleteElement,

@@ -100,6 +100,7 @@ class MultiColumnContainer extends PureComponent {
                                 isBlockerActive={this.context.isBlockerActive}
                                 onClickCapture={this.context.onClickCapture}
                                 parentElement = {this.context.element}
+                                onListSelect={this.context.onListSelect}
                             >
                                 {
                                     (isHovered, isPageNumberEnabled, activeElement, permissions) => (
