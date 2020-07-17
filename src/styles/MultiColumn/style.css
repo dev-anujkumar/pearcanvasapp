@@ -26,7 +26,7 @@
 
 /* For audio tag inside multi-column */
 .container-multi-column-group .element-container audio {
-    width: 100%;
+    width: 80%;
 }
 
 /* For CTA section of interactive external link, PDF */
