@@ -1554,7 +1554,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                                     },
                                     childNodes : [ {
                                         nodeName: 'strong',
-                                        innerHTML: 'test',
+                                        innerHTML: 'test asset',
                                         outerHTML: ''
                                     }]
                                 }]
