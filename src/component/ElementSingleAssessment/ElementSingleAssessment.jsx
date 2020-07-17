@@ -67,9 +67,9 @@ class ElementSingleAssessment extends Component {
         })
         let newElement = localStorage.getItem('newElement');
         if (newElement) {
+            localStorage.removeItem('newElement');
             setTimeout(() => {
                 this.handleAssessmentFocus();
-                localStorage.removeItem('newElement');
             }, 0)
         }
     }
@@ -146,7 +146,9 @@ static getDerivedStateFromProps(nextProps, prevState) {
     /*** @description - This function is to handle Focus on the Assessment element on click*/
     
     handleAssessmentFocus = (event) => {
-        event.stopPropagation();
+        if(event){
+            event.stopPropagation();
+        }
         this.props.handleFocus();
     }
     /*** @description - This function is to handle Blur on the Assessment element on blur*/       

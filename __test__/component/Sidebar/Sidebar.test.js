@@ -36,6 +36,13 @@ describe('Test for Sidebar component', () => {
         metadataReducer: {
             showModule: true
         },
+        elementStatusReducer: {
+            'urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b': "wip",
+            "urn:pearson:work:32e659c2-e0bb-46e8-9605-b8433aa3836c": "wip",
+            "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635": "wip",
+            "urn:pearson:work:ee2b0c11-75eb-4a21-87aa-578750b5301d": "wip",
+            
+        },
     });
     let props = {
         slateId: 'urn:pearson:manifest:e652706d-b04b-4111-a083-557ae121af0f',
@@ -128,6 +135,13 @@ describe('Test for Sidebar component', () => {
             metadataReducer: {
                 currentSlateLOData: {}
             },
+            elementStatusReducer: {
+                'urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b': "wip",
+                "urn:pearson:work:32e659c2-e0bb-46e8-9605-b8433aa3836c": "wip",
+                "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635": "wip",
+                "urn:pearson:work:ee2b0c11-75eb-4a21-87aa-578750b5301d": "wip",
+                
+            },
         });
 
         let sidebar = mount(<Provider store={sidebarWithData}>
@@ -158,6 +172,13 @@ describe('Test for Sidebar component', () => {
             metadataReducer: {
                 currentSlateLOData: {}
             },
+            elementStatusReducer: {
+                'urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b': "wip",
+                "urn:pearson:work:32e659c2-e0bb-46e8-9605-b8433aa3836c": "wip",
+                "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635": "wip",
+                "urn:pearson:work:ee2b0c11-75eb-4a21-87aa-578750b5301d": "wip",
+                
+            },
         });
 
         let sidebar = mount(<Provider store={sidebarWithData}>
@@ -180,6 +201,14 @@ describe('Test for Sidebar component', () => {
             metadataReducer: {
                 currentSlateLOData: {}
             },
+            elementStatusReducer: {
+                'urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b': "wip",
+                "urn:pearson:work:32e659c2-e0bb-46e8-9605-b8433aa3836c": "wip",
+                "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635": "wip",
+                "urn:pearson:work:ee2b0c11-75eb-4a21-87aa-578750b5301d": "wip",
+
+            },
+
         });
         let sidebar = mount(<Provider store={sidebarWithData}>
             <Sidebar {...props}/>
@@ -212,6 +241,13 @@ describe('Test for Sidebar component', () => {
                 metadataReducer: {
                     currentSlateLOData: {}
                 },
+                elementStatusReducer: {
+                    'urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b': "wip",
+                    "urn:pearson:work:32e659c2-e0bb-46e8-9605-b8433aa3836c": "wip",
+                    "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635": "wip",
+                    "urn:pearson:work:ee2b0c11-75eb-4a21-87aa-578750b5301d": "wip",
+                    
+                },
             });
             let sidebar = mount(<Provider store={sidebarWithData}><Sidebar {...props}/></Provider>);
             expect(sidebar.find('.element-dropdown').length).toBe(2)
@@ -239,6 +275,13 @@ describe('Test for Sidebar component', () => {
                 metadataReducer: {
                     currentSlateLOData: {}
                 },
+                elementStatusReducer: {
+                    'urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b': "wip",
+                    "urn:pearson:work:32e659c2-e0bb-46e8-9605-b8433aa3836c": "wip",
+                    "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635": "wip",
+                    "urn:pearson:work:ee2b0c11-75eb-4a21-87aa-578750b5301d": "wip",
+                    
+                },
             });
             let sidebar = mount(<Provider store={sidebarWithData}><Sidebar {...props}/></Provider>);
             expect(sidebar.find('.element-dropdown').length).toBe(2)
@@ -258,6 +301,13 @@ describe('Test for Sidebar component', () => {
                     },
                     metadataReducer: {
                         currentSlateLOData: {}
+                    },
+                    elementStatusReducer: {
+                        'urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b': "wip",
+                        "urn:pearson:work:32e659c2-e0bb-46e8-9605-b8433aa3836c": "wip",
+                        "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635": "wip",
+                        "urn:pearson:work:ee2b0c11-75eb-4a21-87aa-578750b5301d": "wip",
+                        
                     },
                 });
                 let sidebar = mount(<Provider store={sidebarWithData}><Sidebar {...props} /></Provider>);

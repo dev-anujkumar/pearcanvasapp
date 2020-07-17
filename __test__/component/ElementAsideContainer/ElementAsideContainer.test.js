@@ -58,9 +58,18 @@ let initialState = {
     },
     tcmReducer:{
         tcmSnapshot:{}
-    }
+    },
+    elementStatusReducer: {
+        "urn:pearson:work:ee2b0c11-75eb-4a21-87aa-578750b5301d": "wip"       
+    },
 };
-
+jest.mock('../../../src/component/ElementContainer/ElementContainer_Actions.js', () => {
+    return {
+        getElementStatus: function () {
+            return (<div>null</div>)
+        }
+    }
+});
 let store = mockStore(initialState);
 
 describe('Testing ElementAside component with props', () => {

@@ -2,12 +2,12 @@
 import React from 'react';
 import { mount } from 'enzyme';
 /**************************Import Modules**************************/
-import config from '../../../../src/config/config';
+import config from '../../../src/config/config';
 import {UsageTypeDropdown} from ' ../../../src/component/AssessmentSlateCanvas/UsageTypeDropdown/UsageTypeDropdown.jsx';
 /*************************Import Constants*************************/
-import { MockUsageTypeList_Data } from '../../../../fixtures/AssessmentSlateCanvasTestingData.js';
+import { MockUsageTypeList_Data } from '../../../fixtures/AssessmentSlateCanvasTestingData.js';
 /**************************Mock Helper Functions**************************/
-jest.mock('../../../../src/constants/utility.js', () => {
+jest.mock('../../../src/constants/utility.js', () => {
     return {
         hasReviewerRole: () => {
             return false

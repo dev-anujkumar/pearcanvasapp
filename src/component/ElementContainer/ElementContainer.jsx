@@ -380,7 +380,7 @@ class ElementContainer extends Component {
                 subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
                 captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
                 creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
-                posterTextHTML !== this.removeClassesFromHtml(oldPosterText) ||
+                this.removeClassesFromHtml(posterTextHTML) !== this.removeClassesFromHtml(oldPosterText) ||
                 this.props.oldImage !== newInteractiveid
             );
         }

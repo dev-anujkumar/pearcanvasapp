@@ -25,6 +25,13 @@ jest.mock('../../../src/component/SlateWrapper/SlateWrapper_Actions.js', () => {
         }
     }
 });
+jest.mock('../../../src/component/ElementContainer/ElementContainer_Actions.js', () => {
+    return {
+        getElementStatus: function () {
+            return (<div>null</div>)
+        }
+    }
+});
 
 const mockStore = configureMockStore(middlewares)
 
@@ -53,7 +60,10 @@ let initialState = {
     },
     tcmReducer:{
         tcmSnapshot:{}
-    }
+    },
+    elementStatusReducer: {
+        "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635": "wip"       
+    },
 }
 
 let store = mockStore(initialState);

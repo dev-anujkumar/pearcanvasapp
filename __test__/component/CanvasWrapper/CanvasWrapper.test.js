@@ -154,8 +154,8 @@ describe('Testing <CanvasWrapper> Component', () => {
     test('should show LockReleasePopup', () => {
         let canvasWrapperInstance = wrapper.find('CanvasWrapper').instance();
         const event = {
-            stopPropagation() { },
-            preventDefault() { }
+            stopPropagation:()=> { },
+            preventDefault:()=> { }
         }
         canvasWrapperInstance.forceUpdate();
         wrapper.update();
@@ -194,7 +194,11 @@ describe('Testing <CanvasWrapper> Component', () => {
             wrapper.setProps({toggleCommentsPanel:jest.fn()});
             canvasWrapperInstance.forceUpdate();
             wrapper.update();
-            canvasWrapperInstance.handleCommentspanel();
+            const event = {
+                stopPropagation:()=> { },
+                preventDefault:()=> { }
+            }
+            canvasWrapperInstance.handleCommentspanel(event,"id",0);
             expect(typeof(wrapper.props().toggleCommentsPanel)).toEqual('function');
         })
         it('togglePageNumbering  function call',() => {

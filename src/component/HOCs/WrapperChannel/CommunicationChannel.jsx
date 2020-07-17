@@ -242,20 +242,20 @@ function CommunicationChannel(WrappedComponent) {
                 activeElement.forEach((item) => {
                     // console.log('active element:::', item, item.classList.contains('mce-content-body'));
                     if (item.classList.contains('mce-content-body') || !item.classList.contains('place-holder')) {
-                        if (item.querySelector('#' + linkData.linkId)) {
+                        if (item.querySelector(`[asset-id="${linkData.linkId}"]`) || item.querySelector('#' + linkData.linkId)) {
                             tinymce.activeEditor.undoManager.transact(() => {
                                 item.focus();
                                 editor = item;
 
                                 let elementTag = "";
-                                linkNode = item.querySelector('#' + linkData.linkId);
+                                linkNode = item.querySelector(`[asset-id="${linkData.linkId}"]`) ? item.querySelector(`[asset-id="${linkData.linkId}"]`) : item.querySelector('#' + linkData.linkId);
                                 if(linkNode.classList.contains('sup')) {
                                     elementTag = 'sup';
                                 } else if(linkNode.classList.contains('sub')) {
                                     elementTag = 'sub';
                                 }
                                 linkHTML = linkNode.innerHTML || '';
-                                linkNode.outerHTML = '<abbr title="Slate Link" class="Pearson-Component AssetPopoverTerm ' + elementTag + '" id="' + linkId + '" element-id="' + elementId + '" data-uri="' + pageId + '">' + linkHTML + '</abbr>';
+                                linkNode.outerHTML = '<abbr title="Slate Link" class="Pearson-Component AssetPopoverTerm ' + elementTag + '" asset-id="' + linkId + '" element-id="' + elementId + '" data-uri="' + pageId + '">' + linkHTML + '</abbr>';
                                 if (/(<abbr [^>]*id="page-link-[^"]*"[^>]*>.*<\/abbr>)/gi.test(linkNode.outerHTML)) {
                                     linkNotification = "Link updated to slate '" + linkData.pageName + "'.";
                                 } else {
@@ -272,11 +272,11 @@ function CommunicationChannel(WrappedComponent) {
                 activeElement.forEach((item) => {
                     // console.log('active element:::', item, item.classList.contains('mce-content-body'));
                     if (item.classList.contains('mce-content-body') || !item.classList.contains('place-holder')) {
-                        if (item.querySelector('#' + linkData.linkId)) {
+                        if (item.querySelector(`[asset-id="${linkData.linkId}"]`) || item.querySelector('#' + linkData.linkId)) {
                             tinymce.activeEditor.undoManager.transact(() => {
                                 item.focus();
                                 editor = item;
-                                linkNode = item.querySelector('#' + linkData.linkId);
+                                linkNode = item.querySelector(`[asset-id="${linkData.linkId}"]`) ? item.querySelector(`[asset-id="${linkData.linkId}"]`) : item.querySelector('#' + linkData.linkId);
                                 linkHTML = linkNode.innerHTML || '';
                                 linkNode.outerHTML = linkHTML;
                                 if (linkData.link == "unlink") {
