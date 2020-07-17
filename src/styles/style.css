@@ -317,7 +317,9 @@ abbr[title="Slate Link"] {
     padding-right: 15px;
 }
 
-abbr[title="Slate Link"]::after {
+abbr[title="Slate Link"]:not(.sup):not(.sub)::after,
+abbr[title="Slate Link"] sub::after,
+abbr[title="Slate Link"] sup::after {
     content: url('./../images/PageLink/link.svg');
     height: 10px;
     bottom: 1px;

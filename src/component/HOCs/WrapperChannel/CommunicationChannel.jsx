@@ -247,9 +247,15 @@ function CommunicationChannel(WrappedComponent) {
                                 item.focus();
                                 editor = item;
 
+                                let elementTag = "";
                                 linkNode = item.querySelector('#' + linkData.linkId);
+                                if(linkNode.classList.contains('sup')) {
+                                    elementTag = 'sup';
+                                } else if(linkNode.classList.contains('sub')) {
+                                    elementTag = 'sub';
+                                }
                                 linkHTML = linkNode.innerHTML || '';
-                                linkNode.outerHTML = '<abbr title="Slate Link" class="Pearson-Component AssetPopoverTerm" id="' + linkId + '" element-id="' + elementId + '" data-uri="' + pageId + '">' + linkHTML + '</abbr>';
+                                linkNode.outerHTML = '<abbr title="Slate Link" class="Pearson-Component AssetPopoverTerm ' + elementTag + '" id="' + linkId + '" element-id="' + elementId + '" data-uri="' + pageId + '">' + linkHTML + '</abbr>';
                                 if (/(<abbr [^>]*id="page-link-[^"]*"[^>]*>.*<\/abbr>)/gi.test(linkNode.outerHTML)) {
                                     linkNotification = "Link updated to slate '" + linkData.pageName + "'.";
                                 } else {

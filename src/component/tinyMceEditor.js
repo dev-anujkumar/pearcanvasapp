@@ -489,7 +489,7 @@ export class TinyMceEditor extends Component {
          * Case - clicking over Footnote text
          */
 
-        if (e.target.parentElement && e.target.parentElement.nodeName == "SUP" && 
+        if (e.target.parentElement && e.target.parentElement.nodeName == "SUP" && e.target.parentElement.childNodes &&
             e.target.parentElement.childNodes[0].nodeName == 'A' && e.target.dataset.uri) {
             let uri = e.target.dataset.uri;
             this.glossaryBtnInstance && this.glossaryBtnInstance.setDisabled(true)
@@ -1660,15 +1660,17 @@ export class TinyMceEditor extends Component {
         let selection = window.getSelection().anchorNode.parentNode;
         let selectedTag = selection.nodeName;
         let selectedTagClass = selection.classList;
+        selectedText = String(selectedText).replace(/</g, '&lt;').replace(/>/g, '&gt;');
         let activeElement = tinymce.activeEditor.targetElm.closest('.element-container');
         let linkCount = Math.floor(Math.random() * 100) + '-' + Math.floor(Math.random() * 10000); //tinymce.$(activeElement).find('.page-link-attacher').length;
         if (selectedTag !== "LI" && selectedTag !== "P" && selectedTag !== "H3" && selectedTag !== "BLOCKQUOTE" && (!selectedTagClass.contains('poetryLine'))) {
             //selectedText = window.getSelection().anchorNode.parentNode.outerHTML;
             selectedText = '<' + selectedTag.toLocaleLowerCase() + '>' + selectedText + '</' + selectedTag.toLocaleLowerCase() + '>'
         }
-        let insertionText = '<span id="page-link-' + linkCount + '" class="page-link-attacher" element-id="' + activeElement.getAttribute('data-id') + '">' + selectedText + '</span>';
-        // editor.insertContent(insertionText);
-        editor.selection.setContent(insertionText);
+
+        let insertionText = '<span id="page-link-' + linkCount + '" class="page-link-attacher ' + selectedTag.toLocaleLowerCase() + '" element-id="' + activeElement.getAttribute('data-id') + '">' + selectedText + '</span>';
+        editor.insertContent(insertionText);
+        // editor.selection.setContent(insertionText);
         sendDataToIframe({ 'type': LaunchTOCForCrossLinking, 'message': { open: true, case: 'new', element: activeElement.getAttribute('data-id'), link: 'page-link-' + linkCount, blockCanvas: true, crossLink: true } });
     }
 
@@ -1696,13 +1698,15 @@ export class TinyMceEditor extends Component {
         let selection = window.getSelection().anchorNode.parentNode;
         let selectedTag = selection.nodeName;
         let selectedTagClass = selection.classList;
+        selectedText = String(selectedText).replace(/</g, '&lt;').replace(/>/g, '&gt;');
         if (selectedTag !== "LI" && selectedTag !== "P" && selectedTag !== "H3" && selectedTag !== "BLOCKQUOTE" && (!selectedTagClass.contains('poetryLine'))) {
             //selectedText = window.getSelection().anchorNode.parentNode.outerHTML;
             selectedText = '<' + selectedTag.toLocaleLowerCase() + '>' + selectedText + '</' + selectedTag.toLocaleLowerCase() + '>'
         }
+
         let insertionText = '<span id="asset-popover-attacher">' + selectedText + '</span>';
-        // editor.insertContent(insertionText);
-        editor.selection.setContent(insertionText);
+        editor.insertContent(insertionText);
+        // editor.selection.setContent(insertionText);
         customEvent.subscribe('assetPopoverSave', () => {
             this.handleBlur(null, true);
             customEvent.unsubscribe('assetPopoverSave');
