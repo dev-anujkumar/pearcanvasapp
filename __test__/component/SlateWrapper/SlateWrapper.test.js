@@ -226,10 +226,10 @@ describe('Testing <SlateWrapper> Component', () => {
         it('Simulating elementSepratorProps function', () => {
             slateWrapperInstance.elementSepratorProps('', '', '', '', '')
         })
-        it('Simulating renderDefaultElement with slate data function', () => {
+        xit('Simulating renderDefaultElement with slate data function', () => {
             slateWrapperInstance.renderDefaultElement()
         })
-        it('Simulating renderDefaultElement with slate data function slateType not assessment', () => {
+        xit('Simulating renderDefaultElement with slate data function slateType not assessment', () => {
             config.slateType = "";
             slateWrapperInstance.renderDefaultElement()
         })

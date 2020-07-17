@@ -62,7 +62,10 @@ jest.mock('./../../../src/component/ElementContainer/ElementContainer_Actions.js
         },
         updateElement: () => {
             return jest.fn()
-        }
+        },
+        getElementStatus: () => {
+            return jest.fn()
+        },
     }
 })
 const mockStore = configureMockStore(middlewares);
@@ -121,7 +124,14 @@ const store = mockStore({
     },
     tcmReducer:{
         tcmSnapshot:{}
-    }
+    },
+    elementStatusReducer: {
+        'urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b': "wip",
+        "urn:pearson:work:32e659c2-e0bb-46e8-9605-b8433aa3836c": "wip",
+        "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635": "wip",
+        "urn:pearson:work:ee2b0c11-75eb-4a21-87aa-578750b5301d": "wip",
+
+    },
 });
 describe('Test for element container component', () => {
     it('Render Element Container without crashing ', () => {      
@@ -437,14 +447,17 @@ describe('Test for element container component', () => {
             asideData: {},
             parentUrn:"urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464"
         };
+        let event= {
+            stopPropagation:()=>{}
+        }
         let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
         const elementContainerInstance = elementContainer.find('ElementContainer').instance();
         it('Test-handleCommentPopup Function', () => {
             const spyhandleCommentPopup = jest.spyOn(elementContainerInstance, 'handleCommentPopup')
-            elementContainerInstance.handleCommentPopup(true);
+            elementContainerInstance.handleCommentPopup(true,event);
             elementContainerInstance.forceUpdate();
             elementContainer.update();
-            expect(spyhandleCommentPopup).toHaveBeenCalledWith(true)
+            expect(spyhandleCommentPopup).toHaveBeenCalledWith(true,event)
             expect(elementContainerInstance.state.popup).toBe(true)
             expect(elementContainerInstance.state.showDeleteElemPopup).toBe(false)
             expect(elementContainerInstance.state.comment).toBe("")
@@ -482,7 +495,7 @@ describe('Test for element container component', () => {
                 asideData: {},
                 parentUrn:"urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464"
             };
-            elementContainerInstance.saveNewComment();
+            elementContainerInstance.saveNewComment({stopPropagation:()=>{}},true);
             expect(spysaveNewComment).toHaveBeenCalled()
             expect(elementContainerInstance.state.popup).toBe(false)
             spysaveNewComment .mockClear()
@@ -502,6 +515,9 @@ describe('Test for element container component', () => {
             asideData: {},
             parentUrn:"urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464"
         };
+        let event= {
+            stopPropagation:()=>{}
+        }
         let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
         const elementContainerInstance = elementContainer.find('ElementContainer').instance();
         it('Test-openGlossaryFootnotePopUp  Function', () => {
@@ -521,9 +537,9 @@ describe('Test for element container component', () => {
             expect(spyopenAssetPopoverPopUp).toHaveBeenCalledWith(true)
             spyopenAssetPopoverPopUp.mockClear()
         })
-        it('Test-showDeleteElemPopup  Function', () => {
+        xit('Test-showDeleteElemPopup  Function', () => {
             const spyshowDeleteElemPopup = jest.spyOn(elementContainerInstance, 'showDeleteElemPopup')
-            elementContainerInstance.showDeleteElemPopup(true);
+            elementContainerInstance.showDeleteElemPopup(event,true,true);
             elementContainerInstance.forceUpdate();
             elementContainer.update();
             expect(spyshowDeleteElemPopup).toHaveBeenCalledWith(true)
@@ -662,6 +678,9 @@ describe('Test for element container component', () => {
             index:0,
             deleteElement: jest.fn()
         };
+        let event= {
+            stopPropagation:()=>{}
+        }
         let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
         const elementContainerInstance = elementContainer.find('ElementContainer').instance();     
         const elementDiv = document.createElement('div');
@@ -692,7 +711,7 @@ describe('Test for element container component', () => {
 
         it('Test-handleTCM Function', () => {
             const spyhandleTCM  = jest.spyOn(elementContainerInstance, 'handleTCM')
-            elementContainerInstance.handleTCM();
+            elementContainerInstance.handleTCM(event);
             expect(spyhandleTCM).toHaveBeenCalled()
             spyhandleTCM.mockClear()
         }) 
@@ -713,7 +732,7 @@ describe('Test for element container component', () => {
                 sectionBreak: true
             })
             const spydeleteElement  = jest.spyOn(elementContainerInstance, 'deleteElement')
-            elementContainerInstance.deleteElement();
+            elementContainerInstance.deleteElement(event);
             elementContainerInstance.forceUpdate();
             elementContainer.update()
             expect(spydeleteElement).toHaveBeenCalled()
@@ -747,7 +766,7 @@ describe('Test for element container component', () => {
                 sectionBreak: true
             })
             const spydeleteElement  = jest.spyOn(elementContainerInstance, 'deleteElement')
-            elementContainerInstance.deleteElement();
+            elementContainerInstance.deleteElement(event);
             elementContainerInstance.forceUpdate();
             elementContainer.update()
             expect(spydeleteElement).toHaveBeenCalled()

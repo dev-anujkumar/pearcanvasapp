@@ -47,7 +47,7 @@ describe('Test Rendering of metadaanchor on slate', () => {
             "lourn": "urn:5567809876",
             "label": { en: "test data" }
         }
-        let event = { target: { id: "aefeqrwq" } }
+        let event = { target: { id: "aefeqrwq" }, stopPropagation: jest.fn() }
         elementMetaAnchorInstance.onLOClickHandle(props.currentSlateLOData, event)
         expect(elementMetaAnchorInstance.props.currentSlateLOData).toEqual(data);
     })
