@@ -1495,7 +1495,20 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                             nodeName: "SPAN",
                             innerHTML: "<span>Hello</span>",
                             outerHTML: "<p><span>Hello</span></p>",
-                            classList: { contains: () => { return false } }
+                            classList: { contains: () => { return false } },
+                            getElementsByTagName: () => {
+                                return [{
+                                    parentNode: {
+                                        nodeName: 'strong',
+                                        childNodes: []
+                                    },
+                                    childNodes : [ {
+                                        nodeName: 'strong',
+                                        innerHTML: 'test',
+                                        outerHTML: ''
+                                    }]
+                                }]
+                            }
                         }
                     }
                 }
@@ -1532,7 +1545,20 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                             nodeName: "SPAN",
                             innerHTML: "<span>Hello</span>",
                             outerHTML: "<p><span>Hello</span></p>",
-                            classList: { contains: () => { return true } }
+                            classList: { contains: () => { return true } },
+                            getElementsByTagName: () => {
+                                return [{
+                                    parentNode: {
+                                        nodeName: 'strong',
+                                        childNodes: []
+                                    },
+                                    childNodes : [ {
+                                        nodeName: 'strong',
+                                        innerHTML: 'test',
+                                        outerHTML: ''
+                                    }]
+                                }]
+                            }
                         }
                     }
                 }
