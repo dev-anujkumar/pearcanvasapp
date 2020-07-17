@@ -535,7 +535,7 @@ class SlateWrapper extends Component {
         let indexToinsert
         let outerIndex
         // Detects element insertion from the topmost element separator
-        if ((firstOne || type === "opener-elem") && (!config.isCO)) {
+        if (((firstOne || type === "opener-elem") && (!config.isCO)) || (firstOne && parentUrn)) {
             indexToinsert = Number(index)
         } else {
             indexToinsert = Number(index + 1)
