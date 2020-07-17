@@ -240,10 +240,10 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn) => {
     }
     else if (typeof index === "string") {
         eleIndex = Array.isArray(index) ? index : index.split("-");
-        /** Check parent element is approved or not */
-        if (type && bodymatter[eleIndex[0]].status === "approved") {
-            data.parentUrn = "approved"
-        }
+        // /** Check parent element is approved or not */
+        // if (type && bodymatter[eleIndex[0]].status === "approved") {
+        //     data.parentUrn = "approved"
+        // }
         switch (type) {
             case 'stanza':                           /** Inside Poetry */
                 data.wipData = bodymatter[eleIndex[0]].contents.bodymatter[eleIndex[2]];
@@ -258,9 +258,9 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn) => {
                 if (eleIndex.length == 2) {          /** Inside WE-HEAD | Aside */
                     data.wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]];
                 } else if (eleIndex.length == 3) {   /** Inside WE-BODY */
-                    if(bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]].status==="approved"){ /** Check SB element is approved or not */
-                        data.childUrn= "approved"
-                    }
+                    // if(bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]].status==="approved"){ /** Check SB element is approved or not */
+                    //     data.childUrn= "approved"
+                    // }
                     data.wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]].contents.bodymatter[eleIndex[2]];
                 }
                 break;
@@ -416,4 +416,31 @@ const setElementTag = {
             },
         }
     }
+}
+
+export const checkManifestStatus = (bodymatter, parentElement, type) => {
+    let parentData = {};
+    const { asideData, parentUrn, poetryData } = parentElement;
+
+    if ((asideData || parentUrn || poetryData) && bodymatter.length !== 0) {
+        bodymatter.map(element => {
+            if (type === 'SECTION_BREAK' && asideData && element.id == asideData.id) {
+                parentData.parentStatus = element.status;       /** Create Section-Break */
+            }
+            else if (parentUrn && element.id == parentUrn.manifestUrn) {
+                parentData.parentStatus = element.status;       /** In WE-HEAD | Aside | Citations */
+            } else if (asideData && element.type == "element-aside" && element.id == asideData.id) {
+                parentData.parentStatus = element.status;
+                element.elementdata && element.elementdata.bodymatter.map((ele) => {
+                    if (parentUrn && ele.id === parentUrn.manifestUrn) {
+                        parentData.childStatus = ele.status ;   /** In Section-Break */
+                    }
+                })
+            }
+            else if (poetryData && element.id == poetryData.parentUrn) {
+                parentData.parentStatus = element.status;       /** In Poetry */
+            }
+        })
+    }
+    return parentData
 }
