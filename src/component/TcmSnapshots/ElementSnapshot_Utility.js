@@ -5,6 +5,8 @@
 
 /**************************Import Modules**************************/
 import { getCurrentlyLinkedImage } from '../AssetPopover/AssetPopover_Actions.js';
+import { getLatestVersion } from '../TcmSnapshots/TcmSnapshot_Actions.js';
+import config from '../../config/config';
 let elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza'];
 /**
  * @function setSemanticsSnapshots
@@ -278,6 +280,7 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn) => {
 */
 export const fetchParentData = (bodymatter, indexes) => {
     let parentData = {};
+    
     let tempIndex = Array.isArray(indexes) ? indexes : (typeof indexes === "number") ? indexes.toString() : indexes.split("-");
     let isChildElement = elementType.indexOf(bodymatter[tempIndex[0]].type) === -1 ? true : false
 
@@ -289,7 +292,12 @@ export const fetchParentData = (bodymatter, indexes) => {
             type: bodymatter[tempIndex[0]].type,
             element: bodymatter[tempIndex[0]]
         }
-
+        if(bodymatter[tempIndex[0]].status === "approved"){
+            parentData.parentData = "approved"
+        }
+        if(tempIndex.length == 3 && bodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].status === "approved"){
+            parentData.childData = "approved"
+        }
         let parentElement = tempIndex.length == 3 && bodymatter[tempIndex[0]].type !== 'poetry' ? bodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]] : bodymatter[tempIndex[0]];
 
         parentData.parentUrn = {
@@ -299,6 +307,39 @@ export const fetchParentData = (bodymatter, indexes) => {
         }
     }
     return parentData;
+}
+export const checkContainerElementVersion = async (containerElement, data, currentSlateData) => {
+    /** latest version for WE/CE/PE/AS*/
+    if (data.parentData === "approved") {
+        let contentUrn = containerElement.asideData ? containerElement.asideData.contentUrn : containerElement.poetryData ? containerElement.poetryData.contentUrn : containerElement.parentUrn ? containerElement.parentUrn.contentUrn : ""
+        if (contentUrn) {
+            let newManifestData = await getLatestVersion(contentUrn);
+            if (newManifestData) {
+                if (containerElement.poetryData) {
+                    containerElement.poetryData.id = newManifestData;
+                    containerElement.poetryData.parentUrn = newManifestData;
+                }
+                else if (containerElement.asideData) {
+                    containerElement.asideData.id = newManifestData
+                    containerElement.parentUrn.manifestUrn = newManifestData
+                }
+                else if (containerElement.parentUrn) {
+                    containerElement.parentUrn.manifestUrn = newManifestData
+                }
+            }
+        }
+    }
+    /** latest version for SB*/
+    if (data.childData === "approved") {
+        let newManifestData = await getLatestVersion(containerElement.parentUrn.contentUrn);
+        containerElement.parentUrn.manifestUrn = newManifestData ? newManifestData : containerElement.parentUrn.manifestUrn
+    }
+    /** latest version for slate*/
+    if (currentSlateData.status === 'approved') {
+        let newSlateManifest = await getLatestVersion(currentSlateData.contentUrn);
+        config.slateManifestURN = newSlateManifest ? newSlateManifest : config.slateManifestURN
+    }
+    return containerElement;
 }
 
 /**

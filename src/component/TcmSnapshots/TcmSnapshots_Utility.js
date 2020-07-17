@@ -21,8 +21,7 @@ let containerType = ['element-aside', 'manifest', 'citations', 'poetry','WORKED_
  * @param {Object} poetryData - Poetry Parent Data
  * @param {String} type - type of element
 */
-export const prepareTcmSnapshots = (wipData, action, asideData, parentUrn, poetryData, type, status) => (dispatch) => {
-    // let tcmSnapshot = [];
+export const prepareTcmSnapshots = (wipData, action, containerElement, type, status) => (dispatch) => {
     let isContainer = false
     if ((poetryData || asideData || parentUrn) ||
         (containerType.indexOf(wipData.type) !== -1) ||
@@ -62,8 +61,8 @@ export const prepareTcmSnapshots = (wipData, action, asideData, parentUrn, poetr
     }
     /* action on Section break in WE*/
     else if (type === "SECTION_BREAK" || wipData.type === "manifest") {
-        tag.parentTag = asideData && fetchElementsTag(asideData) ? fetchElementsTag(asideData) : fetchElementsTag(wipData)
-        elementId.parentId = asideData && asideData.id ? asideData.id : parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "";
+        tag.parentTag = containerElement.asideData && fetchElementsTag(containerElement.asideData) ? fetchElementsTag(containerElement.asideData) : fetchElementsTag(wipData)
+        elementId.parentId = containerElement.asideData && containerElement.asideData.id ? containerElement.asideData.id : containerElement.parentUrn && containerElement.parentUrn.manifestUrn ? containerElement.parentUrn.manifestUrn : "";
         wipData.contents.bodymatter.map((item) => {
             if (elementType.indexOf(item.type) !== -1) {
                 elementId.childId = item.id
@@ -74,14 +73,14 @@ export const prepareTcmSnapshots = (wipData, action, asideData, parentUrn, poetr
         })
     }
     /* action on element in WE/PE/CG */
-    else if ((poetryData || asideData || parentUrn)) {
-        let parentElement = asideData ? asideData : poetryData ? poetryData : parentUrn ? parentUrn : ""
-        elementId.parentId = parentElement && parentElement.id ? parentElement.id : parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "";
+    else if (containerElement.poetryData || containerElement.asideData || containerElement.parentUrn) {
+        let parentElement = containerElement.asideData ? containerElement.asideData : containerElement.poetryData ? containerElement.poetryData : containerElement.parentUrn ? containerElement.parentUrn : ""
+        elementId.parentId = parentElement && parentElement.id ? parentElement.id : containerElement.parentUrn && containerElement.parentUrn.manifestUrn ? containerElement.parentUrn.manifestUrn : "";
         elementId.childId = wipData.id;
         tag.parentTag = fetchElementsTag(parentElement)
         tag.childTag = fetchElementsTag(wipData)
-        let isHead = asideData && asideData.type === "element-aside" && asideData.subtype === "workedexample" ? parentUrn.manifestUrn == asideData.id ? "HEAD" : "BODY" : ""
-        elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn.manifestUrn)
+        let isHead = containerElement.asideData && containerElement.asideData.type === "element-aside" && containerElement.asideData.subtype === "workedexample" ? containerElement.parentUrn.manifestUrn == containerElement.asideData.id ? "HEAD" : "BODY" : ""
+        elementDetails = setElementTypeAndUrn(elementId, tag, isHead, containerElement.parentUrn.manifestUrn)
         prepareTcmData(elementDetails, wipData, defaultKeys, dispatch)
     }
     /* action on PE and CG */

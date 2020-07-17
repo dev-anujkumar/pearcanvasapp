@@ -12,8 +12,7 @@ import figureDataBank from '../../js/figure_data_bank';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { prepareTcmSnapshots } from '../TcmSnapshots/TcmSnapshots_Utility.js';
-import { fetchParentData } from '../TcmSnapshots/ElementSnapshot_Utility.js';
-
+import { fetchParentData,checkContainerElementVersion } from '../TcmSnapshots/ElementSnapshot_Utility.js';
 let imageSource = ['image','table','mathImage'],imageDestination = ['primary-image-figure','primary-image-table','primary-image-equation']
 let elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza'];
 
@@ -230,14 +229,18 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             "PearsonSSOSession": config.ssoToken
         }
     }).then(res =>{
-
+        
+        let parentData = store;
+        let currentParentData = JSON.parse(JSON.stringify(parentData));
+        let currentSlateData = currentParentData[config.slateManifestURN];
         /** [PCAT-8289] -------------------------------- TCM Snapshot Data handling ----------------------------------*/
         if (elementType.indexOf(oldElementData.type) !== -1) {
-            let convertAppStore = JSON.parse(JSON.stringify(appStore.slateLevelData));
-            let convertSlate = convertAppStore[config.slateManifestURN];
-            let convertBodymatter = convertSlate.contents.bodymatter;
-            let convertParentData = fetchParentData(convertBodymatter, indexes);
-            dispatch(prepareTcmSnapshots(res.data, 'Update', convertParentData.asideData, convertParentData.parentUrn));
+            let elementConversionData ={
+                currentSlateData:currentSlateData,
+                oldElementData:oldElementData,
+                response:res.data
+            }
+            tcmSnapshotsForConversion(elementConversionData,indexes,appStore,dispatch)
         }
         /**-----------------------------------------------------------------------------------------------------------*/
 
@@ -246,9 +249,6 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                 res.data.figuredata.programlanguage = 'Select';
             }
         }
-        let parentData = store;
-        let currentParentData = JSON.parse(JSON.stringify(parentData));
-        let currentSlateData = currentParentData[config.slateManifestURN];
         if (currentSlateData.status === 'approved') {
             if(currentSlateData.type==="popup"){
                 sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
@@ -411,6 +411,25 @@ function prepareDataForConversionTcm(updatedDataID, getState, dispatch,versionid
             data: tcmData
         }
     })
+}
+
+export const tcmSnapshotsForConversion = async (elementConversionData,indexes,appStore,dispatch) => {
+    let convertAppStore = JSON.parse(JSON.stringify(appStore.slateLevelData));
+    let convertSlate = convertAppStore[config.slateManifestURN];
+    let convertBodymatter = convertSlate.contents.bodymatter;
+    let convertParentData = fetchParentData(convertBodymatter, indexes);
+    let data = {
+        parentData: convertParentData.parentData,
+        childData: convertParentData.childData
+    }
+    /** latest version for WE/CE/PE/AS*/
+    convertParentData = await checkContainerElementVersion(convertParentData, data, elementConversionData.currentSlateData)
+    if (elementConversionData.oldElementData.id !== elementConversionData.response.id) {
+        elementConversionData.oldElementData.id = elementConversionData.response.id
+        elementConversionData.oldElementData.versionUrn = elementConversionData.response.id
+        dispatch(prepareTcmSnapshots(elementConversionData.oldElementData, 'Create', convertParentData, "", "Accepted"))
+    }
+    dispatch(prepareTcmSnapshots(elementConversionData.response, 'Update', convertParentData,"",""));
 }
 
 const prepareAssessmentDataForConversion = (oldElementData, format) => {
