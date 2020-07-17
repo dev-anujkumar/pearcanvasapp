@@ -51,7 +51,8 @@ describe('Test Rendering of metadaanchor on slate', () => {
         let e = {
             target: {
                 id: ""
-            }
+            },
+            stopPropagation:()=>{}
         }
         elementMetaAnchorInstance.onLOLClickHandle(data, e);
         expect(elementMetaAnchorInstance.props.currentSlateLOData).toEqual(data);
@@ -62,7 +63,8 @@ describe('Test Rendering of metadaanchor on slate', () => {
         let e = {
             target: {
                 id: ""
-            }
+            },
+            stopPropagation:()=>{}
         }
 
         store = mockStore({

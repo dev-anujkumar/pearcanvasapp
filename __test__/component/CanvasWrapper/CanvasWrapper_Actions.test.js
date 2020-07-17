@@ -33,6 +33,7 @@ let initialState = {
     splittedElementIndex: 0,
     pageNumberData: {}
 };
+let setActiveToolbar =  ["crossLinkingIcon",'assetpopover', 'decreaseindent', 'glossary']
 jest.mock('axios');
 describe('action file test', () => {
     let store = mockStore(() => initialState);
@@ -254,7 +255,7 @@ describe('action file test', () => {
                 'index': 1,
                 'elementWipType': 'element-authoredtext',
                 'tag': 'H1',
-                'toolbar': ['bold','underline','strikethrough','orderedlist','unorderedlist','increaseindent','decreaseindent','glossary','assetpopover','slatetag','redo']
+                'toolbar': ['bold','underline','strikethrough','orderedlist','unorderedlist','increaseindent','decreaseindent','glossary','crossLinkingIcon','assetpopover','slatetag','redo']
             }
         }]
         expect(store.getActions()[0].payload.tag).toEqual(expectedActions[0].payload.tag);
@@ -340,7 +341,7 @@ describe('action file test', () => {
                     "longDesc": "",
                     'elementWipType': 'figure',
                     'tag': 'Fg',
-                    'toolbar': ['assetpopover','decreaseindent','glossary']
+                    'toolbar': ['crossLinkingIcon','assetpopover','decreaseindent','glossary']
                 }
             }]
             let dispatch = (obj) => {
@@ -371,7 +372,7 @@ describe('action file test', () => {
                     "longDesc": "",
                     'elementWipType': 'figure',
                     'tag': 'Fg',
-                    'toolbar': ['assetpopover','decreaseindent','glossary']
+                    'toolbar': ['crossLinkingIcon','assetpopover','decreaseindent','glossary']
                 }
             }]
             let dispatch = (obj) => {
@@ -402,7 +403,7 @@ describe('action file test', () => {
                     "longDesc": "",
                     'elementWipType': 'figure',
                     'tag': 'Fg',
-                    'toolbar': ['assetpopover','decreaseindent','glossary']
+                    'toolbar': ['crossLinkingIcon','assetpopover','decreaseindent','glossary']
                 }
             }]
             let dispatch = (obj) => {
@@ -433,7 +434,7 @@ describe('action file test', () => {
                     "longDesc": "",
                     'elementWipType': 'figure',
                     'tag': 'Fg',
-                    'toolbar': ['assetpopover','decreaseindent','glossary']
+                    'toolbar': ['crossLinkingIcon','assetpopover','decreaseindent','glossary']
                 }
             }]
             let dispatch = (obj) => {
@@ -464,7 +465,7 @@ describe('action file test', () => {
                     "longDesc": "",
                     'elementWipType': 'figure',
                     'tag': 'Fg',
-                    'toolbar': ['assetpopover','decreaseindent','glossary']
+                    'toolbar': ['crossLinkingIcon','assetpopover','decreaseindent','glossary']
                 }
             }]
             let dispatch = (obj) => {
@@ -498,7 +499,7 @@ describe('action file test', () => {
                     "longDesc": "",
                     'elementWipType': 'figure',
                     'tag': 'TB',
-                    'toolbar': ['assetpopover','decreaseindent','glossary']
+                    'toolbar': ['crossLinkingIcon','assetpopover','decreaseindent','glossary']
                 }
             }]
             let dispatch = (obj) => {
@@ -528,7 +529,7 @@ describe('action file test', () => {
                     "longDesc": "",
                     'elementWipType': 'figure',
                     'tag': 'TB',
-                    'toolbar': ['assetpopover','decreaseindent','glossary']
+                    'toolbar': ['crossLinkingIcon','assetpopover','decreaseindent','glossary']
                 }
             }]
             let dispatch = (obj) => {
@@ -560,7 +561,7 @@ describe('action file test', () => {
                     'index': 1,
                     'elementWipType': 'figure',
                     'tag': 'TB',
-                    'toolbar': ['assetpopover','decreaseindent','glossary']
+                    'toolbar': ['crossLinkingIcon','assetpopover','decreaseindent','glossary']
                 }
             }]
             let dispatch = (obj) => {
@@ -592,7 +593,7 @@ describe('action file test', () => {
                     'index': 1,
                     'elementWipType': 'figure',
                     'tag': 'TB',
-                    'toolbar': ['assetpopover','decreaseindent','glossary']
+                    'toolbar': ['crossLinkingIcon','assetpopover','decreaseindent','glossary']
                 }
             }]
             let dispatch = (obj) => {
@@ -627,7 +628,7 @@ describe('action file test', () => {
                     'index': 1,
                     'elementWipType': 'figure',
                     'tag': 'EQ',
-                    'toolbar': ['assetpopover','decreaseindent','glossary']
+                    'toolbar': ['crossLinkingIcon','assetpopover','decreaseindent','glossary']
                 }
             }]
             let dispatch = (obj) => {
@@ -656,7 +657,7 @@ describe('action file test', () => {
                     "longDesc": "",
                     'elementWipType': 'figure',
                     'tag': 'EQ',
-                    'toolbar': ['assetpopover','decreaseindent','glossary']
+                    'toolbar': ['crossLinkingIcon','assetpopover','decreaseindent','glossary']
                 }
             }];
             let dispatch = (obj) => {
@@ -686,7 +687,7 @@ describe('action file test', () => {
                     "longDesc": "",
                     'elementWipType': 'figure',
                     'tag': 'EQ',
-                    'toolbar': ['assetpopover','decreaseindent','glossary']
+                    'toolbar': ['crossLinkingIcon','assetpopover','decreaseindent','glossary']
                 }
             }]
             let dispatch = (obj) => {
@@ -716,7 +717,7 @@ describe('action file test', () => {
                     "longDesc": "",
                     'elementWipType': 'figure',
                     'tag': 'EQ',
-                    'toolbar': ['assetpopover','decreaseindent','glossary']
+                    'toolbar': ['crossLinkingIcon','assetpopover','decreaseindent','glossary']
                 }
             }]
             let dispatch = (obj) => {
@@ -751,7 +752,7 @@ describe('action file test', () => {
                     'elementWipType': 'figure',
                     "altText": "",
                     'tag': 'MML',
-                    'toolbar': ['assetpopover','decreaseindent','glossary']
+                    'toolbar': ['crossLinkingIcon','assetpopover','decreaseindent','glossary']
                 }
             }]
     
@@ -777,7 +778,7 @@ describe('action file test', () => {
                     "startNumber": "1",
                     'elementWipType': 'figure',
                     'tag': 'BCE',
-                    'toolbar': ['assetpopover', 'decreaseindent', 'glossary']
+                    'toolbar': ['crossLinkingIcon','assetpopover', 'decreaseindent', 'glossary']
                 }
             }]
 
@@ -798,7 +799,7 @@ describe('action file test', () => {
                     'index': 1,
                     'elementWipType': 'figure',
                     'tag': 'VID',
-                    'toolbar': ['assetpopover','glossary']
+                    'toolbar': ['crossLinkingIcon','assetpopover','glossary']
                 }
             }]
             let dispatch = (obj) => {
@@ -863,7 +864,7 @@ describe('action file test', () => {
                     'index': 1,
                     'elementWipType': 'figure',
                     'tag': 'VID',
-                    'toolbar': ['assetpopover','glossary']
+                    'toolbar': ['crossLinkingIcon','assetpopover','glossary']
                 }
             }]
             selectActions.setActiveElement(element.video, 1)(dispatch,getState);
@@ -882,7 +883,7 @@ describe('action file test', () => {
                     'index': 1,
                     'elementWipType': 'figure',
                     'tag': 'AUD',
-                    'toolbar': ['assetpopover','glossary']
+                    'toolbar': ['crossLinkingIcon','assetpopover','glossary']
                 }
             }]
             let dispatch = (obj) => {
@@ -939,7 +940,7 @@ describe('action file test', () => {
                     'index': 1,
                     'elementWipType': 'figure',
                     'tag': 'AUD',
-                    'toolbar': ['assetpopover','glossary']
+                    'toolbar': ['crossLinkingIcon','assetpopover','glossary']
                 }
             }]
             let dispatch = (obj) => {
@@ -970,7 +971,7 @@ describe('action file test', () => {
                     'index': 1,
                     'elementWipType': 'figure',
                     'tag': 'MMI',
-                    'toolbar': ['assetpopover','glossary']
+                    'toolbar': ['crossLinkingIcon','assetpopover','glossary']
                 }
             }]
             let dispatch = (obj) => {
@@ -999,7 +1000,7 @@ describe('action file test', () => {
                     'index': 1,
                     'elementWipType': 'figure',
                     'tag': 'SL',
-                    'toolbar': ['assetpopover','glossary']
+                    'toolbar': ['crossLinkingIcon','assetpopover','glossary']
                 }
             }];
             let dispatch = (obj) => {
@@ -1087,7 +1088,7 @@ describe('action file test', () => {
                 index: 1,
                 elementWipType: 'figure',
                 tag: "SL",
-                toolbar: ["assetpopover","glossary"],
+                toolbar: ["crossLinkingIcon","assetpopover","glossary"],
                }
             }];
             let dispatch = (obj) => {
@@ -1124,7 +1125,7 @@ describe('action file test', () => {
                     "startNumber": "1",
                     'elementWipType': 'figure',
                     'tag': 'Qu',
-                    'toolbar': ['assetpopover', 'decreaseindent', 'glossary']
+                    'toolbar': setActiveToolbar
                 }
             }]
 
@@ -1153,7 +1154,7 @@ describe('action file test', () => {
                     "startNumber": "1",
                     'elementWipType': 'element-aside',
                     'tag': 'As',
-                    'toolbar': ['assetpopover', 'decreaseindent', 'glossary']
+                    'toolbar': setActiveToolbar
                 }
             }]
 
@@ -1179,7 +1180,7 @@ describe('action file test', () => {
                     "startNumber": "1",
                     'elementWipType': 'element-aside',
                     'tag': 'WE',
-                    'toolbar': ['assetpopover', 'decreaseindent', 'glossary']
+                    'toolbar': setActiveToolbar
                 }
             }]
 
@@ -1206,7 +1207,7 @@ describe('action file test', () => {
                     "startNumber": "1",
                     'elementWipType': 'element-aside',
                     'tag': 'LO',
-                    'toolbar': ['assetpopover', 'decreaseindent', 'glossary']
+                    'toolbar': setActiveToolbar
                 }
             }]
 
@@ -1234,7 +1235,7 @@ describe('action file test', () => {
                     "startNumber": "1",
                     'elementWipType': 'element-list',
                     'tag': 'LI',
-                    'toolbar': ['assetpopover', 'decreaseindent', 'glossary']
+                    'toolbar': setActiveToolbar
                 }
             }]
 
@@ -1260,7 +1261,7 @@ describe('action file test', () => {
                     "startNumber": "1",
                     'elementWipType': 'element-opener',
                     'tag': 'OE',
-                    'toolbar': ['assetpopover', 'decreaseindent', 'glossary']
+                    'toolbar': setActiveToolbar
                 }
             }]
 
