@@ -4,8 +4,7 @@ import store from '../../appstore/store.js'
 import { sendDataToIframe, createTitleSubtitleModel } from '../../constants/utility.js';
 import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 import { prepareTcmSnapshots } from '../TcmSnapshots/TcmSnapshots_Utility.js';
-import { fetchParentData, fetchElementWipData } from '../TcmSnapshots/ElementSnapshot_Utility.js';
-import { getLatestVersion } from '../TcmSnapshots/TcmSnapshot_Actions.js';
+import { fetchParentData, fetchElementWipData, fetchManifestStatus, checkContainerElementVersion } from '../TcmSnapshots/ElementSnapshot_Utility.js';
 const {
     REACT_APP_API_URL
 } = config
@@ -539,26 +538,29 @@ store.dispatch({
 /**
      * @description - prepare data to create snapshots on update element
 */
+/**
+     * @description - prepare data to create snapshots on update element
+*/
 export const tcmSnapshotsForGlossaryFootnote = async (elementUpdateData, elementIndex, containerElement, dispatch) => {
-    let data = fetchElementWipData(elementUpdateData.updateBodymatter, elementIndex, elementUpdateData.response.type)
+    let wipData = fetchElementWipData(elementUpdateData.tcmBodymatter, elementIndex, elementUpdateData.response.type);
+    let versionStatus = fetchManifestStatus(elementUpdateData.tcmBodymatter, containerElement, elementUpdateData.response.type);
     /** latest version for WE/CE/PE/AS*/
-    containerElement = await checkContainerElementVersion(containerElement, data, elementUpdateData.currentSlateData)
+    containerElement = await checkContainerElementVersion(containerElement, versionStatus, elementUpdateData.currentSlateData)
     let oldData = Object.assign({}, elementUpdateData.response);
-    if (elementUpdateData.response.id !== elementUpdateData.updatedDataId) {
+    if (elementUpdateData.response.id !== elementUpdateData.elementWorkId) {
         if (oldData.poetrylines) {
-            oldData.poetrylines = data.wipData.poetrylines
+            oldData.poetrylines = wipData.poetrylines
         }
         else {
-            oldData.elementdata = data.wipData.elementdata
+            oldData.elementdata = wipData.elementdata
         }
-        oldData.html = data.wipData.html
+        oldData.html = wipData.html
         /** After versioning snapshots*/
         dispatch(prepareTcmSnapshots(oldData, 'Create', containerElement, "", "Accepted"))
     }
     /** Before versioning snapshots*/
     dispatch(prepareTcmSnapshots(elementUpdateData.response, 'Update', containerElement, "", ""))
 }
-
 /**
  * setFormattingToolbar | this method is used to enable/disable the formatting toolbars
  * @param {*} action, type of action to be performed

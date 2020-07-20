@@ -108,16 +108,12 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
 
         /** [PCAT-8289] ---------------------------- TCM Snapshot Data handling ------------------------------*/
         if (elementType.indexOf(type) !== -1) {
-<<<<<<< HEAD
             let containerElement = {
                 asideData: asideData,
                 parentUrn:parentUrn,
                 poetryData:poetryData
             }
             dispatch(prepareTcmSnapshots(createdElemData.data,'Create',containerElement,type,""))
-=======
-            tcmSnapshotsForCreate(currentSlateData.contents.bodymatter, index, createdElemData.data, asideData, parentUrn, poetryData, dispatch, currentSlateData, type)
->>>>>>> 245b0d57648de7fb5d75955876668bb59a4db743
             }
         /**---------------------------------------------------------------------------------------------------*/
 

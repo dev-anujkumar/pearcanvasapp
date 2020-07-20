@@ -1,6 +1,6 @@
 /**
  * Module - ElementSnapshot_Utility
- * Description - This Module contains the utility functions to prepare TCM snapshots for Glossary/Footnoete/Asset_Popover
+ * Description - This Module contains the utility functions to prepare TCM snapshots for Glossary/Footnote/Asset_Popover
  */
 
 /**************************Import Modules**************************/
@@ -8,12 +8,13 @@ import { getCurrentlyLinkedImage } from '../AssetPopover/AssetPopover_Actions.js
 import { getLatestVersion } from '../TcmSnapshots/TcmSnapshot_Actions.js';
 import config from '../../config/config';
 let elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza'];
+
 /**
  * @function setSemanticsSnapshots
  * @description-This function is to set the snapshots for semantics in an element
  * @param {String} status - status of the action performed
  * @param {Object} element - wipData for element
- * @returns {Object}
+ * @returns {Object} All snapshots for Glossary/Footnote/Asset_Popover for given element
 */
 export const setSemanticsSnapshots = async (status, element) => {
     let glossarySnap, footnoteSnap, assetPopoverSnap, glossaryList, footnoteList, assetPopoverList;
@@ -25,13 +26,14 @@ export const setSemanticsSnapshots = async (status, element) => {
             footnoteList = element.elementdata && element.elementdata.footnotes ? element.elementdata.footnotes : [];
             footnoteSnap = prepareFootnoteSnapshotContent(status, footnoteList);
             assetPopoverList = element.elementdata && element.elementdata.internallinks ? element.elementdata.internallinks : [];
-            assetPopoverSnap = prepareAssetPopoverSnapshotContent(assetPopoverList)
+            assetPopoverSnap = await prepareAssetPopoverSnapshotContent(assetPopoverList)
             break;
 
         case 'element-list':
-            glossarySnap = setSnapshotsInListAndPoetry(status, element.elementdata.listitems, 'glossary');
-            footnoteSnap = setSnapshotsInListAndPoetry(status, element.elementdata.listitems, 'footnote');
-            assetPopoverSnap = setSnapshotsInListAndPoetry(status, element.elementdata.listitems, 'assetpopover');
+            glossarySnap = await setSnapshotsInListAndPoetry(status, element.elementdata.listitems, 'glossary');
+            footnoteSnap = await setSnapshotsInListAndPoetry(status, element.elementdata.listitems, 'footnote');
+            assetPopoverSnap = await setSnapshotsInListAndPoetry(status, element.elementdata.listitems, 'assetpopover');
+            console.log('assetPopoverSnap1',assetPopoverSnap)
             break;
 
         case 'element-blockfeature':
@@ -60,6 +62,7 @@ export const setSemanticsSnapshots = async (status, element) => {
         footnoteSnapshot: footnoteSnap,
         assetPopoverSnapshot: assetPopoverSnap
     }
+    console.log('semanticSnapshots',semanticSnapshots)
     return semanticSnapshots
 }
 
@@ -68,12 +71,12 @@ export const setSemanticsSnapshots = async (status, element) => {
  * @description This is a recursive function to prepare snapshot content for each Glossary/Footnote/AssetPopover entry 
  *              in a List and Poetry element
  * @param {String} status - status of the action performed
- * @param {Array} elementList - List of Glossary entries in a list element
- * @returns {Array}  
+ * @param {Array} elementList - List of Glossary/Footnote/Asset_Popover entries in a List/Poetry element
+ * @returns {Array} All snapshots for given semantic - Glossary/Footnote/Asset_Popover for List and Poetry element  
 */
-const setSnapshotsInListAndPoetry = (status, elementList, semanticType) => {
+const setSnapshotsInListAndPoetry = async (status, elementList, semanticType) => {
     let snapshotsList = []
-    for (let item of elementList) {
+    elementList.map( item => {
         if ((item.type == "paragraph" || item.type == "line") && item.authoredtext) {
             if (semanticType === 'glossary') {
                 let glossaryArray = item.authoredtext.glossaryentries ? item.authoredtext.glossaryentries : [];
@@ -83,12 +86,34 @@ const setSnapshotsInListAndPoetry = (status, elementList, semanticType) => {
                 snapshotsList = snapshotsList.concat(prepareFootnoteSnapshotContent(status, footnoteArray));
             } else if (semanticType === 'assetpopover') {
                 let assetLists = item.authoredtext.internallinks ? item.authoredtext.internallinks : [];
-                snapshotsList = snapshotsList.concat(prepareAssetPopoverSnapshotContent(assetLists));
+                let assetSnapList = assetLists.length != 0 ? prepareAssetPopoverSnapshotContent(assetLists) : [];
+                // await Promise.all(assetSnapList).then(snapshotsList = snapshotsList.concat(assetSnapList)).catch(err=>console.log('in catch'));
+                console.log('assetList in poetry func before concat', assetSnapList)
+                snapshotsList = snapshotsList.concat(assetSnapList);
             }
         } else if (item.listitems && item.listitems.length > 0) { // for nested lists
             snapshotsList = snapshotsList.concat(setSnapshotsInListAndPoetry(status, item.listitems, semanticType));
         }
-    }
+    })
+    // for (let item of elementList) {
+    //     if ((item.type == "paragraph" || item.type == "line") && item.authoredtext) {
+    //         if (semanticType === 'glossary') {
+    //             let glossaryArray = item.authoredtext.glossaryentries ? item.authoredtext.glossaryentries : [];
+    //             snapshotsList = snapshotsList.concat(prepareGlossarySnapshotContent(status, glossaryArray));
+    //         } else if (semanticType === 'footnote') {
+    //             let footnoteArray = item.authoredtext.footnotes ? item.authoredtext.footnotes : [];
+    //             snapshotsList = snapshotsList.concat(prepareFootnoteSnapshotContent(status, footnoteArray));
+    //         } else if (semanticType === 'assetpopover') {
+    //             let assetLists = item.authoredtext.internallinks ? item.authoredtext.internallinks : [];
+    //             let assetSnapList = assetLists && assetLists.length !== 0 ? await prepareAssetPopoverSnapshotContent(assetLists) : [];
+    //             console.log('assetList in poetry func before concat', assetSnapList)
+    //             snapshotsList = snapshotsList.concat(assetSnapList);
+    //             snapshotsList = snapshotsList.concat(prepareAssetPopoverSnapshotContent(assetLists));
+    //         }
+    //     } else if (item.listitems && item.listitems.length > 0) { // for nested lists
+    //         snapshotsList = snapshotsList.concat(setSnapshotsInListAndPoetry(status, item.listitems, semanticType));
+    //     }
+    // }
     return snapshotsList
 }
 
@@ -97,7 +122,7 @@ const setSnapshotsInListAndPoetry = (status, elementList, semanticType) => {
  * @description-This function is to prepare snapshot content for each Glossary entry
  * @param {String} status - status of the action performed
  * @param {Array} glossaryList - List of Glossary entries
- * @returns {Array}  
+ * @returns {Array} All  Glossary Snapshots for given element 
 */
 const prepareGlossarySnapshotContent = (status, glossaryList) => {
     let glossarySnap = []
@@ -125,7 +150,7 @@ const prepareGlossarySnapshotContent = (status, glossaryList) => {
  * @description-This function is to prepare snapshot content for each Glossary entry
  * @param {String} status - status of the action performed
  * @param {Array} footnoteList - List of Footnote entries
- * @returns {Array}  
+ * @returns {Array} All Footnote Snapshots for given element 
 */
 const prepareFootnoteSnapshotContent = (status, footnoteList) => {
     let footnoteSnap = []
@@ -135,12 +160,13 @@ const prepareFootnoteSnapshotContent = (status, footnoteList) => {
             changeType: "Update",
             charAt: footnoteItem.charAt,
             footnoteid: footnoteItem.footnoteid
-        }
+        };
+        let footnoteText = "";
         if (footnoteItem.footnotecontent && footnoteItem.footnotecontent[0] && footnoteItem.footnotecontent[0].elementdata) {
-            let footnoteText = footnoteItem.footnotecontent[0].elementdata.text ? footnoteItem.footnotecontent[0].elementdata.text : "";
-            footnoteData.footnote = `<p class="paragraphNumeroUno">${footnoteText}</p>`
+            footnoteText = footnoteItem.footnotecontent[0].elementdata.text ? footnoteItem.footnotecontent[0].elementdata.text : "";
         }
-        footnoteSnap.push(footnoteData)
+        footnoteData.footnote = `<p class="paragraphNumeroUno">${footnoteText}</p>`
+        footnoteSnap.push(footnoteData);
     })
     return footnoteSnap
 }
@@ -150,9 +176,9 @@ const prepareFootnoteSnapshotContent = (status, footnoteList) => {
  * @description-This function is to prepare snapshot content for each Asset Popover entry
  * @param {String} status - status of the action performed
  * @param {Array} assetsList - List of Asset Popover entries
- * @returns {Array}  
+ * @returns {Array} All AssetPopover Snapshots for given element 
 */
-const prepareAssetPopoverSnapshotContent = async (assetsList) => {
+export const prepareAssetPopoverSnapshotContent = async (assetsList) => {
     let assetPopoverSnap = []
     let elementASLinkID = []
     assetsList && assetsList.length && assetsList.map(assetsItem => {
@@ -162,7 +188,9 @@ const prepareAssetPopoverSnapshotContent = async (assetsList) => {
             linkID: assetsItem.linkid
         })
     })
-    await prepareASContentSnapshot(elementASLinkID, assetPopoverSnap)
+    assetPopoverSnap = await prepareASContentSnapshot(elementASLinkID, assetPopoverSnap)
+    // await Promise.all(assetPopoverSnap).then(result=>assetPopoverSnap=result ).catch(err=>console.log('in catch'));
+    console.log('assetPopoverSnap',assetPopoverSnap)
     return assetPopoverSnap
 }
 
@@ -171,9 +199,10 @@ const prepareAssetPopoverSnapshotContent = async (assetsList) => {
  * @description-This function is to prepare snapshot content for each Asset Popover entry
  * @param {String} elementASLinkID - linkId of assetPopover
  * @param {Array} assetPopoverSnap - List of Asset Popover snapshots
- * @returns {Array}  
+ * @returns {Array} All AssetPopover Snapshots for given element  
 */
 export const prepareASContentSnapshot = async (elementASLinkID, assetPopoverSnap) => {
+    // let assetPopoverSnaps = []
     for (let i = 0; i < elementASLinkID.length; i++) {
         await getCurrentlyLinkedImage(elementASLinkID[i].linkID, (resCurrentlyLinkedImageData) => {
             assetPopoverSnap.push({
@@ -183,13 +212,22 @@ export const prepareASContentSnapshot = async (elementASLinkID, assetPopoverSnap
             })
         })
     }
+    
+    // await Promise.all(assetPopoverSnaps).then(elementASLinkID => {
+    //     assetPopoverSnaps = elementASLinkID;
+    //     console.log('assetPopoverSnaps12345', assetPopoverSnaps)
+    // }).catch(error => {
+    //     console.log('in error block')
+    // })
+    console.log('assetPopoverSnaps122',assetPopoverSnap)
     return assetPopoverSnap
 }
 
 /**
  * @function fetchElementsTag
  * @description-This function is to set the lael text of element
- * @param {Object} element - element details 
+ * @param {Object} element - element details
+ * @returns {String} Element Tags for elementType key in Snapshots
 */
 export const fetchElementsTag = (element) => {
     let labelText = "P", eleTag, eleType, eleSubType;
@@ -223,19 +261,19 @@ export const fetchElementsTag = (element) => {
  * @param {Object} bodymatter - bodymatter before delete  
  * @param {String/Number} index - index of element deleted
  * @param {String} type - type of element deleted
- * @returns {Object}
+ * @returns {Object} WipData for element 
 */
 export const fetchElementWipData = (bodymatter, index, type, entityUrn) => {
     let eleIndex,
-        data = {};
+    wipData = {};
 
     if (typeof index === "number" || (Array.isArray(index) && index.length == 1)) {   /** Delete a container or an element at slate level */
         eleIndex = Array.isArray(index) ? index[0] : index;
-        data.wipData = bodymatter[eleIndex]
-        if (data.wipData.subtype === "workedexample") {  /** Delete Section-Break */
-            data.wipData.elementdata.bodymatter.map((item, innerIndex) => {
+        wipData = bodymatter[eleIndex]
+        if (wipData.subtype === "workedexample") {  /** Delete Section-Break */
+            wipData.elementdata.bodymatter.map((item, innerIndex) => {
                 if (item.type == "manifest" && entityUrn == item.contentUrn) {
-                    data.wipData = bodymatter[eleIndex].elementdata.bodymatter[innerIndex]
+                    wipData = bodymatter[eleIndex].elementdata.bodymatter[innerIndex]
                 }
             })
         }
@@ -244,32 +282,32 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn) => {
         eleIndex = Array.isArray(index) ? index : index.split("-");
         switch (type) {
             case 'stanza':                           /** Inside Poetry */
-                data.wipData = bodymatter[eleIndex[0]].contents.bodymatter[eleIndex[2]];
+                wipData = bodymatter[eleIndex[0]].contents.bodymatter[eleIndex[2]];
                 break;
             case 'element-citation':                 /** Inside Citations */
-                data.wipData = bodymatter[eleIndex[0]].contents.bodymatter[eleIndex[1] - 1];
+                wipData = bodymatter[eleIndex[0]].contents.bodymatter[eleIndex[1] - 1];
                 break;
             case 'element-list':
             case 'element-blockfeature':
             case 'element-authoredtext':
             case 'element-learningobjectives':
                 if (eleIndex.length == 2) {          /** Inside WE-HEAD | Aside */
-                    data.wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]];
+                    wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]];
                 } else if (eleIndex.length == 3) {   /** Inside WE-BODY */
-                    data.wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]].contents.bodymatter[eleIndex[2]];
+                    wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]].contents.bodymatter[eleIndex[2]];
                 }
                 break;
         }
     }
-    return data;
+    return wipData;
 }
 
 /**
  * @function fetchParentData
- * @description-This function is to set the parentData for the element
- * @param {Object} bodymatter - bodymatter before delete  
+ * @description This function is to set the parentData for the element
+ * @param {Object} bodymatter - bodymatter for conversion  
  * @param {String/Number} indexes - index of element converted
- * @returns {Object}
+ * @returns {Object} ParentData fo given element
 */
 export const fetchParentData = (bodymatter, indexes) => {
     let parentData = {};
@@ -285,12 +323,7 @@ export const fetchParentData = (bodymatter, indexes) => {
             type: bodymatter[tempIndex[0]].type,
             element: bodymatter[tempIndex[0]]
         }
-        if(bodymatter[tempIndex[0]].status === "approved"){
-            parentData.parentData = "approved"
-        }
-        if(tempIndex.length == 3 && bodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].status === "approved"){
-            parentData.childData = "approved"
-        }
+
         let parentElement = tempIndex.length == 3 && bodymatter[tempIndex[0]].type !== 'poetry' ? bodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]] : bodymatter[tempIndex[0]];
 
         parentData.parentUrn = {
@@ -301,9 +334,19 @@ export const fetchParentData = (bodymatter, indexes) => {
     }
     return parentData;
 }
-export const checkContainerElementVersion = async (containerElement, data, currentSlateData) => {
+
+/**
+ * @function checkContainerElementVersion
+ * @description This function is to check versioning status for slate and container elements and 
+ *              fetch new ManifestUrn based on the status
+ * @param {Object} containerElement Object containing all the parent data for elements  
+ * @param {Object} versionStatus parent element status for versioning
+ * @param {Object} currentSlateData current Slate data 
+ * @returns {Object} Updated Container Element with latest Manifest Urns
+*/
+export const checkContainerElementVersion = async (containerElement, versionStatus, currentSlateData) => {
     /** latest version for WE/CE/PE/AS*/
-    if (data.parentData === "approved") {
+    if (versionStatus && versionStatus.parentStatus && versionStatus.parentStatus === "approved") {
         let contentUrn = containerElement.asideData ? containerElement.asideData.contentUrn : containerElement.poetryData ? containerElement.poetryData.contentUrn : containerElement.parentUrn ? containerElement.parentUrn.contentUrn : ""
         if (contentUrn) {
             let newManifestData = await getLatestVersion(contentUrn);
@@ -323,9 +366,9 @@ export const checkContainerElementVersion = async (containerElement, data, curre
         }
     }
     /** latest version for SB*/
-    if (data.childData === "approved") {
-        let newManifestData = await getLatestVersion(containerElement.parentUrn.contentUrn);
-        containerElement.parentUrn.manifestUrn = newManifestData ? newManifestData : containerElement.parentUrn.manifestUrn
+    if (versionStatus && versionStatus.childStatus && versionStatus.childStatus === "approved") {
+        let newSectionManifest = await getLatestVersion(containerElement.parentUrn.contentUrn);
+        containerElement.parentUrn.manifestUrn = newSectionManifest ? newSectionManifest : containerElement.parentUrn.manifestUrn
     }
     /** latest version for slate*/
     if (currentSlateData.status === 'approved') {
@@ -333,6 +376,43 @@ export const checkContainerElementVersion = async (containerElement, data, curre
         config.slateManifestURN = newSlateManifest ? newSlateManifest : config.slateManifestURN
     }
     return containerElement;
+}
+
+/**
+ * @function fetchManifestStatus
+ * @description This function is to get the status for Parent elements
+ * @param {Object} bodymatter bodymatter for current slate  
+ * @param {Object} parentElement Object containing all the parent data for elements
+ * @param {String} type type of element
+ * @returns {Object} Parent Elements' status
+*/
+export const fetchManifestStatus = (bodymatter, parentElement, type) => {
+    let parentData = {};
+    const { asideData, parentUrn, poetryData } = parentElement;
+
+    if ((asideData || parentUrn || poetryData) && bodymatter.length !== 0) {
+        bodymatter.map(element => {
+            if (type === 'SECTION_BREAK' && asideData && element.id == asideData.id) {
+                console.log('element.id',element)
+                parentData.parentStatus = element.status;       /** Create Section-Break */
+            }
+            else if (parentUrn && element.id == parentUrn.manifestUrn) {
+                parentData.parentStatus = element.status;       /** In WE-HEAD | Aside | Citations */
+            } else if (asideData && element.type == "element-aside" && element.id == asideData.id) {
+                parentData.parentStatus = element.status;
+                element.elementdata && element.elementdata.bodymatter.map((ele) => {
+                    if (parentUrn && ele.id === parentUrn.manifestUrn) {
+                        parentData.childStatus = ele.status ;   /** In Section-Break */
+                    }
+                })
+            }
+            else if (poetryData && element.id == poetryData.parentUrn) {
+                parentData.parentStatus = element.status;       /** In Poetry */
+            }
+        })
+    }
+    console.log('parentData',parentData)
+    return parentData
 }
 
 /**
@@ -450,31 +530,4 @@ const setElementTag = {
             },
         }
     }
-}
-
-export const checkManifestStatus = (bodymatter, parentElement, type) => {
-    let parentData = {};
-    const { asideData, parentUrn, poetryData } = parentElement;
-
-    if ((asideData || parentUrn || poetryData) && bodymatter.length !== 0) {
-        bodymatter.map(element => {
-            if (type === 'SECTION_BREAK' && asideData && element.id == asideData.id) {
-                parentData.parentStatus = element.status;       /** Create Section-Break */
-            }
-            else if (parentUrn && element.id == parentUrn.manifestUrn) {
-                parentData.parentStatus = element.status;       /** In WE-HEAD | Aside | Citations */
-            } else if (asideData && element.type == "element-aside" && element.id == asideData.id) {
-                parentData.parentStatus = element.status;
-                element.elementdata && element.elementdata.bodymatter.map((ele) => {
-                    if (parentUrn && ele.id === parentUrn.manifestUrn) {
-                        parentData.childStatus = ele.status ;   /** In Section-Break */
-                    }
-                })
-            }
-            else if (poetryData && element.id == poetryData.parentUrn) {
-                parentData.parentStatus = element.status;       /** In Poetry */
-            }
-        })
-    }
-    return parentData
 }

@@ -13,13 +13,12 @@ let containerType = ['element-aside', 'manifest', 'citations', 'poetry','WORKED_
 
 /**
  * @function prepareTcmSnapshots
- * @description This is the root function to preapare the data for TCM Snapshots
+ * @description This is the root function to prepare the data for TCM Snapshots
  * @param {Object} wipData - Element Wip Data
  * @param {String} action - action performed
- * @param {Object} asideData - Element Parent Data
- * @param {Object} parentUrn - Element Parent Data
- * @param {Object} poetryData - Poetry Parent Data
+ * @param {Object} containerElement - Element Parent Data
  * @param {String} type - type of element
+ * @param {String} status - pending/accepted
 */
 export const prepareTcmSnapshots = (wipData, action, containerElement, type, status) => (dispatch) => {
     let isContainer = false
