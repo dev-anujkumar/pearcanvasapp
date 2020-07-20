@@ -9,7 +9,7 @@ import { sendElementTcmSnapshot } from './TcmSnapshot_Actions.js';
 import { setSemanticsSnapshots, fetchElementsTag } from './ElementSnapshot_Utility.js';
 
 let elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza'];
-let containerType = ['element-aside', 'manifest', 'citations', 'poetry'];
+let containerType = ['element-aside', 'manifest', 'citations', 'poetry','WORKED_EXAMPLE', 'CONTAINER', 'SECTION_BREAK', 'CITATION', 'POETRY'];
 
 /**
  * @function prepareTcmSnapshots
@@ -22,7 +22,13 @@ let containerType = ['element-aside', 'manifest', 'citations', 'poetry'];
  * @param {String} type - type of element
 */
 export const prepareTcmSnapshots = (wipData, action, containerElement, type, status) => (dispatch) => {
-    let defaultKeys = setDefaultKeys(action,status)
+    let isContainer = false
+    if ((containerElement.poetryData || containerElement.asideData || containerElement.parentUrn) ||
+        (containerType.indexOf(wipData.type) !== -1) ||
+        (type && (containerType.indexOf(type) !== -1))) {
+        isContainer = true
+    }
+    let defaultKeys = setDefaultKeys(action,status,isContainer)
     let elementDetails;
     /* Tag of elements*/
     let tag = {
@@ -79,7 +85,7 @@ export const prepareTcmSnapshots = (wipData, action, containerElement, type, sta
     }
     /* action on PE and CG */
     else if (wipData.type === "citations" || wipData.type === "poetry") {
-        wipData.contents.bodymatter.map(async (item) => {
+        wipData.contents.bodymatter.map((item) => {
             elementId.childId = item.id;
             tag.childTag = fetchElementsTag(item)
             elementDetails = setElementTypeAndUrn(elementId, tag, "", "")
@@ -90,7 +96,6 @@ export const prepareTcmSnapshots = (wipData, action, containerElement, type, sta
         elementDetails = setElementTypeAndUrn(elementId, tag)
         prepareTcmData(elementDetails, wipData, defaultKeys, dispatch)
     }
-    console.log('final data in prepare Function')
 }
 
 /**
@@ -101,7 +106,7 @@ export const prepareTcmSnapshots = (wipData, action, containerElement, type, sta
  * @param {Object} defaultKeys - default tcm_snapshot keys  
  * @param {Function} dispatch - dispatch function  
 */
-const prepareTcmData = async (elementDetails, wipData, defaultKeys, dispatch) => {
+const prepareTcmData =  async (elementDetails, wipData, defaultKeys, dispatch) => {
     let res = Object.assign({}, wipData);
     delete res["html"];
     let currentSnapshot = {
@@ -113,7 +118,7 @@ const prepareTcmData = async (elementDetails, wipData, defaultKeys, dispatch) =>
         ...defaultKeys
     };
     console.log('currentSnapshot', currentSnapshot);
-    dispatch(sendElementTcmSnapshot(currentSnapshot));
+    await sendElementTcmSnapshot( currentSnapshot)
 }
 
 /**
@@ -142,18 +147,17 @@ const setElementTypeAndUrn = (eleId, tag, isHead, sectionId) => {
  * @param {Object} action - type of action performed
  * @returns {Object} Default keys for the snapshot
 */
-export const setDefaultKeys = (action,status) => {
+export const setDefaultKeys = (action,status,isContainer) => {
     let tcmKeys = {}
-    console.log( status === "",action,status," status ===")
     tcmKeys = {
         slateID: config.slateManifestURN,
         slateUrn: config.slateManifestURN,
         projectUrn: config.projectUrn,
         index: 0,
         action: action,
-        status:  (config.tcmStatus && config.tcmStatus == true && status === "" && action !== 'delete') ? "Pending" : "Accepted",//prepareElementStatus(action),
+        status:  (config.tcmStatus && config.tcmStatus == true && status === "" && action !== 'delete') ? "pending" : "accepted",//prepareElementStatus(action),
         //set based on action (config.tcmStatus && config.tcmStatus == true && action !== 'delete') ? "Pending" : "Accepted")
-        slateType: "slate",//set based on condition
+        slateType: isContainer === true ? "container-introduction" : "slate",//set based on condition
     }
     return tcmKeys
 }
@@ -189,7 +193,7 @@ export const prepareElementSnapshots = async (element, action, status) => {
         footnoteSnapshot: isEmpty(semanticSnapshots) === false ? semanticSnapshots.footnoteSnapshot : [],
         assetPopOverSnapshot: isEmpty(semanticSnapshots) === false ? semanticSnapshots.assetPopoverSnapshot : []
     }
-    console.log('elesnap', elementSnapshot)
+    console.log('elesnap', semanticSnapshots)
     return elementSnapshot;
 }
 /**
