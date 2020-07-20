@@ -4,8 +4,7 @@ import store from '../../appstore/store.js'
 import { sendDataToIframe, createTitleSubtitleModel } from '../../constants/utility.js';
 import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 import { prepareTcmSnapshots } from '../TcmSnapshots/TcmSnapshots_Utility.js';
-import { fetchParentData, fetchElementWipData } from '../TcmSnapshots/ElementSnapshot_Utility.js';
-import { getLatestVersion } from '../TcmSnapshots/TcmSnapshot_Actions.js';
+import { fetchParentData, fetchElementWipData, fetchManifestStatus, checkContainerElementVersion } from '../TcmSnapshots/ElementSnapshot_Utility.js';
 const {
     REACT_APP_API_URL
 } = config
@@ -342,7 +341,17 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         let currentSlateData = currentParentData[config.slateManifestURN];
         /** [PCAT-8289] ----------------------------------- TCM Snapshot Data handling ---------------------------------*/
         if (elementTypeData.indexOf(elementType) !== -1) {
-            tcmSnapshotsForGlossaryFootnote(tcmBodymatter, index, res.data, tcmParentData.asideData, tcmParentData.parentUrn, undefined, store.dispatch, currentSlateData, elementWorkId)
+            let elementUpdateData ={
+                currentSlateData:currentSlateData,
+                tcmBodymatter:tcmBodymatter,
+                response: res.data,
+                elementWorkId:elementWorkId
+            },
+            containerElement = {
+                asideData:tcmParentData.asideData,
+                parentUrn:tcmParentData.parentUrn,
+            }
+            tcmSnapshotsForGlossaryFootnote(elementUpdateData, index, containerElement, store.dispatch)
         }
         /**-------------------------------------------------------------------------------------------------------------*/
         if(res.data.id !== data.id && currentSlateData.status === 'approved'){
@@ -529,54 +538,29 @@ store.dispatch({
 /**
      * @description - prepare data to create snapshots on update element
 */
-export const tcmSnapshotsForGlossaryFootnote = async (updateBodymatter, elementIndex, response, asideData, parentUrn, poetryData, dispatch, currentSlateData, updatedDataId) => {
-    let data = fetchElementWipData(updateBodymatter, elementIndex, response.type)
-    /** latest version for WE/CG/PE/AS*/
-    if (data.parentUrn === "approved") {
-        let contentUrn = asideData ? asideData.contentUrn : poetryData ? poetryData.contentUrn : parentUrn ? parentUrn.contentUrn : ""
-        if (contentUrn) {
-            let newdata = await getLatestVersion(contentUrn);
-            if (newdata) {
-                if (poetryData) {
-                    poetryData.id = newdata;
-                    poetryData.parentUrn = newdata;
-                }
-                else if (asideData) {
-                    asideData.id = newdata
-                    parentUrn.manifestUrn = newdata
-                }
-                else if (parentUrn) {
-                    parentUrn.manifestUrn = newdata
-                }
-            }
-        }
-    }
-    /** latest version for SB*/
-    if (data.childUrn === "approved") {
-        let newdata = await getLatestVersion(parentUrn.contentUrn);
-        parentUrn.manifestUrn = newdata ? newdata : parentUrn.manifestUrn
-    }
-    /** latest version for slate*/
-    if (currentSlateData.status === 'approved') {
-        let newdata = await getLatestVersion(currentSlateData.contentUrn);
-        config.slateManifestURN = newdata ? newdata : config.slateManifestURN
-    }
-    /** Before versioning snapshots*/
-    dispatch(prepareTcmSnapshots(response, 'update', asideData, parentUrn, poetryData, "", ""))
-    if (response.id !== updatedDataId) {
-        if (response.poetrylines) {
-            response.poetrylines = data.wipData.poetrylines
+/**
+     * @description - prepare data to create snapshots on update element
+*/
+export const tcmSnapshotsForGlossaryFootnote = async (elementUpdateData, elementIndex, containerElement, dispatch) => {
+    let wipData = fetchElementWipData(elementUpdateData.tcmBodymatter, elementIndex, elementUpdateData.response.type);
+    let versionStatus = fetchManifestStatus(elementUpdateData.tcmBodymatter, containerElement, elementUpdateData.response.type);
+    /** latest version for WE/CE/PE/AS*/
+    containerElement = await checkContainerElementVersion(containerElement, versionStatus, elementUpdateData.currentSlateData)
+    let oldData = Object.assign({}, elementUpdateData.response);
+    if (elementUpdateData.response.id !== elementUpdateData.elementWorkId) {
+        if (oldData.poetrylines) {
+            oldData.poetrylines = wipData.poetrylines
         }
         else {
-            response.elementdata = data.wipData.elementdata
+            oldData.elementdata = wipData.elementdata
         }
-        response.html = data.wipData.html
+        oldData.html = wipData.html
         /** After versioning snapshots*/
-        dispatch(prepareTcmSnapshots(response, 'create', asideData, parentUrn, poetryData, "", "Accepted"))
+        dispatch(prepareTcmSnapshots(oldData, 'Create', containerElement, "", "Accepted"))
     }
-
+    /** Before versioning snapshots*/
+    dispatch(prepareTcmSnapshots(elementUpdateData.response, 'Update', containerElement, "", ""))
 }
-
 /**
  * setFormattingToolbar | this method is used to enable/disable the formatting toolbars
  * @param {*} action, type of action to be performed

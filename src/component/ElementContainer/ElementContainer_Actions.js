@@ -8,7 +8,7 @@ import {
 import { AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP, OPEN_GLOSSARY_FOOTNOTE,DELETE_SHOW_HIDE_ELEMENT, GET_TCM_RESOURCES} from "./../../constants/Action_Constants";
 import { customEvent } from '../../js/utils';
 import { prepareTcmSnapshots } from '../TcmSnapshots/TcmSnapshots_Utility.js';
-import { fetchElementWipData, checkContainerElementVersion } from '../TcmSnapshots/ElementSnapshot_Utility.js';
+import { fetchElementWipData, checkContainerElementVersion, fetchManifestStatus } from '../TcmSnapshots/ElementSnapshot_Utility.js';
 let elementTypeTCM = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza'];
 let containerType = ['element-aside', 'manifest', 'citations', 'poetry'];
 
@@ -406,18 +406,19 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
      * @description - prepare data to create snapshots on update element
 */
 export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, containerElement, dispatch) => {
-    let data = fetchElementWipData(elementUpdateData.updateBodymatter, elementIndex, elementUpdateData.response.type)
+    let wipData = fetchElementWipData(elementUpdateData.updateBodymatter, elementIndex, elementUpdateData.response.type)
+    let versionStatus = fetchManifestStatus(elementUpdateData.updateBodymatter, containerElement, elementUpdateData.response.type);
     /** latest version for WE/CE/PE/AS*/
-    containerElement = await checkContainerElementVersion(containerElement, data, elementUpdateData.currentSlateData)
+    containerElement = await checkContainerElementVersion(containerElement, versionStatus, elementUpdateData.currentSlateData)
     let oldData = Object.assign({}, elementUpdateData.response);
-    if (elementUpdateData.response.id !== elementUpdateData.updatedDataId) {
+    if (elementUpdateData.response.id !== elementUpdateData.updatedId) {
         if (oldData.poetrylines) {
-            oldData.poetrylines = data.wipData.poetrylines
+            oldData.poetrylines = wipData.poetrylines;
         }
         else {
-            oldData.elementdata = data.wipData.elementdata
+            oldData.elementdata = wipData.elementdata;
         }
-        oldData.html = data.wipData.html
+        oldData.html = wipData.html;
         /** After versioning snapshots*/
         dispatch(prepareTcmSnapshots(oldData, 'Create', containerElement, "", "Accepted"))
     }
