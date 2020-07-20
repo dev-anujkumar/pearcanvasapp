@@ -145,9 +145,10 @@ figure,.element-container{
     /* cursor:copy!important; */
     text-align: center;
     max-width: 170px;
-    width: 100%;
+    width: 25%;
     margin: 0.60em auto 0.65em auto;
 }
+
 .figcaptionImage25Text{  
     color: #505759;
     font-family: Open Sans, Helvetica, sans-serif;
@@ -175,6 +176,7 @@ figure,.element-container{
     word-wrap: break-word;
 }
 .image50Text, .image50TextTableImage, .image50TextMathImage{
+    width: 50% !important;
     max-width: 340px !important;
 }
 img.imageTextWidth, img.imageTextWidthTableImage, img.imageTextWidthMathImage{
