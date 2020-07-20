@@ -395,3 +395,7 @@ th ol li.listItemNumeroUnoLowerRoman:before {
 th ol li.listItemNumeroUnoNone:before {
     content: none;
 }
+
+.pearson-component.image.figureData.table-figure-data {
+    overflow: auto;
+}
