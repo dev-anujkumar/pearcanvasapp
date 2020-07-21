@@ -22,7 +22,13 @@ class ApiResults extends React.Component {
         if (ValueToBeSearch && figuresForResults) {
             tempFiguresForResults = figuresForResults.filter((value, index, array) => {
                 if (typeof (value.title) !== 'undefined') {
-                    return value.title.toUpperCase().includes(ValueToBeSearch.toUpperCase());
+                    let searchItem = value.title;
+                    searchItem = String(searchItem).replace(/\u00a0/g, ' ');
+                    searchItem = String(searchItem).replace(/&nbsp;/g, ' ');
+                    searchItem = String(searchItem).replace(/ /g, '&nbsp;');
+                    let searchValue = ValueToBeSearch;
+                    searchValue = String(searchValue).replace(/ /g, '&nbsp;');
+                    return searchItem.toUpperCase().includes(searchValue.toUpperCase());
                 }
             });
         }
