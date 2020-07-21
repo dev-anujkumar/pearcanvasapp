@@ -53,7 +53,6 @@ function prepareDataForTcmUpdate(updatedData, parentData, asideData, poetryData)
     // updatedData.slateEntity = poetryData && poetryData.contentUrn || config.slateEntityURN;
 }
 
-/** Obsolete Code
 function createNewVersionOfSlate(){
     fetch(`${config.STRUCTURE_API_URL}structure-api/context/v2/${config.projectUrn}/container/${config.slateEntityURN}/version`, {
             method: 'PUT',
@@ -69,7 +68,6 @@ function createNewVersionOfSlate(){
                 sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
         })
 }
-*/
 
 export const createElement = (type, index, parentUrn, asideData, outerAsideIndex, loref, cb,poetryData) => (dispatch, getState) => {
     config.currentInsertedIndex = index;
@@ -624,6 +622,7 @@ export const setSlateEntity = (setSlateEntityParams) => (dispatch, getState) => 
         payload: setSlateEntityParams
     })
 }
+
 
 export const accessDenied = (value) => (dispatch, getState) => {
     dispatch({

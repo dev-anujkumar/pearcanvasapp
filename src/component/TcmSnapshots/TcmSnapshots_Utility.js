@@ -199,7 +199,7 @@ export const prepareElementSnapshots = async (element, action, status) => {
         footnoteSnapshot: isEmpty(semanticSnapshots) === false ? semanticSnapshots.footnoteSnapshot : [],
         assetPopOverSnapshot: isEmpty(semanticSnapshots) === false ? semanticSnapshots.assetPopoverSnapshot : []
     }
-    
+
     return elementSnapshot;
 }
 /**
