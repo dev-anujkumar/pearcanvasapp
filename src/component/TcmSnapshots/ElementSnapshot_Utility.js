@@ -33,7 +33,6 @@ export const setSemanticsSnapshots = async (status, element) => {
             glossarySnap = await setSnapshotsInListAndPoetry(status, element.elementdata.listitems, 'glossary');
             footnoteSnap = await setSnapshotsInListAndPoetry(status, element.elementdata.listitems, 'footnote');
             assetPopoverSnap = await setSnapshotsInListAndPoetry(status, element.elementdata.listitems, 'assetpopover');
-            console.log('assetPopoverSnap1',assetPopoverSnap)
             break;
 
         case 'element-blockfeature':
@@ -41,13 +40,13 @@ export const setSemanticsSnapshots = async (status, element) => {
             footnoteList = element.elementdata && element.elementdata.authoredtext && element.elementdata.authoredtext.footnotes ? element.elementdata.authoredtext.footnotes : [];
             footnoteSnap = prepareFootnoteSnapshotContent(status, footnoteList)
             assetPopoverList = element.elementdata && element.elementdata.authoredtext && element.elementdata.authoredtext.internallinks ? element.elementdata.authoredtext.internallinks : [];
-            assetPopoverSnap = prepareAssetPopoverSnapshotContent(assetPopoverList)
+            assetPopoverSnap = await prepareAssetPopoverSnapshotContent(assetPopoverList)
             break;
 
         case 'stanza':
-            glossarySnap = setSnapshotsInListAndPoetry(status, element.poetrylines, 'glossary');
-            footnoteSnap = setSnapshotsInListAndPoetry(status, element.poetrylines, 'footnote');
-            assetPopoverSnap = setSnapshotsInListAndPoetry(status, element.poetrylines, 'assetpopover');
+            glossarySnap = await setSnapshotsInListAndPoetry(status, element.poetrylines, 'glossary');
+            footnoteSnap = await setSnapshotsInListAndPoetry(status, element.poetrylines, 'footnote');
+            assetPopoverSnap = await setSnapshotsInListAndPoetry(status, element.poetrylines, 'assetpopover');
             break;
 
         default:
@@ -62,7 +61,6 @@ export const setSemanticsSnapshots = async (status, element) => {
         footnoteSnapshot: footnoteSnap,
         assetPopoverSnapshot: assetPopoverSnap
     }
-    console.log('semanticSnapshots',semanticSnapshots)
     return semanticSnapshots
 }
 
@@ -76,7 +74,7 @@ export const setSemanticsSnapshots = async (status, element) => {
 */
 const setSnapshotsInListAndPoetry = async (status, elementList, semanticType) => {
     let snapshotsList = []
-    elementList.map( item => {
+    await Promise.all(elementList.map(item => {
         if ((item.type == "paragraph" || item.type == "line") && item.authoredtext) {
             if (semanticType === 'glossary') {
                 let glossaryArray = item.authoredtext.glossaryentries ? item.authoredtext.glossaryentries : [];
@@ -87,33 +85,12 @@ const setSnapshotsInListAndPoetry = async (status, elementList, semanticType) =>
             } else if (semanticType === 'assetpopover') {
                 let assetLists = item.authoredtext.internallinks ? item.authoredtext.internallinks : [];
                 let assetSnapList = assetLists.length != 0 ? prepareAssetPopoverSnapshotContent(assetLists) : [];
-                // await Promise.all(assetSnapList).then(snapshotsList = snapshotsList.concat(assetSnapList)).catch(err=>console.log('in catch'));
-                console.log('assetList in poetry func before concat', assetSnapList)
                 snapshotsList = snapshotsList.concat(assetSnapList);
             }
         } else if (item.listitems && item.listitems.length > 0) { // for nested lists
             snapshotsList = snapshotsList.concat(setSnapshotsInListAndPoetry(status, item.listitems, semanticType));
         }
-    })
-    // for (let item of elementList) {
-    //     if ((item.type == "paragraph" || item.type == "line") && item.authoredtext) {
-    //         if (semanticType === 'glossary') {
-    //             let glossaryArray = item.authoredtext.glossaryentries ? item.authoredtext.glossaryentries : [];
-    //             snapshotsList = snapshotsList.concat(prepareGlossarySnapshotContent(status, glossaryArray));
-    //         } else if (semanticType === 'footnote') {
-    //             let footnoteArray = item.authoredtext.footnotes ? item.authoredtext.footnotes : [];
-    //             snapshotsList = snapshotsList.concat(prepareFootnoteSnapshotContent(status, footnoteArray));
-    //         } else if (semanticType === 'assetpopover') {
-    //             let assetLists = item.authoredtext.internallinks ? item.authoredtext.internallinks : [];
-    //             let assetSnapList = assetLists && assetLists.length !== 0 ? await prepareAssetPopoverSnapshotContent(assetLists) : [];
-    //             console.log('assetList in poetry func before concat', assetSnapList)
-    //             snapshotsList = snapshotsList.concat(assetSnapList);
-    //             snapshotsList = snapshotsList.concat(prepareAssetPopoverSnapshotContent(assetLists));
-    //         }
-    //     } else if (item.listitems && item.listitems.length > 0) { // for nested lists
-    //         snapshotsList = snapshotsList.concat(setSnapshotsInListAndPoetry(status, item.listitems, semanticType));
-    //     }
-    // }
+    }))
     return snapshotsList
 }
 
@@ -202,7 +179,6 @@ export const prepareAssetPopoverSnapshotContent = async (assetsList) => {
  * @returns {Array} All AssetPopover Snapshots for given element  
 */
 export const prepareASContentSnapshot = async (elementASLinkID, assetPopoverSnap) => {
-    // let assetPopoverSnaps = []
     for (let i = 0; i < elementASLinkID.length; i++) {
         await getCurrentlyLinkedImage(elementASLinkID[i].linkID, (resCurrentlyLinkedImageData) => {
             assetPopoverSnap.push({
@@ -212,14 +188,6 @@ export const prepareASContentSnapshot = async (elementASLinkID, assetPopoverSnap
             })
         })
     }
-    
-    // await Promise.all(assetPopoverSnaps).then(elementASLinkID => {
-    //     assetPopoverSnaps = elementASLinkID;
-    //     console.log('assetPopoverSnaps12345', assetPopoverSnaps)
-    // }).catch(error => {
-    //     console.log('in error block')
-    // })
-    console.log('assetPopoverSnaps122',assetPopoverSnap)
     return assetPopoverSnap
 }
 
@@ -269,7 +237,7 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn) => {
 
     if (typeof index === "number" || (Array.isArray(index) && index.length == 1)) {   /** Delete a container or an element at slate level */
         eleIndex = Array.isArray(index) ? index[0] : index;
-        wipData = bodymatter[eleIndex]
+        wipData = bodymatter[eleIndex];
         if (wipData.subtype === "workedexample") {  /** Delete Section-Break */
             wipData.elementdata.bodymatter.map((item, innerIndex) => {
                 if (item.type == "manifest" && entityUrn == item.contentUrn) {
@@ -301,6 +269,7 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn) => {
     }
     return wipData;
 }
+
 
 /**
  * @function fetchParentData
@@ -393,7 +362,6 @@ export const fetchManifestStatus = (bodymatter, parentElement, type) => {
     if ((asideData || parentUrn || poetryData) && bodymatter.length !== 0) {
         bodymatter.map(element => {
             if (type === 'SECTION_BREAK' && asideData && element.id == asideData.id) {
-                console.log('element.id',element)
                 parentData.parentStatus = element.status;       /** Create Section-Break */
             }
             else if (parentUrn && element.id == parentUrn.manifestUrn) {
@@ -411,7 +379,6 @@ export const fetchManifestStatus = (bodymatter, parentElement, type) => {
             }
         })
     }
-    console.log('parentData',parentData)
     return parentData
 }
 

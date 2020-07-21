@@ -118,15 +118,26 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
         let bodymatter = newParentData[config.slateManifestURN].contents.bodymatter
 
             /** [PCAT-8289] -------------------------- TCM Snapshot Data handling ----------------------------*/
-            let deleteBodymatter = deleteParentData[config.slateManifestURN].contents.bodymatter
+            let deleteSlate = deleteParentData[config.slateManifestURN];
+            let deleteBodymatter = deleteParentData[config.slateManifestURN].contents.bodymatter;
+            let deletedUrns = {"id1":"newId1"}
             if (elementTypeTCM.indexOf(type) !== -1 || containerType.indexOf(type) !== -1) {
-                let deleteData = fetchElementWipData(deleteBodymatter, index, type, contentUrn)
-                let containerElement={
-                    asideData:asideData,
-                    parentUrn:parentUrn,
-                    poetryData:poetryData
+                let wipData = fetchElementWipData(deleteBodymatter, index, type, contentUrn)
+                let containerElement = {
+                    asideData: asideData,
+                    parentUrn: parentUrn,
+                    poetryData: poetryData
                 }
-                dispatch(prepareTcmSnapshots(deleteData.wipData, 'delete', containerElement, type, ""))
+                let deleteData = {
+                    wipData: wipData,
+                    currentSlateData: {
+                        status: deleteSlate.status,
+                        contentUrn: deleteSlate.contentUrn
+                    },
+                    bodymatter: deleteBodymatter,
+                    newVersionUrns = deletedUrns 
+                }
+                tcmSnapshotsForDelete(deleteData, type, containerElement, dispatch)
             }
             /**-----------------------------------------------------------------------------------------------*/
 
@@ -268,6 +279,17 @@ function prepareDataForTcmUpdate (updatedData,id, elementIndex, asideData, getSt
     }
     updatedData.projectUrn = config.projectUrn;
     // updatedData.slateEntity = config.slateEntityURN;
+}
+
+export const tcmSnapshotsForDelete = async (elementDeleteData, type, containerElement, dispatch) => {
+    let parentType = ['WORKED_EXAMPLE', 'CONTAINER', 'CITATION', 'POETRY'];
+    let versionStatus = {};
+    if ((parentType.indexOf(type) === -1)) {
+        versionStatus = fetchManifestStatus(elementDeleteData.bodymatter, containerElement, type);
+    }
+    containerElement = await checkContainerElementVersion(containerElement, versionStatus, elementDeleteData.currentSlateData);
+
+    dispatch(prepareTcmSnapshots(elementDeleteData.wipData, 'delete', containerElement, type, "accepted",elementDeleteData.newVersionUrns));
 }
 
 /**

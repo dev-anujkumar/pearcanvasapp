@@ -273,13 +273,15 @@ function prepareDataForTcmCreate(type, createdElementData, getState, dispatch) {
 
 export const tcmSnapshotsForCreate = async (elementCreateData, type, containerElement, dispatch) => {
     let containerType = ['WORKED_EXAMPLE', 'CONTAINER', 'CITATION', 'POETRY'];
-    let versionStatus = {};
+    let versionStatus = {}, currentTcmStatus = "", isVersioned = false;
     if (elementCreateData.bodymatter && elementCreateData.bodymatter.length !== 0 && (containerType.indexOf(type) === -1)) {
         versionStatus = fetchManifestStatus(elementCreateData.bodymatter, containerElement, type);
     }
-    containerElement = await checkContainerElementVersion(containerElement, versionStatus, elementCreateData.currentSlateData)
-
-    dispatch(prepareTcmSnapshots(elementCreateData.response, 'create', containerElement, type, "accepted"))
+    isVersioned = (versionStatus &&
+        (versionStatus.parentStatus != undefined || (versionStatus.parentStatus && versionStatus.childStatus != undefined))) ? true : false;
+    containerElement = await checkContainerElementVersion(containerElement, versionStatus, elementCreateData.currentSlateData);
+    currentTcmStatus = config.tcmStatus ? isVersioned === true ? "accepted" : "pending" : "accepted";
+    dispatch(prepareTcmSnapshots(elementCreateData.response, 'create', containerElement, type, currentTcmStatus))
 }
 
 export const swapElement = (dataObj, cb) => (dispatch, getState) => {

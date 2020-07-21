@@ -547,6 +547,8 @@ export const tcmSnapshotsForGlossaryFootnote = async (elementUpdateData, element
     /** latest version for WE/CE/PE/AS*/
     containerElement = await checkContainerElementVersion(containerElement, versionStatus, elementUpdateData.currentSlateData)
     let oldData = Object.assign({}, elementUpdateData.response);
+    let currentTcmStatus = "", isVersioned=false;
+
     if (elementUpdateData.response.id !== elementUpdateData.elementWorkId) {
         if (oldData.poetrylines) {
             oldData.poetrylines = wipData.poetrylines
@@ -554,12 +556,16 @@ export const tcmSnapshotsForGlossaryFootnote = async (elementUpdateData, element
         else {
             oldData.elementdata = wipData.elementdata
         }
-        oldData.html = wipData.html
+        oldData.html = wipData.html;
+        isVersioned= true;
         /** After versioning snapshots*/
         dispatch(prepareTcmSnapshots(oldData, 'Create', containerElement, "", "Accepted"))
     }
     /** Before versioning snapshots*/
-    dispatch(prepareTcmSnapshots(elementUpdateData.response, 'Update', containerElement, "", ""))
+
+    currentTcmStatus = config.tcmStatus ? isVersioned === true ? "accepted" : "pending" : "accepted";
+
+    dispatch(prepareTcmSnapshots(elementUpdateData.response, 'update', containerElement, "", currentTcmStatus))
 }
 /**
  * setFormattingToolbar | this method is used to enable/disable the formatting toolbars
