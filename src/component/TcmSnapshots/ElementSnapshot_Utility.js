@@ -244,6 +244,7 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn) => {
                 break;
         }
     }
+
     return wipData;
 }
 

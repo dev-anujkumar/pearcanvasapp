@@ -120,7 +120,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
             /** [PCAT-8289] -------------------------- TCM Snapshot Data handling ----------------------------*/
             let deleteSlate = deleteParentData[config.slateManifestURN];
             let deleteBodymatter = deleteParentData[config.slateManifestURN].contents.bodymatter;
-            let deletedUrns = {"id1":"newId1"}
+            let deletedUrns = {"id1":"newId1","id2":"newId1"}
             if (elementTypeTCM.indexOf(type) !== -1 || containerType.indexOf(type) !== -1) {
                 let wipData = fetchElementWipData(deleteBodymatter, index, type, contentUrn)
                 let containerElement = {

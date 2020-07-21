@@ -28,6 +28,7 @@ export const prepareTcmSnapshots = (wipData, action, containerElement, type, sta
         (type && (containerType.indexOf(type) !== -1))) {
         isContainer = true;
     }
+    let deleVercase = newVersionUrns ? true : false
     let defaultKeys = setDefaultKeys(action, status, isContainer);
     let elementDetails;
     /* Tag of elements*/
@@ -36,13 +37,13 @@ export const prepareTcmSnapshots = (wipData, action, containerElement, type, sta
     }
     /* ID of elements*/
     let elementId = {
-        parentId: newVersionUrns ? newVersionUrns[wipData.contentUrn] : wipData.id
+        parentId: deleVercase ? newVersionUrns[wipData.contentUrn] : wipData.id
     }
     /* For WE creation*/
     if (wipData.type === "element-aside" && type != "SECTION_BREAK") {
         wipData.elementdata.bodymatter && wipData.elementdata.bodymatter.map((item) => {
             if (item.type === "manifest") {
-                item.id = newVersionUrns[item.contentUrn];
+                item.id = deleVercase ? newVersionUrns[item.contentUrn] : item.id;
                 item.contents.bodymatter.map((ele) => {
                     if (elementType.indexOf(ele.type) !== -1) {
                         ele.id = newVersionUrns[ele.contentUrn];
@@ -54,8 +55,8 @@ export const prepareTcmSnapshots = (wipData, action, containerElement, type, sta
                 })
             }
             else if (elementType.indexOf(item.type) !== -1) {
-                item.id = newVersionUrns[item.contentUrn];
-                elementId.childId = item.id;;
+                item.id = newVersionUrns[item.contentUrn];//
+                elementId.childId = item.id;
                 tag.childTag = fetchElementsTag(item);
                 elementDetails = setElementTypeAndUrn(elementId, tag, wipData.subtype === "workedexample" ? "HEAD" : "", "");
                 prepareTcmData(elementDetails, item, defaultKeys, dispatch);
@@ -66,10 +67,10 @@ export const prepareTcmSnapshots = (wipData, action, containerElement, type, sta
     else if (type === "SECTION_BREAK" || wipData.type === "manifest") {
         tag.parentTag = containerElement.asideData && fetchElementsTag(containerElement.asideData) ? fetchElementsTag(containerElement.asideData) : fetchElementsTag(wipData)
         elementId.parentId = containerElement.asideData && containerElement.asideData.id ? containerElement.asideData.id : containerElement.parentUrn && containerElement.parentUrn.manifestUrn ? containerElement.parentUrn.manifestUrn : "";
-        wipData.id = newVersionUrns[wipData.contentUrn];
+        wipData.id = newVersionUrns[wipData.contentUrn];//
         wipData.contents.bodymatter.map((item) => {
             if (elementType.indexOf(item.type) !== -1) {
-                item.id = newVersionUrns[item.contentUrn];
+                item.id = newVersionUrns[item.contentUrn];//
                 elementId.childId = item.id;
                 tag.childTag = fetchElementsTag(item);
                 elementDetails = setElementTypeAndUrn(elementId, tag, "BODY", wipData.id);
@@ -81,7 +82,7 @@ export const prepareTcmSnapshots = (wipData, action, containerElement, type, sta
     else if (containerElement.poetryData || containerElement.asideData || containerElement.parentUrn) {
         let parentElement = containerElement.asideData ? containerElement.asideData : containerElement.poetryData ? containerElement.poetryData : containerElement.parentUrn ? containerElement.parentUrn : "";
         elementId.parentId = parentElement && parentElement.id ? parentElement.id : containerElement.parentUrn && containerElement.parentUrn.manifestUrn ? containerElement.parentUrn.manifestUrn : "";
-        wipData.id = newVersionUrns[wipData.contentUrn];
+        wipData.id = newVersionUrns[wipData.contentUrn];//
         elementId.childId = wipData.id;
         tag.parentTag = fetchElementsTag(parentElement);
         tag.childTag = fetchElementsTag(wipData);
@@ -92,7 +93,7 @@ export const prepareTcmSnapshots = (wipData, action, containerElement, type, sta
     /* action on PE and CG */
     else if (wipData.type === "citations" || wipData.type === "poetry") {
         wipData.contents.bodymatter.map((item) => {
-            item.id = newVersionUrns[item.contentUrn];
+            item.id = newVersionUrns[item.contentUrn];//
             elementId.childId = item.id;
             tag.childTag = fetchElementsTag(item);
             elementDetails = setElementTypeAndUrn(elementId, tag, "", "");
