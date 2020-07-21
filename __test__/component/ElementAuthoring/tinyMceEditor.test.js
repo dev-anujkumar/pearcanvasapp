@@ -1521,6 +1521,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                 on: (temp, cb) => { cb(event) },
                 selection: editor.selection,
                 setContent: () => { },
+                insertContent: () => { },
                 formatter: {
                     match: () => { },
                     formatChanged: () => { return jest.fn() },
@@ -1569,6 +1570,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
             }
             let nextEditor1 = {
                 on: (temp, cb) => { cb(event) },
+                insertContent: () => { },
                 selection: {
                     getContent: () => {
                         return '<p><span className="poetryLine">Hello</span></p>';
