@@ -205,7 +205,7 @@ export const fetchElementsTag = (element) => {
  * @param {Object} bodymatter - bodymatter before delete  
  * @param {String/Number} index - index of element deleted
  * @param {String} type - type of element deleted
- * @param {String} type - entityUrn
+ * @param {String} entityUrn - entityUrn
  * @returns {Object} WipData for element 
 */
 export const fetchElementWipData = (bodymatter, index, type, entityUrn) => {

@@ -29,7 +29,7 @@ let elementType = ['WORKED_EXAMPLE', 'CONTAINER', 'SECTION_BREAK', 'TEXT', 'CITA
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
 };
-
+/** This function not required now
 function prepareDataForTcmUpdate(updatedData, parentData, asideData, poetryData) {
     if (parentData && (parentData.elementType === "element-aside" || parentData.elementType === "citations" 
         || parentData.elementType === "poetry")) {
@@ -52,7 +52,8 @@ function prepareDataForTcmUpdate(updatedData, parentData, asideData, poetryData)
     // updatedData.projectURN = config.projectUrn;
     // updatedData.slateEntity = poetryData && poetryData.contentUrn || config.slateEntityURN;
 }
-
+*/
+/** Obsolete Code 
 function createNewVersionOfSlate(){
     fetch(`${config.STRUCTURE_API_URL}structure-api/context/v2/${config.projectUrn}/container/${config.slateEntityURN}/version`, {
             method: 'PUT',
@@ -68,7 +69,7 @@ function createNewVersionOfSlate(){
                 sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
         })
 }
-
+*/
 export const createElement = (type, index, parentUrn, asideData, outerAsideIndex, loref, cb,poetryData) => (dispatch, getState) => {
     config.currentInsertedIndex = index;
     config.currentInsertedType = type;
@@ -90,7 +91,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         _requestData.parentType = "citations"
     }
 
-    prepareDataForTcmUpdate(_requestData, parentUrn, asideData, poetryData)
+    // prepareDataForTcmUpdate(_requestData, parentUrn, asideData, poetryData) // remove this line
     return axios.post(`${config.REACT_APP_API_URL}v1/slate/element`,
         JSON.stringify(_requestData),
         {
@@ -113,7 +114,10 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 poetryData: poetryData
             };
             let slateData = {
-                currentSlateData: currentSlateData,
+                currentSlateData: {
+                    status: currentSlateData.status,
+                    contentUrn: currentSlateData.contentUrn
+                },
                 bodymatter: currentSlateData.contents.bodymatter,
                 response: createdElemData.data
             };
@@ -269,17 +273,23 @@ function prepareDataForTcmCreate(type, createdElementData, getState, dispatch) {
     })
 }
 
+/**
+ * @function tcmSnapshotsForCreate
+ * @description-This function is to prepare snapshot during create element process
+ * @param {Object} elementCreateData - Object containing required element data
+ * @param {String} type - type of element
+ * @param {Object} containerElement - Element Parent Data
+ * @param {Function} dispatch to dispatch tcmSnapshots
+*/
 export const tcmSnapshotsForCreate = async (elementCreateData, type, containerElement, dispatch) => {
     let containerType = ['WORKED_EXAMPLE', 'CONTAINER', 'CITATION', 'POETRY'];
-    let versionStatus = {}, currentTcmStatus = "", isVersioned = false;
+    let versionStatus = {};
+    /** This condition is required to check version of elements when bodymatter has elements and is not a container on slate */
     if (elementCreateData.bodymatter && elementCreateData.bodymatter.length !== 0 && (containerType.indexOf(type) === -1)) {
         versionStatus = fetchManifestStatus(elementCreateData.bodymatter, containerElement, type);
     }
-    isVersioned = (versionStatus &&
-        (versionStatus.parentStatus != undefined || (versionStatus.parentStatus && versionStatus.childStatus != undefined))) ? true : false;
     containerElement = await checkContainerElementVersion(containerElement, versionStatus, elementCreateData.currentSlateData);
-    currentTcmStatus = config.tcmStatus ? isVersioned === true ? "accepted" : "pending" : "accepted";
-    dispatch(prepareTcmSnapshots(elementCreateData.response, 'create', containerElement, type, currentTcmStatus))
+    dispatch(prepareTcmSnapshots(elementCreateData.response, 'create', containerElement, type, "",""));
 }
 
 export const swapElement = (dataObj, cb) => (dispatch, getState) => {

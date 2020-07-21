@@ -296,40 +296,41 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             data.metaDataField = "formattedTitle";
         }
     }
-    if(index &&  typeof (index) !== 'number' && elementType !== 'figure'  && typeWithPopup !== 'popup' && typeWithPopup !== 'poetry'){
-        let tempIndex =  index.split('-');
-        if(tempIndex.length === 2){
-            if(newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].id === elementWorkId){
-                data.isHead = true;
-                if(newBodymatter[tempIndex[0]].subtype === "sidebar"){
-                    data.parentType = "element-aside";
-                }else{
-                    data.parentType = "workedexample";
-                }
+/** This code might be removed later : Used for TCM Snapshots at Backend -  not required now */
+/**if(index &&  typeof (index) !== 'number' && elementType !== 'figure'  && typeWithPopup !== 'popup' && typeWithPopup !== 'poetry'){
+    let tempIndex =  index.split('-');
+    if(tempIndex.length === 2){
+        if(newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].id === elementWorkId){
+            data.isHead = true;
+            if(newBodymatter[tempIndex[0]].subtype === "sidebar"){
+                data.parentType = "element-aside";
+            }else{
+                data.parentType = "workedexample";
             }
-        }else if(tempIndex.length === 3){
-            if(elementType==='stanza'){
-                if (newBodymatter[tempIndex[0]].contents.bodymatter[tempIndex[2]].id === elementWorkId){
-                    data.isHead = false;
-                    data.parentType = "poetry";
-                }
-            }
-            else if(newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]].id === elementWorkId){
+        }
+    }else if(tempIndex.length === 3){
+        if(elementType==='stanza'){
+            if (newBodymatter[tempIndex[0]].contents.bodymatter[tempIndex[2]].id === elementWorkId){
                 data.isHead = false;
-                if(newBodymatter[tempIndex[0]].subtype === "workedexample"){
-                    data.parentType = "workedexample";
-                }
+                data.parentType = "poetry";
+            }
+        }
+        else if(newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]].id === elementWorkId){
+            data.isHead = false;
+            if(newBodymatter[tempIndex[0]].subtype === "workedexample"){
+                data.parentType = "workedexample";
             }
         }
     }
-
+}
+*/
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })  //show saving spinner
-    
+
+    /** tcmBodymatter :  Used to prepare TCM snapshots  */
     let tcmBodymatter = store.getState().appStore.slateLevelData[config.slateManifestURN].contents.bodymatter;
     let tcmParentData = fetchParentData(tcmBodymatter, index);
     
     let url = `${config.REACT_APP_API_URL}v1/slate/element?type=${type.toUpperCase()}&id=${glossaryfootnoteid}`
-    console.log('from footnote actions')
     return axios.put(url, JSON.stringify(data), {
         headers: {
             "Content-Type": "application/json",
@@ -342,16 +343,19 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         /** [PCAT-8289] ----------------------------------- TCM Snapshot Data handling ---------------------------------*/
         if (elementTypeData.indexOf(elementType) !== -1) {
             let elementUpdateData ={
-                currentSlateData:currentSlateData,
+                currentSlateData: {
+                    status: currentSlateData.status,
+                    contentUrn: currentSlateData.contentUrn
+                },
                 tcmBodymatter:tcmBodymatter,
                 response: res.data,
                 elementWorkId:elementWorkId
             },
             containerElement = {
                 asideData:tcmParentData.asideData,
-                parentUrn:tcmParentData.parentUrn,
-            }
-            tcmSnapshotsForGlossaryFootnote(elementUpdateData, index, containerElement, store.dispatch)
+                parentUrn:tcmParentData.parentUrn
+            };
+            tcmSnapshotsForGlossaryFootnote(elementUpdateData, index, containerElement, store.dispatch);
         }
         /**-------------------------------------------------------------------------------------------------------------*/
         if(res.data.id !== data.id && currentSlateData.status === 'approved'){
@@ -538,17 +542,21 @@ store.dispatch({
 /**
      * @description - prepare data to create snapshots on update element
 */
+
 /**
-     * @description - prepare data to create snapshots on update element
+ * @function tcmSnapshotsForGlossaryFootnote
+ * @description-This function is to prepare snapshot during create element process
+ * @param {Object} elementUpdateData - Object containing required element data
+ * @param {String} elementIndex - index of element
+ * @param {Object} containerElement - Element Parent Data
+ * @param {Function} dispatch to dispatch tcmSnapshots
 */
 export const tcmSnapshotsForGlossaryFootnote = async (elementUpdateData, elementIndex, containerElement, dispatch) => {
-    let wipData = fetchElementWipData(elementUpdateData.tcmBodymatter, elementIndex, elementUpdateData.response.type);
+    let wipData = fetchElementWipData(elementUpdateData.tcmBodymatter, elementIndex, elementUpdateData.response.type,"");
     let versionStatus = fetchManifestStatus(elementUpdateData.tcmBodymatter, containerElement, elementUpdateData.response.type);
     /** latest version for WE/CE/PE/AS*/
     containerElement = await checkContainerElementVersion(containerElement, versionStatus, elementUpdateData.currentSlateData)
     let oldData = Object.assign({}, elementUpdateData.response);
-    let currentTcmStatus = "", isVersioned=false;
-
     if (elementUpdateData.response.id !== elementUpdateData.elementWorkId) {
         if (oldData.poetrylines) {
             oldData.poetrylines = wipData.poetrylines
@@ -557,16 +565,13 @@ export const tcmSnapshotsForGlossaryFootnote = async (elementUpdateData, element
             oldData.elementdata = wipData.elementdata
         }
         oldData.html = wipData.html;
-        isVersioned= true;
         /** After versioning snapshots*/
-        dispatch(prepareTcmSnapshots(oldData, 'Create', containerElement, "", "Accepted"))
+        dispatch(prepareTcmSnapshots(oldData, 'create', containerElement, "", "accepted",""))
     }
     /** Before versioning snapshots*/
-
-    currentTcmStatus = config.tcmStatus ? isVersioned === true ? "accepted" : "pending" : "accepted";
-
-    dispatch(prepareTcmSnapshots(elementUpdateData.response, 'update', containerElement, "", currentTcmStatus))
+    dispatch(prepareTcmSnapshots(elementUpdateData.response, 'update', containerElement, "", "",""))
 }
+
 /**
  * setFormattingToolbar | this method is used to enable/disable the formatting toolbars
  * @param {*} action, type of action to be performed

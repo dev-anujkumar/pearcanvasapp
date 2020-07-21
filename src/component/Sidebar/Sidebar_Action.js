@@ -178,22 +178,23 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
 
     let elmIndexes = indexes ? indexes : 0;
     let slateBodyMatter = store[config.slateManifestURN].contents.bodymatter;
-    if(elmIndexes.length === 2 && slateBodyMatter[elmIndexes[0]].subtype == "workedexample" ){
-        if(slateBodyMatter[elmIndexes[0]].elementdata.bodymatter[elmIndexes[1]].id === conversionDataToSend.id){
-            conversionDataToSend.isHead = true;
-            conversionDataToSend.parentType = "workedexample";
-        }
-    }else if(elmIndexes.length === 3 && slateBodyMatter[elmIndexes[0]].subtype == "workedexample"){
-        if(slateBodyMatter[elmIndexes[0]].elementdata.bodymatter[elmIndexes[1]].contents.bodymatter[elmIndexes[2]].id === conversionDataToSend.id){
-            conversionDataToSend.isHead = false;
-            conversionDataToSend.parentType = "workedexample";
-        }
-    }else if(elmIndexes.length === 2 && slateBodyMatter[elmIndexes[0]].subtype == "sidebar"){
-        if(slateBodyMatter[elmIndexes[0]].elementdata.bodymatter[elmIndexes[1]].id === conversionDataToSend.id){
-            conversionDataToSend.isHead = false;
-            conversionDataToSend.parentType = "element-aside";
-        }
-    }
+    /** Used for Backend, not required now */
+    // if(elmIndexes.length === 2 && slateBodyMatter[elmIndexes[0]].subtype == "workedexample" ){
+    //     if(slateBodyMatter[elmIndexes[0]].elementdata.bodymatter[elmIndexes[1]].id === conversionDataToSend.id){
+    //         conversionDataToSend.isHead = true;
+    //         conversionDataToSend.parentType = "workedexample";
+    //     }
+    // }else if(elmIndexes.length === 3 && slateBodyMatter[elmIndexes[0]].subtype == "workedexample"){
+    //     if(slateBodyMatter[elmIndexes[0]].elementdata.bodymatter[elmIndexes[1]].contents.bodymatter[elmIndexes[2]].id === conversionDataToSend.id){
+    //         conversionDataToSend.isHead = false;
+    //         conversionDataToSend.parentType = "workedexample";
+    //     }
+    // }else if(elmIndexes.length === 2 && slateBodyMatter[elmIndexes[0]].subtype == "sidebar"){
+    //     if(slateBodyMatter[elmIndexes[0]].elementdata.bodymatter[elmIndexes[1]].id === conversionDataToSend.id){
+    //         conversionDataToSend.isHead = false;
+    //         conversionDataToSend.parentType = "element-aside";
+    //     }
+    // }
 
     if(conversionDataToSend.outputType==="SHOW_HIDE"||conversionDataToSend.outputType==="POP_UP"){
         slateBodyMatter.forEach((elem)=>{
@@ -236,7 +237,10 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         /** [PCAT-8289] -------------------------------- TCM Snapshot Data handling ----------------------------------*/
         if (elementType.indexOf(oldElementData.type) !== -1) {
             let elementConversionData ={
-                currentSlateData:currentSlateData,
+                currentSlateData:{
+                    status: currentSlateData.status,
+                    contentUrn: currentSlateData.contentUrn
+                },
                 oldElementData:oldElementData,
                 response:res.data
             }
@@ -413,6 +417,14 @@ function prepareDataForConversionTcm(updatedDataID, getState, dispatch,versionid
     })
 }
 
+/**
+ * @function tcmSnapshotsForConversion
+ * @description-This function is to prepare snapshot during create element process
+ * @param {Object} elementConversionData - Object containing required element data
+ * @param {String} indexes - index of element
+ * @param {Object} appStore - store data
+ * @param {Function} dispatch to dispatch tcmSnapshots
+*/
 export const tcmSnapshotsForConversion = async (elementConversionData,indexes,appStore,dispatch) => {
     let convertAppStore = JSON.parse(JSON.stringify(appStore.slateLevelData));
     let convertSlate = convertAppStore[config.slateManifestURN];
@@ -424,9 +436,9 @@ export const tcmSnapshotsForConversion = async (elementConversionData,indexes,ap
     if (elementConversionData.oldElementData.id !== elementConversionData.response.id) {
         elementConversionData.oldElementData.id = elementConversionData.response.id
         elementConversionData.oldElementData.versionUrn = elementConversionData.response.id
-        dispatch(prepareTcmSnapshots(elementConversionData.oldElementData, 'Create', convertParentData, "", "Accepted"))
+        dispatch(prepareTcmSnapshots(elementConversionData.oldElementData, 'create', convertParentData, "", "accepted",""))
     }
-    dispatch(prepareTcmSnapshots(elementConversionData.response, 'Update', convertParentData,"",""));
+    dispatch(prepareTcmSnapshots(elementConversionData.response, 'update', convertParentData,"","",""));
 }
 
 const prepareAssessmentDataForConversion = (oldElementData, format) => {

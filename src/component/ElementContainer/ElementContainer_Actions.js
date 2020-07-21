@@ -86,7 +86,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
     let _requestData = prepareDeleteRequestData(type)
     let indexToBeSent = index || "0"
     _requestData = { ..._requestData, index: indexToBeSent.toString().split('-')[indexToBeSent.toString().split('-').length - 1], elementParentEntityUrn }
-    prepareDataForTcmUpdate(_requestData, elmId, index, asideData, getState, type, poetryData);
+    // prepareDataForTcmUpdate(_requestData, elmId, index, asideData, getState, type, poetryData);
 
     return axios.post(`${config.REACT_APP_API_URL}v1/slate/deleteElement`,
         JSON.stringify(_requestData),
@@ -101,6 +101,31 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
             const parentData = getState().appStore.slateLevelData;
             const deleteParentData = JSON.parse(JSON.stringify(parentData));
+
+            /** [PCAT-8289] -------------------------- TCM Snapshot Data handling ----------------------------*/
+            let deleteSlate = deleteParentData[config.slateManifestURN];
+            let deleteBodymatter = deleteParentData[config.slateManifestURN].contents.bodymatter;
+            let deletedUrns = { "id1": "newId1", "id2": "newId1" }
+            if (elementTypeTCM.indexOf(type) !== -1 || containerType.indexOf(type) !== -1) {
+                let wipData = fetchElementWipData(deleteBodymatter, index, type, contentUrn)
+                let containerElement = {
+                    asideData: asideData,
+                    parentUrn: parentUrn,
+                    poetryData: poetryData
+                }
+                let deleteData = {
+                    wipData: wipData,
+                    currentSlateData: {
+                        status: deleteSlate.status,
+                        contentUrn: deleteSlate.contentUrn
+                    },
+                    bodymatter: deleteBodymatter,
+                    newVersionUrns: deletedUrns
+                }
+                tcmSnapshotsForDelete(deleteData, type, containerElement, dispatch)
+            }
+            /**-----------------------------------------------------------------------------------------------*/
+
             const newParentData = JSON.parse(JSON.stringify(parentData));
             let currentSlateData = newParentData[config.slateManifestURN];
             if (currentSlateData.status === 'approved') {
@@ -117,29 +142,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
         }
         let bodymatter = newParentData[config.slateManifestURN].contents.bodymatter
 
-            /** [PCAT-8289] -------------------------- TCM Snapshot Data handling ----------------------------*/
-            let deleteSlate = deleteParentData[config.slateManifestURN];
-            let deleteBodymatter = deleteParentData[config.slateManifestURN].contents.bodymatter;
-            let deletedUrns = {"id1":"newId1","id2":"newId1"}
-            if (elementTypeTCM.indexOf(type) !== -1 || containerType.indexOf(type) !== -1) {
-                let wipData = fetchElementWipData(deleteBodymatter, index, type, contentUrn)
-                let containerElement = {
-                    asideData: asideData,
-                    parentUrn: parentUrn,
-                    poetryData: poetryData
-                }
-                let deleteData = {
-                    wipData: wipData,
-                    currentSlateData: {
-                        status: deleteSlate.status,
-                        contentUrn: deleteSlate.contentUrn
-                    },
-                    bodymatter: deleteBodymatter,
-                    newVersionUrns = deletedUrns 
-                }
-                tcmSnapshotsForDelete(deleteData, type, containerElement, dispatch)
-            }
-            /**-----------------------------------------------------------------------------------------------*/
+
 
             bodymatter.forEach((element, key) => {
                 if (element.id === elmId) {
@@ -241,46 +244,55 @@ function contentEditableFalse (updatedData){
     }
 }
 
-function prepareDataForTcmUpdate (updatedData,id, elementIndex, asideData, getState, type, poetryData) {
-    updatedData = (updatedData.type == "element-blockfeature") ? contentEditableFalse(updatedData): updatedData;
-    let indexes = elementIndex && elementIndex.length > 0 ? elementIndex.split('-') : 0;
-    let storeData = getState().appStore.slateLevelData;
-    let slateData = JSON.parse(JSON.stringify(storeData));
-    let slateBodyMatter = slateData[config.slateManifestURN].contents.bodymatter;
-    if((type && type === "element-citation") || (updatedData.type === "element-citation")){
-        if (slateBodyMatter[indexes[0]].contents.bodymatter[indexes[1] - 1].id === id) {
-            updatedData.isHead = true;
-            updatedData.parentType = "citations";
-        }
-    } else if (indexes.length === 2) {
-        if (((!poetryData) || (poetryData.type != "poetry")) && slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].id === id) {
-        //if (slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].id === id) {
-            updatedData.isHead = true;
-        }
-    } else if (indexes.length === 3) {
-        if (((!poetryData) || (poetryData.type != "poetry")) && slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].id === id) {
-            updatedData.isHead = false;
-        } else if (((poetryData && poetryData.type === "poetry") || (type === "stanza")) && slateBodyMatter[indexes[0]].contents.bodymatter[indexes[2]].id === id) {
-            updatedData.isHead = false;
-        } 
-        /** else if(type==="stanza" && slateBodyMatter[indexes[0]].contents.bodymatter[indexes[2]].id === id){
-            updatedData.isHead = false;
-        }*/
+/** Used for Backend , not required now */
+// function prepareDataForTcmUpdate (updatedData,id, elementIndex, asideData, getState, type, poetryData) {
+//     updatedData = (updatedData.type == "element-blockfeature") ? contentEditableFalse(updatedData): updatedData;
+//     let indexes = elementIndex && elementIndex.length > 0 ? elementIndex.split('-') : 0;
+//     let storeData = getState().appStore.slateLevelData;
+//     let slateData = JSON.parse(JSON.stringify(storeData));
+//     let slateBodyMatter = slateData[config.slateManifestURN].contents.bodymatter;
+//     if((type && type === "element-citation") || (updatedData.type === "element-citation")){
+//         if (slateBodyMatter[indexes[0]].contents.bodymatter[indexes[1] - 1].id === id) {
+//             updatedData.isHead = true;
+//             updatedData.parentType = "citations";
+//         }
+//     } else if (indexes.length === 2) {
+//         if (((!poetryData) || (poetryData.type != "poetry")) && slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].id === id) {
+//         //if (slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].id === id) {
+//             updatedData.isHead = true;
+//         }
+//     } else if (indexes.length === 3) {
+//         if (((!poetryData) || (poetryData.type != "poetry")) && slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].id === id) {
+//             updatedData.isHead = false;
+//         } else if (((poetryData && poetryData.type === "poetry") || (type === "stanza")) && slateBodyMatter[indexes[0]].contents.bodymatter[indexes[2]].id === id) {
+//             updatedData.isHead = false;
+//         } 
+//         // else if(type==="stanza" && slateBodyMatter[indexes[0]].contents.bodymatter[indexes[2]].id === id){
+//         //     updatedData.isHead = false;
+//         // }
         
-    }
-    if (asideData && asideData.type === "element-aside") {
-        if (asideData.subtype === "workedexample") {
-            updatedData.parentType = "workedexample";
-        } else {
-            updatedData.parentType = "element-aside";
-        }
-    } else if (poetryData && poetryData.type === 'poetry'){
-        updatedData.parentType = "poetry";
-    }
-    updatedData.projectUrn = config.projectUrn;
-    // updatedData.slateEntity = config.slateEntityURN;
-}
+//     }
+//     if (asideData && asideData.type === "element-aside") {
+//         if (asideData.subtype === "workedexample") {
+//             updatedData.parentType = "workedexample";
+//         } else {
+//             updatedData.parentType = "element-aside";
+//         }
+//     } else if (poetryData && poetryData.type === 'poetry'){
+//         updatedData.parentType = "poetry";
+//     }
+//     updatedData.projectUrn = config.projectUrn;
+//     // updatedData.slateEntity = config.slateEntityURN;
+// }
 
+/**
+ * @function tcmSnapshotsForDelete
+ * @description-This function is to prepare snapshot during create element process
+ * @param {Object} elementUpdateData - Object containing required element data
+ * @param {String} type - type of element
+ * @param {Object} containerElement - Element Parent Data
+ * @param {Function} dispatch to dispatch tcmSnapshots
+*/
 export const tcmSnapshotsForDelete = async (elementDeleteData, type, containerElement, dispatch) => {
     let parentType = ['WORKED_EXAMPLE', 'CONTAINER', 'CITATION', 'POETRY'];
     let versionStatus = {};
@@ -302,8 +314,10 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
         return ;
     }
+    updatedData.projectUrn = config.projectUrn;
+    /** updateBodymatter | Used for TCM Snapshots */
     let updateBodymatter = getState().appStore.slateLevelData[config.slateManifestURN].contents.bodymatter;
-    prepareDataForTcmUpdate(updatedData,updatedData.id, elementIndex, asideData, getState, updatedData.type, poetryData);
+    // prepareDataForTcmUpdate(updatedData,updatedData.id, elementIndex, asideData, getState, updatedData.type, poetryData);
     updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, null, elementIndex, showHideType, parentElement, poetryData)
     let updatedData1 = JSON.parse(JSON.stringify(updatedData))
     if (showHideType && showHideType === "postertextobject" && !(updatedData1.elementdata.text.trim().length || updatedData1.html.text.match(/<img/))) {
@@ -318,7 +332,6 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
             }
         }
     }
-    console.log('from container actions')
     return axios.put(`${config.REACT_APP_API_URL}v1/slate/element`,
     updatedData1,
         {
@@ -354,13 +367,15 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
                 poetryData:poetryData
             },
             elementUpdateData ={
-                currentSlateData:currentSlateData,
+                currentSlateData: {
+                    status: currentSlateData.status,
+                    contentUrn: currentSlateData.contentUrn
+                },
                 updateBodymatter:updateBodymatter,
                 response:response.data,
                 updatedId:updatedData.id
             }
-            tcmSnapshotsForUpdate(elementUpdateData, elementIndex, containerElement, dispatch);
-            
+            tcmSnapshotsForUpdate(elementUpdateData, elementIndex, containerElement, dispatch); 
         }
         /**--------------------------------------------------------------------------------------------------------------*/
 
@@ -424,11 +439,17 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
     })
 }
+
 /**
-     * @description - prepare data to create snapshots on update element
+ * @function tcmSnapshotsForUpdate
+ * @description-This function is to prepare snapshot during create element process
+ * @param {Object} elementUpdateData - Object containing required element data
+ * @param {String} elementIndex - index of element
+ * @param {Object} containerElement - Element Parent Data
+ * @param {Function} dispatch to dispatch tcmSnapshots
 */
 export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, containerElement, dispatch) => {
-    let wipData = fetchElementWipData(elementUpdateData.updateBodymatter, elementIndex, elementUpdateData.response.type)
+    let wipData = fetchElementWipData(elementUpdateData.updateBodymatter, elementIndex, elementUpdateData.response.type,"")
     let versionStatus = fetchManifestStatus(elementUpdateData.updateBodymatter, containerElement, elementUpdateData.response.type);
     /** latest version for WE/CE/PE/AS*/
     containerElement = await checkContainerElementVersion(containerElement, versionStatus, elementUpdateData.currentSlateData)
@@ -442,10 +463,10 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
         }
         oldData.html = wipData.html;
         /** After versioning snapshots*/
-        dispatch(prepareTcmSnapshots(oldData, 'Create', containerElement, "", "Accepted"))
+        dispatch(prepareTcmSnapshots(oldData, 'create', containerElement, "", "accepted",""))
     }
     /** Before versioning snapshots*/
-    dispatch(prepareTcmSnapshots(elementUpdateData.response, 'Update', containerElement, "", ""))
+    dispatch(prepareTcmSnapshots(elementUpdateData.response, 'update', containerElement, "", "",""))
 }
 
 function updateLOInStore(updatedData, versionedData, getState, dispatch) {
