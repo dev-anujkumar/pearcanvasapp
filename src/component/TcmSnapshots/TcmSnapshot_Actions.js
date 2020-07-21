@@ -50,7 +50,11 @@ export const handleTCMData = (slateManifestUrn) => (dispatch, getState) => {
     })
 
 }
-
+/**
+     * @description Send TCM Snapshot for Cos converted elements
+     * @param {String} slateManifestUrn | Slate Manifest
+     * @param {String} slateManifestUrn | Slate Entity
+*/
 export const tcmSnapshot = (slateManifestUrn,slateEntityUrn) => (dispatch, getState) => {
     let url = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/tcm/${slateEntityUrn}/${slateManifestUrn}?page=0`;
     return axios.get(url, {
@@ -92,6 +96,7 @@ export const sendElementTcmSnapshot = async (snapshotData) => {
 /**
      * @description - Get latest version of comtainer elemens and slate
      * @param {String} containerUrn | Container Entity URN
+     * @returns {String} - New Manifest version URN
 */
 export const getLatestVersion = async (containerUrn) => {
     try {

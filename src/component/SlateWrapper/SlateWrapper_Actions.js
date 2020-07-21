@@ -24,8 +24,7 @@ import { sendDataToIframe } from '../../constants/utility.js';
 import { HideLoader, ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { prepareTcmSnapshots } from '../TcmSnapshots/TcmSnapshots_Utility.js';
-import { getLatestVersion } from '../TcmSnapshots/TcmSnapshot_Actions.js';
-import { checkManifestStatus } from '../TcmSnapshots/ElementSnapshot_Utility.js';
+import { fetchManifestStatus, checkContainerElementVersion } from '../TcmSnapshots/ElementSnapshot_Utility.js';
 let elementType = ['WORKED_EXAMPLE', 'CONTAINER', 'SECTION_BREAK', 'TEXT', 'CITATION', 'ELEMENT_CITATION', 'POETRY', 'STANZA'];
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
@@ -110,11 +109,16 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         if (elementType.indexOf(type) !== -1) {
             let containerElement = {
                 asideData: asideData,
-                parentUrn:parentUrn,
-                poetryData:poetryData
-            }
-            dispatch(prepareTcmSnapshots(createdElemData.data,'Create',containerElement,type,""))
-            }
+                parentUrn: parentUrn,
+                poetryData: poetryData
+            };
+            let slateData = {
+                currentSlateData: currentSlateData,
+                bodymatter: currentSlateData.contents.bodymatter,
+                response: createdElemData.data
+            };
+            tcmSnapshotsForCreate(slateData, type, containerElement, dispatch);
+        }
         /**---------------------------------------------------------------------------------------------------*/
 
         if (currentSlateData.status === 'approved') {
@@ -265,52 +269,14 @@ function prepareDataForTcmCreate(type, createdElementData, getState, dispatch) {
     })
 }
 
-export const tcmSnapshotsForCreate = async (updateBodymatter, elementIndex, response, asideData, parentUrn, poetryData, dispatch, currentSlateData, type) => {
-    let parentData = {
-        asideData: asideData,
-        parentUrn: parentUrn,
-        poetryData: poetryData
-    }
+export const tcmSnapshotsForCreate = async (elementCreateData, type, containerElement, dispatch) => {
     let containerType = ['WORKED_EXAMPLE', 'CONTAINER', 'CITATION', 'POETRY'];
-    let data = {}
-    if(updateBodymatter.length !== 0 &&  (containerType.indexOf(type) === -1)){
-        data = checkManifestStatus(updateBodymatter, parentData, type)
+    let versionStatus = {};
+    if (elementCreateData.bodymatter && elementCreateData.bodymatter.length !== 0 && (containerType.indexOf(type) === -1)) {
+        versionStatus = fetchManifestStatus(elementCreateData.bodymatter, containerElement, type);
     }
-    
-     console.log('versionStatus', data)
-    /** latest version for WE/CG/PE/AS*/
-    if (data && data.parentStatus === "approved") {
-        let contentUrn = asideData ? asideData.contentUrn : poetryData ? poetryData.contentUrn : parentUrn ? parentUrn.contentUrn : ""
-        if (contentUrn) {
-            let latestParentUrn = await getLatestVersion(contentUrn);
-            if (latestParentUrn) {
-                if (poetryData) {
-                    poetryData.id = latestParentUrn;
-                    poetryData.parentUrn = latestParentUrn;
-                }
-                else if (asideData) {
-                    asideData.id = latestParentUrn
-                    parentUrn.manifestUrn = latestParentUrn
-                }
-                else if (parentUrn) {
-                    parentUrn.manifestUrn = latestParentUrn
-                }
-            }
-        }
-    }
-    /** latest version for SB*/
-    if (data && data.childStatus === "approved" && parentUrn && parentUrn.contentUrn) {
-        let latestParentUrn = await getLatestVersion(parentUrn.contentUrn);
-        parentUrn.manifestUrn = latestParentUrn ? latestParentUrn : parentUrn.manifestUrn
-    }
-    /** latest version for slate*/
-    if (currentSlateData.status === 'approved') {
-        let newSlateManifestUrn = await getLatestVersion(currentSlateData.contentUrn);
-        config.slateManifestURN = newSlateManifestUrn ? newSlateManifestUrn : config.slateManifestURN
-        console.log('newdata',newSlateManifestUrn)
-    }
-
-    dispatch(prepareTcmSnapshots(response,'create', asideData,parentUrn,poetryData,type,"accepted"))
+    containerElement = await checkContainerElementVersion(containerElement, versionStatus, elementCreateData.currentSlateData)
+    dispatch(prepareTcmSnapshots(elementCreateData.response, 'create', containerElement, type, "accepted"))
 }
 
 export const swapElement = (dataObj, cb) => (dispatch, getState) => {

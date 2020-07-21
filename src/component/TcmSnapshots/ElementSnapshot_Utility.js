@@ -30,10 +30,9 @@ export const setSemanticsSnapshots = async (status, element) => {
             break;
 
         case 'element-list':
-            glossarySnap = await setSnapshotsInListAndPoetry(status, element.elementdata.listitems, 'glossary');
-            footnoteSnap = await setSnapshotsInListAndPoetry(status, element.elementdata.listitems, 'footnote');
-            assetPopoverSnap = await setSnapshotsInListAndPoetry(status, element.elementdata.listitems, 'assetpopover');
-            console.log('assetPopoverSnap1',assetPopoverSnap)
+            glossarySnap =  await setSnapshotsInListAndPoetry(status, element.elementdata.listitems, 'glossary');
+            footnoteSnap =  await setSnapshotsInListAndPoetry(status, element.elementdata.listitems, 'footnote');
+            assetPopoverSnap =  await setSnapshotsInListAndPoetry(status, element.elementdata.listitems, 'assetpopover');
             break;
 
         case 'element-blockfeature':
@@ -41,13 +40,13 @@ export const setSemanticsSnapshots = async (status, element) => {
             footnoteList = element.elementdata && element.elementdata.authoredtext && element.elementdata.authoredtext.footnotes ? element.elementdata.authoredtext.footnotes : [];
             footnoteSnap = prepareFootnoteSnapshotContent(status, footnoteList)
             assetPopoverList = element.elementdata && element.elementdata.authoredtext && element.elementdata.authoredtext.internallinks ? element.elementdata.authoredtext.internallinks : [];
-            assetPopoverSnap = prepareAssetPopoverSnapshotContent(assetPopoverList)
+            assetPopoverSnap = await prepareAssetPopoverSnapshotContent(assetPopoverList)
             break;
 
         case 'stanza':
-            glossarySnap = setSnapshotsInListAndPoetry(status, element.poetrylines, 'glossary');
-            footnoteSnap = setSnapshotsInListAndPoetry(status, element.poetrylines, 'footnote');
-            assetPopoverSnap = setSnapshotsInListAndPoetry(status, element.poetrylines, 'assetpopover');
+            glossarySnap = await setSnapshotsInListAndPoetry(status, element.poetrylines, 'glossary');
+            footnoteSnap = await setSnapshotsInListAndPoetry(status, element.poetrylines, 'footnote');
+            assetPopoverSnap = await setSnapshotsInListAndPoetry(status, element.poetrylines, 'assetpopover');
             break;
 
         default:
@@ -62,7 +61,6 @@ export const setSemanticsSnapshots = async (status, element) => {
         footnoteSnapshot: footnoteSnap,
         assetPopoverSnapshot: assetPopoverSnap
     }
-    console.log('semanticSnapshots',semanticSnapshots)
     return semanticSnapshots
 }
 
@@ -76,7 +74,7 @@ export const setSemanticsSnapshots = async (status, element) => {
 */
 const setSnapshotsInListAndPoetry = async (status, elementList, semanticType) => {
     let snapshotsList = []
-    elementList.map( item => {
+    await Promise.all(elementList.map( async item => {
         if ((item.type == "paragraph" || item.type == "line") && item.authoredtext) {
             if (semanticType === 'glossary') {
                 let glossaryArray = item.authoredtext.glossaryentries ? item.authoredtext.glossaryentries : [];
@@ -86,34 +84,13 @@ const setSnapshotsInListAndPoetry = async (status, elementList, semanticType) =>
                 snapshotsList = snapshotsList.concat(prepareFootnoteSnapshotContent(status, footnoteArray));
             } else if (semanticType === 'assetpopover') {
                 let assetLists = item.authoredtext.internallinks ? item.authoredtext.internallinks : [];
-                let assetSnapList = assetLists.length != 0 ? prepareAssetPopoverSnapshotContent(assetLists) : [];
-                // await Promise.all(assetSnapList).then(snapshotsList = snapshotsList.concat(assetSnapList)).catch(err=>console.log('in catch'));
-                console.log('assetList in poetry func before concat', assetSnapList)
+                let assetSnapList = assetLists.length != 0 ? await prepareAssetPopoverSnapshotContent(assetLists) : [];
                 snapshotsList = snapshotsList.concat(assetSnapList);
             }
         } else if (item.listitems && item.listitems.length > 0) { // for nested lists
             snapshotsList = snapshotsList.concat(setSnapshotsInListAndPoetry(status, item.listitems, semanticType));
         }
-    })
-    // for (let item of elementList) {
-    //     if ((item.type == "paragraph" || item.type == "line") && item.authoredtext) {
-    //         if (semanticType === 'glossary') {
-    //             let glossaryArray = item.authoredtext.glossaryentries ? item.authoredtext.glossaryentries : [];
-    //             snapshotsList = snapshotsList.concat(prepareGlossarySnapshotContent(status, glossaryArray));
-    //         } else if (semanticType === 'footnote') {
-    //             let footnoteArray = item.authoredtext.footnotes ? item.authoredtext.footnotes : [];
-    //             snapshotsList = snapshotsList.concat(prepareFootnoteSnapshotContent(status, footnoteArray));
-    //         } else if (semanticType === 'assetpopover') {
-    //             let assetLists = item.authoredtext.internallinks ? item.authoredtext.internallinks : [];
-    //             let assetSnapList = assetLists && assetLists.length !== 0 ? await prepareAssetPopoverSnapshotContent(assetLists) : [];
-    //             console.log('assetList in poetry func before concat', assetSnapList)
-    //             snapshotsList = snapshotsList.concat(assetSnapList);
-    //             snapshotsList = snapshotsList.concat(prepareAssetPopoverSnapshotContent(assetLists));
-    //         }
-    //     } else if (item.listitems && item.listitems.length > 0) { // for nested lists
-    //         snapshotsList = snapshotsList.concat(setSnapshotsInListAndPoetry(status, item.listitems, semanticType));
-    //     }
-    // }
+    }))
     return snapshotsList
 }
 
@@ -174,55 +151,22 @@ const prepareFootnoteSnapshotContent = (status, footnoteList) => {
 /**
  * @function prepareAssetPopoverSnapshotContent
  * @description-This function is to prepare snapshot content for each Asset Popover entry
- * @param {String} status - status of the action performed
  * @param {Array} assetsList - List of Asset Popover entries
  * @returns {Array} All AssetPopover Snapshots for given element 
 */
 export const prepareAssetPopoverSnapshotContent = async (assetsList) => {
     let assetPopoverSnap = []
-    let elementASLinkID = []
-    assetsList && assetsList.length && assetsList.map(assetsItem => {
-        let assetId = document.querySelector('abbr[data-uri="' + assetsItem.linkid + '"').getAttribute("asset-id");
-        elementASLinkID.push({
-            assetid: assetId,
-            linkID: assetsItem.linkid
-        })
-    })
-    assetPopoverSnap = await prepareASContentSnapshot(elementASLinkID, assetPopoverSnap)
-    // await Promise.all(assetPopoverSnap).then(result=>assetPopoverSnap=result ).catch(err=>console.log('in catch'));
-    console.log('assetPopoverSnap',assetPopoverSnap)
-    return assetPopoverSnap
-}
-
-/**
- * @function prepareASContentSnapshot
- * @description-This function is to prepare snapshot content for each Asset Popover entry
- * @param {String} elementASLinkID - linkId of assetPopover
- * @param {Array} assetPopoverSnap - List of Asset Popover snapshots
- * @returns {Array} All AssetPopover Snapshots for given element  
-*/
-export const prepareASContentSnapshot = async (elementASLinkID, assetPopoverSnap) => {
-    // let assetPopoverSnaps = []
-    for (let i = 0; i < elementASLinkID.length; i++) {
-        await getCurrentlyLinkedImage(elementASLinkID[i].linkID, (resCurrentlyLinkedImageData) => {
+    await Promise.all( assetsList && assetsList.length && assetsList.map(async assetsItem => {
+       await getCurrentlyLinkedImage(assetsItem.linkid, (resCurrentlyLinkedImageData) => {
             assetPopoverSnap.push({
-                assetid: elementASLinkID[i].assetid,
+                assetid: assetId,
                 linkID: resCurrentlyLinkedImageData.id,
                 label: resCurrentlyLinkedImageData.title
             })
         })
-    }
-    
-    // await Promise.all(assetPopoverSnaps).then(elementASLinkID => {
-    //     assetPopoverSnaps = elementASLinkID;
-    //     console.log('assetPopoverSnaps12345', assetPopoverSnaps)
-    // }).catch(error => {
-    //     console.log('in error block')
-    // })
-    console.log('assetPopoverSnaps122',assetPopoverSnap)
+    }))
     return assetPopoverSnap
 }
-
 /**
  * @function fetchElementsTag
  * @description-This function is to set the lael text of element
@@ -261,6 +205,7 @@ export const fetchElementsTag = (element) => {
  * @param {Object} bodymatter - bodymatter before delete  
  * @param {String/Number} index - index of element deleted
  * @param {String} type - type of element deleted
+ * @param {String} type - entityUrn
  * @returns {Object} WipData for element 
 */
 export const fetchElementWipData = (bodymatter, index, type, entityUrn) => {
