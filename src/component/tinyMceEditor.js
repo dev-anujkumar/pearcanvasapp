@@ -489,7 +489,7 @@ export class TinyMceEditor extends Component {
          * Case - clicking over Footnote text
          */
 
-        if (e.target.parentElement && e.target.parentElement.nodeName == "SUP" && 
+        if (e.target.parentElement && e.target.parentElement.nodeName == "SUP" && e.target.parentElement.childNodes &&
             e.target.parentElement.childNodes[0].nodeName == 'A' && e.target.dataset.uri) {
             let uri = e.target.dataset.uri;
             this.glossaryBtnInstance && this.glossaryBtnInstance.setDisabled(true)
@@ -544,7 +544,7 @@ export class TinyMceEditor extends Component {
                 // (e.target.attributes['element-id'] && e.target.attributes['element-id'].nodeValue) || e.target.parentNode.attributes['element-id'].nodeValue;
                 let pageId = (e.target.attributes['data-uri'] && e.target.attributes['data-uri'].nodeValue) || e.target.parentNode.attributes['data-uri'].nodeValue;
 
-                sendDataToIframe({ 'type': LaunchTOCForCrossLinking, 'message': { open: true, case: 'update', link: linkId, element: elementId, page: pageId, blockCanvas: true, crossLink: true , reviewerRole: hasReviewerRole()} });
+                sendDataToIframe({ 'type': LaunchTOCForCrossLinking, 'message': { open: true, case: 'update', link: linkId, element: elementId, page: pageId, blockCanvas: true, crossLink: true, reviewerRole: hasReviewerRole() } });
             }
 
         }
@@ -856,7 +856,7 @@ export class TinyMceEditor extends Component {
             } else if (key === 39) {
                 let currentElement = editor.selection.getNode();
                 if (editor.selection.getNode().tagName.toLowerCase() !== 'abbr' && editor.selection.getNode().title.toLowerCase() !== 'slate link') {
-                    currentElement = editor.selection.getNode().closest(`[title="Slate Link"]`);
+                    currentElement = editor.selection.getNode().closest(`.AssetPopoverTerm`);
                 }
                 if (currentElement && currentElement.title.toLowerCase() === 'slate link') {
                     let offset = this.getOffSet(currentElement);
@@ -1660,15 +1660,38 @@ export class TinyMceEditor extends Component {
         let selection = window.getSelection().anchorNode.parentNode;
         let selectedTag = selection.nodeName;
         let selectedTagClass = selection.classList;
+        selectedText = String(selectedText).replace(/</g, '&lt;').replace(/>/g, '&gt;');
         let activeElement = tinymce.activeEditor.targetElm.closest('.element-container');
         let linkCount = Math.floor(Math.random() * 100) + '-' + Math.floor(Math.random() * 10000); //tinymce.$(activeElement).find('.page-link-attacher').length;
         if (selectedTag !== "LI" && selectedTag !== "P" && selectedTag !== "H3" && selectedTag !== "BLOCKQUOTE" && (!selectedTagClass.contains('poetryLine'))) {
             //selectedText = window.getSelection().anchorNode.parentNode.outerHTML;
             selectedText = '<' + selectedTag.toLocaleLowerCase() + '>' + selectedText + '</' + selectedTag.toLocaleLowerCase() + '>'
         }
-        let insertionText = '<span asset-id="page-link-' + linkCount + '" class="page-link-attacher" element-id="' + activeElement.getAttribute('data-id') + '">' + selectedText + '</span>';
-        // editor.insertContent(insertionText);
-        editor.selection.setContent(insertionText);
+        let insertionText = '<span asset-id="page-link-' + linkCount + '" class="page-link-attacher ' + selectedTag.toLocaleLowerCase() + '" element-id="' + activeElement.getAttribute('data-id') + '">' + selectedText + '</span>';
+        editor.insertContent(insertionText);
+        // editor.selection.setContent(insertionText);
+        if (selection.innerHTML) {
+            let spanTag = selection.getElementsByClassName('page-link-attacher');
+            if (spanTag.length) {
+                let tempElem = spanTag[0];
+                let parentElement = tempElem.parentNode;
+                let childNode = tempElem.childNodes;
+                if (childNode.length) {
+                    if (parentElement.nodeName === childNode[0].nodeName) {
+                        let parenChildNode = parentElement.childNodes;
+                        if (parenChildNode.length && parenChildNode.length === 1) {
+                            let innerHTML = parentElement.innerHTML;
+                            parentElement.outerHTML = innerHTML;
+                        } else {
+                            let innerHTML = childNode[0].innerHTML;
+                            childNode[0].outerHTML = innerHTML;
+                        }
+                    }
+                }
+            }
+        } else {
+            selection.parentNode.removeChild(selection);
+        }
         sendDataToIframe({ 'type': LaunchTOCForCrossLinking, 'message': { open: true, case: 'new', element: activeElement.getAttribute('data-id'), link: 'page-link-' + linkCount, blockCanvas: true, crossLink: true } });
     }
 
@@ -1696,13 +1719,37 @@ export class TinyMceEditor extends Component {
         let selection = window.getSelection().anchorNode.parentNode;
         let selectedTag = selection.nodeName;
         let selectedTagClass = selection.classList;
+        selectedText = String(selectedText).replace(/</g, '&lt;').replace(/>/g, '&gt;');
         if (selectedTag !== "LI" && selectedTag !== "P" && selectedTag !== "H3" && selectedTag !== "BLOCKQUOTE" && (!selectedTagClass.contains('poetryLine'))) {
             //selectedText = window.getSelection().anchorNode.parentNode.outerHTML;
             selectedText = '<' + selectedTag.toLocaleLowerCase() + '>' + selectedText + '</' + selectedTag.toLocaleLowerCase() + '>'
         }
+
         let insertionText = '<span id="asset-popover-attacher">' + selectedText + '</span>';
-        // editor.insertContent(insertionText);
-        editor.selection.setContent(insertionText);
+        editor.insertContent(insertionText);
+        // editor.selection.setContent(insertionText);
+        if (selection.innerHTML) {
+            let spanTag = selection.getElementsByTagName('SPAN');
+            if (spanTag.length) {
+                let tempElem = spanTag[0];
+                let parentElement = tempElem.parentNode;
+                let childNode = tempElem.childNodes;
+                if (childNode.length) {
+                    if (parentElement.nodeName === childNode[0].nodeName) {
+                        let parenChildNode = parentElement.childNodes;
+                        if (parenChildNode.length && parenChildNode.length === 1) {
+                            let innerHTML = parentElement.innerHTML;
+                            parentElement.outerHTML = innerHTML;
+                        } else {
+                            let innerHTML = childNode[0].innerHTML;
+                            childNode[0].outerHTML = innerHTML;
+                        }
+                    }
+                }
+            }
+        } else {
+            selection.parentNode.removeChild(selection);
+        }
         customEvent.subscribe('assetPopoverSave', () => {
             this.handleBlur(null, true);
             customEvent.unsubscribe('assetPopoverSave');
@@ -2257,7 +2304,7 @@ export class TinyMceEditor extends Component {
             let innerHtml = this.innerHTML;
             this.outerHTML = innerHtml;
         })
-        if(!checkCanvasBlocker) {
+        if (!checkCanvasBlocker) {
             tinymce.$('span[class="page-link-attacher"]').each(function () {
                 let innerHtml = this.innerHTML;
                 this.outerHTML = innerHtml;
@@ -2317,6 +2364,7 @@ export class TinyMceEditor extends Component {
         if (!this.fromtinyInitBlur && !config.savingInProgress) {
             let elemNode = document.getElementById(`cypress-${this.props.index}`)
             elemNode.innerHTML = elemNode.innerHTML.replace(/<br data-mce-bogus="1">/g, "");
+            elemNode.innerHTML = elemNode.innerHTML.replace(/disc square/g, "disc").replace(/disc circle/g, "disc");
             if (this.props.element && this.props.element.type === "citations") {
                 elemNode.innerHTML = elemNode.innerHTML.replace(/<\s*\/?br\s*[\/]?>/g, "");  /**[BG-2578] */
             }
@@ -2461,7 +2509,7 @@ export class TinyMceEditor extends Component {
                 defModel = removeBOM(defModel)
 
                 return (
-                    <div ref={this.editorRef} data-id={this.props.currentElement ? this.props.currentElement.id : ''} onKeyDown={this.normalKeyDownHandler} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: defModel}} onChange={this.handlePlaceholder}></div>
+                    <div ref={this.editorRef} data-id={this.props.currentElement ? this.props.currentElement.id : ''} onKeyDown={this.normalKeyDownHandler} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: defModel }} onChange={this.handlePlaceholder}></div>
                 )
         }
     }

@@ -458,7 +458,7 @@ export const updateNestedList = (element) => {
             case "disc":
             default:
                 allOlElement[i].classList.add('disc');
-                allOlElement[i].classList.add(UlClassList[treelevel - 1]);
+                //allOlElement[i].classList.add(UlClassList[treelevel - 1]);
                 [...childLielement].forEach((elem) => { elem.classList.add('listItemNumeroUnoBullet') });
                 [...childLielement].forEach((elem) => { elem.classList.add(UlLiClassList[treelevel - 1]) });
                 break;

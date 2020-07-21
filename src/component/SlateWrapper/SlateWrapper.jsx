@@ -31,6 +31,9 @@ import { setActiveElement,openPopupSlate } from '../CanvasWrapper/CanvasWrapper_
 // import { OPEN_AM } from '../../js/auth_module';
 import { showSlateLockPopup } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import { handleTCMData } from '../ElementContainer/TcmSnapshot_Actions'
+import {
+    fetchSlateData
+} from '../CanvasWrapper/CanvasWrapper_Actions';
 
 
 let random = guid();
@@ -1107,6 +1110,11 @@ class SlateWrapper extends Component {
             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
             sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
         }
+        // When normal slate is Wip but popupslate is approved. BG-2742
+        if((this.props.slateData[config.slateManifestURN].id !== config.cachedActiveElement.element.id) && config.cachedActiveElement.element.status === "approved"){
+            this.props.slateData[config.slateManifestURN].index = config.cachedActiveElement.index;
+            this.props.fetchSlateData(this.props.slateData[config.slateManifestURN].id, this.props.slateData[config.slateManifestURN].contentUrn,0 , this.props.slateData[config.slateManifestURN],"",true); 
+        }
         config.slateManifestURN = config.tempSlateManifestURN
         config.slateEntityURN = config.tempSlateEntityURN
         config.tempSlateManifestURN = null
@@ -1235,7 +1243,8 @@ export default connect(
         accessDenied,
         openPopupSlate,
         showSlateLockPopup,
-        handleTCMData
+        handleTCMData,
+        fetchSlateData
 
     }
 )(SlateWrapper);

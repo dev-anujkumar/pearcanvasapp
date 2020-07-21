@@ -1495,7 +1495,20 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                             nodeName: "SPAN",
                             innerHTML: "<span>Hello</span>",
                             outerHTML: "<p><span>Hello</span></p>",
-                            classList: { contains: () => { return false } }
+                            classList: { contains: () => { return false } },
+                            getElementsByTagName: () => {
+                                return [{
+                                    parentNode: {
+                                        nodeName: 'strong',
+                                        childNodes: []
+                                    },
+                                    childNodes : [ {
+                                        nodeName: 'strong',
+                                        innerHTML: 'test',
+                                        outerHTML: ''
+                                    }]
+                                }]
+                            }
                         }
                     }
                 }
@@ -1508,6 +1521,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                 on: (temp, cb) => { cb(event) },
                 selection: editor.selection,
                 setContent: () => { },
+                insertContent: () => { },
                 formatter: {
                     match: () => { },
                     formatChanged: () => { return jest.fn() },
@@ -1532,7 +1546,20 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                             nodeName: "SPAN",
                             innerHTML: "<span>Hello</span>",
                             outerHTML: "<p><span>Hello</span></p>",
-                            classList: { contains: () => { return true } }
+                            classList: { contains: () => { return true } },
+                            getElementsByTagName: () => {
+                                return [{
+                                    parentNode: {
+                                        nodeName: 'strong',
+                                        childNodes: []
+                                    },
+                                    childNodes : [ {
+                                        nodeName: 'strong',
+                                        innerHTML: 'test asset',
+                                        outerHTML: ''
+                                    }]
+                                }]
+                            }
                         }
                     }
                 }
@@ -1543,6 +1570,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
             }
             let nextEditor1 = {
                 on: (temp, cb) => { cb(event) },
+                insertContent: () => { },
                 selection: {
                     getContent: () => {
                         return '<p><span className="poetryLine">Hello</span></p>';
