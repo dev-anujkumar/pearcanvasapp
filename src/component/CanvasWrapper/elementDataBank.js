@@ -380,6 +380,22 @@ const elementDataBank = {
         "elementType" : "stanza",
         "primaryOption" : "primary-stanza",
         "secondaryOption" : "secondary-stanza"
+    },
+    "groupedcontent": {
+        "elementType" : "groupedcontent",
+        "primaryOption" : "primary-multicolumn",
+        "wider-65-35" : {
+            "secondaryOption" : "secondary-multicolumn-wider"
+        },
+        "wider-50-50" : {
+            "secondaryOption" : "secondary-multicolumn-half"
+        },
+        "text-width-60-40" : {
+            "secondaryOption" : "secondary-multicolumn-wider-text"
+        },
+        "text-width-50-50" : {
+            "secondaryOption" : "secondary-multicolumn-half-text"
+        }
     }
 }
 

@@ -1,0 +1,237 @@
+/* Multi column Container class */
+.multi-column-container {
+    display: flex;
+    max-width: 100%;
+    height: 100%;
+}
+
+/* Common class for column groups */
+.container-multi-column-group {
+    /* width: 50%; */
+    border-right: 1px solid black;
+    padding-right: 5px;
+}
+
+/* Specific class for 1st column group */
+.container-multi-column-group.column-1 {
+    /* Phase 1 */
+    padding-left: 10px;
+    border-right: none;
+}
+
+/* Element container class specific to Multi-Column container */
+.container-multi-column-group .element-container {
+    max-width: 83%;
+}
+
+/* For audio tag inside multi-column */
+.container-multi-column-group .element-container audio {
+    width: 80%;
+}
+
+/* For CTA section of interactive external link, PDF */
+.container-multi-column-group a.buttonWidgetPDF, .container-multi-column-group a.buttonWidgetPUSL {
+    width: 100%;
+}
+
+/*style for element picker inside Multi-Column element*/
+.container-multi-column-group .horizontalLine {
+    margin-left: -4%;
+    width: 100%;
+}
+.container-multi-column-group .dropdown {
+    /* margin-left: -23px; */
+    cursor: pointer;
+}
+.container-multi-column-group .elemDiv-expand{
+    right: 2%;
+}
+
+/*************************Styling related to subtype**************************/
+
+/* Subtype: wider-50-50 */
+.container-multi-column-group.wider-50-50 {
+    width: 50%;
+}
+
+/* Subtype: wider-65-35 */
+.container-multi-column-group.wider-65-35.column-0 {
+    width: 65%;
+}
+.container-multi-column-group.wider-65-35.column-1 {
+    width: 35%;
+}
+
+/* Subtype: text-width-50-50 */
+.container-multi-column-group.text-width-50-50 {
+    width: 50%;
+}
+/* Subtype: text-width-60-40 */
+.container-multi-column-group.text-width-60-40.column-0 {
+    width: 60%;
+}
+.container-multi-column-group.text-width-60-40.column-1 {
+    width: 40%;
+}
+
+/***************************** 50-50 *****************************************/
+/***** C1 & C2 *******/
+/* For single asessment */
+.container-multi-column-group.wider-50-50 .singleAssessment_Dropdown_SelectLabel, .container-multi-column-group.text-width-50-50 .singleAssessment_Dropdown_SelectLabel {
+    width: 43%;
+    padding-top: 2px;
+}
+
+/* For single asessment dropdown */
+.container-multi-column-group.wider-50-50 .singleAssessment_Dropdown_activeDropdown, .container-multi-column-group.text-width-50-50 .singleAssessment_Dropdown_activeDropdown {
+    width: 54%;
+    margin-left: 7px;
+}
+
+.container-multi-column-group.wider-50-50 .singleAssessment_Dropdown_currentLabel, .container-multi-column-group.text-width-50-50 .singleAssessment_Dropdown_currentLabel {
+    font-size: 12px;
+}
+
+/* For single asessment dropdown ul */
+.container-multi-column-group.wider-50-50 .singleAssessment_Dropdown_options, .container-multi-column-group.text-width-50-50 .singleAssessment_Dropdown_options {
+    width: 50%;
+    height: 60%;
+}
+/***************/
+
+/******************************************************************************/
+
+
+/***************************** 65-35 *****************************************/
+/***** C1 *****/
+/* For single asessment */
+.container-multi-column-group.wider-65-35 .singleAssessment_Dropdown_SelectLabel {
+    width: 43%;
+    padding-top: 2px;
+}
+
+/* For single asessment dropdown */
+.container-multi-column-group.wider-65-35 .singleAssessment_Dropdown_activeDropdown {
+    width: 54%;
+    margin-left: 7px;
+}
+
+.container-multi-column-group.wider-65-35 .singleAssessment_Dropdown_currentLabel {
+    font-size: 12px;
+}
+
+/* For single asessment dropdown ul */
+.container-multi-column-group.wider-65-35 .singleAssessment_Dropdown_options {
+    margin-left: 45%;
+    width: 50%;
+    height: 60%;
+}
+/************/
+
+/***** C2 *****/
+/* For single asessment */
+.container-multi-column-group.wider-65-35.column-1 .singleAssessment_Dropdown_SelectLabel {
+    width: 20%;
+    margin-bottom: 10px;
+}
+
+/* For single asessment dropdown */
+.container-multi-column-group.wider-65-35.column-1 .singleAssessment_Dropdown_activeDropdown {
+    width: 73%;
+    margin-left: 10px;
+    margin-top: 14px;
+}
+
+.container-multi-column-group.wider-65-35.column-1 .singleAssessment_Dropdown_currentLabel {
+    font-size: 10px;
+}
+
+/* For single asessment dropdown ul */
+.container-multi-column-group.wider-65-35.column-1 .singleAssessment_Dropdown_options {
+    width: 64%;
+    margin-left: 45px;
+    margin-top: 15px;
+    height: 36%;
+}
+
+.container-multi-column-group.wider-65-35.column-1 .singleAssessment_Dropdown_arrow {
+    float: right;
+    position: relative;
+    top: 0px;
+    right: 0px;
+    width: 11px;
+    height: 15px;
+}
+
+.container-multi-column-group.wider-65-35.column-1 .element-container.qu {
+    height: 50%;
+}
+/************/
+/******************************************************************************/
+
+/***************************** 60-40 *****************************************/
+/***** C1 *****/
+/* For single asessment */
+.container-multi-column-group.text-width-60-40 .singleAssessment_Dropdown_SelectLabel {
+    width: 43%;
+    padding-top: 2px;
+}
+
+/* For single asessment dropdown */
+.container-multi-column-group.text-width-60-40 .singleAssessment_Dropdown_activeDropdown {
+    width: 54%;
+    margin-left: 7px;
+}
+
+.container-multi-column-group.text-width-60-40 .singleAssessment_Dropdown_currentLabel {
+    font-size: 12px;
+}
+
+/* For single asessment dropdown ul */
+.container-multi-column-group.text-width-60-40 .singleAssessment_Dropdown_options {
+    margin-left: 45%;
+    width: 50%;
+    height: 60%;
+}
+/************/
+
+/***** C2 *****/
+/* For single asessment */
+.container-multi-column-group.text-width-60-40.column-1 .singleAssessment_Dropdown_SelectLabel {
+    width: 20%;
+    margin-bottom: 10px;
+}
+
+/* For single asessment dropdown */
+.container-multi-column-group.text-width-60-40.column-1 .singleAssessment_Dropdown_activeDropdown {
+    width: 73%;
+    margin-left: 10px;
+    margin-top: 14px;
+}
+
+.container-multi-column-group.text-width-60-40.column-1 .singleAssessment_Dropdown_currentLabel {
+    font-size: 10px;
+}
+
+/* For single asessment dropdown ul */
+.container-multi-column-group.text-width-60-40.column-1 .singleAssessment_Dropdown_options {
+    width: 64%;
+    margin-left: 45px;
+    margin-top: 15px;
+    height: 40%;
+}
+
+.container-multi-column-group.text-width-60-40.column-1 .singleAssessment_Dropdown_arrow {
+    float: right;
+    position: relative;
+    top: 0px;
+    right: 0px;
+    width: 11px;
+    height: 15px;
+}
+
+.container-multi-column-group.text-width-60-40.column-1 .element-container.qu {
+    height: 360px;
+}
+/************/
+/******************************************************************************/
