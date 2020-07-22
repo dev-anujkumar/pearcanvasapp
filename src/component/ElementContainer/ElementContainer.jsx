@@ -93,7 +93,8 @@ class ElementContainer extends Component {
     }
 
     componentDidMount() {
-        this.getElementVersionStatus(this.props.element, this.props.elementStatus)
+        this.getElementVersionStatus(this.props.element, config.elementStatus)
+        console.log("%c ELEMENTCONTAINER DID MOUNT:>>", "background: black; color: white")
         this.setState({
             ElementId: this.props.element.id,
             btnClassName: '',
@@ -1110,7 +1111,7 @@ class ElementContainer extends Component {
                         slateLockInfo: slateLockInfo,
                         onClick: this.handleFocus,
                         glossaryFootnoteValue: this.props.glossaryFootnoteValue,
-                        elementStatus: this.props.elementStatus,
+                        elementStatus: config.elementStatus,
                         openAssetPopoverPopUp: this.openAssetPopoverPopUp,
                         openGlossaryFootnotePopUp: this.openGlossaryFootnotePopUp,
                         getElementStatus: this.props.getElementStatus
@@ -1455,7 +1456,7 @@ const mapStateToProps = (state) => {
         allComments: state.commentsPanelReducer.allComments,
         showHideId: state.appStore.showHideId,
         tcmData: state.tcmReducer.tcmSnapshot,
-        elementStatus: state.elementStatusReducer
+        // elementStatus: state.elementStatusReducer
     }
 }
 

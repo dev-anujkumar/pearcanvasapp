@@ -34,7 +34,7 @@ import { handleTCMData } from '../ElementContainer/TcmSnapshot_Actions'
 import {
     fetchSlateData
 } from '../CanvasWrapper/CanvasWrapper_Actions';
-
+import LazyLoad, {forceCheck} from "react-lazyload";
 
 let random = guid();
 class SlateWrapper extends Component {
@@ -56,6 +56,7 @@ class SlateWrapper extends Component {
     }
 
     componentDidMount() {
+        forceCheck();
         if (document.getElementById("cypress-0")) {
             document.getElementById("cypress-0").focus();
         }
@@ -66,6 +67,7 @@ class SlateWrapper extends Component {
     }
 
     handleScroll = (e) => {
+        forceCheck();
         if (config.totalPageCount <= config.page) return false;
         // const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;        
         let scrollPosition = Number(e.target.scrollTop + e.target.clientHeight + 100);
@@ -108,6 +110,7 @@ class SlateWrapper extends Component {
     }
 
     static getDerivedStateFromProps = (props, state) => {
+        forceCheck();
         /**
          * updateTimer is for updating Time for slate refresh
          */
@@ -885,7 +888,13 @@ class SlateWrapper extends Component {
                 }
                 return _elements.map((element, index) => {
                         return (
+                            
                            <React.Fragment key={element.id}>
+                               <LazyLoad 
+                                key={index}
+                                once={true}
+                                placeholder={<div>Loading...</div>}
+                                >
                                 {
                                     index === 0 && _slateType !== 'assessment' && config.isCO === false ?
                                         <ElementSaprator
@@ -942,8 +951,9 @@ class SlateWrapper extends Component {
                                     />
                                     : null
                                 }
-                              
+                               </LazyLoad>
                             </React.Fragment>
+                           
                           
                         )
                 })

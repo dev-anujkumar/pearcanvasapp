@@ -59,6 +59,7 @@ export class CanvasWrapper extends Component {
 
 
     componentDidMount() {  
+        console.log("%c CANVASWRAPPER DID MOUNT:>>", "background: black; color: yellow")
         // To run Canvas Stabilization app as stand alone app //
         // if (config.slateManifestURN) {
         //     this.props.fetchSlateData(config.slateManifestURN,config.slateEntityURN,config.page,'');
