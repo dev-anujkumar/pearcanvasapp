@@ -810,7 +810,7 @@ export default {
             enum: 'MULTI_COLUMN',		
             subtype: {		
                 'secondary-multicolumn-wider': {
-                    text: 'Wider than text width 65/35%',
+                    text: 'Wider than text width 60/40%',
                     labelText: '2C',
                     enum: 'WIDER_65_35'
                 },
