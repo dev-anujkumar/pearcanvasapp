@@ -812,7 +812,7 @@ export default {
                 'secondary-multicolumn-wider': {
                     text: 'Wider than text width 60/40%',
                     labelText: '2C',
-                    enum: 'WIDER_65_35'
+                    enum: 'WIDER_60_40'
                 },
                 'secondary-multicolumn-half': {
                     text: 'Wider than text width 50/50%',
