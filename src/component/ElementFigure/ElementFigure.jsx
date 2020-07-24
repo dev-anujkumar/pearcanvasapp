@@ -65,8 +65,8 @@ class ElementFigure extends Component {
                 (data && data.scalemarker && data.scalemarker.properties) ? { "imageid": data.scalemarker.properties["d.cmis:versionSeriesId"].value || null } : null,
                 (data && data.scalemarker && data.scalemarker.properties) ? { "alttext": data.scalemarker.properties["t.cmis:name"].value || "The alttext for the scale image" } : null,
                 (data && data.scalemarker && data.scalemarker.properties) ? { "path": data.scalemarker.properties["d.cmis:contentStreamId"].value || null } : null,
-                (data && data.scalemarker && data.scalemarker.properties) ? { "height": data.scalemarker.properties["d.cmis:contentStreamLength"].value || null } : null,
-                (data && data.scalemarker && data.scalemarker.properties && data.scalemarker.properties["d.cmis:contentWidth"]) ? { "width": data.scalemarker.properties["d.cmis:contentWidth"].value || null } : null,
+                (data && data.scalemarker && data.scalemarker.properties) ? { "height": data.scalemarker.properties["e.exif:pixelXDimension"].value || null } : null,
+                (data && data.scalemarker && data.scalemarker.properties && data.scalemarker.properties["e.exif:pixelYDimension"]) ? { "width": data.scalemarker.properties["e.exif:pixelYDimension"].value || null } : null,
             );
 
             let setFigureData = {
