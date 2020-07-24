@@ -1,0 +1,230 @@
+export default {
+
+    "fpo": {
+        "divImage": 'divImageTextWidth',
+        "figureImage": 'figureImageTextWidth',
+        "heading4Label": 'heading4ImageTextWidthNumberLabel',
+        "heading4Title": 'heading4ImageTextWidthTitle',
+        "dataType": 'image',
+        "id": 'id-info',
+        "imageDimension": 'imageTextWidth',
+        "figcaptionClass": 'figcaptionImageTextWidth',
+        "paragraphCredit": 'paragraphImageTextWidthCredit'
+    },
+    "flashcards": {
+        "divImage": 'divWidgetFlashcards',
+        "figureImage": 'figureWidgetFlashcards',
+        "heading4Label": 'heading4WidgetFlashcardsNumberLabel',
+        "heading4Title": 'heading4WidgetFlashcardsTitle',
+        "dataType": 'flashcards',
+        "id": 'id-info',
+        "imageDimension": 'imageWidgetFlashcards',
+        "figcaptionClass": 'figcaptionWidgetFlashcards',
+        "paragraphCredit": 'paragraphWidgetFlashcardsCredit'
+    },
+    "gallery-image": {
+        "divImage": 'divWidgetImgSlideshow',
+        "figureImage": 'figureWidgetImgSlideshow',
+        "heading4Label": 'heading4WidgetImgSlideshowNumberLabel',
+        "heading4Title": 'heading4WidgetImgSlideshowTitle',
+        "dataType": 'imgSlideshow',
+        "id": 'id-info',
+        "imageDimension": 'imageWidgetImgSlideshow',
+        "figcaptionClass": 'figcaptionWidgetImgSlideshow',
+        "paragraphCredit": 'paragraphWidgetImgSlideshowCredit'
+    },
+    "gallery-video": {
+        "divImage": 'divWidgetVidSlideshow',
+        "figureImage": 'figureWidgetVidSlideshow',
+        "heading4Label": 'heading4WidgetVidSlideshowNumberLabel',
+        "heading4Title": 'heading4WidgetVidSlideshowTitle',
+        "dataType": 'vidSlideshow',
+        "id": 'id-info',
+        "imageDimension": 'imageWidgetVidSlideshow',
+        "figcaptionClass": 'figcaptionWidgetVidSlideshow',
+        "paragraphCredit": 'paragraphWidgetVidSlideshowCredit'
+    },
+    "pdf": {
+        "divImage": 'divWidgetPDF',
+        "figureImage": 'figureWidgetPDF',
+        "heading4Label": 'heading4WidgetPDFNumberLabel',
+        "heading4Title": 'heading4WidgetPDFTitle',
+        "dataType": 'pdf',
+        "id": 'id-info',
+        "imageDimension": 'buttonWidgetPDF',
+        "hyperlinkClass": "",
+        "path": "PATH: ",
+        "figcaptionClass": 'figcaptionWidgetPDF',
+        "paragraphCredit": 'paragraphWidgetPDFCredit'
+    },
+    "3rd-party": {
+        "divImage": 'divWidget3PI',
+        "figureImage": 'figureWidget3PI',
+        "heading4Label": 'heading4Widget3PINumberLabel',
+        "heading4Title": 'heading4Widget3PITitle',
+        "dataType": '3pi',
+        "id": 'id-info',
+        "imageDimension": 'imageWidget3PI',
+        "figcaptionClass": 'figcaptionWidget3PI',
+        "paragraphCredit": 'paragraphWidget3PICredit'
+    },
+    "graph": {
+        "divImage": 'divWidgetGraph',
+        "figureImage": 'figureWidgetVidSlideshow',
+        "heading4Label": 'heading4WidgetGraphNumberLabel',
+        "heading4Title": 'heading4WidgetGraphTitle',
+        "dataType": 'graph',
+        "id": 'id-info',
+        "imageDimension": 'imageWidgetGraph',
+        "figcaptionClass": 'figcaptionWidgetGraph',
+        "paragraphCredit": 'paragraphWidgetGraphCredit'
+    },
+    "simulation": {
+        "divImage": 'divWidgetUCA',
+        "figureImage": 'figureWidgetUCA',
+        "heading4Label": 'heading4WidgetUCANumberLabel',
+        "heading4Title": 'heading4WidgetUCATitle',
+        "dataType": 'uca',
+        "id": 'id-info',
+        "imageDimension": 'imageWidgetUCA',
+        "figcaptionClass": 'figcaptionWidgetUCA',
+        "paragraphCredit": 'paragraphWidgetUCACredit'
+    },
+    "survey": {
+        "divImage": 'divWidgetSurvey',
+        "figureImage": 'figureWidgetSurvey',
+        "heading4Label": 'heading4WidgetSurveyNumberLabel',
+        "heading4Title": 'heading4WidgetSurveyTitle',
+        "dataType": 'uca',
+        "id": 'id-info',
+        "imageDimension": 'imageWidgetSurvey',
+        "figcaptionClass": 'figcaptionWidgetSurvey',
+        "paragraphCredit": 'paragraphWidgetSurveyCredit'
+    },
+    "timeline": {
+        "divImage": 'divWidgetTimeline',
+        "figureImage": 'divWidgetTimeline',
+        "heading4Label": 'heading4WidgetTimelineNumberLabel',
+        "heading4Title": 'heading4WidgetTimelineTitle',
+        "dataType": 'timeline',
+        "id": 'id-info',
+        "imageDimension": 'imageWidgetTimeline',
+        "figcaptionClass": 'figcaptionWidgetTimeline',
+        "paragraphCredit": 'paragraphWidgetTimelineCredit'
+    },
+    "hotspot": {
+        "divImage": 'divWidgetHotspot',
+        "figureImage": 'figureWidgetHotspot',
+        "heading4Label": 'heading4WidgetHotspotNumberLabel',
+        "heading4Title": 'heading4WidgetHotspotTitle',
+        "dataType": 'hotspot',
+        "id": 'id-info',
+        "imageDimension": 'imageWidgetHotspot',
+        "figcaptionClass": 'figcaptionWidgetHotspot',
+        "paragraphCredit": 'paragraphWidgetHotspotCredit'
+    },
+    "accountingtable": {
+        "divImage": 'divWidgetAccountingtable',
+        "figureImage": 'figureWidgetAccountingtable',
+        "heading4Label": 'heading4WidgetAccountingtableNumberLabel',
+        "heading4Title": 'heading4WidgetAccountingtableTitle',
+        "dataType": 'accountingtable',
+        "id": 'id-info',
+        "imageDimension": 'imageWidgetAccountingtable',
+        "figcaptionClass": 'figcaptionWidgetAccountingtable',
+        "paragraphCredit": 'paragraphWidgetAccountingtableCredit'
+    },
+    "fill-in-blank": {
+        "divImage": 'divWidgetFIB',
+        "figureImage": 'figureWidgetFIB',
+        "heading4Label": 'heading4WidgetFIBNumberLabel',
+        "heading4Title": 'heading4WidgetFIBTitle',
+        "dataType": 'fib',
+        "id": 'id-info',
+        "imageDimension": 'imageWidgetFIB',
+        "figcaptionClass": 'figcaptionWidgetFIB',
+        "paragraphCredit": 'paragraphWidgetFIBCredit'
+    },
+    "video-mcq": {
+        "divImage": 'divWidgetVideoMcq',
+        "figureImage": 'figureWidgetVideoMcq',
+        "heading4Label": 'heading4WidgetVideoMcqNumberLabel',
+        "heading4Title": 'heading4WidgetVideoMcqTitle',
+        "dataType": 'videoMcq',
+        "id": 'id-info',
+        "imageDimension": 'imageWidgetVideoMcq',
+        "figcaptionClass": 'figcaptionWidgetVideoMcq',
+        "paragraphCredit": 'paragraphWidgetVideoMcqCredit'
+    },
+    "mcq": {
+        "divImage": 'divWidgetVideoMcq',
+        "figureImage": 'figureWidgetVideoMcq',
+        "heading4Label": 'heading4WidgetVideoMcqNumberLabel',
+        "heading4Title": 'heading4WidgetVideoMcqTitle',
+        "dataType": 'videoMcq',
+        "id": 'id-info',
+        "imageDimension": 'imageWidgetVideoMcq',
+        "figcaptionClass": 'figcaptionWidgetVideoMcq',
+        "paragraphCredit": 'paragraphWidgetVideoMcqCredit'
+    },
+    "pop-up-web-link": {
+        "divImage": 'divWidgetPUSL',
+        "figureImage": 'figureWidgetPUSL',
+        "heading4Label": 'heading4WidgetPUSLNumberLabel',
+        "heading4Title": 'heading4WidgetPUSLTitle',
+        "dataType": 'pusl',
+        "id": 'id-info',
+        "imageDimension": 'buttonWidgetPUSL',
+        "hyperlinkClass": 'buttonWidgetPUSL',
+        "figcaptionClass": 'figcaptionWidgetPUSL',
+        "paragraphCredit": 'paragraphWidgetPUSLCredit'
+    },
+    "web-link": {
+        "divImage": 'divWidgetPUSL',
+        "figureImage": 'figureWidgetPUSL',
+        "heading4Label": 'heading4WidgetPUSLNumberLabel',
+        "heading4Title": 'heading4WidgetPUSLTitle',
+        "dataType": 'pusl',
+        "id": 'id-info',
+        "imageDimension": 'buttonWidgetPUSL',
+        "hyperlinkClass": 'buttonWidgetPUSL',
+        "figcaptionClass": 'figcaptionWidgetPUSL',
+        "paragraphCredit": 'paragraphWidgetPUSLCredit'
+    },
+    "table": {
+        "divImage": 'divWidgetTableSL',
+        "figureImage": 'figureWidgetTableSL',
+        "heading4Label": 'heading4WidgetTableSLNumberLabel',
+        "heading4Title": 'heading4WidgetTableSLTitle',
+        "dataType": 'tablesl',
+        "id": 'id-info',
+        "imageDimension": 'imageWidgetTableSL',
+        "hyperlinkClass": '',
+        "figcaptionClass": 'figcaptionWidgetTableSL',
+        "paragraphCredit": 'paragraphWidgetTableSLCredit'
+    },
+    "popup": {
+        "divImage": 'divWidgetPU',
+        "figureImage": 'figureWidgetPU',
+        "heading4Label": 'heading4WidgetPUNumberLabel',
+        "heading4Title": 'heading4WidgetPUTitle',
+        "dataType": 'pu',
+        "id": 'id-info',
+        "imageDimension": '',
+        "hyperlinkClass": 'buttonWidgetPU',
+        "figcaptionClass": 'figcaptionWidgetPU',
+        "paragraphCredit": 'paragraphWidgetPUCredit'
+    },
+    "guided-example":
+    {
+        "divImage": 'divWidgetGuidedExample',
+        "figureImage": 'figureWidgetGuidedExample',
+        "heading4Label": 'heading4WidgetGuidedExampleNumberLabel',
+        "heading4Title": 'heading4WidgetGuidedExampleTitle',
+        "dataType": 'guidedExample',
+        "id": 'id-info',
+        "imageDimension": 'imageWidgetGuidedExample',
+        "figcaptionClass": 'figcaptionWidgetGuidedExample',
+        "paragraphCredit": 'paragraphWidgetGuidedExampleCredit'
+    }
+};

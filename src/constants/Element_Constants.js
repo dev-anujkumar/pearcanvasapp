@@ -12,14 +12,17 @@ export const WIDER = "wider"
 export const FULL = "full"
 export const DEFAULT_IMAGE_DATA_SOURCE = "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png"
 export const DEFAULT_IMAGE_SOURCE = "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png"
+
 /*---------------Element Audio-Video ----------------------*/ 
 export const AUDIO = "audio"
 export const VIDEO = "video"
 export const DEFAULT_ASSET="Asset data undefined"
 export const DEFAULT_VIDEO_POSTER_IMAGE = "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png"
 
+/*---------------Element Interactive ----------------------*/ 
+export const INTERACTIVE_FPO = "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
+export const INTERACTIVE_SCHEMA = "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive"
 /*---------------Element Single Assessment ----------------------*/ 
-export const ASSESSMENT_USAGE_TYPE =['Quiz', 'Test', 'Practice', 'Homework', 'Diagnostic', 'Journal', 'Shared Writing', 'Concept Check', 'Non-Scored', 'Study Tool']
 export const ESA_DIALOG_TEXT='PLEASE ENTER A PRODUCT UUID'
 export const ESA_POPUP_PLACEHOLDER='UUID'
 export const ESA_POPUP_ROWS='1'

@@ -14,10 +14,12 @@ import axios from 'axios';
 import { hasReviewerRole } from '../../constants/utility.js';
 import RootCiteTdxComponent from '../AssessmentSlateCanvas/assessmentCiteTdx/RootCiteTdxComponent.jsx';
 import RootSingleAssessmentComponent from '../AssessmentSlateCanvas/singleAssessmentCiteTdx/RootSingleAssessmentComponent.jsx'
+import RootElmSingleAssessment from '../AssessmentSlateCanvas/elm/RootElmSingleComponent.jsx';
 import  {setCurrentCiteTdx, setCurrentInnerCiteTdx, getMCQGuidedData, assessmentSorting}  from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
 import { connect } from 'react-redux';
 import { sendDataToIframe } from './../../constants/utility.js';
-
+import { INTERACTIVE_FPO, INTERACTIVE_SCHEMA } from '../../constants/Element_Constants.js';
+import interactiveTypeData from './interactiveTypes.js';
 /**
 * @description - Interactive is a class based component. It is defined simply
 * to make a skeleton of the Interactive Element.
@@ -42,40 +44,25 @@ class Interactive extends React.Component {
             itemParentID: this.props.model.figuredata && this.props.model.figuredata.interactiveparentid ? this.props.model.figuredata.interactiveparentid : "",
             openedFrom:'',
             interactiveTitle: this.props.model.figuredata && this.props.model.figuredata.interactivetitle? this.props.model.figuredata.interactivetitle : "",
+            showElmComponent:false,
+            interactiveType:this.props.model.figuredata && this.props.model.figuredata.interactivetype ? this.props.model.figuredata.interactivetype : ""
         
            };
 
     }
 
-    resetPage = (isReset, isSearch=false) => {
-        this.setState({isReset})
-        if(isReset && isSearch){
-            this.setState({parentPageNo:1})
-        } else if (isReset){
-            this.setState({parentPageNo:1})
-            this.setState({searchTitle:'', filterUUID:''})
+    componentDidMount(){
+        if(this.props.model && this.props.model.figuredata){
+            this.setState({
+                itemID : this.props.model.figuredata.interactiveid ? this.props.model.figuredata.interactiveid : "",
+                posterImage : this.props.model.figuredata.posterimage && this.props.model.figuredata.posterimage.path ? this.props.model.figuredata.posterimage.path : "", 
+                itemParentID: this.props.model.figuredata.interactiveparentid ? this.props.model.figuredata.interactiveparentid : "",
+                interactiveTitle: this.props.model.figuredata.interactivetitle? this.props.model.figuredata.interactivetitle : "",
+            
+            })
         }
     }
-    AssessmentSearchTitle = (searchTitle, filterUUID) => {
-        this.setState({searchTitle, filterUUID},()=>{
-            console.log("SetSate for filter", searchTitle + filterUUID)
-        });
-    }
 
-    componentDidMount(){
-        this.setState({
-            itemID : this.props.model.figuredata && this.props.model.figuredata.interactiveid ? this.props.model.figuredata.interactiveid : "",
-            posterImage : this.props.model.figuredata && this.props.model.figuredata.posterimage && this.props.model.figuredata.posterimage.path ? this.props.model.figuredata.posterimage.path : "", 
-            itemParentID: this.props.model.figuredata && this.props.model.figuredata.interactiveparentid ? this.props.model.figuredata.interactiveparentid : "",
-            interactiveTitle: this.props.model.figuredata && this.props.model.figuredata.interactivetitle? this.props.model.figuredata.interactivetitle : "",
-        
-        })
-    }
-    /**
-     * @description - This function is for accessing c2_assessment library for interactive.
-     * @param {event} value
-     */
-     
     static getDerivedStateFromProps(nextProps, prevState) {
         if('figuredata' in nextProps.model && 'interactivetype' in nextProps.model.figuredata && nextProps.model.figuredata.interactivetype !== prevState.elementType) {
             return {
@@ -91,287 +78,32 @@ class Interactive extends React.Component {
         return null;
     }
 
+    /**
+     * @description - This function is for rendering the Jsx Part of different Interactive Elements.
+     * @param {event} element
+     * @param {event} itemId
+     * @param {event} index
+     */
     renderInteractiveType = (element, itemId, index, slateLockInfo) => {
         let jsx, divImage, figureImage, heading4Label, heading4Title, dataType, id, imageDimension, figcaptionClass, paragraphCredit, hyperlinkClass,path;
         var context = element && element.figuredata && element.figuredata.interactivetype;
-        switch (context) {
 
-            case "fpo":
-                divImage = 'divImageTextWidth';
-                figureImage = 'figureImageTextWidth';
-                heading4Label = 'heading4ImageTextWidthNumberLabel';
-                heading4Title = 'heading4ImageTextWidthTitle';
-                dataType = 'image';
-                id = 'id-info';
-                imageDimension = 'imageTextWidth';
-                figcaptionClass = 'figcaptionImageTextWidth';
-                paragraphCredit = 'paragraphImageTextWidthCredit';
-                break;
+        /**------------------ Set classes for jsx based on interactivetype value ------------------*/
+        context = context == "imageSlideShow" ? "gallery-image" : context == "videoSlideShow" ? "gallery-video" : context;
 
-            case "flashcards":
-                divImage = 'divWidgetFlashcards';
-                figureImage = 'figureWidgetFlashcards';
-                heading4Label = 'heading4WidgetFlashcardsNumberLabel';
-                heading4Title = 'heading4WidgetFlashcardsTitle';
-                dataType = 'flashcards';
-                id = 'id-info';
-                imageDimension = 'imageWidgetFlashcards';
-                figcaptionClass = 'figcaptionWidgetFlashcards';
-                paragraphCredit = 'paragraphWidgetFlashcardsCredit';
-                break;
+        let interactiveData = interactiveTypeData.hasOwnProperty(context) === true ? interactiveTypeData[context] : interactiveTypeData["fpo"];
+        divImage = interactiveData['divImage'];
+        figureImage = interactiveData['figureImage'];
+        heading4Label = interactiveData['heading4Label'];
+        heading4Title = interactiveData['heading4Title'];
+        dataType = interactiveData['dataType'];
+        id = interactiveData['id'];
+        imageDimension = interactiveData['imageDimension'];
+        figcaptionClass = interactiveData['figcaptionClass'];
+        paragraphCredit = interactiveData['paragraphCredit'];
+        hyperlinkClass = interactiveData['hyperlinkClass'] ? interactiveData['hyperlinkClass'] : "";
 
-            case "pdf":
-                divImage = 'divWidgetPDF';
-                figureImage = 'figureWidgetPDF';
-                heading4Label = 'heading4WidgetPDFNumberLabel';
-                heading4Title = 'heading4WidgetPDFTitle';
-                dataType = 'pdf';
-                id = 'id-info';
-                imageDimension = '';
-                hyperlinkClass = 'buttonWidgetPDF';
-                path = 'PATH: ';
-                figcaptionClass = 'figcaptionWidgetPDF';
-                paragraphCredit = 'paragraphWidgetPDFCredit';
-                break;
-
-            case "3rd-party":
-                divImage = 'divWidget3PI';
-                figureImage = 'figureWidget3PI';
-                heading4Label = 'heading4Widget3PINumberLabel';
-                heading4Title = 'heading4Widget3PITitle';
-                dataType = '3pi';
-                id = 'id-info';
-                imageDimension = 'imageWidget3PI';
-                figcaptionClass = 'figcaptionWidget3PI';
-                paragraphCredit = 'paragraphWidget3PICredit';
-                break;
-
-            case "graph":
-                divImage = 'divWidgetGraph';
-                figureImage = 'figureWidgetVidSlideshow';
-                heading4Label = 'heading4WidgetGraphNumberLabel';
-                heading4Title = 'heading4WidgetGraphTitle';
-                dataType = 'graph';
-                id = 'id-info';
-                imageDimension = 'imageWidgetGraph';
-                figcaptionClass = 'figcaptionWidgetGraph';
-                paragraphCredit = 'paragraphWidgetGraphCredit';
-                break;
-
-            case "simulation":
-                divImage = 'divWidgetUCA';
-                figureImage = 'figureWidgetUCA';
-                heading4Label = 'heading4WidgetUCANumberLabel';
-                heading4Title = 'heading4WidgetUCATitle';
-                dataType = 'uca';
-                id = 'id-info';
-                imageDimension = 'imageWidgetUCA';
-                figcaptionClass = 'figcaptionWidgetUCA';
-                paragraphCredit = 'paragraphWidgetUCACredit';
-                break;
-
-            case "survey":
-                divImage = 'divWidgetSurvey';
-                figureImage = 'figureWidgetSurvey';
-                heading4Label = 'heading4WidgetSurveyNumberLabel';
-                heading4Title = 'heading4WidgetSurveyTitle';
-                dataType = 'uca';
-                id = 'id-info';
-                imageDimension = 'imageWidgetSurvey';
-                figcaptionClass = 'figcaptionWidgetSurvey';
-                paragraphCredit = 'paragraphWidgetSurveyCredit';
-                break;
-
-            case "timeline":
-                divImage = 'divWidgetTimeline';
-                figureImage = 'figureWidgetTimeline';
-                heading4Label = 'heading4WidgetTimelineNumberLabel';
-                heading4Title = 'heading4WidgetTimelineTitle';
-                dataType = 'timeline';
-                id = 'id-info';
-                imageDimension = 'imageWidgetTimeline';
-                figcaptionClass = 'figcaptionWidgetTimeline';
-                paragraphCredit = 'paragraphWidgetTimelineCredit';
-                break;
-
-            case "hotspot":
-                divImage = 'divWidgetHotspot';
-                figureImage = 'figureWidgetHotspot';
-                heading4Label = 'heading4WidgetHotspotNumberLabel';
-                heading4Title = 'heading4WidgetHotspotTitle';
-                dataType = 'hotspot';
-                id = 'id-info';
-                imageDimension = 'imageWidgetHotspot';
-                figcaptionClass = 'figcaptionWidgetHotspot';
-                paragraphCredit = 'paragraphWidgetHotspotCredit';
-                break;
-
-            case "accountingtable":
-                divImage = 'divWidgetAccountingtable';
-                figureImage = 'figureWidgetAccountingtable';
-                heading4Label = 'heading4WidgetAccountingtableNumberLabel';
-                heading4Title = 'heading4WidgetAccountingtableTitle';
-                dataType = 'accountingtable';
-                id = 'id-info';
-                imageDimension = 'imageWidgetAccountingtable';
-                figcaptionClass = 'figcaptionWidgetAccountingtable';
-                paragraphCredit = 'paragraphWidgetAccountingtableCredit';
-                break;
-
-            case "fill-in-blank":
-                divImage = 'divWidgetFIB';
-                figureImage = 'figureWidgetFIB';
-                heading4Label = 'heading4WidgetFIBNumberLabel';
-                heading4Title = 'heading4WidgetFIBTitle';
-                dataType = 'fib';
-                id = 'id-info';
-                imageDimension = 'imageWidgetFIB';
-                figcaptionClass = 'figcaptionWidgetFIB';
-                paragraphCredit = 'paragraphWidgetFIBCredit';
-                break;
-
-            case "gallery-image":
-                divImage = 'divWidgetImgSlideshow';
-                figureImage = 'figureWidgetImgSlideshow';
-                heading4Label = 'heading4WidgetImgSlideshowNumberLabel';
-                heading4Title = 'heading4WidgetImgSlideshowTitle';
-                dataType = 'imgSlideshow';
-                id = 'id-info';
-                imageDimension = 'imageWidgetImgSlideshow';
-                figcaptionClass = 'figcaptionWidgetImgSlideshow';
-                paragraphCredit = 'paragraphWidgetImgSlideshowCredit';
-                break;
-
-            case "gallery-video":
-                divImage = 'divWidgetVidSlideshow';
-                figureImage = 'figureWidgetVidSlideshow';
-                heading4Label = 'heading4WidgetVidSlideshowNumberLabel';
-                heading4Title = 'heading4WidgetVidSlideshowTitle';
-                dataType = 'vidSlideshow';
-                id = 'id-info';
-                imageDimension = 'imageWidgetVidSlideshow';
-                figcaptionClass = 'figcaptionWidgetVidSlideshow';
-                paragraphCredit = 'paragraphWidgetVidSlideshowCredit';
-                break;
-
-            case "video-mcq":
-            case "mcq":
-                divImage = 'divWidgetVideoMcq';
-                figureImage = 'figureWidgetVideoMcq';
-                heading4Label = 'heading4WidgetVideoMcqNumberLabel';
-                heading4Title = 'heading4WidgetVideoMcqTitle';
-                dataType = 'videoMcq';
-                id = 'id-info';
-                imageDimension = 'imageWidgetVideoMcq';
-                figcaptionClass = 'figcaptionWidgetVideoMcq';
-                paragraphCredit = 'paragraphWidgetVideoMcqCredit';
-                break;
-
-            // case "mcq":
-            //     divImage = 'divWidgetVideoMcq';
-            //     figureImage = 'figureWidgetVideoMcq';
-            //     heading4Label = 'heading4WidgetVideoMcqNumberLabel';
-            //     heading4Title = 'heading4WidgetVideoMcqTitle';
-            //     dataType = 'videoMcq';
-            //     id = 'id-info';
-            //     imageDimension = 'imageWidgetVideoMcq';
-            //     figcaptionClass = 'figcaptionWidgetVideoMcq';
-            //     paragraphCredit = 'paragraphWidgetVideoMcqCredit';
-            //     break;
-
-            case "pop-up-web-link":
-            case "web-link":
-                divImage = 'divWidgetPUSL';
-                figureImage = 'figureWidgetPUSL';
-                heading4Label = 'heading4WidgetPUSLNumberLabel';
-                heading4Title = 'heading4WidgetPUSLTitle';
-                dataType = 'pusl';
-                id = 'id-info';
-                imageDimension = '';
-                hyperlinkClass = 'buttonWidgetPUSL';
-                figcaptionClass = 'figcaptionWidgetPUSL';
-                paragraphCredit = 'paragraphWidgetPUSLCredit';
-                break;
-
-            // case "web-link":
-            //     divImage = 'divWidgetPUSL';
-            //     figureImage = 'figureWidgetPUSL';
-            //     heading4Label = 'heading4WidgetPUSLNumberLabel';
-            //     heading4Title = 'heading4WidgetPUSLTitle';
-            //     dataType = 'pusl';
-            //     id = 'id-info';
-            //     imageDimension = '';
-            //     hyperlinkClass = 'buttonWidgetPUSL';
-            //     figcaptionClass = 'figcaptionWidgetPUSL';
-            //     paragraphCredit = 'paragraphWidgetPUSLCredit';
-            //     break;
-
-            case "table":
-                divImage = 'divWidgetTableSL';
-                figureImage = 'figureWidgetTableSL';
-                heading4Label = 'heading4WidgetTableSLNumberLabel';
-                heading4Title = 'heading4WidgetTableSLTitle';
-                dataType = 'tablesl';
-                id = 'id-info';
-                imageDimension = 'imageWidgetTableSL';
-                hyperlinkClass = '';
-                figcaptionClass = 'figcaptionWidgetTableSL';
-                paragraphCredit = 'paragraphWidgetTableSLCredit';
-                break;
-
-            case "popup":
-                divImage = 'divWidgetPU';
-                figureImage = 'figureWidgetPU';
-                heading4Label = 'heading4WidgetPUNumberLabel';
-                heading4Title = 'heading4WidgetPUTitle';
-                dataType = 'pu';
-                id = 'id-info';
-                imageDimension = '';
-                hyperlinkClass = 'buttonWidgetPU';
-                figcaptionClass = 'figcaptionWidgetPU';
-                paragraphCredit = 'paragraphWidgetPUCredit';
-                break;
-
-            case "guided-example":
-                divImage = 'divWidgetGuidedExample';
-                figureImage = 'figureWidgetGuidedExample';
-                heading4Label = 'heading4WidgetGuidedExampleNumberLabel';
-                heading4Title = 'heading4WidgetGuidedExampleTitle';
-                dataType = 'guidedExample';
-                id = 'id-info';
-                imageDimension = 'imageWidgetGuidedExample';
-                figcaptionClass = 'figcaptionWidgetGuidedExample';
-                paragraphCredit = 'paragraphWidgetGuidedExampleCredit';
-                break;
-
-        }
-        if (context === 'showhide') {
-            jsx = <div className="divWidgetShowHide" resource="">
-                <figure className="figureWidgetShowHide" resource="">
-                    <header>
-                        <h4 className="heading4WidgetShowHideTitle" resource=""></h4>
-                    </header>
-                    <div className="pearson-component showHide" data-uri="" data-type="showHide" data-width="600" data-height="399" >
-                        <div data-reactroot="">
-                            <div className="sh-container">
-                                <div>
-                                    <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} index={`${index}-0`} className="paragraphShowHideWidgetQuestionText" placeholder="Enter shown text" tagName={'p'} 
-                                     model={element.html.title} id={this.props.id} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} />
-                                    <p className="paragraphNumeroUno revealAns" resource="" aria-label="Reveal Answer">
-                                    <a className="paragraphNumeroUno">
-                                        <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} index={`${index}-1`} placeholder="Enter hidden text" 
-                                        id={this.props.id} tagName={'p'}
-                                        model={element.html.subtitle}  handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} /></a>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <figcaption className="figcaptionWidgetShowHide" resource=""></figcaption>
-                </figure>
-                <p className="paragraphWidgetShowHideCredit"></p>
-            </div>
-        }else if(context === 'video-mcq' || context === 'mcq' || context === "guided-example" ) {
+        if(context === 'video-mcq' || context === 'mcq' || context === "guided-example" ) {
             jsx = <div className={divImage} resource="">
                 <figure className={figureImage} resource="">
                     <header>
@@ -383,8 +115,7 @@ class Interactive extends React.Component {
                     <div className={id} onClick={()=> this.handleClickElement()}><strong>{path ? path : 'ITEM ID: '} </strong>{this.state.itemID?this.state.itemID : itemId}</div>
                     <div className={"pearson-component " + dataType} data-uri={this.state.itemID?this.state.itemID : itemId} data-type={dataType} data-width="600" data-height="399" onClick={(e)=>{this.togglePopup(e,true)}} >
 
-                        <img src={this.state.imagePath ? this.state.imagePath : "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"} title="View Image" alt=""
-                            className={imageDimension + " lazyload"} />
+                        <img src={this.state.imagePath ? this.state.imagePath : INTERACTIVE_FPO} title="View Image" alt="" className={imageDimension + " lazyload"} />
 
                     </div>
                     <figcaption>
@@ -408,17 +139,15 @@ class Interactive extends React.Component {
                              handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} />
                     </header>
                     <div className={id} onClick={(event)=> this.handleClickElement(event)}><strong>{path ? path : 'ITEM ID: '} </strong>{this.state.itemID?this.state.itemID : itemId}</div>
+{/**add check for elm interactive*/}{<div className={id} onClick={(event) => this.handleClickElement(event)}><strong>{path ? path : 'INTERACTIVE TITLE: '} </strong>{this.state.interactiveTitle ? this.state.interactiveTitle : ""}</div>}
                     <div className={"pearson-component " + dataType} data-uri="" data-type={dataType} data-width="600" data-height="399" onClick={(e)=>{this.togglePopup(e,true)}} >
                         {
                             imageDimension !== '' ?
                                 (context === 'table' ?
                                     <a className="" href="javascript:void(0)">
-                                        <img src={this.state.posterImage?this.state.posterImage:"https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"}
-                                            data-src="https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png" title="View Image" alt=""
-                                            className={imageDimension + " lazyload"} />
+                                        <img src={this.state.posterImage ? this.state.posterImage : INTERACTIVE_FPO} data-src={INTERACTIVE_FPO} title="View Image" alt="" className={imageDimension + " lazyload"} />
                                     </a>
-                                    : <img src={this.state.posterImage?this.state.posterImage:"https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"} title="View Image" alt=""
-                                        className={imageDimension + " lazyload"} />
+                                    : <img src={this.state.posterImage ? this.state.posterImage : INTERACTIVE_FPO} title="View Image" alt="" className={imageDimension + " lazyload"} />
                                 )
                                 : 
                                  <a className={hyperlinkClass} href="javascript:void(0)">
@@ -443,9 +172,8 @@ class Interactive extends React.Component {
 
     /**
      * @description - This purpose of this function is for only handling the focus of container w.r.t interactive .
-     * @param {event} 
+     * @param {event} event
      */
-
     handleClickElement = (event) => {
         event.stopPropagation();
     }
@@ -454,7 +182,6 @@ class Interactive extends React.Component {
      * @description - This function is for toggling the c2 media uuid popup.
      * @param {event} value
      */
-
     togglePopup = (e,value)=>{
         if(hasReviewerRole()){
             return true;
@@ -466,7 +193,7 @@ class Interactive extends React.Component {
             }
             this.handleC2MediaClick(e);
         }
-        else if(this.props.model.figuredata.interactiveformat === "mmi"){
+        /** else if(this.props.model.figuredata.interactiveformat === "mmi"){
             this.props.assessmentSorting("","");
             sendDataToIframe({ 'type': 'hideToc', 'message': {} });
             this.props.showBlocker(value);
@@ -494,6 +221,16 @@ class Interactive extends React.Component {
                     showAssessmentPopup: value
                 });
             }
+        }*/
+        else if (this.props.model.figuredata.interactiveformat==="mmi"){
+            this.setState({
+                showElmComponent: true
+            })
+            sendDataToIframe({ 'type': 'hideToc', 'message': {} });
+            showTocBlocker(true);
+            disableHeader(true);
+            this.props.showBlocker(true);
+            this.props.handleFocus();
         }
         else {
             this.props.showBlocker(value);
@@ -504,6 +241,36 @@ class Interactive extends React.Component {
         }
     }
 
+    /**---------------- This section consists of Elm Interactive related methods ----------------*/
+    /*** @description This function is to close ELM PopUp */
+    closeElmWindow = () => {
+        this.setState({
+            showElmComponent: false
+        });
+        hideTocBlocker(false);
+        disableHeader(false);
+        this.props.showBlocker(false);
+    }
+
+    /**
+     * @description This function is to add Elm Interactive Asset ot Interactive Element 
+     * @param {Object} pufObj Objeact containing elmInteractive Asset details
+    */
+    addElmInteractive = (pufObj) => {
+        showTocBlocker();
+        disableHeader(true);
+        this.setState({
+            itemID: pufObj.id,
+            interactiveTitle: pufObj.title,
+            interactiveType: pufObj.interactiveType
+        })
+    }
+    /**------------------------------------------------------------------------------------------*/
+    
+    /**---------------- This section consists of Alfresco Assets related methods ----------------*/
+    /**
+     * @description function will be called on image src add and fetch resources from Alfresco
+     */
     dataFromAlfresco = (data) => {
         hideTocBlocker();
         disableHeader(false);
@@ -548,7 +315,7 @@ class Interactive extends React.Component {
                 }
                 // let posterURL = imageData['posterImageUrl'] || 'https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png';
                 if (epsURL == "" || epsURL == undefined) {
-                    epsURL = imageData['posterImageUrl'] ? imageData['posterImageUrl'] : "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png";
+                    epsURL = imageData['posterImageUrl'] ? imageData['posterImageUrl'] : INTERACTIVE_FPO;
                 }
                 let vendorName = imageData['vendorName'];
                 let mobileready = imageData['smartlinkoptimizedmobileval'];
@@ -558,7 +325,7 @@ class Interactive extends React.Component {
                     height: height,
                     width: width,
                     mobileready: mobileready,
-                    schema: "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+                    schema: INTERACTIVE_SCHEMA,
                     interactiveid: uniqueIDInteractive,
                     interactivetype: interactivetype,
                     interactiveformat: "external-link",
@@ -593,7 +360,8 @@ class Interactive extends React.Component {
     }
 
     /**
-     * @description function will be called on image src add and fetch resources from Alfresco
+     * @description - This function is for accessing c2_assessment library for interactive.
+     * @param {event} e
      */
     handleC2MediaClick = (e) => {
         this.props.handleFocus();
@@ -695,6 +463,9 @@ class Interactive extends React.Component {
         }
 
     }
+    /**------------------------------------------------------------------------------------------*/
+
+    /**---------------- This section consists of CITE/TDX Asset related methods -----------------*/
     /*** @description - This function is to close CITE/TDX PopUp
     */
    closeWindowAssessment = () => {
@@ -708,6 +479,7 @@ class Interactive extends React.Component {
     disableHeader(false);
     this.props.showBlocker(false);
     }
+
     assessmentNavigateBack = () => {
         this.props.setCurrentInnerCiteTdx({});
         if(this.state.openedFrom === "singleAssessment"){
@@ -717,6 +489,22 @@ class Interactive extends React.Component {
             showAssessmentPopup: true,
             showSinglePopup:false,
             openedFrom:''
+        });
+    }
+
+    resetPage = (isReset, isSearch=false) => {
+        this.setState({isReset})
+        if(isReset && isSearch){
+            this.setState({parentPageNo:1})
+        } else if (isReset){
+            this.setState({parentPageNo:1})
+            this.setState({searchTitle:'', filterUUID:''})
+        }
+    }
+    
+    AssessmentSearchTitle = (searchTitle, filterUUID) => {
+        this.setState({searchTitle, filterUUID},()=>{
+            console.log("SetSate for filter", searchTitle + filterUUID)
         });
     }
 
@@ -752,7 +540,7 @@ class Interactive extends React.Component {
             let that = this;
            
                let figureData = {
-                   schema: "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+                   schema: INTERACTIVE_SCHEMA,
                    interactiveid: citeTdxObj.singleAssessmentID.versionUrn,
                    interactiveparentid:citeTdxObj.id,
                    interactivetitle:citeTdxObj.title,
@@ -780,15 +568,11 @@ class Interactive extends React.Component {
         }
         
     }
-    /**
-     * @description - This function is for rendering the Jsx Part of different Interactive Elements.
-     * @param {event} element
-     * @param {event} itemId
-     * @param {event} index
-     */
+    /**------------------------------------------------------------------------------------------*/
+
 
     render() {
-        const { model, itemId, index, slateLockInfo } = this.props;
+        const { model, itemId, index, slateLockInfo, interactiveType } = this.props;
         try {
             return (
                
@@ -796,6 +580,7 @@ class Interactive extends React.Component {
                         {this.renderInteractiveType(model, itemId, index, slateLockInfo)}
                         {this.state.showAssessmentPopup? <RootCiteTdxComponent openedFrom = {'singleSlateAssessment'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.elementType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAsseessmentUsageType} parentPageNo={this.state.parentPageNo} resetPage={this.resetPage} isReset={this.state.isReset} AssessmentSearchTitle={this.AssessmentSearchTitle} searchTitle={this.state.searchTitle} filterUUID={this.state.filterUUID} />:""}
                         {this.state.showSinglePopup ? <RootSingleAssessmentComponent setCurrentAssessment ={this.state.setCurrentAssessment} activeAssessmentType={this.state.activeAssessmentType} openedFrom = {'singleSlateAssessmentInner'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.activeAssessmentType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAssessmentUsageType} assessmentNavigateBack = {this.assessmentNavigateBack} resetPage={this.resetPage}/>:""}
+                        {this.state.showElmComponent? <RootElmSingleAssessment activeAssessmentType={model.figuredata.interactiveformat} closeElmWindow={() => this.closeElmWindow()} addPufFunction={this.addElmInteractive} /> : ''}
                     </div>
                 
             )

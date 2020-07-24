@@ -28,7 +28,8 @@ import {
     stanzaIcon,
     blockTextIcon,
     tableElemIcon,
-    multiColumnContainer
+    multiColumnContainer,
+    elmInteractiveIcon
 } from '../../images/ElementButtons/ElementButtons.jsx';
 import deleteIcon from '../../images/ElementButtons/deleteIcon.png'
 import forwardNavActive from '../../images/ElementButtons/forwardNavActive.png'
@@ -201,6 +202,11 @@ class ElementButton extends Component {
             case buttonTypes.MULTI_COLUMN_CONTAINER:
                 buttonJSX = <span className="btn-element multi-column-group" onClick={clickHandlerFn}>
                     {multiColumnContainer}
+                </span>
+                break;
+            case ButtonTypes.ELM_INTERACTIVE_ICON:
+                buttonJSX = <span className="" onClick={clickHandlerFn}>
+                    {elmInteractiveIcon}
                 </span>
                 break;
         }

@@ -624,6 +624,9 @@ class SlateWrapper extends Component {
             case 'multi-column-group':
                 this.props.createElement(MULTI_COLUMN, indexToinsert, parentUrn, asideData, null, null, null, null)
                 break;
+            case 'elm-interactive-elem':
+                this.props.createElement(ELM_INTERACTIVE, indexToinsert, parentUrn, asideData, null, null, null);
+                break;
             case 'text-elem':
             default:
                 this.props.createElement(TEXT, indexToinsert, parentUrn, asideData, null, null, null);
