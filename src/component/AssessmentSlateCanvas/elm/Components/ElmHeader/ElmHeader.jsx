@@ -4,16 +4,23 @@
 import React from 'react';
 import '../../../../../styles/AssessmentSlateCanvas/elm/RootElmComponent.css';
 import Button from './../../../../ElementButtons';
-import { LEARNOSITY_BETA, LEARNOSITY } from '../../../AssessmentSlateConstants';
+import { LEARNOSITY_BETA, LEARNOSITY, ELM_INT } from '../../../AssessmentSlateConstants';
 const ElmHeader = (props) => {
 
     const { closeElmWindow, activeAssessmentType } = props;
     const setHeaderTitle = (type) => {
         let header = "";
-        if (type == LEARNOSITY_BETA || type == LEARNOSITY) {
-            header = "Learnosity Assessments";
-        } else {
-            header = "Elm Assessments";
+        switch (type) {
+            case ELM_INT:
+                header = "Interactives";
+                break;
+            case LEARNOSITY_BETA:
+            case LEARNOSITY:
+                header = "Learnosity Assessments";
+                break;
+            default:
+                header = "Elm Assessments";
+                break;
         }
         return header
     }

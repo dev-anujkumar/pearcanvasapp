@@ -973,6 +973,7 @@ class ElementContainer extends Component {
         /** Handle TCM for tcm enable elements */
         let tcm = false;
         let feedback = false;
+        let isQuadInteractive = "";
         tcm = tcmData.filter(tcmelm => {
             let elementUrn = tcmelm.elemURN;
             return (element.id.includes('urn:pearson:work') && elementUrn.indexOf(element.id) !== -1) && tcmelm.txCnt && tcmelm.txCnt > 0}).length>0;
@@ -1021,18 +1022,10 @@ class ElementContainer extends Component {
                             labelText = 'Qu';
                             break;
                         case elementTypeConstant.INTERACTIVE:
-                            switch (element.figuredata.interactiveformat) {
-                                case elementTypeConstant.INTERACTIVE_MMI:
-                                    editor = <ElementInteractive accessDenied={this.props.accessDenied} showBlocker={this.props.showBlocker} updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} />;
-                                    let interactiveType = element.figuredata.interactivetype
-                                    labelText = interactiveType == 'showhide' ? 'SH' : interactiveType == 'elminteractive' ? 'ELM' : 'Quad';
-                                    break;
-                                case elementTypeConstant.INTERACTIVE_EXTERNAL_LINK:
-                                case elementTypeConstant.INTERACTIVE_NARRATIVE_LINK:
-                                    editor = <ElementInteractive accessDenied={this.props.accessDenied} showBlocker={this.props.showBlocker} updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} />;
-                                    labelText = LABELS[element.figuredata.interactiveformat];
-                                    break;
-                            }
+                            editor = <ElementInteractive accessDenied={this.props.accessDenied} showBlocker={this.props.showBlocker} updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} />;
+                            labelText = LABELS[element.figuredata.interactiveformat];
+                            isQuadInteractive = labelText === "Quad" ? "quad-interactive" : "";
+                            break;
                     }
                     break;
                 case elementTypeConstant.ELEMENT_LIST:
@@ -1248,6 +1241,7 @@ class ElementContainer extends Component {
 
         let borderToggle = this.state.borderToggle;
         let btnClassName = this.state.btnClassName;
+        
         let bceOverlay = "";
         let elementOverlay = ''
         if (!hasReviewerRole() && this.props.permissions && !(this.props.permissions.includes('access_formatting_bar')||this.props.permissions.includes('elements_add_remove')) ) {
@@ -1260,11 +1254,10 @@ class ElementContainer extends Component {
                 btnClassName = '';
             }
         }
-
         return (
             <div className="editor" data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
-                    <Button type="element-label" btnClassName={`${btnClassName} ${this.state.isOpener ? ' ignore-for-drag' : ''}`} labelText={labelText}  onClick={(event) => this.labelClickHandler(event)} />
+                    <Button type="element-label" btnClassName={`${btnClassName} ${isQuadInteractive} ${this.state.isOpener ? ' ignore-for-drag' : ''}`} labelText={labelText}  onClick={(event) => this.labelClickHandler(event)} />
                     {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && config.slateType !== 'assessment' ? (<Button type="delete-element" onClick={(e) => this.showDeleteElemPopup(e,true)} />)
                         : null}
                     {this.renderColorPaletteButton(element, permissions)}

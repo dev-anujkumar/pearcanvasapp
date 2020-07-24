@@ -113,11 +113,13 @@ const findElementType = (element, index) => {
                         break;
                     case "interactive":
                         altText = element.figuredata.alttext ? element.figuredata.alttext : "";
+                        let interactiveFormat = element.figuredata.interactiveformat;
+                        let interactiveData = (interactiveFormat == "mmi" || interactiveFormat == "elminteractive") ? element.figuredata.interactiveformat : element.figuredata.interactivetype;
                         elementType = {
                             elementType: elementDataBank[element.type][element.figuretype]["elementType"],
-                            primaryOption: elementDataBank[element.type][element.figuretype][element.figuredata.interactivetype]["primaryOption"],
-                            secondaryOption: elementDataBank[element.type][element.figuretype][element.figuredata.interactivetype]["secondaryOption"],
-                            altText
+                            primaryOption: elementDataBank[element.type][element.figuretype][interactiveData]["primaryOption"],
+                            altText,
+                            ...elementDataBank[element.type][element.figuretype][interactiveData]
                         }
                         break;
                     case "assessment":

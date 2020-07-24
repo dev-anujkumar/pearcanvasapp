@@ -87,9 +87,7 @@ class Interactive extends React.Component {
     renderInteractiveType = (element, itemId, index, slateLockInfo) => {
         let jsx, divImage, figureImage, heading4Label, heading4Title, dataType, id, imageDimension, figcaptionClass, paragraphCredit, hyperlinkClass,path;
         var context = element && element.figuredata && element.figuredata.interactivetype;
-
         /**------------------ Set classes for jsx based on interactivetype value ------------------*/
-        context = context == "imageSlideShow" ? "gallery-image" : context == "videoSlideShow" ? "gallery-video" : context;
 
         let interactiveData = interactiveTypeData.hasOwnProperty(context) === true ? interactiveTypeData[context] : interactiveTypeData["fpo"];
         divImage = interactiveData['divImage'];
@@ -133,14 +131,14 @@ class Interactive extends React.Component {
             jsx = <div className={divImage} resource="">
                 <figure className={figureImage} resource="">
                     <header>
-                            <TinyMceEditor  permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} index={`${index}-0`} className={heading4Label + ' figureLabel'} id={this.props.id} placeholder="Enter Label..." tagName={'h4'} model={element.html.title}
-                              handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} />
-                            <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} index={`${index}-1`} className={heading4Title + ' figureTitle'} id={this.props.id} placeholder="Enter Title..." tagName={'h4'} model={element.html.subtitle}
-                             handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} />
+                        <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} index={`${index}-0`} className={heading4Label + ' figureLabel'} id={this.props.id} placeholder="Enter Label..." tagName={'h4'} model={element.html.title}
+                            handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} />
+                        <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} index={`${index}-1`} className={heading4Title + ' figureTitle'} id={this.props.id} placeholder="Enter Title..." tagName={'h4'} model={element.html.subtitle}
+                            handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} />
                     </header>
-                    <div className={id} onClick={(event)=> this.handleClickElement(event)}><strong>{path ? path : 'ITEM ID: '} </strong>{this.state.itemID?this.state.itemID : itemId}</div>
-{/**add check for elm interactive*/}{<div className={id} onClick={(event) => this.handleClickElement(event)}><strong>{path ? path : 'INTERACTIVE TITLE: '} </strong>{this.state.interactiveTitle ? this.state.interactiveTitle : ""}</div>}
-                    <div className={"pearson-component " + dataType} data-uri="" data-type={dataType} data-width="600" data-height="399" onClick={(e)=>{this.togglePopup(e,true)}} >
+                    <div className={id} onClick={(event) => this.handleClickElement(event)}><strong>{path ? path : 'ITEM ID: '} </strong>{this.state.itemID ? this.state.itemID : itemId}</div>
+                    {element.figuredata.interactiveformat === "elminteractive" && <div className={id} onClick={(event) => this.handleClickElement(event)}><strong>{path ? path : 'INTERACTIVE TITLE: '} </strong>{this.state.interactiveTitle ? this.state.interactiveTitle : ""}</div>}
+                    <div className={"pearson-component " + dataType} data-uri="" data-type={dataType} data-width="600" data-height="399" onClick={(e) => { this.togglePopup(e, true) }} >
                         {
                             imageDimension !== '' ?
                                 (context === 'table' ?
@@ -193,7 +191,7 @@ class Interactive extends React.Component {
             }
             this.handleC2MediaClick(e);
         }
-        /** else if(this.props.model.figuredata.interactiveformat === "mmi"){
+        else if(this.props.model.figuredata.interactiveformat === "mmi"){
             this.props.assessmentSorting("","");
             sendDataToIframe({ 'type': 'hideToc', 'message': {} });
             this.props.showBlocker(value);
@@ -221,8 +219,8 @@ class Interactive extends React.Component {
                     showAssessmentPopup: value
                 });
             }
-        }*/
-        else if (this.props.model.figuredata.interactiveformat==="mmi"){
+        }
+        else if (this.props.model.figuredata.interactiveformat==="elminteractive"){
             this.setState({
                 showElmComponent: true
             })
@@ -465,10 +463,10 @@ class Interactive extends React.Component {
     }
     /**------------------------------------------------------------------------------------------*/
 
-    /**---------------- This section consists of CITE/TDX Asset related methods -----------------*/
+    /**---------------- This section consists of CITE/TDX Assets related methods ----------------*/
     /*** @description - This function is to close CITE/TDX PopUp
     */
-   closeWindowAssessment = () => {
+    closeWindowAssessment = () => {
     this.props.setCurrentCiteTdx({});
     this.props.setCurrentInnerCiteTdx({});
     this.setState({

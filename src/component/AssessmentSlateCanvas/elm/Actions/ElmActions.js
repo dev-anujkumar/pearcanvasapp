@@ -1,5 +1,5 @@
 import config from '../../../../config/config';
-import {FULL_ASSESSMENT_PUF, LEARNOSITY, LEARNOSITY_BETA} from '../../AssessmentSlateConstants';
+import { LEARNOSITY, LEARNOSITY_BETA} from '../../AssessmentSlateConstants';
 import axios from 'axios';
 
 /**
@@ -8,7 +8,7 @@ import axios from 'axios';
 export const insertElmResourceAction = (assessmentType) => (dispatch) => {
     dispatch({ type: 'SET_ELM_LOADING_TRUE', payload: { elmLoading: true } });
 
-    let url =`${assessmentType === FULL_ASSESSMENT_PUF ?`${config.ELM_ENDPOINT}`:`${config.LERNOSITY_ENDPOINT}`}v2/${config.projectUrn}/alignments/resources`;
+    let url =`${config.ELM_ENDPOINT}v2/${config.projectUrn}/alignments/resources`;
     return axios.get(url, {
           headers:  {
             ApiKey: config.STRUCTURE_APIKEY,
