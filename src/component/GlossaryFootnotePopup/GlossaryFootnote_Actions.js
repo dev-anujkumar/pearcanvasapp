@@ -341,7 +341,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         let currentParentData = JSON.parse(JSON.stringify(parentData1));
         let currentSlateData = currentParentData[config.slateManifestURN];
         /** [PCAT-8289] ----------------------------------- TCM Snapshot Data handling ---------------------------------*/
-        if (elementTypeData.indexOf(elementType) !== -1) {
+        if (elementTypeData.indexOf(elementType) !== -1 && data.metaDataField == undefined  && data.sectionType == undefined) {
             let elementUpdateData ={
                 currentSlateData: {
                     status: currentSlateData.status,
@@ -552,6 +552,11 @@ store.dispatch({
  * @param {Function} dispatch to dispatch tcmSnapshots
 */
 export const tcmSnapshotsForGlossaryFootnote = async (elementUpdateData, elementIndex, containerElement, dispatch) => {
+    let actionStatus = {
+        action:"update",
+        status:"",
+        fromWhere:"update"
+    }
     let wipData = fetchElementWipData(elementUpdateData.tcmBodymatter, elementIndex, elementUpdateData.response.type,"");
     let versionStatus = fetchManifestStatus(elementUpdateData.tcmBodymatter, containerElement, elementUpdateData.response.type);
     /** latest version for WE/CE/PE/AS*/
@@ -565,11 +570,14 @@ export const tcmSnapshotsForGlossaryFootnote = async (elementUpdateData, element
             oldData.elementdata = wipData.elementdata
         }
         oldData.html = wipData.html;
+        let actionStatusVersioning = Object.assign({}, actionStatus);
+        actionStatusVersioning.action="create"
+        actionStatusVersioning.status ="accepted"
         /** After versioning snapshots*/
-        dispatch(prepareTcmSnapshots(oldData, 'create', containerElement, "", "accepted",""))
+        prepareTcmSnapshots(oldData, actionStatusVersioning, containerElement, "","");
     }
     /** Before versioning snapshots*/
-    dispatch(prepareTcmSnapshots(elementUpdateData.response, 'update', containerElement, "", "",""))
+    prepareTcmSnapshots(elementUpdateData.response, actionStatus, containerElement, "","");
 }
 
 /**

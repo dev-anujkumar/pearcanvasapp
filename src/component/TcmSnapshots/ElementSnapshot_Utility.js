@@ -16,39 +16,38 @@ let elementType = ['element-authoredtext', 'element-list', 'element-blockfeature
  * @param {Object} element - wipData for element
  * @returns {Object} All snapshots for Glossary/Footnote/Asset_Popover for given element
 */
-export const setSemanticsSnapshots = async (status, element) => {
+export const setSemanticsSnapshots = async (element,actionStatus) => {
     let glossarySnap, footnoteSnap, assetPopoverSnap, glossaryList, footnoteList, assetPopoverList;
     let semanticSnapshots = {};
+   
     switch (element.type) {
+        
         case 'element-authoredtext':
+            console.log(element.elementdata,"kanika",element.type)
             glossaryList = element.elementdata && element.elementdata.glossaryentries && !element.elementdata.headers ? element.elementdata.glossaryentries : [];
-            glossarySnap = prepareGlossarySnapshotContent(status, glossaryList);
+            glossarySnap = prepareGlossarySnapshotContent(actionStatus, glossaryList);
+           
             footnoteList = element.elementdata && element.elementdata.footnotes ? element.elementdata.footnotes : [];
-            footnoteSnap = prepareFootnoteSnapshotContent(status, footnoteList);
+            footnoteSnap = prepareFootnoteSnapshotContent(actionStatus, footnoteList);
             assetPopoverList = element.elementdata && element.elementdata.internallinks ? element.elementdata.internallinks : [];
             assetPopoverSnap = await prepareAssetPopoverSnapshotContent(assetPopoverList)
             break;
 
+        case 'stanza':
         case 'element-list':
-            glossarySnap =  await setSnapshotsInListAndPoetry(status, element.elementdata.listitems, 'glossary');
-            footnoteSnap =  await setSnapshotsInListAndPoetry(status, element.elementdata.listitems, 'footnote');
-            assetPopoverSnap =  await setSnapshotsInListAndPoetry(status, element.elementdata.listitems, 'assetpopover');
+            let listData = element.type === "element-list" ? element.elementdata.listitems: element.poetrylines
+            glossarySnap =  await setSnapshotsInListAndPoetry(actionStatus, listData, 'glossary');
+            footnoteSnap =  await setSnapshotsInListAndPoetry(actionStatus, listData, 'footnote');
+            assetPopoverSnap =  await setSnapshotsInListAndPoetry("", listData, 'assetpopover');
             break;
 
         case 'element-blockfeature':
             glossarySnap = [];
             footnoteList = element.elementdata && element.elementdata.authoredtext && element.elementdata.authoredtext.footnotes ? element.elementdata.authoredtext.footnotes : [];
-            footnoteSnap = prepareFootnoteSnapshotContent(status, footnoteList)
+            footnoteSnap = prepareFootnoteSnapshotContent(actionStatus, footnoteList)
             assetPopoverList = element.elementdata && element.elementdata.authoredtext && element.elementdata.authoredtext.internallinks ? element.elementdata.authoredtext.internallinks : [];
             assetPopoverSnap = await prepareAssetPopoverSnapshotContent(assetPopoverList)
             break;
-
-        case 'stanza':
-            glossarySnap = await setSnapshotsInListAndPoetry(status, element.poetrylines, 'glossary');
-            footnoteSnap = await setSnapshotsInListAndPoetry(status, element.poetrylines, 'footnote');
-            assetPopoverSnap = await setSnapshotsInListAndPoetry(status, element.poetrylines, 'assetpopover');
-            break;
-
         default:
             glossarySnap = [];
             footnoteSnap = [];
@@ -72,23 +71,23 @@ export const setSemanticsSnapshots = async (status, element) => {
  * @param {Array} elementList - List of Glossary/Footnote/Asset_Popover entries in a List/Poetry element
  * @returns {Array} All snapshots for given semantic - Glossary/Footnote/Asset_Popover for List and Poetry element  
 */
-const setSnapshotsInListAndPoetry = async (status, elementList, semanticType) => {
+const setSnapshotsInListAndPoetry = async (actionStatus, elementList, semanticType) => {
     let snapshotsList = []
     await Promise.all(elementList.map( async item => {
         if ((item.type == "paragraph" || item.type == "line") && item.authoredtext) {
             if (semanticType === 'glossary') {
                 let glossaryArray = item.authoredtext.glossaryentries ? item.authoredtext.glossaryentries : [];
-                snapshotsList = snapshotsList.concat(prepareGlossarySnapshotContent(status, glossaryArray));
+                snapshotsList = snapshotsList.concat(prepareGlossarySnapshotContent(actionStatus, glossaryArray));
             } else if (semanticType === 'footnote') {
                 let footnoteArray = item.authoredtext.footnotes ? item.authoredtext.footnotes : [];
-                snapshotsList = snapshotsList.concat(prepareFootnoteSnapshotContent(status, footnoteArray));
+                snapshotsList = snapshotsList.concat(prepareFootnoteSnapshotContent(actionStatus, footnoteArray));
             } else if (semanticType === 'assetpopover') {
                 let assetLists = item.authoredtext.internallinks ? item.authoredtext.internallinks : [];
                 let assetSnapList = assetLists.length != 0 ? await prepareAssetPopoverSnapshotContent(assetLists) : [];
                 snapshotsList = snapshotsList.concat(assetSnapList);
             }
         } else if (item.listitems && item.listitems.length > 0) { // for nested lists
-            snapshotsList = snapshotsList.concat(setSnapshotsInListAndPoetry(status, item.listitems, semanticType));
+            snapshotsList = snapshotsList.concat(await setSnapshotsInListAndPoetry(actionStatus, item.listitems, semanticType));
         }
     }))
     return snapshotsList
@@ -101,12 +100,12 @@ const setSnapshotsInListAndPoetry = async (status, elementList, semanticType) =>
  * @param {Array} glossaryList - List of Glossary entries
  * @returns {Array} All  Glossary Snapshots for given element 
 */
-const prepareGlossarySnapshotContent = (status, glossaryList) => {
+const prepareGlossarySnapshotContent = (actionStatus, glossaryList) => {
     let glossarySnap = []
     glossaryList && glossaryList.length && glossaryList.map(glossaryItem => {
         let glossaryData = {
-            changeStatus: status.charAt(0).toUpperCase() + status.slice(1),
-            changeType: "Update",
+            changeStatus: actionStatus.status.charAt(0).toUpperCase() + actionStatus.status.slice(1),
+            changeType: actionStatus.action,
             charAt: glossaryItem.charAt,
             glossaryId: glossaryItem.itemid
         }
@@ -129,12 +128,12 @@ const prepareGlossarySnapshotContent = (status, glossaryList) => {
  * @param {Array} footnoteList - List of Footnote entries
  * @returns {Array} All Footnote Snapshots for given element 
 */
-const prepareFootnoteSnapshotContent = (status, footnoteList) => {
+const prepareFootnoteSnapshotContent = (actionStatus, footnoteList) => {
     let footnoteSnap = []
     footnoteList && footnoteList.length && footnoteList.map(footnoteItem => {
         let footnoteData = {
-            changeStatus: status.charAt(0).toUpperCase() + status.slice(1),
-            changeType: "Update",
+            changeStatus: actionStatus.status.charAt(0).toUpperCase() + actionStatus.status.slice(1),
+            changeType: actionStatus.action,
             charAt: footnoteItem.charAt,
             footnoteid: footnoteItem.footnoteid
         };
@@ -156,15 +155,20 @@ const prepareFootnoteSnapshotContent = (status, footnoteList) => {
 */
 export const prepareAssetPopoverSnapshotContent = async (assetsList) => {
     let assetPopoverSnap = []
-    await Promise.all( assetsList && assetsList.length && assetsList.map(async assetsItem => {
-       await getCurrentlyLinkedImage(assetsItem.linkid, (resCurrentlyLinkedImageData) => {
-            assetPopoverSnap.push({
-                assetid: assetId,
-                linkID: resCurrentlyLinkedImageData.id,
-                label: resCurrentlyLinkedImageData.title
+    if(assetsList && assetsList.length){
+        await Promise.all(assetsList.map(async assetsItem => {
+            let assetId = document.querySelector('abbr[data-uri="' + assetsItem.linkid + '"').getAttribute("asset-id");
+           await getCurrentlyLinkedImage(assetsItem.linkid, (resCurrentlyLinkedImageData) => {
+                assetPopoverSnap.push({
+                    assetid: assetId,
+                    linkID: resCurrentlyLinkedImageData.id,
+                    label: resCurrentlyLinkedImageData.title,
+                    type:"Asset Popover"
+                })
             })
-        })
-    }))
+        }))
+    }
+    
     return assetPopoverSnap
 }
 /**
@@ -193,7 +197,9 @@ export const fetchElementsTag = (element) => {
             eleSubType = ""
             break;
     }
+    
     eleTag = eleSubType.trim() !== "" && setElementTag[eleType] ? setElementTag[eleType].subtype[eleSubType] : setElementTag[eleType]
+    console.log(eleTag,eleType,"arora")
     labelText = `${eleTag.parentTag}${eleTag.childTag ? '+' + eleTag.childTag : ""}`
 
     return labelText;
@@ -224,7 +230,8 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn) => {
         }
     }
     else if (typeof index === "string") {
-        eleIndex = Array.isArray(index) ? index : index.split("-");
+        eleIndex =  index.split("-");
+        // eleIndex = Array.isArray(index) ? index : index.split("-");
         switch (type) {
             case 'stanza':                           /** Inside Poetry */
                 wipData = bodymatter[eleIndex[0]].contents.bodymatter[eleIndex[2]];
@@ -271,7 +278,7 @@ export const fetchParentData = (bodymatter, indexes) => {
             element: bodymatter[tempIndex[0]]
         }
 
-        let parentElement = tempIndex.length == 3 && bodymatter[tempIndex[0]].type !== 'poetry' ? bodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]] : bodymatter[tempIndex[0]];
+        let parentElement = tempIndex.length == 3 && bodymatter[tempIndex[0]].type !== 'poetry'  ? bodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]] : bodymatter[tempIndex[0]];
 
         parentData.parentUrn = {
             manifestUrn: parentElement.id,
@@ -318,7 +325,7 @@ export const checkContainerElementVersion = async (containerElement, versionStat
         containerElement.parentUrn.manifestUrn = newSectionManifest ? newSectionManifest : containerElement.parentUrn.manifestUrn
     }
     /** latest version for slate*/
-    if (currentSlateData.status === 'approved') {
+    if (currentSlateData && currentSlateData.status && currentSlateData.status === 'approved') {
         let newSlateManifest = await getLatestVersion(currentSlateData.contentUrn);
         config.slateManifestURN = newSlateManifest ? newSlateManifest : config.slateManifestURN
     }

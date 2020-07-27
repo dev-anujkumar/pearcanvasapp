@@ -176,8 +176,8 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         slateEntity : Object.keys(appStore.parentUrn).length !== 0 ?appStore.parentUrn.contentUrn:config.slateEntityURN
     }
 
-    let elmIndexes = indexes ? indexes : 0;
-    let slateBodyMatter = store[config.slateManifestURN].contents.bodymatter;
+    //let elmIndexes = indexes ? indexes : 0;
+    //let slateBodyMatter = store[config.slateManifestURN].contents.bodymatter;
     /** Used for Backend, not required now */
     // if(elmIndexes.length === 2 && slateBodyMatter[elmIndexes[0]].subtype == "workedexample" ){
     //     if(slateBodyMatter[elmIndexes[0]].elementdata.bodymatter[elmIndexes[1]].id === conversionDataToSend.id){
@@ -196,18 +196,18 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     //     }
     // }
 
-    if(conversionDataToSend.outputType==="SHOW_HIDE"||conversionDataToSend.outputType==="POP_UP"){
-        slateBodyMatter.forEach((elem)=>{
-            if(elem.type==="element-aside"){
-                elem.elementdata.bodymatter.forEach((nestElem)=>{
-                    if(nestElem.id===conversionDataToSend.id){
-                        conversionDataToSend.slateVersionUrn = elem.versionUrn;
-                        conversionDataToSend.slateEntity = elem.contentUrn;
-                    }
-                })
-            }
-        })
-    }
+    // if(conversionDataToSend.outputType==="SHOW_HIDE"||conversionDataToSend.outputType==="POP_UP"){
+    //     slateBodyMatter.forEach((elem)=>{
+    //         if(elem.type==="element-aside"){
+    //             elem.elementdata.bodymatter.forEach((nestElem)=>{
+    //                 if(nestElem.id===conversionDataToSend.id){
+    //                     conversionDataToSend.slateVersionUrn = elem.versionUrn;
+    //                     conversionDataToSend.slateEntity = elem.contentUrn;
+    //                 }
+    //             })
+    //         }
+    //     })
+    // }
 
     if (newElementData.primaryOption !== "primary-list" && conversionDataToSend.inputType === conversionDataToSend.outputType && conversionDataToSend.inputSubType === conversionDataToSend.outputSubType) {
         return;
@@ -235,7 +235,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         let currentParentData = JSON.parse(JSON.stringify(parentData));
         let currentSlateData = currentParentData[config.slateManifestURN];
         /** [PCAT-8289] -------------------------------- TCM Snapshot Data handling ----------------------------------*/
-        if (elementType.indexOf(oldElementData.type) !== -1) {
+        if (elementType.indexOf(oldElementData.type) !== -1 && showHideObj == undefined) {
             let elementConversionData ={
                 currentSlateData:{
                     status: currentSlateData.status,
@@ -426,19 +426,30 @@ function prepareDataForConversionTcm(updatedDataID, getState, dispatch,versionid
  * @param {Function} dispatch to dispatch tcmSnapshots
 */
 export const tcmSnapshotsForConversion = async (elementConversionData,indexes,appStore,dispatch) => {
+    let actionStatus = {
+        action:"update",
+        status:"",
+        fromWhere:"conversion"
+    }
+    const {oldElementData,response,currentSlateData}=elementConversionData
     let convertAppStore = JSON.parse(JSON.stringify(appStore.slateLevelData));
     let convertSlate = convertAppStore[config.slateManifestURN];
     let convertBodymatter = convertSlate.contents.bodymatter;
     let convertParentData = fetchParentData(convertBodymatter, indexes);
-    let versionStatus = fetchManifestStatus(convertBodymatter, convertParentData, elementConversionData.response.type);
+    let versionStatus = fetchManifestStatus(convertBodymatter, convertParentData,response.type);
     /** latest version for WE/CE/PE/AS*/
-    convertParentData = await checkContainerElementVersion(convertParentData, versionStatus, elementConversionData.currentSlateData)
-    if (elementConversionData.oldElementData.id !== elementConversionData.response.id) {
-        elementConversionData.oldElementData.id = elementConversionData.response.id
-        elementConversionData.oldElementData.versionUrn = elementConversionData.response.id
-        dispatch(prepareTcmSnapshots(elementConversionData.oldElementData, 'create', convertParentData, "", "accepted",""))
+    convertParentData = await checkContainerElementVersion(convertParentData, versionStatus, currentSlateData)
+    if (oldElementData.id !== response.id) {
+        oldElementData.id = response.id
+        oldElementData.versionUrn = response.id
+        let actionStatusVersioning = Object.assign({}, actionStatus);
+        actionStatusVersioning.action="create"
+        actionStatusVersioning.status ="accepted"
+        prepareTcmSnapshots(oldElementData, actionStatusVersioning, convertParentData, "","");
     }
-    dispatch(prepareTcmSnapshots(elementConversionData.response, 'update', convertParentData,"","",""));
+    prepareTcmSnapshots(response,actionStatus, convertParentData,"","");
+
+    
 }
 
 const prepareAssessmentDataForConversion = (oldElementData, format) => {

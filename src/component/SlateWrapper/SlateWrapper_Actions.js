@@ -75,6 +75,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
     config.currentInsertedType = type;
     let  popupSlateData = getState().appStore.popupSlateData
     localStorage.setItem('newElement', 1);
+    console.log(type,"create")
     let slateEntityUrn = parentUrn && parentUrn.contentUrn || popupSlateData && popupSlateData.contentUrn || poetryData && poetryData.contentUrn || config.slateEntityURN
 
     let _requestData = {
@@ -101,6 +102,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
             }
         }
     ).then(createdElemData => {
+        console.log("kanika")
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         const parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
@@ -121,6 +123,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 bodymatter: currentSlateData.contents.bodymatter,
                 response: createdElemData.data
             };
+            console.log(slateData,"inside slatewrapper")
             tcmSnapshotsForCreate(slateData, type, containerElement, dispatch);
         }
         /**---------------------------------------------------------------------------------------------------*/
@@ -183,8 +186,10 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         else {
             newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
         }
+        console.log(config.tcmStatus)
         if (config.tcmStatus) {
             if (elementType.indexOf(type) !== -1) {
+                console.log(type,"tupr")
                 prepareDataForTcmCreate(type, createdElementData, getState, dispatch);
             }
         }
@@ -196,17 +201,18 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 slateLevelData: newParentData
             }
         })
-        if(type === "SHOW_HIDE"){
-            let showHideRevealElement = document.getElementById(`cypress-${index}-2-0`)
-               if(showHideRevealElement){
-                    showHideRevealElement.focus()
-                    showHideRevealElement.blur()
-               } 
-            }
+        // if(type === "SHOW_HIDE"){
+        //     let showHideRevealElement = document.getElementById(`cypress-${index}-2-0`)
+        //        if(showHideRevealElement){
+        //             showHideRevealElement.focus()
+        //             showHideRevealElement.blur()
+        //        } 
+        //     }
         if (cb) {
             cb();
         }   
     }).catch(error => {
+        console.log("catch inside")
         // Opener Element mock creation
         if (type == "OPENER") {
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
@@ -232,6 +238,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
 
 function prepareDataForTcmCreate(type, createdElementData, getState, dispatch) {
     let elmUrn = [];
+    console.log(type,"tcmdata")
     const tcmData = getState().tcmReducer.tcmSnapshot;
     if (type === "WORKED_EXAMPLE" || type === "CONTAINER") {
         createdElementData.elementdata.bodymatter.map((item) => {
@@ -282,6 +289,11 @@ function prepareDataForTcmCreate(type, createdElementData, getState, dispatch) {
  * @param {Function} dispatch to dispatch tcmSnapshots
 */
 export const tcmSnapshotsForCreate = async (elementCreateData, type, containerElement, dispatch) => {
+    let actionStatus = {
+        action:"create",
+        status:"",
+        fromWhere:"create"
+    }
     let containerType = ['WORKED_EXAMPLE', 'CONTAINER', 'CITATION', 'POETRY'];
     let versionStatus = {};
     /** This condition is required to check version of elements when bodymatter has elements and is not a container on slate */
@@ -289,7 +301,8 @@ export const tcmSnapshotsForCreate = async (elementCreateData, type, containerEl
         versionStatus = fetchManifestStatus(elementCreateData.bodymatter, containerElement, type);
     }
     containerElement = await checkContainerElementVersion(containerElement, versionStatus, elementCreateData.currentSlateData);
-    dispatch(prepareTcmSnapshots(elementCreateData.response, 'create', containerElement, type, "",""));
+    console.log(elementCreateData.response,"kanika")
+    prepareTcmSnapshots(elementCreateData.response, actionStatus, containerElement, type,"");
 }
 
 export const swapElement = (dataObj, cb) => (dispatch, getState) => {

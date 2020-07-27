@@ -122,7 +122,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
                     bodymatter: deleteBodymatter,
                     newVersionUrns: deletedUrns
                 }
-                tcmSnapshotsForDelete(deleteData, type, containerElement, dispatch)
+                tcmSnapshotsForDelete(deleteData, type, containerElement)
             }
             /**-----------------------------------------------------------------------------------------------*/
 
@@ -293,7 +293,12 @@ function contentEditableFalse (updatedData){
  * @param {Object} containerElement - Element Parent Data
  * @param {Function} dispatch to dispatch tcmSnapshots
 */
-export const tcmSnapshotsForDelete = async (elementDeleteData, type, containerElement, dispatch) => {
+export const tcmSnapshotsForDelete = async (elementDeleteData, type, containerElement) => {
+    let actionStatus = {
+        action:"delete",
+        status:"accepted",
+        fromWhere:"delete"
+    }
     let parentType = ['WORKED_EXAMPLE', 'CONTAINER', 'CITATION', 'POETRY'];
     let versionStatus = {};
     if ((parentType.indexOf(type) === -1)) {
@@ -301,7 +306,7 @@ export const tcmSnapshotsForDelete = async (elementDeleteData, type, containerEl
     }
     containerElement = await checkContainerElementVersion(containerElement, versionStatus, elementDeleteData.currentSlateData);
 
-    dispatch(prepareTcmSnapshots(elementDeleteData.wipData, 'delete', containerElement, type, "accepted",elementDeleteData.newVersionUrns));
+    prepareTcmSnapshots(elementDeleteData.wipData, actionStatus, containerElement, type,elementDeleteData.newVersionUrns);
 }
 
 /**
@@ -360,7 +365,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         }
 
         /** [PCAT-8289] -------------------------- TCM Snapshot Data handling ----------------------------*/
-        if (elementTypeTCM.indexOf(response.data.type) !== -1 && (parentElement && parentElement.type !== 'showhide')) {
+        if (elementTypeTCM.indexOf(response.data.type) !== -1 && updatedData.metaDataField == undefined  && updatedData.sectionType == undefined) {
             let containerElement={
                 asideData:asideData,
                 parentUrn:parentUrn,
@@ -449,6 +454,11 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
  * @param {Function} dispatch to dispatch tcmSnapshots
 */
 export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, containerElement, dispatch) => {
+    let actionStatus = {
+        action:"update",
+        status:"",
+        fromWhere:"update"
+    }
     let wipData = fetchElementWipData(elementUpdateData.updateBodymatter, elementIndex, elementUpdateData.response.type,"")
     let versionStatus = fetchManifestStatus(elementUpdateData.updateBodymatter, containerElement, elementUpdateData.response.type);
     /** latest version for WE/CE/PE/AS*/
@@ -462,11 +472,14 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
             oldData.elementdata = wipData.elementdata;
         }
         oldData.html = wipData.html;
-        /** After versioning snapshots*/
-        dispatch(prepareTcmSnapshots(oldData, 'create', containerElement, "", "accepted",""))
+        let actionStatusVersioning = Object.assign({}, actionStatus);
+        actionStatusVersioning.action="create"
+        actionStatusVersioning.status ="accepted"
+        /** After versioning with old snapshots*/
+        prepareTcmSnapshots(oldData, actionStatusVersioning, containerElement, "","")
     }
-    /** Before versioning snapshots*/
-    dispatch(prepareTcmSnapshots(elementUpdateData.response, 'update', containerElement, "", "",""))
+    /** Before and after versioning with new snapshots*/
+    prepareTcmSnapshots(elementUpdateData.response, actionStatus, containerElement, "","")
 }
 
 function updateLOInStore(updatedData, versionedData, getState, dispatch) {
