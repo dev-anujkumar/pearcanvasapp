@@ -14,6 +14,7 @@ import PopUp from '../PopUp/index.js';
 import { SYNTAX_HIGHLIGHTING } from '../SlateWrapper/SlateWrapperConstants.js';
 import { showBlocker,hideBlocker } from '../../js/toggleLoader';
 import { customEvent } from '../../js/utils.js';
+let disabledPrimaryOption=["primary-openerelement", "primary-mathml-equation", "primary-blockcode-equation", "primary-poetry", "primary-stanza", "primary-elm-interactive", "primary-mmi", "primary-smartlink", "primary-showhide", "primary-popup", "primary-editor-table-equation", "primary-single-assessment", "primary-citations-group", "primary-element-citation", "primary-multicolumn"];
 
 class Sidebar extends Component {
     constructor(props) {
@@ -103,8 +104,7 @@ class Sidebar extends Component {
         }
         const { activePrimaryOption } = this.state
         if(e.target.dataset && e.target.dataset.element !== "secondary"){
-            let disabledPrimaryOption=["primary-openerelement", "primary-single-assessment" ,"primary-popup", "primary-showhide", "primary-mmi", "primary-smartlink","primary-citations-group", "primary-element-citation", "primary-poetry", "primary-stanza", "primary-editor-table-equation", "primary-blockcode-equation", "primary-mathml-equation","primary-multicolumn"];
-            if( disabledPrimaryOption.indexOf(activePrimaryOption) !== -1 ){
+            if( disabledPrimaryOption.indexOf(activePrimaryOption) > -1 ){
                 e.stopPropagation()
                 return false
             }
@@ -129,13 +129,13 @@ class Sidebar extends Component {
                 if(this.state.activeElementType === 'element-assessment'){
                     delete primaryOptionList[1];
                 }
-                let disabledPrimaryOption=["popup", "showhide", "element-interactive", "element-smartlink"];
-                 if( disabledPrimaryOption.indexOf(this.state.activeElementType) !== -1 ){
+                let disabledPrimaryOptions=["primary-mathml-equation", "primary-blockcode-equation", "primary-editor-table-equation", "primary-elm-interactive", "primary-mmi", "primary-smartlink", "primary-showhide", "primary-popup"];
+                 if( disabledPrimaryOptions.indexOf(activePrimaryOption) > -1 ){
                     className="disabled"
                  }
-                 if (activePrimaryOption === "primary-mathml-equation" || activePrimaryOption === "primary-blockcode-equation" || activePrimaryOption === "primary-editor-table-equation") {
-                    className="disabled"
-                 }
+                //  if (activePrimaryOption === "primary-mathml-equation" || activePrimaryOption === "primary-blockcode-equation" || activePrimaryOption === "primary-editor-table-equation") {
+                //     className="disabled"
+                //  }
                 primaryOptions = primaryOptionList.map(item => {
                     if(item !== 'enumType' && item !== 'primary-mathml-equation' && item !== 'primary-blockcode-equation' && item !== 'primary-editor-table-equation') {
                         return <li key={item} data-value={item} onClick={this.handlePrimaryOptionChange}>
@@ -148,13 +148,11 @@ class Sidebar extends Component {
                 if(this.state.elementDropdown === 'primary') {
                     active = 'active';
                 }
-    
                 primaryOptions = <div
                     className={`element-dropdown ${this.props.showHideObj && this.props.activeElement.elementType? "sidebar-disable": ""}`}>
                     <div className={`element-dropdown-title ${className}`} data-element="primary" onClick={this.toggleElementDropdown}>
                         {primaryOptionObject[this.state.activePrimaryOption].text}
-                        { activePrimaryOption === "primary-single-assessment" || activePrimaryOption === "primary-citations-group" || activePrimaryOption === "primary-element-citation" || activePrimaryOption === "primary-poetry" || activePrimaryOption === "primary-stanza" || activePrimaryOption === "primary-mathml-equation" || activePrimaryOption === "primary-blockcode-equation" || activePrimaryOption === "primary-editor-table-equation"  || activePrimaryOption === "primary-multicolumn"
-                         ? null : dropdownArrow }
+                        {disabledPrimaryOption.indexOf(activePrimaryOption) > -1 ? null : dropdownArrow}
                     </div>
                     <ul className={`element-dropdown-content primary-options ${active}`}>
                         {primaryOptions}
@@ -265,7 +263,7 @@ class Sidebar extends Component {
         if(this.state.activeElementType){
             let primaryOptionList = elementList[this.state.activeElementType][this.state.activePrimaryOption];
             let secondaryOptionList = primaryOptionList.subtype[this.state.activeSecondaryOption];
-            if((primaryOptionList.text && primaryOptionList.text==="MMI" )&& (this.props.activeElement.altText && this.props.activeElement.altText!="")){
+            if((primaryOptionList.text && primaryOptionList.text==="Quad Interactive" )&& (this.props.activeElement.altText && this.props.activeElement.altText!="")){
                 primaryOptionList['attributes']={
                     "alt_text":{
                         "isEditable": false,
@@ -273,7 +271,10 @@ class Sidebar extends Component {
                     }
                 }
             }
-            else if(primaryOptionList.text && primaryOptionList.text==="MMI" ){
+            else if(primaryOptionList.text && primaryOptionList.text==="Quad Interactive" ){
+                primaryOptionList['attributes']={}
+            }
+            else if(primaryOptionList.text && primaryOptionList.text==="Elm Interactive" ){
                 primaryOptionList['attributes']={}
             }
             if(primaryOptionList.attributes) {

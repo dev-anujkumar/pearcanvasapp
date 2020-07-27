@@ -4,7 +4,7 @@ import { mount } from 'enzyme';
 import thunk from 'redux-thunk';
 import configureMockStore from 'redux-mock-store';
 const middlewares = [thunk];
-import RootElmSingleAssessment from '../../../../src/component/AssessmentSlateCanvas/elm/RootElmSingleComponent.jsx';
+import RootElmComponent from '../../../../src/component/AssessmentSlateCanvas/elm/RootElmComponent.jsx';
 import {DefaultSlateData} from '../../../../fixtures/AssessmentSlateCanvasTestingData';
 const mockStore = configureMockStore(middlewares);
 jest.mock('../../../../src/config/config.js', () => ({
@@ -400,9 +400,9 @@ describe('ELM root component test', () => {
             elmResource: function(){},
        }
 
-        const component = mount(<Provider store={store}><RootElmSingleAssessment {...props}/></Provider>)
+        const component = mount(<Provider store={store}><RootElmComponent {...props}/></Provider>)
         expect(component).toHaveLength(1);
-        let instance = component.find('RootElmSingleAssessment').instance();
+        let instance = component.find('RootElmComponent').instance();
         expect(instance).toBeDefined();
 
     })

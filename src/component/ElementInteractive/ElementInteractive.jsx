@@ -14,7 +14,7 @@ import axios from 'axios';
 import { hasReviewerRole } from '../../constants/utility.js';
 import RootCiteTdxComponent from '../AssessmentSlateCanvas/assessmentCiteTdx/RootCiteTdxComponent.jsx';
 import RootSingleAssessmentComponent from '../AssessmentSlateCanvas/singleAssessmentCiteTdx/RootSingleAssessmentComponent.jsx'
-import RootElmSingleAssessment from '../AssessmentSlateCanvas/elm/RootElmSingleComponent.jsx';
+import RootElmComponent from '../AssessmentSlateCanvas/elm/RootElmComponent.jsx';
 import  {setCurrentCiteTdx, setCurrentInnerCiteTdx, getMCQGuidedData, assessmentSorting}  from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
 import { connect } from 'react-redux';
 import { sendDataToIframe } from './../../constants/utility.js';
@@ -578,7 +578,7 @@ class Interactive extends React.Component {
                         {this.renderInteractiveType(model, itemId, index, slateLockInfo)}
                         {this.state.showAssessmentPopup? <RootCiteTdxComponent openedFrom = {'singleSlateAssessment'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.elementType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAsseessmentUsageType} parentPageNo={this.state.parentPageNo} resetPage={this.resetPage} isReset={this.state.isReset} AssessmentSearchTitle={this.AssessmentSearchTitle} searchTitle={this.state.searchTitle} filterUUID={this.state.filterUUID} />:""}
                         {this.state.showSinglePopup ? <RootSingleAssessmentComponent setCurrentAssessment ={this.state.setCurrentAssessment} activeAssessmentType={this.state.activeAssessmentType} openedFrom = {'singleSlateAssessmentInner'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.activeAssessmentType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAssessmentUsageType} assessmentNavigateBack = {this.assessmentNavigateBack} resetPage={this.resetPage}/>:""}
-                        {this.state.showElmComponent? <RootElmSingleAssessment activeAssessmentType={model.figuredata.interactiveformat} closeElmWindow={() => this.closeElmWindow()} addPufFunction={this.addElmInteractive} /> : ''}
+                        {this.state.showElmComponent? <RootElmComponent activeAssessmentType={model.figuredata.interactiveformat} closeElmWindow={() => this.closeElmWindow()} addPufFunction={this.addElmInteractive} /> : ''}
                     </div>
                 
             )

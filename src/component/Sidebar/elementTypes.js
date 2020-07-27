@@ -658,7 +658,7 @@ export default {
         'primary-mmi': {
             text: 'Quad Interactive',
             toolbar: ['crossLinkingIcon','assetpopover', 'glossary'],
-            enum: 'QUAD_INTERACTIVE',
+            enum: 'MMI',
             subtype: {
                 'secondary-interactive-mmi': {
                     text: 'Quad',

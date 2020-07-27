@@ -308,7 +308,7 @@ export const multiColumnContainer = (() => {
 /***********************************************************SVG- Elm Interactive Icon in Picker ****************************************************/
 export const elmInteractiveIcon = (() => {
     return (
-        <svg id="elm-interactive-icon" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" width="28" height="28" viewBox="0 0 28 28">
+        <svg id="elm-interactive-icon" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 24 24">
             <defs>
                 <path id="yuua8t3uoa" d="M22.75 2.333H5.25c-1.604 0-2.917 1.313-2.917 2.917v17.5c0 1.604 1.313 2.917 2.917 2.917h17.5c1.604 0 2.917-1.313 2.917-2.917V5.25c0-1.604-1.313-2.917-2.917-2.917zm-9.45 9.333V18.2h6.533v.133c0 2.762-2.238 5-5 5h-1.666c-2.762 0-5-2.238-5-5v-1.666c0-2.762 2.238-5 5-5h.132zm6.533 0v5.6h-5.6v-5.6h5.6zm0-6.533v5.6h-5.6v-5.6h5.6z" />
             </defs>

@@ -213,6 +213,12 @@
   fill:rgb(0%,0%,0%);
   fill-opacity:1;
  }
+ .td-class.interactive-type{
+   width: 180px;
+ }
+.td-class.elm-urn{
+  width: 370px;
+}
  .elmAssessmentItem-icon{
   margin-right : 8px;
   margin-left : 8px;
@@ -253,6 +259,25 @@
   margin: 2px !important;
   display: inline-flex;
   align-items: center;
+}
+/** -------------------------------------------- Elm-Interactive --------------------------------------------  */
+.elm-interactive .td-class.elm-text-assesment{
+  padding: 6px 8px !important;
+}
+.elm-interactive .td-class .icon-div{
+  max-height: 24px;
+}
+.elm-interactive .elm-text-assesment .radio-button{
+  top: 0px;
+}
+.elm-interactive .elmAssessmentItem-icon{
+  max-height: 24px;
+ }
+.elm-interactive svg#elm-interactive-icon {
+  margin-top: -2px;
+}
+.elm-interactive .td-class.assessment-container{
+  padding: 10px 8px !important;
 }
 /** --------------------------------------------AssessmentSearchBar CSS-------------------------------------------- **/
 .learnosity-search-block .filter-container{
