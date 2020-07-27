@@ -291,7 +291,7 @@
 
 .tableHeader {
     text-align: left;
-    padding: 8px;
+    padding: 8px 8px 8px 6px;
     width: 16% !important;
     border: none;
 }
@@ -337,14 +337,20 @@
     z-index: 5;
     background: #fff;
 }
-.tableHeader.header1{
-    width: 19% !important;
+
+tr th.tableHeader:nth-child(1){
+    width: 18% !important;
 }
+tr th.tableHeader:nth-child(2),tr th.tableHeader:nth-child(4), tr.modalCard td:nth-child(4), tr.modalCard td:nth-child(4){
+    padding-left: 10px;
+}
+
+tr th.tableHeader:nth-child(5){
+    padding-left: 8px;
+}
+
 .learning-tool-margin-left tr.modalCard{
     padding-left: 0px;
-}
-tr.modalCard td:nth-child(4) {
-    padding-left: 10px;
 }
 
 tr.modalCard td:nth-child(2) {
@@ -353,19 +359,12 @@ tr.modalCard td:nth-child(2) {
     max-width: 150px;
 }
 
-tr.modalCard td:nth-child(5) {
-    padding-left: 5px;
-}
-tr.modalCard td:nth-child(6) {
+tr.modalCard td:nth-child(5),tr.modalCard td:nth-child(6) {
     padding-left: 5px;
 }
 
-.labelHeader{
-    padding: 8px 8px 8px 2px;
-}
 .learningRadioButton{
     position: relative;
-    /* top:5px; */
     width: 15px !important;
     padding: 0px;
     top: 2px;
@@ -376,7 +375,7 @@ tr.modalCard td:nth-child(6) {
 }
 
 td.tableRow.radio-button {
-    width: 175px;
+    width: 172px;
     padding: 0px 5px 0px 0px;
     display: inline-flex;
 }
@@ -384,7 +383,7 @@ p.row1-content{
     padding-left: 0px;
     padding: 8px 0;
     max-width: 160px;
-    font-family: Open Sans,sans-serif;
+    font-family: 'Open Sans', sans-serif;
     font-size: 12px;
     margin-top: -1px;
 }
