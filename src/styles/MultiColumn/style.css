@@ -19,18 +19,21 @@
 /* Specific class for 1st column group */
 .container-multi-column-group.column-1 {
     /* Phase 1 */
-    padding-left: 10px;
+    padding-left: 6px;
     border-right: none;
 }
 
 /* Element container class specific to Multi-Column container */
 .container-multi-column-group .element-container {
-    max-width: 83%;
+    max-width: 82%;
 }
 .container-multi-column-group.column-1 .element-container {
-    max-width: 80%;
+    max-width: 82%;
 }
 
+.container-multi-column-group.wider-50-50.column-1 .element-container, .container-multi-column-group.text-width-50-50.column-1 .element-container {
+    max-width: 85%;
+}
 /* For audio tag inside multi-column */
 .container-multi-column-group .element-container audio {
     width: 80%;
@@ -109,7 +112,7 @@
 /******************************************************************************/
 
 
-/***************************** 65-35 *****************************************/
+/***************************** 60-40 *****************************************/
 /***** C1 *****/
 /* For single asessment */
 .container-multi-column-group.wider-60-40 .singleAssessment_Dropdown_SelectLabel {
@@ -133,6 +136,11 @@
     width: 50%;
     height: 60%;
 }
+
+.container-multi-column-group.column-0 .element-container {
+    max-width: 88%;
+}
+
 /************/
 
 /***** C2 *****/
@@ -244,4 +252,12 @@
 /******************************************************************************/
 .container-multi-column-group .figureAssessment.figureAssessmentItem header {
     overflow-wrap: break-word;
+}
+.element-container.multi-column {
+    padding-right: 0px !important;
+    padding-left: 5px !important;
+}
+
+.container-multi-column-group .cypress-editable {
+    overflow-wrap: anywhere;
 }

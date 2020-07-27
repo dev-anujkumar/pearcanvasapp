@@ -14,7 +14,7 @@
 
 .element-container.active:not(.ct) {
     border: 1.5px solid #149632;
-    padding: 1px 7px !important;
+    padding: 1px 7px;
 }
 
 .element-container.ct.active {
