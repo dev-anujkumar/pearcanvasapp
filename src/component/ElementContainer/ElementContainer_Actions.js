@@ -778,7 +778,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
 function prepareDataForUpdateTcm(updatedDataID, getState, dispatch,versionedData) {
     const tcmData = getState().tcmReducer.tcmSnapshot;
     let indexes = []
-    tcmData.filter(function (element, index) {
+    tcmData && tcmData.filter(function (element, index) {
     if (element.elemURN.indexOf(updatedDataID) !== -1 && element.elemURN.includes('urn:pearson:work')) {
             indexes.push(index)
         }

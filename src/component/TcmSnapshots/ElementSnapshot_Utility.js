@@ -178,7 +178,7 @@ export const prepareAssetPopoverSnapshotContent = async (assetsList) => {
  * @returns {String} Element Tags for elementType key in Snapshots
 */
 export const fetchElementsTag = (element) => {
-    let labelText = "P", eleTag, eleType, eleSubType;
+    let labelText, eleTag, eleType, eleSubType;
     eleType = element.type ? element.type :  element.elementType;
     switch (eleType) {
         case 'element-authoredtext':
@@ -198,9 +198,9 @@ export const fetchElementsTag = (element) => {
             break;
     }
     
-    eleTag = eleSubType.trim() !== "" && setElementTag[eleType] ? setElementTag[eleType].subtype[eleSubType] : setElementTag[eleType]
+    eleTag = eleSubType && eleSubType.trim() !== "" && setElementTag[eleType] ? setElementTag[eleType].subtype[eleSubType] : setElementTag[eleType]
     console.log(eleTag,eleType,"arora")
-    labelText = `${eleTag.parentTag}${eleTag.childTag ? '+' + eleTag.childTag : ""}`
+    labelText = eleTag ? `${eleTag.parentTag}${eleTag.childTag ? '+' + eleTag.childTag : ""}`:"P"
 
     return labelText;
 }
