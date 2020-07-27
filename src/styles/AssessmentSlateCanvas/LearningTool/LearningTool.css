@@ -313,6 +313,7 @@
     line-height: 1.4em;
     color: #424242;
     font-weight: normal;
+    overflow-wrap: break-word;
 }
 
 .learningToolSearchButton[disabled] {
