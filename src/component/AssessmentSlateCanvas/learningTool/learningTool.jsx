@@ -216,7 +216,7 @@ class LearningTool extends React.Component {
                             <th className="tableHeader labelHeader">Label</th>
                             <th className="tableHeader">Date Modified</th>
                             <th className="tableHeader">Keyword(s)</th>
-                            <th className="tableHeader">template ID</th>
+                            <th className="tableHeader">Template ID</th>
                         </tr>
                     </table> : ''} 
                     <ApiResults selectedResult={selectedResult} selectedFigure={this.selectedFigure} apiResponseData={apiResponseLearningTemp} />
