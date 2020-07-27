@@ -4,11 +4,11 @@
 
 .learningToolContainer {
     position: fixed;
-    width: 763px;
+    width: 980px;
     top: 12%;
     right: 0;
     outline: 0;
-    left: 24%;
+    left: 19%;
     background: #fff;
     background-color: white;
     z-index: 1500;
@@ -66,7 +66,7 @@
 }
 
 .spanLTFilterType {
-    margin-left: 100px;
+    margin-left: 22%;
     margin-right: 10px;
     font-family: 'Open Sans', sans-serif;
     font-size: 11px;
@@ -94,7 +94,8 @@
 }
 
 .learningToolType {
-    width: 149.1px;
+    /* width: 149.1px; */
+    width: 175px;
     height: 25px;
     border-radius: 3px;
     border: solid 1px #b9b9b9;
@@ -102,7 +103,8 @@
 }
 
 .learningToolDis {
-    width: 151.6px;
+    /* width: 151.6px; */
+    width: 175px;
     height: 25px;
     border-radius: 3px;
     border: solid 1px #b9b9b9;
@@ -126,7 +128,7 @@
 }
 
 .learningToolSearchBar {
-    margin-left: 100px;
+    margin-left: 22%;
     margin-right: 15px;
     width: 430px;
     height: 30px;
@@ -292,7 +294,7 @@
 .tableHeader {
     text-align: left;
     padding: 8px;
-    width: 20% !important;
+    width: 16% !important;
     border: none;
 }
 
@@ -304,12 +306,12 @@
 
 .tableRow {
     /* text-align: justify; */
-    width: 140px;
+    width: 150px;
     font-size: 12px;
     font-family: 'Open Sans', sans-serif;
     padding: 0px 5px;
     line-height: 1.4em;
-    color:#424242;
+    color: #424242;
     font-weight: normal;
 }
 
@@ -336,34 +338,72 @@
     z-index: 5;
     background: #fff;
 }
-
+.tableHeader.header1{
+    width: 19% !important;
+}
+.learning-tool-margin-left tr.modalCard{
+    padding-left: 0px;
+}
 tr.modalCard td:nth-child(4) {
-    padding-left: 12px;
+    padding-left: 10px;
 }
 
 tr.modalCard td:nth-child(2) {
     padding-right: 10px;
+    width: 150px;
+    max-width: 150px;
 }
 
 tr.modalCard td:nth-child(5) {
-    padding-left: 13px;
+    /* padding-left: 13px; */
+    padding-left: 5px;
 }
-
+tr.modalCard td:nth-child(6) {
+    /* padding-left: 12px; */
+    padding-left: 5px;
+}
+/* tr.modalCard td:nth-child(7) {
+    padding-left: 5px;
+} */
 .labelHeader{
-    padding: 8px 15px;
+    /* padding: 8px 15px; */
+    padding: 8px 8px 8px 2px;
 }
 .learningRadioButton{
     position: relative;
     top:5px;
+    width: 15px !important;
+    padding: 0px;
   }
 /* tr th.tableHeader:nth-child(2) {
     padding: 0 10px;
 } */
-
+.learningTemplate.tableData{
+    max-width: 160px;
+}
+/* td.tableRow.radio-button {
+    width: 20px;
+    padding: 0px;
+} */
+td.tableRow.radio-button {
+    width: 175px;
+    padding: 0px 5px 0px 0px;
+    /* padding-left: 10px; */
+    display: inline-flex;
+    /* text-align: center; */
+    /* align-content: center; */
+}
+p.row1-content{
+    padding-left: 0px;
+    padding: 8px 0px;
+    max-width: 160px;
+}
 .learning-tool-margin-left {
     margin-left: 10px;
 }
-
+td.tableRow.radio-button .inputElem{
+    margin-top: 5px !important;
+  }
 .exclamation-icon {
     margin-top: 3px;
     width: 25px;
@@ -418,7 +458,7 @@ tr.modalCard td:nth-child(5) {
     text-align: left;
     color: #252525;
     position: absolute;
-    left: 100px;
+    left: 22%;
 }
 @media only screen and (max-width:1500px) {
     .learningToolContainer {

@@ -328,14 +328,17 @@ import { setAssessmentUsageType } from '../AssessmentSlateCanvas/AssessmentActio
         if (document.getElementsByClassName("slate-tag-icon").length) {
         document.getElementsByClassName("slate-tag-icon")[0].classList.remove("disable");
         }
+        let showID ="";
         let assessmentSlateJSX;
         let assessmentTypeValue;
         let changeTypeValue;
         let title = this.props.assessmentItemTitle? this.props.assessmentItemTitle:this.props.learningTemplateLabel;
         if(this.state.activeAssessmentType === LEARNING_APP_TYPE || this.state.activeAssessmentType === LEARNING_TEMPLATE){
+            showID = this.props.model.elementdata && this.props.model.elementdata.templateid ? this.props.model.elementdata.templateid:"";
             assessmentTypeValue="Learning App";
             changeTypeValue="Change Learning App"
         }else {
+            showID = this.props.assessmentId;
             assessmentTypeValue="Assessment";
             changeTypeValue="Change assessment";
         }
@@ -352,7 +355,7 @@ import { setAssessmentUsageType } from '../AssessmentSlateCanvas/AssessmentActio
                         <div className="slate_assessment_data_label">{assessmentTypeValue}</div>
                         <div className="slate_assessment_data_details">
                             <div className="slate_assessment_data_title">{title}</div>
-                            <div className="slate_assessment_data_id">{'ID: ' + this.props.assessmentId}</div>
+                            <div className="slate_assessment_data_id">{'ID: ' + showID}</div>
                             <div className="slate_assessment_data_id_lo" style={{display:"none"}}>{this.props.assessmentId}</div>
                             <div className="slate_assessment_data_format_lo" style={{display:"none"}}>{this.state.activeAssessmentType}</div>
                             <div className="slate_assessment_change_button" onClick={ !hasReviewerRole() && this.changeAssessment}>{changeTypeValue}</div>

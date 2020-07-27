@@ -211,11 +211,12 @@ class LearningTool extends React.Component {
                 <div className="learningToolBody scroller" id="style-2">
                    {apiResponseLearningTemp.length? <table className="tableForApiResults">
                         <tr>
-                            <th className="tableHeader">Learning App Type</th>
+                            <th className="tableHeader header1">Learning App Type</th>
                             <th className="tableHeader">Discipline</th>
                             <th className="tableHeader labelHeader">Label</th>
                             <th className="tableHeader">Date Modified</th>
                             <th className="tableHeader">Keyword(s)</th>
+                            <th className="tableHeader">template ID</th>
                         </tr>
                     </table> : ''} 
                     <ApiResults selectedResult={selectedResult} selectedFigure={this.selectedFigure} apiResponseData={apiResponseLearningTemp} />
