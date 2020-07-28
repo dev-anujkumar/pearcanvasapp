@@ -1762,10 +1762,6 @@ export class TinyMceEditor extends Component {
         let selectedTag = selection.nodeName;
         let selectedTagClass = selection.classList;
         selectedText = String(selectedText).replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        // if (selectedTag !== "LI" && selectedTag !== "P" && selectedTag !== "H3" && selectedTag !== "BLOCKQUOTE" && (!selectedTagClass.contains('poetryLine'))) {
-        //     //selectedText = window.getSelection().anchorNode.parentNode.outerHTML;
-        //     selectedText = '<' + selectedTag.toLocaleLowerCase() + '>' + selectedText + '</' + selectedTag.toLocaleLowerCase() + '>'
-        // }
 
         let parentNode = true;
         do {
