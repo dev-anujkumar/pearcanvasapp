@@ -271,12 +271,10 @@ class Sidebar extends Component {
                     }
                 }
             }
-            else if(primaryOptionList.text && primaryOptionList.text==="Quad Interactive" ){
+            else if(primaryOptionList.text && (primaryOptionList.text==="Quad Interactive" || primaryOptionList.text==="Elm Interactive" ) ){
                 primaryOptionList['attributes']={}
             }
-            else if(primaryOptionList.text && primaryOptionList.text==="Elm Interactive" ){
-                primaryOptionList['attributes']={}
-            }
+
             if(primaryOptionList.attributes) {
                 attributionsObject = primaryOptionList.attributes;
                 attributionsList = Object.keys(attributionsObject);

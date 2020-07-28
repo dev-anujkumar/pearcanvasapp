@@ -45,7 +45,7 @@ class Interactive extends React.Component {
             openedFrom:'',
             interactiveTitle: this.props.model.figuredata && this.props.model.figuredata.interactivetitle? this.props.model.figuredata.interactivetitle : "",
             showElmComponent:false,
-            interactiveType:this.props.model.figuredata && this.props.model.figuredata.interactivetype ? this.props.model.figuredata.interactivetype : ""
+            // interactiveType:this.props.model.figuredata && this.props.model.figuredata.interactivetype ? this.props.model.figuredata.interactivetype : ""
         
            };
 
@@ -257,10 +257,22 @@ class Interactive extends React.Component {
     addElmInteractive = (pufObj) => {
         showTocBlocker();
         disableHeader(true);
+
+        let figureData = {
+            schema: INTERACTIVE_SCHEMA,
+            interactiveid: pufObj.id,
+            interactivetype: pufObj.interactiveType,
+            interactivetitle: pufObj.title,
+            interactiveformat: "elminteractive"
+        }
         this.setState({
             itemID: pufObj.id,
             interactiveTitle: pufObj.title,
-            interactiveType: pufObj.interactiveType
+            elementType: pufObj.interactiveType
+        })
+        this.props.updateFigureData(figureData, this.props.index, this.props.elementId, () => {
+            this.props.handleFocus("updateFromC2");
+            this.props.handleBlur();
         })
     }
     /**------------------------------------------------------------------------------------------*/
@@ -568,9 +580,8 @@ class Interactive extends React.Component {
     }
     /**------------------------------------------------------------------------------------------*/
 
-
     render() {
-        const { model, itemId, index, slateLockInfo, interactiveType } = this.props;
+        const { model, itemId, index, slateLockInfo } = this.props;
         try {
             return (
                

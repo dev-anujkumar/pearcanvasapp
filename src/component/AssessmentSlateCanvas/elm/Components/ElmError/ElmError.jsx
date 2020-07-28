@@ -9,7 +9,10 @@ const ElmError = (props) => {
 
     const getErrorMessage = () => {
         let errorMessage = '';
-        if (props && (props.activeAssessmentType == PUF) && props.errFlag) {
+        if(props && (props.activeAssessmentType == 'elminteractive')){
+            errorMessage = ERROR_MESSAGE_LEARNOSITY
+        }
+        else if (props && (props.activeAssessmentType == PUF) && props.errFlag) {
             errorMessage = ERROR_MESSAGE_ELM_RESOURCE
         } else if (props && (props.activeAssessmentType == LEARNOSITY_BETA) && (props.errFlag || (props.filterResults == 'No Results'))) {
             errorMessage = ERROR_MESSAGE_LEARNOSITY

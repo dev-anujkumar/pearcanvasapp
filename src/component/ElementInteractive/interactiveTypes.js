@@ -51,8 +51,8 @@ export default {
         "heading4Title": 'heading4WidgetPDFTitle',
         "dataType": 'pdf',
         "id": 'id-info',
-        "imageDimension": 'buttonWidgetPDF',
-        "hyperlinkClass": "",
+        "imageDimension": '',
+        "hyperlinkClass": "buttonWidgetPDF",
         "path": "PATH: ",
         "figcaptionClass": 'figcaptionWidgetPDF',
         "paragraphCredit": 'paragraphWidgetPDFCredit'
@@ -174,7 +174,7 @@ export default {
         "heading4Title": 'heading4WidgetPUSLTitle',
         "dataType": 'pusl',
         "id": 'id-info',
-        "imageDimension": 'buttonWidgetPUSL',
+        "imageDimension": '',
         "hyperlinkClass": 'buttonWidgetPUSL',
         "figcaptionClass": 'figcaptionWidgetPUSL',
         "paragraphCredit": 'paragraphWidgetPUSLCredit'
@@ -186,7 +186,7 @@ export default {
         "heading4Title": 'heading4WidgetPUSLTitle',
         "dataType": 'pusl',
         "id": 'id-info',
-        "imageDimension": 'buttonWidgetPUSL',
+        "imageDimension": '',
         "hyperlinkClass": 'buttonWidgetPUSL',
         "figcaptionClass": 'figcaptionWidgetPUSL',
         "paragraphCredit": 'paragraphWidgetPUSLCredit'
