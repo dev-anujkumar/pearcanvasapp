@@ -59,6 +59,16 @@ class ElementFigure extends Component {
             } else {
                 this.setState({ imgSrc: DEFAULT_IMAGE_SOURCE })
             }
+
+            let scaleMarkerData = {};
+            Object.assign(scaleMarkerData, (data && data.scalemarker && data.scalemarker.properties) ? { schema: 'http://schemas.pearson.com/wip-authoring/image/1#/definitions/image' } : null,
+                (data && data.scalemarker && data.scalemarker.properties) ? { "imageid": data.scalemarker.properties["d.cmis:versionSeriesId"].value || null } : null,
+                (data && data.scalemarker && data.scalemarker.properties) ? { "alttext": data.scalemarker.properties["t.cmis:name"].value || "The alttext for the scale image" } : null,
+                (data && data.scalemarker && data.scalemarker.EpsUrl) ? { "path": data.scalemarker.EpsUrl || null } : null,
+                (data && data.scalemarker && data.scalemarker.properties) ? { "height": data.scalemarker.properties["e.exif:pixelXDimension"].value || null } : null,
+                (data && data.scalemarker && data.scalemarker.properties && data.scalemarker.properties["e.exif:pixelYDimension"]) ? { "width": data.scalemarker.properties["e.exif:pixelYDimension"].value || null } : null,
+            );
+
             let setFigureData = {
                 path: epsURL,
                 height: height,
@@ -69,6 +79,9 @@ class ElementFigure extends Component {
                 longdescription: longDesc,
                 type: figureType,
             }
+            
+            Object.assign(setFigureData, (Object.keys(scaleMarkerData).length > 0) ? { scaleimage: scaleMarkerData } : null);
+
             this.props.updateFigureData(setFigureData, this.props.index, this.props.elementId, () => {
                 this.props.handleFocus("updateFromC2")
                 this.props.handleBlur()

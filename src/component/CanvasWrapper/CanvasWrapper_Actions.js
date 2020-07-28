@@ -187,6 +187,18 @@ const findElementType = (element, index) => {
                 }
                 elementType = { ...elementDataBank["element-authoredtext"] }
                 break;
+            case  'groupedcontent':
+                elementType = {
+                    elementType: elementDataBank[element.type]["elementType"],
+                    primaryOption: elementDataBank[element.type]["primaryOption"]  
+                }
+                if (element.width && element.groupproportions) {
+                    elementType["secondaryOption"] = elementDataBank[element.type][`${element.width}-${element.groupproportions}`]["secondaryOption"]
+                }
+                else {
+                    elementType["secondaryOption"] = elementDataBank[element.type]["wider-50-50"]["secondaryOption"] 
+                }
+                break;
             default:
                 elementType = { ...elementDataBank["element-authoredtext"] }
         }
@@ -345,7 +357,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                             slateLevelData: newslateData
                         }
                     })
-                } else if (versioning.type === 'citations' || versioning.type === 'poetry') {
+                } else if (versioning.type === 'citations' || versioning.type === 'poetry' || versioning.type === 'groupedcontent') {
                     let parentData = getState().appStore.slateLevelData;
                     let newslateData = JSON.parse(JSON.stringify(parentData));
                     let index
@@ -455,6 +467,7 @@ const setSlateDetail = (slateTitle, slateManifestURN) => {
 
 const setOldImagePath = (getState, activeElement, elementIndex = 0) => {
     let parentData = getState().appStore.slateLevelData,
+        { parentUrn } = getState().appStore,
         oldPath,
         index = elementIndex;
     const newParentData = JSON.parse(JSON.stringify(parentData));
@@ -472,6 +485,11 @@ const setOldImagePath = (getState, activeElement, elementIndex = 0) => {
             if (condition.versionUrn == activeElement.id) {
                 oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.path
             }
+        } else if (indexesLen == 3 && parentUrn && parentUrn.elementType === "group") {
+            condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
+            if (condition.versionUrn == activeElement.id) {
+                oldPath = condition.figuredata.path || ""
+            }
         } else if (indexesLen == 3) {
             condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
             if (condition.versionUrn == activeElement.id) {
@@ -483,6 +501,7 @@ const setOldImagePath = (getState, activeElement, elementIndex = 0) => {
 }
 const setOldAudioVideoPath = (getState, activeElement, elementIndex, type) => {
     let parentData = getState().appStore.slateLevelData,
+        { parentUrn } = getState().appStore,
         oldPath,
         index = elementIndex;
     const newParentData = JSON.parse(JSON.stringify(parentData));
@@ -501,6 +520,11 @@ const setOldAudioVideoPath = (getState, activeElement, elementIndex, type) => {
                     condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
                     if (condition.versionUrn == activeElement.id) {
                         oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.audio && bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.audio.path
+                    }
+                } else if (indexesLen == 3 && parentUrn && parentUrn.elementType === "group") {
+                    condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
+                    if (condition.versionUrn == activeElement.id) {
+                        oldPath = condition.figuredata.audio && condition.figuredata.audio.path || ""
                     }
                 } else if (indexesLen == 3) {
                     condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
@@ -523,6 +547,11 @@ const setOldAudioVideoPath = (getState, activeElement, elementIndex, type) => {
                     if (condition.versionUrn == activeElement.id) {
                         oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.videos[0].path
                     }
+                } else if (indexesLen == 3 && parentUrn && parentUrn.elementType === "group") {
+                    condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
+                    if (condition.versionUrn == activeElement.id) {
+                        oldPath = condition.figuredata.videos[0].path || ""
+                    }
                 } else if (indexesLen == 3) {
                     condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
                     if (condition.versionUrn == activeElement.id) {
@@ -537,6 +566,7 @@ const setOldAudioVideoPath = (getState, activeElement, elementIndex, type) => {
 }
 const setOldinteractiveIdPath = (getState, activeElement, elementIndex) => {
     let parentData = getState().appStore.slateLevelData,
+        { parentUrn } = getState().appStore,
         oldPath,
         index = elementIndex;
     const newParentData = JSON.parse(JSON.stringify(parentData));
@@ -553,6 +583,11 @@ const setOldinteractiveIdPath = (getState, activeElement, elementIndex) => {
             condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
             if (condition.versionUrn == activeElement.id) {
                 oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.interactiveid || ""
+            }
+        } else if (indexesLen == 3 && parentUrn && parentUrn.elementType === "group") {
+            condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
+            if (condition.versionUrn == activeElement.id) {
+                oldPath = condition.figuredata.interactiveid || ""
             }
         } else if (indexesLen == 3) {
             condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
