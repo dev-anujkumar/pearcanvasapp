@@ -16,11 +16,11 @@ export const insertElmResourceAction = (assessmentType) => (dispatch) => {
             PearsonSSOSession: config.ssoToken
         }
     }).then((res) => {
-        apiData = res.data
-        prepareApiData(apiData,'assessment')
-        console.log('apiData',apiData)
-        removeUnwantedApiData(apiData, 'assessment')
-        console.log('apiData',apiData)
+        // apiData = res.data
+        // prepareApiData(apiData,'assessment')
+        // console.log('apiData',apiData)
+        // removeUnwantedApiData(apiData, 'assessment')
+        // console.log('apiData',apiData)
         dispatch({
             type: 'GET_ELM_RESOURCES',
             payload: {
@@ -163,5 +163,6 @@ export const removeUnwantedApiData = (data, type) => {
     if(data.contents.bodyMatter.length == 0 && data.hasMoreItems == true){
         data = {}
         //send error msg
+        console.log('this project has no elm resources added for this type')
     }
 }
