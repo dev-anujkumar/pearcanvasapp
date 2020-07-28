@@ -285,3 +285,22 @@ export const tableElemIcon = (() => {
         </svg>
     )
   })();
+
+
+/***********************************************************SVG- Multi-Column Element ****************************************************/
+export const multiColumnContainer = (() => {
+    return (
+        <svg width="18px" height="18px" viewBox="0 0 18 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+            {/* <title>icon/element/MultiColumn</title> */}
+            <g id="Multi-column-group" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
+                <g id="02" transform="translate(-934.000000, -582.000000)">
+                    <g id="Group" transform="translate(203.000000, 296.000000)">
+                        <g id="icon/element/multi-column" transform="translate(728.000000, 283.000000)">
+                            <rect id="Rectangle" fillOpacity="0" fill="#EEEEEE" fillRule="evenodd" x="0" y="0" width="24" height="24"></rect>
+                            <path d="M8.8,3 C10.0150264,3 11,3.98497355 11,5.2 L11,5.2 L11,18.8 C11,20.0150264 10.0150264,21 8.8,21 L8.8,21 L5.2,21 C3.98497355,21 3,20.0150264 3,18.8 L3,18.8 L3,5.2 C3,3.98497355 3.98497355,3 5.2,3 L5.2,3 Z M18.8,3 C20.0150264,3 21,3.98497355 21,5.2 L21,5.2 L21,18.8 C21,20.0150264 20.0150264,21 18.8,21 L18.8,21 L15.2,21 C13.9849736,21 13,20.0150264 13,18.8 L13,18.8 L13,5.2 C13,3.98497355 13.9849736,3 15.2,3 L15.2,3 Z M8.8,5 L5.2,5 C5.08954305,5 5,5.08954305 5,5.2 L5,5.2 L5,18.8 C5,18.9104569 5.08954305,19 5.2,19 L5.2,19 L8.8,19 C8.91045695,19 9,18.9104569 9,18.8 L9,18.8 L9,5.2 C9,5.08954305 8.91045695,5 8.8,5 L8.8,5 Z M18.8,5 L15.2,5 C15.0895431,5 15,5.08954305 15,5.2 L15,5.2 L15,18.8 C15,18.9104569 15.0895431,19 15.2,19 L15.2,19 L18.8,19 C18.9104569,19 19,18.9104569 19,18.8 L19,18.8 L19,5.2 C19,5.08954305 18.9104569,5 18.8,5 L18.8,5 Z" id="Combined-Shape" fill="#9e9e9e" fillRule="nonzero"></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </svg>)
+})();

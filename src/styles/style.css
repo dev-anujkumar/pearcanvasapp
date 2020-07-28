@@ -129,6 +129,10 @@ table p {
     display:none !important;
 }
 
+.container-multi-column-group.wider-60-40.column-1 .element-container.h1 .cypress-editable.place-holder::before, .container-multi-column-group.text-width-60-40.column-1 .element-container.h1 .cypress-editable.place-holder::before {
+    font-size: 23px !important;
+    margin-top: -9px !important;
+}
 .element-container.h1 .cypress-editable.place-holder::before {
     font-size: 23px !important;
     margin-top: 2px !important;
