@@ -393,7 +393,7 @@ function CommunicationChannel(WrappedComponent) {
                 config.totalPageCount = 0;
                 config.pageLimit = 0;
                 config.fromTOC = false;
-                sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': { slateRefreshStatus: 'Refreshing' } });
+                sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': { slateRefreshStatus: 'Refreshing...' } });
                 this.props.handleSlateRefresh(id, () => {
                     config.isSlateLockChecked = false;
                     this.props.getSlateLockStatus(config.projectUrn, config.slateManifestURN)
