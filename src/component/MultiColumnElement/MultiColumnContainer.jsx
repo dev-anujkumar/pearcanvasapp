@@ -15,7 +15,6 @@ import { checkSlateLock } from '../../js/slateLockUtility.js'
 /** External Components */
 import ElementSaprator from '../ElementSaprator'
 import ElementContainer from '../ElementContainer'
-import PageNumberElement from '../SlateWrapper/PageNumberElement.jsx';
 
 /** Action Creators */
 import { swapElement } from '../SlateWrapper/SlateWrapper_Actions'
@@ -101,25 +100,7 @@ class MultiColumnContainer extends PureComponent {
                                 onClickCapture={this.context.onClickCapture}
                                 parentElement = {this.context.element}
                                 onListSelect={this.context.onListSelect}
-                            >
-                                {
-                                    (isHovered, isPageNumberEnabled, activeElement, permissions) => (
-                                        <PageNumberElement 
-                                            updatePageNumber={this.context.updatePageNumber}
-                                            asideData={asideData}
-                                            parentUrn={parentUrn}
-                                            element={element}
-                                            isHovered={isHovered}
-                                            isPageNumberEnabled={isPageNumberEnabled}
-                                            activeElement={activeElement}
-                                            permissions={permissions}
-                                            asideData={asideData}
-                                            parentUrn={parentUrn}
-                                            parentIndex={parentIndex}
-                                        />
-                                    )
-                                }
-                            </ElementContainer>
+                            />
                             <ElementSaprator
                                 index={index}
                                 esProps={this.context.elementSeparatorProps(index, false, parentUrn, asideData, parentIndex)}
