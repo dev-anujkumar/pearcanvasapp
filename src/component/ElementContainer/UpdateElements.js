@@ -53,6 +53,11 @@ export const generateCommonFigureData = (index, previousElementData, elementType
     subtitleText = subtitleText.replace(/(\r\n|\n|\r)/gm, '');
     captionText = captionText.replace(/(\r\n|\n|\r)/gm, '');
     creditsText = creditsText.replace(/(\r\n|\n|\r)/gm, '');
+    let podwidth;
+    if(previousElementData.figuretype === 'image' || previousElementData.figuretype === "table" || previousElementData.figuretype === "mathImage" ){
+        let getAttributeBCE = document.querySelector(`div.element-container.active[data-id="${previousElementData.id}"] div.figureElement`) || document.querySelector(`div.element-container.fg.showBorder[data-id="${previousElementData.id}"] div.figureElement`)
+        podwidth = getAttributeBCE && getAttributeBCE.getAttribute("podwidth") || 'print100'
+    }  
 
 
     let data = {
@@ -86,10 +91,26 @@ export const generateCommonFigureData = (index, previousElementData, elementType
             postertext: "",
             text: ""
         },
+        figuredata : {
+            path: previousElementData.figuredata.path,
+            height: previousElementData.figuredata.height,
+            width: previousElementData.figuredata.width,
+            schema: "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+            imageid: previousElementData.figuredata.imageid,
+            alttext: previousElementData.figuredata.altText,
+            longdescription: previousElementData.figuredata.longDesc,
+            type: previousElementData.figuredata.type,
+            podwidth: podHtmlmatchWithRegex(podwidth) ? podwidth : `print${podwidth}`
+        },
         inputType : elementType?elementTypes[elementType][primaryOption]['enum']:"",
         inputSubType : elementType?elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']:""    
     }
     return data
+}
+
+const podHtmlmatchWithRegex = (html) => {
+    let printValue = html && html.match(/print/g) ? true : false
+    return printValue;
 }
 
 /**

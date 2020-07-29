@@ -27,6 +27,7 @@ class Sidebar extends Component {
         let numbered = this.props.activeElement.numbered || true;
         let startNumber = this.props.activeElement.startNumber || "1";
         let syntaxhighlighting =  this.props.syntaxhighlighting || true;
+        let podwidth = this.props.activeElement.podwidth || 'print100'
         
         this.state = {
             elementDropdown: '',
@@ -39,7 +40,9 @@ class Sidebar extends Component {
             bceToggleValue: numbered,
             syntaxHighlightingToggleValue: syntaxhighlighting,
             showSyntaxHighlightingPopup : false,
-            bceNumberStartFrom : startNumber
+            bceNumberStartFrom : startNumber,
+            podOption : false,
+            podValue : podwidth
         };
     }
 
@@ -49,11 +52,13 @@ class Sidebar extends Component {
             let numberStartFrom = prevState.bceNumberStartFrom;
             let bceToggle = prevState.bceToggleValue;
             let bceSyntaxHighlight = prevState.syntaxHighlightingToggleValue;
+            let podValue = prevState.podValue
             if(nextProps.activeElement.elementId !== prevState.activeElementId) {
                 elementDropdown = '';
                 numberStartFrom = nextProps.activeElement.startNumber;
                 bceToggle = nextProps.activeElement.numbered;
                 bceSyntaxHighlight = nextProps.activeElement.syntaxhighlighting ;
+                podValue = nextProps.activeElement.podwidth
             }
             
             return {
@@ -65,7 +70,8 @@ class Sidebar extends Component {
                 activeLabelText: nextProps.activeElement.tag,
                 bceNumberStartFrom : numberStartFrom,
                 bceToggleValue : bceToggle,
-                syntaxHighlightingToggleValue : bceSyntaxHighlight
+                syntaxHighlightingToggleValue : bceSyntaxHighlight,
+                podValue : podValue
             };
         }
 
@@ -488,6 +494,53 @@ class Sidebar extends Component {
         return null
     }
 
+    togglePODDropdown = (e) => {
+        let selValue = e.target.getAttribute('data-value');
+        this.setState({
+            podOption: !this.state.podOption,
+            podValue : selValue ? selValue : this.state.podValue
+        }, () => this.handleBceBlur())    
+    }
+
+    podOption = () => {
+        if (this.state.activePrimaryOption === 'primary-image-table' || this.state.activePrimaryOption === 'primary-image-figure' ||
+            this.state.activePrimaryOption === 'primary-image-equation') {
+            let active = '';
+            if (this.state.podOption) {
+                active = 'active'
+            }
+            let printValue = this.state.podValue
+
+            printValue = printValue.replace(/print/g) ? printValue.slice(5) : this.state.podValue
+            printValue = printValue.match(/%/g) ? printValue : printValue + '%'
+
+            let activeElement = document.querySelector(`[data-id="${this.props.activeElement.elementId}"]`)
+            let attrNode = activeElement ? activeElement.querySelector(".figureElement") : null
+            if (attrNode) {
+                attrNode.setAttribute("podwidth", this.state.podValue)
+            }
+
+            return (
+                <div className='printOnDemand'>
+                    <label>POD Width Options</label>
+                    <div className='element-dropdown'>
+                        <div className="element-dropdown-pod" data-element="secondary" onClick={this.togglePODDropdown}>{printValue}
+                            <ul className={`element-dropdown-content pod-options ${active}`}>
+                                <li data-value="print25">25%</li>
+                                <li data-value="print50">50%</li>
+                                <li data-value="print75">75%</li>
+                                <li data-value="print100">100%</li>
+                            </ul>
+                            <svg class="dropdown-arrow" viewBox="0 0 9 4.5"><path d="M0,0,4.5,4.5,9,0Z"></path></svg>
+                        </div>
+                    </div>
+                </div>
+
+            )
+        }
+        return null
+    }
+
     render = () => {
         return (
             <div className="canvas-sidebar">
@@ -497,6 +550,7 @@ class Sidebar extends Component {
                 {this.renderLanguageLabel(this.props.activeElement && this.props.activeElement.tag || '')}
                 {this.secondaryOption()}
                 {this.attributions()}
+                {this.podOption()}
                 {this.state.showSyntaxHighlightingPopup && <PopUp confirmCallback={this.handleSyntaxHighligtingRemove} togglePopup={(value)=>{this.handleSyntaxHighlightingPopup(value)}} dialogText={SYNTAX_HIGHLIGHTING} slateLockClass="lock-message" sytaxHighlight={true}/>}
             </div>
         );

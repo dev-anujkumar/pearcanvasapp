@@ -49,6 +49,9 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                     oldElementData.figuredata.postertext.text = "";
                 }
             }
+            if(oldElementData.figuretype  === 'image'|| oldElementData.figuretype === "table" || oldElementData.figuretype === "mathImage" ){
+                oldElementData.figuredata.podwidth = 'print100'
+            }
 
         /* on Conversion removing the tinymce instance for BCE element*/
         if ((outputPrimaryOptionType && outputPrimaryOptionType['enum'] === "BLOCK_CODE_EDITOR" || newElementData && newElementData['primaryOption'] === 'primary-blockcode-equation') &&

@@ -28,6 +28,7 @@ const findElementType = (element, index) => {
     elementType['tag'] = '';
     let altText = "";
     let longDesc = "";
+    let podwidth = 'print100'
     try {
         switch (element.type) {
             case 'element-authoredtext':
@@ -64,16 +65,23 @@ const findElementType = (element, index) => {
                             let figureAlignment = figureType[element['alignment']]
                             subType = figureAlignment['imageDimension']
                         }
+                        if(element.figuretype === "image" || element.figuretype === "table" || element.figuretype === "mathImage"){
+                            if(element.figuredata && !element.figuredata.podwidth){
+                                element.figuredata.podwidth = 'print100'
+                            }
+                        }
                         //  if (element.subtype == "" || element.subtype == undefined) {                        
                         element.subtype = subType
                         //  } 
                         altText = element.figuredata.alttext ? element.figuredata.alttext : ""
                         longDesc = element.figuredata.longdescription ? element.figuredata.longdescription : ""
+                        podwidth = element.figuredata.podwidth
                         elementType = {
                             elementType: elementDataBank[element.type][element.figuretype]["elementType"],
                             primaryOption: elementDataBank[element.type][element.figuretype]["primaryOption"],
                             altText,
                             longDesc,
+                            podwidth,
                             ...elementDataBank[element.type][element.figuretype][element.subtype]
                         }
                         if (!elementType.secondaryOption) {
