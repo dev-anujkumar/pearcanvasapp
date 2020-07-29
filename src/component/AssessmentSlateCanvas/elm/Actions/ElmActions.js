@@ -8,35 +8,35 @@ import axios from 'axios';
 export const insertElmResourceAction = (assessmentType) => (dispatch) => {
     dispatch({ type: 'SET_ELM_LOADING_TRUE', payload: { elmLoading: true } });
 
-    let url =`${config.ELM_ENDPOINT}v2/${config.projectUrn}/alignments/resources`;
+    let url = `${config.ELM_ENDPOINT}v2/${config.projectUrn}/alignments/resources`;
     return axios.get(url, {
-          headers:  {
+        headers: {
             ApiKey: config.STRUCTURE_APIKEY,
             PearsonSSOSession: config.ssoToken
         }
     }).then((res) => {
         let newApiData = JSON.parse(JSON.stringify(res.data))
-        let itemType = assessmentType == 'elminteractive' ? 'interactive'  : 'assessment'
-        filterApiAlignments(newApiData,itemType);
+        let itemType = assessmentType == 'elminteractive' ? 'interactive' : 'assessment'
+        filterApiAlignments(newApiData, itemType);
         filterApiContainers(newApiData);
-        if(setCondition(newApiData).noAlignments && setCondition(newApiData).noBodyMatter){
+        if (setCondition(newApiData).noAlignments && setCondition(newApiData).noBodyMatter) {
             dispatch({
                 type: 'GET_ELM_RESOURCES',
                 payload: {
                     data: {},
                     errFlag: true,
                     apiStatus: "400",
-                    elmLoading:false
+                    elmLoading: false
                 }
             })
-        }else{
+        } else {
             dispatch({
                 type: 'GET_ELM_RESOURCES',
                 payload: {
                     data: newApiData,
                     errFlag: false,
                     apiStatus: "200",
-                    elmLoading:false
+                    elmLoading: false
                 }
             })
         }
@@ -47,7 +47,7 @@ export const insertElmResourceAction = (assessmentType) => (dispatch) => {
                 data: {},
                 errFlag: true,
                 apiStatus: "404",
-                elmLoading:false
+                elmLoading: false
             }
         })
     })
@@ -123,7 +123,7 @@ export const setSearchTerm = (assessmentType,searchTerm) => dispatch => {
   */
 export const filterApiAlignments = (data, type) => {
     if (data.alignments && data.alignments.resourceCollections && data.alignments.resourceCollections.length) {
-        data.alignments.resourceCollections = data.alignments.resourceCollections.filter(resource => {
+        data.alignments.resourceCollections = data.alignments.resourceCollections.filter( resource => {
             if (resource.resources && resource.resources.length) {
                 resource.resources = resource.resources.filter((assessments) => {
                     return assessments.type === type;

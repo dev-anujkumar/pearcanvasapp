@@ -256,8 +256,6 @@ export const tableDataSorting = (openInnerTable, tableValue, order) => {
     return sortedData
 }
 
-
-
 /*** @description - This object is used for mapping elm-interactives */
 export const interactiveTypeList = {
     'flashcards' : {
