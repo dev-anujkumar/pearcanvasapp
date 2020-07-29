@@ -4,7 +4,11 @@
     max-width: 100%;
     height: 100%;
 }
-
+/* Scroller for list inside multi column */
+.container-multi-column-group .element-container.ul ul[treelevel='1'], .container-multi-column-group .element-container.ol ol[treelevel='1']{
+    overflow-y: unset;
+    overflow-wrap: normal;
+}
 /* Common class for column groups */
 .container-multi-column-group {
     /* width: 50%; */
@@ -15,15 +19,21 @@
 /* Specific class for 1st column group */
 .container-multi-column-group.column-1 {
     /* Phase 1 */
-    padding-left: 10px;
+    padding-left: 6px;
     border-right: none;
 }
 
 /* Element container class specific to Multi-Column container */
 .container-multi-column-group .element-container {
-    max-width: 83%;
+    max-width: 82%;
+}
+.container-multi-column-group.column-1 .element-container {
+    max-width: 82%;
 }
 
+.container-multi-column-group.wider-50-50.column-1 .element-container, .container-multi-column-group.text-width-50-50.column-1 .element-container {
+    max-width: 85%;
+}
 /* For audio tag inside multi-column */
 .container-multi-column-group .element-container audio {
     width: 80%;
@@ -54,12 +64,12 @@
     width: 50%;
 }
 
-/* Subtype: wider-65-35 */
-.container-multi-column-group.wider-65-35.column-0 {
-    width: 65%;
+/* Subtype: wider-60-40 */
+.container-multi-column-group.wider-60-40.column-0 {
+    width: 60%;
 }
-.container-multi-column-group.wider-65-35.column-1 {
-    width: 35%;
+.container-multi-column-group.wider-60-40.column-1 {
+    width: 40%;
 }
 
 /* Subtype: text-width-50-50 */
@@ -102,59 +112,64 @@
 /******************************************************************************/
 
 
-/***************************** 65-35 *****************************************/
+/***************************** 60-40 *****************************************/
 /***** C1 *****/
 /* For single asessment */
-.container-multi-column-group.wider-65-35 .singleAssessment_Dropdown_SelectLabel {
+.container-multi-column-group.wider-60-40 .singleAssessment_Dropdown_SelectLabel {
     width: 43%;
     padding-top: 2px;
 }
 
 /* For single asessment dropdown */
-.container-multi-column-group.wider-65-35 .singleAssessment_Dropdown_activeDropdown {
+.container-multi-column-group.wider-60-40 .singleAssessment_Dropdown_activeDropdown {
     width: 54%;
     margin-left: 7px;
 }
 
-.container-multi-column-group.wider-65-35 .singleAssessment_Dropdown_currentLabel {
+.container-multi-column-group.wider-60-40 .singleAssessment_Dropdown_currentLabel {
     font-size: 12px;
 }
 
 /* For single asessment dropdown ul */
-.container-multi-column-group.wider-65-35 .singleAssessment_Dropdown_options {
+.container-multi-column-group.wider-60-40 .singleAssessment_Dropdown_options {
     margin-left: 45%;
     width: 50%;
     height: 60%;
 }
+
+.container-multi-column-group.column-0 .element-container {
+    max-width: 88%;
+}
+
 /************/
 
 /***** C2 *****/
 /* For single asessment */
-.container-multi-column-group.wider-65-35.column-1 .singleAssessment_Dropdown_SelectLabel {
+.container-multi-column-group.wider-60-40.column-1 .singleAssessment_Dropdown_SelectLabel {
     width: 20%;
     margin-bottom: 10px;
 }
 
 /* For single asessment dropdown */
-.container-multi-column-group.wider-65-35.column-1 .singleAssessment_Dropdown_activeDropdown {
+.container-multi-column-group.wider-60-40.column-1 .singleAssessment_Dropdown_activeDropdown {
     width: 73%;
     margin-left: 10px;
     margin-top: 14px;
 }
 
-.container-multi-column-group.wider-65-35.column-1 .singleAssessment_Dropdown_currentLabel {
+.container-multi-column-group.wider-60-40.column-1 .singleAssessment_Dropdown_currentLabel {
     font-size: 10px;
 }
 
 /* For single asessment dropdown ul */
-.container-multi-column-group.wider-65-35.column-1 .singleAssessment_Dropdown_options {
+.container-multi-column-group.wider-60-40.column-1 .singleAssessment_Dropdown_options {
     width: 64%;
     margin-left: 45px;
     margin-top: 15px;
     height: 36%;
 }
 
-.container-multi-column-group.wider-65-35.column-1 .singleAssessment_Dropdown_arrow {
+.container-multi-column-group.wider-60-40.column-1 .singleAssessment_Dropdown_arrow {
     float: right;
     position: relative;
     top: 0px;
@@ -163,7 +178,7 @@
     height: 15px;
 }
 
-.container-multi-column-group.wider-65-35.column-1 .element-container.qu {
+.container-multi-column-group.wider-60-40.column-1 .element-container.qu, .container-multi-column-group.text-width-60-40.column-1 .element-container.qu {
     height: 50%;
 }
 /************/
@@ -230,8 +245,16 @@
     height: 15px;
 }
 
-.container-multi-column-group.text-width-60-40.column-1 .element-container.qu {
-    height: 360px;
-}
 /************/
 /******************************************************************************/
+.container-multi-column-group .figureAssessment.figureAssessmentItem header {
+    overflow-wrap: break-word;
+}
+.element-container.multi-column {
+    padding-right: 0px !important;
+    padding-left: 5px !important;
+}
+
+.container-multi-column-group .cypress-editable {
+    overflow-wrap: anywhere;
+}

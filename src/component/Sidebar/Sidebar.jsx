@@ -25,9 +25,9 @@ class Sidebar extends Component {
         let primaryFirstOption = Object.keys(elementTypeList)[0];
         let secondaryFirstOption = Object.keys(elementTypeList[primaryFirstOption].subtype)[0];
         let labelText = elementTypeList[primaryFirstOption].subtype[secondaryFirstOption].labelText;
-        let numbered = this.props.activeElement.numbered || true;
+        let numbered = this.props.activeElement.numbered;
         let startNumber = this.props.activeElement.startNumber || "1";
-        let syntaxhighlighting =  this.props.syntaxhighlighting || true;
+        let syntaxhighlighting =  this.props.activeElement.syntaxhighlighting;
         
         this.state = {
             elementDropdown: '',

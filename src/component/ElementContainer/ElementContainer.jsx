@@ -1219,7 +1219,6 @@ class ElementContainer extends Component {
                         index: index,
                         element: element,
                         slateLockInfo: slateLockInfo,
-                        updatePageNumber: this.props.updatePageNumber,
                         handleCommentspanel : handleCommentspanel,
                         isBlockerActive : this.props.isBlockerActive,
                         onClickCapture : this.props.onClickCapture,
