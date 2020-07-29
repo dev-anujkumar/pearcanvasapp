@@ -294,3 +294,6 @@ blockquote.blockquoteMarginaliaAttr,blockquote.blockquoteMarginalia{
 .showHide .cypress-editable{
     min-height: 50px !important;
 }
+.pearson-component.image.figureData.table-figure-data table caption {
+    margin-top: 2%;
+}

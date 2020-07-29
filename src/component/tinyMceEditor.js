@@ -438,6 +438,13 @@ export class TinyMceEditor extends Component {
                         return false
                     }
                     break;
+                case "Undo":
+                case "Redo":
+                    if (activeElement.nodeName === "CODE") {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+                    break;
                 case 'Bold':
                 case 'Italic':
                 case 'Underline':
