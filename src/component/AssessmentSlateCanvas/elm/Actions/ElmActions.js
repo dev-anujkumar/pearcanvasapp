@@ -5,7 +5,6 @@ import axios from 'axios';
 /**
  * This action creator is used to fetch ELM resources added to the project
  */
-let apiData ; 
 export const insertElmResourceAction = (assessmentType) => (dispatch) => {
     dispatch({ type: 'SET_ELM_LOADING_TRUE', payload: { elmLoading: true } });
 
@@ -16,20 +15,31 @@ export const insertElmResourceAction = (assessmentType) => (dispatch) => {
             PearsonSSOSession: config.ssoToken
         }
     }).then((res) => {
-        // apiData = res.data
-        // prepareApiData(apiData,'assessment')
-        // console.log('apiData',apiData)
-        // removeUnwantedApiData(apiData, 'assessment')
-        // console.log('apiData',apiData)
-        dispatch({
-            type: 'GET_ELM_RESOURCES',
-            payload: {
-                data: res.data,
-                errFlag: false,
-                apiStatus: "200",
-                elmLoading:false
-            }
-        })
+        let newApiData = JSON.parse(JSON.stringify(res.data))
+        let itemType = assessmentType == 'elminteractive' ? 'interactive'  : 'assessment'
+        filterApiAlignments(newApiData,itemType);
+        filterApiContainers(newApiData);
+        if(setCondition(newApiData).noAlignments && setCondition(newApiData).noBodyMatter){
+            dispatch({
+                type: 'GET_ELM_RESOURCES',
+                payload: {
+                    data: {},
+                    errFlag: true,
+                    apiStatus: "400",
+                    elmLoading:false
+                }
+            })
+        }else{
+            dispatch({
+                type: 'GET_ELM_RESOURCES',
+                payload: {
+                    data: newApiData,
+                    errFlag: false,
+                    apiStatus: "200",
+                    elmLoading:false
+                }
+            })
+        }
     }).catch((error) => {
         dispatch({
             type: 'GET_ELM_RESOURCES',
@@ -107,62 +117,63 @@ export const setSearchTerm = (assessmentType,searchTerm) => dispatch => {
         dispatch({ type: 'SET_SEARCH_TERM', payload: { searchTerm: searchTerm } });
 }
 
-export const prepareApiData = (data, type) => {
-    let title = "", index = "", count = 0, allCount = 0;
+/*** @description This is function to filter containers which contain the assets of given type
+    * @param data API data
+    * @param type type of asset
+  */
+export const filterApiAlignments = (data, type) => {
     if (data.alignments && data.alignments.resourceCollections && data.alignments.resourceCollections.length) {
-        data.hasMoreItems = false
-        for (let resource of data.alignments.resourceCollections) {
+        data.alignments.resourceCollections = data.alignments.resourceCollections.filter(resource => {
             if (resource.resources && resource.resources.length) {
-                for (let assessments of resource.resources) {
-                    if (assessments && assessments.type && assessments.type !== type) {
-                        count++;
-                    }
-                    allCount = allCount + resource.resources.length;
-                }
+                resource.resources = resource.resources.filter((assessments) => {
+                    return assessments.type === type;
+                });
             }
-        }
-        if (count == allCount) {
-            data.hasMoreItems = true;
-            data.alignments = {}
-        }
-        console.log('data.hasMoreItems', data.hasMoreItems)
+            return resource.resources.length > 0;
+        });
     }
     if (data.contents && data.contents.bodyMatter && data.contents.bodyMatter.length) {
         for (let item of data.contents.bodyMatter) {
             if (item && ((item.alignments && item.alignments != null) || (item.contents && item.contents != null))) {
-                console.log('item', item.label)
-                prepareApiData(item, type)
+                filterApiAlignments(item, type)
             }
         }
     }
-
 }
-export const removeUnwantedApiData = (data, type) => {
-    if (data.contents && data.contents.bodyMatter && data.contents.bodyMatter.length) {//p -> c -> m ||p
-        for (let { index1, item1 } of data.contents.bodyMatter.entries()) { //item= part
-            if (item1.contents && item1.contents.bodyMatter.length) {
-                for (let { index2, item2 } of item1.contents.bodyMatter.entries()) {                         //item = chap
-                    if (item2.contents && item2.contents.bodyMatter.length) {
-                        for (let { index3, item3 } of item2.contents.bodyMatter.entries()) {                         //item = mod
-                            if (item3.contents && item3.contents.bodyMatter.length) {
-                                //go to loop else 
-                                console.log('in if case')
-                            } else if (item3.hasMoreItems == true && !item3.contents.bodyMatter.length) {
-                                delete item2.contents.bodyMatter[index3]
-                            }
-                        }
-                    }else if (item2.hasMoreItems == true && !item2.contents.bodyMatter.length) {
-                        delete item1.contents.bodyMatter[index2]
+
+/*** @description This is function to filter containers which are empty
+    * @param data API data
+  */
+export const filterApiContainers = (data) => {
+    if (data.contents && data.contents.bodyMatter && data.contents.bodyMatter.length) {
+        data.contents.bodyMatter = data.contents.bodyMatter.filter(container1 => {
+            if (container1 && (container1.contents && container1.contents != null)) {
+                container1.contents.bodyMatter = container1.contents.bodyMatter.filter(container2 => {
+                    if (container2 && (container2.contents && container2.contents != null)) {
+                        container2.contents.bodyMatter = container2.contents.bodyMatter.filter(container3 => {
+                            return !setCondition(container3).noBodyMatter || !setCondition(container3).noAlignments
+                        });
                     }
-                }
-            }else if (item1.hasMoreItems == true && !item1.contents.bodyMatter.length) {
-                delete data.contents.bodyMatter[index1]
+                    return !setCondition(container2).noBodyMatter || !setCondition(container2).noAlignments
+                });
             }
-        }
+            return !setCondition(container1).noBodyMatter || !setCondition(container1).noAlignments
+
+        });
     }
-    if(data.contents.bodyMatter.length == 0 && data.hasMoreItems == true){
+    if (setCondition(data).noAlignments && setCondition(data).noBodyMatter) {
         data = {}
-        //send error msg
-        console.log('this project has no elm resources added for this type')
     }
+    return data
+}
+
+/*** @description This is function to check if bodymatter is empty and check if aligments are present
+    * @param item current container
+  */
+const setCondition = (item) => {
+    let condition = {};
+    condition.noBodyMatter = item && (!item.contents || (item.contents && item.contents.bodyMatter.length == 0))
+    condition.noAlignments = item && (!item.alignments || item.alignments.resourceCollections.length == 0)
+
+    return condition
 }
