@@ -51,6 +51,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                 }
             }
 
+            /* On conversion of primary option type, change the POD value to default value */
             if((oldElementData.figuretype  === 'image'|| oldElementData.figuretype === "table" || oldElementData.figuretype === "mathImage") &&
             inputPrimaryOptionType !== outputPrimaryOptionType ){
                 oldElementData.figuredata.podwidth = POD_DEFAULT_VALUE

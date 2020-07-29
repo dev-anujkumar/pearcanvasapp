@@ -496,6 +496,11 @@ class Sidebar extends Component {
         return null
     }
 
+    /**
+     * Responsible for toggling of print of Demand dropdown 
+     * @param {*} e
+     */
+
     togglePODDropdown = (e) => {
         let selValue = e.target.getAttribute('data-value');
         this.setState({
@@ -503,6 +508,11 @@ class Sidebar extends Component {
             podValue : selValue ? selValue : this.state.podValue
         }, () => this.handleBceBlur())    
     }
+
+    /**
+     * Responsible for rendering of print of Demand 
+     * @param {*} 
+     */
 
     podOption = () => {
         if (this.state.activePrimaryOption === 'primary-image-table' || this.state.activePrimaryOption === 'primary-image-figure' ||
