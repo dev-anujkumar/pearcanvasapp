@@ -3,6 +3,7 @@ import elementTypes from './../Sidebar/elementTypes';
 import config from '../../config/config';
 import { matchHTMLwithRegex } from '../../constants/utility.js'
 import store from '../../appstore/store'
+import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
 
 let indivisualData = {
     schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
@@ -56,7 +57,8 @@ export const generateCommonFigureData = (index, previousElementData, elementType
     let podwidth;
     if(previousElementData.figuretype === 'image' || previousElementData.figuretype === "table" || previousElementData.figuretype === "mathImage" ){
         let getAttributeBCE = document.querySelector(`div.element-container.active[data-id="${previousElementData.id}"] div.figureElement`) || document.querySelector(`div.element-container.fg.showBorder[data-id="${previousElementData.id}"] div.figureElement`)
-        podwidth = getAttributeBCE && getAttributeBCE.getAttribute("podwidth") || 'print100'
+        podwidth = getAttributeBCE && getAttributeBCE.getAttribute("podwidth") || POD_DEFAULT_VALUE
+        previousElementData.figuredata.podwidth = podHtmlmatchWithRegex(podwidth) ? podwidth : `print${podwidth}`
     }  
 
 
@@ -90,17 +92,6 @@ export const generateCommonFigureData = (index, previousElementData, elementType
             title: matchHTMLwithRegex(titleHTML)?titleHTML:`<p>${titleHTML}</p>`,
             postertext: "",
             text: ""
-        },
-        figuredata : {
-            path: previousElementData.figuredata.path,
-            height: previousElementData.figuredata.height,
-            width: previousElementData.figuredata.width,
-            schema: "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
-            imageid: previousElementData.figuredata.imageid,
-            alttext: previousElementData.figuredata.altText,
-            longdescription: previousElementData.figuredata.longDesc,
-            type: previousElementData.figuredata.type,
-            podwidth: podHtmlmatchWithRegex(podwidth) ? podwidth : `print${podwidth}`
         },
         inputType : elementType?elementTypes[elementType][primaryOption]['enum']:"",
         inputSubType : elementType?elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']:""    

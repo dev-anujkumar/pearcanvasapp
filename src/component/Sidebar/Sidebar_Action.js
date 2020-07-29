@@ -11,6 +11,7 @@ import elementTypes from './../Sidebar/elementTypes';
 import figureDataBank from '../../js/figure_data_bank';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
+import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
 let imageSource = ['image','table','mathImage'],imageDestination = ['primary-image-figure','primary-image-table','primary-image-equation']
 
 export const convertElement = (oldElementData, newElementData, oldElementInfo, store, indexes, fromToolbar,showHideObj) => (dispatch,getState) => {
@@ -49,8 +50,10 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                     oldElementData.figuredata.postertext.text = "";
                 }
             }
-            if(oldElementData.figuretype  === 'image'|| oldElementData.figuretype === "table" || oldElementData.figuretype === "mathImage" ){
-                oldElementData.figuredata.podwidth = 'print100'
+
+            if((oldElementData.figuretype  === 'image'|| oldElementData.figuretype === "table" || oldElementData.figuretype === "mathImage") &&
+            inputPrimaryOptionType !== outputPrimaryOptionType ){
+                oldElementData.figuredata.podwidth = POD_DEFAULT_VALUE
             }
 
         /* on Conversion removing the tinymce instance for BCE element*/

@@ -22,13 +22,14 @@ import elementDataBank from './elementDataBank'
 import figureData from '../ElementFigure/figureTypes.js';
 import { fetchAllSlatesData, setCurrentSlateAncestorData } from '../../js/getAllSlatesData.js';
 import { handleTCMData, tcmSnapshot } from '../../component/ElementContainer/TcmSnapshot_Actions';
+import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
 
 const findElementType = (element, index) => {
     let elementType = {};
     elementType['tag'] = '';
     let altText = "";
     let longDesc = "";
-    let podwidth = 'print100'
+    let podwidth = POD_DEFAULT_VALUE
     try {
         switch (element.type) {
             case 'element-authoredtext':
@@ -67,7 +68,7 @@ const findElementType = (element, index) => {
                         }
                         if(element.figuretype === "image" || element.figuretype === "table" || element.figuretype === "mathImage"){
                             if(element.figuredata && !element.figuredata.podwidth){
-                                element.figuredata.podwidth = 'print100'
+                                element.figuredata.podwidth = POD_DEFAULT_VALUE
                             }
                         }
                         //  if (element.subtype == "" || element.subtype == undefined) {                        

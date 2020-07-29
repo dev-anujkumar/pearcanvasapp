@@ -14,6 +14,7 @@ import PopUp from '../PopUp/index.js';
 import { SYNTAX_HIGHLIGHTING } from '../SlateWrapper/SlateWrapperConstants.js';
 import { showBlocker,hideBlocker } from '../../js/toggleLoader';
 import { customEvent } from '../../js/utils.js';
+import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
 
 class Sidebar extends Component {
     constructor(props) {
@@ -27,7 +28,7 @@ class Sidebar extends Component {
         let numbered = this.props.activeElement.numbered;
         let startNumber = this.props.activeElement.startNumber || "1";
         let syntaxhighlighting =  this.props.activeElement.syntaxhighlighting;
-        let podwidth = this.props.activeElement.podwidth || 'print100'
+        let podwidth = this.props.activeElement.podwidth || POD_DEFAULT_VALUE
         
         this.state = {
             elementDropdown: '',
@@ -89,7 +90,7 @@ class Sidebar extends Component {
             activePrimaryOption: value,
             activeSecondaryOption: secondaryFirstOption,
             activeLabelText: labelText,
-            podValue: 'print100'
+            podValue: POD_DEFAULT_VALUE
         });
 
         if(this.props.activeElement.elementId !== '' && this.props.activeElement.elementWipType !== "element-assessment") {
@@ -198,8 +199,7 @@ class Sidebar extends Component {
         this.setState({
             elementDropdown: '',
             activeSecondaryOption: value,
-            activeLabelText: labelText,
-            podValue: 'print100'
+            activeLabelText: labelText
         });
 
         if(this.props.activeElement.elementId !== '' && this.props.activeElement.elementWipType !== "element-assessment") {
