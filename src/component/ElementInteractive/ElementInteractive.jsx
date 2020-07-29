@@ -16,6 +16,7 @@ import RootCiteTdxComponent from '../AssessmentSlateCanvas/assessmentCiteTdx/Roo
 import RootSingleAssessmentComponent from '../AssessmentSlateCanvas/singleAssessmentCiteTdx/RootSingleAssessmentComponent.jsx'
 import RootElmComponent from '../AssessmentSlateCanvas/elm/RootElmComponent.jsx';
 import  {setCurrentCiteTdx, setCurrentInnerCiteTdx, getMCQGuidedData, assessmentSorting}  from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
+import {resetElmStore} from '../AssessmentSlateCanvas/elm/Actions/ElmActions.js';
 import { connect } from 'react-redux';
 import { sendDataToIframe } from './../../constants/utility.js';
 import { INTERACTIVE_FPO, INTERACTIVE_SCHEMA } from '../../constants/Element_Constants.js';
@@ -248,6 +249,7 @@ class Interactive extends React.Component {
         hideTocBlocker(false);
         disableHeader(false);
         this.props.showBlocker(false);
+        this.props.resetElmStore();
     }
 
     /**
@@ -624,7 +626,8 @@ Interactive.propTypes = {
 const mapActionToProps = {
     setCurrentCiteTdx: setCurrentCiteTdx,
     setCurrentInnerCiteTdx: setCurrentInnerCiteTdx,
-    assessmentSorting:assessmentSorting
+    assessmentSorting:assessmentSorting,
+    resetElmStore:resetElmStore
 }
 
 export default connect(

@@ -15,6 +15,7 @@ import RootSingleAssessmentComponent from '../AssessmentSlateCanvas/singleAssess
 import { setCurrentCiteTdx, setCurrentInnerCiteTdx, assessmentSorting, specialCharacterDecode } from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
 import RootElmComponent from '../AssessmentSlateCanvas/elm/RootElmComponent.jsx';
 import { setAssessmentTitle, setAssessmentUsageType, setAssessmentProperties } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
+import { resetElmStore } from '../AssessmentSlateCanvas/elm/Actions/ElmActions.js';
 
 /*** @description - ElementSingleAssessment is a class based component. It is defined simply to make a skeleton of the assessment-type element .*/
 
@@ -219,6 +220,7 @@ static getDerivedStateFromProps(nextProps, prevState) {
         hideTocBlocker(false);
         disableHeader(false);
         this.props.showBlocker(false);
+        this.props.resetElmStore();
     }
 
     /***
@@ -348,7 +350,8 @@ const mapStateToProps = state => {
 const mapActionToProps = {
     setCurrentCiteTdx: setCurrentCiteTdx,
     setCurrentInnerCiteTdx: setCurrentInnerCiteTdx,
-    assessmentSorting: assessmentSorting
+    assessmentSorting: assessmentSorting,
+    resetElmStore: resetElmStore
 }
 
 

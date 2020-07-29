@@ -55,6 +55,7 @@ export const insertElmResourceAction = (assessmentType) => (dispatch) => {
 
 /**
  * This action creator is used to fetch ELM assessment-items for a given ELM resource
+ * @param assessmentId id of the assessment to fetch its items
  */
 export const fetchAssessmentItem = (assessmentId) => (dispatch) => {
     dispatch({ type: 'SET_LOADING_TRUE', payload: { isLoading: true } });
@@ -115,6 +116,18 @@ export const openAssessmentSearchBar = (assessmentType, flag) => dispatch => {
 
 export const setSearchTerm = (assessmentType,searchTerm) => dispatch => {
         dispatch({ type: 'SET_SEARCH_TERM', payload: { searchTerm: searchTerm } });
+}
+
+/*** @description This is function to reset the elm store when the elm picker is closed */
+export const resetElmStore = () => dispatch => {
+    dispatch({
+        type: 'GET_ELM_RESOURCES',
+        payload: {
+            data: {},
+            errFlag: false,
+            elmLoading:true,
+        }
+    })
 }
 
 /*** @description This is function to filter containers which contain the assets of given type
