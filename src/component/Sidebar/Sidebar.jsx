@@ -88,7 +88,8 @@ class Sidebar extends Component {
             elementDropdown: '',
             activePrimaryOption: value,
             activeSecondaryOption: secondaryFirstOption,
-            activeLabelText: labelText
+            activeLabelText: labelText,
+            podValue: 'print100'
         });
 
         if(this.props.activeElement.elementId !== '' && this.props.activeElement.elementWipType !== "element-assessment") {
@@ -197,7 +198,8 @@ class Sidebar extends Component {
         this.setState({
             elementDropdown: '',
             activeSecondaryOption: value,
-            activeLabelText: labelText
+            activeLabelText: labelText,
+            podValue: 'print100'
         });
 
         if(this.props.activeElement.elementId !== '' && this.props.activeElement.elementWipType !== "element-assessment") {
@@ -524,7 +526,8 @@ class Sidebar extends Component {
                 <div className='printOnDemand'>
                     <label>POD Width Options</label>
                     <div className='element-dropdown'>
-                        <div className="element-dropdown-pod" data-element="secondary" onClick={this.togglePODDropdown}>{printValue}
+                        <div className="element-dropdown-pod" data-element="secondary" onClick={this.togglePODDropdown}>
+                            <label id='pod-value'>{printValue}</label>
                             <ul className={`element-dropdown-content pod-options ${active}`}>
                                 <li data-value="print25">25%</li>
                                 <li data-value="print50">50%</li>
