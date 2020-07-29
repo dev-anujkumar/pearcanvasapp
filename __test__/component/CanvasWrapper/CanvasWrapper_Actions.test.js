@@ -340,6 +340,7 @@ describe('action file test', () => {
                     'index': 1,
                     "longDesc": "",
                     'elementWipType': 'figure',
+                    "podwidth": "print100",
                     'tag': 'Fg',
                     'toolbar': ['crossLinkingIcon','assetpopover','decreaseindent','glossary']
                 }
@@ -370,6 +371,7 @@ describe('action file test', () => {
                     'elementId': 'urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464',
                     'index': 1,
                     "longDesc": "",
+                    "podwidth": "print100",
                     'elementWipType': 'figure',
                     'tag': 'Fg',
                     'toolbar': ['crossLinkingIcon','assetpopover','decreaseindent','glossary']
@@ -402,6 +404,7 @@ describe('action file test', () => {
                     'index': 1,
                     "longDesc": "",
                     'elementWipType': 'figure',
+                    "podwidth": "print100",
                     'tag': 'Fg',
                     'toolbar': ['crossLinkingIcon','assetpopover','decreaseindent','glossary']
                 }
@@ -497,6 +500,7 @@ describe('action file test', () => {
                     'elementId': 'urn:pearson:work:b33703aa-d629-4466-8606-cfcf0505e291',
                     'index': 1,
                     "longDesc": "",
+                    "podwidth": 'print100',
                     'elementWipType': 'figure',
                     'tag': 'TB',
                     'toolbar': ['crossLinkingIcon','assetpopover','decreaseindent','glossary']
@@ -626,6 +630,7 @@ describe('action file test', () => {
                     'secondaryOption': 'secondary-image-equation-half',
                     'elementId': 'urn:pearson:work:1d5259c3-63c9-4a77-9a52-0315007624d0',
                     'index': 1,
+                    "podwidth": "print100",
                     'elementWipType': 'figure',
                     'tag': 'EQ',
                     'toolbar': ['crossLinkingIcon','assetpopover','decreaseindent','glossary']
