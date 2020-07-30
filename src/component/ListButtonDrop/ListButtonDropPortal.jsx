@@ -109,7 +109,7 @@ class ListButtonDropPortal extends Component {
                             )
                           
                         }else if (element.type === "showhide"){
-                            element.interactivedata[this.props.showHideObj.showHideType].find(
+                            this.props.showHideObj && element.interactivedata[this.props.showHideObj.showHideType].find(
                                 (nselement) => {
                                     // let isMatched = false
                                     if (nselement.id === activeElement.elementId) {
@@ -118,6 +118,13 @@ class ListButtonDropPortal extends Component {
                                     }
                                 }
                             )
+                        } else if (element.type === "groupedcontent") {
+                            let indexes = activeElement.index.split("-")
+                            let liElement = element.groupeddata && element.groupeddata.bodymatter[indexes[1]] && element.groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
+                            if (liElement && liElement.id === activeElement.elementId) {
+                                isMatched = liElement.type === 'element-list'
+                                isMatched && (listElement = liElement)
+                            }
                         }
                         return isMatched
                     });
