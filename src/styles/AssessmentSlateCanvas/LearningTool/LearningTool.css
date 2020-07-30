@@ -98,7 +98,7 @@
 }
 
 .learningToolType {
-    width: 149.1px;
+    width: 175px;
     height: 25px;
     border-radius: 3px;
     border: solid 1px #b9b9b9;
@@ -106,7 +106,7 @@
 }
 
 .learningToolDis {
-    width: 151.6px;
+    width: 175px;
     height: 25px;
     border-radius: 3px;
     border: solid 1px #b9b9b9;
@@ -314,10 +314,11 @@
 .tableRow {
     font-size: 12px;
     font-family: 'Open Sans', sans-serif;
-    padding: 0px 5px;
+    padding: 2px 5px;
     line-height: 1.4em;
-    color:#424242;
+    color: #424242;
     font-weight: normal;
+    overflow-wrap: break-word;
 }
 .learningToolSearchButton[disabled] {
     border: 1px ridge gray;
