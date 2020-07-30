@@ -50,7 +50,7 @@ describe('Utils file function testing', () => {
 
     })
 
-    it('Testing buildCommentDate function', () => {
+    xit('Testing buildCommentDate function', () => {
         let result = utils.buildCommentDate('2015-03-25')
         let finalResult = result.includes('Mar. 24, 2015');
         expect(finalResult).toEqual(false);
