@@ -14,6 +14,7 @@ import PopUp from '../PopUp/index.js';
 import { SYNTAX_HIGHLIGHTING } from '../SlateWrapper/SlateWrapperConstants.js';
 import { showBlocker,hideBlocker } from '../../js/toggleLoader';
 import { customEvent } from '../../js/utils.js';
+import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
 
 class Sidebar extends Component {
     constructor(props) {
@@ -27,6 +28,7 @@ class Sidebar extends Component {
         let numbered = this.props.activeElement.numbered;
         let startNumber = this.props.activeElement.startNumber || "1";
         let syntaxhighlighting =  this.props.activeElement.syntaxhighlighting;
+        let podwidth = this.props.activeElement.podwidth || POD_DEFAULT_VALUE
         
         this.state = {
             elementDropdown: '',
@@ -39,7 +41,9 @@ class Sidebar extends Component {
             bceToggleValue: numbered,
             syntaxHighlightingToggleValue: syntaxhighlighting,
             showSyntaxHighlightingPopup : false,
-            bceNumberStartFrom : startNumber
+            bceNumberStartFrom : startNumber,
+            podOption : false,
+            podValue : podwidth
         };
     }
 
@@ -49,11 +53,13 @@ class Sidebar extends Component {
             let numberStartFrom = prevState.bceNumberStartFrom;
             let bceToggle = prevState.bceToggleValue;
             let bceSyntaxHighlight = prevState.syntaxHighlightingToggleValue;
+            let podValue = prevState.podValue
             if(nextProps.activeElement.elementId !== prevState.activeElementId) {
                 elementDropdown = '';
                 numberStartFrom = nextProps.activeElement.startNumber;
                 bceToggle = nextProps.activeElement.numbered;
                 bceSyntaxHighlight = nextProps.activeElement.syntaxhighlighting ;
+                podValue = nextProps.activeElement.podwidth
             }
             
             return {
@@ -65,7 +71,8 @@ class Sidebar extends Component {
                 activeLabelText: nextProps.activeElement.tag,
                 bceNumberStartFrom : numberStartFrom,
                 bceToggleValue : bceToggle,
-                syntaxHighlightingToggleValue : bceSyntaxHighlight
+                syntaxHighlightingToggleValue : bceSyntaxHighlight,
+                podValue : podValue
             };
         }
 
@@ -82,7 +89,8 @@ class Sidebar extends Component {
             elementDropdown: '',
             activePrimaryOption: value,
             activeSecondaryOption: secondaryFirstOption,
-            activeLabelText: labelText
+            activeLabelText: labelText,
+            podValue: POD_DEFAULT_VALUE
         });
 
         if(this.props.activeElement.elementId !== '' && this.props.activeElement.elementWipType !== "element-assessment") {
@@ -488,6 +496,64 @@ class Sidebar extends Component {
         return null
     }
 
+    /**
+     * Responsible for toggling of print of Demand dropdown 
+     * @param {*} e
+     */
+
+    togglePODDropdown = (e) => {
+        let selValue = e.target.getAttribute('data-value');
+        this.setState({
+            podOption: !this.state.podOption,
+            podValue : selValue ? selValue : this.state.podValue
+        }, () => this.handleBceBlur())    
+    }
+
+    /**
+     * Responsible for rendering of print of Demand 
+     * @param {*} 
+     */
+
+    podOption = () => {
+        if (this.state.activePrimaryOption === 'primary-image-table' || this.state.activePrimaryOption === 'primary-image-figure' ||
+            this.state.activePrimaryOption === 'primary-image-equation') {
+            let active = '';
+            if (this.state.podOption) {
+                active = 'active'
+            }
+            let printValue = this.state.podValue
+
+            printValue = printValue.replace(/print/g) ? printValue.slice(5) : this.state.podValue
+            printValue = printValue.match(/%/g) ? printValue : printValue + '%'
+
+            let activeElement = document.querySelector(`[data-id="${this.props.activeElement.elementId}"]`)
+            let attrNode = activeElement ? activeElement.querySelector(".figureElement") : null
+            if (attrNode) {
+                attrNode.setAttribute("podwidth", this.state.podValue)
+            }
+
+            return (
+                <div className='printOnDemand'>
+                    <label>POD Width Options</label>
+                    <div className='element-dropdown'>
+                        <div className="element-dropdown-pod" data-element="secondary" onClick={this.togglePODDropdown}>
+                            <label id='pod-value'>{printValue}</label>
+                            <ul className={`element-dropdown-content pod-options ${active}`}>
+                                <li data-value="print25">25%</li>
+                                <li data-value="print50">50%</li>
+                                <li data-value="print75">75%</li>
+                                <li data-value="print100">100%</li>
+                            </ul>
+                            <svg class="dropdown-arrow" viewBox="0 0 9 4.5"><path d="M0,0,4.5,4.5,9,0Z"></path></svg>
+                        </div>
+                    </div>
+                </div>
+
+            )
+        }
+        return null
+    }
+
     render = () => {
         return (
             <div className="canvas-sidebar">
@@ -497,6 +563,7 @@ class Sidebar extends Component {
                 {this.renderLanguageLabel(this.props.activeElement && this.props.activeElement.tag || '')}
                 {this.secondaryOption()}
                 {this.attributions()}
+                {this.podOption()}
                 {this.state.showSyntaxHighlightingPopup && <PopUp confirmCallback={this.handleSyntaxHighligtingRemove} togglePopup={(value)=>{this.handleSyntaxHighlightingPopup(value)}} dialogText={SYNTAX_HIGHLIGHTING} slateLockClass="lock-message" sytaxHighlight={true}/>}
             </div>
         );

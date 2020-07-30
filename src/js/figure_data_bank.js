@@ -3,7 +3,8 @@ let figureCommonData = {
     "height": "422",
     "width": "680",
     "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
-    "imageid": ""
+    "imageid": "",
+    "podwidth": "print100"
 }
 export default {
     "primary-image-figure": figureCommonData,
