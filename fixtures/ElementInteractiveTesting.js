@@ -568,7 +568,7 @@ export const interactiveElm = {
 		"schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
 		"interactiveid": "urn:pearson:work:baf20494-42b2-4bb8-9d3d-07b5fb7f24ec",
 		"interactivetype": "simulation",
-		"interactiveformat": "elminteractive",/**change elminteractive here */
+		"interactiveformat": "mmi-elm",
 		"interactivetitle": "Interative 2 -UCA"
 	},
 	"html": {

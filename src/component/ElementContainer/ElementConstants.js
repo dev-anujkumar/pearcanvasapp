@@ -18,7 +18,7 @@ export default {
 /****************Figure Interactive Element************************ */
     INTERACTIVE : "interactive",
     INTERACTIVE_MMI : "mmi",
-    INTERACTIVE_ELM : "elminteractive",
+    INTERACTIVE_ELM : "mmi-elm",
     INTERACTIVE_EXTERNAL_LINK : "external-link",
     INTERACTIVE_SHOW_HIDE : "showhide",
     INTERACTIVE_NARRATIVE_LINK : "narrative-link",
@@ -68,6 +68,6 @@ export const LABELS = {
     "workedexample": "WE",
     "poetry": "PE",
     "mmi":"Quad",
-    "elminteractive":"ELM"  /**change elminteractive here */
+    "mmi-elm":"ELM"
 }
 
