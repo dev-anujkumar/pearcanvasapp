@@ -23,7 +23,7 @@ import figureData from '../ElementFigure/figureTypes.js';
 import { fetchAllSlatesData, setCurrentSlateAncestorData } from '../../js/getAllSlatesData.js';
 import { handleTCMData, tcmSnapshot } from '../../component/ElementContainer/TcmSnapshot_Actions';
 import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
-
+import { ELM_INT } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 const findElementType = (element, index) => {
     let elementType = {};
     elementType['tag'] = '';
@@ -123,7 +123,7 @@ const findElementType = (element, index) => {
                     case "interactive":
                         altText = element.figuredata.alttext ? element.figuredata.alttext : "";
                         let interactiveFormat = element.figuredata.interactiveformat;
-                        let interactiveData = (interactiveFormat == "mmi" || interactiveFormat == "elminteractive") ? element.figuredata.interactiveformat : element.figuredata.interactivetype;
+                        let interactiveData = (interactiveFormat == "mmi" || interactiveFormat == ELM_INT) ? element.figuredata.interactiveformat : element.figuredata.interactivetype;
                         elementType = {
                             elementType: elementDataBank[element.type][element.figuretype]["elementType"],
                             primaryOption: elementDataBank[element.type][element.figuretype][interactiveData]["primaryOption"],

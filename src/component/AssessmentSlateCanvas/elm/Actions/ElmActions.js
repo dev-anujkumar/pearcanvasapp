@@ -1,5 +1,5 @@
 import config from '../../../../config/config';
-import { LEARNOSITY, LEARNOSITY_BETA} from '../../AssessmentSlateConstants';
+import { LEARNOSITY, LEARNOSITY_BETA, ELM_INT} from '../../AssessmentSlateConstants';
 import axios from 'axios';
 
 /**
@@ -16,7 +16,7 @@ export const insertElmResourceAction = (assessmentType) => (dispatch) => {
         }
     }).then((res) => {
         let newApiData = JSON.parse(JSON.stringify(res.data))
-        let itemType = assessmentType == 'elminteractive' ? 'interactive' : 'assessment'
+        let itemType = assessmentType == ELM_INT ? 'interactive' : 'assessment'
         filterApiAlignments(newApiData, itemType);
         filterApiContainers(newApiData);
         if (setCondition(newApiData).noAlignments && setCondition(newApiData).noBodyMatter) {

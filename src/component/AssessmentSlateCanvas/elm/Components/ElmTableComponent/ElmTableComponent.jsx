@@ -13,10 +13,10 @@ import AssessmentSearchBar from '../AssessmentSearchBar';
 // IMPORT - Dependencies // 
 import config from './../../../../../config/config';
 import '../../../../../styles/AssessmentSlateCanvas/elm/ElmTable.css';
-import { FULL_ASSESSMENT_PUF, PUF, LEARNOSITY_BETA } from '../../../AssessmentSlateConstants.js'
+import { FULL_ASSESSMENT_PUF, PUF, LEARNOSITY_BETA, ELM_INT } from '../../../AssessmentSlateConstants.js'
 import { elmSortUp, elmSortDown, elmNavigateBack } from './../../../../../images/ElementButtons/ElementButtons.jsx';
 import { openAssessmentSearchBar, setSearchTerm,setElmLoading } from '../../Actions/ElmActions.js';
-import { setStatus, searchAndFilterAssessmentData, setParentUrn, tableDataSorting, interactiveTypeList } from '../../UtilityFunctions/ElmLearnosityUtility.js';
+import { setStatus, searchAndFilterAssessmentData, setParentUrn, tableDataSorting, setInteractiveType } from '../../UtilityFunctions/ElmLearnosityUtility.js';
 
 /*** @description - ElmTableComponent is a class based component to store ELM assessments in tabular form*/
 class ElmTableComponent extends Component {
@@ -212,8 +212,9 @@ class ElmTableComponent extends Component {
                             title = assessments.title.en
                         }
                         if(assessments && assessments.type && (assessments.type == activeElementType)){
-                            let elmInteractiveType = assessments.additionalMetadata && assessments.additionalMetadata.interactiveType ? assessments.additionalMetadata.interactiveType : "";
-                            this.preparedData.push({ "type": assessments.type? assessments.type:"assessment", "title": title, "urn": assessments.urn, "parentUrn": parentUrn, "previousUrn": data.versionUrn, "interactiveType" : elmInteractiveType }) // "assessment" is added as type for resources where type-key is missing
+                            // let elmInteractiveType = assessments.additionalMetadata && assessments.additionalMetadata.interactiveType ? assessments.additionalMetadata.interactiveType : "";
+                            let elmInteractiveType = setInteractiveType(assessments);
+                            this.preparedData.push({ "type": assessments.type? assessments.type:"assessment", "title": title, "urn": assessments.urn, "parentUrn": parentUrn, "previousUrn": data.versionUrn, "interactiveType" : elmInteractiveType });
                         }
                     })
                 }
@@ -342,7 +343,7 @@ class ElmTableComponent extends Component {
         else{
             let assessmentFormat = (this.props.activeAssessmentType == FULL_ASSESSMENT_PUF || this.props.activeAssessmentType == PUF) ? PUF : LEARNOSITY_BETA;
             
-            if(this.props.activeAssessmentType == "elminteractive"){
+            if(this.props.activeAssessmentType == ELM_INT){
                 obj = {
                     id: this.state.currentAssessmentSelected.urn,
                     title: this.state.currentAssessmentSelected.title,
@@ -430,7 +431,7 @@ class ElmTableComponent extends Component {
     elmFooterProps = {
         closeElmWindow: this.props.closeElmWindow,
         sendPufAssessment: this.sendPufAssessment,
-        buttonText: this.props.activeAssessmentType === "elminteractive" ? "SELECT" : (this.props.activeAssessmentType === FULL_ASSESSMENT_PUF || this.props.activeAssessmentType === PUF) ? "ADD" : "OK",
+        buttonText: this.props.activeAssessmentType === ELM_INT ? "SELECT" : (this.props.activeAssessmentType === FULL_ASSESSMENT_PUF || this.props.activeAssessmentType === PUF) ? "ADD" : "OK",
         openAssessmentSearchBar:this.openAssessmentSearchBar
     };
 
@@ -439,8 +440,8 @@ class ElmTableComponent extends Component {
         const { tableValue, openItemTable, parentUrn, parentTitle, sortIcon, openedFrom, addFlag,filterResults } = this.state;
         let assessmentFormat = (this.props.activeAssessmentType == FULL_ASSESSMENT_PUF || this.props.activeAssessmentType == PUF) ? PUF : LEARNOSITY_BETA;
         /** Set render condition variables using setStatus function */
-        if(this.props.activeAssessmentType == "elminteractive"){
-            assessmentFormat = "elminteractive"
+        if(this.props.activeAssessmentType == ELM_INT){
+            assessmentFormat = ELM_INT
         }
         let hideSearch = setStatus('setSearchButtonStatus', assessmentFormat, this.props.elmReducer, this.state)
         let showNavigationBar = setStatus('setNavigationBarStatus', assessmentFormat, this.props.elmReducer, this.state)
@@ -495,8 +496,8 @@ class ElmTableComponent extends Component {
                                             <td className='td-class sort-icon'>Title</td>
                                             <div className="sort-icon" onClick={() => this.setSort()}>{sortIcon}</div>
                                         </th>
-                                        {assessmentFormat == "elminteractive" && <th className='row-class assessment-id'>Type</th>}
-                                        <th className='row-class assessment-id'>{assessmentFormat == "elminteractive" ?"URN" : "Assessment URN"}</th>
+                                        {assessmentFormat == ELM_INT && <th className='row-class assessment-id'>Type</th>}
+                                        <th className='row-class assessment-id'>{assessmentFormat == ELM_INT ? "URN" : "Assessment URN"}</th>
                                     </thead>
                                     {/** ELM Picker Table Body*/}
                                     <ElmTableBody

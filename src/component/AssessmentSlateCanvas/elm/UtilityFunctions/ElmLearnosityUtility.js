@@ -4,8 +4,8 @@
 
 // IMPORT - Module dependencies
 import config from '../../../../config/config';
-import { PUF, LEARNOSITY_BETA, LEARNOSITY, FolderLabelList } from '../../AssessmentSlateConstants.js';
-let preparedData = []
+import { PUF, LEARNOSITY_BETA, LEARNOSITY, ELM_INT, FolderLabelList } from '../../AssessmentSlateConstants.js';
+let preparedData = [];
 
 /*** @description - This function is to set the folder name in folder-icon based on type of container
      * @param label- label of container
@@ -57,7 +57,7 @@ export const setStatus = (condition, assessmentFormat, propsValue, stateValue) =
     let status = false;
     switch (condition) {
         case 'setSearchButtonStatus':
-            if (assessmentFormat == PUF || assessmentFormat == "elminteractive") {//"elminteractive") {
+            if (assessmentFormat == PUF || assessmentFormat == ELM_INT) {
                 status = true;
             } else if (assessmentFormat == LEARNOSITY_BETA) {
                 if (stateValue.openItemTable == true || (stateValue.openItemTable == false && propsValue.openSearch == true)) {
@@ -66,7 +66,7 @@ export const setStatus = (condition, assessmentFormat, propsValue, stateValue) =
             }
             break;
         case 'setNavigationBarStatus':
-            if (((assessmentFormat == PUF) || (assessmentFormat == "elminteractive") || (assessmentFormat == LEARNOSITY_BETA && !propsValue.openSearch))) {
+            if (((assessmentFormat == PUF) || (assessmentFormat == ELM_INT) || (assessmentFormat == LEARNOSITY_BETA && !propsValue.openSearch))) {
                 status = true;
             }
             break;
@@ -278,4 +278,19 @@ export const interactiveTypeList = {
     'value' : 'userControlledAnimation',
     'wipValue' : 'simulation'
     }
+}
+
+/*** @description - This is function to set interactive type for elm-interactive assets
+    * @param asset - current asset for elm-interactive
+   */
+export const setInteractiveType = (asset) => {
+    let interactiveType = {
+        wipValue: "",
+        label: ""
+    }
+    const { interactiveType } = asset.additionalMetadata;
+    interactiveType.label = interactiveType.label ? interactiveType.label : interactiveTypeList[interactiveType].label;
+    interactiveType.wipValue = interactiveType.wipValue ? interactiveType.wipValue : interactiveTypeList[interactiveType].wipValue;
+
+    return interactiveType
 }

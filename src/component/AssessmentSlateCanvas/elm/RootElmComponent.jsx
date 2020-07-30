@@ -7,6 +7,7 @@ import './../../../styles/AssessmentSlateCanvas/elm/RootElmComponent.css';
 import { insertElmResourceAction, fetchAssessmentItem, openAssessmentSearchBar } from './Actions/ElmActions';
 import ElmHeader from './Components/ElmHeader';
 import ElmTableComponent from './Components/ElmTableComponent';
+import { ELM_INT } from '../AssessmentSlateConstants.js';
 
 const RootElmComponent = (props) => {
 
@@ -23,7 +24,7 @@ const RootElmComponent = (props) => {
     }
     return (
         <div className="vex-overlay elm-wrapper">
-            <div className={`root-container ${props.activeAssessmentType == 'elminteractive' ? 'elm-interactive' : ''}`}>
+            <div className={`root-container ${props.activeAssessmentType == ELM_INT ? 'elm-interactive' : ''}`}>
                 <ElmHeader closeElmWindow={closeElmLearnosityWindow} activeAssessmentType={props.activeAssessmentType}/>
                 {props.elmReducer.errFlag == null ?
                     <div className="elm-loader"></div> :

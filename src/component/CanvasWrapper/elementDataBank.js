@@ -198,7 +198,7 @@ const elementDataBank = {
                 "primaryOption": "primary-mmi",
                 "secondaryOption": "secondary-interactive-mmi"
             },
-            "elminteractive": {
+            "elminteractive": { /**change elminteractive here */
                 "tag": "ELM",
                 "primaryOption": "primary-elm-interactive",
                 "secondaryOption": "secondary-elm-interactive"

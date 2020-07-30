@@ -12,7 +12,7 @@ export const PUF = 'puf'
 export const CITE = 'cite'
 export const TDX = 'tdx'
 export const LEARNOSITY_BETA = 'learnosity'
-export const ELM_INT = "elminteractive"
+export const ELM_INT = "elminteractive" /**change elminteractive here */
 
 export const ERROR_MESSAGE_ELM_RESOURCE = "This project has no Elm assessments currently. Please add an Elm assessment to this project first."
 export const ERROR_MESSAGE_ELM_ITEMS = "No Data Found"
