@@ -22,12 +22,14 @@ import elementDataBank from './elementDataBank'
 import figureData from '../ElementFigure/figureTypes.js';
 import { fetchAllSlatesData, setCurrentSlateAncestorData } from '../../js/getAllSlatesData.js';
 import { handleTCMData, tcmSnapshot } from '../../component/ElementContainer/TcmSnapshot_Actions';
+import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
 
 const findElementType = (element, index) => {
     let elementType = {};
     elementType['tag'] = '';
     let altText = "";
     let longDesc = "";
+    let podwidth = POD_DEFAULT_VALUE
     try {
         switch (element.type) {
             case 'element-authoredtext':
@@ -64,16 +66,23 @@ const findElementType = (element, index) => {
                             let figureAlignment = figureType[element['alignment']]
                             subType = figureAlignment['imageDimension']
                         }
+                        if(element.figuretype === "image" || element.figuretype === "table" || element.figuretype === "mathImage"){
+                            if(element.figuredata && !element.figuredata.podwidth){
+                                element.figuredata.podwidth = POD_DEFAULT_VALUE
+                            }
+                        }
                         //  if (element.subtype == "" || element.subtype == undefined) {                        
                         element.subtype = subType
                         //  } 
                         altText = element.figuredata.alttext ? element.figuredata.alttext : ""
                         longDesc = element.figuredata.longdescription ? element.figuredata.longdescription : ""
+                        podwidth = element.figuredata.podwidth
                         elementType = {
                             elementType: elementDataBank[element.type][element.figuretype]["elementType"],
                             primaryOption: elementDataBank[element.type][element.figuretype]["primaryOption"],
                             altText,
                             longDesc,
+                            podwidth,
                             ...elementDataBank[element.type][element.figuretype][element.subtype]
                         }
                         if (!elementType.secondaryOption) {
