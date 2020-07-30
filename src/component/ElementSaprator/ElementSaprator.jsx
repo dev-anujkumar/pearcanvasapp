@@ -234,13 +234,6 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
                     && btnObj.buttonType !== STANZA_ELEMENT;
                 })
             }
-            if(config.isPopupSlate){
-                updatedEsProps = esProps.filter((btnObj) => {
-                    buttonType = btnObj.buttonType;
-                    return buttonType !== SECTION_BREAK && buttonType !== OPENER 
-                    && buttonType !== CITATION && btnObj.buttonType !== STANZA_ELEMENT;
-                })
-            }
             if (elementType == ELEMENT_ASIDE || elementType == POETRY || elementType == CITATION_GROUP_ELEMENT || elementType == SINGLE_COLUMN) {
                 esProps = renderConditionalButtons(esProps, sectionBreak,elementType);
                     updatedEsProps = esProps.filter((btnObj) => {
