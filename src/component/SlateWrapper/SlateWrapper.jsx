@@ -12,7 +12,7 @@ import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
 import { SlateFooter } from './SlateFooter.jsx';
 import { createElement, swapElement, setSplittedElementIndex, updatePageNumber, accessDenied } from './SlateWrapper_Actions';
 import { sendDataToIframe } from '../../constants/utility.js';
-import { ShowLoader, SplitCurrentSlate } from '../../constants/IFrameMessageTypes.js';
+import { ShowLoader, SplitCurrentSlate, SlateLockStatus } from '../../constants/IFrameMessageTypes.js';
 import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
 import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
 import config from '../../config/config';
@@ -1129,6 +1129,7 @@ class SlateWrapper extends Component {
      * render | renders title and slate wrapper
      */
     render() {
+        sendDataToIframe({ 'type': SlateLockStatus, 'message': { slateLockInfo: this.props.slateLockInfo } });
         if (this.state.hasError) {
             return (
                 <div className='slate-content'>
