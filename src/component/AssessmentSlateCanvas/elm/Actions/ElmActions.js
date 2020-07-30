@@ -142,7 +142,9 @@ const filterApiAlignments = (data, type) => {
         data.alignments.resourceCollections = data.alignments.resourceCollections.filter( resource => {
             if (resource.resources && resource.resources.length) {
                 resource.resources = resource.resources.filter((assessments) => {
-                    return assessments.type === type;
+                    if ((type == 'assessment') || (type == 'interactive' && assessments.additionalMetadata && assessments.additionalMetadata.interactiveType)) {
+                        return assessments.type === type;
+                    }
                 });
             }
             return resource.resources.length > 0;
