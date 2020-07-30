@@ -222,16 +222,16 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
                 }
             }
             
-            if (!config.isCO) {
-                updatedEsProps = esProps.filter((btnObj) => {
-                    return btnObj.buttonType !== SECTION_BREAK && btnObj.buttonType !== CITATION 
-                    && btnObj.buttonType !== STANZA_ELEMENT;
-                })
-            } else {
+            if(config.isPopupSlate || config.isCO){
                 updatedEsProps = esProps.filter((btnObj) => {
                     buttonType = btnObj.buttonType;
                     return buttonType !== SECTION_BREAK && buttonType !== OPENER 
                     && buttonType !== CITATION && btnObj.buttonType !== STANZA_ELEMENT;
+                })
+            }else{
+                updatedEsProps = esProps.filter((btnObj) => {
+                    return btnObj.buttonType !== SECTION_BREAK && btnObj.buttonType !== CITATION 
+                    && btnObj.buttonType !== STANZA_ELEMENT;
                 })
             }
             if (elementType == ELEMENT_ASIDE || elementType == POETRY || elementType == CITATION_GROUP_ELEMENT || elementType == SINGLE_COLUMN) {
@@ -242,6 +242,7 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
                     })
                 
             }
+
         }
         else if (elementType == ELEMENT_ASIDE || elementType == CITATION_GROUP_ELEMENT || elementType === POETRY || elementType == SINGLE_COLUMN) {
                 updatedEsProps = renderConditionalButtons(esProps, sectionBreak, elementType);
