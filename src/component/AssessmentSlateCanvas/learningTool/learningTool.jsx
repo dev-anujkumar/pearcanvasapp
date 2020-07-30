@@ -245,9 +245,6 @@ class LearningTool extends React.Component {
     this.props.linkLearningApp(this.props.selectedResultFormApi);
     this.props.closePopUp();
    }
-//    renderTableBody=(){
-
-//    }
     render() {
         disableHeader(true);
         return (
