@@ -7,16 +7,12 @@ var globalDiv = null;
 global.tinymce = {
     $: () => {
         globalDiv = document.createElement("DIV");
-        let span = document.createElement("SPAN");
-        span.classList.add('poetryLine');
-        let bold = document.createElement("STRONG");
-        bold.innerText = 'Testing';
-        span.appendChild(bold);
-        let spanSecond = document.createElement("SPAN");
-        spanSecond.classList.add('poetryLine');
-        spanSecond.innerText = 'Testing';
-        let boldTwo = document.createElement("STRONG");
-        boldTwo.appendChild(spanSecond);
+        let htmlString = '<div><span class="poetryLine"><strong>Testing</strong></span><strong><span class="poetryLine">Testing</span></strong></div>';
+        let parser = new DOMParser();
+        let htmlDoc = parser.parseFromString(htmlString, 'text/html');
+        let span = htmlDoc.getElementsByTagName("span")[0];
+        let spanSecond = htmlDoc.getElementsByTagName("span")[1];
+        let boldTwo = htmlDoc.getElementsByTagName("strong")[1]
         globalDiv.appendChild(span);
         globalDiv.appendChild(boldTwo);
         return [span, spanSecond]
@@ -56,7 +52,8 @@ describe('Utils file function testing', () => {
 
     it('Testing buildCommentDate function', () => {
         let result = utils.buildCommentDate('2015-03-25')
-        expect(result).toBe('Mar. 25, 2015 @05:30 AM')
+        let finalResult = result.includes('Mar. 24, 2015');
+        expect(finalResult).toEqual(false);
     })
 
     it('Testing toTitleCase function', () => {
@@ -264,13 +261,11 @@ describe('Utils file function testing', () => {
     })
 
     it('Testing handleBackSpaceAndDeleteKyeDown function if element has no previousSibling for key 8', () => {
-        globalDiv.innerHTML = "";
-        let span = document.createElement("SPAN");
-        span.classList.add('poetryLine');
-        let bold = document.createElement("STRONG");
-        bold.innerText = 'T';
-        span.appendChild(bold);
-        globalDiv.appendChild(span);
+        let htmlString = '<div><span class="poetryLine"><strong>T</strong></span></div>';
+        let parser = new DOMParser();
+        let htmlDoc = parser.parseFromString(htmlString, 'text/html');
+        let spanTag = htmlDoc.getElementsByTagName("span")[0];
+        let divTag = htmlDoc.getElementsByTagName("div")[0];
         let editor = {
             selection: {
                 getRng: () => {
@@ -283,7 +278,7 @@ describe('Utils file function testing', () => {
                         tagName: 'STRONG',
                         className: 'TEST',
                         closest: (args) => {
-                            return span;
+                            return spanTag;
                         }
                     }
                 },
@@ -293,7 +288,7 @@ describe('Utils file function testing', () => {
             },
             dom: {
                 create: () => {
-                    let span = document.createElement("SPAN");
+                    let span = htmlDoc.createElement("SPAN");
                     span.classList.add('poetryLine');
                     span.innerHTML = '<br/>';
                     return span;
@@ -301,16 +296,15 @@ describe('Utils file function testing', () => {
             }
         }
         spanHandlers.handleBackSpaceAndDeleteKyeDown(editor, 8, {}, 'poetryLine');
-        expect(JSON.stringify(globalDiv)).toEqual("{}");
+        expect(divTag.innerHTML).toEqual('<span class="poetryLine"><br></span>');
     })
 
     it('Testing handleBackSpaceAndDeleteKyeDown function if element has previousSibling for key 8', () => {
-        let span = document.createElement("SPAN");
-        span.classList.add('poetryLine');
-        let bold = document.createElement("STRONG");
-        bold.innerText = 'T';
-        span.appendChild(bold);
-        globalDiv.appendChild(span);
+        let htmlString = '<div><span class="poetryLine"></span><span class="poetryLine"><strong>T</strong></span></div>';
+        let parser = new DOMParser();
+        let htmlDoc = parser.parseFromString(htmlString, 'text/html');
+        let spanTag = htmlDoc.getElementsByTagName("span")[1];
+        let divTag = htmlDoc.getElementsByTagName("div")[0];
         let editor = {
             selection: {
                 getRng: () => {
@@ -323,7 +317,7 @@ describe('Utils file function testing', () => {
                         tagName: 'STRONG',
                         className: 'TEST',
                         closest: (args) => {
-                            return span;
+                            return spanTag;
                         }
                     }
                 },
@@ -333,7 +327,7 @@ describe('Utils file function testing', () => {
             },
             dom: {
                 create: () => {
-                    let span = document.createElement("SPAN");
+                    let span = htmlDoc.createElement("SPAN");
                     span.classList.add('poetryLine');
                     span.innerHTML = '<br/>';
                     return span;
@@ -341,15 +335,15 @@ describe('Utils file function testing', () => {
             }
         }
         spanHandlers.handleBackSpaceAndDeleteKyeDown(editor, 8, {}, 'poetryLine');
-        expect(JSON.stringify(globalDiv)).toEqual("{}");
+        expect(divTag.innerHTML).toEqual('<span class=\"poetryLine\">&nbsp;<span class=\"poetryLine\"><br></span></span>');
     })
 
     it('Testing handleBackSpaceAndDeleteKyeDown function if element has no previousSibling for key 46', () => {
-        globalDiv.innerHTML = "";
-        let span = document.createElement("SPAN");
-        span.classList.add('poetryLine');
-        span.innerHTML = 'T';
-        globalDiv.appendChild(span);
+        let htmlString = '<div><span class="poetryLine">T</span></div>';
+        let parser = new DOMParser();
+        let htmlDoc = parser.parseFromString(htmlString, 'text/html');
+        let spanTag = htmlDoc.getElementsByTagName("span")[0];
+        let divTag = htmlDoc.getElementsByTagName("div")[0];
         let editor = {
             selection: {
                 getRng: () => {
@@ -362,7 +356,7 @@ describe('Utils file function testing', () => {
                         tagName: 'STRONG',
                         className: 'TEST',
                         closest: (args) => {
-                            return span;
+                            return spanTag;
                         }
                     }
                 },
@@ -372,7 +366,7 @@ describe('Utils file function testing', () => {
             },
             dom: {
                 create: () => {
-                    let span = document.createElement("SPAN");
+                    let span = htmlDoc.createElement("SPAN");
                     span.classList.add('poetryLine');
                     span.innerHTML = '<br/>';
                     return span;
@@ -380,14 +374,15 @@ describe('Utils file function testing', () => {
             }
         }
         spanHandlers.handleBackSpaceAndDeleteKyeDown(editor, 46, { preventDefault: () => { } }, 'poetryLine');
-        expect(JSON.stringify(globalDiv)).toEqual("{}");
+        expect(divTag.innerHTML).toEqual('<span class=\"poetryLine\"><br></span>');
     })
 
     it('Testing handleBackSpaceAndDeleteKyeDown function if element has previousSibling for key 46', () => {
-        let span = document.createElement("SPAN");
-        span.classList.add('poetryLine');
-        span.innerHTML = 'T';
-        globalDiv.appendChild(span);
+        let htmlString = '<div><span class="poetryLine">T</span></div>';
+        let parser = new DOMParser();
+        let htmlDoc = parser.parseFromString(htmlString, 'text/html');
+        let spanTag = htmlDoc.getElementsByTagName("span")[0];
+        let divTag = htmlDoc.getElementsByTagName("div")[0];
         let editor = {
             selection: {
                 getRng: () => {
@@ -400,7 +395,7 @@ describe('Utils file function testing', () => {
                         tagName: 'STRONG',
                         className: 'TEST',
                         closest: (args) => {
-                            return span;
+                            return spanTag;
                         }
                     }
                 },
@@ -410,7 +405,7 @@ describe('Utils file function testing', () => {
             },
             dom: {
                 create: () => {
-                    let span = document.createElement("SPAN");
+                    let span = htmlDoc.createElement("SPAN");
                     span.classList.add('poetryLine');
                     span.innerHTML = '<br/>';
                     return span;
@@ -418,21 +413,15 @@ describe('Utils file function testing', () => {
             }
         }
         spanHandlers.handleBackSpaceAndDeleteKyeDown(editor, 46, { preventDefault: () => { } }, 'poetryLine');
-        expect(JSON.stringify(globalDiv)).toEqual("{}");
+        expect(divTag.innerHTML).toEqual('<span class=\"poetryLine\"><br></span>');
     })
 
     it('Testing handleBackSpaceAndDeleteKyeUp function if element has no previousSibling for key 46', () => {
-        globalDiv.innerHTML = "";
-        let span = document.createElement("SPAN");
-        span.classList.add('poetryLine');
-        span.innerText = 'Testing';
-        span.textContent = 'Testing';
-        let span2 = document.createElement("SPAN");
-        span2.innerText = 'T';
-        let brTag = document.createElement("BR");
-        span.appendChild(span2);
-        span.appendChild(brTag);
-        globalDiv.appendChild(span);
+        let htmlString = '<div><span class="poetryLine">Testing<span>T</span><br></span></div>';
+        let parser = new DOMParser();
+        let htmlDoc = parser.parseFromString(htmlString, 'text/html');
+        let spanTag = htmlDoc.getElementsByTagName("span")[0];
+        let divTag = htmlDoc.getElementsByTagName("div")[0];
         let editor = {
             selection: {
                 getNode: () => {
@@ -440,7 +429,7 @@ describe('Utils file function testing', () => {
                         tagName: 'STRONG',
                         className: 'TEST',
                         closest: (args) => {
-                            return span;
+                            return spanTag;
                         }
                     }
                 },
@@ -450,7 +439,7 @@ describe('Utils file function testing', () => {
             }
         }
         spanHandlers.handleBackSpaceAndDeleteKyeUp(editor, 46, 'poetryLine');
-        expect(span.childNodes.length).toEqual(1);
+        expect(divTag.innerHTML).toEqual('<span class=\"poetryLine\">TestingT</span>');
     })
 
     it('Testing handleRemoveFormattingOnSpan function', () => {
