@@ -133,9 +133,6 @@ class Sidebar extends Component {
                  if( disabledPrimaryOptions.indexOf(activePrimaryOption) > -1 ){
                     className="disabled"
                  }
-                //  if (activePrimaryOption === "primary-mathml-equation" || activePrimaryOption === "primary-blockcode-equation" || activePrimaryOption === "primary-editor-table-equation") {
-                //     className="disabled"
-                //  }
                 primaryOptions = primaryOptionList.map(item => {
                     if(item !== 'enumType' && item !== 'primary-mathml-equation' && item !== 'primary-blockcode-equation' && item !== 'primary-editor-table-equation') {
                         return <li key={item} data-value={item} onClick={this.handlePrimaryOptionChange}>

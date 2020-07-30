@@ -45,9 +45,7 @@ class Interactive extends React.Component {
             itemParentID: this.props.model.figuredata && this.props.model.figuredata.interactiveparentid ? this.props.model.figuredata.interactiveparentid : "",
             openedFrom:'',
             interactiveTitle: this.props.model.figuredata && this.props.model.figuredata.interactivetitle? this.props.model.figuredata.interactivetitle : "",
-            showElmComponent:false,
-            // interactiveType:this.props.model.figuredata && this.props.model.figuredata.interactivetype ? this.props.model.figuredata.interactivetype : ""
-        
+            showElmComponent:false
            };
 
     }
