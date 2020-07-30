@@ -211,12 +211,6 @@ class ElmTableComponent extends Component {
                         if (assessments && assessments.title && assessments.title.en) {
                             title = assessments.title.en
                         }
-                        // if(assessments && assessments.type && (assessments.type !="assessmentItem" && assessments.type !="interactive")){
-                        //     this.preparedData.push({ "type": assessments.type? assessments.type:"assessment", "title": title, "urn": assessments.urn, "parentUrn": parentUrn, previousUrn: data.versionUrn }) // "assessment" is added as type for resources where type-key is missing
-                        // }else if(assessments && assessments.type && assessments.type ==="interactive"){
-                        //     let elmInteractiveType = assessments.additionalMetadata && assessments.additionalMetadata.interactiveType ? assessments.additionalMetadata.interactiveType : "";
-                        //     this.preparedData.push({ "type": assessments.type? assessments.type:"interactive", "title": title, "urn": assessments.urn, "parentUrn": parentUrn, previousUrn: data.versionUrn, interactiveType : elmInteractiveType })
-                        // }
                         if(assessments && assessments.type && (assessments.type == activeElementType)){
                             let elmInteractiveType = assessments.additionalMetadata && assessments.additionalMetadata.interactiveType ? assessments.additionalMetadata.interactiveType : "";
                             this.preparedData.push({ "type": assessments.type? assessments.type:"assessment", "title": title, "urn": assessments.urn, "parentUrn": parentUrn, "previousUrn": data.versionUrn, "interactiveType" : elmInteractiveType }) // "assessment" is added as type for resources where type-key is missing
@@ -370,7 +364,6 @@ class ElmTableComponent extends Component {
                     usagetype: this.props.activeUsageType
                 }
             }
-            console.log('obj',obj)
             this.props.addPufFunction(obj);
             this.props.closeElmWindow();
         }

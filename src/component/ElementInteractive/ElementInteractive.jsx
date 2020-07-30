@@ -513,9 +513,7 @@ class Interactive extends React.Component {
     }
     
     AssessmentSearchTitle = (searchTitle, filterUUID) => {
-        this.setState({searchTitle, filterUUID},()=>{
-            console.log("SetSate for filter", searchTitle + filterUUID)
-        });
+        this.setState({searchTitle, filterUUID});
     }
 
     addCiteTdxAssessment = async(citeTdxObj, parentPageNo=1) => {

@@ -14,7 +14,7 @@ import PopUp from '../PopUp/index.js';
 import { SYNTAX_HIGHLIGHTING } from '../SlateWrapper/SlateWrapperConstants.js';
 import { showBlocker,hideBlocker } from '../../js/toggleLoader';
 import { customEvent } from '../../js/utils.js';
-let disabledPrimaryOption=["primary-openerelement", "primary-mathml-equation", "primary-blockcode-equation", "primary-poetry", "primary-stanza", "primary-elm-interactive", "primary-mmi", "primary-smartlink", "primary-showhide", "primary-popup", "primary-editor-table-equation", "primary-single-assessment", "primary-citations-group", "primary-element-citation", "primary-multicolumn"];
+import { disabledPrimaryOption } from '../../constants/Element_Constants.js';
 
 class Sidebar extends Component {
     constructor(props) {
