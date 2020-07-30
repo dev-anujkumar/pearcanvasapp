@@ -82,3 +82,21 @@ export const ASSESSMENT_ITEM_TDX = 'tdxAssessmentItem';
 
 /****************Print On Demand************************ */ 
 export const POD_DEFAULT_VALUE = 'print100';
+/*********************** Sidebar *********************** */
+export const disabledPrimaryOption = [
+    "primary-openerelement",
+    "primary-mathml-equation",
+    "primary-blockcode-equation",
+    "primary-poetry",
+    "primary-stanza",
+    "primary-elm-interactive",
+    "primary-mmi",
+    "primary-smartlink",
+    "primary-showhide",
+    "primary-popup",
+    "primary-editor-table-equation",
+    "primary-single-assessment",
+    "primary-citations-group",
+    "primary-element-citation",
+    "primary-multicolumn"
+];
