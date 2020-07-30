@@ -36,5 +36,5 @@ export default {
     BLOCK_TEXT : "block-text-button",
     TABLE_EDITOR : "table-editor-elem-button",
     MULTI_COLUMN_CONTAINER : "multi-column-group",
-    ELM_INTERACTIVE_ICON:"elmInteractiveIcon",
+    ELM_INTERACTIVE_ICON:"elmInteractiveIcon"
 }

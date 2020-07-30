@@ -328,22 +328,20 @@ import { setAssessmentUsageType } from '../AssessmentSlateCanvas/AssessmentActio
         if (document.getElementsByClassName("slate-tag-icon").length) {
         document.getElementsByClassName("slate-tag-icon")[0].classList.remove("disable");
         }
-        // let showID ="";
+
         let assessmentSlateJSX;
         let assessmentTypeValue;
         let changeTypeValue;
         let title = this.props.assessmentItemTitle? this.props.assessmentItemTitle:this.props.learningTemplateLabel;
         if(this.state.activeAssessmentType === LEARNING_APP_TYPE || this.state.activeAssessmentType === LEARNING_TEMPLATE){
-            // showID = this.props.model.elementdata && this.props.model.elementdata.templateid ? this.props.model.elementdata.templateid:"";
             assessmentTypeValue="Learning App";
             changeTypeValue="Change Learning App"
         }else {
-            // showID = this.props.assessmentId;
             assessmentTypeValue="Assessment";
             changeTypeValue="Change assessment";
         }
         if ((this.state.activeAssessmentType === FULL_ASSESSMENT_PUF || this.state.activeAssessmentType === LEARNOSITY) && this.state.showElmComponent === true) {
-            // return <RootElmComponent activeAssessmentType={this.state.activeAssessmentType} closeElmWindow = {()=>this.closeElmWindow()} addPufFunction = {this.addPufAssessment} activeUsageType = {this.state.activeAssessmentUsageType}/>
+            return <RootElmComponent activeAssessmentType={this.state.activeAssessmentType} closeElmWindow = {()=>this.closeElmWindow()} addPufFunction = {this.addPufAssessment} activeUsageType = {this.state.activeAssessmentUsageType} elementType={'assessment'}/>
         }
         if ((this.state.activeAssessmentType === FULL_ASSESSMENT_CITE || this.state.activeAssessmentType === FULL_ASSESSMENT_TDX) && this.state.showCiteTdxComponent === true) {
             return <RootCiteTdxComponent activeAssessmentType={this.state.activeAssessmentType} openedFrom = {'slateAssessment'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.activeAssessmentType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAssessmentUsageType} parentPageNo={this.state.parentPageNo} isReset={this.state.isReset} resetPage={this.resetPage} AssessmentSearchTitle={this.AssessmentSearchTitle} searchTitle={this.state.searchTitle} filterUUID={this.state.filterUUID} />

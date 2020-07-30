@@ -104,17 +104,20 @@ export const fetchAssessmentItem = (assessmentId) => (dispatch) => {
     })
 }
 
+/*** @description This is function to set elm loader */
 export const setElmLoading = (flag) => (dispatch)=>{
     dispatch({ type: 'SET_ELM_LOADING_TRUE', payload: { elmLoading: flag } });
 }
 
+/*** @description This is function to open search Assessment Screen */
 export const openAssessmentSearchBar = (assessmentType, flag) => dispatch => {
     if(assessmentType==LEARNOSITY || assessmentType== LEARNOSITY_BETA){
         dispatch({ type: 'SET_SEARCH_FLAG', payload: { openSearch: flag } });   
     }
 }
 
-export const setSearchTerm = (assessmentType,searchTerm) => dispatch => {
+/*** @description This is function to set search Term */
+export const setSearchTerm = (searchTerm) => dispatch => {
         dispatch({ type: 'SET_SEARCH_TERM', payload: { searchTerm: searchTerm } });
 }
 
@@ -134,7 +137,7 @@ export const resetElmStore = () => dispatch => {
     * @param data API data
     * @param type type of asset
   */
-export const filterApiAlignments = (data, type) => {
+const filterApiAlignments = (data, type) => {
     if (data.alignments && data.alignments.resourceCollections && data.alignments.resourceCollections.length) {
         data.alignments.resourceCollections = data.alignments.resourceCollections.filter( resource => {
             if (resource.resources && resource.resources.length) {
@@ -148,7 +151,7 @@ export const filterApiAlignments = (data, type) => {
     if (data.contents && data.contents.bodyMatter && data.contents.bodyMatter.length) {
         for (let item of data.contents.bodyMatter) {
             if (item && ((item.alignments && item.alignments != null) || (item.contents && item.contents != null))) {
-                filterApiAlignments(item, type)
+                filterApiAlignments(item, type);
             }
         }
     }
@@ -157,27 +160,27 @@ export const filterApiAlignments = (data, type) => {
 /*** @description This is function to filter containers which are empty
     * @param data API data
   */
-export const filterApiContainers = (data) => {
+const filterApiContainers = (data) => {
     if (data.contents && data.contents.bodyMatter && data.contents.bodyMatter.length) {
         data.contents.bodyMatter = data.contents.bodyMatter.filter(container1 => {
             if (container1 && (container1.contents && container1.contents != null)) {
                 container1.contents.bodyMatter = container1.contents.bodyMatter.filter(container2 => {
                     if (container2 && (container2.contents && container2.contents != null)) {
                         container2.contents.bodyMatter = container2.contents.bodyMatter.filter(container3 => {
-                            return !setCondition(container3).noBodyMatter || !setCondition(container3).noAlignments
+                            return !setCondition(container3).noBodyMatter || !setCondition(container3).noAlignments;
                         });
                     }
-                    return !setCondition(container2).noBodyMatter || !setCondition(container2).noAlignments
+                    return !setCondition(container2).noBodyMatter || !setCondition(container2).noAlignments;
                 });
             }
-            return !setCondition(container1).noBodyMatter || !setCondition(container1).noAlignments
+            return !setCondition(container1).noBodyMatter || !setCondition(container1).noAlignments;
 
         });
     }
     if (setCondition(data).noAlignments && setCondition(data).noBodyMatter) {
-        data = {}
+        data = {};
     }
-    return data
+    return data;
 }
 
 /*** @description This is function to check if bodymatter is empty and check if aligments are present
@@ -188,5 +191,5 @@ const setCondition = (item) => {
     condition.noBodyMatter = item && (!item.contents || (item.contents && item.contents.bodyMatter.length == 0))
     condition.noAlignments = item && (!item.alignments || item.alignments.resourceCollections.length == 0)
 
-    return condition
+    return condition;
 }

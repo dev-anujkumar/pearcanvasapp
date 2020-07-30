@@ -18,6 +18,7 @@ export const ERROR_MESSAGE_ELM_RESOURCE = "This project has no Elm assessments c
 export const ERROR_MESSAGE_ELM_ITEMS = "No Data Found"
 export const ERROR_MESSAGE_LEARNOSITY = "No Results Found"
 export const ERROR_MESSAGE_ELM_DEFAULT = "**Error occured, Please try again!!!"
+export const ERROR_MESSAGE_ELM_INTERACTIVES = "No Results Found"
 
 export const FolderLabelList = {
     'C':['chapter'],

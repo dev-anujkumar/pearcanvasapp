@@ -29,14 +29,13 @@ const RootElmComponent = (props) => {
                     <div className="elm-loader"></div> :
                     <ElmTableComponent
                         elmReducer={props.elmReducer}
+                        elementType={props.elementType}
                         closeElmWindow={closeElmLearnosityWindow}
                         addPufFunction={props.addPufFunction}
                         activeUsageType={props.activeUsageType}
+                        setItemParentUrn={props.setItemParentUrn}                        
                         fetchAssessmentItem={props.fetchAssessmentItem}
                         activeAssessmentType={props.activeAssessmentType}
-                        setItemParentUrn={props.setItemParentUrn}
-                        setElmLoader={props.setElmLoader}
-                        currentSlateAncestorData={props.currentSlateAncestorData}
                     />
                 }
             </div>
@@ -55,7 +54,7 @@ const mapActionToProps = {
 const mapStateToProps = (state) => {
     return {
         elmReducer: state.elmReducer,
-        currentSlateAncestorData : state.appStore.currentSlateAncestorData
+        // currentSlateAncestorData : state.appStore.currentSlateAncestorData
     }
 }
 
