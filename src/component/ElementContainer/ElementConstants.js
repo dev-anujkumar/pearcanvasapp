@@ -46,7 +46,10 @@ export default {
 
 /****************Poetry element************************ */  
     POETRY_ELEMENT: "poetry",
-    POETRY_STANZA: "stanza"
+    POETRY_STANZA: "stanza",
+
+/****************Multi Column element************************ */
+    MULTI_COLUMN: "groupedcontent"
 }
 
 export const LABELS = {

@@ -11,6 +11,7 @@ import elementTypes from './../Sidebar/elementTypes';
 import figureDataBank from '../../js/figure_data_bank';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
+import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
 let imageSource = ['image','table','mathImage'],imageDestination = ['primary-image-figure','primary-image-table','primary-image-equation']
 
 export const convertElement = (oldElementData, newElementData, oldElementInfo, store, indexes, fromToolbar,showHideObj) => (dispatch,getState) => {
@@ -48,6 +49,12 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                 if (oldElementData.figuredata && oldElementData.figuredata.postertext && oldElementData.figuredata.postertext.text) {
                     oldElementData.figuredata.postertext.text = "";
                 }
+            }
+
+            /* On conversion of primary option type, change the POD value to default value */
+            if((oldElementData.figuretype  === 'image'|| oldElementData.figuretype === "table" || oldElementData.figuretype === "mathImage") &&
+            inputPrimaryOptionType !== outputPrimaryOptionType ){
+                oldElementData.figuredata.podwidth = POD_DEFAULT_VALUE
             }
 
         /* on Conversion removing the tinymce instance for BCE element*/
@@ -173,6 +180,12 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         slateEntity : Object.keys(appStore.parentUrn).length !== 0 ?appStore.parentUrn.contentUrn:config.slateEntityURN
     }
 
+    //For elements inside multi-column container
+    if (appStore && appStore.parentUrn && appStore.parentUrn.elementType === "group") {
+        conversionDataToSend["parentType"] = "groupedcontent"
+        conversionDataToSend["columnName"] = appStore.parentUrn.columnName
+    }
+    
     let elmIndexes = indexes ? indexes : 0;
     let slateBodyMatter = store[config.slateManifestURN].contents.bodymatter;
     if(elmIndexes.length === 2 && slateBodyMatter[elmIndexes[0]].subtype == "workedexample" ){
@@ -285,6 +298,8 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                     focusedElement[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].interactivedata[showHideObj.showHideType][indexes[4]] = res.data
                     break
             }
+        } else if (appStore.parentUrn.elementType === "group") {
+            focusedElement[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]] = res.data
         } else {
             indexes.forEach(index => {
                 if(focusedElement[index]){
@@ -438,7 +453,8 @@ const prepareAssessmentDataForConversion = (oldElementData, format) => {
     return asessmentConversionData
 }
 
-export const handleElementConversion = (elementData, store, activeElement, fromToolbar,showHideObj) => dispatch => {
+export const handleElementConversion = (elementData, store, activeElement, fromToolbar,showHideObj) => (dispatch, getState) => {
+    let { appStore } = getState()
     store = JSON.parse(JSON.stringify(store));
     if(Object.keys(store).length > 0) {
         let storeElement = store[config.slateManifestURN];
@@ -460,6 +476,9 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
                     break;
             }
             dispatch(convertElement(oldElementData, elementData, activeElement, store, indexes, fromToolbar, showHideObj))
+        } else if (appStore && appStore.parentUrn && appStore.parentUrn.elementType === "group") {
+            let elementOldData = bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
+            dispatch(convertElement(elementOldData, elementData, activeElement, store, indexes, fromToolbar, showHideObj))
         } else {
             indexes.forEach(index => {
                 if(bodymatter[index]){
