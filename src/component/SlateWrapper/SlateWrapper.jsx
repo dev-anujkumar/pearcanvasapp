@@ -197,8 +197,6 @@ class SlateWrapper extends Component {
         try {
             if (_slateData !== null && _slateData !== undefined) {
                 if(_slateData[config.slateManifestURN]){
-                // if (Object.values(_slateData).length > 0) {
-                    // let _slateObject = Object.values(_slateData)[0];
                     let _slateObject = _slateData[config.slateManifestURN];
                     let { contents: _slateContent } = _slateObject;
                     let title = {
@@ -215,11 +213,8 @@ class SlateWrapper extends Component {
                     )
                 }
             }
-            else {
-                // handle error
-            }
         } catch (error) {
-            // handle error
+            console.error(error)
         }
     }
 
@@ -316,11 +311,9 @@ class SlateWrapper extends Component {
                     )
                 }
             }
-            else {
-                // handle error
-            }
         } catch (error) {
             // handle error
+            console.error(error)
         }
     }
 
@@ -356,9 +349,6 @@ class SlateWrapper extends Component {
         if (context.props.withinLockPeriod) {
             callback(config.projectUrn, Object.keys(context.props.slateData)[0])
             context.props.setLockPeriodFlag(false)
-            /* context.setState({
-                showReleasePopup: true
-            }) */
         }
     }
 
