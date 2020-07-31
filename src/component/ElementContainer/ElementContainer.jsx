@@ -318,19 +318,6 @@ class ElementContainer extends Component {
         if(previousElementData.html && previousElementData.html.preformattedtext === '<p></p>'){
             previousElementData.html.preformattedtext = '<p><span class="codeNoHighlightLine"></span></p>'
         }
-        // if (titleHTML !== previousElementData.html.title ||
-        //     subtitleHTML !== previousElementData.html.subtitle ||
-        //     captionHTML !== previousElementData.html.captions ||
-        //     creditsHTML !== previousElementData.html.credits ||
-        //     preformattedText !== previousElementData.figuredata.preformattedtext.join('\n').trim() ||
-        //     startNumber !== previousElementData.figuredata.startNumber ||
-        //     isNumbered !== previousElementData.figuredata.numbered
-        //     ){
-        //         return 1
-        //     }
-        //     else {
-        //         return 0
-        //     }
         return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
             subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
             captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
@@ -373,17 +360,6 @@ class ElementContainer extends Component {
             let posterTextHTML = pdfPosterTextDOM ? pdfPosterTextDOM.innerHTML : ""
             posterTextHTML = posterTextHTML.match(/(<p.*?>.*?<\/p>)/g)?posterTextHTML:`<p>${posterTextHTML}</p>`
             
-            // if(titleHTML !== previousElementData.html.title ||
-            //     subtitleHTML !== previousElementData.html.subtitle || 
-            //     captionHTML !== previousElementData.html.captions ||
-            //     creditsHTML !== previousElementData.html.credits || 
-            //     posterTextHTML !== previousElementData.html.postertext
-            //     ){
-            //         return 1
-            //     }
-            //     else {
-            //         return 0
-            //     }
             let oldPosterText = previousElementData.html && previousElementData.html.postertext ? previousElementData.html.postertext.match(/(<p.*?>.*?<\/p>)/g) ? previousElementData.html.postertext : `<p>${previousElementData.html.postertext}</p>` : "<p></p>";
             return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
                 subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
@@ -909,21 +885,6 @@ class ElementContainer extends Component {
         }
         this.handleCommentPopup(false,e);
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-
-        /* // This condition is to delete whole Container Group element when only one element is left and that too getting deleted
-        if (this.props.parentElement && this.props.parentElement.type === "citations" && this.props.parentElement.contents && this.props.parentElement.contents.bodymatter.length === 1) {
-            id = this.props.parentElement.id
-            type = this.props.parentElement.type
-            contentUrn = this.props.parentElement.contentUrn
-            index = index.split("-")[0]
-        }
-        // This condition to delete whole aside element when only one element in it deleted
-        else if (this.props.parentElement && this.props.parentElement.subtype !== "workedexample" && this.props.parentElement.elementdata && this.props.parentElement.elementdata.bodymatter.length === 1) {
-            id = this.props.parentElement.id
-            type = this.props.parentElement.type
-            contentUrn = this.props.parentElement.contentUrn
-        } */
-
         // api needs to run from here
         this.props.deleteElement(id, type, parentUrn, asideData, contentUrn, index, poetryData);
         this.setState({
