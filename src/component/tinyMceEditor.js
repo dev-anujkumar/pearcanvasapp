@@ -373,14 +373,14 @@ export class TinyMceEditor extends Component {
                     }
                     else if (this.props.element.type === 'stanza') {
                         let selection = window.getSelection();
-                        let output = spanHandlers.handleRemoveFormattingOnSpan(selection, e, 'div', 'poetryLine');
+                        let output = spanHandlers.handleRemoveFormattingOnSpan(selection, e, 'div', 'poetryLine', selectedText);
                         if (output === false) {
                             return false;
                         }
                     }
                     else if (this.props.element.figuretype === 'codelisting') {
                         let selection = window.getSelection();
-                        let output = spanHandlers.handleRemoveFormattingOnSpan(selection, e, 'code', 'codeNoHighlightLine');
+                        let output = spanHandlers.handleRemoveFormattingOnSpan(selection, e, 'code', 'codeNoHighlightLine', selectedText);
                         if (output === false) {
                             return false;
                         }

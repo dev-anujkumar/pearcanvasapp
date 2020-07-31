@@ -76,3 +76,6 @@ export const LIST_TYPE_MAPPINGS = {
 /****************SlateTagDropdown************************ */ 
 export const ASSESSMENT_ITEM = 'assessmentItem';
 export const ASSESSMENT_ITEM_TDX = 'tdxAssessmentItem';
+
+/****************Print On Demand************************ */ 
+export const POD_DEFAULT_VALUE = '';
