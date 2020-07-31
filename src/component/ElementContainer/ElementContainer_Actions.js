@@ -5,7 +5,7 @@ import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import {
     fetchSlateData
 } from '../CanvasWrapper/CanvasWrapper_Actions';
-import { AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP, OPEN_GLOSSARY_FOOTNOTE,DELETE_SHOW_HIDE_ELEMENT, GET_TCM_RESOURCES} from "./../../constants/Action_Constants";
+import { AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP, OPEN_GLOSSARY_FOOTNOTE,DELETE_SHOW_HIDE_ELEMENT, GET_TCM_RESOURCES,VERSIONING_SLATEMANIFEST} from "./../../constants/Action_Constants";
 import { customEvent } from '../../js/utils';
 import { prepareTcmSnapshots } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 import { fetchElementWipData, checkContainerElementVersion, fetchManifestStatus } from '../TcmSnapshots/ElementSnapshot_Utility.js';
@@ -105,7 +105,6 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
             /** [PCAT-8289] -------------------------- TCM Snapshot Data handling ----------------------------*/
             let deleteSlate = deleteParentData[config.slateManifestURN];
             let deleteBodymatter = deleteParentData[config.slateManifestURN].contents.bodymatter;
-            let deletedUrns = { "id1": "newId1", "id2": "newId1" }
             if (elementTypeTCM.indexOf(type) !== -1 || containerType.indexOf(type) !== -1) {
                 let wipData = fetchElementWipData(deleteBodymatter, index, type, contentUrn)
                 let containerElement = {
@@ -120,7 +119,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
                         contentUrn: deleteSlate.contentUrn
                     },
                     bodymatter: deleteBodymatter,
-                    newVersionUrns: deletedUrns
+                    newVersionUrns: deleteElemData.data.workUrnList
                 }
                 tcmSnapshotsForDelete(deleteData, type, containerElement)
             }
@@ -299,13 +298,12 @@ export const tcmSnapshotsForDelete = async (elementDeleteData, type, containerEl
         status:"accepted",
         fromWhere:"delete"
     }
-    let parentType = ['WORKED_EXAMPLE', 'CONTAINER', 'CITATION', 'POETRY'];
+    let parentType = ['element-aside', 'citations', 'poetry'];
     let versionStatus = {};
     if ((parentType.indexOf(type) === -1)) {
         versionStatus = fetchManifestStatus(elementDeleteData.bodymatter, containerElement, type);
     }
     containerElement = await checkContainerElementVersion(containerElement, versionStatus, elementDeleteData.currentSlateData);
-
     prepareTcmSnapshots(elementDeleteData.wipData, actionStatus, containerElement, type,elementDeleteData.newVersionUrns);
 }
 
@@ -372,10 +370,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
                 poetryData:poetryData
             },
             elementUpdateData ={
-                currentSlateData: {
-                    status: currentSlateData.status,
-                    contentUrn: currentSlateData.contentUrn
-                },
+                currentParentData: currentParentData,
                 updateBodymatter:updateBodymatter,
                 response:response.data,
                 updatedId:updatedData.id
@@ -459,12 +454,23 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
         status:"",
         fromWhere:"update"
     }
-    let wipData = fetchElementWipData(elementUpdateData.updateBodymatter, elementIndex, elementUpdateData.response.type,"")
-    let versionStatus = fetchManifestStatus(elementUpdateData.updateBodymatter, containerElement, elementUpdateData.response.type);
+    let {updateBodymatter, response,updatedId,currentParentData} = elementUpdateData;
+    let currentSlateData =currentParentData[config.slateManifestURN] 
+    let wipData = fetchElementWipData(updateBodymatter, elementIndex, response.type,"")
+    let versionStatus = fetchManifestStatus(updateBodymatter, containerElement, response.type);
     /** latest version for WE/CE/PE/AS*/
-    containerElement = await checkContainerElementVersion(containerElement, versionStatus, elementUpdateData.currentSlateData)
-    let oldData = Object.assign({}, elementUpdateData.response);
-    if (elementUpdateData.response.id !== elementUpdateData.updatedId) {
+    containerElement = await checkContainerElementVersion(containerElement, versionStatus,currentSlateData)
+    let oldData = Object.assign({}, response);
+    //set new slate Manifest in store also
+    if(containerElement.slateManifest){
+        delete Object.assign(currentParentData, {[containerElement.slateManifest]: currentParentData[currentSlateData.id] })[currentSlateData.id];
+        currentParentData[containerElement.slateManifest].id = containerElement.slateManifest
+        dispatch({
+            type: VERSIONING_SLATEMANIFEST,
+            payload: {slateLevelData:currentParentData}
+        })
+    }
+    if (response.id !== updatedId) {
         if (oldData.poetrylines) {
             oldData.poetrylines = wipData.poetrylines;
         }
@@ -479,7 +485,7 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
         prepareTcmSnapshots(oldData, actionStatusVersioning, containerElement, "","")
     }
     /** Before and after versioning with new snapshots*/
-    prepareTcmSnapshots(elementUpdateData.response, actionStatus, containerElement, "","")
+    prepareTcmSnapshots(response, actionStatus, containerElement, "","")
 }
 
 function updateLOInStore(updatedData, versionedData, getState, dispatch) {

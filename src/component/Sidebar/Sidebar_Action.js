@@ -170,10 +170,10 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         outputType : outputPrimaryOptionEnum,
         outputSubType: outputSubTypeEnum,
         projectUrn : config.projectUrn,
-        slateVersionUrn:Object.keys(appStore.parentUrn).length !== 0 ? appStore.parentUrn.manifestUrn: config.slateManifestURN,
+        slateVersionUrn:appStore.parentUrn && Object.keys(appStore.parentUrn).length !== 0 ? appStore.parentUrn.manifestUrn: config.slateManifestURN,
         counterIncrement: (newElementData.startvalue > 0) ? (newElementData.startvalue) : 1, // earlier default by 0
         index: indexes[indexes.length - 1],
-        slateEntity : Object.keys(appStore.parentUrn).length !== 0 ?appStore.parentUrn.contentUrn:config.slateEntityURN
+        slateEntity : appStore.parentUrn && Object.keys(appStore.parentUrn).length !== 0 ?appStore.parentUrn.contentUrn:config.slateEntityURN
     }
 
     //let elmIndexes = indexes ? indexes : 0;

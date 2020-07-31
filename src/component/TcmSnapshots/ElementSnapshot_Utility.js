@@ -17,18 +17,19 @@ let elementType = ['element-authoredtext', 'element-list', 'element-blockfeature
  * @returns {Object} All snapshots for Glossary/Footnote/Asset_Popover for given element
 */
 export const setSemanticsSnapshots = async (element,actionStatus) => {
-    let glossarySnap, footnoteSnap, assetPopoverSnap, glossaryList, footnoteList, assetPopoverList;
+    let glossarySnap, footnoteSnap, assetPopoverSnap, glossaryWipList, footnoteWipList, assetPopoverList;
     let semanticSnapshots = {};
-   
+    let glossaryHtmlList= element.html && element.html.glossaryentries ?element.html.glossaryentries:[];
+    let footnoteHtmlList = element.html && element.html.footnotes ? element.html.footnotes : [];
     switch (element.type) {
         
         case 'element-authoredtext':
-            console.log(element.elementdata,"kanika",element.type)
-            glossaryList = element.elementdata && element.elementdata.glossaryentries && !element.elementdata.headers ? element.elementdata.glossaryentries : [];
-            glossarySnap = prepareGlossarySnapshotContent(actionStatus, glossaryList);
-           
-            footnoteList = element.elementdata && element.elementdata.footnotes ? element.elementdata.footnotes : [];
-            footnoteSnap = prepareFootnoteSnapshotContent(actionStatus, footnoteList);
+            glossaryWipList = element.elementdata && element.elementdata.glossaryentries && !element.elementdata.headers ? element.elementdata.glossaryentries : [];
+            //glossaryHtmlList = element.html && element.html.glossaryentries ?element.html.glossaryentries:[];
+            glossarySnap = prepareGlossarySnapshotContent(actionStatus, glossaryWipList,glossaryHtmlList);
+            footnoteWipList = element.elementdata && element.elementdata.footnotes ? element.elementdata.footnotes : [];
+            //footnoteHtmlList = element.html && element.html.footnotes ? element.html.footnotes : [];
+            footnoteSnap = prepareFootnoteSnapshotContent(actionStatus, footnoteWipList,footnoteHtmlList);
             assetPopoverList = element.elementdata && element.elementdata.internallinks ? element.elementdata.internallinks : [];
             assetPopoverSnap = await prepareAssetPopoverSnapshotContent(assetPopoverList)
             break;
@@ -36,15 +37,17 @@ export const setSemanticsSnapshots = async (element,actionStatus) => {
         case 'stanza':
         case 'element-list':
             let listData = element.type === "element-list" ? element.elementdata.listitems: element.poetrylines
-            glossarySnap =  await setSnapshotsInListAndPoetry(actionStatus, listData, 'glossary');
-            footnoteSnap =  await setSnapshotsInListAndPoetry(actionStatus, listData, 'footnote');
+           // glossaryHtmlList = element.html && element.html.glossaryentries ?element.html.glossaryentries:[];
+            glossarySnap =  await setSnapshotsInListAndPoetry(actionStatus, listData, 'glossary',glossaryHtmlList);
+            footnoteSnap =  await setSnapshotsInListAndPoetry(actionStatus, listData, 'footnote',footnoteHtmlList);
             assetPopoverSnap =  await setSnapshotsInListAndPoetry("", listData, 'assetpopover');
             break;
 
         case 'element-blockfeature':
             glossarySnap = [];
-            footnoteList = element.elementdata && element.elementdata.authoredtext && element.elementdata.authoredtext.footnotes ? element.elementdata.authoredtext.footnotes : [];
-            footnoteSnap = prepareFootnoteSnapshotContent(actionStatus, footnoteList)
+            footnoteWipList = element.elementdata && element.elementdata.authoredtext && element.elementdata.authoredtext.footnotes ? element.elementdata.authoredtext.footnotes : [];
+            //footnoteHtmlList = element.html && element.html.footnotes ? element.html.footnotes : [];
+            footnoteSnap = prepareFootnoteSnapshotContent(actionStatus, footnoteWipList,footnoteHtmlList)
             assetPopoverList = element.elementdata && element.elementdata.authoredtext && element.elementdata.authoredtext.internallinks ? element.elementdata.authoredtext.internallinks : [];
             assetPopoverSnap = await prepareAssetPopoverSnapshotContent(assetPopoverList)
             break;
@@ -71,23 +74,23 @@ export const setSemanticsSnapshots = async (element,actionStatus) => {
  * @param {Array} elementList - List of Glossary/Footnote/Asset_Popover entries in a List/Poetry element
  * @returns {Array} All snapshots for given semantic - Glossary/Footnote/Asset_Popover for List and Poetry element  
 */
-const setSnapshotsInListAndPoetry = async (actionStatus, elementList, semanticType) => {
+const setSnapshotsInListAndPoetry = async (actionStatus, elementList, semanticType,glossaryFootnoteHtmlList) => {
     let snapshotsList = []
     await Promise.all(elementList.map( async item => {
         if ((item.type == "paragraph" || item.type == "line") && item.authoredtext) {
             if (semanticType === 'glossary') {
                 let glossaryArray = item.authoredtext.glossaryentries ? item.authoredtext.glossaryentries : [];
-                snapshotsList = snapshotsList.concat(prepareGlossarySnapshotContent(actionStatus, glossaryArray));
+                snapshotsList = snapshotsList.concat(prepareGlossarySnapshotContent(actionStatus, glossaryArray,glossaryFootnoteHtmlList));
             } else if (semanticType === 'footnote') {
                 let footnoteArray = item.authoredtext.footnotes ? item.authoredtext.footnotes : [];
-                snapshotsList = snapshotsList.concat(prepareFootnoteSnapshotContent(actionStatus, footnoteArray));
+                snapshotsList = snapshotsList.concat(prepareFootnoteSnapshotContent(actionStatus, footnoteArray,glossaryFootnoteHtmlList));
             } else if (semanticType === 'assetpopover') {
                 let assetLists = item.authoredtext.internallinks ? item.authoredtext.internallinks : [];
                 let assetSnapList = assetLists.length != 0 ? await prepareAssetPopoverSnapshotContent(assetLists) : [];
                 snapshotsList = snapshotsList.concat(assetSnapList);
             }
         } else if (item.listitems && item.listitems.length > 0) { // for nested lists
-            snapshotsList = snapshotsList.concat(await setSnapshotsInListAndPoetry(actionStatus, item.listitems, semanticType));
+            snapshotsList = snapshotsList.concat(await setSnapshotsInListAndPoetry(actionStatus, item.listitems, semanticType,glossaryFootnoteHtmlList));
         }
     }))
     return snapshotsList
@@ -100,7 +103,7 @@ const setSnapshotsInListAndPoetry = async (actionStatus, elementList, semanticTy
  * @param {Array} glossaryList - List of Glossary entries
  * @returns {Array} All  Glossary Snapshots for given element 
 */
-const prepareGlossarySnapshotContent = (actionStatus, glossaryList) => {
+const prepareGlossarySnapshotContent = (actionStatus, glossaryList, glossaryHtmlList) => {
     let glossarySnap = []
     glossaryList && glossaryList.length && glossaryList.map(glossaryItem => {
         let glossaryData = {
@@ -110,8 +113,9 @@ const prepareGlossarySnapshotContent = (actionStatus, glossaryList) => {
             glossaryId: glossaryItem.itemid
         }
         if (glossaryItem.glossaryentry && glossaryItem.glossaryentry[0]) {
-            glossaryData.glossaryTerm = `<p>${glossaryItem.glossaryentry[0].term.text}</p>`
-            glossaryData.glossaryDefinition = `<p>${glossaryItem.glossaryentry[0].definition.text}</p>`
+            let dataID = glossaryItem.itemid;
+            glossaryData.glossaryTerm = JSON.parse(glossaryHtmlList[dataID]).term
+            glossaryData.glossaryDefinition =  JSON.parse(glossaryHtmlList[dataID]).definition
             if (glossaryItem.glossaryentry[0].narrativeform) {
                 glossaryData.glossaryNarrative = `<p>${glossaryItem.glossaryentry[0].narrativeform.text}</p>`
             }
@@ -128,18 +132,19 @@ const prepareGlossarySnapshotContent = (actionStatus, glossaryList) => {
  * @param {Array} footnoteList - List of Footnote entries
  * @returns {Array} All Footnote Snapshots for given element 
 */
-const prepareFootnoteSnapshotContent = (actionStatus, footnoteList) => {
+const prepareFootnoteSnapshotContent = (actionStatus, footnoteWipList, footnoteHtmlList) => {
     let footnoteSnap = []
-    footnoteList && footnoteList.length && footnoteList.map(footnoteItem => {
+    footnoteWipList && footnoteWipList.length && footnoteWipList.map(footnoteItem => {
         let footnoteData = {
             changeStatus: actionStatus.status.charAt(0).toUpperCase() + actionStatus.status.slice(1),
             changeType: actionStatus.action,
             charAt: footnoteItem.charAt,
-            footnoteid: footnoteItem.footnoteid
+            footnoteId: footnoteItem.footnoteid
         };
         let footnoteText = "";
         if (footnoteItem.footnotecontent && footnoteItem.footnotecontent[0] && footnoteItem.footnotecontent[0].elementdata) {
-            footnoteText = footnoteItem.footnotecontent[0].elementdata.text ? footnoteItem.footnotecontent[0].elementdata.text : "";
+            let dataID = footnoteItem.footnotecontent[0].id;
+            footnoteText = footnoteHtmlList[dataID];
         }
         footnoteData.footnote = `<p class="paragraphNumeroUno">${footnoteText}</p>`
         footnoteSnap.push(footnoteData);
@@ -199,7 +204,6 @@ export const fetchElementsTag = (element) => {
     }
     
     eleTag = eleSubType && eleSubType.trim() !== "" && setElementTag[eleType] ? setElementTag[eleType].subtype[eleSubType] : setElementTag[eleType]
-    console.log(eleTag,eleType,"arora")
     labelText = eleTag ? `${eleTag.parentTag}${eleTag.childTag ? '+' + eleTag.childTag : ""}`:"P"
 
     return labelText;
@@ -328,6 +332,11 @@ export const checkContainerElementVersion = async (containerElement, versionStat
     if (currentSlateData && currentSlateData.status && currentSlateData.status === 'approved') {
         let newSlateManifest = await getLatestVersion(currentSlateData.contentUrn);
         config.slateManifestURN = newSlateManifest ? newSlateManifest : config.slateManifestURN
+        if(newSlateManifest)
+        {
+        containerElement.slateManifest = newSlateManifest
+        }
+
     }
     return containerElement;
 }

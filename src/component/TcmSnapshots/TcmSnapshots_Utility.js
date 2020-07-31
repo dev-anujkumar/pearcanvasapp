@@ -38,17 +38,15 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
     }
     /* ID of elements*/
     let elementId = {
-        parentId: wipData.id //deleVercase ? newVersionUrns[wipData.contentUrn] : wipData.id
+        parentId:  deleVercase && newVersionUrns[wipData.id] ? newVersionUrns[wipData.id] :  wipData.id 
     }
     /* For WE creation*/
     if (wipData.type === "element-aside" && type != "SECTION_BREAK") {
         wipData.elementdata.bodymatter && wipData.elementdata.bodymatter.map((item) => {
             if (item.type === "manifest") {
-                //item.id = deleVercase ? newVersionUrns[item.contentUrn] : item.id;
                 item.contents.bodymatter.map((ele) => {
                     if (elementType.indexOf(ele.type) !== -1) {
-                       // ele.id = newVersionUrns[ele.contentUrn];
-                        elementId.childId = ele.id;
+                        elementId.childId = deleVercase ? newVersionUrns[ele.id] : ele.id;
                         tag.childTag = fetchElementsTag(ele);
                         elementDetails = setElementTypeAndUrn(elementId, tag, wipData.subtype === "workedexample" ? 'BODY' : "", item.id);
                         prepareTcmData(elementDetails, ele, defaultKeys, actionStatus);
@@ -56,8 +54,7 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
                 })
             }
             else if (elementType.indexOf(item.type) !== -1) {
-               // item.id = newVersionUrns[item.contentUrn];//
-                elementId.childId = item.id;
+                elementId.childId = deleVercase ? newVersionUrns[item.id] : item.id;
                 tag.childTag = fetchElementsTag(item);
                 elementDetails = setElementTypeAndUrn(elementId, tag, wipData.subtype === "workedexample" ? "HEAD" : "", "");
                 prepareTcmData(elementDetails, item, defaultKeys, actionStatus);
@@ -68,11 +65,9 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
     else if (type === "SECTION_BREAK" || wipData.type === "manifest") {
         tag.parentTag = asideData && fetchElementsTag(asideData) ? fetchElementsTag(asideData) : fetchElementsTag(wipData)
         elementId.parentId = asideData && asideData.id ? asideData.id : parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "";
-        //wipData.id = newVersionUrns[wipData.contentUrn];//
         wipData.contents.bodymatter.map((item) => {
             if (elementType.indexOf(item.type) !== -1) {
-                //item.id = newVersionUrns[item.contentUrn];//
-                elementId.childId = item.id;
+                elementId.childId =  deleVercase ? newVersionUrns[item.id] : item.id;
                 tag.childTag = fetchElementsTag(item);
                 elementDetails = setElementTypeAndUrn(elementId, tag, "BODY", wipData.id);
                 prepareTcmData(elementDetails, item, defaultKeys, actionStatus);
@@ -83,8 +78,7 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
     else if (poetryData || asideData || parentUrn) {
         let parentElement = asideData ? asideData : poetryData ? poetryData : parentUrn ? parentUrn : "";
         elementId.parentId = parentElement && parentElement.id ? parentElement.id : parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "";
-        //wipData.id = newVersionUrns[wipData.contentUrn];//
-        elementId.childId = wipData.id;
+        elementId.childId = deleVercase ? newVersionUrns[wipData.id] : wipData.id;
         tag.parentTag = fetchElementsTag(parentElement);
         tag.childTag = fetchElementsTag(wipData);
         let isHead = asideData && asideData.type === "element-aside" && asideData.subtype === "workedexample" ? parentUrn.manifestUrn == asideData.id ? "HEAD" : "BODY" : "";
@@ -94,8 +88,7 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
     /* action on PE and CG */
     else if (wipData.type === "citations" || wipData.type === "poetry") {
         wipData.contents.bodymatter.map((item) => {
-            //item.id = newVersionUrns[item.contentUrn];//
-            elementId.childId = item.id;
+            elementId.childId = deleVercase ? newVersionUrns[item.id] : item.id;
             tag.childTag = fetchElementsTag(item);
             elementDetails = setElementTypeAndUrn(elementId, tag, "", "");
             prepareTcmData(elementDetails, item, defaultKeys, actionStatus);
@@ -210,6 +203,55 @@ export const prepareElementSnapshots = async (element,actionStatus) => {
     }
 
     return elementSnapshot;
+}
+
+
+/**
+ * @function tcmSnapshotsForUpdate
+ * @description-This function is to prepare snapshot during create element process
+ * @param {Object} elementUpdateData - Object containing required element data
+ * @param {String} elementIndex - index of element
+ * @param {Object} containerElement - Element Parent Data
+ * @param {Function} dispatch to dispatch tcmSnapshots
+*/
+export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, containerElement, dispatch) => {
+    let actionStatus = {
+        action: "update",
+        status: "",
+        fromWhere: "update"
+    }
+    let { updateBodymatter, response, updatedId, currentParentData } = elementUpdateData;
+    let currentSlateData = currentParentData[config.slateManifestURN]
+    let wipData = fetchElementWipData(updateBodymatter, elementIndex, response.type, "")
+    let versionStatus = fetchManifestStatus(updateBodymatter, containerElement, response.type);
+    /** latest version for WE/CE/PE/AS*/
+    containerElement = await checkContainerElementVersion(containerElement, versionStatus, currentSlateData)
+    //set new slate Manifest in store also
+    if (containerElement.slateManifest) {
+        delete Object.assign(currentParentData, { [containerElement.slateManifest]: currentParentData[currentSlateData.id] })[currentSlateData.id];
+        currentParentData[containerElement.slateManifest].id = containerElement.slateManifest
+        dispatch({
+            type: VERSIONING_SLATEMANIFEST,
+            payload: { slateLevelData: currentParentData }
+        })
+    }
+    let oldData = Object.assign({}, response);
+    if (response.id !== updatedId) {
+        if (oldData.poetrylines) {
+            oldData.poetrylines = wipData.poetrylines;
+        }
+        else {
+            oldData.elementdata = wipData.elementdata;
+        }
+        oldData.html = wipData.html;
+        let actionStatusVersioning = Object.assign({}, actionStatus);
+        actionStatusVersioning.action = "create"
+        actionStatusVersioning.status = "accepted"
+        /** After versioning with old snapshots*/
+        prepareTcmSnapshots(oldData, actionStatusVersioning, containerElement, "", "")
+    }
+    /** Before and after versioning with new snapshots*/
+    prepareTcmSnapshots(response, actionStatus, containerElement, "", "")
 }
 /**
  * @function isEmpty
