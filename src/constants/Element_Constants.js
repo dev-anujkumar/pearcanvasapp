@@ -81,7 +81,7 @@ export const ASSESSMENT_ITEM_TDX = 'tdxAssessmentItem';
 
 /****************Print On Demand************************ */ 
 export const POD_DEFAULT_VALUE = 'print100';
-/*********************** Sidebar *********************** */
+/*********************** Sidebar Dropdown*********************** */
 export const disabledPrimaryOption = [
     "primary-openerelement",
     "primary-mathml-equation",
