@@ -213,7 +213,7 @@ class ElmTableComponent extends Component {
                         }
                         if(assessments && assessments.type && (assessments.type == activeElementType)){
                             // let elmInteractiveType = assessments.additionalMetadata && assessments.additionalMetadata.interactiveType ? assessments.additionalMetadata.interactiveType : "";
-                            let elmInteractiveType = setInteractiveType(assessments);
+                            let elmInteractiveType = assessments.type == 'interactive' ? setInteractiveType(assessments) : {};
                             this.preparedData.push({ "type": assessments.type? assessments.type:"assessment", "title": title, "urn": assessments.urn, "parentUrn": parentUrn, "previousUrn": data.versionUrn, "interactiveType" : elmInteractiveType });
                         }
                     })

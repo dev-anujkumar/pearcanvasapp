@@ -64,13 +64,11 @@ const ElmTableBody = (props) => {
     }
 
     return (
-        <>
-            <tbody>
-                {tableValue.map((item, index) => {
-                    return setElmTableJsx(item, index)
-                })}
-            </tbody>
-        </>
+        <tbody>
+            {tableValue.map((item, index) => {
+                return setElmTableJsx(item, index)
+            })}
+        </tbody>
     );
 }
 export default ElmTableBody;
