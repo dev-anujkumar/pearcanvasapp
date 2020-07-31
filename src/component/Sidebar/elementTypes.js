@@ -645,7 +645,7 @@ export default {
         'primary-elm-interactive': {
             text: 'Elm Interactive',
             toolbar: ['crossLinkingIcon','assetpopover', 'glossary'],
-            enum: 'ELM_INTERACTIVE',
+            enum: 'MMI_ELM',
             subtype: {
                 'secondary-elm-interactive': {
                     text: 'Elm Interactive',
