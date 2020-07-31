@@ -245,6 +245,7 @@ describe('ELM Actions test', () => {
             assessmentFormat: "puf",
             usagetype: "Quiz"
         }
+        let elementType = 'assessment';
         const component = mount(<Provider store={store}><ElmTableComponent {...props} /></Provider>);
         const elmTableInstance = component.find('ElmTableComponent').instance();
         elmTableInstance.setState({
@@ -301,19 +302,19 @@ describe('ELM Actions test', () => {
         })
         it('TEST-filterData case-1', () => {
             const spyfilterData = jest.spyOn(elmTableInstance, 'filterData')
-            elmTableInstance.filterData("urn:pearson:manifest:3164caea-e288-4a7d-b8f3-d8e99e7df4ab", mockELMResponse, "urn:pearson:distributable:cd9daf2a-981d-493f-bfae-71fd76109d8f");
+            elmTableInstance.filterData(elementType,false,"urn:pearson:manifest:3164caea-e288-4a7d-b8f3-d8e99e7df4ab", mockELMResponse, "urn:pearson:distributable:cd9daf2a-981d-493f-bfae-71fd76109d8f");
             expect(spyfilterData).toHaveBeenCalled()
             spyfilterData.mockClear()
         })
         it('TEST-filterData case 2', () => {
             const spyfilterData = jest.spyOn(elmTableInstance, 'filterData')
-            elmTableInstance.filterData("urn:pearson:manifest:3164caea-e288-4a7d-b8f3-d8e99e7df4ab", mockELMResponse, "urn:pearson:manifest:3164caea-e288-4a7d-b8f3-d8e99e7df4ab");
+            elmTableInstance.filterData(elementType,false,"urn:pearson:manifest:3164caea-e288-4a7d-b8f3-d8e99e7df4ab", mockELMResponse, "urn:pearson:manifest:3164caea-e288-4a7d-b8f3-d8e99e7df4ab");
             expect(spyfilterData).toHaveBeenCalled()
             spyfilterData.mockClear()
         })
         it('TEST-getResourcefromFilterData', () => {
             const spygetResourcefromFilterData = jest.spyOn(elmTableInstance, 'getResourcefromFilterData')
-            elmTableInstance.getResourcefromFilterData(mockELMResponse, "urn:pearson:distributable:cd9daf2a-981d-493f-bfae-71fd76109d8f")
+            elmTableInstance.getResourcefromFilterData(elementType,false,mockELMResponse, "urn:pearson:distributable:cd9daf2a-981d-493f-bfae-71fd76109d8f")
             expect(spygetResourcefromFilterData).toHaveBeenCalled()
             spygetResourcefromFilterData.mockClear()
         })

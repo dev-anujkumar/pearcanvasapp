@@ -35,5 +35,6 @@ export default {
     POP_UP : "popup-elem",
     BLOCK_TEXT : "block-text-button",
     TABLE_EDITOR : "table-editor-elem-button",
-    MULTI_COLUMN_CONTAINER : "multi-column-group"
+    MULTI_COLUMN_CONTAINER : "multi-column-group",
+    ELM_INTERACTIVE_ICON:"elmInteractiveIcon"
 }

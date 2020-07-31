@@ -31,7 +31,9 @@
     cursor: move;
     background-color: grey;
 }
-
+.btn-element.element-label.quad-interactive{
+    font-size: 12px;
+}
 .btn-element.flag-icon {
     background-color: #fa5d54;
 }
