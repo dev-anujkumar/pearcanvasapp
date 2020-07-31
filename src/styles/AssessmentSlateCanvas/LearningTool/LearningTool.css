@@ -4,11 +4,11 @@
 
 .learningToolContainer {
     position: fixed;
-    width: 763px;
+    width: 1200px;
     top: 12%;
     right: 0;
     outline: 0;
-    left: 24%;
+    left: 0%;
     background: #fff;
     background-color: white;
     z-index: 1500;
@@ -17,8 +17,12 @@
     overflow-y:auto;
     transition: top 0.4s, opacity 0.4s;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    margin: 0 auto;
 }
-
+.learningToolHeaderMainDiv{
+    margin: 0 auto;
+    text-align: center;
+}
 .learningToolContainer hr{
     box-sizing: content-box;
     height: 0;
@@ -66,7 +70,7 @@
 }
 
 .spanLTFilterType {
-    margin-left: 100px;
+    /* margin-left: 100px; */
     margin-right: 10px;
     font-family: 'Open Sans', sans-serif;
     font-size: 11px;
@@ -94,7 +98,7 @@
 }
 
 .learningToolType {
-    width: 149.1px;
+    width: 175px;
     height: 25px;
     border-radius: 3px;
     border: solid 1px #b9b9b9;
@@ -102,7 +106,7 @@
 }
 
 .learningToolDis {
-    width: 151.6px;
+    width: 175px;
     height: 25px;
     border-radius: 3px;
     border: solid 1px #b9b9b9;
@@ -126,7 +130,7 @@
 }
 
 .learningToolSearchBar {
-    margin-left: 100px;
+    /* margin-left: 100px; */
     margin-right: 15px;
     width: 430px;
     height: 30px;
@@ -138,7 +142,7 @@
     line-height: 2;
     letter-spacing: normal;
     text-align: left;
-    padding-left: 5px;
+    padding: 0 5px;
     border: solid 1px #b9b9b9;
 }
 
@@ -291,28 +295,31 @@
 
 .tableHeader {
     text-align: left;
+    vertical-align: top;
     padding: 8px;
-    width: 20% !important;
+    width: 14% !important;
     border: none;
 }
-
+.learning-tool-margin-left p.ErrorComp{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
 .tableForApiResults {
     width: 100% !important;
     font-size: 14px;
     font-weight: bold;
 }
-
 .tableRow {
-    /* text-align: justify; */
-    width: 140px;
     font-size: 12px;
     font-family: 'Open Sans', sans-serif;
-    padding: 0px 5px;
+    padding: 2px 5px;
     line-height: 1.4em;
-    color:#424242;
+    color: #424242;
     font-weight: normal;
+    overflow-wrap: break-word;
 }
-
 .learningToolSearchButton[disabled] {
     border: 1px ridge gray;
     background-color: rgb(21, 119, 162);
@@ -320,7 +327,6 @@
     opacity: 0.3;
     cursor: default;
 }
-
 .learningToolFooterButtonLink[disabled] {
     border: 1px ridge gray;
     background-color: rgb(21, 119, 162);
@@ -328,7 +334,6 @@
     opacity: 0.3;
     cursor: default;
 }
-
 .tableForApiResults th {
     position: -webkit-sticky;
     position: sticky;
@@ -337,32 +342,76 @@
     background: #fff;
 }
 
-tr.modalCard td:nth-child(4) {
-    padding-left: 12px;
-}
-
-tr.modalCard td:nth-child(2) {
-    padding-right: 10px;
-}
-
-tr.modalCard td:nth-child(5) {
-    padding-left: 13px;
-}
-
-.labelHeader{
-    padding: 8px 15px;
-}
-.learningRadioButton{
+.inputElem.learningRadioButton {
+    width: 15px !important;
     position: relative;
-    top:5px;
-  }
-/* tr th.tableHeader:nth-child(2) {
-    padding: 0 10px;
-} */
+    top: 0px;
+    margin-top: 2px !important;
+}
 
+div.learningToolHeaderSearchDiv{
+    display: inline-flex;
+}
+div.learningToolHeaderSearchBar, button.learningToolSearchButton {
+    position: relative;
+    top: 20px;
+}
+
+/** Api Results Table Header Data CSS*/
 .learning-tool-margin-left {
     margin-left: 10px;
 }
+
+thead.tableForApiResults th.tableHeader:nth-child(1) {
+    width: 16% !important;
+}
+thead.tableForApiResults th.tableHeader:nth-child(2){
+    width: 10% !important;
+}
+thead.tableForApiResults th.tableHeader:nth-child(3){
+    width: 15% !important;
+}
+thead.tableForApiResults th.tableHeader:nth-child(4){
+    width: 15% !important;
+}
+thead.tableForApiResults th.tableHeader:nth-child(5){
+    width: 18% !important;
+}
+thead.tableForApiResults th.tableHeader:nth-child(6){
+    width: 26% !important;
+}
+
+/** Api Results Table Row Data CSS*/
+tr.modalCard td.tableRowData:nth-child(1) {
+    display: inline-flex;
+    padding-right: 10px;
+}
+tr.modalCard td.tableRowData:nth-child(2) {
+    padding-right: 10px;
+}
+tr.modalCard td.tableRowData:nth-child(3) {
+    padding-right: 10px;
+}
+tr.modalCard td.tableRowData:nth-child(4) {
+    padding-right: 10px;
+}
+tr.modalCard td.tableRowData:nth-child(5) {
+    padding-right: 10px;
+}
+tr.modalCard td.tableRowData:nth-child(6) {
+    padding-right: 10px;
+}
+
+table.learningToolTable{
+    max-width: 99% !important;
+}
+td.tableRowData{
+    border: none;
+    padding-left: 5px;
+    text-align: left;
+    vertical-align: top;
+}
+
 
 .exclamation-icon {
     margin-top: 3px;
@@ -373,27 +422,22 @@ tr.modalCard td:nth-child(5) {
     margin-bottom: -10px;
     padding-top: 1px;
 }
-
 .arrow-icon {
     color: #d2cdcdf0;
 }
-
 .scroller {
     overflow-y: scroll;
 }
-
 #style-2::-webkit-scrollbar-track , .learningToolContainer::-webkit-scrollbar-track  {
     box-shadow: inset 0 0 6px grey;
     -webkit-box-shadow: inset 0 0 6px grey;
     border-radius: 5px;
     background-color: #F5F5F5;
 }
-
 #style-2::-webkit-scrollbar, .learningToolContainer::-webkit-scrollbar {
     width: 5px;
     background-color: #F5F5F5;
 }
-
 #style-2::-webkit-scrollbar-thumb, .learningToolContainer::-webkit-scrollbar-thumb {
     border-radius: 5px;
     box-shadow: inset 0 0 6px grey;
@@ -403,7 +447,6 @@ tr.modalCard td:nth-child(5) {
 /* .learningToolContainer{
     overflow-y:auto;
 } */
-
 .highlightSelectedRow {
     background-color: #E8F8FF !important;
 }
@@ -417,8 +460,8 @@ tr.modalCard td:nth-child(5) {
     letter-spacing: normal;
     text-align: left;
     color: #252525;
-    position: absolute;
-    left: 100px;
+    position: relative;
+    left: 0;
 }
 @media only screen and (max-width:1500px) {
     .learningToolContainer {
@@ -428,6 +471,13 @@ tr.modalCard td:nth-child(5) {
 @media only screen and (max-width:1200px) {
     .learningToolContainer {
         max-height: 400px;
+        max-width: 98%;
     }
   }
 
+@media only screen and (max-width:1000px) {
+    .learningToolContainer {
+        max-height: 350px;
+        width : 960px;
+    }
+}
