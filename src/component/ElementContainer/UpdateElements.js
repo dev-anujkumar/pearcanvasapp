@@ -4,7 +4,7 @@ import config from '../../config/config';
 import { matchHTMLwithRegex } from '../../constants/utility.js'
 import store from '../../appstore/store'
 
-let indivisualData = {
+const indivisualData = {
     schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
     textsemantics: [ ],
     mathml: [ ]
@@ -619,15 +619,6 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                 inputType : elementTypes[elementType][primaryOption]['enum'],
                 inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']
             }
-                // switch (previousElementData.subtype) {
-                //     case elementTypeConstant.ELEMENT_WORKEDEXAMPLE:
-                //     default:
-                //         dataToReturn = { 
-                //             ...previousElementData,
-                //             inputType : elementTypes[elementType][primaryOption]['enum'],
-                //             inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']
-                //     }
-                // }
             break;
         
         case elementTypeConstant.ASSESSMENT_SLATE:
@@ -638,18 +629,6 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
             break;
     }
     dataToReturn.slateVersionUrn = config.slateManifestURN;
-    /* if (previousElementData.status == "approved") {
-        let parentData = store.getState().appStore.slateLevelData;
-        if (config.isPopupSlate && parentData[config.slateManifestURN].status === "approved") {
-            dataToReturn.parentEntityId = config.slateEntityURN;
-        } else if (asideData && asideData.contentUrn) {
-            dataToReturn.parentEntityId = asideData.contentUrn;
-        } else if (parentElement && parentElement.type === "showhide" && showHideType && parentElement.contentUrn) {
-            dataToReturn.parentEntityId = parentElement.contentUrn;
-        } else if (poetryData && poetryData.contentUrn) {
-            dataToReturn.parentEntityId = poetryData.contentUrn;
-        } 
-    } */
     if (parentElement) {
         parentElement["index"] = index
     }

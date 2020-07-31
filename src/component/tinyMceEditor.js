@@ -129,10 +129,6 @@ export class TinyMceEditor extends Component {
                             let innerHtml = this.innerHTML;
                             this.outerHTML = innerHtml;
                         })
-                        // tinyMCE.$('.Wirisformula').each(function () {
-                        //     this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
-                        //     this.naturalWidth && this.setAttribute('width', this.naturalWidth)
-                        // }) 
                         if (!config.savingInProgress) {
                             if ((this.props.element.type === "popup" || this.props.element.type === "citations") && !this.props.currentElement) {
                                 this.props.createPopupUnit(this.props.popupField, true, this.props.index, this.props.element)
@@ -192,14 +188,11 @@ export class TinyMceEditor extends Component {
                 /* Reverting data-temp-mathml to data-mathml and class Wirisformula to temp_WirisFormula */
                 if (editor.getContentAreaContainer()) {
                     let revertingTempContainerHtml = editor.getContentAreaContainer().innerHTML;
-
                     //Test Case Changes
                     if (!revertingTempContainerHtml) {
                         revertingTempContainerHtml = "";
                     }
-
                     revertingTempContainerHtml = revertingTempContainerHtml.replace(/data-temp-mathml/g, 'data-mathml').replace(/temp_Wirisformula/g, 'Wirisformula');
-
                     //Test Case Changes
                     if (document.getElementById(editor.id)) {
                         document.getElementById(editor.id).innerHTML = revertingTempContainerHtml;
