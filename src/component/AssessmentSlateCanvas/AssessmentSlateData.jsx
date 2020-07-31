@@ -328,15 +328,17 @@ import { setAssessmentUsageType } from '../AssessmentSlateCanvas/AssessmentActio
         if (document.getElementsByClassName("slate-tag-icon").length) {
         document.getElementsByClassName("slate-tag-icon")[0].classList.remove("disable");
         }
-
+        let showID ="";
         let assessmentSlateJSX;
         let assessmentTypeValue;
         let changeTypeValue;
         let title = this.props.assessmentItemTitle? this.props.assessmentItemTitle:this.props.learningTemplateLabel;
         if(this.state.activeAssessmentType === LEARNING_APP_TYPE || this.state.activeAssessmentType === LEARNING_TEMPLATE){
+            showID = 'Template ID: ' + (this.props.model.elementdata && this.props.model.elementdata.templateid ? this.props.model.elementdata.templateid:"");
             assessmentTypeValue="Learning App";
             changeTypeValue="Change Learning App"
         }else {
+            showID = 'ID: '+this.props.assessmentId;
             assessmentTypeValue="Assessment";
             changeTypeValue="Change assessment";
         }
@@ -347,14 +349,13 @@ import { setAssessmentUsageType } from '../AssessmentSlateCanvas/AssessmentActio
             return <RootCiteTdxComponent activeAssessmentType={this.state.activeAssessmentType} openedFrom = {'slateAssessment'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.activeAssessmentType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAssessmentUsageType} parentPageNo={this.state.parentPageNo} isReset={this.state.isReset} resetPage={this.resetPage} AssessmentSearchTitle={this.AssessmentSearchTitle} searchTitle={this.state.searchTitle} filterUUID={this.state.filterUUID} />
         }
         if (this.props.getAssessmentData && this.props.getAssessmentDataPopup===false && this.state.changeLearningData === false) {
- 
             assessmentSlateJSX = <div className="slate_fetch_canvas">
                 <div className="slate_assessment_data_container">
                     <div className="slate_assessment_data_content">
                         <div className="slate_assessment_data_label">{assessmentTypeValue}</div>
                         <div className="slate_assessment_data_details">
                             <div className="slate_assessment_data_title">{title}</div>
-                            <div className="slate_assessment_data_id">{'ID: ' + this.props.assessmentId}</div>
+                            <div className="slate_assessment_data_id">{showID}</div>
                             <div className="slate_assessment_data_id_lo" style={{display:"none"}}>{this.props.assessmentId}</div>
                             <div className="slate_assessment_data_format_lo" style={{display:"none"}}>{this.state.activeAssessmentType}</div>
                             <div className="slate_assessment_change_button" onClick={ !hasReviewerRole() && this.changeAssessment}>{changeTypeValue}</div>

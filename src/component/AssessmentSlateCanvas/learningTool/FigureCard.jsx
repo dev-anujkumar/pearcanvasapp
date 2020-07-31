@@ -40,7 +40,7 @@ class FigureCard extends React.Component {
 
         return (
             <tr className={(this.props.selectedResult && (this.props.selectedResult.learningtemplateUrn == this.props.apiResultObject.learningtemplateUrn)) ? "modalCard highlightSelectedRow" : "modalCard"} >
-                <td >
+                <td className="tableRowData">
                     <input
                         type="radio"
                         value={this.props.apiResultObject.learningtemplateUrn}
@@ -51,21 +51,24 @@ class FigureCard extends React.Component {
                         id={this.props.forInputKey}
                         key={this.props.apiResultObject.learningtemplateUrn}
                     />
+                {/* </td>
+                <td className="tableRow"> */}
+                    <p className="tableRow">{this.state.learningType[this.props.apiResultObject.type]}</p>
                 </td>
-                <td className="tableRow">
-                    {this.state.learningType[this.props.apiResultObject.type]}
-                </td>
-                <td >
+                <td className="tableRowData">
                     <p className="tableRow" htmlFor={this.props.forInputKey}>{this.props.apiResultObject.disciplines.en.join(", ")}</p>
                 </td>
-                <td >
+                <td className="tableRowData">
                     <p className="tableRow" htmlFor={this.props.forInputKey}>{this.props.apiResultObject.label.en}</p>
                 </td>
-                <td >
+                <td className="tableRowData">
                     <p className="tableRow" htmlFor={this.props.forInputKey}>{this.props.apiResultObject.dateModified}</p>
                 </td>
-                <td >
+                <td className="tableRowData">
                     <p className="tableRow" htmlFor={this.props.forInputKey}>{this.props.apiResultObject.keywords && this.props.apiResultObject.keywords.en ? this.props.apiResultObject.keywords.en.join(", ") : "-"}</p>
+                </td>
+                <td className="tableRowData">
+                    <p className="tableRow" htmlFor={this.props.forInputKey}>{this.props.apiResultObject.templateid ? this.props.apiResultObject.templateid : "-"}</p>
                 </td>
             </tr>
         );
