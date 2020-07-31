@@ -19,20 +19,7 @@ const ElementContainerHOC = (WrappedComponent) => {
             figTitleClass= 'heading4ImageTextWidthTitle',
             // figCaptionClass= 'figcaptionImageTextWidth',
             figCreditClass= 'paragraphImageTextWidthCredit'
-
-            /* let formattedSubtitle = model.contents.hasOwnProperty('formatted-subtitle') ?
-                model.contents["formatted-subtitle"].html && model.contents["formatted-subtitle"].html.text : "<p></p>";
-            let formattedTitle = model.contents.hasOwnProperty('formatted-title') ?
-                model.contents["formatted-title"].html && model.contents["formatted-title"].html.text : "<p></p>"; */
             let formattedSubtitle, formattedTitle
-             /*let oldSubtitleModel = model.contents.hasOwnProperty("formatted-subtitle") && model.contents["formatted-subtitle"].html && model.contents["formatted-subtitle"].html.text
-
-            if(model.contents.hasOwnProperty('formatted-title') && isOldDataFormat(model.contents["formatted-title"].html.text)){
-                formattedSubtitle = oldSubtitleModel ? getTitleSubtitleModel(model.contents["formatted-subtitle"].html.text, "formatted-subtitle", oldSubtitleModel) : `<p class="paragraphNumeroUno"><br/></p>`;
-
-                formattedTitle = model.contents.hasOwnProperty('formatted-title') ?
-                model.contents["formatted-title"].html && getTitleSubtitleModel(model.contents["formatted-title"].html.text, "formatted-title") : `<p class="paragraphNumeroUno"><br/></p>`;
-            } */
             if(model.contents.hasOwnProperty('formatted-title')){
                 /**
                  * New format
@@ -50,10 +37,7 @@ const ElementContainerHOC = (WrappedComponent) => {
                 model.contents["creditsarray"][0].html && model.contents["creditsarray"][0].html.text : "<p><br/></p>";
             let subTitle
             let Title = subTitle = element.contents && element.contents['formatted-title']
-            // let subTitle = element.contents && element.contents['formatted-title']
-            // let subTitle = element.contents && element.contents['formatted-subtitle']
             let credit = element.contents && element.contents.hasOwnProperty('creditsarray') && element.contents['creditsarray'][0]
-            
             
             let poetryElem = <div className={divClass}>
                 <div className={divContainerClass}>
@@ -69,11 +53,6 @@ const ElementContainerHOC = (WrappedComponent) => {
                         <div>
                             <WrappedComponent data={this.state} {...this.props} />
                         </div>
-
-                        {/* <figcaption className={figCaptionClass} >
-                            <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${index}-3`} placeholder="Enter Caption..." tagName={'p'} className={figCaptionClass + " figureCaption"} model={formattedCaption} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} createPoetryElements={this.props.createPoetryElements} poetryField="formattedCaption" />
-                        </figcaption> */}
-
                         <figcredit>
                             <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${index}-4`} placeholder="Enter Credit..." tagName={'figureCredit'} className={figCreditClass + " figureCredit"} model={formattedCredit} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} createPoetryElements={this.props.createPoetryElements} poetryField="creditsarray"
                                 currentElement={credit} />
