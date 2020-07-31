@@ -288,8 +288,8 @@ export const setInteractiveType = (asset) => {
         wipValue: "",
         label: ""
     }
-    const { interactiveType, interactiveLabel } = asset.additionalMetadata;
-    interactiveTypeData.label = interactiveLabel ? interactiveLabel : interactiveTypeList[interactiveType].label;
+    const { interactiveType } = asset.additionalMetadata;
+    interactiveTypeData.label = interactiveType ? interactiveType : interactiveTypeList[interactiveType].wipValue;
     interactiveTypeData.wipValue = interactiveType ? interactiveType : interactiveTypeList[interactiveType].wipValue;
 
     return interactiveTypeData
