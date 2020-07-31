@@ -58,7 +58,7 @@ export const generateCommonFigureData = (index, previousElementData, elementType
     if(previousElementData.figuretype === 'image' || previousElementData.figuretype === "table" || previousElementData.figuretype === "mathImage" ){
         let getAttributeBCE = document.querySelector(`div.element-container.active[data-id="${previousElementData.id}"] div.figureElement`) || document.querySelector(`div.element-container.fg.showBorder[data-id="${previousElementData.id}"] div.figureElement`)
         podwidth = getAttributeBCE && getAttributeBCE.getAttribute("podwidth") || POD_DEFAULT_VALUE
-        previousElementData.figuredata.podwidth = podHtmlmatchWithRegex(podwidth) ? podwidth : `print${podwidth}`
+        previousElementData.figuredata.podwidth = podwidth ? (podHtmlmatchWithRegex(podwidth) ? podwidth : `print${podwidth}`) : ''
     }  
 
 
