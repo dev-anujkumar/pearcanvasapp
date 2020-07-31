@@ -284,13 +284,13 @@ export const interactiveTypeList = {
     * @param asset - current asset for elm-interactive
    */
 export const setInteractiveType = (asset) => {
-    let interactiveType = {
+    let interactiveTypeData = {
         wipValue: "",
         label: ""
     }
-    const { interactiveType } = asset.additionalMetadata;
-    interactiveType.label = interactiveType.label ? interactiveType.label : interactiveTypeList[interactiveType].label;
-    interactiveType.wipValue = interactiveType.wipValue ? interactiveType.wipValue : interactiveTypeList[interactiveType].wipValue;
+    const { interactiveType, interactiveLabel } = asset.additionalMetadata;
+    interactiveTypeData.label = interactiveLabel ? interactiveLabel : interactiveTypeList[interactiveType].label;
+    interactiveTypeData.wipValue = interactiveType ? interactiveType : interactiveTypeList[interactiveType].wipValue;
 
-    return interactiveType
+    return interactiveTypeData
 }

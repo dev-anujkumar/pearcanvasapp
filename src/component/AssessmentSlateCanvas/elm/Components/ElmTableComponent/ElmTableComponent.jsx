@@ -347,7 +347,7 @@ class ElmTableComponent extends Component {
                 obj = {
                     id: this.state.currentAssessmentSelected.urn,
                     title: this.state.currentAssessmentSelected.title,
-                    interactiveType: interactiveTypeList[this.state.currentAssessmentSelected.interactiveType].wipValue,
+                    interactiveType: this.state.currentAssessmentSelected.interactiveType.wipValue,
                 }
             }else if (this.state.openedFrom === "slateAssessment") {
                 obj = {

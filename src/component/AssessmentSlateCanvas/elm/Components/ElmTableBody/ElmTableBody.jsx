@@ -3,7 +3,7 @@
 */
 import React from 'react';
 import '../../../../../styles/AssessmentSlateCanvas/elm/ElmTable.css';
-import { getFolderLabel, interactiveTypeList } from '../../UtilityFunctions/ElmLearnosityUtility.js';
+import { getFolderLabel } from '../../UtilityFunctions/ElmLearnosityUtility.js';
 import { elmInteractiveIcon, singleAssessmentItemIcon, elmAssessmentItem } from '../../../../../images/ElementButtons/ElementButtons.jsx';
 import { ELM_INT } from '../../../AssessmentSlateConstants.js';
 
@@ -47,7 +47,7 @@ const ElmTableBody = (props) => {
                     </div>
                     <span className="elm-data-span"><b className='elm-assessment-title'> {item.title ? item.title : item.urn}</b></span>
                 </td>
-                {(elementType == ELM_INT) && <td className='td-class interactive-type'><b className="elm-text-assesment">{item.interactiveType ? interactiveTypeList[item.interactiveType].label : ""}</b></td>}
+                {(elementType == ELM_INT) && <td className='td-class interactive-type'><b className="elm-text-assesment">{item.interactiveType ? item.interactiveType.label : ""}</b></td>}
                 <td className='td-class elm-urn'><b className="elm-text-assesment">{item.urn}</b></td>
             </tr>
         }
