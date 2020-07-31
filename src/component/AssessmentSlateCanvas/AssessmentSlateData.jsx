@@ -14,7 +14,6 @@ import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import  {setCurrentCiteTdx,assessmentSorting}  from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
 import { setAssessmentUsageType } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
-
  class AssessmentSlateData extends Component {
     constructor(props) {
         super(props);
