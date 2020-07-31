@@ -80,7 +80,7 @@ export const ASSESSMENT_ITEM = 'assessmentItem';
 export const ASSESSMENT_ITEM_TDX = 'tdxAssessmentItem';
 
 /****************Print On Demand************************ */ 
-export const POD_DEFAULT_VALUE = 'print100';
+export const POD_DEFAULT_VALUE = '';
 /*********************** Sidebar Dropdown*********************** */
 export const disabledPrimaryOption = [
     "primary-openerelement",

@@ -519,13 +519,14 @@ class Sidebar extends Component {
             }
             let printValue = this.state.podValue
 
-            printValue = printValue.replace(/print/g) ? printValue.slice(5) : this.state.podValue
-            printValue = printValue.match(/%/g) ? printValue : printValue + '%'
+            printValue = printValue.match(/print/g) ? printValue.slice(5) : this.state.podValue
+            printValue = printValue ? (printValue.match(/%/g) ? printValue : printValue + '%') : '100%'
 
             let activeElement = document.querySelector(`[data-id="${this.props.activeElement.elementId}"]`)
             let attrNode = activeElement ? activeElement.querySelector(".figureElement") : null
+            let showPodValue = this.state.podValue === 'print100' ? '' : this.state.podValue
             if (attrNode) {
-                attrNode.setAttribute("podwidth", this.state.podValue)
+                attrNode.setAttribute("podwidth", showPodValue)
             }
 
             return (
