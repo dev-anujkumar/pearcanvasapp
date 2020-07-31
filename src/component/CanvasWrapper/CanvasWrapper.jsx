@@ -63,7 +63,7 @@ export class CanvasWrapper extends Component {
         // if (config.slateManifestURN) {
         //     this.props.fetchSlateData(config.slateManifestURN,config.slateEntityURN,config.page,'');
         // }
-        sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus :'Refreshed a moment ago'} });
+        sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus :'Refreshed, a moment ago'} });
         
         sendDataToIframe({
             'type': CanvasIframeLoaded,
