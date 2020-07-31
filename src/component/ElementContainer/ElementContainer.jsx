@@ -1247,7 +1247,6 @@ class ElementContainer extends Component {
 
         let borderToggle = this.state.borderToggle;
         let btnClassName = this.state.btnClassName;
-        
         let bceOverlay = "";
         let elementOverlay = ''
         if (!hasReviewerRole() && this.props.permissions && !(this.props.permissions.includes('access_formatting_bar')||this.props.permissions.includes('elements_add_remove')) ) {

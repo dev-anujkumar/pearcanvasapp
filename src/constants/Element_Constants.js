@@ -12,7 +12,6 @@ export const WIDER = "wider"
 export const FULL = "full"
 export const DEFAULT_IMAGE_DATA_SOURCE = "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png"
 export const DEFAULT_IMAGE_SOURCE = "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png"
-
 /*---------------Element Audio-Video ----------------------*/ 
 export const AUDIO = "audio"
 export const VIDEO = "video"

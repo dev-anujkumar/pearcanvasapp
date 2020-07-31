@@ -39,7 +39,6 @@ class ElmTableComponent extends Component {
             filterResults: ''
         };
         this.preparedData = [];
-        this.finalData = [];
         this.searchData = [];
         this.setSort();
         

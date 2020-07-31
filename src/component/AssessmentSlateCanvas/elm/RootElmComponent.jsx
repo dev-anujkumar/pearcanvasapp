@@ -54,8 +54,7 @@ const mapActionToProps = {
 
 const mapStateToProps = (state) => {
     return {
-        elmReducer: state.elmReducer,
-        // currentSlateAncestorData : state.appStore.currentSlateAncestorData
+        elmReducer: state.elmReducer
     }
 }
 
