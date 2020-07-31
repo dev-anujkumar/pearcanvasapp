@@ -196,13 +196,13 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 slateLevelData: newParentData
             }
         })
-        // if(type === "SHOW_HIDE"){
-        //     let showHideRevealElement = document.getElementById(`cypress-${index}-2-0`)
-        //        if(showHideRevealElement){
-        //             showHideRevealElement.focus()
-        //             showHideRevealElement.blur()
-        //        } 
-        //     }
+        /*if(type === "SHOW_HIDE"){
+            let showHideRevealElement = document.getElementById(`cypress-${index}-2-0`)
+               if(showHideRevealElement){
+                    showHideRevealElement.focus()
+                    showHideRevealElement.blur()
+               } 
+            }*/
         if (cb) {
             cb();
         }   

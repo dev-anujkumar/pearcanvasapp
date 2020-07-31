@@ -8,7 +8,6 @@ import { GET_TCM_RESOURCES } from '../../constants/Action_Constants';
      * @param {String} slateManifestUrn | Slate Manifest URN
   */
 export const handleTCMData = (slateManifestUrn) => (dispatch, getState) => {
-    console.log(slateManifestUrn,config.projectUrn)
     sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'false' });
     let url = `/cypress/trackchanges-srvr/tcstats/proj/${config.projectUrn}/slate/${slateManifestUrn}`;
     return axios.get(url, {
@@ -75,11 +74,6 @@ export const tcmSnapshot = (slateManifestUrn,slateEntityUrn) => (dispatch, getSt
      * @param {Object} snapshotData | TCM Snapshot data
 */
 export const sendElementTcmSnapshot = async (snapshotData) => {
-    /** requestBody = snapshotData
-     * API CALL HERE
-     */
-    // await snapshotData
-    //console.log('snapshotData',snapshotData)
         let url = `http://localhost:3003/snapshots`;
         return axios.post(url, snapshotData, {
         headers: {
@@ -87,7 +81,6 @@ export const sendElementTcmSnapshot = async (snapshotData) => {
         }
     }).then((res) => {
         console.log("success")
-        console.log('snapshotData',snapshotData)
     }).catch((error) => {
         console.log("error")
     })

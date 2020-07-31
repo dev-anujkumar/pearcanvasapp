@@ -179,36 +179,36 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     //let elmIndexes = indexes ? indexes : 0;
     //let slateBodyMatter = store[config.slateManifestURN].contents.bodymatter;
     /** Used for Backend, not required now */
-    // if(elmIndexes.length === 2 && slateBodyMatter[elmIndexes[0]].subtype == "workedexample" ){
-    //     if(slateBodyMatter[elmIndexes[0]].elementdata.bodymatter[elmIndexes[1]].id === conversionDataToSend.id){
-    //         conversionDataToSend.isHead = true;
-    //         conversionDataToSend.parentType = "workedexample";
-    //     }
-    // }else if(elmIndexes.length === 3 && slateBodyMatter[elmIndexes[0]].subtype == "workedexample"){
-    //     if(slateBodyMatter[elmIndexes[0]].elementdata.bodymatter[elmIndexes[1]].contents.bodymatter[elmIndexes[2]].id === conversionDataToSend.id){
-    //         conversionDataToSend.isHead = false;
-    //         conversionDataToSend.parentType = "workedexample";
-    //     }
-    // }else if(elmIndexes.length === 2 && slateBodyMatter[elmIndexes[0]].subtype == "sidebar"){
-    //     if(slateBodyMatter[elmIndexes[0]].elementdata.bodymatter[elmIndexes[1]].id === conversionDataToSend.id){
-    //         conversionDataToSend.isHead = false;
-    //         conversionDataToSend.parentType = "element-aside";
-    //     }
-    // }
+   /** if(elmIndexes.length === 2 && slateBodyMatter[elmIndexes[0]].subtype == "workedexample" ){
+        if(slateBodyMatter[elmIndexes[0]].elementdata.bodymatter[elmIndexes[1]].id === conversionDataToSend.id){
+            conversionDataToSend.isHead = true;
+            conversionDataToSend.parentType = "workedexample";
+        }
+    }else if(elmIndexes.length === 3 && slateBodyMatter[elmIndexes[0]].subtype == "workedexample"){
+        if(slateBodyMatter[elmIndexes[0]].elementdata.bodymatter[elmIndexes[1]].contents.bodymatter[elmIndexes[2]].id === conversionDataToSend.id){
+            conversionDataToSend.isHead = false;
+            conversionDataToSend.parentType = "workedexample";
+        }
+    }else if(elmIndexes.length === 2 && slateBodyMatter[elmIndexes[0]].subtype == "sidebar"){
+        if(slateBodyMatter[elmIndexes[0]].elementdata.bodymatter[elmIndexes[1]].id === conversionDataToSend.id){
+            conversionDataToSend.isHead = false;
+            conversionDataToSend.parentType = "element-aside";
+        }
+    }
 
-    // if(conversionDataToSend.outputType==="SHOW_HIDE"||conversionDataToSend.outputType==="POP_UP"){
-    //     slateBodyMatter.forEach((elem)=>{
-    //         if(elem.type==="element-aside"){
-    //             elem.elementdata.bodymatter.forEach((nestElem)=>{
-    //                 if(nestElem.id===conversionDataToSend.id){
-    //                     conversionDataToSend.slateVersionUrn = elem.versionUrn;
-    //                     conversionDataToSend.slateEntity = elem.contentUrn;
-    //                 }
-    //             })
-    //         }
-    //     })
-    // }
-
+    if(conversionDataToSend.outputType==="SHOW_HIDE"||conversionDataToSend.outputType==="POP_UP"){
+        slateBodyMatter.forEach((elem)=>{
+            if(elem.type==="element-aside"){
+                elem.elementdata.bodymatter.forEach((nestElem)=>{
+                    if(nestElem.id===conversionDataToSend.id){
+                        conversionDataToSend.slateVersionUrn = elem.versionUrn;
+                        conversionDataToSend.slateEntity = elem.contentUrn;
+                    }
+                })
+            }
+        })
+    }*/
+    
     if (newElementData.primaryOption !== "primary-list" && conversionDataToSend.inputType === conversionDataToSend.outputType && conversionDataToSend.inputSubType === conversionDataToSend.outputSubType) {
         return;
     }

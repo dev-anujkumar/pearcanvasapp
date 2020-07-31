@@ -25,10 +25,8 @@ export const setSemanticsSnapshots = async (element,actionStatus) => {
         
         case 'element-authoredtext':
             glossaryWipList = element.elementdata && element.elementdata.glossaryentries && !element.elementdata.headers ? element.elementdata.glossaryentries : [];
-            //glossaryHtmlList = element.html && element.html.glossaryentries ?element.html.glossaryentries:[];
             glossarySnap = prepareGlossarySnapshotContent(actionStatus, glossaryWipList,glossaryHtmlList);
             footnoteWipList = element.elementdata && element.elementdata.footnotes ? element.elementdata.footnotes : [];
-            //footnoteHtmlList = element.html && element.html.footnotes ? element.html.footnotes : [];
             footnoteSnap = prepareFootnoteSnapshotContent(actionStatus, footnoteWipList,footnoteHtmlList);
             assetPopoverList = element.elementdata && element.elementdata.internallinks ? element.elementdata.internallinks : [];
             assetPopoverSnap = await prepareAssetPopoverSnapshotContent(assetPopoverList)
@@ -37,7 +35,6 @@ export const setSemanticsSnapshots = async (element,actionStatus) => {
         case 'stanza':
         case 'element-list':
             let listData = element.type === "element-list" ? element.elementdata.listitems: element.poetrylines
-           // glossaryHtmlList = element.html && element.html.glossaryentries ?element.html.glossaryentries:[];
             glossarySnap =  await setSnapshotsInListAndPoetry(actionStatus, listData, 'glossary',glossaryHtmlList);
             footnoteSnap =  await setSnapshotsInListAndPoetry(actionStatus, listData, 'footnote',footnoteHtmlList);
             assetPopoverSnap =  await setSnapshotsInListAndPoetry("", listData, 'assetpopover');
@@ -46,7 +43,6 @@ export const setSemanticsSnapshots = async (element,actionStatus) => {
         case 'element-blockfeature':
             glossarySnap = [];
             footnoteWipList = element.elementdata && element.elementdata.authoredtext && element.elementdata.authoredtext.footnotes ? element.elementdata.authoredtext.footnotes : [];
-            //footnoteHtmlList = element.html && element.html.footnotes ? element.html.footnotes : [];
             footnoteSnap = prepareFootnoteSnapshotContent(actionStatus, footnoteWipList,footnoteHtmlList)
             assetPopoverList = element.elementdata && element.elementdata.authoredtext && element.elementdata.authoredtext.internallinks ? element.elementdata.authoredtext.internallinks : [];
             assetPopoverSnap = await prepareAssetPopoverSnapshotContent(assetPopoverList)
@@ -221,7 +217,6 @@ export const fetchElementsTag = (element) => {
 export const fetchElementWipData = (bodymatter, index, type, entityUrn) => {
     let eleIndex,
     wipData = {};
-
     if (typeof index === "number" || (Array.isArray(index) && index.length == 1)) {   /** Delete a container or an element at slate level */
         eleIndex = Array.isArray(index) ? index[0] : index;
         wipData = bodymatter[eleIndex];
@@ -235,7 +230,6 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn) => {
     }
     else if (typeof index === "string") {
         eleIndex =  index.split("-");
-        // eleIndex = Array.isArray(index) ? index : index.split("-");
         switch (type) {
             case 'stanza':                           /** Inside Poetry */
                 wipData = bodymatter[eleIndex[0]].contents.bodymatter[eleIndex[2]];
@@ -269,10 +263,8 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn) => {
 */
 export const fetchParentData = (bodymatter, indexes) => {
     let parentData = {};
-    
     let tempIndex = Array.isArray(indexes) ? indexes : (typeof indexes === "number") ? indexes.toString() : indexes.split("-");
     let isChildElement = elementType.indexOf(bodymatter[tempIndex[0]].type) === -1 ? true : false
-
     if (isChildElement == true) {
         parentData.asideData = {
             contentUrn: bodymatter[tempIndex[0]].contentUrn,
@@ -281,9 +273,7 @@ export const fetchParentData = (bodymatter, indexes) => {
             type: bodymatter[tempIndex[0]].type,
             element: bodymatter[tempIndex[0]]
         }
-
         let parentElement = tempIndex.length == 3 && bodymatter[tempIndex[0]].type !== 'poetry'  ? bodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]] : bodymatter[tempIndex[0]];
-
         parentData.parentUrn = {
             manifestUrn: parentElement.id,
             contentUrn: parentElement.contentUrn,

@@ -169,20 +169,6 @@ export const setDefaultKeys = (actionStatus, isContainer) => {
     actionStatus.status = tcmKeys.status
     return tcmKeys
 }
-
-// /**
-//  * @function prepareElementStatus
-//  * @description This function is to set the status of element
-//  * @param string action - type of action
-// */
-// const prepareElementStatus = (action, status) => {
-//     let newStatus;
-//     if (action.toLowerCase() === "create") {
-//         newStatus = config.tcmStatus === true ? "Pending" : "Accepted";
-//     }
-//     return newStatus
-// }
-
 /**
  * @function prepareElementSnapshots
  * @description This function is to set the common keys for tcm snapshots
