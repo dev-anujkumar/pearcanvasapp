@@ -8,6 +8,7 @@ import {
 import { AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP, OPEN_GLOSSARY_FOOTNOTE,DELETE_SHOW_HIDE_ELEMENT, GET_TCM_RESOURCES,VERSIONING_SLATEMANIFEST} from "./../../constants/Action_Constants";
 import { customEvent } from '../../js/utils';
 import { prepareTcmSnapshots } from '../TcmSnapshots/TcmSnapshots_Utility.js';
+import { tcmSnapshotsForUpdate } from '../TcmSnapshots/TcmUpdateSnapshot_Utility.js';
 import { fetchElementWipData, checkContainerElementVersion, fetchManifestStatus } from '../TcmSnapshots/ElementSnapshot_Utility.js';
 let elementTypeTCM = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza'];
 let containerType = ['element-aside', 'manifest', 'citations', 'poetry'];
@@ -438,54 +439,6 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         document.getElementById('link-notification').innerText = "";
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
     })
-}
-
-/**
- * @function tcmSnapshotsForUpdate
- * @description-This function is to prepare snapshot during create element process
- * @param {Object} elementUpdateData - Object containing required element data
- * @param {String} elementIndex - index of element
- * @param {Object} containerElement - Element Parent Data
- * @param {Function} dispatch to dispatch tcmSnapshots
-*/
-export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, containerElement, dispatch) => {
-    let actionStatus = {
-        action:"update",
-        status:"",
-        fromWhere:"update"
-    }
-    let {updateBodymatter, response,updatedId,currentParentData} = elementUpdateData;
-    let currentSlateData =currentParentData[config.slateManifestURN] 
-    let wipData = fetchElementWipData(updateBodymatter, elementIndex, response.type,"")
-    let versionStatus = fetchManifestStatus(updateBodymatter, containerElement, response.type);
-    /** latest version for WE/CE/PE/AS*/
-    containerElement = await checkContainerElementVersion(containerElement, versionStatus,currentSlateData)
-    let oldData = Object.assign({}, response);
-    //set new slate Manifest in store also
-    if(containerElement.slateManifest){
-        delete Object.assign(currentParentData, {[containerElement.slateManifest]: currentParentData[currentSlateData.id] })[currentSlateData.id];
-        currentParentData[containerElement.slateManifest].id = containerElement.slateManifest
-        dispatch({
-            type: VERSIONING_SLATEMANIFEST,
-            payload: {slateLevelData:currentParentData}
-        })
-    }
-    if (response.id !== updatedId) {
-        if (oldData.poetrylines) {
-            oldData.poetrylines = wipData.poetrylines;
-        }
-        else {
-            oldData.elementdata = wipData.elementdata;
-        }
-        oldData.html = wipData.html;
-        let actionStatusVersioning = Object.assign({}, actionStatus);
-        actionStatusVersioning.action="create"
-        actionStatusVersioning.status ="accepted"
-        /** After versioning with old snapshots*/
-        prepareTcmSnapshots(oldData, actionStatusVersioning, containerElement, "","")
-    }
-    /** Before and after versioning with new snapshots*/
-    prepareTcmSnapshots(response, actionStatus, containerElement, "","")
 }
 
 function updateLOInStore(updatedData, versionedData, getState, dispatch) {

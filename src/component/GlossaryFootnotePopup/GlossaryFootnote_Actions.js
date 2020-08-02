@@ -4,7 +4,8 @@ import store from '../../appstore/store.js'
 import { sendDataToIframe, createTitleSubtitleModel } from '../../constants/utility.js';
 import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 import { prepareTcmSnapshots } from '../TcmSnapshots/TcmSnapshots_Utility.js';
-import { fetchParentData, fetchElementWipData, fetchManifestStatus, checkContainerElementVersion } from '../TcmSnapshots/ElementSnapshot_Utility.js';
+import { fetchParentData} from '../TcmSnapshots/ElementSnapshot_Utility.js';
+import { tcmSnapshotsForUpdate } from '../TcmSnapshots/TcmUpdateSnapshot_Utility.js';
 const {
     REACT_APP_API_URL
 } = config
@@ -344,15 +345,15 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         if (elementTypeData.indexOf(elementType) !== -1 && data.metaDataField == undefined  && data.sectionType == undefined) {
             let elementUpdateData ={
                 currentParentData: currentParentData,
-                tcmBodymatter:tcmBodymatter,
+                updateBodymatter:tcmBodymatter,
                 response: res.data,
-                elementWorkId:elementWorkId
+                updatedId:elementWorkId
             },
             containerElement = {
                 asideData:tcmParentData.asideData,
                 parentUrn:tcmParentData.parentUrn
             };
-            tcmSnapshotsForGlossaryFootnote(elementUpdateData, index, containerElement,store.dispatch);
+            tcmSnapshotsForUpdate(elementUpdateData, index, containerElement,store.dispatch);
         }
         /**-------------------------------------------------------------------------------------------------------------*/
         if(res.data.id !== data.id && currentSlateData.status === 'approved'){
