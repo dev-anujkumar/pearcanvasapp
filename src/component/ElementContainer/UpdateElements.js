@@ -3,8 +3,9 @@ import elementTypes from './../Sidebar/elementTypes';
 import config from '../../config/config';
 import { matchHTMLwithRegex } from '../../constants/utility.js'
 import store from '../../appstore/store'
+import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
 
-let indivisualData = {
+const indivisualData = {
     schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
     textsemantics: [ ],
     mathml: [ ]
@@ -53,6 +54,12 @@ export const generateCommonFigureData = (index, previousElementData, elementType
     subtitleText = subtitleText.replace(/(\r\n|\n|\r)/gm, '');
     captionText = captionText.replace(/(\r\n|\n|\r)/gm, '');
     creditsText = creditsText.replace(/(\r\n|\n|\r)/gm, '');
+    let podwidth;
+    if(previousElementData.figuretype === 'image' || previousElementData.figuretype === "table" || previousElementData.figuretype === "mathImage" ){
+        let getAttributeBCE = document.querySelector(`div.element-container.active[data-id="${previousElementData.id}"] div.figureElement`) || document.querySelector(`div.element-container.fg.showBorder[data-id="${previousElementData.id}"] div.figureElement`)
+        podwidth = getAttributeBCE && getAttributeBCE.getAttribute("podwidth") || POD_DEFAULT_VALUE
+        previousElementData.figuredata.podwidth = podwidth ? (podHtmlmatchWithRegex(podwidth) ? podwidth : `print${podwidth}`) : ''
+    }  
 
 
     let data = {
@@ -90,6 +97,11 @@ export const generateCommonFigureData = (index, previousElementData, elementType
         inputSubType : elementType?elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']:""    
     }
     return data
+}
+
+const podHtmlmatchWithRegex = (html) => {
+    let printValue = html && html.match(/print/g) ? true : false
+    return printValue;
 }
 
 /**
@@ -619,15 +631,6 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                 inputType : elementTypes[elementType][primaryOption]['enum'],
                 inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']
             }
-                // switch (previousElementData.subtype) {
-                //     case elementTypeConstant.ELEMENT_WORKEDEXAMPLE:
-                //     default:
-                //         dataToReturn = { 
-                //             ...previousElementData,
-                //             inputType : elementTypes[elementType][primaryOption]['enum'],
-                //             inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']
-                //     }
-                // }
             break;
         
         case elementTypeConstant.ASSESSMENT_SLATE:
@@ -638,19 +641,9 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
             break;
     }
     dataToReturn.slateVersionUrn = config.slateManifestURN;
-    /* if (previousElementData.status == "approved") {
-        let parentData = store.getState().appStore.slateLevelData;
-        if (config.isPopupSlate && parentData[config.slateManifestURN].status === "approved") {
-            dataToReturn.parentEntityId = config.slateEntityURN;
-        } else if (asideData && asideData.contentUrn) {
-            dataToReturn.parentEntityId = asideData.contentUrn;
-        } else if (parentElement && parentElement.type === "showhide" && showHideType && parentElement.contentUrn) {
-            dataToReturn.parentEntityId = parentElement.contentUrn;
-        } else if (poetryData && poetryData.contentUrn) {
-            dataToReturn.parentEntityId = poetryData.contentUrn;
-        } 
-    } */
-    
+    if (parentElement) {
+        parentElement["index"] = index
+    }
     let slateEntityUrn = dataToReturn.elementParentEntityUrn || appStore.parentUrn && appStore.parentUrn.contentUrn || config.slateEntityURN
     dataToReturn = { ...dataToReturn, index: index.toString().split('-')[index.toString().split('-').length - 1], elementParentEntityUrn: slateEntityUrn }
     if (config.elementStatus[dataToReturn.id] && config.elementStatus[dataToReturn.id] === "approved") {

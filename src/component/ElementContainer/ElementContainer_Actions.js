@@ -8,7 +8,7 @@ import {
 import { AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP, OPEN_GLOSSARY_FOOTNOTE,DELETE_SHOW_HIDE_ELEMENT, GET_TCM_RESOURCES} from "./../../constants/Action_Constants";
 import { customEvent } from '../../js/utils';
 
-export const addComment = (commentString, elementId, asideData, parentUrn) => (dispatch, getState) => {
+export const addComment = (commentString, elementId) => (dispatch) => {
     let url = `${config.STRUCTURE_API_URL}narrative-api/v2/${elementId}/comment/`
     let newComment = {
         comment: commentString,
@@ -49,9 +49,6 @@ export const addComment = (commentString, elementId, asideData, parentUrn) => (d
 
         }).catch(error => {
             showError(error, dispatch, "Failed to add comment")
-            /* dispatch({type: ERROR_POPUP, payload:{show: true}})
-            sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
-            console.log("Failed to add comment", error); */
         })
 }
 
@@ -66,6 +63,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
             case "popup":
             case "citations":
             case "poetry":
+            case "groupedcontent":
                 return {
                     "projectUrn": config.projectUrn,
                     "entityUrn": contentUrn
@@ -110,7 +108,12 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
 
             return false;
         }
-        let bodymatter = newParentData[config.slateManifestURN].contents.bodymatter
+
+        if (parentUrn && parentUrn.elementType == "group") {
+            let elIndex = index.toString().split('-') 
+            newParentData[config.slateManifestURN].contents.bodymatter[elIndex[0]].groupeddata.bodymatter[elIndex[1]].groupdata.bodymatter.splice(elIndex[2], 1)
+        } else {
+            let bodymatter = newParentData[config.slateManifestURN].contents.bodymatter
             bodymatter.forEach((element, key) => {
                 if (element.id === elmId) {
                     bodymatter.splice(key, 1);
@@ -150,8 +153,9 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
                         element.contents.bodymatter.splice([innerIndex[1] - 1], 1)
                     }
                 }
-
             })
+        }
+
 
             dispatch({
                 type: AUTHORING_ELEMENT_CREATED,
@@ -167,9 +171,6 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
 
     }).catch(error => {
         showError(error, dispatch, "delete Api fail")
-        /* dispatch({type: ERROR_POPUP, payload:{show: true}})
-        sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
-        console.log("delete Api fail", error); */
     })
 }
 /** Delete Tcm data on element delete*/
@@ -224,18 +225,17 @@ function prepareDataForTcmUpdate (updatedData,id, elementIndex, asideData, getSt
         }
     } else if (indexes.length === 2) {
         if (((!poetryData) || (poetryData.type != "poetry")) && slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].id === id) {
-        //if (slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].id === id) {
             updatedData.isHead = true;
         }
-    } else if (indexes.length === 3) {
+    } else if (indexes.length === 3 && asideData && asideData.type !== "groupedcontent") {
         if (((!poetryData) || (poetryData.type != "poetry")) && slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].id === id) {
             updatedData.isHead = false;
         } else if (((poetryData && poetryData.type === "poetry") || (type === "stanza")) && slateBodyMatter[indexes[0]].contents.bodymatter[indexes[2]].id === id) {
             updatedData.isHead = false;
+        } else if ((asideData && asideData.type == 'groupedcontent') && slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].id === id) {
+            updatedData.isHead = true;
+            updatedData.parentType = "groupedcontent";
         } 
-        /** else if(type==="stanza" && slateBodyMatter[indexes[0]].contents.bodymatter[indexes[2]].id === id){
-            updatedData.isHead = false;
-        }*/
         
     }
     if (asideData && asideData.type === "element-aside") {
@@ -246,9 +246,11 @@ function prepareDataForTcmUpdate (updatedData,id, elementIndex, asideData, getSt
         }
     } else if (poetryData && poetryData.type === 'poetry'){
         updatedData.parentType = "poetry";
+    } else if (asideData && asideData.type === "groupedcontent"){
+        updatedData.parentType = asideData.type;
+        updatedData.columnName = indexes[1] === "0" ? "C1" : "C2"
     }
     updatedData.projectUrn = config.projectUrn;
-    // updatedData.slateEntity = config.slateEntityURN;
 }
 
 /**
@@ -367,13 +369,10 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
 function updateLOInStore(updatedData, versionedData, getState, dispatch) {
     let parentData = getState().appStore.slateLevelData;
     let newslateData = JSON.parse(JSON.stringify(parentData));
-    if(versionedData){
-        //let _slateObject = Object.values(newslateData)[0];   can be removed after regression testing
-    //let { contents: _slateContent } = _slateObject;
-    //let { bodymatter: _slateBodyMatter } = _slateContent;
-    for(let i = 0; i < updatedData.loIndex.length; i++){
-        newslateData[config.slateManifestURN].contents.bodymatter[i].id = versionedData.metaDataAnchorID[i];
-    }
+    if (versionedData) {
+        for (let i = 0; i < updatedData.loIndex.length; i++) {
+            newslateData[config.slateManifestURN].contents.bodymatter[i].id = versionedData.metaDataAnchorID[i];
+        }
     }
     return dispatch({
         type: AUTHORING_ELEMENT_UPDATE,
@@ -381,8 +380,6 @@ function updateLOInStore(updatedData, versionedData, getState, dispatch) {
             slateLevelData: newslateData
         }
     })
-    
-
 }
 function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getState, versionedData, elementIndex, showHideType, parentElement, poetryData){
     //direct dispatching in store
@@ -429,7 +426,9 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
             else if(parentElement && parentElement.type === "citations"){
                 dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:parentElement.id, parentElement.contentUrn, 0, parentElement,"", false));
             }
-            else {
+            else if (parentElement && parentElement.type === "groupedcontent") {
+                dispatch(fetchSlateData(parentElement.id, parentElement.contentUrn, 0, parentElement, "", false));
+            } else {
                 elementIndex = indexes.length == 2 ?indexes[0] : elementIndex
                 newslateData[config.slateManifestURN].contents.bodymatter[elementIndex] = versionedData;
             }
@@ -453,8 +452,19 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                     _slateBodyMatter[elementIndex].contents["formatted-title"] = {...updatedData}     
                 }
             }
-        }
-        else {
+        } else if (parentElement && parentElement.type === "groupedcontent") {
+            let indexes = elementIndex.split("-")
+            let element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
+            _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]] = {
+                ...element,
+                ...updatedData,
+                elementdata: {
+                    ...element.elementdata,
+                    text: updatedData.elementdata ? updatedData.elementdata.text : null
+                },
+                tcm: _slateObject.tcm ? true : false
+            }
+        } else {
             _slateBodyMatter = _slateBodyMatter.map(element => {
                 if (element.id === elementId) {
 
@@ -724,16 +734,23 @@ export const updateFigureData = (figureData, elementIndex, elementId, cb) => (di
                 }
             }
         } else if (indexesLen == 3) {
-            condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
-            if (condition.versionUrn == elementId) {
-                if (newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuretype === "assessment") {
-                    newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata['elementdata'] = figureData
-                    //element = condition
-                } else {
-                    newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata = figureData
-                    //element = condition
+            if (newBodymatter[indexes[0]].type === "groupedcontent") {              //For Multi-column container
+                condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
+                if (condition.versionUrn == elementId) {
+                    condition.figuredata = figureData
                 }
-
+            } else {
+                condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
+                if (condition.versionUrn == elementId) {
+                    if (newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuretype === "assessment") {
+                        newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata['elementdata'] = figureData
+                        //element = condition
+                    } else {
+                        newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata = figureData
+                        //element = condition
+                    }
+    
+                }
             }
         }
     }
@@ -781,9 +798,6 @@ export const getTableEditorData = (elementid,updatedData) => (dispatch, getState
         })
     }).catch(error => {
         showError(error, dispatch, "getTableEditorData Api fail")
-        /* dispatch({type: ERROR_POPUP, payload:{show: true}})
-        sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
-        console.log("getTableEditorData Api fail", error); */
     })
 }
 
@@ -801,6 +815,12 @@ const updateTableEditorData = (elementId, tableData, slateBodyMatter) => {
         }
         else if (elm.contents && elm.contents.bodymatter) {
             elm.contents.bodymatter = updateTableEditorData(elementId, tableData, elm.contents.bodymatter)
+        }
+        else if (elm.groupeddata && elm.groupeddata.bodymatter) {
+            elm.groupeddata.bodymatter = updateTableEditorData(elementId, tableData, elm.groupeddata.bodymatter)
+        }
+        else if (elm.groupdata && elm.groupdata.bodymatter) {
+            elm.groupdata.bodymatter = updateTableEditorData(elementId, tableData, elm.groupdata.bodymatter)
         }
         return elm;
     })
@@ -869,9 +889,6 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
         }
     }).catch(error => {
         showError(error, dispatch, "error while createing element")
-        /* dispatch({type: ERROR_POPUP, payload:{show: true}})
-        sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
-        console.log("error while createing element",error) */
     })
 }
 
@@ -938,9 +955,6 @@ export const deleteShowHideUnit = (elementId, type, parentUrn, index,eleIndex, p
   
     }).catch(error => {
         showError(error, dispatch, "error while creating element")
-        /* dispatch({type: ERROR_POPUP, payload:{show: true}})
-        sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
-        console.log("error while createing element",error) */
     })
 }
 

@@ -641,15 +641,28 @@ export default {
         },
         enumType: 'assessment',		
     },
-    'element-interactive': {
+     'element-interactive': {
+        'primary-elm-interactive': {
+            text: 'Elm Interactive',
+            toolbar: ['crossLinkingIcon','assetpopover', 'glossary'],
+            enum: 'MMI_ELM',
+            subtype: {
+                'secondary-elm-interactive': {
+                    text: 'Elm Interactive',
+                    labelText: 'ELM',
+                    enum: 'FLASHCARDS',
+                    wipValue: 'fpo'
+                }
+            }
+        },
         'primary-mmi': {
-            text: 'MMI',
+            text: 'Quad Interactive',
             toolbar: ['crossLinkingIcon','assetpopover', 'glossary'],
             enum: 'MMI',
             subtype: {
                 'secondary-interactive-mmi': {
-                    text: 'MMI',
-                    labelText: 'MMI',
+                    text: 'Quad',
+                    labelText: 'Quad',
                     enum: 'FLASHCARDS',
                     wipValue: 'fpo'
                 }
@@ -802,5 +815,35 @@ export default {
                 }
             }
         } 
+    },
+    'groupedcontent': {		
+        'primary-multicolumn': {		
+            text: '2 Column',
+            toolbar: [],
+            enum: 'MULTI_COLUMN',		
+            subtype: {		
+                'secondary-multicolumn-wider': {
+                    text: 'Wider than text width 60/40%',
+                    labelText: '2C',
+                    enum: 'WIDER_60_40'
+                },
+                'secondary-multicolumn-half': {
+                    text: 'Wider than text width 50/50%',
+                    labelText: '2C',
+                    enum: 'WIDER_50_50'
+                },
+                'secondary-multicolumn-wider-text': {
+                    text: 'Text width 60/40%',
+                    labelText: '2C',
+                    enum: 'TEXT_WIDTH_60_40'
+                },
+                'secondary-multicolumn-half-text': {
+                    text: 'Text width 50/50%',
+                    labelText: '2C',
+                    enum: 'TEXT_WIDTH_50_50'
+                }
+            }		
+        },
+        enumType: 'multicolumn'		
     }
 };

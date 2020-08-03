@@ -22,12 +22,14 @@ import elementDataBank from './elementDataBank'
 import figureData from '../ElementFigure/figureTypes.js';
 import { fetchAllSlatesData, setCurrentSlateAncestorData } from '../../js/getAllSlatesData.js';
 import { handleTCMData, tcmSnapshot } from '../../component/ElementContainer/TcmSnapshot_Actions';
-
+import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
+import { ELM_INT } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 const findElementType = (element, index) => {
     let elementType = {};
     elementType['tag'] = '';
     let altText = "";
     let longDesc = "";
+    let podwidth = POD_DEFAULT_VALUE
     try {
         switch (element.type) {
             case 'element-authoredtext':
@@ -64,16 +66,23 @@ const findElementType = (element, index) => {
                             let figureAlignment = figureType[element['alignment']]
                             subType = figureAlignment['imageDimension']
                         }
+                        if(element.figuretype === "image" || element.figuretype === "table" || element.figuretype === "mathImage"){
+                            if(element.figuredata && !element.figuredata.podwidth){
+                                element.figuredata.podwidth = POD_DEFAULT_VALUE
+                            }
+                        }
                         //  if (element.subtype == "" || element.subtype == undefined) {                        
                         element.subtype = subType
                         //  } 
                         altText = element.figuredata.alttext ? element.figuredata.alttext : ""
                         longDesc = element.figuredata.longdescription ? element.figuredata.longdescription : ""
+                        podwidth = element.figuredata.podwidth
                         elementType = {
                             elementType: elementDataBank[element.type][element.figuretype]["elementType"],
                             primaryOption: elementDataBank[element.type][element.figuretype]["primaryOption"],
                             altText,
                             longDesc,
+                            podwidth,
                             ...elementDataBank[element.type][element.figuretype][element.subtype]
                         }
                         if (!elementType.secondaryOption) {
@@ -113,11 +122,13 @@ const findElementType = (element, index) => {
                         break;
                     case "interactive":
                         altText = element.figuredata.alttext ? element.figuredata.alttext : "";
+                        let interactiveFormat = element.figuredata.interactiveformat;
+                        let interactiveData = (interactiveFormat == "mmi" || interactiveFormat == ELM_INT) ? element.figuredata.interactiveformat : element.figuredata.interactivetype;
                         elementType = {
                             elementType: elementDataBank[element.type][element.figuretype]["elementType"],
-                            primaryOption: elementDataBank[element.type][element.figuretype][element.figuredata.interactivetype]["primaryOption"],
-                            secondaryOption: elementDataBank[element.type][element.figuretype][element.figuredata.interactivetype]["secondaryOption"],
-                            altText
+                            primaryOption: elementDataBank[element.type][element.figuretype][interactiveData]["primaryOption"],
+                            altText,
+                            ...elementDataBank[element.type][element.figuretype][interactiveData]
                         }
                         break;
                     case "assessment":
@@ -186,6 +197,18 @@ const findElementType = (element, index) => {
                     element.elementdata.assessmentformat = element.elementdata.assessmentformat.toLowerCase()  /**PCAT-7526 fixes */
                 }
                 elementType = { ...elementDataBank["element-authoredtext"] }
+                break;
+            case  'groupedcontent':
+                elementType = {
+                    elementType: elementDataBank[element.type]["elementType"],
+                    primaryOption: elementDataBank[element.type]["primaryOption"]  
+                }
+                if (element.width && element.groupproportions) {
+                    elementType["secondaryOption"] = elementDataBank[element.type][`${element.width}-${element.groupproportions}`]["secondaryOption"]
+                }
+                else {
+                    elementType["secondaryOption"] = elementDataBank[element.type]["wider-50-50"]["secondaryOption"] 
+                }
                 break;
             default:
                 elementType = { ...elementDataBank["element-authoredtext"] }
@@ -345,7 +368,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                             slateLevelData: newslateData
                         }
                     })
-                } else if (versioning.type === 'citations' || versioning.type === 'poetry') {
+                } else if (versioning.type === 'citations' || versioning.type === 'poetry' || versioning.type === 'groupedcontent') {
                     let parentData = getState().appStore.slateLevelData;
                     let newslateData = JSON.parse(JSON.stringify(parentData));
                     let index
@@ -455,6 +478,7 @@ const setSlateDetail = (slateTitle, slateManifestURN) => {
 
 const setOldImagePath = (getState, activeElement, elementIndex = 0) => {
     let parentData = getState().appStore.slateLevelData,
+        { parentUrn } = getState().appStore,
         oldPath,
         index = elementIndex;
     const newParentData = JSON.parse(JSON.stringify(parentData));
@@ -472,6 +496,11 @@ const setOldImagePath = (getState, activeElement, elementIndex = 0) => {
             if (condition.versionUrn == activeElement.id) {
                 oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.path
             }
+        } else if (indexesLen == 3 && parentUrn && parentUrn.elementType === "group") {
+            condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
+            if (condition.versionUrn == activeElement.id) {
+                oldPath = condition.figuredata.path || ""
+            }
         } else if (indexesLen == 3) {
             condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
             if (condition.versionUrn == activeElement.id) {
@@ -483,6 +512,7 @@ const setOldImagePath = (getState, activeElement, elementIndex = 0) => {
 }
 const setOldAudioVideoPath = (getState, activeElement, elementIndex, type) => {
     let parentData = getState().appStore.slateLevelData,
+        { parentUrn } = getState().appStore,
         oldPath,
         index = elementIndex;
     const newParentData = JSON.parse(JSON.stringify(parentData));
@@ -501,6 +531,11 @@ const setOldAudioVideoPath = (getState, activeElement, elementIndex, type) => {
                     condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
                     if (condition.versionUrn == activeElement.id) {
                         oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.audio && bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.audio.path
+                    }
+                } else if (indexesLen == 3 && parentUrn && parentUrn.elementType === "group") {
+                    condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
+                    if (condition.versionUrn == activeElement.id) {
+                        oldPath = condition.figuredata.audio && condition.figuredata.audio.path || ""
                     }
                 } else if (indexesLen == 3) {
                     condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
@@ -523,6 +558,11 @@ const setOldAudioVideoPath = (getState, activeElement, elementIndex, type) => {
                     if (condition.versionUrn == activeElement.id) {
                         oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.videos[0].path
                     }
+                } else if (indexesLen == 3 && parentUrn && parentUrn.elementType === "group") {
+                    condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
+                    if (condition.versionUrn == activeElement.id) {
+                        oldPath = condition.figuredata.videos[0].path || ""
+                    }
                 } else if (indexesLen == 3) {
                     condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
                     if (condition.versionUrn == activeElement.id) {
@@ -537,6 +577,7 @@ const setOldAudioVideoPath = (getState, activeElement, elementIndex, type) => {
 }
 const setOldinteractiveIdPath = (getState, activeElement, elementIndex) => {
     let parentData = getState().appStore.slateLevelData,
+        { parentUrn } = getState().appStore,
         oldPath,
         index = elementIndex;
     const newParentData = JSON.parse(JSON.stringify(parentData));
@@ -553,6 +594,11 @@ const setOldinteractiveIdPath = (getState, activeElement, elementIndex) => {
             condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
             if (condition.versionUrn == activeElement.id) {
                 oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.interactiveid || ""
+            }
+        } else if (indexesLen == 3 && parentUrn && parentUrn.elementType === "group") {
+            condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
+            if (condition.versionUrn == activeElement.id) {
+                oldPath = condition.figuredata.interactiveid || ""
             }
         } else if (indexesLen == 3) {
             condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]

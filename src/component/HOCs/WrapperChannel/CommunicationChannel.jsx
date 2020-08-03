@@ -96,15 +96,6 @@ function CommunicationChannel(WrappedComponent) {
                 case 'disableNext':
                     config.disableNext = true;//message.disableNext;
                     break;
-                // case 'swappedIS':
-                // case 'ISDeleted':
-                // case 'TocLoader':
-                //     {
-                //         /**
-                //          * TO BE IMPLEMENTED
-                //          *  */
-                //     }
-                //     break;
                 case 'refreshElementWithTable':
                     {
                         this.setTableData(message.elementId, message.updatedData);
@@ -122,9 +113,6 @@ function CommunicationChannel(WrappedComponent) {
                         }
 
                     }
-                    break;
-                case 'updateSlateTitleByID':
-                    this.updateSlateTitleByID(message);
                     break;
                 case 'projectDetails':
                     config.tcmStatus = message.tcm.activated;
@@ -240,7 +228,6 @@ function CommunicationChannel(WrappedComponent) {
                 let elementContainer = document.querySelector('.element-container[data-id="' + linkData.elementId + '"]');
                 activeElement = elementContainer.querySelectorAll('.cypress-editable');
                 activeElement.forEach((item) => {
-                    // console.log('active element:::', item, item.classList.contains('mce-content-body'));
                     if (item.classList.contains('mce-content-body') || !item.classList.contains('place-holder')) {
                         if (item.querySelector(`[asset-id="${linkData.linkId}"]`) || item.querySelector('#' + linkData.linkId)) {
                             tinymce.activeEditor.undoManager.transact(() => {
@@ -393,7 +380,7 @@ function CommunicationChannel(WrappedComponent) {
                 config.totalPageCount = 0;
                 config.pageLimit = 0;
                 config.fromTOC = false;
-                sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': { slateRefreshStatus: 'Refreshing' } });
+                sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': { slateRefreshStatus: 'Refreshing...' } });
                 this.props.handleSlateRefresh(id, () => {
                     config.isSlateLockChecked = false;
                     this.props.getSlateLockStatus(config.projectUrn, config.slateManifestURN)
@@ -596,27 +583,6 @@ function CommunicationChannel(WrappedComponent) {
                 tocDeleteMessage: newMessage
             })
         }
-
-        updateSlateTitleByID = (messageObj) => {
-            if (messageObj.slateType && (messageObj.slateType === 'section' || messageObj.slateType === 'assessment')) {
-                this.updateTitleSlate(messageObj);
-            }
-            else if (messageObj.slateType === 'container-introduction') {
-                if (this.props.introObject.isCO === false && messageObj.slateID === this.props.introObject.introSlate) {
-                    this.updateTitleSlate(messageObj);
-                }
-                else {
-                    this.fetchOpenerData(messageObj);
-                }
-            }
-        }
-
-        fetchOpenerData = (messageObj) => {
-            /**
-             * TO BE IMPLEMENTED
-             *  */
-        }
-
         updateTitleSlate = (messageObj) => {
             /**
              * TO BE IMPLEMENTED

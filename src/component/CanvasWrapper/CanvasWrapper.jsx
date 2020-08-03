@@ -64,7 +64,7 @@ export class CanvasWrapper extends Component {
         // if (config.slateManifestURN) {
         //     this.props.fetchSlateData(config.slateManifestURN,config.slateEntityURN,config.page,'');
         // }
-        sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus :'Refreshed a moment ago'} });
+        sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus :'Refreshed, a moment ago'} });
         
         sendDataToIframe({
             'type': CanvasIframeLoaded,
@@ -135,7 +135,7 @@ export class CanvasWrapper extends Component {
         let interval = intervals.find(i => i.seconds <= seconds);
         if (interval && interval.label != 'second') {
             count = Math.floor(seconds / interval.seconds);
-            sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus : `Refreshed ${count} ${interval.label == 'second' ? '' : interval.label} ago`} });
+            sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus : `Refreshed, ${count} ${interval.label == 'second' ? '' : interval.label} ago`} });
         }        
     }
 

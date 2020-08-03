@@ -129,10 +129,6 @@ export class TinyMceEditor extends Component {
                             let innerHtml = this.innerHTML;
                             this.outerHTML = innerHtml;
                         })
-                        // tinyMCE.$('.Wirisformula').each(function () {
-                        //     this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
-                        //     this.naturalWidth && this.setAttribute('width', this.naturalWidth)
-                        // }) 
                         if (!config.savingInProgress) {
                             if ((this.props.element.type === "popup" || this.props.element.type === "citations") && !this.props.currentElement) {
                                 this.props.createPopupUnit(this.props.popupField, true, this.props.index, this.props.element)
@@ -192,14 +188,11 @@ export class TinyMceEditor extends Component {
                 /* Reverting data-temp-mathml to data-mathml and class Wirisformula to temp_WirisFormula */
                 if (editor.getContentAreaContainer()) {
                     let revertingTempContainerHtml = editor.getContentAreaContainer().innerHTML;
-
                     //Test Case Changes
                     if (!revertingTempContainerHtml) {
                         revertingTempContainerHtml = "";
                     }
-
                     revertingTempContainerHtml = revertingTempContainerHtml.replace(/data-temp-mathml/g, 'data-mathml').replace(/temp_Wirisformula/g, 'Wirisformula');
-
                     //Test Case Changes
                     if (document.getElementById(editor.id)) {
                         document.getElementById(editor.id).innerHTML = revertingTempContainerHtml;
@@ -380,14 +373,14 @@ export class TinyMceEditor extends Component {
                     }
                     else if (this.props.element.type === 'stanza') {
                         let selection = window.getSelection();
-                        let output = spanHandlers.handleRemoveFormattingOnSpan(selection, e, 'div', 'poetryLine');
+                        let output = spanHandlers.handleRemoveFormattingOnSpan(selection, e, 'div', 'poetryLine', selectedText);
                         if (output === false) {
                             return false;
                         }
                     }
                     else if (this.props.element.figuretype === 'codelisting') {
                         let selection = window.getSelection();
-                        let output = spanHandlers.handleRemoveFormattingOnSpan(selection, e, 'code', 'codeNoHighlightLine');
+                        let output = spanHandlers.handleRemoveFormattingOnSpan(selection, e, 'code', 'codeNoHighlightLine', selectedText);
                         if (output === false) {
                             return false;
                         }
@@ -436,6 +429,13 @@ export class TinyMceEditor extends Component {
                         keyDownEvent = new KeyboardEvent('keydown', { bubbles: true, ctrlKey: true, keyCode: 89, metaKey: false, shiftKey: false, which: 89 })
                         editor.targetElm.dispatchEvent(keyDownEvent)
                         return false
+                    }
+                    break;
+                case "Undo":
+                case "Redo":
+                    if (activeElement.nodeName === "CODE") {
+                        e.preventDefault();
+                        e.stopPropagation();
                     }
                     break;
                 case 'Bold':
@@ -525,11 +525,12 @@ export class TinyMceEditor extends Component {
         /**
          * Case - clicking over Asset text
          */
-        else if (e.target.nodeName == 'ABBR' || e.target.parentNode && e.target.parentNode.tagName === 'ABBR') {
-            let linkTitle = (e.target.attributes['title'] && e.target.attributes['title'].nodeValue) || e.target.parentNode.attributes['title'].nodeValue;
+        else if (this.isABBR(e.target, 'status')) {
+            let abbrElm = this.isABBR(e.target, 'elm');
+            let linkTitle = (abbrElm.attributes['title'] && abbrElm.attributes['title'].nodeValue) || abbrElm.parentNode.attributes['title'].nodeValue;
             if (linkTitle == "Asset Popover") {
-                let assetId = (e.target.attributes['asset-id'] && e.target.attributes['asset-id'].nodeValue) || e.target.parentNode.attributes['asset-id'].nodeValue;
-                let dataUrn = (e.target.attributes['data-uri'] && e.target.attributes['data-uri'].nodeValue) || e.target.parentNode.attributes['data-uri'].nodeValue;
+                let assetId = (abbrElm.attributes['asset-id'] && abbrElm.attributes['asset-id'].nodeValue) || abbrElm.parentNode.attributes['asset-id'].nodeValue;
+                let dataUrn = (abbrElm.attributes['data-uri'] && abbrElm.attributes['data-uri'].nodeValue) || abbrElm.parentNode.attributes['data-uri'].nodeValue;
                 let apoObject = {
                     'assetId': assetId,
                     'dataUrn': dataUrn
@@ -539,14 +540,13 @@ export class TinyMceEditor extends Component {
 
             if (linkTitle == "Slate Link") {
                 sendDataToIframe({ 'type': 'tocToggle', 'message': { open: false } });
-                let linkId = (e.target.attributes['asset-id'] && e.target.attributes['asset-id'].nodeValue) || (e.target.parentNode.attributes['asset-id'] && e.target.parentNode.attributes['asset-id'].nodeValue) || (e.target.attributes['id'] && e.target.attributes['id'].nodeValue) || e.target.parentNode.attributes['id'].nodeValue;
+                let linkId = (abbrElm.attributes['asset-id'] && abbrElm.attributes['asset-id'].nodeValue) || (abbrElm.parentNode.attributes['asset-id'] && abbrElm.parentNode.attributes['asset-id'].nodeValue) || (abbrElm.attributes['id'] && abbrElm.attributes['id'].nodeValue) || abbrElm.parentNode.attributes['id'].nodeValue;
                 let elementId = this.props.element && this.props.element.id
-                // (e.target.attributes['element-id'] && e.target.attributes['element-id'].nodeValue) || e.target.parentNode.attributes['element-id'].nodeValue;
-                let pageId = (e.target.attributes['data-uri'] && e.target.attributes['data-uri'].nodeValue) || e.target.parentNode.attributes['data-uri'].nodeValue;
+                // (abbrElm.attributes['element-id'] && abbrElm.attributes['element-id'].nodeValue) || abbrElm.parentNode.attributes['element-id'].nodeValue;
+                let pageId = (abbrElm.attributes['data-uri'] && abbrElm.attributes['data-uri'].nodeValue) || abbrElm.parentNode.attributes['data-uri'].nodeValue;
 
                 sendDataToIframe({ 'type': LaunchTOCForCrossLinking, 'message': { open: true, case: 'update', link: linkId, element: elementId, page: pageId, blockCanvas: true, crossLink: true, reviewerRole: hasReviewerRole() } });
             }
-
         }
         /**
          *  Case - otherwise close glossary & footnote popup  
@@ -562,6 +562,30 @@ export class TinyMceEditor extends Component {
             this.props.activeShowHide(e, this.props.currentElement)
         } else if (document.querySelector('.show-hide-active')) {
             document.querySelector('.show-hide-active').classList.remove("show-hide-active")
+        }
+    }
+
+    isABBR = (el, target) => {
+        let isAbbr = false;
+        let parentNode = true;
+
+        do {
+            if(el.parentNode.tagName && el.parentNode.tagName !== 'LI' && el.parentNode.tagName !== 'P' && el.parentNode.tagName !== 'H3' && el.parentNode.tagName !== 'BLOCKQUOTE') {
+                if(el.nodeName == 'ABBR' || (el.parentNode && el.parentNode.tagName === 'ABBR')) {
+                    parentNode = false;
+                    isAbbr = true;
+                } else {
+                    el = el.parentNode;
+                }
+            } else {
+                parentNode = false;
+            }
+        } while(parentNode);
+        
+        if(target === 'elm' && isAbbr) {
+            return el.parentNode;
+        } else if(target === 'status') {
+            return isAbbr;
         }
     }
 
@@ -1661,12 +1685,22 @@ export class TinyMceEditor extends Component {
         let selectedTag = selection.nodeName;
         let selectedTagClass = selection.classList;
         selectedText = String(selectedText).replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+        let parentNode = true;
+        do {
+            if (selectedTag !== "LI" && selectedTag !== "P" && selectedTag !== "H3" && selectedTag !== "BLOCKQUOTE" && (!selectedTagClass.contains('poetryLine'))) {
+                //selectedText = window.getSelection().anchorNode.parentNode.outerHTML;
+                selectedText = '<' + selectedTag.toLocaleLowerCase() + '>' + selectedText + '</' + selectedTag.toLocaleLowerCase() + '>';
+                selection = selection.parentNode;
+                selectedTag = selection.nodeName;
+                selectedTagClass = selection.classList;
+            } else {
+                parentNode = false;
+            }
+        } while(parentNode);
+
         let activeElement = tinymce.activeEditor.targetElm.closest('.element-container');
-        let linkCount = Math.floor(Math.random() * 100) + '-' + Math.floor(Math.random() * 10000); //tinymce.$(activeElement).find('.page-link-attacher').length;
-        if (selectedTag !== "LI" && selectedTag !== "P" && selectedTag !== "H3" && selectedTag !== "BLOCKQUOTE" && (!selectedTagClass.contains('poetryLine'))) {
-            //selectedText = window.getSelection().anchorNode.parentNode.outerHTML;
-            selectedText = '<' + selectedTag.toLocaleLowerCase() + '>' + selectedText + '</' + selectedTag.toLocaleLowerCase() + '>'
-        }
+        let linkCount = Math.floor(Math.random() * 100) + '-' + Math.floor(Math.random() * 10000);
         let insertionText = '<span asset-id="page-link-' + linkCount + '" class="page-link-attacher ' + selectedTag.toLocaleLowerCase() + '" element-id="' + activeElement.getAttribute('data-id') + '">' + selectedText + '</span>';
         editor.insertContent(insertionText);
         // editor.selection.setContent(insertionText);
@@ -1716,14 +1750,24 @@ export class TinyMceEditor extends Component {
             })
             return false;
         }
+
         let selection = window.getSelection().anchorNode.parentNode;
         let selectedTag = selection.nodeName;
         let selectedTagClass = selection.classList;
         selectedText = String(selectedText).replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        if (selectedTag !== "LI" && selectedTag !== "P" && selectedTag !== "H3" && selectedTag !== "BLOCKQUOTE" && (!selectedTagClass.contains('poetryLine'))) {
-            //selectedText = window.getSelection().anchorNode.parentNode.outerHTML;
-            selectedText = '<' + selectedTag.toLocaleLowerCase() + '>' + selectedText + '</' + selectedTag.toLocaleLowerCase() + '>'
-        }
+
+        let parentNode = true;
+        do {
+            if (selectedTag !== "LI" && selectedTag !== "P" && selectedTag !== "H3" && selectedTag !== "BLOCKQUOTE" && (!selectedTagClass.contains('poetryLine'))) {
+                //selectedText = window.getSelection().anchorNode.parentNode.outerHTML;
+                selectedText = '<' + selectedTag.toLocaleLowerCase() + '>' + selectedText + '</' + selectedTag.toLocaleLowerCase() + '>';
+                selection = selection.parentNode;
+                selectedTag = selection.nodeName;
+                selectedTagClass = selection.classList;
+            } else {
+                parentNode = false;
+            }
+        } while(parentNode);
 
         let insertionText = '<span id="asset-popover-attacher">' + selectedText + '</span>';
         editor.insertContent(insertionText);

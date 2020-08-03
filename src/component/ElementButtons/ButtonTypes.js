@@ -34,5 +34,7 @@ export default {
     SHOW_HIDE : "show-hide-elem",
     POP_UP : "popup-elem",
     BLOCK_TEXT : "block-text-button",
-    TABLE_EDITOR : "table-editor-elem-button"
+    TABLE_EDITOR : "table-editor-elem-button",
+    MULTI_COLUMN_CONTAINER : "multi-column-group",
+    ELM_INTERACTIVE_ICON:"elmInteractiveIcon"
 }
