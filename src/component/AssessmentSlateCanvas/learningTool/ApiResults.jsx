@@ -43,9 +43,9 @@ class ApiResults extends React.Component {
 
     render() {
         return (
-            <div className="learning-tool-margin-left">
+            <>
                 {this.apiResultsJsx(this.props.apiResponseData, this.props.selectedFigure, this.props.selectedResult)}
-            </div>
+            </>
         )
     }
 }

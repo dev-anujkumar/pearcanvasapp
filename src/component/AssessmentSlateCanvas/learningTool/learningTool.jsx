@@ -209,16 +209,20 @@ class LearningTool extends React.Component {
                     </span>
                 </div>
                 <div className="learningToolBody scroller" id="style-2">
-                   {apiResponseLearningTemp.length? <table className="tableForApiResults">
-                        <tr>
-                            <th className="tableHeader">Learning App Type</th>
-                            <th className="tableHeader">Discipline</th>
-                            <th className="tableHeader labelHeader">Label</th>
-                            <th className="tableHeader">Date Modified</th>
-                            <th className="tableHeader">Keyword(s)</th>
-                        </tr>
-                    </table> : ''} 
-                    <ApiResults selectedResult={selectedResult} selectedFigure={this.selectedFigure} apiResponseData={apiResponseLearningTemp} />
+                    <table className="learningToolTable">
+                        {apiResponseLearningTemp.length ? <thead className="tableForApiResults">
+                                <th className="tableHeader">Learning App Type</th>
+                                <th className="tableHeader">Discipline</th>
+                                <th className="tableHeader labelHeader">Label</th>
+                                <th className="tableHeader">Date Modified</th>
+                                <th className="tableHeader">Keyword(s)</th>
+                                <th className="tableHeader">Template ID</th>
+                        </thead>
+                            : ''}
+                        {<tbody  className="learning-tool-margin-left">
+                            <ApiResults selectedResult={selectedResult} selectedFigure={this.selectedFigure} apiResponseData={apiResponseLearningTemp} />
+                            </tbody>}
+                    </table>
                 </div>
             </div>
         )
@@ -252,51 +256,54 @@ class LearningTool extends React.Component {
                         <div className="learningToolHeaderTitle">
                             <h1 className="learningToolHeaderString"> Search Learning App Type </h1>
                         </div>
+                        <div className="learningToolHeaderMainDiv">
+                            {/* Filter dropdown of Learning App type */}
+                            <div className="learningToolHeaderTypeFilter">
+                                <span className="spanLTFilterType">Learning App Type <span style={{ "color": "red" }}>*</span></span>
+                                <select className="learningToolType" onChange={this.learningAppType}>
+                                    <option value="" selected>Select One</option>
+                                    <option value="accounting-sims">Accounting Sims</option>
+                                    <option value="criminal-justice-sims"> Criminal Justice Sims</option>
+                                    <option value="economics-sims">Economic Sims</option>
+                                    <option value="helpdesk">HelpDesk</option>
+                                    <option value="hospitality-sims">Hospitality Sims</option>
+                                    <option value="information-technology-sims">Information Technology Sims</option>
+                                    <option value="video-quiz"> Media Quiz</option>
+                                    <option value="video-submission">Shared Media</option>
+                                    <option value="myvirtual-child">MyVirtualChild</option>
+                                    <option value="myvirtual-life">MyVirtualLife</option>
+                                    <option value="knowdl">Personal Finance </option>
+                                    <option value="political-science-sims">Political Science Sims</option>
+                                    <option value="qual-sims">Qualitative Business Sims</option>
+                                    <option value="soundbytes">Sound Bytes</option>
+                                    <option value="socialexplorer-surveys">Surveys and Inventories</option>
+                                    <option value="video-library">Video Library</option>
+                                    <option value="writingsolutions">Writing Solutions</option>
+                                </select>
 
-                        {/* Filter dropdown of Learning App type */}
-                        <div className="learningToolHeaderTypeFilter">
-                            <span className="spanLTFilterType">Learning App Type <span style={{ "color": "red" }}>*</span></span>
-                            <select className="learningToolType" onChange={this.learningAppType}>
-                                <option value="" selected>Select One</option>
-                                <option value="accounting-sims">Accounting Sims</option>
-                                <option value="criminal-justice-sims"> Criminal Justice Sims</option>
-                                <option value="economics-sims">Economic Sims</option>
-                                <option value="helpdesk">HelpDesk</option>
-                                <option value="hospitality-sims">Hospitality Sims</option>
-                                <option value="information-technology-sims">Information Technology Sims</option>
-                                <option value="video-quiz"> Media Quiz</option>
-                                <option value="video-submission">Shared Media</option>
-                                <option value="myvirtual-child">MyVirtualChild</option>
-                                <option value="myvirtual-life">MyVirtualLife</option>
-                                <option value="knowdl">Personal Finance </option>
-                                <option value="political-science-sims">Political Science Sims</option>
-                                <option value="qual-sims">Qualitative Business Sims</option>
-                                <option value="soundbytes">Sound Bytes</option>
-                                <option value="socialexplorer-surveys">Surveys and Inventories</option>
-                                <option value="video-library">Video Library</option>
-                                <option value="writingsolutions">Writing Solutions</option>
-                            </select>
+                                {/* Render the discipline dropdown dynamically */}
+                                <span className="spanLTFilterDis">Discipline</span>
+                                <select className="learningToolDis" onChange={this.learningToolDisFilter}>
+                                    <option value="" selected>Select One</option>
+                                    {this.props.showDisFilterValues ? this.renderDisFilter(this.props.apiResponseForDis) : '<option value="" selected disabled>Select One</option>'}
+                                </select>
 
-                            {/* Render the discipline dropwn dynamically */}
-                            <span className="spanLTFilterDis">Discipline</span>
-                            <select className="learningToolDis" onChange={this.learningToolDisFilter}>
-                                <option value="" selected>Select One</option>
-                                {this.props.showDisFilterValues ? this.renderDisFilter(this.props.apiResponseForDis) : '<option value="" selected disabled>Select One</option>'}
-                            </select>
-
-                        </div>
-
-                        {/* Search Bar for searching */}
-                        <div className="learningToolHeaderSearchBar">
-                            <br />
-                            <input className={`learningToolSearchBar ${this.state.showError ? "error":""}`} id="learningToolSearchBar" type="text" placeholder="Enter Keyword to search" onChange={this.validateSearch} name="search2" />
-                          {/*   <svg  id="errorIcon"  className="exclamation-icon">
+                            </div>
+                            <div className="learningToolHeaderSearchDiv">
+                            {/* Search Bar for searching */}
+                            <div className="learningToolHeaderSearchBar">
+                                {/* <br /> */}
+                                <input className={`learningToolSearchBar ${this.state.showError ? "error" : ""}`} id="learningToolSearchBar" type="text" placeholder="Enter Keyword to search" onChange={this.validateSearch} name="search2" />
+                                {/*   <svg  id="errorIcon"  className="exclamation-icon">
                                 <use xlinkHref="#exlamation-error"/>
                              </svg>  */}
-                             {this.state.showError ? <img  className="exclamation-icon" src = {error_icon}></img> :""}
+                                {this.state.showError ? <img className="exclamation-icon" src={error_icon}></img> : ""}
+                                <div className={`learning-search-text ${this.state.showError ? "errorSpan" : ""}`}>Max. 100 characters of A-Z, a-z, 0-9, space allowed</div>     
+                                
+                                </div>
+                                <button disabled={!this.state.selectedTypeValue} className="learningToolSearchButton" onClick={(e) => this.learningToolSearch(e, this.state.selectedTypeValue)}>Search</button>
+                            </div>
 
-                            <button disabled={!this.state.selectedTypeValue} className="learningToolSearchButton" onClick={(e) => this.learningToolSearch(e, this.state.selectedTypeValue)}>Search</button>
-                            <div className={`learning-search-text ${this.state.showError ? "errorSpan":""}`}>Max. 100 characters of A-Z, a-z, 0-9, space allowed</div>
                         </div>
                     </div>
                     <hr />

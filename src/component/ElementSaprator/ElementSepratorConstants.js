@@ -34,7 +34,8 @@ export const containerTypeArray = {
         "Add Citation Group": "citations-group-elem"
     },
     "interactive-elem-button": {
-        "Add MMI": "interactive-elem",
+        "Add Elm Interactive": "elm-interactive-elem",
+        "Add Quad Interactive": "interactive-elem",
         "Add Smart Link": "smartlink-elem",
         "Add Show Hide": "show-hide-elem",
         "Add Pop Up": "popup-elem",

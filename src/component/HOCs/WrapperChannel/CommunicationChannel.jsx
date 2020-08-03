@@ -96,15 +96,6 @@ function CommunicationChannel(WrappedComponent) {
                 case 'disableNext':
                     config.disableNext = true;//message.disableNext;
                     break;
-                // case 'swappedIS':
-                // case 'ISDeleted':
-                // case 'TocLoader':
-                //     {
-                //         /**
-                //          * TO BE IMPLEMENTED
-                //          *  */
-                //     }
-                //     break;
                 case 'refreshElementWithTable':
                     {
                         this.setTableData(message.elementId, message.updatedData);
@@ -122,9 +113,6 @@ function CommunicationChannel(WrappedComponent) {
                         }
 
                     }
-                    break;
-                case 'updateSlateTitleByID':
-                    this.updateSlateTitleByID(message);
                     break;
                 case 'projectDetails':
                     config.tcmStatus = message.tcm.activated;
@@ -594,27 +582,6 @@ function CommunicationChannel(WrappedComponent) {
                 tocDeleteMessage: newMessage
             })
         }
-
-        updateSlateTitleByID = (messageObj) => {
-            if (messageObj.slateType && (messageObj.slateType === 'section' || messageObj.slateType === 'assessment')) {
-                this.updateTitleSlate(messageObj);
-            }
-            else if (messageObj.slateType === 'container-introduction') {
-                if (this.props.introObject.isCO === false && messageObj.slateID === this.props.introObject.introSlate) {
-                    this.updateTitleSlate(messageObj);
-                }
-                else {
-                    this.fetchOpenerData(messageObj);
-                }
-            }
-        }
-
-        fetchOpenerData = (messageObj) => {
-            /**
-             * TO BE IMPLEMENTED
-             *  */
-        }
-
         updateTitleSlate = (messageObj) => {
             /**
              * TO BE IMPLEMENTED
