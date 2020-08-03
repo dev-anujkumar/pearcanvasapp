@@ -37,6 +37,7 @@ import {
 import LazyLoad, {forceCheck} from "react-lazyload";
 
 let random = guid();
+
 class SlateWrapper extends Component {
     constructor(props) {
         super(props);
@@ -259,7 +260,7 @@ class SlateWrapper extends Component {
                                         dataIdAttr: 'data-id',
                                         scroll: true, // or HTMLElement
                                         filter: ".ignore-for-drag",
-                                        draggable: ".editor",
+                                        draggable: ".lazyload-wrapper",
                                         // ignoreNextClick : false,
                                         preventOnFilter: false,
                                         forceFallback: true,
@@ -893,67 +894,66 @@ class SlateWrapper extends Component {
                             
                            <React.Fragment key={element.id}>
                                <LazyLoad 
-                                key={index}
-                                once={true}
-                                placeholder={<div>Loading...</div>}
+                                    once={true}
+                                    placeholder={<div>Loading...</div>}
                                 >
-                                {
-                                    index === 0 && _slateType !== 'assessment' && config.isCO === false ?
+                                    {
+                                        index === 0 && _slateType !== 'assessment' && config.isCO === false ?
+                                            <ElementSaprator
+                                                firstOne={index === 0}
+                                                index={index}
+                                                esProps={this.elementSepratorProps(index, true)}
+                                                elementType=""
+                                                permissions={this.props.permissions}
+                                                showAudioSplitPopup={this.props.showAudioSplitPopup}
+                                                openAudio={this.props.openAudio}
+                                                onClickCapture={this.checkSlateLockStatus}
+                                                splithandlerfunction={this.splithandlerfunction}
+                                            />
+                                            : index === 0 && config.isCO === true ? <div className="noSeparatorContainer"></div> : null
+                                    }
+                                    <ElementContainer
+                                        openCustomPopup = {this.openCustomPopup}
+                                        slateType={_slateType}
+                                        element={element}
+                                        index={index}
+                                        handleCommentspanel={this.props.handleCommentspanel}
+                                        elementSepratorProps={this.elementSepratorProps}
+                                        showBlocker={this.props.showBlocker}
+                                        isBlockerActive={this.props.isBlockerActive}
+                                        onListSelect={this.props.convertToListElement}
+                                        onClickCapture={this.checkSlateLockStatus}
+                                        isLOExist={this.props.isLOExist}
+                                        splithandlerfunction={this.splithandlerfunction}
+                                    >
+                                        {
+                                            (isHovered, isPageNumberEnabled, activeElement, permissions) => (
+                                                <PageNumberElement pageLoading={pageLoading}
+                                                    updatePageNumber={this.props.updatePageNumber}
+                                                    element={element} _slateType={_slateType}
+                                                    isHovered={isHovered}
+                                                    isPageNumberEnabled={isPageNumberEnabled}
+                                                    activeElement={activeElement}
+                                                    permissions={permissions} />
+                                            )
+                                        }
+                                    </ElementContainer>
+                                    {_slateType !== 'assessment' ?
                                         <ElementSaprator
-                                            firstOne={index === 0}
                                             index={index}
-                                            esProps={this.elementSepratorProps(index, true)}
+                                            esProps={this.elementSepratorProps(index, false)}
                                             elementType=""
+                                            slateType={_slateType}
+                                            toggleSplitSlatePopup={this.toggleSplitSlatePopup}
                                             permissions={this.props.permissions}
                                             showAudioSplitPopup={this.props.showAudioSplitPopup}
                                             openAudio={this.props.openAudio}
                                             onClickCapture={this.checkSlateLockStatus}
                                             splithandlerfunction={this.splithandlerfunction}
                                         />
-                                        : index === 0 && config.isCO === true ? <div className="noSeparatorContainer"></div> : null
-                                }
-                                <ElementContainer
-                                    openCustomPopup = {this.openCustomPopup}
-                                    slateType={_slateType}
-                                    element={element}
-                                    index={index}
-                                    handleCommentspanel={this.props.handleCommentspanel}
-                                    elementSepratorProps={this.elementSepratorProps}
-                                    showBlocker={this.props.showBlocker}
-                                    isBlockerActive={this.props.isBlockerActive}
-                                    onListSelect={this.props.convertToListElement}
-                                    onClickCapture={this.checkSlateLockStatus}
-                                    isLOExist={this.props.isLOExist}
-                                    splithandlerfunction={this.splithandlerfunction}
-                                >
-                                    {
-                                        (isHovered, isPageNumberEnabled, activeElement, permissions) => (
-                                            <PageNumberElement pageLoading={pageLoading}
-                                                updatePageNumber={this.props.updatePageNumber}
-                                                element={element} _slateType={_slateType}
-                                                isHovered={isHovered}
-                                                isPageNumberEnabled={isPageNumberEnabled}
-                                                activeElement={activeElement}
-                                                permissions={permissions} />
-                                        )
+                                        : null
                                     }
-                                </ElementContainer>
-                                {_slateType !== 'assessment' ?
-                                    <ElementSaprator
-                                        index={index}
-                                        esProps={this.elementSepratorProps(index, false)}
-                                        elementType=""
-                                        slateType={_slateType}
-                                        toggleSplitSlatePopup={this.toggleSplitSlatePopup}
-                                        permissions={this.props.permissions}
-                                        showAudioSplitPopup={this.props.showAudioSplitPopup}
-                                        openAudio={this.props.openAudio}
-                                        onClickCapture={this.checkSlateLockStatus}
-                                         splithandlerfunction={this.splithandlerfunction}
-                                    />
-                                    : null
-                                }
-                               </LazyLoad>
+                                </LazyLoad>
                             </React.Fragment>
                            
                           

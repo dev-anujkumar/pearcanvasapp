@@ -207,9 +207,22 @@ function CommunicationChannel(WrappedComponent) {
                 case 'pageLink':
                     this.updatePageLink(message);
                     break;
+                case 'slateLengthChanged':
+                    this.changeSlateLength(message)
+                    break;
             }
         }
 
+        /**
+         * Updates the element count and refreshes slate
+         * @param {String} message element count in a slate 
+         */
+        changeSlateLength = (message) => {
+            console.log("changeSlateLength::>>>", message)
+            this.props.setSlateLength(message)
+            this.handleRefreshSlate()
+        }
+        
         /**
          * Handle the element update action on linking a page
          */

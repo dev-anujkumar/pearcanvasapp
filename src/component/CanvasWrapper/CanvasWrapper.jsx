@@ -18,7 +18,7 @@ import { getSlateLockStatus, releaseSlateLock } from './SlateLock_Actions'
 import GlossaryFootnoteMenu from '../GlossaryFootnotePopup/GlossaryFootnoteMenu.jsx';
 import {updateElement, getTableEditorData, clearElementStatus}from '../../component/ElementContainer/ElementContainer_Actions'
 // IMPORT - Actions //
-import { fetchSlateData, fetchAuthUser, openPopupSlate } from './CanvasWrapper_Actions';
+import { fetchSlateData, fetchAuthUser, openPopupSlate, setSlateLength } from './CanvasWrapper_Actions';
 import {toggleCommentsPanel,fetchComments,fetchCommentByElement} from '../CommentsPanel/CommentsPanel_Action'
 import { convertToListElement } from '../ListElement/ListElement_Action.js';
 import { handleSplitSlate,setUpdatedSlateTitle, setSlateType, setSlateEntity, setSlateParent } from '../SlateWrapper/SlateWrapper_Actions'
@@ -33,6 +33,7 @@ import store from './../../appstore/store'
 import { hideBlocker } from '../../js/toggleLoader';
 import {getAllSlatesData} from '../../js/getAllSlatesData'
 import { fetchUsageTypeData } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
+
 export class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
@@ -273,6 +274,7 @@ export default connect(
         getTableEditorData,
         getAllSlatesData,
         clearElementStatus,
-        fetchUsageTypeData
+        fetchUsageTypeData,
+        setSlateLength
     }
 )(CommunicationChannelWrapper(CanvasWrapper));
