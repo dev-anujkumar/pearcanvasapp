@@ -221,7 +221,7 @@ export const getCurrentlyLinkedImage = async (id, cb) => {
     if (data.length) {
       let latestIndex = 0;
       for(let index = 1; index < data.length; index++) {
-        let isAfter = moment(data[index]).isAfter(data[latestIndex]);
+        let isAfter = moment(data[index].createdDate).isAfter(data[latestIndex].createdDate);
         if(isAfter) {
           latestIndex = index;
         }
