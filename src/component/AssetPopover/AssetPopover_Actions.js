@@ -1,3 +1,4 @@
+import moment from 'moment';
 import store from '../../appstore/store.js';
 import {
   APO_SEARCH_SAVE,
@@ -218,8 +219,14 @@ export const getCurrentlyLinkedImage = async (id, cb) => {
 
     let data = await response.json()
     if (data.length) {
-
-      let workId = data[data.length - 1].versionUrn;
+      let latestIndex = 0;
+      for(let index = 1; index < data.length; index++) {
+        let isAfter = moment(data[index]).isAfter(data[latestIndex]);
+        if(isAfter) {
+          latestIndex = index;
+        }
+      }
+      let workId = data[latestIndex].versionUrn;
 
         currentlyLinkedData = await getElementVersionContent(workId)
         cb(currentlyLinkedData)
