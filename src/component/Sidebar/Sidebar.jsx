@@ -29,8 +29,7 @@ class Sidebar extends Component {
         let numbered = this.props.activeElement.numbered;
         let startNumber = this.props.activeElement.startNumber || "1";
         let syntaxhighlighting =  this.props.activeElement.syntaxhighlighting;
-        let podwidth = this.props.activeElement.podwidth || POD_DEFAULT_VALUE
-        
+        let podwidth = this.props.activeElement.podwidth || POD_DEFAULT_VALUE;        
         this.state = {
             elementDropdown: '',
             activeElementId: this.props.activeElement.elementId || "",
@@ -54,13 +53,15 @@ class Sidebar extends Component {
             let numberStartFrom = prevState.bceNumberStartFrom;
             let bceToggle = prevState.bceToggleValue;
             let bceSyntaxHighlight = prevState.syntaxHighlightingToggleValue;
-            let podValue = prevState.podValue
+            let podValue = prevState.podValue;
+            let podOption = prevState.podOption
             if(nextProps.activeElement.elementId !== prevState.activeElementId) {
                 elementDropdown = '';
                 numberStartFrom = nextProps.activeElement.startNumber;
                 bceToggle = nextProps.activeElement.numbered;
                 bceSyntaxHighlight = nextProps.activeElement.syntaxhighlighting ;
-                podValue = nextProps.activeElement.podwidth
+                podValue = nextProps.activeElement.podwidth;
+                podOption = false
             }
             
             return {
@@ -73,7 +74,8 @@ class Sidebar extends Component {
                 bceNumberStartFrom : numberStartFrom,
                 bceToggleValue : bceToggle,
                 syntaxHighlightingToggleValue : bceSyntaxHighlight,
-                podValue : podValue
+                podValue : podValue,
+                podOption : podOption
             };
         }
 
@@ -91,7 +93,8 @@ class Sidebar extends Component {
             activePrimaryOption: value,
             activeSecondaryOption: secondaryFirstOption,
             activeLabelText: labelText,
-            podValue: POD_DEFAULT_VALUE
+            podValue: POD_DEFAULT_VALUE,
+            podOption: false
         });
 
         if(this.props.activeElement.elementId !== '' && this.props.activeElement.elementWipType !== "element-assessment") {
@@ -122,7 +125,8 @@ class Sidebar extends Component {
             elementDropdown = '';
         }
         this.setState({
-            elementDropdown
+            elementDropdown,
+            podOption: false
         });
     }
 
@@ -194,7 +198,8 @@ class Sidebar extends Component {
         this.setState({
             elementDropdown: '',
             activeSecondaryOption: value,
-            activeLabelText: labelText
+            activeLabelText: labelText,
+            podOption: false
         });
 
         if(this.props.activeElement.elementId !== '' && this.props.activeElement.elementWipType !== "element-assessment") {
@@ -501,7 +506,8 @@ class Sidebar extends Component {
         let selValue = e.target.getAttribute('data-value');
         this.setState({
             podOption: !this.state.podOption,
-            podValue : selValue ? selValue : this.state.podValue
+            podValue : selValue ? selValue : this.state.podValue,
+            elementDropdown: ''
         }, () => this.handleBceBlur())    
     }
 
@@ -519,7 +525,7 @@ class Sidebar extends Component {
             }
             let printValue = this.state.podValue
 
-            printValue = printValue.match(/print/g) ? printValue.slice(5) : this.state.podValue
+            printValue = ( printValue && printValue.match(/print/g)) ? printValue.slice(5) : this.state.podValue
             printValue = printValue ? (printValue.match(/%/g) ? printValue : printValue + '%') : '100%'
 
             let activeElement = document.querySelector(`[data-id="${this.props.activeElement.elementId}"]`)
@@ -533,8 +539,8 @@ class Sidebar extends Component {
                 <div className='printOnDemand'>
                     <label>POD Width Options</label>
                     <div className='element-dropdown'>
-                        <div className="element-dropdown-pod" data-element="secondary" onClick={this.togglePODDropdown}>
-                            <label id='pod-value'>{printValue}</label>
+                        <div className="element-dropdown-pod" data-element="pod" onClick={this.togglePODDropdown}>
+                            <label className='pod-value' id='pod-value'>{printValue}</label>
                             <ul className={`element-dropdown-content pod-options ${active}`}>
                                 <li data-value="print25">25%</li>
                                 <li data-value="print50">50%</li>
