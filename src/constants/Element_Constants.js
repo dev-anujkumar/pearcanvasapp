@@ -18,8 +18,10 @@ export const VIDEO = "video"
 export const DEFAULT_ASSET="Asset data undefined"
 export const DEFAULT_VIDEO_POSTER_IMAGE = "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png"
 
+/*---------------Element Interactive ----------------------*/ 
+export const INTERACTIVE_FPO = "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
+export const INTERACTIVE_SCHEMA = "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive"
 /*---------------Element Single Assessment ----------------------*/ 
-export const ASSESSMENT_USAGE_TYPE =['Quiz', 'Test', 'Practice', 'Homework', 'Diagnostic', 'Journal', 'Shared Writing', 'Concept Check', 'Non-Scored', 'Study Tool']
 export const ESA_DIALOG_TEXT='PLEASE ENTER A PRODUCT UUID'
 export const ESA_POPUP_PLACEHOLDER='UUID'
 export const ESA_POPUP_ROWS='1'
@@ -78,4 +80,22 @@ export const ASSESSMENT_ITEM = 'assessmentItem';
 export const ASSESSMENT_ITEM_TDX = 'tdxAssessmentItem';
 
 /****************Print On Demand************************ */ 
-export const POD_DEFAULT_VALUE = 'print100';
+export const POD_DEFAULT_VALUE = '';
+/*********************** Sidebar Dropdown*********************** */
+export const disabledPrimaryOption = [
+    "primary-openerelement",
+    "primary-mathml-equation",
+    "primary-blockcode-equation",
+    "primary-poetry",
+    "primary-stanza",
+    "primary-elm-interactive",
+    "primary-mmi",
+    "primary-smartlink",
+    "primary-showhide",
+    "primary-popup",
+    "primary-editor-table-equation",
+    "primary-single-assessment",
+    "primary-citations-group",
+    "primary-element-citation",
+    "primary-multicolumn"
+];

@@ -642,14 +642,27 @@ export default {
         enumType: 'assessment',		
     },
      'element-interactive': {
+        'primary-elm-interactive': {
+            text: 'Elm Interactive',
+            toolbar: ['crossLinkingIcon','assetpopover', 'glossary'],
+            enum: 'MMI_ELM',
+            subtype: {
+                'secondary-elm-interactive': {
+                    text: 'Elm Interactive',
+                    labelText: 'ELM',
+                    enum: 'FLASHCARDS',
+                    wipValue: 'fpo'
+                }
+            }
+        },
         'primary-mmi': {
-            text: 'MMI',
+            text: 'Quad Interactive',
             toolbar: ['crossLinkingIcon','assetpopover', 'glossary'],
             enum: 'MMI',
             subtype: {
                 'secondary-interactive-mmi': {
-                    text: 'MMI',
-                    labelText: 'MMI',
+                    text: 'Quad',
+                    labelText: 'Quad',
                     enum: 'FLASHCARDS',
                     wipValue: 'fpo'
                 }
