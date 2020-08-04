@@ -860,7 +860,7 @@ describe('action file test', () => {
                     'elementId': 'urn:pearson:work:06b83c99-3e7c-4b5d-810e-0dee86dbbfdf',
                     'index': 1,
                     'elementWipType': 'figure',
-                    'tag': 'MMI',
+                    'tag': 'QUAD',
                     'toolbar': ['crossLinkingIcon','assetpopover','glossary']
                 }
             }]

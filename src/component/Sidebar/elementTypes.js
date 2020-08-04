@@ -662,7 +662,7 @@ export default {
             subtype: {
                 'secondary-interactive-mmi': {
                     text: 'Quad',
-                    labelText: 'Quad',
+                    labelText: 'QUAD',
                     enum: 'FLASHCARDS',
                     wipValue: 'fpo'
                 }
