@@ -400,7 +400,7 @@ describe('Testing communication channel', () => {
         expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 1000);
         spyhanndleSplitSlate.mockClear()
     })
-    describe('Test for updateSlateTitleByID', () => {
+    xdescribe('Test for updateSlateTitleByID', () => {
         let currentSlate1 = {
             category: "titleChange",
             container: "chapter",
