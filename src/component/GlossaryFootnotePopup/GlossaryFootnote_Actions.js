@@ -3,12 +3,12 @@ import config from '../../config/config';
 import store from '../../appstore/store.js'
 import { sendDataToIframe, createTitleSubtitleModel } from '../../constants/utility.js';
 import { HideLoader } from '../../constants/IFrameMessageTypes.js';
-import { prepareTcmSnapshots, tcmSnapshotsForUpdate, fetchParentData } from '../TcmSnapshots/TcmSnapshots_Utility.js';
+import { tcmSnapshotsForUpdate, fetchParentData } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 const {
     REACT_APP_API_URL
 } = config
 
-import { OPEN_GLOSSARY_FOOTNOTE, UPDATE_FOOTNOTEGLOSSARY, ERROR_POPUP, GET_TCM_RESOURCES,VERSIONING_SLATEMANIFEST } from "./../../constants/Action_Constants";
+import { OPEN_GLOSSARY_FOOTNOTE, UPDATE_FOOTNOTEGLOSSARY, ERROR_POPUP, GET_TCM_RESOURCES } from "./../../constants/Action_Constants";
 let elementTypeData = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza'];
 
 export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, typeWithPopup, poetryField) => async (dispatch) => {
@@ -533,57 +533,6 @@ store.dispatch({
         data: tcmData
     }
 })
-}
-
-/**
-     * @description - prepare data to create snapshots on update element
-*/
-
-/**
- * @function tcmSnapshotsForGlossaryFootnote
- * @description-This function is to prepare snapshot during create element process
- * @param {Object} elementUpdateData - Object containing required element data
- * @param {String} elementIndex - index of element
- * @param {Object} containerElement - Element Parent Data
- * @param {Function} dispatch to dispatch tcmSnapshots
-*/
-export const tcmSnapshotsForGlossaryFootnote = async (elementUpdateData, elementIndex, containerElement,dispatch) => {
-    let actionStatus = {
-        action:"update",
-        status:"",
-        fromWhere:"update"
-    }
-    let {tcmBodymatter, response,elementWorkId,currentParentData} = elementUpdateData;
-    let currentSlateData =currentParentData[config.slateManifestURN] 
-    let wipData = fetchElementWipData(tcmBodymatter, elementIndex, response.type,"");
-    let versionStatus = fetchManifestStatus(tcmBodymatter, containerElement, response.type);
-    /** latest version for WE/CE/PE/AS*/
-    containerElement = await checkContainerElementVersion(containerElement, versionStatus, currentSlateData)
-    if(containerElement.slateManifest){
-        delete Object.assign(currentParentData, {[containerElement.slateManifest]: currentParentData[currentSlateData.id] })[currentSlateData.id];
-        currentParentData[containerElement.slateManifest].id = containerElement.slateManifest
-         dispatch({
-            type: VERSIONING_SLATEMANIFEST,
-            payload: {slateLevelData:currentParentData}
-        })
-    }
-    let oldData = Object.assign({}, response);
-    if (response.id !== elementWorkId) {
-        if (oldData.poetrylines) {
-            oldData.poetrylines = wipData.poetrylines
-        }
-        else {
-            oldData.elementdata = wipData.elementdata
-        }
-        oldData.html = wipData.html;
-        let actionStatusVersioning = Object.assign({}, actionStatus);
-        actionStatusVersioning.action="create"
-        actionStatusVersioning.status ="accepted"
-        /** After versioning snapshots*/
-        prepareTcmSnapshots(oldData, actionStatusVersioning, containerElement, "","");
-    }
-    /** Before versioning snapshots*/
-    prepareTcmSnapshots(response, actionStatus, containerElement, "","");
 }
 
 /**
