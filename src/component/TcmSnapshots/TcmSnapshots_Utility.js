@@ -5,9 +5,9 @@
 
 /**************************Import Modules**************************/
 import config from '../../config/config.js';
-import { sendElementTcmSnapshot } from './TcmSnapshot_Actions.js';
+import { sendElementTcmSnapshot, getLatestVersion } from './TcmSnapshot_Actions.js';
 import { setSemanticsSnapshots, fetchElementsTag } from './ElementSnapshot_Utility.js';
-
+import { VERSIONING_SLATEMANIFEST } from "./../../constants/Action_Constants";
 let elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza'];
 let containerType = ['element-aside', 'manifest', 'citations', 'poetry', 'WORKED_EXAMPLE', 'CONTAINER', 'SECTION_BREAK', 'CITATION', 'POETRY'];
 
@@ -191,7 +191,6 @@ export const prepareElementSnapshots = async (element,actionStatus) => {
     return elementSnapshot;
 }
 
-
 /**
  * @function tcmSnapshotsForUpdate
  * @description-This function is to prepare snapshot during create element process
@@ -202,26 +201,26 @@ export const prepareElementSnapshots = async (element,actionStatus) => {
 */
 export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, containerElement, dispatch) => {
     let actionStatus = {
-        action: "update",
-        status: "",
-        fromWhere: "update"
+        action:"update",
+        status:"",
+        fromWhere:"update"
     }
-    let { updateBodymatter, response, updatedId, currentParentData } = elementUpdateData;
-    let currentSlateData = currentParentData[config.slateManifestURN]
-    let wipData = fetchElementWipData(updateBodymatter, elementIndex, response.type, "")
+    let {updateBodymatter, response,updatedId,currentParentData} = elementUpdateData;
+    let currentSlateData =currentParentData[config.slateManifestURN] 
+    let wipData = fetchElementWipData(updateBodymatter, elementIndex, response.type,"")
     let versionStatus = fetchManifestStatus(updateBodymatter, containerElement, response.type);
     /** latest version for WE/CE/PE/AS*/
-    containerElement = await checkContainerElementVersion(containerElement, versionStatus, currentSlateData)
+    containerElement = await checkContainerElementVersion(containerElement, versionStatus,currentSlateData)
+    let oldData = Object.assign({}, response);
     //set new slate Manifest in store also
-    if (containerElement.slateManifest) {
-        delete Object.assign(currentParentData, { [containerElement.slateManifest]: currentParentData[currentSlateData.id] })[currentSlateData.id];
+    if(containerElement.slateManifest){
+        delete Object.assign(currentParentData, {[containerElement.slateManifest]: currentParentData[currentSlateData.id] })[currentSlateData.id];
         currentParentData[containerElement.slateManifest].id = containerElement.slateManifest
         dispatch({
             type: VERSIONING_SLATEMANIFEST,
-            payload: { slateLevelData: currentParentData }
+            payload: {slateLevelData:currentParentData}
         })
     }
-    let oldData = Object.assign({}, response);
     if (response.id !== updatedId) {
         if (oldData.poetrylines) {
             oldData.poetrylines = wipData.poetrylines;
@@ -231,14 +230,173 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
         }
         oldData.html = wipData.html;
         let actionStatusVersioning = Object.assign({}, actionStatus);
-        actionStatusVersioning.action = "create"
-        actionStatusVersioning.status = "accepted"
+        actionStatusVersioning.action="create"
+        actionStatusVersioning.status ="accepted"
         /** After versioning with old snapshots*/
-        prepareTcmSnapshots(oldData, actionStatusVersioning, containerElement, "", "")
+        prepareTcmSnapshots(oldData, actionStatusVersioning, containerElement, "","")
     }
     /** Before and after versioning with new snapshots*/
-    prepareTcmSnapshots(response, actionStatus, containerElement, "", "")
+    prepareTcmSnapshots(response, actionStatus, containerElement, "","")
 }
+
+/**
+ * @function fetchManifestStatus
+ * @description This function is to get the status for Parent elements
+ * @param {Object} bodymatter bodymatter for current slate  
+ * @param {Object} parentElement Object containing all the parent data for elements
+ * @param {String} type type of element
+ * @returns {Object} Parent Elements' status
+*/
+export const fetchManifestStatus = (bodymatter, parentElement, type) => {
+    let parentData = {};
+    const { asideData, parentUrn, poetryData } = parentElement;
+
+    if ((asideData || parentUrn || poetryData) && bodymatter.length !== 0) {
+        bodymatter.map(element => {
+            if (type === 'SECTION_BREAK' && asideData && element.id == asideData.id) {
+                parentData.parentStatus = element.status;       /** Create Section-Break */
+            }
+            else if (parentUrn && element.id == parentUrn.manifestUrn) {
+                parentData.parentStatus = element.status;       /** In WE-HEAD | Aside | Citations */
+            } else if (asideData && element.type == "element-aside" && element.id == asideData.id) {
+                parentData.parentStatus = element.status;
+                element.elementdata && element.elementdata.bodymatter.map((ele) => {
+                    if (parentUrn && ele.id === parentUrn.manifestUrn) {
+                        parentData.childStatus = ele.status ;   /** In Section-Break */
+                    }
+                })
+            }
+            else if (poetryData && element.id == poetryData.parentUrn) {
+                parentData.parentStatus = element.status;       /** In Poetry */
+            }
+        })
+    }
+    return parentData
+}
+/**
+ * @function checkContainerElementVersion
+ * @description This function is to check versioning status for slate and container elements and 
+ *              fetch new ManifestUrn based on the status
+ * @param {Object} containerElement Object containing all the parent data for elements  
+ * @param {Object} versionStatus parent element status for versioning
+ * @param {Object} currentSlateData current Slate data 
+ * @returns {Object} Updated Container Element with latest Manifest Urns
+*/
+export const checkContainerElementVersion = async (containerElement, versionStatus, currentSlateData) => {
+    /** latest version for WE/CE/PE/AS*/
+    if (versionStatus && versionStatus.parentStatus && versionStatus.parentStatus === "approved") {
+        let contentUrn = containerElement.asideData ? containerElement.asideData.contentUrn : containerElement.poetryData ? containerElement.poetryData.contentUrn : containerElement.parentUrn ? containerElement.parentUrn.contentUrn : ""
+        if (contentUrn) {
+            let newManifestData = await getLatestVersion(contentUrn);
+            if (newManifestData) {
+                if (containerElement.poetryData) {
+                    containerElement.poetryData.id = newManifestData;
+                    containerElement.poetryData.parentUrn = newManifestData;
+                }
+                else if (containerElement.asideData) {
+                    containerElement.asideData.id = newManifestData
+                    containerElement.parentUrn.manifestUrn = newManifestData
+                }
+                else if (containerElement.parentUrn) {
+                    containerElement.parentUrn.manifestUrn = newManifestData
+                }
+            }
+        }
+    }
+    /** latest version for SB*/
+    if (versionStatus && versionStatus.childStatus && versionStatus.childStatus === "approved") {
+        let newSectionManifest = await getLatestVersion(containerElement.parentUrn.contentUrn);
+        containerElement.parentUrn.manifestUrn = newSectionManifest ? newSectionManifest : containerElement.parentUrn.manifestUrn
+    }
+    /** latest version for slate*/
+    if (currentSlateData && currentSlateData.status && currentSlateData.status === 'approved') {
+        let newSlateManifest = await getLatestVersion(currentSlateData.contentUrn);
+        config.slateManifestURN = newSlateManifest ? newSlateManifest : config.slateManifestURN
+        if(newSlateManifest)
+        {
+        containerElement.slateManifest = newSlateManifest
+        }
+
+    }
+    return containerElement;
+}
+/**
+ * @function fetchElementWipData
+ * @description-This function is to set the lael text of element
+ * @param {Object} bodymatter - bodymatter before delete  
+ * @param {String/Number} index - index of element deleted
+ * @param {String} type - type of element deleted
+ * @param {String} entityUrn - entityUrn
+ * @returns {Object} WipData for element 
+*/
+export const fetchElementWipData = (bodymatter, index, type, entityUrn) => {
+    let eleIndex,
+    wipData = {};
+    if (typeof index === "number" || (Array.isArray(index) && index.length == 1)) {   /** Delete a container or an element at slate level */
+        eleIndex = Array.isArray(index) ? index[0] : index;
+        wipData = bodymatter[eleIndex];
+        if (wipData.subtype === "workedexample") {  /** Delete Section-Break */
+            wipData.elementdata.bodymatter.map((item, innerIndex) => {
+                if (item.type == "manifest" && entityUrn == item.contentUrn) {
+                    wipData = bodymatter[eleIndex].elementdata.bodymatter[innerIndex]
+                }
+            })
+        }
+    }
+    else if (typeof index === "string") {
+        eleIndex =  index.split("-");
+        switch (type) {
+            case 'stanza':                           /** Inside Poetry */
+                wipData = bodymatter[eleIndex[0]].contents.bodymatter[eleIndex[2]];
+                break;
+            case 'element-citation':                 /** Inside Citations */
+                wipData = bodymatter[eleIndex[0]].contents.bodymatter[eleIndex[1] - 1];
+                break;
+            case 'element-list':
+            case 'element-blockfeature':
+            case 'element-authoredtext':
+            case 'element-learningobjectives':
+                if (eleIndex.length == 2) {          /** Inside WE-HEAD | Aside */
+                    wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]];
+                } else if (eleIndex.length == 3) {   /** Inside WE-BODY */
+                    wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]].contents.bodymatter[eleIndex[2]];
+                }
+                break;
+        }
+    }
+
+    return wipData;
+}
+
+/**
+ * @function fetchParentData
+ * @description This function is to set the parentData for the element
+ * @param {Object} bodymatter - bodymatter for conversion  
+ * @param {String/Number} indexes - index of element converted
+ * @returns {Object} ParentData fo given element
+*/
+export const fetchParentData = (bodymatter, indexes) => {
+    let parentData = {};
+    let tempIndex = Array.isArray(indexes) ? indexes : (typeof indexes === "number") ? indexes.toString() : indexes.split("-");
+    let isChildElement = elementType.indexOf(bodymatter[tempIndex[0]].type) === -1 ? true : false
+    if (isChildElement == true) {
+        parentData.asideData = {
+            contentUrn: bodymatter[tempIndex[0]].contentUrn,
+            id: bodymatter[tempIndex[0]].id,
+            subtype: bodymatter[tempIndex[0]].subtype,
+            type: bodymatter[tempIndex[0]].type,
+            element: bodymatter[tempIndex[0]]
+        }
+        let parentElement = tempIndex.length == 3 && bodymatter[tempIndex[0]].type !== 'poetry'  ? bodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]] : bodymatter[tempIndex[0]];
+        parentData.parentUrn = {
+            manifestUrn: parentElement.id,
+            contentUrn: parentElement.contentUrn,
+            elementType: parentElement.type
+        }
+    }
+    return parentData;
+}
+
 /**
  * @function isEmpty
  * @description This function is to check if an object is empty

@@ -3,9 +3,7 @@ import config from '../../config/config';
 import store from '../../appstore/store.js'
 import { sendDataToIframe, createTitleSubtitleModel } from '../../constants/utility.js';
 import { HideLoader } from '../../constants/IFrameMessageTypes.js';
-import { prepareTcmSnapshots } from '../TcmSnapshots/TcmSnapshots_Utility.js';
-import { fetchParentData} from '../TcmSnapshots/ElementSnapshot_Utility.js';
-import { tcmSnapshotsForUpdate } from '../TcmSnapshots/TcmUpdateSnapshot_Utility.js';
+import { prepareTcmSnapshots, tcmSnapshotsForUpdate, fetchParentData } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 const {
     REACT_APP_API_URL
 } = config
