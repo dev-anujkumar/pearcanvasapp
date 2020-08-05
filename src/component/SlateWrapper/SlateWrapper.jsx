@@ -18,7 +18,7 @@ import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
 import config from '../../config/config';
 import { TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER, WORKED_EXAMPLE, SECTION_BREAK, METADATA_ANCHOR, LO_LIST, ELEMENT_ASSESSMENT, OPENER,
     ALREADY_USED_SLATE , REMOVE_LINKED_AUDIO, NOT_AUDIO_ASSET, SPLIT_SLATE_WITH_ADDED_AUDIO , ACCESS_DENIED_CONTACT_ADMIN, IN_USE_BY, LOCK_DURATION, SHOW_HIDE,POP_UP ,
-    CITATION, ELEMENT_CITATION,SMARTLINK,POETRY ,STANZA, BLOCKCODE, TABLE_EDITOR, FIGURE_MML} from './SlateWrapperConstants';
+    CITATION, ELEMENT_CITATION,SMARTLINK,POETRY ,STANZA, BLOCKCODE, TABLE_EDITOR, FIGURE_MML, MULTI_COLUMN, MMI_ELM} from './SlateWrapperConstants';
 import PageNumberElement from './PageNumberElement.jsx';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
@@ -31,6 +31,9 @@ import { setActiveElement,openPopupSlate } from '../CanvasWrapper/CanvasWrapper_
 // import { OPEN_AM } from '../../js/auth_module';
 import { showSlateLockPopup } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import { handleTCMData } from '../TcmSnapshots/TcmSnapshot_Actions.js'
+import {
+    fetchSlateData
+} from '../CanvasWrapper/CanvasWrapper_Actions';
 
 
 let random = guid();
@@ -194,8 +197,6 @@ class SlateWrapper extends Component {
         try {
             if (_slateData !== null && _slateData !== undefined) {
                 if(_slateData[config.slateManifestURN]){
-                // if (Object.values(_slateData).length > 0) {
-                    // let _slateObject = Object.values(_slateData)[0];
                     let _slateObject = _slateData[config.slateManifestURN];
                     let { contents: _slateContent } = _slateObject;
                     let title = {
@@ -212,11 +213,8 @@ class SlateWrapper extends Component {
                     )
                 }
             }
-            else {
-                // handle error
-            }
         } catch (error) {
-            // handle error
+            console.error(error)
         }
     }
 
@@ -313,11 +311,9 @@ class SlateWrapper extends Component {
                     )
                 }
             }
-            else {
-                // handle error
-            }
         } catch (error) {
             // handle error
+            console.error(error)
         }
     }
 
@@ -353,9 +349,6 @@ class SlateWrapper extends Component {
         if (context.props.withinLockPeriod) {
             callback(config.projectUrn, Object.keys(context.props.slateData)[0])
             context.props.setLockPeriodFlag(false)
-            /* context.setState({
-                showReleasePopup: true
-            }) */
         }
     }
 
@@ -535,7 +528,7 @@ class SlateWrapper extends Component {
         let indexToinsert
         let outerIndex
         // Detects element insertion from the topmost element separator
-        if ((firstOne || type === "opener-elem") && (!config.isCO)) {
+        if (((firstOne || type === "opener-elem") && (!config.isCO)) || (firstOne && parentUrn)) {
             indexToinsert = Number(index)
         } else {
             indexToinsert = Number(index + 1)
@@ -618,6 +611,12 @@ class SlateWrapper extends Component {
             case 'table-editor-elem-button':
                 this.props.createElement(TABLE_EDITOR, indexToinsert, parentUrn, asideData, null, null);
                 break;
+            case 'multi-column-group':
+                this.props.createElement(MULTI_COLUMN, indexToinsert, parentUrn, asideData, null, null, null, null)
+                break;
+            case 'elm-interactive-elem':
+                this.props.createElement(MMI_ELM, indexToinsert, parentUrn, asideData, null, null, null);
+                break;
             case 'text-elem':
             default:
                 this.props.createElement(TEXT, indexToinsert, parentUrn, asideData, null, null, null);
@@ -679,6 +678,12 @@ class SlateWrapper extends Component {
                 buttonType: 'worked-exp-elem',
                 buttonHandler: () => this.splithandlerfunction('worked-exp-elem', index, firstOne, parentUrn),
                 tooltipText: 'Worked Example',
+                tooltipDirection: 'left'
+            },
+            {
+                buttonType: 'multi-column-group',
+                buttonHandler: () => this.splithandlerfunction('multi-column-group', index, firstOne, parentUrn),
+                tooltipText: 'Multi Column',
                 tooltipDirection: 'left'
             },
             {
@@ -1098,6 +1103,11 @@ class SlateWrapper extends Component {
             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
             sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
         }
+        // When normal slate is Wip but popupslate is approved. BG-2742
+        if((this.props.slateData[config.slateManifestURN].id !== config.cachedActiveElement.element.id) && config.cachedActiveElement.element.status === "approved"){
+            this.props.slateData[config.slateManifestURN].index = config.cachedActiveElement.index;
+            this.props.fetchSlateData(this.props.slateData[config.slateManifestURN].id, this.props.slateData[config.slateManifestURN].contentUrn,0 , this.props.slateData[config.slateManifestURN],"",true); 
+        }
         config.slateManifestURN = config.tempSlateManifestURN
         config.slateEntityURN = config.tempSlateEntityURN
         config.tempSlateManifestURN = null
@@ -1226,7 +1236,8 @@ export default connect(
         accessDenied,
         openPopupSlate,
         showSlateLockPopup,
-        handleTCMData
+        handleTCMData,
+        fetchSlateData
 
     }
 )(SlateWrapper);

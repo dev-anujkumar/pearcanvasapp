@@ -260,7 +260,7 @@ export const spanHandlers = {
                 if (key === 46) {
                     e.preventDefault();
                 } else {
-                    if(currentElement.previousSibling.innerHTML != '<br>') {
+                    if (currentElement.previousSibling.innerHTML != '<br>') {
                         currentElement.previousSibling.innerHTML += '&nbsp;';
                     }
                 }
@@ -313,7 +313,7 @@ export const spanHandlers = {
         }
     },
 
-    handleRemoveFormattingOnSpan: (selection, e, parentTag, childClass) => {
+    handleRemoveFormattingOnSpan: (selection, e, parentTag, childClass, selectedText) => {
         if (selection.anchorNode.parentNode.nodeName === "SPAN" && selection.anchorNode.parentNode.classList.contains(childClass)) {
             if (selectedText !== "") {
                 selection.anchorNode.parentNode.innerHTML = selection.anchorNode.parentNode.innerText;
@@ -332,13 +332,13 @@ export const spanHandlers = {
             }
         }
     },
-    handleSelectAllRemoveFormatting: (id, parentTag, childClass) =>{
+    handleSelectAllRemoveFormatting: (id, parentTag, childClass) => {
         tinymce.$(`${parentTag}#cypress-${id} .${childClass}`).each(function () {
             this.innerHTML = this.innerText;
         })
     },
 
-    splitOnTag: function(bound, cutElement) {
+    splitOnTag: function (bound, cutElement) {
         for (let parent = cutElement.parentNode; bound != parent; parent = grandparent) {
             let right = parent.cloneNode(false);
             while (cutElement.nextSibling)
@@ -349,7 +349,7 @@ export const spanHandlers = {
         }
     },
 
-    setContentOfSpan: function(childNodes) {
+    setContentOfSpan: function (childNodes) {
         for (let index = 0; index < childNodes.length; index++) {
             let innerNodes = childNodes[index].childNodes;
             if (innerNodes) {
@@ -372,7 +372,7 @@ export const spanHandlers = {
         }
     },
 
-    setContentOfBlankChild: function(childNodes) {
+    setContentOfBlankChild: function (childNodes) {
         for (let index = 0; index < childNodes.length; index++) {
             let innerNodes = childNodes[index].childNodes;
             if (innerNodes) {
@@ -399,7 +399,7 @@ export const spanHandlers = {
         }
     },
 
-    addAndSplitSpan: function(editor, elementId, parentTag, childClass) {
+    addAndSplitSpan: function (editor, elementId, parentTag, childClass) {
         let position = 'next';
         let elementSearch = editor.selection.getNode();
         if (editor.selection.getNode().tagName.toLowerCase() !== 'span' || editor.selection.getNode().className.toLowerCase() !== childClass) {
@@ -407,111 +407,121 @@ export const spanHandlers = {
         }
         if (elementSearch && elementSearch.tagName.toLowerCase() === 'span' && ((childClass === 'poetryLine' && elementSearch.innerHTML != '<br>') || childClass === 'codeNoHighlightLine')) {
             editor.undoManager.transact(() => {
-                let elm = editor.dom.create('span', { 'class': childClass }, '<br />');
-                if (editor.selection.getRng().startOffset === 0) {
-                    elementSearch.parentNode.insertBefore(elm, elementSearch);
-                    editor.selection.setCursorLocation(elementSearch.previousSibling, 0);
-                    if(elementSearch.innerHTML === '<br>') {
+                this.performSplitOperation(editor, elementId, parentTag, childClass, position, elementSearch);
+            });
+        }
+    },
+
+    performSplitOperation: function (editor, elementId, parentTag, childClass, position, elementSearch) {
+        let elm = editor.dom.create('span', { 'class': childClass }, '<br />');
+        if (editor.selection.getRng().startOffset === 0) {
+            elementSearch.parentNode.insertBefore(elm, elementSearch);
+            editor.selection.setCursorLocation(elementSearch.previousSibling, 0);
+            if (elementSearch.innerHTML === '<br>') {
+                position = 'current';
+            } else {
+                position = 'previous';
+            }
+        } else {
+            if (editor.selection.getContent() !== '' || editor.selection.getNode().tagName.toLowerCase() === 'img' || editor.selection.getNode().tagName.toLowerCase() === 'dfn' || editor.selection.getNode().tagName.toLowerCase() === 'abbr' || editor.selection.getNode().tagName.toLowerCase() === 'a') {
+                if (elementSearch.nextSibling) {
+                    elementSearch.parentNode.insertBefore(elm, elementSearch.nextSibling)
+                    editor.selection.setCursorLocation(elementSearch.nextSibling, 0);
+                } else {
+                    elementSearch.parentNode.appendChild(elm);
+                    editor.selection.setCursorLocation(elementSearch.nextSibling, 0);
+                }
+            } else {
+                editor.selection.setContent('<!--break-->');
+                if (parentTag === 'code') {
+                    elementSearch.innerHTML = String(elementSearch.innerHTML).replace(/ /g, '&nbsp;');
+                }
+                let comment = document.createNodeIterator(elementSearch.parentNode, NodeFilter.SHOW_COMMENT, null, true).nextNode();
+                this.splitOnTag(elementSearch.parentNode, comment);
+                elementSearch.nextSibling.remove();
+                let innerSpans = elementSearch.getElementsByTagName('span');
+                for (let index = 0; index < innerSpans.length; index++) {
+                    let innerHtml = innerSpans[index].innerHTML;
+                    innerSpans[index].outerHTML = innerHtml;
+                }
+                if (elementSearch.textContent.trim() == '') {
+                    if (elementSearch.innerHTML == '') {
                         position = 'current';
+                        elementSearch.innerHTML = '<br/>';
                     } else {
-                        position = 'previous';
+                        let childNodes = elementSearch.childNodes;
+                        if (childNodes.length) {
+                            if (childNodes.length > 1) {
+                                this.setContentOfSpan(childNodes);
+                            } else {
+                                if (childNodes[0].tagName) {
+                                    this.setContentOfSpan(childNodes);
+                                } else {
+                                    elementSearch.innerHTML = '<br/>';
+                                }
+                            }
+                        }
                     }
                 } else {
-                    if (editor.selection.getContent() !== '' || editor.selection.getNode().tagName.toLowerCase() === 'img' || editor.selection.getNode().tagName.toLowerCase() === 'dfn' || editor.selection.getNode().tagName.toLowerCase() === 'abbr' || editor.selection.getNode().tagName.toLowerCase() === 'a') {
-                        if (elementSearch.nextSibling) {
-                            elementSearch.parentNode.insertBefore(elm, elementSearch.nextSibling)
-                            editor.selection.setCursorLocation(elementSearch.nextSibling, 0);
-                        } else {
-                            elementSearch.parentNode.appendChild(elm);
-                            editor.selection.setCursorLocation(elementSearch.nextSibling, 0);
-                        }
+                    let childNodes = elementSearch.childNodes;
+                    this.setContentOfBlankChild(childNodes)
+                }
+                innerSpans = elementSearch.getElementsByTagName('span');
+                for (let index = 0; index < innerSpans.length; index++) {
+                    let innerHtml = innerSpans[index].innerHTML;
+                    innerSpans[index].outerHTML = innerHtml;
+                }
+                let innerSpansSibling = elementSearch.nextSibling.getElementsByTagName('span');
+                for (let index = 0; index < innerSpansSibling.length; index++) {
+                    let innerHtml = innerSpansSibling[index].innerHTML;
+                    innerSpansSibling[index].outerHTML = innerHtml;
+                }
+                if (elementSearch.nextSibling.textContent.trim() == '') {
+                    if (elementSearch.nextSibling.innerHTML == '') {
+                        elementSearch.nextSibling.innerHTML = '<br/>';
                     } else {
-                        editor.selection.setContent('<!--break-->');
-                      	if (parentTag === 'code'){
-                            elementSearch.innerHTML = String(elementSearch.innerHTML).replace(/ /g, '&nbsp;');
-                        }
-                        let comment = document.createNodeIterator(elementSearch.parentNode, NodeFilter.SHOW_COMMENT, null, true).nextNode();
-                        this.splitOnTag(elementSearch.parentNode, comment);
-                        elementSearch.nextSibling.remove();
-                        let innerSpans = elementSearch.getElementsByTagName('span');
-                        for (let index = 0; index < innerSpans.length; index++) {
-                            let innerHtml = innerSpans[index].innerHTML;
-                            innerSpans[index].outerHTML = innerHtml;
-                        }
-                        if (elementSearch.textContent.trim() == '') {
-                            if (elementSearch.innerHTML == '') {
-                                position = 'current';
-                                elementSearch.innerHTML = '<br/>';
+                        let childNodes = elementSearch.nextSibling.childNodes;
+                        if (childNodes.length) {
+                            if (childNodes.length > 1) {
+                                this.setContentOfSpan(childNodes);
                             } else {
-                                let childNodes = elementSearch.childNodes;
-                                if (childNodes.length) {
-                                    if (childNodes.length > 1) {
-                                        this.setContentOfSpan(childNodes);
-                                    } else {
-                                        if (childNodes[0].tagName) {
-                                            this.setContentOfSpan(childNodes);
-                                        } else {
-                                            elementSearch.innerHTML = '<br/>';
-                                        }
-                                    }
+                                if (childNodes[0].tagName) {
+                                    this.setContentOfSpan(childNodes);
+                                } else {
+                                    elementSearch.nextSibling.innerHTML = '<br/>';
                                 }
                             }
-                        } else {
-                            let childNodes = elementSearch.childNodes;
-                            this.setContentOfBlankChild(childNodes)
                         }
-                        innerSpans = elementSearch.getElementsByTagName('span');
-                        for (let index = 0; index < innerSpans.length; index++) {
-                            let innerHtml = innerSpans[index].innerHTML;
-                            innerSpans[index].outerHTML = innerHtml;
-                        }
-                        let innerSpansSibling = elementSearch.nextSibling.getElementsByTagName('span');
-                        for (let index = 0; index < innerSpansSibling.length; index++) {
-                            let innerHtml = innerSpansSibling[index].innerHTML;
-                            innerSpansSibling[index].outerHTML = innerHtml;
-                        }
-                        if (elementSearch.nextSibling.textContent.trim() == '') {
-                            if (elementSearch.nextSibling.innerHTML == '') {
-                                elementSearch.nextSibling.innerHTML = '<br/>';
-                            } else {
-                                let childNodes = elementSearch.nextSibling.childNodes;
-                                if (childNodes.length) {
-                                    if (childNodes.length > 1) {
-                                        this.setContentOfSpan(childNodes);
-                                    } else {
-                                        if (childNodes[0].tagName) {
-                                            this.setContentOfSpan(childNodes);
-                                        } else {
-                                            elementSearch.nextSibling.innerHTML = '<br/>';
-                                        }
-                                    }
-                                }
-                            }
-                        } else {
-                            let childNodes = elementSearch.nextSibling.childNodes;
-                            this.setContentOfBlankChild(childNodes)
-                        }
-                        innerSpansSibling = elementSearch.nextSibling.getElementsByTagName('span');
-                        for (let index = 0; index < innerSpansSibling.length; index++) {
-                            let innerHtml = innerSpansSibling[index].innerHTML;
-                            innerSpansSibling[index].outerHTML = innerHtml;
-                        }
-                        elementSearch.nextSibling.removeAttribute("data-id");
-                        elementSearch.nextSibling.className = childClass;
-                        elementSearch.innerHTML = elementSearch.innerHTML.replace(/^\s+|\s+$/g, '&nbsp;');
-                        elementSearch.nextSibling.innerHTML = elementSearch.nextSibling.innerHTML.replace(/^\s+|\s+$/g, '&nbsp;');
-                        editor.selection.setCursorLocation(elementSearch.nextSibling, 0);
                     }
+                } else {
+                    let childNodes = elementSearch.nextSibling.childNodes;
+                    this.setContentOfBlankChild(childNodes)
                 }
-                this.handleExtraTags(elementId, parentTag, childClass);
-                if (position === 'next') {
-                    editor.selection.setCursorLocation(elementSearch.nextSibling, 0);
-                } else if (position === 'previous') {
-                    editor.selection.setCursorLocation(elementSearch.previousSibling, 0);
-                } else if (position === 'current') {
-                    editor.selection.setCursorLocation(elementSearch, 0);
+                innerSpansSibling = elementSearch.nextSibling.getElementsByTagName('span');
+                for (let index = 0; index < innerSpansSibling.length; index++) {
+                    let innerHtml = innerSpansSibling[index].innerHTML;
+                    innerSpansSibling[index].outerHTML = innerHtml;
                 }
-            });
+                elementSearch.nextSibling.removeAttribute("data-id");
+                elementSearch.nextSibling.className = childClass;
+                elementSearch.innerHTML = elementSearch.innerHTML.replace(/^\s+|\s+$/g, '&nbsp;');
+                elementSearch.nextSibling.innerHTML = elementSearch.nextSibling.innerHTML.replace(/^\s+|\s+$/g, '&nbsp;');
+                editor.selection.setCursorLocation(elementSearch.nextSibling, 0);
+            }
+        }
+        this.handleExtraTags(elementId, parentTag, childClass);
+        if (position === 'next') {
+            editor.selection.setCursorLocation(elementSearch.nextSibling, 0);
+        } else if (position === 'previous') {
+            editor.selection.setCursorLocation(elementSearch.previousSibling, 0);
+        } else if (position === 'current') {
+            editor.selection.setCursorLocation(elementSearch, 0);
         }
     }
 }
+
+/**
+ * Removes Byte Order Markup (BOM text) i.e &#65279
+ * @param {String} nodeHTML model HTML
+ */
+export const removeBOM = (nodeHTML) => nodeHTML.replace("﻿", "");

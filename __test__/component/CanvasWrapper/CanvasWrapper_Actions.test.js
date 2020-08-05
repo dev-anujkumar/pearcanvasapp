@@ -10,7 +10,9 @@ import {
     SET_ACTIVE_ELEMENT,
     AUTHORING_ELEMENT_UPDATE
 } from '../../../src/constants/Action_Constants';
+import { POD_DEFAULT_VALUE } from '../../../src/constants/Element_Constants'
 import { slateDataNew } from '../../../fixtures/slateTestingData';
+import figureMockData from './mockData.js'
 const mockStore = configureMockStore(middlewares);
 jest.mock('../../../src/config/config.js', () => ({
     slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
@@ -33,6 +35,7 @@ let initialState = {
     splittedElementIndex: 0,
     pageNumberData: {}
 };
+let setActiveToolbar =  ["crossLinkingIcon",'assetpopover', 'decreaseindent', 'glossary']
 jest.mock('axios');
 describe('action file test', () => {
     let store = mockStore(() => initialState);
@@ -254,7 +257,7 @@ describe('action file test', () => {
                 'index': 1,
                 'elementWipType': 'element-authoredtext',
                 'tag': 'H1',
-                'toolbar': ['bold','underline','strikethrough','orderedlist','unorderedlist','increaseindent','decreaseindent','glossary','assetpopover','slatetag','redo']
+                'toolbar': ['bold','underline','strikethrough','orderedlist','unorderedlist','increaseindent','decreaseindent','glossary','crossLinkingIcon','assetpopover','slatetag','redo']
             }
         }]
         expect(store.getActions()[0].payload.tag).toEqual(expectedActions[0].payload.tag);
@@ -328,21 +331,7 @@ describe('action file test', () => {
 
 
         it('setActiveElement test cases------------- figure', () => {
-            let expectedActions = [{
-                type: SET_ACTIVE_ELEMENT,
-                payload: {
-                    "altText": "",
-                    'elementType': 'figure',
-                    'primaryOption': 'primary-image-figure',
-                    'secondaryOption': 'secondary-image-figure-width',
-                    'elementId': 'urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464',
-                    'index': 1,
-                    "longDesc": "",
-                    'elementWipType': 'figure',
-                    'tag': 'Fg',
-                    'toolbar': ['assetpopover','decreaseindent','glossary']
-                }
-            }]
+            let expectedActions = figureMockData.figure
             let dispatch = (obj) => {
                 if(obj.type === SET_ACTIVE_ELEMENT){
                     expect(obj.payload).toEqual(expectedActions[0].payload);
@@ -359,21 +348,7 @@ describe('action file test', () => {
         });
 
         xit('setActiveElement test cases------------- figure image50Text', () => {
-            let expectedActions = [{
-                type: SET_ACTIVE_ELEMENT,
-                payload: {
-                    "altText": "",
-                    'elementType': 'figure',
-                    'primaryOption': 'primary-image-figure',
-                    'secondaryOption': 'secondary-image-figure-half',
-                    'elementId': 'urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464',
-                    'index': 1,
-                    "longDesc": "",
-                    'elementWipType': 'figure',
-                    'tag': 'Fg',
-                    'toolbar': ['assetpopover','decreaseindent','glossary']
-                }
-            }]
+            let expectedActions = figureMockData.figureImage50Text
             let dispatch = (obj) => {
                 if(obj.type === SET_ACTIVE_ELEMENT){
                     expect(obj.payload).toEqual(expectedActions[0].payload);
@@ -390,21 +365,7 @@ describe('action file test', () => {
         });
 
         xit('setActiveElement test cases------------- figure imageWiderThanText', () => {
-            let expectedActions = [{
-                type: SET_ACTIVE_ELEMENT,
-                payload: {
-                    "altText": "",
-                    'elementType': 'figure',
-                    'primaryOption': 'primary-image-figure',
-                    'secondaryOption': 'secondary-image-figure-wider',
-                    'elementId': 'urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464',
-                    'index': 1,
-                    "longDesc": "",
-                    'elementWipType': 'figure',
-                    'tag': 'Fg',
-                    'toolbar': ['assetpopover','decreaseindent','glossary']
-                }
-            }]
+            let expectedActions = figureMockData.figureImageWiderThanText
             let dispatch = (obj) => {
                 if(obj.type === SET_ACTIVE_ELEMENT){
                     expect(obj.payload).toEqual(expectedActions[0].payload);
@@ -421,21 +382,7 @@ describe('action file test', () => {
         });
 
         xit('setActiveElement test cases------------- figure imageFullscreen', () => {
-            let expectedActions = [{
-                type: SET_ACTIVE_ELEMENT,
-                payload: {
-                    "altText": "",
-                    'elementType': 'figure',
-                    'primaryOption': 'primary-image-figure',
-                    'secondaryOption': 'secondary-image-figure-full',
-                    'elementId': 'urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464',
-                    'index': 1,
-                    "longDesc": "",
-                    'elementWipType': 'figure',
-                    'tag': 'Fg',
-                    'toolbar': ['assetpopover','decreaseindent','glossary']
-                }
-            }]
+            let expectedActions = figureMockData.figureImageFullscreen
             let dispatch = (obj) => {
                 if(obj.type === SET_ACTIVE_ELEMENT){
                     expect(obj.payload).toEqual(expectedActions[0].payload);
@@ -452,21 +399,7 @@ describe('action file test', () => {
 
         
         xit('setActiveElement test cases------------- figure image25Text', () => {
-            let expectedActions = [{
-                type: SET_ACTIVE_ELEMENT,
-                payload: {
-                    "altText": "",
-                    'elementType': 'figure',
-                    'primaryOption': 'primary-image-figure',
-                    'secondaryOption': 'secondary-image-figure-quarter',
-                    'elementId': 'urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464',
-                    'index': 1,
-                    "longDesc": "",
-                    'elementWipType': 'figure',
-                    'tag': 'Fg',
-                    'toolbar': ['assetpopover','decreaseindent','glossary']
-                }
-            }]
+            let expectedActions = figureMockData.figureImage25Text
             let dispatch = (obj) => {
                 if(obj.type === SET_ACTIVE_ELEMENT){
                     expect(obj.payload).toEqual(expectedActions[0].payload);
@@ -486,21 +419,7 @@ describe('action file test', () => {
     describe('action file test casses for table', () => {
         it('setActiveElement  with table', () => {
     
-            let expectedActions = [{
-                type: SET_ACTIVE_ELEMENT,
-                payload: {
-                    "altText": "",
-                    'elementType': 'figure',
-                    'primaryOption': 'primary-image-table',
-                    'secondaryOption': 'secondary-image-table-half',
-                    'elementId': 'urn:pearson:work:b33703aa-d629-4466-8606-cfcf0505e291',
-                    'index': 1,
-                    "longDesc": "",
-                    'elementWipType': 'figure',
-                    'tag': 'TB',
-                    'toolbar': ['assetpopover','decreaseindent','glossary']
-                }
-            }]
+            let expectedActions = figureMockData.table
             let dispatch = (obj) => {
                 if(obj.type === SET_ACTIVE_ELEMENT){
                     expect(obj.payload).toEqual(expectedActions[0].payload);
@@ -516,21 +435,7 @@ describe('action file test', () => {
     
         });
         xit('setActiveElement  with table imageTextWidthTableImage', () => {
-            let expectedActions = [{
-                type: SET_ACTIVE_ELEMENT,
-                payload: {
-                    "altText": "",
-                    'elementType': 'figure',
-                    'primaryOption': 'primary-image-table',
-                    'secondaryOption': 'secondary-image-table-width',
-                    'elementId': 'urn:pearson:work:b33703aa-d629-4466-8606-cfcf0505e291',
-                    'index': 1,
-                    "longDesc": "",
-                    'elementWipType': 'figure',
-                    'tag': 'TB',
-                    'toolbar': ['assetpopover','decreaseindent','glossary']
-                }
-            }]
+            let expectedActions = figureMockData.imageTextWidthTableImage
             let dispatch = (obj) => {
                 if(obj.type === SET_ACTIVE_ELEMENT){
                     expect(obj.payload).toEqual(expectedActions[0].payload);
@@ -560,7 +465,7 @@ describe('action file test', () => {
                     'index': 1,
                     'elementWipType': 'figure',
                     'tag': 'TB',
-                    'toolbar': ['assetpopover','decreaseindent','glossary']
+                    'toolbar': ['crossLinkingIcon','assetpopover','decreaseindent','glossary']
                 }
             }]
             let dispatch = (obj) => {
@@ -592,7 +497,7 @@ describe('action file test', () => {
                     'index': 1,
                     'elementWipType': 'figure',
                     'tag': 'TB',
-                    'toolbar': ['assetpopover','decreaseindent','glossary']
+                    'toolbar': ['crossLinkingIcon','assetpopover','decreaseindent','glossary']
                 }
             }]
             let dispatch = (obj) => {
@@ -615,21 +520,7 @@ describe('action file test', () => {
     describe('action file test casses for mathImage', () => {
         it('setActiveElement for   ------------------mathImage', () => {
     
-            let expectedActions = [{
-                type: SET_ACTIVE_ELEMENT,
-                payload: {
-                    "altText": "",
-                    'elementType': 'figure',
-                    "longDesc": "",
-                    'primaryOption': 'primary-image-equation',
-                    'secondaryOption': 'secondary-image-equation-half',
-                    'elementId': 'urn:pearson:work:1d5259c3-63c9-4a77-9a52-0315007624d0',
-                    'index': 1,
-                    'elementWipType': 'figure',
-                    'tag': 'EQ',
-                    'toolbar': ['assetpopover','decreaseindent','glossary']
-                }
-            }]
+            let expectedActions = figureMockData.mathImage
             let dispatch = (obj) => {
                 if(obj.type === SET_ACTIVE_ELEMENT){
                     expect(obj.payload).toEqual(expectedActions[0].payload);
@@ -656,7 +547,7 @@ describe('action file test', () => {
                     "longDesc": "",
                     'elementWipType': 'figure',
                     'tag': 'EQ',
-                    'toolbar': ['assetpopover','decreaseindent','glossary']
+                    'toolbar': ['crossLinkingIcon','assetpopover','decreaseindent','glossary']
                 }
             }];
             let dispatch = (obj) => {
@@ -686,7 +577,7 @@ describe('action file test', () => {
                     "longDesc": "",
                     'elementWipType': 'figure',
                     'tag': 'EQ',
-                    'toolbar': ['assetpopover','decreaseindent','glossary']
+                    'toolbar': ['crossLinkingIcon','assetpopover','decreaseindent','glossary']
                 }
             }]
             let dispatch = (obj) => {
@@ -716,7 +607,7 @@ describe('action file test', () => {
                     "longDesc": "",
                     'elementWipType': 'figure',
                     'tag': 'EQ',
-                    'toolbar': ['assetpopover','decreaseindent','glossary']
+                    'toolbar': ['crossLinkingIcon','assetpopover','decreaseindent','glossary']
                 }
             }]
             let dispatch = (obj) => {
@@ -751,7 +642,7 @@ describe('action file test', () => {
                     'elementWipType': 'figure',
                     "altText": "",
                     'tag': 'MML',
-                    'toolbar': ['assetpopover','decreaseindent','glossary']
+                    'toolbar': ['crossLinkingIcon','assetpopover','decreaseindent','glossary']
                 }
             }]
     
@@ -777,7 +668,7 @@ describe('action file test', () => {
                     "startNumber": "1",
                     'elementWipType': 'figure',
                     'tag': 'BCE',
-                    'toolbar': ['assetpopover', 'decreaseindent', 'glossary']
+                    'toolbar': ['crossLinkingIcon','assetpopover', 'decreaseindent', 'glossary']
                 }
             }]
 
@@ -798,7 +689,7 @@ describe('action file test', () => {
                     'index': 1,
                     'elementWipType': 'figure',
                     'tag': 'VID',
-                    'toolbar': ['assetpopover','glossary']
+                    'toolbar': ['crossLinkingIcon','assetpopover','glossary']
                 }
             }]
             let dispatch = (obj) => {
@@ -863,7 +754,7 @@ describe('action file test', () => {
                     'index': 1,
                     'elementWipType': 'figure',
                     'tag': 'VID',
-                    'toolbar': ['assetpopover','glossary']
+                    'toolbar': ['crossLinkingIcon','assetpopover','glossary']
                 }
             }]
             selectActions.setActiveElement(element.video, 1)(dispatch,getState);
@@ -882,7 +773,7 @@ describe('action file test', () => {
                     'index': 1,
                     'elementWipType': 'figure',
                     'tag': 'AUD',
-                    'toolbar': ['assetpopover','glossary']
+                    'toolbar': ['crossLinkingIcon','assetpopover','glossary']
                 }
             }]
             let dispatch = (obj) => {
@@ -939,7 +830,7 @@ describe('action file test', () => {
                     'index': 1,
                     'elementWipType': 'figure',
                     'tag': 'AUD',
-                    'toolbar': ['assetpopover','glossary']
+                    'toolbar': ['crossLinkingIcon','assetpopover','glossary']
                 }
             }]
             let dispatch = (obj) => {
@@ -969,8 +860,8 @@ describe('action file test', () => {
                     'elementId': 'urn:pearson:work:06b83c99-3e7c-4b5d-810e-0dee86dbbfdf',
                     'index': 1,
                     'elementWipType': 'figure',
-                    'tag': 'MMI',
-                    'toolbar': ['assetpopover','glossary']
+                    'tag': 'QUAD',
+                    'toolbar': ['crossLinkingIcon','assetpopover','glossary']
                 }
             }]
             let dispatch = (obj) => {
@@ -999,7 +890,7 @@ describe('action file test', () => {
                     'index': 1,
                     'elementWipType': 'figure',
                     'tag': 'SL',
-                    'toolbar': ['assetpopover','glossary']
+                    'toolbar': ['crossLinkingIcon','assetpopover','glossary']
                 }
             }];
             let dispatch = (obj) => {
@@ -1087,7 +978,7 @@ describe('action file test', () => {
                 index: 1,
                 elementWipType: 'figure',
                 tag: "SL",
-                toolbar: ["assetpopover","glossary"],
+                toolbar: ["crossLinkingIcon","assetpopover","glossary"],
                }
             }];
             let dispatch = (obj) => {
@@ -1124,7 +1015,7 @@ describe('action file test', () => {
                     "startNumber": "1",
                     'elementWipType': 'figure',
                     'tag': 'Qu',
-                    'toolbar': ['assetpopover', 'decreaseindent', 'glossary']
+                    'toolbar': setActiveToolbar
                 }
             }]
 
@@ -1153,7 +1044,7 @@ describe('action file test', () => {
                     "startNumber": "1",
                     'elementWipType': 'element-aside',
                     'tag': 'As',
-                    'toolbar': ['assetpopover', 'decreaseindent', 'glossary']
+                    'toolbar': setActiveToolbar
                 }
             }]
 
@@ -1179,7 +1070,7 @@ describe('action file test', () => {
                     "startNumber": "1",
                     'elementWipType': 'element-aside',
                     'tag': 'WE',
-                    'toolbar': ['assetpopover', 'decreaseindent', 'glossary']
+                    'toolbar': setActiveToolbar
                 }
             }]
 
@@ -1206,7 +1097,7 @@ describe('action file test', () => {
                     "startNumber": "1",
                     'elementWipType': 'element-aside',
                     'tag': 'LO',
-                    'toolbar': ['assetpopover', 'decreaseindent', 'glossary']
+                    'toolbar': setActiveToolbar
                 }
             }]
 
@@ -1234,7 +1125,7 @@ describe('action file test', () => {
                     "startNumber": "1",
                     'elementWipType': 'element-list',
                     'tag': 'LI',
-                    'toolbar': ['assetpopover', 'decreaseindent', 'glossary']
+                    'toolbar': setActiveToolbar
                 }
             }]
 
@@ -1260,7 +1151,7 @@ describe('action file test', () => {
                     "startNumber": "1",
                     'elementWipType': 'element-opener',
                     'tag': 'OE',
-                    'toolbar': ['assetpopover', 'decreaseindent', 'glossary']
+                    'toolbar': setActiveToolbar
                 }
             }]
 

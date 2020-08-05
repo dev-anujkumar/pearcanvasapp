@@ -285,3 +285,41 @@ export const tableElemIcon = (() => {
         </svg>
     )
   })();
+
+
+/***********************************************************SVG- Multi-Column Element ****************************************************/
+export const multiColumnContainer = (() => {
+    return (
+        <svg width="18px" height="18px" viewBox="0 0 18 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+            {/* <title>icon/element/MultiColumn</title> */}
+            <g id="Multi-column-group" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
+                <g id="02" transform="translate(-934.000000, -582.000000)">
+                    <g id="Group" transform="translate(203.000000, 296.000000)">
+                        <g id="icon/element/multi-column" transform="translate(728.000000, 283.000000)">
+                            <rect id="Rectangle" fillOpacity="0" fill="#EEEEEE" fillRule="evenodd" x="0" y="0" width="24" height="24"></rect>
+                            <path d="M8.8,3 C10.0150264,3 11,3.98497355 11,5.2 L11,5.2 L11,18.8 C11,20.0150264 10.0150264,21 8.8,21 L8.8,21 L5.2,21 C3.98497355,21 3,20.0150264 3,18.8 L3,18.8 L3,5.2 C3,3.98497355 3.98497355,3 5.2,3 L5.2,3 Z M18.8,3 C20.0150264,3 21,3.98497355 21,5.2 L21,5.2 L21,18.8 C21,20.0150264 20.0150264,21 18.8,21 L18.8,21 L15.2,21 C13.9849736,21 13,20.0150264 13,18.8 L13,18.8 L13,5.2 C13,3.98497355 13.9849736,3 15.2,3 L15.2,3 Z M8.8,5 L5.2,5 C5.08954305,5 5,5.08954305 5,5.2 L5,5.2 L5,18.8 C5,18.9104569 5.08954305,19 5.2,19 L5.2,19 L8.8,19 C8.91045695,19 9,18.9104569 9,18.8 L9,18.8 L9,5.2 C9,5.08954305 8.91045695,5 8.8,5 L8.8,5 Z M18.8,5 L15.2,5 C15.0895431,5 15,5.08954305 15,5.2 L15,5.2 L15,18.8 C15,18.9104569 15.0895431,19 15.2,19 L15.2,19 L18.8,19 C18.9104569,19 19,18.9104569 19,18.8 L19,18.8 L19,5.2 C19,5.08954305 18.9104569,5 18.8,5 L18.8,5 Z" id="Combined-Shape" fill="#9e9e9e" fillRule="nonzero"></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </svg>)
+})();
+
+/***********************************************************SVG- Elm Interactive Icon in Picker ****************************************************/
+export const elmInteractiveIcon = (() => {
+    return (
+        <svg id="elm-interactive-icon" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 28 28">
+            <defs>
+                <path id="yuua8t3uoa" d="M22.75 2.333H5.25c-1.604 0-2.917 1.313-2.917 2.917v17.5c0 1.604 1.313 2.917 2.917 2.917h17.5c1.604 0 2.917-1.313 2.917-2.917V5.25c0-1.604-1.313-2.917-2.917-2.917zm-9.45 9.333V18.2h6.533v.133c0 2.762-2.238 5-5 5h-1.666c-2.762 0-5-2.238-5-5v-1.666c0-2.762 2.238-5 5-5h.132zm6.533 0v5.6h-5.6v-5.6h5.6zm0-6.533v5.6h-5.6v-5.6h5.6z" />
+            </defs>
+            <g fill="none" fillRule="evenodd">
+                <mask id="mg3xnxeabb" fill="#fff">
+                    <use xlinkHref="#yuua8t3uoa" />
+                </mask>
+                <g fill="#EA7600" mask="url(#mg3xnxeabb)">
+                    <path d="M0 0H28V28H0z" />
+                </g>
+            </g>
+        </svg>
+    )
+})();

@@ -9,6 +9,12 @@ import {
     SlateLockMockState,
     AssetPopOverMockState
 } from '../../../fixtures/slateTestingData.js';
+import tinymce from 'tinymce/tinymce';
+let tinyMceEditor = {
+    undoManager: { data: [], typing: false, beforeChange: jest.fn(), add: jest.fn(), undo: jest.fn() ,transact: () =>{ }},
+    windowManager: { open: jest.fn(), openUrl: jest.fn(), alert: jest.fn(), confirm: jest.fn(), close: jest.fn() }
+}
+tinymce.activeEditor = { ...tinyMceEditor }
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 const initialState = {
@@ -216,130 +222,6 @@ describe('Testing communication channel', () => {
     let channelInstance = wrapper.find('CommunicationWrapper').instance();
     expect(wrapper).toHaveLength(1);
     expect(channelInstance).toBeDefined();
-    xdescribe('Test for projectDetails-modifyObjKeys function', () => {
-        const spygetProjectConfig = jest.spyOn(channelInstance, 'getProjectConfig')
-        const spymodifyObjKeys = jest.spyOn(channelInstance, 'modifyObjKeys')
-        xtest('Test for projectDetails case-qa', () => {
-            let event = {
-                data: {
-                    type: "projectDetails",
-                    message: {
-                        'x-prsn-user-id': "abc",
-                        'tcm': {
-                            activated: 'true'
-                        },
-                        currentOrigin: 'qa',
-                        ssoToken: "IZaFs6qIbKAo1yX0WaRCz6fagzA.*AAJTSQACMDIAAlNLABw5WUNuT3h6MEN0OHRFRUlEZUxFamxQa1EyNm89AAJTMQACMDE.*",
-                        id: "urn:pearson:distributable:977c95a8-e16a-413c-bfd0-788fd2a3698d",
-                        citeUrn: "urn:pearson:manifestation:7fa4ae52-fabc-4a7f-8876-6054f33d36c4",
-                        entityUrn: "urn:pearson:entity:3d9363f1-36bb-47ea-8842-9b142027692c",
-                        name: "ELMTEST_StgEnv_Krajewski Test"
-                    }
-                }
-            }
-            channelInstance.handleIncommingMessages(event);
-            expect(channelInstance.getProjectConfig).toHaveBeenCalled()
-            expect(channelInstance.modifyObjKeys).toHaveBeenCalled()
-            spygetProjectConfig.mockClear()
-            spymodifyObjKeys.mockClear()
-        })
-        xtest('Test for projectDetails case-perf', () => {
-            let event = {
-                data: {
-                    type: "projectDetails",
-                    message: {
-                        'x-prsn-user-id': "abc",
-                        'tcm': {
-                            activated: 'true'
-                        },
-                        currentOrigin: 'perf',
-                        ssoToken: "IZaFs6qIbKAo1yX0WaRCz6fagzA.*AAJTSQACMDIAAlNLABw5WUNuT3h6MEN0OHRFRUlEZUxFamxQa1EyNm89AAJTMQACMDE.*",
-                        id: "urn:pearson:distributable:977c95a8-e16a-413c-bfd0-788fd2a3698d",
-                        citeUrn: "urn:pearson:manifestation:7fa4ae52-fabc-4a7f-8876-6054f33d36c4",
-                        entityUrn: "urn:pearson:entity:3d9363f1-36bb-47ea-8842-9b142027692c",
-                        name: "ELMTEST_StgEnv_Krajewski Test"
-                    }
-                }
-            }
-            channelInstance.handleIncommingMessages(event);
-            expect(channelInstance.getProjectConfig).toHaveBeenCalled()
-            expect(channelInstance.modifyObjKeys).toHaveBeenCalled()
-            spygetProjectConfig.mockClear()
-            spymodifyObjKeys.mockClear()
-        })
-        xtest('Test for projectDetails case-staging', () => {
-            let event = {
-                data: {
-                    type: "projectDetails",
-                    message: {
-                        'x-prsn-user-id': "abc",
-                        'tcm': {
-                            activated: 'true'
-                        },
-                        currentOrigin: 'staging',
-                        ssoToken: "IZaFs6qIbKAo1yX0WaRCz6fagzA.*AAJTSQACMDIAAlNLABw5WUNuT3h6MEN0OHRFRUlEZUxFamxQa1EyNm89AAJTMQACMDE.*",
-                        id: "urn:pearson:distributable:977c95a8-e16a-413c-bfd0-788fd2a3698d",
-                        citeUrn: "urn:pearson:manifestation:7fa4ae52-fabc-4a7f-8876-6054f33d36c4",
-                        entityUrn: "urn:pearson:entity:3d9363f1-36bb-47ea-8842-9b142027692c",
-                        name: "ELMTEST_StgEnv_Krajewski Test"
-                    }
-                }
-            }
-            channelInstance.handleIncommingMessages(event);
-            expect(channelInstance.getProjectConfig).toHaveBeenCalled()
-            expect(channelInstance.modifyObjKeys).toHaveBeenCalled()
-            spygetProjectConfig.mockClear()
-            spymodifyObjKeys.mockClear()
-        })
-        xtest('Test for projectDetails case-prod', () => {
-            let event = {
-                data: {
-                    type: "projectDetails",
-                    message: {
-                        'x-prsn-user-id': "abc",
-                        'tcm': {
-                            activated: 'true'
-                        },
-                        currentOrigin: 'prod',
-                        ssoToken: "IZaFs6qIbKAo1yX0WaRCz6fagzA.*AAJTSQACMDIAAlNLABw5WUNuT3h6MEN0OHRFRUlEZUxFamxQa1EyNm89AAJTMQACMDE.*",
-                        id: "urn:pearson:distributable:977c95a8-e16a-413c-bfd0-788fd2a3698d",
-                        citeUrn: "urn:pearson:manifestation:7fa4ae52-fabc-4a7f-8876-6054f33d36c4",
-                        entityUrn: "urn:pearson:entity:3d9363f1-36bb-47ea-8842-9b142027692c",
-                        name: "ELMTEST_StgEnv_Krajewski Test"
-                    }
-                }
-            }
-            channelInstance.handleIncommingMessages(event);
-            expect(channelInstance.getProjectConfig).toHaveBeenCalled()
-            expect(channelInstance.modifyObjKeys).toHaveBeenCalled()
-            spygetProjectConfig.mockClear()
-            spymodifyObjKeys.mockClear()
-        })
-        xtest('Test for projectDetails case-local', () => {
-            let event = {
-                data: {
-                    type: "projectDetails",
-                    message: {
-                        'x-prsn-user-id': "abc",
-                        'tcm': {
-                            activated: 'true'
-                        },
-                        currentOrigin: 'local',
-                        ssoToken: "IZaFs6qIbKAo1yX0WaRCz6fagzA.*AAJTSQACMDIAAlNLABw5WUNuT3h6MEN0OHRFRUlEZUxFamxQa1EyNm89AAJTMQACMDE.*",
-                        id: "urn:pearson:distributable:977c95a8-e16a-413c-bfd0-788fd2a3698d",
-                        citeUrn: "urn:pearson:manifestation:7fa4ae52-fabc-4a7f-8876-6054f33d36c4",
-                        entityUrn: "urn:pearson:entity:3d9363f1-36bb-47ea-8842-9b142027692c",
-                        name: "ELMTEST_StgEnv_Krajewski Test"
-                    }
-                }
-            }
-            channelInstance.handleIncommingMessages(event);
-            expect(channelInstance.getProjectConfig).toHaveBeenCalled()
-            expect(channelInstance.modifyObjKeys).toHaveBeenCalled()
-            spygetProjectConfig.mockClear()
-            spymodifyObjKeys.mockClear()
-        })
-    })
     test('Test for getPermissions else case', () => {
         let event = {
             data: {
@@ -518,7 +400,7 @@ describe('Testing communication channel', () => {
         expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 1000);
         spyhanndleSplitSlate.mockClear()
     })
-    describe('Test for updateSlateTitleByID', () => {
+    xdescribe('Test for updateSlateTitleByID', () => {
         let currentSlate1 = {
             category: "titleChange",
             container: "chapter",
@@ -819,7 +701,7 @@ describe('Testing communication channel', () => {
         expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
         spyhandleIncommingMessages.mockClear()
     })
-    xtest('Test for statusForSave if case', () => {
+    test('Test for statusForSave if case', () => {
         const div = document.createElement('div');
         const loChild = document.createElement('div');
         loChild.classList.add("learning-objective");
@@ -844,7 +726,7 @@ describe('Testing communication channel', () => {
         expect(channelInstance.handleLOData).toHaveBeenCalled()
         spyhandleLOData.mockClear()
     })
-    xtest('Test for statusForSave if-else case', () => {
+    test('Test for statusForSave if-else case', () => {
         const div = document.createElement('div');
         const loChild = document.createElement('div');
         loChild.classList.add("learning-objective");
@@ -949,7 +831,6 @@ describe('Testing communication channel', () => {
         spyhandleIncommingMessages.mockClear()
     })
     test('Test for permissionsDetails function', () => {
-        let channelInstance = wrapper.find('CommunicationWrapper').instance();
         let currentSlate = {
             category: "titleChange",
             container: "chapter",
@@ -1143,7 +1024,7 @@ describe('Testing communication channel', () => {
             const pageLinkNode = document.createElement('div');
                 pageLinkNode.id = "page-link-0";
                 pageLinkNode.innerText = "Link";
-                
+
                 cypressEditor.appendChild(pageLinkNode);
                 elementContainer.appendChild(cypressEditor);
                 document.body.appendChild(elementContainer);
@@ -1151,7 +1032,7 @@ describe('Testing communication channel', () => {
             const element = document.createElement('div');
                 element.id = "link-notification";
                 document.body.appendChild(element);
-
+                
             test("Slate Link - Link Case - ", () => {
                 let event = {
                     data: {
@@ -1167,7 +1048,7 @@ describe('Testing communication channel', () => {
                 }
                 const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
                 channelInstance.handleIncommingMessages(event);
-                expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+                expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()                
                 spyhandleIncommingMessages.mockClear()
             });
             test("Slate Link - Unlink Case - ", () => {

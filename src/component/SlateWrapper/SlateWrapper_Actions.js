@@ -31,10 +31,10 @@ Array.prototype.move = function (from, to) {
 };
 /** This function not required now
 function prepareDataForTcmUpdate(updatedData, parentData, asideData, poetryData) {
-    if (parentData && (parentData.elementType === "element-aside" || parentData.elementType === "citations" 
-        || parentData.elementType === "poetry")) {
+    if (parentData && (parentData.elementType === "element-aside" || parentData.elementType === "citations"
+        || parentData.elementType === "poetry" || parentData.elementType === "groupedcontent")) {
         updatedData.isHead = true;
-    } else if (parentData && parentData.elementType === "manifest") {
+    } else if (parentData && (parentData.elementType === "manifest" || parentData.elementType === "group" )) {
         updatedData.isHead = false;
     }
     if(updatedData.type === "POP_UP" || updatedData.type === "SHOW_HIDE"){
@@ -48,9 +48,11 @@ function prepareDataForTcmUpdate(updatedData, parentData, asideData, poetryData)
         }
     } else if ((poetryData && poetryData.type === 'poetry') || (parentData && parentData.elementType === "poetry")){
         updatedData.parentType = "poetry";
+    } else if (asideData && asideData.type === "groupedcontent") {
+        updatedData.parentType = "groupedcontent";
     }
-    // updatedData.projectURN = config.projectUrn;
-    // updatedData.slateEntity = poetryData && poetryData.contentUrn || config.slateEntityURN;
+    /* updatedData.projectURN = config.projectUrn;
+    updatedData.slateEntity = poetryData && poetryData.contentUrn || config.slateEntityURN; 
 }
 */
 /** Obsolete Code 
@@ -89,6 +91,10 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
     } 
     else if (type == 'ELEMENT_CITATION') {
         _requestData.parentType = "citations"
+    }
+    else if (parentUrn && parentUrn.elementType === 'group') {
+        _requestData["parentType"] = "groupedcontent"
+        _requestData["columnName"] = parentUrn.columnName
     }
 
     // prepareDataForTcmUpdate(_requestData, parentUrn, asideData, poetryData) // remove this line
@@ -180,6 +186,13 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 }
             })  
         }
+        else if (asideData && asideData.type === 'groupedcontent') {
+            newParentData[config.slateManifestURN].contents.bodymatter.map((item, i) => {
+                if (item.id === asideData.id) {
+                    item.groupeddata.bodymatter[parentUrn.columnIndex].groupdata.bodymatter.splice(index, 0, createdElementData)
+                }
+            })
+        }
         else {
             newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
         }
@@ -253,6 +266,16 @@ function prepareDataForTcmCreate(type, createdElementData, getState, dispatch) {
     }
     else if (type === 'TEXT' || type === 'ELEMENT_CITATION' || type === "STANZA") {
         elmUrn.push(createdElementData.id)
+    }
+    else if (type === "MULTI_COLUMN") {
+        /** First Column */
+        createdElementData.groupeddata.bodymatter[0].groupdata.bodymatter.map(item => {
+            elmUrn.push(item.id)
+        })
+        /** Second Column */
+        createdElementData.groupeddata.bodymatter[1].groupdata.bodymatter.map(item => {
+            elmUrn.push(item.id)
+        })
     }
 
     elmUrn.map((item) => {
@@ -376,6 +399,14 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                         }
                     });
                 }
+                else if (containerTypeElem && containerTypeElem == '2C') {
+                    newBodymatter[dataObj.containerIndex].groupeddata.bodymatter[dataObj.columnIndex].groupdata.bodymatter.move(oldIndex, newIndex);
+                    /* newBodymatter.forEach(element => {
+                        if (element.id == poetryId) {
+                            element.contents.bodymatter.move(oldIndex, newIndex);
+                        }
+                    }); */
+                }
                 else {
                     newParentData[slateId].contents.bodymatter.move(oldIndex, newIndex);
                 }
@@ -398,7 +429,7 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
             /* For hiding the spinning loader send HideLoader message to Wrapper component */
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
             dispatch({type: ERROR_POPUP, payload:{show: true}})
-            // console.log('Error occured while swaping element', err)
+            console.log('Error occured while swaping element', err)
         })
 }
 

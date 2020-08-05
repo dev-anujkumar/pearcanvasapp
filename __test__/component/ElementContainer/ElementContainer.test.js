@@ -6,6 +6,7 @@ import configureMockStore from 'redux-mock-store';
 import { comments } from '../../../fixtures/commentPanelData.js'
 import thunk from 'redux-thunk';
 const middlewares = [thunk];
+import config from "../../../src/config/config.js"
 import wipData from './wipData';
 jest.mock('./../../../src/component/SlateWrapper/PageNumberElement', () => {
     return (<div>null</div>)
@@ -28,7 +29,8 @@ jest.mock('./../../../src/constants/utility.js', () => ({
     hasReviewerRole: jest.fn(),
     guid: jest.fn(),
     encodeHTMLInWiris: jest.fn(),
-    matchHTMLwithRegex:jest.fn()
+    matchHTMLwithRegex:jest.fn(),
+    createTitleSubtitleModel:jest.fn()
 }))
 jest.mock('./../../../src/config/config.js', () => ({
     colors : ["#000000", "#003057", "#505759", "#005A70", "#006128"],
@@ -54,6 +56,7 @@ jest.mock('./../../../src/component/ElementContainer/UpdateElements.js', () => {
         }
     }
 })
+
 jest.mock('./../../../src/component/ElementContainer/ElementContainer_Actions.js', () => {
     return { 
         prepareDataForTcmUpdate: jest.fn() ,
@@ -61,6 +64,12 @@ jest.mock('./../../../src/component/ElementContainer/ElementContainer_Actions.js
             return jest.fn()
         },
         updateElement: () => {
+            return jest.fn()
+        },
+        getElementStatus: () => {
+            return jest.fn()
+        },
+        updateFigureData : () => {
             return jest.fn()
         }
     }
@@ -120,8 +129,15 @@ const store = mockStore({
         glossaryFootnoteValue: { "type": "", "popUpStatus": false }
     },
     tcmReducer:{
-        tcmSnapshot:{}
-    }
+        tcmSnapshot:[]
+    },
+    elementStatusReducer: {
+        'urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b': "wip",
+        "urn:pearson:work:32e659c2-e0bb-46e8-9605-b8433aa3836c": "wip",
+        "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635": "wip",
+        "urn:pearson:work:ee2b0c11-75eb-4a21-87aa-578750b5301d": "wip",
+
+    },
 });
 describe('Test for element container component', () => {
     it('Render Element Container without crashing ', () => {      
@@ -133,6 +149,7 @@ describe('Test for element container component', () => {
             "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
         ],
         showBlocker: jest.fn(),
+        tcmData:[{"id":"222","feedback":"asdsa"}]
     };
 
     let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
@@ -206,7 +223,7 @@ describe('Test for element container component', () => {
             expect(elementContainer).toHaveLength(1);
             expect(elementContainerInstance).toBeDefined();
         })
-        it('Render Element Container ----->Figure Element-Image', () => {
+        it('Render Element Container ----->handleBlur', () => {
             let props = {
                 element: wipData.figure,
                 permissions: []
@@ -220,6 +237,248 @@ describe('Test for element container component', () => {
             expect(spyhandleBlur).toHaveBeenCalled()
             spyhandleBlur.mockClear()
         })
+
+        it('Render Element Container ----->handleBlur list', () => {
+            let props = {
+                element: wipData.list,
+                permissions: [],
+                index:1
+            };
+            const elementDiv = document.createElement('div');
+            elementDiv.setAttribute('id', "cypress-1");
+            elementDiv.innerHTML=''
+            document.body.appendChild(elementDiv);
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            const spyhandleBlur  = jest.spyOn(elementContainerInstance, 'handleBlur') 
+            elementContainerInstance.handleBlur();
+            expect(spyhandleBlur).toHaveBeenCalled()
+            spyhandleBlur.mockClear()
+        })
+        it('Render Element Container ----->handleBlur citation', () => {
+            let props = {
+                element: wipData.citation,
+                permissions: [],
+                index:1
+            };
+            
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            const elementDiv = document.createElement('div');
+            elementDiv.setAttribute('id', "cypress-1");
+            elementDiv.innerHTML='<h3 class="pullQuoteNumeroUno">Hello Test</h3>'
+            document.body.appendChild(elementDiv);
+            const spyhandleBlur  = jest.spyOn(elementContainerInstance, 'handleBlur') 
+            elementContainerInstance.handleBlur(true);
+            expect(spyhandleBlur).toHaveBeenCalled()
+            spyhandleBlur.mockClear()
+        })
+        it('Render Element Container ----->handleBlur popup', () => {
+            let props = {
+                element: wipData.popup,
+                permissions: [],
+                index: 1,
+               
+            };
+            let currentElement ={
+                "contentUrn": "urn:pearson:entity:33ef8197-0877-415e-9197-832fa0f34ce1",
+                "elementParentEntityUrn": "urn:pearson:entity:2c5baa8a-e6c9-4669-8206-7ff30ce20878",
+                "elementdata": { "text": "de " },
+                "html": { "text": "<p><label>de&nbsp;</label></p>" },
+                "id": "urn:pearson:work:ed092623-a64a-4e49-a483-16f6f026f141",
+                "metaDataField": "formattedTitleOnly",
+                "type": "element-authoredtext",
+                "versionUrn": "urn:pearson:work:ed092623-a64a-4e49-a483-16f6f026f141"
+
+            }
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            const elementDiv = document.createElement('div');
+            elementDiv.setAttribute('id', "cypress-1-0");
+
+            elementDiv.innerHTML = '<h3 class="pullQuoteNumeroUno">Hello Test</h3>'
+            elementDiv.textContent = ""
+            const elementDivChild = document.createElement('div');
+            elementDivChild.setAttribute('id', "cypress-1-1");
+            elementDivChild.textContent = ""
+            elementDiv.appendChild(elementDivChild);
+            document.body.appendChild(elementDiv);
+            const spyhandleBlur = jest.spyOn(elementContainerInstance, 'handleBlur')
+            elementContainerInstance.handleBlur("", currentElement, 1);
+            expect(spyhandleBlur).toHaveBeenCalled()
+            spyhandleBlur.mockClear()
+        })
+        it('Render Element Container ----->handleBlur citation', () => {
+            let props = {
+                element: wipData.citationgroup,
+                permissions: [],
+                index: 1,
+               
+            };
+            let currentElement ={
+                "contentUrn": "urn:pearson:entity:07705fa5-93c6-4d95-a14f-96bd30e8d044",
+                "elementParentEntityUrn": "urn:pearson:entity:d1b0bca1-154c-44e1-bd6f-2e4013bc6a47",
+                "elementdata": {"text": "dasdd"},
+                "html": {"text": "<p>dasdd</p>"},
+                "id": "urn:pearson:work:2d4298cf-0ef1-444c-9725-016b5f74d5d3",
+                "index": "0",
+                "inputSubType": "NA",
+                "inputType": "AUTHORED_TEXT",
+                "metaDataField": "formattedTitle",
+                "type": "element-authoredtext"
+            }
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            const elementDiv = document.createElement('div');
+            elementDiv.setAttribute('id', "cypress-1-0");
+
+            elementDiv.innerHTML = '<h3 class="pullQuoteNumeroUno">Hello Test</h3>'
+            elementDiv.textContent = ""
+            const elementDivChild = document.createElement('div');
+            elementDivChild.setAttribute('id', "cypress-1-1");
+            elementDivChild.textContent = ""
+            elementDiv.appendChild(elementDivChild);
+            document.body.appendChild(elementDiv);
+            const spyhandleBlur = jest.spyOn(elementContainerInstance, 'handleBlur')
+            elementContainerInstance.handleBlur("", currentElement, 1);
+            expect(spyhandleBlur).toHaveBeenCalled()
+            spyhandleBlur.mockClear()
+        })
+        
+        it('Render Element Container ----->handleBlur poetry', () => {
+            let props = {
+                element: wipData.paragraph,
+                permissions: [],
+                index: 1,
+                parentElement: {
+                    type: "poetry",
+                    contents: {}
+                }
+            };
+
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            const elementDiv = document.createElement('div');
+            elementDiv.setAttribute('id', "cypress-1-0");
+
+            elementDiv.innerHTML = '<h3 class="pullQuoteNumeroUno">Hello Test</h3>'
+            elementDiv.textContent = ""
+            const elementDivChild = document.createElement('div');
+            elementDivChild.setAttribute('id', "cypress-1-1");
+            elementDivChild.textContent = ""
+            elementDiv.appendChild(elementDivChild);
+            document.body.appendChild(elementDiv);
+            const spyhandleBlur = jest.spyOn(elementContainerInstance, 'handleBlur')
+            elementContainerInstance.handleBlur("", "", 1);
+            expect(spyhandleBlur).toHaveBeenCalled()
+            spyhandleBlur.mockClear()
+        })
+        
+        it('Render Element Container ----->handleBlur poetry with creditsarray', () => {
+            let props = {
+                element: wipData.paragraph,
+                permissions: [],
+                index: 1,
+                parentElement: {
+                    type: "poetry",
+                    contents: {
+                        creditsarray: [{
+                            "contentUrn": "urn:pearson:entity:55ce4b5c-af27-4060-a1dc-c3847416cc80",
+                            "elementParentEntityUrn": "urn:pearson:entity:239dc459-58db-4fe1-a389-4e8bd41a9d8a",
+                            "elementdata": { "text": "ds" },
+                            "html": { "text": "<p>ds</p>" },
+                            "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1a",
+                            "parentType": "poetry",
+                            "sectionType": "creditsarray"
+                        }]
+                    }
+                }
+            };
+
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            const elementDiv = document.createElement('div');
+            elementDiv.setAttribute('id', "cypress-1-0");
+
+            elementDiv.innerHTML = '<h3 class="pullQuoteNumeroUno">Hello Test</h3>'
+            elementDiv.textContent = ""
+            const elementDivChild = document.createElement('div');
+            elementDivChild.setAttribute('id', "cypress-1-1");
+            elementDivChild.textContent = ""
+            elementDiv.appendChild(elementDivChild);
+            document.body.appendChild(elementDiv);
+            const spyhandleBlur = jest.spyOn(elementContainerInstance, 'handleBlur')
+            elementContainerInstance.handleBlur("", "", 1);
+            expect(spyhandleBlur).toHaveBeenCalled()
+            spyhandleBlur.mockClear()
+        })
+        it('Render Element Container ----->handleBlurAside', () => {
+            let props = {
+                element: wipData.figure,
+                permissions: []
+            };
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            expect(elementContainer).toHaveLength(1);
+            expect(elementContainerInstance).toBeDefined();
+            const spyhandleBlur  = jest.spyOn(elementContainerInstance, 'handleBlurAside') 
+            elementContainerInstance.handleBlurAside();
+            expect(spyhandleBlur).toHaveBeenCalled()
+            spyhandleBlur.mockClear()
+        })
+        it('Render Element Container ----->labelClickHandler', () => {
+            let props = {
+                element: wipData.figure,
+                permissions: []
+            };
+            let event= {
+                stopPropagation:()=>{}
+            }
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            const spyhandleBlur  = jest.spyOn(elementContainerInstance, 'labelClickHandler') 
+            elementContainerInstance.labelClickHandler(event);
+            expect(spyhandleBlur).toHaveBeenCalled()
+            spyhandleBlur.mockClear()
+        })
+        it('Render Element Container ----->showDeleteElemPopup', () => {
+            let event= {
+                stopPropagation:()=>{}
+            }
+            const spyhandleBlur  = jest.spyOn(elementContainerInstance, 'showDeleteElemPopup') 
+            elementContainerInstance.showDeleteElemPopup(event);
+            expect(spyhandleBlur).toHaveBeenCalled()
+            spyhandleBlur.mockClear()
+        })
+        it('Render Element Container ----->updateFigureData', () => {
+            let props = {
+                element: wipData.figure,
+                permissions: [],
+                updateFigureData:jest.fn()
+            };
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            const spyhandleBlur  = jest.spyOn(elementContainerInstance, 'updateFigureData') 
+            elementContainerInstance.updateFigureData();
+            expect(spyhandleBlur).toHaveBeenCalled()
+            spyhandleBlur.mockClear()
+        })
+        it('Render Element Container ----->Figure Element-Image', () => {
+            let props = {
+                element: wipData.figure,
+                permissions: []
+            };
+            let parentElement = {
+                contentUrn:"67"
+            }
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            const spyhandleBlur  = jest.spyOn(elementContainerInstance, 'createPoetryElements') 
+            elementContainerInstance.createPoetryElements("","","",parentElement);
+            expect(spyhandleBlur).toHaveBeenCalled()
+            spyhandleBlur.mockClear()
+        })
+        
         it('Render Element Container ----->Figure Element-TableImage', () => {
             let props = {
                 element: wipData.table,
@@ -437,14 +696,17 @@ describe('Test for element container component', () => {
             asideData: {},
             parentUrn:"urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464"
         };
+        let event= {
+            stopPropagation:()=>{}
+        }
         let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
         const elementContainerInstance = elementContainer.find('ElementContainer').instance();
         it('Test-handleCommentPopup Function', () => {
             const spyhandleCommentPopup = jest.spyOn(elementContainerInstance, 'handleCommentPopup')
-            elementContainerInstance.handleCommentPopup(true);
+            elementContainerInstance.handleCommentPopup(true,event);
             elementContainerInstance.forceUpdate();
             elementContainer.update();
-            expect(spyhandleCommentPopup).toHaveBeenCalledWith(true)
+            expect(spyhandleCommentPopup).toHaveBeenCalledWith(true,event)
             expect(elementContainerInstance.state.popup).toBe(true)
             expect(elementContainerInstance.state.showDeleteElemPopup).toBe(false)
             expect(elementContainerInstance.state.comment).toBe("")
@@ -482,7 +744,7 @@ describe('Test for element container component', () => {
                 asideData: {},
                 parentUrn:"urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464"
             };
-            elementContainerInstance.saveNewComment();
+            elementContainerInstance.saveNewComment({stopPropagation:()=>{}},true);
             expect(spysaveNewComment).toHaveBeenCalled()
             expect(elementContainerInstance.state.popup).toBe(false)
             spysaveNewComment .mockClear()
@@ -502,6 +764,9 @@ describe('Test for element container component', () => {
             asideData: {},
             parentUrn:"urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464"
         };
+        let event= {
+            stopPropagation:()=>{}
+        }
         let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
         const elementContainerInstance = elementContainer.find('ElementContainer').instance();
         it('Test-openGlossaryFootnotePopUp  Function', () => {
@@ -521,9 +786,9 @@ describe('Test for element container component', () => {
             expect(spyopenAssetPopoverPopUp).toHaveBeenCalledWith(true)
             spyopenAssetPopoverPopUp.mockClear()
         })
-        it('Test-showDeleteElemPopup  Function', () => {
+        xit('Test-showDeleteElemPopup  Function', () => {
             const spyshowDeleteElemPopup = jest.spyOn(elementContainerInstance, 'showDeleteElemPopup')
-            elementContainerInstance.showDeleteElemPopup(true);
+            elementContainerInstance.showDeleteElemPopup(event,true,true);
             elementContainerInstance.forceUpdate();
             elementContainer.update();
             expect(spyshowDeleteElemPopup).toHaveBeenCalledWith(true)
@@ -577,6 +842,62 @@ describe('Test for element container component', () => {
         it('Test-renderPaletteList  Function', () => {
             const spyrenderPaletteList = jest.spyOn(elementContainerInstance, 'renderPaletteList')
             elementContainerInstance.renderPaletteList();
+            elementContainerInstance.forceUpdate();
+            elementContainer.update();
+            expect(spyrenderPaletteList).toHaveBeenCalled()
+            spyrenderPaletteList.mockClear()
+        })
+        it('Test-renderColorPaletteButton if  Function', () => {
+            let permissions= [
+                "elements_add_remove"
+            ],
+            element={
+                type:"openerelement"
+            }
+            const spyrenderPaletteList = jest.spyOn(elementContainerInstance, 'renderColorPaletteButton')
+            elementContainerInstance.renderColorPaletteButton(element,permissions);
+            elementContainerInstance.forceUpdate();
+            elementContainer.update();
+            expect(spyrenderPaletteList).toHaveBeenCalled()
+            spyrenderPaletteList.mockClear()
+        })
+        it('Test-renderColorTextButton  if  Function', () => {
+            let permissions= [
+                "elements_add_remove"
+            ],
+            element={
+                type:"openerelement"
+            }
+            const spyrenderPaletteList = jest.spyOn(elementContainerInstance, 'renderColorTextButton')
+            elementContainerInstance.renderColorTextButton(element,permissions);
+            elementContainerInstance.forceUpdate();
+            elementContainer.update();
+            expect(spyrenderPaletteList).toHaveBeenCalled()
+            spyrenderPaletteList.mockClear()
+        })
+        it('Test-renderColorPaletteButton else  Function', () => {
+            let permissions= [
+                "elements_add_remove"
+            ],
+            element={
+                type:""
+            }
+            const spyrenderPaletteList = jest.spyOn(elementContainerInstance, 'renderColorPaletteButton')
+            elementContainerInstance.renderColorPaletteButton(element,permissions);
+            elementContainerInstance.forceUpdate();
+            elementContainer.update();
+            expect(spyrenderPaletteList).toHaveBeenCalled()
+            spyrenderPaletteList.mockClear()
+        })
+        it('Test-renderColorTextButton else  Function', () => {
+            let permissions= [
+                "elements_add_remove"
+            ],
+            element={
+                type:""
+            }
+            const spyrenderPaletteList = jest.spyOn(elementContainerInstance, 'renderColorTextButton')
+            elementContainerInstance.renderColorTextButton(element,permissions);
             elementContainerInstance.forceUpdate();
             elementContainer.update();
             expect(spyrenderPaletteList).toHaveBeenCalled()
@@ -646,6 +967,32 @@ describe('Test for element container component', () => {
             expect(spyselectTextColor).toHaveBeenCalledWith(e)
             spyselectTextColor.mockClear()
         })
+        it('Test-toggleColorPaletteList  Function', () => {
+            elementContainerInstance.setState({
+                showColorPaletteList: false
+            })
+            elementContainerInstance.forceUpdate();
+            elementContainer.update();
+            config.savingInProgress =true
+            const spytoggleColorPaletteList  = jest.spyOn(elementContainerInstance, 'toggleColorPaletteList')
+            elementContainerInstance.toggleColorPaletteList();
+            expect(spytoggleColorPaletteList).toHaveBeenCalled()
+            expect(elementContainerInstance.state.showColorPaletteList).toBe(false)
+            spytoggleColorPaletteList.mockClear()
+        })
+        it('Test-toggleColorTextList  Function', () => {
+            elementContainerInstance.setState({
+                showColorTextList: false
+            })
+            config.savingInProgress =true
+            elementContainerInstance.forceUpdate();
+            elementContainer.update();
+            const spytoggleColorTextList  = jest.spyOn(elementContainerInstance, 'toggleColorTextList')
+            elementContainerInstance.toggleColorTextList();
+            expect(spytoggleColorTextList).toHaveBeenCalled()
+            expect(elementContainerInstance.state.showColorTextList).toBe(false)
+            spytoggleColorTextList.mockClear()
+        })
     })
     describe('Test-Other Functions', () => {
         let props = {
@@ -662,6 +1009,9 @@ describe('Test for element container component', () => {
             index:0,
             deleteElement: jest.fn()
         };
+        let event= {
+            stopPropagation:()=>{}
+        }
         let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
         const elementContainerInstance = elementContainer.find('ElementContainer').instance();     
         const elementDiv = document.createElement('div');
@@ -670,17 +1020,52 @@ describe('Test for element container component', () => {
         elementDivChild.setAttribute('className','tox-toolbar');
         elementDiv.appendChild(elementDivChild);
         document.body.appendChild(elementDiv);
+
         it('Test-handleFocus Function- for paragraph element', () => {
             elementContainerInstance.setState({
                 sectionBreak: true
             })
             const spyhandleFocus  = jest.spyOn(elementContainerInstance, 'handleFocus')
-            elementContainerInstance.handleFocus();
+            elementContainerInstance.handleFocus("","",event,"");
             elementContainerInstance.forceUpdate();
             elementContainer.update()
             expect(spyhandleFocus).toHaveBeenCalled()
             spyhandleFocus.mockClear()
-        }) 
+        })
+        it('Test-handleFocus Function- for opener element', () => {
+            let props = {
+                element:{
+                    type:"openerelement",
+                    id:"890"
+                }
+            }
+        let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+        const elementContainerInstance = elementContainer.find('ElementContainer').instance(); 
+            elementContainerInstance.setState({
+                sectionBreak: true
+            })
+            const spyhandleFocus  = jest.spyOn(elementContainerInstance, 'handleFocus')
+            elementContainerInstance.handleFocus("updateFromC2","",event,"");
+            elementContainerInstance.forceUpdate();
+            elementContainer.update()
+            expect(spyhandleFocus).toHaveBeenCalled()
+            spyhandleFocus.mockClear()
+        })
+        it('Test-handleFocus Function- for paragraph element', () => {
+            elementContainerInstance.setState({
+                sectionBreak: true
+            })
+            const spyhandleFocus  = jest.spyOn(elementContainerInstance, 'handleFocus')
+            let showHideObj = {
+                currentElement:"P",
+                index:1
+            }
+            elementContainerInstance.handleFocus('updateFromC2',showHideObj,event,"");
+            elementContainerInstance.forceUpdate();
+            elementContainer.update()
+            expect(spyhandleFocus).toHaveBeenCalled()
+            spyhandleFocus.mockClear()
+        })
         it('Test-handleFocus Function- for c2mdeia update-other elements', () => {
             const spyhandleFocus  = jest.spyOn(elementContainerInstance, 'handleFocus')
             elementContainerInstance.handleFocus(true);
@@ -692,7 +1077,7 @@ describe('Test for element container component', () => {
 
         it('Test-handleTCM Function', () => {
             const spyhandleTCM  = jest.spyOn(elementContainerInstance, 'handleTCM')
-            elementContainerInstance.handleTCM();
+            elementContainerInstance.handleTCM(event);
             expect(spyhandleTCM).toHaveBeenCalled()
             spyhandleTCM.mockClear()
         }) 
@@ -713,7 +1098,7 @@ describe('Test for element container component', () => {
                 sectionBreak: true
             })
             const spydeleteElement  = jest.spyOn(elementContainerInstance, 'deleteElement')
-            elementContainerInstance.deleteElement();
+            elementContainerInstance.deleteElement(event);
             elementContainerInstance.forceUpdate();
             elementContainer.update()
             expect(spydeleteElement).toHaveBeenCalled()
@@ -747,7 +1132,7 @@ describe('Test for element container component', () => {
                 sectionBreak: true
             })
             const spydeleteElement  = jest.spyOn(elementContainerInstance, 'deleteElement')
-            elementContainerInstance.deleteElement();
+            elementContainerInstance.deleteElement(event);
             elementContainerInstance.forceUpdate();
             elementContainer.update()
             expect(spydeleteElement).toHaveBeenCalled()

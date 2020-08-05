@@ -4,7 +4,7 @@ import ApiResults  from '../../../../src/component/AssessmentSlateCanvas/learnin
 import {tempFiguresForResults,disciplines,apiResultObject,selectedResult} from '../../../../fixtures/learningTool'
 import { spy, stub } from 'sinon';
 const selectedFigure = new stub();
-describe('Testing Figure Card component with props', () => {
+xdescribe('Testing Figure Card component with props', () => {
     let props = {
         apiResponseData: apiResultObject,
         selectedResult:selectedResult

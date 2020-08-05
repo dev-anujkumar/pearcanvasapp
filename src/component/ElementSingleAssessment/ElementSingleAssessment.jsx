@@ -13,8 +13,9 @@ import RootCiteTdxComponent from '../AssessmentSlateCanvas/assessmentCiteTdx/Roo
 import { FULL_ASSESSMENT_CITE, FULL_ASSESSMENT_TDX } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import RootSingleAssessmentComponent from '../AssessmentSlateCanvas/singleAssessmentCiteTdx/RootSingleAssessmentComponent.jsx'
 import { setCurrentCiteTdx, setCurrentInnerCiteTdx, assessmentSorting, specialCharacterDecode } from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
-import RootElmSingleAssessment from '../AssessmentSlateCanvas/elm/RootElmSingleComponent.jsx'
+import RootElmComponent from '../AssessmentSlateCanvas/elm/RootElmComponent.jsx';
 import { setAssessmentTitle, setAssessmentUsageType, setAssessmentProperties } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
+import { resetElmStore } from '../AssessmentSlateCanvas/elm/Actions/ElmActions.js';
 
 /*** @description - ElementSingleAssessment is a class based component. It is defined simply to make a skeleton of the assessment-type element .*/
 
@@ -67,9 +68,9 @@ class ElementSingleAssessment extends Component {
         })
         let newElement = localStorage.getItem('newElement');
         if (newElement) {
+            localStorage.removeItem('newElement');
             setTimeout(() => {
-                this.props.handleFocus();
-                localStorage.removeItem('newElement');
+                this.handleAssessmentFocus();
             }, 0)
         }
     }
@@ -146,7 +147,9 @@ static getDerivedStateFromProps(nextProps, prevState) {
     /*** @description - This function is to handle Focus on the Assessment element on click*/
     
     handleAssessmentFocus = (event) => {
-        event.stopPropagation();
+        if(event){
+            event.stopPropagation();
+        }
         this.props.handleFocus();
     }
     /*** @description - This function is to handle Blur on the Assessment element on blur*/       
@@ -217,6 +220,7 @@ static getDerivedStateFromProps(nextProps, prevState) {
         hideTocBlocker(false);
         disableHeader(false);
         this.props.showBlocker(false);
+        this.props.resetElmStore();
     }
 
     /***
@@ -307,7 +311,7 @@ static getDerivedStateFromProps(nextProps, prevState) {
                 {this.renderAssessmentType(model, index)}
                 {this.state.showAssessmentPopup? <RootCiteTdxComponent openedFrom = {'singleSlateAssessment'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.elementType=="cite"?FULL_ASSESSMENT_CITE:FULL_ASSESSMENT_TDX} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAsseessmentUsageType} parentPageNo={this.state.parentPageNo} isReset={this.state.isReset} resetPage={this.resetPage} AssessmentSearchTitle={this.AssessmentSearchTitle} searchTitle={this.state.searchTitle} filterUUID={this.state.filterUUID} />:""}
                 {this.state.showSinglePopup ? <RootSingleAssessmentComponent setCurrentAssessment ={this.state.setCurrentAssessment} activeAssessmentType={this.state.activeAssessmentType} openedFrom = {'singleSlateAssessmentInner'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.activeAssessmentType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAssessmentUsageType} assessmentNavigateBack = {this.assessmentNavigateBack} resetPage={this.resetPage}/>:""}     
-                {this.state.showElmComponent? <RootElmSingleAssessment activeAssessmentType={this.state.elementType} closeElmWindow={() => this.closeElmWindow()} addPufFunction={this.addPufAssessment} activeUsageType={this.state.activeAssessmentUsageType}/> : ''}
+                {this.state.showElmComponent? <RootElmComponent activeAssessmentType={this.state.elementType} closeElmWindow={() => this.closeElmWindow()} addPufFunction={this.addPufAssessment} activeUsageType={this.state.activeAssessmentUsageType} elementType={model.figuretype}/> : ''}
             </div>
         );
     }
@@ -346,7 +350,8 @@ const mapStateToProps = state => {
 const mapActionToProps = {
     setCurrentCiteTdx: setCurrentCiteTdx,
     setCurrentInnerCiteTdx: setCurrentInnerCiteTdx,
-    assessmentSorting: assessmentSorting
+    assessmentSorting: assessmentSorting,
+    resetElmStore: resetElmStore
 }
 
 

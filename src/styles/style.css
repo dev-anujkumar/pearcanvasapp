@@ -129,6 +129,10 @@ table p {
     display:none !important;
 }
 
+.container-multi-column-group.wider-60-40.column-1 .element-container.h1 .cypress-editable.place-holder::before, .container-multi-column-group.text-width-60-40.column-1 .element-container.h1 .cypress-editable.place-holder::before {
+    font-size: 23px !important;
+    margin-top: -9px !important;
+}
 .element-container.h1 .cypress-editable.place-holder::before {
     font-size: 23px !important;
     margin-top: 2px !important;
@@ -317,7 +321,9 @@ abbr[title="Slate Link"] {
     padding-right: 15px;
 }
 
-abbr[title="Slate Link"]::after {
+abbr[title="Slate Link"]:not(.sup):not(.sub)::after,
+abbr[title="Slate Link"] sub::after,
+abbr[title="Slate Link"] sup::after {
     content: url('./../images/PageLink/link.svg');
     height: 10px;
     bottom: 1px;

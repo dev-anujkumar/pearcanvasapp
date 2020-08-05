@@ -96,15 +96,6 @@ function CommunicationChannel(WrappedComponent) {
                 case 'disableNext':
                     config.disableNext = true;//message.disableNext;
                     break;
-                // case 'swappedIS':
-                // case 'ISDeleted':
-                // case 'TocLoader':
-                //     {
-                //         /**
-                //          * TO BE IMPLEMENTED
-                //          *  */
-                //     }
-                //     break;
                 case 'refreshElementWithTable':
                     {
                         this.setTableData(message.elementId, message.updatedData);
@@ -122,9 +113,6 @@ function CommunicationChannel(WrappedComponent) {
                         }
 
                     }
-                    break;
-                case 'updateSlateTitleByID':
-                    this.updateSlateTitleByID(message);
                     break;
                 case 'projectDetails':
                     config.tcmStatus = message.tcm.activated;
@@ -237,19 +225,24 @@ function CommunicationChannel(WrappedComponent) {
                 elementId = linkData.elementId || "";
                 pageId = linkData.pageId || "";
 
-                let elementContainer = document.querySelector('.element-container[data-id="' + linkData.elementId + '"]');
+                let elementContainer = document.querySelector('.element-container[data-id="' + linkData.elementId + '"]');              
                 activeElement = elementContainer.querySelectorAll('.cypress-editable');
                 activeElement.forEach((item) => {
-                    // console.log('active element:::', item, item.classList.contains('mce-content-body'));
                     if (item.classList.contains('mce-content-body') || !item.classList.contains('place-holder')) {
-                        if (item.querySelector('#' + linkData.linkId)) {
+                        if (item.querySelector(`[asset-id="${linkData.linkId}"]`) || item.querySelector('#' + linkData.linkId)) {
                             tinymce.activeEditor.undoManager.transact(() => {
                                 item.focus();
                                 editor = item;
 
-                                linkNode = item.querySelector('#' + linkData.linkId);
+                                let elementTag = "";
+                                linkNode = item.querySelector(`[asset-id="${linkData.linkId}"]`) ? item.querySelector(`[asset-id="${linkData.linkId}"]`) : item.querySelector('#' + linkData.linkId);
+                                if(linkNode.classList.contains('sup')) {
+                                    elementTag = 'sup';
+                                } else if(linkNode.classList.contains('sub')) {
+                                    elementTag = 'sub';
+                                }
                                 linkHTML = linkNode.innerHTML || '';
-                                linkNode.outerHTML = '<abbr title="Slate Link" class="Pearson-Component AssetPopoverTerm" id="' + linkId + '" element-id="' + elementId + '" data-uri="' + pageId + '">' + linkHTML + '</abbr>';
+                                linkNode.outerHTML = '<abbr title="Slate Link" class="Pearson-Component AssetPopoverTerm ' + elementTag + '" asset-id="' + linkId + '" element-id="' + elementId + '" data-uri="' + pageId + '">' + linkHTML + '</abbr>';
                                 if (/(<abbr [^>]*id="page-link-[^"]*"[^>]*>.*<\/abbr>)/gi.test(linkNode.outerHTML)) {
                                     linkNotification = "Link updated to slate '" + linkData.pageName + "'.";
                                 } else {
@@ -264,13 +257,12 @@ function CommunicationChannel(WrappedComponent) {
                 let elementContainer = document.querySelector('.element-container[data-id="' + linkData.elementId + '"]');
                 activeElement = elementContainer.querySelectorAll('.cypress-editable');
                 activeElement.forEach((item) => {
-                    // console.log('active element:::', item, item.classList.contains('mce-content-body'));
                     if (item.classList.contains('mce-content-body') || !item.classList.contains('place-holder')) {
-                        if (item.querySelector('#' + linkData.linkId)) {
+                        if (item.querySelector(`[asset-id="${linkData.linkId}"]`) || item.querySelector('#' + linkData.linkId)) {
                             tinymce.activeEditor.undoManager.transact(() => {
                                 item.focus();
                                 editor = item;
-                                linkNode = item.querySelector('#' + linkData.linkId);
+                                linkNode = item.querySelector(`[asset-id="${linkData.linkId}"]`) ? item.querySelector(`[asset-id="${linkData.linkId}"]`) : item.querySelector('#' + linkData.linkId);
                                 linkHTML = linkNode.innerHTML || '';
                                 linkNode.outerHTML = linkHTML;
                                 if (linkData.link == "unlink") {
@@ -285,9 +277,9 @@ function CommunicationChannel(WrappedComponent) {
             document.getElementById('link-notification').innerText = linkNotification;
             sendDataToIframe({ 'type': TocToggle, 'message': { "open": false } });
 
-            setTimeout(async () => {
+            setTimeout(() => {
                 if (editor) {
-                    await editor.click();
+                    editor.click();
                     editor.blur();
                 }
             }, 500);
@@ -590,27 +582,6 @@ function CommunicationChannel(WrappedComponent) {
                 tocDeleteMessage: newMessage
             })
         }
-
-        updateSlateTitleByID = (messageObj) => {
-            if (messageObj.slateType && (messageObj.slateType === 'section' || messageObj.slateType === 'assessment')) {
-                this.updateTitleSlate(messageObj);
-            }
-            else if (messageObj.slateType === 'container-introduction') {
-                if (this.props.introObject.isCO === false && messageObj.slateID === this.props.introObject.introSlate) {
-                    this.updateTitleSlate(messageObj);
-                }
-                else {
-                    this.fetchOpenerData(messageObj);
-                }
-            }
-        }
-
-        fetchOpenerData = (messageObj) => {
-            /**
-             * TO BE IMPLEMENTED
-             *  */
-        }
-
         updateTitleSlate = (messageObj) => {
             /**
              * TO BE IMPLEMENTED

@@ -22,7 +22,10 @@ let initialState = {
         citeErrorFlag:"",
         assessmenterrFlag:false,
 
- },
+    },
+    appStore: {
+        usageTypeListData: { usageTypeList: ["Quiz", "Concept Check", "Test"] }
+    }
 };
 let store = mockStore(initialState);
 jest.mock('../../../src/js/toggleLoader', () => ({
