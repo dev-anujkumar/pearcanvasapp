@@ -14,7 +14,9 @@
  .id-info {
     padding: 5px 0 10px;
 } 
-
+.interactive-title{
+    overflow-wrap: anywhere;
+}
 .pearson-component:not(.showHide) {
     cursor: copy;
 }

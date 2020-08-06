@@ -289,10 +289,10 @@ export const setInteractiveType = (asset) => {
         label: ""
     }
     let oldInteractiveTypes = ['userControlledAnimation', 'imageSlideShow', 'videoSlideShow'];
-    const { interactiveType } = asset.additionalMetadata;/** label key might be used in future */
+    const { interactiveType, label } = asset.additionalMetadata;
 
-    interactiveTypeData.label = oldInteractiveTypes.indexOf(interactiveType) > -1 ? interactiveTypeList[interactiveType].wipValue : interactiveType;
+    interactiveTypeData.label = oldInteractiveTypes.indexOf(interactiveType) > -1 ? interactiveTypeList[interactiveType].label : label;
     interactiveTypeData.wipValue = oldInteractiveTypes.indexOf(interactiveType) > -1 ? interactiveTypeList[interactiveType].wipValue : interactiveType;
 
-    return interactiveTypeData
+    return interactiveTypeData;
 }
