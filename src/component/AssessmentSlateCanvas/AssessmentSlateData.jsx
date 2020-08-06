@@ -333,7 +333,7 @@ import { setAssessmentUsageType } from '../AssessmentSlateCanvas/AssessmentActio
         let changeTypeValue;
         let title = this.props.assessmentItemTitle? this.props.assessmentItemTitle:this.props.learningTemplateLabel;
         if(this.state.activeAssessmentType === LEARNING_APP_TYPE || this.state.activeAssessmentType === LEARNING_TEMPLATE){
-            showID = 'Template ID: ' + (this.props.model.elementdata && this.props.model.elementdata.templateid ? this.props.model.elementdata.templateid:"");
+            showID = 'Template ID: ' + (this.props.model && this.props.model.elementdata && this.props.model.elementdata.templateid ? this.props.model.elementdata.templateid:"");
             assessmentTypeValue="Learning App";
             changeTypeValue="Change Learning App"
         }else {

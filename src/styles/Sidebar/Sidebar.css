@@ -44,7 +44,7 @@
     margin: 0 0 0px 29px;
     outline: none;
     position: relative;
-    /* cursor: pointer; */
+    cursor: pointer;
     border-bottom: 1px solid #e0e0e0;
     -webkit-appearance: none; 
     -moz-appearance: none;
@@ -171,4 +171,8 @@
     margin-top: 16px;
     display: inline-flex;
     width: 100%;
+}
+.pod-value{
+    display: inline-block;
+    width: 28px;
 }

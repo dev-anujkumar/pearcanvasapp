@@ -570,7 +570,7 @@ export class TinyMceEditor extends Component {
         let parentNode = true;
 
         do {
-            if(el.parentNode.tagName && el.parentNode.tagName !== 'LI' && el.parentNode.tagName !== 'P' && el.parentNode.tagName !== 'H3' && el.parentNode.tagName !== 'BLOCKQUOTE') {
+            if(el.parentNode && el.parentNode.tagName && el.parentNode.tagName !== 'LI' && el.parentNode.tagName !== 'P' && el.parentNode.tagName !== 'H3' && el.parentNode.tagName !== 'BLOCKQUOTE') {
                 if(el.nodeName == 'ABBR' || (el.parentNode && el.parentNode.tagName === 'ABBR')) {
                     parentNode = false;
                     isAbbr = true;
@@ -579,11 +579,17 @@ export class TinyMceEditor extends Component {
                 }
             } else {
                 parentNode = false;
+                if(el.nodeName == 'ABBR') {
+                    isAbbr = true;
+                }
             }
         } while(parentNode);
-        
         if(target === 'elm' && isAbbr) {
-            return el.parentNode;
+            if(el.nodeName == 'ABBR') {
+                return el;
+            } else {
+                return el.parentNode;
+            }
         } else if(target === 'status') {
             return isAbbr;
         }
