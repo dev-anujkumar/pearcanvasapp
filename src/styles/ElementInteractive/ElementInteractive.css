@@ -14,7 +14,9 @@
  .id-info {
     padding: 5px 0 10px;
 } 
-
+.mmi-elm-interactive-title{
+    word-break: break-all;
+}
 .pearson-component:not(.showHide) {
     cursor: copy;
 }
