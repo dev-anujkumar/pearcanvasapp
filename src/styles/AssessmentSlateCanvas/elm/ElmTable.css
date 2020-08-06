@@ -28,6 +28,7 @@
   }
   .row-class .assessment-container{
     cursor: pointer;
+    padding-left: 6px !important;
   }
   .td-class.elm-text-assesment{
     text-overflow: ellipsis;
@@ -264,7 +265,7 @@ width: 50%;
   margin-top: -2px;
 }
 .elm-interactive .td-class.assessment-container{
-  padding: 10px 8px !important;
+  padding: 10px 6px !important;
 }
 
 .elm-interactive span.elm-data-span{
