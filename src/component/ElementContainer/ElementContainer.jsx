@@ -1441,7 +1441,6 @@ const mapStateToProps = (state) => {
         allComments: state.commentsPanelReducer.allComments,
         showHideId: state.appStore.showHideId,
         tcmData: state.tcmReducer.tcmSnapshot,
-        // elementStatus: state.elementStatusReducer
     }
 }
 

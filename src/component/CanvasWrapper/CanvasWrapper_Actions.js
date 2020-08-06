@@ -437,6 +437,11 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                             type: SET_ACTIVE_ELEMENT,
                             payload: {}
                         });
+
+                        let slateWrapperNode = document.getElementById('slateWrapper');
+                        if (slateWrapperNode) {
+                            slateWrapperNode.scrollTop = 0;
+                        }
                     }
                     //}
                     // config.isFetchSlateInProgress = false;

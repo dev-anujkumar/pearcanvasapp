@@ -587,8 +587,7 @@ const mapStateToProps = state => {
         activeElement: state.appStore.activeElement,
         showModule:state.metadataReducer.showModule,
         permissions : state.appStore.permissions,
-        showHideObj:state.appStore.showHideObj,
-        // elementStatus: state.elementStatusReducer
+        showHideObj:state.appStore.showHideObj
     };
 };
 

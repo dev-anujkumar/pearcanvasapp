@@ -1831,7 +1831,7 @@ export class TinyMceEditor extends Component {
                 */
                 let tempContainerHtml = tinyMCE.$("#" + activeElementObj.join("-")).html();
                 tempContainerHtml = tempContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
-                let tinymceActiveEditorNode = document.getElementById(tinymce.activeEditor.id)
+                let tinymceActiveEditorNode = document.getElementById(tinymce.activeEditor && tinymce.activeEditor.id)
                 let isBlockQuote = tinymceActiveEditorNode && tinymceActiveEditorNode.classList.contains('blockquote-editor');
                 if (!isBlockQuote) {
                     let activeElementNode = document.getElementById(activeElementObj.join("-"))
@@ -1884,7 +1884,7 @@ export class TinyMceEditor extends Component {
                 if (this.editorRef.current) {
                     if (!(this.props.element && this.props.element.figuretype === "codelisting" && this.props.element.figuredata.programlanguage && this.props.element.figuredata.programlanguage === "Select")) {
                         this.editorRef.current.style.caretColor = 'transparent';
-                        // this.editorRef.current.focus();
+                        this.editorRef.current.focus();
                     } else {
                         this.props.handleEditorFocus("", null, null)
                     }
@@ -1930,10 +1930,10 @@ export class TinyMceEditor extends Component {
                         */
                         this.editorRef.current.style.caretColor = "rgb(0, 0, 0)";
                         if (!newElement) {
-                            /* this.fromtinyInitBlur = true;
+                            this.fromtinyInitBlur = true;
                             this.editorRef.current.focus();
                             this.editorRef.current.blur();
-                            this.fromtinyInitBlur = false; */
+                            this.fromtinyInitBlur = false;
                         }
                     }
                 })

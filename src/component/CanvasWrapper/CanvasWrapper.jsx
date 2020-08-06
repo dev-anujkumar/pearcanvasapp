@@ -55,10 +55,6 @@ export class CanvasWrapper extends Component {
         if(prevState.slateRefreshStatus !== nextProps.slateRefreshStatus) {
             sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus:nextProps.slateRefreshStatus} }); 
         }
-        if (Object.keys(nextProps.slateLevelData).length) {
-            let slateWrapperNode = document.getElementById('slateWrapper');
-            if (slateWrapperNode) slateWrapperNode.scrollTop = 0;
-        }
         return null;    
      }
 

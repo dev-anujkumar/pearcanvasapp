@@ -977,7 +977,7 @@ const cascadeElement = (parentElement, dispatch, parentElementIndex) => {
 export const getElementStatus = (elementWorkId, index) => async (dispatch) => {
     let apiUrl = `${config.NARRATIVE_API_ENDPOINT}v2/${elementWorkId}`
     const resp = await fetch(apiUrl, {
-        method: 'GET', // *GET, POST, PUT, DELETE, etc.
+        method: 'GET',
         headers: {
             'Content-Type': 'application/json',
             'PearsonSSOSession': config.ssoToken,
@@ -989,13 +989,6 @@ export const getElementStatus = (elementWorkId, index) => async (dispatch) => {
     let splittedString = statusString.split("/")
     let elementVersioningStatus = splittedString[splittedString.length - 1]
     config.elementStatus[elementWorkId] = elementVersioningStatus
-    /* dispatch({
-        type: "SET_ELEMENT_STATUS",
-        payload: {
-            elementWorkId,
-            elementVersioningStatus
-        }
-    }) */
 }
 
 /**
