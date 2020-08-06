@@ -237,7 +237,7 @@ function CommunicationChannel(WrappedComponent) {
                 elementId = linkData.elementId || "";
                 pageId = linkData.pageId || "";
 
-                let elementContainer = document.querySelector('.element-container[data-id="' + linkData.elementId + '"]');
+                let elementContainer = document.querySelector('.element-container[data-id="' + linkData.elementId + '"]');              
                 activeElement = elementContainer.querySelectorAll('.cypress-editable');
                 activeElement.forEach((item) => {
                     if (item.classList.contains('mce-content-body') || !item.classList.contains('place-holder')) {
@@ -289,9 +289,9 @@ function CommunicationChannel(WrappedComponent) {
             document.getElementById('link-notification').innerText = linkNotification;
             sendDataToIframe({ 'type': TocToggle, 'message': { "open": false } });
 
-            setTimeout(async () => {
+            setTimeout(() => {
                 if (editor) {
-                    await editor.click();
+                    editor.click();
                     editor.blur();
                 }
             }, 500);

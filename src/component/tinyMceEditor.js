@@ -579,11 +579,17 @@ export class TinyMceEditor extends Component {
                 }
             } else {
                 parentNode = false;
+                if(el.nodeName == 'ABBR') {
+                    isAbbr = true;
+                }
             }
         } while(parentNode);
-        
         if(target === 'elm' && isAbbr) {
-            return el.parentNode;
+            if(el.nodeName == 'ABBR') {
+                return el;
+            } else {
+                return el.parentNode;
+            }
         } else if(target === 'status') {
             return isAbbr;
         }

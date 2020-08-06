@@ -1483,7 +1483,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
         spylearningObjectiveDropdown.mockClear()
     });
     describe('Test-18-Method--16--addAssetPopover', () => {
-        it('Test-18.1-Method--16--addAssetPopover-Non Poetry Elements', () => {
+        xit('Test-18.1-Method--16--addAssetPopover-Non Poetry Elements', () => {
             window.getSelection = () => {
                 return {
                     removeAllRanges: () => { },
@@ -1508,7 +1508,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                                         outerHTML: ''
                                     }]
                                 }]
-                            }
+                            }                           
                         }
                     }
                 }

@@ -209,11 +209,11 @@ describe('Utils file function testing', () => {
     })
 
     it('Testing handleFormattingTags function', () => {
-        let span = document.createElement("SPAN");
-        span.classList.add('poetryLine');
-        let bold = document.createElement("STRONG");
-        bold.innerText = 'Testing';
-        span.appendChild(bold);
+        let htmlString = '<div><span class="poetryLine"><strong>Testing</strong></span></div>';
+        let parser = new DOMParser();
+        let htmlDoc = parser.parseFromString(htmlString, 'text/html');
+        let span = htmlDoc.getElementsByTagName("span")[0];
+        let divTag = htmlDoc.getElementsByTagName("div")[0];
         let editor = {
             selection: {
                 getContent: () => {
@@ -252,7 +252,7 @@ describe('Utils file function testing', () => {
             }
         }
         spanHandlers.handleFormattingTags(editor, 'testid', 'div', childNodes, 'poetryLine', range);
-        expect(JSON.stringify(globalDiv)).toEqual("{}");
+        expect(divTag.innerHTML).toEqual('<span class=\"poetryLine\"><strong>Testing</strong></span>');
     })
 
     it('Testing handleExtraTags function', () => {
