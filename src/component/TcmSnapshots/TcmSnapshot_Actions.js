@@ -94,15 +94,34 @@ export const sendElementTcmSnapshot = async (snapshotData) => {
 */
 export const getLatestVersion = async (containerUrn) => {
     try {
-        let data = await axios.get(`${config.AUDIO_NARRATION_URL}context/v2/${config.projectUrn}/container/${containerUrn}/versions`, {
+        const response = await axios.get(`${config.AUDIO_NARRATION_URL}context/v2/${config.projectUrn}/container/${containerUrn}/versions`, {
             headers: {
                 "Content-Type": "application/json",
                 "PearsonSSOSession": config.ssoToken
             }
         })
-        return data.data[0];
+        return response.data[0];
     } catch (err) {
         console.log('Error in getting version', err)
+    }
+}
+
+/**
+     * @description - Get slate linking details for snapshots 
+     * @param {String} containerUrn | Container Entity URN
+     * @returns {Object} - Slate Linking label and manifest urn
+*/
+export const slateLinkDetails = async (containerUrn) => {
+    try {
+        const response = await axios.get(`${config.AUDIO_NARRATION_URL}context/v2/${config.projectUrn}/container/${containerUrn}`, {
+            headers: {
+                "Content-Type": "application/json",
+                "PearsonSSOSession": config.ssoToken
+            }
+        })
+        return response.data;
+    } catch (err) {
+        console.log('Error in getting slate link data', err)
     }
 }
 

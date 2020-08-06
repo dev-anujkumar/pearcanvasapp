@@ -5,6 +5,7 @@
 
 /**************************Import Modules**************************/
 import { getCurrentlyLinkedImage } from '../AssetPopover/AssetPopover_Actions.js';
+import {slateLinkDetails} from '../TcmSnapshots/TcmSnapshot_Actions.js'
 /**
  * @function setSemanticsSnapshots
  * @description-This function is to set the snapshots for semantics in an element
@@ -151,22 +152,30 @@ const prepareFootnoteSnapshotContent = (actionStatus, footnoteWipList, footnoteH
 */
 export const prepareAssetPopoverSnapshotContent = async (assetsList) => {
     let assetPopoverSnap = []
-    if(assetsList && assetsList.length){
+    if (assetsList && assetsList.length) {
         await Promise.all(assetsList.map(async assetsItem => {
             let assetId = document.querySelector('abbr[data-uri="' + assetsItem.linkid + '"').getAttribute("asset-id");
-           await getCurrentlyLinkedImage(assetsItem.linkid, (resCurrentlyLinkedImageData) => {
-                assetPopoverSnap.push({
-                    assetid: assetId,
-                    linkID: resCurrentlyLinkedImageData.id,
-                    label: resCurrentlyLinkedImageData.title,
-                    type:"Asset Popover"
+            let data = {
+                assetid: assetId,
+                type: assetsItem.internallinktype === "slate" ? "Slate Link" : "Asset Popover"
+            }
+            if (assetsItem.internallinktype === "slate") {
+                let slateLink = await slateLinkDetails(assetsItem.linkid);
+                data.linkID = slateLink && slateLink.containerUrn ? slateLink.containerUrn : ""
+                data.label = slateLink && slateLink.unformattedTitle && slateLink.unformattedTitle.en ? slateLink.unformattedTitle.en : ""
+            }
+            else {
+                await getCurrentlyLinkedImage(assetsItem.linkid, (resCurrentlyLinkedImageData) => {
+                    data.linkID = resCurrentlyLinkedImageData.id ? resCurrentlyLinkedImageData.id : ""
+                    data.label = resCurrentlyLinkedImageData.title ? resCurrentlyLinkedImageData.title : ""
                 })
-            })
+            }
+            assetPopoverSnap.push(data)
         }))
     }
-    
     return assetPopoverSnap
 }
+
 /**
  * @function fetchElementsTag
  * @description-This function is to set the lael text of element
