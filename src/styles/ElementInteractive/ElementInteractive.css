@@ -34,3 +34,6 @@ a.buttonWidgetPDF , a.buttonWidgetPUSL, a.buttonWidgetPU {
     font-family: 'Open Sans', Calibri, Tahoma, sans-serif;
     background-color: white;
 }
+img.imageWidgetAccountingtable {
+    width: 100%;
+}
