@@ -55,16 +55,15 @@ export class CanvasWrapper extends Component {
         if(prevState.slateRefreshStatus !== nextProps.slateRefreshStatus) {
             sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus:nextProps.slateRefreshStatus} }); 
         }
+        if (Object.keys(nextProps.slateLevelData).length) {
+            let slateWrapperNode = document.getElementById('slateWrapper');
+            if (slateWrapperNode) slateWrapperNode.scrollTop = 0;
+        }
         return null;    
      }
 
 
     componentDidMount() {  
-        console.log("%c CANVASWRAPPER DID MOUNT:>>", "background: black; color: yellow")
-        // To run Canvas Stabilization app as stand alone app //
-        // if (config.slateManifestURN) {
-        //     this.props.fetchSlateData(config.slateManifestURN,config.slateEntityURN,config.page,'');
-        // }
         sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus :'Refreshed, a moment ago'} });
         
         sendDataToIframe({

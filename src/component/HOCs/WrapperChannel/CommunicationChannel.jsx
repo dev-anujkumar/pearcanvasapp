@@ -218,7 +218,6 @@ function CommunicationChannel(WrappedComponent) {
          * @param {String} message element count in a slate 
          */
         changeSlateLength = (message) => {
-            console.log("changeSlateLength::>>>", message)
             this.props.setSlateLength(message)
             this.handleRefreshSlate()
         }
@@ -270,7 +269,6 @@ function CommunicationChannel(WrappedComponent) {
                 let elementContainer = document.querySelector('.element-container[data-id="' + linkData.elementId + '"]');
                 activeElement = elementContainer.querySelectorAll('.cypress-editable');
                 activeElement.forEach((item) => {
-                    // console.log('active element:::', item, item.classList.contains('mce-content-body'));
                     if (item.classList.contains('mce-content-body') || !item.classList.contains('place-holder')) {
                         if (item.querySelector(`[asset-id="${linkData.linkId}"]`) || item.querySelector('#' + linkData.linkId)) {
                             tinymce.activeEditor.undoManager.transact(() => {

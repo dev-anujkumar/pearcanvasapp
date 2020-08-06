@@ -1845,7 +1845,6 @@ export class TinyMceEditor extends Component {
      * Called immediately before mounting occurs, and before Component#render. Avoid introducing any side-effects or subscriptions in this method.
      */
     componentWillMount() {
-        console.log("%c TINYMCE WILL MOUNT:>>", "background: blue; color: yellow")
         /**
          * Defines initial placeholder
          */
@@ -1856,7 +1855,6 @@ export class TinyMceEditor extends Component {
      * React's lifecycle method. Called immediately after a component is mounted. Setting state here will trigger re-rendering. 
      */
     componentDidMount() {
-        console.log("%c TINYMCE DID MOUNT:>>", "background: blue; color: black")
         const { slateLockInfo: { isLocked } } = this.props
         const userId = this.props.slateLockInfo && this.props.slateLockInfo.userId.replace(/.*\(|\)/gi, '');
         /**
@@ -1999,7 +1997,6 @@ export class TinyMceEditor extends Component {
      */
     componentDidUpdate(prevProps) {
         if (prevProps.element.id !== this.props.element.id) {
-            console.log("%c TINYMCE DID UPDATE:>>", "background: blue; color: yellow")
             let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");
             if (isBlockQuote) {
                 this.lastContent = document.getElementById('cypress-' + this.props.index).innerHTML;
@@ -2088,7 +2085,6 @@ export class TinyMceEditor extends Component {
      * @param {*} e  event object
      */
     handleClick = (e) => {
-        console.log("%c TINYMCE FOCUS PRE INIT 1:>>", "background: blue; color: yellow")
         /*
         * In IS slate removing the toolbar disabled class which was applied in case of OE
         */
@@ -2256,9 +2252,7 @@ export class TinyMceEditor extends Component {
              */
             currentTarget.focus();
             let termText = newCurrentTargetNode && newCurrentTargetNode.html();
-            console.log("%c TINYMCE FOCUS PRE INIT 2:>>", "background: blue; color: yellow")
             tinymce.init(this.editorConfig).then(() => {
-                console.log("%c TINYMCE FOCUS POST INIT 1 :>>", "background: blue; color: yellow")
                 if (termText && termText.length && 'type' in this.props.element && this.props.element.type !== 'poetry' && this.props.element.type !== 'element-list' &&
                     !(this.props.element.type === "showhide" && this.props.currentElement.type === 'element-list')) {
                     if (termText.search(/^(<.*>(<br.*>)<\/.*>)+$/g) < 0 &&
@@ -2295,7 +2289,6 @@ export class TinyMceEditor extends Component {
                         }
                     })
                 }
-                console.log("%c TINYMCE FOCUS POST INIT 2:>>", "background: blue; color: yellow")
             });
             this.setToolbarByElementType();
         }

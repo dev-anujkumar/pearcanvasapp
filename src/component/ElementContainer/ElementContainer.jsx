@@ -96,7 +96,6 @@ class ElementContainer extends Component {
 
     componentDidMount() {
         this.getElementVersionStatus(this.props.element, config.elementStatus)
-        console.log("%c ELEMENTCONTAINER DID MOUNT:>>", "background: black; color: white")
         this.setState({
             ElementId: this.props.element.id,
             btnClassName: '',
