@@ -139,6 +139,9 @@ const store = mockStore({
 
     },
 });
+
+config["elementStatus"] = {}
+
 describe('Test for element container component', () => {
     it('Render Element Container without crashing ', () => {      
     let props = {
@@ -1378,5 +1381,5 @@ describe('Test-Other Functions', () => {
         elementContainer.update()
         expect(spyhandleFocus).toHaveBeenCalled()
         spyhandleFocus.mockClear()
-    }) 
+    })
 })
