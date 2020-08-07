@@ -470,7 +470,7 @@ class Sidebar extends Component {
             "slateVersionUrn": config.slateManifestURN,
             "elementParentEntityUrn":config.slateEntityURN
         }
-        if (this.props.elementStatus[this.props.activeElement.elementId] === "approved") {
+        if (config.elementStatus[this.props.activeElement.elementId] === "approved") {
             config.savingInProgress = true
         }
         this.props.updateElement(data)
@@ -587,8 +587,7 @@ const mapStateToProps = state => {
         activeElement: state.appStore.activeElement,
         showModule:state.metadataReducer.showModule,
         permissions : state.appStore.permissions,
-        showHideObj:state.appStore.showHideObj,
-        elementStatus: state.elementStatusReducer
+        showHideObj:state.appStore.showHideObj
     };
 };
 

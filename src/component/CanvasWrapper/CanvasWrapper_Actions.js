@@ -11,7 +11,8 @@ import {
     SET_PARENT_SHOW_DATA,
     ERROR_POPUP,
     SLATE_TITLE,
-    GET_PAGE_NUMBER
+    GET_PAGE_NUMBER,
+    SET_SLATE_LENGTH
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
@@ -277,9 +278,10 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             dispatch(tcmSnapshot(manifestURN, entityURN))
         }
     }
-    let apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}`
+    const elementCount = getState().appStore.slateLength
+    let apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}&elementCount=${elementCount}`
     if (versionPopupReload) {
-        apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}&metadata=true`
+        apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}&metadata=true&elementCount=${elementCount}`
     } 
     return axios.get(apiUrl, {
         headers: {
@@ -435,6 +437,11 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                             type: SET_ACTIVE_ELEMENT,
                             payload: {}
                         });
+
+                        let slateWrapperNode = document.getElementById('slateWrapper');
+                        if (slateWrapperNode) {
+                            slateWrapperNode.scrollTop = 0;
+                        }
                     }
                     //}
                     // config.isFetchSlateInProgress = false;
@@ -884,4 +891,11 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
        // dispatch({type: ERROR_POPUP, payload:{show: true}})
         config.savingInProgress = false
     })
+}
+
+export const setSlateLength = (length) => {
+    return {
+        type: SET_SLATE_LENGTH,
+        payload: length
+    }
 }
