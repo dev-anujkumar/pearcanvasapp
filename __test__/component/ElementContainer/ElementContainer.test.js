@@ -139,6 +139,7 @@ const store = mockStore({
 
     },
 });
+
 describe('Test for element container component', () => {
     it('Render Element Container without crashing ', () => {      
     let props = {
@@ -181,9 +182,6 @@ describe('Test for element container component', () => {
             elementContainer.update();
             expect(elementContainerInstance).toBeDefined();
         })
-        
-      
-
         it('Render Element Container ----->BlockQuote-Pullquote', () => {
 
             let props = {
@@ -232,6 +230,10 @@ describe('Test for element container component', () => {
             const elementContainerInstance = elementContainer.find('ElementContainer').instance();
             expect(elementContainer).toHaveLength(1);
             expect(elementContainerInstance).toBeDefined();
+            const elementDiv = document.createElement('div');
+            elementDiv.setAttribute('id', "cypress-2");
+            elementDiv.innerHTML='<h3 class="pullQuoteNumeroUno">Hello Test</h3>'
+            document.body.appendChild(elementDiv);
             const spyhandleBlur  = jest.spyOn(elementContainerInstance, 'handleBlur') 
             elementContainerInstance.handleBlur();
             expect(spyhandleBlur).toHaveBeenCalled()
@@ -255,7 +257,7 @@ describe('Test for element container component', () => {
             expect(spyhandleBlur).toHaveBeenCalled()
             spyhandleBlur.mockClear()
         })
-        it('Render Element Container ----->handleBlur citation', () => {
+        it('Render Element Container ----->handleBlur citation element', () => {
             let props = {
                 element: wipData.citation,
                 permissions: [],
