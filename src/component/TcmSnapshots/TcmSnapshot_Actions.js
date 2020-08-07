@@ -74,7 +74,7 @@ export const tcmSnapshot = (slateManifestUrn,slateEntityUrn) => (dispatch, getSt
      * @param {Object} snapshotData | TCM Snapshot data
 */
 export const sendElementTcmSnapshot = async (snapshotData) => {
-        let url = config.TCM_SNAPSHOT_ENDPOINT; //for local use  `http://localhost:3003/${config.TCM_SNAPSHOT_ENDPOINT}`;
+        let url = `/cypress/trackchanges-srvr/snapshot`; //for local use  `http://localhost:3003/snapshots`;
         return axios.post(url, snapshotData, {
         headers: {
             PearsonSSOSession: config.ssoToken
