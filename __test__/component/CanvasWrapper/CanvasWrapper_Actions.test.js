@@ -1,1161 +1,1245 @@
-import thunk from 'redux-thunk';
-import configureMockStore from 'redux-mock-store';
-import * as selectActions from '../../../src/component/CanvasWrapper/CanvasWrapper_Actions';
-const middlewares = [thunk];
+/**************************Import Plugins**************************/
 import axios from 'axios';
-import wip from '../../component/ElementContainer/wipData';
-import moxios from 'moxios';
+import { JSDOM } from 'jsdom'
+global.document = (new JSDOM()).window.Element;
+if (!global.Element.prototype.hasOwnProperty("getElementById")) {
+    Object.defineProperty(global.Element.prototype, 'getElementById', {
+        get() {
+            return {
+                innerText: "innerText",
+                innerHTML: "<p>innerHTML</p>"
+            };
+        },
+    });
+
+}
+/***************************Import Modules*************************/
 import {
+    ERROR_POPUP,
+    GET_PAGE_NUMBER,
     FETCH_SLATE_DATA,
+    CLOSE_POPUP_SLATE,
     SET_ACTIVE_ELEMENT,
+    SET_OLD_IMAGE_PATH,
+    SET_PARENT_SHOW_DATA,
+    SET_PARENT_ASIDE_DATA,
     AUTHORING_ELEMENT_UPDATE
 } from '../../../src/constants/Action_Constants';
-import { POD_DEFAULT_VALUE } from '../../../src/constants/Element_Constants'
-import { slateDataNew } from '../../../fixtures/slateTestingData';
-import figureMockData from './mockData.js'
-const mockStore = configureMockStore(middlewares);
-jest.mock('../../../src/config/config.js', () => ({
-    slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
-    ASSET_POPOVER_ENDPOINT:"https://contentapis-staging.pearsoncms.net/manifest-api/",
-    STRUCTURE_APIKEY:'Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld',
-    PRODUCTAPI_ENDPOINT:"https://contentapis-staging.pearsoncms.net/product-api/",
-    projectUrn: "urn:pearson:distributable:3e872df6-834c-45f5-b5c7-c7b525fab1ef",
-    parentEntityUrn : "bodyMatter",
-    slateType: "assessment",
-    totalPageCount :1,
-    fromTOC:false
-}));
-let initialState = {
-    appStore : {
-        slateLevelData : slateDataNew.data
-    },
-    slateLevelData: {},
-    // elementsTag: {},
-    activeElement: {},
-    splittedElementIndex: 0,
-    pageNumberData: {}
-};
-let setActiveToolbar =  ["crossLinkingIcon",'assetpopover', 'decreaseindent', 'glossary']
+import config from '../../../src/config/config.js';
+import * as canvasActions from '../../../src/component/CanvasWrapper/CanvasWrapper_Actions';
+/*************************Import Test Data*************************/
+import { slateTestData } from './mockData.js';
+/**********************Mock Helper Functions***********************/
 jest.mock('axios');
-describe('action file test', () => {
-    let store = mockStore(() => initialState);
-    let initialState2;
-    beforeEach(() => {
-        initialState = {
-            slateLevelData: {},
-            appStore:{
-                slateLevelData: {
-                    "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e": {
-                        "id": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
-                        "schema": "http://schemas.pearson.com/wip-authoring/manifest/1",
-                        "type": "manifest",
-                        contents: {
-                            "schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest",
-                            "title": {
-                                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                                "text": "sample slate"
-                            },
-                            "frontmatter": [],
-                            bodymatter: [
-                                {
-                                    "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-                                    "type": "element-authoredtext",
-                                    "subtype": "",
-                                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
-                                    "elementdata": {
-                                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                                        "text": ""
-                                    },
-                                    "html": {
-                                        "text": "<p class=\"paragraphNumeroUno\"><br></p>"
-                                    },
-                                    "comments": true,
-                                    "tcm": true,
-                                    "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-                                    "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
-                                },
-                                {
-                                    "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0b",
-                                    "type": "element-authoredtext",
-                                    "subtype": "",
-                                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
-                                    "elementdata": {
-                                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                                        "text": ""
-                                    },
-                                    "html": {
-                                        "text": "<p class=\"paragraphNumeroUno\"><br></p>"
-                                    },
-                                    "comments": true,
-                                    "tcm": true,
-                                    "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-                                    "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
-                                }
-                            ]
-                        }
-                    }, 
-                permissions: [
-                    "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
-                    "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
-                    "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
-                ]
-            }
-        },
-            // elementsTag: {},
-            activeElement: {},
-            splittedElementIndex: 0,
-            pageNumberData: {}
-        };
-        initialState2 = {
-            slateLevelData: {},
-            appStore:{
-                slateLevelData: slateDataNew.data
-                },
-            activeElement: {},
-            splittedElementIndex: 0,
-            pageNumberData: {}
-        };
-        moxios.install();
+jest.mock('../../../src/constants/ga', () => {
+    return {
+        sendToDataLayer: jest.fn()
+    }
+});
+jest.mock('../../../src/constants/IFrameMessageTypes.js', () => {
+    return {
+        HideLoader: jest.fn()
+    }
+});
+jest.mock('../../../src/js/getAllSlatesData.js', () => {
+    return {
+        fetchAllSlatesData: jest.fn(),
+        setCurrentSlateAncestorData: jest.fn()
+    }
+});
+jest.mock('../../../src/component/ElementContainer/TcmSnapshot_Actions', () => {
+    return {
+        tcmSnapshot: jest.fn(),
+        handleTCMData: jest.fn()
+    }
+});
+jest.mock('../../../src/component/CommentsPanel/CommentsPanel_Action', () => {
+    return {
+        fetchComments: jest.fn(),
+        fetchCommentByElement: jest.fn()
+    }
+});
+jest.mock('../../../src/constants/utility.js', () => {
+    return {
+        sendDataToIframe: jest.fn(),
+        createTitleSubtitleModel: jest.fn(),
+        requestConfigURI: jest.fn(),
+    }
+});
+
+/*********************Declare Common Variables**********************/
+const cb = jest.fn();
+config.slateManifestURN = "urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"
+config.projectUrn = "urn:pearson:distributable:3e872df6-834c-45f5-b5c7-c7b525fab1ef"
+config.parentEntityUrn = "bodyMatter"
+config.totalPageCount = 0
+config.tcmStatus = true
+describe('|Testing ----------------------[ CanvasWrapper_Actions ]----------------------|', () => {
+    describe('Test-1- fetchElementTag', () => {
+        it('Test-1.1-fetchElementTag - Heading', () => {
+            let activeElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[10];
+            const spyFunction = jest.spyOn(canvasActions, 'fetchElementTag')
+            canvasActions.fetchElementTag(activeElement, 10);
+            expect(spyFunction).toHaveBeenCalled();
+            expect(spyFunction).toHaveReturnedWith('H1');
+            spyFunction.mockClear()
+        })
+        it('Test-1.2-fetchElementTag - Stanza', () => {
+            let activeElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[0].contents.bodymatter[0];
+            const spyFunction = jest.spyOn(canvasActions, 'fetchElementTag')
+            canvasActions.fetchElementTag(activeElement, '0-3-0');
+            expect(spyFunction).toHaveBeenCalled();
+            expect(spyFunction).toHaveReturnedWith('PE');
+            spyFunction.mockClear()
+        })
+        it('Test-1.3-fetchElementTag - Table Editor', () => {
+            let activeElement = { type: 'figure', figuretype: 'tableasmarkup', figuredata: { ...slateTestData.ImageFigureData } };
+            const spyFunction = jest.spyOn(canvasActions, 'fetchElementTag')
+            canvasActions.fetchElementTag(activeElement, 13);
+            expect(spyFunction).toHaveBeenCalled();
+            expect(spyFunction).toHaveReturnedWith('TE');
+            spyFunction.mockClear()
+        })
+        it('Test-1.4-fetchElementTag - Assessment Element', () => {
+            let activeElement = { type: 'figure', figuretype: 'assessment', figuredata: { elementdata: { assessmentformat: 'puf' } } };
+            const spyFunction = jest.spyOn(canvasActions, 'fetchElementTag')
+            canvasActions.fetchElementTag(activeElement, 12);
+            expect(spyFunction).toHaveBeenCalled();
+            expect(spyFunction).toHaveReturnedWith('Qu');
+            spyFunction.mockClear();
+        })
+        it('Test-1.5-fetchElementTag - Assessment Slate', () => {
+            let activeElement = { type: 'element-assessment', elementdata: { assessmentformat: 'puf' } };
+            const spyFunction = jest.spyOn(canvasActions, 'fetchElementTag')
+            canvasActions.fetchElementTag(activeElement, 0);
+            expect(spyFunction).toHaveBeenCalled();
+            expect(spyFunction).toHaveReturnedWith('P');
+            spyFunction.mockClear()
+        })
+        it('Test-1.6-fetchElementTag - Popup Element', () => {
+            let activeElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[1];
+            const spyFunction = jest.spyOn(canvasActions, 'fetchElementTag')
+            canvasActions.fetchElementTag(activeElement, 1);
+            expect(spyFunction).toHaveBeenCalled();
+            expect(spyFunction).toHaveReturnedWith('Pop');
+            spyFunction.mockClear()
+        })
+        it('Test-1.7.1-fetchElementTag - Aside - Default', () => {
+            let activeElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[8];
+            const spyFunction = jest.spyOn(canvasActions, 'fetchElementTag')
+            canvasActions.fetchElementTag(activeElement, 8);
+            expect(spyFunction).toHaveBeenCalled();
+            expect(spyFunction).toHaveReturnedWith('As');
+            spyFunction.mockClear()
+        })
+        it('Test-1.7.2-fetchElementTag - Aside - no Subtype', () => {
+            let activeElement = { type: 'element-aside', subtype: '', designtype: "" };
+            const spyFunction = jest.spyOn(canvasActions, 'fetchElementTag')
+            canvasActions.fetchElementTag(activeElement, 8);
+            expect(spyFunction).toHaveBeenCalled();
+            expect(spyFunction).toHaveReturnedWith('As');
+            spyFunction.mockClear()
+        })
+        it('Test-1.7.2-fetchElementTag - Aside - Subtype = Tactic', () => {
+            let activeElement = { type: 'element-aside', subtype: 'Tactic', designtype: "" };
+            const spyFunction = jest.spyOn(canvasActions, 'fetchElementTag')
+            canvasActions.fetchElementTag(activeElement, 8);
+            expect(spyFunction).toHaveBeenCalled();
+            expect(spyFunction).toHaveReturnedWith('');
+            spyFunction.mockClear()
+        })
+        it('Test-1.8.1-fetchElementTag - WE -Default', () => {
+            let activeElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[9];
+            const spyFunction = jest.spyOn(canvasActions, 'fetchElementTag')
+            canvasActions.fetchElementTag(activeElement, 9);
+            expect(spyFunction).toHaveBeenCalled();
+            expect(spyFunction).toHaveReturnedWith('WE');
+            spyFunction.mockClear()
+        })
+        it('Test-1.8.2-fetchElementTag - WE - no designtype', () => {
+            let activeElement = { type: 'element-aside', subtype: 'workedexample', designtype: "" };
+            const spyFunction = jest.spyOn(canvasActions, 'fetchElementTag')
+            canvasActions.fetchElementTag(activeElement, 9);
+            expect(spyFunction).toHaveBeenCalled();
+            expect(spyFunction).toHaveReturnedWith('WE');
+            spyFunction.mockClear()
+        })
+        it('Test-1.9-fetchElementTag - Poetry', () => {
+            let activeElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[0];
+            const spyFunction = jest.spyOn(canvasActions, 'fetchElementTag')
+            canvasActions.fetchElementTag(activeElement, 0);
+            expect(spyFunction).toHaveBeenCalled();
+            expect(spyFunction).toHaveReturnedWith('PE');
+            spyFunction.mockClear()
+        })
+        it('Test-1.10-fetchElementTag - Opener Element', () => {
+            let activeElement = { type: 'openerelement', backgroundimage: { alttext: "alttext", longdescription: "longdescription" } };
+            const spyFunction = jest.spyOn(canvasActions, 'fetchElementTag')
+            canvasActions.fetchElementTag(activeElement, 0);
+            expect(spyFunction).toHaveBeenCalled();
+            expect(spyFunction).toHaveReturnedWith('OE');
+            spyFunction.mockClear()
+        })
+        it('Test-1.11-fetchElementTag - List Element', () => {
+            let activeElement = { type: 'element-list', subtype: 'lower-alpha', elementdata: { subtype: 'lower-alpha' } };
+            const spyFunction = jest.spyOn(canvasActions, 'fetchElementTag')
+            canvasActions.fetchElementTag(activeElement, 12);
+            expect(spyFunction).toHaveBeenCalled();
+            expect(spyFunction).toHaveReturnedWith('OL');
+            spyFunction.mockClear()
+        })
+        it('Test-1.12-fetchElementTag - BlockQuote', () => {
+            let activeElement = { type: 'element-blockfeature', elementdata: { type: 'pullquote' } };
+            const spyFunction = jest.spyOn(canvasActions, 'fetchElementTag')
+            canvasActions.fetchElementTag(activeElement, 11);
+            expect(spyFunction).toHaveBeenCalled();
+            expect(spyFunction).toHaveReturnedWith('BQ');
+            spyFunction.mockClear()
+        })
+        it('Test-1.13-fetchElementTag - MultiColumn', () => {
+            let activeElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[7];
+            const spyFunction = jest.spyOn(canvasActions, 'fetchElementTag')
+            canvasActions.fetchElementTag(activeElement, 7);
+            expect(spyFunction).toHaveBeenCalled();
+            expect(spyFunction).toHaveReturnedWith('2C');
+            spyFunction.mockClear()
+        })
+        it('Test-1.14.1-fetchElementTag - Block Code -Default', () => {
+            let activeElement = { type: 'figure', figuretype: 'codelisting', figuredata: { ...slateTestData.BceFigureData } };
+            const spyFunction = jest.spyOn(canvasActions, 'fetchElementTag')
+            canvasActions.fetchElementTag(activeElement, 14);
+            expect(spyFunction).toHaveBeenCalled();
+            expect(spyFunction).toHaveReturnedWith('BCE');
+            spyFunction.mockClear()
+        })
+        it('Test-1.14.2-fetchElementTag - Block Code -Java', () => {
+            let activeElement = { type: 'figure', figuretype: 'codelisting', figuredata: { ...slateTestData.BceFigureData, programlanguage: "Java" } };
+            const spyFunction = jest.spyOn(canvasActions, 'fetchElementTag')
+            canvasActions.fetchElementTag(activeElement, 14);
+            expect(spyFunction).toHaveBeenCalled();
+            expect(spyFunction).toHaveReturnedWith('BCE');
+            spyFunction.mockClear()
+        })
+        it('Test-1.15-fetchElementTag - Default', () => {
+            let activeElement = { type: 'paragraph' };
+            const spyFunction = jest.spyOn(canvasActions, 'fetchElementTag')
+            canvasActions.fetchElementTag(activeElement, 10);
+            expect(spyFunction).toHaveBeenCalled();
+            expect(spyFunction).toHaveReturnedWith('P');
+            spyFunction.mockClear()
+        })
+        it('Test-1.16-fetchElementTag - Mathml Element', () => {
+            let activeElement = { type: 'figure', figuretype: 'authoredtext', figuredata: {} };
+            const spyFunction = jest.spyOn(canvasActions, 'fetchElementTag')
+            canvasActions.fetchElementTag(activeElement, 12);
+            expect(spyFunction).toHaveBeenCalled();
+            expect(spyFunction).toHaveReturnedWith('MML');
+            spyFunction.mockClear();
+        })
+        it('Test-1.17-fetchElementTag - Catch Block', () => {
+            let activeElement = {};
+            const spyFunction = jest.spyOn(canvasActions, 'fetchElementTag')
+            canvasActions.fetchElementTag(activeElement, 10);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear()
+        })
     });
-
-    afterEach(() => moxios.uninstall());
-    it('testing---Fetch comment action',async () => {
-        store = mockStore(() => initialState);
-        let manifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
-        const expectedActions = [{
-            type: FETCH_SLATE_DATA,
-            payload: { slateDataNew }
-
-        }];
-        let data = slateDataNew;
-        let dispatch = (obj) =>{
-            if(obj.type === FETCH_SLATE_DATA){
-              expect(obj).toEqual(expectedActions);
-            }
-
-        };
-        let getState = () => {
-            return initialState;
-           }
-        axios.get.mockImplementation(() => Promise.resolve(data));
-        let result = await selectActions.fetchSlateData(manifestURN,2);
-        result(dispatch,getState);
-    })
-
-    it('testing---createPopupUnit action - popup',async () => {
-        store = mockStore(() => initialState);
-        let manifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
-        const expectedActions = [{
-            type: AUTHORING_ELEMENT_UPDATE,
-            payload: { slateDataNew }
-
-        }];
-        let data = slateDataNew;
-        let dispatch = (obj) =>{
-            if(obj.type === AUTHORING_ELEMENT_UPDATE){
-              expect(obj).toEqual(expectedActions);
-            }
-
-        };
-        let getState = () => {
-            return initialState;
-        }
-        let cb = jest.fn()
-        axios.post.mockImplementation(() => Promise.resolve(data));
-        let result = await selectActions.createPopupUnit("formatted-title", slateDataNew.data[manifestURN].contents.bodymatter[2], cb ,"2-0", manifestURN);
-        result(dispatch,getState);
-    })
-    it('testing---createPopupUnit action - citations',async () => {
-        store = mockStore(() => initialState2);
-        let manifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
-        const expectedActions = [{
-            type: AUTHORING_ELEMENT_UPDATE,
-            payload: { slateDataNew }
-
-        }];
-        let data = slateDataNew;
-        let dispatch = (obj) =>{
-            if(obj.type === AUTHORING_ELEMENT_UPDATE){
-              expect(obj).toEqual(expectedActions);
-            }
-
-        };
-        let getState = () => {
-            return initialState2;
-        }
-        let cb = jest.fn()
-        axios.post.mockImplementation(() => Promise.resolve(data));
-        let result = await selectActions.createPopupUnit(null, slateDataNew.data[manifestURN].contents.bodymatter[3], cb ,"3-0", manifestURN);
-        result(dispatch,getState);
-    })
-
-    xit('fetchSlateData', () => {
-        const manifestURN = 'urn:9324dsfds23432dsf45';
-        const expectedActions = [{
-            type: SET_ACTIVE_ELEMENT,
-            payload: {  }
-
-        }];
-        let dispatch = (obj) =>{
-            if(obj.type === FETCH_SLATE_DATA){
-              expect(obj).toEqual(expectedActions);
-            }
-            else{
-                expect(obj).toEqual(expectedActions);
-            }
-
-        };
-        let getState = () => {
-            return initialState;
-           }
-        selectActions.fetchSlateData(manifestURN)(dispatch,getState);
-
+    describe('Test-2- fetchAuthUser', () => {
+        it('Test-2.1-fetchAuthUser', () => {
+            let dispatch = jest.fn();
+            let responseData = { data: slateTestData.fetchAuthUserResponse }
+            const spyFunction = jest.spyOn(canvasActions, 'fetchAuthUser')
+            axios.get = jest.fn(() => Promise.resolve(responseData))
+            canvasActions.fetchAuthUser()(dispatch);
+            expect(spyFunction).toHaveBeenCalled();
+            expect(dispatch).not.toHaveBeenCalled();
+            spyFunction.mockClear();
+        });
+        it('Test-2.2-fetchAuthUser - Catch Block', () => {
+            let dispatch = jest.fn();
+            const spyFunction = jest.spyOn(canvasActions, 'fetchAuthUser')
+            axios.get = jest.fn(() => Promise.reject({}))
+            canvasActions.fetchAuthUser()(dispatch);
+            expect(spyFunction).toHaveBeenCalled();
+            expect(dispatch).not.toHaveBeenCalled();
+            spyFunction.mockClear();
+        });
     });
-    it('fetchAuthUser', () => {
-        let store = mockStore();
-        let dispatch = jest.fn();
-        store.dispatch(selectActions.fetchAuthUser());
-        selectActions.fetchAuthUser()(dispatch);
-        expect(dispatch).not.toHaveBeenCalled();
+    describe('Test-3- setActiveElement', () => {
+        config.slateManifestURN = "urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"
+        it('Test-3.1-setActiveElement - Citations', () => {
+            let dispatch = (obj) => {
+                if (obj && obj.type === SET_ACTIVE_ELEMENT) {
+                    expect(obj.payload).toEqual(slateTestData.setActiveElementPayload.citationGroup);
+                }
+                else if (obj && obj.type === SET_PARENT_ASIDE_DATA) {
+                    expect(obj.payload).toEqual({ parentUrn: {}, asideData: {} });
+                }
+                else if (obj && obj.type === SET_PARENT_SHOW_DATA) {
+                    expect(obj.payload).toEqual({ showHideObj: undefined });
+                }
+            }
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.slateData1,
+                        activeElement: {},
+                    }
+                };
+            }
+            let activeElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[2];
+            const spyFunction = jest.spyOn(canvasActions, 'setActiveElement')
+            canvasActions.setActiveElement(activeElement, 2, {}, {}, undefined, undefined)(dispatch, getState);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear()
+        })
+        it('Test-3.2.1-setActiveElement - Figure Image at Slate Level', () => {
+            let oldPath = "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png";
+            let dispatch = (obj) => {
+                if (obj.type === SET_ACTIVE_ELEMENT) {
+                    expect(obj.payload).toEqual(slateTestData.setActiveElementPayload.figureImage);
+                }
+                else if (obj.type === SET_PARENT_ASIDE_DATA) {
+                    expect(obj.payload).toEqual({ parentUrn: {}, asideData: {} });
+                }
+                else if (obj.type === SET_PARENT_SHOW_DATA) {
+                    expect(obj.payload).toEqual({ showHideObj: undefined });
+                }
+                else if (obj.type === SET_OLD_IMAGE_PATH) {
+                    expect(obj.payload).toEqual({ oldImage: oldPath });
+
+                }
+            }
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.slateData1,
+                        activeElement: {},
+                        parentUrn: {}
+                    }
+                };
+            }
+            let activeElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[3];
+            const spyFunction = jest.spyOn(canvasActions, 'setActiveElement')
+            canvasActions.setActiveElement(activeElement, 3, {}, {}, undefined, undefined)(dispatch, getState);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear()
+        })
+        it('Test-3.2.2-setActiveElement - Figure Image in Aside', () => {
+            let oldPath = "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png";
+            let dispatch = (obj) => {
+                if (obj.type === SET_ACTIVE_ELEMENT) {
+                    expect(obj.payload).toEqual(slateTestData.setActiveElementPayload.figureInAside);
+                }
+                else if (obj.type === SET_PARENT_ASIDE_DATA) {
+                    expect(obj.payload).toEqual({ parentUrn: {}, asideData: {} });
+                }
+                else if (obj.type === SET_PARENT_SHOW_DATA) {
+                    expect(obj.payload).toEqual({ showHideObj: undefined });
+                }
+                else if (obj.type === SET_OLD_IMAGE_PATH) {
+                    expect(obj.payload).toEqual({ oldImage: oldPath });
+                }
+            }
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.slateData1,
+                        activeElement: {},
+                        parentUrn: {}
+                    }
+                };
+            }
+            let activeElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[8].elementdata.bodymatter[0];
+            const spyFunction = jest.spyOn(canvasActions, 'setActiveElement')
+            canvasActions.setActiveElement(activeElement, '8-0', {}, {}, undefined, undefined)(dispatch, getState);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear()
+        })
+        it('Test-3.2.3-setActiveElement - Figure Image in WE-Section Break', () => {
+            let oldPath = "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png";
+            let dispatch = (obj) => {
+                if (obj.type === SET_ACTIVE_ELEMENT) {
+                    expect(obj.payload).toEqual(slateTestData.setActiveElementPayload.figureInWE);
+                }
+                else if (obj.type === SET_PARENT_ASIDE_DATA) {
+                    expect(obj.payload).toEqual({ parentUrn: {}, asideData: {} });
+                }
+                else if (obj.type === SET_PARENT_SHOW_DATA) {
+                    expect(obj.payload).toEqual({ showHideObj: undefined });
+                }
+                else if (obj.type === SET_OLD_IMAGE_PATH) {
+                    expect(obj.payload).toEqual({ oldImage: oldPath });
+
+                }
+            }
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.slateData1,
+                        activeElement: {},
+                        parentUrn: {}
+                    }
+                };
+            }
+            let activeElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[9].elementdata.bodymatter[1].contents.bodymatter[0];
+            const spyFunction = jest.spyOn(canvasActions, 'setActiveElement')
+            canvasActions.setActiveElement(activeElement, '9-1-0', {}, {}, undefined, undefined)(dispatch, getState);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear()
+        })
+        it('Test-3.2.4-setActiveElement - Figure Image in Multi-Column', () => {
+            let oldPath = "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png";
+            let dispatch = (obj) => {
+                if (obj.type === SET_ACTIVE_ELEMENT) {
+                    expect(obj.payload).toEqual(slateTestData.setActiveElementPayload.figureInMultiColumn);
+                }
+                else if (obj.type === SET_PARENT_ASIDE_DATA) {
+                    expect(obj.payload).toEqual({ parentUrn: {}, asideData: {} });
+                }
+                else if (obj.type === SET_PARENT_SHOW_DATA) {
+                    expect(obj.payload).toEqual({ showHideObj: undefined });
+                }
+                else if (obj.type === SET_OLD_IMAGE_PATH) {
+                    expect(obj.payload).toEqual({ oldImage: oldPath });
+                }
+            }
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.slateData1,
+                        activeElement: {},
+                        parentUrn: { elementType: "group" }
+                    }
+                };
+            }
+            let activeElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[7].groupeddata.bodymatter[0].groupdata.bodymatter[0];
+            const spyFunction = jest.spyOn(canvasActions, 'setActiveElement')
+            canvasActions.setActiveElement(activeElement, '7-0-0', {}, {}, false, undefined)(dispatch, getState);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear()
+        })
+        it('Test-3.3.1-setActiveElement - Audio Element at Slate Level', () => {
+            let dispatch = (obj) => {
+                if (obj.type === SET_ACTIVE_ELEMENT) {
+                    expect(obj.payload).toEqual(slateTestData.setActiveElementPayload.audioElement);
+                }
+                else if (obj.type === SET_PARENT_ASIDE_DATA) {
+                    expect(obj.payload).toEqual({ parentUrn: {}, asideData: {} });
+                }
+                else if (obj.type === SET_PARENT_SHOW_DATA) {
+                    expect(obj.payload).toEqual({ showHideObj: undefined });
+                }
+                else if (obj.type === SET_OLD_IMAGE_PATH) {
+                    expect(obj.payload).toEqual({ oldImage: "" });
+
+                }
+            }
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.slateData1,
+                        activeElement: {},
+                        parentUrn: {}
+                    }
+                };
+            }
+            let activeElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[5];
+            const spyFunction = jest.spyOn(canvasActions, 'setActiveElement')
+            canvasActions.setActiveElement(activeElement, 5, {}, {}, undefined, undefined)(dispatch, getState);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear()
+        })
+        it('Test-3.3.2-setActiveElement - Audio Element in Aside', () => {
+            let dispatch = (obj) => {
+                if (obj.type === SET_ACTIVE_ELEMENT) {
+                    expect(obj.payload).toEqual(slateTestData.setActiveElementPayload.audioInAside);
+                }
+                else if (obj.type === SET_PARENT_ASIDE_DATA) {
+                    expect(obj.payload).toEqual({ parentUrn: {}, asideData: {} });
+                }
+                else if (obj.type === SET_PARENT_SHOW_DATA) {
+                    expect(obj.payload).toEqual({ showHideObj: undefined });
+                }
+                else if (obj.type === SET_OLD_IMAGE_PATH) {
+                    expect(obj.payload).toEqual({ oldImage: "" });
+                }
+            }
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.slateData1,
+                        activeElement: {},
+                        parentUrn: {}
+                    }
+                };
+            }
+            let activeElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[8].elementdata.bodymatter[2];
+            const spyFunction = jest.spyOn(canvasActions, 'setActiveElement')
+            canvasActions.setActiveElement(activeElement, '8-2', {}, {}, undefined, undefined)(dispatch, getState);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear()
+        })
+        it('Test-3.3.3-setActiveElement - Audio Elemente in WE-Section Break', () => {
+            let dispatch = (obj) => {
+                if (obj.type === SET_ACTIVE_ELEMENT) {
+                    expect(obj.payload).toEqual(slateTestData.setActiveElementPayload.audioInWE);
+                }
+                else if (obj.type === SET_PARENT_ASIDE_DATA) {
+                    expect(obj.payload).toEqual({ parentUrn: {}, asideData: {} });
+                }
+                else if (obj.type === SET_PARENT_SHOW_DATA) {
+                    expect(obj.payload).toEqual({ showHideObj: undefined });
+                }
+                else if (obj.type === SET_OLD_IMAGE_PATH) {
+                    expect(obj.payload).toEqual({ oldImage: "" });
+
+                }
+            }
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.slateData1,
+                        activeElement: {},
+                        parentUrn: {}
+                    }
+                };
+            }
+            let activeElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[9].elementdata.bodymatter[1].contents.bodymatter[1];
+            const spyFunction = jest.spyOn(canvasActions, 'setActiveElement')
+            canvasActions.setActiveElement(activeElement, '9-1-1', {}, {}, undefined, undefined)(dispatch, getState);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear()
+        })
+        it('Test-3.3.4-setActiveElement - Audio Element in Multi-Column', () => {
+            let dispatch = (obj) => {
+                if (obj.type === SET_ACTIVE_ELEMENT) {
+                    expect(obj.payload).toEqual(slateTestData.setActiveElementPayload.audioInMultiColumn);
+                }
+                else if (obj.type === SET_PARENT_ASIDE_DATA) {
+                    expect(obj.payload).toEqual({ parentUrn: {}, asideData: {} });
+                }
+                else if (obj.type === SET_PARENT_SHOW_DATA) {
+                    expect(obj.payload).toEqual({ showHideObj: undefined });
+                }
+                else if (obj.type === SET_OLD_IMAGE_PATH) {
+                    expect(obj.payload).toEqual({ oldImage: "" });
+
+                }
+            }
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.slateData1,
+                        activeElement: {},
+                        parentUrn: { elementType: "group" }
+                    }
+                };
+            }
+            let activeElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[7].groupeddata.bodymatter[0].groupdata.bodymatter[1];
+            const spyFunction = jest.spyOn(canvasActions, 'setActiveElement')
+            canvasActions.setActiveElement(activeElement, '7-0-1', {}, {}, undefined, undefined)(dispatch, getState);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear()
+        })
+        it('Test-3.4.1-setActiveElement - Video Element at Slate Level', () => {
+            let dispatch = (obj) => {
+                if (obj.type === SET_ACTIVE_ELEMENT) {
+                    expect(obj.payload).toEqual(slateTestData.setActiveElementPayload.videoElement);
+                }
+                else if (obj.type === SET_PARENT_ASIDE_DATA) {
+                    expect(obj.payload).toEqual({ parentUrn: {}, asideData: {} });
+                }
+                else if (obj.type === SET_PARENT_SHOW_DATA) {
+                    expect(obj.payload).toEqual({ showHideObj: undefined });
+                }
+                else if (obj.type === SET_OLD_IMAGE_PATH) {
+                    expect(obj.payload).toEqual({ oldImage: "" });
+                }
+            }
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.slateData1,
+                        activeElement: {},
+                        parentUrn: {}
+                    }
+                };
+            }
+            let activeElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[4];
+            const spyFunction = jest.spyOn(canvasActions, 'setActiveElement')
+            canvasActions.setActiveElement(activeElement, 4, {}, {}, undefined, undefined)(dispatch, getState);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear()
+        })
+        it('Test-3.4.2-setActiveElement - Video Element in Aside', () => {
+            let dispatch = (obj) => {
+                if (obj.type === SET_ACTIVE_ELEMENT) {
+                    expect(obj.payload).toEqual(slateTestData.setActiveElementPayload.videoInAside);
+                }
+                else if (obj.type === SET_PARENT_ASIDE_DATA) {
+                    expect(obj.payload).toEqual({ parentUrn: {}, asideData: {} });
+                }
+                else if (obj.type === SET_PARENT_SHOW_DATA) {
+                    expect(obj.payload).toEqual({ showHideObj: undefined });
+                }
+                else if (obj.type === SET_OLD_IMAGE_PATH) {
+                    expect(obj.payload).toEqual({ oldImage: "" });
+                }
+            }
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.slateData1,
+                        activeElement: {},
+                        parentUrn: {}
+                    }
+                };
+            }
+            let activeElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[8].elementdata.bodymatter[1];
+            const spyFunction = jest.spyOn(canvasActions, 'setActiveElement')
+            canvasActions.setActiveElement(activeElement, '8-1', {}, {}, undefined, undefined)(dispatch, getState);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear()
+        })
+        it('Test-3.4.3-setActiveElement - Video Element in WE-Section Break', () => {
+            let dispatch = (obj) => {
+                if (obj.type === SET_ACTIVE_ELEMENT) {
+                    expect(obj.payload).toEqual(slateTestData.setActiveElementPayload.videoInWE);
+                }
+                else if (obj.type === SET_PARENT_ASIDE_DATA) {
+                    expect(obj.payload).toEqual({ parentUrn: {}, asideData: {} });
+                }
+                else if (obj.type === SET_PARENT_SHOW_DATA) {
+                    expect(obj.payload).toEqual({ showHideObj: undefined });
+                }
+                else if (obj.type === SET_OLD_IMAGE_PATH) {
+                    expect(obj.payload).toEqual({ oldImage: "" });
+
+                }
+            }
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.slateData1,
+                        activeElement: {},
+                        parentUrn: {}
+                    }
+                };
+            }
+            let activeElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[9].elementdata.bodymatter[1].contents.bodymatter[2];
+            const spyFunction = jest.spyOn(canvasActions, 'setActiveElement')
+            canvasActions.setActiveElement(activeElement, '9-1-2', {}, {}, undefined, undefined)(dispatch, getState);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear()
+        })
+        it('Test-3.4.4-setActiveElement - Video Element in Multi-Column', () => {
+            let dispatch = (obj) => {
+                if (obj.type === SET_ACTIVE_ELEMENT) {
+                    expect(obj.payload).toEqual(slateTestData.setActiveElementPayload.videoInMultiColumn);
+                }
+                else if (obj.type === SET_PARENT_ASIDE_DATA) {
+                    expect(obj.payload).toEqual({ parentUrn: {}, asideData: {} });
+                }
+                else if (obj.type === SET_PARENT_SHOW_DATA) {
+                    expect(obj.payload).toEqual({ showHideObj: undefined });
+                }
+                else if (obj.type === SET_OLD_IMAGE_PATH) {
+                    expect(obj.payload).toEqual({ oldImage: "" });
+
+                }
+            }
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.slateData1,
+                        activeElement: {},
+                        parentUrn: { elementType: "group" }
+                    }
+                };
+            }
+            let activeElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[7].groupeddata.bodymatter[1].groupdata.bodymatter[0];
+            const spyFunction = jest.spyOn(canvasActions, 'setActiveElement')
+            canvasActions.setActiveElement(activeElement, '7-1-0', {}, {}, undefined, undefined)(dispatch, getState);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear()
+        })
+        it('Test-3.5.1-setActiveElement - Interactive Element at Slate Level', () => {
+            let dispatch = (obj) => {
+                if (obj.type === SET_ACTIVE_ELEMENT) {
+                    expect(obj.payload).toEqual(slateTestData.setActiveElementPayload.interactiveElement);
+                }
+                else if (obj.type === SET_PARENT_ASIDE_DATA) {
+                    expect(obj.payload).toEqual({ parentUrn: {}, asideData: {} });
+                }
+                else if (obj.type === SET_PARENT_SHOW_DATA) {
+                    expect(obj.payload).toEqual({ showHideObj: undefined });
+                }
+                else if (obj.type === SET_OLD_IMAGE_PATH) {
+                    expect(obj.payload).toEqual({ oldImage: "" });
+
+                }
+            }
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.slateData1,
+                        activeElement: {},
+                        parentUrn: {}
+                    }
+                };
+            }
+            let activeElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[6];
+            const spyFunction = jest.spyOn(canvasActions, 'setActiveElement')
+            canvasActions.setActiveElement(activeElement, 6, {}, {}, undefined, undefined)(dispatch, getState);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear()
+        })
+        it('Test-3.5.2-setActiveElement - Interactive Element in Aside', () => {
+            let dispatch = (obj) => {
+                if (obj.type === SET_ACTIVE_ELEMENT) {
+                    expect(obj.payload).toEqual(slateTestData.setActiveElementPayload.interactiveInAside);
+                }
+                else if (obj.type === SET_PARENT_ASIDE_DATA) {
+                    expect(obj.payload).toEqual({ parentUrn: {}, asideData: {} });
+                }
+                else if (obj.type === SET_PARENT_SHOW_DATA) {
+                    expect(obj.payload).toEqual({ showHideObj: undefined });
+                }
+                else if (obj.type === SET_OLD_IMAGE_PATH) {
+                    expect(obj.payload).toEqual({ oldImage: "" });
+                }
+            }
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.slateData1,
+                        activeElement: {},
+                        parentUrn: {}
+                    }
+                };
+            }
+            let activeElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[8].elementdata.bodymatter[3];
+            const spyFunction = jest.spyOn(canvasActions, 'setActiveElement')
+            canvasActions.setActiveElement(activeElement, '8-3', {}, {}, undefined, undefined)(dispatch, getState);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear()
+        })
+        it('Test-3.5.3-setActiveElement - Interactive Elemente in WE-Section Break', () => {
+            let dispatch = (obj) => {
+                if (obj.type === SET_ACTIVE_ELEMENT) {
+                    expect(obj.payload).toEqual(slateTestData.setActiveElementPayload.interactiveInWE);
+                }
+                else if (obj.type === SET_PARENT_ASIDE_DATA) {
+                    expect(obj.payload).toEqual({ parentUrn: {}, asideData: {} });
+                }
+                else if (obj.type === SET_PARENT_SHOW_DATA) {
+                    expect(obj.payload).toEqual({ showHideObj: undefined });
+                }
+                else if (obj.type === SET_OLD_IMAGE_PATH) {
+                    expect(obj.payload).toEqual({ oldImage: "" });
+
+                }
+            }
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.slateData1,
+                        activeElement: {},
+                        parentUrn: {}
+                    }
+                };
+            }
+            let activeElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[9].elementdata.bodymatter[1].contents.bodymatter[3];
+            const spyFunction = jest.spyOn(canvasActions, 'setActiveElement')
+            canvasActions.setActiveElement(activeElement, '9-1-3', {}, {}, undefined, undefined)(dispatch, getState);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear()
+        })
+        it('Test-3.5.4-setActiveElement - Interactive Element in Multi-Column', () => {
+            let dispatch = (obj) => {
+                if (obj.type === SET_ACTIVE_ELEMENT) {
+                    expect(obj.payload).toEqual(slateTestData.setActiveElementPayload.interactiveInMultiColumn);
+                }
+                else if (obj.type === SET_PARENT_ASIDE_DATA) {
+                    expect(obj.payload).toEqual({ parentUrn: {}, asideData: {} });
+                }
+                else if (obj.type === SET_PARENT_SHOW_DATA) {
+                    expect(obj.payload).toEqual({ showHideObj: undefined });
+                }
+                else if (obj.type === SET_OLD_IMAGE_PATH) {
+                    expect(obj.payload).toEqual({ oldImage: "" });
+
+                }
+            }
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.slateData1,
+                        activeElement: {},
+                        parentUrn: { elementType: "group" }
+                    }
+                };
+            }
+            let activeElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[7].groupeddata.bodymatter[1].groupdata.bodymatter[1];
+            const spyFunction = jest.spyOn(canvasActions, 'setActiveElement')
+            canvasActions.setActiveElement(activeElement, '7-1-1', {}, {}, undefined, undefined)(dispatch, getState);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear()
+        })
     });
-    // it('fetchElementTag', () => {
-    //     let store = mockStore();
-    //     store.dispatch(selectActions.fetchElementTag(wip, 0));
-    // });
-    it('setActiveElement for paragraph', () => {
-        let store = mockStore();
-        store.dispatch(selectActions.setActiveElement(wip.paragraph, 1));
-
-        let expectedActions = [{
-            type: SET_ACTIVE_ELEMENT,
-            payload: {
-                'elementType': 'element-authoredtext',
-                'primaryOption': 'primary-paragraph',
-                'secondaryOption': 'secondary-paragraph',
-                'elementId': 'urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1a',
-                'index': 1,
-                'elementWipType': 'element-authoredtext',
-                'tag': 'P',
-                'toolbar': []
-
+    describe('Test-4- fetchSlateData', () => {
+        it('Test-4.1-fetchSlateData - calledFrom - SlateRefresh', () => {
+            let responseData = { data: slateTestData.slateData1 }
+            let dispatch = (obj) => {
+                if (obj && obj.type === GET_PAGE_NUMBER) {
+                    expect(obj.payload).toEqual({ pageNumberData: [], allElemPageData: [] });
+                }
+                else if (obj && obj.type === FETCH_SLATE_DATA) {
+                    expect(obj.payload).toEqual(slateTestData.slateData1);
+                }
+                else if (obj && obj.type === SET_ACTIVE_ELEMENT) {
+                    expect(obj.payload).toEqual({});
+                }
             }
-        }]
-        expect(store.getActions()[0].payload.tag).toEqual(expectedActions[0].payload.tag);
-
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.slateData1,
+                        activeElement: {},
+                    }
+                };
+            }
+            let manifestURN = 'urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9',
+                entityURN = 'urn:pearson:entity:1d4517cf-3a5d-4fd4-8347-2fa55f118294',
+                page = 1,
+                versioning = '',
+                calledFrom = 'SlateRefresh',
+                versionPopupReload = undefined
+            const spyFunction = jest.spyOn(canvasActions, 'fetchSlateData');
+            axios.get = jest.fn(() => Promise.resolve(responseData));
+            canvasActions.fetchSlateData(manifestURN, entityURN, page, versioning, calledFrom, versionPopupReload)(dispatch, getState);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        })
+        it('Test-4.2-fetchSlateData - Poetry Element - Versioning', () => {
+            let responseData = { data: slateTestData.slateData1 }
+            let dispatch = (obj) => {
+                if (obj && obj.type === GET_PAGE_NUMBER) {
+                    expect(obj.payload).toEqual({ pageNumberData: [], allElemPageData: [] });
+                }
+                else if (obj && obj.type === AUTHORING_ELEMENT_UPDATE) {
+                    expect(obj.payload).toEqual(slateTestData.poetryElementVersion);
+                }
+                else if (obj && obj.type === SET_ACTIVE_ELEMENT) {
+                    expect(obj.payload).toEqual({});
+                }
+            }
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.slateData1,
+                        activeElement: {},
+                    }
+                };
+            }
+            let manifestURN = 'urn:pearson:manifest:ff22f67a-e32f-4f5c-a9e5-a57c8c757ce0',
+                entityURN = 'urn:pearson:entity:767e921e-255d-44a5-87bb-c0381cf3ef50',
+                page = 0,
+                versioning = slateTestData.poetryElementVersion,
+                calledFrom = '',
+                versionPopupReload = false
+            const spyFunction = jest.spyOn(canvasActions, 'fetchSlateData');
+            axios.get = jest.fn(() => Promise.resolve(responseData));
+            canvasActions.fetchSlateData(manifestURN, entityURN, page, versioning, calledFrom, versionPopupReload)(dispatch, getState);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        })
+        it('Test-4.3-fetchSlateData - Aside Element - Versioning', () => {
+            let responseData = { data: { ...slateTestData.slateData1 } }
+            let dispatch = (obj) => {
+                if (obj && obj.type === GET_PAGE_NUMBER) {
+                    expect(obj.payload).toEqual({ pageNumberData: [], allElemPageData: [] });
+                }
+                else if (obj && obj.type === AUTHORING_ELEMENT_UPDATE) {
+                    expect(obj.payload).toEqual({ ...slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[8], [slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[8].elementdata.bodymatter[5]]: slateTestData.asideVersioning });
+                }
+                else if (obj && obj.type === SET_ACTIVE_ELEMENT) {
+                    expect(obj.payload).toEqual({});
+                }
+            }
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.slateData1,
+                        activeElement: {},
+                    }
+                };
+            }
+            let manifestURN = 'urn:pearson:manifest:7bb268e1-c3b6-4174-b0d7-12c57a46e93b',
+                entityURN = 'urn:pearson:entity:7c7fc762-2432-4499-88c0-3c6b824d2470',
+                page = 0,
+                versioning = { ...slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[8], [slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[8].elementdata.bodymatter[5]]: slateTestData.asideVersioning },
+                calledFrom = '',
+                versionPopupReload = false
+            const spyFunction = jest.spyOn(canvasActions, 'fetchSlateData');
+            axios.get = jest.fn(() => Promise.resolve(responseData));
+            canvasActions.fetchSlateData(manifestURN, entityURN, page, versioning, calledFrom, versionPopupReload)(dispatch, getState);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        })
+        it('Test-4.4-fetchSlateData - Popup Slate', () => {
+            let responseData = { data: { ...slateTestData.popupSlate } }
+            let dispatch = (obj) => {
+                if (obj && obj.type === GET_PAGE_NUMBER) {
+                    expect(obj.payload).toEqual({ pageNumberData: [], allElemPageData: [] });
+                }
+                else if (obj && obj.type === OPEN_POPUP_SLATE) {
+                    expect(obj.payload).toEqual(slateTestData.popupSlate);
+                }
+            }
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.popupSlate,
+                        activeElement: {},
+                    }
+                };
+            }
+            let manifestURN = 'urn:pearson:manifest:0749775b-cf8e-4165-ae6d-3e37600b2670',
+                entityURN = 'urn:pearson:entity:f23c667b-81ca-48c5-ba58-bc19fa6b9677',
+                page = 0,
+                versioning = false,
+                calledFrom = '',
+                versionPopupReload = undefined
+            const spyFunction = jest.spyOn(canvasActions, 'fetchSlateData');
+            axios.get = jest.fn(() => Promise.resolve(responseData));
+            canvasActions.fetchSlateData(manifestURN, entityURN, page, versioning, calledFrom, versionPopupReload)(dispatch, getState);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        })
+        it('Test-4.5-fetchSlateData - Popup Slate - Versioning', () => {
+            let responseData = { data: { ...slateTestData.popupSlate } }
+            let dispatch = (obj) => {
+                if (obj && obj.type === GET_PAGE_NUMBER) {
+                    expect(obj.payload).toEqual({ pageNumberData: [], allElemPageData: [] });
+                }
+            }
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.popupSlate,
+                        activeElement: {},
+                    }
+                };
+            }
+            let manifestURN = 'urn:pearson:manifest:0749775b-cf8e-4165-ae6d-3e37600b2670',
+                entityURN = 'urn:pearson:entity:f23c667b-81ca-48c5-ba58-bc19fa6b9677',
+                page = 0,
+                versioning = slateTestData.popupSlateLabelVersioning,
+                calledFrom = '',
+                versionPopupReload = true
+            const spyFunction = jest.spyOn(canvasActions, 'fetchSlateData');
+            axios.get = jest.fn(() => Promise.resolve(responseData));
+            canvasActions.fetchSlateData(manifestURN, entityURN, page, versioning, calledFrom, versionPopupReload)(dispatch, getState);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        })
     });
-    it('setActiveElement for paragraph with headers', () => {
-        let store = mockStore();
-        store.dispatch(selectActions.setActiveElement(wip["heading-1"], 1));
-
-        let expectedActions = [{
-            type: SET_ACTIVE_ELEMENT,
-            payload: {
-                'elementType': 'element-authoredtext',
-                'primaryOption': 'primary-heading',
-                'secondaryOption': 'secondary-heading-1',
-                'elementId': 'urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b',
-                'index': 1,
-                'elementWipType': 'element-authoredtext',
-                'tag': 'H1',
-                'toolbar': ['bold','underline','strikethrough','orderedlist','unorderedlist','increaseindent','decreaseindent','glossary','crossLinkingIcon','assetpopover','slatetag','redo']
+    describe('Test-5- openPopupSlate', () => {
+        it('Test-5.1-openPopupSlate - IF Case', () => {
+            let dispatch = jest.fn();
+            let popupId = "urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9";
+            const spyFunction = jest.spyOn(canvasActions, 'openPopupSlate')
+            canvasActions.openPopupSlate({ id: "popupId" }, popupId)(dispatch);
+            expect(spyFunction).toHaveBeenCalled()
+            expect(dispatch).not.toHaveBeenCalled();
+            spyFunction.mockClear()
+        })
+        it('Test-5.2-openPopupSlate - ELSE Case', () => {
+            let dispatch = (obj) => {
+                expect(obj.type).toBe(CLOSE_POPUP_SLATE);
+                expect(obj.payload.popupId).toBe("urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9");
             }
-        }]
-        expect(store.getActions()[0].payload.tag).toEqual(expectedActions[0].payload.tag);
-
+            let popupId = "urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9";
+            const spyFunction = jest.spyOn(canvasActions, 'openPopupSlate')
+            canvasActions.openPopupSlate(undefined, popupId)(dispatch);
+            expect(spyFunction).toHaveBeenCalled()
+            spyFunction.mockClear()
+        })
     });
-    it('setActiveElement for paragraph with blockfeature', () => {
-        let store = mockStore();
-        store.dispatch(selectActions.setActiveElement(wip.pullquote, 1));
-
-        let expectedActions = [{
-            type: SET_ACTIVE_ELEMENT,
-            payload: {
-                'elementType': 'element-authoredtext',
-                'primaryOption': 'primary-blockquote',
-                'secondaryOption': 'secondary-pullquote',
-                'elementId': 'urn:pearson:work:5d489bfe-ef76-4193-b07a-62d9d393fe93',
-                'index': 1,
-                'elementWipType': 'element-blockfeature',
-                'tag': 'BQ',
-                'toolbar': ['bold','underline','strikethrough','orderedlist','unorderedlist', 'glossary','slatetag']
+    describe('Test-6- createPopupUnit', () => {
+        let slateManifestURN = 'urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9'
+        it('Test-6.1-createPopupUnit - popupField - formatted-title', () => {
+            let responseData = { data: slateTestData.popupLabelResponse }
+            let dispatch = (obj) => {
+                expect(obj.type).toBe(AUTHORING_ELEMENT_UPDATE);
             }
-        }]
-
-        expect(store.getActions()[0].payload.tag).toEqual(expectedActions[0].payload.tag);
-
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.slateData1,
+                        activeElement: {},
+                    }
+                };
+            }
+            let popupField = 'formatted-title',
+                parentElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[1],
+                popupElementIndex = '1-0',
+                createdFromFootnote = undefined;
+            const spyFunction = jest.spyOn(canvasActions, 'createPopupUnit')
+            axios.post = jest.fn(() => Promise.resolve(responseData))
+            canvasActions.createPopupUnit(popupField, parentElement, cb, popupElementIndex, slateManifestURN, createdFromFootnote)(dispatch, getState)
+            expect(spyFunction).toHaveBeenCalled()
+            spyFunction.mockClear()
+        })
+        it('Test-6.2-createPopupUnit - popupField - formatted-subtitle', () => {
+            document.getElementById = () => {
+                return {
+                    innerText: "innerText",
+                    innerHTML: "<p>innerHTML</p>"
+                }
+            }
+            let responseData = { data: slateTestData.popupLabelResponse }
+            let dispatch = (obj) => {
+                expect(obj.type).toBe(AUTHORING_ELEMENT_UPDATE);
+            }
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.slateData1,
+                        activeElement: {},
+                    }
+                };
+            }
+            let popupField = 'formatted-subtitle',
+                parentElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[1],
+                popupElementIndex = '1-1',
+                createdFromFootnote = undefined;
+            const spyFunction = jest.spyOn(canvasActions, 'createPopupUnit')
+            axios.post = jest.fn(() => Promise.resolve(responseData))
+            canvasActions.createPopupUnit(popupField, parentElement, cb, popupElementIndex, slateManifestURN, createdFromFootnote)(dispatch, getState)
+            expect(spyFunction).toHaveBeenCalled()
+            spyFunction.mockClear()
+        })
+        it('Test-6.3-createPopupUnit - CITATIONS', () => {
+            document.getElementById = () => {
+                return {
+                    innerText: "innerText",
+                    innerHTML: "<p>innerHTML</p>"
+                }
+            }
+            let responseData = { data: slateTestData.CitationTitleResponse }
+            let dispatch = (obj) => {
+                expect(obj.type).toBe(AUTHORING_ELEMENT_UPDATE);
+            }
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.slateData1,
+                        activeElement: {},
+                    }
+                };
+            }
+            let parentElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[2],
+                popupElementIndex = '2-0';
+            const spyFunction = jest.spyOn(canvasActions, 'createPopupUnit')
+            axios.post = jest.fn(() => Promise.resolve(responseData))
+            canvasActions.createPopupUnit(undefined, parentElement, cb, popupElementIndex, slateManifestURN, undefined)(dispatch, getState)
+            expect(spyFunction).toHaveBeenCalled()
+            spyFunction.mockClear()
+        })
+        it('Test-6.4-createPopupUnit - popupField - catch Block', () => {
+            let dispatch = (obj) => {
+                expect(obj.type).toBe(ERROR_POPUP);
+                expect(obj.payload.show).toBe(true);
+            };
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.slateData1,
+                        activeElement: {},
+                    }
+                };
+            }
+            let popupField = 'formatted-title',
+                parentElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[1],
+                popupElementIndex = '1-0',
+                createdFromFootnote = undefined;
+            const spyFunction = jest.spyOn(canvasActions, 'createPopupUnit')
+            axios.post = jest.fn(() => Promise.reject({}))
+            canvasActions.createPopupUnit(popupField, parentElement, cb, popupElementIndex, slateManifestURN, createdFromFootnote)(dispatch, getState)
+            expect(spyFunction).toHaveBeenCalled()
+            spyFunction.mockClear()
+        })
+        it('Test-6.5-createPopupUnit - Popup in Aside', () => {
+            document.getElementById = () => {
+                return {
+                    innerText: "innerText",
+                    innerHTML: "<p>innerHTML</p>"
+                }
+            }
+            let responseData = { data: slateTestData.popupLabelResponse }
+            let dispatch = (obj) => {
+                expect(obj.type).toBe(AUTHORING_ELEMENT_UPDATE);
+            }
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.slateData1,
+                        activeElement: {},
+                    }
+                };
+            }
+            let popupField = 'formatted-subtitle',
+                parentElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[8].elementdata.bodymatter[4],
+                popupElementIndex = '8-4-0',
+                createdFromFootnote = undefined;
+            const spyFunction = jest.spyOn(canvasActions, 'createPopupUnit')
+            axios.post = jest.fn(() => Promise.resolve(responseData))
+            canvasActions.createPopupUnit(popupField, parentElement, cb, popupElementIndex, slateManifestURN, createdFromFootnote)(dispatch, getState)
+            expect(spyFunction).toHaveBeenCalled()
+            spyFunction.mockClear()
+        })
+        it('Test-6.6-createPopupUnit - Popup in WE', () => {
+            document.getElementById = () => {
+                return {
+                    innerText: "innerText",
+                    innerHTML: "<p>innerHTML</p>"
+                }
+            }
+            let responseData = { data: slateTestData.popupLabelResponse }
+            let dispatch = (obj) => {
+                expect(obj.type).toBe(AUTHORING_ELEMENT_UPDATE);
+            }
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.slateData1,
+                        activeElement: {},
+                    }
+                };
+            }
+            let popupField = 'formatted-subtitle',
+                parentElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[9].elementdata.bodymatter[1].contents.bodymatter[4],
+                popupElementIndex = '9-1-4-1',
+                createdFromFootnote = undefined;
+            const spyFunction = jest.spyOn(canvasActions, 'createPopupUnit')
+            axios.post = jest.fn(() => Promise.resolve(responseData))
+            canvasActions.createPopupUnit(popupField, parentElement, cb, popupElementIndex, slateManifestURN, createdFromFootnote)(dispatch, getState)
+            expect(spyFunction).toHaveBeenCalled()
+            spyFunction.mockClear()
+        })
     });
-    it('setActiveElement for paragraph with margilinia', () => {
-        let store = mockStore();
-        store.dispatch(selectActions.setActiveElement(wip.marginalia, 1));
-
-        let expectedActions = [{
-            type: SET_ACTIVE_ELEMENT,
-            payload: {
-                'elementType': 'element-authoredtext',
-                'primaryOption': 'primary-blockquote',
-                'secondaryOption': 'secondary-marginalia',
-                'elementId': 'urn:pearson:work:3a87a270-5d35-4714-877e-9bca2eb25271',
-                'index': 1,
-                'elementWipType': 'element-blockfeature',
-                'tag': 'BQ',
-                'toolbar': ['bold','underline','strikethrough','orderedlist','unorderedlist', 'glossary','slatetag']
+    describe('Test-7- createPoetryUnit', () => {
+        let slateManifestURN = 'urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9'
+        it('Test-7.1-createPoetryUnit - poetryField - formatted-subtitle', () => {
+            let responseData = { data: slateTestData.poetryTitleResponse }
+            let dispatch = (obj) => {
+                expect(obj.type).toBe(AUTHORING_ELEMENT_UPDATE);
             }
-        }]
-
-        expect(store.getActions()[0].payload.tag).toEqual(expectedActions[0].payload.tag);
-
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.slateData1,
+                        activeElement: {},
+                    }
+                };
+            }
+            let poetryField = 'formatted-subtitle',
+                parentElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[0],
+                ElementIndex = '0-1';
+            const spyFunction = jest.spyOn(canvasActions, 'createPoetryUnit');
+            axios.post = jest.fn(() => Promise.resolve(responseData));
+            canvasActions.createPoetryUnit(poetryField, parentElement, cb, ElementIndex, slateManifestURN)(dispatch, getState);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        })
+        it('Test-7.2-createPoetryUnit - poetryField - creditsarray', () => {
+            let responseData = { data: slateTestData.poetryTitleResponse }
+            let dispatch = (obj) => {
+                expect(obj.type).toBe(AUTHORING_ELEMENT_UPDATE);
+            }
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.slateData1,
+                        activeElement: {},
+                    }
+                };
+            }
+            let poetryField = 'creditsarray',
+                parentElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[0],
+                ElementIndex = '0-4';
+            const spyFunction = jest.spyOn(canvasActions, 'createPoetryUnit');
+            axios.post = jest.fn(() => Promise.resolve(responseData));
+            canvasActions.createPoetryUnit(poetryField, parentElement, cb, ElementIndex, slateManifestURN)(dispatch, getState);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        })
+        it('Test-7.3-createPoetryUnit - poetryField - formatted-title', () => {
+            let responseData = { data: slateTestData.poetryTitleResponse }
+            let dispatch = (obj) => {
+                expect(obj.type).toBe(AUTHORING_ELEMENT_UPDATE);
+            }
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.slateData1,
+                        activeElement: {},
+                    }
+                };
+            }
+            let poetryField = 'formatted-title',
+                parentElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[0],
+                ElementIndex = '0-1';
+            const spyFunction = jest.spyOn(canvasActions, 'createPoetryUnit');
+            axios.post = jest.fn(() => Promise.resolve(responseData));
+            canvasActions.createPoetryUnit(poetryField, parentElement, cb, ElementIndex, slateManifestURN)(dispatch, getState);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        })
+        it('Test-7.4-createPoetryUnit - poetryField - else case', () => {
+            let responseData = { data: slateTestData.poetryTitleResponse }
+            let dispatch = (obj) => {
+                expect(obj.type).toBe(AUTHORING_ELEMENT_UPDATE);
+            }
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.slateData1,
+                        activeElement: {},
+                    }
+                };
+            }
+            let poetryField = 'formatted-title ',
+                parentElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[0],
+                ElementIndex = '0-1';
+            const spyFunction = jest.spyOn(canvasActions, 'createPoetryUnit');
+            axios.post = jest.fn(() => Promise.resolve(responseData));
+            canvasActions.createPoetryUnit(poetryField, parentElement, cb, ElementIndex, slateManifestURN)(dispatch, getState);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        })
+        it('Test-7.5-createPoetryUnit - catch block', () => {
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.slateData1,
+                        activeElement: {},
+                    }
+                };
+            },
+                dispatch;
+            let poetryField = 'formatted-title',
+                parentElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[0],
+                ElementIndex = '0-1';
+            const spyFunction = jest.spyOn(canvasActions, 'createPoetryUnit');
+            axios.post = jest.fn(() => Promise.reject({}));
+            canvasActions.createPoetryUnit(poetryField, parentElement, cb, ElementIndex, slateManifestURN)(dispatch, getState);
+            expect(spyFunction).toHaveBeenCalled();
+            expect(config.savingInProgress).toBe(false);
+            spyFunction.mockClear();
+        })
     });
-
-    it('setActiveElement for paragraph with margilinia with attribution', () => {
-        let store = mockStore();
-        store.dispatch(selectActions.setActiveElement(wip["marginalia-attribution"], 1));
-
-        let expectedActions = [{
-            type: SET_ACTIVE_ELEMENT,
-            payload: {
-                'elementType': 'element-authoredtext',
-                'primaryOption': 'primary-blockquote',
-                'secondaryOption': 'secondary-marginalia-attribution',
-                'elementId': 'urn:pearson:work:9c2d0567-c24d-44f5-8e8e-5b7d9859a26d',
-                'index': 1,
-                'elementWipType': 'element-blockfeature',
-                'tag': 'BQ',
-                'toolbar': ['bold','underline','strikethrough','orderedlist','unorderedlist', 'glossary','slatetag']
-            }
-        }]
-
-        expect(store.getActions()[0].payload.tag).toEqual(expectedActions[0].payload.tag);
-
-    });
-    describe('action file test casses for figure', () => {
-
-
-        it('setActiveElement test cases------------- figure', () => {
-            let expectedActions = figureMockData.figure
-            let dispatch = (obj) => {
-                if(obj.type === SET_ACTIVE_ELEMENT){
-                    expect(obj.payload).toEqual(expectedActions[0].payload);
-                }
-                else{
-                    return ''
-                }
-            };
-            let getState = () => {
-             return initialState;
-            }
-            selectActions.setActiveElement(wip.figure, 1)(dispatch,getState);
-    
-        });
-
-        xit('setActiveElement test cases------------- figure image50Text', () => {
-            let expectedActions = figureMockData.figureImage50Text
-            let dispatch = (obj) => {
-                if(obj.type === SET_ACTIVE_ELEMENT){
-                    expect(obj.payload).toEqual(expectedActions[0].payload);
-                }
-                else{
-                    return ''
-                }
-            };
-            let getState = () => {
-             return initialState;
-            }
-            selectActions.setActiveElement(wip["figure-image50Text"], 1)(dispatch,getState);
-    
-        });
-
-        xit('setActiveElement test cases------------- figure imageWiderThanText', () => {
-            let expectedActions = figureMockData.figureImageWiderThanText
-            let dispatch = (obj) => {
-                if(obj.type === SET_ACTIVE_ELEMENT){
-                    expect(obj.payload).toEqual(expectedActions[0].payload);
-                }
-                else{
-                    return ''
-                }
-            };
-            let getState = () => {
-             return initialState;
-            }
-            selectActions.setActiveElement(wip["figure-imageWiderThanText"], 1)(dispatch,getState);
-    
-        });
-
-        xit('setActiveElement test cases------------- figure imageFullscreen', () => {
-            let expectedActions = figureMockData.figureImageFullscreen
-            let dispatch = (obj) => {
-                if(obj.type === SET_ACTIVE_ELEMENT){
-                    expect(obj.payload).toEqual(expectedActions[0].payload);
-                }
-                else{
-                    return ''
-                }
-            };
-            let getState = () => {
-             return initialState;
-            }
-            selectActions.setActiveElement(wip["figure-imageFullscreen"], 1)(dispatch,getState);
-        });
-
-        
-        xit('setActiveElement test cases------------- figure image25Text', () => {
-            let expectedActions = figureMockData.figureImage25Text
-            let dispatch = (obj) => {
-                if(obj.type === SET_ACTIVE_ELEMENT){
-                    expect(obj.payload).toEqual(expectedActions[0].payload);
-                }
-                else{
-                    return ''
-                }
-            };
-            let getState = () => {
-             return initialState;
-            }
-            selectActions.setActiveElement(wip["figure-image25Text"], 1)(dispatch,getState);
-        });
-    })
-
-
-    describe('action file test casses for table', () => {
-        it('setActiveElement  with table', () => {
-    
-            let expectedActions = figureMockData.table
-            let dispatch = (obj) => {
-                if(obj.type === SET_ACTIVE_ELEMENT){
-                    expect(obj.payload).toEqual(expectedActions[0].payload);
-                }
-                else{
-                    return ''
-                }
-            };
-            let getState = () => {
-             return initialState;
-            }
-            selectActions.setActiveElement(wip.table, 1)(dispatch,getState);
-    
-        });
-        xit('setActiveElement  with table imageTextWidthTableImage', () => {
-            let expectedActions = figureMockData.imageTextWidthTableImage
-            let dispatch = (obj) => {
-                if(obj.type === SET_ACTIVE_ELEMENT){
-                    expect(obj.payload).toEqual(expectedActions[0].payload);
-                }
-                else{
-                    return ''
-                }
-            };
-            let getState = () => {
-             return initialState;
-            }
-            selectActions.setActiveElement(wip["table-imageTextWidthTableImage"], 1)(dispatch,getState);
-    
-        });
-
-        xit('setActiveElement  with table imageWiderThanTextTableImage', () => {
-    
-            let expectedActions = [{
-                type: SET_ACTIVE_ELEMENT,
-                payload: {
-                    "altText": "",
-                    'elementType': 'figure',
-                    'primaryOption': 'primary-image-table',
-                    "longDesc": "",
-                    'secondaryOption': 'secondary-image-table-wider',
-                    'elementId': 'urn:pearson:work:b33703aa-d629-4466-8606-cfcf0505e291',
-                    'index': 1,
-                    'elementWipType': 'figure',
-                    'tag': 'TB',
-                    'toolbar': ['crossLinkingIcon','assetpopover','decreaseindent','glossary']
-                }
-            }]
-            let dispatch = (obj) => {
-                if(obj.type === SET_ACTIVE_ELEMENT){
-                    expect(obj.payload).toEqual(expectedActions[0].payload);
-                }
-                else{
-                    return ''
-                }
-            };
-            let getState = () => {
-             return initialState;
-            }
-            selectActions.setActiveElement(wip["table-imageWiderThanTextTableImage"], 1)(dispatch,getState);
-    
-        });
-
-        xit('setActiveElement  with table imageFullscreenTableImage', () => {
-    
-            let expectedActions = [{
-                type: SET_ACTIVE_ELEMENT,
-                payload: {
-                    'altText':'',
-                    'elementType': 'figure',
-                    "longDesc": "",
-                    'primaryOption': 'primary-image-table',
-                    'secondaryOption': 'secondary-image-table-full',
-                    'elementId': 'urn:pearson:work:b33703aa-d629-4466-8606-cfcf0505e291',
-                    'index': 1,
-                    'elementWipType': 'figure',
-                    'tag': 'TB',
-                    'toolbar': ['crossLinkingIcon','assetpopover','decreaseindent','glossary']
-                }
-            }]
-            let dispatch = (obj) => {
-                if(obj.type === SET_ACTIVE_ELEMENT){
-                    expect(obj.payload).toEqual(expectedActions[0].payload);
-                }
-                else{
-                    return ''
-                }
-            };
-            let getState = () => {
-             return initialState;
-            }
-            selectActions.setActiveElement(wip["table-imageFullscreenTableImage"], 1)(dispatch,getState);
-    
-        });
-    
-    })
-    
-    describe('action file test casses for mathImage', () => {
-        it('setActiveElement for   ------------------mathImage', () => {
-    
-            let expectedActions = figureMockData.mathImage
-            let dispatch = (obj) => {
-                if(obj.type === SET_ACTIVE_ELEMENT){
-                    expect(obj.payload).toEqual(expectedActions[0].payload);
-                }
-                else{
-                    return ''
-                }
-            };
-            let getState = () => {
-             return initialState;
-            }
-            selectActions.setActiveElement(wip.mathImage, 1)(dispatch,getState);
-        });
-        xit('setActiveElement for  -------------- mathImage imageTextWidthMathImage', () => {
-            let expectedActions = [{
-                type: SET_ACTIVE_ELEMENT,
-                payload: {
-                    "altText": "",
-                    'elementType': 'figure',
-                    'primaryOption': 'primary-image-equation',
-                    'secondaryOption': 'secondary-image-equation-width',
-                    'elementId': 'urn:pearson:work:1d5259c3-63c9-4a77-9a52-0315007624d0',
-                    'index': 1,
-                    "longDesc": "",
-                    'elementWipType': 'figure',
-                    'tag': 'EQ',
-                    'toolbar': ['crossLinkingIcon','assetpopover','decreaseindent','glossary']
-                }
-            }];
-            let dispatch = (obj) => {
-                if(obj.type === SET_ACTIVE_ELEMENT){
-                    expect(obj.payload).toEqual(expectedActions[0].payload);
-                }
-                else{
-                    return ''
-                }
-            };
-            let getState = () => {
-             return initialState;
-            }
-            selectActions.setActiveElement(wip["mathImage-imageTextWidthMathImage"], 1)(dispatch,getState);
-    
-        });
-        xit('setActiveElement for  -------------- mathImage imageWiderThanTextMathImage', () => {
-            let expectedActions = [{
-                type: SET_ACTIVE_ELEMENT,
-                payload: {
-                    "altText": "",
-                    'elementType': 'figure',
-                    'primaryOption': 'primary-image-equation',
-                    'secondaryOption': 'secondary-image-equation-wider',
-                    'elementId': 'urn:pearson:work:1d5259c3-63c9-4a77-9a52-0315007624d0',
-                    'index': 1,
-                    "longDesc": "",
-                    'elementWipType': 'figure',
-                    'tag': 'EQ',
-                    'toolbar': ['crossLinkingIcon','assetpopover','decreaseindent','glossary']
-                }
-            }]
-            let dispatch = (obj) => {
-                if(obj.type === SET_ACTIVE_ELEMENT){
-                    expect(obj.payload).toEqual(expectedActions[0].payload);
-                }
-                else{
-                    return ''
-                }
-            };
-            let getState = () => {
-             return initialState;
-            }
-            selectActions.setActiveElement(wip["mathImage-imageWiderThanTextMathImage"], 1)(dispatch,getState);
-        });
-        xit('setActiveElement for  -------------- mathImage imageFullscreenMathImage', () => {
-    
-            let expectedActions = [{
-                type: SET_ACTIVE_ELEMENT,
-                payload: {
-                    "altText": "",
-                    'elementType': 'figure',
-                    'primaryOption': 'primary-image-equation',
-                    'secondaryOption': 'secondary-image-equation-full',
-                    'elementId': 'urn:pearson:work:1d5259c3-63c9-4a77-9a52-0315007624d0',
-                    'index': 1,
-                    "longDesc": "",
-                    'elementWipType': 'figure',
-                    'tag': 'EQ',
-                    'toolbar': ['crossLinkingIcon','assetpopover','decreaseindent','glossary']
-                }
-            }]
-            let dispatch = (obj) => {
-                if(obj.type === SET_ACTIVE_ELEMENT){
-                    expect(obj.payload).toEqual(expectedActions[0].payload);
-                }
-                else{
-                    return ''
-                }
-            };
-            let getState = () => {
-             return initialState;
-            }
-            selectActions.setActiveElement(wip["mathImage-imageFullscreenMathImage"], 1)(dispatch,getState);
-        });
-    })
-
-    xdescribe('action file test casses for eqation', () => {
-        it('setActiveElement for eqation', () => {
-            let store = mockStore();
-            store.dispatch(selectActions.setActiveElement(wip.equation, 1));
-    
-            let expectedActions = [{
-                type: SET_ACTIVE_ELEMENT,
-                payload: {
-                    'elementType': 'figure',
-                    'primaryOption': 'primary-mathml-equation',
-                    'secondaryOption': 'secondary-mathml-equation',
-                    'elementId': 'urn:pearson:work:46a8d1a5-e664-4d6e-928a-a86e951d03bb',
-                    'index': 1,
-                    "longDesc": "",
-                    'elementWipType': 'figure',
-                    "altText": "",
-                    'tag': 'MML',
-                    'toolbar': ['crossLinkingIcon','assetpopover','decreaseindent','glossary']
-                }
-            }]
-    
-            expect(store.getActions()).toEqual(expectedActions);
-    
-        });
-    })
-
-    describe('action file test casses for codelisting', () => {
-        it('setActiveElement for with codelisting', () => {
-            let store = mockStore();
-            store.dispatch(selectActions.setActiveElement(wip.codeEditor, 1));
-
-            let expectedActions = [{
-                type: SET_ACTIVE_ELEMENT,
-                payload: {
-                    'elementType': 'figure',
-                    'primaryOption': 'primary-blockcode-equation',
-                    'secondaryOption': 'secondary-blockcode-language-Default',
-                    'elementId': 'urn:pearson:work:ab5ae968-d1e8-4d31-8c2e-1a3cfdc7b0b1',
-                    'index': 1,
-                    "numbered": true,
-                    "startNumber": "1",
-                    'elementWipType': 'figure',
-                    'tag': 'BCE',
-                    'toolbar': ['crossLinkingIcon','assetpopover', 'decreaseindent', 'glossary']
-                }
-            }]
-
-            expect(store.getActions().type).toEqual(expectedActions.type);
-
-        });
-
-    })
-    describe('action file test casses for video', () => {
-        it('setActiveElement for with video', () => {
-            let expectedActions = [{
-                type: SET_ACTIVE_ELEMENT,
-                payload: {
-                    'elementType': 'video-audio',
-                    'primaryOption': 'primary-video',
-                    'secondaryOption': 'secondary-video-smartlink',
-                    'elementId': 'urn:pearson:work:3057d0db-e900-45fb-8d6e-cbdf010fa149',
-                    'index': 1,
-                    'elementWipType': 'figure',
-                    'tag': 'VID',
-                    'toolbar': ['crossLinkingIcon','assetpopover','glossary']
-                }
-            }]
-            let dispatch = (obj) => {
-                if(obj.type === SET_ACTIVE_ELEMENT){
-                    expect(obj.payload).toEqual(expectedActions[0].payload);
-                }
-                else{
-                    return ''
-                }
-            };
-            let getState = () => {
-             return initialState;
-            }
-            selectActions.setActiveElement(wip.video, 1)(dispatch,getState);
-        });
-        it('setActiveElement for with src internal', () => {
-            let store = mockStore();
-            let element= {
-                "video":{
-                    "id": "urn:pearson:work:3057d0db-e900-45fb-8d6e-cbdf010fa149",
-                    "type": "figure",
-                    "figuretype": "video",
-                    "subtype": "figureVideo",
-                    "figuredata": {
-                        "height": "399",
-                        "width": "600",
-                        "schema": "http://schemas.pearson.com/wip-authoring/video/1#/definitions/video",
-                        "videoid": "",
-                        "posterimage": {
-                            "imageid": "",
-                            "path": "https://d12m40tknrppbi.cloudfront.net/cite/images/FPO-audio_video.png"
-                        },
-                        "videos": [
-                            {
-                                "format": "",
-                                "path": ""
-                            }
-                        ],
-                        "tracks": [],
-                        "srctype": "internal",
-                        "clipinfo": {}
-                    },
-            }}
-            let dispatch = (obj) => {
-                if(obj.type === SET_ACTIVE_ELEMENT){
-                    expect(obj.payload).toEqual(expectedActions[0].payload);
-                }
-                else{
-                    return ''
-                }
-            };
-            let getState = () => {
-             return initialState;
-            }
-            let expectedActions = [{
-                type: SET_ACTIVE_ELEMENT,
-                payload: {
-                    'elementType': 'video-audio',
-                    'primaryOption': 'primary-video',
-                    'secondaryOption': 'secondary-video-alfresco',
-                    'elementId': 'urn:pearson:work:3057d0db-e900-45fb-8d6e-cbdf010fa149',
-                    'index': 1,
-                    'elementWipType': 'figure',
-                    'tag': 'VID',
-                    'toolbar': ['crossLinkingIcon','assetpopover','glossary']
-                }
-            }]
-            selectActions.setActiveElement(element.video, 1)(dispatch,getState);
-    
-        });
-    })
-    describe('action file test casses for audio', () => {
-        it('setActiveElement for with audio', () => {
-            let expectedActions = [{
-                type: SET_ACTIVE_ELEMENT,
-                payload: {
-                    'elementType': 'video-audio',
-                    'primaryOption': 'primary-audio',
-                    'secondaryOption': 'secondary-audio-smartlink',
-                    'elementId': 'urn:pearson:work:3057d0db-e900-45fb-8d6e-cbdf010fa149',
-                    'index': 1,
-                    'elementWipType': 'figure',
-                    'tag': 'AUD',
-                    'toolbar': ['crossLinkingIcon','assetpopover','glossary']
-                }
-            }]
-            let dispatch = (obj) => {
-                if(obj.type === SET_ACTIVE_ELEMENT){
-                    expect(obj.payload).toEqual(expectedActions[0].payload);
-                }
-                else{
-                    return ''
-                }
-            };
-            let getState = () => {
-             return initialState;
-            }
-            selectActions.setActiveElement(wip.audio, 1)(dispatch,getState);
-    
-        });
-        it('setActiveElement for with internal src', () => {
-            let element= {
-                "audio":{
-                    "id": "urn:pearson:work:3057d0db-e900-45fb-8d6e-cbdf010fa149",
-                    "type": "figure",
-                    "figuretype": "audio",
-                    "subtype": "figureVideo",
-                    "figuredata": {
-                        "height": "399",
-                        "width": "600",
-                        "schema": "http://schemas.pearson.com/wip-authoring/video/1#/definitions/video",
-                        "videoid": "",
-                        "posterimage": {
-                            "imageid": "",
-                            "path": "https://d12m40tknrppbi.cloudfront.net/cite/images/FPO-audio_video.png"
-                        },
-                        "videos": [
-                            {
-                                "format": "",
-                                "path": ""
-                            }
-                        ],
-                        "tracks": [],
-                        "srctype": "internal",
-                        "clipinfo": {}
-                    },
-                    "versionUrn": "urn:pearson:work:3057d0db-e900-45fb-8d6e-cbdf010fa149",
-                    "contentUrn": "urn:pearson:entity:48594256-c78a-4f3d-abdc-fa0c99746351"
-                },
-            }
-            let expectedActions = [{
-                type: SET_ACTIVE_ELEMENT,
-                payload: {
-                    'elementType': 'video-audio',
-                    'primaryOption': 'primary-audio',
-                    'secondaryOption': 'secondary-audio-alfresco',
-                    'elementId': 'urn:pearson:work:3057d0db-e900-45fb-8d6e-cbdf010fa149',
-                    'index': 1,
-                    'elementWipType': 'figure',
-                    'tag': 'AUD',
-                    'toolbar': ['crossLinkingIcon','assetpopover','glossary']
-                }
-            }]
-            let dispatch = (obj) => {
-                if(obj.type === SET_ACTIVE_ELEMENT){
-                    expect(obj.payload).toEqual(expectedActions[0].payload);
-                }
-                else{
-                    return ''
-                }
-            };
-            let getState = () => {
-             return initialState;
-            }
-            selectActions.setActiveElement(element.audio, 1)(dispatch,getState);
-    
-        });
-    })
-    describe('action file test casses for interactive', () => {
-        it('setActiveElement for with interavtive', () => {
-            let expectedActions = [{
-                type: SET_ACTIVE_ELEMENT,
-                payload: {
-                    "altText": "",
-                    'elementType': 'element-interactive',
-                    'primaryOption': 'primary-mmi',
-                    'secondaryOption': 'secondary-interactive-mmi',
-                    'elementId': 'urn:pearson:work:06b83c99-3e7c-4b5d-810e-0dee86dbbfdf',
-                    'index': 1,
-                    'elementWipType': 'figure',
-                    'tag': 'QUAD',
-                    'toolbar': ['crossLinkingIcon','assetpopover','glossary']
-                }
-            }]
-            let dispatch = (obj) => {
-                if(obj.type === SET_ACTIVE_ELEMENT){
-                    expect(obj.payload).toEqual(expectedActions[0].payload);
-                }
-                else{
-                    return ''
-                }
-            };
-            let getState = () => {
-             return initialState;
-            }
-            selectActions.setActiveElement(wip.interactive, 1)(dispatch,getState);
-    
-        });
-        it('setActiveElement for with interavtive', () => {
-            let expectedActions = [{
-                type: SET_ACTIVE_ELEMENT,
-                payload: {
-                    "altText": "",
-                    'elementType': 'element-interactive',
-                    'primaryOption': 'primary-smartlink',
-                    'secondaryOption': 'secondary-interactive-smartlink-third',
-                    'elementId': 'urn:pearson:work:9c29501d-374e-4400-815d-a71df4968d9f',
-                    'index': 1,
-                    'elementWipType': 'figure',
-                    'tag': 'SL',
-                    'toolbar': ['crossLinkingIcon','assetpopover','glossary']
-                }
-            }];
-            let dispatch = (obj) => {
-                if(obj.type === SET_ACTIVE_ELEMENT){
-                    expect(obj.payload).toEqual(expectedActions[0].payload);
-                }
-                else{
-                    return ''
-                }
-            };
-            let getState = () => {
-             return initialState;
-            }
-            selectActions.setActiveElement(wip.smartLink, 1)(dispatch,getState);
-    
-        });
-        xit('setActiveElement for with show hide', () => {
-            let expectedActions = [{
-                type: SET_ACTIVE_ELEMENT,
-                payload: {
-                    "altText": "",
-                    'elementType': 'element-interactive',
-                    'primaryOption': 'primary-showhide',
-                    'secondaryOption': 'secondary-aside-showhide',
-                    'elementId': 'urn:pearson:work:276f4d81-e76b-4d11-9e5e-0dae671e631e',
-                    'index': 1,
-                    'elementWipType': 'figure',
-                    'tag': 'SH',
-                    'toolbar': []
-                }
-            }];
-            let dispatch = (obj) => {
-                if(obj.type === SET_ACTIVE_ELEMENT){
-                    expect(obj.payload.tag).toEqual(expectedActions[0].payload.tag);
-                }
-                else{
-                    return ''
-                }
-            };
-            let getState = () => {
-             return initialState;
-            }
-            let dataToSend = wip.showHide;
-            dataToSend.type = 'showhide'
-            selectActions.setActiveElement(dataToSend, 1)(dispatch,getState);
-    
-        });
-        xit('setActiveElement for with show popup', () => {
-            let expectedActions = [{
-                type: SET_ACTIVE_ELEMENT,
-                payload: {
-                    "altText": "",
-                    'elementType': 'element-interactive',
-                    'primaryOption': 'primary-popup',
-                    'secondaryOption': 'secondary-interactive-popup',
-                    'elementId': 'urn:pearson:work:d5a8989a-f468-47b1-aca0-452e2503a09a',
-                    'index': 1,
-                    'elementWipType': 'figure',
-                    'tag': undefined,
-                    'toolbar': undefined
-                }
-            }];
-            let dispatch = (obj) => {
-                if(obj.type === SET_ACTIVE_ELEMENT){
-                    expect(obj.payload).toEqual(expectedActions[0].payload);
-                }
-                else{
-                    return ''
-                }
-            };
-            let getState = () => {
-             return initialState;
-            }
-            selectActions.setActiveElement(wip.popUp, 1)(dispatch,getState);
-    
-        });
-        it('setActiveElement for with show pdf', () => {
-            let expectedActions = [{
-                type: SET_ACTIVE_ELEMENT,
-                payload:{ elementType: 'element-interactive',
-                primaryOption: 'primary-smartlink',
-                secondaryOption: 'secondary-interactive-smartlink-pdf',
-                altText: '',
-                elementId: 'urn:pearson:work:d5a8989a-f468-47b1-aca0-452e2503a09a',
-                index: 1,
-                elementWipType: 'figure',
-                tag: "SL",
-                toolbar: ["crossLinkingIcon","assetpopover","glossary"],
-               }
-            }];
-            let dispatch = (obj) => {
-                if(obj.type === SET_ACTIVE_ELEMENT){
-                    expect(obj.payload).toEqual(expectedActions[0].payload);
-
-                }
-                else{
-                    return ''
-                }
-            };
-            let getState = () => {
-             return initialState;
-            }
-            selectActions.setActiveElement(wip.pdf, 1)(dispatch, getState);
-    
-        });
-    })
-    describe('action file tets cases for assessment', () => {
-
-        it('setActiveElement for with assesment', () => {
-            let store = mockStore();
-            store.dispatch(selectActions.setActiveElement(wip.assessment, 1));
-
-            let expectedActions = [{
-                type: SET_ACTIVE_ELEMENT,
-                payload: {
-                    'elementType': 'element-assessment',
-                    'primaryOption': 'primary-single-assessment',
-                    'secondaryOption': 'secondary-single-assessment-cite',
-                    'elementId': 'urn:pearson:work:ab5ae968-d1e8-4d31-8c2e-1a3cfdc7b0b1',
-                    'index': 1,
-                    "numbered": true,
-                    "startNumber": "1",
-                    'elementWipType': 'figure',
-                    'tag': 'Qu',
-                    'toolbar': setActiveToolbar
-                }
-            }]
-
-            expect(store.getActions().type).toEqual(expectedActions.type);
-
-        });
-
-    })
-    describe('action file tets cases for containers', () => {
-
-        it('setActiveElement for with elemnt-aside', () => {
-            let store = mockStore();
-            let dataToSend = wip.aside;
-            dataToSend.subtype="";
-            store.dispatch(selectActions.setActiveElement(dataToSend, 1));
-
-            let expectedActions = [{
-                type: SET_ACTIVE_ELEMENT,
-                payload: {
-                    'elementType': 'element-aside',
-                    'primaryOption': 'primary-aside-aside',
-                    'secondaryOption': 'secondary-aside-sb1',
-                    'elementId': 'urn:pearson:work:ab5ae968-d1e8-4d31-8c2e-1a3cfdc7b0b1',
-                    'index': 1,
-                    "numbered": true,
-                    "startNumber": "1",
-                    'elementWipType': 'element-aside',
-                    'tag': 'As',
-                    'toolbar': setActiveToolbar
-                }
-            }]
-
-            expect(store.getActions().type).toEqual(expectedActions.type);
-
-        });
-
-        it('setActiveElement for with eworkde example', () => {
-            let store = mockStore();
-            let dataToSend = wip.workedExample;
-            dataToSend.designtype = ""
-            store.dispatch(selectActions.setActiveElement(wip.workedExample, 1));
-
-            let expectedActions = [{
-                type: SET_ACTIVE_ELEMENT,
-                payload: {
-                    'elementType': 'element-workedexample',
-                    'primaryOption': 'primary-workedexample-we1',
-                    'secondaryOption': 'secondary-workedexample-we1',
-                    'elementId': 'urn:pearson:work:ab5ae968-d1e8-4d31-8c2e-1a3cfdc7b0b1',
-                    'index': 1,
-                    "numbered": true,
-                    "startNumber": "1",
-                    'elementWipType': 'element-aside',
-                    'tag': 'WE',
-                    'toolbar': setActiveToolbar
-                }
-            }]
-
-            expect(store.getActions().type).toEqual(expectedActions.type);
-
-        });
-
-    })
-    describe('action file tets cases for LO', () => {
-
-        it('setActiveElement for with LO', () => {
-            let store = mockStore();
-            store.dispatch(selectActions.setActiveElement(wip.lo, 1));
-
-            let expectedActions = [{
-                type: SET_ACTIVE_ELEMENT,
-                payload: {
-                    'elementType': 'element-aside',
-                    'primaryOption': 'primary-aside-aside',
-                    'secondaryOption': 'secondary-aside-sb1',
-                    'elementId': 'urn:pearson:work:ab5ae968-d1e8-4d31-8c2e-1a3cfdc7b0b1',
-                    'index': 1,
-                    "numbered": true,
-                    "startNumber": "1",
-                    'elementWipType': 'element-aside',
-                    'tag': 'LO',
-                    'toolbar': setActiveToolbar
-                }
-            }]
-
-            expect(store.getActions().type).toEqual(expectedActions.type);
-
-        });
-
-    })
-
-    describe('action file tets cases for list', () => {
-
-        it('setActiveElement for with list', () => {
-            let store = mockStore();
-            store.dispatch(selectActions.setActiveElement(wip.list, 1));
-
-            let expectedActions = [{
-                type: SET_ACTIVE_ELEMENT,
-                payload: {
-                    'elementType': 'element-list',
-                    'primaryOption': 'primary-ordered-list',
-                    'secondaryOption': 'secondary-ordered-list',
-                    'elementId': 'urn:pearson:work:ab5ae968-d1e8-4d31-8c2e-1a3cfdc7b0b1',
-                    'index': 1,
-                    "numbered": true,
-                    "startNumber": "1",
-                    'elementWipType': 'element-list',
-                    'tag': 'LI',
-                    'toolbar': setActiveToolbar
-                }
-            }]
-
-            expect(store.getActions().type).toEqual(expectedActions.type);
-
-        });
-
-    })
-
-    describe('action file tets cases for opener element', () => {
-
-        it('setActiveElement for with opener element', () => {
-            let store = mockStore();
-            store.dispatch(selectActions.setActiveElement(wip.opener, 1));
-
-            let expectedActions = [{
-                type: SET_ACTIVE_ELEMENT,
-                payload: {
-                    'elementType': 'element-opener',
-                    'elementId': 'urn:pearson:work:ab5ae968-d1e8-4d31-8c2e-1a3cfdc7b0b1',
-                    'index': 1,
-                    "numbered": true,
-                    "startNumber": "1",
-                    'elementWipType': 'element-opener',
-                    'tag': 'OE',
-                    'toolbar': setActiveToolbar
-                }
-            }]
-
-            expect(store.getActions().type).toEqual(expectedActions.type);
-        });
-    })
 });

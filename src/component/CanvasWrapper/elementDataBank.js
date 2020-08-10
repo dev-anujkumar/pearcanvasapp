@@ -194,7 +194,7 @@ const elementDataBank = {
         "interactive": {
             "elementType": "element-interactive",
             "mmi": {
-                "tag": "QUAD",
+                "tag": "Quad",
                 "primaryOption": "primary-mmi",
                 "secondaryOption": "secondary-interactive-mmi"
             },
