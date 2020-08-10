@@ -1,8 +1,5 @@
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { createStore, applyMiddleware, compose } from 'redux';
-//import rootReducer from '../../../src/Appstore/rootReducer.js';
-import moxios from 'moxios';
 import * as actions from '../../../src/component/GlossaryFootnotePopup/GlossaryFootnote_Actions';
 import  mockData  from "../../../src/appstore/mockdata.js";
 const middlewares = [thunk];
@@ -32,7 +29,7 @@ let  initialState = {
             toolbar: ["crossLinkingIcon", "assetpopover", "glossary"]
         }
     },
-    glossaryFootnoteReducer: {elementIndex : "1"},
+    glossaryFootnoteReducer: {"elementIndex" : "0"},
     glossaaryFootnoteValue:{ "type":"","popUpStatus":false}
 };
 
@@ -68,12 +65,12 @@ jest.mock('../../../src/appstore/store', () => {
                         contentUrn : "urn:pearson:work:282ddf7a-4e73-4cb7-814c-5873bc750184"
                     }
                 },
-                glossaryFootnoteReducer:{elementIndex:1}
+                glossaryFootnoteReducer:{"elementIndex": "0"}
             }
         },
         dispatch:(obj)=>{
             responseData = obj;
-            console.log("object123456---",obj);
+           // console.log("object123456---",obj);
             return jest.fn();
         }
     }
@@ -101,6 +98,7 @@ describe('Tests commentsPanel action', () => {
         initialState = {
              glossaaryFootnoteValue:{ "type":"","popUpStatus":false},
              appStore:{slateLevelData:mockData},
+             glossaryFootnoteReducer:{"elementIndex": "0"}
         };
     });
  
@@ -191,6 +189,13 @@ describe('Tests commentsPanel action', () => {
                         return {innerHTML:'tests'}
                     }
         actions.saveGlossaryAndFootnote('urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','figure','dsusiudfd','GLOSSARY','apple','fruit','image', 'term', 'popup'); 
+       });
+       it('testing new func ===> ?????', () => {
+        document.querySelector = () => { return false; }
+        document.getElementById = ()=>{
+                        return {innerHTML:'tests'}
+                    }
+        actions.saveGlossaryAndFootnote('urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','interactive','dsusiudfd','GLOSSARY','apple','fruit','image'); 
        });
        it('testing new func ===> tableasmarkup', () => {
         document.querySelector = () => { return false; }
