@@ -207,9 +207,21 @@ function CommunicationChannel(WrappedComponent) {
                 case 'pageLink':
                     this.updatePageLink(message);
                     break;
+                case 'slateLengthChanged':
+                    this.changeSlateLength(message)
+                    break;
             }
         }
 
+        /**
+         * Updates the element count and refreshes slate
+         * @param {String} message element count in a slate 
+         */
+        changeSlateLength = (message) => {
+            this.props.setSlateLength(message)
+            this.handleRefreshSlate()
+        }
+        
         /**
          * Handle the element update action on linking a page
          */
@@ -225,7 +237,7 @@ function CommunicationChannel(WrappedComponent) {
                 elementId = linkData.elementId || "";
                 pageId = linkData.pageId || "";
 
-                let elementContainer = document.querySelector('.element-container[data-id="' + linkData.elementId + '"]');
+                let elementContainer = document.querySelector('.element-container[data-id="' + linkData.elementId + '"]');              
                 activeElement = elementContainer.querySelectorAll('.cypress-editable');
                 activeElement.forEach((item) => {
                     if (item.classList.contains('mce-content-body') || !item.classList.contains('place-holder')) {
@@ -257,7 +269,6 @@ function CommunicationChannel(WrappedComponent) {
                 let elementContainer = document.querySelector('.element-container[data-id="' + linkData.elementId + '"]');
                 activeElement = elementContainer.querySelectorAll('.cypress-editable');
                 activeElement.forEach((item) => {
-                    // console.log('active element:::', item, item.classList.contains('mce-content-body'));
                     if (item.classList.contains('mce-content-body') || !item.classList.contains('place-holder')) {
                         if (item.querySelector(`[asset-id="${linkData.linkId}"]`) || item.querySelector('#' + linkData.linkId)) {
                             tinymce.activeEditor.undoManager.transact(() => {
@@ -278,9 +289,9 @@ function CommunicationChannel(WrappedComponent) {
             document.getElementById('link-notification').innerText = linkNotification;
             sendDataToIframe({ 'type': TocToggle, 'message': { "open": false } });
 
-            setTimeout(async () => {
+            setTimeout(() => {
                 if (editor) {
-                    await editor.click();
+                    editor.click();
                     editor.blur();
                 }
             }, 500);

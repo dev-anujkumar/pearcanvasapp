@@ -288,9 +288,11 @@ export const setInteractiveType = (asset) => {
         wipValue: "",
         label: ""
     }
-    const { interactiveType } = asset.additionalMetadata;
-    interactiveTypeData.label = interactiveType ? interactiveType : interactiveTypeList[interactiveType].wipValue;
-    interactiveTypeData.wipValue = interactiveType ? interactiveType : interactiveTypeList[interactiveType].wipValue;
+    let oldInteractiveTypes = ['userControlledAnimation', 'imageSlideShow', 'videoSlideShow'];
+    const { interactiveType, label } = asset.additionalMetadata;
 
-    return interactiveTypeData
+    interactiveTypeData.label = oldInteractiveTypes.indexOf(interactiveType) > -1 || label == undefined? interactiveTypeList[interactiveType].label : label ;
+    interactiveTypeData.wipValue = oldInteractiveTypes.indexOf(interactiveType) > -1 ? interactiveTypeList[interactiveType].wipValue : interactiveType;
+
+    return interactiveTypeData;
 }
