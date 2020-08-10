@@ -7,7 +7,7 @@ import '../../styles/CanvasSlateHeader/CanvasSlateHeader.css';
 import Button from '../ElementButtons/ElementButton.jsx';
 import PropTypes from 'prop-types'
 import config from '../../config/config'
-import { NextSlate, PreviousSlate, ShowLoader} from '../../constants/IFrameMessageTypes.js';
+import { NextSlate, PreviousSlate, ShowLoader, SlateLockStatus} from '../../constants/IFrameMessageTypes.js';
 import { sendDataToIframe } from '../../constants/utility.js';
 
 /**
@@ -103,6 +103,7 @@ import { sendDataToIframe } from '../../constants/utility.js';
         if(slateLockInfo){
             let lockedUserId = slateLockInfo.userId.replace(/.*\(|\)/gi, ''); // Retrieve only PROOT id
             if(slateLockInfo.isLocked && config.userId !== lockedUserId){
+                sendDataToIframe({ 'type': SlateLockStatus, 'message': { slateLockInfo: slateLockInfo } });
                 return this.renderSlateLockJSX(slateLockInfo.userId) // (`${slateLockInfo.userFirstName} ${slateLockInfo.userLastName}`)
             }
             else {
