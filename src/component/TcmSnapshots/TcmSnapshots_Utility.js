@@ -117,11 +117,6 @@ const prepareAndSendTcmData = async (elementDetails, wipData, defaultKeys, actio
         elementType: elementDetails.elementType,
         elementWip: JSON.stringify(res),
         elementSnapshot: JSON.stringify(await prepareElementSnapshots(wipData,actionStatus)),
-        timeCreated: new Date().getTime(), 
-        timeUpdated: new Date().getTime(),
-        userApprover:null,
-        userEditor:"mishra, sumant sumant",
-        feedback:null,
         ...defaultKeys
     };
     await sendElementTcmSnapshot(currentSnapshot)
