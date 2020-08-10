@@ -291,7 +291,7 @@ export const setInteractiveType = (asset) => {
     let oldInteractiveTypes = ['userControlledAnimation', 'imageSlideShow', 'videoSlideShow'];
     const { interactiveType, label } = asset.additionalMetadata;
 
-    interactiveTypeData.label = oldInteractiveTypes.indexOf(interactiveType) > -1 ? interactiveTypeList[interactiveType].label : label;
+    interactiveTypeData.label = oldInteractiveTypes.indexOf(interactiveType) > -1 || label == undefined? interactiveTypeList[interactiveType].label : label ;
     interactiveTypeData.wipValue = oldInteractiveTypes.indexOf(interactiveType) > -1 ? interactiveTypeList[interactiveType].wipValue : interactiveType;
 
     return interactiveTypeData;

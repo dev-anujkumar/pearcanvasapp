@@ -8,6 +8,9 @@ import { CitationGroupContext } from '../../../src/component/ElementContainer/El
 import { citationGroupElement } from '../../../fixtures/ElementCitationData';
 import { Provider } from 'react-redux';
 import config from '../../../src/config/config.js';
+
+config["elementStatus"] = {}
+
 jest.mock('../../../src/component/ElementSaprator/ElementSaprator.jsx', () => {
     return function () {
         return (<div>null</div>)

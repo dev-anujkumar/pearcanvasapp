@@ -10,6 +10,7 @@ import { Provider } from 'react-redux';
 import config from '../../../src/config/config.js';
 import tinyMCE from "tinymce"
 
+config["elementStatus"] = {}
 jest.mock('../../../src/component/ElementSaprator/ElementSaprator.jsx', () => {
     return function () {
         return (<div>null</div>)

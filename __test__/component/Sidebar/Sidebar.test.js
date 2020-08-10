@@ -13,6 +13,7 @@ jest.mock('./../../../src/component/ElementContainer/ElementContainer_Actions', 
     prepareDataForTcmUpdate: jest.fn()
 }))
 import config from '../../../src/config/config.js';
+config["elementStatus"] = {}
 describe('Test for Sidebar component', () => {
     const mockStore = configureMockStore(middlewares);
     const activeElement = {
