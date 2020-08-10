@@ -49,7 +49,7 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
                         elementId.childId = deleVercase ? newVersionUrns[ele.id] : ele.id;
                         tag.childTag = fetchElementsTag(ele);
                         elementDetails = setElementTypeAndUrn(elementId, tag, wipData.subtype === "workedexample" ? 'BODY' : "", item.id);
-                        prepareTcmData(elementDetails, ele, defaultKeys, actionStatus);
+                        prepareAndSendTcmData(elementDetails, ele, defaultKeys, actionStatus);
                     }
                 })
             }
@@ -57,7 +57,7 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
                 elementId.childId = deleVercase ? newVersionUrns[item.id] : item.id;
                 tag.childTag = fetchElementsTag(item);
                 elementDetails = setElementTypeAndUrn(elementId, tag, wipData.subtype === "workedexample" ? "HEAD" : "", "");
-                prepareTcmData(elementDetails, item, defaultKeys, actionStatus);
+                prepareAndSendTcmData(elementDetails, item, defaultKeys, actionStatus);
             }
         })
     }
@@ -70,20 +70,20 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
                 elementId.childId =  deleVercase ? newVersionUrns[item.id] : item.id;
                 tag.childTag = fetchElementsTag(item);
                 elementDetails = setElementTypeAndUrn(elementId, tag, "BODY", wipData.id);
-                prepareTcmData(elementDetails, item, defaultKeys, actionStatus);
+                prepareAndSendTcmData(elementDetails, item, defaultKeys, actionStatus);
             }
         })
     }
     /* action on element in WE/PE/CG */
     else if (poetryData || asideData || parentUrn) {
-        let parentElement = asideData ? asideData : poetryData ? poetryData : parentUrn ? parentUrn : "";
+        let parentElement = asideData ? asideData : poetryData ? poetryData : parentUrn;
         elementId.parentId = parentElement && parentElement.id ? parentElement.id : parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "";
         elementId.childId = deleVercase ? newVersionUrns[wipData.id] : wipData.id;
         tag.parentTag = fetchElementsTag(parentElement);
         tag.childTag = fetchElementsTag(wipData);
         let isHead = asideData && asideData.type === "element-aside" && asideData.subtype === "workedexample" ? parentUrn.manifestUrn == asideData.id ? "HEAD" : "BODY" : "";
         elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn:"");
-        prepareTcmData(elementDetails, wipData, defaultKeys, actionStatus);
+        prepareAndSendTcmData(elementDetails, wipData, defaultKeys, actionStatus);
     }
     /* action on PE and CG */
     else if (wipData.type === "citations" || wipData.type === "poetry") {
@@ -91,24 +91,24 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
             elementId.childId = deleVercase ? newVersionUrns[item.id] : item.id;
             tag.childTag = fetchElementsTag(item);
             elementDetails = setElementTypeAndUrn(elementId, tag, "", "");
-            prepareTcmData(elementDetails, item, defaultKeys, actionStatus);
+            prepareAndSendTcmData(elementDetails, item, defaultKeys, actionStatus);
         })
     }
     else {
         elementDetails = setElementTypeAndUrn(elementId, tag);
-        prepareTcmData(elementDetails, wipData, defaultKeys, actionStatus);
+        prepareAndSendTcmData(elementDetails, wipData, defaultKeys, actionStatus);
     }
 }
 
 /**
- * @function prepareTcmData
+ * @function prepareAndSendTcmData
  * @description This function is to all keys for tcm snapshots
  * @param {Object} elementDetails - Object containing the details for Element tag & urn
  * @param {Object} wipData - Element Wip Data  
  * @param {Object} defaultKeys - default tcm_snapshot keys  
  * @param {Function} dispatch - dispatch function  
 */
-const prepareTcmData = async (elementDetails, wipData, defaultKeys, actionStatus) => {
+const prepareAndSendTcmData = async (elementDetails, wipData, defaultKeys, actionStatus) => {
     let res = Object.assign({}, wipData);
     delete res["html"];
     let currentSnapshot = {
