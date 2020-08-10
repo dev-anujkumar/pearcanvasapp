@@ -35,7 +35,9 @@ const { TEXT,
     CONTAINER_INTRO,
     MULTI_COLUMN_CONTAINER,
     MULTI_COLUMN,
-    SINGLE_COLUMN
+    SINGLE_COLUMN,
+    BLOCK_TEXT_BUTTON,
+    TABLE_EDITOR
  } = elementTypeConstant
 
 export function ElementSaprator(props) {
@@ -169,7 +171,8 @@ function renderConditionalButtons(esProps,sectionBreak,elementType){
             return buttonType === STANZA_ELEMENT;
         }
         else if (elementType == SINGLE_COLUMN) {                     /** Container : C1/C2 in Multi-Column Element*/
-            return buttonType !== OPENER && buttonType !== SECTION_BREAK && buttonType !== WORKED_EXP && buttonType !== CONTAINER_BUTTON && buttonType !== CITATION && buttonType !== STANZA_ELEMENT && buttonType !== POETRY_ELEMENT && buttonType !== MULTI_COLUMN_CONTAINER && buttonType !== METADATA_ANCHOR;
+            let  MultiColumnPicker = [ TEXT, IMAGE, AUDIO, BLOCK_TEXT_BUTTON, INTERACTIVE_BUTTON, TABLE_EDITOR, ASSESSMENT ];                  
+            return MultiColumnPicker.includes(buttonType);
         } 
         else {
         if (sectionBreak) {                                          /** Container : Other cases in Wored Example*/
