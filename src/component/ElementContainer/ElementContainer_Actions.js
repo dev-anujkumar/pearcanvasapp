@@ -116,7 +116,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
                         contentUrn: deleteSlate.contentUrn
                     },
                     bodymatter: deleteBodymatter,
-                    newVersionUrns: deleteElemData.data.workUrnList
+                    newVersionUrns: deleteElemData.data
                 }
                 tcmSnapshotsForDelete(deleteData, type, containerElement)
             }
@@ -315,6 +315,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         return ;
     }
     updatedData.projectUrn = config.projectUrn;
+    updatedData = (updatedData.type == "element-blockfeature") ? contentEditableFalse(updatedData): updatedData;
     /** updateBodymatter | Used for TCM Snapshots */
     let updateBodymatter = getState().appStore.slateLevelData[config.slateManifestURN].contents.bodymatter;
     // prepareDataForTcmUpdate(updatedData,updatedData.id, elementIndex, asideData, getState, updatedData.type, poetryData);
