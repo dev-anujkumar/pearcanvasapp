@@ -13,7 +13,6 @@ let config = {
     AUDIO_NARRATION_URL : 'https://contentapis-staging.pearsoncms.net/structure-api/',
     PAGE_NUMBER_UPDATE_ENDPOINT : "https://contentapis-staging.pearsoncms.net/print-api",
     NARRATIVE_API_ENDPOINT:"https://contentapis-qa.pearsoncms.net/narrative-api/",
-    TCM_SNAPSHOT_ENDPOINT: "/snapshots",
     OPENER_ELEMENT_COREAPI_KEY:  "PAMkIwLGoPIJtNZHc1SzowG7GFlHDZHJ",
     AUDIO_API_KEY : "Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld",
     API_URL: "./api",
