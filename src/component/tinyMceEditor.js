@@ -50,6 +50,7 @@ export class TinyMceEditor extends Component {
         this.fromtinyInitBlur = false;
         this.notFormatting = true;
         this.gRange = null;
+        this.positionElement = null;
         this.editorConfig = {
             plugins: EditorConfig.plugins,
             selector: '#cypress-0',
@@ -570,8 +571,8 @@ export class TinyMceEditor extends Component {
         let parentNode = true;
 
         do {
-            if(el.parentNode && el.parentNode.tagName && el.parentNode.tagName !== 'LI' && el.parentNode.tagName !== 'P' && el.parentNode.tagName !== 'H3' && el.parentNode.tagName !== 'BLOCKQUOTE') {
-                if(el.nodeName == 'ABBR' || (el.parentNode && el.parentNode.tagName === 'ABBR')) {
+            if (el.parentNode && el.parentNode.tagName && el.parentNode.tagName !== 'LI' && el.parentNode.tagName !== 'P' && el.parentNode.tagName !== 'H3' && el.parentNode.tagName !== 'BLOCKQUOTE') {
+                if (el.nodeName == 'ABBR' || (el.parentNode && el.parentNode.tagName === 'ABBR')) {
                     parentNode = false;
                     isAbbr = true;
                 } else {
@@ -579,18 +580,18 @@ export class TinyMceEditor extends Component {
                 }
             } else {
                 parentNode = false;
-                if(el.nodeName == 'ABBR') {
+                if (el.nodeName == 'ABBR') {
                     isAbbr = true;
                 }
             }
-        } while(parentNode);
-        if(target === 'elm' && isAbbr) {
-            if(el.nodeName == 'ABBR') {
+        } while (parentNode);
+        if (target === 'elm' && isAbbr) {
+            if (el.nodeName == 'ABBR') {
                 return el;
             } else {
                 return el.parentNode;
             }
-        } else if(target === 'status') {
+        } else if (target === 'status') {
             return isAbbr;
         }
     }
@@ -1287,6 +1288,7 @@ export class TinyMceEditor extends Component {
                     text = String(text).replace(/ /g, '&nbsp;');
                     text = String(text).replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;');
                     text = String(text).replace(/<br><br>/g, '<br>');
+                    text = text + '<span id="BCEposition"></span>';
                     this.copyContent = text;
                 }
             }
@@ -1376,7 +1378,7 @@ export class TinyMceEditor extends Component {
             let startFlag = true;
             let element = document.getElementsByClassName('TempSpan')[0];
             for (let index = 0; index < element.childNodes.length; ++index) {
-                if (element.childNodes[index].nodeType === Node.TEXT_NODE) {
+                if (element.childNodes[index].nodeType === Node.TEXT_NODE || element.childNodes[index].id === 'BCEposition') {
                     textNode.push(element.childNodes[index]);
                     if (startFlag) {
                         startText += element.childNodes[index].textContent;
@@ -1414,6 +1416,9 @@ export class TinyMceEditor extends Component {
         while (remainSpans.length) {
             remainSpans[0].parentNode.removeChild(remainSpans[0]);
         }
+        this.positionElement = document.getElementById('BCEposition');
+        tinymce.activeEditor.selection.setCursorLocation(this.positionElement, 0);
+        this.positionElement.remove();
         tinymce.activeEditor.undoManager.clear();
     }
 
@@ -1703,7 +1708,7 @@ export class TinyMceEditor extends Component {
             } else {
                 parentNode = false;
             }
-        } while(parentNode);
+        } while (parentNode);
 
         let activeElement = tinymce.activeEditor.targetElm.closest('.element-container');
         let linkCount = Math.floor(Math.random() * 100) + '-' + Math.floor(Math.random() * 10000);
@@ -1773,7 +1778,7 @@ export class TinyMceEditor extends Component {
             } else {
                 parentNode = false;
             }
-        } while(parentNode);
+        } while (parentNode);
 
         let insertionText = '<span id="asset-popover-attacher">' + selectedText + '</span>';
         editor.insertContent(insertionText);
@@ -2010,7 +2015,7 @@ export class TinyMceEditor extends Component {
             this.removeMultiTinyInstance();
             this.handlePlaceholder()
             tinymce.$('.blockquote-editor').attr('contenteditable', false)
-        } 
+        }
     }
 
     removeMultiTinyInstance = () => {
@@ -2094,7 +2099,7 @@ export class TinyMceEditor extends Component {
         /*
         * In IS slate removing the toolbar disabled class which was applied in case of OE
         */
-       let tinymceToolbar = document.getElementById('tinymceToolbar')
+        let tinymceToolbar = document.getElementById('tinymceToolbar')
         if (config && config.slateType === "container-introduction" && tinymceToolbar && tinymceToolbar.classList) {
             tinymceToolbar.classList.remove('toolbar-disabled')
         }
@@ -2226,7 +2231,7 @@ export class TinyMceEditor extends Component {
                 Remove all instaces of wiris on changing element on basis of there data-ids not on id 
                 because on inserting new element id changes
             */
-           let wirisModalDesktopNode = tinymce.$('.wrs_modal_desktop')
+            let wirisModalDesktopNode = tinymce.$('.wrs_modal_desktop')
             wirisModalDesktopNode.remove();
 
             for (let i = tinymce.editors.length - 1; i > -1; i--) {
