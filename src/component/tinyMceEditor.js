@@ -50,7 +50,6 @@ export class TinyMceEditor extends Component {
         this.fromtinyInitBlur = false;
         this.notFormatting = true;
         this.gRange = null;
-        this.positionElement = null;
         this.editorConfig = {
             plugins: EditorConfig.plugins,
             selector: '#cypress-0',
@@ -1416,9 +1415,9 @@ export class TinyMceEditor extends Component {
         while (remainSpans.length) {
             remainSpans[0].parentNode.removeChild(remainSpans[0]);
         }
-        this.positionElement = document.getElementById('BCEposition');
-        tinymce.activeEditor.selection.setCursorLocation(this.positionElement, 0);
-        this.positionElement.remove();
+        let positionElement = document.getElementById('BCEposition');
+        tinymce.activeEditor.selection.setCursorLocation(positionElement, 0);
+        positionElement.remove();
         tinymce.activeEditor.undoManager.clear();
     }
 
