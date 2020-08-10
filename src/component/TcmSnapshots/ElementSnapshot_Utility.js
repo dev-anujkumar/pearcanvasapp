@@ -20,7 +20,7 @@ export const setSemanticsSnapshots = async (element,actionStatus) => {
     let footnoteHtmlList = element.html && element.html.footnotes ? element.html.footnotes : [];
     switch (element.type) {
         case 'element-authoredtext':
-            glossaryWipList = element.elementdata && element.elementdata.glossaryentries && !element.elementdata.headers ? element.elementdata.glossaryentries : [];
+            glossaryWipList = element.elementdata && element.elementdata.glossaryentries ? element.elementdata.glossaryentries : [];
             glossarySnap = prepareGlossarySnapshotContent(actionStatus, glossaryWipList,glossaryHtmlList);
             footnoteWipList = element.elementdata && element.elementdata.footnotes ? element.elementdata.footnotes : [];
             footnoteSnap = prepareFootnoteSnapshotContent(actionStatus, footnoteWipList,footnoteHtmlList);

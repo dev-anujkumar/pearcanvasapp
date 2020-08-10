@@ -55,7 +55,7 @@ let cypressConfig = {
     TCM_DASHBOARD_UI_URL: process.env.NODE_ENV === 'production' ? `${window.parent.origin}/cypress/trackchanges/index.html` :"https://dev-structuredauthoring.pearson.com/cypress/trackchanges/index.html",
     getENVConfig: process.env.NODE_ENV === "development" ? 'https://10.11.7.246:8443/cypress-api/' : '/cypress/canvas-srvr/cypress-api/',
     prodUrl : 'https://structuredauthoring.pearson.com',
-    sitePointing : 'dev',
+    sitePointing : 'test',
     conversionInProcess : false,
     savingInProgress: false,
     citationFlag: false,
