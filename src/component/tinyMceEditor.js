@@ -2119,7 +2119,7 @@ export class TinyMceEditor extends Component {
         /*
             Adding br tag in lists because on first conversion from p tag to list, br tag gets removed
         */
-        let tinymceActiveEditorNode = document.getElementById(tinymce.activeEditor.id)
+        let tinymceActiveEditorNode = document.getElementById(tinymce.activeEditor && tinymce.activeEditor.id)
         if (this.props.permissions && !(this.props.permissions.includes('access_formatting_bar') || this.props.permissions.includes('elements_add_remove'))) {        // when user doesn't have edit permission
             if (tinymce.activeEditor && tinymce.activeEditor.id) {
                 tinymceActiveEditorNode.setAttribute('contenteditable', false)

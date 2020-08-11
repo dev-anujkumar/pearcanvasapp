@@ -208,7 +208,10 @@ function CommunicationChannel(WrappedComponent) {
                     this.updatePageLink(message);
                     break;
                 case 'slateLengthChanged':
-                    this.changeSlateLength(message)
+                    this.changeSlateLength(message);
+                    break;
+                case 'updateProjectStructure':
+                    this.props.fetchSlateAncestorData();
                     break;
             }
         }

@@ -474,6 +474,20 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
     });
 };
 
+export const fetchSlateAncestorData = () => async (dispatch, getState) => {
+    // console.log('ancestor Data:::', getState().appStore.allSlateData);
+    // await dispatch(fetchAllSlatesData());
+    // dispatch(setCurrentSlateAncestorData(getState().appStore.allSlateData));
+
+    // new Promise((resolve, reject) => {
+        // resolve(dispatch(fetchAllSlatesData()));
+        // resolve();
+    // }).then(() => {
+        dispatch(setCurrentSlateAncestorData(getState().appStore.allSlateData));
+    // });
+    // dispatch(setCurrentSlateAncestorData(getState().appStore.allSlateData));
+}
+
 const setSlateDetail = (slateTitle, slateManifestURN) => {
     let env = requestConfigURI().toLowerCase();
     return {
