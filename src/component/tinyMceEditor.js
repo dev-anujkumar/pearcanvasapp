@@ -2006,15 +2006,13 @@ export class TinyMceEditor extends Component {
      * React's lifecycle method. Called immediately after updating occurs. Not called for the initial render.
      */
     componentDidUpdate(prevProps) {
-        if (prevProps.element.id !== this.props.element.id) {
-            let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");
-            if (isBlockQuote) {
-                this.lastContent = document.getElementById('cypress-' + this.props.index).innerHTML;
-            }
-            this.removeMultiTinyInstance();
-            this.handlePlaceholder()
-            tinymce.$('.blockquote-editor').attr('contenteditable', false)
+        let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");
+        if (isBlockQuote) {
+            this.lastContent = document.getElementById('cypress-' + this.props.index).innerHTML;
         }
+        this.removeMultiTinyInstance();
+        this.handlePlaceholder()
+        tinymce.$('.blockquote-editor').attr('contenteditable', false)
     }
 
     removeMultiTinyInstance = () => {
