@@ -60,6 +60,20 @@
     right: 2%;
 }
 
+.container-multi-column-group .element-container.ol abbr[title="Slate Link"],
+.container-multi-column-group .element-container.ul abbr[title="Slate Link"] {
+    padding-right: 2px;
+}
+
+.container-multi-column-group .element-container.ol abbr[title="Slate Link"]:not(.sup):not(.sub)::after,
+.container-multi-column-group .element-container.ul abbr[title="Slate Link"]:not(.sup):not(.sub)::after,
+.container-multi-column-group .element-container.ol abbr[title="Slate Link"] sub::after,
+.container-multi-column-group .element-container.ol abbr[title="Slate Link"] sup::after,
+.container-multi-column-group .element-container.ul abbr[title="Slate Link"] sub::after,
+.container-multi-column-group .element-container.ul abbr[title="Slate Link"] sup::after {
+    right: -15px;
+}
+
 /*************************Styling related to subtype**************************/
 
 /* Subtype: wider-50-50 */
