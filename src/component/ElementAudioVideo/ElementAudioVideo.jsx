@@ -93,7 +93,7 @@ class ElementAudioVideo extends Component {
                 tracks.push(
                     {
                         path: audioDes.audioDescription,//.split("?")[0];
-                        lang: "en",
+                        language: "en",
                         tracktype: "audiodescriptions",
                         label: `English AD`
                     }
@@ -103,9 +103,9 @@ class ElementAudioVideo extends Component {
                 tracks.push(
                     {
                         format: 'text/' + ensubtitle.split("?")[1].split("&")[0].split("=")[1],
-                        direction: "righttoleft",
+                        direction: "lefttoright",
                         path: ensubtitle,//.split("?")[0];
-                        lang: ensubtitle.split("?")[1].split("&")[1].split("=")[1] + "-us",
+                        language: ensubtitle.split("?")[1].split("&")[1].split("=")[1] + "-us",
                         tracktype: "captions",
                         label: `English CC`
                     }
@@ -116,7 +116,7 @@ class ElementAudioVideo extends Component {
                     {
                         format: 'text/' + frenchSubtitle.split("?")[1].split("&")[0].split("=")[1],
                         path: frenchSubtitle,//.split("?")[0];
-                        lang: frenchSubtitle.split("?")[1].split("&")[1].split("=")[1],
+                        language: "fr-fr",
                         tracktype: "captions",
                         label: `French CC`
                     }
@@ -127,7 +127,7 @@ class ElementAudioVideo extends Component {
                     {
                         format: 'text/' + spanishSubtitle.split("?")[1].split("&")[0].split("=")[1],
                         path: spanishSubtitle,//.split("?")[0];
-                        lang: spanishSubtitle.split("?")[1].split("&")[1].split("=")[1],
+                        language: "es-es",
                         tracktype:  "captions",
                         label: `Spanish CC`
                     }
