@@ -322,5 +322,8 @@ const setElementTag = {
                 childTag: ""
             },
         }
-    }
+    },
+    "groupedcontent": {
+        parentTag: "2C"
+    },
 }

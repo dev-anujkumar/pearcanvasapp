@@ -34,14 +34,29 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
     let elementDetails;
     /* Tag of elements*/
     let tag = {
-        parentTag: fetchElementsTag(wipData)
+        parentTag: wipData.type === "groupedcontent" ? '2C':fetchElementsTag(wipData)
     }
     /* ID of elements*/
     let elementId = {
         parentId:  deleVercase && newVersionUrns[wipData.id] ? newVersionUrns[wipData.id] :  wipData.id 
     }
+       /* For 2C creation*/
+    if (wipData.type === "groupedcontent") {
+        wipData.groupeddata.bodymatter && wipData.groupeddata.bodymatter.map((item) => {
+            if (item.type === "group") {
+                item.groupdata.bodymatter.map((ele) => {
+                    if (elementType.indexOf(ele.type) !== -1) {
+                        elementId.childId = deleVercase ? newVersionUrns[ele.id] : ele.id;
+                        tag.childTag = fetchElementsTag(ele);
+                        elementDetails = setElementTypeAndUrn(elementId, tag, 'C1', item.id);
+                        prepareAndSendTcmData(elementDetails, ele, defaultKeys, actionStatus);
+                    }
+                })
+            }
+        })
+    }
     /* For WE creation*/
-    if (wipData.type === "element-aside" && type != "SECTION_BREAK") {
+    else if (wipData.type === "element-aside" && type != "SECTION_BREAK") {
         wipData.elementdata.bodymatter && wipData.elementdata.bodymatter.map((item) => {
             if (item.type === "manifest") {
                 item.contents.bodymatter.map((ele) => {
@@ -81,7 +96,7 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
         elementId.childId = deleVercase ? newVersionUrns[wipData.id] : wipData.id;
         tag.parentTag = fetchElementsTag(parentElement);
         tag.childTag = fetchElementsTag(wipData);
-        let isHead = asideData && asideData.type === "element-aside" && asideData.subtype === "workedexample" ? parentUrn.manifestUrn == asideData.id ? "HEAD" : "BODY" : "";
+        let isHead = asideData && asideData.type === "element-aside" && asideData.subtype === "workedexample" ? parentUrn.manifestUrn == asideData.id ? "HEAD" : "BODY" : parentUrn.columnName  ? parentUrn.columnName:"";
         elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn:"");
         prepareAndSendTcmData(elementDetails, wipData, defaultKeys, actionStatus);
     }
@@ -134,7 +149,7 @@ const prepareAndSendTcmData = async (elementDetails, wipData, defaultKeys, actio
 const setElementTypeAndUrn = (eleId, tag, isHead, sectionId) => {
     let elementData = {}
     let elementTag = `${tag.parentTag}${isHead ? ":" + isHead : ""}${tag.childTag ? ":" + tag.childTag : ""}`;
-    let elementId = `${eleId.parentId}${sectionId && isHead === "BODY" ? "+" + sectionId : ""}${eleId.childId ? "+" + eleId.childId : ""}`
+    let elementId = `${eleId.parentId}${sectionId && (isHead === "BODY"||isHead === "C1") ? "+" + sectionId : ""}${eleId.childId ? "+" + eleId.childId : ""}`
     elementData = {
         elementUrn: elementId,
         elementType: elementTag
@@ -325,8 +340,7 @@ export const checkContainerElementVersion = async (containerElement, versionStat
  * @returns {Object} WipData for element 
 */
 export const fetchElementWipData = (bodymatter, index, type, entityUrn) => {
-    let eleIndex,
-    wipData = {};
+    let eleIndex, wipData = {};
     if (typeof index === "number" || (Array.isArray(index) && index.length == 1)) {   /** Delete a container or an element at slate level */
         eleIndex = Array.isArray(index) ? index[0] : index;
         wipData = bodymatter[eleIndex];
@@ -353,13 +367,15 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn) => {
             case 'element-learningobjectives':
                 if (eleIndex.length == 2) {          /** Inside WE-HEAD | Aside */
                     wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]];
-                } else if (eleIndex.length == 3) {   /** Inside WE-BODY */
+                } else if (eleIndex.length == 3 && bodymatter[eleIndex[0]].type !== "groupedcontent") {   /** Inside WE-BODY */
                     wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]].contents.bodymatter[eleIndex[2]];
+                }
+                else if (eleIndex.length == 3) {   /** Inside Multi-Column*/
+                    wipData = bodymatter[eleIndex[0]].groupeddata.bodymatter[eleIndex[1]].groupdata.bodymatter[eleIndex[2]];
                 }
                 break;
         }
     }
-
     return wipData;
 }
 
@@ -382,8 +398,27 @@ export const fetchParentData = (bodymatter, indexes) => {
             type: bodymatter[tempIndex[0]].type,
             element: bodymatter[tempIndex[0]]
         }
-        let parentElement = tempIndex.length == 3 && bodymatter[tempIndex[0]].type !== 'poetry'  ? bodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]] : bodymatter[tempIndex[0]];
+        let parentElement = {}
+        if(tempIndex.length == 3){
+            switch (bodymatter[tempIndex[0]].type) {
+                case 'poetry':
+                    parentElement = bodymatter[tempIndex[0]]
+                    break;
+                case 'groupedcontent':
+                    parentElement = bodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]]
+                    parentData.parentUrn = {
+                        columnIndex: tempIndex[1],
+                        columnName: tempIndex[1] =='0' ? 'C1':'C2'
+                    }
+                    break;
+                default:
+                    parentElement = bodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]]
+                    break;
+            }
+        }
+
         parentData.parentUrn = {
+            ...parentData.parentUrn,
             manifestUrn: parentElement.id,
             contentUrn: parentElement.contentUrn,
             elementType: parentElement.type
