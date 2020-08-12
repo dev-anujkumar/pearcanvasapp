@@ -179,7 +179,6 @@ export const setCurrentSlateAncestorData = (allSlateData) => dispatch => {
 
     currentSlateData = setCurrentSlateAncestorDataDetails(matterTypeData, ancestor, matterType)
 
-    sendDataToIframe({ 'type': 'projectStructure', 'message': { currentSlateData } })
     return dispatch({
         type: SET_CURRENT_SLATE_DATA,
         payload: {
