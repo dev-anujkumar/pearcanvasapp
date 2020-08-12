@@ -344,17 +344,3 @@ abbr[title="Slate Link"] sup::after {
 p code, ul code, ol code{
     color: inherit;
 }
-
-.element-container.ol abbr[title="Slate Link"],
-.element-container.ul abbr[title="Slate Link"] {
-    padding-right: 2px;
-}
-
-.element-container.ol abbr[title="Slate Link"]:not(.sup):not(.sub)::after,
-.element-container.ul abbr[title="Slate Link"]:not(.sup):not(.sub)::after,
-.element-container.ol abbr[title="Slate Link"] sub::after,
-.element-container.ol abbr[title="Slate Link"] sup::after,
-.element-container.ul abbr[title="Slate Link"] sub::after,
-.element-container.ul abbr[title="Slate Link"] sup::after {
-    right: -15px;
-}
