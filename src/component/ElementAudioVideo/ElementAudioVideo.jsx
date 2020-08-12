@@ -89,7 +89,7 @@ class ElementAudioVideo extends Component {
             }catch(err){
                 console.log(err)
             }
-            if(audioDes.audioDescEnabled && audioDes.audioDescEnabled==="Yes"){
+            if(audioDes && audioDes.audioDescEnabled && audioDes.audioDescEnabled==="Yes"){
                 tracks.push(
                     {
                         path: audioDes.audioDescription,//.split("?")[0];
