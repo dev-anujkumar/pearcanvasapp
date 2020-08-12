@@ -94,7 +94,6 @@ class ElementAudioVideo extends Component {
             if(audioDes.audioDescEnabled && audioDes.audioDescEnabled==="Yes"){
                 tracks.push(
                     {
-                        id: null,
                         direction: "righttoleft",
                         path: audioDes.audioDescription,//.split("?")[0];
                         lang: "en",
@@ -106,7 +105,6 @@ class ElementAudioVideo extends Component {
             if (ensubtitle) {
                 tracks.push(
                     {
-                        id: null,
                         format: 'text/' + ensubtitle.split("?")[1].split("&")[0].split("=")[1],
                         path: ensubtitle,//.split("?")[0];
                         lang: ensubtitle.split("?")[1].split("&")[1].split("=")[1] + "-us",
@@ -118,7 +116,6 @@ class ElementAudioVideo extends Component {
             if (frenchSubtitle) {
                 tracks.push(
                     {
-                        id: null,
                         format: 'text/' + frenchSubtitle.split("?")[1].split("&")[0].split("=")[1],
                         path: frenchSubtitle,//.split("?")[0];
                         lang: frenchSubtitle.split("?")[1].split("&")[1].split("=")[1],
@@ -130,7 +127,6 @@ class ElementAudioVideo extends Component {
             if (spanishSubtitle) {
                 tracks.push(
                     {
-                        id: null,
                         format: 'text/' + spanishSubtitle.split("?")[1].split("&")[0].split("=")[1],
                         path: spanishSubtitle,//.split("?")[0];
                         lang: spanishSubtitle.split("?")[1].split("&")[1].split("=")[1],
