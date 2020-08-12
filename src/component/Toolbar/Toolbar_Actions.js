@@ -1,5 +1,5 @@
 import {
-    TOGGLE_BORDERS, TOGGLE_LO_DROPDOWN
+    TOGGLE_BORDERS, TOGGLE_LO_DROPDOWN, TOGGLE_PAGE_NUMBER
 } from '../../constants/Action_Constants';
 
 /**
@@ -13,5 +13,10 @@ export const toggleElemBordersAction = () => {
 export const toggleLODropdown = () => {
     return {
         type: TOGGLE_LO_DROPDOWN
+    }
+}
+export const togglePageNumberAction = () => {
+    return {
+        type: TOGGLE_PAGE_NUMBER
     }
 }

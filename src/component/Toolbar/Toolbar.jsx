@@ -62,13 +62,7 @@ const _Toolbar = props => {
     function _handleOpenDropdown() {
         setValueOpen(!openDropDown);
     }
-    /**
-     * Function for show/hide border
-     */
-    function _handleElemBorders() {
-        props.toggleElemBorders()
-    }
-
+    
     /**
      * Function for show/hide dropdown
      */
@@ -77,26 +71,6 @@ const _Toolbar = props => {
     }
     function closeLODropdown() {
         setLODropdown(!lodropdown);
-    }
-    /**
-     * @description {responsable for render switch buttons}
-     * @param {border or pageNumber} type 
-     */
-    function _elemToggleBtnJsx(type) {
-        return (<>
-            <label className="switch">
-                {type === 'border' ? <input
-                    type="checkbox"
-                    onChange={_handleElemBorders}
-                    defaultChecked='true' /> :
-                    <input
-                        type="checkbox"
-                        onChange={props.togglePageNumbering} />
-                }
-                <span className="slider round"></span>
-            </label>
-        </>
-        )
     }
 
     /**
@@ -172,21 +146,6 @@ const _Toolbar = props => {
                 </div>
             }
             {/* *****end**** */}
-
-            <div className="toggle-actions">
-            {props.permissions.includes('toggle_element_page_no') &&
-            <div className='elem-page-number'>
-                <div className='elemPageText'>Element <br />Page Number</div>
-                {_elemToggleBtnJsx('pageNumber')}
-            </div>
-            }
-            {props.permissions.includes('toggle_element_borders') &&
-                <div className='element-borders'>
-                    <div className='elemBorderText'>Element Borders</div>
-                        {_elemToggleBtnJsx('border')}
-                    </div>
-                }
-            </div>
         </div>
     )
 }

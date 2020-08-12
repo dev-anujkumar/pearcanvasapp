@@ -33,14 +33,13 @@ import store from './../../appstore/store'
 import { hideBlocker } from '../../js/toggleLoader';
 import {getAllSlatesData} from '../../js/getAllSlatesData'
 import { fetchUsageTypeData } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
-
+import { toggleElemBordersAction, togglePageNumberAction } from '../Toolbar/Toolbar_Actions.js';
 export class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
         this.state = {
             showReleasePopup : false,
             toggleApo : false,
-            isPageNumberEnabled : false,
             isConfigLoaded : true
         }  
     }
@@ -171,7 +170,7 @@ export class CanvasWrapper extends Component {
                 {/** Ends of custom error popup */}
                 <div id="editor-toolbar" className="editor-toolbar">
                     {/* editor tool goes here */}
-                    <Toolbar togglePageNumbering={this.togglePageNumbering} />
+                    <Toolbar />
                     {/* custom list editor component */}
                 </div>
 
@@ -182,7 +181,7 @@ export class CanvasWrapper extends Component {
                             <div id='artboard-container' className='artboard-container'>
                                 {this.props.showApoSearch ? <AssetPopoverSearch /> : ''}
                                 {/* slate wrapper component combines slate content & slate title */}
-                                <RootContext.Provider value={{ isPageNumberEnabled: this.state.isPageNumberEnabled }}>
+                                <RootContext.Provider value={{ isPageNumberEnabled: this.props.pageNumberToggle }}>
                                     <SlateWrapper loadMorePages={this.loadMorePages}  handleCommentspanel={this.handleCommentspanel} slateData={slateData} navigate={this.navigate} showBlocker= {this.props.showCanvasBlocker} convertToListElement={this.props.convertToListElement} toggleTocDelete = {this.props.toggleTocDelete} tocDeleteMessage = {this.props.tocDeleteMessage} modifyState = {this.props.modifyState}  updateTimer = {this.updateTimer} isBlockerActive = {this.props.showBlocker} isLOExist={this.props.isLOExist}/>
                                 </RootContext.Provider>                                
                             </div>
@@ -212,12 +211,6 @@ export class CanvasWrapper extends Component {
             </div>
         );
     }
-    
-    togglePageNumbering = () => {
-        this.setState((state) => ({
-            isPageNumberEnabled: !state.isPageNumberEnabled
-        }));
-    }
 }
 
 CanvasWrapper.displayName = "CanvasWrapper"
@@ -235,6 +228,7 @@ const mapStateToProps = state => {
         logout,
         withinLockPeriod: state.slateLockReducer.withinLockPeriod,
         ErrorPopup: state.errorPopup,
+        pageNumberToggle: state.toolbarReducer.pageNumberToggle
     };
 };
 
@@ -270,6 +264,8 @@ export default connect(
         getAllSlatesData,
         clearElementStatus,
         fetchUsageTypeData,
-        setSlateLength
+        setSlateLength,
+        toggleElemBordersAction,
+        togglePageNumberAction
     }
 )(CommunicationChannelWrapper(CanvasWrapper));
