@@ -31,8 +31,6 @@ class ElementAudioVideo extends Component {
      * @param {*} data selected asset data
      */
     dataFromAlfresco = (data) => {
-        console.log(JSON.stringify(JSON.parse(JSON.parse(data.text).results[0].properties['s.avs:jsonString'].value[0])))
-
         hideTocBlocker();
         disableHeader(false);
         let tracks = [];
@@ -94,7 +92,6 @@ class ElementAudioVideo extends Component {
             if(audioDes.audioDescEnabled && audioDes.audioDescEnabled==="Yes"){
                 tracks.push(
                     {
-                        direction: "righttoleft",
                         path: audioDes.audioDescription,//.split("?")[0];
                         lang: "en",
                         tracktype: "audiodescriptions",
@@ -106,6 +103,7 @@ class ElementAudioVideo extends Component {
                 tracks.push(
                     {
                         format: 'text/' + ensubtitle.split("?")[1].split("&")[0].split("=")[1],
+                        direction: "righttoleft",
                         path: ensubtitle,//.split("?")[0];
                         lang: ensubtitle.split("?")[1].split("&")[1].split("=")[1] + "-us",
                         tracktype: "captions",
