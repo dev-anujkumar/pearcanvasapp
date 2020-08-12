@@ -210,8 +210,8 @@ function CommunicationChannel(WrappedComponent) {
                 case 'slateLengthChanged':
                     this.changeSlateLength(message);
                     break;
-                case 'updateProjectStructure':
-                    this.props.fetchSlateAncestorData();
+                case 'parentChanging':
+                    this.props.fetchSlateAncestorData(message || {});
                     break;
             }
         }

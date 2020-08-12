@@ -12,7 +12,8 @@ import {
     ERROR_POPUP,
     SLATE_TITLE,
     GET_PAGE_NUMBER,
-    SET_SLATE_LENGTH
+    SET_SLATE_LENGTH,
+    SET_CURRENT_SLATE_DATA
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
@@ -463,6 +464,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             });
         }
 
+        dispatch(fetchSlateAncestorData());
         const elapsedTime = performance.now() - startTime;
         
         sendToDataLayer('slate-load', {
@@ -474,18 +476,36 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
     });
 };
 
-export const fetchSlateAncestorData = () => async (dispatch, getState) => {
-    // console.log('ancestor Data:::', getState().appStore.allSlateData);
-    // await dispatch(fetchAllSlatesData());
-    // dispatch(setCurrentSlateAncestorData(getState().appStore.allSlateData));
+export const fetchSlateAncestorData = (tocNode = {}) => (dispatch, getState) => {
+    let structure = [];
+    let changeFlag = false;
+    let currentSlateData = getState().appStore.currentSlateAncestorData;
+    let newSlateData = currentSlateData;
+    if(Object.keys(currentSlateData).length > 0) {
+        while('ancestor' in currentSlateData && currentSlateData.ancestor.label !== 'project') {
+            let ancestorTitle = currentSlateData.ancestor.title || 'Title';
+            if(Object.keys(tocNode).length > 0 && tocNode.entityUrn === currentSlateData.ancestor.entityUrn &&
+                ancestorTitle !== tocNode.title) {
+                ancestorTitle = tocNode.title;
+                changeFlag = true;
+                currentSlateData.ancestor.title = tocNode.title;
+            }
 
-    // new Promise((resolve, reject) => {
-        // resolve(dispatch(fetchAllSlatesData()));
-        // resolve();
-    // }).then(() => {
-        dispatch(setCurrentSlateAncestorData(getState().appStore.allSlateData));
-    // });
-    // dispatch(setCurrentSlateAncestorData(getState().appStore.allSlateData));
+            structure.unshift(ancestorTitle);
+            currentSlateData = currentSlateData.ancestor;
+        }
+    }
+
+    if(changeFlag) {
+        dispatch({
+            type: SET_CURRENT_SLATE_DATA,
+            payload: {
+                currentSlateAncestorData: newSlateData
+            }
+        });
+    }
+    
+    sendDataToIframe({ 'type': 'projectStructure', 'message': { structure } })
 }
 
 const setSlateDetail = (slateTitle, slateManifestURN) => {
