@@ -274,7 +274,7 @@ export const interactiveTypeList = {
     'wipValue' : 'gallery-video'
     },
     'userControlledAnimation' : {
-    'label' : 'User Controlled Animation',
+    'label' : 'User-Controlled Animation',
     'value' : 'userControlledAnimation',
     'wipValue' : 'simulation'
     }
