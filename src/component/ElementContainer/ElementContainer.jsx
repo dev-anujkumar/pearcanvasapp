@@ -95,7 +95,7 @@ class ElementContainer extends Component {
     }
 
     componentDidMount() {
-        this.getElementVersionStatus(this.props.element, this.props.elementStatus)
+        this.getElementVersionStatus(this.props.element, config.elementStatus)
         this.setState({
             ElementId: this.props.element.id,
             btnClassName: '',
@@ -318,19 +318,6 @@ class ElementContainer extends Component {
         if(previousElementData.html && previousElementData.html.preformattedtext === '<p></p>'){
             previousElementData.html.preformattedtext = '<p><span class="codeNoHighlightLine"></span></p>'
         }
-        // if (titleHTML !== previousElementData.html.title ||
-        //     subtitleHTML !== previousElementData.html.subtitle ||
-        //     captionHTML !== previousElementData.html.captions ||
-        //     creditsHTML !== previousElementData.html.credits ||
-        //     preformattedText !== previousElementData.figuredata.preformattedtext.join('\n').trim() ||
-        //     startNumber !== previousElementData.figuredata.startNumber ||
-        //     isNumbered !== previousElementData.figuredata.numbered
-        //     ){
-        //         return 1
-        //     }
-        //     else {
-        //         return 0
-        //     }
         return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
             subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
             captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
@@ -373,17 +360,6 @@ class ElementContainer extends Component {
             let posterTextHTML = pdfPosterTextDOM ? pdfPosterTextDOM.innerHTML : ""
             posterTextHTML = posterTextHTML.match(/(<p.*?>.*?<\/p>)/g)?posterTextHTML:`<p>${posterTextHTML}</p>`
             
-            // if(titleHTML !== previousElementData.html.title ||
-            //     subtitleHTML !== previousElementData.html.subtitle || 
-            //     captionHTML !== previousElementData.html.captions ||
-            //     creditsHTML !== previousElementData.html.credits || 
-            //     posterTextHTML !== previousElementData.html.postertext
-            //     ){
-            //         return 1
-            //     }
-            //     else {
-            //         return 0
-            //     }
             let oldPosterText = previousElementData.html && previousElementData.html.postertext ? previousElementData.html.postertext.match(/(<p.*?>.*?<\/p>)/g) ? previousElementData.html.postertext : `<p>${previousElementData.html.postertext}</p>` : "<p></p>";
             return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
                 subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
@@ -909,21 +885,6 @@ class ElementContainer extends Component {
         }
         this.handleCommentPopup(false,e);
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-
-        /* // This condition is to delete whole Container Group element when only one element is left and that too getting deleted
-        if (this.props.parentElement && this.props.parentElement.type === "citations" && this.props.parentElement.contents && this.props.parentElement.contents.bodymatter.length === 1) {
-            id = this.props.parentElement.id
-            type = this.props.parentElement.type
-            contentUrn = this.props.parentElement.contentUrn
-            index = index.split("-")[0]
-        }
-        // This condition to delete whole aside element when only one element in it deleted
-        else if (this.props.parentElement && this.props.parentElement.subtype !== "workedexample" && this.props.parentElement.elementdata && this.props.parentElement.elementdata.bodymatter.length === 1) {
-            id = this.props.parentElement.id
-            type = this.props.parentElement.type
-            contentUrn = this.props.parentElement.contentUrn
-        } */
-
         // api needs to run from here
         this.props.deleteElement(id, type, parentUrn, asideData, contentUrn, index, poetryData);
         this.setState({
@@ -980,6 +941,7 @@ class ElementContainer extends Component {
         /** Handle TCM for tcm enable elements */
         let tcm = false;
         let feedback = false;
+        let isQuadInteractive = "";
         tcm = tcmData.filter(tcmelm => {
             let elementUrn = tcmelm.elemURN;
             return (element.id.includes('urn:pearson:work') && elementUrn.indexOf(element.id) !== -1) && tcmelm.txCnt && tcmelm.txCnt > 0}).length>0;
@@ -1028,17 +990,10 @@ class ElementContainer extends Component {
                             labelText = 'Qu';
                             break;
                         case elementTypeConstant.INTERACTIVE:
-                            switch (element.figuredata.interactiveformat) {
-                                case elementTypeConstant.INTERACTIVE_MMI:
-                                    editor = <ElementInteractive accessDenied={this.props.accessDenied} showBlocker={this.props.showBlocker} updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} />;
-                                    labelText = element.figuredata.interactivetype == 'showhide' ? 'SH' : 'MMI';
-                                    break;
-                                case elementTypeConstant.INTERACTIVE_EXTERNAL_LINK:
-                                case elementTypeConstant.INTERACTIVE_NARRATIVE_LINK:
-                                    editor = <ElementInteractive accessDenied={this.props.accessDenied} showBlocker={this.props.showBlocker} updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} />;
-                                    labelText = LABELS[element.figuredata.interactiveformat];
-                                    break;
-                            }
+                            editor = <ElementInteractive accessDenied={this.props.accessDenied} showBlocker={this.props.showBlocker} updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} />;
+                            labelText = LABELS[element.figuredata.interactiveformat];
+                            isQuadInteractive = labelText === "Quad" ? "quad-interactive" : "";
+                            break;
                     }
                     break;
                 case elementTypeConstant.ELEMENT_LIST:
@@ -1119,7 +1074,7 @@ class ElementContainer extends Component {
                         slateLockInfo: slateLockInfo,
                         onClick: this.handleFocus,
                         glossaryFootnoteValue: this.props.glossaryFootnoteValue,
-                        elementStatus: this.props.elementStatus,
+                        elementStatus: config.elementStatus,
                         openAssetPopoverPopUp: this.openAssetPopoverPopUp,
                         openGlossaryFootnotePopUp: this.openGlossaryFootnotePopUp,
                         getElementStatus: this.props.getElementStatus
@@ -1265,11 +1220,10 @@ class ElementContainer extends Component {
                 btnClassName = '';
             }
         }
-
         return (
             <div className="editor" data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
-                    <Button type="element-label" btnClassName={`${btnClassName} ${this.state.isOpener ? ' ignore-for-drag' : ''}`} labelText={labelText}  onClick={(event) => this.labelClickHandler(event)} />
+                    <Button type="element-label" btnClassName={`${btnClassName} ${isQuadInteractive} ${this.state.isOpener ? ' ignore-for-drag' : ''}`} labelText={labelText}  onClick={(event) => this.labelClickHandler(event)} />
                     {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && config.slateType !== 'assessment' ? (<Button type="delete-element" onClick={(e) => this.showDeleteElemPopup(e,true)} />)
                         : null}
                     {this.renderColorPaletteButton(element, permissions)}
@@ -1487,7 +1441,6 @@ const mapStateToProps = (state) => {
         allComments: state.commentsPanelReducer.allComments,
         showHideId: state.appStore.showHideId,
         tcmData: state.tcmReducer.tcmSnapshot,
-        elementStatus: state.elementStatusReducer
     }
 }
 

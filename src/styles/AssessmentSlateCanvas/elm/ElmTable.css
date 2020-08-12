@@ -7,17 +7,10 @@
   }
   .assessment-id{
     text-align:left;
-    padding-left: 9px;
-    /* font-size: 13px; */
-  }
-  .assessment-title{
-    width: 360px;
-    /* font-size: 13px; */
+    padding-left: 8px;
   }
   .elm-data-span{
     text-overflow: ellipsis;
-    /* white-space: nowrap; */
-    /* overflow: hidden; */
     overflow: visible;
     white-space: normal;
     height: auto;
@@ -35,6 +28,7 @@
   }
   .row-class .assessment-container{
     cursor: pointer;
+    padding-left: 6px !important;
   }
   .td-class.elm-text-assesment{
     text-overflow: ellipsis;
@@ -60,14 +54,9 @@
   }
 
   .main-div.item-table,.main-div.show-loader{
-    /* min-height: 388px; */
     min-height: 388px;
     max-height: 389px;
   }
-  /* .main-div.show-loader{
-    min-height: 388px;
-    max-height: 388px;
-  } */
   button:disabled,
   button[disabled] {
     opacity: 0.35; 
@@ -213,9 +202,11 @@
   fill:rgb(0%,0%,0%);
   fill-opacity:1;
  }
+
  .elmAssessmentItem-icon{
   margin-right : 8px;
   margin-left : 8px;
+  margin-top : 2px;
  }
  .sort-icon{
   background-color: white;
@@ -254,6 +245,41 @@
   display: inline-flex;
   align-items: center;
 }
+.elm-wrapper th.row-class:nth-child(2), .elm-wrapper td.td-class:nth-child(2){
+width: 50%;
+}
+/** -------------------------------------------- Elm-Interactive --------------------------------------------  */
+.elm-interactive .td-class.elm-text-assesment{
+  padding: 6px 8px !important;
+}
+.elm-interactive .td-class .icon-div{
+  max-height: 24px;
+}
+.elm-interactive .elm-text-assesment .radio-button{
+  top: 0px;
+}
+.elm-interactive .elmAssessmentItem-icon{
+  max-height: 24px;
+ }
+.elm-interactive svg#elm-interactive-icon {
+  margin-top: -2px;
+}
+.elm-interactive .td-class.assessment-container{
+  padding: 10px 6px !important;
+}
+
+.elm-interactive span.elm-data-span{
+  text-overflow: ellipsis;
+  height: auto;
+  max-width: 230px;
+  word-break: break-word;
+}
+.elm-wrapper .elm-interactive th.row-class:nth-child(2), .elm-wrapper .elm-interactive td.td-class:nth-child(2){
+  width: 20%;
+}
+.elm-wrapper .elm-interactive th.row-class:nth-child(3), .elm-wrapper .elm-interactive td.td-class:nth-child(3){
+  width: 41%;
+}
 /** --------------------------------------------AssessmentSearchBar CSS-------------------------------------------- **/
 .learnosity-search-block .filter-container{
   margin: 11px 50px 11px 20px;
@@ -264,18 +290,12 @@
 
 .learnosity-search-block .title-block {
   width: 100%;
-  /* margin: 11px 20px 11px 20px; */
-  /* width: 80%; */
-  /* display: inline-block; */
-  /* display: inline-block; */
-  /* width: 95%; */
   border: solid 1px #a9a9a9;
   background-color: #ffffff;
   padding: 9px 8px 9px 8px;
 }
 
 .learnosity-search-block .input-title1 {
-  /* margin-right: 20px; */
   position: relative;
   width: 95%;
   box-sizing: border-box;
@@ -284,14 +304,9 @@
 }
 
 .learnosity-search-block .filter-block {
-  /* width: 100%; */
   margin: 11px 20px 11px 20px;
   width: 80%;
   display: inline-block;
-  /* width: 95%; */
-  /* border: solid 1px #a9a9a9; */
-  /* background-color: #ffffff; */
-  /* padding: 9px 8px 9px 8px; */
 }
 
 .learnosity-search-block .search-block {
@@ -315,9 +330,6 @@
 
 .learnosity input.input-title1 {
   position: relative;
-  /* display: block; */
-  /* padding-right: 76px; */
-  /* width: 170px; */
   width: 95%;
   box-sizing: border-box;
   padding-left: 4px;
@@ -325,11 +337,11 @@
 
 .learnosity-search-block .search-heading{
   text-align: center;
-    padding: 5px;
-    font-size: 16px;
-    font-family: Open sans, sans-serif;
-    border-top: 2px #EEEEEE solid;
-    border-bottom: 2px #EEEEEE solid;
+  padding: 5px;
+  font-size: 16px;
+  font-family: Open sans, sans-serif;
+  border-top: 2px #EEEEEE solid;
+  border-bottom: 2px #EEEEEE solid;
 }
 
 .table-header.show-search{

@@ -6,8 +6,7 @@ import config from '../../config/config';
 import './../../styles/AssessmentSlateCanvas/AssessmentSlateCanvas.css';
 import { showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';
 import { assessmentType, FULL_ASSESSMENT_PUF, LEARNING_APP_TYPE, LEARNOSITY, LEARNING_TEMPLATE, PUF, FULL_ASSESSMENT_CITE, FULL_ASSESSMENT_TDX  } from './AssessmentSlateConstants.js';
-// import RootElmComponent from './elm/RootElmComponent.jsx';
-import RootElmSingleAssessment from '../AssessmentSlateCanvas/elm/RootElmSingleComponent.jsx';
+import RootElmComponent from './elm/RootElmComponent.jsx';
 import RootCiteTdxComponent from './assessmentCiteTdx/RootCiteTdxComponent.jsx';
 import LearningTool from './learningTool/learningTool.jsx';
 import { UsageTypeDropdown } from './UsageTypeDropdown/UsageTypeDropdown.jsx';
@@ -328,19 +327,22 @@ import { setAssessmentUsageType } from '../AssessmentSlateCanvas/AssessmentActio
         if (document.getElementsByClassName("slate-tag-icon").length) {
         document.getElementsByClassName("slate-tag-icon")[0].classList.remove("disable");
         }
+        let showID ="";
         let assessmentSlateJSX;
         let assessmentTypeValue;
         let changeTypeValue;
         let title = this.props.assessmentItemTitle? this.props.assessmentItemTitle:this.props.learningTemplateLabel;
         if(this.state.activeAssessmentType === LEARNING_APP_TYPE || this.state.activeAssessmentType === LEARNING_TEMPLATE){
+            showID = 'Template ID: ' + (this.props.model && this.props.model.elementdata && this.props.model.elementdata.templateid ? this.props.model.elementdata.templateid:"");
             assessmentTypeValue="Learning App";
             changeTypeValue="Change Learning App"
         }else {
+            showID = 'ID: '+this.props.assessmentId;
             assessmentTypeValue="Assessment";
             changeTypeValue="Change assessment";
         }
         if ((this.state.activeAssessmentType === FULL_ASSESSMENT_PUF || this.state.activeAssessmentType === LEARNOSITY) && this.state.showElmComponent === true) {
-            return <RootElmSingleAssessment activeAssessmentType={this.state.activeAssessmentType} closeElmWindow = {()=>this.closeElmWindow()} addPufFunction = {this.addPufAssessment} activeUsageType = {this.state.activeAssessmentUsageType}/>
+            return <RootElmComponent activeAssessmentType={this.state.activeAssessmentType} closeElmWindow = {()=>this.closeElmWindow()} addPufFunction = {this.addPufAssessment} activeUsageType = {this.state.activeAssessmentUsageType} elementType={'assessment'}/>
         }
         if ((this.state.activeAssessmentType === FULL_ASSESSMENT_CITE || this.state.activeAssessmentType === FULL_ASSESSMENT_TDX) && this.state.showCiteTdxComponent === true) {
             return <RootCiteTdxComponent activeAssessmentType={this.state.activeAssessmentType} openedFrom = {'slateAssessment'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.activeAssessmentType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAssessmentUsageType} parentPageNo={this.state.parentPageNo} isReset={this.state.isReset} resetPage={this.resetPage} AssessmentSearchTitle={this.AssessmentSearchTitle} searchTitle={this.state.searchTitle} filterUUID={this.state.filterUUID} />
@@ -352,7 +354,7 @@ import { setAssessmentUsageType } from '../AssessmentSlateCanvas/AssessmentActio
                         <div className="slate_assessment_data_label">{assessmentTypeValue}</div>
                         <div className="slate_assessment_data_details">
                             <div className="slate_assessment_data_title">{title}</div>
-                            <div className="slate_assessment_data_id">{'ID: ' + this.props.assessmentId}</div>
+                            <div className="slate_assessment_data_id">{showID}</div>
                             <div className="slate_assessment_data_id_lo" style={{display:"none"}}>{this.props.assessmentId}</div>
                             <div className="slate_assessment_data_format_lo" style={{display:"none"}}>{this.state.activeAssessmentType}</div>
                             <div className="slate_assessment_change_button" onClick={ !hasReviewerRole() && this.changeAssessment}>{changeTypeValue}</div>

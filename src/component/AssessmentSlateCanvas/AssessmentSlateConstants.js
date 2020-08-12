@@ -12,11 +12,13 @@ export const PUF = 'puf'
 export const CITE = 'cite'
 export const TDX = 'tdx'
 export const LEARNOSITY_BETA = 'learnosity'
+export const ELM_INT = "mmi-elm"
 
 export const ERROR_MESSAGE_ELM_RESOURCE = "This project has no Elm assessments currently. Please add an Elm assessment to this project first."
 export const ERROR_MESSAGE_ELM_ITEMS = "No Data Found"
 export const ERROR_MESSAGE_LEARNOSITY = "No Results Found"
 export const ERROR_MESSAGE_ELM_DEFAULT = "**Error occured, Please try again!!!"
+export const ERROR_MESSAGE_ELM_INTERACTIVES = "No Results Found"
 
 export const FolderLabelList = {
     'C':['chapter'],

@@ -15,7 +15,10 @@ jest.mock('../../../src/component/tinyMceEditor.js', () => {
     }
 })
 const initialState = {
-    slateLevelData : {}
+    slateLevelData : {},
+    appStore : {
+        slateLength: '25'
+    }
 }
 let store = mockStore(initialState);
 describe('Testing Element Show Hide component', () => {

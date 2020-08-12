@@ -11,7 +11,8 @@ import {
     SET_PARENT_SHOW_DATA,
     ERROR_POPUP,
     SLATE_TITLE,
-    GET_PAGE_NUMBER
+    GET_PAGE_NUMBER,
+    SET_SLATE_LENGTH
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
@@ -23,7 +24,7 @@ import figureData from '../ElementFigure/figureTypes.js';
 import { fetchAllSlatesData, setCurrentSlateAncestorData } from '../../js/getAllSlatesData.js';
 import { handleTCMData, tcmSnapshot } from '../../component/ElementContainer/TcmSnapshot_Actions';
 import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
-
+import { ELM_INT } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 const findElementType = (element, index) => {
     let elementType = {};
     elementType['tag'] = '';
@@ -122,11 +123,13 @@ const findElementType = (element, index) => {
                         break;
                     case "interactive":
                         altText = element.figuredata.alttext ? element.figuredata.alttext : "";
+                        let interactiveFormat = element.figuredata.interactiveformat;
+                        let interactiveData = (interactiveFormat == "mmi" || interactiveFormat == ELM_INT) ? element.figuredata.interactiveformat : element.figuredata.interactivetype;
                         elementType = {
                             elementType: elementDataBank[element.type][element.figuretype]["elementType"],
-                            primaryOption: elementDataBank[element.type][element.figuretype][element.figuredata.interactivetype]["primaryOption"],
-                            secondaryOption: elementDataBank[element.type][element.figuretype][element.figuredata.interactivetype]["secondaryOption"],
-                            altText
+                            primaryOption: elementDataBank[element.type][element.figuretype][interactiveData]["primaryOption"],
+                            altText,
+                            ...elementDataBank[element.type][element.figuretype][interactiveData]
                         }
                         break;
                     case "assessment":
@@ -275,9 +278,10 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             dispatch(tcmSnapshot(manifestURN, entityURN))
         }
     }
-    let apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}`
+    const elementCount = getState().appStore.slateLength
+    let apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}&elementCount=${elementCount}`
     if (versionPopupReload) {
-        apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}&metadata=true`
+        apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}&metadata=true&elementCount=${elementCount}`
     } 
     return axios.get(apiUrl, {
         headers: {
@@ -433,6 +437,11 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                             type: SET_ACTIVE_ELEMENT,
                             payload: {}
                         });
+
+                        let slateWrapperNode = document.getElementById('slateWrapper');
+                        if (slateWrapperNode) {
+                            slateWrapperNode.scrollTop = 0;
+                        }
                     }
                     //}
                     // config.isFetchSlateInProgress = false;
@@ -882,4 +891,11 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
        // dispatch({type: ERROR_POPUP, payload:{show: true}})
         config.savingInProgress = false
     })
+}
+
+export const setSlateLength = (length) => {
+    return {
+        type: SET_SLATE_LENGTH,
+        payload: length
+    }
 }

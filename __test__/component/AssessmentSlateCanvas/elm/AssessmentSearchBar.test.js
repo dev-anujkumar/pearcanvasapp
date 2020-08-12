@@ -2,7 +2,7 @@ import React from 'react';
 import { mount } from 'enzyme';
 import AssessmentSearchBar from ' ../../../src/component/AssessmentSlateCanvas/elm/Components/AssessmentSearchBar';
 
-describe('Testing ELM Footer component', () => {
+describe('Testing Learnosity AssessmentSearchBar component', () => {
 
     it('Test- renders without crashing', () => {
         let props = {}
