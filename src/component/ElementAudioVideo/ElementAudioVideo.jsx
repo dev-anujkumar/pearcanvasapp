@@ -33,9 +33,10 @@ class ElementAudioVideo extends Component {
     dataFromAlfresco = (data) => {
         hideTocBlocker();
         disableHeader(false);
-        let format , path , lang , tracktype;
+        let tracks = [];
         let imageData = data;
         let clipInfo;
+        let audioDes;
         let epsURL = imageData['EpsUrl'] ? imageData['EpsUrl'] : "";
         let figureType = imageData['assetType'] ? imageData['assetType'].toLowerCase() : "";
         let width = imageData['width'] ? imageData['width'] : "";
@@ -81,23 +82,56 @@ class ElementAudioVideo extends Component {
             let videoFormat = imageData['mimetype'] ? imageData['mimetype'] : "";
             let uniqID = imageData['uniqueID'] ? imageData['uniqueID'] : "";
             let ensubtitle = imageData['subtitle'] ? imageData['subtitle'] : "";
-            let frenchSubtitle = imageData['frenchsubtitle'] ? imageData['subtitle'] : "";
-            let spanishSubtitle = imageData['spanishsubtitle'] ? imageData['subtitle'] : "";
+            let frenchSubtitle = imageData['frenchsubtitle'] ? imageData['frenchsubtitle'] : "";
+            let spanishSubtitle = imageData['spanishsubtitle'] ? imageData['spanishsubtitle'] : "";
+            try{
+                audioDes = JSON.parse(JSON.parse(data.text).results[0].properties['s.avs:jsonString'].value[0]);
+            }catch(err){
+                console.log(err)
+            }
+            if(audioDes && audioDes.audioDescEnabled && audioDes.audioDescEnabled==="Yes"){
+                tracks.push(
+                    {
+                        path: audioDes.audioDescription,//.split("?")[0];
+                        language: "en",
+                        tracktype: "audiodescriptions",
+                        label: `English AD`
+                    }
+                )
+            }
             if (ensubtitle) {
-                format = 'text/' + ensubtitle.split("?")[1].split("&")[0].split("=")[1];
-                path = ensubtitle;//.split("?")[0];
-                lang = ensubtitle.split("?")[1].split("&")[1].split("=")[1] + "-us";
-                tracktype = "captions"
-            } else if (frenchSubtitle) {
-                format = 'text/' + frenchsubtitle.split("?")[1].split("&")[0].split("=")[1];
-                path = frenchsubtitle;//.split("?")[0];
-                lang = frenchsubtitle.split("?")[1].split("&")[1].split("=")[1];
-                tracktype = "captions"
-            } else if (spanishSubtitle) {
-                format = 'text/' + spanishsubtitle.split("?")[1].split("&")[0].split("=")[1];
-                path = spanishsubtitle;//.split("?")[0];
-                lang = spanishsubtitle.split("?")[1].split("&")[1].split("=")[1];
-                tracktype = "captions"
+                tracks.push(
+                    {
+                        format: 'text/' + ensubtitle.split("?")[1].split("&")[0].split("=")[1],
+                        direction: "lefttoright",
+                        path: ensubtitle,//.split("?")[0];
+                        language: ensubtitle.split("?")[1].split("&")[1].split("=")[1] + "-us",
+                        tracktype: "captions",
+                        label: `English CC`
+                    }
+                )
+            }
+            if (frenchSubtitle) {
+                tracks.push(
+                    {
+                        format: 'text/' + frenchSubtitle.split("?")[1].split("&")[0].split("=")[1],
+                        path: frenchSubtitle,//.split("?")[0];
+                        language: "fr-fr",
+                        tracktype: "captions",
+                        label: `French CC`
+                    }
+                )
+            }
+            if (spanishSubtitle) {
+                tracks.push(
+                    {
+                        format: 'text/' + spanishSubtitle.split("?")[1].split("&")[0].split("=")[1],
+                        path: spanishSubtitle,//.split("?")[0];
+                        language: "es-es",
+                        tracktype:  "captions",
+                        label: `Spanish CC`
+                    }
+                )
             }
             
             this.setState({ imgSrc: epsURL,assetData :smartLinkURl })
@@ -134,12 +168,7 @@ class ElementAudioVideo extends Component {
                             }
                         ],
                         tracks: [
-                            {
-                                format: format,
-                                path: path,
-                                language: lang,
-                                tracktype: tracktype
-                            }
+                            ...tracks
                         ],
                         clipinfo : clipInfo,
                         schema: "http://schemas.pearson.com/wip-authoring/video/1#/definitions/video",

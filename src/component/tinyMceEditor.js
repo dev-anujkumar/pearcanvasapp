@@ -2046,7 +2046,7 @@ export class TinyMceEditor extends Component {
     setInstanceToolbar = () => {
         let toolbar = [];
         if (this.props.placeholder === "Enter Label..." || this.props.placeholder === 'Enter call to action...' || (this.props.element && this.props.element.subtype == 'mathml' && this.props.placeholder === "Type something...")) {
-            toolbar = (this.props.element && (this.props.element.type === 'poetry' || this.props.element.type === 'popup')) ? config.poetryLabelToolbar : config.labelToolbar;
+            toolbar = (this.props.element && (this.props.element.type === 'poetry' || this.props.element.type === 'popup' || this.props.placeholder === 'Enter call to action...')) ? config.poetryLabelToolbar : config.labelToolbar;
         }
         else if (this.props.placeholder === "Enter Caption..." || this.props.placeholder === "Enter Credit...") {
             toolbar = (this.props.element && this.props.element.type === 'poetry') ? config.poetryCaptionToolbar : config.captionToolbar;
