@@ -87,6 +87,7 @@ import { sendDataToIframe } from '../../constants/utility.js';
                 return this.renderSlateLockJSX(slateLockInfo.userId) // (`${slateLockInfo.userFirstName} ${slateLockInfo.userLastName}`)
             }
             else {
+				sendDataToIframe({ 'type': SlateLockStatus, 'message': { slateLockInfo: slateLockInfo } });
                 return null
             }
         }  

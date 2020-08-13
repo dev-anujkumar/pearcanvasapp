@@ -2106,15 +2106,13 @@ export class TinyMceEditor extends Component {
      * React's lifecycle method. Called immediately after updating occurs. Not called for the initial render.
      */
     componentDidUpdate(prevProps) {
-        if (prevProps.element.id !== this.props.element.id) {
-            let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");
-            if (isBlockQuote) {
-                this.lastContent = document.getElementById('cypress-' + this.props.index).innerHTML;
-            }
-            this.removeMultiTinyInstance();
-            this.handlePlaceholder()
-            tinymce.$('.blockquote-editor').attr('contenteditable', false)
+        let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");
+        if (isBlockQuote) {
+            this.lastContent = document.getElementById('cypress-' + this.props.index).innerHTML;
         }
+        this.removeMultiTinyInstance();
+        this.handlePlaceholder()
+        tinymce.$('.blockquote-editor').attr('contenteditable', false)
     }
 
     removeMultiTinyInstance = () => {
@@ -2148,7 +2146,7 @@ export class TinyMceEditor extends Component {
     setInstanceToolbar = () => {
         let toolbar = [];
         if (this.props.placeholder === "Enter Label..." || this.props.placeholder === 'Enter call to action...' || (this.props.element && this.props.element.subtype == 'mathml' && this.props.placeholder === "Type something...")) {
-            toolbar = (this.props.element && (this.props.element.type === 'poetry' || this.props.element.type === 'popup')) ? config.poetryLabelToolbar : config.labelToolbar;
+            toolbar = (this.props.element && (this.props.element.type === 'poetry' || this.props.element.type === 'popup' || this.props.placeholder === 'Enter call to action...')) ? config.poetryLabelToolbar : config.labelToolbar;
         }
         else if (this.props.placeholder === "Enter Caption..." || this.props.placeholder === "Enter Credit...") {
             toolbar = (this.props.element && this.props.element.type === 'poetry') ? config.poetryCaptionToolbar : config.captionToolbar;
@@ -2219,7 +2217,7 @@ export class TinyMceEditor extends Component {
         /*
             Adding br tag in lists because on first conversion from p tag to list, br tag gets removed
         */
-        let tinymceActiveEditorNode = document.getElementById(tinymce.activeEditor.id)
+        let tinymceActiveEditorNode = document.getElementById(tinymce.activeEditor && tinymce.activeEditor.id)
         if (this.props.permissions && !(this.props.permissions.includes('access_formatting_bar') || this.props.permissions.includes('elements_add_remove'))) {        // when user doesn't have edit permission
             if (tinymce.activeEditor && tinymce.activeEditor.id) {
                 tinymceActiveEditorNode.setAttribute('contenteditable', false)
