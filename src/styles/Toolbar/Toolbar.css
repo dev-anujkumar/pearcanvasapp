@@ -60,9 +60,11 @@
   }
 
   .toolbar-container{
-    display: flex;
-    flex-direction: row;
     width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height:100%
     /* border: solid 1px #e0e0e0; */
   }
 
@@ -100,7 +102,7 @@
   }
 
   .tox-editor-container .tox-toolbar{
-    background: #f5f5f5 !important;
+    background: #ffffff !important;
     cursor: pointer;
   }
   .toggle-actions{
@@ -112,14 +114,14 @@
   .learningobjectivedropdown {
     color: black;
     position: absolute;
-    background-color: white;
     width: 233px;
     overflow: auto;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
     font-size: 14px;
     font-weight: 600;
     margin-top: 5px;
+    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 4px 5px 0 rgba(0, 0, 0, 0.14);
+    background-color: #ffffff;
 }
 
 .learningobjectivedropdown li {
@@ -135,7 +137,7 @@
 }
 .leaningobjective-block {
   cursor: pointer;
-  padding: 8px 16px 0 0;
+  padding: 0 16px 0 0;
 }
 .learningobjectivedropdown ul {
   padding:0;
@@ -157,14 +159,11 @@
   .audio-block{
     /* height: 39px; */
     position: relative;
-    padding-right: 20px;
-    padding-top: 6px;
     z-index: 22;
     background: transparent;
 }
 .audioicon  {
   cursor: pointer;
-  margin-top: 2px;
 }
 .audioicon span {
   white-space: nowrap;

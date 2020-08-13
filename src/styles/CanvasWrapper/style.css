@@ -8,9 +8,9 @@
 
 #editor-toolbar {
     width: 100%;
-    min-height: 40px;
+    min-height: 54px;
     margin: 0 auto;
-    background: #f5f5f5;
+    background: #ffffff;
     border-bottom: solid 1px #e0e0e0;
     position: relative;
     z-index: 1;
