@@ -18,27 +18,7 @@ import { sendDataToIframe } from '../../constants/utility.js';
     constructor(props) {
         super(props);
         this.state ={}
-        this.handleNavClick = this.handleNavClick.bind(this);
         this.getLabel = this.getLabel.bind(this);
-    }
-
-
-    /**
-     * @description - This function is for handling the navigation of Slate backward and forward.
-     * @param {event} nav
-     */
-
-    handleNavClick(nav) {
-        if(config.savingInProgress || config.popupCreationCallInProgress){
-            return false
-        }
-        config.currentInsertedType = "";
-        sendDataToIframe({'type': ShowLoader,'message': { status: true }});
-        if(nav === "back"){
-            sendDataToIframe({'type': PreviousSlate,'message': {}})
-        }else{
-            sendDataToIframe({'type': NextSlate,'message': {}})
-        }
     }
 
     setDynamicStyle = (type,className) => {
@@ -113,23 +93,10 @@ import { sendDataToIframe } from '../../constants/utility.js';
     }
     
     render() {
-        const { slateType, slateTitle, slateLockInfo } = this.props
-        let slateLabel = this.getLabel(slateType);
-        let currentSlateTitle = (slateTitle && slateTitle.text) ? slateTitle.text : '';
-
+        const { slateLockInfo } = this.props
         return (
             <div className="slate-title">
                 {this.checkSlateLock(slateLockInfo)}
-                <div className="canvas-header" id="canvas-header">
-                    <div className="slate-header"><label className="header-label" style={this.setDynamicStyle(this.props.slateType,'header-label')}>{slateLabel}</label></div>
-                    <div className="input-text" style={this.setDynamicStyle(this.props.slateType,'input-text')}>
-                        <label className="u-hidden" htmlFor="txt-input" />
-                        <input type="text" className="txt-input" placeholder="Title" value={currentSlateTitle} disabled/>
-                    </div>
-                    {/*  <Button type="backward-nav-active" onClick={() => this.handleNavClick("back")}/> */}
-                    <Button type={ (!config.disablePrev) ? 'backward-nav-active' : 'backward-nav-disable'} onClick={() => this.handleNavClick("back")}/>
-                    <Button type={ (!config.disableNext) ? 'forward-nav-active' : 'forward-nav-disable'} onClick={() => this.handleNavClick("next")}/>
-                </div>
             </div>
         )
     }

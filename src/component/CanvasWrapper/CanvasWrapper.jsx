@@ -13,7 +13,7 @@ import config from './../../config/config';
 // IMPORT - Assets //
 import '../../styles/CanvasWrapper/style.css';
 import { sendDataToIframe , hasReviewerRole} from '../../constants/utility.js';
-import { CanvasIframeLoaded, ShowHeader,TocToggle } from '../../constants/IFrameMessageTypes.js';
+import { CanvasIframeLoaded, ShowHeader,TocToggle,NextSlate, PreviousSlate, ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { getSlateLockStatus, releaseSlateLock } from './SlateLock_Actions'
 import GlossaryFootnoteMenu from '../GlossaryFootnotePopup/GlossaryFootnoteMenu.jsx';
 import {updateElement, getTableEditorData, clearElementStatus}from '../../component/ElementContainer/ElementContainer_Actions'
@@ -151,7 +151,19 @@ export class CanvasWrapper extends Component {
         store.dispatch({type:'ERROR_POPUP', payload:{show:false}})
         return true;
     }
-
+    handleNavClick=(nav)=> {
+        if(config.savingInProgress || config.popupCreationCallInProgress){
+            return false
+        }
+        config.currentInsertedType = "";
+        sendDataToIframe({'type': ShowLoader,'message': { status: true }});
+        if(nav === "back"){
+            sendDataToIframe({'type': PreviousSlate,'message': {}})
+        }else{
+            sendDataToIframe({'type': NextSlate,'message': {}})
+        }
+        
+    }
     render() {
         let slateData = this.props.slateLevelData
         let isReviewerRoleClass = hasReviewerRole() ? " reviewer-role" : ""
@@ -177,15 +189,29 @@ export class CanvasWrapper extends Component {
                 <div className='workspace'>
                    
                     <div id='canvas' className={'canvas'+ isReviewerRoleClass}>
+                        
                         <div id='artboard-containers'>
+                            <div className='navigation-container'>
+                                <div className={(!config.disablePrev) ? 'navigation-content' : 'navigation-content disableNavigation'} onClick={() => this.handleNavClick("back")}>
+                                    <div className='navigation-icon'><i class="nav-arrow left"></i></div>
+                                    <div className='navigation-text'>Previous</div>
+                                </div>
+                            </div>
                             <div id='artboard-container' className='artboard-container'>
                                 {this.props.showApoSearch ? <AssetPopoverSearch /> : ''}
                                 {/* slate wrapper component combines slate content & slate title */}
                                 <RootContext.Provider value={{ isPageNumberEnabled: this.props.pageNumberToggle }}>
-                                    <SlateWrapper loadMorePages={this.loadMorePages}  handleCommentspanel={this.handleCommentspanel} slateData={slateData} navigate={this.navigate} showBlocker= {this.props.showCanvasBlocker} convertToListElement={this.props.convertToListElement} toggleTocDelete = {this.props.toggleTocDelete} tocDeleteMessage = {this.props.tocDeleteMessage} modifyState = {this.props.modifyState}  updateTimer = {this.updateTimer} isBlockerActive = {this.props.showBlocker} isLOExist={this.props.isLOExist}/>
-                                </RootContext.Provider>                                
+                                    <SlateWrapper loadMorePages={this.loadMorePages} handleCommentspanel={this.handleCommentspanel} slateData={slateData} navigate={this.navigate} showBlocker={this.props.showCanvasBlocker} convertToListElement={this.props.convertToListElement} toggleTocDelete={this.props.toggleTocDelete} tocDeleteMessage={this.props.tocDeleteMessage} modifyState={this.props.modifyState} updateTimer={this.updateTimer} isBlockerActive={this.props.showBlocker} isLOExist={this.props.isLOExist} />
+                                </RootContext.Provider>
+                            </div>
+                            <div className='navigation-container' onClick={() => this.handleNavClick("next")}>
+                                <div className={(!config.disableNext) ? 'navigation-content' : 'navigation-content disableNavigation'} >
+                                    <div className='navigation-icon'><i class="nav-arrow right"></i></div>
+                                    <div className='navigation-text'>Next</div>
+                                </div>
                             </div>
                         </div>
+                        
                     </div>
                     <div className = "sidebar-panel">
                         {/* pull all sidebar panel */}

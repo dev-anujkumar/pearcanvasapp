@@ -39,6 +39,7 @@
 
 #artboard-containers {
     height: 100%;
+    padding-left: 130px;
     /* overflow:auto; */
     /* width: 100%; */
 }
@@ -60,14 +61,15 @@
 }
 
 .content-composer .workspace .artboard-container {
-    width: 890px;
+    width: 800px;
     height: 100%;
     display: block;
     margin: 0 auto;
     justify-content: space-around;
     position: relative;
-    padding-left: 90px;
+    /*padding-left: 90px;*/
     background-color: #fafafa;
+    float: left;
     /* height: calc(100% - 62px); */
 }
 
@@ -84,21 +86,10 @@
 .canvas-blocker{
     width: 100%;
     height: 100%;
-    /* position: absolute; */
-    /* position: fixed; */
-    /* left: 0; */
     top: 0;
-    /* z-index: 16000; */
-    /* opacity: 0.1; */
-    /* background: black; */
     background-color: rgba(0, 0, 0, 0.4);
-    /* width: 100%;
-    height: 100%; */
     position: absolute;
-    /* top: 0px; */
     z-index: 3;
-    /* visibility: hidden !important; */
-
 }
 .wrs_modal_dialogContainer.wrs_modal_desktop.wrs_maximized{
     width: 580px!important;
@@ -112,3 +103,49 @@
     left : 0px;
     height : 100%;
 }
+.navigation-container{
+    width:70px;
+    height: 100%;
+    float: left;
+}
+.navigation-content{
+    width: 62px;
+    height: 76px;
+    background: #fff;
+    padding: 20px 8px 10px;
+    position: absolute;
+    top: 40%;
+    cursor: pointer;
+    color: #005a70;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 12px;
+}
+.disableNavigation{
+    cursor: not-allowed !important;
+    pointer-events: none;
+}
+.nav-arrow {
+    border: solid #005a70;
+    border-width: 0 4px 4px 0;
+    display: inline-block;
+    padding: 6px;
+  }
+  
+  .right {
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+  }
+  
+  .left {
+    transform: rotate(135deg);
+    -webkit-transform: rotate(135deg);
+  }
+  .navigation-icon{
+    width: 100%;
+    text-align: center;
+  }
+  .navigation-text{
+    width: 100%;
+    text-align: center;
+    margin-top: 10px;
+  }
