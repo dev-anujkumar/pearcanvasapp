@@ -273,6 +273,8 @@ i.fa.fa-asterisk,.fa .fa-bookmark {
 
 #tinymceToolbar {
     min-width: 681px;
+    display:inline-block;
+    padding: 8px 0 9px 0;
 }
 
 #tinymceToolbar .tox .tox-collection--list .tox-collection__item[title="Figure Link"],
@@ -314,21 +316,27 @@ P.paragraphNumeroUnoIndentLevel1, P.paragraphNumeroUnoIndentLevel2, P.paragraphN
 table code {
     color: unset !important;
 }
+.tox .tox-tbtn--disabled, .tox .tox-tbtn--disabled:hover, .tox .tox-tbtn:disabled, .tox .tox-tbtn:disabled:hover{
+    opacity: 0.34!important;
+}
 
 /*  Cross Link Content Design  */
 
-abbr[title="Slate Link"] {
+/* abbr[title="Slate Link"] {
     padding-right: 15px;
-}
-
+} */
 abbr[title="Slate Link"]:not(.sup):not(.sub)::after,
 abbr[title="Slate Link"] sub::after,
 abbr[title="Slate Link"] sup::after {
     content: url('./../images/PageLink/link.svg');
     height: 10px;
+    top: 0;
+    right: 0;
+    left: 0;
     bottom: 1px;
-    padding-left: 1px;
-    position: absolute;
+    margin: 0 auto;
+    padding: 0 2px;
+    position: relative;
     text-decoration: underline dotted;
     border-bottom: 1.1px dotted #007FA3;
 }

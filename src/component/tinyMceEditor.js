@@ -15,10 +15,7 @@ import config from '../config/config';
 import { insertListButton, bindKeyDownEvent, insertUoListButton, preventRemoveAllFormatting, removeTinyDefaultAttribute } from './ListElement/eventBinding.js';
 import { authorAssetPopOver } from './AssetPopover/openApoFunction.js';
 import {
-    tinymceFormulaIcon,
-    tinymceFormulaChemistryIcon,
-    assetPopoverIcon,
-    crossLinkIcon
+    tinymceFormulaIcon,tinymceFormulaChemistryIcon,assetPopoverIcon,crossLinkIcon,code,Footnote,bold,Glossary,undo,redo,italic,underline,strikethrough,removeformat,subscript,superscript,charmap,downArrow,orderedList,unorderedList,indent,outdent
 } from '../images/TinyMce/TinyMce.jsx';
 import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
 import { checkforToolbarClick, customEvent, spanHandlers, removeBOM } from '../js/utils';
@@ -82,8 +79,11 @@ export class TinyMceEditor extends Component {
                 this.addCrossLinkingIcon(editor);
                 this.setAssetPopoverIcon(editor);
                 this.addAssetPopoverIcon(editor);
+                this.setFootnoteIcon(editor);
                 this.addFootnoteIcon(editor);
+                this.setGlossaryIcon(editor);
                 this.addGlossaryIcon(editor);
+                this.setInlineIcon(editor);
                 this.addInlineCodeIcon(editor);
                 this.editorClick(editor);
                 this.editorKeydown(editor);
@@ -93,6 +93,8 @@ export class TinyMceEditor extends Component {
                 this.editorExecCommand(editor);
                 this.insertListButtonIcon(editor);
                 this.clearUndoStack(editor);
+                this.changeTextElements(editor);
+                this.setDefaultIcons(editor)
                 editor.on('init', function (e) {
                     if (document.querySelector('.audio')) {
                         document.querySelector('.audio').style.display = "block";
@@ -961,7 +963,7 @@ export class TinyMceEditor extends Component {
     addInlineCodeIcon = (editor) => {
         let self = this;
         editor.ui.registry.addToggleButton('code', {
-            text: '<i class="fa fa-code"></i>',
+            icon:"code",
             tooltip: "Inline code",
             onAction: function () {
                 // Add the custom formatting
@@ -1020,7 +1022,7 @@ export class TinyMceEditor extends Component {
         editor.ui.registry.addButton('Glossary', {
             id: 'buttonId',
             classes: 'buttonClas',
-            text: '<i class="fa fa-bookmark" aria-hidden="true"></i>',
+            icon:"glossary",
             tooltip: "Glossary",
             onAction: () => this.addGlossary(editor),
             onSetup: (btnRef) => {
@@ -1035,7 +1037,7 @@ export class TinyMceEditor extends Component {
      */
     addFootnoteIcon = (editor) => {
         editor.ui.registry.addButton('Footnote', {
-            text: '<i class="fa fa-asterisk" aria-hidden="true"></i>',
+            icon:'footnote',
             tooltip: "Footnote",
             onAction: () => this.addFootnote(editor),
             onSetup: (btnRef) => {
@@ -1063,6 +1065,57 @@ export class TinyMceEditor extends Component {
         editor.ui.registry.addIcon(
             "assetPopoverIcon",
             assetPopoverIcon
+        );
+    }
+    /**
+     * Add Inline Icon icon to the toolbar.
+     * @param {*} editor  editor instance
+     */
+    setInlineIcon = editor => {
+        editor.ui.registry.addIcon(
+            "code",
+            code
+        );
+    }
+
+    /**
+     * Add Footnote Icon Icon icon to the toolbar.
+     * @param {*} editor  editor instance
+     */
+    setFootnoteIcon = editor => {
+        editor.ui.registry.addIcon(
+            "Footnote",
+            Footnote
+        );
+    }
+    setDefaultIcons = editor => {
+        editor.ui.registry.addIcon("undo", undo);
+        editor.ui.registry.addIcon("redo", redo);
+        editor.ui.registry.addIcon("bold", bold);
+        editor.ui.registry.addIcon("italic", italic);
+        editor.ui.registry.addIcon("underline", underline);
+        editor.ui.registry.addIcon("strike-through", strikethrough);
+        editor.ui.registry.addIcon("remove-formatting", removeformat);
+        editor.ui.registry.addIcon("subscript", subscript);
+        editor.ui.registry.addIcon("superscript", superscript);
+        editor.ui.registry.addIcon("insert-character", charmap);
+        editor.ui.registry.addIcon("chevron-down", downArrow);
+        editor.ui.registry.addIcon("customUoListButton", unorderedList);
+        editor.ui.registry.addIcon("customListButton", orderedList);
+        editor.ui.registry.addIcon("indent", indent);
+        editor.ui.registry.addIcon("outdent", outdent);
+    }
+
+    
+
+    /**
+     * Add Footnote Icon Icon icon to the toolbar.
+     * @param {*} editor  editor instance
+     */
+    setGlossaryIcon = editor => {
+        editor.ui.registry.addIcon(
+            "Glossary",
+            Glossary
         );
     }
 
@@ -1267,6 +1320,53 @@ export class TinyMceEditor extends Component {
             }
         });
     }
+
+
+    changeTextElements = editor => {
+        editor.ui.registry.addSplitButton('mybutton', {
+            text: 'Paragraph',
+            onAction: function (_) {
+                return false;
+            },
+            onItemAction: function (buttonApi, value) {
+            },
+            fetch: function (callback) {
+                let items = [
+                    {
+                        type: 'choiceitem',
+                        text: 'Paragrapgh',
+                    },
+                    {
+                        type: 'choiceitem',
+                        text: 'Heading 1',
+                        value: "H1"
+                    },
+                    {
+                        type: 'choiceitem',
+                        text: 'Heading 2',
+                    },
+                    {
+                        type: 'choiceitem',
+                        text: 'Heading 3',
+                    },
+                    {
+                        type: 'choiceitem',
+                        text: 'Heading 4',
+                    },
+                    {
+                        type: 'choiceitem',
+                        text: 'Heading 5',
+                    },
+                    {
+                        type: 'choiceitem',
+                        text: 'Heading 6',
+                    }
+                ];
+                callback(items);
+            }
+        });
+    }
+
 
     editorPaste = (editor) => {
         editor.on('paste', (e) => {

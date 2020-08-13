@@ -12,7 +12,7 @@ require('./polyfills.js')
  */
 export const insertUoListButton = (editor, onIconClick) => {
     editor.ui.registry.addButton('customUoListButton', {
-        text: '<i class="fa fa-list-ul" aria-hidden="true"></i>',
+        icon:"customuolistbutton",
         tooltip: 'Unordered List',
         onAction: () => {
             onIconClick('disc');
@@ -25,7 +25,7 @@ export const insertUoListButton = (editor, onIconClick) => {
  */
 export const insertListButton = (editor) => {
     editor.ui.registry.addButton('customListButton', {
-        text: '<i class="fa fa-list-ol" aria-hidden="true"></i>',
+        icon:"customlistbutton",
         tooltip: 'Ordered List',
         onAction: () => {
             positionListDrop(event);

@@ -23,7 +23,7 @@ export const EditorConfig = {
             { selector: 'span', remove: 'empty', split: false }
           ]
     },
-    toolbar: 'bold italic underline strikethrough removeformat indent outdent Footnote Glossary customListButton customUoListButton tinyMcewirisformulaEditor tinyMcewirisformulaEditorChemistry code superscript subscript charmap undo redo crossLinkingIcon slateTag ',
+    toolbar: 'undo redo | mybutton | bold italic underline strikethrough removeformat subscript superscript charmap | crossLinkingIcon Glossary Footnote tinyMcewirisformulaEditor tinyMcewirisformulaEditorChemistry code | customListButton customUoListButton indent outdent | slateTag ',
     contentStyle: CONTENT_STYLE,
     plugins: "lists advlist placeholder charmap paste tiny_mce_wiris"
 }
