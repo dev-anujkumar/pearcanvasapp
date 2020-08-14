@@ -25,7 +25,6 @@ export const insertUoListButton = (editor, onIconClick) => {
  */
 export const insertListButton = (editor, onIconClick) => {
     editor.ui.registry.addSplitButton('customListButton', {
-        //text: '<i class="fa fa-list-ol" aria-hidden="true"></i>',
         tooltip: 'Ordered List',
         icon:"customlistbutton",
         onAction: () => {

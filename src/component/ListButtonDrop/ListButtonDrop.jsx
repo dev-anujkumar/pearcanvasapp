@@ -7,6 +7,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import '../../styles/CanvasWrapper/ListButtonDrop.css';
+import {LIST_TYPE , LIST_DATA} from './ListTypeData'
 
 /**
  * ListButtonDrop | it is component renders list drop ui on editor tool header
@@ -15,7 +16,6 @@ import '../../styles/CanvasWrapper/ListButtonDrop.css';
 const ListButtonDrop = (props) => {
     return (
         <div className="fr-popup fr-desktop" ref={props.setListDropRef}>
-            {/* <span className="fr-arrow"></span> */}
             <div className="fr-buttons numbered-list-dropdown">
                 <DecimalListIconBox {...props} />
                 <UpperAlphaListIconBox {...props} />
@@ -55,7 +55,9 @@ const onListOptionSelect = (type, props) => {
     if (_listWrapperDiv)
         _listWrapperDiv.querySelector('.fr-popup').classList.remove('fr-active');
 }
-
+/**
+ * getHorizontalLines | returns two horizontal parallel lines
+ */
 const getHorizontalLines = () =>{
     return (
         <span className="list-option-line">
@@ -65,6 +67,15 @@ const getHorizontalLines = () =>{
     )
 }
 /**
+ * getListData | returns list type data for dropdown to render
+ * @param {string} type | type of list to render in dropdown
+ */
+const getListData = (type) =>{
+    return LIST_DATA[type].map((listObj)=>{
+        return <span className={`list-option-row ${listObj.class? listObj.class : ''}`}>{listObj.value}{getHorizontalLines()}</span>
+    })
+}
+/**
  * DecimalListIconBox | renders Decimal list icon in list drop
  * @param {object} props | received props to <ListButtonDrop />
  */
@@ -72,9 +83,7 @@ const DecimalListIconBox = (props) => {
     const _listFor = 'decimal';
     return (
         <div className={`list-options ${props.selectedOption === _listFor ? 'selected' : ''}`} onClick={() => { onListOptionSelect(_listFor, props) }} id={`${_listFor}-1`} tabIndex="-1" data-cmd={_listFor}>
-            <span className="list-option-row">1{getHorizontalLines()}</span>
-            <span className="list-option-row">2{getHorizontalLines()}</span>
-            <span className="list-option-row">3{getHorizontalLines()}</span>
+            {getListData(LIST_TYPE.DECIMAL)}
             <span className="list-opt-tooltip">{_listFor}</span>
         </div>
     )
@@ -87,9 +96,7 @@ const UpperAlphaListIconBox = (props) => {
     const _listFor = 'upper-alpha';
     return (
         <div className={`list-options ${props.selectedOption === _listFor ? 'selected' : ''}`} onClick={() => { onListOptionSelect(_listFor, props) }} id={`${_listFor}-1`} tabIndex="-1" data-cmd={_listFor}>
-            <span className="list-option-row">A{getHorizontalLines()}</span>
-            <span className="list-option-row">B{getHorizontalLines()}</span>
-            <span className="list-option-row">C{getHorizontalLines()}</span>
+            {getListData(LIST_TYPE.UPPER_ALPHA)}
             <span className="list-opt-tooltip">{_listFor}</span>
         </div>
     )
@@ -102,9 +109,7 @@ const LowerAlphaListIconBox = (props) => {
     const _listFor = 'lower-alpha';
     return (
         <div className={`list-options ${props.selectedOption === _listFor ? 'selected' : ''}`} onClick={() => { onListOptionSelect(_listFor, props) }} id={`${_listFor}-1`} tabIndex="-1" data-cmd={_listFor}>
-            <span className="list-option-row">a{getHorizontalLines()}</span>
-            <span className="list-option-row">b{getHorizontalLines()}</span>
-            <span className="list-option-row">c{getHorizontalLines()}</span>
+            {getListData(LIST_TYPE.LOWER_ALPHA)}
             <span className="list-opt-tooltip">{_listFor}</span>
         </div>
     )
@@ -117,9 +122,7 @@ const UpperRomanListIconBox = (props) => {
     const _listFor = 'upper-roman';
     return (
         <div className={`list-options ${props.selectedOption === _listFor ? 'selected' : ''}`} onClick={() => { onListOptionSelect(_listFor, props) }} id={`${_listFor}-1`} tabIndex="-1" data-cmd={_listFor}>
-            <span className="list-option-row list-roman-text">I{getHorizontalLines()}</span>
-            <span className="list-option-row list-roman-text">II{getHorizontalLines()}</span>
-            <span className="list-option-row">III{getHorizontalLines()}</span>
+            {getListData(LIST_TYPE.UPPER_ROMAN)}
             <span className="list-opt-tooltip">{_listFor}</span>
         </div>
     )
@@ -132,9 +135,7 @@ const LowerRomanListIconBox = (props) => {
     const _listFor = 'lower-roman';
     return (
         <div className={`list-options ${props.selectedOption === _listFor ? 'selected' : ''}`} onClick={() => { onListOptionSelect(_listFor, props) }} id={`${_listFor}-1`} tabIndex="-1" data-cmd={_listFor}>
-            <span className="list-option-row list-roman-text">i{getHorizontalLines()}</span>
-            <span className="list-option-row list-roman-text">ii{getHorizontalLines()}</span>
-            <span className="list-option-row">iii{getHorizontalLines()}</span>
+            {getListData(LIST_TYPE.LOWER_ROMAN)}
             <span className="list-opt-tooltip">{_listFor}</span>
         </div>
     )
