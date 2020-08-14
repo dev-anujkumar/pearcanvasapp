@@ -15,15 +15,7 @@ import config from '../config/config';
 import { insertListButton, bindKeyDownEvent, insertUoListButton, preventRemoveAllFormatting, removeTinyDefaultAttribute } from './ListElement/eventBinding.js';
 import { authorAssetPopOver } from './AssetPopover/openApoFunction.js';
 import {
-    tinymceFormulaIcon,
-    tinymceFormulaChemistryIcon,
-    assetPopoverIcon,
-    crossLinkIcon,
-    code,
-    Footnote,
-    bold,
-    Glossary,
-    undo,redo,italic,underline,strikethrough,removeformat,subscript,superscript,charmap,downArrow,orderedList,unorderedList,indent,outdent
+    tinymceFormulaIcon,tinymceFormulaChemistryIcon,assetPopoverIcon,crossLinkIcon,code,Footnote,bold,Glossary,undo,redo,italic,underline,strikethrough,removeformat,subscript,superscript,charmap,downArrow,orderedList,unorderedList,indent,outdent
 } from '../images/TinyMce/TinyMce.jsx';
 import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
 import { checkforToolbarClick, customEvent, spanHandlers, removeBOM } from '../js/utils';
@@ -101,7 +93,7 @@ export class TinyMceEditor extends Component {
                 this.editorExecCommand(editor);
                 this.insertListButtonIcon(editor);
                 this.clearUndoStack(editor);
-                this.chnageTextElements(editor);
+                this.changeTextElements(editor);
                 this.setDefaultIcons(editor)
                 editor.on('init', function (e) {
                     if (document.querySelector('.audio')) {
@@ -1330,7 +1322,7 @@ export class TinyMceEditor extends Component {
     }
 
 
-    chnageTextElements = editor => {
+    changeTextElements = editor => {
         editor.ui.registry.addSplitButton('mybutton', {
             text: 'Paragraph',
             onAction: function (_) {
@@ -1339,7 +1331,7 @@ export class TinyMceEditor extends Component {
             onItemAction: function (buttonApi, value) {
             },
             fetch: function (callback) {
-                var items = [
+                let items = [
                     {
                         type: 'choiceitem',
                         text: 'Paragrapgh',
