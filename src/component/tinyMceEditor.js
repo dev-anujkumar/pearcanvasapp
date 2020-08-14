@@ -1106,8 +1106,6 @@ export class TinyMceEditor extends Component {
         editor.ui.registry.addIcon("outdent", outdent);
     }
 
-    
-
     /**
      * Add Footnote Icon Icon icon to the toolbar.
      * @param {*} editor  editor instance
