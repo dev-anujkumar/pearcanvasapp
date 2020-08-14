@@ -218,8 +218,8 @@ export class TinyMceEditor extends Component {
      * @param {*} editor  editor instance
      */
     insertListButtonIcon = (editor) => {
-        insertListButton(editor);
-        insertUoListButton(editor, this.onUnorderedListButtonClick);
+        insertListButton(editor, this.onListButtonClick);
+        insertUoListButton(editor, this.onListButtonClick);
     }
 
     /**
@@ -246,7 +246,7 @@ export class TinyMceEditor extends Component {
         }
     }
 
-    onUnorderedListButtonClick = (type) => {
+    onListButtonClick = (type) => {
         this.props.onListSelect(type, "");
     }
 
@@ -1105,8 +1105,6 @@ export class TinyMceEditor extends Component {
         editor.ui.registry.addIcon("indent", indent);
         editor.ui.registry.addIcon("outdent", outdent);
     }
-
-    
 
     /**
      * Add Footnote Icon Icon icon to the toolbar.

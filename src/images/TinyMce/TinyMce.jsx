@@ -69,7 +69,7 @@ export const downArrow = (function(){
 })();
 
 export const orderedList = (function(){
-  return ('<svg xmlns="http://www.w3.org/2000/svg" width="40" height="24" viewBox="0 0 40 24"><g fill="none" fill-rule="evenodd"><path fill="#EEE" fill-opacity="0" d="M0 0H24V24H0zM24 0H40V24H24z"/><path fill="#000" fill-opacity=".87" fill-rule="nonzero" d="M8.21 13.313v-1.626H20v1.626H8.21m0 4.874v-1.625H20v1.625H8.21m0-9.75V6.813H20v1.625H8.21m-3.368.812V6.812H4V6h1.684v3.25h-.842M4 16.563v-.813h2.526V19H4v-.813h1.684v-.406h-.842v-.812h.842v-.407H4m1.895-5.687c.349 0 .631.273.631.61 0 .162-.067.316-.177.422l-1.406 1.405h1.583v.813H4v-.748l1.684-1.69H4v-.812h1.895z"/><path fill="#000" fill-opacity=".87" fill-rule="nonzero" d="M0 0L4 4 8 0z" transform="translate(28 10)"/></g></svg>')
+  return ('<svg xmlns="http://www.w3.org/2000/svg" width="40" height="24" viewBox="0 0 16 24"><g fill="none" fill-rule="evenodd"><path fill="#EEE" fill-opacity="0" d="M0 0H24V24H0zM24 0H40V24H24z"/><path fill="#000" fill-opacity=".87" fill-rule="nonzero" d="M8.21 13.313v-1.626H20v1.626H8.21m0 4.874v-1.625H20v1.625H8.21m0-9.75V6.813H20v1.625H8.21m-3.368.812V6.812H4V6h1.684v3.25h-.842M4 16.563v-.813h2.526V19H4v-.813h1.684v-.406h-.842v-.812h.842v-.407H4m1.895-5.687c.349 0 .631.273.631.61 0 .162-.067.316-.177.422l-1.406 1.405h1.583v.813H4v-.748l1.684-1.69H4v-.812h1.895z"/></g></svg>')
 })();
 
 export const unorderedList = (function(){

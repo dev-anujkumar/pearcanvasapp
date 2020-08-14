@@ -7,6 +7,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import '../../styles/CanvasWrapper/ListButtonDrop.css';
+import {LIST_TYPE , LIST_DATA} from './ListTypeData'
 
 /**
  * ListButtonDrop | it is component renders list drop ui on editor tool header
@@ -15,7 +16,6 @@ import '../../styles/CanvasWrapper/ListButtonDrop.css';
 const ListButtonDrop = (props) => {
     return (
         <div className="fr-popup fr-desktop" ref={props.setListDropRef}>
-            <span className="fr-arrow"></span>
             <div className="fr-buttons numbered-list-dropdown">
                 <DecimalListIconBox {...props} />
                 <UpperAlphaListIconBox {...props} />
@@ -25,7 +25,7 @@ const ListButtonDrop = (props) => {
                 <NoStyleListIconBox {...props} />
             </div>
             <div className="list-input-layer" id="list-input-layer">
-                <div className="topText">Enter numerical value</div>
+                <div className="topText">Start with</div>
                 <div>
                     <div id="listInputCover" className="">
                         <input ref={props.inputRef} id="listINputBox" defaultValue={props.startValue} maxLength="9" type="text" dir="auto" pattern="\d*" className="list-input-box fr-not-empty" onKeyPress={numberValidatorHandler} onKeyDown={handleCtrlV} onPaste={handleRightClickCtrlV} onKeyUp={(e) => { handleInputSubmit(e, props) }} />
@@ -50,12 +50,31 @@ const ListButtonDrop = (props) => {
 const onListOptionSelect = (type, props) => {
     let _value = parseInt(document.getElementById('listINputBox').value || 1); // earlier default by 0
     _value = isNaN(_value) ? 1 : _value; //isNaN(_value) && 0 || _value; // earlier default by 0
-    props.onListSelect(type, _value);
+    props.onListSelect(type, _value, false);
     let _listWrapperDiv = document.querySelector('#listDropWrapper');
     if (_listWrapperDiv)
         _listWrapperDiv.querySelector('.fr-popup').classList.remove('fr-active');
 }
-
+/**
+ * getHorizontalLines | returns two horizontal parallel lines
+ */
+const getHorizontalLines = () =>{
+    return (
+        <span className="list-option-line">
+            <hr/>
+            <hr/> 
+        </span>
+    )
+}
+/**
+ * getListData | returns list type data for dropdown to render
+ * @param {string} type | type of list to render in dropdown
+ */
+const getListData = (type) =>{
+    return LIST_DATA[type].map((listObj)=>{
+        return <span className={`list-option-row ${listObj.class? listObj.class : ''}`}>{listObj.value}{getHorizontalLines()}</span>
+    })
+}
 /**
  * DecimalListIconBox | renders Decimal list icon in list drop
  * @param {object} props | received props to <ListButtonDrop />
@@ -64,10 +83,7 @@ const DecimalListIconBox = (props) => {
     const _listFor = 'decimal';
     return (
         <div className={`list-options ${props.selectedOption === _listFor ? 'selected' : ''}`} onClick={() => { onListOptionSelect(_listFor, props) }} id={`${_listFor}-1`} tabIndex="-1" data-cmd={_listFor}>
-            <span className="list-option-row">1.</span>
-            <span className="list-option-row">2.</span>
-            <span className="list-option-row">3.</span>
-            <span className="list-option-row">4.</span>
+            {getListData(LIST_TYPE.DECIMAL)}
             <span className="list-opt-tooltip">{_listFor}</span>
         </div>
     )
@@ -80,10 +96,7 @@ const UpperAlphaListIconBox = (props) => {
     const _listFor = 'upper-alpha';
     return (
         <div className={`list-options ${props.selectedOption === _listFor ? 'selected' : ''}`} onClick={() => { onListOptionSelect(_listFor, props) }} id={`${_listFor}-1`} tabIndex="-1" data-cmd={_listFor}>
-            <span className="list-option-row">A.</span>
-            <span className="list-option-row">B.</span>
-            <span className="list-option-row">C.</span>
-            <span className="list-option-row">D.</span>
+            {getListData(LIST_TYPE.UPPER_ALPHA)}
             <span className="list-opt-tooltip">{_listFor}</span>
         </div>
     )
@@ -96,10 +109,7 @@ const LowerAlphaListIconBox = (props) => {
     const _listFor = 'lower-alpha';
     return (
         <div className={`list-options ${props.selectedOption === _listFor ? 'selected' : ''}`} onClick={() => { onListOptionSelect(_listFor, props) }} id={`${_listFor}-1`} tabIndex="-1" data-cmd={_listFor}>
-            <span className="list-option-row">a.</span>
-            <span className="list-option-row">b.</span>
-            <span className="list-option-row">c.</span>
-            <span className="list-option-row">d.</span>
+            {getListData(LIST_TYPE.LOWER_ALPHA)}
             <span className="list-opt-tooltip">{_listFor}</span>
         </div>
     )
@@ -112,10 +122,7 @@ const UpperRomanListIconBox = (props) => {
     const _listFor = 'upper-roman';
     return (
         <div className={`list-options ${props.selectedOption === _listFor ? 'selected' : ''}`} onClick={() => { onListOptionSelect(_listFor, props) }} id={`${_listFor}-1`} tabIndex="-1" data-cmd={_listFor}>
-            <span className="list-option-row">I.</span>
-            <span className="list-option-row">II.</span>
-            <span className="list-option-row">III.</span>
-            <span className="list-option-row">IV.</span>
+            {getListData(LIST_TYPE.UPPER_ROMAN)}
             <span className="list-opt-tooltip">{_listFor}</span>
         </div>
     )
@@ -128,10 +135,7 @@ const LowerRomanListIconBox = (props) => {
     const _listFor = 'lower-roman';
     return (
         <div className={`list-options ${props.selectedOption === _listFor ? 'selected' : ''}`} onClick={() => { onListOptionSelect(_listFor, props) }} id={`${_listFor}-1`} tabIndex="-1" data-cmd={_listFor}>
-            <span className="list-option-row">i.</span>
-            <span className="list-option-row">ii.</span>
-            <span className="list-option-row">iii.</span>
-            <span className="list-option-row">iv.</span>
+            {getListData(LIST_TYPE.LOWER_ROMAN)}
             <span className="list-opt-tooltip">{_listFor}</span>
         </div>
     )

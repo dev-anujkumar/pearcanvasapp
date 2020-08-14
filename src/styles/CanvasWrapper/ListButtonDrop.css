@@ -32,6 +32,9 @@ i.fa.fa-list-ul:before {
 
 #listDropWrapper .fr-popup.fr-active {
     display: block;
+    margin-top: -10px;
+    width: 275px;
+    height: 260px;
 }
 
 #listDropWrapper .fr-popup {
@@ -60,7 +63,6 @@ i.fa.fa-list-ul:before {
     margin-top: 0px;
     text-align: left;
     border: 0;
-    border-top: 5px solid #222;
     text-rendering: optimizelegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -88,11 +90,10 @@ i.fa.fa-list-ul:before {
 
 #list-input-layer #listInputCover .fr-btn {
     float: right;
-    width: 10%;
+    width: 12%;
     height: 30px;
     font-size: 100%;
-    background: #000;
-    margin: 0px;
+    background: #005a70;
     color: #fff;
     padding: 0px;
 }
@@ -232,16 +233,16 @@ i.fa.fa-list-ul:before {
 }
 
 #list-input-layer {
-    padding: 15px 0 8px;
     clear: both;
     overflow: hidden;
-    border-top: 1px solid #ccc;
-    margin: 10px 10px 0px;
+    margin: 0 10px 0 10px;
+    color: #999999;
 }
 
 #list-input-layer .topText {
-    padding-bottom: 5px;
+    padding-bottom: 0 5px 5px 5px;
     font-size: 12px;
+    font-family: Open Sans;
 }
 
 #listInputCover {
@@ -251,12 +252,21 @@ i.fa.fa-list-ul:before {
 
 #list-input-layer .list-input-box {
     float: left;
-    width: 90%;
+    width: 85%;
     height: 30px;
     /* font-size: 100%; */
-    border: 1px solid #ccc;
+    border: 0;
+    border-bottom: 2px solid #d8d8d8;
     padding: 0 5px;
-    font-size: 12px;
+    font-size: 16px;
+}
+
+#list-input-layer .list-input-box:focus {
+    border-bottom: 2px solid #005a70;
+}
+
+#list-input-layer:focus-within {
+    color: #005a70;
 }
 
 #listDropWrapper .fr-popup input, #listDropWrapper .fr-popup textarea {
@@ -315,14 +325,17 @@ i.fa.fa-list-ul:before {
 
 #listDropWrapper .list-options {
     width: 80px;
-    height: 90px;
+    height: 80px;
     margin: 5px;
     float: left;
     padding: 5px 9px;
     border: 2px solid #f0f0f0;
+    border-radius: 5px;
     box-sizing: border-box !important;
     user-select: none !important;
-    font-family: sans-serif;
+    font-family: Open Sans;
+    font-weight: bold;
+    color: #6e6e6e;
     cursor: pointer;
     -webkit-transition: all .2s ease 0s;
     -moz-transition: all .2s ease 0s;
@@ -330,10 +343,28 @@ i.fa.fa-list-ul:before {
     -o-transition: all .2s ease 0s;
 }
 
+.list-options span.list-option-line {
+    width: 70%;
+    float: right;
+    margin: 5px 5px 0 0;
+    height : 10px
+}
+
+hr {
+    margin-top : 2px;
+    height: 2px;
+    border-width: 1px;
+}
+
+.list-roman-text{
+    text-align: center;
+}
+
 #listDropWrapper .list-option-row {
     width: 100%;
     float: left;
     height: 25%;
+    margin: 2px;
     font-size: 11px;
     line-height: 20px;
 }
@@ -341,12 +372,12 @@ i.fa.fa-list-ul:before {
 #listDropWrapper .list-option-row.no-style {
     text-align: center;
     transform: translateY(-50%);
-    top: 50%;
+    top: 45%;
     position: relative;
 }
 
 #listDropWrapper .list-options.selected {
-    border-color: #05a0c7;
+    border: 1px solid #005a70;
 }
 
 #listDropWrapper .list-options:not(.selected):hover {
