@@ -226,8 +226,8 @@ export class TinyMceEditor extends Component {
      * @param {*} editor  editor instance
      */
     insertListButtonIcon = (editor) => {
-        insertListButton(editor);
-        insertUoListButton(editor, this.onUnorderedListButtonClick);
+        insertListButton(editor, this.onListButtonClick);
+        insertUoListButton(editor, this.onListButtonClick);
     }
 
     /**
@@ -254,7 +254,7 @@ export class TinyMceEditor extends Component {
         }
     }
 
-    onUnorderedListButtonClick = (type) => {
+    onListButtonClick = (type) => {
         this.props.onListSelect(type, "");
     }
 

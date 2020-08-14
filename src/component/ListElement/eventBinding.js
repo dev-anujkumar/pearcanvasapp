@@ -23,11 +23,16 @@ export const insertUoListButton = (editor, onIconClick) => {
 /**
  * insertListButton | inserts custom list button with icon in existing editor toolbar
  */
-export const insertListButton = (editor) => {
-    editor.ui.registry.addButton('customListButton', {
-        icon:"customlistbutton",
+export const insertListButton = (editor, onIconClick) => {
+    editor.ui.registry.addSplitButton('customListButton', {
+        //text: '<i class="fa fa-list-ol" aria-hidden="true"></i>',
         tooltip: 'Ordered List',
+        icon:"customlistbutton",
         onAction: () => {
+            onIconClick('decimal');
+        },
+        onItemAction: function () {},
+        fetch: function () {
             positionListDrop(event);
         }
     });
@@ -42,7 +47,7 @@ export const positionListDrop = (event) => {
     let _listWrapperDiv = document.querySelector('#listDropWrapper');
     // *** let { width: _wrapperWidth } = _listWrapperDiv.getBoundingClientRect(); *** //
     let _wrapperWidth = 275;  // static because dom remains hidden //
-    let _offsetLeft = _targetLeft - (_wrapperWidth / 2) + (_targetWidth / 2);
+    let _offsetLeft = _targetLeft - (_wrapperWidth / 2) + (_targetWidth / 2) + 100;
     _listWrapperDiv.style.left = `${_offsetLeft}px`;
     if (!_listWrapperDiv.querySelector('.fr-popup').classList.contains('fr-active')) {
         _listWrapperDiv.querySelector('.fr-popup').classList.add('fr-active');
