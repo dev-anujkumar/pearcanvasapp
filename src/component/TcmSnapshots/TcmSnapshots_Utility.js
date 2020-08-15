@@ -26,6 +26,7 @@ const {
     CONTAINER_INTRO,
     CITATION_GROUP,
     CITATION_ELEMENT,
+    WE_MANIFEST,
     SLATE
 }
     = TcmConstants;
@@ -60,9 +61,10 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
     }
     /* Initial snapshotsData of elements*/
     let snapshotsData = {
-        elementId: elementId,
+        tag: tag,
         wipData: wipData,
-        tag: tag
+        elementId: elementId,
+        actionStatus: actionStatus
     }
     /* For 2C creation*/
     if (wipData.type === MULTI_COLUMN) {
@@ -100,7 +102,7 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
 */
 const tcmSnapshotsCreateAsideWE = (snapshotsData, defaultKeys, deleVercase, newVersionUrns) => {
     let elementDetails;
-    const { wipData, elementId, tag } = snapshotsData;
+    const { wipData, elementId, tag, actionStatus } = snapshotsData;
     wipData.elementdata.bodymatter && wipData.elementdata.bodymatter.map((item) => {
         if (item.type === WE_MANIFEST) {
             item.contents.bodymatter.map((ele) => {
@@ -132,7 +134,7 @@ const tcmSnapshotsCreateAsideWE = (snapshotsData, defaultKeys, deleVercase, newV
 */
 const tcmSnapshotsCreateSectionBreak = (containerElement, snapshotsData, defaultKeys, deleVercase, newVersionUrns) => {
     let elementDetails;
-    const { wipData, elementId, tag } = snapshotsData;
+    const { wipData, elementId, tag, actionStatus } = snapshotsData;
     const { asideData, parentUrn } = containerElement
     tag.parentTag = asideData && fetchElementsTag(asideData) ? fetchElementsTag(asideData) : fetchElementsTag(wipData)
     elementId.parentId = asideData && asideData.id ? asideData.id : parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "";
@@ -157,7 +159,7 @@ const tcmSnapshotsCreateSectionBreak = (containerElement, snapshotsData, default
 */
 const tcmSnapshotsInContainerElements = (containerElement, snapshotsData, defaultKeys, deleVercase, newVersionUrns) => {
     let elementDetails;
-    const { wipData, elementId, tag } = snapshotsData;
+    const { wipData, elementId, tag, actionStatus } = snapshotsData;
     const { poetryData, asideData, parentUrn } = containerElement
     let parentElement = asideData ? asideData : poetryData ? poetryData : parentUrn;
     elementId.parentId = parentElement && parentElement.id ? parentElement.id : parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "";
@@ -179,7 +181,7 @@ const tcmSnapshotsInContainerElements = (containerElement, snapshotsData, defaul
 */
 const tcmSnapshotsMultiColumn = (snapshotsData, defaultKeys, deleVercase, newVersionUrns) => {
     let elementDetails;
-    const { wipData, elementId, tag } = snapshotsData;
+    const { wipData, elementId, tag, actionStatus } = snapshotsData;
     wipData.groupeddata.bodymatter && wipData.groupeddata.bodymatter.map((item) => {
         if (item.type === "group") {
             item.groupdata.bodymatter.map((ele) => {
@@ -204,7 +206,7 @@ const tcmSnapshotsMultiColumn = (snapshotsData, defaultKeys, deleVercase, newVer
 */
 const tcmSnapshotsCitationPoetry = (snapshotsData, defaultKeys, deleVercase, newVersionUrns) => {
     let elementDetails;
-    const { wipData, elementId, tag } = snapshotsData;
+    const { wipData, elementId, tag, actionStatus } = snapshotsData;
     wipData.contents.bodymatter.map((item) => {
         elementId.childId = deleVercase ? newVersionUrns[item.id] : item.id;
         tag.childTag = fetchElementsTag(item);
