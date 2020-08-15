@@ -520,31 +520,44 @@ export const fetchParentData = (bodymatter, indexes) => {
             type: bodymatter[tempIndex[0]].type,
             element: bodymatter[tempIndex[0]]
         }
-        let parentElement = {}
-        if(tempIndex.length == 3){
-            switch (bodymatter[tempIndex[0]].type) {
-                case POETRY_ELEMENT:
-                    parentElement = bodymatter[tempIndex[0]]
-                    break;
-                case MULTI_COLUMN:
-                    parentElement = bodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]]
-                    parentData.parentUrn = {
-                        columnIndex: tempIndex[1],
-                        columnName: tempIndex[1] =='0' ? 'C1':'C2'
-                    }
-                    break;
-                case ELEMENT_ASIDE:
-                default:
-                    parentElement = bodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]]
-                    break;
-            }
-        }
+        const { parentElement, multiColumnData } = setParentUrn(bodymatter, tempIndex);
         parentData.parentUrn = {
-            ...parentData.parentUrn,
             manifestUrn: parentElement.id,
             contentUrn: parentElement.contentUrn,
             elementType: parentElement.type
         }
+        if (multiColumnData) {
+            parentData.parentUrn.columnName = multiColumnData.columnName;
+            parentData.parentUrn.columnIndex = multiColumnData.columnIndex;
+        }
     }
     return parentData;
+}
+
+const setParentUrn = (bodymatter, tempIndex) => {
+    let parentElement = {}, multiColumnData = {};
+    if (tempIndex.length == 2) {
+        parentElement = bodymatter[tempIndex[0]]
+    } else if (tempIndex.length == 3) {
+        switch (bodymatter[tempIndex[0]].type) {
+            case ELEMENT_ASIDE:
+                parentElement = bodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]]
+                break;
+            case MULTI_COLUMN:
+                parentElement = bodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]]
+                multiColumnData = {
+                    columnIndex: tempIndex[1],
+                    columnName: tempIndex[1] == '0' ? 'C1' : 'C2'
+                }
+                break;
+            case POETRY_ELEMENT:
+            default:
+                parentElement = bodymatter[tempIndex[0]]
+                break;
+        }
+    }
+    return {
+        parentElement,
+        multiColumnData
+    }
 }
