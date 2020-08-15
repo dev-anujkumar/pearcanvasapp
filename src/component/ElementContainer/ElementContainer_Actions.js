@@ -55,7 +55,6 @@ export const addComment = (commentString, elementId) => (dispatch) => {
         })
 }
 
-
 export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, index, poetryData) => (dispatch, getState) => {
 
     const prepareDeleteRequestData = (elementType) => {
@@ -294,7 +293,7 @@ export const tcmSnapshotsForDelete = async (elementDeleteData, type, containerEl
         status:"accepted",
         fromWhere:"delete"
     }
-    let parentType = ['element-aside', 'citations', 'poetry'];
+    let parentType = ['element-aside', 'citations', 'poetry', 'groupedcontent'];
     let versionStatus = {};
     if ((parentType.indexOf(type) === -1)) {
         versionStatus = fetchManifestStatus(elementDeleteData.bodymatter, containerElement, type);

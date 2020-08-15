@@ -1,11 +1,30 @@
 /**
  * Module - ElementSnapshot_Utility
- * Description - This Module contains the utility functions to prepare TCM snapshots for Glossary/Footnote/Asset_Popover
+ * Description - This Module contains the utility functions to prepare TCM snapshots for Glossary/Footnote/Asset_Popover/Slate_Link
  */
-
 /**************************Import Modules**************************/
-import { getCurrentlyLinkedImage } from '../AssetPopover/AssetPopover_Actions.js';
 import {slateLinkDetails} from '../TcmSnapshots/TcmSnapshot_Actions.js'
+import { getCurrentlyLinkedImage } from '../AssetPopover/AssetPopover_Actions.js';
+/*************************Import Constants*************************/
+import TcmConstants from './TcmConstants.js';
+const {
+    AUTHORED_TEXT,
+    BLOCKFEATURE,
+    ELEMENT_LIST,
+    HEADING,
+    PARAGRAPH,
+    SLATE,
+    ELEMENT_ASIDE,
+    POETRY_STANZA,
+    POETRY_LINE,
+    GLOSSARY,
+    FOOTNOTE,
+    ASSET_POPOVER,
+    SLATE_LINK,
+    AP_TYPE
+}
+    = TcmConstants;
+
 /**
  * @function setSemanticsSnapshots
  * @description-This function is to set the snapshots for semantics in an element
@@ -19,7 +38,7 @@ export const setSemanticsSnapshots = async (element,actionStatus) => {
     let glossaryHtmlList= element.html && element.html.glossaryentries ?element.html.glossaryentries:[];
     let footnoteHtmlList = element.html && element.html.footnotes ? element.html.footnotes : [];
     switch (element.type) {
-        case 'element-authoredtext':
+        case AUTHORED_TEXT:
             glossaryWipList = element.elementdata && element.elementdata.glossaryentries ? element.elementdata.glossaryentries : [];
             glossarySnap = prepareGlossarySnapshotContent(actionStatus, glossaryWipList,glossaryHtmlList);
             footnoteWipList = element.elementdata && element.elementdata.footnotes ? element.elementdata.footnotes : [];
@@ -28,15 +47,15 @@ export const setSemanticsSnapshots = async (element,actionStatus) => {
             assetPopoverSnap = await prepareAssetPopoverSnapshotContent(assetPopoverList)
             break;
 
-        case 'stanza':
-        case 'element-list':
-            let listData = element.type === "element-list" ? element.elementdata.listitems: element.poetrylines
-            glossarySnap =  await setSnapshotsInListAndPoetry(actionStatus, listData, 'glossary',glossaryHtmlList);
-            footnoteSnap =  await setSnapshotsInListAndPoetry(actionStatus, listData, 'footnote',footnoteHtmlList);
-            assetPopoverSnap =  await setSnapshotsInListAndPoetry("", listData, 'assetpopover');
+        case ELEMENT_LIST:
+        case POETRY_STANZA:
+            let listData = element.type === ELEMENT_LIST ? element.elementdata.listitems: element.poetrylines
+            glossarySnap =  await setSnapshotsInListAndPoetry(actionStatus, listData, GLOSSARY, glossaryHtmlList);
+            footnoteSnap =  await setSnapshotsInListAndPoetry(actionStatus, listData, FOOTNOTE, footnoteHtmlList);
+            assetPopoverSnap =  await setSnapshotsInListAndPoetry("", listData, ASSET_POPOVER);
             break;
 
-        case 'element-blockfeature':
+        case BLOCKFEATURE:
             glossarySnap = [];
             footnoteWipList = element.elementdata && element.elementdata.authoredtext && element.elementdata.authoredtext.footnotes ? element.elementdata.authoredtext.footnotes : [];
             footnoteSnap = prepareFootnoteSnapshotContent(actionStatus, footnoteWipList,footnoteHtmlList)
@@ -69,14 +88,14 @@ export const setSemanticsSnapshots = async (element,actionStatus) => {
 const setSnapshotsInListAndPoetry = async (actionStatus, elementList, semanticType,glossaryFootnoteHtmlList) => {
     let snapshotsList = []
     await Promise.all(elementList.map( async item => {
-        if ((item.type == "paragraph" || item.type == "line") && item.authoredtext) {
-            if (semanticType === 'glossary') {
+        if ((item.type == PARAGRAPH || item.type == POETRY_LINE) && item.authoredtext) {
+            if (semanticType === GLOSSARY) {
                 let glossaryArray = item.authoredtext.glossaryentries ? item.authoredtext.glossaryentries : [];
                 snapshotsList = snapshotsList.concat(prepareGlossarySnapshotContent(actionStatus, glossaryArray,glossaryFootnoteHtmlList));
-            } else if (semanticType === 'footnote') {
+            } else if (semanticType === FOOTNOTE) {
                 let footnoteArray = item.authoredtext.footnotes ? item.authoredtext.footnotes : [];
                 snapshotsList = snapshotsList.concat(prepareFootnoteSnapshotContent(actionStatus, footnoteArray,glossaryFootnoteHtmlList));
-            } else if (semanticType === 'assetpopover') {
+            } else if (semanticType === ASSET_POPOVER) {
                 let assetLists = item.authoredtext.internallinks ? item.authoredtext.internallinks : [];
                 let assetSnapList = assetLists.length != 0 ? await prepareAssetPopoverSnapshotContent(assetLists) : [];
                 snapshotsList = snapshotsList.concat(assetSnapList);
@@ -157,9 +176,9 @@ export const prepareAssetPopoverSnapshotContent = async (assetsList) => {
             let assetId = document.querySelector('abbr[data-uri="' + assetsItem.linkid + '"').getAttribute("asset-id");
             let data = {
                 assetid: assetId,
-                type: assetsItem.internallinktype === "slate" ? "Slate Link" : "Asset Popover"
+                type: assetsItem.internallinktype === SLATE ? SLATE_LINK : AP_TYPE
             }
-            if (assetsItem.internallinktype === "slate") {
+            if (assetsItem.internallinktype === SLATE) {
                 let slateLink = await slateLinkDetails(assetsItem.linkid);
                 data.linkID = slateLink && slateLink.containerUrn ? slateLink.containerUrn : ""
                 data.label = slateLink && slateLink.unformattedTitle && slateLink.unformattedTitle.en ? slateLink.unformattedTitle.en : ""
@@ -186,16 +205,16 @@ export const fetchElementsTag = (element) => {
     let labelText, eleTag, eleType, eleSubType;
     eleType = element.type ? element.type :  element.elementType;
     switch (eleType) {
-        case 'element-authoredtext':
-            eleSubType = (element.elementdata && element.elementdata.headers) ? "heading" + element.elementdata.headers[0].level : "paragraph";
+        case AUTHORED_TEXT:
+            eleSubType = (element.elementdata && element.elementdata.headers) ? HEADING + element.elementdata.headers[0].level : PARAGRAPH;
             break;
-        case 'element-aside':
-            eleSubType = element.subtype === "workedexample" ? "workedexample" : "aside";
+        case ELEMENT_ASIDE:
+            eleSubType = element.subtype === WORKED_EXAMPLE ? WORKED_EXAMPLE : ASIDE;
             break;
-        case 'element-list':
+        case ELEMENT_LIST:
             eleSubType = element.subtype
             break;
-        case 'element-blockfeature':
+        case BLOCKFEATURE:
             eleSubType = element.elementdata.type
             break;
         default:

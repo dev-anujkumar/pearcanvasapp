@@ -50,6 +50,7 @@ export const handleTCMData = (slateManifestUrn) => (dispatch, getState) => {
     })
 
 }
+
 /**
      * @description Send TCM Snapshot for Cos converted elements
      * @param {String} slateManifestUrn | Slate Manifest

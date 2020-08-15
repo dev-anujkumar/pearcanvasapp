@@ -7,23 +7,42 @@
 import config from '../../config/config.js';
 import { sendElementTcmSnapshot, getLatestVersion } from './TcmSnapshot_Actions.js';
 import { setSemanticsSnapshots, fetchElementsTag } from './ElementSnapshot_Utility.js';
+/*************************Import Constants*************************/
+import TcmConstants from './TcmConstants.js';
 import { VERSIONING_SLATEMANIFEST } from "./../../constants/Action_Constants";
-let elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza'];
-let containerType = ['element-aside', 'manifest', 'citations', 'poetry', 'WORKED_EXAMPLE', 'CONTAINER', 'SECTION_BREAK', 'CITATION', 'POETRY'];
+
+const {
+    elementType,
+    containerType,
+    AUTHORED_TEXT,
+    BLOCKFEATURE,
+    ELEMENT_LIST,
+    ELEMENT_ASIDE,
+    POETRY_ELEMENT,
+    POETRY_STANZA,
+    MULTI_COLUMN,
+    SECTION_BREAK,
+    WORKED_EXAMPLE,
+    CONTAINER_INTRO,
+    CITATION_GROUP,
+    CITATION_ELEMENT,
+    SLATE
+}
+    = TcmConstants;
 
 /**
  * @function prepareTcmSnapshots
  * @description This is the root function to prepare the data for TCM Snapshots
  * @param {Object} wipData - Element Wip Data
- * @param {String} action - action performed
+ * @param {String} actionStatus - action performed
  * @param {Object} containerElement - Element Parent Data
  * @param {String} type - type of element
- * @param {String} status - pending/accepted
+ * @param {Object} newVersionUrns - Latest  Version Urns for delete case
 */
-export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, type, newVersionUrns)  => {
+export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, type, newVersionUrns) => {
+    const { poetryData, asideData, parentUrn } = containerElement
     /** isContainer : used to set SlateType  */
     let isContainer = false;
-    const {poetryData,asideData,parentUrn}=containerElement
     if ((poetryData || asideData || parentUrn) ||
         (containerType.indexOf(wipData.type) !== -1) ||
         (type && (containerType.indexOf(type) !== -1))) {
@@ -31,88 +50,167 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
     }
     let deleVercase = newVersionUrns ? true : false
     let defaultKeys = setDefaultKeys(actionStatus, isContainer);
-    let elementDetails;
     /* Tag of elements*/
     let tag = {
-        parentTag: wipData.type === "groupedcontent" ? '2C':fetchElementsTag(wipData)
+        parentTag: wipData.type === "groupedcontent" ? '2C' : fetchElementsTag(wipData)
     }
     /* ID of elements*/
     let elementId = {
-        parentId:  deleVercase && newVersionUrns[wipData.id] ? newVersionUrns[wipData.id] :  wipData.id 
+        parentId: deleVercase && newVersionUrns[wipData.id] ? newVersionUrns[wipData.id] : wipData.id
     }
-       /* For 2C creation*/
-    if (wipData.type === "groupedcontent") {
-        wipData.groupeddata.bodymatter && wipData.groupeddata.bodymatter.map((item) => {
-            if (item.type === "group") {
-                item.groupdata.bodymatter.map((ele) => {
-                    if (elementType.indexOf(ele.type) !== -1) {
-                        elementId.childId = deleVercase ? newVersionUrns[ele.id] : ele.id;
-                        tag.childTag = fetchElementsTag(ele);
-                        elementDetails = setElementTypeAndUrn(elementId, tag, 'C1', item.id);
-                        prepareAndSendTcmData(elementDetails, ele, defaultKeys, actionStatus);
-                    }
-                })
-            }
-        })
+    /* Initial snapshotsData of elements*/
+    let snapshotsData = {
+        elementId: elementId,
+        wipData: wipData,
+        tag: tag
+    }
+    /* For 2C creation*/
+    if (wipData.type === MULTI_COLUMN) {
+        tcmSnapshotsMultiColumn(snapshotsData, defaultKeys, deleVercase, newVersionUrns);
     }
     /* For WE creation*/
-    else if (wipData.type === "element-aside" && type != "SECTION_BREAK") {
-        wipData.elementdata.bodymatter && wipData.elementdata.bodymatter.map((item) => {
-            if (item.type === "manifest") {
-                item.contents.bodymatter.map((ele) => {
-                    if (elementType.indexOf(ele.type) !== -1) {
-                        elementId.childId = deleVercase ? newVersionUrns[ele.id] : ele.id;
-                        tag.childTag = fetchElementsTag(ele);
-                        elementDetails = setElementTypeAndUrn(elementId, tag, wipData.subtype === "workedexample" ? 'BODY' : "", item.id);
-                        prepareAndSendTcmData(elementDetails, ele, defaultKeys, actionStatus);
-                    }
-                })
-            }
-            else if (elementType.indexOf(item.type) !== -1) {
-                elementId.childId = deleVercase ? newVersionUrns[item.id] : item.id;
-                tag.childTag = fetchElementsTag(item);
-                elementDetails = setElementTypeAndUrn(elementId, tag, wipData.subtype === "workedexample" ? "HEAD" : "", "");
-                prepareAndSendTcmData(elementDetails, item, defaultKeys, actionStatus);
-            }
-        })
+    else if (wipData.type === ELEMENT_ASIDE && type != SECTION_BREAK) {
+        tcmSnapshotsCreateAsideWE(snapshotsData, defaultKeys, deleVercase, newVersionUrns);
     }
     /* action on Section break in WE*/
-    else if (type === "SECTION_BREAK" || wipData.type === "manifest") {
-        tag.parentTag = asideData && fetchElementsTag(asideData) ? fetchElementsTag(asideData) : fetchElementsTag(wipData)
-        elementId.parentId = asideData && asideData.id ? asideData.id : parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "";
-        wipData.contents.bodymatter.map((item) => {
-            if (elementType.indexOf(item.type) !== -1) {
-                elementId.childId =  deleVercase ? newVersionUrns[item.id] : item.id;
-                tag.childTag = fetchElementsTag(item);
-                elementDetails = setElementTypeAndUrn(elementId, tag, "BODY", wipData.id);
-                prepareAndSendTcmData(elementDetails, item, defaultKeys, actionStatus);
-            }
-        })
+    else if (type === SECTION_BREAK || wipData.type === WE_MANIFEST) {
+        tcmSnapshotsCreateSectionBreak(containerElement, snapshotsData, defaultKeys, deleVercase, newVersionUrns)
     }
     /* action on element in WE/PE/CG */
     else if (poetryData || asideData || parentUrn) {
-        let parentElement = asideData ? asideData : poetryData ? poetryData : parentUrn;
-        elementId.parentId = parentElement && parentElement.id ? parentElement.id : parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "";
-        elementId.childId = deleVercase ? newVersionUrns[wipData.id] : wipData.id;
-        tag.parentTag = fetchElementsTag(parentElement);
-        tag.childTag = fetchElementsTag(wipData);
-        let isHead = asideData && asideData.type === "element-aside" && asideData.subtype === "workedexample" ? parentUrn.manifestUrn == asideData.id ? "HEAD" : "BODY" : parentUrn.columnName  ? parentUrn.columnName:"";
-        elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn:"");
-        prepareAndSendTcmData(elementDetails, wipData, defaultKeys, actionStatus);
+        tcmSnapshotsInContainerElements(containerElement, snapshotsData, defaultKeys, deleVercase, newVersionUrns)
     }
     /* action on PE and CG */
-    else if (wipData.type === "citations" || wipData.type === "poetry") {
-        wipData.contents.bodymatter.map((item) => {
-            elementId.childId = deleVercase ? newVersionUrns[item.id] : item.id;
-            tag.childTag = fetchElementsTag(item);
-            elementDetails = setElementTypeAndUrn(elementId, tag, "", "");
-            prepareAndSendTcmData(elementDetails, item, defaultKeys, actionStatus);
-        })
+    else if (wipData.type === CITATION_GROUP || wipData.type === POETRY_ELEMENT) {
+        tcmSnapshotsCitationPoetry(snapshotsData, defaultKeys, deleVercase, newVersionUrns);
     }
     else {
-        elementDetails = setElementTypeAndUrn(elementId, tag);
+        let elementDetails = setElementTypeAndUrn(elementId, tag);
         prepareAndSendTcmData(elementDetails, wipData, defaultKeys, actionStatus);
     }
+}
+
+/**
+ * @function tcmSnapshotsCreateAsideWE
+ * @description This is the function to prepare the data for TCM Snapshots for Action = Create & Elements = Aside/WE
+ * @param {Object} snapshotsData - Initial Snapshots data
+ * @param {String} defaultKeys - default keys of tcm snapshot
+ * @param {Boolean} deleVercase - Check for delete versioning action
+ * @param {Object} newVersionUrns - Latest  Version Urns for delete case
+*/
+const tcmSnapshotsCreateAsideWE = (snapshotsData, defaultKeys, deleVercase, newVersionUrns) => {
+    let elementDetails;
+    const { wipData, elementId, tag } = snapshotsData;
+    wipData.elementdata.bodymatter && wipData.elementdata.bodymatter.map((item) => {
+        if (item.type === WE_MANIFEST) {
+            item.contents.bodymatter.map((ele) => {
+                if (elementType.indexOf(ele.type) !== -1) {
+                    elementId.childId = deleVercase ? newVersionUrns[ele.id] : ele.id;
+                    tag.childTag = fetchElementsTag(ele);
+                    elementDetails = setElementTypeAndUrn(elementId, tag, wipData.subtype === WORKED_EXAMPLE ? 'BODY' : "", item.id);
+                    prepareAndSendTcmData(elementDetails, ele, defaultKeys, actionStatus);
+                }
+            })
+        }
+        else if (elementType.indexOf(item.type) !== -1) {
+            elementId.childId = deleVercase ? newVersionUrns[item.id] : item.id;
+            tag.childTag = fetchElementsTag(item);
+            elementDetails = setElementTypeAndUrn(elementId, tag, wipData.subtype === WORKED_EXAMPLE ? "HEAD" : "", "");
+            prepareAndSendTcmData(elementDetails, item, defaultKeys, actionStatus);
+        }
+    })
+}
+
+/**
+ * @function tcmSnapshotsCreateSectionBreak
+ * @description This is the function to prepare the data for TCM Snapshots for Action = Create & Elements = Section-Break
+ * @param {Object} snapshotsData - Initial Snapshots data
+ * @param {Object} containerElement - Element Parent Data
+ * @param {String} defaultKeys - default keys of tcm snapshot
+ * @param {Boolean} deleVercase - Check for delete versioning action
+ * @param {Object} newVersionUrns - Latest  Version Urns for delete case
+*/
+const tcmSnapshotsCreateSectionBreak = (containerElement, snapshotsData, defaultKeys, deleVercase, newVersionUrns) => {
+    let elementDetails;
+    const { wipData, elementId, tag } = snapshotsData;
+    const { asideData, parentUrn } = containerElement
+    tag.parentTag = asideData && fetchElementsTag(asideData) ? fetchElementsTag(asideData) : fetchElementsTag(wipData)
+    elementId.parentId = asideData && asideData.id ? asideData.id : parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "";
+    wipData.contents.bodymatter.map((item) => {
+        if (elementType.indexOf(item.type) !== -1) {
+            elementId.childId = deleVercase ? newVersionUrns[item.id] : item.id;
+            tag.childTag = fetchElementsTag(item);
+            elementDetails = setElementTypeAndUrn(elementId, tag, "BODY", wipData.id);
+            prepareAndSendTcmData(elementDetails, item, defaultKeys, actionStatus);
+        }
+    })
+}
+
+/**
+ * @function tcmSnapshotsInContainerElements
+ * @description This is the function to prepare the data for TCM Snapshots for Action = Update/Del & Elements inside Aside/WE/CG/PE/MC
+ * @param {Object} snapshotsData - Initial Snapshots data
+ * @param {Object} containerElement - Element Parent Data
+ * @param {String} defaultKeys - default keys of tcm snapshot
+ * @param {Boolean} deleVercase - Check for delete versioning action
+ * @param {Object} newVersionUrns - Latest  Version Urns for delete case
+*/
+const tcmSnapshotsInContainerElements = (containerElement, snapshotsData, defaultKeys, deleVercase, newVersionUrns) => {
+    let elementDetails;
+    const { wipData, elementId, tag } = snapshotsData;
+    const { poetryData, asideData, parentUrn } = containerElement
+    let parentElement = asideData ? asideData : poetryData ? poetryData : parentUrn;
+    elementId.parentId = parentElement && parentElement.id ? parentElement.id : parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "";
+    elementId.childId = deleVercase ? newVersionUrns[wipData.id] : wipData.id;
+    tag.parentTag = fetchElementsTag(parentElement);
+    tag.childTag = fetchElementsTag(wipData);
+    let isHead = asideData && asideData.type === ELEMENT_ASIDE && asideData.subtype === WORKED_EXAMPLE ? parentUrn.manifestUrn == asideData.id ? "HEAD" : "BODY" : parentUrn.columnName ? parentUrn.columnName : "";
+    elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "");
+    prepareAndSendTcmData(elementDetails, wipData, defaultKeys, actionStatus);
+}
+
+/**
+ * @function tcmSnapshotsMultiColumn
+ * @description This is the function to prepare the data for TCM Snapshots for Action = Create & Elements = Mutli-column
+ * @param {Object} snapshotsData - Initial Snapshots data
+ * @param {String} defaultKeys - default keys of tcm snapshot
+ * @param {Boolean} deleVercase - Check for delete versioning action
+ * @param {Object} newVersionUrns - Latest  Version Urns for delete case
+*/
+const tcmSnapshotsMultiColumn = (snapshotsData, defaultKeys, deleVercase, newVersionUrns) => {
+    let elementDetails;
+    const { wipData, elementId, tag } = snapshotsData;
+    wipData.groupeddata.bodymatter && wipData.groupeddata.bodymatter.map((item) => {
+        if (item.type === "group") {
+            item.groupdata.bodymatter.map((ele) => {
+                if (elementType.indexOf(ele.type) !== -1) {
+                    elementId.childId = deleVercase ? newVersionUrns[ele.id] : ele.id;
+                    tag.childTag = fetchElementsTag(ele);
+                    elementDetails = setElementTypeAndUrn(elementId, tag, 'C1', item.id);
+                    prepareAndSendTcmData(elementDetails, ele, defaultKeys, actionStatus);
+                }
+            })
+        }
+    })
+}
+
+/**
+ * @function tcmSnapshotsCitationPoetry
+ * @description This is the function to prepare the data for TCM Snapshots for Action = Create & Elements = Citaions/Poetry
+ * @param {Object} snapshotsData - Initial Snapshots data
+ * @param {String} defaultKeys - default keys of tcm snapshot
+ * @param {Boolean} deleVercase - Check for delete versioning action
+ * @param {Object} newVersionUrns - Latest  Version Urns for delete case
+*/
+const tcmSnapshotsCitationPoetry = (snapshotsData, defaultKeys, deleVercase, newVersionUrns) => {
+    let elementDetails;
+    const { wipData, elementId, tag } = snapshotsData;
+    wipData.contents.bodymatter.map((item) => {
+        elementId.childId = deleVercase ? newVersionUrns[item.id] : item.id;
+        tag.childTag = fetchElementsTag(item);
+        elementDetails = setElementTypeAndUrn(elementId, tag, "", "");
+        prepareAndSendTcmData(elementDetails, item, defaultKeys, actionStatus);
+    })
 }
 
 /**
@@ -172,13 +270,13 @@ export const setDefaultKeys = (actionStatus, isContainer) => {
         projectUrn: config.projectUrn,
         index: 0,
         action: action,
-        status:  (config.tcmStatus && config.tcmStatus == true && status === "" && action !== 'delete') ? "pending" : "accepted",//prepareElementStatus(action),
-        //set based on action (config.tcmStatus && config.tcmStatus == true && action !== 'delete') ? "Pending" : "Accepted")
-        slateType: isContainer === true ? "container-introduction" : "slate",//set based on condition
+        status:  (config.tcmStatus && config.tcmStatus == true && status === "" && action !== 'delete') ? "pending" : "accepted",
+        slateType: isContainer === true ? CONTAINER_INTRO : SLATE,/** set based on condition */
     }
     actionStatus.status = tcmKeys.status
     return tcmKeys
 }
+
 /**
  * @function prepareElementSnapshots
  * @description This function is to set the common keys for tcm snapshots
@@ -189,7 +287,7 @@ export const setDefaultKeys = (actionStatus, isContainer) => {
 */
 export const prepareElementSnapshots = async (element,actionStatus) => {
     let elementSnapshot = {};
-    let semanticSnapshots = (actionStatus.fromWhere !== "create" && element.type !== 'element-citation') ? await setSemanticsSnapshots(element,actionStatus) : {};
+    let semanticSnapshots = (actionStatus.fromWhere !== "create" && element.type !== CITATION_ELEMENT) ? await setSemanticsSnapshots(element,actionStatus) : {};
 
     elementSnapshot = {
         contentSnapshot: element.html && element.html.text ? element.html.text : "",
@@ -199,6 +297,18 @@ export const prepareElementSnapshots = async (element,actionStatus) => {
     }
 
     return elementSnapshot;
+}
+/**
+ * @function isEmpty
+ * @description This function is to check if an object is empty
+ * @param {Object} obj - object to be checked
+ * @returns {Boolean}
+*/
+const isEmpty = (obj) => {
+    if ((Object.keys(obj).length === 0 && obj.constructor === Object)) {
+        return true;
+    }
+    return false;
 }
 
 /**
@@ -219,7 +329,7 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
     let currentSlateData =currentParentData[config.slateManifestURN] 
     let wipData = fetchElementWipData(updateBodymatter, elementIndex, response.type,"")
     let versionStatus = fetchManifestStatus(updateBodymatter, containerElement, response.type);
-    /** latest version for WE/CE/PE/AS*/
+    /** latest version for WE/CE/PE/AS/2C*/
     containerElement = await checkContainerElementVersion(containerElement, versionStatus,currentSlateData)
     let oldData = Object.assign({}, response);
     //set new slate Manifest in store also
@@ -260,29 +370,39 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
 export const fetchManifestStatus = (bodymatter, parentElement, type) => {
     let parentData = {};
     const { asideData, parentUrn, poetryData } = parentElement;
-
     if ((asideData || parentUrn || poetryData) && bodymatter.length !== 0) {
         bodymatter.map(element => {
-            if (type === 'SECTION_BREAK' && asideData && element.id == asideData.id) {
-                parentData.parentStatus = element.status;       /** Create Section-Break */
-            }
-            else if (parentUrn && element.id == parentUrn.manifestUrn) {
-                parentData.parentStatus = element.status;       /** In WE-HEAD | Aside | Citations */
-            } else if (asideData && element.type == "element-aside" && element.id == asideData.id) {
-                parentData.parentStatus = element.status;
-                element.elementdata && element.elementdata.bodymatter.map((ele) => {
-                    if (parentUrn && ele.id === parentUrn.manifestUrn) {
-                        parentData.childStatus = ele.status ;   /** In Section-Break */
+            switch (type) {
+                case SECTION_BREAK:                              /** Create Section-Break */
+                    parentData.parentStatus = asideData && asideData.id == element.id ? element.status : undefined;
+                    break;
+                case POETRY_ELEMENT:                             /** In Poetry */
+                    parentData.parentStatus = poetryData && poetryData.parentUrn == element.id ? element.status : undefined;
+                    break;
+                case MULTI_COLUMN:                               /** In Multi-Column */
+                    parentData.parentStatus = asideData && asideData.id == element.id ? element.status : undefined;
+                    element.groupeddata && element.groupeddata.bodymatter.map((ele) => {
+                        parentData.childStatus = parentUrn && ele.id === parentUrn.manifestUrn ? ele.status : undefined;
+                    })
+                    break;
+                case ELEMENT_ASIDE:                               /** In Section-Break */
+                    if (asideData && element.id == asideData.id && element.id !== parentUrn.manifestUrn) {
+                        parentData.parentStatus = element.status;
+                        element.elementdata && element.elementdata.bodymatter.map((ele) => {
+                            parentData.childStatus = parentUrn && ele.id === parentUrn.manifestUrn ? ele.status : undefined;
+                        })
                     }
-                })
-            }
-            else if (poetryData && element.id == poetryData.parentUrn) {
-                parentData.parentStatus = element.status;       /** In Poetry */
+                    break;
+                case CITATION_GROUP:
+                default:                                         /** In WE-HEAD | Aside | Citations */
+                    parentData.parentStatus = parentUrn && element.id == parentUrn.manifestUrn ? element.status : undefined;
+                    break;
             }
         })
     }
     return parentData
 }
+
 /**
  * @function checkContainerElementVersion
  * @description This function is to check versioning status for slate and container elements and 
@@ -330,6 +450,7 @@ export const checkContainerElementVersion = async (containerElement, versionStat
     }
     return containerElement;
 }
+
 /**
  * @function fetchElementWipData
  * @description-This function is to set the lael text of element
@@ -344,9 +465,9 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn) => {
     if (typeof index === "number" || (Array.isArray(index) && index.length == 1)) {   /** Delete a container or an element at slate level */
         eleIndex = Array.isArray(index) ? index[0] : index;
         wipData = bodymatter[eleIndex];
-        if (wipData.subtype === "workedexample") {  /** Delete Section-Break */
+        if (wipData.subtype === WORKED_EXAMPLE) {  /** Delete Section-Break */
             wipData.elementdata.bodymatter.map((item, innerIndex) => {
-                if (item.type == "manifest" && entityUrn == item.contentUrn) {
+                if (item.type == WE_MANIFEST && entityUrn == item.contentUrn) {
                     wipData = bodymatter[eleIndex].elementdata.bodymatter[innerIndex]
                 }
             })
@@ -355,22 +476,21 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn) => {
     else if (typeof index === "string") {
         eleIndex =  index.split("-");
         switch (type) {
-            case 'stanza':                           /** Inside Poetry */
+            case POETRY_STANZA:                      /** Inside Poetry */
                 wipData = bodymatter[eleIndex[0]].contents.bodymatter[eleIndex[2]];
                 break;
-            case 'element-citation':                 /** Inside Citations */
+            case CITATION_ELEMENT:                   /** Inside Citations */
                 wipData = bodymatter[eleIndex[0]].contents.bodymatter[eleIndex[1] - 1];
                 break;
-            case 'element-list':
-            case 'element-blockfeature':
-            case 'element-authoredtext':
-            case 'element-learningobjectives':
+            case ELEMENT_LIST:
+            case BLOCKFEATURE:
+            case AUTHORED_TEXT:
+            case LEARNING_OBJECTIVE:
                 if (eleIndex.length == 2) {          /** Inside WE-HEAD | Aside */
                     wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]];
-                } else if (eleIndex.length == 3 && bodymatter[eleIndex[0]].type !== "groupedcontent") {   /** Inside WE-BODY */
+                } else if (eleIndex.length == 3 && bodymatter[eleIndex[0]].type !== MULTI_COLUMN) {   /** Inside WE-BODY */
                     wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]].contents.bodymatter[eleIndex[2]];
-                }
-                else if (eleIndex.length == 3) {   /** Inside Multi-Column*/
+                } else if (eleIndex.length == 3) {   /** Inside Multi-Column*/
                     wipData = bodymatter[eleIndex[0]].groupeddata.bodymatter[eleIndex[1]].groupdata.bodymatter[eleIndex[2]];
                 }
                 break;
@@ -401,22 +521,22 @@ export const fetchParentData = (bodymatter, indexes) => {
         let parentElement = {}
         if(tempIndex.length == 3){
             switch (bodymatter[tempIndex[0]].type) {
-                case 'poetry':
+                case POETRY_ELEMENT:
                     parentElement = bodymatter[tempIndex[0]]
                     break;
-                case 'groupedcontent':
+                case MULTI_COLUMN:
                     parentElement = bodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]]
                     parentData.parentUrn = {
                         columnIndex: tempIndex[1],
                         columnName: tempIndex[1] =='0' ? 'C1':'C2'
                     }
                     break;
+                case ELEMENT_ASIDE:
                 default:
                     parentElement = bodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]]
                     break;
             }
         }
-
         parentData.parentUrn = {
             ...parentData.parentUrn,
             manifestUrn: parentElement.id,
@@ -425,15 +545,4 @@ export const fetchParentData = (bodymatter, indexes) => {
         }
     }
     return parentData;
-}
-
-/**
- * @function isEmpty
- * @description This function is to check if an object is empty
- * @param {Object} obj - object to be checked
- * @returns {Boolean}
-*/
-const isEmpty = (obj) => {
-    for (let key in obj) { return false; }
-    return true;
 }

@@ -81,7 +81,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     outputPrimaryOptionEnum = outputPrimaryOptionType['enum']
 
         if (oldElementData.figuretype === "assessment") {
-            /**-----------Sidebar Conversion fro Single Assessment-----------*/
+            /**-----------Sidebar Conversion for Single Assessment-----------*/
             let assessmentData = prepareAssessmentDataForConversion(oldElementData, outputSubType.text)
             oldElementData = assessmentData.oldElementData;
             inputSubTypeEnum = inputSubType['enum'];
@@ -454,7 +454,7 @@ export const tcmSnapshotsForConversion = async (elementConversionData,indexes,ap
     let convertBodymatter = convertSlate.contents.bodymatter;
     let convertParentData = fetchParentData(convertBodymatter, indexes);
     let versionStatus = fetchManifestStatus(convertBodymatter, convertParentData,response.type);
-    /** latest version for WE/CE/PE/AS*/
+    /** latest version for WE/CE/PE/AS/2C*/
     convertParentData = await checkContainerElementVersion(convertParentData, versionStatus, currentSlateData)
     if (oldElementData.id !== response.id) {
         oldElementData.id = response.id
@@ -465,8 +465,6 @@ export const tcmSnapshotsForConversion = async (elementConversionData,indexes,ap
         prepareTcmSnapshots(oldElementData, actionStatusVersioning, convertParentData, "","");
     }
     prepareTcmSnapshots(response,actionStatus, convertParentData,"","");
-
-    
 }
 
 const prepareAssessmentDataForConversion = (oldElementData, format) => {
