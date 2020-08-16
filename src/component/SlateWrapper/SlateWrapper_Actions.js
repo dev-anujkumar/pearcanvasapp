@@ -24,7 +24,7 @@ import { sendDataToIframe } from '../../constants/utility.js';
 import { HideLoader, ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { prepareTcmSnapshots, fetchManifestStatus, checkContainerElementVersion } from '../TcmSnapshots/TcmSnapshots_Utility.js';
-let elementType = ['WORKED_EXAMPLE', 'CONTAINER', 'SECTION_BREAK', 'TEXT', 'CITATION', 'ELEMENT_CITATION', 'POETRY', 'STANZA'];
+let elementType = ['WORKED_EXAMPLE', 'CONTAINER', 'SECTION_BREAK', 'TEXT', 'CITATION', 'ELEMENT_CITATION', 'POETRY', 'STANZA' , 'MULTI_COLUMN'];
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
 };
@@ -309,7 +309,7 @@ export const tcmSnapshotsForCreate = async (elementCreateData, type, containerEl
         status:"",
         fromWhere:"create"
     }
-    let containerType = ['WORKED_EXAMPLE', 'CONTAINER', 'CITATION', 'POETRY'];
+    let containerType = ['WORKED_EXAMPLE', 'CONTAINER', 'CITATION', 'POETRY', 'MULTI_COLUMN'];
     let versionStatus = {};
     /** This condition is required to check version of elements when bodymatter has elements and is not a container on slate */
     if (elementCreateData.bodymatter && elementCreateData.bodymatter.length !== 0 && (containerType.indexOf(type) === -1)) {

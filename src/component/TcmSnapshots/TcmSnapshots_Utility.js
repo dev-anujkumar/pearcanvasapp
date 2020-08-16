@@ -9,7 +9,7 @@ import { sendElementTcmSnapshot, getLatestVersion } from './TcmSnapshot_Actions.
 import { setSemanticsSnapshots, fetchElementsTag } from './ElementSnapshot_Utility.js';
 import { VERSIONING_SLATEMANIFEST } from "./../../constants/Action_Constants";
 let elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza'];
-let containerType = ['element-aside', 'manifest', 'citations', 'poetry', 'WORKED_EXAMPLE', 'CONTAINER', 'SECTION_BREAK', 'CITATION', 'POETRY'];
+let containerType = ['element-aside', 'manifest', 'citations', 'poetry', 'WORKED_EXAMPLE', 'CONTAINER', 'SECTION_BREAK', 'CITATION', 'POETRY', 'groupedcontent'];
 
 /**
  * @function prepareTcmSnapshots
@@ -74,7 +74,7 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
             }
         })
     }
-    /* action on element in WE/PE/CG */
+    /* action on element in WE/PE/CG/2C */
     else if (poetryData || asideData || parentUrn) {
         let parentElement = asideData ? asideData : poetryData ? poetryData : parentUrn;
         elementId.parentId = parentElement && parentElement.id ? parentElement.id : parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "";
@@ -82,7 +82,7 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
         tag.parentTag = fetchElementsTag(parentElement);
         tag.childTag = fetchElementsTag(wipData);
         let isHead = asideData && asideData.type === "element-aside" && asideData.subtype === "workedexample" ? parentUrn.manifestUrn == asideData.id ? "HEAD" : "BODY" : "";
-        elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn:"");
+        elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn:"",parentUrn ? parentUrn.columnIndex : -1);
         prepareAndSendTcmData(elementDetails, wipData, defaultKeys, actionStatus);
     }
     /* action on PE and CG */
@@ -92,6 +92,18 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
             tag.childTag = fetchElementsTag(item);
             elementDetails = setElementTypeAndUrn(elementId, tag, "", "");
             prepareAndSendTcmData(elementDetails, item, defaultKeys, actionStatus);
+        })
+    }
+    /* action on Multi-column */
+    else if (wipData.type === 'groupedcontent') {
+        wipData.groupeddata.bodymatter.map((item, eleIndex) => {
+            item.groupdata.bodymatter.map((ele) => {
+                elementId.childId = deleVercase ? newVersionUrns[ele.id] : ele.id;
+                tag.childTag = fetchElementsTag(ele);
+                elementDetails = setElementTypeAndUrn(elementId, tag, "", "", parentUrn ? parentUrn.columnIndex : eleIndex);
+                prepareAndSendTcmData(elementDetails, item, defaultKeys, actionStatus);
+            })
+
         })
     }
     else {
@@ -131,10 +143,13 @@ const prepareAndSendTcmData = async (elementDetails, wipData, defaultKeys, actio
  * @param {String} sectionId - Urn for section break
  * @returns {Object} Object that contains the element tag and elementUrn for snapshot 
 */
-const setElementTypeAndUrn = (eleId, tag, isHead, sectionId) => {
+const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex) => {
     let elementData = {}
     let elementTag = `${tag.parentTag}${isHead ? ":" + isHead : ""}${tag.childTag ? ":" + tag.childTag : ""}`;
     let elementId = `${eleId.parentId}${sectionId && isHead === "BODY" ? "+" + sectionId : ""}${eleId.childId ? "+" + eleId.childId : ""}`
+    if(eleIndex > -1){
+        elementTag = `${tag.parentTag}${(eleIndex === 0) ? ':C1' : ':C2'}${tag.childTag ? ":" + tag.childTag : ""}`        
+    }
     elementData = {
         elementUrn: elementId,
         elementType: elementTag
@@ -177,7 +192,7 @@ export const prepareElementSnapshots = async (element,actionStatus) => {
     let semanticSnapshots = (actionStatus.fromWhere !== "create" && element.type !== 'element-citation') ? await setSemanticsSnapshots(element,actionStatus) : {};
 
     elementSnapshot = {
-        contentSnapshot: element.html && element.html.text ? element.html.text : "",
+        contentSnapshot: (element.type === 'group') ? (element.groupdata.bodymatter && element.groupdata.bodymatter[0].html.text) : element.html && element.html.text ? element.html.text : "",
         glossorySnapshot: JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.glossarySnapshot : []),
         footnoteSnapshot:  JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.footnoteSnapshot : []),
         assetPopOverSnapshot:  JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.assetPopoverSnapshot : [])

@@ -276,6 +276,9 @@ const setElementTag = {
     "stanza": {
         parentTag: "ST"
     },
+    "groupedcontent": {
+        parentTag: "2C"
+    },
     "manifest": {
         parentTag: "WE"
     },
