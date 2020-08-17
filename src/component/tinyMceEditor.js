@@ -570,8 +570,8 @@ export class TinyMceEditor extends Component {
         let parentNode = true;
 
         do {
-            if(el.parentNode && el.parentNode.tagName && el.parentNode.tagName !== 'LI' && el.parentNode.tagName !== 'P' && el.parentNode.tagName !== 'H3' && el.parentNode.tagName !== 'BLOCKQUOTE') {
-                if(el.nodeName == 'ABBR' || (el.parentNode && el.parentNode.tagName === 'ABBR')) {
+            if (el.parentNode && el.parentNode.tagName && el.parentNode.tagName !== 'LI' && el.parentNode.tagName !== 'P' && el.parentNode.tagName !== 'H3' && el.parentNode.tagName !== 'BLOCKQUOTE') {
+                if (el.nodeName == 'ABBR' || (el.parentNode && el.parentNode.tagName === 'ABBR')) {
                     parentNode = false;
                     isAbbr = true;
                 } else {
@@ -579,18 +579,18 @@ export class TinyMceEditor extends Component {
                 }
             } else {
                 parentNode = false;
-                if(el.nodeName == 'ABBR') {
+                if (el.nodeName == 'ABBR') {
                     isAbbr = true;
                 }
             }
-        } while(parentNode);
-        if(target === 'elm' && isAbbr) {
-            if(el.nodeName == 'ABBR') {
+        } while (parentNode);
+        if (target === 'elm' && isAbbr) {
+            if (el.nodeName == 'ABBR') {
                 return el;
             } else {
                 return el.parentNode;
             }
-        } else if(target === 'status') {
+        } else if (target === 'status') {
             return isAbbr;
         }
     }
@@ -1287,6 +1287,7 @@ export class TinyMceEditor extends Component {
                     text = String(text).replace(/ /g, '&nbsp;');
                     text = String(text).replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;');
                     text = String(text).replace(/<br><br>/g, '<br>');
+                    text = text + '<span id="BCEposition"></span>';
                     this.copyContent = text;
                 }
             }
@@ -1376,7 +1377,7 @@ export class TinyMceEditor extends Component {
             let startFlag = true;
             let element = document.getElementsByClassName('TempSpan')[0];
             for (let index = 0; index < element.childNodes.length; ++index) {
-                if (element.childNodes[index].nodeType === Node.TEXT_NODE) {
+                if (element.childNodes[index].nodeType === Node.TEXT_NODE || element.childNodes[index].id === 'BCEposition') {
                     textNode.push(element.childNodes[index]);
                     if (startFlag) {
                         startText += element.childNodes[index].textContent;
@@ -1414,6 +1415,9 @@ export class TinyMceEditor extends Component {
         while (remainSpans.length) {
             remainSpans[0].parentNode.removeChild(remainSpans[0]);
         }
+        let positionElement = document.getElementById('BCEposition');
+        tinymce.activeEditor.selection.setCursorLocation(positionElement, 0);
+        positionElement.remove();
         tinymce.activeEditor.undoManager.clear();
     }
 
@@ -1703,7 +1707,7 @@ export class TinyMceEditor extends Component {
             } else {
                 parentNode = false;
             }
-        } while(parentNode);
+        } while (parentNode);
 
         let activeElement = tinymce.activeEditor.targetElm.closest('.element-container');
         let linkCount = Math.floor(Math.random() * 100) + '-' + Math.floor(Math.random() * 10000);
@@ -1773,7 +1777,7 @@ export class TinyMceEditor extends Component {
             } else {
                 parentNode = false;
             }
-        } while(parentNode);
+        } while (parentNode);
 
         let insertionText = '<span id="asset-popover-attacher">' + selectedText + '</span>';
         editor.insertContent(insertionText);
@@ -1831,10 +1835,12 @@ export class TinyMceEditor extends Component {
                 */
                 let tempContainerHtml = tinyMCE.$("#" + activeElementObj.join("-")).html();
                 tempContainerHtml = tempContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
-                let isBlockQuote = document.getElementById(tinymce.activeEditor.id) && document.getElementById(tinymce.activeEditor.id).classList.contains('blockquote-editor');
+                let tinymceActiveEditorNode = document.getElementById(tinymce.activeEditor && tinymce.activeEditor.id)
+                let isBlockQuote = tinymceActiveEditorNode && tinymceActiveEditorNode.classList.contains('blockquote-editor');
                 if (!isBlockQuote) {
-                    if (document.getElementById(activeElementObj.join("-")) && tinymce.activeEditor.id == activeElementObj.join("-")) {
-                        document.getElementById(activeElementObj.join("-")).innerHTML = tempContainerHtml;
+                    let activeElementNode = document.getElementById(activeElementObj.join("-"))
+                    if (activeElementNode && tinymce.activeEditor.id == activeElementObj.join("-")) {
+                        activeElementNode.innerHTML = tempContainerHtml;
                     }
                     // tinymce.remove('#' + activeElementObj.join("-"));
                 }
@@ -1859,7 +1865,6 @@ export class TinyMceEditor extends Component {
      * React's lifecycle method. Called immediately after a component is mounted. Setting state here will trigger re-rendering. 
      */
     componentDidMount() {
-
         const { slateLockInfo: { isLocked } } = this.props
         const userId = this.props.slateLockInfo && this.props.slateLockInfo.userId.replace(/.*\(|\)/gi, '');
         /**
@@ -2000,7 +2005,7 @@ export class TinyMceEditor extends Component {
     /**
      * React's lifecycle method. Called immediately after updating occurs. Not called for the initial render.
      */
-    componentDidUpdate() {
+    componentDidUpdate(prevProps) {
         let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");
         if (isBlockQuote) {
             this.lastContent = document.getElementById('cypress-' + this.props.index).innerHTML;
@@ -2041,7 +2046,7 @@ export class TinyMceEditor extends Component {
     setInstanceToolbar = () => {
         let toolbar = [];
         if (this.props.placeholder === "Enter Label..." || this.props.placeholder === 'Enter call to action...' || (this.props.element && this.props.element.subtype == 'mathml' && this.props.placeholder === "Type something...")) {
-            toolbar = (this.props.element && (this.props.element.type === 'poetry' || this.props.element.type === 'popup')) ? config.poetryLabelToolbar : config.labelToolbar;
+            toolbar = (this.props.element && (this.props.element.type === 'poetry' || this.props.element.type === 'popup' || this.props.placeholder === 'Enter call to action...')) ? config.poetryLabelToolbar : config.labelToolbar;
         }
         else if (this.props.placeholder === "Enter Caption..." || this.props.placeholder === "Enter Credit...") {
             toolbar = (this.props.element && this.props.element.type === 'poetry') ? config.poetryCaptionToolbar : config.captionToolbar;
@@ -2071,12 +2076,13 @@ export class TinyMceEditor extends Component {
      */
     setToolbarByElementType = () => {
         let toolbar = this.setInstanceToolbar();
-        tinyMCE.$('#tinymceToolbar').find('.tox-toolbar__group>.tox-split-button,.tox-toolbar__group>.tox-tbtn').removeClass('toolbar-disabled')
+        let tinyMceToolbarNode = tinyMCE.$('#tinymceToolbar').find('.tox-toolbar__group>.tox-split-button,.tox-toolbar__group>.tox-tbtn')
+        tinyMceToolbarNode.removeClass('toolbar-disabled')
         if (toolbar && toolbar.length) {
-            tinyMCE.$('#tinymceToolbar').find('.tox-toolbar__group>.tox-split-button,.tox-toolbar__group>.tox-tbtn')
+            tinyMceToolbarNode
                 .each((index) => {
                     if (config.toolBarList[index] && toolbar.indexOf(config.toolBarList[index]) > -1) {
-                        tinyMCE.$('#tinymceToolbar').find('.tox-toolbar__group>.tox-split-button,.tox-toolbar__group>.tox-tbtn').eq(index).addClass('toolbar-disabled')
+                        tinyMceToolbarNode.eq(index).addClass('toolbar-disabled')
                     }
                 });
         }
@@ -2087,12 +2093,12 @@ export class TinyMceEditor extends Component {
      * @param {*} e  event object
      */
     handleClick = (e) => {
-
         /*
         * In IS slate removing the toolbar disabled class which was applied in case of OE
         */
-        if (config && config.slateType === "container-introduction" && document.getElementById('tinymceToolbar') && document.getElementById('tinymceToolbar').classList) {
-            document.getElementById('tinymceToolbar').classList.remove('toolbar-disabled')
+        let tinymceToolbar = document.getElementById('tinymceToolbar')
+        if (config && config.slateType === "container-introduction" && tinymceToolbar && tinymceToolbar.classList) {
+            tinymceToolbar.classList.remove('toolbar-disabled')
         }
         let showHideObj;
         if (this.props.showHideType) {
@@ -2111,10 +2117,10 @@ export class TinyMceEditor extends Component {
         /*
             Adding br tag in lists because on first conversion from p tag to list, br tag gets removed
         */
-
+        let tinymceActiveEditorNode = document.getElementById(tinymce.activeEditor && tinymce.activeEditor.id)
         if (this.props.permissions && !(this.props.permissions.includes('access_formatting_bar') || this.props.permissions.includes('elements_add_remove'))) {        // when user doesn't have edit permission
             if (tinymce.activeEditor && tinymce.activeEditor.id) {
-                document.getElementById(tinymce.activeEditor.id).setAttribute('contenteditable', false)
+                tinymceActiveEditorNode.setAttribute('contenteditable', false)
             }
         }
         this.props.handleEditorFocus("", showHideObj, e);
@@ -2169,14 +2175,15 @@ export class TinyMceEditor extends Component {
          * first remove current tinymce instance then prepare element currently being focused to get tinymce intialized
          */
         let activeEditorId = '';
-        if ((!isSameTargetBasedOnDataId || !isSameTarget || !isSameByElementId) && currentActiveNode && tinymce.activeEditor && document.getElementById(tinyMCE.activeEditor.id) && !(tinymce.activeEditor.id.includes('glossary') || tinymce.activeEditor.id.includes('footnote'))) {
+        let newCurrentTargetNode = tinyMCE.$("#" + currentTarget.id)
+        if ((!isSameTargetBasedOnDataId || !isSameTarget || !isSameByElementId) && currentActiveNode && tinymce.activeEditor && tinymceActiveEditorNode && !(tinymce.activeEditor.id.includes('glossary') || tinymce.activeEditor.id.includes('footnote'))) {
             activeEditorId = tinymce.activeEditor.id;
             /**
              * Before removing the current tinymce instance, update wiris image attribute data-mathml to data-temp-mathml and class Wirisformula to temp_Wirisformula
              * As removing tinymce instance, also updates the images made by the wiris plugin to mathml
              */
             let tempContainerHtml = tinyMCE.$("#" + activeEditorId).html()
-            let tempNewContainerHtml = tinyMCE.$("#" + currentTarget.id).html()
+            let tempNewContainerHtml = newCurrentTargetNode.html()
             let previousTargetId = '';
             let currentTargetId = '';
             if (!isSameTargetBasedOnDataId || !isSameByElementId) {
@@ -2199,8 +2206,9 @@ export class TinyMceEditor extends Component {
             let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");
             if (!isBlockQuote) {
                 if (!isSameTargetBasedOnDataId || !isSameByElementId) {
-                    if (document.querySelectorAll('.element-container[data-id="' + previousTargetId + '"] .cypress-editable').length)
-                        document.querySelectorAll('.element-container[data-id="' + previousTargetId + '"] .cypress-editable')[0].innerHTML = tempContainerHtml;
+                    let elementContainerNodes = document.querySelectorAll('.element-container[data-id="' + previousTargetId + '"] .cypress-editable')
+                    if (elementContainerNodes.length)
+                        elementContainerNodes[0].innerHTML = tempContainerHtml;
                     document.querySelectorAll('.element-container[data-id="' + currentTargetId + '"] .cypress-editable')[0].innerHTML = tempNewContainerHtml;
                 }
                 else {
@@ -2220,26 +2228,30 @@ export class TinyMceEditor extends Component {
                 Remove all instaces of wiris on changing element on basis of there data-ids not on id 
                 because on inserting new element id changes
             */
-            tinymce.$('.wrs_modal_desktop').remove();
+            let wirisModalDesktopNode = tinymce.$('.wrs_modal_desktop')
+            wirisModalDesktopNode.remove();
 
             for (let i = tinymce.editors.length - 1; i > -1; i--) {
                 let ed_id = tinymce.editors[i].id;
                 if (!(ed_id.includes('glossary') || ed_id.includes('footnote'))) {
                     let tempFirstContainerHtml = tinyMCE.$("#" + tinymce.editors[i].id).html()
                     tempFirstContainerHtml = tempFirstContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
-                    if (document.getElementById(tinymce.editors[i].id)) {
-                        document.getElementById(tinymce.editors[i].id).innerHTML = tempFirstContainerHtml;
+                    let tinymceEditorNode = document.getElementById(tinymce.editors[i].id)
+                    if (tinymceEditorNode) {
+                        tinymceEditorNode.innerHTML = tempFirstContainerHtml;
                     }
                     removeTinyDefaultAttribute(tinymce.activeEditor.targetElm)
                     tinymce.remove(`#${ed_id}`)
-                    tinymce.$('.wrs_modal_desktop').remove();
-                    if (document.getElementById(`${ed_id}`)) {
-                        document.getElementById(`${ed_id}`).contentEditable = true;
+                    wirisModalDesktopNode.remove();
+                    let edNode = document.getElementById(`${ed_id}`)
+                    if (edNode) {
+                        edNode.contentEditable = true;
                     }
                 }
             }
-            if (document.getElementById(activeEditorId)) {
-                document.getElementById(activeEditorId).contentEditable = true;
+            let activeEditorNode = document.getElementById(activeEditorId)
+            if (activeEditorNode) {
+                activeEditorNode.contentEditable = true;
             }
             this.editorConfig.selector = '#' + currentTarget.id;
 
@@ -2247,20 +2259,20 @@ export class TinyMceEditor extends Component {
              * Using timeout - init tinymce instance only when default events stack becomes empty
              */
             currentTarget.focus();
-            let termText = tinyMCE.$("#" + currentTarget.id) && tinyMCE.$("#" + currentTarget.id).html();
+            let termText = newCurrentTargetNode && newCurrentTargetNode.html();
             tinymce.init(this.editorConfig).then(() => {
                 if (termText && termText.length && 'type' in this.props.element && this.props.element.type !== 'poetry' && this.props.element.type !== 'element-list' &&
                     !(this.props.element.type === "showhide" && this.props.currentElement.type === 'element-list')) {
                     if (termText.search(/^(<.*>(<br.*>)<\/.*>)+$/g) < 0 &&
-                        (tinyMCE.$("#" + currentTarget.id).html()).search(/^(<.*>(<br.*>)<\/.*>)+$/g) >= 0) {
-                        termText = tinyMCE.$("#" + currentTarget.id).html();
+                        (newCurrentTargetNode.html()).search(/^(<.*>(<br.*>)<\/.*>)+$/g) >= 0) {
+                        termText = newCurrentTargetNode.html();
                     }
                     /***
                      * [BG-2225] | Unwanted saving calls in video element
                      */
                     if ('type' in this.props.element && this.props.element.type === "figure" && termText.search(/^(<.*>(<br.*>)<\/.*>)+$/g) < 0 &&
-                        (tinyMCE.$("#" + currentTarget.id).html()).search(/^(<br.*>)+$/g) >= 0) {
-                        termText = tinyMCE.$("#" + currentTarget.id).html();
+                        (newCurrentTargetNode.html()).search(/^(<br.*>)+$/g) >= 0) {
+                        termText = newCurrentTargetNode.html();
                     }
 
                     /* Reverting data-temp-mathml to data-mathml and class Wirisformula to temp_WirisFormula */
@@ -2277,8 +2289,9 @@ export class TinyMceEditor extends Component {
                 }
                 tinymce.$('.blockquote-editor').attr('contenteditable', false)
                 this.editorOnClick(event);
-                if (currentTarget && currentTarget.querySelectorAll('li') && currentTarget.querySelectorAll('li').length) {
-                    currentTarget.querySelectorAll('li').forEach((li) => {
+                let listLiNodes = currentTarget.querySelectorAll('li')
+                if (currentTarget && listLiNodes && listLiNodes.length) {
+                    listLiNodes.forEach((li) => {
                         if (li.innerHTML.trim() == '') {
                             li.append(document.createElement('br'))
                         }
@@ -2294,17 +2307,19 @@ export class TinyMceEditor extends Component {
             clearTimeout(timeoutInstance);
             tinymce.init(this.editorConfig).then((d) => {
                 this.setToolbarByElementType();
-                if (currentTarget && currentTarget.querySelectorAll('li') && currentTarget.querySelectorAll('li').length) {
-                    currentTarget.querySelectorAll('li').forEach((li) => {
+                let listLiNodes1 = currentTarget.querySelectorAll('li')
+                if (currentTarget && listLiNodes1 && listLiNodes1.length) {
+                    listLiNodes1.forEach((li) => {
                         if (li.innerHTML.trim() == '') {
                             li.append(document.createElement('br'))
                         }
                     })
                 }
-                if (document.querySelector('button[title="Asset Popover"]')) {
-                    document.querySelector('button[title="Asset Popover"]').setAttribute("aria-disabled", false)
-                    document.querySelector('button[title="Asset Popover"]').removeAttribute('aria-pressed')
-                    document.querySelector('button[title="Asset Popover"]').classList.remove('tox-tbtn--disabled')
+                let assetPopoverButtonNode = document.querySelector('button[title="Asset Popover"]')
+                if (assetPopoverButtonNode) {
+                    assetPopoverButtonNode.setAttribute("aria-disabled", false)
+                    assetPopoverButtonNode.removeAttribute('aria-pressed')
+                    assetPopoverButtonNode.classList.remove('tox-tbtn--disabled')
                 }
             })
         });

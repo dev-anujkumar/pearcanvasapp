@@ -1685,7 +1685,28 @@ text: "mathml text"
         "contentUrn": "urn:pearson:entity:2c5baa8a-e6c9-4669-8206-7ff30ce20878",
         "id": "urn:pearson:manifest:5d84b194-a509-4993-bd33-303fb3790de4",
         "index": 0,
-        "popupdata": {"bodymatter": [], "postertextobject": [{"id":"567"}], "formatted-title": []},
+        "popupdata": {
+            "bodymatter": [],
+            "postertextobject": [{"id":"567"}],
+            "formatted-title": {
+                "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1a",
+                "type": "element-authoredtext",
+                "subtype": "",
+                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                "elementdata": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": "Paragraph"
+                },
+                "html": {
+                    "text": "<p class=\"paragraphNumeroUno\">Paragraph</p>"
+                },
+                "comments": true,
+                "tcm": false,
+                "feedback": true,
+                "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+            }
+        },
         "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/popup",
         "type": "popup",
         "versionUrn": "urn:pearson:manifest:5d84b194-a509-4993-bd33-303fb3790de4"

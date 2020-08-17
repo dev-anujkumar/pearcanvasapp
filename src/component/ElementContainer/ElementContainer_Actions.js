@@ -1045,32 +1045,25 @@ const cascadeElement = (parentElement, dispatch, parentElementIndex) => {
  * @param {*} elementWorkId element work URN
  * @param {*} index index of element
  */
-export const getElementStatus = (elementWorkId, index) => (dispatch) => {
+export const getElementStatus = (elementWorkId, index) => async (dispatch) => {
     let apiUrl = `${config.NARRATIVE_API_ENDPOINT}v2/${elementWorkId}`
-    return fetch(apiUrl, {
-        method: 'GET', // *GET, POST, PUT, DELETE, etc.
+    const resp = await fetch(apiUrl, {
+        method: 'GET',
         headers: {
             'Content-Type': 'application/json',
             'PearsonSSOSession': config.ssoToken,
             'ApiKey': config.APO_API_KEY
         }
       })
-      .then(resp => resp.json()).then(res => {
-            let statusString = res.status[0]
-            let splittedString = statusString.split("/")
-            let elementVersioningStatus = splittedString[splittedString.length - 1]
-
-            dispatch({
-                type: "SET_ELEMENT_STATUS",
-                payload: {
-                    elementWorkId,
-                    elementVersioningStatus
-                }
-            })
-      })
-      .catch(err => {
-        console.log(`ERROR for element at ${index}`, err)
-    })
+    try {
+        const res = await resp.json()
+        let statusString = res.status[0]
+        let splittedString = statusString.split("/")
+        let elementVersioningStatus = splittedString[splittedString.length - 1]
+        config.elementStatus[elementWorkId] = elementVersioningStatus
+    } catch (error) {
+        console.error("Error in fetching element status", error)
+    }
 }
 
 /**

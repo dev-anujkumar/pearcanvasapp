@@ -115,3 +115,6 @@ export const SLATE_TITLE = 'Title'
 export const GET_TCM_RESOURCES = 'GET_TCM_RESOURCES'
 export const GET_TCM_STATUS_OF_PROJECT = 'GET_TCM_STATUS_OF_PROJECT'
 export const VERSIONING_SLATEMANIFEST ='VERSIONING_SLATEMANIFEST'
+
+/*--------------- Long Slate load ----------------*/
+export const SET_SLATE_LENGTH = 'SET_SLATE_LENGTH'

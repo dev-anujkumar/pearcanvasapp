@@ -36,6 +36,7 @@ import {
     SET_CURRENT_SLATE_DATA,
     PAGE_NUMBER_LOADER,
     GET_USAGE_TYPE ,
+    SET_SLATE_LENGTH,
     VERSIONING_SLATEMANIFEST  
 } from '../constants/Action_Constants';
 
@@ -63,7 +64,8 @@ const INITIAL_STATE = {
     currentSlateAncestorData:{},
     allElemPageData:[],
     pageNumberLoading:false,
-    usageTypeListData:{}
+    usageTypeListData:{},
+    slateLength: "25"
 };
 
 const INITIAL_ACTION = {
@@ -218,6 +220,11 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
             return {
                 ...state,
                 usageTypeListData: action.payload
+            }
+        case SET_SLATE_LENGTH:
+            return {
+                ...state,
+                slateLength: action.payload
             }
         default:
             return state;

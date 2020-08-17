@@ -207,9 +207,24 @@ function CommunicationChannel(WrappedComponent) {
                 case 'pageLink':
                     this.updatePageLink(message);
                     break;
+                case 'slateLengthChanged':
+                    this.changeSlateLength(message);
+                    break;
+                case 'parentChanging':
+                    this.props.fetchSlateAncestorData(message || {});
+                    break;
             }
         }
 
+        /**
+         * Updates the element count and refreshes slate
+         * @param {String} message element count in a slate 
+         */
+        changeSlateLength = (message) => {
+            this.props.setSlateLength(message)
+            this.handleRefreshSlate()
+        }
+        
         /**
          * Handle the element update action on linking a page
          */
@@ -379,7 +394,7 @@ function CommunicationChannel(WrappedComponent) {
                 config.totalPageCount = 0;
                 config.pageLimit = 0;
                 config.fromTOC = false;
-                sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': { slateRefreshStatus: 'Refreshing' } });
+                sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': { slateRefreshStatus: 'Refreshing...' } });
                 this.props.handleSlateRefresh(id, () => {
                     config.isSlateLockChecked = false;
                     this.props.getSlateLockStatus(config.projectUrn, config.slateManifestURN)
@@ -457,6 +472,7 @@ function CommunicationChannel(WrappedComponent) {
                     currentProjectId: config.projectUrn,
                     slateEntityUrn: config.slateEntityURN
                 }
+                config.isPopupSlate = false;
                 this.props.fetchAudioNarrationForContainer(slateData)
                 this.props.clearElementStatus()
                 this.props.fetchUsageTypeData('assessment');

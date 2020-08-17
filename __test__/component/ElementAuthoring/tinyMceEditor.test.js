@@ -172,7 +172,7 @@ let tinyMceEditor = {
     contentDocument: document,
     contentStyles: [],
     contentWindow: { parent: Window, opener: null, top: Window, length: 0, frames: Window, },
-    dom: { doc: document, settings: {}, win: Window, files: {}, stdMode: true },
+    dom: { doc: document, settings: {}, win: Window, files: {}, stdMode: true, create:()=>{} },
     editorContainer: {},
     editorManager: { fire: jest.fn(), on: jest.fn(), off: jest.fn(), once: jest.fn(), hasEventListeners: jest.fn() },
     fire: jest.fn(),
@@ -208,7 +208,11 @@ let tinyMceEditor = {
             return {
                 tagName: 'span',
                 className: 'poetryLine',
-                closest: () => { }
+                closest: () => { },
+                childNodes:[{
+                    tagName: 'span',
+                    className: 'poetryLine',
+                }]
             }
         },
         getContent: () => {
@@ -1195,6 +1199,52 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
             instance.editorBeforeExecCommand(nextEditor);
             expect(getContent).toHaveBeenCalled()
         })
+        it('Test-8.7-Method--6--editorBeforeExecCommand --CASE_7--Undo', () => {
+            let event = {
+                target: {
+                    getContent: () => {
+                        return "Test"
+                    }
+                },
+                value: "h5",
+                command: 'Undo',
+                preventDefault: () => { },
+                stopPropagation: () => { }
+            }
+            let nextEditor = {
+                on: (temp, cb) => { cb(event) },
+                targetElm: {
+                    findChildren: () => {
+                        return {
+                            length: 0
+                        };
+                    },
+                    childNodes: [{ classList: ["blockquoteMarginalia"] }],
+                    dispatchEvent: () => { }
+                },
+                selection: editor.selection,
+                dom: {
+                    getParent: () => {
+                        return {
+                            innerHTML: '<p class="paragraphNumeroUno place-holder">hello<ol></ol><ul></ul></p>',
+                            nodeName: "CODE"
+                        }
+                    }
+                },
+                setContent: () => { },
+            }
+            component.setProps({
+                ...props,
+                permissions: ["login", "logout"],
+                tagName: "LIST",
+                elementId: "work:urn",
+                element: { type: "element-list" }
+            })
+            component.update();
+            const getContent = jest.spyOn(event.target, 'getContent');
+            instance.editorBeforeExecCommand(nextEditor);
+            expect(getContent).toHaveBeenCalled()
+        })
         it('Test-8.8-Method--6--editorBeforeExecCommand --CASE_8--Bold', () => {
             let event = {
                 target: {
@@ -1241,6 +1291,62 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                     }
                 },
                 setContent: () => { },
+            }
+            const getContent = jest.spyOn(event.target, 'getContent');
+            instance.editorBeforeExecCommand(nextEditor);
+            expect(getContent).toHaveBeenCalled()
+        })
+        it('Test-8.9-Method--6--editorBeforeExecCommand --CASE_8--Underline', () => {
+            let event = {
+                target: {
+                    getContent: () => {
+                        return "Test"
+                    },
+                    targetElm: {
+                        nodeName: "CODE"
+                    }
+                },
+                value: "h5",
+                command: 'Bold',
+                preventDefault: () => { },
+                stopPropagation: () => { }
+            }
+            let nextEditor = {
+                on: (temp, cb) => { cb(event) },
+                targetElm: {
+                    findChildren: () => {
+                        return {
+                            length: 0
+                        };
+                    },
+                    childNodes: [{ classList: ["blockquoteMarginalia"] }],
+                    dispatchEvent: () => { }
+                },
+                selection: editor.selection,
+                dom: {
+                    getParent: () => {
+                        return {
+                            innerHTML: '<p class="paragraphNumeroUno place-holder">hello<ol></ol><ul></ul></p>',
+                            children: [
+                                {
+                                    tagName: 'CODE'
+                                }
+                            ],
+                            nodeName: "CODE",
+                            innerText: "hello",
+                            querySelectorAll: jest.fn(),
+                            classList: {
+                                remove: jest.fn()
+                            }
+                        }
+                    }
+                },
+                setContent: () => { },
+            }
+            document.querySelector = () => {
+                return {
+                    checked: true
+                };
             }
             const getContent = jest.spyOn(event.target, 'getContent');
             instance.editorBeforeExecCommand(nextEditor);
@@ -1483,7 +1589,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
         spylearningObjectiveDropdown.mockClear()
     });
     describe('Test-18-Method--16--addAssetPopover', () => {
-        xit('Test-18.1-Method--16--addAssetPopover-Non Poetry Elements', () => {
+        it('Test-18.1-Method--16--addAssetPopover-Non Poetry Elements', () => {
             window.getSelection = () => {
                 return {
                     removeAllRanges: () => { },
@@ -1491,24 +1597,45 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                         return "hello TEST"
                     },
                     anchorNode: {
+                        nodeName: "SPAN",
                         parentNode: {
                             nodeName: "SPAN",
-                            innerHTML: "<span>Hello</span>",
+                            innerHTML: "<span>Hello1</span>",
                             outerHTML: "<p><span>Hello</span></p>",
                             classList: { contains: () => { return false } },
                             getElementsByTagName: () => {
                                 return [{
                                     parentNode: {
-                                        nodeName: 'strong',
+                                        nodeName: 'LI',
                                         childNodes: []
                                     },
-                                    childNodes : [ {
+                                    childNodes: [{
                                         nodeName: 'strong',
                                         innerHTML: 'test',
                                         outerHTML: ''
                                     }]
                                 }]
-                            }                           
+                            },
+                            parentNode: {
+                                nodeName: "LI",
+                                innerHTML: "<span>Hello1</span>",
+                                outerHTML: "<p><span>Hello</span></p>",
+                                classList: { contains: () => { return false } },
+                                getElementsByTagName: () => {
+                                    return [{
+                                        parentNode: {
+                                            nodeName: 'LI',
+                                            childNodes: []
+                                        },
+                                        childNodes: [{
+                                            nodeName: 'strong',
+                                            innerHTML: 'test',
+                                            outerHTML: ''
+                                        }]
+                                    }]
+                                },
+                                parentNode: {}
+                            }
                         }
                     }
                 }
@@ -2084,7 +2211,24 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
             instance.notFormatting = true;
             instance.copyContent = "PasteData"
             tinymce.activeEditor.selection = editor.selection;
-            tinymce.activeEditor.dom = domObj;
+            tinymce.activeEditor.dom = {
+                getParent: () => {
+                    return {
+                        innerHTML: '<p class="paragraphNumeroUno place-holder">hello<ol></ol><ul></ul></p>',
+                        children: [
+                            {
+                                tagName: 'CODE'
+                            }
+                        ],
+                        innerText: "hello",
+                        querySelectorAll: jest.fn(),
+                        classList: {
+                            remove: jest.fn()
+                        },
+                        nodeName :'CODE'
+                    }
+                }
+            };
             const spypastePreProcess = jest.spyOn(instance, 'pastePreProcess')
             instance.pastePreProcess(plugin, args);
             expect(spypastePreProcess).toHaveBeenCalled()
@@ -2141,7 +2285,24 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
         instance.notFormatting = true;
         instance.copyContent = "PasteData"
         tinymce.activeEditor.selection = editor.selection;
-        tinymce.activeEditor.dom = domObj;
+        tinymce.activeEditor.dom = {
+            getParent: () => {
+                return {
+                    innerHTML: '<p class="paragraphNumeroUno place-holder">hello<ol></ol><ul></ul></p>',
+                    children: [
+                        {
+                            tagName: 'CODE'
+                        }
+                    ],
+                    innerText: "hello",
+                    querySelectorAll: jest.fn(),
+                    classList: {
+                        remove: jest.fn()
+                    },
+                    nodeName :'CODE'
+                }
+            }
+        };
         const spypastePostProcess = jest.spyOn(instance, 'pastePostProcess')
         instance.pastePostProcess(plugin, args);
         expect(spypastePostProcess).toHaveBeenCalled()
@@ -4764,5 +4925,515 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
             spyFunction.mockClear()
         });
     });
+    describe('Test-36-Method--34--addPageLink', () => {
+        it('Test-36.1-Method--34--addPageLink-Innermost If true', () => {
+            const domFunction = () =>{
+                return [{
+                    parentNode: {
+                        nodeName: 'LI',
+                        childNodes: [{
+                            nodeName: 'LI',
+                            innerHTML: 'test',
+                            outerHTML: '',
+                            length :1
+                        }]
+                    },
+                    childNodes: [{
+                        nodeName: 'LI',
+                        innerHTML: 'test',
+                        outerHTML: '',
+                        length :1
+                    }]
+                }]
+            }
+            window.getSelection = () => {
+                return {
+                    removeAllRanges: () => { },
+                    toString: () => {
+                        return "hello TEST"
+                    },
+                    anchorNode: {
+                        nodeName: "SPAN",
+                        parentNode: {
+                            nodeName: "SPAN",
+                            innerHTML: "<span>Hello1</span>",
+                            outerHTML: "<p><span>Hello</span></p>",
+                            classList: { contains: () => { return false } },
+                            getElementsByTagName: domFunction,
+                            getElementsByClassName:domFunction,
+                            parentNode: {
+                                nodeName: "LI",
+                                innerHTML: "<span>Hello1</span>",
+                                outerHTML: "<p><span>Hello</span></p>",
+                                classList: { contains: () => { return false } },
+                                getElementsByTagName: domFunction,
+                                getElementsByClassName:domFunction,
+                                parentNode: {}
+                            }
+                        }
+                    }
+                }
+            }
+            let event = {
+                preventDefault: () => { },
+                stopPropagation: () => { }
+            }
+            let nextEditor = {
+                on: (temp, cb) => { cb(event) },
+                selection: editor.selection,
+                setContent: () => { },
+                insertContent: () => { },
+                formatter: {
+                    match: () => { },
+                    formatChanged: () => { return jest.fn() },
+                    unbind: () => { }
+                }
+            }
+            let selectedText = "Hello"
+            const spyaddPageLink = jest.spyOn(instance, 'addPageLink')
+            instance.addPageLink(nextEditor, selectedText);
+            expect(spyaddPageLink).toHaveBeenCalled();
+            spyaddPageLink.mockClear()
+        });
+        it('Test-36.2-Method--34--addPageLink-Innermost Else true', () => {
+            const domFunction = () =>{
+                return [{
+                    parentNode: {
+                        nodeName: 'LI',
+                        childNodes: []
+                    },
+                    childNodes: [{
+                        nodeName: 'LI',
+                        innerHTML: 'test',
+                        outerHTML: ''
+                    }]
+                }]
+            }
+            window.getSelection = () => {
+                return {
+                    removeAllRanges: () => { },
+                    toString: () => {
+                        return "hello TEST"
+                    },
+                    anchorNode: {
+                        nodeName: "SPAN",
+                        parentNode: {
+                            nodeName: "SPAN",
+                            innerHTML: "<span>Hello1</span>",
+                            outerHTML: "<p><span>Hello</span></p>",
+                            classList: { contains: () => { return false } },
+                            getElementsByTagName: domFunction,
+                            getElementsByClassName:domFunction,
+                            parentNode: {
+                                nodeName: "LI",
+                                innerHTML: "<span>Hello1</span>",
+                                outerHTML: "<p><span>Hello</span></p>",
+                                classList: { contains: () => { return false } },
+                                getElementsByTagName: domFunction,
+                                getElementsByClassName:domFunction,
+                                parentNode: {}
+                            }
+                        }
+                    }
+                }
+            }
+            let event = {
+                preventDefault: () => { },
+                stopPropagation: () => { }
+            }
+            let nextEditor = {
+                on: (temp, cb) => { cb(event) },
+                selection: editor.selection,
+                setContent: () => { },
+                insertContent: () => { },
+                formatter: {
+                    match: () => { },
+                    formatChanged: () => { return jest.fn() },
+                    unbind: () => { }
+                }
+            }
+            let selectedText = "Hello"
+            const spyaddPageLink = jest.spyOn(instance, 'addPageLink')
+            instance.addPageLink(nextEditor, selectedText);
+            expect(spyaddPageLink).toHaveBeenCalled();
+            spyaddPageLink.mockClear()
+        });
+        xit('Test-36.3-Method--34--addPageLink-Outermost Else true', () => {
+            const domFunction = () =>{
+                return [{
+                    parentNode: {
+                        nodeName: 'LI',
+                        childNodes: [],
+                        removeChild:()=>{}
+                    },
+                    childNodes: [{
+                        nodeName: 'LI',
+                        innerHTML: 'test',
+                        outerHTML: '',
+                        removeChild:()=>{}
+                    }]
+                }]
+            }
+            window.getSelection = () => {
+                return {
+                    removeAllRanges: () => { },
+                    toString: () => {
+                        return "hello TEST"
+                    },
+                    anchorNode: {
+                        nodeName: "SPAN",
+                        parentNode: {
+                            nodeName: "SPAN",
+                            innerHTML: "",
+                            outerHTML: "<p><span>Hello</span></p>",
+                            classList: { contains: () => { return false } },
+                            getElementsByTagName: domFunction,
+                            getElementsByClassName:domFunction,
+                            removeChild:()=>{},
+                            parentNode: {
+                                nodeName: "LI",
+                                innerHTML: "",
+                                outerHTML: "<p><span>Hello</span></p>",
+                                classList: { contains: () => { return false } },
+                                getElementsByTagName: domFunction,
+                                getElementsByClassName:domFunction,
+                                parentNode: {},
+                                removeChild:()=>{},
+                            }
+                        },
+                        removeChild:()=>{}
+                    }
+                }
+            }
+            let event = {
+                preventDefault: () => { },
+                stopPropagation: () => { }
+            }
+            let nextEditor = {
+                on: (temp, cb) => { cb(event) },
+                selection: editor.selection,
+                setContent: () => { },
+                insertContent: () => { },
+                formatter: {
+                    match: () => { },
+                    formatChanged: () => { return jest.fn() },
+                    unbind: () => { }
+                }
+            }
+            let selectedText = "Hello"
+            const spyaddPageLink = jest.spyOn(instance, 'addPageLink')
+            instance.addPageLink(nextEditor, selectedText);
+            expect(spyaddPageLink).toHaveBeenCalled();
+            spyaddPageLink.mockClear()
+        });
+    });
+    describe('Test-37-Method--35--getOffSet', () => {
+        it('Test-37.1-Method--35--getOffSet-IF case', () => {
+            let element={
+                document:{
+                    parentWindow:{
+                        getSelection : ()=>{
+                            return {
+                                rangeCount : 4,
+                                getRangeAt : () =>{
+                                    return {
+                                        endContainer: 100,
+                                        endOffset:120,
+                                        cloneRange : ()=>{
+                                            return {
+                                                selectNodeContents : ()=>{},
+                                                setEnd:()=>{},
+                                                toStrin:()=>{
+                                                    return {
+                                                        length :1
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            component.setProps({
+                ...props,
+                permissions: ["login", "logout"],
+                tagName: "SPAN",
+                elementId: "work:urn",
+                element: {
+                    "type": "element-list",
+                    "html": { "text": "" },
+                },
+                model: { "text": 'LIST' },
+                placeholder: "",
+            })
+            component.update();
+            tinymce.activeEditor.selection = editor.selection;
+            tinymce.activeEditor.dom = domObj;
+            const spygetOffSet = jest.spyOn(instance, 'getOffSet')
+            instance.getOffSet(element);
+            expect(spygetOffSet).toHaveBeenCalled()
+        });
+        it('Test-37.2-Method--35--getOffSet-ELSE case', () => {
+            let element = {
+                ownerDocument: {
+                    defaultView: {
+                        getSelection: undefined,
+                    },
+                    selection: {
+                        type: 'NotControl',
+                        createRange: () => { }
+                    },
+                    body: {
+                        createTextRange: () => {
+                            return {
+                                moveToElementText: () => { },
+                                setEndPoint: () => { },
+                                text: { length: 2 }
+                            }
+                        }
+                    }
+                }
+            }
+            component.setProps({
+                ...props,
+                permissions: ["login", "logout"],
+                tagName: "SPAN",
+                elementId: "work:urn",
+                element: {
+                    "type": "figure",
+                    'figuretype': "codelisting",
+                    "html": { "text": "" },
+                    "figuredata": { preformattedtext: "BCE" }
+                },
+                model: { "figuredata": { preformattedtext: "BCE" } },
+                placeholder: "",
+            })
+            component.update();
+            instance.notFormatting = true;
+            instance.copyContent = "PasteData"
+            tinymce.activeEditor.selection = editor.selection;
+            tinymce.activeEditor.dom = {
+                getParent: () => {
+                    return {
+                        innerHTML: '<p class="paragraphNumeroUno place-holder">hello<ol></ol><ul></ul></p>',
+                        children: [
+                            {
+                                tagName: 'CODE'
+                            }
+                        ],
+                        innerText: "hello",
+                        querySelectorAll: jest.fn(),
+                        classList: {
+                            remove: jest.fn()
+                        },
+                        nodeName :'CODE'
+                    }
+                }
+            };
+            const spygetOffSet = jest.spyOn(instance, 'getOffSet')
+            instance.getOffSet(element);
+            expect(spygetOffSet).toHaveBeenCalled()
+        });
+    });
+    describe('Test-38-Method--36--setCursorOnCode', () => {
+        xit('Test-38.1-Method--36--setCursorOnCode-tagName = "CODE"', () => {
+            let element = {
+                tagName: "CODE",
+                appendChild: () => { },
+                childNodes: [],
+                getElementsByTagName: () => {
+                    return [
+                        {
+                            length: 1,
+                            parentNode: {
+                                removeChild: () => { }
+                            }
+                        }
+                    ]
+                }
+            }
+            component.setProps({
+                ...props,
+                permissions: ["login", "logout"],
+                tagName: "SPAN",
+                elementId: "work:urn",
+                element: {
+                    "type": "element-list",
+                    "html": { "text": "" },
+                },
+                model: { "text": 'LIST' },
+                placeholder: "",
+            })
+            let nextEditor = {
+                on: (temp, cb) => { cb(event) },
+                selection: editor.selection,
+                setContent: () => { },
+                insertContent: () => { },
+                formatter: {
+                    match: () => { },
+                    formatChanged: () => { return jest.fn() },
+                    unbind: () => { }
+                },
+                dom:{ create:()=>{
+                    return "<br>"
+                
+                }}
+            }
+            component.update();
+            tinymce.activeEditor.selection = editor.selection;
+            tinymce.activeEditor.dom = domObj;
+            const spysetCursorOnCode = jest.spyOn(instance, 'setCursorOnCode')
+            instance.setCursorOnCode(element, nextEditor);
+            expect(spysetCursorOnCode).toHaveBeenCalled()
+        });
+        it('Test-38.2-Method--36--setCursorOnCode-tagName = "SPAN"', () => {
+            let element = {
+                tagName: "SPAN",
+                appendChild: () => { },
+                childNodes: {
+                    length:1,
+                    "0":{}
+                }
+            }
+            let nextEditor = {
+                on: (temp, cb) => { cb(event) },
+                selection: editor.selection,
+                setContent: () => { },
+                insertContent: () => { },
+                formatter: {
+                    match: () => { },
+                    formatChanged: () => { return jest.fn() },
+                    unbind: () => { }
+                }
+            }
+            component.setProps({
+                ...props,
+                permissions: ["login", "logout"],
+                tagName: "SPAN",
+                elementId: "work:urn",
+                element: {
+                    "type": "figure",
+                    'figuretype': "codelisting",
+                    "html": { "text": "" },
+                    "figuredata": { preformattedtext: "BCE" }
+                },
+                model: { "figuredata": { preformattedtext: "BCE" } },
+                placeholder: "",
+            })
+            component.update();
+            tinymce.activeEditor.selection = editor.selection;
+            tinymce.activeEditor.dom = domObj;
+            const spysetCursorOnCode = jest.spyOn(instance, 'setCursorOnCode')
+            instance.setCursorOnCode(element,nextEditor);
+            expect(spysetCursorOnCode).toHaveBeenCalled()
+        });
+    });
+    describe('Test-39-Method--37--handleCodeClick', () => {
+        it('Test-39.1-Method--37--handleCodeClick-IF showHide Present', () => {
+            let showHide = "show"
+            component.setProps({
+                ...props,
+                permissions: ["login", "logout"],
+                tagName: "SPAN",
+                elementId: "work:urn",
+                element: {
+                    "type": "element-list",
+                    "html": { "text": "" },
+                },
+                model: { "text": 'LIST' },
+                placeholder: "",
+            })
+            component.update();
+            let nextEditor = {
+                on: (temp, cb) => { cb(event) },
+                selection: editor.selection,
+                setContent: () => { },
+                insertContent: () => { },
+                formatter: {
+                    match: () => { },
+                    formatChanged: () => { return jest.fn() },
+                    unbind: () => { }
+                }
+            }
+            tinymce.activeEditor.selection = editor.selection;
+            tinymce.activeEditor.dom = domObj;
+            instance.setCursorOnCode = jest.fn()
+            const spyhandleCodeClick = jest.spyOn(instance, 'handleCodeClick')
+            instance.handleCodeClick(nextEditor, showHide);
+            expect(spyhandleCodeClick).toHaveBeenCalled()
+        });
+        xit('Test-39.2-Method--37--handleCodeClick-showhide not present', () => {
+            component.setProps({
+                ...props,
+                permissions: ["login", "logout"],
+                tagName: "BR",
+                elementId: "work:urn",
+                element: {
+                    "type": "element-list",
+                    "html": { "text": "" },
+                },
+                model: { "text": 'LIST' },
+                placeholder: "",
+            })
+            component.update();
+            let nextEditor = {
+                on: (temp, cb) => { cb(event) },
+                selection: {
+                    ...editor.selection,
+                    getNode: () => {
+                        return {
+                            tagName: 'BR',
+                            className: 'poetryLine',
+                            closest: () => { },
+                            removeChild: () => { },
+                            childNodes: {
+                                length: 2,
+                                "0": {
+                                    tagName: 'BR',
+                                    className: 'linebreak',
+                                    innerHTML:"<br>",
+                                    removeChild: () => { },
+                                    parentNode:{
+                                        removeChild: () => { },
+                                        nodeName: "BR",
+                                        innerHTML: "<span>Hello1</span>",
+                                        outerHTML: "<p><span>Hello</span></p>",
+                                        classList: { contains: () => { return false } },
+                                        parentNode: {
+                                            removeChild: () => { },
+                                            nodeName: "BR",
+                                            innerHTML: "<span>Hello1</span>",
+                                            outerHTML: "<p><span>Hello</span></p>",
+                                            classList: { contains: () => { return false } },
+                                            parentNode: {}
+                                        }
+                                    }
+                                },
+                                "1": {
+                                    tagName: 'BR',
+                                    className: 'poetryLine'
+                                }
+                            }
+                        }
+                    },
+                },
+                setContent: () => { },
+                insertContent: () => { },
+                formatter: {
+                    match: () => { },
+                    formatChanged: () => { return jest.fn() },
+                    unbind: () => { }
+                }
+            }
+            tinymce.activeEditor.selection = editor.selection;
+            tinymce.activeEditor.dom = domObj;
+            instance.setCursorOnCode = jest.fn()
+            const spyhandleCodeClick = jest.spyOn(instance, 'handleCodeClick')
+            instance.handleCodeClick(nextEditor, undefined);
+            expect(spyhandleCodeClick).toHaveBeenCalled()
+        });
+    });
 });
-

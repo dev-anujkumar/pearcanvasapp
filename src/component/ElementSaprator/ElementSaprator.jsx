@@ -35,7 +35,9 @@ const { TEXT,
     CONTAINER_INTRO,
     MULTI_COLUMN_CONTAINER,
     MULTI_COLUMN,
-    SINGLE_COLUMN
+    SINGLE_COLUMN,
+    BLOCK_TEXT_BUTTON,
+    TABLE_EDITOR
  } = elementTypeConstant
 
 export function ElementSaprator(props) {
@@ -168,13 +170,14 @@ function renderConditionalButtons(esProps,sectionBreak,elementType){
         } else if (elementType == POETRY){                           /** Container : Poetry Element |Render Stanza Element*/
             return buttonType === STANZA_ELEMENT;
         }
-        // else if (elementType == SINGLE_COLUMN) {                     /** Container : C1/C2 in Multi-Column Element*/
-        //     return buttonType == TEXT && buttonType == IMAGE && buttonType == AUDIO && buttonType == INTERACTIVE && buttonType == ASSESSMENT && buttonType == BLOCK_TEXT && buttonType == METADATA_ANCHOR
-        // } 
+        else if (elementType == SINGLE_COLUMN) {                     /** Container : C1/C2 in Multi-Column Element*/
+            let  MultiColumnPicker = [ TEXT, IMAGE, AUDIO, BLOCK_TEXT_BUTTON, INTERACTIVE_BUTTON, TABLE_EDITOR, ASSESSMENT ];                  
+            return MultiColumnPicker.includes(buttonType);
+        } 
         else {
         if (sectionBreak) {                                          /** Container : Other cases in Wored Example*/
             return buttonType !== WORKED_EXP && buttonType !== CONTAINER_BUTTON && buttonType !== OPENER &&  buttonType !== CITATION && buttonType !== STANZA_ELEMENT && buttonType !== POETRY_ELEMENT && buttonType !== MULTI_COLUMN_CONTAINER;
-        } else {                                                     /** Container : Aside| Section in WE| C1/C2 in Multi-Column Element*/
+        } else {                                                     /** Container : Aside| Section in WE*/
             return buttonType !== OPENER && buttonType !== SECTION_BREAK && buttonType !== WORKED_EXP && buttonType !== CONTAINER_BUTTON && buttonType !== CITATION && buttonType !== STANZA_ELEMENT && buttonType !== POETRY_ELEMENT && buttonType !== MULTI_COLUMN_CONTAINER;
         }
     }

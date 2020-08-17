@@ -11,7 +11,9 @@ import {
     SET_PARENT_SHOW_DATA,
     ERROR_POPUP,
     SLATE_TITLE,
-    GET_PAGE_NUMBER
+    GET_PAGE_NUMBER,
+    SET_SLATE_LENGTH,
+    SET_CURRENT_SLATE_DATA
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
@@ -277,9 +279,10 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             dispatch(tcmSnapshot(manifestURN, entityURN))
         }
     }
-    let apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}`
+    const elementCount = getState().appStore.slateLength
+    let apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}&elementCount=${elementCount}`
     if (versionPopupReload) {
-        apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}&metadata=true`
+        apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}&metadata=true&elementCount=${elementCount}`
     } 
     return axios.get(apiUrl, {
         headers: {
@@ -435,6 +438,11 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                             type: SET_ACTIVE_ELEMENT,
                             payload: {}
                         });
+
+                        let slateWrapperNode = document.getElementById('slateWrapper');
+                        if (slateWrapperNode) {
+                            slateWrapperNode.scrollTop = 0;
+                        }
                     }
                     //}
                     // config.isFetchSlateInProgress = false;
@@ -456,6 +464,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             });
         }
 
+        dispatch(fetchSlateAncestorData());
         const elapsedTime = performance.now() - startTime;
         
         sendToDataLayer('slate-load', {
@@ -466,6 +475,38 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
         });
     });
 };
+
+export const fetchSlateAncestorData = (tocNode = {}) => (dispatch, getState) => {
+    let structure = [];
+    let changeFlag = false;
+    let currentSlateData = getState().appStore.currentSlateAncestorData;
+    let newSlateData = currentSlateData;
+    if(Object.keys(currentSlateData).length > 0) {
+        while('ancestor' in currentSlateData && currentSlateData.ancestor.label !== 'project') {
+            let ancestorTitle = currentSlateData.ancestor.title || 'Title';
+            if(Object.keys(tocNode).length > 0 && tocNode.entityUrn === currentSlateData.ancestor.entityUrn &&
+                ancestorTitle !== tocNode.title) {
+                ancestorTitle = tocNode.title;
+                changeFlag = true;
+                currentSlateData.ancestor.title = tocNode.title;
+            }
+
+            structure.unshift(ancestorTitle);
+            currentSlateData = currentSlateData.ancestor;
+        }
+    }
+
+    if(changeFlag) {
+        dispatch({
+            type: SET_CURRENT_SLATE_DATA,
+            payload: {
+                currentSlateAncestorData: newSlateData
+            }
+        });
+    }
+    
+    sendDataToIframe({ 'type': 'projectStructure', 'message': { structure } })
+}
 
 const setSlateDetail = (slateTitle, slateManifestURN) => {
     let env = requestConfigURI().toLowerCase();
@@ -884,4 +925,11 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
        // dispatch({type: ERROR_POPUP, payload:{show: true}})
         config.savingInProgress = false
     })
+}
+
+export const setSlateLength = (length) => {
+    return {
+        type: SET_SLATE_LENGTH,
+        payload: length
+    }
 }

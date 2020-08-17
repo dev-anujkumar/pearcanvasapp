@@ -235,7 +235,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     conversionDataToSend["elementParentEntityUrn"] = parentEntityUrn
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
     config.conversionInProcess = true
-    if(elementStatusReducer[conversionDataToSend.id] === "approved"){
+    if(config.elementStatus[conversionDataToSend.id] === "approved"){
         config.savingInProgress = true
     }
     const url = `${config.REACT_APP_API_URL}v1/slate/elementTypeConversion/${overallType}`

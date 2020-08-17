@@ -344,3 +344,11 @@ abbr[title="Slate Link"] sup::after {
 p code, ul code, ol code{
     color: inherit;
 }
+
+/******* Alfresco Windo ***********/
+.overlay-0-0.overlayLittle-0-1 {
+    align-items: initial;
+}
+.overlay-0-0.overlayLittle-0-1 div[class^="modal-"] {
+    margin: auto;
+}
