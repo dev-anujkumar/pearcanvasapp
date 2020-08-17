@@ -243,3 +243,21 @@
 button[title="Cross Linking"] .tox-tbtn__select-label {
   margin: 0;
 }
+.tox .tox-tbtn--disabled, .tox .tox-tbtn--disabled:hover, .tox .tox-tbtn:disabled, .tox .tox-tbtn:disabled:hover{
+  opacity: 0.34!important;
+}
+.tox .tox-tbtn--enabled{
+  background-color: #ffffff!important;
+}
+.tox .tox-tbtn--enabled :not(svg) {
+  fill: #005a70!important;
+}
+.tox .tox-tbtn:hover:not(.tox-tbtn--disabled) {
+  background: none!important;
+}
+.tox .tox-tbtn:hover:not(.tox-tbtn--disabled) svg {
+  background-color: #f3f7f8!important;
+}
+.tox .tox-tbtn--enabled svg {
+  background-color: #d4eae4!important;
+}
