@@ -28,49 +28,7 @@ let elementType = ['WORKED_EXAMPLE', 'CONTAINER', 'SECTION_BREAK', 'TEXT', 'CITA
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
 };
-/** This function not required now
-function prepareDataForTcmUpdate(updatedData, parentData, asideData, poetryData) {
-    if (parentData && (parentData.elementType === "element-aside" || parentData.elementType === "citations"
-        || parentData.elementType === "poetry" || parentData.elementType === "groupedcontent")) {
-        updatedData.isHead = true;
-    } else if (parentData && (parentData.elementType === "manifest" || parentData.elementType === "group" )) {
-        updatedData.isHead = false;
-    }
-    if(updatedData.type === "POP_UP" || updatedData.type === "SHOW_HIDE"){
-        updatedData.parentType = updatedData.type==="POP_UP"? "popup":"showhide";
-    }
-    else if (asideData && asideData.type === "element-aside") {
-        if (asideData.subtype === "workedexample") {
-            updatedData.parentType = "workedexample";
-        } else {
-            updatedData.parentType = "element-aside";
-        }
-    } else if ((poetryData && poetryData.type === 'poetry') || (parentData && parentData.elementType === "poetry")){
-        updatedData.parentType = "poetry";
-    } else if (asideData && asideData.type === "groupedcontent") {
-        updatedData.parentType = "groupedcontent";
-    }
-    /* updatedData.projectURN = config.projectUrn;
-    updatedData.slateEntity = poetryData && poetryData.contentUrn || config.slateEntityURN; 
-}
-*/
-/** Obsolete Code 
-function createNewVersionOfSlate(){
-    fetch(`${config.STRUCTURE_API_URL}structure-api/context/v2/${config.projectUrn}/container/${config.slateEntityURN}/version`, {
-            method: 'PUT',
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json",
-                "PearsonSSOSession": config.ssoToken,
-                "ApiKey": config.APO_API_KEY,
-            }
-        })
-            .then(res => res.json())
-            .then((res) => {
-                sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
-        })
-}
-*/
+
 export const createElement = (type, index, parentUrn, asideData, outerAsideIndex, loref, cb,poetryData) => (dispatch, getState) => {
     config.currentInsertedIndex = index;
     config.currentInsertedType = type;

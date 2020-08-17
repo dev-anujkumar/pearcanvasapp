@@ -238,47 +238,6 @@ function contentEditableFalse (updatedData){
     }
 }
 
-/** Used for Backend , not required now */
-// function prepareDataForTcmUpdate (updatedData,id, elementIndex, asideData, getState, type, poetryData) {
-//     updatedData = (updatedData.type == "element-blockfeature") ? contentEditableFalse(updatedData): updatedData;
-//     let indexes = elementIndex && elementIndex.length > 0 ? elementIndex.split('-') : 0;
-//     let storeData = getState().appStore.slateLevelData;
-//     let slateData = JSON.parse(JSON.stringify(storeData));
-//     let slateBodyMatter = slateData[config.slateManifestURN].contents.bodymatter;
-//     if((type && type === "element-citation") || (updatedData.type === "element-citation")){
-//         if (slateBodyMatter[indexes[0]].contents.bodymatter[indexes[1] - 1].id === id) {
-//             updatedData.isHead = true;
-//             updatedData.parentType = "citations";
-//         }
-//     } else if (indexes.length === 2) {
-//         if (((!poetryData) || (poetryData.type != "poetry")) && slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].id === id) {
-//         //if (slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].id === id) {
-//             updatedData.isHead = true;
-//         }
-//     } else if (indexes.length === 3) {
-//         if (((!poetryData) || (poetryData.type != "poetry")) && slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].id === id) {
-//             updatedData.isHead = false;
-//         } else if (((poetryData && poetryData.type === "poetry") || (type === "stanza")) && slateBodyMatter[indexes[0]].contents.bodymatter[indexes[2]].id === id) {
-//             updatedData.isHead = false;
-//         } 
-//         // else if(type==="stanza" && slateBodyMatter[indexes[0]].contents.bodymatter[indexes[2]].id === id){
-//         //     updatedData.isHead = false;
-//         // }
-        
-//     }
-//     if (asideData && asideData.type === "element-aside") {
-//         if (asideData.subtype === "workedexample") {
-//             updatedData.parentType = "workedexample";
-//         } else {
-//             updatedData.parentType = "element-aside";
-//         }
-//     } else if (poetryData && poetryData.type === 'poetry'){
-//         updatedData.parentType = "poetry";
-//     }
-//     updatedData.projectUrn = config.projectUrn;
-//     // updatedData.slateEntity = config.slateEntityURN;
-// }
-
 /**
  * @function tcmSnapshotsForDelete
  * @description-This function is to prepare snapshot during create element process
@@ -316,7 +275,6 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
     updatedData = (updatedData.type == "element-blockfeature") ? contentEditableFalse(updatedData): updatedData;
     /** updateBodymatter | Used for TCM Snapshots */
     let updateBodymatter = getState().appStore.slateLevelData[config.slateManifestURN].contents.bodymatter;
-    // prepareDataForTcmUpdate(updatedData,updatedData.id, elementIndex, asideData, getState, updatedData.type, poetryData);
     updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, null, elementIndex, showHideType, parentElement, poetryData)
     let updatedData1 = JSON.parse(JSON.stringify(updatedData))
     if (showHideType && showHideType === "postertextobject" && !(updatedData1.elementdata.text.trim().length || updatedData1.html.text.match(/<img/))) {

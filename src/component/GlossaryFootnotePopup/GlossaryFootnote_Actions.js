@@ -306,38 +306,6 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             data.metaDataField = "formattedTitle";
         }
     }
-/** This code might be removed later : Used for TCM Snapshots at Backend -  not required now */
-/**if(index &&  typeof (index) !== 'number' && elementType !== 'figure'  && typeWithPopup !== 'popup' && typeWithPopup !== 'poetry'){
-    let tempIndex =  index.split('-');
-    if(tempIndex.length === 2){
-        if(newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].id === elementWorkId){
-            data.isHead = true;
-            if(newBodymatter[tempIndex[0]].subtype === "sidebar"){
-                data.parentType = "element-aside";
-            }else{
-                data.parentType = "workedexample";
-            }
-            else if(newBodymatter[tempIndex[0]].type !== "groupedcontent" && newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]].id === elementWorkId){
-                data.isHead = false;
-                data.parentType = "poetry";
-            }
-        }
-        else if(newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]].id === elementWorkId){
-            data.isHead = false;
-            if(newBodymatter[tempIndex[0]].subtype === "workedexample"){
-                data.parentType = "workedexample";
-            }
-            else if(newBodymatter[tempIndex[0]].type === "groupedcontent"){
-                if(newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].id == elementWorkId){
-                    data.isHead = false;
-                    data.parentType = "groupedcontent";
-                    data.columnName = appStore.parentUrn && appStore.parentUrn.columnName
-                }
-            }
-        }
-    }
-}
-*/
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })  //show saving spinner
 
     /** tcmBodymatter :  Used to prepare TCM snapshots  */
