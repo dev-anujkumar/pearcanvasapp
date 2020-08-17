@@ -50,6 +50,7 @@ export const handleTCMData = (slateManifestUrn) => (dispatch, getState) => {
     })
 
 }
+
 /**
      * @description Send TCM Snapshot for Cos converted elements
      * @param {String} slateManifestUrn | Slate Manifest
@@ -74,15 +75,16 @@ export const tcmSnapshot = (slateManifestUrn,slateEntityUrn) => (dispatch, getSt
      * @param {Object} snapshotData | TCM Snapshot data
 */
 export const sendElementTcmSnapshot = async (snapshotData) => {
-        let url = `/cypress/trackchanges-srvr/snapshot`; //for local use  `http://localhost:3003/snapshots`;
+        let url = 'http://localhost:4000/tctxsnapshot'
+        // let url = `/cypress/trackchanges-srvr/tctxsnapshot`;
         return axios.post(url, snapshotData, {
         headers: {
             PearsonSSOSession: config.ssoToken
         }
     }).then((res) => {
-        console.log("success")
+        console.log("Successs !!!")
     }).catch((error) => {
-        console.log("error")
+        console.log("Error in sending TCM Snapshots>>>>",error)
     })
 
 }

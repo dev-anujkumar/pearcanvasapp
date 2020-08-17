@@ -9,7 +9,7 @@ import { AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, C
 import { customEvent } from '../../js/utils';
 import { prepareTcmSnapshots,tcmSnapshotsForUpdate,fetchElementWipData,checkContainerElementVersion,fetchManifestStatus } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 let elementTypeTCM = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza'];
-let containerType = ['element-aside', 'manifest', 'citations', 'poetry'];
+let containerType = ['element-aside', 'manifest', 'citations', 'poetry', 'groupedcontent'];
 
 export const addComment = (commentString, elementId) => (dispatch) => {
     let url = `${config.STRUCTURE_API_URL}narrative-api/v2/${elementId}/comment/`
@@ -55,7 +55,6 @@ export const addComment = (commentString, elementId) => (dispatch) => {
         })
 }
 
-
 export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, index, poetryData) => (dispatch, getState) => {
 
     const prepareDeleteRequestData = (elementType) => {
@@ -83,7 +82,6 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
     let _requestData = prepareDeleteRequestData(type)
     let indexToBeSent = index || "0"
     _requestData = { ..._requestData, index: indexToBeSent.toString().split('-')[indexToBeSent.toString().split('-').length - 1], elementParentEntityUrn }
-    // prepareDataForTcmUpdate(_requestData, elmId, index, asideData, getState, type, poetryData);
 
     return axios.post(`${config.REACT_APP_API_URL}v1/slate/deleteElement`,
         JSON.stringify(_requestData),
@@ -295,7 +293,7 @@ export const tcmSnapshotsForDelete = async (elementDeleteData, type, containerEl
         status:"accepted",
         fromWhere:"delete"
     }
-    let parentType = ['element-aside', 'citations', 'poetry'];
+    let parentType = ['element-aside', 'citations', 'poetry', 'groupedcontent'];
     let versionStatus = {};
     if ((parentType.indexOf(type) === -1)) {
         versionStatus = fetchManifestStatus(elementDeleteData.bodymatter, containerElement, type);
