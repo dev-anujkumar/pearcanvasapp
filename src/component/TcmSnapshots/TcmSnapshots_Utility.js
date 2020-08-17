@@ -27,7 +27,8 @@ const {
     CITATION_GROUP,
     CITATION_ELEMENT,
     WE_MANIFEST,
-    SLATE
+    SLATE,
+    MULTI_COLUMN_GROUP
 }
     = TcmConstants;
 
@@ -373,34 +374,34 @@ export const fetchManifestStatus = (bodymatter, parentElement, type) => {
     let parentData = {};
     const { asideData, parentUrn, poetryData } = parentElement;
     if ((asideData || parentUrn || poetryData) && bodymatter.length !== 0) {
-        bodymatter.map(element => {
-            switch (type) {
-                case SECTION_BREAK:                              /** Create Section-Break */
-                    parentData.parentStatus = asideData && asideData.id == element.id ? element.status : undefined;
-                    break;
-                case POETRY_ELEMENT:                             /** In Poetry */
-                    parentData.parentStatus = poetryData && poetryData.parentUrn == element.id ? element.status : undefined;
-                    break;
-                case MULTI_COLUMN:                               /** In Multi-Column */
-                    parentData.parentStatus = asideData && asideData.id == element.id ? element.status : undefined;
-                    element.groupeddata && element.groupeddata.bodymatter.map((ele) => {
+        let eleType = type === SECTION_BREAK ? SECTION_BREAK : parentUrn.elementType;
+        let element = bodymatter[0];
+        switch (eleType) {
+            case SECTION_BREAK:                              /** Create Section-Break */
+                parentData.parentStatus = asideData && asideData.id == element.id ? element.status : undefined;
+                break;
+            case POETRY_ELEMENT:                             /** In Poetry */
+                parentData.parentStatus = poetryData && poetryData.parentUrn == element.id ? element.status : undefined;
+                break;
+            case MULTI_COLUMN_GROUP:                         /** In Multi-Column */
+                parentData.parentStatus = asideData && asideData.id == element.id ? element.status : undefined;
+                let columndata = element.groupeddata.bodymatter[Number(parentUrn.columnIndex)]
+                parentData.childStatus = parentUrn && columndata.id === parentUrn.manifestUrn ? columndata.status : undefined;
+                break;
+            case WE_MANIFEST:                                /** In Section-Break */
+                if (asideData && element.id == asideData.id && element.id !== parentUrn.manifestUrn) {
+                    parentData.parentStatus = element.status;
+                    element.elementdata && element.elementdata.bodymatter.map((ele) => {
                         parentData.childStatus = parentUrn && ele.id === parentUrn.manifestUrn ? ele.status : undefined;
                     })
-                    break;
-                case ELEMENT_ASIDE:                               /** In Section-Break */
-                    if (asideData && element.id == asideData.id && element.id !== parentUrn.manifestUrn) {
-                        parentData.parentStatus = element.status;
-                        element.elementdata && element.elementdata.bodymatter.map((ele) => {
-                            parentData.childStatus = parentUrn && ele.id === parentUrn.manifestUrn ? ele.status : undefined;
-                        })
-                    }
-                    break;
-                case CITATION_GROUP:
-                default:                                         /** In WE-HEAD | Aside | Citations */
-                    parentData.parentStatus = parentUrn && element.id == parentUrn.manifestUrn ? element.status : undefined;
-                    break;
-            }
-        })
+                }
+                break;
+            case CITATION_GROUP:                             /** In Citations */
+            case ELEMENT_ASIDE:                              /** In WE-HEAD | Aside */
+            default:
+                parentData.parentStatus = parentUrn && element.id == parentUrn.manifestUrn ? element.status : undefined;
+                break;
+        }
     }
     return parentData
 }

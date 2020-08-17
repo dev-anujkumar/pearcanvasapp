@@ -12,7 +12,7 @@ import figureDataBank from '../../js/figure_data_bank';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
-import { prepareTcmSnapshots,fetchParentData,checkContainerElementVersion,fetchManifestStatus } from '../TcmSnapshots/TcmSnapshots_Utility.js';
+import { prepareTcmSnapshots,checkContainerElementVersion,fetchManifestStatus } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 let imageSource = ['image','table','mathImage'],imageDestination = ['primary-image-figure','primary-image-table','primary-image-equation']
 let elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza'];
 
@@ -452,7 +452,10 @@ export const tcmSnapshotsForConversion = async (elementConversionData,indexes,ap
     let convertAppStore = JSON.parse(JSON.stringify(appStore.slateLevelData));
     let convertSlate = convertAppStore[config.slateManifestURN];
     let convertBodymatter = convertSlate.contents.bodymatter;
-    let convertParentData = fetchParentData(convertBodymatter, indexes);
+    let convertParentData = {
+        asideData: appStore.asideData,
+        parentUrn: appStore.parentUrn
+    };
     let versionStatus = fetchManifestStatus(convertBodymatter, convertParentData,response.type);
     /** latest version for WE/CE/PE/AS/2C*/
     convertParentData = await checkContainerElementVersion(convertParentData, versionStatus, currentSlateData)

@@ -21,7 +21,9 @@ const {
     FOOTNOTE,
     ASSET_POPOVER,
     SLATE_LINK,
-    AP_TYPE
+    AP_TYPE,
+    ASIDE,
+    WORKED_EXAMPLE
 }
     = TcmConstants;
 
