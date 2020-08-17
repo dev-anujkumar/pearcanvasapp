@@ -82,7 +82,7 @@ export const sendElementTcmSnapshot = async (snapshotData) => {
             PearsonSSOSession: config.ssoToken
         }
     }).then((res) => {
-        console.log("Snapshot Sent Succesfully !!!")
+        console.log("Successs !!!")
     }).catch((error) => {
         console.log("Error in sending TCM Snapshots>>>>",error)
     })
