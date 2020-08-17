@@ -8,7 +8,7 @@ import config from '../../config/config.js';
 import { sendElementTcmSnapshot, getLatestVersion } from './TcmSnapshot_Actions.js';
 import { setSemanticsSnapshots, fetchElementsTag } from './ElementSnapshot_Utility.js';
 import { VERSIONING_SLATEMANIFEST } from "./../../constants/Action_Constants";
-let elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza'];
+let elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza', 'groupedcontent'];
 let containerType = ['element-aside', 'manifest', 'citations', 'poetry', 'WORKED_EXAMPLE', 'CONTAINER', 'SECTION_BREAK', 'CITATION', 'POETRY', 'groupedcontent'];
 
 /**
@@ -192,7 +192,8 @@ export const prepareElementSnapshots = async (element,actionStatus) => {
     let semanticSnapshots = (actionStatus.fromWhere !== "create" && element.type !== 'element-citation') ? await setSemanticsSnapshots(element,actionStatus) : {};
 
     elementSnapshot = {
-        contentSnapshot: (element.type === 'group') ? (element.groupdata.bodymatter && element.groupdata.bodymatter[0].html.text) : element.html && element.html.text ? element.html.text : "",
+        contentSnapshot: (element.type === 'group') ? (element.groupdata && element.groupdata.bodymatter && element.groupdata.bodymatter[0].html.text) :
+                         element.html && element.html.text ? element.html.text : "",
         glossorySnapshot: JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.glossarySnapshot : []),
         footnoteSnapshot:  JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.footnoteSnapshot : []),
         assetPopOverSnapshot:  JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.assetPopoverSnapshot : [])
@@ -368,8 +369,10 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn) => {
             case 'element-learningobjectives':
                 if (eleIndex.length == 2) {          /** Inside WE-HEAD | Aside */
                     wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]];
-                } else if (eleIndex.length == 3) {   /** Inside WE-BODY */
+                } else if (eleIndex.length == 3 && bodymatter[eleIndex[0]].type !== 'groupedcontent' ) {   /** Inside WE-BODY */
                     wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]].contents.bodymatter[eleIndex[2]];
+                } else if(eleIndex.length == 3 && bodymatter[eleIndex[0]].type === 'groupedcontent'){
+                    wipData = bodymatter[eleIndex[0]].groupeddata.bodymatter[eleIndex[1]].groupdata.bodymatter[eleIndex[2]]
                 }
                 break;
         }
@@ -397,7 +400,16 @@ export const fetchParentData = (bodymatter, indexes) => {
             type: bodymatter[tempIndex[0]].type,
             element: bodymatter[tempIndex[0]]
         }
-        let parentElement = tempIndex.length == 3 && bodymatter[tempIndex[0]].type !== 'poetry'  ? bodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]] : bodymatter[tempIndex[0]];
+        let parentElement; 
+        // tempIndex.length == 3 && bodymatter[tempIndex[0]].type !== 'poetry'  ? bodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]] : bodymatter[tempIndex[0]];
+        if(tempIndex.length == 3 && bodymatter[tempIndex[0]].type !== 'poetry' ){
+            parentElement = bodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]]
+        }
+        else if(tempIndex.length == 3 && bodymatter[tempIndex[0]].type === 'groupedcontent' ){
+            parentElement = bodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]]
+        } else {
+            parentElement = bodymatter[tempIndex[0]];
+        }
         parentData.parentUrn = {
             manifestUrn: parentElement.id,
             contentUrn: parentElement.contentUrn,
