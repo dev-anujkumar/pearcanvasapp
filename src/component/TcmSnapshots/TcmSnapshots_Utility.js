@@ -54,7 +54,7 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
     let defaultKeys = setDefaultKeys(actionStatus, isContainer);
     /* Tag of elements*/
     let tag = {
-        parentTag: wipData.type === "groupedcontent" ? '2C' : fetchElementsTag(wipData)
+        parentTag: fetchElementsTag(wipData)
     }
     /* ID of elements*/
     let elementId = {
@@ -294,7 +294,7 @@ export const prepareElementSnapshots = async (element,actionStatus) => {
     let semanticSnapshots = (actionStatus.fromWhere !== "create" && element.type !== CITATION_ELEMENT) ? await setSemanticsSnapshots(element,actionStatus) : {};
 
     elementSnapshot = {
-        contentSnapshot: (element.type === 'group') ? (element.groupdata && element.groupdata.bodymatter && element.groupdata.bodymatter[0].html.text) :
+        contentSnapshot: (element.type === MULTI_COLUMN_GROUP) ? (element.groupdata && element.groupdata.bodymatter && element.groupdata.bodymatter[0].html.text) :
                          element.html && element.html.text ? element.html.text : "",
         glossorySnapshot: JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.glossarySnapshot : []),
         footnoteSnapshot:  JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.footnoteSnapshot : []),
