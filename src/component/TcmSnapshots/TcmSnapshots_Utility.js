@@ -67,25 +67,25 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
         elementId: elementId,
         actionStatus: actionStatus
     }
-    /* For 2C creation*/
-    if (wipData.type === MULTI_COLUMN) {
-        tcmSnapshotsMultiColumn(snapshotsData, defaultKeys, deleVercase, newVersionUrns);
-    }
     /* For WE creation*/
-    else if (wipData.type === ELEMENT_ASIDE && type != SECTION_BREAK) {
+    if (wipData.type === ELEMENT_ASIDE && type != SECTION_BREAK) {
         tcmSnapshotsCreateAsideWE(snapshotsData, defaultKeys, deleVercase, newVersionUrns);
     }
     /* action on Section break in WE*/
     else if (type === SECTION_BREAK || wipData.type === WE_MANIFEST) {
         tcmSnapshotsCreateSectionBreak(containerElement, snapshotsData, defaultKeys, deleVercase, newVersionUrns)
     }
-    /* action on element in WE/PE/CG */
+    /* action on element in WE/PE/CG/2C */
     else if (poetryData || asideData || parentUrn) {
         tcmSnapshotsInContainerElements(containerElement, snapshotsData, defaultKeys, deleVercase, newVersionUrns)
     }
     /* action on PE and CG */
     else if (wipData.type === CITATION_GROUP || wipData.type === POETRY_ELEMENT) {
         tcmSnapshotsCitationPoetry(snapshotsData, defaultKeys, deleVercase, newVersionUrns);
+    }
+    /* action on Multi-column */
+    else if (wipData.type === MULTI_COLUMN) {
+        tcmSnapshotsMultiColumn(containerElement,snapshotsData, defaultKeys, deleVercase, newVersionUrns);
     }
     else {
         let elementDetails = setElementTypeAndUrn(elementId, tag);
@@ -167,8 +167,8 @@ const tcmSnapshotsInContainerElements = (containerElement, snapshotsData, defaul
     elementId.childId = deleVercase ? newVersionUrns[wipData.id] : wipData.id;
     tag.parentTag = fetchElementsTag(parentElement);
     tag.childTag = fetchElementsTag(wipData);
-    let isHead = asideData && asideData.type === ELEMENT_ASIDE && asideData.subtype === WORKED_EXAMPLE ? parentUrn.manifestUrn == asideData.id ? "HEAD" : "BODY" : parentUrn.columnName ? parentUrn.columnName : "";
-    elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "");
+    let isHead = asideData && asideData.type === ELEMENT_ASIDE && asideData.subtype === WORKED_EXAMPLE ? parentUrn.manifestUrn == asideData.id ? "HEAD" : "BODY" : "";
+    elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn:"",parentUrn ? parentUrn.columnIndex : -1);
     prepareAndSendTcmData(elementDetails, wipData, defaultKeys, actionStatus);
 }
 
@@ -180,20 +180,18 @@ const tcmSnapshotsInContainerElements = (containerElement, snapshotsData, defaul
  * @param {Boolean} deleVercase - Check for delete versioning action
  * @param {Object} newVersionUrns - Latest  Version Urns for delete case
 */
-const tcmSnapshotsMultiColumn = (snapshotsData, defaultKeys, deleVercase, newVersionUrns) => {
+const tcmSnapshotsMultiColumn = (containerElement,snapshotsData, defaultKeys, deleVercase, newVersionUrns) => {
     let elementDetails;
     const { wipData, elementId, tag, actionStatus } = snapshotsData;
-    wipData.groupeddata.bodymatter && wipData.groupeddata.bodymatter.map((item) => {
-        if (item.type === "group") {
-            item.groupdata.bodymatter.map((ele) => {
-                if (elementType.indexOf(ele.type) !== -1) {
-                    elementId.childId = deleVercase ? newVersionUrns[ele.id] : ele.id;
-                    tag.childTag = fetchElementsTag(ele);
-                    elementDetails = setElementTypeAndUrn(elementId, tag, 'C1', item.id);
-                    prepareAndSendTcmData(elementDetails, ele, defaultKeys, actionStatus);
-                }
-            })
-        }
+    const { parentUrn } = containerElement
+    wipData.groupeddata.bodymatter.map((item, eleIndex) => {
+        item.groupdata.bodymatter.map((ele) => {
+            elementId.childId = deleVercase ? newVersionUrns[ele.id] : ele.id;
+            tag.childTag = fetchElementsTag(ele);
+            elementDetails = setElementTypeAndUrn(elementId, tag, "", "", parentUrn ? parentUrn.columnIndex : eleIndex);
+            prepareAndSendTcmData(elementDetails, item, defaultKeys, actionStatus);
+        })
+
     })
 }
 
@@ -247,10 +245,13 @@ const prepareAndSendTcmData = async (elementDetails, wipData, defaultKeys, actio
  * @param {String} sectionId - Urn for section break
  * @returns {Object} Object that contains the element tag and elementUrn for snapshot 
 */
-const setElementTypeAndUrn = (eleId, tag, isHead, sectionId) => {
+const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex) => {
     let elementData = {}
     let elementTag = `${tag.parentTag}${isHead ? ":" + isHead : ""}${tag.childTag ? ":" + tag.childTag : ""}`;
-    let elementId = `${eleId.parentId}${sectionId && (isHead === "BODY"||isHead === "C1") ? "+" + sectionId : ""}${eleId.childId ? "+" + eleId.childId : ""}`
+    let elementId = `${eleId.parentId}${sectionId && isHead === "BODY" ? "+" + sectionId : ""}${eleId.childId ? "+" + eleId.childId : ""}`
+    if(eleIndex > -1){
+        elementTag = `${tag.parentTag}${(eleIndex === 0) ? ':C1' : ':C2'}${tag.childTag ? ":" + tag.childTag : ""}`        
+    }
     elementData = {
         elementUrn: elementId,
         elementType: elementTag
@@ -293,7 +294,8 @@ export const prepareElementSnapshots = async (element,actionStatus) => {
     let semanticSnapshots = (actionStatus.fromWhere !== "create" && element.type !== CITATION_ELEMENT) ? await setSemanticsSnapshots(element,actionStatus) : {};
 
     elementSnapshot = {
-        contentSnapshot: element.html && element.html.text ? element.html.text : "",
+        contentSnapshot: (element.type === 'group') ? (element.groupdata && element.groupdata.bodymatter && element.groupdata.bodymatter[0].html.text) :
+                         element.html && element.html.text ? element.html.text : "",
         glossorySnapshot: JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.glossarySnapshot : []),
         footnoteSnapshot:  JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.footnoteSnapshot : []),
         assetPopOverSnapshot:  JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.assetPopoverSnapshot : [])
@@ -491,10 +493,10 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn) => {
             case LEARNING_OBJECTIVE:
                 if (eleIndex.length == 2) {          /** Inside WE-HEAD | Aside */
                     wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]];
-                } else if (eleIndex.length == 3 && bodymatter[eleIndex[0]].type !== MULTI_COLUMN) {   /** Inside WE-BODY */
+                } else if (eleIndex.length == 3 && bodymatter[eleIndex[0]].type !== MULTI_COLUMN ) {   /** Inside WE-BODY */
                     wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]].contents.bodymatter[eleIndex[2]];
-                } else if (eleIndex.length == 3) {   /** Inside Multi-Column*/
-                    wipData = bodymatter[eleIndex[0]].groupeddata.bodymatter[eleIndex[1]].groupdata.bodymatter[eleIndex[2]];
+                } else if(eleIndex.length == 3 && bodymatter[eleIndex[0]].type === MULTI_COLUMN){      /** Inside Multi-Column */
+                    wipData = bodymatter[eleIndex[0]].groupeddata.bodymatter[eleIndex[1]].groupdata.bodymatter[eleIndex[2]]
                 }
                 break;
         }
