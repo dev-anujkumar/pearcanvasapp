@@ -28,7 +28,8 @@ const {
     CITATION_ELEMENT,
     WE_MANIFEST,
     SLATE,
-    MULTI_COLUMN_GROUP
+    MULTI_COLUMN_GROUP,
+    LEARNING_OBJECTIVE
 }
     = TcmConstants;
 
