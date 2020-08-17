@@ -39,7 +39,7 @@
 
 #artboard-containers {
     height: 100%;
-    padding-left: 130px;
+    padding-left: 30px;
     /* overflow:auto; */
     /* width: 100%; */
 }
@@ -109,16 +109,8 @@
     float: left;
 }
 .navigation-content{
-    width: 62px;
-    height: 76px;
-    background: #fff;
-    padding: 20px 8px 10px;
     position: absolute;
     top: 40%;
-    cursor: pointer;
-    color: #005a70;
-    font-family: 'Open Sans', sans-serif;
-    font-size: 12px;
 }
 .disableNavigation{
     cursor: not-allowed !important;
@@ -131,14 +123,30 @@
     padding: 6px;
   }
   
-  .right {
+  .right-arrow-transform {
     transform: rotate(-45deg);
     -webkit-transform: rotate(-45deg);
   }
   
-  .left {
+  .left-arrow-transform {
     transform: rotate(135deg);
     -webkit-transform: rotate(135deg);
+  }
+  .up-arrow-transform {
+    transform: rotate(-135deg);
+    -webkit-transform: rotate(-135deg);
+  }
+  .navigation-button{
+    width: 62px;
+    height: 76px;
+    background: #fff;
+    padding: 20px 8px 10px;
+    cursor: pointer;
+    color: #005a70;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 12px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 2px 1px -1px rgba(0, 0, 0, 0.12), 0 1px 1px 0 rgba(0, 0, 0, 0.14);
+    border-radius: 3px;
   }
   .navigation-icon{
     width: 100%;
@@ -146,6 +154,20 @@
   }
   .navigation-text{
     width: 100%;
-    text-align: center;
     margin-top: 10px;
+    font-family: 'Open Sans';
+    font-size: 12px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.67;
+    letter-spacing: normal;
+    text-align: center;
+    color: #005a70;
+  }
+  .collapse-arrow{
+    border: solid black;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 3px;
   }

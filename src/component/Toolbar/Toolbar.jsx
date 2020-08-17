@@ -140,11 +140,12 @@ const _Toolbar = props => {
                         }}>
                             {audioNarrationEnable}
                         </div>
-                        <span class="openAudioIcon"></span>
+                        <span className="openAudioIcon"></span>
                         {openDropDown && <OpenAudioBook closeAudioBookDialog={closeAudioBookDialog} />}
                     </div>
                 </div>
             }
+            <div className="collapse-header"><i className="collapse-arrow up-arrow-transform"></i></div>
             {/* *****end**** */}
         </div>
     )

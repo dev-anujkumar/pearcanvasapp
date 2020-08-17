@@ -192,9 +192,11 @@ export class CanvasWrapper extends Component {
                         
                         <div id='artboard-containers'>
                             <div className='navigation-container'>
-                                <div className={(!config.disablePrev) ? 'navigation-content' : 'navigation-content disableNavigation'} onClick={() => this.handleNavClick("back")}>
-                                    <div className='navigation-icon'><i class="nav-arrow left"></i></div>
-                                    <div className='navigation-text'>Previous</div>
+                                <div className={(!config.disablePrev) ? 'navigation-content' : 'navigation-content disableNavigation'}>
+                                    <div className='navigation-button' onClick={() => this.handleNavClick("back")}>
+                                        <div className='navigation-icon'><i class="nav-arrow left-arrow-transform"></i></div>
+                                        <div className='navigation-text'>Previous</div>
+                                    </div>
                                 </div>
                             </div>
                             <div id='artboard-container' className='artboard-container'>
@@ -204,14 +206,16 @@ export class CanvasWrapper extends Component {
                                     <SlateWrapper loadMorePages={this.loadMorePages} handleCommentspanel={this.handleCommentspanel} slateData={slateData} navigate={this.navigate} showBlocker={this.props.showCanvasBlocker} convertToListElement={this.props.convertToListElement} toggleTocDelete={this.props.toggleTocDelete} tocDeleteMessage={this.props.tocDeleteMessage} modifyState={this.props.modifyState} updateTimer={this.updateTimer} isBlockerActive={this.props.showBlocker} isLOExist={this.props.isLOExist} />
                                 </RootContext.Provider>
                             </div>
-                            <div className='navigation-container' onClick={() => this.handleNavClick("next")}>
+                            <div className='navigation-container'>
                                 <div className={(!config.disableNext) ? 'navigation-content' : 'navigation-content disableNavigation'} >
-                                    <div className='navigation-icon'><i class="nav-arrow right"></i></div>
-                                    <div className='navigation-text'>Next</div>
+                                    <div className='navigation-button' onClick={() => this.handleNavClick("next")}>
+                                        <div className='navigation-icon'><i class="nav-arrow right-arrow-transform"></i></div>
+                                        <div className='navigation-text'>Next</div>
+                                    </div>
                                 </div>
                             </div>
+                            <div className='clr'></div>
                         </div>
-                        
                     </div>
                     <div className = "sidebar-panel">
                         {/* pull all sidebar panel */}
