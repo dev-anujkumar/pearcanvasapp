@@ -316,9 +316,6 @@ P.paragraphNumeroUnoIndentLevel1, P.paragraphNumeroUnoIndentLevel2, P.paragraphN
 table code {
     color: unset !important;
 }
-.tox .tox-tbtn--disabled, .tox .tox-tbtn--disabled:hover, .tox .tox-tbtn:disabled, .tox .tox-tbtn:disabled:hover{
-    opacity: 0.34!important;
-}
 
 /*  Cross Link Content Design  */
 

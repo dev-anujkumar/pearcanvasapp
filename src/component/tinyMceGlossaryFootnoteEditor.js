@@ -3,9 +3,8 @@ import tinymce from 'tinymce/tinymce';
 import "tinymce/plugins/paste";
 import { GlossaryFootnoteEditorConfig } from '../config/EditorConfig';
 import {
-  tinymceFormulaIcon,
-  tinymceFormulaChemistryIcon
-}  from '../images/TinyMce/TinyMce.jsx';
+  tinymceFormulaIcon,tinymceFormulaChemistryIcon,bold,italic,underline,strikethrough,removeformat,subscript,superscript,charmap,code
+} from '../images/TinyMce/TinyMce.jsx';
 import { hasReviewerRole, hasProjectPermission } from '../constants/utility.js'
 import { setFormattingToolbar } from './GlossaryFootnotePopup/GlossaryFootnote_Actions.js';
 export class ReactEditor extends React.Component {
@@ -35,9 +34,10 @@ export class ReactEditor extends React.Component {
           this.addMathmlFormulaButton(editor);
         }
         this.onEditorBlur(editor);
+        this.setDefaultIcons(editor)
         editor.on('keyup', (e) => { this.editorOnKeyup(e, editor) });
         editor.ui.registry.addToggleButton('code', {
-          text: '<i class="fa fa-code" aria-hidden="true"></i>',
+          icon:"code",
           tooltip: "Inline code",
           onAction: () => {
             this.addInlineCode(editor)
@@ -186,6 +186,17 @@ export class ReactEditor extends React.Component {
       e.preventDefault();
     });
   };
+  setDefaultIcons = editor => {
+    editor.ui.registry.addIcon("bold", bold);
+    editor.ui.registry.addIcon("italic", italic);
+    editor.ui.registry.addIcon("underline", underline);
+    editor.ui.registry.addIcon("strike-through", strikethrough);
+    editor.ui.registry.addIcon("remove-formatting", removeformat);
+    editor.ui.registry.addIcon("subscript", subscript);
+    editor.ui.registry.addIcon("superscript", superscript);
+    editor.ui.registry.addIcon("insert-character", charmap);
+    editor.ui.registry.addIcon("code",code);
+}
 
   setChemistryFormulaIcon = editor => {
     /*

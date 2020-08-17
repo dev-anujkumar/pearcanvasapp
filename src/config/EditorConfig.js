@@ -37,5 +37,5 @@ export const GlossaryFootnoteEditorConfig = {
             { selector: 'abbr,dfn,a,strong,em,s,u,sub,sup,code,span', remove: 'all',split: true, expand: false }
           ]
     },
-    toolbar: 'bold italic underline strikethrough removeformat superscript subscript tinyMcewirisformulaEditor tinyMcewirisformulaEditorChemistry code'
+    toolbar: 'bold italic underline strikethrough removeformat subscript superscript tinyMcewirisformulaEditor tinyMcewirisformulaEditorChemistry code'
 }
