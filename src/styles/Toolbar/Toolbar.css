@@ -261,3 +261,10 @@ button[title="Cross Linking"] .tox-tbtn__select-label {
 .tox .tox-tbtn--enabled svg {
   background-color: #d4eae4!important;
 }
+.tox-menu.tox-collection.tox-collection--list.tox-selected-menu{
+  overflow : hidden!important;
+  max-height: none!important;
+}
+button[title="formatSelector"] span.tox-tbtn__select-label{
+  min-width : 145px!important
+}

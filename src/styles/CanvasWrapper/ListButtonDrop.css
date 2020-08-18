@@ -354,6 +354,7 @@ hr {
     margin-top : 2px;
     height: 2px;
     border-width: 1px;
+    background: #ccc;;
 }
 
 .list-roman-text{
