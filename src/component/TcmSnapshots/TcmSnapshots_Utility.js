@@ -166,6 +166,8 @@ const tcmSnapshotsInContainerElements = (containerElement, snapshotsData, defaul
     let parentElement = asideData ? asideData : poetryData ? poetryData : parentUrn;
     elementId.parentId = parentElement && parentElement.id ? parentElement.id : parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "";
     elementId.childId = deleVercase ? newVersionUrns[wipData.id] : wipData.id;
+    elementId.columnId = parentUrn && parentUrn.manifestUrn;
+    // deleVercase ? parentUrn && newVersionUrns[parentUrn.manifestUrn] : parentUrn && parentUrn.manifestUrn;
     tag.parentTag = fetchElementsTag(parentElement);
     tag.childTag = fetchElementsTag(wipData);
     let isHead = asideData && asideData.type === ELEMENT_ASIDE && asideData.subtype === WORKED_EXAMPLE ? parentUrn.manifestUrn == asideData.id ? "HEAD" : "BODY" : "";
@@ -187,6 +189,7 @@ const tcmSnapshotsMultiColumn = (containerElement,snapshotsData, defaultKeys, de
     const { parentUrn } = containerElement
     wipData.groupeddata.bodymatter.map((item, eleIndex) => {
         item.groupdata.bodymatter.map((ele) => {
+            elementId.columnId = deleVercase ? newVersionUrns[item.id] : item.id;
             elementId.childId = deleVercase ? newVersionUrns[ele.id] : ele.id;
             tag.childTag = fetchElementsTag(ele);
             elementDetails = setElementTypeAndUrn(elementId, tag, "", "", parentUrn ? parentUrn.columnIndex : eleIndex);
@@ -251,7 +254,8 @@ const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex) => {
     let elementTag = `${tag.parentTag}${isHead ? ":" + isHead : ""}${tag.childTag ? ":" + tag.childTag : ""}`;
     let elementId = `${eleId.parentId}${sectionId && isHead === "BODY" ? "+" + sectionId : ""}${eleId.childId ? "+" + eleId.childId : ""}`
     if(eleIndex > -1){
-        elementTag = `${tag.parentTag}${(eleIndex === 0) ? ':C1' : ':C2'}${tag.childTag ? ":" + tag.childTag : ""}`        
+        elementTag = `${tag.parentTag}${(eleIndex === 0) ? ':C1' : ':C2'}${tag.childTag ? ":" + tag.childTag : ""}`   ;
+        elementId =  `${eleId.parentId}${eleId.columnId ? "+" + eleId.columnId : ""}${eleId.childId ? "+" + eleId.childId : ""}`
     }
     elementData = {
         elementUrn: elementId,
@@ -275,7 +279,7 @@ export const setDefaultKeys = (actionStatus, isContainer) => {
         projectUrn: config.projectUrn,
         index: 0,
         action: action,
-        status:  (config.tcmStatus && config.tcmStatus == true && status === "" && action !== 'delete') ? "pending" : "accepted",
+        status:  (config.tcmStatus && config.tcmStatus == true && status === "") ? "pending" : "accepted",
         slateType: isContainer === true ? CONTAINER_INTRO : SLATE,/** set based on condition */
     }
     actionStatus.status = tcmKeys.status

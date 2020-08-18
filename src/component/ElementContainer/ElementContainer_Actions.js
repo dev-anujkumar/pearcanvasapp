@@ -249,7 +249,7 @@ function contentEditableFalse (updatedData){
 export const tcmSnapshotsForDelete = async (elementDeleteData, type, containerElement) => {
     let actionStatus = {
         action:"delete",
-        status:"accepted",
+        status:"pending",
         fromWhere:"delete"
     }
     let parentType = ['element-aside', 'citations', 'poetry', 'groupedcontent'];
