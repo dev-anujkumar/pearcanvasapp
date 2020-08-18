@@ -275,7 +275,7 @@ export const setDefaultKeys = (actionStatus, isContainer) => {
         projectUrn: config.projectUrn,
         index: 0,
         action: action,
-        status:  (config.tcmStatus && config.tcmStatus == true && status === "" && action !== 'delete') ? "pending" : "accepted",
+        status:  (config.tcmStatus && config.tcmStatus == true && status === "") ? "pending" : "accepted",
         slateType: isContainer === true ? CONTAINER_INTRO : SLATE,/** set based on condition */
     }
     actionStatus.status = tcmKeys.status
