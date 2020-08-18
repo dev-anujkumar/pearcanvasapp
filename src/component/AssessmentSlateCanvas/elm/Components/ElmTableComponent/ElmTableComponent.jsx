@@ -453,7 +453,8 @@ class ElmTableComponent extends Component {
         (tableValue.length <=0))||(filterResults=='No Results') ? true:false
         /** Condition to show table */
         let showTable = tableValue.length ? true:false
-  
+        /** Condition to show loader before Items Table */
+        let showItemLoader = showLoader == true && isLoading == true && openSearch == true && openItemTable== true  ? true : false;
         {
             if (errFlag == true) {
                 /** ELM Picker Error Div */
@@ -475,7 +476,7 @@ class ElmTableComponent extends Component {
                         </div>}
                         {/** Assessment Search Bar */}
                         {(assessmentFormat == LEARNOSITY_BETA && openSearch && openItemTable==false) && <AssessmentSearchBar filterAssessmentData={this.searchAssessmentData} assessmentType={'learnosity'} searchTerm={searchTerm}/>}
-                        <div className={`main-div ${(assessmentFormat == LEARNOSITY_BETA && openSearch && showLoader==false) ? 'has-search' : openItemTable == true && showLoader==true ? 'item-table' : (showNavigationBar==false && showLoader==true)?'show-loader':''}`}>
+                        <div className={`main-div ${(assessmentFormat == LEARNOSITY_BETA && openSearch && showLoader==false) ? 'has-search' : showItemLoader ? 'item-table' : (showNavigationBar==false && showLoader==true)?'show-loader':''}`}>
                             {showLoader &&  <div className="elm-loader"></div>}
                             {showErrorStatus ?
                                 /** ELM Picker Error Div */

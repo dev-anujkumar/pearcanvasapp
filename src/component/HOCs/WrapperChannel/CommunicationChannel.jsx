@@ -208,7 +208,10 @@ function CommunicationChannel(WrappedComponent) {
                     this.updatePageLink(message);
                     break;
                 case 'slateLengthChanged':
-                    this.changeSlateLength(message)
+                    this.changeSlateLength(message);
+                    break;
+                case 'parentChanging':
+                    this.props.fetchSlateAncestorData(message || {});
                     break;
             }
         }
@@ -469,6 +472,7 @@ function CommunicationChannel(WrappedComponent) {
                     currentProjectId: config.projectUrn,
                     slateEntityUrn: config.slateEntityURN
                 }
+                config.isPopupSlate = false;
                 this.props.fetchAudioNarrationForContainer(slateData)
                 this.props.clearElementStatus()
                 this.props.fetchUsageTypeData('assessment');

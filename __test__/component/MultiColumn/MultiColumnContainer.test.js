@@ -6,6 +6,9 @@ import {multiColumnContainer} from "../../../fixtures/multiColumnContainer";
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import config from "../../../src/config/config.js"
+
+config["elementStatus"] = {}
 const middlewares = [thunk];
 
 jest.mock('../../../src/component/ElementSaprator/ElementSaprator.jsx', () => {

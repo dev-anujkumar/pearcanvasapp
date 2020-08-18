@@ -984,11 +984,15 @@ export const getElementStatus = (elementWorkId, index) => async (dispatch) => {
             'ApiKey': config.APO_API_KEY
         }
       })
-    const res = await resp.json()
-    let statusString = res.status[0]
-    let splittedString = statusString.split("/")
-    let elementVersioningStatus = splittedString[splittedString.length - 1]
-    config.elementStatus[elementWorkId] = elementVersioningStatus
+    try {
+        const res = await resp.json()
+        let statusString = res.status[0]
+        let splittedString = statusString.split("/")
+        let elementVersioningStatus = splittedString[splittedString.length - 1]
+        config.elementStatus[elementWorkId] = elementVersioningStatus
+    } catch (error) {
+        console.error("Error in fetching element status", error)
+    }
 }
 
 /**

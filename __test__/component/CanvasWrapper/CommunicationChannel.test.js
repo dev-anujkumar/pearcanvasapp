@@ -1069,6 +1069,25 @@ describe('Testing communication channel', () => {
                 expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
                 spyhandleIncommingMessages.mockClear()
             });
+            test("Test changeSlateLength function ", () => {
+                const message = "25"
+                const spychangeSlateLength = jest.spyOn(channelInstance, 'changeSlateLength')
+                channelInstance.changeSlateLength(message);
+                expect(channelInstance.changeSlateLength).toHaveBeenCalled()
+                spychangeSlateLength.mockClear()
+            })
+            test('Test for slateLengthChanged case', () => {
+                let event = {
+                    data: {
+                        type: "slateLengthChanged",
+                        message: "25"
+                    }
+                }
+                const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+                channelInstance.handleIncommingMessages(event);
+                expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+                spyhandleIncommingMessages.mockClear()
+            })
         })
     })
 })
