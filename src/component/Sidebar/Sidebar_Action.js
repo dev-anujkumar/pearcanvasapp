@@ -87,8 +87,12 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             inputSubTypeEnum = inputSubType['enum'];
             outputSubTypeEnum = outputSubType['enum'];
         }
-
-    /**
+        /** Remove subtype key on conversion from BQ to P/H/LO*/
+        let textPrimaryOption = ["primary-paragraph", "primary-heading", 'primary-learning-objective']
+        if (oldElementInfo.primaryOption === "primary-blockquote" && oldElementData.subtype && (textPrimaryOption.includes(newElementData.primaryOption))) {
+            delete oldElementData.subtype
+        }
+    /**s
      * Patch [code in If block] - in case list is being converted from toolbar and there are some unsaved changes in current element
      * then send dom html data instead of sending store data
      */
@@ -129,7 +133,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
          * case - if element list is being converted into paragraph from sidepanel
          * [BG-2515] | Remove subtype during list to paragraph or heading conversion
          */
-        if (oldElementInfo.primaryOption === "primary-list" && (newElementData.primaryOption === "primary-paragraph" || newElementData.primaryOption === "primary-heading") && oldElementData.subtype) {
+        if (oldElementInfo.primaryOption === "primary-list" && (textPrimaryOption.includes(newElementData.primaryOption)) && oldElementData.subtype) {
             delete oldElementData.subtype
         }
 
@@ -410,7 +414,7 @@ export const tcmSnapshotsForConversion = async (elementConversionData,indexes,ap
     let convertAppStore = JSON.parse(JSON.stringify(appStore.slateLevelData));
     let convertSlate = convertAppStore[config.slateManifestURN];
     let convertBodymatter = convertSlate.contents.bodymatter;
-    let convertParentData = fetchParentData(convertBodymatter,indexes)
+    let convertParentData = fetchParentData(convertBodymatter,indexes);
     let versionStatus = fetchManifestStatus(convertBodymatter, convertParentData,response.type);
     /** latest version for WE/CE/PE/AS/2C*/
     convertParentData = await checkContainerElementVersion(convertParentData, versionStatus, currentSlateData)
