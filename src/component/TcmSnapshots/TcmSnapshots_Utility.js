@@ -254,7 +254,7 @@ const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex) => {
     let elementTag = `${tag.parentTag}${isHead ? ":" + isHead : ""}${tag.childTag ? ":" + tag.childTag : ""}`;
     let elementId = `${eleId.parentId}${sectionId && isHead === "BODY" ? "+" + sectionId : ""}${eleId.childId ? "+" + eleId.childId : ""}`
     if(eleIndex > -1){
-        elementTag = `${tag.parentTag}${(eleIndex === 0) ? ':C1' : ':C2'}${tag.childTag ? ":" + tag.childTag : ""}`   ;
+        elementTag = `${tag.parentTag}${(eleIndex === 0) ? ':C1' : ':C2'}${tag.childTag ? ":" + tag.childTag : ""}`   
         elementId =  `${eleId.parentId}${eleId.columnId ? "+" + eleId.columnId : ""}${eleId.childId ? "+" + eleId.childId : ""}`
     }
     elementData = {
@@ -279,10 +279,10 @@ export const setDefaultKeys = (actionStatus, isContainer) => {
         projectUrn: config.projectUrn,
         index: 0,
         action: action,
-        status:  (config.tcmStatus && config.tcmStatus == true && status === "") ? "pending" : "accepted",
+        status:  (action == 'delete') ? "pending" : (config.tcmStatus && config.tcmStatus == true && status === "") ? "pending" : "accepted",
         slateType: isContainer === true ? CONTAINER_INTRO : SLATE,/** set based on condition */
     }
-    actionStatus.status = tcmKeys.status
+    actionStatus.status = tcmKeys.status;
     return tcmKeys
 }
 
