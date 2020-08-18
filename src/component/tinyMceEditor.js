@@ -1329,7 +1329,7 @@ export class TinyMceEditor extends Component {
             text: self.getElementTypeForToolbar(self.props.element),
             tooltip : 'formatSelector',
             fetch: function (callback) {
-                var items = FormatSelectors(self.elementConversion)
+                const items = FormatSelectors(self.elementConversion);
                 callback(items);
             }
         });

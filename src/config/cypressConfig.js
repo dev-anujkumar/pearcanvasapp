@@ -26,7 +26,7 @@ let cypressConfig = {
     textcolors:["option1", "option2"],
     isCO : false,
     isLOL:false,
-    toolBarList : ['formatSelector','bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','crossLinkingIcon','assetpopover','slatetag'],
+    toolBarList : ['bold','italic','formatSelector','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','crossLinkingIcon','assetpopover','slatetag'],
     elementToolbar: [],
     showHideToolbar: ['footnote','glossary','assetpopover'],
     hideToolbar : ['footnote','glossary','crossLinkingIcon','assetpopover','orderedlist','unorderedlist'],

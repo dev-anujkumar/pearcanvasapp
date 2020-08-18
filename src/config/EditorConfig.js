@@ -40,70 +40,56 @@ export const GlossaryFootnoteEditorConfig = {
     toolbar: 'bold italic underline strikethrough removeformat subscript superscript tinyMcewirisformulaEditor tinyMcewirisformulaEditorChemistry code'
 }
 
+const FormatSelectorType = [
+    {
+        text: 'Paragraph',
+        value: 'P',
+    },
+    {
+        text: 'Heading 1',
+        value: "H1",
+    },
+    {
+        text: 'Heading 2',
+        value: "H2",
+    },
+    {
+        text: 'Heading 3',
+        value: "H3",
+    },
+    {
+        text: 'Heading 4',
+        value: "H4",
+    },
+    {
+        text: 'Heading 5',
+        value: "H5",
+    },
+    {
+        text: 'Heading 6',
+        value: "H6",
+    },
+    {
+        text: 'Blockquote',
+        value: "BQ",
+    },
+    {
+        text: 'Pullquote',
+        value: "PQ",
+    },
+    {
+        text: 'Learning Objective Item',
+        value: "LO",
+    }
+]
+
 export const FormatSelectors = function(callback){
 
-   return  [
-        {
-            type: 'menuitem',
-            text: 'Paragraph',
-            value: 'P',
-            onAction : function(){callback('P')}
-        },
-        {
-            type: 'menuitem',
-            text: 'Heading 1',
-            value: "H1",
-            onAction : function(){callback('H1')}
-        },
-        {
-            type: 'menuitem',
-            text: 'Heading 2',
-            value: "H2",
-            onAction : function(){callback('H2')}
-        },
-        {
-            type: 'menuitem',
-            text: 'Heading 3',
-            value: "H3",
-            onAction : function(){callback('H3')}
-        },
-        {
-            type: 'menuitem',
-            text: 'Heading 4',
-            value: "H4",
-            onAction : function(){callback('H4')}
-        },
-        {
-            type: 'menuitem',
-            text: 'Heading 5',
-            value: "H5",
-            onAction : function(){callback('H5')}
-        },
-        {
-            type: 'menuitem',
-            text: 'Heading 6',
-            value: "H6",
-            onAction : function(){callback('H6')}
-        },
-        {
-            type: 'menuitem',
-            text: 'Blockquote',
-            value: "BQ",
-            onAction : function(){callback('BQ')}
-        },
-        {
-            type: 'menuitem',
-            text: 'Pullquote',
-            value: "PQ",
-            onAction : function(){callback('PQ')}
-        },
-        {
-            type: 'menuitem',
-            text: 'Learning Objective Item',
-            value: "LO",
-            onAction : function(){callback('LO')}
-        }
-    ]
+    return FormatSelectorType.map((obj)=>{
+        obj.type = 'menuitem';
+        obj.onAction = function(){callback(obj.value)}
+        return obj;
+    });
 }
 
 export const elementTypeOptions = Object.freeze({
@@ -115,47 +101,47 @@ export const elementTypeOptions = Object.freeze({
     'H1' : {
         primaryOption : 'primary-heading',
         secondaryOption : 'secondary-heading-1',
-        label : 'P',
+        label : 'H1',
     },
     'H2' : {
         primaryOption : 'primary-heading',
         secondaryOption : 'secondary-heading-2',
-        label : 'P',
+        label : 'H2',
     },
     'H3' : {
         primaryOption : 'primary-heading',
         secondaryOption : 'secondary-heading-3',
-        label : 'P',
+        label : 'H3',
     },
     'H4' : {
         primaryOption : 'primary-heading',
         secondaryOption : 'secondary-heading-4',
-        label : 'P',
+        label : 'H4',
     },
     'H5' : {
         primaryOption : 'primary-heading',
         secondaryOption : 'secondary-heading-5',
-        label : 'P',
+        label : 'H5',
     },
     'H6' : {
         primaryOption : 'primary-heading',
         secondaryOption : 'secondary-heading-6',
-        label : 'P',
+        label : 'H6',
     },
     'PQ' : {
         primaryOption : 'primary-blockquote',
         secondaryOption : 'secondary-pullquote',
-        label : 'P',
+        label : 'PQ',
     },
     'BQ' : {
         primaryOption : 'primary-blockquote',
         secondaryOption : 'secondary-marginalia-attribution',
-        label : 'P',
+        label : 'BQ',
     },
     'LO' : {
         primaryOption : 'primary-learning-objective',
         secondaryOption : 'secondary-learning-objective',
-        label : 'P',
+        label : 'LO',
     },
 })
 
