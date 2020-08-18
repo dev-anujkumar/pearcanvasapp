@@ -373,26 +373,28 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
  * @param {String} type type of element
  * @returns {Object} Parent Elements' status
 */
-export const fetchManifestStatus = (bodymatter, parentElement, type) => {
-    let parentData = {};
-    const { asideData, parentUrn, poetryData } = parentElement;
+export const fetchManifestStatus = (bodymatter, parentElements, type, indexes) => {
+    let parentData = {}
+    const { asideData, parentUrn, poetryData } = parentElements;
     if ((asideData || parentUrn || poetryData) && bodymatter.length !== 0) {
+        let parentElement = asideData ? asideData : poetryData ? poetryData : parentUrn;
+        let parentId = parentElement && parentElement.id ? parentElement.id : parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "";
+        let element = bodymatter.find(item => item.id == parentId);
         let eleType = type === SECTION_BREAK ? SECTION_BREAK : parentUrn.elementType;
-        let element = bodymatter[0];
         switch (eleType) {
             case SECTION_BREAK:                              /** Create Section-Break */
-                parentData.parentStatus = asideData && asideData.id == element.id ? element.status : undefined;
+                parentData.parentStatus = element && element.status ? element.status : undefined;
                 break;
             case POETRY_ELEMENT:                             /** In Poetry */
-                parentData.parentStatus = poetryData && poetryData.parentUrn == element.id ? element.status : undefined;
+                parentData.parentStatus = element && element.status ? element.status : undefined;
                 break;
             case MULTI_COLUMN_GROUP:                         /** In Multi-Column */
-                parentData.parentStatus = asideData && asideData.id == element.id ? element.status : undefined;
+                parentData.parentStatus = element && element.status ? element.status : undefined;
                 let columndata = element.groupeddata.bodymatter[Number(parentUrn.columnIndex)]
                 parentData.childStatus = parentUrn && columndata.id === parentUrn.manifestUrn ? columndata.status : undefined;
                 break;
             case WE_MANIFEST:                                /** In Section-Break */
-                if (asideData && element.id == asideData.id && element.id !== parentUrn.manifestUrn) {
+                if (asideData && element && element.id !== parentUrn.manifestUrn) {
                     parentData.parentStatus = element.status;
                     element.elementdata && element.elementdata.bodymatter.map((ele) => {
                         parentData.childStatus = parentUrn && ele.id === parentUrn.manifestUrn ? ele.status : undefined;
@@ -402,7 +404,7 @@ export const fetchManifestStatus = (bodymatter, parentElement, type) => {
             case CITATION_GROUP:                             /** In Citations */
             case ELEMENT_ASIDE:                              /** In WE-HEAD | Aside */
             default:
-                parentData.parentStatus = parentUrn && element.id == parentUrn.manifestUrn ? element.status : undefined;
+                parentData.parentStatus = element && element.status ? element.status : undefined;
                 break;
         }
     }
