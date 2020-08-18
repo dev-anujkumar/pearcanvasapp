@@ -27,12 +27,12 @@ i.fa.fa-list-ul:before {
 #listDropWrapper {
     position: absolute;
     background: #fff;
+    margin-top: 40px;
     /* left: -100px !important; */
 }
 
 #listDropWrapper .fr-popup.fr-active {
     display: block;
-    margin-top: -10px;
     width: 275px;
     height: 260px;
 }
