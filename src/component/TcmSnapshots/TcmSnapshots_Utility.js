@@ -382,12 +382,6 @@ export const fetchManifestStatus = (bodymatter, parentElements, type, indexes) =
         let element = bodymatter.find(item => item.id == parentId);
         let eleType = type === SECTION_BREAK ? SECTION_BREAK : parentUrn.elementType;
         switch (eleType) {
-            case SECTION_BREAK:                              /** Create Section-Break */
-                parentData.parentStatus = element && element.status ? element.status : undefined;
-                break;
-            case POETRY_ELEMENT:                             /** In Poetry */
-                parentData.parentStatus = element && element.status ? element.status : undefined;
-                break;
             case MULTI_COLUMN_GROUP:                         /** In Multi-Column */
                 parentData.parentStatus = element && element.status ? element.status : undefined;
                 let columndata = element.groupeddata.bodymatter[Number(parentUrn.columnIndex)]
@@ -401,8 +395,10 @@ export const fetchManifestStatus = (bodymatter, parentElements, type, indexes) =
                     })
                 }
                 break;
-            case CITATION_GROUP:                             /** In Citations */
             case ELEMENT_ASIDE:                              /** In WE-HEAD | Aside */
+            case SECTION_BREAK:                              /** Create Section-Break */
+            case POETRY_ELEMENT:                             /** In Poetry */
+            case CITATION_GROUP:                             /** In Citations */
             default:
                 parentData.parentStatus = element && element.status ? element.status : undefined;
                 break;
