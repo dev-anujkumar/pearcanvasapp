@@ -74,9 +74,18 @@ export const tcmSnapshot = (slateManifestUrn,slateEntityUrn) => (dispatch, getSt
      * @description Send TCM Snapshot for the element
      * @param {Object} snapshotData | TCM Snapshot data
 */
+
+var timerID;
+var allSnapshotData = [];
 export const sendElementTcmSnapshot = async (snapshotData) => {
-        // let url = 'http://localhost:4000/tctxsnapshot'
-        let url = `/cypress/trackchanges-srvr/tctxsnapshot`;
+        allSnapshotData.push(snapshotData);
+        if (timerID) clearTimeout(timerID); 
+        timerID = setTimeout( async() => {await callSnapshotAPI(allSnapshotData); allSnapshotData=[]}, 2000)
+}
+
+const callSnapshotAPI = async(snapshotData) => {
+     // let url = 'http://localhost:4000/tctxsnapshot'
+     let url = `/cypress/trackchanges-srvr/tctxsnapshot`;
         return axios.post(url, snapshotData, {
         headers: {
             PearsonSSOSession: config.ssoToken
@@ -86,7 +95,6 @@ export const sendElementTcmSnapshot = async (snapshotData) => {
     }).catch((error) => {
         console.log("Error in sending TCM Snapshots>>>>",error)
     })
-
 }
 
 /**
