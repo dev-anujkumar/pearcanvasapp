@@ -25,7 +25,8 @@ const plugin = [
         //To add defer property in script tags
         defaultAttribute: 'defer'
     }),
-    new CopyPlugin([
+    new CopyPlugin({ 
+        patterns:[
         {
             from: path.join(__dirname, 'src/favicon.ico'),
             to: path.join(__dirname, 'dist/'),
@@ -34,7 +35,8 @@ const plugin = [
             from: path.join(__dirname, 'src/static/health.html'),
             to: path.join(__dirname, 'dist/')
         }
-    ]),
+    ]}
+    ),
     // To prevent vendor hash id to change everytime
     new webpack.HashedModuleIdsPlugin(),
     // This doesn't work with [contenthash] or [chunkhash] and uncomment it if HMR is needed

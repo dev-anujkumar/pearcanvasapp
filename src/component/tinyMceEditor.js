@@ -674,6 +674,9 @@ export class TinyMceEditor extends Component {
                                     }
                                 }
                             }
+                            let bceNode = document.getElementsByClassName("element-container bce active")
+                            let codeSnippetNode = bceNode && bceNode[0] && bceNode[0].getElementsByClassName("pearson-component blockcode codeSnippet blockCodeDiv")
+                            codeSnippetNode && codeSnippetNode[0] && codeSnippetNode[0].scroll(0,0)
                         }
                     }
                     else if (key != undefined && (key === 8 || key === 46)) {

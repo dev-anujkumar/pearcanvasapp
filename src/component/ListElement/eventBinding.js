@@ -5,6 +5,7 @@
 
 // IMPORT - dependencies
 require('./polyfills.js')
+import tinyMCE from 'tinymce';
 
 /* ------------------------------ START - List toolbar button methods ----------------------------- */
 /**
@@ -321,6 +322,13 @@ export const bindKeyDownEvent = (editor, e, element,showHideCallback) => {
             listUpdatedOnce = true;
             return false;
         });
+
+        let activeLiNode = document.getElementsByClassName("cypress-editable mce-content-body mce-edit-focus")
+        
+        if (activeLiNode && activeLiNode[0]) {
+            const activeNodeOffsetLeft = tinyMCE.$(editor.selection.getNode())[0].offsetLeft
+            activeLiNode[0].scrollLeft = activeNodeOffsetLeft
+        }
     }
     if (isOnlyListElement && !listUpdatedOnce) {
         let timeoutInstance = setTimeout(() => {
