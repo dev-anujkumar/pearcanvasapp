@@ -261,3 +261,6 @@ button[title="Cross Linking"] .tox-tbtn__select-label {
 .tox .tox-tbtn--enabled svg {
   background-color: #d4eae4!important;
 }
+.tox .tox-split-button:hover{
+  box-shadow: 0 0 0 0 #dee0e2 inset!important;
+}
