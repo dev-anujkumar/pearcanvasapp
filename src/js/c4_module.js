@@ -146,9 +146,6 @@ export const c4PublishObj = {
             
             _.delay(() => {
                 window.open(previewURL, '_blank');
-                $("#blocker.blocker, #loader.loader").css({
-                    visibility: "hidden"
-                });
             }, 1100);
 
         } else {
