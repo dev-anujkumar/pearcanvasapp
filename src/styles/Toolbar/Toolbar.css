@@ -252,7 +252,41 @@ button[title="Cross Linking"] .tox-tbtn__select-label {
 .tox .tox-tbtn--enabled :not(svg) {
   fill: #005a70!important;
 }
+.tox .tox-tbtn--enabled :not(svg) {
+  fill: #005a70!important;
+}
 .tox .tox-tbtn:hover:not(.tox-tbtn--disabled) {
+  background: none!important;
+}
+div[title="Ordered List"] span.tox-tbtn__icon-wrap svg {
+  margin-left: 5px;
+}
+div[title="Ordered List"].tox-split-button:hover {
+  box-shadow: none!important;
+}
+div[title="Ordered List"].tox-split-button:focus {
+  background: none!important;
+}
+div[title="Ordered List"] .tox-tbtn.tox-split-button__chevron:active{
+  background: none!important;
+}
+div[title="Ordered List"] .tox-tbtn.tox-split-button__chevron:focus{
+  background: none!important;
+}
+div[title="Ordered List"] span.tox-split-button__chevron svg {
+  width : 15px;
+  margin-right: 5px;
+}
+div[title="Ordered List"] span.tox-split-button__chevron svg:focus {
+  background: #d4eae4!important;
+}
+div[title="Ordered List"] span.tox-split-button__chevron svg:active {
+  background: #d4eae4!important;
+}
+.tox .tox-tbtn:active {
+  background: none!important;
+}
+.tox .tox-tbtn:focus {
   background: none!important;
 }
 .tox .tox-tbtn:hover:not(.tox-tbtn--disabled) svg {
