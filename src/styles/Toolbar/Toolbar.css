@@ -253,7 +253,7 @@ button[title="Cross Linking"] .tox-tbtn__select-label {
   fill: #005a70!important;
 }
 .tox .tox-tbtn:hover:not(.tox-tbtn--disabled) {
-  background: none!important;
+  background-color: #f3f7f8!important;
 }
 .tox .tox-tbtn:hover:not(.tox-tbtn--disabled) svg {
   background-color: #f3f7f8!important;
@@ -267,10 +267,24 @@ button[title="Cross Linking"] .tox-tbtn__select-label {
 .tox-menu.tox-collection.tox-collection--list.tox-selected-menu{
   overflow : hidden!important;
   max-height: none!important;
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 4px 5px 0 rgba(0, 0, 0, 0.14);
+  border: 0;
 }
 button[title="formatSelector"] span.tox-tbtn__select-label{
-  min-width : 145px!important;
+  min-width : 126px!important;
   cursor:pointer!important;
+  overflow-wrap: normal;
+  white-space: nowrap;
+  width: 50px;
+  overflow: hidden;
+  text-overflow: clip;
+}
+button[title="formatSelector"].tox-tbtn--select{
+  max-width : 162px!important;
+  
+}
+button[title="formatSelector"]:hover{
+  background-color: #f3f7f8!important;
 }
 .tox-toolbar__group:last-child{
   border-right: 1px solid #ccc;
@@ -291,4 +305,18 @@ button[title="formatSelector"] span.tox-tbtn__select-label{
 }
 .tox-tbtn{
   cursor:pointer!important;
+}
+.tox-collection__item-label{
+    font-size: 16px!important;
+    line-height: 2.5!important;
+    letter-spacing: normal;
+    color: #000000!important;
+}
+.tox .tox-collection--list .tox-collection__item {
+  padding: 0 10px!important;
+}
+.tox-tbtn__select-label{
+  font-size: 16px!important;
+  line-height: 2!important;
+  color: #000000!important;
 }

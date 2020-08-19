@@ -61,7 +61,7 @@
 }
 
 .content-composer .workspace .artboard-container {
-    width: 84%;
+    width: 800px;
     float: left;
     height: 100%;
     display: block;
@@ -110,7 +110,7 @@
     float: left;
 }
 .artboard-parent{
-    width: 80%;
+    width: 960px;
     margin: 0 auto;
     height: 100%;
 }
@@ -179,17 +179,17 @@ padding: 3px;
 }
 @media screen and (max-width: 1500px) {
 .artboard-parent{
-width:84%;
+width:850px;
 }
 .content-composer .workspace .artboard-container{
-width:80%;
+width:700px;
 }
 }
 @media screen and (max-width: 1024px) {
 .artboard-parent{
-    width:86%;
+    width:700px;
 }
 .content-composer .workspace .artboard-container{
-    width: 75%;
+    width: 540px;
 }
 }
