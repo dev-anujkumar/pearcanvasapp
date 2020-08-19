@@ -13,7 +13,7 @@
 }
 
 .element-container.active:not(.ct) {
-    border: 1.5px solid #149632;
+    border: 1.5px solid #005a70;
     padding: 1px 7px;
 }
 

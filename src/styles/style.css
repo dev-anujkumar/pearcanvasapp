@@ -341,11 +341,11 @@ abbr[title="Slate Link"] sup::after {
 
 /*  Cross Link dropdown color Design  */
 .tox .tox-collection--list .tox-collection__item--active:not(.tox-collection__item--state-disabled){
-    background-color: #007FA3 !important;
+    background-color: #efefef !important;
 }
 
 .tox .tox-collection--list .tox-collection__item--active:not(.tox-collection__item--state-disabled) .tox-collection__item-label{
-    color: #ffffff !important;
+    color: #000000 !important;
 }
 p code, ul code, ol code{
     color: inherit;

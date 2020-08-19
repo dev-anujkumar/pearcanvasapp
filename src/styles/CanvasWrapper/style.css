@@ -62,14 +62,14 @@
 
 .content-composer .workspace .artboard-container {
     width: 800px;
+    float: left;
     height: 100%;
     display: block;
-    margin: 0 auto;
+    margin: 0 11px 0 11px;
     justify-content: space-around;
     position: relative;
     /*padding-left: 90px;*/
     background-color: #fafafa;
-    float: left;
     /* height: calc(100% - 62px); */
 }
 
@@ -104,9 +104,14 @@
     height : 100%;
 }
 .navigation-container{
-    width:70px;
+    width: 62px;
     height: 100%;
     float: left;
+}
+.artboard-parent{
+    width: 960px;
+    margin: 0 auto;
+    height: 100%;
 }
 .navigation-content{
     position: absolute;
@@ -165,9 +170,25 @@
     text-align: center;
     color: #005a70;
   }
-  .collapse-arrow{
-    border: solid black;
-    border-width: 0 3px 3px 0;
-    display: inline-block;
-    padding: 3px;
-  }
+.collapse-arrow{
+border: solid black;
+border-width: 0 3px 3px 0;
+display: inline-block;
+padding: 3px;
+}
+@media screen and (max-width: 1500px) {
+.artboard-parent{
+width:850px;
+}
+.content-composer .workspace .artboard-container{
+width:700px;
+}
+}
+@media screen and (max-width: 1024px) {
+.artboard-parent{
+    width:700px;
+}
+.content-composer .workspace .artboard-container{
+    width: 540px;
+}
+}
