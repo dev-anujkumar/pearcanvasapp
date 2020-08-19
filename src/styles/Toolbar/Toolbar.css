@@ -60,12 +60,12 @@
   }
 
   .toolbar-container{
-    width: 100%;
+    width: 96%;
     display: flex;
     justify-content: center;
     align-items: center;
-    height:100%
-    /* border: solid 1px #e0e0e0; */
+    height:100%;
+    float:left;
   }
 
   .elemBorderText{
@@ -263,4 +263,32 @@ button[title="Cross Linking"] .tox-tbtn__select-label {
 }
 .tox .tox-split-button:hover{
   box-shadow: 0 0 0 0 #dee0e2 inset!important;
+}
+.tox-menu.tox-collection.tox-collection--list.tox-selected-menu{
+  overflow : hidden!important;
+  max-height: none!important;
+}
+button[title="formatSelector"] span.tox-tbtn__select-label{
+  min-width : 145px!important;
+  cursor:pointer!important;
+}
+.tox-toolbar__group:last-child{
+  border-right: 1px solid #ccc;
+}
+.collapse-header{
+  float: right;
+  display: flex;
+  align-items: center;
+  display: flex;
+  height: 100%;
+  margin-right: 16px;
+}
+.collapse-header svg{
+  cursor: pointer;
+}
+.tox-toolbar__group{
+  cursor:default!important;
+}
+.tox-tbtn{
+  cursor:pointer!important;
 }

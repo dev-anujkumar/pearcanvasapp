@@ -6,20 +6,17 @@ import '../../styles/Toolbar/Toolbar.css';
 import SlateTagDropdown from '../ElementMetaDataAnchor/SlateTagDropdown.jsx';
 
 import { toggleElemBordersAction, toggleLODropdown } from './Toolbar_Actions.js';
-import { slateTagDisable, slateTagEnable } from '../../images/TinyMce/TinyMce.jsx';
-import {
-    audioNarration,
-    audioNarrationEnable
-} from '../../images/TinyMce/TinyMce.jsx';
+import { slateTagDisable, slateTagEnable, audioNarration, audioNarrationEnable, collapseHeader, expandHeader } from '../../images/TinyMce/TinyMce.jsx';
 import { checkSlateLock } from '../../js/slateLockUtility.js'
 import AddAudioBook from '../AudioNarration/AddAudioBook.jsx';
 import OpenAudioBook from '../AudioNarration/OpenAudioBook.jsx'
-import { hasReviewerRole } from '../../constants/utility.js'
+import { hasReviewerRole, sendDataToIframe } from '../../constants/utility.js'
 
 const _Toolbar = props => {
     const [lodropdown, setLODropdown] = useState(false);
     const [addDropDown, setValueAdd] = useState(false);
     const [openDropDown, setValueOpen] = useState(false);
+    const [showHeader, setHeaderValue] = useState(true);
 
     useEffect(() => {
         setLODropdown(false);
@@ -30,9 +27,9 @@ const _Toolbar = props => {
         changeAudioNarration() 
     }, [props.openAudio ,props.addAudio])
 
-       /**
-     * Function for show/hide slate tag icon
-     */
+    /**
+    * Function for show/hide slate tag icon
+    */
     function hideSlateTagIcon() {
         if (document.getElementsByClassName("slate-tag-icon").length) {
             document.getElementsByClassName("slate-tag-icon")[0].style.display = "block";
@@ -84,10 +81,18 @@ const _Toolbar = props => {
     function closeAddAudioBook() {
         setValueAdd(!addDropDown);
     }
+
+    /**
+     * Function for show/hide header
+     */
+    function showHideHeader() {
+        setHeaderValue(!showHeader);
+        sendDataToIframe({ 'type': 'collapseHeader', 'message': !showHeader});
+    }
     let accessToolbar = (props.permissions && props.permissions.includes('access_formatting_bar')) ? "" : " disableToolbar"
 
     return (
-
+        <>
         <div className='toolbar-container'>
             <div className={"header" + accessToolbar} id="tinymceToolbar"></div>
             {/* ***********************Slate Tag in toolbar******************************************** */}
@@ -145,9 +150,14 @@ const _Toolbar = props => {
                     </div>
                 </div>
             }
-            <div className="collapse-header"><i className="collapse-arrow up-arrow-transform"></i></div>
             {/* *****end**** */}
         </div>
+            {/* ***********************Collapse Header******************************************** */}
+            <div className="collapse-header" onClick={() => { showHideHeader() }}>
+                {showHeader ? collapseHeader : expandHeader}
+            </div>
+    </>
+        
     )
 }
 

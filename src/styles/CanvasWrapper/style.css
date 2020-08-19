@@ -34,12 +34,12 @@
     float: left;
     width: 100%;
     display: inline-block;
-    margin-bottom: 25px;
+    margin-bottom: 5px;
 }
 
 #artboard-containers {
     height: 100%;
-    padding-left: 30px;
+    padding-left: 40px;
     /* overflow:auto; */
     /* width: 100%; */
 }
