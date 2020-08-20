@@ -247,6 +247,8 @@ export class TinyMceEditor extends Component {
     }
 
     onListButtonClick = (type) => {
+        this.elementConverted = true;
+        this.removeListHighliting();
         this.props.onListSelect(type, "");
     }
 
@@ -671,6 +673,9 @@ export class TinyMceEditor extends Component {
                                     }
                                 }
                             }
+                            let bceNode = document.getElementsByClassName("element-container bce active")
+                            let codeSnippetNode = bceNode && bceNode[0] && bceNode[0].getElementsByClassName("pearson-component blockcode codeSnippet blockCodeDiv")
+                            codeSnippetNode && codeSnippetNode[0] && codeSnippetNode[0].scroll(0,0)
                         }
                     }
                     else if (key != undefined && (key === 8 || key === 46)) {
@@ -2108,11 +2113,36 @@ export class TinyMceEditor extends Component {
         if (isBlockQuote) {
             this.lastContent = document.getElementById('cypress-' + this.props.index).innerHTML;
         }
+        if(this.elementConverted){
+            document.querySelector('button[title="formatSelector"] .tox-tbtn__select-label').innerText = this.getElementTypeForToolbar(this.props.element);
+            if(this.props.element.type="element-list"){
+                this.highlightListIcon();
+            }
+            this.elementConverted = false;
+        }
         this.removeMultiTinyInstance();
         this.handlePlaceholder()
         tinymce.$('.blockquote-editor').attr('contenteditable', false)
     }
 
+    removeListHighliting = _ => {
+        let listToolbar = document.querySelector('button[title="Unordered List"]')
+        listToolbar && listToolbar.classList.remove('tox-tbtn--enabled')
+
+        listToolbar = document.querySelector('div[title="Ordered List"]')
+        listToolbar && listToolbar.classList.remove('tox-tbtn--enabled')
+    }
+
+    highlightListIcon = _ => {
+        if (this.props.element.subtype === "disc") {
+            let listToolbar = document.querySelector('button[title="Unordered List"]')
+            listToolbar && listToolbar.classList.add('tox-tbtn--enabled')
+        } else {
+            let listToolbar = document.querySelector('div[title="Ordered List"]');
+            listToolbar && listToolbar.classList.add('tox-tbtn--enabled')
+        }
+    }
+    
     removeMultiTinyInstance = () => {
         let tinyMCEInstancesNodes = document.getElementsByClassName('tox tox-tinymce tox-tinymce-inline');
 
@@ -2418,6 +2448,12 @@ export class TinyMceEditor extends Component {
                     assetPopoverButtonNode.setAttribute("aria-disabled", false)
                     assetPopoverButtonNode.removeAttribute('aria-pressed')
                     assetPopoverButtonNode.classList.remove('tox-tbtn--disabled')
+                }
+                if(this.props.element.type==="element-list"){
+                    this.highlightListIcon();
+                } 
+                else{
+                    this.removeListHighliting();
                 }
             })
         });
