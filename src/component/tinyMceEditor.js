@@ -1373,7 +1373,6 @@ export class TinyMceEditor extends Component {
                 return 'Paragraph'
         }
     }
-
     editorPaste = (editor) => {
         editor.on('paste', (e) => {
             let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
