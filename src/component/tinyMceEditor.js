@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 //IMPORT TINYMCE 
 import tinymce from 'tinymce/tinymce';
@@ -11,7 +10,7 @@ import "tinymce/plugins/lists";
 import "tinymce/plugins/advlist";
 import "tinymce/plugins/paste";
 // IMPORT - Components & Dependencies //
-import { EditorConfig, FormatSelectors, elementTypeOptions } from '../config/EditorConfig';
+import { EditorConfig } from '../config/EditorConfig';
 import config from '../config/config';
 import { insertListButton, bindKeyDownEvent, insertUoListButton, preventRemoveAllFormatting, removeTinyDefaultAttribute } from './ListElement/eventBinding.js';
 import { authorAssetPopOver } from './AssetPopover/openApoFunction.js';
@@ -26,8 +25,6 @@ import { sendDataToIframe, hasReviewerRole } from '../constants/utility.js';
 import store from '../appstore/store';
 import { MULTIPLE_LINE_POETRY_ERROR_POPUP } from '../constants/Action_Constants';
 import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER } from '../component/SlateWrapper/SlateWrapperConstants.js';
-import { conversionElement } from './Sidebar/Sidebar_Action';
-import elementList from './Sidebar/elementTypes';
 let context = {};
 let clickedX = 0;
 let clickedY = 0;
@@ -1324,49 +1321,48 @@ export class TinyMceEditor extends Component {
 
 
     changeTextElements = editor => {
-        const self = this;
-        editor.ui.registry.addMenuButton('formatSelector', {
-            text: self.getElementTypeForToolbar(self.props.element),
-            tooltip : 'formatSelector',
+        editor.ui.registry.addSplitButton('mybutton', {
+            text: 'Paragraph',
+            onAction: function (_) {
+                return false;
+            },
+            onItemAction: function (buttonApi, value) {
+            },
             fetch: function (callback) {
-                const items = FormatSelectors(self.elementConversion);
+                let items = [
+                    {
+                        type: 'choiceitem',
+                        text: 'Paragrapgh',
+                    },
+                    {
+                        type: 'choiceitem',
+                        text: 'Heading 1',
+                        value: "H1"
+                    },
+                    {
+                        type: 'choiceitem',
+                        text: 'Heading 2',
+                    },
+                    {
+                        type: 'choiceitem',
+                        text: 'Heading 3',
+                    },
+                    {
+                        type: 'choiceitem',
+                        text: 'Heading 4',
+                    },
+                    {
+                        type: 'choiceitem',
+                        text: 'Heading 5',
+                    },
+                    {
+                        type: 'choiceitem',
+                        text: 'Heading 6',
+                    }
+                ];
                 callback(items);
             }
         });
-    }
-
-    elementConversion = (convertTo) => {
-        const value = elementTypeOptions[convertTo].primaryOption;
-        const labelText = elementTypeOptions[convertTo].label;
-        const secondaryOption = elementTypeOptions[convertTo].secondaryOption;
-        this.props.conversionElement({
-            elementId: this.props.element.id,
-            elementType: 'element-authoredtext',
-            primaryOption: value,
-            secondaryOption: secondaryOption,
-            labelText: labelText,
-            toolbar: elementList['element-authoredtext'][value].toolbar
-        });
-        this.elementConverted = true;
-    }
-
-    getElementTypeForToolbar = (element) => {
-        switch (element.type) {
-            case "element-authoredtext":
-                if (element.elementdata.headers)
-                    return `Heading ${element.elementdata.headers[0].level}`
-                else
-                    return "Paragraph"
-            case "element-blockfeature":
-                if (element.elementdata.type === "pullquote")
-                    return "Pullquote"
-                else
-                    return "Blockquote"
-            case "element-learningobjectives":
-                return "Learning Objective Item"
-            default:
-                return 'Paragraph'
-        }
     }
 
 
@@ -2112,10 +2108,6 @@ export class TinyMceEditor extends Component {
         if (isBlockQuote) {
             this.lastContent = document.getElementById('cypress-' + this.props.index).innerHTML;
         }
-        if(this.elementConverted){
-            document.querySelector('button[title="formatSelector"] .tox-tbtn__select-label').innerText = this.getElementTypeForToolbar(this.props.element);
-            this.elementConverted = false;
-        }
         this.removeMultiTinyInstance();
         this.handlePlaceholder()
         tinymce.$('.blockquote-editor').attr('contenteditable', false)
@@ -2708,7 +2700,4 @@ TinyMceEditor.defaultProps = {
     error: null,
 };
 
-export default connect(
-    null, 
-    { conversionElement }
-)(TinyMceEditor);
+export default TinyMceEditor;

@@ -18,7 +18,7 @@ import { getSlateLockStatus, releaseSlateLock } from './SlateLock_Actions'
 import GlossaryFootnoteMenu from '../GlossaryFootnotePopup/GlossaryFootnoteMenu.jsx';
 import {updateElement, getTableEditorData, clearElementStatus}from '../../component/ElementContainer/ElementContainer_Actions'
 // IMPORT - Actions //
-import { fetchSlateData, fetchSlateAncestorData, fetchAuthUser, openPopupSlate, setSlateLength } from './CanvasWrapper_Actions';
+import { fetchSlateData, fetchSlateAncestorData, fetchAuthUser, openPopupSlate, setSlateLength, setNavigationStatus } from './CanvasWrapper_Actions';
 import {toggleCommentsPanel,fetchComments,fetchCommentByElement} from '../CommentsPanel/CommentsPanel_Action'
 import { convertToListElement } from '../ListElement/ListElement_Action.js';
 import { handleSplitSlate,setUpdatedSlateTitle, setSlateType, setSlateEntity, setSlateParent } from '../SlateWrapper/SlateWrapper_Actions'
@@ -80,7 +80,7 @@ export class CanvasWrapper extends Component {
 
     componentDidUpdate(prevProps, prevState){
         this.countTimer =  Date.now();
-
+        
         var targetNode = document.querySelector('body');
         // Options for the observer (which mutations to observe)		
         var config = { attributes: true };
@@ -191,7 +191,7 @@ export class CanvasWrapper extends Component {
                         <div id='artboard-containers'>
                             <div class="artboard-parent">
                                 {/*Prev Button */}
-                                <div className='navigation-container'>
+                                <div className={`navigation-container ${this.props.glossaryFootnoteValue.popUpStatus || this.props.navigationDisabled ? 'disabled':""}`}>
                                     <div className={(!config.disablePrev) ? 'navigation-content' : 'navigation-content disableNavigation'}>
                                         <div className='navigation-button' onClick={() => this.handleNavClick("back")}>
                                             <div className='navigation-icon'><i class="nav-arrow left-arrow-transform"></i></div>
@@ -207,7 +207,7 @@ export class CanvasWrapper extends Component {
                                     </RootContext.Provider>
                                 </div>
                                  {/*Next Button */}
-                                <div className='navigation-container'>
+                                <div className={`navigation-container ${this.props.glossaryFootnoteValue.popUpStatus || this.props.navigationDisabled ? 'disabled':""}`}>
                                     <div className={(!config.disableNext) ? 'navigation-content' : 'navigation-content disableNavigation'} >
                                         <div className='navigation-button' onClick={() => this.handleNavClick("next")}>
                                             <div className='navigation-icon'><i class="nav-arrow right-arrow-transform"></i></div>
@@ -260,7 +260,8 @@ const mapStateToProps = state => {
         logout,
         withinLockPeriod: state.slateLockReducer.withinLockPeriod,
         ErrorPopup: state.errorPopup,
-        pageNumberToggle: state.toolbarReducer.pageNumberToggle
+        pageNumberToggle: state.toolbarReducer.pageNumberToggle,
+        navigationDisabled: state.appStore.navigationDisabled
     };
 };
 
@@ -299,6 +300,7 @@ export default connect(
         fetchSlateAncestorData,
         setSlateLength,
         toggleElemBordersAction,
-        togglePageNumberAction
+        togglePageNumberAction,
+        setNavigationStatus
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

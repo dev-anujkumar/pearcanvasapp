@@ -320,3 +320,9 @@ button[title="formatSelector"]:hover{
   line-height: 2!important;
   color: #000000!important;
 }
+.tox-tbtn--select.tox-tbtn--active{
+  background:#d4eae4!important
+}
+.tox-tbtn--select.tox-tbtn--active .tox-tbtn__select-label{
+  color:#005a70!important;
+}

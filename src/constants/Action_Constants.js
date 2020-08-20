@@ -119,3 +119,6 @@ export const GET_TCM_STATUS_OF_PROJECT = 'GET_TCM_STATUS_OF_PROJECT'
 
 /*--------------- Long Slate load ----------------*/
 export const SET_SLATE_LENGTH = 'SET_SLATE_LENGTH'
+
+/*--------------- Navigation ----------------*/
+export const NAVIGATION_DISABLE = 'NAVIGATION_DISABLE'
