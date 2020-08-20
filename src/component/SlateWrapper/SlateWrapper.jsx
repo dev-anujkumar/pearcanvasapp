@@ -879,11 +879,11 @@ class SlateWrapper extends Component {
         try {
             if (_elements !== null && _elements !== undefined) {
                 this.renderButtonsonCondition(_elements);
-                if (_elements.length === 0 && _slateType == "assessment") {
-                    this.isDefaultElementInProgress = true;
+                if (_elements.length === 0 && _slateType == "assessment" && config.isDefaultElementInProgress) {
+                    config.isDefaultElementInProgress = false;
                     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
                     this.props.createElement(ELEMENT_ASSESSMENT, "0", '', '', '', '', () => {
-                        this.isDefaultElementInProgress = false;
+                        config.isDefaultElementInProgress = true;
                     });
                 }
                 else if (_elements.length === 0 && _slateType != "assessment") {
