@@ -23,7 +23,7 @@ import {
 import { sendDataToIframe } from '../../constants/utility.js';
 import { HideLoader, ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
-import { prepareTcmSnapshots, fetchManifestStatus, checkContainerElementVersion } from '../TcmSnapshots/TcmSnapshots_Utility.js';
+import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 let elementType = ['WORKED_EXAMPLE', 'CONTAINER', 'SECTION_BREAK', 'TEXT', 'CITATION', 'ELEMENT_CITATION', 'POETRY', 'STANZA' , 'MULTI_COLUMN'];
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
@@ -54,7 +54,6 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         _requestData["columnName"] = parentUrn.columnName
     }
 
-    // prepareDataForTcmUpdate(_requestData, parentUrn, asideData, poetryData) // remove this line
     return axios.post(`${config.REACT_APP_API_URL}v1/slate/element`,
         JSON.stringify(_requestData),
         {
@@ -70,7 +69,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         let currentSlateData = newParentData[config.slateManifestURN];
 
         /** [PCAT-8289] ---------------------------- TCM Snapshot Data handling ------------------------------*/
-        if (elementType.indexOf(type) !== -1) {
+        // if (elementType.indexOf(type) !== -1) {
             let containerElement = {
                 asideData: asideData,
                 parentUrn: parentUrn,
@@ -85,7 +84,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 response: createdElemData.data
             };
             tcmSnapshotsForCreate(slateData, type, containerElement, dispatch);
-        }
+        // }
         /**---------------------------------------------------------------------------------------------------*/
 
         if (currentSlateData.status === 'approved') {
@@ -251,30 +250,6 @@ function prepareDataForTcmCreate(type, createdElementData, getState, dispatch) {
             data: tcmData
         }
     })
-}
-
-/**
- * @function tcmSnapshotsForCreate
- * @description-This function is to prepare snapshot during create element process
- * @param {Object} elementCreateData - Object containing required element data
- * @param {String} type - type of element
- * @param {Object} containerElement - Element Parent Data
- * @param {Function} dispatch to dispatch tcmSnapshots
-*/
-export const tcmSnapshotsForCreate = async (elementCreateData, type, containerElement, dispatch) => {
-    const actionStatus = {
-        action:"create",
-        status:"",
-        fromWhere:"create"
-    }
-    let containerType = ['WORKED_EXAMPLE', 'CONTAINER', 'CITATION', 'POETRY', 'MULTI_COLUMN'];
-    let versionStatus = {};
-    /** This condition is required to check version of elements when bodymatter has elements and is not a container on slate */
-    if (elementCreateData.bodymatter && elementCreateData.bodymatter.length !== 0 && (containerType.indexOf(type) === -1)) {
-        versionStatus = fetchManifestStatus(elementCreateData.bodymatter, containerElement, type);
-    }
-    containerElement = await checkContainerElementVersion(containerElement, versionStatus, elementCreateData.currentSlateData);
-    prepareTcmSnapshots(elementCreateData.response, actionStatus, containerElement, type,"");
 }
 
 export const swapElement = (dataObj, cb) => (dispatch, getState) => {

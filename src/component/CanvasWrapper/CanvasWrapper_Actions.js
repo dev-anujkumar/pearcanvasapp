@@ -26,6 +26,8 @@ import { fetchAllSlatesData, setCurrentSlateAncestorData } from '../../js/getAll
 import { handleTCMData, tcmSnapshot } from '../TcmSnapshots/TcmSnapshot_Actions.js';
 import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
 import { ELM_INT } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
+import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
+
 const findElementType = (element, index) => {
     let elementType = {};
     elementType['tag'] = '';
@@ -850,6 +852,21 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
             popupField,
             createdFromFootnote
         }
+        const parentData = getState().appStore.slateLevelData;
+        const newParentData = JSON.parse(JSON.stringify(parentData));
+        let currentSlateData = newParentData[config.slateManifestURN];
+        let containerElement = {
+            parentElement:parentElement
+        };
+        let slateData = {
+            currentSlateData: {
+                status: currentSlateData.status,
+                contentUrn: currentSlateData.contentUrn
+            },
+            bodymatter: currentSlateData.contents.bodymatter,
+            response: response.data
+        };
+        tcmSnapshotsForCreate(slateData, popupField, containerElement, dispatch);
         appendCreatedElement(argObj, response.data)
 
     })

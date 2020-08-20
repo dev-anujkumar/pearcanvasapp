@@ -6,6 +6,7 @@ export default {
     HEADING: "heading",
     PARAGRAPH: "paragraph",
     LEARNING_OBJECTIVE: "element-learningobjectives",
+    FORMATTED_TITLE:'formatted-title',
     /****************Container Elements*********************/
     ASIDE:"aside",
     SLATE:"slate",
@@ -16,6 +17,8 @@ export default {
     WORKED_EXAMPLE: "workedexample",
     CONTAINER_INTRO:"container-introduction",
     MULTI_COLUMN_GROUP:"group",
+    POP_UP:'POP_UP',
+    POPUP_ELEMENT:'popup',
     /****************Citation elment************************/
     CITATION_GROUP: "citations",
     CITATION_ELEMENT: "element-citation",

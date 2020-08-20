@@ -203,9 +203,9 @@ export const prepareAssetPopoverSnapshotContent = async (assetsList) => {
  * @param {Object} element - element details
  * @returns {String} Element Tags for elementType key in Snapshots
 */
-export const fetchElementsTag = (element) => {
+export const fetchElementsTag = (element,popupType) => {
     let labelText, eleTag, eleType, eleSubType;
-    eleType = element.type ? element.type :  element.elementType;
+    eleType = popupType ? popupType : element.type ? element.type :  element.elementType;
     switch (eleType) {
         case AUTHORED_TEXT:
             eleSubType = (element.elementdata && element.elementdata.headers) ? HEADING + element.elementdata.headers[0].level : PARAGRAPH;
@@ -302,6 +302,15 @@ const setElementTag = {
     },
     "manifest": {
         parentTag: "WE"
+    },
+    "popup": {
+        parentTag: "POP"
+    },
+    "popup_cta": {
+        parentTag: "CTA"
+    },
+    "popup_label": {
+        parentTag: "LB"
     },
     "element-aside": {
         subtype: {
