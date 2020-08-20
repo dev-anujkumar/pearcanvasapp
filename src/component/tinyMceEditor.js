@@ -250,6 +250,8 @@ export class TinyMceEditor extends Component {
     }
 
     onListButtonClick = (type) => {
+        this.elementConverted = true;
+        this.removeListHighliting();
         this.props.onListSelect(type, "");
     }
 
@@ -2117,6 +2119,9 @@ export class TinyMceEditor extends Component {
         }
         if(this.elementConverted){
             document.querySelector('button[title="formatSelector"] .tox-tbtn__select-label').innerText = this.getElementTypeForToolbar(this.props.element);
+            if(this.props.element.type="element-list"){
+                this.highlightListIcon();
+            }
             this.elementConverted = false;
         }
         this.removeMultiTinyInstance();
@@ -2124,6 +2129,24 @@ export class TinyMceEditor extends Component {
         tinymce.$('.blockquote-editor').attr('contenteditable', false)
     }
 
+    removeListHighliting = _ => {
+        let listToolbar = document.querySelector('button[title="Unordered List"]')
+        listToolbar && listToolbar.classList.remove('tox-tbtn--enabled')
+
+        listToolbar = document.querySelector('div[title="Ordered List"]')
+        listToolbar && listToolbar.classList.remove('tox-tbtn--enabled')
+    }
+
+    highlightListIcon = _ => {
+        if (this.props.element.subtype === "disc") {
+            let listToolbar = document.querySelector('button[title="Unordered List"]')
+            listToolbar && listToolbar.classList.add('tox-tbtn--enabled')
+        } else {
+            let listToolbar = document.querySelector('div[title="Ordered List"]');
+            listToolbar && listToolbar.classList.add('tox-tbtn--enabled')
+        }
+    }
+    
     removeMultiTinyInstance = () => {
         let tinyMCEInstancesNodes = document.getElementsByClassName('tox tox-tinymce tox-tinymce-inline');
 
@@ -2429,6 +2452,12 @@ export class TinyMceEditor extends Component {
                     assetPopoverButtonNode.setAttribute("aria-disabled", false)
                     assetPopoverButtonNode.removeAttribute('aria-pressed')
                     assetPopoverButtonNode.classList.remove('tox-tbtn--disabled')
+                }
+                if(this.props.element.type==="element-list"){
+                    this.highlightListIcon();
+                } 
+                else{
+                    this.removeListHighliting();
                 }
             })
         });

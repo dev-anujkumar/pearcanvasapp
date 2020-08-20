@@ -12,7 +12,7 @@ export const LIST_DATA = Object.freeze({
     lowerAlpha : [
         {value : 'a'},
         {value : 'b'},
-        {value : 'b'}
+        {value : 'c'}
     ],
     upperRoman : [
         {value : 'I', class : 'list-roman-text'},
