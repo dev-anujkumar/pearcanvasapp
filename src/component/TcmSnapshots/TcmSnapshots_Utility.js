@@ -5,7 +5,6 @@
 
 /**************************Import Modules**************************/
 import config from '../../config/config.js';
-import {sendDataToIframe} from '../../constants/utility';
 import { sendElementTcmSnapshot, getLatestVersion } from './TcmSnapshot_Actions.js';
 import { setSemanticsSnapshots, fetchElementsTag } from './ElementSnapshot_Utility.js';
 /*************************Import Constants*************************/
@@ -319,9 +318,7 @@ const prepareAndSendTcmData = async (elementDetails, wipData, defaultKeys, actio
         elementSnapshot: JSON.stringify(await prepareElementSnapshots(wipData,actionStatus)),
         ...defaultKeys
     };
-    config.savingInProgress = false
-    sendDataToIframe({ 'type': 'savingInProgressOnCanvas', 'message': { savingInProgress: config.savingInProgress } })
-    console.log('config.savingInProgress17',config.savingInProgress)
+
     await sendElementTcmSnapshot(currentSnapshot)
 }
 
