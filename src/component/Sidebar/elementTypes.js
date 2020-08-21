@@ -91,7 +91,7 @@ export default {
         },
         'primary-list': {
             text: 'List',
-            toolbar: [],
+            toolbar: ['formatSelector'],
             enum: 'LIST',
             subtype: {
                 'secondary-list-1': {
@@ -556,7 +556,7 @@ export default {
     'element-workedexample': {
         'primary-workedexample-we1': {
             text: 'Worked Example 1',
-            toolbar:['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','crossLinkingIcon','assetpopover','slatetag'],
+            toolbar:['formatSelector','bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','crossLinkingIcon','assetpopover','slatetag'],
             enum: 'WORKED_EXAMPLE',
             subtype: {
                 'secondary-workedexample-we1': {
@@ -568,7 +568,7 @@ export default {
         },
         'primary-workedexample-we2': {
             text: 'Worked Example 2',
-            toolbar:['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','crossLinkingIcon','assetpopover','slatetag'],
+            toolbar:['formatSelector', 'bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','crossLinkingIcon','assetpopover','slatetag'],
             enum: 'WORKED_EXAMPLE',
             subtype: {
                 'secondary-workedexample-we2': {
