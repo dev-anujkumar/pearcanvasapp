@@ -70,9 +70,9 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
     /** TCM Snapshots on Popup Slate */
     if (config.isPopupSlate) {
         let defaultKeysPopup = setDefaultKeys(actionStatus, true, true)
-        if (elementInPopupInContainer) {   /** Elements in WE-Aside/ Simple Elements in PopupSlate Inside WE/Aside */
+        if (elementInPopupInContainer) {   /** Elements in Containers/ Simple Elements in PopupSlate Inside WE/Aside */
             tcmSnapshotsElementsInPopupInContainer(snapshotsData, defaultKeysPopup, containerElement, type, deleVercase, newVersionUrns);
-        } else {                           /** Elements in WE-Aside/ Simple Elements in PopupSlate */
+        } else {                           /** Elements in Containers/ Simple Elements in PopupSlate */
             tcmSnapshotsOnDefaultSlate(snapshotsData, defaultKeysPopup, containerElement, type, deleVercase, newVersionUrns);
         }
     }
@@ -140,14 +140,14 @@ const tcmSnapshotsOnDefaultSlate = (snapshotsData, defaultKeys, containerElement
 */
 const tcmSnapshotsCreateAsideWE = (snapshotsData, defaultKeys, deleVercase, newVersionUrns) => {
     let elementDetails;
-    const { wipData, elementId, tag, actionStatus } = snapshotsData;
+    const { wipData, elementId, tag, actionStatus, popupInContainer } = snapshotsData;
     wipData.elementdata.bodymatter && wipData.elementdata.bodymatter.map((item) => {
         if (item.type === WE_MANIFEST) {
             item.contents.bodymatter.map((ele) => {
                 if (elementType.indexOf(ele.type) !== -1) {
                     elementId.childId = deleVercase ? newVersionUrns[ele.id] : ele.id;
                     tag.childTag = fetchElementsTag(ele);
-                    elementDetails = setElementTypeAndUrn(elementId, tag, wipData.subtype === WORKED_EXAMPLE ? 'BODY' : "", item.id);
+                    elementDetails = setElementTypeAndUrn(elementId, tag, wipData.subtype === WORKED_EXAMPLE ? 'BODY' : "", item.id,undefined,popupInContainer);
                     prepareAndSendTcmData(elementDetails, ele, defaultKeys, actionStatus);
                 }
             })
@@ -155,7 +155,7 @@ const tcmSnapshotsCreateAsideWE = (snapshotsData, defaultKeys, deleVercase, newV
         else if (elementType.indexOf(item.type) !== -1) {
             elementId.childId = deleVercase ? newVersionUrns[item.id] : item.id;
             tag.childTag = fetchElementsTag(item);
-            elementDetails = setElementTypeAndUrn(elementId, tag, wipData.subtype === WORKED_EXAMPLE ? "HEAD" : "", "");
+            elementDetails = setElementTypeAndUrn(elementId, tag, wipData.subtype === WORKED_EXAMPLE ? "HEAD" : "", "",undefined,popupInContainer);
             prepareAndSendTcmData(elementDetails, item, defaultKeys, actionStatus);
         }
     })
@@ -172,7 +172,7 @@ const tcmSnapshotsCreateAsideWE = (snapshotsData, defaultKeys, deleVercase, newV
 */
 const tcmSnapshotsCreateSectionBreak = (containerElement, snapshotsData, defaultKeys, deleVercase, newVersionUrns) => {
     let elementDetails;
-    const { wipData, elementId, tag, actionStatus } = snapshotsData;
+    const { wipData, elementId, tag, actionStatus,popupInContainer } = snapshotsData;
     const { asideData, parentUrn } = containerElement
     tag.parentTag = asideData && fetchElementsTag(asideData) ? fetchElementsTag(asideData) : fetchElementsTag(wipData)
     elementId.parentId = asideData && asideData.id ? asideData.id : parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "";
@@ -180,7 +180,7 @@ const tcmSnapshotsCreateSectionBreak = (containerElement, snapshotsData, default
         if (elementType.indexOf(item.type) !== -1) {
             elementId.childId = deleVercase ? newVersionUrns[item.id] : item.id;
             tag.childTag = fetchElementsTag(item);
-            elementDetails = setElementTypeAndUrn(elementId, tag, "BODY", wipData.id);
+            elementDetails = setElementTypeAndUrn(elementId, tag, "BODY", wipData.id,undefined,popupInContainer);
             prepareAndSendTcmData(elementDetails, item, defaultKeys, actionStatus);
         }
     })
@@ -221,14 +221,14 @@ const tcmSnapshotsInContainerElements = (containerElement, snapshotsData, defaul
 */
 const tcmSnapshotsMultiColumn = (containerElement,snapshotsData, defaultKeys, deleVercase, newVersionUrns) => {
     let elementDetails;
-    const { wipData, elementId, tag, actionStatus } = snapshotsData;
+    const { wipData, elementId, tag, actionStatus,popupInContainer } = snapshotsData;
     const { parentUrn } = containerElement
     wipData.groupeddata.bodymatter.map((item, eleIndex) => {
         item.groupdata.bodymatter.map((ele) => {
             elementId.columnId = deleVercase ? newVersionUrns[item.id] : item.id;
             elementId.childId = deleVercase ? newVersionUrns[ele.id] : ele.id;
             tag.childTag = fetchElementsTag(ele);
-            elementDetails = setElementTypeAndUrn(elementId, tag, "", "", parentUrn ? parentUrn.columnIndex : eleIndex);
+            elementDetails = setElementTypeAndUrn(elementId, tag, "", "", parentUrn ? parentUrn.columnIndex : eleIndex,popupInContainer);
             prepareAndSendTcmData(elementDetails, item, defaultKeys, actionStatus);
         })
 
@@ -245,11 +245,11 @@ const tcmSnapshotsMultiColumn = (containerElement,snapshotsData, defaultKeys, de
 */
 const tcmSnapshotsCitationPoetry = (snapshotsData, defaultKeys, deleVercase, newVersionUrns) => {
     let elementDetails;
-    const { wipData, elementId, tag, actionStatus } = snapshotsData;
+    const { wipData, elementId, tag, actionStatus, popupInContainer } = snapshotsData;
     wipData.contents.bodymatter.map((item) => {
         elementId.childId = deleVercase ? newVersionUrns[item.id] : item.id;
         tag.childTag = fetchElementsTag(item);
-        elementDetails = setElementTypeAndUrn(elementId, tag, "", "");
+        elementDetails = setElementTypeAndUrn(elementId, tag, "", "",-1,popupInContainer);
         prepareAndSendTcmData(elementDetails, item, defaultKeys, actionStatus);
     })
 }
@@ -358,7 +358,7 @@ const tcmSnapshotsPopupInContainer = (snapshotsData, defaultKeys, containerEleme
     tag.popupParentTag = fetchElementsTag(popupParent);//WE/AS
     let isHead = asideData && asideData.type === ELEMENT_ASIDE && asideData.subtype === WORKED_EXAMPLE ? parentUrn.manifestUrn == asideData.id ? "HEAD" : "BODY" : "";//HEAD/BODY
     let sectionId = isHead == "BODY" ? parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "" : "";//body-id
-    tag.popupParentTag = `${tag.popupParentTag}:${isHead ? isHead : ""}`
+    tag.popupParentTag = `${tag.popupParentTag}${isHead ? ":"+isHead : ""}`
     elementId.popupParentId = `${elementId.popupParentId}+${isHead == "BODY" ? sectionId : ""}`
     let popupData = {
         tag: tag,
@@ -388,8 +388,8 @@ const tcmSnapshotsElementsInPopupInContainer = (snapshotsData, defaultKeys, cont
     tag.popupParentTag = fetchElementsTag(popupParent);//WE/AS
     let headWE = popupAsideData && popupAsideData.type === ELEMENT_ASIDE && popupAsideData.subtype === WORKED_EXAMPLE ? popupParentUrn.manifestUrn == popupAsideData.id ? "HEAD" : "BODY" : "";
     let bodyWE = headWE == "BODY" ? popupParentUrn && popupParentUrn.manifestUrn ? popupParentUrn.manifestUrn : "" : "";//body-id
-    tag.popupParentTag = `${tag.popupParentTag}:${headWE ? headWE : ""}`
-    elementId.popupParentId = `${elementId.popupParentId}+${headWE == "BODY" ? bodyWE : ""}`
+    tag.popupParentTag = `${tag.popupParentTag}${headWE ? ":"+headWE : ""}`
+    elementId.popupParentId = `${elementId.popupParentId}${headWE == "BODY" ? "+"+bodyWE : ""}`
     let popupData = {
         tag: tag,
         wipData: wipData,
