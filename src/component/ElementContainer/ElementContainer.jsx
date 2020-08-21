@@ -45,6 +45,7 @@ import ElementPoetryStanza from '../ElementPoetry/ElementPoetryStanza.jsx';
 import MultiColumnContext from "./MultiColumnContext.js"
 import MultiColumnContainer from "../MultiColumnElement"
 import {handleTCMData} from './TcmSnapshot_Actions';
+import CopyUrn from '../CopyUrn';
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -101,6 +102,9 @@ class ElementContainer extends Component {
             btnClassName: '',
             isOpener: this.props.element.type === elementTypeConstant.OPENER
         })
+        document.addEventListener('click',()=>{
+            this.setState({showCopyPopup : false})
+        });
     }
 
     componentWillUnmount() {
@@ -928,6 +932,49 @@ class ElementContainer extends Component {
         }
     }
 
+    getParentPosition = (el) => {
+        var xPos = 0;
+        var yPos = 0;
+
+        while (el) {
+            if (el.tagName == "BODY") {
+                // deal with browser quirks with body/window/document and page scroll
+                var xScroll = el.scrollLeft || document.documentElement.scrollLeft;
+                var yScroll = el.scrollTop || document.documentElement.scrollTop;
+
+                xPos += (el.offsetLeft - xScroll + el.clientLeft);
+                yPos += (el.offsetTop - yScroll + el.clientTop);
+            } else {
+                // for all other non-BODY elements
+                xPos += (el.offsetLeft - el.scrollLeft + el.clientLeft);
+                yPos += (el.offsetTop - el.scrollTop + el.clientTop);
+            }
+
+            el = el.offsetParent;
+        }
+        return { x: xPos, y: yPos }
+    }
+
+    onCopyContext=(e)=> {
+
+        if (e.currentTarget.classList.contains('active')) {
+            const parentPosition = this.getParentPosition(e.currentTarget);
+            const scrollTop = document.getElementById('slateWrapper').scrollTop;
+
+            this.copyClickedX = e.clientX - parentPosition.x;
+            this.copyClickedY = e.clientY - parentPosition.y + scrollTop + 10;
+
+            // this.copyClickedX = e.clientX;   //change position to fixed
+            // this.copyClickedY = e.clientY;
+            this.toggleCopyMenu(true)
+            e.preventDefault();
+        }
+    }
+
+    toggleCopyMenu = (value)=> {
+        this.setState({showCopyPopup : value})
+    }
+
     /**
      * Render Element function takes current element from bodymatter and render it into currnet slate 
      * @param {element} 
@@ -1222,6 +1269,7 @@ class ElementContainer extends Component {
         }
         return (
             <div className="editor" data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
+                {this.state.showCopyPopup && <CopyUrn elementId={this.props.element.id} toggleCopyMenu={this.toggleCopyMenu} copyClickedX={this.copyClickedX} copyClickedY={this.copyClickedY} />}
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                     <Button type="element-label" btnClassName={`${btnClassName} ${isQuadInteractive} ${this.state.isOpener ? ' ignore-for-drag' : ''}`} labelText={labelText}  onClick={(event) => this.labelClickHandler(event)} />
                     {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && config.slateType !== 'assessment' ? (<Button type="delete-element" onClick={(e) => this.showDeleteElemPopup(e,true)} />)
@@ -1230,7 +1278,7 @@ class ElementContainer extends Component {
                     {this.renderColorTextButton(element, permissions)}
                 </div>
                     : ''}
-                <div className={`element-container ${labelText.toLowerCase()=="2c"? "multi-column":labelText.toLowerCase()} ${borderToggle}`} data-id={element.id} onFocus={() => this.toolbarHandling('remove')} onBlur={() => this.toolbarHandling('add')} onClick = {(e)=>this.handleFocus("","",e,labelText)}>
+                <div className={`element-container ${labelText.toLowerCase()=="2c"? "multi-column":labelText.toLowerCase()} ${borderToggle}`} onContextMenu={this.onCopyContext} data-id={element.id} onFocus={() => this.toolbarHandling('remove')} onBlur={() => this.toolbarHandling('add')} onClick = {(e)=>this.handleFocus("","",e,labelText)}>
                     {elementOverlay}{bceOverlay}{editor}
                 </div>
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
