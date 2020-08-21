@@ -13,8 +13,7 @@ import {
     SLATE_TITLE,
     GET_PAGE_NUMBER,
     SET_SLATE_LENGTH,
-    SET_CURRENT_SLATE_DATA,
-    NAVIGATION_DISABLE
+    SET_CURRENT_SLATE_DATA
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
@@ -932,12 +931,5 @@ export const setSlateLength = (length) => {
     return {
         type: SET_SLATE_LENGTH,
         payload: length
-    }
-}
-
-export const setNavigationStatus = (value) => {
-    return {
-        type: NAVIGATION_DISABLE,
-        payload: value
     }
 }
