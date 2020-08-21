@@ -262,7 +262,13 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
         }
     });
    
-
+    if (config.cachedActiveElement && config.cachedActiveElement.element && config.cachedActiveElement.element.type == "popup") {
+        config.popupParentElement = {
+            parentElement: config.cachedActiveElement.element,
+            popupAsideData: getState().appStore.asideData,
+            popupParentUrn: getState().appStore.parentUrn
+        }
+    }
     /** Project level and element level TCM status */
     if (page === 0 && config.tcmStatus && versioning === "") {
         /** Show TCM icon header if TCM is on for project level*/

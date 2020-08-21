@@ -63,7 +63,8 @@ let cypressConfig = {
     popupCreationCallInProgress : false,
     pageNumberInProcess: true,
     poetryElementCreationInProgress: false,
-    elementStatus: {}
+    elementStatus: {},
+    popupParentElement : {}
 }
 
 
