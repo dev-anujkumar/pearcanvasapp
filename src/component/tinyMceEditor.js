@@ -250,6 +250,8 @@ export class TinyMceEditor extends Component {
     }
 
     onListButtonClick = (type) => {
+        this.elementConverted = true;
+        this.removeListHighliting();
         this.props.onListSelect(type, "");
     }
 
@@ -1371,8 +1373,6 @@ export class TinyMceEditor extends Component {
                 return 'Paragraph'
         }
     }
-
-
     editorPaste = (editor) => {
         editor.on('paste', (e) => {
             let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
@@ -2117,6 +2117,9 @@ export class TinyMceEditor extends Component {
         }
         if(this.elementConverted){
             document.querySelector('button[title="formatSelector"] .tox-tbtn__select-label').innerText = this.getElementTypeForToolbar(this.props.element);
+            if(this.props.element.type="element-list"){
+                this.highlightListIcon();
+            }
             this.elementConverted = false;
         }
         this.removeMultiTinyInstance();
@@ -2124,6 +2127,24 @@ export class TinyMceEditor extends Component {
         tinymce.$('.blockquote-editor').attr('contenteditable', false)
     }
 
+    removeListHighliting = _ => {
+        let listToolbar = document.querySelector('button[title="Unordered List"]')
+        listToolbar && listToolbar.classList.remove('tox-tbtn--enabled')
+
+        listToolbar = document.querySelector('div[title="Ordered List"]')
+        listToolbar && listToolbar.classList.remove('tox-tbtn--enabled')
+    }
+
+    highlightListIcon = _ => {
+        if (this.props.element.subtype === "disc") {
+            let listToolbar = document.querySelector('button[title="Unordered List"]')
+            listToolbar && listToolbar.classList.add('tox-tbtn--enabled')
+        } else {
+            let listToolbar = document.querySelector('div[title="Ordered List"]');
+            listToolbar && listToolbar.classList.add('tox-tbtn--enabled')
+        }
+    }
+    
     removeMultiTinyInstance = () => {
         let tinyMCEInstancesNodes = document.getElementsByClassName('tox tox-tinymce tox-tinymce-inline');
 
@@ -2430,6 +2451,12 @@ export class TinyMceEditor extends Component {
                     assetPopoverButtonNode.removeAttribute('aria-pressed')
                     assetPopoverButtonNode.classList.remove('tox-tbtn--disabled')
                 }
+                if(this.props.element.type==="element-list"){
+                    this.highlightListIcon();
+                } 
+                else{
+                    this.removeListHighliting();
+                }
             })
         });
         if (isSameTarget) {
@@ -2537,7 +2564,6 @@ export class TinyMceEditor extends Component {
 
         if (!this.fromtinyInitBlur && !config.savingInProgress) {
             let elemNode = document.getElementById(`cypress-${this.props.index}`)
-            console.log(elemNode.innerHTML,">>>>>>>>>>>>>>")
             elemNode.innerHTML = elemNode.innerHTML.replace(/<br data-mce-bogus="1">/g, "");
             elemNode.innerHTML = elemNode.innerHTML.replace(/disc square/g, "disc").replace(/disc circle/g, "disc");
             if (this.props.element && this.props.element.type === "citations") {
@@ -2624,9 +2650,9 @@ export class TinyMceEditor extends Component {
                     <code ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: codeModel }}></code>
                 )
             case 'blockquote':
-                if (this.props.element && this.props.element.elementdata && this.props.element.elementdata.type === "marginalia") {
+                if (this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia"|| this.props.element.elementdata.type === "blockquote")) {
                     let temDiv = document.createElement('div');
-                    temDiv.innerHTML = this.props.model && this.props.model.text ? this.props.model.text : '<blockquote class="blockquoteMarginaliaAttr" contenteditable="false"><p class="paragraphNummerEins" contenteditable="true"></p><p class="blockquoteTextCredit" contenteditable="false"></p></blockquote>';
+                    temDiv.innerHTML = this.props.model && this.props.model.text ? this.props.model.text : '<blockquote class="blockquoteMarginaliaAttr" contenteditable="false"><p class="paragraphNummerEins" contenteditable="true"></p><p class="blockquoteTextCredit" contenteditable="false" data-placeholder="Attribution Text"></p></blockquote>';
 
                     //temDiv.innerHTML = '<blockquote class="blockquoteMarginaliaAttr" contenteditable="false"><p class="paragraphNummerEins" contenteditable="true">Add fdefut</p><p class="blockquoteTextCredit" contenteditable="true" data-placeholder="Attribution Text"></p></blockquote>';
                     tinymce.$(temDiv).find('.blockquoteTextCredit').attr('contenteditable', 'true').attr('data-placeholder','Attribution Text');
@@ -2644,6 +2670,8 @@ export class TinyMceEditor extends Component {
                         <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={false} dangerouslySetInnerHTML={{ __html: temDiv.innerHTML }} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
                     )
                 }
+                /**Disbale previous blockquote functionality and managed with margilia */
+                /*
                 else if (this.props.element && this.props.element.elementdata && this.props.element.elementdata.type === "blockquote") {
                     let temDiv = document.createElement('div');
                     temDiv.innerHTML = this.props.model && this.props.model.text ? this.props.model.text : '<blockquote class="blockquoteMarginalia" contenteditable="false"><p class="paragraphNummerEins" contenteditable="true"></p></blockquote>';
@@ -2657,7 +2685,7 @@ export class TinyMceEditor extends Component {
                     return (
                         <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={false} dangerouslySetInnerHTML={{ __html: temDiv.innerHTML }} onChange={this.handlePlaceholder}></div>
                     )
-                }
+                }*/
                 else {
                     classes = classes + ' pullquote-editor';
                     let pqModel = this.props.model && this.props.model.text || '<p class="paragraphNumeroUno"><br/></p>'

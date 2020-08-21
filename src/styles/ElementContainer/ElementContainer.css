@@ -13,12 +13,12 @@
 }
 
 .element-container.active:not(.ct) {
-    border: 1.5px solid #149632;
+    border: 1.5px solid #005a70;
     padding: 1px 7px;
 }
 
 .element-container.ct.active {
-    border: 1.5px solid #149632;
+    border: 1.5px solid #005a70 !important;
 }
 
 .element-container.hideBorder:not(.as):not(.we):not(.cg):not(.pe):not(.multi-column) *, .element-container.showBorder:not(.as):not(.we):not(.cg):not(.pe):not(.multi-column) * {

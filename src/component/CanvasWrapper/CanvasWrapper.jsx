@@ -18,7 +18,7 @@ import { getSlateLockStatus, releaseSlateLock } from './SlateLock_Actions'
 import GlossaryFootnoteMenu from '../GlossaryFootnotePopup/GlossaryFootnoteMenu.jsx';
 import {updateElement, getTableEditorData, clearElementStatus}from '../../component/ElementContainer/ElementContainer_Actions'
 // IMPORT - Actions //
-import { fetchSlateData, fetchSlateAncestorData, fetchAuthUser, openPopupSlate, setSlateLength } from './CanvasWrapper_Actions';
+import { fetchSlateData, fetchSlateAncestorData, fetchAuthUser, openPopupSlate, setSlateLength, setNavigationStatus } from './CanvasWrapper_Actions';
 import {toggleCommentsPanel,fetchComments,fetchCommentByElement} from '../CommentsPanel/CommentsPanel_Action'
 import { convertToListElement } from '../ListElement/ListElement_Action.js';
 import { handleSplitSlate,setUpdatedSlateTitle, setSlateType, setSlateEntity, setSlateParent } from '../SlateWrapper/SlateWrapper_Actions'
@@ -80,7 +80,7 @@ export class CanvasWrapper extends Component {
 
     componentDidUpdate(prevProps, prevState){
         this.countTimer =  Date.now();
-
+        
         var targetNode = document.querySelector('body');
         // Options for the observer (which mutations to observe)		
         var config = { attributes: true };
@@ -186,31 +186,33 @@ export class CanvasWrapper extends Component {
                     {/* custom list editor component */}
                 </div>
 
-                <div className='workspace'>
-                   
+                <div className='workspace'>               
                     <div id='canvas' className={'canvas'+ isReviewerRoleClass}>
-                        
                         <div id='artboard-containers'>
-                            <div className='navigation-container'>
-                                <div className={(!config.disablePrev) ? 'navigation-content' : 'navigation-content disableNavigation'}>
-                                    <div className='navigation-button' onClick={() => this.handleNavClick("back")}>
-                                        <div className='navigation-icon'><i class="nav-arrow left-arrow-transform"></i></div>
-                                        <div className='navigation-text'>Previous</div>
+                            <div class="artboard-parent">
+                                {/*Prev Button */}
+                                <div className={`navigation-container ${this.props.glossaryFootnoteValue.popUpStatus || this.props.navigationDisabled ? 'disabled':""}`}>
+                                    <div className={(!config.disablePrev) ? 'navigation-content' : 'navigation-content disableNavigation'}>
+                                        <div className='navigation-button' onClick={() => this.handleNavClick("back")}>
+                                            <div className='navigation-icon'><i class="nav-arrow left-arrow-transform"></i></div>
+                                            <div className='navigation-text'>Previous</div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div id='artboard-container' className='artboard-container'>
-                                {this.props.showApoSearch ? <AssetPopoverSearch /> : ''}
-                                {/* slate wrapper component combines slate content & slate title */}
-                                <RootContext.Provider value={{ isPageNumberEnabled: this.props.pageNumberToggle }}>
-                                    <SlateWrapper loadMorePages={this.loadMorePages} handleCommentspanel={this.handleCommentspanel} slateData={slateData} navigate={this.navigate} showBlocker={this.props.showCanvasBlocker} convertToListElement={this.props.convertToListElement} toggleTocDelete={this.props.toggleTocDelete} tocDeleteMessage={this.props.tocDeleteMessage} modifyState={this.props.modifyState} updateTimer={this.updateTimer} isBlockerActive={this.props.showBlocker} isLOExist={this.props.isLOExist} />
-                                </RootContext.Provider>
-                            </div>
-                            <div className='navigation-container'>
-                                <div className={(!config.disableNext) ? 'navigation-content' : 'navigation-content disableNavigation'} >
-                                    <div className='navigation-button' onClick={() => this.handleNavClick("next")}>
-                                        <div className='navigation-icon'><i class="nav-arrow right-arrow-transform"></i></div>
-                                        <div className='navigation-text'>Next</div>
+                                <div id='artboard-container' className='artboard-container'>
+                                    {this.props.showApoSearch ? <AssetPopoverSearch /> : ''}
+                                    {/* slate wrapper component combines slate content & slate title */}
+                                    <RootContext.Provider value={{ isPageNumberEnabled: this.props.pageNumberToggle }}>
+                                        <SlateWrapper loadMorePages={this.loadMorePages} handleCommentspanel={this.handleCommentspanel} slateData={slateData} navigate={this.navigate} showBlocker={this.props.showCanvasBlocker} convertToListElement={this.props.convertToListElement} toggleTocDelete={this.props.toggleTocDelete} tocDeleteMessage={this.props.tocDeleteMessage} modifyState={this.props.modifyState} updateTimer={this.updateTimer} isBlockerActive={this.props.showBlocker} isLOExist={this.props.isLOExist} />
+                                    </RootContext.Provider>
+                                </div>
+                                 {/*Next Button */}
+                                <div className={`navigation-container ${this.props.glossaryFootnoteValue.popUpStatus || this.props.navigationDisabled ? 'disabled':""}`}>
+                                    <div className={(!config.disableNext) ? 'navigation-content' : 'navigation-content disableNavigation'} >
+                                        <div className='navigation-button' onClick={() => this.handleNavClick("next")}>
+                                            <div className='navigation-icon'><i class="nav-arrow right-arrow-transform"></i></div>
+                                            <div className='navigation-text'>Next</div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -258,7 +260,8 @@ const mapStateToProps = state => {
         logout,
         withinLockPeriod: state.slateLockReducer.withinLockPeriod,
         ErrorPopup: state.errorPopup,
-        pageNumberToggle: state.toolbarReducer.pageNumberToggle
+        pageNumberToggle: state.toolbarReducer.pageNumberToggle,
+        navigationDisabled: state.appStore.navigationDisabled
     };
 };
 
@@ -297,6 +300,7 @@ export default connect(
         fetchSlateAncestorData,
         setSlateLength,
         toggleElemBordersAction,
-        togglePageNumberAction
+        togglePageNumberAction,
+        setNavigationStatus
     }
 )(CommunicationChannelWrapper(CanvasWrapper));
