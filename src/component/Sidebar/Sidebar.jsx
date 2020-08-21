@@ -559,7 +559,7 @@ class Sidebar extends Component {
 
     render = () => {
         return (
-            <div className="canvas-sidebar">
+           this.props.activeElement.elementType !== "element-authoredtext" && <div className="canvas-sidebar">
                 <div className="canvas-sidebar-heading">Settings</div>
                 {this.primaryOption()}
                 {this.renderSyntaxHighlighting(this.props.activeElement && this.props.activeElement.tag || '')}

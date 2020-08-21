@@ -261,7 +261,6 @@ const mapStateToProps = state => {
         withinLockPeriod: state.slateLockReducer.withinLockPeriod,
         ErrorPopup: state.errorPopup,
         pageNumberToggle: state.toolbarReducer.pageNumberToggle,
-        navigationDisabled: state.appStore.navigationDisabled
     };
 };
 
