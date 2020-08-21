@@ -976,6 +976,30 @@ class ElementContainer extends Component {
     }
 
     /**
+     * Handling border style and properties
+     * @param {*} elemBorderToggleFromProp Slate level border based on toggle
+     * @param {*} borderToggleFromState Element level border based on focus
+     */
+    setBorderToggle = (elemBorderToggleFromProp, borderToggleFromState) => {
+        if (elemBorderToggleFromProp !== 'undefined' && elemBorderToggleFromProp) {
+            if (borderToggleFromState == 'active') {
+                return borderToggleFromState
+            }
+            else {
+                return 'showBorder'
+            }
+        }
+        else {
+            if (borderToggleFromState == 'active') {
+                return borderToggleFromState
+            }
+            else {
+                return 'hideBorder'
+            }
+        }
+    }
+    
+    /**
      * Render Element function takes current element from bodymatter and render it into currnet slate 
      * @param {element} 
     */
@@ -1253,7 +1277,7 @@ class ElementContainer extends Component {
             editor = <p className="incorrect-data">Incorrect Data - {element.id}</p>;
         }
 
-        let borderToggle = this.state.borderToggle;
+        let borderToggle = this.setBorderToggle(this.props.elemBorderToggle, this.state.borderToggle)
         let btnClassName = this.state.btnClassName;
         let bceOverlay = "";
         let elementOverlay = ''
