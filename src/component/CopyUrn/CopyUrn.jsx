@@ -2,7 +2,8 @@ import React from 'react'
 
 const CopyUrn = props => {
 
-    const copyToClipBoard = (text) => {
+    const copyToClipBoard = (e,text) => {
+        e.stopPropagation();
         const tempElement = document.createElement('textarea');
         tempElement.value = text;
         document.body.appendChild(tempElement);
@@ -13,7 +14,7 @@ const CopyUrn = props => {
     }
 
     return (
-        <div style={{left : `${props.copyClickedX}px` , top : `${props.copyClickedY}px`}} className={'copyUrn'} onClick={() => { copyToClipBoard(props.elementId) }}>
+        <div style={{left : `${props.copyClickedX}px` , top : `${props.copyClickedY}px`}} className={'copyUrn'} onClick={(e) => { copyToClipBoard(e,props.elementId) }}>
             Copy {props.elementId.includes('work') ? 'Work' : 'Manifest'} URN
         </div>
     )
