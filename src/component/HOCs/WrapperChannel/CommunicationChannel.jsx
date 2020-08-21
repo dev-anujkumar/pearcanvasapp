@@ -77,9 +77,6 @@ function CommunicationChannel(WrappedComponent) {
                 case 'hideCommentsPanel':
                     this.props.toggleCommentsPanel(false);
                     break;
-                case  'navigationDisabled' :
-                    this.props.setNavigationStatus(message);
-                    break;
                 case 'toggleCommentsPanel':
                     this.props.toggleCommentsPanel(true);
                     sendDataToIframe({

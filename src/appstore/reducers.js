@@ -37,7 +37,6 @@ import {
     PAGE_NUMBER_LOADER,
     GET_USAGE_TYPE,
     SET_SLATE_LENGTH,
-    NAVIGATION_DISABLE
 } from '../constants/Action_Constants';
 
 /**
@@ -65,8 +64,7 @@ const INITIAL_STATE = {
     allElemPageData:[],
     pageNumberLoading:false,
     usageTypeListData:{},
-    slateLength: "25",
-    navigationDisabled:false
+    slateLength: "25"
 };
 
 const INITIAL_ACTION = {
@@ -225,11 +223,6 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
             return {
                 ...state,
                 slateLength: action.payload
-            }
-        case NAVIGATION_DISABLE:
-            return {
-                ...state,
-                navigationDisabled: action.payload
             }
         default:
             return state;
