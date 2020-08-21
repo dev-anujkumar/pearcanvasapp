@@ -2117,7 +2117,7 @@ export class TinyMceEditor extends Component {
         }
         if(this.elementConverted){
             document.querySelector('button[title="formatSelector"] .tox-tbtn__select-label').innerText = this.getElementTypeForToolbar(this.props.element);
-            if(this.props.element.type="element-list"){
+            if (this.props.element.type === "element-list") {
                 this.highlightListIcon();
             }
             this.elementConverted = false;
