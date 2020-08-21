@@ -261,9 +261,9 @@ class Sidebar extends Component {
         this.setState({
             attrInput: event.target.value
         })
-        let activeElement = document.querySelector(`[data-id="${this.props.activeElement.elementId}"]`)
-        let attrNode = activeElement.querySelector(".blockquoteTextCredit");
-        attrNode.innerHTML = event.target.value.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        //let activeElement = document.querySelector(`[data-id="${this.props.activeElement.elementId}"]`)
+        //let attrNode = activeElement.querySelector(".blockquoteTextCredit");
+        //attrNode.innerHTML = event.target.value.replace(/</g, "&lt;").replace(/>/g, "&gt;");
     }
     
     attributions = () => {
@@ -295,8 +295,8 @@ class Sidebar extends Component {
     
             if(attributionsList.length > 0) {
                 let activeElement = document.querySelector(`[data-id="${this.props.activeElement.elementId}"]`)
-                let attrNode = activeElement ? activeElement.querySelector(".blockquoteTextCredit") : null
-                let attrValue = attrNode && attrNode.innerHTML!=null ? attrNode.innerHTML.replace(/<br>/g, "").replace(/&lt;/g, "<").replace(/&gt;/g, ">") : ""
+                //let attrNode = activeElement ? activeElement.querySelector(".blockquoteTextCredit") : null
+                let attrValue = ""
                 attributions = attributionsList.map(item => {
                     let isDisable = (item === 'attribution' ? hasReviewerRole() : !attributionsObject[item].isEditable) 
                     if(item==="alt_text"){

@@ -790,11 +790,11 @@ export class TinyMceEditor extends Component {
             let iFocusinBlockQuote = editor.dom.getParent(editor.selection.getStart(), '.paragraphNummerEins');
             let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");
             let newElement = this.props.currentElement ? this.props.currentElement : this.props.element
-            if (isBlockQuote && !iFocusinBlockQuote) {
-                let evt = (e) ? e : window.event;
-                evt.preventDefault();
-                return false;
-            }
+            // if (isBlockQuote && !iFocusinBlockQuote) {
+            //     let evt = (e) ? e : window.event;
+            //     evt.preventDefault();
+            //     return false;
+            // }
             if (e.keyCode == 86 && e.ctrlKey) {
                 this.isctrlPlusV = true;
             }
@@ -2537,6 +2537,7 @@ export class TinyMceEditor extends Component {
 
         if (!this.fromtinyInitBlur && !config.savingInProgress) {
             let elemNode = document.getElementById(`cypress-${this.props.index}`)
+            console.log(elemNode.innerHTML,">>>>>>>>>>>>>>")
             elemNode.innerHTML = elemNode.innerHTML.replace(/<br data-mce-bogus="1">/g, "");
             elemNode.innerHTML = elemNode.innerHTML.replace(/disc square/g, "disc").replace(/disc circle/g, "disc");
             if (this.props.element && this.props.element.type === "citations") {
@@ -2626,6 +2627,9 @@ export class TinyMceEditor extends Component {
                 if (this.props.element && this.props.element.elementdata && this.props.element.elementdata.type === "marginalia") {
                     let temDiv = document.createElement('div');
                     temDiv.innerHTML = this.props.model && this.props.model.text ? this.props.model.text : '<blockquote class="blockquoteMarginaliaAttr" contenteditable="false"><p class="paragraphNummerEins" contenteditable="true"></p><p class="blockquoteTextCredit" contenteditable="false"></p></blockquote>';
+
+                    //temDiv.innerHTML = '<blockquote class="blockquoteMarginaliaAttr" contenteditable="false"><p class="paragraphNummerEins" contenteditable="true">Add fdefut</p><p class="blockquoteTextCredit" contenteditable="true" data-placeholder="Attribution Text"></p></blockquote>';
+                    tinymce.$(temDiv).find('.blockquoteTextCredit').attr('contenteditable', 'true').attr('data-placeholder','Attribution Text');
                     if (!tinymce.$(temDiv).find('blockquote p.blockquote-hidden').length) {
                         tinymce.$(temDiv).find('blockquote').append('<p contenteditable="false" class="blockquote-hidden" style="visibility: hidden;">hidden</p>');
                     }
@@ -2634,7 +2638,6 @@ export class TinyMceEditor extends Component {
                     if (tinymce.$(temDiv).find('.paragraphNummerEins') && tinymce.$(temDiv).find('.paragraphNummerEins')[0]) {
                         tinymce.$(temDiv).find('.paragraphNummerEins')[0].addEventListener('blur', this.handleBlur);
                     }
-                    tinymce.$(temDiv).find('.blockquoteTextCredit').attr('contenteditable', 'false');
                     classes = classes + ' blockquote-editor with-attr';
                     temDiv.innerHTML = removeBOM(temDiv.innerHTML)
                     return (
