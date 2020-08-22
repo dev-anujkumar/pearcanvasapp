@@ -203,9 +203,10 @@ export const prepareAssetPopoverSnapshotContent = async (assetsList) => {
  * @param {Object} element - element details
  * @returns {String} Element Tags for elementType key in Snapshots
 */
-export const fetchElementsTag = (element,popupType) => {
+export const fetchElementsTag = (element,metadataField) => {
     let labelText, eleTag, eleType, eleSubType;
-    eleType = popupType ? popupType : element.type ? element.type :  element.elementType;
+    eleType = element && element.type ? element.type :  element.elementType;
+    eleType = metadataField ? setMetadataType[element.type][metadataField] : eleType;
     switch (eleType) {
         case AUTHORED_TEXT:
             eleSubType = (element.elementdata && element.elementdata.headers) ? HEADING + element.elementdata.headers[0].level : PARAGRAPH;
@@ -355,5 +356,14 @@ const setElementTag = {
                 childTag: ""
             },
         }
+    }
+}
+
+const setMetadataType = {
+    "popup": {
+        'postertextobject': 'popup_cta',
+        'formattedTitle': 'popup_label',
+        'formattedSubtitle': 'popup_label',
+        'formattedTitleOnly': 'popup_label'
     }
 }

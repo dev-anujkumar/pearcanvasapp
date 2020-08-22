@@ -9,7 +9,7 @@ import { AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, C
 import { customEvent } from '../../js/utils';
 import { prepareTcmSnapshots,tcmSnapshotsForUpdate,fetchElementWipData,checkContainerElementVersion,fetchManifestStatus } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 let elementTypeTCM = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza'];
-let containerType = ['element-aside', 'manifest', 'citations', 'poetry', 'groupedcontent'];
+let containerType = ['element-aside', 'manifest', 'citations', 'poetry', 'groupedcontent','popup'];
 
 export const addComment = (commentString, elementId) => (dispatch) => {
     let url = `${config.STRUCTURE_API_URL}narrative-api/v2/${elementId}/comment/`
@@ -317,11 +317,15 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         }
 
         /** [PCAT-8289] -------------------------- TCM Snapshot Data handling ----------------------------*/
-        if (elementTypeTCM.indexOf(response.data.type) !== -1 && updatedData.metaDataField == undefined  && updatedData.sectionType == undefined) {
-            let containerElement={
-                asideData:asideData,
-                parentUrn:parentUrn,
-                poetryData:poetryData
+        //add check for show-hide
+        if (elementTypeTCM.indexOf(response.data.type) !== -1 && showHideType == undefined) {//&& updatedData.metaDataField == undefined  && updatedData.sectionType == undefined
+            let containerElement = {
+                asideData: asideData,
+                parentUrn: parentUrn,
+                poetryData: poetryData,
+                parentElement: parentElement && parentElement.type == 'popup' ? parentElement : undefined,
+                metaDataField: updatedData.metaDataField ? updatedData.metaDataField : undefined,
+                sectionType : updatedData.sectionType ? updatedData.sectionType : undefined
             },
             elementUpdateData ={
                 currentParentData: currentParentData,

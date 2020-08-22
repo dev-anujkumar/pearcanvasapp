@@ -862,7 +862,9 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
         const newParentData = JSON.parse(JSON.stringify(parentData));
         let currentSlateData = newParentData[config.slateManifestURN];
         let containerElement = {
-            parentElement:parentElement
+            parentElement:parentElement,
+            asideData:getState().appStore.asideData,
+            parentUrn:getState().appStore.parentUrn
         };
         let slateData = {
             currentSlateData: {
@@ -872,7 +874,7 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
             bodymatter: currentSlateData.contents.bodymatter,
             response: response.data
         };
-        tcmSnapshotsForCreate(slateData, popupField, containerElement, dispatch);
+        tcmSnapshotsForCreate(slateData, _requestData.metaDataField, containerElement, dispatch);
         appendCreatedElement(argObj, response.data)
 
     })

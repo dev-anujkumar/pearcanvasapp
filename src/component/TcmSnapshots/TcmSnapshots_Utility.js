@@ -32,7 +32,9 @@ const {
     LEARNING_OBJECTIVE,
     POP_UP,
     POPUP_ELEMENT,
-    FORMATTED_TITLE
+    FORMATTED_TITLE,
+    formattedTitleField,
+    POSTER_TEXT_OBJ
 }
     = TcmConstants;
 
@@ -66,7 +68,9 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
         elementId: elementId,
         actionStatus: actionStatus
     }
-    let elementInPopupInContainer = config.popupParentElement && config.popupParentElement.parentElement && config.popupParentElement.parentElement.type == 'popup' ? true : false        //check if popup is inside Container
+    /* Check if Popup Slate is inside a Container Element*/
+    let elementInPopupInContainer = config.popupParentElement && checkElementsInPopupInContainer();
+
     /** TCM Snapshots on Popup Slate */
     if (config.isPopupSlate) {
         let defaultKeysPopup = setDefaultKeys(actionStatus, true, true)
@@ -77,7 +81,7 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
         }
     }
     /* For POPUP Element */
-    else if ((wipData.type === POPUP_ELEMENT && type == POP_UP) || (parentElement && parentElement.type == POPUP_ELEMENT && type == FORMATTED_TITLE)) {
+    else if ((wipData.type === POPUP_ELEMENT && type == POP_UP) || (parentElement && parentElement.type == POPUP_ELEMENT)) {
         if (poetryData || asideData || parentUrn) { /** Popup Inside WE/Aside */
             tcmSnapshotsPopupInContainer(snapshotsData, defaultKeys, containerElement, type, deleVercase, newVersionUrns);
         }
@@ -202,7 +206,7 @@ const tcmSnapshotsInContainerElements = (containerElement, snapshotsData, defaul
     let parentElement = asideData ? asideData : poetryData ? poetryData : parentUrn;
     elementId.parentId = parentElement && parentElement.id ? parentElement.id : parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "";
     elementId.childId = deleVercase ? newVersionUrns[wipData.id] : wipData.id;
-    elementId.columnId = parentUrn && parentUrn.manifestUrn;
+    elementId.columnId = parentUrn && parentUrn.elementType === MULTI_COLUMN_GROUP && parentUrn.manifestUrn ? parentUrn.manifestUrn : "";
     // deleVercase ? parentUrn && newVersionUrns[parentUrn.manifestUrn] : parentUrn && parentUrn.manifestUrn;
     tag.parentTag = fetchElementsTag(parentElement);
     tag.childTag = fetchElementsTag(wipData);
@@ -262,7 +266,7 @@ const tcmSnapshotsCitationPoetry = (snapshotsData, defaultKeys, deleVercase, new
  * @param {Boolean} deleVercase - Check for delete versioning action
  * @param {Object} newVersionUrns - Latest  Version Urns for delete case
 */
-const tcmSnapshotsCreatePopup = (snapshotsData, defaultKeys, parentElement, deleVercase, newVersionUrns) => {
+const tcmSnapshotsCreatePopup = (snapshotsData, defaultKeys, deleVercase, newVersionUrns) => {
     let elementDetails;
     const { wipData, elementId, tag, actionStatus, popupInContainer } = snapshotsData;
     wipData.popupdata && wipData.popupdata.bodymatter.map((item) => {
@@ -282,14 +286,16 @@ const tcmSnapshotsCreatePopup = (snapshotsData, defaultKeys, parentElement, dele
  * @param {Boolean} deleVercase - Check for delete versioning action
  * @param {Object} newVersionUrns - Latest  Version Urns for delete case
 */
-const tcmSnapshotsPopupLabel = (snapshotsData, defaultKeys,parentElement, deleVercase, newVersionUrns) => {
+const tcmSnapshotsMetadataField = (snapshotsData, defaultKeys, containerElement, deleVercase, newVersionUrns,type) => {
     let elementDetails;
+    const { parentElement, metaDataField } = containerElement
     const { wipData, elementId, tag, actionStatus, popupInContainer } = snapshotsData;
     elementId.parentId = deleVercase ? newVersionUrns[parentElement.id] : parentElement.id;
     elementId.childId = deleVercase ? newVersionUrns[wipData.id] : wipData.id;
     tag.parentTag = fetchElementsTag(parentElement);
-    tag.childTag = fetchElementsTag(parentElement, "popup_label");
-    elementDetails = setElementTypeAndUrn(elementId, tag, "HEAD", "",undefined,popupInContainer);
+    tag.childTag = fetchElementsTag(parentElement, type ? type : metaDataField ? metaDataField : "");
+    let isHeadTag = tag.parentTag == 'POP' ? "HEAD" : ""
+    elementDetails = setElementTypeAndUrn(elementId, tag, isHeadTag, "", undefined, popupInContainer);
     prepareAndSendTcmData(elementDetails, wipData, defaultKeys, actionStatus);
 }
 
@@ -302,18 +308,18 @@ const tcmSnapshotsPopupLabel = (snapshotsData, defaultKeys,parentElement, deleVe
  * @param {Boolean} deleVercase - Check for delete versioning action
  * @param {Object} newVersionUrns - Latest  Version Urns for delete case
 */
-const tcmSnapshotsPopupCTA = (snapshotsData, defaultKeys, parentElement, deleVercase, newVersionUrns) => {
+const tcmSnapshotsPopupCTA = (snapshotsData, defaultKeys, containerElement, deleVercase, newVersionUrns) => {
     let elementDetails;
-    const { wipData, elementId, tag, actionStatus, popupInContainer} = snapshotsData;
-    let popupElement = parentElement  ? parentElement : wipData
+    const { parentElement, sectionType } = containerElement
+    const { wipData, elementId, tag, actionStatus, popupInContainer } = snapshotsData;
+    let popupElement = parentElement ? parentElement : wipData;
+    let ctaElement = wipData.type === POPUP_ELEMENT ? wipData.popupdata.postertextobject[0] : wipData;
     elementId.parentId = deleVercase ? newVersionUrns[popupElement.id] : popupElement.id;
     tag.parentTag = fetchElementsTag(popupElement);
-    wipData.popupdata.postertextobject.map((item) => {
-        elementId.childId = deleVercase ? newVersionUrns[item.id] : item.id;
-        tag.childTag = fetchElementsTag(popupElement, "popup_cta");
-        elementDetails = setElementTypeAndUrn(elementId, tag, "HEAD", "",undefined,popupInContainer);
-        prepareAndSendTcmData(elementDetails, item, defaultKeys, actionStatus);
-    })
+    elementId.childId = deleVercase ? newVersionUrns[ctaElement.id] : ctaElement.id;
+    tag.childTag = sectionType ? fetchElementsTag(popupElement, sectionType) : fetchElementsTag(popupElement, POSTER_TEXT_OBJ);
+    elementDetails = setElementTypeAndUrn(elementId, tag, "HEAD", "", undefined, popupInContainer);
+    prepareAndSendTcmData(elementDetails, ctaElement, defaultKeys, actionStatus);
 }
 
 /**
@@ -327,15 +333,15 @@ const tcmSnapshotsPopupCTA = (snapshotsData, defaultKeys, parentElement, deleVer
  * @param {Object} newVersionUrns - Latest  Version Urns for delete case
 */
 const tcmSnapshotsInPopupElement = (snapshotsData, defaultKeys, containerElement, type, deleVercase, newVersionUrns) => {
-    const {parentElement} = containerElement
-    if (defaultKeys.action === 'create' && type == POP_UP) { /** create Popup */
-        tcmSnapshotsPopupCTA(snapshotsData, defaultKeys, parentElement,deleVercase, newVersionUrns);
-        tcmSnapshotsCreatePopup(snapshotsData, defaultKeys, parentElement, deleVercase, newVersionUrns);        
+    const { metaDataField, sectionType } = containerElement
+    if (defaultKeys.action === 'create' && type == POP_UP) {     /** Create Popup */
+        tcmSnapshotsPopupCTA(snapshotsData, defaultKeys, containerElement, deleVercase, newVersionUrns);
+        tcmSnapshotsCreatePopup(snapshotsData, defaultKeys, deleVercase, newVersionUrns);
     }
-    else if ((defaultKeys.action === 'create' && type == FORMATTED_TITLE)) { /** Formatted-title */
-        tcmSnapshotsPopupLabel(snapshotsData, defaultKeys, parentElement,deleVercase, newVersionUrns);
-    }else{
-        //update & delete case for popup element
+    else if ((type && formattedTitleField.includes(type)) || (metaDataField && formattedTitleField.includes(metaDataField))) { /** Formatted-title */
+        tcmSnapshotsMetadataField(snapshotsData, defaultKeys, containerElement, deleVercase, newVersionUrns, type);
+    } else if (sectionType && sectionType === POSTER_TEXT_OBJ) { /** Update CTA */
+        tcmSnapshotsPopupCTA(snapshotsData, defaultKeys, containerElement, deleVercase, newVersionUrns);
     }
 }
 
@@ -383,9 +389,9 @@ const tcmSnapshotsPopupInContainer = (snapshotsData, defaultKeys, containerEleme
 const tcmSnapshotsElementsInPopupInContainer = (snapshotsData, defaultKeys, containerElement, type, deleVercase, newVersionUrns) => {
     const { wipData, elementId, tag, actionStatus } = snapshotsData;
     const { popupAsideData, popupParentUrn } = config.popupParentElement
-    let popupParent = popupAsideData ? popupAsideData : popupParentUrn;
+    let popupParent = popupAsideData ? popupAsideData : popupParentUrn ? popupParentUrn :  undefined;
     elementId.popupParentId = popupParent && popupParent.id ? popupParent.id : ""; //we:id
-    tag.popupParentTag = fetchElementsTag(popupParent);//WE/AS
+    tag.popupParentTag = popupParent && fetchElementsTag(popupParent);//WE/AS
     let headWE = popupAsideData && popupAsideData.type === ELEMENT_ASIDE && popupAsideData.subtype === WORKED_EXAMPLE ? popupParentUrn.manifestUrn == popupAsideData.id ? "HEAD" : "BODY" : "";
     let bodyWE = headWE == "BODY" ? popupParentUrn && popupParentUrn.manifestUrn ? popupParentUrn.manifestUrn : "" : "";//body-id
     tag.popupParentTag = `${tag.popupParentTag}${headWE ? ":"+headWE : ""}`
@@ -398,6 +404,17 @@ const tcmSnapshotsElementsInPopupInContainer = (snapshotsData, defaultKeys, cont
         popupInContainer: true
     }
     tcmSnapshotsOnDefaultSlate(popupData, defaultKeys, containerElement, type, deleVercase, newVersionUrns);
+}
+
+/**
+ * @function checkElementsInPopupInContainer
+ * @description Check if Popup Slate is inside a Container Element
+*/
+const checkElementsInPopupInContainer = () => {
+    let isPopupInContainer = config.popupParentElement && config.popupParentElement.parentElement && config.popupParentElement.parentElement.type == 'popup' ? true : false;        
+    let hasPopupAsideData = config.popupParentElement && ('popupAsideData' in config.popupParentElement && !isEmpty(config.popupParentElement.popupAsideData)) ? true : false;
+    let hasPopupParentUrn = config.popupParentElement && ('popupParentUrn' in config.popupParentElement && !isEmpty(config.popupParentElement.popupParentUrn)) ? true : false;
+    return (isPopupInContainer && (hasPopupAsideData || hasPopupParentUrn));
 }
 /**----------------------------------------------------------------------------------------------------------------- */
 /**

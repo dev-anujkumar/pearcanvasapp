@@ -24,7 +24,7 @@ import { sendDataToIframe } from '../../constants/utility.js';
 import { HideLoader, ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
-let elementType = ['WORKED_EXAMPLE', 'CONTAINER', 'SECTION_BREAK', 'TEXT', 'CITATION', 'ELEMENT_CITATION', 'POETRY', 'STANZA' , 'MULTI_COLUMN'];
+let elementType = ['WORKED_EXAMPLE', 'CONTAINER', 'SECTION_BREAK', 'TEXT', 'CITATION', 'ELEMENT_CITATION', 'POETRY', 'STANZA' , 'MULTI_COLUMN','POP_UP'];
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
 };
@@ -69,7 +69,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         let currentSlateData = newParentData[config.slateManifestURN];
 
         /** [PCAT-8289] ---------------------------- TCM Snapshot Data handling ------------------------------*/
-        // if (elementType.indexOf(type) !== -1) {
+        if (elementType.indexOf(type) !== -1) {
             let containerElement = {
                 asideData: asideData,
                 parentUrn: parentUrn,
@@ -84,7 +84,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 response: createdElemData.data
             };
             tcmSnapshotsForCreate(slateData, type, containerElement, dispatch);
-        // }
+        }
         /**---------------------------------------------------------------------------------------------------*/
 
         if (currentSlateData.status === 'approved') {
