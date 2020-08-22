@@ -205,7 +205,12 @@ function CommunicationChannel(WrappedComponent) {
                     }
                     break;
                 case 'pageLink':
-                    this.updatePageLink(message);
+                    if(message && message.link === 'unlink'){
+                        this.deleteTocItem(message)
+
+                    } else {
+                        this.updatePageLink(message);
+                    }
                     break;
                 case 'slateLengthChanged':
                     this.changeSlateLength(message);
@@ -659,7 +664,7 @@ function CommunicationChannel(WrappedComponent) {
         render() {
             return (
                 <React.Fragment>
-                    <WrappedComponent {...this.props} showBlocker={this.state.showBlocker} showCanvasBlocker={this.showCanvasBlocker} toggleTocDelete={this.state.toggleTocDelete} tocDeleteMessage={this.state.tocDeleteMessage} modifyState={this.modifyState} />
+                    <WrappedComponent {...this.props} showBlocker={this.state.showBlocker} showCanvasBlocker={this.showCanvasBlocker} toggleTocDelete={this.state.toggleTocDelete} tocDeleteMessage={this.state.tocDeleteMessage} modifyState={this.modifyState} updatePageLink={this.updatePageLink}/>
                     {this.showLockPopup()}
                 </React.Fragment>
             )
