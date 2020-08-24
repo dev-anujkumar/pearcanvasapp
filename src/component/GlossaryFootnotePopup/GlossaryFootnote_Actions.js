@@ -3,7 +3,7 @@ import config from '../../config/config';
 import store from '../../appstore/store.js'
 import { sendDataToIframe, createTitleSubtitleModel } from '../../constants/utility.js';
 import { HideLoader } from '../../constants/IFrameMessageTypes.js';
-import { tcmSnapshotsForUpdate, fetchParentData } from '../TcmSnapshots/TcmSnapshots_Utility.js';
+import { tcmSnapshotsForUpdate, fetchParentData, fetchElementWipData } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 const {
     REACT_APP_API_URL
 } = config
@@ -308,10 +308,12 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
     }
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })  //show saving spinner
 
-    /** tcmBodymatter :  Used to prepare TCM snapshots  */
+    /** For TCM snapshots */
+    let mainSlateId = config.isPopupSlate ? config.tempSlateManifestURN : config.slateManifestURN;
     let tcmBodymatter = store.getState().appStore.slateLevelData[config.slateManifestURN].contents.bodymatter;
     let tcmParentData = fetchParentData(tcmBodymatter, index);
-    
+    let tcmMainBodymatter = store.getState().appStore.slateLevelData[mainSlateId].contents.bodymatter;
+    /** ----------------- */
     let url = `${config.REACT_APP_API_URL}v1/slate/element?type=${type.toUpperCase()}&id=${glossaryfootnoteid}`
     return axios.put(url, JSON.stringify(data), {
         headers: {
@@ -323,7 +325,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         let currentParentData = JSON.parse(JSON.stringify(parentData1));
         let currentSlateData = currentParentData[config.slateManifestURN];
         /** [PCAT-8289] ----------------------------------- TCM Snapshot Data handling ---------------------------------*/
-        if (elementTypeData.indexOf(elementType) !== -1 && data.metaDataField == undefined  && data.sectionType == undefined) {
+        if (elementTypeData.indexOf(elementType) !== -1 && store.getState().appStore.showHideType == undefined) {
             let elementUpdateData ={
                 currentParentData: currentParentData,
                 updateBodymatter:tcmBodymatter,
@@ -332,7 +334,9 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             },
             containerElement = {
                 asideData:tcmParentData.asideData,
-                parentUrn:tcmParentData.parentUrn
+                parentUrn:tcmParentData.parentUrn,
+                parentElement: data.metaDataField ? fetchElementWipData(tcmMainBodymatter,index,'popup') : undefined,
+                metaDataField: data.metaDataField ? data.metaDataField : undefined
             };
             tcmSnapshotsForUpdate(elementUpdateData, index, containerElement,store.dispatch);
         }

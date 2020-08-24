@@ -70,7 +70,7 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
     }
     /* Check if Popup Slate is inside a Container Element*/
     let elementInPopupInContainer = config.popupParentElement && checkElementsInPopupInContainer();
-
+    let hasParentData = containerElement && checkParentData(containerElement)
     /** TCM Snapshots on Popup Slate */
     if (config.isPopupSlate) {
         let defaultKeysPopup = setDefaultKeys(actionStatus, true, true)
@@ -82,10 +82,10 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
     }
     /* For POPUP Element */
     else if ((wipData.type === POPUP_ELEMENT && type == POP_UP) || (parentElement && parentElement.type == POPUP_ELEMENT)) {
-        if (poetryData || asideData || parentUrn) { /** Popup Inside WE/Aside */
+        if (hasParentData) { /** Popup Inside WE/Aside */
             tcmSnapshotsPopupInContainer(snapshotsData, defaultKeys, containerElement, type, deleVercase, newVersionUrns);
         }
-        else {                                      /** Popup Element */
+        else {               /** Popup Element */
             tcmSnapshotsInPopupElement(snapshotsData, defaultKeys, containerElement, type, deleVercase, newVersionUrns);
         }
     }
@@ -365,7 +365,7 @@ const tcmSnapshotsPopupInContainer = (snapshotsData, defaultKeys, containerEleme
     let isHead = asideData && asideData.type === ELEMENT_ASIDE && asideData.subtype === WORKED_EXAMPLE ? parentUrn.manifestUrn == asideData.id ? "HEAD" : "BODY" : "";//HEAD/BODY
     let sectionId = isHead == "BODY" ? parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "" : "";//body-id
     tag.popupParentTag = `${tag.popupParentTag}${isHead ? ":"+isHead : ""}`
-    elementId.popupParentId = `${elementId.popupParentId}+${isHead == "BODY" ? sectionId : ""}`
+    elementId.popupParentId = `${elementId.popupParentId}${isHead == "BODY" ? "+"+sectionId : ""}`
     let popupData = {
         tag: tag,
         wipData: wipData,
@@ -415,6 +415,17 @@ const checkElementsInPopupInContainer = () => {
     let hasPopupAsideData = config.popupParentElement && ('popupAsideData' in config.popupParentElement && !isEmpty(config.popupParentElement.popupAsideData)) ? true : false;
     let hasPopupParentUrn = config.popupParentElement && ('popupParentUrn' in config.popupParentElement && !isEmpty(config.popupParentElement.popupParentUrn)) ? true : false;
     return (isPopupInContainer && (hasPopupAsideData || hasPopupParentUrn));
+}
+
+/**
+ * @function checkParentData = () =>
+ * @description Check if Popup Slate is inside a Container Element
+*/
+const checkParentData = (containerElement) => {
+    let poetryData = containerElement && ((containerElement.poetryData != undefined ||containerElement.poetryData != null)  && !isEmpty(containerElement.poetryData)) ? true : false;
+    let asideData = containerElement && ((containerElement.asideData != undefined ||containerElement.asideData != null)  && !isEmpty(containerElement.asideData)) ? true : false;
+    let parentUrn = containerElement && ((containerElement.parentUrn != undefined ||containerElement.parentUrn != null)  && !isEmpty(containerElement.parentUrn)) ? true : false;
+    return (poetryData || asideData || parentUrn);
 }
 /**----------------------------------------------------------------------------------------------------------------- */
 /**
@@ -765,6 +776,15 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn) => {
                     wipData = bodymatter[eleIndex[0]].groupeddata.bodymatter[eleIndex[1]].groupdata.bodymatter[eleIndex[2]]
                 }
                 break;
+            case POPUP_ELEMENT:
+                if (eleIndex.length == 2) {           /** Formatted-title in Popup Element */
+                    wipData = bodymatter[eleIndex[0]];
+                } else if (eleIndex.length == 3) {    /** Inside WE-HEAD | Aside */
+                    wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]];
+                } else if (eleIndex.length == 4 && bodymatter[eleIndex[0]].type !== MULTI_COLUMN) {   /** Inside WE-BODY */
+                    wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]].contents.bodymatter[eleIndex[2]];
+                }
+                break;
         }
     }
     return wipData;
@@ -781,6 +801,9 @@ export const fetchParentData = (bodymatter, indexes) => {
     let parentData = {};
     let tempIndex = Array.isArray(indexes) ? indexes : (typeof indexes === "number") ? indexes.toString() : indexes.split("-");
     let isChildElement = elementType.indexOf(bodymatter[tempIndex[0]].type) === -1 ? true : false
+    if(tempIndex.length >1 && bodymatter[tempIndex[0]].type == POPUP_ELEMENT){
+        isChildElement = false
+    }
     if (isChildElement == true) {
         parentData.asideData = {
             contentUrn: bodymatter[tempIndex[0]].contentUrn,
@@ -817,7 +840,9 @@ const setParentUrn = (bodymatter, tempIndex) => {
     } else if (tempIndex.length == 3) {
         switch (bodymatter[tempIndex[0]].type) {
             case ELEMENT_ASIDE:
-                parentElement = bodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]]
+                parentElement = bodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]];
+                /** Formatted-title in Popup */
+                parentElement = parentElement.type == POPUP_ELEMENT ? bodymatter[tempIndex[0]] : parentElement;
                 break;
             case MULTI_COLUMN:
                 parentElement = bodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]]
@@ -831,6 +856,8 @@ const setParentUrn = (bodymatter, tempIndex) => {
                 parentElement = bodymatter[tempIndex[0]]
                 break;
         }
+    } else if (tempIndex.length == 4) {
+        parentElement = bodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]]
     }
     return {
         parentElement,
