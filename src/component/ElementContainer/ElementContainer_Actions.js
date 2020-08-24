@@ -8,7 +8,7 @@ import {
 import { AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP, OPEN_GLOSSARY_FOOTNOTE,DELETE_SHOW_HIDE_ELEMENT, GET_TCM_RESOURCES} from "./../../constants/Action_Constants";
 import { customEvent } from '../../js/utils';
 import { prepareTcmSnapshots,tcmSnapshotsForUpdate,fetchElementWipData,checkContainerElementVersion,fetchManifestStatus } from '../TcmSnapshots/TcmSnapshots_Utility.js';
-let elementTypeTCM = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza'];
+let elementTypeTCM = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza',  'popup'];
 let containerType = ['element-aside', 'manifest', 'citations', 'poetry', 'groupedcontent','popup'];
 
 export const addComment = (commentString, elementId) => (dispatch) => {
@@ -252,7 +252,7 @@ export const tcmSnapshotsForDelete = async (elementDeleteData, type, containerEl
         status:"pending",
         fromWhere:"delete"
     }
-    let parentType = ['element-aside', 'citations', 'poetry', 'groupedcontent'];
+    let parentType = ['element-aside', 'citations', 'poetry', 'groupedcontent', 'popup'];
     let versionStatus = {};
     if ((parentType.indexOf(type) === -1)) {
         versionStatus = fetchManifestStatus(elementDeleteData.bodymatter, containerElement, type);
