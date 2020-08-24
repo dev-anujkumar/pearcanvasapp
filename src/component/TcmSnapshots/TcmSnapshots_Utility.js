@@ -587,7 +587,11 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
     }
     let {updateBodymatter, response,updatedId,currentParentData} = elementUpdateData;
     let currentSlateData =currentParentData[config.slateManifestURN] 
+    const { metaDataField, sectionType, parentElement} = containerElement
     let wipData = fetchElementWipData(updateBodymatter, elementIndex, response.type,"")
+    if((metaDataField || sectionType) && parentElement && parentElement.type == 'popup'){
+        wipData = metaDataField ? wipData && wipData.popupdata['formatted-title'] : wipData.popupdata.postertextobject[0]
+    }
     let versionStatus = fetchManifestStatus(updateBodymatter, containerElement, response.type);
     /** latest version for WE/CE/PE/AS/2C*/
     containerElement = await checkContainerElementVersion(containerElement, versionStatus,currentSlateData)
@@ -605,7 +609,7 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
         if (oldData.poetrylines) {
             oldData.poetrylines = wipData.poetrylines;
         }
-        else {
+        else{ 
             oldData.elementdata = wipData.elementdata;
         }
         oldData.html = wipData.html;
@@ -651,14 +655,15 @@ export const tcmSnapshotsForCreate = async (elementCreateData, type, containerEl
  * @param {String} type type of element
  * @returns {Object} Parent Elements' status
 */
-export const fetchManifestStatus = (bodymatter, parentElements, type, indexes) => {
+export const fetchManifestStatus = (bodymatter, conatinerElement, type, indexes) => {
     let parentData = {}
-    const { asideData, parentUrn, poetryData } = parentElements;
-    if ((asideData || parentUrn || poetryData) && bodymatter.length !== 0) {
-        let parentElement = asideData ? asideData : poetryData ? poetryData : parentUrn;
-        let parentId = parentElement && parentElement.id ? parentElement.id : parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "";
+    const { asideData, parentUrn, poetryData, parentElement, metaDataField,sectionType } = conatinerElement;
+    if ((asideData || parentUrn || poetryData || parentElement) && bodymatter.length !== 0) {
+        let parentElem = asideData ? asideData : poetryData ? poetryData : parentUrn;
+        let parentId = parentElem && parentElem.id ? parentElem.id : parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "";
         let element = bodymatter.find(item => item.id == parentId);
-        let eleType = type === SECTION_BREAK ? SECTION_BREAK : parentUrn.elementType;
+        let eleType = type === SECTION_BREAK ? SECTION_BREAK : parentUrn && parentUrn.elementType ?parentUrn.elementType: "";
+        let popupElem = metaDataField || sectionType ? parentElement : undefined
         switch (eleType) {
             case MULTI_COLUMN_GROUP:                         /** In Multi-Column */
                 parentData.parentStatus = element && element.status ? element.status : undefined;
@@ -670,8 +675,13 @@ export const fetchManifestStatus = (bodymatter, parentElements, type, indexes) =
                     parentData.parentStatus = element.status;
                     element.elementdata && element.elementdata.bodymatter.map((ele) => {
                         parentData.childStatus = parentUrn && ele.id === parentUrn.manifestUrn ? ele.status : undefined;
+                        parentData.popupStatus = popupElem && ele.id == popupElem.id && popupElem.status ? popupElem.status : undefined; /** Check Popup Status */
                     })
                 }
+                break;
+            case POPUP_ELEMENT:
+                /** Formatted-title and CTA */
+                parentData.parentStatus = popupElem && popupElem.status ? popupElem.status : undefined;
                 break;
             case ELEMENT_ASIDE:                              /** In WE-HEAD | Aside */
             case SECTION_BREAK:                              /** Create Section-Break */
@@ -679,6 +689,7 @@ export const fetchManifestStatus = (bodymatter, parentElements, type, indexes) =
             case CITATION_GROUP:                             /** In Citations */
             default:
                 parentData.parentStatus = element && element.status ? element.status : undefined;
+                parentData.popupStatus = popupElem && popupElem.status ? popupElem.status : undefined; /** Check Popup Status */
                 break;
         }
     }
@@ -719,6 +730,14 @@ export const checkContainerElementVersion = async (containerElement, versionStat
     if (versionStatus && versionStatus.childStatus && versionStatus.childStatus === "approved") {
         let newSectionManifest = await getLatestVersion(containerElement.parentUrn.contentUrn);
         containerElement.parentUrn.manifestUrn = newSectionManifest ? newSectionManifest : containerElement.parentUrn.manifestUrn
+    }
+    if(versionStatus && versionStatus.popupStatus && versionStatus.popupStatus === "approved"){
+        let updatedPopupUrn = containerElement && containerElement.parentElement && containerElement.parentElement.contentUrn ? containerElement.parentElement.contentUrn : "";
+        if(updatedPopupUrn){
+            let newPopupManifestUrn = await getLatestVersion(updatedPopupUrn);
+            containerElement.parentElement.id = newPopupManifestUrn;
+            containerElement.parentElement.versionUrn = newPopupManifestUrn;
+        }
     }
     /** latest version for slate*/
     if (currentSlateData && currentSlateData.status && currentSlateData.status === 'approved') {
