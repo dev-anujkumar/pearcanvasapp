@@ -81,7 +81,7 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
         }
     }
     /* For POPUP Element */
-    else if ((wipData.type === POPUP_ELEMENT && type == POP_UP) || (parentElement && parentElement.type == POPUP_ELEMENT)) {
+    else if ((wipData.type === POPUP_ELEMENT && (type == POP_UP || type == POPUP_ELEMENT)) || (parentElement && parentElement.type == POPUP_ELEMENT)) {
         if (hasParentData) { /** Popup Inside WE/Aside */
             tcmSnapshotsPopupInContainer(snapshotsData, defaultKeys, containerElement, type, deleVercase, newVersionUrns);
         }
@@ -334,7 +334,7 @@ const tcmSnapshotsPopupCTA = (snapshotsData, defaultKeys, containerElement, dele
 */
 const tcmSnapshotsInPopupElement = (snapshotsData, defaultKeys, containerElement, type, deleVercase, newVersionUrns) => {
     const { metaDataField, sectionType } = containerElement
-    if (defaultKeys.action === 'create' && type == POP_UP) {     /** Create Popup */
+    if (defaultKeys.action === 'create' && type == POP_UP || (defaultKeys.action === 'delete' && type == POPUP_ELEMENT)) {     /** Create Popup */
         tcmSnapshotsPopupCTA(snapshotsData, defaultKeys, containerElement, deleVercase, newVersionUrns);
         tcmSnapshotsCreatePopup(snapshotsData, defaultKeys, deleVercase, newVersionUrns);
     }
@@ -802,7 +802,7 @@ export const fetchParentData = (bodymatter, indexes) => {
     let tempIndex = Array.isArray(indexes) ? indexes : (typeof indexes === "number") ? indexes.toString() : indexes.split("-");
     let isChildElement = elementType.indexOf(bodymatter[tempIndex[0]].type) === -1 ? true : false
     if(tempIndex.length >1 && bodymatter[tempIndex[0]].type == POPUP_ELEMENT){
-        isChildElement = false
+        isChildElement = false /** Formatted-title in Popup */
     }
     if (isChildElement == true) {
         parentData.asideData = {
