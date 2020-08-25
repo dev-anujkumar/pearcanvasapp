@@ -42,7 +42,7 @@ export const ERROR_CREATING_ASSETPOPOVER = "You can not apply Asset PopOver over
 export const SINGLE_CONTAINER_DELETE = 'A project must have at least one Part/Chapter. Please add another Part/Chapter before deleting this one'
 export const WITH_PENDING_TRACK = ' Are you sure you want to delete this slate/container with pending changes?'
 export const WITH_PENDING_TRACK_NOTE_MESSAGE = 'Note:There will be no undo available after deletion'
-export const SLATE_UNLINKING = 'Are you sure you want to unlink. This action can not be undone?'
+export const SLATE_UNLINKING = 'Are you sure you want to unlink. This action can not be undone'
 export const DELETE_DIALOG_TEXT = 'Are you sure you want to delete, this action cannot be undone?'
 
 /*****************************TOC Delete message type */
