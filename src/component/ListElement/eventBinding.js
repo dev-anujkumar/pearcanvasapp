@@ -16,7 +16,7 @@ export const insertUoListButton = (editor, onIconClick) => {
         icon:"customuolistbutton",
         tooltip: 'Unordered List',
         onAction: () => {
-            onIconClick('disc');
+            onIconClick('unordered','disc');
         }
     });
 }
@@ -29,7 +29,7 @@ export const insertListButton = (editor, onIconClick) => {
         tooltip: 'Ordered List',
         icon:"customlistbutton",
         onAction: () => {
-            onIconClick('decimal');
+            onIconClick('ordered','decimal');
         },
         onItemAction: function () {},
         fetch: function () {
@@ -545,6 +545,24 @@ const createDefaultOlLi = (treelevel, olClass, listType, element) => {
         olEle.append(liEle)
         element.innerHTML = ""
         element.append(olEle)
+    }
+}
+
+export const removeListHighliting = _ => {
+    let listToolbar = document.querySelector('button[title="Unordered List"]')
+    listToolbar && listToolbar.classList.remove('tox-tbtn--enabled')
+
+    listToolbar = document.querySelector('div[title="Ordered List"]')
+    listToolbar && listToolbar.classList.remove('tox-tbtn--enabled')
+}
+
+export const highlightListIcon = props => {
+    if (props.element.subtype === "disc") {
+        let listToolbar = document.querySelector('button[title="Unordered List"]')
+        listToolbar && listToolbar.classList.add('tox-tbtn--enabled')
+    } else {
+        let listToolbar = document.querySelector('div[title="Ordered List"]');
+        listToolbar && listToolbar.classList.add('tox-tbtn--enabled')
     }
 }
 /* ------------------------------ END - List customized events method ----------------------------- */

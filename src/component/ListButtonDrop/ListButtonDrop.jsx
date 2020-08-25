@@ -7,7 +7,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import '../../styles/CanvasWrapper/ListButtonDrop.css';
-import {LIST_TYPE , LIST_DATA} from './ListTypeData'
+import {LIST_TYPE , LIST_DATA} from './ListTypeData';
+import {removeListHighliting } from '../ListElement/eventBinding'
 
 /**
  * ListButtonDrop | it is component renders list drop ui on editor tool header
@@ -51,6 +52,7 @@ const onListOptionSelect = (type, props) => {
     let _value = parseInt(document.getElementById('listINputBox').value || 1); // earlier default by 0
     _value = isNaN(_value) ? 1 : _value; //isNaN(_value) && 0 || _value; // earlier default by 0
     props.onListSelect(type, _value, false);
+    removeListHighliting();
     let _listWrapperDiv = document.querySelector('#listDropWrapper');
     if (_listWrapperDiv)
         _listWrapperDiv.querySelector('.fr-popup').classList.remove('fr-active');

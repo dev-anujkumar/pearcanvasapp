@@ -13,7 +13,7 @@ import "tinymce/plugins/paste";
 // IMPORT - Components & Dependencies //
 import { EditorConfig, FormatSelectors, elementTypeOptions } from '../config/EditorConfig';
 import config from '../config/config';
-import { insertListButton, bindKeyDownEvent, insertUoListButton, preventRemoveAllFormatting, removeTinyDefaultAttribute } from './ListElement/eventBinding.js';
+import { insertListButton, bindKeyDownEvent, insertUoListButton, preventRemoveAllFormatting, removeTinyDefaultAttribute, removeListHighliting, highlightListIcon } from './ListElement/eventBinding.js';
 import { authorAssetPopOver } from './AssetPopover/openApoFunction.js';
 import {
     tinymceFormulaIcon,tinymceFormulaChemistryIcon,assetPopoverIcon,crossLinkIcon,code,Footnote,bold,Glossary,undo,redo,italic,underline,strikethrough,removeformat,subscript,superscript,charmap,downArrow,orderedList,unorderedList,indent,outdent
@@ -253,14 +253,14 @@ export class TinyMceEditor extends Component {
         }
     }
 
-    onListButtonClick = (type) => {
+    onListButtonClick = (type,subType) => {
         this.elementConverted = true;
-        this.removeListHighliting();
+        removeListHighliting();
 
-        if(this.props.element.type==="element-list" && this.props.element.subtype === type){
-            this.toggleConfirmationPopup(true,type);
+        if(this.props.element.type==="element-list" && this.props.element.elementdata.listtype===type){
+            this.toggleConfirmationPopup(true,this.props.element.subtype);
         } else {
-            this.props.onListSelect(type, "");
+            this.props.onListSelect(subType, "");
         }
     }
 
@@ -2142,10 +2142,10 @@ export class TinyMceEditor extends Component {
         if (isBlockQuote) {
             this.lastContent = document.getElementById('cypress-' + this.props.index).innerHTML;
         }
-        if(this.elementConverted){
+        if(this.elementConverted || prevProps.element.subtype !== this.props.element.subtype){
             document.querySelector('button[title="formatSelector"] .tox-tbtn__select-label').innerText = this.getElementTypeForToolbar(this.props.element);
             if (this.props.element.type === "element-list") {
-                this.highlightListIcon();
+                highlightListIcon(this.props);
             }
             this.elementConverted = false;
         }
@@ -2154,24 +2154,6 @@ export class TinyMceEditor extends Component {
         tinymce.$('.blockquote-editor').attr('contenteditable', false)
     }
 
-    removeListHighliting = _ => {
-        let listToolbar = document.querySelector('button[title="Unordered List"]')
-        listToolbar && listToolbar.classList.remove('tox-tbtn--enabled')
-
-        listToolbar = document.querySelector('div[title="Ordered List"]')
-        listToolbar && listToolbar.classList.remove('tox-tbtn--enabled')
-    }
-
-    highlightListIcon = _ => {
-        if (this.props.element.subtype === "disc") {
-            let listToolbar = document.querySelector('button[title="Unordered List"]')
-            listToolbar && listToolbar.classList.add('tox-tbtn--enabled')
-        } else {
-            let listToolbar = document.querySelector('div[title="Ordered List"]');
-            listToolbar && listToolbar.classList.add('tox-tbtn--enabled')
-        }
-    }
-    
     removeMultiTinyInstance = () => {
         let tinyMCEInstancesNodes = document.getElementsByClassName('tox tox-tinymce tox-tinymce-inline');
 
@@ -2479,10 +2461,10 @@ export class TinyMceEditor extends Component {
                     assetPopoverButtonNode.classList.remove('tox-tbtn--disabled')
                 }
                 if(this.props.element.type==="element-list"){
-                    this.highlightListIcon();
+                    highlightListIcon(this.props);
                 } 
                 else{
-                    this.removeListHighliting();
+                    removeListHighliting();
                 }
             })
         });
