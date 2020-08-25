@@ -28,6 +28,9 @@ import { MULTIPLE_LINE_POETRY_ERROR_POPUP } from '../constants/Action_Constants'
 import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER } from '../component/SlateWrapper/SlateWrapperConstants.js';
 import { conversionElement } from './Sidebar/Sidebar_Action';
 import elementList from './Sidebar/elementTypes';
+import PopUp from '../component/PopUp';
+import { showTocBlocker, showBlocker, hideTocBlocker,disableHeader } from '../js/toggleLoader';
+
 let context = {};
 let clickedX = 0;
 let clickedY = 0;
@@ -36,6 +39,7 @@ export class TinyMceEditor extends Component {
     constructor(props) {
         super(props);
         context = this;
+        this.state = { popup : false }
         this.placeHolderClass = ''
         this.indentRun = false;
         this.outdentRun = false;
@@ -214,7 +218,7 @@ export class TinyMceEditor extends Component {
 
         this.editorRef = React.createRef();
         this.currentCursorBookmark = {};
-    };
+    }
 
     /**
      * Adds custon list button to the editor toolbar
@@ -252,7 +256,30 @@ export class TinyMceEditor extends Component {
     onListButtonClick = (type) => {
         this.elementConverted = true;
         this.removeListHighliting();
-        this.props.onListSelect(type, "");
+
+        if(this.props.element.type==="element-list" && this.props.element.subtype === type){
+            this.toggleConfirmationPopup(true,type);
+        } else {
+            this.props.onListSelect(type, "");
+        }
+    }
+
+    toggleConfirmationPopup = (value,type) => {
+        showBlocker(value); 
+        this.props.showBlocker(value)
+        if(value){
+            showTocBlocker();
+        }
+        else{
+            hideTocBlocker();
+            disableHeader(false)
+        }
+        this.setState({popup : value, listType : type})
+    }
+
+    listWarningConfirmation = ()=>{
+        this.props.onListSelect(this.state.listType, "");
+        this.toggleConfirmationPopup(false,null)
     }
 
     /**
@@ -2714,7 +2741,20 @@ export class TinyMceEditor extends Component {
                 defModel = removeBOM(defModel)
 
                 return (
-                    <div ref={this.editorRef} data-id={this.props.currentElement ? this.props.currentElement.id : ''} onKeyDown={this.normalKeyDownHandler} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: defModel }} onChange={this.handlePlaceholder}></div>
+                    <div>
+                        {this.state.popup && 
+                         <PopUp 
+                            dialogText={"Performing this action will remove the list and convert this text to a paragraph. Do you wish to continue?"} 
+                            active={true}
+                            listConfirmation={true}
+                            togglePopup = {this.toggleConfirmationPopup}
+                            tocDeleteClass = {'listConfirmation'}
+                            saveButtonText = {"Yes"}
+                            saveContent = {this.listWarningConfirmation}
+                         />
+                        }
+                        <div ref={this.editorRef} data-id={this.props.currentElement ? this.props.currentElement.id : ''} onKeyDown={this.normalKeyDownHandler} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: defModel }} onChange={this.handlePlaceholder}></div>
+                    </div>
                 )
         }
     }
