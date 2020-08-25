@@ -66,10 +66,8 @@
     float: left;
     height: 100%;
     display: block;
-    margin: 0 11px 0 11px;
     justify-content: space-around;
     position: relative;
-    /*padding-left: 90px;*/
     background-color: #fafafa;
     /* height: calc(100% - 62px); */
 }
@@ -105,7 +103,7 @@
     height : 100%;
 }
 .navigation-container{
-    width: 62px;
+    width: 30px;
     height: 100%;
     float: left;
 }
@@ -143,16 +141,21 @@
     -webkit-transform: rotate(-135deg);
   }
   .navigation-button{
-    width: 62px;
-    height: 76px;
+    width: 30px;
+    height: 130px;
     background: #fff;
-    padding: 20px 8px 10px;
     cursor: pointer;
     color: #005a70;
     font-family: 'Open Sans', sans-serif;
     font-size: 12px;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 2px 1px -1px rgba(0, 0, 0, 0.12), 0 1px 1px 0 rgba(0, 0, 0, 0.14);
     border-radius: 3px;
+  }
+  .navigation-button.next{
+    padding:50px 5px 0
+  }
+  .navigation-button.back{
+    padding:50px 10px 0
   }
   .navigation-icon{
     width: 100%;
