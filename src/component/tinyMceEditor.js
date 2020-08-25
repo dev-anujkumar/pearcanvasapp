@@ -582,6 +582,9 @@ export class TinyMceEditor extends Component {
                 sendDataToIframe({ 'type': LaunchTOCForCrossLinking, 'message': { open: true, case: 'update', link: linkId, element: elementId, page: pageId, blockCanvas: true, crossLink: true, reviewerRole: hasReviewerRole() } });
             }
         }
+        else if (e.target.className === "blockquoteTextCredit"){
+            setFormattingToolbar('disableTinymceToolbar')
+        }
         /**
          *  Case - otherwise close glossary & footnote popup  
          */
@@ -1356,7 +1359,7 @@ export class TinyMceEditor extends Component {
 
 
     changeTextElements = editor => {
-        const self = this;
+        const self = this;        
         editor.ui.registry.addMenuButton('formatSelector', {
             text: self.getElementTypeForToolbar(self.props.element),
             tooltip : 'formatSelector',
