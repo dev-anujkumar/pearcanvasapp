@@ -688,7 +688,7 @@ export const fetchManifestStatus = (bodymatter, containerElement, type, indexes)
                     parentData.parentStatus = element.status;
                     element.elementdata && element.elementdata.bodymatter.map((ele) => {
                         parentData.childStatus = parentUrn && ele.id === parentUrn.manifestUrn ? ele.status : undefined;
-                        parentData.popupStatus = popupElem && ele.id == popupElem.id && popupElem.status ? popupElem.status : undefined; /** Check Popup Status */
+                        parentData.popupStatus = popupElem && popupElem.status ? popupElem.status : undefined; /** Check Popup Status */
                     })
                 }
                 break;
