@@ -61,11 +61,6 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
     let elementId = {
         parentId: deleVercase && newVersionUrns[wipData.id] ? newVersionUrns[wipData.id] : wipData.id
     }
-    /* updating wip id with latest versioned id*/
-    if (deleVercase) {
-        wipData.id = newVersionUrns[wipData.id]
-        wipData.versionUrn = newVersionUrns[wipData.id]
-    }
     /* Initial snapshotsData of elements*/
     let snapshotsData = {
         tag: tag,
