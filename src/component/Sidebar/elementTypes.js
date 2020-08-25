@@ -68,7 +68,7 @@ export default {
             subtype: {
                 'secondary-pullquote': {
                     text: 'Pullquote',
-                    labelText: 'BQ',
+                    labelText: 'PQ',
                     enum: 'PULLQUOTE'
                 },
                 'secondary-marginalia': {

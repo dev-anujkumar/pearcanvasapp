@@ -193,9 +193,8 @@ export class CanvasWrapper extends Component {
                                 {/*Prev Button */}
                                 <div className={`navigation-container ${config.disablePrev ? 'disabled':""}`}>
                                     <div className='navigation-content'>
-                                        <div className='navigation-button' onClick={() => this.handleNavClick("back")}>
+                                        <div className='navigation-button back' onClick={() => this.handleNavClick("back")}>
                                             <div className='navigation-icon'><i class="nav-arrow left-arrow-transform"></i></div>
-                                            <div className='navigation-text'>Previous</div>
                                         </div>
                                     </div>
                                 </div>
@@ -209,14 +208,14 @@ export class CanvasWrapper extends Component {
                                  {/*Next Button */}
                                 <div className={`navigation-container ${config.disableNext ? 'disabled':""}`}>
                                     <div className='navigation-content' >
-                                        <div className='navigation-button' onClick={() => this.handleNavClick("next")}>
+                                        <div className='navigation-button next' onClick={() => this.handleNavClick("next")}>
                                             <div className='navigation-icon'><i class="nav-arrow right-arrow-transform"></i></div>
-                                            <div className='navigation-text'>Next</div>
                                         </div>
                                     </div>
                                 </div>
+                                <div className='clr'></div>
                             </div>
-                            <div className='clr'></div>
+                            
                         </div>
                     </div>
                     <div className = "sidebar-panel">

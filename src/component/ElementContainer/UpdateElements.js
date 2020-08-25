@@ -546,7 +546,6 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
             innerText = revealTextData.innerText
             let attributionText=tinyMCE.$(node).find('.blockquoteTextCredit').text()
             let inputElementSubType=elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'];
-            console.log(inputElementSubType,"attributionText>",attributionText)
             if ((attributionText.length == 0 && inputElementSubType == "MARGINALIA") || (attributionText.length == 0 && inputElementSubType == "BLOCKQUOTE")) {
                 inputElementSubType = "BLOCKQUOTE"
             }
