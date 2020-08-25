@@ -796,7 +796,14 @@ const appendCreatedElement = async (paramObj, responseData) => {
                 targetPopupElement.popupdata["formatted-title"].html.text = createTitleSubtitleModel("", elemNode.innerHTML)
             }
             targetPopupElement.popupdata["formatted-title"].elementdata.text = elemNode.innerText
-            _slateObject.contents.bodymatter[popupElementIndex] = targetPopupElement
+            // _slateObject.contents.bodymatter[popupElementIndex] = targetPopupElement
+            if (popupElementIndex.length === 3) {
+                _slateObject.contents.bodymatter[popupElementIndex[0]].elementdata.bodymatter[popupElementIndex[1]] = targetPopupElement
+            } else if (popupElementIndex.length === 4) {
+                _slateObject.contents.bodymatter[popupElementIndex[0]].elementdata.bodymatter[popupElementIndex[1]].contents.bodymatter[popupElementIndex[2]] = targetPopupElement
+            } else {
+                _slateObject.contents.bodymatter[popupElementIndex[0]] = targetPopupElement
+            }
         }
     }
     else if(parentElement.type === "citations"){
@@ -864,7 +871,8 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
         let containerElement = {
             parentElement:parentElement,
             asideData:getState().appStore.asideData,
-            parentUrn:getState().appStore.parentUrn
+            parentUrn:getState().appStore.parentUrn,
+            metaDataField: _requestData.metaDataField
         };
         let slateData = {
             currentSlateData: {

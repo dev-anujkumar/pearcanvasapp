@@ -175,7 +175,7 @@ export const prepareAssetPopoverSnapshotContent = async (assetsList) => {
     let assetPopoverSnap = []
     if (assetsList && assetsList.length) {
         await Promise.all(assetsList.map(async assetsItem => {
-            let assetId = document.querySelector('abbr[data-uri="' + assetsItem.linkid + '"').getAttribute("asset-id");
+            let assetId = assetsItem && assetsItem.linkid && document.querySelector('abbr[data-uri="' + assetsItem.linkid + '"').getAttribute("asset-id");
             let data = {
                 assetid: assetId,
                 type: assetsItem.internallinktype === SLATE ? SLATE_LINK : AP_TYPE

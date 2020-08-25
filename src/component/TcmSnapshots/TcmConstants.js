@@ -6,7 +6,7 @@ export default {
     HEADING: "heading",
     PARAGRAPH: "paragraph",
     LEARNING_OBJECTIVE: "element-learningobjectives",
-    FORMATTED_TITLE:'formattedTitle',
+    FORMATTED_TITLE:'formatted-title',
     CTA_BUTTON:'actionButton',
     POSTER_TEXT_OBJ:'postertextobject',
     /****************Container Elements*********************/
@@ -38,5 +38,5 @@ export default {
     elementType: ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza', 'groupedcontent'],
     containerType : ['element-aside', 'manifest', 'citations', 'poetry', 'WORKED_EXAMPLE', 'CONTAINER', 'SECTION_BREAK', 'CITATION', 'POETRY', 'groupedcontent'],
     formattedTitleField : ['formattedTitle','formattedTitleOnly','formattedSubtitle' ],
-
+    parentType : ['WORKED_EXAMPLE', 'CONTAINER', 'CITATION', 'POETRY', 'MULTI_COLUMN'],
 }
