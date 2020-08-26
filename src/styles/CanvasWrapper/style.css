@@ -8,7 +8,7 @@
 
 #editor-toolbar {
     width: 100%;
-    min-height: 54px;
+    min-height: 49px;
     margin: 0 auto;
     background: #ffffff;
     border-bottom: solid 1px #e0e0e0;
@@ -39,7 +39,7 @@
 
 #artboard-containers {
     height: 100%;
-    padding-left: 40px;
+    /* padding-left: 40px; */
     /* overflow:auto; */
     /* width: 100%; */
 }
@@ -47,7 +47,7 @@
 .panel-text-settings {
     width: 240px;
     overflow-y: auto;
-    position: relative;
+    position:fixed;
     right: 0;
     height: 100%;
     background-color: #fafafa;
@@ -188,20 +188,4 @@
 }
 p.blockquoteTextCredit:empty:not(:focus)::before {
     content: attr(data-placeholder);
-}
-@media screen and (max-width: 1500px) {
-.artboard-parent{
-width:850px;
-}
-.content-composer .workspace .artboard-container{
-width:700px;
-}
-}
-@media screen and (max-width: 1024px) {
-.artboard-parent{
-    width:700px;
-}
-.content-composer .workspace .artboard-container{
-    width: 540px;
-}
 }
