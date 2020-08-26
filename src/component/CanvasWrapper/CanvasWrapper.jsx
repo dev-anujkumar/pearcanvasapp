@@ -154,7 +154,6 @@ export class CanvasWrapper extends Component {
         if(config.savingInProgress || config.popupCreationCallInProgress){
             return false
         }
-        config.currentInsertedType = "";
         sendDataToIframe({'type': ShowLoader,'message': { status: true }});
         if(nav === "back"){
             sendDataToIframe({'type': PreviousSlate,'message': {}})
