@@ -819,14 +819,7 @@ export class TinyMceEditor extends Component {
      */
     editorKeydown = (editor) => {
         editor.on('keydown', (e) => {
-            let iFocusinBlockQuote = editor.dom.getParent(editor.selection.getStart(), '.paragraphNummerEins');
-            let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");
             let newElement = this.props.currentElement ? this.props.currentElement : this.props.element
-            // if (isBlockQuote && !iFocusinBlockQuote) {
-            //     let evt = (e) ? e : window.event;
-            //     evt.preventDefault();
-            //     return false;
-            // }
             if (e.keyCode == 86 && e.ctrlKey) {
                 this.isctrlPlusV = true;
             }

@@ -27,5 +27,4 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
         default:
             return state
     }
-   
 }

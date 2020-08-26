@@ -261,9 +261,6 @@ class Sidebar extends Component {
         this.setState({
             attrInput: event.target.value
         })
-        //let activeElement = document.querySelector(`[data-id="${this.props.activeElement.elementId}"]`)
-        //let attrNode = activeElement.querySelector(".blockquoteTextCredit");
-        //attrNode.innerHTML = event.target.value.replace(/</g, "&lt;").replace(/>/g, "&gt;");
     }
     
     attributions = () => {

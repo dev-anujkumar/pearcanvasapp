@@ -80,7 +80,6 @@ export class CanvasWrapper extends Component {
 
     componentDidUpdate(prevProps, prevState){
         this.countTimer =  Date.now();
-        
         var targetNode = document.querySelector('body');
         // Options for the observer (which mutations to observe)		
         var config = { attributes: true };
@@ -259,7 +258,7 @@ const mapStateToProps = state => {
         logout,
         withinLockPeriod: state.slateLockReducer.withinLockPeriod,
         ErrorPopup: state.errorPopup,
-        pageNumberToggle: state.toolbarReducer.pageNumberToggle,
+        pageNumberToggle: state.toolbarReducer.pageNumberToggle
     };
 };
 
