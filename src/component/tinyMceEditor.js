@@ -1359,6 +1359,7 @@ export class TinyMceEditor extends Component {
             fetch: function (callback) {
                 const items = FormatSelectors(self.elementConversion);
                 callback(items);
+                self.handleBlur(null, false)
             }
         });
     }

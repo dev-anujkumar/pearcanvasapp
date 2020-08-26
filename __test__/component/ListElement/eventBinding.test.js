@@ -5,10 +5,12 @@ import {
     removeTinyDefaultAttribute,
     preventRemoveAllFormatting,
     bindKeyDownEvent,
-    updateNestedList
+    updateNestedList,
+    highlightListIcon
 } from '../../../src/component/ListElement/eventBinding';
 
 describe('Testing Event Binding Methods', () => {
+    let onIconClick = () => { };
     it('Test insertUoListButton Call', () => {
         let editor = {
             ui: {
@@ -19,7 +21,6 @@ describe('Testing Event Binding Methods', () => {
                 }
             }
         }
-        let onIconClick = () => { };
         const addButton = jest.spyOn(editor.ui.registry, 'addButton');
         insertUoListButton(editor, onIconClick);
         expect(addButton).toHaveBeenCalled();
@@ -29,14 +30,34 @@ describe('Testing Event Binding Methods', () => {
         let editor = {
             ui: {
                 registry: {
-                    addButton: (temp, object) => {
+                    addSplitButton: (temp, object) => {
+                        object.onAction();
+                        object.onItemAction();
                     }
                 }
             }
         }
-        const addButton = jest.spyOn(editor.ui.registry, 'addButton');
-        insertListButton(editor);
-        expect(addButton).toHaveBeenCalled();
+        const addSplitButton = jest.spyOn(editor.ui.registry, 'addSplitButton');
+        insertListButton(editor,onIconClick);
+        expect(addSplitButton).toHaveBeenCalled();
+    });
+
+    it('highlightListIcon test UL',() => {
+        const elem = document.createElement('button');
+        elem.setAttribute('title','Unordered List');
+        document.body.append(elem);
+        const context = { element : {subtype : 'disc'}}
+        highlightListIcon(context); 
+        expect(elem.classList.contains('tox-tbtn--enabled')).toEqual(true);
+    });
+
+    it('highlightListIcon test OL',() => {
+        const elem = document.createElement('div');
+        elem.setAttribute('title','Ordered List');
+        document.body.append(elem);
+        const context = { element : {subtype : 'decimal'}}
+        highlightListIcon(context); 
+        expect(elem.classList.contains('tox-tbtn--enabled')).toEqual(true);
     });
 
     it('Test positionListDrop Call', () => {
