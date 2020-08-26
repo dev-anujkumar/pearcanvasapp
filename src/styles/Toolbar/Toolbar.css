@@ -256,7 +256,7 @@ button[title="Cross Linking"] .tox-tbtn__select-label {
   fill: #005a70!important;
 }
 .tox .tox-tbtn:hover:not(.tox-tbtn--disabled) {
-  background-color: #f3f7f8!important;
+  background: none!important;
 }
 div[title="Ordered List"] span.tox-tbtn__icon-wrap svg {
   margin-left: 5px;
@@ -336,6 +336,7 @@ button[title="formatSelector"]:hover{
 }
 .tox-toolbar__group{
   cursor:default!important;
+  height:32px!important
 }
 .tox-tbtn{
   cursor:pointer!important;
@@ -359,4 +360,11 @@ button[title="formatSelector"]:hover{
 }
 .tox-tbtn--select.tox-tbtn--active .tox-tbtn__select-label{
   color:#005a70!important;
+}
+.tox .tox-tbtn{
+  height:32px!important;
+  margin:0!important;
+}
+.tox-editor-container{
+  height:32px!important;
 }
