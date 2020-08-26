@@ -12,7 +12,6 @@ let cypressConfig = {
     parentEntityUrn:"",
     slateType : 'section',
     currentInsertedIndex : 0,
-    currentInsertedType : "",
     disableNext : false,
     disablePrev : false,
     tcmStatus : false,

@@ -36,7 +36,7 @@ import {
     SET_CURRENT_SLATE_DATA,
     PAGE_NUMBER_LOADER,
     GET_USAGE_TYPE,
-    SET_SLATE_LENGTH,
+    SET_SLATE_LENGTH
 } from '../constants/Action_Constants';
 
 /**

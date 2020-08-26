@@ -80,7 +80,6 @@ export class CanvasWrapper extends Component {
 
     componentDidUpdate(prevProps, prevState){
         this.countTimer =  Date.now();
-        
         var targetNode = document.querySelector('body');
         // Options for the observer (which mutations to observe)		
         var config = { attributes: true };
@@ -155,7 +154,6 @@ export class CanvasWrapper extends Component {
         if(config.savingInProgress || config.popupCreationCallInProgress){
             return false
         }
-        config.currentInsertedType = "";
         sendDataToIframe({'type': ShowLoader,'message': { status: true }});
         if(nav === "back"){
             sendDataToIframe({'type': PreviousSlate,'message': {}})
@@ -202,7 +200,7 @@ export class CanvasWrapper extends Component {
                                     {this.props.showApoSearch ? <AssetPopoverSearch /> : ''}
                                     {/* slate wrapper component combines slate content & slate title */}
                                     <RootContext.Provider value={{ isPageNumberEnabled: this.props.pageNumberToggle }}>
-                                        <SlateWrapper loadMorePages={this.loadMorePages} handleCommentspanel={this.handleCommentspanel} slateData={slateData} navigate={this.navigate} showBlocker={this.props.showCanvasBlocker} convertToListElement={this.props.convertToListElement} toggleTocDelete={this.props.toggleTocDelete} tocDeleteMessage={this.props.tocDeleteMessage} modifyState={this.props.modifyState} updateTimer={this.updateTimer} isBlockerActive={this.props.showBlocker} isLOExist={this.props.isLOExist} />
+                                        <SlateWrapper loadMorePages={this.loadMorePages} handleCommentspanel={this.handleCommentspanel} slateData={slateData} navigate={this.navigate} showBlocker={this.props.showCanvasBlocker} convertToListElement={this.props.convertToListElement} toggleTocDelete={this.props.toggleTocDelete} tocDeleteMessage={this.props.tocDeleteMessage} modifyState={this.props.modifyState} updateTimer={this.updateTimer} isBlockerActive={this.props.showBlocker} isLOExist={this.props.isLOExist} updatePageLink={this.props.updatePageLink}/>
                                     </RootContext.Provider>
                                 </div>
                                  {/*Next Button */}
@@ -259,7 +257,7 @@ const mapStateToProps = state => {
         logout,
         withinLockPeriod: state.slateLockReducer.withinLockPeriod,
         ErrorPopup: state.errorPopup,
-        pageNumberToggle: state.toolbarReducer.pageNumberToggle,
+        pageNumberToggle: state.toolbarReducer.pageNumberToggle
     };
 };
 

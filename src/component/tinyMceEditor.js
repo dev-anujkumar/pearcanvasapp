@@ -584,6 +584,9 @@ export class TinyMceEditor extends Component {
                 sendDataToIframe({ 'type': LaunchTOCForCrossLinking, 'message': { open: true, case: 'update', link: linkId, element: elementId, page: pageId, blockCanvas: true, crossLink: true, reviewerRole: hasReviewerRole() } });
             }
         }
+        else if (e.target.className === "blockquoteTextCredit"){
+            setFormattingToolbar('disableTinymceToolbar')
+        }
         /**
          *  Case - otherwise close glossary & footnote popup  
          */
@@ -818,14 +821,7 @@ export class TinyMceEditor extends Component {
      */
     editorKeydown = (editor) => {
         editor.on('keydown', (e) => {
-            let iFocusinBlockQuote = editor.dom.getParent(editor.selection.getStart(), '.paragraphNummerEins');
-            let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");
             let newElement = this.props.currentElement ? this.props.currentElement : this.props.element
-            // if (isBlockQuote && !iFocusinBlockQuote) {
-            //     let evt = (e) ? e : window.event;
-            //     evt.preventDefault();
-            //     return false;
-            // }
             if (e.keyCode == 86 && e.ctrlKey) {
                 this.isctrlPlusV = true;
             }
@@ -1358,7 +1354,7 @@ export class TinyMceEditor extends Component {
 
 
     changeTextElements = editor => {
-        const self = this;
+        const self = this;        
         editor.ui.registry.addMenuButton('formatSelector', {
             text: self.getElementTypeForToolbar(self.props.element),
             tooltip : 'formatSelector',
@@ -1374,6 +1370,7 @@ export class TinyMceEditor extends Component {
             fetch: function (callback) {
                 const items = FormatSelectors(self.elementConversion);
                 callback(items);
+                self.handleBlur(null, false)
             }
         });
     }
@@ -2677,9 +2674,10 @@ export class TinyMceEditor extends Component {
             case 'blockquote':
                 if (this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia"|| this.props.element.elementdata.type === "blockquote")) {
                     let temDiv = document.createElement('div');
-                    temDiv.innerHTML = this.props.model && this.props.model.text ? this.props.model.text : '<blockquote class="blockquoteMarginaliaAttr" contenteditable="false"><p class="paragraphNummerEins" contenteditable="true"></p><p class="blockquoteTextCredit" contenteditable="false" data-placeholder="Attribution Text"></p></blockquote>';
-
-                    //temDiv.innerHTML = '<blockquote class="blockquoteMarginaliaAttr" contenteditable="false"><p class="paragraphNummerEins" contenteditable="true">Add fdefut</p><p class="blockquoteTextCredit" contenteditable="true" data-placeholder="Attribution Text"></p></blockquote>';
+                    temDiv.innerHTML = this.props.model && this.props.model.text ? this.props.model.text : '<blockquote class="blockquoteMarginaliaAttr" contenteditable="false"><p class="paragraphNummerEins" contenteditable="true"></p><p class="blockquoteTextCredit" contenteditable="true" data-placeholder="Attribution Text"></p></blockquote>';
+                    if(this.props.element.elementdata.type === "blockquote" && !tinymce.$(temDiv).find('blockquote p.blockquoteTextCredit').length){
+                        tinymce.$(temDiv).find('blockquote').append('<p class="blockquoteTextCredit" contenteditable="true" data-placeholder="Attribution Text"></p>');
+                    }
                     tinymce.$(temDiv).find('.blockquoteTextCredit').attr('contenteditable', 'true').attr('data-placeholder','Attribution Text');
                     if (!tinymce.$(temDiv).find('blockquote p.blockquote-hidden').length) {
                         tinymce.$(temDiv).find('blockquote').append('<p contenteditable="false" class="blockquote-hidden" style="visibility: hidden;">hidden</p>');

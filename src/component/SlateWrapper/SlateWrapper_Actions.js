@@ -71,7 +71,6 @@ function createNewVersionOfSlate(){
 
 export const createElement = (type, index, parentUrn, asideData, outerAsideIndex, loref, cb,poetryData) => (dispatch, getState) => {
     config.currentInsertedIndex = index;
-    config.currentInsertedType = type;
     let  popupSlateData = getState().appStore.popupSlateData
     localStorage.setItem('newElement', 1);
     let slateEntityUrn = parentUrn && parentUrn.contentUrn || popupSlateData && popupSlateData.contentUrn || poetryData && poetryData.contentUrn || config.slateEntityURN
