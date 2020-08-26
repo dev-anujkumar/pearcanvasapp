@@ -886,7 +886,7 @@ class ElementContainer extends Component {
         this.handleCommentPopup(false,e);
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
         // api needs to run from here
-        this.props.deleteElement(id, type, parentUrn, asideData, contentUrn, index, poetryData);
+        this.props.deleteElement(id, type, parentUrn, asideData, contentUrn, index, poetryData, this.props.element);
         this.setState({
             sectionBreak: null
         })
@@ -1385,8 +1385,8 @@ const mapDispatchToProps = (dispatch) => {
         setActiveElement: (element, index, parentUrn, asideData, updateFromC2Flag, showHideObj) => {
             dispatch(setActiveElement(element, index, parentUrn, asideData, updateFromC2Flag, showHideObj))
         },
-        deleteElement: (id, type, parentUrn, asideData, contentUrn, index, poetryData) => {
-            dispatch(deleteElement(id, type, parentUrn, asideData, contentUrn, index, poetryData))
+        deleteElement: (id, type, parentUrn, asideData, contentUrn, index, poetryData, element) => {
+            dispatch(deleteElement(id, type, parentUrn, asideData, contentUrn, index, poetryData, element))
         },
         glossaaryFootnotePopup: (glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, callback, typeWithPopup, poetryField) => {
             dispatch(glossaaryFootnotePopup(glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, typeWithPopup, poetryField)).then(() => {

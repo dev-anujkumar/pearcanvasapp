@@ -135,3 +135,41 @@ export const slateLinkDetails = async (containerUrn) => {
     }
 }
 
+export const fetchPOPupSlateData = (manifestURN, entityURN, page, element , index) => (dispatch, getState) => {
+    const elementCount = getState().appStore.slateLength
+    let apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}&elementCount=${elementCount}`
+    return axios.get(apiUrl, {
+        headers: {
+            "Content-Type": "application/json",
+            "PearsonSSOSession": config.ssoToken
+        }
+    }).then(slateData => {
+        let parentData = getState().appStore.slateLevelData;
+        let newslateData = JSON.parse(JSON.stringify(parentData));
+        newslateData[config.slateManifestURN] = Object.values(slateData.data)[0];
+        let popBodymatter = newslateData[config.slateManifestURN].contents.bodymatter
+        element.popupdata.bodymatter = popBodymatter
+        let eleIndex
+        if (typeof index === "number" || (Array.isArray(index) && index.length == 1)){
+            eleIndex = Array.isArray(index) ? index[0] : index;
+            parentData[config.slateManifestURN].contents.bodymatter[eleIndex] = element
+        }
+        else if(typeof index === "string"){
+            eleIndex =  index.split("-");
+            if (eleIndex.length == 2) {          /** Inside WE-HEAD | Aside */
+                parentData[config.slateManifestURN].contents.bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]] = element
+            } else if (eleIndex.length == 3 && bodymatter[eleIndex[0]].type !== MULTI_COLUMN ) {   /** Inside WE-BODY */
+                parentData[config.slateManifestURN].contents.bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]].contents.bodymatter[eleIndex[2]]= element
+            }
+            
+        }
+      console.log("parentData",parentData)
+        return dispatch({
+            type: AUTHORING_ELEMENT_UPDATE,
+            payload: {
+                slateLevelData: parentData
+            }
+        })
+    })
+}
+
