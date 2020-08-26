@@ -233,7 +233,10 @@ function prepareDataForTcmCreate(type, createdElementData, getState, dispatch) {
             elmUrn.push(item.id)
         })
     }
-
+    else if (type === 'POP_UP') {
+        elmUrn.push(createdElementData.popupdata.postertextobject[0].id)
+        elmUrn.push(createdElementData.popupdata.bodymatter[0].id)
+    }
     elmUrn.map((item) => {
         return tcmData.push({
             "txCnt": 1,

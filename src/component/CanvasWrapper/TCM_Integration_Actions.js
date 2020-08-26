@@ -9,7 +9,7 @@ export const loadTrackChanges = (elementId) => {
     let slateLockInfo = store.getState().slateLockReducer.slateLockInfo;
     if (!checkSlateLock(slateLockInfo)) {
         let slateData = store.getState().appStore.slateLevelData;
-        let slateId = config.slateManifestURN;
+        let slateId = config.tempSlateManifestURN ?  config.tempSlateManifestURN : config.slateManifestURN;
         var childObj = [];
         var createManifestObject = (element, type) => {
           if(element && element[type] && element[type].bodymatter){
@@ -64,11 +64,12 @@ export const loadTrackChanges = (elementId) => {
             })
           }
         }
-
+        let currentSlate = slateData && slateData[slateId] ? slateData[slateId] : undefined;
+        let title = currentSlate && currentSlate.contents && currentSlate.contents.title && currentSlate.contents.title.text ? currentSlate.contents.title.text : ""
         let currentElementId = elementId ? elementId : "";
-        let currentSlateTitle = document.querySelector('div.input-text .txt-input')? document.querySelector('div.input-text .txt-input').value: "";
+        let currentSlateTitle = title;
         let currentProjectUrn = config.projectUrn;
-        let currentSlateUrn = config.slateManifestURN;
+        let currentSlateUrn = config.tempSlateManifestURN ?  config.tempSlateManifestURN : config.slateManifestURN;
         let currentProjectEntityUrn = config.projectEntityUrn;
         let TCMurl = config.TCM_DASHBOARD_UI_URL;
         var trackChange = function(event) {

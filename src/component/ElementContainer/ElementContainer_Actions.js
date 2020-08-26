@@ -425,7 +425,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
     let elementId = updatedData.id;
     //tcm update code   
     if (config.tcmStatus) {
-        if (elementTypeTCM.indexOf(updatedData.type) !== -1 && !updatedData.metaDataField  && !updatedData.sectionType) {
+        if (elementTypeTCM.indexOf(updatedData.type) !== -1 && showHideType == undefined) {
             prepareDataForUpdateTcm(updatedData.id, getState, dispatch, versionedData);
         }
     }
@@ -542,7 +542,8 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                                         popupdata: {
                                             ...nestedEle.popupdata,
                                             "formatted-title": { ...updatedData }
-                                        }
+                                        },
+                                        tcm: _slateObject.tcm ? true : false //add tcm to popup
                                     };
                                 }
                                 else if (nestedEle.popupdata.postertextobject[0].id === elementId) {
@@ -551,7 +552,8 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                                         popupdata: {
                                             ...nestedEle.popupdata,
                                             postertextobject: [{ ...updatedData }]
-                                        }
+                                        },
+                                        tcm: _slateObject.tcm ? true : false //add tcm to popup
                                     };
                                 }
                             } else if (nestedEle.type == "showhide" && showHideType) {
@@ -584,7 +586,8 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                                                 popupdata: {
                                                     ...ele.popupdata,
                                                     "formatted-title": { ...updatedData }
-                                                }
+                                                },
+                                                tcm: _slateObject.tcm ? true : false //add tcm to popup
                                             };
                                         }
                                         else if (ele.popupdata.postertextobject[0].id === elementId) {
@@ -593,7 +596,8 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                                                 popupdata: {
                                                     ...ele.popupdata,
                                                     postertextobject: [{ ...updatedData }]
-                                                }
+                                                },
+                                                tcm: _slateObject.tcm ? true : false //add tcm to popup
                                             };
                                         }
                                     } else if (ele.type == "showhide" && showHideType) {
@@ -621,7 +625,8 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                             popupdata: {
                                 ...element.popupdata,
                                 "formatted-title": { ...updatedData }
-                            }
+                            },
+                            tcm: _slateObject.tcm ? true : false //add tcm to popup
                         };
                     }
                     else if (element.popupdata && element.popupdata.postertextobject && element.popupdata.postertextobject[0].id === elementId) {
@@ -630,7 +635,8 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                             popupdata: {
                                 ...element.popupdata,
                                 postertextobject: [{ ...updatedData }]
-                            }
+                            },
+                            tcm: _slateObject.tcm ? true : false //add tcm to popup
                         };
                     }
                 }
