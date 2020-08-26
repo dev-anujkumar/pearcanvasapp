@@ -1,7 +1,7 @@
 import elementTypeConstant from './ElementConstants'
 import elementTypes from './../Sidebar/elementTypes';
 import config from '../../config/config';
-import { matchHTMLwithRegex } from '../../constants/utility.js'
+import { matchHTMLwithRegex, removeBlankTags } from '../../constants/utility.js'
 import store from '../../appstore/store'
 import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
 
@@ -18,7 +18,7 @@ const replaceUnwantedtags = (html,flag) => {
     if(flag){
         tempDiv.innerHTML = tempDiv.innerHTML.replace(/<br>/g, "").replace(/(<sup><\/sup>)/g, "");
     }
-    return tempDiv.innerHTML;
+    return removeBlankTags(tempDiv.innerHTML);
 }
 
 /**
