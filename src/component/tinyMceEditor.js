@@ -100,7 +100,9 @@ export class TinyMceEditor extends Component {
                 this.editorExecCommand(editor);
                 this.insertListButtonIcon(editor);
                 this.clearUndoStack(editor);
+                /* Dropdown for showing text type elements */
                 this.changeTextElements(editor);
+                /* change the default icons of tinymce with new svg */
                 this.setDefaultIcons(editor)
                 editor.on('init', function (e) {
                     if (document.querySelector('.audio')) {
@@ -1360,6 +1362,15 @@ export class TinyMceEditor extends Component {
         editor.ui.registry.addMenuButton('formatSelector', {
             text: self.getElementTypeForToolbar(self.props.element),
             tooltip : 'formatSelector',
+            onSetup: function () {
+                let newSpan = document.createElement('span');
+                newSpan.className = "tooltip-text"
+                newSpan.innerText = self.getElementTypeForToolbar(self.props.element);
+                const tooltipLabel = document.querySelector('button[title="formatSelector"] .tox-tbtn__select-label')
+                if (tooltipLabel) {
+                    tooltipLabel.after(newSpan)
+                }
+            },
             fetch: function (callback) {
                 const items = FormatSelectors(self.elementConversion);
                 callback(items);
@@ -2144,6 +2155,11 @@ export class TinyMceEditor extends Component {
         }
         if(this.elementConverted || prevProps.element.subtype !== this.props.element.subtype){
             document.querySelector('button[title="formatSelector"] .tox-tbtn__select-label').innerText = this.getElementTypeForToolbar(this.props.element);
+            /* tooltip code for text elements in toolbar */
+            const tooltipText = document.querySelector('button[title="formatSelector"] .tooltip-text')
+            if (tooltipText) {
+                tooltipText.innerText = this.getElementTypeForToolbar(this.props.element);
+            }
             if (this.props.element.type === "element-list") {
                 highlightListIcon(this.props);
             }
