@@ -3,7 +3,8 @@ import { citationElementData, elementAuthoredText, figureData, audioVideoData, i
 import tinyMCE from 'tinymce/tinymce'
 import config from "../../../src/config/config.js"
 jest.mock('./../../../src/constants/utility.js', () => ({
-    matchHTMLwithRegex: jest.fn()
+    matchHTMLwithRegex: jest.fn(),
+    removeBlankTags: jest.fn()
 }))
 
 config["elementStatus"] = {}

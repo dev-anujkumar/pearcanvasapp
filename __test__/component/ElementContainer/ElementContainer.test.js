@@ -30,7 +30,8 @@ jest.mock('./../../../src/constants/utility.js', () => ({
     guid: jest.fn(),
     encodeHTMLInWiris: jest.fn(),
     matchHTMLwithRegex:jest.fn(),
-    createTitleSubtitleModel:jest.fn()
+    createTitleSubtitleModel:jest.fn(),
+    removeBlankTags: jest.fn()
 }))
 jest.mock('./../../../src/config/config.js', () => ({
     colors : ["#000000", "#003057", "#505759", "#005A70", "#006128"],
