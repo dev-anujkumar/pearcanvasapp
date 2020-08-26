@@ -47,7 +47,7 @@
 .panel-text-settings {
     width: 240px;
     overflow-y: auto;
-    position: relative;
+    position:fixed;
     right: 0;
     height: 100%;
     background-color: #fafafa;
@@ -188,7 +188,4 @@
 }
 p.blockquoteTextCredit:empty:not(:focus)::before {
     content: attr(data-placeholder);
-}
-.panel-text-settings{
-    position:fixed;
 }
