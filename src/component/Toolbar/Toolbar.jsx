@@ -5,7 +5,7 @@ import config from '../../config/config';
 import '../../styles/Toolbar/Toolbar.css';
 import SlateTagDropdown from '../ElementMetaDataAnchor/SlateTagDropdown.jsx';
 
-import { toggleElemBordersAction, toggleLODropdown } from './Toolbar_Actions.js';
+import { toggleElemBordersAction } from './Toolbar_Actions.js';
 import { slateTagDisable, slateTagEnable, audioNarration, audioNarrationEnable, collapseHeader, expandHeader } from '../../images/TinyMce/TinyMce.jsx';
 import { checkSlateLock } from '../../js/slateLockUtility.js'
 import AddAudioBook from '../AudioNarration/AddAudioBook.jsx';
@@ -179,7 +179,6 @@ const mapStateToProps = (state) => {
 
 const mapActionToProps = {
     toggleElemBorders: toggleElemBordersAction,
-    toggleLODropdown: toggleLODropdown,
     checkSlateLock
 }
 
