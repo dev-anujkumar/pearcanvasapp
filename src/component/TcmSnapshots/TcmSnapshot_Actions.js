@@ -9,7 +9,8 @@ import { GET_TCM_RESOURCES } from '../../constants/Action_Constants';
   */
 export const handleTCMData = (slateManifestUrn) => (dispatch, getState) => {
     sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'false' });
-    let url = `/cypress/trackchanges-srvr/tcstats/proj/${config.projectUrn}/slate/${slateManifestUrn}`;
+    // let url = `http://localhost:4000/tcstats/proj/${config.projectUrn}/slate/${slateManifestUrn}`
+    let url = `https://dev-structuredauthoring.pearson.com/cypress/trackchanges-srvr/tcstats/proj/${config.projectUrn}/slate/${slateManifestUrn}`;
     return axios.get(url, {
         headers: {
             PearsonSSOSession: config.ssoToken,
@@ -84,7 +85,7 @@ export const sendElementTcmSnapshot = async (snapshotData) => {
 }
 
 const callSnapshotAPI = async(snapshotData) => {
-     // let url = 'http://localhost:4000/tctxsnapshot'
+    //  let url = 'http://localhost:4000/tctxsnapshot'
      let url = `/cypress/trackchanges-srvr/tctxsnapshot`;
         return axios.post(url, snapshotData, {
         headers: {

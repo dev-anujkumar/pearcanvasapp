@@ -53,7 +53,7 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
     /** isContainer : used to set SlateType  */
     let isContainer = setSlateType(wipData,containerElement,type);
     let deleVercase = newVersionUrns ? true : false
-    let defaultKeys = setDefaultKeys(actionStatus, isContainer);
+    let defaultKeys = config.isPopupSlate ? setDefaultKeys(actionStatus, true, true) : setDefaultKeys(actionStatus, isContainer);
     /* Tag of elements*/
     let tag = {
         parentTag: fetchElementsTag(wipData)
@@ -74,11 +74,11 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
     let hasParentData = containerElement && checkParentData(containerElement)
     /** TCM Snapshots on Popup Slate */
     if (config.isPopupSlate) {
-        let defaultKeysPopup = setDefaultKeys(actionStatus, true, true)
+        // let defaultKeysPopup = setDefaultKeys(actionStatus, true, true)
         if (elementInPopupInContainer) {   /** Elements in Containers/ Simple Elements in PopupSlate Inside WE/Aside */
-            tcmSnapshotsElementsInPopupInContainer(snapshotsData, defaultKeysPopup, containerElement, type, deleVercase, newVersionUrns);
+            tcmSnapshotsElementsInPopupInContainer(snapshotsData, defaultKeys, containerElement, type, deleVercase, newVersionUrns);
         } else {                           /** Elements in Containers/ Simple Elements in PopupSlate */
-            tcmSnapshotsOnDefaultSlate(snapshotsData, defaultKeysPopup, containerElement, type, deleVercase, newVersionUrns);
+            tcmSnapshotsOnDefaultSlate(snapshotsData, defaultKeys, containerElement, type, deleVercase, newVersionUrns);
         }
     }
     /* For POPUP Element */

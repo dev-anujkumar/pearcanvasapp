@@ -1001,7 +1001,6 @@ class ElementContainer extends Component {
                     }
                 }
             }
-
             tcmStatus.tcm = status.tcm
             tcmStatus.feedback = status.feedback
         } else {
