@@ -343,9 +343,16 @@ const tcmSnapshotsPopupCTA = (snapshotsData, defaultKeys, containerElement, dele
 */
 const tcmSnapshotsInPopupElement = (snapshotsData, defaultKeys, containerElement, type, deleVercase, newVersionUrns) => {
     const { metaDataField, sectionType } = containerElement
-    if (defaultKeys.action === 'create' && type == POP_UP || (defaultKeys.action === 'delete' && type == POPUP_ELEMENT)) {     /** Create Popup */
+    if (defaultKeys.action === 'create' && type == POP_UP) {     /** Create Popup */
         tcmSnapshotsPopupCTA(snapshotsData, defaultKeys, containerElement, deleVercase, newVersionUrns);
         tcmSnapshotsCreatePopup(snapshotsData, defaultKeys, deleVercase, newVersionUrns);
+    }
+    else if((defaultKeys.action === 'delete' && type == POPUP_ELEMENT)) {            /** Delete Popup */
+        tcmSnapshotsPopupCTA(snapshotsData, defaultKeys, containerElement, deleVercase, newVersionUrns);
+        tcmSnapshotsCreatePopup(snapshotsData, defaultKeys, deleVercase, newVersionUrns);
+        if(defaultKeys.action === 'delete' && type == POPUP_ELEMENT && (metaDataField && formattedTitleField.includes(metaDataField))){
+            tcmSnapshotsMetadataField(snapshotsData, defaultKeys, containerElement, deleVercase, newVersionUrns, type);
+        }
     }
     else if ((type && formattedTitleField.includes(type)) || (metaDataField && formattedTitleField.includes(metaDataField))) { /** Formatted-title */
         tcmSnapshotsMetadataField(snapshotsData, defaultKeys, containerElement, deleVercase, newVersionUrns, type);

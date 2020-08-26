@@ -8,6 +8,7 @@ import {
 import { AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP, OPEN_GLOSSARY_FOOTNOTE,DELETE_SHOW_HIDE_ELEMENT, GET_TCM_RESOURCES} from "./../../constants/Action_Constants";
 import { customEvent } from '../../js/utils';
 import { prepareTcmSnapshots,tcmSnapshotsForUpdate,fetchElementWipData,checkContainerElementVersion,fetchManifestStatus } from '../TcmSnapshots/TcmSnapshots_Utility.js';
+import { fetchPOPupSlateData} from '../../component/TcmSnapshots/TcmSnapshot_Actions.js'
 let elementTypeTCM = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza',  'popup'];
 let containerType = ['element-aside', 'manifest', 'citations', 'poetry', 'groupedcontent','popup'];
 
@@ -55,7 +56,7 @@ export const addComment = (commentString, elementId) => (dispatch) => {
         })
 }
 
-export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, index, poetryData) => (dispatch, getState) => {
+export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, index, poetryData, element) => (dispatch, getState) => {
 
     const prepareDeleteRequestData = (elementType) => {
         switch (elementType) {
@@ -78,6 +79,9 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
                 }
         }
     }
+    if(type === 'popup' && element.popupdata.bodymatter.length === 0){
+        dispatch(fetchPOPupSlateData(elmId, contentUrn, 0 , element, index)) 
+     }
     let elementParentEntityUrn = parentUrn && parentUrn.contentUrn || config.slateEntityURN
     let _requestData = prepareDeleteRequestData(type)
     let indexToBeSent = index || "0"
@@ -105,7 +109,10 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
                 let containerElement = {
                     asideData: asideData,
                     parentUrn: parentUrn,
-                    poetryData: poetryData
+                    poetryData: poetryData,
+                    parentElement: wipData && wipData.type == 'popup' ? wipData : undefined,
+                    metaDataField: wipData && wipData.type == 'popup' && wipData.popupdata['formatted-title'] ? 'formattedTitle' : undefined,
+                    sectionType : wipData && wipData.type == 'popup' ? 'postertextobject' : undefined
                 }
                 let deleteData = {
                     wipData: wipData,
