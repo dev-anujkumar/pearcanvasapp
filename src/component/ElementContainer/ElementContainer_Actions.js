@@ -174,7 +174,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
     })
 }
 /** Delete Tcm data on element delete*/
-function prepareTCMforDelete(elmId, dispatch,getState) {
+export function prepareTCMforDelete(elmId, dispatch,getState) {
         let tcmData = getState().tcmReducer.tcmSnapshot;
         tcmData = tcmData && tcmData.filter(function (tcm) {
             return !tcm.elemURN.includes(elmId);
@@ -381,7 +381,7 @@ function updateLOInStore(updatedData, versionedData, getState, dispatch) {
         }
     })
 }
-function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getState, versionedData, elementIndex, showHideType, parentElement, poetryData){
+export function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getState, versionedData, elementIndex, showHideType, parentElement, poetryData){
     //direct dispatching in store
     let parentData = getState().appStore.slateLevelData;
     let newslateData = JSON.parse(JSON.stringify(parentData));
@@ -958,7 +958,7 @@ export const deleteShowHideUnit = (elementId, type, parentUrn, index,eleIndex, p
     })
 }
 
-const showError = (error, dispatch, errorMessage) => {
+export const showError = (error, dispatch, errorMessage) => {
     dispatch({type: ERROR_POPUP, payload:{show: true}})
     sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
     console.log(errorMessage, error)

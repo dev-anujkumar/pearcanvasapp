@@ -20,7 +20,7 @@ const element = document.createElement('div');
     element.innerHTML = "<p>Link Notification</p>";
     document.body.appendChild(element);
     
-xdescribe('Tests ElementContainer Actions', () => {
+describe('Tests ElementContainer Actions', () => {
     let initialState = {
         slateLevelData: slateLevelData,
         appStore: slateLevelData,
@@ -51,7 +51,10 @@ xdescribe('Tests ElementContainer Actions', () => {
     };
     let initialState2 ={...initialState,
         slateLevelData: slateWithCitationElement.slateLevelData,  
-        appStore: {slateLevelData:slateWithCitationElement.slateLevelData}
+        appStore: {slateLevelData:slateWithCitationElement.slateLevelData},
+        tcmReducer : {
+            tcmSnapshot: [{elemURN: "2", txCnt: 1}]
+        }
     }
     // let store = mockStore(() => initialState);
 
@@ -1868,9 +1871,9 @@ xdescribe('Tests ElementContainer Actions', () => {
         });
     })
     })
-    xdescribe('testing----------- Citation Element -------------',()=>{
+    describe('testing----------- Citation Element -------------',()=>{
        
-        it('testing------- Delete Element citations type------action', () => {
+        xit('testing------- Delete Element citations type------action', () => {
             let store = mockStore(() => initialState2);
             config.slateManifestURN='urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'
             let contentUrn = "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r43",
@@ -2008,6 +2011,34 @@ xdescribe('Tests ElementContainer Actions', () => {
             return store.dispatch(actions.updateElement(updatedData, "0", parentUrn, asideData, null, parentElement, null)).then(() => {
                 expect(store.getActions()[0].type).toEqual(expectedActions[0].type);
             });
+        })
+
+        it('testing------- showError------method', () => {
+            let store = mockStore(() => initialState2);
+            const spyShowError  = jest.spyOn(actions, 'showError') 
+            actions.showError({}, store.dispatch, "Test error");
+            expect(spyShowError).toHaveBeenCalled()
+            expect(spyShowError).toHaveReturnedWith(undefined);
+            spyShowError.mockClear()
+        })
+        it('testing------- prepareTCMforDelete------method', () => {
+            let store = mockStore(() => initialState2);
+            const spyPrepareTCMforDelete  = jest.spyOn(actions, 'prepareTCMforDelete') 
+            actions.prepareTCMforDelete("1", store.dispatch, store.getState);
+            expect(spyPrepareTCMforDelete).toHaveBeenCalled()
+            expect(spyPrepareTCMforDelete).toHaveReturnedWith(undefined);
+            spyPrepareTCMforDelete.mockClear()
+        })
+        it('testing------- updateStoreInCanvas------method', () => {
+            let store = mockStore(() => initialState2);
+            const spyUpdateStoreInCanvas  = jest.spyOn(actions, 'updateStoreInCanvas')
+            let asideData = {indexes: ["1","1"], type : 'element-aside'}
+            let parentElement = {
+                type : 'poetry'
+            }
+            actions.updateStoreInCanvas({slateVersionUrn: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"}, asideData, {}, store.dispatch, store.getState, {}, "1", null, parentElement, null);
+            expect(spyUpdateStoreInCanvas).toHaveBeenCalled()
+            spyUpdateStoreInCanvas.mockClear()
         })
     })
 })
