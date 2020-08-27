@@ -49,7 +49,7 @@ const {
  * @param {Object} newVersionUrns - Latest  Version Urns for delete case
 */
 export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, type, newVersionUrns) => {
-    const { parentElement, poetryData, asideData, parentUrn } = containerElement
+    const { parentElement } = containerElement
     /** isContainer : used to set SlateType  */
     let isContainer = setSlateType(wipData,containerElement,type);
     let deleVercase = newVersionUrns ? true : false
@@ -677,7 +677,7 @@ export const tcmSnapshotsForCreate = async (elementCreateData, type, containerEl
 */
 export const fetchManifestStatus = (bodymatter, containerElement, type, indexes) => {
     let parentData = {}
-    const { asideData, parentUrn, poetryData, parentElement, metaDataField,sectionType } = containerElement;
+    const { asideData, parentUrn, poetryData, parentElement } = containerElement;
     if ((asideData || parentUrn || poetryData || parentElement) && bodymatter.length !== 0) {
         let parentElem = asideData ? asideData : poetryData ? poetryData : parentUrn;
         let parentId = parentElem && parentElem.id ? parentElem.id : parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "";

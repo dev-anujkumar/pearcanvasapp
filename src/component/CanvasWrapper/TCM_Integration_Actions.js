@@ -64,8 +64,8 @@ export const loadTrackChanges = (elementId) => {
             })
           }
         }
-        let currentSlate = slateData && slateData[slateId] ? slateData[slateId] : undefined;
-        let title = currentSlate && currentSlate.contents && currentSlate.contents.title && currentSlate.contents.title.text ? currentSlate.contents.title.text : ""
+
+        let title = store.getState().appStore && store.getState().appStore.slateTitleUpdated ? store.getState().appStore.slateTitleUpdated :  "";
         let currentElementId = elementId ? elementId : "";
         let currentSlateTitle = title;
         let currentProjectUrn = config.projectUrn;
