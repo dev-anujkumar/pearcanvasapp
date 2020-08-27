@@ -51,6 +51,7 @@ export class ListElement extends Component {
                 glossaryFootnoteValue={this.props.glossaryFootnoteValue}
                 glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
                 showHideType={showHideType}
+                showBlocker={this.props.showBlocker}
             />
         )
     }

@@ -544,6 +544,14 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
             let revealTextData = validateRevealAnswerData(showHideType, node, type)
             innerHTML = revealTextData.innerHTML
             innerText = revealTextData.innerText
+            let attributionText=tinyMCE.$(node).find('.blockquoteTextCredit').text()
+            let inputElementSubType=elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'];
+            if ((attributionText.length == 0 && inputElementSubType == "MARGINALIA") || (attributionText.length == 0 && inputElementSubType == "BLOCKQUOTE")) {
+                inputElementSubType = "BLOCKQUOTE"
+            }
+            else if ((attributionText.length > 0 && inputElementSubType == "BLOCKQUOTE") || (attributionText.length > 0 && inputElementSubType == "MARGINALIA")) {
+                inputElementSubType = "MARGINALIA"
+            }
             dataToReturn = {
                 ...previousElementData,
                 elementdata : {
@@ -555,8 +563,7 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                     glossaryentries : previousElementData.html.glossaryentries || {},
                 },
                 inputType : parentElement && (parentElement.type === "popup" || parentElement.type === "citations" || parentElement.type === "showhide" && previousElementData.type === "element-authoredtext" || parentElement.type === "poetry" && previousElementData.type === "element-authoredtext") ? "AUTHORED_TEXT" : elementTypes[elementType][primaryOption]['enum'],
-                inputSubType : parentElement && (parentElement.type == "popup" || parentElement.type === "poetry") ? "NA" : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']
-                // slateVersionUrn: parentElement && (parentElement.type === "showhide" || parentElement.type === "popup") ? parentElement.id: config.slateManifestURN  
+                inputSubType : parentElement && (parentElement.type == "popup" || parentElement.type === "poetry") ? "NA" : inputElementSubType
             }
 
             if(type==="stanza"){
@@ -594,7 +601,6 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                 dataToReturn["elementParentEntityUrn"] = parentElement.contentUrn
             }
             break;
-
         case elementTypeConstant.FIGURE:
                 switch (previousElementData.figuretype) {
                     case elementTypeConstant.FIGURE_IMAGE:

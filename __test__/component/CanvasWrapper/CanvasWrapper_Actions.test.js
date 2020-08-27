@@ -193,7 +193,7 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
             const spyFunction = jest.spyOn(canvasActions, 'fetchElementTag')
             canvasActions.fetchElementTag(activeElement, 11);
             expect(spyFunction).toHaveBeenCalled();
-            expect(spyFunction).toHaveReturnedWith('BQ');
+            expect(spyFunction).toHaveReturnedWith('PQ');
             spyFunction.mockClear()
         })
         it('Test-1.13-fetchElementTag - MultiColumn', () => {

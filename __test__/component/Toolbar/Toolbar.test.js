@@ -52,13 +52,6 @@ beforeEach(() => {
 })
 
 describe('Toolbar testing', () => {
-    it('Should have 2 Toolbar switch buttons and toggle switch', () => {
-        expect(wrapper.find('.switch')).toHaveLength(2)
-    })
-
-    it('Should have 2 input for Toolbar', () => {
-        expect(wrapper.find('input')).toHaveLength(2)
-    })
 
     it('Simulate audio icon click', () => {
         wrapper.find('.audio.audioicon').at(0).simulate('click')
@@ -67,5 +60,12 @@ describe('Toolbar testing', () => {
 
     it('Handle slate tag icon click', () => {
         wrapper.find('.learningobjectiveicon.slate-tag-icon').simulate('click')
+    })
+
+    it('Handle slate tag icon click', () => {
+        wrapper.find('.learningobjectiveicon.slate-tag-icon').simulate('click')
+    })
+    it('collapse header', () => {
+       wrapper.find('.collapse-header').simulate('click')
     })
 })

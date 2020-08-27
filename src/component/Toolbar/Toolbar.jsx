@@ -5,21 +5,18 @@ import config from '../../config/config';
 import '../../styles/Toolbar/Toolbar.css';
 import SlateTagDropdown from '../ElementMetaDataAnchor/SlateTagDropdown.jsx';
 
-import { toggleElemBordersAction, toggleLODropdown } from './Toolbar_Actions.js';
-import { slateTagDisable, slateTagEnable } from '../../images/TinyMce/TinyMce.jsx';
-import {
-    audioNarration,
-    audioNarrationEnable
-} from '../../images/TinyMce/TinyMce.jsx';
+import { toggleElemBordersAction } from './Toolbar_Actions.js';
+import { slateTagDisable, slateTagEnable, audioNarration, audioNarrationEnable, collapseHeader, expandHeader } from '../../images/TinyMce/TinyMce.jsx';
 import { checkSlateLock } from '../../js/slateLockUtility.js'
 import AddAudioBook from '../AudioNarration/AddAudioBook.jsx';
 import OpenAudioBook from '../AudioNarration/OpenAudioBook.jsx'
-import { hasReviewerRole } from '../../constants/utility.js'
+import { hasReviewerRole, sendDataToIframe } from '../../constants/utility.js'
 
 const _Toolbar = props => {
     const [lodropdown, setLODropdown] = useState(false);
     const [addDropDown, setValueAdd] = useState(false);
     const [openDropDown, setValueOpen] = useState(false);
+    const [showHeader, setHeaderValue] = useState(true);
 
     useEffect(() => {
         setLODropdown(false);
@@ -30,9 +27,9 @@ const _Toolbar = props => {
         changeAudioNarration() 
     }, [props.openAudio ,props.addAudio])
 
-       /**
-     * Function for show/hide slate tag icon
-     */
+    /**
+    * Function for show/hide slate tag icon
+    */
     function hideSlateTagIcon() {
         if (document.getElementsByClassName("slate-tag-icon").length) {
             document.getElementsByClassName("slate-tag-icon")[0].style.display = "block";
@@ -62,13 +59,7 @@ const _Toolbar = props => {
     function _handleOpenDropdown() {
         setValueOpen(!openDropDown);
     }
-    /**
-     * Function for show/hide border
-     */
-    function _handleElemBorders() {
-        props.toggleElemBorders()
-    }
-
+    
     /**
      * Function for show/hide dropdown
      */
@@ -77,26 +68,6 @@ const _Toolbar = props => {
     }
     function closeLODropdown() {
         setLODropdown(!lodropdown);
-    }
-    /**
-     * @description {responsable for render switch buttons}
-     * @param {border or pageNumber} type 
-     */
-    function _elemToggleBtnJsx(type) {
-        return (<>
-            <label className="switch">
-                {type === 'border' ? <input
-                    type="checkbox"
-                    onChange={_handleElemBorders}
-                    defaultChecked='true' /> :
-                    <input
-                        type="checkbox"
-                        onChange={props.togglePageNumbering} />
-                }
-                <span className="slider round"></span>
-            </label>
-        </>
-        )
     }
 
     /**
@@ -110,10 +81,18 @@ const _Toolbar = props => {
     function closeAddAudioBook() {
         setValueAdd(!addDropDown);
     }
+
+    /**
+     * Function for show/hide header
+     */
+    function showHideHeader() {
+        setHeaderValue(!showHeader);
+        sendDataToIframe({ 'type': 'collapseHeader', 'message': !showHeader});
+    }
     let accessToolbar = (props.permissions && props.permissions.includes('access_formatting_bar')) ? "" : " disableToolbar"
 
     return (
-
+        <>
         <div className='toolbar-container'>
             <div className={"header" + accessToolbar} id="tinymceToolbar"></div>
             {/* ***********************Slate Tag in toolbar******************************************** */}
@@ -166,28 +145,19 @@ const _Toolbar = props => {
                         }}>
                             {audioNarrationEnable}
                         </div>
-                        <span class="openAudioIcon"></span>
+                        <span className="openAudioIcon"></span>
                         {openDropDown && <OpenAudioBook closeAudioBookDialog={closeAudioBookDialog} />}
                     </div>
                 </div>
             }
             {/* *****end**** */}
-
-            <div className="toggle-actions">
-            {props.permissions.includes('toggle_element_page_no') &&
-            <div className='elem-page-number'>
-                <div className='elemPageText'>Element <br />Page Number</div>
-                {_elemToggleBtnJsx('pageNumber')}
-            </div>
-            }
-            {props.permissions.includes('toggle_element_borders') &&
-                <div className='element-borders'>
-                    <div className='elemBorderText'>Element Borders</div>
-                        {_elemToggleBtnJsx('border')}
-                    </div>
-                }
-            </div>
         </div>
+            {/* ***********************Collapse Header******************************************** */}
+            <div className="collapse-header" onClick={() => { showHideHeader() }}>
+                {showHeader ? collapseHeader : expandHeader}
+            </div>
+    </>
+        
     )
 }
 
@@ -209,7 +179,6 @@ const mapStateToProps = (state) => {
 
 const mapActionToProps = {
     toggleElemBorders: toggleElemBordersAction,
-    toggleLODropdown: toggleLODropdown,
     checkSlateLock
 }
 

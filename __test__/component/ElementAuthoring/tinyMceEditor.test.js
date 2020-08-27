@@ -7,6 +7,10 @@ import { mount } from 'enzyme';
 import config from '../../../src/config/config.js';
 import TinyMceEditor from '../../../src/component/tinyMceEditor'
 import elementData from './elementData';
+import { Provider } from 'react-redux';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+const middlewares = [thunk];
 
 global.document = (new JSDOM()).window.Element;
 if (!global.Element.prototype.hasOwnProperty("innerText")) {
@@ -75,7 +79,9 @@ jest.mock('../../../src/component/ListElement/eventBinding', () => {
         insertListButton: () => { },
         insertUoListButton: () => { },
         removeTinyDefaultAttribute: () => { },
-        bindKeyDownEvent: () => { }
+        bindKeyDownEvent: () => { },
+        removeListHighliting : () => {},
+        highlightListIcon : () => {}
     }
 })
 jest.mock("../../../src/component/AssetPopover/openApoFunction.js", () => {
@@ -148,6 +154,7 @@ let props = {
         userId: 'c5Test02'
     },
     tagName: "P",
+    conversionElement: jest.fn(),
     className: "p",
     index: 1,
     element: elementData.paragraph,
@@ -272,8 +279,10 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
         },
         ...tinymce.activeEditor
     }
-    const component = mount(< TinyMceEditor {...props} />, { attachTo: document.body })
-    let instance = component.instance();
+    const mockStore = configureMockStore(middlewares);
+    const store = mockStore({ });
+    const component = mount(<Provider store={store}> < TinyMceEditor {...props} /> </Provider>, { attachTo: document.body })
+    let instance = component.find('TinyMceEditor').instance();
     let tinymceDiv = document.createElement('div');
     tinymceDiv.id = editor.id;
     let tinymceDiv2 = document.createElement('p');
@@ -291,8 +300,8 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
             permissions: ["login", "logout"]
         })
         component.update();
-        const callback = jest.spyOn(component.instance().editorConfig, 'init_instance_callback');
-        component.instance().editorConfig.init_instance_callback(editor);
+        const callback = jest.spyOn(component.find('TinyMceEditor').instance().editorConfig, 'init_instance_callback');
+        component.find('TinyMceEditor').instance().editorConfig.init_instance_callback(editor);
         expect(callback).toHaveBeenCalled()
     });
     describe('Test-3-Method--1--innerTextWithMathMl', () => {
@@ -309,7 +318,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                     }
                 ]
             }
-            let result = component.instance().innerTextWithMathMl(node);
+            let result = component.find('TinyMceEditor').instance().innerTextWithMathMl(node);
             expect(result).toEqual("undefined");
         });
         it('Test-3.2-Method--1--innerTextWithMathMl--childNodes.length != 0', () => {
@@ -330,18 +339,30 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                 }]
             }
             let mySpyFunction = jest.spyOn(instance, 'innerTextWithMathMl')
-            let result = component.instance().innerTextWithMathMl(node);
+            let result = component.find('TinyMceEditor').instance().innerTextWithMathMl(node);
             expect(mySpyFunction).toHaveBeenCalled();
             mySpyFunction.mockClear()
         });
     });
-    it('Test-4-Method--2--onUnorderedListButtonClick', () => {
-        let mySpyFunction = jest.spyOn(instance, 'onUnorderedListButtonClick')
-        instance.onUnorderedListButtonClick('decimal');
-        expect(mySpyFunction).toHaveBeenCalledWith('decimal');
-        expect(typeof instance.props.onListSelect).toBe('function');
-        mySpyFunction.mockClear()
-    });
+
+    describe('Test-4 List Click',() => {
+        it('Test-4-Method--2--onListButtonClick', () => {
+            let mySpyFunction = jest.spyOn(instance, 'onListButtonClick')
+            instance.onListButtonClick('ordered','decimal');
+            expect(mySpyFunction).toHaveBeenCalledWith('ordered','decimal');
+            expect(typeof instance.props.onListSelect).toBe('function');
+            mySpyFunction.mockClear()
+        });
+        it('Test-4-Method--3--toggleConfirmationPopup ', () => {
+            let mySpyFunction = jest.spyOn(instance, 'toggleConfirmationPopup')
+            instance.toggleConfirmationPopup(true,'decimal');
+            expect(mySpyFunction).toHaveBeenCalledWith(true,'decimal');
+            expect(instance.state.popup).toBe(true);
+            expect(instance.state.listType).toBe('decimal');
+            mySpyFunction.mockClear();
+
+        });
+    })
     describe('Test-5-Method--3--editorExecCommand', () => {
         it('Test-5.1-Method--3--editorExecCommand --CASE_1--indent--', () => {
             let event = {
@@ -413,14 +434,15 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                 selection: editor.selection,
                 setContent: () => { },
             }
-            component.setProps({
+            instance.props = {
                 ...props,
                 permissions: ["login", "logout"],
                 tagName: "SPAN",
                 elementId: "work:urn",
                 element: { type: "stanza" }
-            })
+            }
             component.update();
+            console.log(instance.props)
             let mySpyFunction = jest.spyOn(instance, 'editorExecCommand');
             instance.editorExecCommand(nextEditor);
             expect(mySpyFunction).toHaveBeenCalled()
@@ -440,13 +462,13 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                 selection: editor.selection,
                 setContent: () => { },
             }
-            component.setProps({
+            instance.props = {
                 ...props,
                 permissions: ["login", "logout"],
                 tagName: "CODE",
                 elementId: "work:urn",
                 element: { type: "figure", figuretype: "codelisting" }
-            })
+            }
             component.update();
             let mySpyFunction = jest.spyOn(instance, 'editorExecCommand');
             instance.editorExecCommand(nextEditor);
@@ -527,13 +549,13 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                 selection: editor.selection,
                 setContent: () => { },
             }
-            component.setProps({
+            instance.props = {
                 ...props,
                 permissions: ["login", "logout"],
                 tagName: "SPAN",
                 elementId: "work:urn",
                 element: { type: "stanza" }
-            })
+            }
             component.update();
             let mySpyFunction = jest.spyOn(instance, 'handleIndent');
             instance.handleIndent(event, nextEditor5, 'paragraphNumeroUno', 'stanza', { className: "para-stanza" });
@@ -614,13 +636,13 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                 selection: editor.selection,
                 setContent: () => { },
             }
-            component.setProps({
+            instance.props = {
                 ...props,
                 permissions: ["login", "logout"],
                 tagName: "SPAN",
                 elementId: "work:urn",
                 element: { type: "stanza" }
-            })
+            }
             component.update();
             let mySpyFunction = jest.spyOn(instance, 'handleOutdent');
             instance.handleOutdent(event, nextEditor5, 'paragraphNumeroUnoIndentLevel1', 'stanza', { className: "para-stanza" });
@@ -1994,7 +2016,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                 return '<sup><a href="#" id = "${res.data.id}" data-uri="${res.data.id}" data-footnoteelementid="${res.data.id}" class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>'
             },
         }
-        component.setProps({
+        instance.props = {
             ...props,
             permissions: ["login", "logout"],
             tagName: "SPAN",
@@ -2011,7 +2033,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                 glossaryTermText: { replace: () => { } }
             },
             createPoetryElements: () => { }
-        })
+        }
         component.update();
         const spysaveContent = jest.spyOn(instance, 'saveContent')
         instance.saveContent();
@@ -2947,7 +2969,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                 children: ['<p class="paragraphNumeroUno">hello</p>'],
                 classList: ["cypress-editable", "mce-content-body", "mce-edit-focus", 'place-holder']
             }
-            component.setProps({
+            instance.props = {
                 ...props,
                 permissions: ["login", "logout"],
                 tagName: "element-citation",
@@ -2958,7 +2980,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                 element: { type: "citation", status: "wip" },
                 model: {},
                 placeholder: "",
-            })
+            }
             component.update();
             window.getSelection = () => {
                 return {

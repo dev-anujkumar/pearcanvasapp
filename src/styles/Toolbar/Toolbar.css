@@ -60,10 +60,12 @@
   }
 
   .toolbar-container{
+    width: 96%;
     display: flex;
-    flex-direction: row;
-    width: 100%;
-    /* border: solid 1px #e0e0e0; */
+    justify-content: center;
+    align-items: center;
+    height:100%;
+    float:left;
   }
 
   .elemBorderText{
@@ -100,7 +102,7 @@
   }
 
   .tox-editor-container .tox-toolbar{
-    background: #f5f5f5 !important;
+    background: #ffffff !important;
     cursor: pointer;
   }
   .toggle-actions{
@@ -112,14 +114,14 @@
   .learningobjectivedropdown {
     color: black;
     position: absolute;
-    background-color: white;
     width: 233px;
     overflow: auto;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
     font-size: 14px;
     font-weight: 600;
     margin-top: 5px;
+    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 4px 5px 0 rgba(0, 0, 0, 0.14);
+    background-color: #ffffff;
 }
 
 .learningobjectivedropdown li {
@@ -135,7 +137,7 @@
 }
 .leaningobjective-block {
   cursor: pointer;
-  padding: 8px 16px 0 0;
+  padding: 0 16px 0 0;
 }
 .learningobjectivedropdown ul {
   padding:0;
@@ -157,14 +159,11 @@
   .audio-block{
     /* height: 39px; */
     position: relative;
-    padding-right: 20px;
-    padding-top: 6px;
     z-index: 22;
     background: transparent;
 }
 .audioicon  {
   cursor: pointer;
-  margin-top: 2px;
 }
 .audioicon span {
   white-space: nowrap;
@@ -243,4 +242,172 @@
 
 button[title="Cross Linking"] .tox-tbtn__select-label {
   margin: 0;
+}
+.tox .tox-tbtn--disabled, .tox .tox-tbtn--disabled:hover, .tox .tox-tbtn:disabled, .tox .tox-tbtn:disabled:hover{
+  opacity: 0.34!important;
+}
+.tox .tox-tbtn--enabled{
+  background-color: #ffffff!important;
+}
+.tox .tox-tbtn--enabled :not(svg) {
+  fill: #005a70!important;
+}
+.tox .tox-tbtn--enabled :not(svg) {
+  fill: #005a70!important;
+}
+.tox .tox-tbtn:hover:not(.tox-tbtn--disabled) {
+  background: none!important;
+}
+div[title="Ordered List"] span.tox-tbtn__icon-wrap svg {
+  margin-left: 5px;
+}
+div[title="Ordered List"].tox-split-button:hover {
+  box-shadow: none!important;
+}
+div[title="Ordered List"].tox-split-button:focus {
+  background: none!important;
+}
+div[title="Ordered List"] .tox-tbtn.tox-split-button__chevron:active{
+  background: none!important;
+}
+div[title="Ordered List"] .tox-tbtn.tox-split-button__chevron:focus{
+  background: none!important;
+}
+div[title="Ordered List"] span.tox-split-button__chevron svg {
+  width : 15px;
+  margin-right: 5px;
+}
+div[title="Ordered List"] span.tox-split-button__chevron svg:focus {
+  background: #d4eae4!important;
+}
+div[title="Ordered List"] span.tox-split-button__chevron svg:active {
+  background: #d4eae4!important;
+}
+.tox .tox-tbtn:active {
+  background: none!important;
+}
+.tox .tox-tbtn:focus {
+  background: none!important;
+}
+.tox .tox-tbtn:hover:not(.tox-tbtn--disabled) svg {
+  background-color: #f3f7f8!important;
+}
+.tox .tox-tbtn--enabled svg {
+  background-color: #d4eae4!important;
+}
+.tox .tox-split-button:hover{
+  box-shadow: 0 0 0 0 #dee0e2 inset!important;
+}
+.tox-menu.tox-collection.tox-collection--list.tox-selected-menu{
+  overflow : hidden!important;
+  max-height: none!important;
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 4px 5px 0 rgba(0, 0, 0, 0.14);
+  border: 0;
+}
+button[title="formatSelector"] span.tox-tbtn__select-label{
+  min-width : 126px!important;
+  cursor:pointer!important;
+  overflow-wrap: normal;
+  white-space: nowrap;
+  width: 50px;
+  overflow: hidden;
+  text-overflow: clip;
+}
+button[title="formatSelector"].tox-tbtn--select{
+  max-width : 162px!important;
+  
+}
+.tox button[title="formatSelector"].tox-tbtn:hover:not(.tox-tbtn--disabled){
+  background-color: #f3f7f8!important;
+}
+.editor-toolbar .tox-toolbar__group:last-child{
+  border-right: 1px solid #ccc;
+}
+.collapse-header{
+  float: right;
+  display: flex;
+  align-items: center;
+  display: flex;
+  height: 100%;
+  margin-right: 16px;
+}
+.collapse-header svg{
+  cursor: pointer;
+}
+.editor-toolbar .tox-toolbar__group{
+  cursor:default!important;
+  height:32px!important
+}
+.tox-tbtn{
+  cursor:pointer!important;
+}
+.tox-collection__item-label{
+    font-size: 16px!important;
+    line-height: 2.5!important;
+    letter-spacing: normal;
+    color: #000000!important;
+}
+.tox .tox-collection--list .tox-collection__item {
+  padding: 0 10px!important;
+}
+.tox-tbtn__select-label{
+  font-size: 16px!important;
+  line-height: 2!important;
+  color: #000000!important;
+}
+.tox-tbtn--select.tox-tbtn--active{
+  background:#d4eae4!important
+}
+.tox-tbtn--select.tox-tbtn--active .tox-tbtn__select-label{
+  color:#005a70!important;
+}
+.editor-toolbar .tox .tox-tbtn{
+  height:32px!important;
+  margin:0!important;
+}
+.editor-toolbar .tox-editor-container{
+  height:32px!important;
+}
+.editor-toolbar .tox .tox-split-button{
+  margin:0!important;
+}
+.editor-toolbar .tox-toolbar__group .tox-tbtn:hover .tox-tbtn--select{
+  background-color: #f3f7f8!important;
+}
+.tox-tbtn--select .tooltip-text{
+  position: fixed;
+  top: 40px;
+  font-size: 10px;
+  font-weight: 500;
+  padding: 3px 8px;
+  border-radius: 3px;
+  white-space: normal;
+  cursor: default;
+  color: #fff;
+  display:none;
+  line-height: 15px;
+  border: 1px solid #FFFFFF;
+  background-color: rgba(0, 0, 0, 0.75);
+}
+button[title="formatSelector"].tox-tbtn--select:hover .tooltip-text{
+  display:block;
+}
+.tooltip-text:after {
+  content: "";
+  height: 0px;
+  width: 0px;
+  z-index: 10;
+  position: absolute;
+  border-width: 3px;
+  border-style: solid;
+  left: 0;
+  bottom: 100%;
+  left: 50%;
+  border-color: transparent transparent rgba(0, 0, 0, 0.65);
+}
+@media only screen and (max-width: 1300px) {
+  .artboard-parent{
+  margin:0!important;
+  padding-left:70px;
+  }
 }

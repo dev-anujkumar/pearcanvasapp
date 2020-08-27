@@ -116,6 +116,9 @@ const findElementType = (element, index) => {
                         break;
                     case "video":
                     case "audio":
+                        if(element.figuredata.srctype && element.figuredata.srctype==='internal'){
+                            element.figuredata.srctype='externallink'
+                        }
                         elementType = {
                             elementType: elementDataBank[element.type][element.figuretype]["elementType"],
                             primaryOption: elementDataBank[element.type][element.figuretype]["primaryOption"],

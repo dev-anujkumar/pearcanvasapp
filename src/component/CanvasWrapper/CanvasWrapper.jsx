@@ -13,7 +13,7 @@ import config from './../../config/config';
 // IMPORT - Assets //
 import '../../styles/CanvasWrapper/style.css';
 import { sendDataToIframe , hasReviewerRole} from '../../constants/utility.js';
-import { CanvasIframeLoaded, ShowHeader,TocToggle } from '../../constants/IFrameMessageTypes.js';
+import { CanvasIframeLoaded, ShowHeader,TocToggle,NextSlate, PreviousSlate, ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { getSlateLockStatus, releaseSlateLock } from './SlateLock_Actions'
 import GlossaryFootnoteMenu from '../GlossaryFootnotePopup/GlossaryFootnoteMenu.jsx';
 import {updateElement, getTableEditorData, clearElementStatus}from '../../component/ElementContainer/ElementContainer_Actions'
@@ -33,14 +33,13 @@ import store from './../../appstore/store'
 import { hideBlocker } from '../../js/toggleLoader';
 import {getAllSlatesData} from '../../js/getAllSlatesData'
 import { fetchUsageTypeData } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
-
+import { toggleElemBordersAction, togglePageNumberAction } from '../Toolbar/Toolbar_Actions.js';
 export class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
         this.state = {
             showReleasePopup : false,
             toggleApo : false,
-            isPageNumberEnabled : false,
             isConfigLoaded : true
         }  
     }
@@ -81,7 +80,6 @@ export class CanvasWrapper extends Component {
 
     componentDidUpdate(prevProps, prevState){
         this.countTimer =  Date.now();
-
         var targetNode = document.querySelector('body');
         // Options for the observer (which mutations to observe)		
         var config = { attributes: true };
@@ -152,7 +150,18 @@ export class CanvasWrapper extends Component {
         store.dispatch({type:'ERROR_POPUP', payload:{show:false}})
         return true;
     }
-
+    handleNavClick=(nav)=> {
+        if(config.savingInProgress || config.popupCreationCallInProgress){
+            return false
+        }
+        sendDataToIframe({'type': ShowLoader,'message': { status: true }});
+        if(nav === "back"){
+            sendDataToIframe({'type': PreviousSlate,'message': {}})
+        }else{
+            sendDataToIframe({'type': NextSlate,'message': {}})
+        }
+        
+    }
     render() {
         let slateData = this.props.slateLevelData
         let isReviewerRoleClass = hasReviewerRole() ? " reviewer-role" : ""
@@ -171,21 +180,40 @@ export class CanvasWrapper extends Component {
                 {/** Ends of custom error popup */}
                 <div id="editor-toolbar" className="editor-toolbar">
                     {/* editor tool goes here */}
-                    <Toolbar togglePageNumbering={this.togglePageNumbering} />
+                    <Toolbar />
                     {/* custom list editor component */}
                 </div>
 
-                <div className='workspace'>
-                   
+                <div className='workspace'>               
                     <div id='canvas' className={'canvas'+ isReviewerRoleClass}>
                         <div id='artboard-containers'>
-                            <div id='artboard-container' className='artboard-container'>
-                                {this.props.showApoSearch ? <AssetPopoverSearch /> : ''}
-                                {/* slate wrapper component combines slate content & slate title */}
-                                <RootContext.Provider value={{ isPageNumberEnabled: this.state.isPageNumberEnabled }}>
-                                    <SlateWrapper loadMorePages={this.loadMorePages}  handleCommentspanel={this.handleCommentspanel} slateData={slateData} navigate={this.navigate} showBlocker= {this.props.showCanvasBlocker} convertToListElement={this.props.convertToListElement} toggleTocDelete = {this.props.toggleTocDelete} tocDeleteMessage = {this.props.tocDeleteMessage} modifyState = {this.props.modifyState}  updateTimer = {this.updateTimer} isBlockerActive = {this.props.showBlocker} isLOExist={this.props.isLOExist} updatePageLink={this.props.updatePageLink}/>
-                                </RootContext.Provider>                                
+                            <div class="artboard-parent">
+                                {/*Prev Button */}
+                                <div className={`navigation-container ${config.disablePrev ? 'disabled':""}`}>
+                                    <div className='navigation-content'>
+                                        <div className='navigation-button back' onClick={() => this.handleNavClick("back")}>
+                                            <div className='navigation-icon'><i class="nav-arrow left-arrow-transform"></i></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id='artboard-container' className='artboard-container'>
+                                    {this.props.showApoSearch ? <AssetPopoverSearch /> : ''}
+                                    {/* slate wrapper component combines slate content & slate title */}
+                                    <RootContext.Provider value={{ isPageNumberEnabled: this.props.pageNumberToggle }}>
+                                        <SlateWrapper loadMorePages={this.loadMorePages} handleCommentspanel={this.handleCommentspanel} slateData={slateData} navigate={this.navigate} showBlocker={this.props.showCanvasBlocker} convertToListElement={this.props.convertToListElement} toggleTocDelete={this.props.toggleTocDelete} tocDeleteMessage={this.props.tocDeleteMessage} modifyState={this.props.modifyState} updateTimer={this.updateTimer} isBlockerActive={this.props.showBlocker} isLOExist={this.props.isLOExist} updatePageLink={this.props.updatePageLink}/>
+                                    </RootContext.Provider>
+                                </div>
+                                 {/*Next Button */}
+                                <div className={`navigation-container ${config.disableNext ? 'disabled':""}`}>
+                                    <div className='navigation-content' >
+                                        <div className='navigation-button next' onClick={() => this.handleNavClick("next")}>
+                                            <div className='navigation-icon'><i class="nav-arrow right-arrow-transform"></i></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className='clr'></div>
                             </div>
+                            
                         </div>
                     </div>
                     <div className = "sidebar-panel">
@@ -212,12 +240,6 @@ export class CanvasWrapper extends Component {
             </div>
         );
     }
-    
-    togglePageNumbering = () => {
-        this.setState((state) => ({
-            isPageNumberEnabled: !state.isPageNumberEnabled
-        }));
-    }
 }
 
 CanvasWrapper.displayName = "CanvasWrapper"
@@ -235,6 +257,7 @@ const mapStateToProps = state => {
         logout,
         withinLockPeriod: state.slateLockReducer.withinLockPeriod,
         ErrorPopup: state.errorPopup,
+        pageNumberToggle: state.toolbarReducer.pageNumberToggle
     };
 };
 
@@ -271,6 +294,8 @@ export default connect(
         clearElementStatus,
         fetchUsageTypeData,
         fetchSlateAncestorData,
-        setSlateLength
+        setSlateLength,
+        toggleElemBordersAction,
+        togglePageNumberAction
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

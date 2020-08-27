@@ -218,6 +218,12 @@ function CommunicationChannel(WrappedComponent) {
                 case 'parentChanging':
                     this.props.fetchSlateAncestorData(message || {});
                     break;
+                case 'elementBorder':
+                    this.props.toggleElemBordersAction()
+                    break;
+                case 'pageNumber':
+                    this.props.togglePageNumberAction()
+                    break;
             }
         }
 

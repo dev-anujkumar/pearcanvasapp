@@ -105,7 +105,7 @@ class PopUp extends React.Component {
     * @param {event} 
     */
     renderInputBox = (props) => {
-        if(props.showDeleteElemPopup || props.isLockReleasePopup ||  props.isSplitSlatePopup || props.tocDelete || props.removeConfirmation || props.wrongAudio || props.lockForTOC || props.sytaxHighlight){
+        if(props.showDeleteElemPopup || props.isLockReleasePopup ||  props.isSplitSlatePopup || props.tocDelete || props.removeConfirmation || props.wrongAudio || props.lockForTOC || props.sytaxHighlight || props.listConfirmation){
             return null
         }
         else if(props.isLockPopup && props.withInputBox && !props.lockForTOC){
@@ -132,7 +132,7 @@ class PopUp extends React.Component {
     }
     
     renderCloseSymbol = (props) => {
-        if(props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.tocDelete || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight){
+        if(props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.tocDelete || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation){
             return null
         }
         else{
@@ -160,7 +160,7 @@ class PopUp extends React.Component {
                 )
             }
         }
-        else if(props.tocDelete){
+        else if(props.tocDelete || props.listConfirmation){
             //jsx dialog text
             return(
                 <>
