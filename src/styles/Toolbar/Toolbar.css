@@ -320,7 +320,7 @@ button[title="formatSelector"].tox-tbtn--select{
 .tox button[title="formatSelector"].tox-tbtn:hover:not(.tox-tbtn--disabled){
   background-color: #f3f7f8!important;
 }
-.tox-toolbar__group:last-child{
+.editor-toolbar .tox-toolbar__group:last-child{
   border-right: 1px solid #ccc;
 }
 .collapse-header{
@@ -334,7 +334,7 @@ button[title="formatSelector"].tox-tbtn--select{
 .collapse-header svg{
   cursor: pointer;
 }
-.tox-toolbar__group{
+.editor-toolbar .tox-toolbar__group{
   cursor:default!important;
   height:32px!important
 }
@@ -361,17 +361,17 @@ button[title="formatSelector"].tox-tbtn--select{
 .tox-tbtn--select.tox-tbtn--active .tox-tbtn__select-label{
   color:#005a70!important;
 }
-.tox .tox-tbtn{
+.editor-toolbar .tox .tox-tbtn{
   height:32px!important;
   margin:0!important;
 }
-.tox-editor-container{
+.editor-toolbar .tox-editor-container{
   height:32px!important;
 }
-.tox .tox-split-button{
+.editor-toolbar .tox .tox-split-button{
   margin:0!important;
 }
-.tox-toolbar__group .tox-tbtn:hover .tox-tbtn--select{
+.editor-toolbar .tox-toolbar__group .tox-tbtn:hover .tox-tbtn--select{
   background-color: #f3f7f8!important;
 }
 .tox-tbtn--select .tooltip-text{
@@ -404,4 +404,10 @@ button[title="formatSelector"].tox-tbtn--select:hover .tooltip-text{
   bottom: 100%;
   left: 50%;
   border-color: transparent transparent rgba(0, 0, 0, 0.65);
+}
+@media only screen and (max-width: 1300px) {
+  .artboard-parent{
+  margin:0!important;
+  padding-left:70px;
+  }
 }
