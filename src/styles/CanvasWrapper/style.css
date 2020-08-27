@@ -103,7 +103,7 @@
     height : 100%;
 }
 .navigation-container{
-    width: 30px;
+    width: 35px;
     height: 100%;
     float: left;
 }
@@ -122,9 +122,9 @@
 }
 .nav-arrow {
     border: solid #005a70;
-    border-width: 0 4px 4px 0;
+    border-width: 0 3px 3px 0;
     display: inline-block;
-    padding: 6px;
+    padding: 5px;
   }
   
   .right-arrow-transform {
@@ -141,8 +141,8 @@
     -webkit-transform: rotate(-135deg);
   }
   .navigation-button{
-    width: 30px;
-    height: 130px;
+    width: 35px;
+    height: 85px;
     background: #fff;
     cursor: pointer;
     color: #005a70;
@@ -152,14 +152,13 @@
     border-radius: 3px;
   }
   .navigation-button.next{
-    padding:50px 5px 0
+    padding:37px 10px 0
   }
   .navigation-button.back{
-    padding:50px 10px 0
+    padding: 37px 14px 0;
   }
   .navigation-icon{
     width: 100%;
-    text-align: center;
   }
   .navigation-text{
     width: 100%;
