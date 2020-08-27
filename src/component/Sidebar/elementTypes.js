@@ -440,12 +440,6 @@ export default {
                     labelText: 'VID',
                     enum: 'EXTERNAL_LINK',
                     wipValue : 'externallink'
-                },
-                'secondary-video-alfresco': {
-                    text: 'Alfresco Video Link',
-                    labelText: 'VID',
-                    enum: 'INTERNAL_LINK',
-                    wipValue:'internal'
                 }
             }
         },
@@ -459,12 +453,6 @@ export default {
                     labelText: 'AUD',
                     enum: 'EXTERNAL_LINK',
                     wipValue : 'externallink'
-                },
-                'secondary-audio-alfresco': {
-                    text: 'Alfresco Audio Link',
-                    labelText: 'AUD',
-                    enum: 'INTERNAL_LINK',
-                    wipValue:'internal'
                 }
             }
         },
