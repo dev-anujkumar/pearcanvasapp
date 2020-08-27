@@ -317,7 +317,7 @@ button[title="formatSelector"].tox-tbtn--select{
   max-width : 162px!important;
   
 }
-button[title="formatSelector"]:hover{
+.tox button[title="formatSelector"].tox-tbtn:hover:not(.tox-tbtn--disabled){
   background-color: #f3f7f8!important;
 }
 .tox-toolbar__group:last-child{
@@ -367,4 +367,41 @@ button[title="formatSelector"]:hover{
 }
 .tox-editor-container{
   height:32px!important;
+}
+.tox .tox-split-button{
+  margin:0!important;
+}
+.tox-toolbar__group .tox-tbtn:hover .tox-tbtn--select{
+  background-color: #f3f7f8!important;
+}
+.tox-tbtn--select .tooltip-text{
+  position: fixed;
+  top: 40px;
+  font-size: 10px;
+  font-weight: 500;
+  padding: 3px 8px;
+  border-radius: 3px;
+  white-space: normal;
+  cursor: default;
+  color: #fff;
+  display:none;
+  line-height: 15px;
+  border: 1px solid #FFFFFF;
+  background-color: rgba(0, 0, 0, 0.75);
+}
+button[title="formatSelector"].tox-tbtn--select:hover .tooltip-text{
+  display:block;
+}
+.tooltip-text:after {
+  content: "";
+  height: 0px;
+  width: 0px;
+  z-index: 10;
+  position: absolute;
+  border-width: 3px;
+  border-style: solid;
+  left: 0;
+  bottom: 100%;
+  left: 50%;
+  border-color: transparent transparent rgba(0, 0, 0, 0.65);
 }
