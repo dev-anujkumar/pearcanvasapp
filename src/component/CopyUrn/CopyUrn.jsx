@@ -12,7 +12,7 @@ const CopyUrn = props => {
         document.body.removeChild(tempElement);
         props.toggleCopyMenu(false);
         let linkNotification = document.getElementById('link-notification');
-        if(text.includes('work')) {
+        if (text.includes('work')) {
             linkNotification.innerText = "Work URN copied to clipboard";
         } else {
             linkNotification.innerText = "Manifest URN copied to clipboard";
@@ -24,9 +24,17 @@ const CopyUrn = props => {
         }, 4000);
     }
 
+    const hideAPOOnOuterClick = (e) => {
+        props.toggleCopyMenu(false);
+        e.stopPropagation();
+    }
+
     return (
-        <div style={{ left: `${props.copyClickedX}px`, top: `${props.copyClickedY}px` }} className={'copyUrn'} onClick={(e) => { copyToClipBoard(e, props.elementId) }}>
-            Copy {props.elementId.includes('work') ? 'Work' : 'Manifest'} URN
+        <div>
+            <div style={{ left: `${props.copyClickedX}px`, top: `${props.copyClickedY}px` }} className={'copyUrn'} onClick={(e) => { copyToClipBoard(e, props.elementId) }}>
+                Copy {props.elementId.includes('work') ? 'Work' : 'Manifest'} URN
+            </div>
+            <div className='blockerBgDiv' tabIndex="0" onClick={(e) => { hideAPOOnOuterClick(e) }}></div>
         </div>
     )
 }
