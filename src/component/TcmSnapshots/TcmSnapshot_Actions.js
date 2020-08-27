@@ -1,7 +1,7 @@
 import axios from 'axios';
 import config from '../../config/config';
 import { sendDataToIframe } from '../../constants/utility.js';
-import { GET_TCM_RESOURCES } from '../../constants/Action_Constants';
+import { GET_TCM_RESOURCES, AUTHORING_ELEMENT_UPDATE } from '../../constants/Action_Constants';
 
  /**
      * @description - TCM STATUS FOR ELEMENT LEVEL ON SLATE
@@ -52,11 +52,11 @@ export const handleTCMData = (slateManifestUrn) => (dispatch, getState) => {
 
 }
 
-/**
+/** TO BE REMOVED ---------> 
      * @description Send TCM Snapshot for Cos converted elements
      * @param {String} slateManifestUrn | Slate Manifest
      * @param {String} slateManifestUrn | Slate Entity
-*/
+
 export const tcmSnapshot = (slateManifestUrn,slateEntityUrn) => (dispatch, getState) => {
     let url = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/tcm/${slateEntityUrn}/${slateManifestUrn}?page=0`;
     return axios.get(url, {
@@ -70,7 +70,7 @@ export const tcmSnapshot = (slateManifestUrn,slateEntityUrn) => (dispatch, getSt
     })
 
 }
-
+-----------------------> */
 /**
      * @description Send TCM Snapshot for the element
      * @param {Object} snapshotData | TCM Snapshot data
