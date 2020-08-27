@@ -900,25 +900,27 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
             popupField,
             createdFromFootnote
         }
-        const parentData = getState().appStore.slateLevelData;
-        const newParentData = JSON.parse(JSON.stringify(parentData));
-        let currentSlateData = newParentData[config.slateManifestURN];
-        let containerElement = {
-            parentElement:parentElement,
-            asideData:getState().appStore.asideData,
-            parentUrn:getState().appStore.parentUrn,
-            metaDataField: _requestData.metaDataField
-        };
-        let slateData = {
-            currentSlateData: {
-                status: currentSlateData.status,
-                contentUrn: currentSlateData.contentUrn
-            },
-            bodymatter: currentSlateData.contents.bodymatter,
-            response: response.data
-        };
-        prepareDataForTcmCreate(parentElement, _requestData.metaDataField , response.data, getState, dispatch)
-        tcmSnapshotsForCreate(slateData, _requestData.metaDataField, containerElement, dispatch);
+        if (parentElement && parentElement.type == 'popup') {
+            const parentData = getState().appStore.slateLevelData;
+            const newParentData = JSON.parse(JSON.stringify(parentData));
+            let currentSlateData = newParentData[config.slateManifestURN];
+            let containerElement = {
+                parentElement: parentElement,
+                asideData: getState().appStore.asideData,
+                parentUrn: getState().appStore.parentUrn,
+                metaDataField: _requestData.metaDataField
+            };
+            let slateData = {
+                currentSlateData: {
+                    status: currentSlateData.status,
+                    contentUrn: currentSlateData.contentUrn
+                },
+                bodymatter: currentSlateData.contents.bodymatter,
+                response: response.data
+            };
+            prepareDataForTcmCreate(parentElement, _requestData.metaDataField, response.data, getState, dispatch)
+            tcmSnapshotsForCreate(slateData, _requestData.metaDataField, containerElement, dispatch);
+        }
         appendCreatedElement(argObj, response.data)
 
     })

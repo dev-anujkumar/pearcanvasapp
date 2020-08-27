@@ -324,15 +324,16 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         }
 
         /** [PCAT-8289] -------------------------- TCM Snapshot Data handling ----------------------------*/
-        //add check for show-hide
-        if (elementTypeTCM.indexOf(response.data.type) !== -1 && showHideType == undefined) {//&& updatedData.metaDataField == undefined  && updatedData.sectionType == undefined
+        let isPopupElement = parentElement && parentElement.type == 'popup' && (updatedData.metaDataField !== undefined || updatedData.sectionType !== undefined) ? true : false;
+        let noAdditionalFields = (updatedData.metaDataField == undefined && updatedData.sectionType == undefined) ? true : false
+        if (elementTypeTCM.indexOf(response.data.type) !== -1 && showHideType == undefined && (isPopupElement || noAdditionalFields)) {
             let containerElement = {
                 asideData: asideData,
                 parentUrn: parentUrn,
                 poetryData: poetryData,
                 parentElement: parentElement && parentElement.type == 'popup' ? parentElement : undefined,
-                metaDataField: updatedData.metaDataField ? updatedData.metaDataField : undefined,
-                sectionType : updatedData.sectionType ? updatedData.sectionType : undefined
+                metaDataField: parentElement && parentElement.type == 'popup' && updatedData.metaDataField ? updatedData.metaDataField : undefined,
+                sectionType : parentElement && parentElement.type == 'popup' && updatedData.sectionType ? updatedData.sectionType : undefined
             },
             elementUpdateData ={
                 currentParentData: currentParentData,
