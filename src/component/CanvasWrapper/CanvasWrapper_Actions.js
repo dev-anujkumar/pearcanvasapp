@@ -263,6 +263,8 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
         }
     });
    
+    let isPopupSlate = config.cachedActiveElement && config.cachedActiveElement.element && config.cachedActiveElement.element.type == "popup" ? true :false;
+
     if (config.cachedActiveElement && config.cachedActiveElement.element && config.cachedActiveElement.element.type == "popup") {
         config.popupParentElement = {
             parentElement: config.cachedActiveElement.element,
@@ -271,7 +273,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
         }
     }
     /** Project level and element level TCM status */
-    if (page === 0 && config.tcmStatus && (versioning == "")) {
+    if (page === 0 && config.tcmStatus && (versioning == "") && !isPopupSlate) {
         /** Show TCM icon header if TCM is on for project level*/
         let messageTcmStatus = {
             TcmStatus: {
@@ -282,11 +284,10 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             'type': "TcmStatusUpdated",
             'message': messageTcmStatus
         })
-
         dispatch(handleTCMData(manifestURN));
-        if (calledFrom !== "slateRefresh") {
-            dispatch(tcmSnapshot(manifestURN, entityURN))
-        }
+        // if (calledFrom !== "slateRefresh") {
+        //     dispatch(tcmSnapshot(manifestURN, entityURN))
+        // }
     }
     const elementCount = getState().appStore.slateLength
     let apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}&elementCount=${elementCount}`
