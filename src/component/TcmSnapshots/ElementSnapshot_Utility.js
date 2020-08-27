@@ -121,7 +121,7 @@ const prepareGlossarySnapshotContent = (actionStatus, glossaryList, glossaryHtml
     glossaryList && glossaryList.length && glossaryList.map(glossaryItem => {
         let glossaryData = {
             changeStatus: actionStatus.status.charAt(0).toUpperCase() + actionStatus.status.slice(1),
-            changeType: actionStatus.action,
+            changeType: actionStatus.action.charAt(0).toUpperCase() + actionStatus.action.slice(1),
             charAt: glossaryItem.charAt,
             glossaryId: glossaryItem.itemid
         }
@@ -150,7 +150,7 @@ const prepareFootnoteSnapshotContent = (actionStatus, footnoteWipList, footnoteH
     footnoteWipList && footnoteWipList.length && footnoteWipList.map(footnoteItem => {
         let footnoteData = {
             changeStatus: actionStatus.status.charAt(0).toUpperCase() + actionStatus.status.slice(1),
-            changeType: actionStatus.action,
+            changeType: actionStatus.action.charAt(0).toUpperCase() + actionStatus.action.slice(1),
             charAt: footnoteItem.charAt,
             footnoteId: footnoteItem.footnoteid
         };
