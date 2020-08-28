@@ -372,7 +372,7 @@ button[aria-label="formatSelector"].tox-tbtn--select{
 .editor-toolbar .tox-toolbar__group .tox-tbtn:hover .tox-tbtn--select{
   background-color: #f3f7f8!important;
 }
-.tox-tbtn--select .tooltip-text{
+.tox-tbtn--select .tooltip-text, .navigation-content .tooltip-text{
   position: fixed;
   top: 40px;
   font-size: 10px;
@@ -387,9 +387,18 @@ button[aria-label="formatSelector"].tox-tbtn--select{
   border: 1px solid #FFFFFF;
   background-color: rgba(0, 0, 0, 0.75);
 }
-button[aria-label="formatSelector"].tox-tbtn--select:hover .tooltip-text{
+button[aria-label="formatSelector"].tox-tbtn--select:hover .tooltip-text,.navigation-content:hover .tooltip-text{
   display:block;
 }
+.navigation-content .tooltip-text{
+position: absolute;
+display: none;
+z-index: 99;
+top: 102px;
+}
+.navigation-content .tooltip-text.back{
+  left:-8px;
+  }
 .tooltip-text:after {
   content: "";
   height: 0px;
@@ -400,7 +409,7 @@ button[aria-label="formatSelector"].tox-tbtn--select:hover .tooltip-text{
   border-style: solid;
   left: 0;
   bottom: 100%;
-  left: 50%;
+  left: 40%;
   border-color: transparent transparent rgba(0, 0, 0, 0.65);
 }
 #toolbarGlossaryFootnote svg.math-chem-margin{

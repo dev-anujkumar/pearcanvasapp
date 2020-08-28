@@ -195,6 +195,7 @@ export class CanvasWrapper extends Component {
                                         <div className='navigation-button back' onClick={() => this.handleNavClick("back")}>
                                             <div className='navigation-icon'>{prevIcon}</div>
                                         </div>
+                                        <div className = "tooltip-text back">Previous</div>
                                     </div>
                                 </div>
                                 <div id='artboard-container' className='artboard-container'>
@@ -210,6 +211,7 @@ export class CanvasWrapper extends Component {
                                         <div className='navigation-button next' onClick={() => this.handleNavClick("next")}>
                                             <div className='navigation-icon'>{nextIcon}</div>
                                         </div>
+                                        <div className = "tooltip-text next">Next</div>
                                     </div>
                                 </div>
                                 <div className='clr'></div>
