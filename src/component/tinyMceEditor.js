@@ -1359,10 +1359,11 @@ export class TinyMceEditor extends Component {
             text: self.getElementTypeForToolbar(self.props.element),
             tooltip : 'formatSelector',
             onSetup: function () {
+                document.querySelector('button[title="formatSelector"]').setAttribute('title','');
                 let newSpan = document.createElement('span');
                 newSpan.className = "tooltip-text"
                 newSpan.innerText = self.getElementTypeForToolbar(self.props.element);
-                const tooltipLabel = document.querySelector('button[title="formatSelector"] .tox-tbtn__select-label')
+                const tooltipLabel = document.querySelector('button[aria-label="formatSelector"] .tox-tbtn__select-label')
                 if (tooltipLabel) {
                     tooltipLabel.after(newSpan)
                 }
@@ -2151,9 +2152,9 @@ export class TinyMceEditor extends Component {
             this.lastContent = document.getElementById('cypress-' + this.props.index).innerHTML;
         }
         if(this.elementConverted || prevProps.element.subtype !== this.props.element.subtype){
-            document.querySelector('button[title="formatSelector"] .tox-tbtn__select-label').innerText = this.getElementTypeForToolbar(this.props.element);
+            document.querySelector('button[aria-label="formatSelector"] .tox-tbtn__select-label').innerText = this.getElementTypeForToolbar(this.props.element);
             /* tooltip code for text elements in toolbar */
-            const tooltipText = document.querySelector('button[title="formatSelector"] .tooltip-text')
+            const tooltipText = document.querySelector('button[aria-label="formatSelector"] .tooltip-text')
             if (tooltipText) {
                 tooltipText.innerText = this.getElementTypeForToolbar(this.props.element);
             }

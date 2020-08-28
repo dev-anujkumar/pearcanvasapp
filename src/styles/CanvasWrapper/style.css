@@ -29,7 +29,6 @@
     flex: 2;
     overflow: hidden;
     min-width: 768px;
-    padding: 16px 16px 16px 40px;
     background-color: #fafafa;
     float: left;
     width: 100%;
@@ -103,12 +102,12 @@
     height : 100%;
 }
 .navigation-container{
-    width: 35px;
+    width: 36px;
     height: 100%;
     float: left;
 }
 .artboard-parent{
-    width: 960px;
+    width: 872px;
     margin: 0 auto;
     height: 100%;
 }
@@ -126,23 +125,8 @@
     display: inline-block;
     padding: 5px;
   }
-  
-  .right-arrow-transform {
-    transform: rotate(-45deg);
-    -webkit-transform: rotate(-45deg);
-  }
-  
-  .left-arrow-transform {
-    transform: rotate(135deg);
-    -webkit-transform: rotate(135deg);
-  }
-  .up-arrow-transform {
-    transform: rotate(-135deg);
-    -webkit-transform: rotate(-135deg);
-  }
   .navigation-button{
-    width: 35px;
-    height: 85px;
+    height:100%;
     background: #fff;
     cursor: pointer;
     color: #005a70;
@@ -151,11 +135,15 @@
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 2px 1px -1px rgba(0, 0, 0, 0.12), 0 1px 1px 0 rgba(0, 0, 0, 0.14);
     border-radius: 3px;
   }
+  .navigation-content{
+      height:100px;
+      width:36px;
+  }
   .navigation-button.next{
-    padding:37px 10px 0
+    padding: 40px 2px 40px 12px;
   }
   .navigation-button.back{
-    padding: 37px 14px 0;
+    padding: 40px 2px 40px 12px;
   }
   .navigation-icon{
     width: 100%;

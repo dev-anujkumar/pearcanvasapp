@@ -34,6 +34,7 @@ import { hideBlocker } from '../../js/toggleLoader';
 import {getAllSlatesData} from '../../js/getAllSlatesData'
 import { fetchUsageTypeData } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import { toggleElemBordersAction, togglePageNumberAction } from '../Toolbar/Toolbar_Actions.js';
+import { prevIcon, nextIcon } from '../../../src/images/ElementButtons/ElementButtons.jsx';
 export class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
@@ -192,7 +193,7 @@ export class CanvasWrapper extends Component {
                                 <div className={`navigation-container ${config.disablePrev ? 'disabled':""}`}>
                                     <div className='navigation-content'>
                                         <div className='navigation-button back' onClick={() => this.handleNavClick("back")}>
-                                            <div className='navigation-icon'><i class="nav-arrow left-arrow-transform"></i></div>
+                                            <div className='navigation-icon'>{prevIcon}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -207,7 +208,7 @@ export class CanvasWrapper extends Component {
                                 <div className={`navigation-container ${config.disableNext ? 'disabled':""}`}>
                                     <div className='navigation-content' >
                                         <div className='navigation-button next' onClick={() => this.handleNavClick("next")}>
-                                            <div className='navigation-icon'><i class="nav-arrow right-arrow-transform"></i></div>
+                                            <div className='navigation-icon'>{nextIcon}</div>
                                         </div>
                                     </div>
                                 </div>
