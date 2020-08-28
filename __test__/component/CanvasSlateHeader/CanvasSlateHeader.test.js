@@ -23,12 +23,6 @@ describe('Test-handleNavClick', () => {
             let CanvasSlateHeaderInstance = CanvasSlateHeader.instance(); 
             expect(CanvasSlateHeaderInstance).toBeDefined();
         })
-        it('onClick Event-handleNavClick-next', () => {
-            const spyhandleNavClick = jest.spyOn(CanvasSlateHeaderInstance, 'handleNavClick')
-            CanvasSlateHeaderInstance.handleNavClick("next");
-            expect(CanvasSlateHeaderInstance.handleNavClick).toHaveBeenCalled()
-            spyhandleNavClick.mockClear()
-        })
         it('Test-getLabel() -default case ', () => {        
             CanvasSlateHeaderInstance.getLabel("into");
             expect(CanvasSlateHeaderInstance.getLabel).toHaveBeenCalled()
@@ -48,15 +42,7 @@ describe('Test-handleNavClick', () => {
     })
 describe('onClick Event', () => {
     const onLoadMock = jest.fn();
-    const CanvasSlateHeader = mount(<SlateHeader onNavigate={onLoadMock} />)
-    let CanvasSlateHeaderInstance = CanvasSlateHeader.find('SlateHeader').instance();
 
-    it('onClick Event', () => {
-        const spyhandleNavClick = jest.spyOn(CanvasSlateHeaderInstance, 'handleNavClick')
-        CanvasSlateHeaderInstance.handleNavClick("back")
-        expect(CanvasSlateHeaderInstance.handleNavClick).toHaveBeenCalled()
-        spyhandleNavClick.mockClear()
-    })
     it('navigate Event ', () => {
         const onLoadMock = jest.fn();
         const component = mount(<SlateHeader onNavigate={onLoadMock} disabled='next' />);

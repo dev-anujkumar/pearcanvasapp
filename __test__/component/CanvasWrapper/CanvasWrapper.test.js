@@ -128,6 +128,9 @@ const initialState = {
             id: 1,
             loUrn: "123"
         }
+    },
+    toolbarReducer:{
+        pageNumberToggle:false
     }
 };
 
@@ -201,20 +204,11 @@ describe('Testing <CanvasWrapper> Component', () => {
             canvasWrapperInstance.handleCommentspanel(event,"id",0);
             expect(typeof(wrapper.props().toggleCommentsPanel)).toEqual('function');
         })
-        it('togglePageNumbering  function call',() => {
-            canvasWrapperInstance.togglePageNumbering();
-            expect(canvasWrapperInstance.state.isPageNumberEnabled).toBe(true);
-        })
         test('should call updateTimer mock', () => {
             global.setInterval = jest.fn();
             canvasWrapperInstance.countTimer = 21;
             canvasWrapperInstance.updateTimer();
             expect(global.setInterval).toHaveBeenCalled();
-        })
-        it('togglePageNumbering  function call togglecheck',() => {
-            canvasWrapperInstance.togglePageNumbering();
-            canvasWrapperInstance.togglePageNumbering();
-            expect(canvasWrapperInstance.state.isPageNumberEnabled).toBe(true);
         })
         it('loadMorePages  function call',() => {
             config.page = 0;
@@ -225,6 +219,14 @@ describe('Testing <CanvasWrapper> Component', () => {
         it('ReleaseErrorPopup  function call',() => {
             canvasWrapperInstance.ReleaseErrorPopup();
             expect(canvasWrapperInstance.ReleaseErrorPopup).toBeTruthy();
+        })
+        it('handleNavClick back', () => {
+            canvasWrapperInstance.handleNavClick('back');
+            expect(canvasWrapperInstance.handleNavClick).toBeTruthy();
+        })
+        it('handleNavClick next', () => {
+            canvasWrapperInstance.handleNavClick('next');
+            expect(canvasWrapperInstance.handleNavClick).toBeTruthy();
         })
     })
 })
