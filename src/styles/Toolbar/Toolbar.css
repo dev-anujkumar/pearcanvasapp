@@ -299,12 +299,10 @@ div[title="Ordered List"] span.tox-split-button__chevron svg:active {
   box-shadow: 0 0 0 0 #dee0e2 inset!important;
 }
 .tox-menu.tox-collection.tox-collection--list.tox-selected-menu{
-  overflow : hidden!important;
-  max-height: none!important;
   box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 4px 5px 0 rgba(0, 0, 0, 0.14);
   border: 0;
 }
-button[title="formatSelector"] span.tox-tbtn__select-label{
+button[aria-label="formatSelector"] span.tox-tbtn__select-label{
   min-width : 126px!important;
   cursor:pointer!important;
   overflow-wrap: normal;
@@ -313,11 +311,11 @@ button[title="formatSelector"] span.tox-tbtn__select-label{
   overflow: hidden;
   text-overflow: clip;
 }
-button[title="formatSelector"].tox-tbtn--select{
+button[aria-label="formatSelector"].tox-tbtn--select{
   max-width : 162px!important;
   
 }
-.tox button[title="formatSelector"].tox-tbtn:hover:not(.tox-tbtn--disabled){
+.tox button[aria-label="formatSelector"].tox-tbtn:hover:not(.tox-tbtn--disabled){
   background-color: #f3f7f8!important;
 }
 .editor-toolbar .tox-toolbar__group:last-child{
@@ -389,7 +387,7 @@ button[title="formatSelector"].tox-tbtn--select{
   border: 1px solid #FFFFFF;
   background-color: rgba(0, 0, 0, 0.75);
 }
-button[title="formatSelector"].tox-tbtn--select:hover .tooltip-text{
+button[aria-label="formatSelector"].tox-tbtn--select:hover .tooltip-text{
   display:block;
 }
 .tooltip-text:after {
@@ -405,9 +403,13 @@ button[title="formatSelector"].tox-tbtn--select:hover .tooltip-text{
   left: 50%;
   border-color: transparent transparent rgba(0, 0, 0, 0.65);
 }
+#toolbarGlossaryFootnote svg.math-chem-margin{
+margin-left:6px;
+}
 @media only screen and (max-width: 1300px) {
   .artboard-parent{
-  margin:0!important;
-  padding-left:70px;
+    margin: 0!important;
+    padding-left: 110px;
+    width:100%!important;
   }
 }

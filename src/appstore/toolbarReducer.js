@@ -1,5 +1,6 @@
 import {
-    TOGGLE_BORDERS
+    TOGGLE_BORDERS,
+    TOGGLE_PAGE_NUMBER
 } from '../constants/Action_Constants';
 
 const INITIAL_STATE = {
@@ -14,12 +15,12 @@ const INITIAL_ACTION = {
 
 export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
     switch (action.type) {
-        case 'TOGGLE_BORDERS':
+        case TOGGLE_BORDERS:
             return {
                 ...state,
                 elemBorderToggle: !state.elemBorderToggle
             }
-        case 'TOGGLE_PAGE_NUMBER':
+        case TOGGLE_PAGE_NUMBER:
             return {
                 ...state,
                 pageNumberToggle: !state.pageNumberToggle
