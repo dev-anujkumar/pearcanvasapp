@@ -81,7 +81,7 @@ var allSnapshotData = [];
 export const sendElementTcmSnapshot = async (snapshotData) => {
         allSnapshotData.push(snapshotData);
         if (timerID) clearTimeout(timerID); 
-        timerID = setTimeout( async() => {await callSnapshotAPI(allSnapshotData); allSnapshotData=[]}, 2000)
+        timerID = setTimeout( async() => {let snapshots = allSnapshotData; allSnapshotData=[]; await callSnapshotAPI(snapshots)}, 2000)
 }
 
 const callSnapshotAPI = async(snapshotData) => {
