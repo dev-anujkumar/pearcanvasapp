@@ -2675,13 +2675,18 @@ export class TinyMceEditor extends Component {
             case 'blockquote':
                 if (this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia"|| this.props.element.elementdata.type === "blockquote")) {
                     let temDiv = document.createElement('div');
+                    let hiddenBlock = document.createElement('p');
+                    hiddenBlock.innerHTML = "hidden";
+                    hiddenBlock.classList.add("blockquote-hidden");
+                    hiddenBlock.setAttribute("contenteditable","false");
+                    hiddenBlock.style.visibility = "hidden"
                     temDiv.innerHTML = this.props.model && this.props.model.text ? this.props.model.text : '<blockquote class="blockquoteMarginaliaAttr" contenteditable="false"><p class="paragraphNummerEins" contenteditable="true"></p><p class="blockquoteTextCredit" contenteditable="true" data-placeholder="Attribution Text"></p></blockquote>';
                     if(this.props.element.elementdata.type === "blockquote" && !tinymce.$(temDiv).find('blockquote p.blockquoteTextCredit').length){
                         tinymce.$(temDiv).find('blockquote').append('<p class="blockquoteTextCredit" contenteditable="true" data-placeholder="Attribution Text"></p>');
                     }
                     tinymce.$(temDiv).find('.blockquoteTextCredit').attr('contenteditable', 'true').attr('data-placeholder','Attribution Text');
-                    if (!tinymce.$(temDiv).find('blockquote p.blockquote-hidden').length) {
-                        tinymce.$(temDiv).find('blockquote').append('<p contenteditable="false" class="blockquote-hidden" style="visibility: hidden;">hidden</p>');
+                    if (tinymce.$(temDiv).find('.blockquoteTextCredit') && !tinymce.$(temDiv).find('blockquote p.blockquote-hidden').length) {
+                        temDiv.childNodes[0].insertBefore(hiddenBlock,tinymce.$(temDiv).find('.blockquoteTextCredit')[0]);
                     }
                     tinymce.$(temDiv).find('blockquote').attr('contenteditable', 'false');
                     tinymce.$(temDiv).find('.paragraphNummerEins').attr('contenteditable', !lockCondition);
