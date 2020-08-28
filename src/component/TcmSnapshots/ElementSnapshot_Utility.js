@@ -215,7 +215,7 @@ export const fetchElementsTag = (element,metadataField) => {
             eleSubType = element.subtype === WORKED_EXAMPLE ? WORKED_EXAMPLE : ASIDE;
             break;
         case ELEMENT_LIST:
-            eleSubType = element.subtype
+            eleSubType = element.subtype ? element.subtype : element.elementdata && element.elementdata.subtype ? element.elementdata.subtype : "disc"
             break;
         case BLOCKFEATURE:
             eleSubType = element.elementdata.type

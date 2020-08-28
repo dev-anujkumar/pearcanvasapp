@@ -74,7 +74,6 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
     let hasParentData = containerElement && checkParentData(containerElement)
     /** TCM Snapshots on Popup Slate */
     if (config.isPopupSlate) {
-        // let defaultKeysPopup = setDefaultKeys(actionStatus, true, true)
         if (elementInPopupInContainer) {   /** Elements in Containers/ Simple Elements in PopupSlate Inside WE/Aside */
             tcmSnapshotsElementsInPopupInContainer(snapshotsData, defaultKeys, containerElement, type, deleVercase, newVersionUrns);
         } else {                           /** Elements in Containers/ Simple Elements in PopupSlate */
@@ -606,9 +605,7 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
     const { metaDataField, sectionType, parentElement} = containerElement;
     let wipData = {};
     if ((metaDataField || sectionType) && parentElement && parentElement.type == POPUP_ELEMENT) {
-        wipData = metaDataField && parentElement.popupdata && parentElement.popupdata[FORMATTED_TITLE] ?  parentElement.popupdata[FORMATTED_TITLE] : parentElement.popupdata && parentElement.popupdata.postertextobject[0] ? parentElement.popupdata.postertextobject[0] : wipData;
-        // wipData = fetchElementWipData(updateBodymatter, elementIndex, POPUP_ELEMENT, "")
-        // wipData = metaDataField ? wipData && wipData.popupdata && wipData.popupdata[FORMATTED_TITLE] : wipData && wipData.popupdata && wipData.popupdata.postertextobject[0] ? wipData.popupdata.postertextobject[0] : wipData;
+        wipData = metaDataField && parentElement.popupdata && parentElement.popupdata[FORMATTED_TITLE] ? parentElement.popupdata[FORMATTED_TITLE] : parentElement.popupdata && parentElement.popupdata.postertextobject[0] ? parentElement.popupdata.postertextobject[0] : wipData;
     } else {
         wipData = fetchElementWipData(updateBodymatter, elementIndex, response.type, "")
     }
