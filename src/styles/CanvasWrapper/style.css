@@ -111,20 +111,11 @@
     margin: 0 auto;
     height: 100%;
 }
-.navigation-content{
-    position: absolute;
-    top: 40%;
-}
 .disableNavigation{
     cursor: not-allowed !important;
     pointer-events: none;
 }
-.nav-arrow {
-    border: solid #005a70;
-    border-width: 0 3px 3px 0;
-    display: inline-block;
-    padding: 5px;
-  }
+
   .navigation-button{
     height:100%;
     background: #fff;
@@ -133,17 +124,34 @@
     font-family: 'Open Sans', sans-serif;
     font-size: 12px;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 2px 1px -1px rgba(0, 0, 0, 0.12), 0 1px 1px 0 rgba(0, 0, 0, 0.14);
-    border-radius: 3px;
   }
   .navigation-content{
-      height:100px;
-      width:36px;
+    height:100px;
+    width:36px;
+    position: absolute;
+    top: 40%;
+  }
+  .navigation-container.disabled .navigation-button{
+    background-color: #fafafa;
+    box-shadow: none;
+    border: solid 1px #dcdcdc;
+  }
+  .navigation-container.disabled svg path{
+    fill:#999999;
+  }
+  .navigation-content:hover .navigation-button{ 
+    background-color: #def8ff;
+  }
+  .navigation-content:active .navigation-button{ 
+    border: solid 1px #005a70;;
   }
   .navigation-button.next{
     padding: 40px 2px 40px 12px;
+    border-radius: 0 4px 4px 0;
   }
   .navigation-button.back{
     padding: 40px 2px 40px 12px;
+    border-radius: 4px 0 0 4px;
   }
   .navigation-icon{
     width: 100%;
@@ -168,7 +176,6 @@
     padding: 3px;
 }
 .navigation-container.disabled{
-    opacity: 0.34;
     cursor: none;
     cursor: default;
     pointer-events: none;

@@ -39,6 +39,9 @@ const initialState = {
                 en:'en'
             }
         }
+    },
+    toolbarReducer:{
+        pageNumberToggle:false
     }
 };
 
@@ -1081,6 +1084,28 @@ describe('Testing communication channel', () => {
                     data: {
                         type: "slateLengthChanged",
                         message: "25"
+                    }
+                }
+                const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+                channelInstance.handleIncommingMessages(event);
+                expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+                spyhandleIncommingMessages.mockClear()
+            })
+            it('Test for elementBorder case', () => {
+                let event = {
+                    data: {
+                        type: "elementBorder"
+                    }
+                }
+                const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+                channelInstance.handleIncommingMessages(event);
+                expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+                spyhandleIncommingMessages.mockClear()
+            })
+            it('Test for elementBorder case', () => {
+                let event = {
+                    data: {
+                        type: "pageNumber"
                     }
                 }
                 const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
