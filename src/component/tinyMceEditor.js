@@ -2743,7 +2743,7 @@ export class TinyMceEditor extends Component {
                 defModel = removeBOM(defModel)
 
                 return (
-                    <div>
+                    <>
                         {this.state.popup && 
                          <PopUp 
                             dialogText={"Performing this action will remove the list and convert this text to a paragraph. Do you wish to continue?"} 
@@ -2756,7 +2756,7 @@ export class TinyMceEditor extends Component {
                          />
                         }
                         <div ref={this.editorRef} data-id={this.props.currentElement ? this.props.currentElement.id : ''} onKeyDown={this.normalKeyDownHandler} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: defModel }} onChange={this.handlePlaceholder}></div>
-                    </div>
+                    </>
                 )
         }
     }
