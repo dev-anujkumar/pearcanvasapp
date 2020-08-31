@@ -2500,7 +2500,7 @@ export class TinyMceEditor extends Component {
                 else{
                     removeListHighliting();
                 }
-                if(this.props.element.type === "element-blockfeature"){
+                if(this.props.element && this.props.element.type === "element-blockfeature"){
                     this.removeBogusTagsFromDom();
                     this.removeAttributionBr();
                 }
