@@ -2071,7 +2071,7 @@ export class TinyMceEditor extends Component {
                         if (termText && termText.length && this.props.element.type === 'figure') {
                             document.getElementById(currentId).innerHTML = termText;
                         }
-                        if(this.props.element.type === "element-blockfeature"){
+                        if(this.props.element && this.props.element.type === "element-blockfeature"){
                             this.removeBogusTagsFromDom();
                             this.removeAttributionBr();
                         }
@@ -2466,7 +2466,7 @@ export class TinyMceEditor extends Component {
                         }
                     })
                 }
-                if(this.props.element.type === "element-blockfeature"){
+                if(this.props.element && this.props.element.type === "element-blockfeature"){
                     this.removeBogusTagsFromDom();
                     this.removeAttributionBr();
                 }
