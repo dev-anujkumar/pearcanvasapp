@@ -186,6 +186,8 @@ export class TinyMceEditor extends Component {
 
                             }
                         }
+                        this.removeBogusTagsFromDom();
+                        this.removeAttributionBr();
                     }
                 });
 
@@ -1736,7 +1738,7 @@ export class TinyMceEditor extends Component {
                 tempDiv.innerHTML = tinyMCE.activeEditor.getContent();
                 tinymce.$(tempDiv).find('.blockquote-hidden').remove()
                 if (this.props.model && this.props.model.text && this.props.model.text.includes("blockquoteMarginaliaAttr") && !tempDiv.innerText.trim()) {
-                    let insertText = `<blockquote class="blockquoteMarginaliaAttr" contenteditable="false"><p class="paragraphNummerEins" contenteditable="true"><sup><a href="#" id = "${res.data.id}" data-uri="${res.data.id}" data-footnoteelementid="${res.data.id}" class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup></p><p class="blockquoteTextCredit" contenteditable="false">${document.getElementsByClassName('attribution-editor')[0].innerHTML.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</p></blockquote>`
+                    let insertText = `<blockquote class="blockquoteMarginaliaAttr" contenteditable="false"><p class="paragraphNummerEins" contenteditable="true"><sup><a href="#" id = "${res.data.id}" data-uri="${res.data.id}" data-footnoteelementid="${res.data.id}" class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup></p><p class="blockquoteTextCredit" contenteditable="true" data-placeholder="Attribution Text">${document.getElementsByClassName('blockquoteTextCredit')[0].innerHTML.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</p></blockquote>`
                     tinymce.activeEditor.setContent(insertText);
                     document.getElementById(tinyMCE.activeEditor.id).classList.remove("place-holder")
                 }
@@ -2070,6 +2072,10 @@ export class TinyMceEditor extends Component {
                         if (termText && termText.length && this.props.element.type === 'figure') {
                             document.getElementById(currentId).innerHTML = termText;
                         }
+                        if(this.props.element && this.props.element.type === "element-blockfeature"){
+                            this.removeBogusTagsFromDom();
+                            this.removeAttributionBr();
+                        }
 
                         /*
                             Making blinking cursor color again to black
@@ -2223,6 +2229,16 @@ export class TinyMceEditor extends Component {
             toolbar = config.elementToolbar;
         }
         return toolbar;
+    }
+
+    removeBogusTagsFromDom = () => {
+        let bogusTag = document.querySelector(`#cypress-${this.props.index} p[data-mce-bogus="all"]`)
+        bogusTag && bogusTag.remove();
+    }
+
+    removeAttributionBr = () => {
+        let attributionNodeBr = document.querySelector(`#cypress-${this.props.index} p.blockquoteTextCredit br`)
+        attributionNodeBr && attributionNodeBr.remove();
     }
 
     /**
@@ -2451,6 +2467,10 @@ export class TinyMceEditor extends Component {
                         }
                     })
                 }
+                if(this.props.element && this.props.element.type === "element-blockfeature"){
+                    this.removeBogusTagsFromDom();
+                    this.removeAttributionBr();
+                }
             });
             this.setToolbarByElementType();
         }
@@ -2480,6 +2500,10 @@ export class TinyMceEditor extends Component {
                 } 
                 else{
                     removeListHighliting();
+                }
+                if(this.props.element && this.props.element.type === "element-blockfeature"){
+                    this.removeBogusTagsFromDom();
+                    this.removeAttributionBr();
                 }
             })
         });

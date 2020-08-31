@@ -50,4 +50,7 @@ h3.pullQuoteNumeroUno{
 }
 blockquote.blockquoteMarginaliaAttr {
     padding: 1.0em 0.25em 1.5em;
-  }
+}
+p[data-mce-bogus="all"] {
+    display: none!important
+}
