@@ -221,7 +221,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
     })
 }
 
-function prepareDataForTcmCreate(type, createdElementData, getState, dispatch) {
+export function prepareDataForTcmCreate(type, createdElementData, getState, dispatch) {
     let elmUrn = [];
     const tcmData = getState().tcmReducer.tcmSnapshot;
     if (type === "WORKED_EXAMPLE" || type === "CONTAINER") {
