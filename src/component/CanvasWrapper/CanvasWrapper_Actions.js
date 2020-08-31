@@ -13,7 +13,8 @@ import {
     SLATE_TITLE,
     GET_PAGE_NUMBER,
     SET_SLATE_LENGTH,
-    SET_CURRENT_SLATE_DATA
+    SET_CURRENT_SLATE_DATA,
+    GET_TCM_RESOURCES
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
@@ -262,6 +263,8 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
         }
     });
    
+    let isPopupSlate = config.cachedActiveElement && config.cachedActiveElement.element && config.cachedActiveElement.element.type == "popup" ? true :false;
+
     if (config.cachedActiveElement && config.cachedActiveElement.element && config.cachedActiveElement.element.type == "popup") {
         config.popupParentElement = {
             parentElement: config.cachedActiveElement.element,
@@ -270,7 +273,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
         }
     }
     /** Project level and element level TCM status */
-    if (page === 0 && config.tcmStatus && versioning === "") {
+    if ((page === 0 && config.tcmStatus && (versioning == "") && !isPopupSlate)|| (calledFrom == "slateRefresh")) {
         /** Show TCM icon header if TCM is on for project level*/
         let messageTcmStatus = {
             TcmStatus: {
@@ -281,11 +284,10 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             'type': "TcmStatusUpdated",
             'message': messageTcmStatus
         })
-
         dispatch(handleTCMData(manifestURN));
-        if (calledFrom !== "slateRefresh") {
-            dispatch(tcmSnapshot(manifestURN, entityURN))
-        }
+        // if (calledFrom !== "slateRefresh") {
+        //     dispatch(tcmSnapshot(manifestURN, entityURN))
+        // }
     }
     const elementCount = getState().appStore.slateLength
     let apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}&elementCount=${elementCount}`
@@ -827,6 +829,39 @@ const appendCreatedElement = async (paramObj, responseData) => {
 }
 
 /**
+ * @description prepareDataForTcmCreate -> tracks tcm txCnt for creation of metadat-field.
+ * @param {*} parentElement Parent popup element/ citation group container
+ * @param {*} popupField formatted title or formatted-subtitle
+ * @param {*} responseData API response
+ * @param {*} getState store
+ * @param {*} dispatch dispatch fn
+ */
+function prepareDataForTcmCreate(parentElement, popupField , responseData, getState, dispatch) {
+    let elmUrn = [];
+    const tcmData = getState().tcmReducer.tcmSnapshot;
+    let formattedTitleField = ['formattedTitle','formattedTitleOnly','formattedSubtitle' ];
+    if (parentElement && parentElement.type =='popup' && formattedTitleField.indexOf(popupField) !==-1 ) {
+        elmUrn.push(responseData.id)
+    }
+    elmUrn.map((item) => {
+        return tcmData.push({
+            "txCnt": 1,
+            "isPrevAcceptedTxAvailable": false,
+            "elemURN": item,
+            "feedback": null
+        })
+    })
+    if(tcmData.length > 0 ){
+        sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });}
+    dispatch({
+        type: GET_TCM_RESOURCES,
+        payload: {
+            data: tcmData
+        }
+    })
+}
+
+/**
  * Creates request data for creating popup/citation unit.
  * @param {*} parentElement Parent popup element/ citation group container
  * @param {*} popupField formatted title or formatted-subtitle
@@ -865,24 +900,27 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
             popupField,
             createdFromFootnote
         }
-        const parentData = getState().appStore.slateLevelData;
-        const newParentData = JSON.parse(JSON.stringify(parentData));
-        let currentSlateData = newParentData[config.slateManifestURN];
-        let containerElement = {
-            parentElement:parentElement,
-            asideData:getState().appStore.asideData,
-            parentUrn:getState().appStore.parentUrn,
-            metaDataField: _requestData.metaDataField
-        };
-        let slateData = {
-            currentSlateData: {
-                status: currentSlateData.status,
-                contentUrn: currentSlateData.contentUrn
-            },
-            bodymatter: currentSlateData.contents.bodymatter,
-            response: response.data
-        };
-        tcmSnapshotsForCreate(slateData, _requestData.metaDataField, containerElement, dispatch);
+        if (parentElement && parentElement.type == 'popup') {
+            const parentData = getState().appStore.slateLevelData;
+            const newParentData = JSON.parse(JSON.stringify(parentData));
+            let currentSlateData = newParentData[config.slateManifestURN];
+            let containerElement = {
+                parentElement: parentElement,
+                asideData: getState().appStore.asideData,
+                parentUrn: getState().appStore.parentUrn,
+                metaDataField: _requestData.metaDataField
+            };
+            let slateData = {
+                currentSlateData: {
+                    status: currentSlateData.status,
+                    contentUrn: currentSlateData.contentUrn
+                },
+                bodymatter: currentSlateData.contents.bodymatter,
+                response: response.data
+            };
+            prepareDataForTcmCreate(parentElement, _requestData.metaDataField, response.data, getState, dispatch)
+            tcmSnapshotsForCreate(slateData, _requestData.metaDataField, containerElement, dispatch);
+        }
         appendCreatedElement(argObj, response.data)
 
     })

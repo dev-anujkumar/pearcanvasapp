@@ -324,15 +324,16 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         }
 
         /** [PCAT-8289] -------------------------- TCM Snapshot Data handling ----------------------------*/
-        //add check for show-hide
-        if (elementTypeTCM.indexOf(response.data.type) !== -1 && showHideType == undefined) {//&& updatedData.metaDataField == undefined  && updatedData.sectionType == undefined
+        let isPopupElement = parentElement && parentElement.type == 'popup' && (updatedData.metaDataField !== undefined || updatedData.sectionType !== undefined) ? true : false;
+        let noAdditionalFields = (updatedData.metaDataField == undefined && updatedData.sectionType == undefined) ? true : false
+        if (elementTypeTCM.indexOf(response.data.type) !== -1 && showHideType == undefined && (isPopupElement || noAdditionalFields)) {
             let containerElement = {
                 asideData: asideData,
                 parentUrn: parentUrn,
                 poetryData: poetryData,
                 parentElement: parentElement && parentElement.type == 'popup' ? parentElement : undefined,
-                metaDataField: updatedData.metaDataField ? updatedData.metaDataField : undefined,
-                sectionType : updatedData.sectionType ? updatedData.sectionType : undefined
+                metaDataField: parentElement && parentElement.type == 'popup' && updatedData.metaDataField ? updatedData.metaDataField : undefined,
+                sectionType : parentElement && parentElement.type == 'popup' && updatedData.sectionType ? updatedData.sectionType : undefined
             },
             elementUpdateData ={
                 currentParentData: currentParentData,
@@ -432,7 +433,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
     let elementId = updatedData.id;
     //tcm update code   
     if (config.tcmStatus) {
-        if (elementTypeTCM.indexOf(updatedData.type) !== -1 && !updatedData.metaDataField  && !updatedData.sectionType) {
+        if (elementTypeTCM.indexOf(updatedData.type) !== -1 && showHideType == undefined) {
             prepareDataForUpdateTcm(updatedData.id, getState, dispatch, versionedData);
         }
     }
@@ -549,7 +550,8 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                                         popupdata: {
                                             ...nestedEle.popupdata,
                                             "formatted-title": { ...updatedData }
-                                        }
+                                        },
+                                        tcm: _slateObject.tcm ? true : false //add tcm to popup
                                     };
                                 }
                                 else if (nestedEle.popupdata.postertextobject[0].id === elementId) {
@@ -558,7 +560,8 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                                         popupdata: {
                                             ...nestedEle.popupdata,
                                             postertextobject: [{ ...updatedData }]
-                                        }
+                                        },
+                                        tcm: _slateObject.tcm ? true : false //add tcm to popup
                                     };
                                 }
                             } else if (nestedEle.type == "showhide" && showHideType) {
@@ -591,7 +594,8 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                                                 popupdata: {
                                                     ...ele.popupdata,
                                                     "formatted-title": { ...updatedData }
-                                                }
+                                                },
+                                                tcm: _slateObject.tcm ? true : false //add tcm to popup
                                             };
                                         }
                                         else if (ele.popupdata.postertextobject[0].id === elementId) {
@@ -600,7 +604,8 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                                                 popupdata: {
                                                     ...ele.popupdata,
                                                     postertextobject: [{ ...updatedData }]
-                                                }
+                                                },
+                                                tcm: _slateObject.tcm ? true : false //add tcm to popup
                                             };
                                         }
                                     } else if (ele.type == "showhide" && showHideType) {
@@ -628,7 +633,8 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                             popupdata: {
                                 ...element.popupdata,
                                 "formatted-title": { ...updatedData }
-                            }
+                            },
+                            tcm: _slateObject.tcm ? true : false //add tcm to popup
                         };
                     }
                     else if (element.popupdata && element.popupdata.postertextobject && element.popupdata.postertextobject[0].id === elementId) {
@@ -637,7 +643,8 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                             popupdata: {
                                 ...element.popupdata,
                                 postertextobject: [{ ...updatedData }]
-                            }
+                            },
+                            tcm: _slateObject.tcm ? true : false //add tcm to popup
                         };
                     }
                 }

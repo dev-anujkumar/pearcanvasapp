@@ -929,6 +929,87 @@ class ElementContainer extends Component {
     }
 
     /**
+    * @description - getPopupChildUrns is responsible for creating an array of wUrn of child elements of Popup Element
+    * @param {*} element active element - Popup
+    */
+    getPopupChildUrns = (element) => {
+        let popupChildUrns = [];
+        if (element && element.type == 'popup') {
+            if (element.popupdata && element.popupdata.bodymatter && element.popupdata.bodymatter.length > 0) {
+                popupChildUrns.push(element.popupdata.bodymatter[0].id);
+            }
+            if (element.popupdata && element.popupdata['formatted-title']) {
+                popupChildUrns.push(element.popupdata['formatted-title'].id);
+            }
+            if (element.popupdata && element.popupdata.postertextobject[0]) {
+                popupChildUrns.push(element.popupdata.postertextobject[0].id);
+            }
+        }
+        return popupChildUrns
+    }
+    /**
+    * @description - checkTCMStatus is responsible for setting the tcm status for the element
+    * @param {*} tcmData tcm data for elements on the slate
+    * @param {*} element active element id
+    */
+    checkTCMStatus = (tcmData, elementId, defaultUrn) => {
+        let tcmButtonStatus = {}, tcm, feedback;
+        tcm = tcmData.filter(tcmelm => {
+            let elementUrn = tcmelm.elemURN;
+            return (elementId.includes(defaultUrn) && elementUrn.indexOf(elementId) !== -1) && tcmelm.txCnt && tcmelm.txCnt > 0
+        }).length > 0;
+        feedback = tcmData.filter(feedbackelm => {
+            let elementUrn = feedbackelm.elemURN;
+            return (elementId.includes(defaultUrn) && elementUrn.indexOf(elementId) !== -1) && feedbackelm.feedback && feedbackelm.feedback !== null
+        }).length > 0;
+        tcmButtonStatus = {
+            tcm: tcm,
+            feedback: feedback
+        }
+        return tcmButtonStatus;
+    }
+    /**
+    * @description - showTCMButton is responsible for showing the tcm/feedback icon on the element
+    * @param {*} tcmData tcm data for elements on the slate
+    * @param {*} element active element
+    */
+    showTCMButton = (tcmData, element) => {
+        let tcmStatus = {};
+        let defaultWorkUrn = 'urn:pearson:work';
+        let defaultManifestUrn = 'urn:pearson:manifest';
+        if (element.type == 'popup') {
+            let popupChildren = this.getPopupChildUrns(element);
+            let popupTcmCount = 0;
+            let status = {
+                tcm: false,
+                feedback: false
+            };
+            tcmStatus = this.checkTCMStatus(tcmData, element.id, defaultManifestUrn)
+            if (tcmStatus.tcm || tcmStatus.false) {
+                return tcmStatus;
+            } else {
+                tcmStatus.tcm = false;
+                tcmStatus.feedback = false;
+                for (let index = 0; index < popupChildren.length; index++) {
+                    if (popupTcmCount < 1) {
+                        status = this.checkTCMStatus(tcmData, popupChildren[index], defaultWorkUrn)
+                        if (status.tcm || status.false) {
+                            popupTcmCount++;
+                        }
+                    } else {
+                        break;
+                    }
+                }
+            }
+            tcmStatus.tcm = status.tcm
+            tcmStatus.feedback = status.feedback
+        } else {
+            tcmStatus = this.checkTCMStatus(tcmData, element.id, defaultWorkUrn)
+        }
+        return tcmStatus;
+    }
+
+    /**
      * Render Element function takes current element from bodymatter and render it into currnet slate 
      * @param {element} 
     */
@@ -938,17 +1019,23 @@ class ElementContainer extends Component {
         let labelText = fetchElementTag(element, index);
         config.elementToolbar = this.props.activeElement.toolbar || [];
         let anyOpenComment = allComments.filter(({ commentStatus, commentOnEntity }) => commentOnEntity === element.id && commentStatus.toLowerCase() === "open").length > 0
+        let isQuadInteractive = "";
         /** Handle TCM for tcm enable elements */
         let tcm = false;
         let feedback = false;
-        let isQuadInteractive = "";
+        let tcmStatus = {};
+        tcmStatus = this.showTCMButton(tcmData, element)
+        tcm = tcmStatus.tcm
+        feedback = tcmStatus.feedback
+        /** OLD TCM ICON FLOW -----> to be removed
         tcm = tcmData.filter(tcmelm => {
             let elementUrn = tcmelm.elemURN;
             return (element.id.includes('urn:pearson:work') && elementUrn.indexOf(element.id) !== -1) && tcmelm.txCnt && tcmelm.txCnt > 0}).length>0;
         feedback = tcmData.filter(feedbackelm => {
             let elementUrn = feedbackelm.elemURN;
             return (element.id.includes('urn:pearson:work') && elementUrn.indexOf(element.id) !== -1) && feedbackelm.feedback && feedbackelm.feedback !== null}).length>0;
-       /* TODO need better handling with a function and dynamic component rendering with label text*/
+        */
+        /* TODO need better handling with a function and dynamic component rendering with label text*/
         if (labelText) {
             switch (element.type) {
                 case elementTypeConstant.ASSESSMENT_SLATE:

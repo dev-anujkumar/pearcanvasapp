@@ -49,11 +49,11 @@ const {
  * @param {Object} newVersionUrns - Latest  Version Urns for delete case
 */
 export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, type, newVersionUrns) => {
-    const { parentElement, poetryData, asideData, parentUrn } = containerElement
+    const { parentElement } = containerElement
     /** isContainer : used to set SlateType  */
     let isContainer = setSlateType(wipData,containerElement,type);
     let deleVercase = newVersionUrns ? true : false
-    let defaultKeys = setDefaultKeys(actionStatus, isContainer);
+    let defaultKeys = config.isPopupSlate ? setDefaultKeys(actionStatus, true, true) : setDefaultKeys(actionStatus, isContainer);
     /* Tag of elements*/
     let tag = {
         parentTag: fetchElementsTag(wipData)
@@ -74,11 +74,10 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
     let hasParentData = containerElement && checkParentData(containerElement)
     /** TCM Snapshots on Popup Slate */
     if (config.isPopupSlate) {
-        let defaultKeysPopup = setDefaultKeys(actionStatus, true, true)
         if (elementInPopupInContainer) {   /** Elements in Containers/ Simple Elements in PopupSlate Inside WE/Aside */
-            tcmSnapshotsElementsInPopupInContainer(snapshotsData, defaultKeysPopup, containerElement, type, deleVercase, newVersionUrns);
+            tcmSnapshotsElementsInPopupInContainer(snapshotsData, defaultKeys, containerElement, type, deleVercase, newVersionUrns);
         } else {                           /** Elements in Containers/ Simple Elements in PopupSlate */
-            tcmSnapshotsOnDefaultSlate(snapshotsData, defaultKeysPopup, containerElement, type, deleVercase, newVersionUrns);
+            tcmSnapshotsOnDefaultSlate(snapshotsData, defaultKeys, containerElement, type, deleVercase, newVersionUrns);
         }
     }
     /* For POPUP Element */
@@ -606,9 +605,7 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
     const { metaDataField, sectionType, parentElement} = containerElement;
     let wipData = {};
     if ((metaDataField || sectionType) && parentElement && parentElement.type == POPUP_ELEMENT) {
-        wipData = metaDataField && parentElement.popupdata && parentElement.popupdata[FORMATTED_TITLE] ?  parentElement.popupdata[FORMATTED_TITLE] : parentElement.popupdata && parentElement.popupdata.postertextobject[0] ? parentElement.popupdata.postertextobject[0] : wipData;
-        // wipData = fetchElementWipData(updateBodymatter, elementIndex, POPUP_ELEMENT, "")
-        // wipData = metaDataField ? wipData && wipData.popupdata && wipData.popupdata[FORMATTED_TITLE] : wipData && wipData.popupdata && wipData.popupdata.postertextobject[0] ? wipData.popupdata.postertextobject[0] : wipData;
+        wipData = metaDataField && parentElement.popupdata && parentElement.popupdata[FORMATTED_TITLE] ? parentElement.popupdata[FORMATTED_TITLE] : parentElement.popupdata && parentElement.popupdata.postertextobject[0] ? parentElement.popupdata.postertextobject[0] : wipData;
     } else {
         wipData = fetchElementWipData(updateBodymatter, elementIndex, response.type, "")
     }
@@ -677,7 +674,7 @@ export const tcmSnapshotsForCreate = async (elementCreateData, type, containerEl
 */
 export const fetchManifestStatus = (bodymatter, containerElement, type, indexes) => {
     let parentData = {}
-    const { asideData, parentUrn, poetryData, parentElement, metaDataField,sectionType } = containerElement;
+    const { asideData, parentUrn, poetryData, parentElement } = containerElement;
     if ((asideData || parentUrn || poetryData || parentElement) && bodymatter.length !== 0) {
         let parentElem = asideData ? asideData : poetryData ? poetryData : parentUrn;
         let parentId = parentElem && parentElem.id ? parentElem.id : parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "";

@@ -151,7 +151,7 @@ const prepareFootnoteSnapshotContent = (actionStatus, footnoteWipList, footnoteH
     footnoteWipList && footnoteWipList.length && footnoteWipList.map(footnoteItem => {
         let footnoteData = {
             changeStatus: actionStatus.status.charAt(0).toUpperCase() + actionStatus.status.slice(1),
-            changeType: actionStatus.action,
+            changeType: actionStatus.action.charAt(0).toUpperCase() + actionStatus.action.slice(1),
             charAt: footnoteItem.charAt,
             footnoteId: footnoteItem.footnoteid
         };
@@ -216,7 +216,7 @@ export const fetchElementsTag = (element,metadataField) => {
             eleSubType = element.subtype === WORKED_EXAMPLE ? WORKED_EXAMPLE : ASIDE;
             break;
         case ELEMENT_LIST:
-            eleSubType = element.subtype
+            eleSubType = element.subtype ? element.subtype : element.elementdata && element.elementdata.subtype ? element.elementdata.subtype : "disc"
             break;
         case BLOCKFEATURE:
             eleSubType = element.elementdata.type
