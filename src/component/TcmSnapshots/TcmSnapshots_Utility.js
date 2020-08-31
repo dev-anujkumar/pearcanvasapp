@@ -351,7 +351,7 @@ const tcmSnapshotsInPopupElement = (snapshotsData, defaultKeys, containerElement
         tcmSnapshotsPopupCTA(snapshotsData, defaultKeys, containerElement, deleVercase, newVersionUrns);
         tcmSnapshotsCreatePopup(snapshotsData, defaultKeys, deleVercase, newVersionUrns);
         if(defaultKeys.action === 'delete' && type == POPUP_ELEMENT && (metaDataField && formattedTitleField.includes(metaDataField))){
-            tcmSnapshotsMetadataField(snapshotsData, defaultKeys, containerElement, deleVercase, newVersionUrns, type);
+            tcmSnapshotsMetadataField(snapshotsData, defaultKeys, containerElement, deleVercase, newVersionUrns, metaDataField);
         }
     }
     else if ((type && formattedTitleField.includes(type)) || (metaDataField && formattedTitleField.includes(metaDataField))) { /** Formatted-title */
@@ -463,7 +463,7 @@ const prepareAndSendTcmData = async (elementDetails, wipData, defaultKeys, actio
         elementSnapshot: JSON.stringify(await prepareElementSnapshots(wipData,actionStatus)),
         ...defaultKeys
     };
-
+    
     await sendElementTcmSnapshot(currentSnapshot)
 }
 

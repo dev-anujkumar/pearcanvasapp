@@ -119,21 +119,22 @@ const setSnapshotsInListAndPoetry = async (actionStatus, elementList, semanticTy
 const prepareGlossarySnapshotContent = (actionStatus, glossaryList, glossaryHtmlList) => {
     let glossarySnap = []
     glossaryList && glossaryList.length && glossaryList.map(glossaryItem => {
-        let glossaryData = {
-            changeStatus: actionStatus.status.charAt(0).toUpperCase() + actionStatus.status.slice(1),
-            changeType: actionStatus.action,
-            charAt: glossaryItem.charAt,
-            glossaryId: glossaryItem.itemid
-        }
-        if (glossaryItem.glossaryentry && glossaryItem.glossaryentry[0]) {
-            let dataID = glossaryItem.itemid;
-            glossaryData.glossaryTerm = JSON.parse(glossaryHtmlList[dataID]).term
-            glossaryData.glossaryDefinition =  JSON.parse(glossaryHtmlList[dataID]).definition
+        let dataID = glossaryItem.itemid;
+        let glossaryHtml = JSON.parse(glossaryHtmlList[dataID])
+        if (glossaryItem.glossaryentry && glossaryItem.glossaryentry[0] && glossaryHtml && !isEmpty(glossaryHtml)) {
+            let glossaryData = {
+                changeStatus: actionStatus.status.charAt(0).toUpperCase() + actionStatus.status.slice(1),
+                changeType: actionStatus.action.charAt(0).toUpperCase() + actionStatus.action.slice(1),
+                charAt: glossaryItem.charAt,
+                glossaryId: glossaryItem.itemid
+            }
+            glossaryData.glossaryTerm = glossaryHtml.term ? glossaryHtml.term : '<p></p>'
+            glossaryData.glossaryDefinition = glossaryHtml.definition ? glossaryHtml.definition : '<p></p>'
             if (glossaryItem.glossaryentry[0].narrativeform) {
                 glossaryData.glossaryNarrative = `<p>${glossaryItem.glossaryentry[0].narrativeform.text}</p>`
             }
+            glossarySnap.push(glossaryData)
         }
-        glossarySnap.push(glossaryData)
     })
     return glossarySnap
 }
@@ -230,6 +231,20 @@ export const fetchElementsTag = (element,metadataField) => {
 
     return labelText;
 }
+
+/**
+ * @function isEmpty
+ * @description This function is to check if an object is empty
+ * @param {Object} obj - object to be checked
+ * @returns {Boolean}
+*/
+const isEmpty = (obj) => {
+    if ((Object.keys(obj).length === 0 && obj.constructor === Object)) {
+        return true;
+    }
+    return false;
+}
+
 /**
  * @Object setElementTag | Used to map elementTags based on type and subtype
 */
