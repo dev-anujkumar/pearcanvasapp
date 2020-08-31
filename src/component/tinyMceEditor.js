@@ -1388,6 +1388,7 @@ export class TinyMceEditor extends Component {
             labelText: labelText,
             toolbar: elementList['element-authoredtext'][value].toolbar
         });
+        setFormattingToolbar('disableTinymceToolbar')
         this.elementConverted = true;
     }
 
