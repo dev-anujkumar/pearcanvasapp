@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import '../../styles/CanvasWrapper/ListButtonDrop.css';
 import {LIST_TYPE , LIST_DATA} from './ListTypeData';
 import {removeListHighliting } from '../ListElement/eventBinding'
+import listCheck from '../../images/ElementButtons/listCheck.svg'
 
 /**
  * ListButtonDrop | it is component renders list drop ui on editor tool header
@@ -31,7 +32,7 @@ const ListButtonDrop = (props) => {
                     <div id="listInputCover" className="">
                         <input ref={props.inputRef} id="listINputBox" defaultValue={props.startValue} maxLength="9" type="text" dir="auto" pattern="\d*" className="list-input-box fr-not-empty" onKeyPress={numberValidatorHandler} onKeyDown={handleCtrlV} onPaste={handleRightClickCtrlV} onKeyUp={(e) => { handleInputSubmit(e, props) }} />
                         <button id="popupGoBtn-1" type="button" tabIndex="-1" role="button" title="submit" className={`fr-command fr-btn fr-btn-font_awesome ${!props.startValue && 'disabledListBtn' || ''} `} data-cmd="popupGoBtn" onClick={(e) => { handleInputSubmit(e, props, true) }}>
-                            <i className="fa fa-check" aria-hidden="true"></i>
+                            <img src={listCheck}/>
                             <span className="fr-sr-only">submit</span>
                         </button>
                     </div>

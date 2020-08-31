@@ -27,13 +27,13 @@ i.fa.fa-list-ul:before {
 #listDropWrapper {
     position: absolute;
     background: #fff;
-    margin-top: 40px;
+    margin-top: 37px;
     /* left: -100px !important; */
 }
 
 #listDropWrapper .fr-popup.fr-active {
     display: block;
-    width: 275px;
+    width: 280px;
     height: 260px;
 }
 
@@ -43,7 +43,7 @@ i.fa.fa-list-ul:before {
     background: #fff;
     -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, .12), 0 1px 1px 1px rgba(0, 0, 0, .16);
     -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, .12), 0 1px 1px 1px rgba(0, 0, 0, .16);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, .12), 0 1px 1px 1px rgba(0, 0, 0, .16);
+    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 4px 5px 0 rgba(0, 0, 0, 0.14);
     border-radius: 2px;
     -moz-border-radius: 2px;
     -webkit-border-radius: 2px;
@@ -74,10 +74,11 @@ i.fa.fa-list-ul:before {
     -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, .12), 0 1px 1px 1px rgba(0, 0, 0, .16);
     -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, .12), 0 1px 1px 1px rgba(0, 0, 0, .16);
     box-shadow: 0 1px 3px rgba(0, 0, 0, .12), 0 1px 1px 1px rgba(0, 0, 0, .16);
-    padding: 0 2px;
+    padding: 0 0 0 5px;
     white-space: nowrap;
     line-height: 0;
     border-bottom: 0;
+    position: absolute;
 }
 
 #listDropWrapper .numbered-list-dropdown {
@@ -90,12 +91,16 @@ i.fa.fa-list-ul:before {
 
 #list-input-layer #listInputCover .fr-btn {
     float: right;
-    width: 12%;
-    height: 30px;
+    width: 34px;
+    height: 35px;
     font-size: 100%;
     background: #005a70;
     color: #fff;
     padding: 0px;
+}
+
+#list-input-layer #listInputCover .fr-btn img {
+    margin: 0 0 2px 5px;
 }
 
 #listDropWrapper .fr-popup .fr-buttons .fr-btn {
@@ -240,19 +245,21 @@ i.fa.fa-list-ul:before {
 }
 
 #list-input-layer .topText {
-    padding-bottom: 0 5px 5px 5px;
+    margin: 192px 0 0 5px ;
     font-size: 12px;
     font-family: Open Sans;
+    height: 17px;
 }
 
 #listInputCover {
     clear: both;
     overflow: hidden;
+    margin-left: 5px;
 }
 
 #list-input-layer .list-input-box {
     float: left;
-    width: 85%;
+    width: 206px;
     height: 30px;
     /* font-size: 100%; */
     border: 0;
@@ -283,6 +290,7 @@ i.fa.fa-list-ul:before {
     -webkit-background-clip: padding-box;
     background-clip: padding-box;
     outline: 0;
+    height: 35px;
 }
 
 #list-input-layer .fa {
@@ -328,7 +336,7 @@ i.fa.fa-list-ul:before {
     height: 80px;
     margin: 5px;
     float: left;
-    padding: 5px 9px;
+    padding: 5px;
     border: 2px solid #f0f0f0;
     border-radius: 5px;
     box-sizing: border-box !important;
@@ -354,7 +362,8 @@ hr {
     margin-top : 2px;
     height: 2px;
     border-width: 1px;
-    background: #ccc;;
+    width: 47px;
+    background: #999999;;
 }
 
 .list-roman-text{
@@ -366,7 +375,7 @@ hr {
     float: left;
     height: 25%;
     margin: 2px;
-    font-size: 11px;
+    font-size: 14px;
     line-height: 20px;
 }
 

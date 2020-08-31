@@ -261,8 +261,9 @@ export class TinyMceEditor extends Component {
         this.elementConverted = true;
         removeListHighliting();
 
-        if(this.props.element.type==="element-list" && this.props.element.elementdata.listtype===type){
-            this.toggleConfirmationPopup(true,this.props.element.subtype);
+        if((this.props.element && this.props.element.type==="element-list" && this.props.element.elementdata.listtype===type) || 
+            (this.props.currentElement && this.props.currentElement.type === "element-list" && this.props.currentElement.elementdata.listtype===type)){
+            this.toggleConfirmationPopup(true,this.props.element.subtype || this.props.currentElement.subtype );
         } else {
             this.props.onListSelect(subType, "");
         }
@@ -2096,7 +2097,7 @@ export class TinyMceEditor extends Component {
     * Defines initial placeholder
     */
     handlePlaceholder = () => {
-        if (this.props.element && this.props.element.type === "element-list" || this.props.currentElement && this.props.currentElement.type === 'element-list') {
+        if ((this.props.element && this.props.element.type === "element-list") || (this.props.currentElement && this.props.currentElement.type === 'element-list')) {
             this.placeHolderClass = '';
         }
         else if (this.props.model && this.props.model.text) {
@@ -2164,7 +2165,7 @@ export class TinyMceEditor extends Component {
             if (tooltipText) {
                 tooltipText.innerText = this.getElementTypeForToolbar(this.props.element);
             }
-            if (this.props.element.type === "element-list") {
+            if ((this.props.element && this.props.element.type === "element-list") || (this.props.currentElement && this.props.currentElement.type === "element-list")) {
                 highlightListIcon(this.props);
             }
             this.elementConverted = false;
@@ -2494,7 +2495,7 @@ export class TinyMceEditor extends Component {
                     assetPopoverButtonNode.removeAttribute('aria-pressed')
                     assetPopoverButtonNode.classList.remove('tox-tbtn--disabled')
                 }
-                if(this.props.element.type==="element-list"){
+                if((this.props.element && this.props.element.type==="element-list") || (this.props.currentElement && this.props.currentElement.type === "element-list")){
                     highlightListIcon(this.props);
                 } 
                 else{
@@ -2651,6 +2652,7 @@ export class TinyMceEditor extends Component {
     render() {
         const { slateLockInfo: { isLocked, userId } } = this.props;
         let lockCondition = isLocked && config.userId !== userId.replace(/.*\(|\)/gi, '');
+        this.handlePlaceholder();
 
         let classes = this.props.className ? this.props.className + " cypress-editable" : '' + "cypress-editable";
         let id = 'cypress-' + this.props.index;
@@ -2704,6 +2706,7 @@ export class TinyMceEditor extends Component {
                     hiddenBlock.classList.add("blockquote-hidden");
                     hiddenBlock.setAttribute("contenteditable","false");
                     hiddenBlock.style.visibility = "hidden"
+                    hiddenBlock.style.height = "20px";
                     temDiv.innerHTML = this.props.model && this.props.model.text ? this.props.model.text : '<blockquote class="blockquoteMarginaliaAttr" contenteditable="false"><p class="paragraphNummerEins" contenteditable="true"></p><p class="blockquoteTextCredit" contenteditable="true" data-placeholder="Attribution Text"></p></blockquote>';
                     if(this.props.element.elementdata.type === "blockquote" && !tinymce.$(temDiv).find('blockquote p.blockquoteTextCredit').length){
                         tinymce.$(temDiv).find('blockquote').append('<p class="blockquoteTextCredit" contenteditable="true" data-placeholder="Attribution Text"></p>');

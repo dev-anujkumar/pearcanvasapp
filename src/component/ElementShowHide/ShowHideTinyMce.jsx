@@ -26,7 +26,8 @@ const ShowHideTinyMce = (props) => {
         glossaryFootnoteValue,
         glossaaryFootnotePopup,
         elementStatus,
-        getElementStatus
+        getElementStatus,
+        showBlocker
     } = context;
     const { currentElement, activeShowHide, createShowHideElement, deleteShowHideUnit, innerIndex, placeholder, showHideType } = props;
 
@@ -60,7 +61,8 @@ const ShowHideTinyMce = (props) => {
             onListSelect={onListSelect}
             glossaryFootnoteValue={glossaryFootnoteValue}
             glossaaryFootnotePopup={glossaaryFootnotePopup}
-            showHideType={showHideType} />
+            showHideType={showHideType}
+            showBlocker={showBlocker} />
     }
     return (
         <TinyMceEditor permissions={permissions}
@@ -83,6 +85,7 @@ const ShowHideTinyMce = (props) => {
             currentElement={currentElement}
             onListSelect={onListSelect}
             deleteShowHideUnit={deleteShowHideUnit}
+            showBlocker={showBlocker}
         />)
 }
 

@@ -47,7 +47,7 @@ export const positionListDrop = (event) => {
     let _listWrapperDiv = document.querySelector('#listDropWrapper');
     // *** let { width: _wrapperWidth } = _listWrapperDiv.getBoundingClientRect(); *** //
     let _wrapperWidth = 275;  // static because dom remains hidden //
-    let _offsetLeft = _targetLeft - (_wrapperWidth / 2) + (_targetWidth / 2) + 110;
+    let _offsetLeft = _targetLeft - (_wrapperWidth / 2) + (_targetWidth / 2) + 104.5;
     _listWrapperDiv.style.left = `${_offsetLeft}px`;
     if (!_listWrapperDiv.querySelector('.fr-popup').classList.contains('fr-active')) {
         _listWrapperDiv.querySelector('.fr-popup').classList.add('fr-active');
@@ -557,7 +557,7 @@ export const removeListHighliting = _ => {
 }
 
 export const highlightListIcon = props => {
-    if (props.element.subtype === "disc") {
+    if (props.element.subtype === "disc" || (props.currentElement && props.currentElement.subtype === "disc")) {
         let listToolbar = document.querySelector('button[title="Unordered List"]')
         listToolbar && listToolbar.classList.add('tox-tbtn--enabled')
     } else {
