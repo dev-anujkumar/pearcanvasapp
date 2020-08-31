@@ -190,7 +190,7 @@ export class CanvasWrapper extends Component {
                         <div id='artboard-containers'>
                             <div class="artboard-parent">
                                 {/*Prev Button */}
-                                <div className={`navigation-container ${config.disablePrev ? 'disabled':""}`}>
+                                {config.isPopupSlate === false && <div className={`navigation-container ${config.disablePrev ? 'disabled':""}`}>
                                     <div className='navigation-content'>
                                         <div className='navigation-button back' onClick={() => this.handleNavClick("back")}>
                                             <div className='navigation-icon'>{prevIcon}</div>
@@ -198,6 +198,7 @@ export class CanvasWrapper extends Component {
                                         <div className = "tooltip-text back">Previous</div>
                                     </div>
                                 </div>
+                                }
                                 <div id='artboard-container' className='artboard-container'>
                                     {this.props.showApoSearch ? <AssetPopoverSearch /> : ''}
                                     {/* slate wrapper component combines slate content & slate title */}
@@ -206,7 +207,7 @@ export class CanvasWrapper extends Component {
                                     </RootContext.Provider>
                                 </div>
                                  {/*Next Button */}
-                                <div className={`navigation-container ${config.disableNext ? 'disabled':""}`}>
+                                 {config.isPopupSlate === false && <div className={`navigation-container ${config.disableNext ? 'disabled':""}`}>
                                     <div className='navigation-content' >
                                         <div className='navigation-button next' onClick={() => this.handleNavClick("next")}>
                                             <div className='navigation-icon'>{nextIcon}</div>
@@ -214,6 +215,7 @@ export class CanvasWrapper extends Component {
                                         <div className = "tooltip-text next">Next</div>
                                     </div>
                                 </div>
+                                }
                                 <div className='clr'></div>
                             </div>
                             
