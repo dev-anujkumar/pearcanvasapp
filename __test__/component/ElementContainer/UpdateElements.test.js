@@ -82,7 +82,7 @@ describe('Test for UpdateElements Functions', () => {
         updateFunction.createUpdatedData(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement);
         expect(updateFunction.createUpdatedData).toHaveBeenCalledWith(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement)
     })
-    it('Test for ELEMENT-TYPE----->figure---->MathML', () => {
+    xit('Test for ELEMENT-TYPE----->figure---->MathML', () => {
         const element = document.createElement('div');
         element.id = "cypress-5-2";
         document.body.appendChild(element);

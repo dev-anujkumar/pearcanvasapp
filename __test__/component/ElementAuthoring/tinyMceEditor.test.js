@@ -169,7 +169,8 @@ let props = {
     openGlossaryFootnotePopUp: jest.fn(),
     error: null,
     glossaryFootnotePopup: jest.fn(),
-    glossaryFootnoteValue: glossaryFootnoteObject
+    glossaryFootnoteValue: glossaryFootnoteObject,
+    showBlocker: jest.fn()
 }
 let tinyMceEditor = {
     $: jest.fn(),
