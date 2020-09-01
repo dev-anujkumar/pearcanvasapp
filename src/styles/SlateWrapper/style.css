@@ -1,13 +1,11 @@
 .title-head-wrapper {
-    height: 35px;
-    /* margin: 0px 10px; */
     margin-left: 10px;
     display: table;
 }
 
 .slate-wrapper {
     height: calc(100% - 60px);
-    padding: 8px;
+    padding: 10px 8px;
     overflow: auto;
 }
 

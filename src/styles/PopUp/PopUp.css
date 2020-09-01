@@ -258,3 +258,8 @@
   width: 82%;
   text-transform: capitalize;
 }
+
+.listConfirmation {
+  letter-spacing: 0.5px;
+  line-height: 20px;
+}

@@ -45,6 +45,8 @@ export const UPDATE_FOOTNOTEGLOSSARY = "UPDATE_FOOTNOTEGLOSSARY"
 
 /*-----------------Toolbar----------------------------*/
 export const TOGGLE_BORDERS = 'TOGGLE_BORDERS'
+export const TOGGLE_PAGE_NUMBER = 'TOGGLE_PAGE_NUMBER'
+
 
 /*---------------Slate Lock -------------------*/
 export const SET_SLATE_LOCK_STATUS = "SET_SLATE_LOCK_STATUS"

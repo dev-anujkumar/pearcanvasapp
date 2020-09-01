@@ -31,7 +31,6 @@ Array.prototype.move = function (from, to) {
 
 export const createElement = (type, index, parentUrn, asideData, outerAsideIndex, loref, cb,poetryData) => (dispatch, getState) => {
     config.currentInsertedIndex = index;
-    config.currentInsertedType = type;
     let  popupSlateData = getState().appStore.popupSlateData
     localStorage.setItem('newElement', 1);
     let slateEntityUrn = parentUrn && parentUrn.contentUrn || popupSlateData && popupSlateData.contentUrn || poetryData && poetryData.contentUrn || config.slateEntityURN
@@ -199,7 +198,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
     })
 }
 
-function prepareDataForTcmCreate(type, createdElementData, getState, dispatch) {
+export function prepareDataForTcmCreate(type, createdElementData, getState, dispatch) {
     let elmUrn = [];
     const tcmData = getState().tcmReducer.tcmSnapshot;
     if (type === "WORKED_EXAMPLE" || type === "CONTAINER") {

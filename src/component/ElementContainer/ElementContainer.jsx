@@ -21,7 +21,7 @@ import elementTypeConstant from './ElementConstants'
 import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } from './../CanvasWrapper/CanvasWrapper_Actions';
 import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
-import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel } from '../../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
@@ -45,6 +45,7 @@ import ElementPoetryStanza from '../ElementPoetry/ElementPoetryStanza.jsx';
 import MultiColumnContext from "./MultiColumnContext.js"
 import MultiColumnContainer from "../MultiColumnElement"
 import {handleTCMData} from '../TcmSnapshots/TcmSnapshot_Actions.js';
+import CopyUrn from '../CopyUrn';
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -101,6 +102,9 @@ class ElementContainer extends Component {
             btnClassName: '',
             isOpener: this.props.element.type === elementTypeConstant.OPENER
         })
+        document.addEventListener('click',()=>{
+            this.setState({showCopyPopup : false})
+        });
     }
 
     componentWillUnmount() {
@@ -235,6 +239,7 @@ class ElementContainer extends Component {
         tinyMCE.$(tempDiv).find('a').removeAttr('data-mce-href');
         tinyMCE.$(tempDiv).find('a').removeAttr('data-mce-selected');
         tinyMCE.$(tempDiv).find('a').removeAttr('data-custom-editor');
+        tempDiv.innerHTML = removeBlankTags(tempDiv.innerHTML)
         return encodeHTMLInWiris(tempDiv.innerHTML);
     }
 
@@ -568,7 +573,8 @@ class ElementContainer extends Component {
                 html =html.replace(/(\r\n|\n|\r)/gm, '')
                 previousElementData.html.text= previousElementData.html.text.replace(/<br data-mce-bogus="1">/g, "<br>").replace(/(\r\n|\n|\r)/gm, '');
                 previousElementData.html.text = previousElementData.html.text.replace(/data-mce-bogus="all"/g, '')
-                if (html && previousElementData.html && (this.replaceUnwantedtags(html) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate) && !assetPopoverPopupIsVisible && !config.savingInProgress && !checkCanvasBlocker) {
+                tempDiv.innerHTML = removeBlankTags(tempDiv.innerHTML)
+                if (html && previousElementData.html && (this.replaceUnwantedtags(html) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate) && !assetPopoverPopupIsVisible && !config.savingInProgress && !checkCanvasBlocker && elementType && primaryOption && secondaryOption) {
                     dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDiv, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,parentElement,showHideType, asideData, poetryData)
                     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                     this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, showHideType, parentElement, poetryData);
@@ -640,7 +646,8 @@ class ElementContainer extends Component {
                         tinyMCE.$(currentListNode).find('li')[i].innerHTML= tinyMCE.$(currentListNode).find('li')[i].innerHTML.replace( /[\r\n]+/gm, "" ); 
                         tinyMCE.$(currentListNode).find('li')[i].innerHTML = tinyMCE.$(currentListNode).find('li')[i].innerHTML.replace(/^\s+|\s+$/g, '&nbsp;');
                         tinyMCE.$(currentListNode).find('li')[i].innerHTML = tinyMCE.$(currentListNode).find('li')[i].innerHTML.replace(/(<sup><\/sup>)|(<sup><br><\/sup>)/g, "");
-                    } 
+                    }
+                    currentListNode.innerHTML = removeBlankTags(currentListNode.innerHTML)
                     let nodehtml = currentListNode.innerHTML;
                     if(nodehtml && previousElementData.html) {
                         let prevData = this.replaceUnwantedtags(previousElementData.html.text);
@@ -662,6 +669,8 @@ class ElementContainer extends Component {
                     let tempDivForCE = document.createElement('div');
                     tempDivForCE.innerHTML = ceHtml;
                     ceHtml = tempDivForCE.innerHTML;
+                    tempDivForCE.innerHTML = removeBlankTags(tempDivForCE.innerHTML)
+                    ceHtml = removeBlankTags(ceHtml)
                     if (ceHtml && previousElementData.html && (this.replaceUnwantedtags(ceHtml) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate) && !config.savingInProgress) {
                         dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDivForCE, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, showHideType, asideData)
                         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
@@ -928,6 +937,73 @@ class ElementContainer extends Component {
         }
     }
 
+    getParentPosition = (el) => {
+        var xPos = 0;
+        var yPos = 0;
+
+        while (el) {
+            if (el.tagName == "BODY") {
+                // deal with browser quirks with body/window/document and page scroll
+                var xScroll = el.scrollLeft || document.documentElement.scrollLeft;
+                var yScroll = el.scrollTop || document.documentElement.scrollTop;
+
+                xPos += (el.offsetLeft - xScroll + el.clientLeft);
+                yPos += (el.offsetTop - yScroll + el.clientTop);
+            } else {
+                // for all other non-BODY elements
+                xPos += (el.offsetLeft - el.scrollLeft + el.clientLeft);
+                yPos += (el.offsetTop - el.scrollTop + el.clientTop);
+            }
+
+            el = el.offsetParent;
+        }
+        return { x: xPos, y: yPos }
+    }
+
+    onCopyContext=(e)=> {
+
+        if (e.currentTarget.classList.contains('active')) {
+            const parentPosition = this.getParentPosition(e.currentTarget);
+            const scrollTop = document.getElementById('slateWrapper').scrollTop;
+
+            this.copyClickedX = e.clientX - parentPosition.x;
+            this.copyClickedY = e.clientY - parentPosition.y + scrollTop + 10;
+
+            // this.copyClickedX = e.clientX;   //change position to fixed
+            // this.copyClickedY = e.clientY;
+            this.toggleCopyMenu(true)
+            e.preventDefault();
+        }
+    }
+
+    toggleCopyMenu = (value)=> {
+        this.setState({showCopyPopup : value})
+    }
+
+    /**
+     * Handling border style and properties
+     * @param {*} elemBorderToggleFromProp Slate level border based on toggle
+     * @param {*} borderToggleFromState Element level border based on focus
+     */
+    setBorderToggle = (elemBorderToggleFromProp, borderToggleFromState) => {
+        if (elemBorderToggleFromProp !== 'undefined' && elemBorderToggleFromProp) {
+            if (borderToggleFromState == 'active') {
+                return borderToggleFromState
+            }
+            else {
+                return 'showBorder'
+            }
+        }
+        else {
+            if (borderToggleFromState == 'active') {
+                return borderToggleFromState
+            }
+            else {
+                return 'hideBorder'
+            }
+        }
+    }
+    
     /**
     * @description - getPopupChildUrns is responsible for creating an array of wUrn of child elements of Popup Element
     * @param {*} element active element - Popup
@@ -1084,7 +1160,7 @@ class ElementContainer extends Component {
                     }
                     break;
                 case elementTypeConstant.ELEMENT_LIST:
-                    editor = <ListElement permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onListSelect={this.props.onListSelect} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} />;
+                    editor = <ListElement showBlocker={this.props.showBlocker} permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onListSelect={this.props.onListSelect} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} />;
                     labelText = 'OL'
                     if ((element.subtype || element.elementdata.subtype) === 'disc')
                         labelText = 'UL'
@@ -1293,7 +1369,7 @@ class ElementContainer extends Component {
             editor = <p className="incorrect-data">Incorrect Data - {element.id}</p>;
         }
 
-        let borderToggle = this.state.borderToggle;
+        let borderToggle = this.setBorderToggle(this.props.elemBorderToggle, this.state.borderToggle)
         let btnClassName = this.state.btnClassName;
         let bceOverlay = "";
         let elementOverlay = ''
@@ -1309,6 +1385,7 @@ class ElementContainer extends Component {
         }
         return (
             <div className="editor" data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
+                {this.state.showCopyPopup && <CopyUrn elementId={this.props.element.id} toggleCopyMenu={this.toggleCopyMenu} copyClickedX={this.copyClickedX} copyClickedY={this.copyClickedY} />}
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                     <Button type="element-label" btnClassName={`${btnClassName} ${isQuadInteractive} ${this.state.isOpener ? ' ignore-for-drag' : ''}`} labelText={labelText}  onClick={(event) => this.labelClickHandler(event)} />
                     {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && config.slateType !== 'assessment' ? (<Button type="delete-element" onClick={(e) => this.showDeleteElemPopup(e,true)} />)
@@ -1317,7 +1394,7 @@ class ElementContainer extends Component {
                     {this.renderColorTextButton(element, permissions)}
                 </div>
                     : ''}
-                <div className={`element-container ${labelText.toLowerCase()=="2c"? "multi-column":labelText.toLowerCase()} ${borderToggle}`} data-id={element.id} onFocus={() => this.toolbarHandling('remove')} onBlur={() => this.toolbarHandling('add')} onClick = {(e)=>this.handleFocus("","",e,labelText)}>
+                <div className={`element-container ${labelText.toLowerCase()=="2c"? "multi-column":labelText.toLowerCase()} ${borderToggle}`} onContextMenu={this.onCopyContext} data-id={element.id} onFocus={() => this.toolbarHandling('remove')} onBlur={() => this.toolbarHandling('add')} onClick = {(e)=>this.handleFocus("","",e,labelText)}>
                     {elementOverlay}{bceOverlay}{editor}
                 </div>
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>

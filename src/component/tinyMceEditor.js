@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 //IMPORT TINYMCE 
 import tinymce from 'tinymce/tinymce';
@@ -10,15 +11,12 @@ import "tinymce/plugins/lists";
 import "tinymce/plugins/advlist";
 import "tinymce/plugins/paste";
 // IMPORT - Components & Dependencies //
-import { EditorConfig } from '../config/EditorConfig';
+import { EditorConfig, FormatSelectors, elementTypeOptions } from '../config/EditorConfig';
 import config from '../config/config';
-import { insertListButton, bindKeyDownEvent, insertUoListButton, preventRemoveAllFormatting, removeTinyDefaultAttribute } from './ListElement/eventBinding.js';
+import { insertListButton, bindKeyDownEvent, insertUoListButton, preventRemoveAllFormatting, removeTinyDefaultAttribute, removeListHighliting, highlightListIcon } from './ListElement/eventBinding.js';
 import { authorAssetPopOver } from './AssetPopover/openApoFunction.js';
 import {
-    tinymceFormulaIcon,
-    tinymceFormulaChemistryIcon,
-    assetPopoverIcon,
-    crossLinkIcon
+    tinymceFormulaIcon,tinymceFormulaChemistryIcon,assetPopoverIcon,crossLinkIcon,code,Footnote,bold,Glossary,undo,redo,italic,underline,strikethrough,removeformat,subscript,superscript,charmap,downArrow,orderedList,unorderedList,indent,outdent
 } from '../images/TinyMce/TinyMce.jsx';
 import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
 import { checkforToolbarClick, customEvent, spanHandlers, removeBOM } from '../js/utils';
@@ -28,6 +26,11 @@ import { sendDataToIframe, hasReviewerRole } from '../constants/utility.js';
 import store from '../appstore/store';
 import { MULTIPLE_LINE_POETRY_ERROR_POPUP } from '../constants/Action_Constants';
 import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER } from '../component/SlateWrapper/SlateWrapperConstants.js';
+import { conversionElement } from './Sidebar/Sidebar_Action';
+import elementList from './Sidebar/elementTypes';
+import PopUp from '../component/PopUp';
+import { showTocBlocker, showBlocker, hideTocBlocker,disableHeader } from '../js/toggleLoader';
+
 let context = {};
 let clickedX = 0;
 let clickedY = 0;
@@ -36,6 +39,7 @@ export class TinyMceEditor extends Component {
     constructor(props) {
         super(props);
         context = this;
+        this.state = { popup : false }
         this.placeHolderClass = ''
         this.indentRun = false;
         this.outdentRun = false;
@@ -82,8 +86,11 @@ export class TinyMceEditor extends Component {
                 this.addCrossLinkingIcon(editor);
                 this.setAssetPopoverIcon(editor);
                 this.addAssetPopoverIcon(editor);
+                this.setFootnoteIcon(editor);
                 this.addFootnoteIcon(editor);
+                this.setGlossaryIcon(editor);
                 this.addGlossaryIcon(editor);
+                this.setInlineIcon(editor);
                 this.addInlineCodeIcon(editor);
                 this.editorClick(editor);
                 this.editorKeydown(editor);
@@ -93,6 +100,10 @@ export class TinyMceEditor extends Component {
                 this.editorExecCommand(editor);
                 this.insertListButtonIcon(editor);
                 this.clearUndoStack(editor);
+                /* Dropdown for showing text type elements */
+                this.changeTextElements(editor);
+                /* change the default icons of tinymce with new svg */
+                this.setDefaultIcons(editor)
                 editor.on('init', function (e) {
                     if (document.querySelector('.audio')) {
                         document.querySelector('.audio').style.display = "block";
@@ -175,6 +186,8 @@ export class TinyMceEditor extends Component {
 
                             }
                         }
+                        this.removeBogusTagsFromDom();
+                        this.removeAttributionBr();
                     }
                 });
 
@@ -209,15 +222,15 @@ export class TinyMceEditor extends Component {
 
         this.editorRef = React.createRef();
         this.currentCursorBookmark = {};
-    };
+    }
 
     /**
      * Adds custon list button to the editor toolbar
      * @param {*} editor  editor instance
      */
     insertListButtonIcon = (editor) => {
-        insertListButton(editor);
-        insertUoListButton(editor, this.onUnorderedListButtonClick);
+        insertListButton(editor, this.onListButtonClick);
+        insertUoListButton(editor, this.onListButtonClick);
     }
 
     /**
@@ -244,8 +257,34 @@ export class TinyMceEditor extends Component {
         }
     }
 
-    onUnorderedListButtonClick = (type) => {
-        this.props.onListSelect(type, "");
+    onListButtonClick = (type,subType) => {
+        this.elementConverted = true;
+        removeListHighliting();
+
+        if((this.props.element && this.props.element.type==="element-list" && this.props.element.elementdata.listtype===type) || 
+            (this.props.currentElement && this.props.currentElement.type === "element-list" && this.props.currentElement.elementdata.listtype===type)){
+            this.toggleConfirmationPopup(true,this.props.element.subtype || this.props.currentElement.subtype );
+        } else {
+            this.props.onListSelect(subType, "");
+        }
+    }
+
+    toggleConfirmationPopup = (value,type) => {
+        showBlocker(value); 
+        this.props.showBlocker(value)
+        if(value){
+            showTocBlocker();
+        }
+        else{
+            hideTocBlocker();
+            disableHeader(false)
+        }
+        this.setState({popup : value, listType : type})
+    }
+
+    listWarningConfirmation = ()=>{
+        this.props.onListSelect(this.state.listType, "");
+        this.toggleConfirmationPopup(false,null)
     }
 
     /**
@@ -548,6 +587,9 @@ export class TinyMceEditor extends Component {
                 sendDataToIframe({ 'type': LaunchTOCForCrossLinking, 'message': { open: true, case: 'update', link: linkId, element: elementId, page: pageId, blockCanvas: true, crossLink: true, reviewerRole: hasReviewerRole() } });
             }
         }
+        else if (e.target.className === "blockquoteTextCredit"){
+            setFormattingToolbar('disableTinymceToolbar')
+        }
         /**
          *  Case - otherwise close glossary & footnote popup  
          */
@@ -669,6 +711,9 @@ export class TinyMceEditor extends Component {
                                     }
                                 }
                             }
+                            let bceNode = document.getElementsByClassName("element-container bce active")
+                            let codeSnippetNode = bceNode && bceNode[0] && bceNode[0].getElementsByClassName("pearson-component blockcode codeSnippet blockCodeDiv")
+                            codeSnippetNode && codeSnippetNode[0] && codeSnippetNode[0].scroll(0,0)
                         }
                     }
                     else if (key != undefined && (key === 8 || key === 46)) {
@@ -779,14 +824,7 @@ export class TinyMceEditor extends Component {
      */
     editorKeydown = (editor) => {
         editor.on('keydown', (e) => {
-            let iFocusinBlockQuote = editor.dom.getParent(editor.selection.getStart(), '.paragraphNummerEins');
-            let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");
             let newElement = this.props.currentElement ? this.props.currentElement : this.props.element
-            if (isBlockQuote && !iFocusinBlockQuote) {
-                let evt = (e) ? e : window.event;
-                evt.preventDefault();
-                return false;
-            }
             if (e.keyCode == 86 && e.ctrlKey) {
                 this.isctrlPlusV = true;
             }
@@ -961,7 +999,7 @@ export class TinyMceEditor extends Component {
     addInlineCodeIcon = (editor) => {
         let self = this;
         editor.ui.registry.addToggleButton('code', {
-            text: '<i class="fa fa-code"></i>',
+            icon:"code",
             tooltip: "Inline code",
             onAction: function () {
                 // Add the custom formatting
@@ -1020,7 +1058,7 @@ export class TinyMceEditor extends Component {
         editor.ui.registry.addButton('Glossary', {
             id: 'buttonId',
             classes: 'buttonClas',
-            text: '<i class="fa fa-bookmark" aria-hidden="true"></i>',
+            icon:"glossary",
             tooltip: "Glossary",
             onAction: () => this.addGlossary(editor),
             onSetup: (btnRef) => {
@@ -1035,7 +1073,7 @@ export class TinyMceEditor extends Component {
      */
     addFootnoteIcon = (editor) => {
         editor.ui.registry.addButton('Footnote', {
-            text: '<i class="fa fa-asterisk" aria-hidden="true"></i>',
+            icon:'footnote',
             tooltip: "Footnote",
             onAction: () => this.addFootnote(editor),
             onSetup: (btnRef) => {
@@ -1063,6 +1101,55 @@ export class TinyMceEditor extends Component {
         editor.ui.registry.addIcon(
             "assetPopoverIcon",
             assetPopoverIcon
+        );
+    }
+    /**
+     * Add Inline Icon icon to the toolbar.
+     * @param {*} editor  editor instance
+     */
+    setInlineIcon = editor => {
+        editor.ui.registry.addIcon(
+            "code",
+            code
+        );
+    }
+
+    /**
+     * Add Footnote Icon Icon icon to the toolbar.
+     * @param {*} editor  editor instance
+     */
+    setFootnoteIcon = editor => {
+        editor.ui.registry.addIcon(
+            "Footnote",
+            Footnote
+        );
+    }
+    setDefaultIcons = editor => {
+        editor.ui.registry.addIcon("undo", undo);
+        editor.ui.registry.addIcon("redo", redo);
+        editor.ui.registry.addIcon("bold", bold);
+        editor.ui.registry.addIcon("italic", italic);
+        editor.ui.registry.addIcon("underline", underline);
+        editor.ui.registry.addIcon("strike-through", strikethrough);
+        editor.ui.registry.addIcon("remove-formatting", removeformat);
+        editor.ui.registry.addIcon("subscript", subscript);
+        editor.ui.registry.addIcon("superscript", superscript);
+        editor.ui.registry.addIcon("insert-character", charmap);
+        editor.ui.registry.addIcon("chevron-down", downArrow);
+        editor.ui.registry.addIcon("customUoListButton", unorderedList);
+        editor.ui.registry.addIcon("customListButton", orderedList);
+        editor.ui.registry.addIcon("indent", indent);
+        editor.ui.registry.addIcon("outdent", outdent);
+    }
+
+    /**
+     * Add Footnote Icon Icon icon to the toolbar.
+     * @param {*} editor  editor instance
+     */
+    setGlossaryIcon = editor => {
+        editor.ui.registry.addIcon(
+            "Glossary",
+            Glossary
         );
     }
 
@@ -1268,6 +1355,64 @@ export class TinyMceEditor extends Component {
         });
     }
 
+
+    changeTextElements = editor => {
+        const self = this;        
+        editor.ui.registry.addMenuButton('formatSelector', {
+            text: self.getElementTypeForToolbar(self.props.element),
+            tooltip : 'formatSelector',
+            onSetup: function () {
+                document.querySelector('button[title="formatSelector"]').setAttribute('title','');
+                let newSpan = document.createElement('span');
+                newSpan.className = "tooltip-text"
+                newSpan.innerText = self.getElementTypeForToolbar(self.props.element);
+                const tooltipLabel = document.querySelector('button[aria-label="formatSelector"] .tox-tbtn__select-label')
+                if (tooltipLabel) {
+                    tooltipLabel.after(newSpan)
+                }
+            },
+            fetch: function (callback) {
+                const items = FormatSelectors(self.elementConversion);
+                callback(items);
+                self.handleBlur(null, false)
+            }
+        });
+    }
+
+    elementConversion = (convertTo) => {
+        const value = elementTypeOptions[convertTo].primaryOption;
+        const labelText = elementTypeOptions[convertTo].label;
+        const secondaryOption = elementTypeOptions[convertTo].secondaryOption;
+        this.props.conversionElement({
+            elementId: this.props.element.id,
+            elementType: 'element-authoredtext',
+            primaryOption: value,
+            secondaryOption: secondaryOption,
+            labelText: labelText,
+            toolbar: elementList['element-authoredtext'][value].toolbar
+        });
+        setFormattingToolbar('disableTinymceToolbar')
+        this.elementConverted = true;
+    }
+
+    getElementTypeForToolbar = (element) => {
+        switch (element.type) {
+            case "element-authoredtext":
+                if (element.elementdata.headers)
+                    return `Heading ${element.elementdata.headers[0].level}`
+                else
+                    return "Paragraph"
+            case "element-blockfeature":
+                if (element.elementdata.type === "pullquote")
+                    return "Pullquote"
+                else
+                    return "Blockquote"
+            case "element-learningobjectives":
+                return "Learning Objective Item"
+            default:
+                return 'Paragraph'
+        }
+    }
     editorPaste = (editor) => {
         editor.on('paste', (e) => {
             let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
@@ -1594,7 +1739,7 @@ export class TinyMceEditor extends Component {
                 tempDiv.innerHTML = tinyMCE.activeEditor.getContent();
                 tinymce.$(tempDiv).find('.blockquote-hidden').remove()
                 if (this.props.model && this.props.model.text && this.props.model.text.includes("blockquoteMarginaliaAttr") && !tempDiv.innerText.trim()) {
-                    let insertText = `<blockquote class="blockquoteMarginaliaAttr" contenteditable="false"><p class="paragraphNummerEins" contenteditable="true"><sup><a href="#" id = "${res.data.id}" data-uri="${res.data.id}" data-footnoteelementid="${res.data.id}" class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup></p><p class="blockquoteTextCredit" contenteditable="false">${document.getElementsByClassName('attribution-editor')[0].innerHTML.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</p></blockquote>`
+                    let insertText = `<blockquote class="blockquoteMarginaliaAttr" contenteditable="false"><p class="paragraphNummerEins" contenteditable="true"><sup><a href="#" id = "${res.data.id}" data-uri="${res.data.id}" data-footnoteelementid="${res.data.id}" class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup></p><p class="blockquoteTextCredit" contenteditable="true" data-placeholder="Attribution Text">${document.getElementsByClassName('blockquoteTextCredit')[0].innerHTML.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</p></blockquote>`
                     tinymce.activeEditor.setContent(insertText);
                     document.getElementById(tinyMCE.activeEditor.id).classList.remove("place-holder")
                 }
@@ -1928,6 +2073,10 @@ export class TinyMceEditor extends Component {
                         if (termText && termText.length && this.props.element.type === 'figure') {
                             document.getElementById(currentId).innerHTML = termText;
                         }
+                        if(this.props.element && this.props.element.type === "element-blockfeature"){
+                            this.removeBogusTagsFromDom();
+                            this.removeAttributionBr();
+                        }
 
                         /*
                             Making blinking cursor color again to black
@@ -1949,7 +2098,7 @@ export class TinyMceEditor extends Component {
     * Defines initial placeholder
     */
     handlePlaceholder = () => {
-        if (this.props.element && this.props.element.type === "element-list" || this.props.currentElement && this.props.currentElement.type === 'element-list') {
+        if ((this.props.element && this.props.element.type === "element-list") || (this.props.currentElement && this.props.currentElement.type === 'element-list')) {
             this.placeHolderClass = '';
         }
         else if (this.props.model && this.props.model.text) {
@@ -2010,6 +2159,18 @@ export class TinyMceEditor extends Component {
         if (isBlockQuote) {
             this.lastContent = document.getElementById('cypress-' + this.props.index).innerHTML;
         }
+        if(this.elementConverted || prevProps.element.subtype !== this.props.element.subtype){
+            document.querySelector('button[aria-label="formatSelector"] .tox-tbtn__select-label').innerText = this.getElementTypeForToolbar(this.props.element);
+            /* tooltip code for text elements in toolbar */
+            const tooltipText = document.querySelector('button[aria-label="formatSelector"] .tooltip-text')
+            if (tooltipText) {
+                tooltipText.innerText = this.getElementTypeForToolbar(this.props.element);
+            }
+            if ((this.props.element && this.props.element.type === "element-list") || (this.props.currentElement && this.props.currentElement.type === "element-list")) {
+                highlightListIcon(this.props);
+            }
+            this.elementConverted = false;
+        }
         this.removeMultiTinyInstance();
         this.handlePlaceholder()
         tinymce.$('.blockquote-editor').attr('contenteditable', false)
@@ -2069,6 +2230,16 @@ export class TinyMceEditor extends Component {
             toolbar = config.elementToolbar;
         }
         return toolbar;
+    }
+
+    removeBogusTagsFromDom = () => {
+        let bogusTag = document.querySelector(`#cypress-${this.props.index} p[data-mce-bogus="all"]`)
+        bogusTag && bogusTag.remove();
+    }
+
+    removeAttributionBr = () => {
+        let attributionNodeBr = document.querySelector(`#cypress-${this.props.index} p.blockquoteTextCredit br`)
+        attributionNodeBr && attributionNodeBr.remove();
     }
 
     /**
@@ -2297,6 +2468,10 @@ export class TinyMceEditor extends Component {
                         }
                     })
                 }
+                if(this.props.element && this.props.element.type === "element-blockfeature"){
+                    this.removeBogusTagsFromDom();
+                    this.removeAttributionBr();
+                }
             });
             this.setToolbarByElementType();
         }
@@ -2320,6 +2495,16 @@ export class TinyMceEditor extends Component {
                     assetPopoverButtonNode.setAttribute("aria-disabled", false)
                     assetPopoverButtonNode.removeAttribute('aria-pressed')
                     assetPopoverButtonNode.classList.remove('tox-tbtn--disabled')
+                }
+                if((this.props.element && this.props.element.type==="element-list") || (this.props.currentElement && this.props.currentElement.type === "element-list")){
+                    highlightListIcon(this.props);
+                } 
+                else{
+                    removeListHighliting();
+                }
+                if(this.props.element && this.props.element.type === "element-blockfeature"){
+                    this.removeBogusTagsFromDom();
+                    this.removeAttributionBr();
                 }
             })
         });
@@ -2468,6 +2653,7 @@ export class TinyMceEditor extends Component {
     render() {
         const { slateLockInfo: { isLocked, userId } } = this.props;
         let lockCondition = isLocked && config.userId !== userId.replace(/.*\(|\)/gi, '');
+        this.handlePlaceholder();
 
         let classes = this.props.className ? this.props.className + " cypress-editable" : '' + "cypress-editable";
         let id = 'cypress-' + this.props.index;
@@ -2514,24 +2700,35 @@ export class TinyMceEditor extends Component {
                     <code ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: codeModel }}></code>
                 )
             case 'blockquote':
-                if (this.props.element && this.props.element.elementdata && this.props.element.elementdata.type === "marginalia") {
+                if (this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia"|| this.props.element.elementdata.type === "blockquote")) {
                     let temDiv = document.createElement('div');
-                    temDiv.innerHTML = this.props.model && this.props.model.text ? this.props.model.text : '<blockquote class="blockquoteMarginaliaAttr" contenteditable="false"><p class="paragraphNummerEins" contenteditable="true"></p><p class="blockquoteTextCredit" contenteditable="false"></p></blockquote>';
-                    if (!tinymce.$(temDiv).find('blockquote p.blockquote-hidden').length) {
-                        tinymce.$(temDiv).find('blockquote').append('<p contenteditable="false" class="blockquote-hidden" style="visibility: hidden;">hidden</p>');
+                    let hiddenBlock = document.createElement('p');
+                    hiddenBlock.innerHTML = "hidden";
+                    hiddenBlock.classList.add("blockquote-hidden");
+                    hiddenBlock.setAttribute("contenteditable","false");
+                    hiddenBlock.style.visibility = "hidden"
+                    hiddenBlock.style.height = "20px";
+                    temDiv.innerHTML = this.props.model && this.props.model.text ? this.props.model.text : '<blockquote class="blockquoteMarginaliaAttr" contenteditable="false"><p class="paragraphNummerEins" contenteditable="true"></p><p class="blockquoteTextCredit" contenteditable="true" data-placeholder="Attribution Text"></p></blockquote>';
+                    if(this.props.element.elementdata.type === "blockquote" && !tinymce.$(temDiv).find('blockquote p.blockquoteTextCredit').length){
+                        tinymce.$(temDiv).find('blockquote').append('<p class="blockquoteTextCredit" contenteditable="true" data-placeholder="Attribution Text"></p>');
+                    }
+                    tinymce.$(temDiv).find('.blockquoteTextCredit').attr('contenteditable', 'true').attr('data-placeholder','Attribution Text');
+                    if (tinymce.$(temDiv).find('.blockquoteTextCredit') && !tinymce.$(temDiv).find('blockquote p.blockquote-hidden').length) {
+                        temDiv.childNodes[0].insertBefore(hiddenBlock,tinymce.$(temDiv).find('.blockquoteTextCredit')[0]);
                     }
                     tinymce.$(temDiv).find('blockquote').attr('contenteditable', 'false');
                     tinymce.$(temDiv).find('.paragraphNummerEins').attr('contenteditable', !lockCondition);
                     if (tinymce.$(temDiv).find('.paragraphNummerEins') && tinymce.$(temDiv).find('.paragraphNummerEins')[0]) {
                         tinymce.$(temDiv).find('.paragraphNummerEins')[0].addEventListener('blur', this.handleBlur);
                     }
-                    tinymce.$(temDiv).find('.blockquoteTextCredit').attr('contenteditable', 'false');
                     classes = classes + ' blockquote-editor with-attr';
                     temDiv.innerHTML = removeBOM(temDiv.innerHTML)
                     return (
                         <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={false} dangerouslySetInnerHTML={{ __html: temDiv.innerHTML }} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
                     )
                 }
+                /**Disbale previous blockquote functionality and managed with margilia */
+                /*
                 else if (this.props.element && this.props.element.elementdata && this.props.element.elementdata.type === "blockquote") {
                     let temDiv = document.createElement('div');
                     temDiv.innerHTML = this.props.model && this.props.model.text ? this.props.model.text : '<blockquote class="blockquoteMarginalia" contenteditable="false"><p class="paragraphNummerEins" contenteditable="true"></p></blockquote>';
@@ -2545,7 +2742,7 @@ export class TinyMceEditor extends Component {
                     return (
                         <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={false} dangerouslySetInnerHTML={{ __html: temDiv.innerHTML }} onChange={this.handlePlaceholder}></div>
                     )
-                }
+                }*/
                 else {
                     classes = classes + ' pullquote-editor';
                     let pqModel = this.props.model && this.props.model.text || '<p class="paragraphNumeroUno"><br/></p>'
@@ -2574,7 +2771,20 @@ export class TinyMceEditor extends Component {
                 defModel = removeBOM(defModel)
 
                 return (
-                    <div ref={this.editorRef} data-id={this.props.currentElement ? this.props.currentElement.id : ''} onKeyDown={this.normalKeyDownHandler} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: defModel }} onChange={this.handlePlaceholder}></div>
+                    <>
+                        {this.state.popup && 
+                         <PopUp 
+                            dialogText={"Performing this action will remove the list and convert this text to a paragraph. Do you wish to continue?"} 
+                            active={true}
+                            listConfirmation={true}
+                            togglePopup = {this.toggleConfirmationPopup}
+                            tocDeleteClass = {'listConfirmation'}
+                            saveButtonText = {"Yes"}
+                            saveContent = {this.listWarningConfirmation}
+                         />
+                        }
+                        <div ref={this.editorRef} data-id={this.props.currentElement ? this.props.currentElement.id : ''} onKeyDown={this.normalKeyDownHandler} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: defModel }} onChange={this.handlePlaceholder}></div>
+                    </>
                 )
         }
     }
@@ -2602,4 +2812,7 @@ TinyMceEditor.defaultProps = {
     error: null,
 };
 
-export default TinyMceEditor;
+export default connect(
+    null, 
+    { conversionElement }
+)(TinyMceEditor);

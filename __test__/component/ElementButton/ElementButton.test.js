@@ -35,84 +35,53 @@ describe('Testing Button component with props', () => {
         expect(component.find('svg').exists()).toBe(true);
         expect(component.find('img').exists()).toBe(false);
     })
-    it('render forward-nav-active Button component  ', () => {
-        const component = mount(<Button type={buttonTypes.FORWARD_NAVIGATION} labelText="UL" />);
-        expect(component.find('span.btn-element').hasClass('forward-nav-active')).toBe(true);
-        expect(component.find('img').exists()).toBe(true);
-    })
-    it('render backward-nav-active Button component  ', () => {
-        const component = mount(<Button type={buttonTypes.BACKWARD_NAVIGATION} labelText="UL" />);
-        expect(component.find('span.btn-element').hasClass('forward-nav-active')).toBe(false);
-        expect(component.find('span.btn-element').hasClass('backward-nav-active')).toBe(true);
-        expect(component.find('img').exists()).toBe(true);
-    })
-    it('render backward-nav-disable Button component  ', () => {
-        const component = mount(<Button type={buttonTypes.BACKWARD_NAVIGATION_DISABLE} labelText="UL" />);
-        expect(component.find('span.btn-element').hasClass('backward-nav-active')).toBe(false);
-        expect(component.find('span.btn-element').hasClass('backward-nav-disable')).toBe(true);
-    })
-    it('render forward-nav-disable Button component  ', () => {
-        const component = mount(<Button type={buttonTypes.FORWARD_NAVIGATION_DISABLE} />);
-        expect(component.find('span.btn-element').hasClass('forward-nav-disable')).toBe(true);
-        expect(component.find('span.btn-element').hasClass('backward-nav-disable')).toBe(false);
-        expect(component.find('img').exists()).toBe(true);
-    })
     it('render expand Button component  ', () => {
         const component = mount(<Button type={buttonTypes.EXPAND} labelText="UL" />);
         expect(component.find('span.btn-element').hasClass('expand-icon')).toBe(true);
-        expect(component.find('span.btn-element').hasClass('backward-nav-disable')).toBe(false);
         expect(component.find('img').exists()).toBe(true);
     })
     it('render color-palette Button component  ', () => {
         const component = mount(<Button type={buttonTypes.COLOR_PALETTE} labelText="UL" />);
         expect(component.find('span.btn-element').hasClass('color-palette')).toBe(true);
-        expect(component.find('span.btn-element').hasClass('backward-nav-disable')).toBe(false);
         expect(component.find('img').exists()).toBe(true);
     })
     it('render close-container Button component  ', () => {
         const component = mount(<Button type={buttonTypes.CLOSE_CONTAINER} labelText="UL" />);
         expect(component.find('span.btn-element').hasClass('close-container')).toBe(true);
-        expect(component.find('span.btn-element').hasClass('backward-nav-disable')).toBe(false);
         expect(component.find('img').exists()).toBe(true);
     })
 
     it('render Text element Button component  ', () => {
         const component = mount(<Button type={buttonTypes.TEXT_ELEMENT} />);
         expect(component.find('span.btn-element').hasClass('close-container')).toBe(false);
-        expect(component.find('span.btn-element').hasClass('backward-nav-disable')).toBe(false);
         expect(component.find('img').exists()).toBe(false);
     })
     it('render Image element Button component  ', () => {
         const component = mount(<Button type={buttonTypes.IMAGE_ELEMENT} />);
         expect(component.find('span.btn-element').hasClass('image-elem')).toBe(true);
-        expect(component.find('span.btn-element').hasClass('backward-nav-disable')).toBe(false);
         expect(component.find('svg#image-media').exists()).toBe(true);
         expect(component.find('img').exists()).toBe(false);
     })
     it('render Audio/video element Button component  ', () => {
         const component = mount(<Button type={buttonTypes.AUDIO_ELEMENT} />);
         expect(component.find('span.btn-element').hasClass('audio-elem')).toBe(true);
-        expect(component.find('span.btn-element').hasClass('backward-nav-disable')).toBe(false);
         expect(component.find('svg#audioIcon').exists()).toBe(true);
         expect(component.find('polygon').exists()).toBe(true);
     })
     it('render Interactive element Button component  ', () => {
         const component = mount(<Button type={buttonTypes.INTERACTIVE_ELEMENT} />);
         expect(component.find('span.btn-element').hasClass('interactive-elem-button')).toBe(true);
-        expect(component.find('span.btn-element').hasClass('backward-nav-disable')).toBe(false);
         expect(component.find('svg#audioIcon').exists()).toBe(false);
         expect(component.find('rect').exists()).toBe(true);
     })
     it('render Container element Button component  ', () => {
         const component = mount(<Button type={buttonTypes.CONTAINER_ELEMENT} />);
         expect(component.find('span.btn-element').hasClass('container-elem-button')).toBe(true);
-        expect(component.find('span.btn-element').hasClass('backward-nav-disable')).toBe(false);
         expect(component.find('svg#containerIcon').exists()).toBe(true);
     })
     it('render Worked example Button component  ', () => {
         const component = mount(<Button type={buttonTypes.WORKED_EXAMPLE_ELEMENT} />);
         expect(component.find('span.btn-element').hasClass('interactive-elem-button')).toBe(false);
-        expect(component.find('span.btn-element').hasClass('backward-nav-disable')).toBe(false);
         expect(component.find('span.btn-element').hasClass('worked-exp-elem')).toBe(true);
         expect(component.find('svg#workedExampleIcon').exists()).toBe(true);
         expect(component.find('rect').exists()).toBe(true);
@@ -120,7 +89,6 @@ describe('Testing Button component with props', () => {
     it('render Assessment element Button component  ', () => {
         const component = mount(<Button type={buttonTypes.ASSESSMENT_ELEMENT} />);
         expect(component.find('span.btn-element').hasClass('assessment-elem')).toBe(true);
-        expect(component.find('span.btn-element').hasClass('backward-nav-disable')).toBe(false);
         expect(component.find('span.btn-element').hasClass('worked-exp-elem')).toBe(false);
         expect(component.find('svg#assessmentIcon').exists()).toBe(true);
         expect(component.find('rect').exists()).toBe(true);
@@ -128,15 +96,13 @@ describe('Testing Button component with props', () => {
     it('render Opener element Button component  ', () => {
         const component = mount(<Button type={buttonTypes.OPENER_ELEMENT} />);
         expect(component.find('span.btn-element').hasClass('opener-elem')).toBe(true);
-        expect(component.find('span.btn-element').hasClass('backward-nav-disable')).toBe(false);
         expect(component.find('span.btn-element').hasClass('worked-exp-elem')).toBe(false);
         expect(component.find('svg#Layer_1').exists()).toBe(true);
     })
     it('render Section break element Button component  ', () => {
         const component = mount(<Button type={buttonTypes.SECTION_BREAK_ELEMENT} />);
         console.log("this is component button functionality---",component.debug());
-        expect(component.find('span.btn-element').hasClass('section-break-elem')).toBe(true);
-        expect(component.find('span.btn-element').hasClass('backward-nav-disable')).toBe(false);
+        expect(component.find('span.btn-element').hasClass('section-break-elem')).toBe(true);;
         expect(component.find('span.btn-element').hasClass('worked-exp-elem')).toBe(false);
         expect(component.find('svg#sectionBreakElement').exists()).toBe(true);
     })

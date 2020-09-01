@@ -48,7 +48,9 @@ h3.pullQuoteNumeroUno{
     margin-left: 0em;
     font-family: Georgia, serif, Palatino, Palatino Linotype, Palatino LT STD !important;
 }
-p.blockquoteTextCredit{
-    pointer-events: none !important;
-    user-select: none !important;
+blockquote.blockquoteMarginaliaAttr {
+    padding: 1.0em 0.25em 1.5em;
+}
+p[data-mce-bogus="all"] {
+    display: none!important
 }

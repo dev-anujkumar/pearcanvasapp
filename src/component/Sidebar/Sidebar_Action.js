@@ -124,7 +124,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         /**
          * case - if bullet list is being converted into bullet again then explicitly proceed with paragraph coversion
          */
-        if (inputPrimaryOptionEnum === outputPrimaryOptionEnum && inputSubTypeEnum === outputSubTypeEnum && outputSubTypeEnum === "DISC" && fromToolbar) {
+        if (inputPrimaryOptionEnum === outputPrimaryOptionEnum && outputPrimaryOptionEnum==="LIST" && inputSubTypeEnum === outputSubTypeEnum && fromToolbar) {
             outputPrimaryOptionEnum = "AUTHORED_TEXT"
             outputSubTypeEnum = "NA"
         }

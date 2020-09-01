@@ -13,12 +13,12 @@
 }
 
 .element-container.active:not(.ct) {
-    border: 1.5px solid #149632;
+    border: 1.5px solid #005a70;
     padding: 1px 7px;
 }
 
 .element-container.ct.active {
-    border: 1.5px solid #149632;
+    border: 1.5px solid #005a70 !important;
 }
 
 .element-container.hideBorder:not(.as):not(.we):not(.cg):not(.pe):not(.multi-column) *, .element-container.showBorder:not(.as):not(.we):not(.cg):not(.pe):not(.multi-column) * {
@@ -50,6 +50,24 @@
 
 .showBorder {
     border: 1px solid #737373;
+}
+
+.copyUrn {
+    z-index: 1500;
+    position: absolute;
+    cursor: pointer;
+    box-shadow: 1px 1px 6px 0px grey;
+    border-color: #d6d6d5;
+    text-align: center;
+    height: auto;
+    width: auto;
+    font-size: 16px;
+    padding: 10px 15px;
+    background : #fff;
+}
+
+.copyUrn:hover{
+    background-color: #E9F4F6;
 }
 
 .hideBorder {

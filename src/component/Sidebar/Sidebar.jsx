@@ -261,9 +261,6 @@ class Sidebar extends Component {
         this.setState({
             attrInput: event.target.value
         })
-        let activeElement = document.querySelector(`[data-id="${this.props.activeElement.elementId}"]`)
-        let attrNode = activeElement.querySelector(".blockquoteTextCredit");
-        attrNode.innerHTML = event.target.value.replace(/</g, "&lt;").replace(/>/g, "&gt;");
     }
     
     attributions = () => {
@@ -295,8 +292,8 @@ class Sidebar extends Component {
     
             if(attributionsList.length > 0) {
                 let activeElement = document.querySelector(`[data-id="${this.props.activeElement.elementId}"]`)
-                let attrNode = activeElement ? activeElement.querySelector(".blockquoteTextCredit") : null
-                let attrValue = attrNode && attrNode.innerHTML!=null ? attrNode.innerHTML.replace(/<br>/g, "").replace(/&lt;/g, "<").replace(/&gt;/g, ">") : ""
+                //let attrNode = activeElement ? activeElement.querySelector(".blockquoteTextCredit") : null
+                let attrValue = ""
                 attributions = attributionsList.map(item => {
                     let isDisable = (item === 'attribution' ? hasReviewerRole() : !attributionsObject[item].isEditable) 
                     if(item==="alt_text"){
@@ -559,7 +556,7 @@ class Sidebar extends Component {
 
     render = () => {
         return (
-            <div className="canvas-sidebar">
+            this.props.activeElement && Object.keys(this.props.activeElement).length !== 0 && this.props.activeElement.elementType !== "element-authoredtext" && <div className="canvas-sidebar">
                 <div className="canvas-sidebar-heading">Settings</div>
                 {this.primaryOption()}
                 {this.renderSyntaxHighlighting(this.props.activeElement && this.props.activeElement.tag || '')}

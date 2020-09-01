@@ -18,7 +18,9 @@ import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
 import config from '../../config/config';
 import { TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER, WORKED_EXAMPLE, SECTION_BREAK, METADATA_ANCHOR, LO_LIST, ELEMENT_ASSESSMENT, OPENER,
     ALREADY_USED_SLATE , REMOVE_LINKED_AUDIO, NOT_AUDIO_ASSET, SPLIT_SLATE_WITH_ADDED_AUDIO , ACCESS_DENIED_CONTACT_ADMIN, IN_USE_BY, LOCK_DURATION, SHOW_HIDE,POP_UP ,
-    CITATION, ELEMENT_CITATION,SMARTLINK,POETRY ,STANZA, BLOCKCODE, TABLE_EDITOR, FIGURE_MML, MULTI_COLUMN, MMI_ELM} from './SlateWrapperConstants';
+    CITATION, ELEMENT_CITATION,SMARTLINK,POETRY ,STANZA, BLOCKCODE, TABLE_EDITOR, FIGURE_MML, MULTI_COLUMN, MMI_ELM,
+    SINGLE_CONTAINER_DELETE, WITH_PENDING_TRACK, SLATE_UNLINKING, DELETE_DIALOG_TEXT, WITH_PENDING_TRACK_NOTE_MESSAGE, TYPE_SINGLE_CONTAINER_DELETE, TYPE_WITH_PENDING_TRACK, TYPE_UNLINK
+} from './SlateWrapperConstants';
 import PageNumberElement from './PageNumberElement.jsx';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
@@ -773,6 +775,14 @@ class SlateWrapper extends Component {
         this.deleteRejected()
     }
 
+    unlinkAccepted = () => {
+        this.props.updatePageLink(this.props.tocDeleteMessage);
+        hideBlocker();
+        hideTocBlocker();
+        disableHeader(true);
+        this.props.modifyState(false)
+    }
+
     deleteRejected = () => {
         hideBlocker();
         hideTocBlocker();
@@ -784,31 +794,33 @@ class SlateWrapper extends Component {
     showTocDeletePopup = () => {
         /**
          * Need to refactor these all condition and minimize them
-         */
+         */        
         if (this.props.toggleTocDelete) {
-            if(this.props.tocDeleteMessage&& this.props.tocDeleteMessage.messageType === 'singleContainerDelete'){
+            if(this.props.tocDeleteMessage&& this.props.tocDeleteMessage.messageType === TYPE_SINGLE_CONTAINER_DELETE){
                 return (
                     <PopUp
                         togglePopup={this.deleteRejected}
                         active={true}
                         saveContent={this.deleteAccepted}
                         saveButtonText='Okay'
-                        dialogText='A project must have at least one Part/Chapter. Please add another Part/Chapter before deleting this one'
+                        dialogText={SINGLE_CONTAINER_DELETE}
                         tocDelete={true}
                         tocDeleteClass='tocDeleteClass'
                     />                   
                    
                 )
             }
-            else if(this.props.tocDeleteMessage && this.props.tocDeleteMessage.messageType === 'withPendingTrack'){
+            else if(this.props.tocDeleteMessage && (this.props.tocDeleteMessage.messageType === TYPE_WITH_PENDING_TRACK || this.props.tocDeleteMessage.link === TYPE_UNLINK)){
+                let dialogText = (this.props.tocDeleteMessage.messageType === TYPE_WITH_PENDING_TRACK) ? WITH_PENDING_TRACK : SLATE_UNLINKING
+                let note = (this.props.tocDeleteMessage.messageType === TYPE_WITH_PENDING_TRACK) ? WITH_PENDING_TRACK_NOTE_MESSAGE : ''
                 return (
                     <PopUp
                         togglePopup={this.deleteRejected}
                         active={true}
-                        saveContent={this.deleteAccepted}
+                        saveContent={(this.props.tocDeleteMessage.messageType === TYPE_WITH_PENDING_TRACK) ? this.deleteAccepted : this.unlinkAccepted}
                         saveButtonText='Yes'
-                        dialogText=' Are you sure you want to delete this slate/container with pending changes?'
-                        note='Note:There will be no undo available after deletion'
+                        dialogText={dialogText}
+                        note={note}
                         tocDelete={true}
                         tocDeleteClass='tocDeleteClass'
                     />
@@ -822,7 +834,7 @@ class SlateWrapper extends Component {
                         active={true}
                         saveContent={this.deleteAccepted}
                         saveButtonText='Yes'
-                        dialogText='Are you sure you want to delete, this action cannot be undone?'
+                        dialogText={DELETE_DIALOG_TEXT}
                         tocDelete={true}
                         tocDeleteClass='tocDeleteClass'
                     />
@@ -879,11 +891,11 @@ class SlateWrapper extends Component {
         try {
             if (_elements !== null && _elements !== undefined) {
                 this.renderButtonsonCondition(_elements);
-                if (_elements.length === 0 && _slateType == "assessment") {
-                    this.isDefaultElementInProgress = true;
+                if (_elements.length === 0 && _slateType == "assessment" && config.isDefaultElementInProgress) {
+                    config.isDefaultElementInProgress = false;
                     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
                     this.props.createElement(ELEMENT_ASSESSMENT, "0", '', '', '', '', () => {
-                        this.isDefaultElementInProgress = false;
+                        config.isDefaultElementInProgress = true;
                     });
                 }
                 else if (_elements.length === 0 && _slateType != "assessment") {
