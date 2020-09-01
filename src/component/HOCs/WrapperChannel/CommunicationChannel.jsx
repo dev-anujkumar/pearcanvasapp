@@ -125,6 +125,7 @@ function CommunicationChannel(WrappedComponent) {
                     config.alfrescoMetaData = message;
                     config.book_title = message.name;
                     this.props.fetchAuthUser()
+                    this.props.tcmCosConversionSnapshot()       // for creation of pre-snapshots for cos converted projects
                     break;
                 case 'permissionsDetails':
                     this.handlePermissioning(message);

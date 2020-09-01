@@ -760,6 +760,27 @@ export const openPopupSlate = (element, popupId) => dispatch => {
 }
 
 /**
+ * Create the pre-snapshots for cos converted projects
+ * @param {*}  
+ */
+
+export const tcmCosConversionSnapshot = () => dispatch => {
+    console.log("config", config.projectUrn)
+    return axios.patch(`/cypress/trackchanges-srvr/pre-snapshot/${config.projectUrn}`, {
+        headers: {
+            "Content-Type": "application/json",
+            "PearsonSSOSession": config.ssoToken,
+            "Accept": "application/json"
+        }
+    }).then((response) => {
+        // console.log("response", response)
+    })
+        .catch(err => {
+            console.log('axios Error', err);
+        })
+}
+
+/**
  * Appends the created Unit element to the parent element and then to the slate.
  * @param {*} paramObj 
  * @param {*} responseData 
