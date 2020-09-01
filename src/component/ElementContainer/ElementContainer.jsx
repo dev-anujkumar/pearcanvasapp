@@ -651,9 +651,9 @@ class ElementContainer extends Component {
                     let nodehtml = currentListNode.innerHTML;
                     if(nodehtml && previousElementData.html) {
                         let prevData = this.replaceUnwantedtags(previousElementData.html.text);
-                        prevData = prevData.replace(/(reset | reset|↵)/g, "");
+                        prevData = prevData && prevData.replace(/(reset | reset|↵)/g, "");
                         let nodeData = this.replaceUnwantedtags(nodehtml);
-                        nodeData = nodeData.replace(/(reset | reset|↵)/g, "");
+                        nodeData = nodeData && nodeData.replace(/(reset | reset|↵)/g, "");
                         if ((nodeData !== prevData || forceupdate && !config.savingInProgress) && !assetPopoverPopupIsVisible && !checkCanvasBlocker) {
                             dataToSend = createUpdatedData(previousElementData.type, previousElementData, currentListNode, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, showHideType,undefined)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
