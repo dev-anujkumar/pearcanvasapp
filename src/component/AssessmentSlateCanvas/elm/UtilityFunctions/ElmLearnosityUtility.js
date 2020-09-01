@@ -187,12 +187,12 @@ export const dynamicSort = (property,sortByRelevance) => {
   */
 function dynamicSortMultiple() {
 
-    var props = arguments;
+    let props = arguments;
     let sortByRelevanceData, propertyArray=[];
     if(props.length && props[props.length-1] && props[props.length-1].status === true ){
         sortByRelevanceData = props[props.length-1]
         delete  props[props.length-1]
-        for(var i =0;i<props.length;i++){
+        for(let i =0;i<props.length;i++){
            if(props[i] != null ){
             propertyArray.push(props[i])
            } 
@@ -202,13 +202,9 @@ function dynamicSortMultiple() {
         propertyArray = props
     }
     return function (data1, data2) {
-        var i = 0,
-            result = 0,
-
-            numberOfProperties = propertyArray.length;
-
+        let i = 0,result = 0,numberOfProperties = propertyArray.length;
         while (result === 0 && i < numberOfProperties) {
-            result = dynamicSort(propertyArray[i],sortByRelevanceData)(data1, data2);
+            result = dynamicSort(propertyArray[i], sortByRelevanceData)(data1, data2);
             i++;
         }
         return result;

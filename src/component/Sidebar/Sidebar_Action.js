@@ -15,7 +15,7 @@ import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
 let imageSource = ['image','table','mathImage'],imageDestination = ['primary-image-figure','primary-image-table','primary-image-equation']
 
 export const convertElement = (oldElementData, newElementData, oldElementInfo, store, indexes, fromToolbar,showHideObj) => (dispatch,getState) => {
-    let { appStore, elementStatusReducer } =  getState();
+    let { appStore } =  getState();
     try {
         let conversionDataToSend = {};
     // Input Element
