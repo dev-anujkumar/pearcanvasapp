@@ -3,11 +3,12 @@ import thunk from 'redux-thunk';
 import moxios from 'moxios';
 import axios from 'axios';
 import * as actions from '../../../src/component/SlateWrapper/SlateWrapper_Actions';
-import { storeWithFigure,SlatetDataOpenerDefault, SlatetDataOpenerElement, createstoreWithFigure} from "../../../fixtures/slateTestingData"
+import { storeWithFigure,SlatetDataOpenerDefault, SlatetDataOpenerElement, createstoreWithFigure, popupSlateData} from "../../../fixtures/slateTestingData"
 import { SET_SLATE_TYPE, SET_SLATE_ENTITY, ACCESS_DENIED_POPUP, SET_PARENT_NODE,SWAP_ELEMENT, SET_UPDATED_SLATE_TITLE, AUTHORING_ELEMENT_CREATED,SET_SPLIT_INDEX, GET_PAGE_NUMBER, ERROR_POPUP } from '../../../src/constants/Action_Constants';
 import config from '../../../src/config/config';
-import { elementAside,slateLevelData1, slateLevelData2, asideDataType1, asideDataType2 } from '../../../fixtures/elementAsideData';
-
+import { elementAside,slateLevelData1, slateLevelData2, asideDataType1, asideDataType2, elementAsideWorkExample } from '../../../fixtures/elementAsideData';
+import { citationGroupElement } from "../../../fixtures/ElementCitationData";
+import { multiColumnContainer } from "../../../fixtures/multiColumnContainer"
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
@@ -85,7 +86,7 @@ describe('Tests Slate Wrapper Actions', () => {
         return store.dispatch(actions.createElement(type, index)).then(() => {
             const { type, payload } = store.getActions()[0];
             expect(type).toBe(expectedActions.type);
-        }).catch((err)=>{});;
+        }).catch((err)=>{})
     });
     it('testing------- SECTION_BREAK ------action', () => {
         let store = mockStore(() => initialState);
@@ -375,7 +376,7 @@ describe('Tests Slate Wrapper Actions', () => {
             expect(type).toBe(expectedActions.type);
             expect(payload).toStrictEqual(expectedActions.payload);
         });
-    });
+    });  
     it('testing------- SWAP ELEMENT ------action - then', () => {
         //let store = mockStore(() => initialState);
         const type = "element-authoredtext";
@@ -626,7 +627,7 @@ describe('Tests Slate Wrapper Actions', () => {
                     // elementsTag: {},
                     activeElement: {},
                     splittedElementIndex: 0,
-                    pageNumberData: {}
+                    pageNumberData: [{id: "urn:pearson:work:1786a007-d28e-4d5e-8098-ac071e9c54b7"}]
                 }
             }
         }
@@ -698,5 +699,122 @@ describe('Tests Slate Wrapper Actions', () => {
         let pagenumber = 1;
         actions.updatePageNumber(pagenumber, elementId,asideDataType2,parentUrn)(dispatch,getState);
     })
+    it('testing------- prepareDataForTcmCreate for authored-text ------function', () => {
+        initialState = {
+            appStore : {
+                slateLevelData: popupSlateData,
+                activeElement: {},
+                splittedElementIndex: 0,
+                pageNumberData: {},
+            },
+            tcmReducer: {tcmSnapshot: []}
+        };
+        store = mockStore(() => initialState);
+        const type = "TEXT";
+        config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
+        const createdElementData = {
+            "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+            "type": "element-authoredtext",
+            "subtype": "",
+            "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+            "elementdata": {
+                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                "text": ""
+            },
+            "html": {
+                "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+            },
+            "comments": true,
+            "tcm": true,
+            "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+            "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+        }
     
+        const spyPrepareDataForTcmCreate = jest.spyOn(actions, 'prepareDataForTcmCreate')
+        actions.prepareDataForTcmCreate(type, createdElementData, store.getState, store.dispatch)
+        expect(spyPrepareDataForTcmCreate).toHaveBeenCalled()
+        expect(spyPrepareDataForTcmCreate).toHaveReturnedWith(undefined);
+    });
+    it('testing------- prepareDataForTcmCreate for worked-example ------function', () => {
+        initialState = {
+            appStore : {
+                slateLevelData: slateLevelData2,
+                activeElement: {},
+                splittedElementIndex: 0,
+                pageNumberData: {},
+            },
+            tcmReducer: {tcmSnapshot: []}
+        };
+        store = mockStore(() => initialState);
+        const type = "WORKED_EXAMPLE";
+        config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
+        const createdElementData = elementAsideWorkExample
+    
+        const spyPrepareDataForTcmCreate = jest.spyOn(actions, 'prepareDataForTcmCreate')
+        actions.prepareDataForTcmCreate(type, createdElementData, store.getState, store.dispatch)
+        expect(spyPrepareDataForTcmCreate).toHaveBeenCalled()
+        expect(spyPrepareDataForTcmCreate).toHaveReturnedWith(undefined);
+    });
+    it('testing------- prepareDataForTcmCreate for citation ------function', () => {
+        initialState = {
+            appStore : {
+                slateLevelData: slateLevelData2,
+                activeElement: {},
+                splittedElementIndex: 0,
+                pageNumberData: {},
+            },
+            tcmReducer: {tcmSnapshot: []}
+        };
+        store = mockStore(() => initialState);
+        const type = "CITATION";
+        config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
+        const createdElementData = citationGroupElement
+    
+        const spyPrepareDataForTcmCreate = jest.spyOn(actions, 'prepareDataForTcmCreate')
+        actions.prepareDataForTcmCreate(type, createdElementData, store.getState, store.dispatch)
+        expect(spyPrepareDataForTcmCreate).toHaveBeenCalled()
+        expect(spyPrepareDataForTcmCreate).toHaveReturnedWith(undefined);
+    });
+    it('testing------- prepareDataForTcmCreate for MultiColumn container ------function', () => {
+        initialState = {
+            appStore : {
+                slateLevelData: slateLevelData2,
+                activeElement: {},
+                splittedElementIndex: 0,
+                pageNumberData: {},
+            },
+            tcmReducer: {tcmSnapshot: []}
+        };
+        store = mockStore(() => initialState);
+        const type = "MULTI_COLUMN";
+        config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
+        const createdElementData = multiColumnContainer
+    
+        const spyPrepareDataForTcmCreate = jest.spyOn(actions, 'prepareDataForTcmCreate')
+        actions.prepareDataForTcmCreate(type, createdElementData, store.getState, store.dispatch)
+        expect(spyPrepareDataForTcmCreate).toHaveBeenCalled()
+        expect(spyPrepareDataForTcmCreate).toHaveReturnedWith(undefined);
+    });
+    it('testing------- getPageNumber ------action -- catch', () => {
+        jest.mock('axios');
+        axios.get = jest.fn(() => Promise.resolve({}));
+
+        initialState = {
+            appStore : {
+                slateLevelData: slateLevelData2,
+                activeElement: {},
+                splittedElementIndex: 0,
+                pageNumberData: [],
+                allElemPageData: []
+            },
+            tcmReducer: {tcmSnapshot: []}
+        };
+        
+        store = mockStore(() => initialState);
+        config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
+    
+        const spyGetPageNumber = jest.spyOn(actions, 'getPageNumber')
+        actions.getPageNumber("1")(store.dispatch, store.getState)
+        expect(spyGetPageNumber).toHaveBeenCalled()
+    });
 });
