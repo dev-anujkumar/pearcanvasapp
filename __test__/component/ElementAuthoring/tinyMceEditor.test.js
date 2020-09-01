@@ -348,6 +348,27 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
 
     describe('Test-4 List Click',() => {
         it('Test-4-Method--2--onListButtonClick', () => {
+            instance.props = {
+                ...props,
+                permissions: ["login", "logout"],
+                tagName: "SPAN",
+                elementId: "work:urn",
+                element: { type: "element-list", elementdata : {listtype : 'ordered'} },
+                currentElement: { type: "element-list", elementdata : {listtype : 'ordered'} }
+            }
+            let mySpyFunction = jest.spyOn(instance, 'onListButtonClick')
+            instance.onListButtonClick('ordered','decimal');
+            expect(mySpyFunction).toHaveBeenCalledWith('ordered','decimal');
+            expect(typeof instance.props.onListSelect).toBe('function');
+            mySpyFunction.mockClear()
+        });
+        it('Test-4-Method--2.1--onListButtonClick else', () => {
+            instance.props = {
+                ...props,
+                permissions: ["login", "logout"],
+                tagName: "SPAN",
+                elementId: "work:urn",
+            }
             let mySpyFunction = jest.spyOn(instance, 'onListButtonClick')
             instance.onListButtonClick('ordered','decimal');
             expect(mySpyFunction).toHaveBeenCalledWith('ordered','decimal');
@@ -361,7 +382,14 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
             expect(instance.state.popup).toBe(true);
             expect(instance.state.listType).toBe('decimal');
             mySpyFunction.mockClear();
-
+        });
+        it('Test-4-Method--4--listWarningConfirmation ', () => {
+            let mySpyFunction = jest.spyOn(instance, 'listWarningConfirmation')
+            instance.listWarningConfirmation();
+            expect(mySpyFunction).toHaveBeenCalledWith();
+            expect(instance.state.popup).toBe(false);
+            expect(instance.state.listType).toBe(null);
+            mySpyFunction.mockClear();
         });
     })
     describe('Test-5-Method--3--editorExecCommand', () => {

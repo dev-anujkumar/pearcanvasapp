@@ -2160,7 +2160,10 @@ export class TinyMceEditor extends Component {
             this.lastContent = document.getElementById('cypress-' + this.props.index).innerHTML;
         }
         if(this.elementConverted || prevProps.element.subtype !== this.props.element.subtype){
-            document.querySelector('button[aria-label="formatSelector"] .tox-tbtn__select-label').innerText = this.getElementTypeForToolbar(this.props.element);
+            let elementTypeNode = document.querySelector('button[aria-label="formatSelector"] .tox-tbtn__select-label');
+            if(elementTypeNode){
+                elementTypeNode.innerText = this.getElementTypeForToolbar(this.props.element);
+            } 
             /* tooltip code for text elements in toolbar */
             const tooltipText = document.querySelector('button[aria-label="formatSelector"] .tooltip-text')
             if (tooltipText) {
