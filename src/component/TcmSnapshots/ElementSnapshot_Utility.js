@@ -121,17 +121,22 @@ const prepareGlossarySnapshotContent = (actionStatus, glossaryList, glossaryHtml
     glossaryList && glossaryList.length && glossaryList.map(glossaryItem => {
         let dataID = glossaryItem.itemid;
         let glossaryHtml = JSON.parse(glossaryHtmlList[dataID])
-        if (glossaryItem.glossaryentry && glossaryItem.glossaryentry[0] && glossaryHtml && !isEmpty(glossaryHtml)) {
+        if (glossaryItem.glossaryentry && glossaryItem.glossaryentry[0] ) {
             let glossaryData = {
                 changeStatus: actionStatus.status.charAt(0).toUpperCase() + actionStatus.status.slice(1),
                 changeType: actionStatus.action.charAt(0).toUpperCase() + actionStatus.action.slice(1),
                 charAt: glossaryItem.charAt,
                 glossaryId: glossaryItem.itemid
             }
-            glossaryData.glossaryTerm = glossaryHtml.term ? glossaryHtml.term : '<p></p>'
-            glossaryData.glossaryDefinition = glossaryHtml.definition ? glossaryHtml.definition : '<p></p>'
-            if (glossaryItem.glossaryentry[0].narrativeform) {
-                glossaryData.glossaryNarrative = `<p>${glossaryItem.glossaryentry[0].narrativeform.text}</p>`
+            if(glossaryItem.glossaryentry[0].narrativeform && ((glossaryHtml && isEmpty(glossaryHtml)) ||!glossaryHtml )){
+                glossaryData.glossaryTerm = `<p>${glossaryItem.glossaryentry[0].narrativeform.text}</p>`
+                glossaryData.glossaryDefinition =  '<p></p>'
+            }else {
+                glossaryData.glossaryTerm = glossaryHtml.term ? glossaryHtml.term : '<p></p>'
+                glossaryData.glossaryDefinition = glossaryHtml.definition ? glossaryHtml.definition : '<p></p>'
+                if (glossaryItem.glossaryentry[0].narrativeform) {
+                    glossaryData.glossaryNarrative = `<p>${glossaryItem.glossaryentry[0].narrativeform.text}</p>`
+                }
             }
             glossarySnap.push(glossaryData)
         }
