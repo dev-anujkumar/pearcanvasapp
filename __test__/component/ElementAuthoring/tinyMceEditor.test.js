@@ -170,7 +170,7 @@ let props = {
     error: null,
     glossaryFootnotePopup: jest.fn(),
     glossaryFootnoteValue: glossaryFootnoteObject,
-    showBlocker: jest.fn()
+    togglePopup: jest.fn()
 }
 let tinyMceEditor = {
     $: jest.fn(),
@@ -379,16 +379,6 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
             let mySpyFunction = jest.spyOn(instance, 'toggleConfirmationPopup')
             instance.toggleConfirmationPopup(true,'decimal');
             expect(mySpyFunction).toHaveBeenCalledWith(true,'decimal');
-            expect(instance.state.popup).toBe(true);
-            expect(instance.state.listType).toBe('decimal');
-            mySpyFunction.mockClear();
-        });
-        it('Test-4-Method--4--listWarningConfirmation ', () => {
-            let mySpyFunction = jest.spyOn(instance, 'listWarningConfirmation')
-            instance.listWarningConfirmation();
-            expect(mySpyFunction).toHaveBeenCalledWith();
-            expect(instance.state.popup).toBe(false);
-            expect(instance.state.listType).toBe(null);
             mySpyFunction.mockClear();
         });
     })
