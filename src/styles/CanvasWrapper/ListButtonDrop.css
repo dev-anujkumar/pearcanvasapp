@@ -358,7 +358,7 @@ i.fa.fa-list-ul:before {
     height : 10px
 }
 
-hr {
+.list-option-line hr {
     margin-top : 2px;
     height: 2px;
     border-width: 1px;

@@ -404,8 +404,6 @@ export const updateNestedList = (element) => {
 
     let lowerRomanClassList = ['lower-roman', 'lower-alpha', 'decimal', 'lower-roman'];
     let lowerRomanLiClassList = ['listItemNumeroUnoLowerRoman', 'listItemNumeroUnoLowerAlpha', 'listItemNumeroUnoNumber', 'listItemNumeroUnoLowerRoman'];
-
-    let UlClassList = ['disc', 'square', 'circle', 'disc'];
     let UlLiClassList = ['listItemNumeroUnoDisc', 'listItemNumeroUnoSquare', 'listItemNumeroUnoCircle', 'listItemNumeroUnoDisc'];
 
     let allOlElement = element.querySelectorAll('ol');
@@ -470,7 +468,6 @@ export const updateNestedList = (element) => {
             case "disc":
             default:
                 allOlElement[i].classList.add('disc');
-                //allOlElement[i].classList.add(UlClassList[treelevel - 1]);
                 [...childLielement].forEach((elem) => { elem.classList.add('listItemNumeroUnoBullet') });
                 [...childLielement].forEach((elem) => { elem.classList.add(UlLiClassList[treelevel - 1]) });
                 break;

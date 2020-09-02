@@ -42,7 +42,7 @@ describe('App component', () => {
         expect(typeof(ReactDOM.unmountComponentAtNode)).toEqual('function');
     });
 
-    it('Call Env config', async () => {
+    xit('Call Env config', async () => {
         jest.mock('../src/config/cypressConfig', () => ({
             prodUrl: "https://dev-structuredauthoring.pearson.com",
             sitePointing: "dev",

@@ -17,7 +17,7 @@ let imageSource = ['image','table','mathImage'],imageDestination = ['primary-ima
 let elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza'];
 
 export const convertElement = (oldElementData, newElementData, oldElementInfo, store, indexes, fromToolbar,showHideObj) => (dispatch,getState) => {
-    let { appStore, elementStatusReducer } =  getState();
+    let { appStore } =  getState();
     try {
         let conversionDataToSend = {};
     // Input Element

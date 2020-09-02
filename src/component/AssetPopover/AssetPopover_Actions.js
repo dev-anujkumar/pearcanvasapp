@@ -9,7 +9,6 @@ import {
   IMAGES_FROM_API_FAIL
 } from '../../constants/Action_Constants';
 import config from '../../config/config.js'
-import axios from 'axios';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader , HideLoader} from '../../constants/IFrameMessageTypes.js';
 let currentlySearching = false;

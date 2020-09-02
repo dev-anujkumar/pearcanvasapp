@@ -310,6 +310,7 @@ button[aria-label="formatSelector"] span.tox-tbtn__select-label{
   width: 50px;
   overflow: hidden;
   text-overflow: clip;
+  font-family: 'Open Sans',sans-serif;
 }
 button[aria-label="formatSelector"].tox-tbtn--select{
   max-width : 162px!important;

@@ -28,8 +28,6 @@ import { MULTIPLE_LINE_POETRY_ERROR_POPUP } from '../constants/Action_Constants'
 import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER } from '../component/SlateWrapper/SlateWrapperConstants.js';
 import { conversionElement } from './Sidebar/Sidebar_Action';
 import elementList from './Sidebar/elementTypes';
-import PopUp from '../component/PopUp';
-import { showTocBlocker, showBlocker, hideTocBlocker,disableHeader } from '../js/toggleLoader';
 
 let context = {};
 let clickedX = 0;
@@ -270,21 +268,7 @@ export class TinyMceEditor extends Component {
     }
 
     toggleConfirmationPopup = (value,type) => {
-        showBlocker(value); 
-        this.props.showBlocker(value)
-        if(value){
-            showTocBlocker();
-        }
-        else{
-            hideTocBlocker();
-            disableHeader(false)
-        }
-        this.setState({popup : value, listType : type})
-    }
-
-    listWarningConfirmation = ()=>{
-        this.props.onListSelect(this.state.listType, "");
-        this.toggleConfirmationPopup(false,null)
+        this.props.togglePopup(value, type)
     }
 
     /**
@@ -443,7 +427,6 @@ export class TinyMceEditor extends Component {
                 case "mceInsertContent":
                     editor.selection.bookmarkManager.moveToBookmark(this.currentCursorBookmark);
                     setTimeout(() => {
-                        let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
                         if (activeElement) {
                             if (activeElement.innerText === "") {
                                 activeElement.classList.add('place-holder')
@@ -2160,7 +2143,10 @@ export class TinyMceEditor extends Component {
             this.lastContent = document.getElementById('cypress-' + this.props.index).innerHTML;
         }
         if(this.elementConverted || prevProps.element.subtype !== this.props.element.subtype){
-            document.querySelector('button[aria-label="formatSelector"] .tox-tbtn__select-label').innerText = this.getElementTypeForToolbar(this.props.element);
+            let elementTypeNode = document.querySelector('button[aria-label="formatSelector"] .tox-tbtn__select-label');
+            if(elementTypeNode){
+                elementTypeNode.innerText = this.getElementTypeForToolbar(this.props.element);
+            } 
             /* tooltip code for text elements in toolbar */
             const tooltipText = document.querySelector('button[aria-label="formatSelector"] .tooltip-text')
             if (tooltipText) {
@@ -2771,20 +2757,7 @@ export class TinyMceEditor extends Component {
                 defModel = removeBOM(defModel)
 
                 return (
-                    <>
-                        {this.state.popup && 
-                         <PopUp 
-                            dialogText={"Performing this action will remove the list and convert this text to a paragraph. Do you wish to continue?"} 
-                            active={true}
-                            listConfirmation={true}
-                            togglePopup = {this.toggleConfirmationPopup}
-                            tocDeleteClass = {'listConfirmation'}
-                            saveButtonText = {"Yes"}
-                            saveContent = {this.listWarningConfirmation}
-                         />
-                        }
-                        <div ref={this.editorRef} data-id={this.props.currentElement ? this.props.currentElement.id : ''} onKeyDown={this.normalKeyDownHandler} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: defModel }} onChange={this.handlePlaceholder}></div>
-                    </>
+                    <div ref={this.editorRef} data-id={this.props.currentElement ? this.props.currentElement.id : ''} onKeyDown={this.normalKeyDownHandler} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: defModel }} onChange={this.handlePlaceholder}></div>
                 )
         }
     }

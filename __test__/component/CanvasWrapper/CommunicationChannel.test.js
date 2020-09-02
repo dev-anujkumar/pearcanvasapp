@@ -1013,6 +1013,7 @@ describe('Testing communication channel', () => {
         describe('Test for pageLink linking case', () => {
             let attr1 = document.createAttribute('class');
             let dataID = document.createAttribute('data-id');
+            let elementId = document.createAttribute('id');
             const elementContainer = document.createElement('div');
                 attr1.value = "element-container";
                 elementContainer.setAttributeNode(attr1);
@@ -1025,7 +1026,8 @@ describe('Testing communication channel', () => {
                 cypressEditor.setAttributeNode(attr2);
 
             const pageLinkNode = document.createElement('div');
-                pageLinkNode.id = "page-link-0";
+                elementId.value= "page-link-0";
+                pageLinkNode.setAttributeNode(elementId);
                 pageLinkNode.innerText = "Link";
 
                 cypressEditor.appendChild(pageLinkNode);
