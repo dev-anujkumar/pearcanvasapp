@@ -16,15 +16,16 @@ import config from '../../../src/config/config.js';
 config["elementStatus"] = {}
 describe('Test for Sidebar component', () => {
     const mockStore = configureMockStore(middlewares);
-    const activeElement = {
+    let activeElement = {
         elementId: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b",
-        elementType: "element-authoredtext",
-        elementWipType: "element-authoredtext",
-        primaryOption: "primary-heading",
-        secondaryOption: "secondary-heading-1",
+        elementType: "figure",
+        elementWipType: "figure",
+        primaryOption: "primary-image-figure",
+        secondaryOption: "secondary-image-figure-width",
         index: "1-0",
-        tag: "H1",
-        toolbar: []
+        tag: "Fg",
+        toolbar: [],
+        type:"figure"
     };
 
     const sidebarWithData = mockStore({
@@ -52,24 +53,22 @@ describe('Test for Sidebar component', () => {
     };
 
     let sidebar = mount(<Provider store={sidebarWithData}>
-        <Sidebar  />
+        <Sidebar />
     </Provider>);
 
     it('onClick Event', () => {
         const sidebarInstance = sidebar.find('Sidebar').instance();
         config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
         sidebarInstance.setState({
-            elementDropdown: 'primary',
-            activeElementType: 'element-authoredtext',
-            activePrimaryOption: 'primary-paragraph',
-            activeSecondaryOption: 'secondary-paragraph',
-            activeLabelText: 'P'
+            activeElementType: 'figure',
+            activePrimaryOption: 'primary-image-figure',
+            activeSecondaryOption: 'secondary-image-figure-half'
         });
 
         let target = {
             target: {
                 getAttribute: function(dataValue) {
-                    return 'primary-heading';
+                    return 'primary-image-figure';
                 }
             }
         }
@@ -85,20 +84,13 @@ describe('Test for Sidebar component', () => {
         target = {
             target: {
                 getAttribute: function(dataValue) {
-                    return 'secondary-heading-1';
+                    return 'secondary-image-figure-width';
                 }
             }
         }
 
        // sidebar.find('ul.element-dropdown-content.secondary-options').simulate('click');
         sidebarInstance.handleSecondaryOptionChange(target);
-
-        // Attribution for secondary element type
-        sidebarInstance.setState({
-            elementDropdown: 'primary',
-            activePrimaryOption: 'primary-blockquote',
-            activeSecondaryOption: 'secondary-marginalia-attribution'
-        });
 
         sidebarInstance.attributions();
 
@@ -110,7 +102,7 @@ describe('Test for Sidebar component', () => {
         });
 
         sidebarInstance.attributions();
-       expect(sidebar.find('.element-dropdown').length).toBe(2)
+       expect(sidebar.find('.element-dropdown').length).toBe(3)
         expect(sidebar.find('.element-dropdown-title[data-element="primary"]').length).toBe(1)
         expect(sidebar.find('.element-dropdown-title[data-element="secondary"]').length).toBe(1)
     });
@@ -214,81 +206,11 @@ describe('Test for Sidebar component', () => {
         let sidebar = mount(<Provider store={sidebarWithData}>
             <Sidebar {...props}/>
         </Provider>);
+        expect(sidebar.find('.element-dropdown').length).toBe(0)
     })
-    expect(sidebar.find('.element-dropdown').length).toBe(2)
-    expect(sidebar.find('.element-dropdown-title[data-element="primary"]').text()).toBe('Headings')
-    expect(sidebar.find('.element-dropdown-title[data-element="secondary"]').text()).toBe('Heading 1')
+    
 
     describe("Blockquote", () => {
-
-        it("Checking data for pullquote", () => {
-            const activeElement = {
-                elementId: "urn:pearson:work:28493c52-4356-48e5-8328-c24337bb3200",
-                elementType: "element-authoredtext",
-                elementWipType: "element-blockfeature",
-                index: 0,
-                primaryOption: "primary-blockquote",
-                secondaryOption: "secondary-pullquote",
-                tag: "BQ",
-                toolbar: []
-            }
-
-            const sidebarWithData = mockStore({
-                appStore: {
-                    activeElement,
-                    conversionElement,
-                    slateLevelData
-                },
-                metadataReducer: {
-                    currentSlateLOData: {}
-                },
-                elementStatusReducer: {
-                    'urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b': "wip",
-                    "urn:pearson:work:32e659c2-e0bb-46e8-9605-b8433aa3836c": "wip",
-                    "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635": "wip",
-                    "urn:pearson:work:ee2b0c11-75eb-4a21-87aa-578750b5301d": "wip",
-                    
-                },
-            });
-            let sidebar = mount(<Provider store={sidebarWithData}><Sidebar {...props}/></Provider>);
-            expect(sidebar.find('.element-dropdown').length).toBe(2)
-            expect(sidebar.find('.element-dropdown-title[data-element="primary"]').text()).toBe("Blockquotes")
-            expect(sidebar.find('.element-dropdown-title[data-element="secondary"]').text()).toBe("Pullquote")
-        })
-
-        it("Checking data for Marginalia with attribution", () => {
-            const activeElement = {
-                elementId: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e2t",
-                elementType: "element-authoredtext",
-                elementWipType: "element-blockfeature",
-                primaryOption: "primary-blockquote",
-                secondaryOption: "secondary-marginalia-attribution",
-                index: 1,
-                tag: "BQ"
-            }
-
-            const sidebarWithData = mockStore({
-                appStore: {
-                    activeElement,
-                    conversionElement,
-                    slateLevelData
-                },
-                metadataReducer: {
-                    currentSlateLOData: {}
-                },
-                elementStatusReducer: {
-                    'urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b': "wip",
-                    "urn:pearson:work:32e659c2-e0bb-46e8-9605-b8433aa3836c": "wip",
-                    "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635": "wip",
-                    "urn:pearson:work:ee2b0c11-75eb-4a21-87aa-578750b5301d": "wip",
-                    
-                },
-            });
-            let sidebar = mount(<Provider store={sidebarWithData}><Sidebar {...props}/></Provider>);
-            expect(sidebar.find('.element-dropdown').length).toBe(2)
-            expect(sidebar.find('.element-dropdown-title[data-element="primary"]').text()).toBe("Blockquotes")
-            expect(sidebar.find('.element-dropdown-title[data-element="secondary"]').text()).toBe("Marginalia with Attribution")
-        }),
 
             it("Checking toggleElementDropdown function for Else Condition", () => {
                 let e = { target: { dataset: { element: "Primary" }, getAttribute: jest.fn() }, stopPropagation: jest.fn() }
