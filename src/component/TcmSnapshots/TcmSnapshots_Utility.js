@@ -480,7 +480,7 @@ const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,popupInCo
     let elementTag = `${tag.parentTag}${isHead ? ":" + isHead : ""}${tag.childTag ? ":" + tag.childTag : ""}`;
     let elementId = `${eleId.parentId}${sectionId && isHead === "BODY" ? "+" + sectionId : ""}${eleId.childId ? "+" + eleId.childId : ""}`
     if(eleIndex > -1){
-        elementTag = `${tag.parentTag}${(eleIndex === 0) ? ':C1' : ':C2'}${tag.childTag ? ":" + tag.childTag : ""}`   ; 
+        elementTag = `${tag.parentTag}${(eleIndex == 0) ? ':C1' : ':C2'}${tag.childTag ? ":" + tag.childTag : ""}`   ; 
         elementId =  `${eleId.parentId}${eleId.columnId ? "+" + eleId.columnId : ""}${eleId.childId ? "+" + eleId.childId : ""}`
     }
     if (popupInContainer && config.isPopupSlate) {  //WE:BODY:POP:BODY:WE:BODY:P
