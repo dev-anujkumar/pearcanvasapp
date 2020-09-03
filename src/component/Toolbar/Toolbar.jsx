@@ -145,7 +145,6 @@ const _Toolbar = props => {
                         }}>
                             {audioNarrationEnable}
                         </div>
-                        <span className="openAudioIcon"></span>
                         {openDropDown && <OpenAudioBook closeAudioBookDialog={closeAudioBookDialog} />}
                     </div>
                 </div>

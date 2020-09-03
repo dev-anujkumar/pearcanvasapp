@@ -1178,9 +1178,8 @@ export class TinyMceEditor extends Component {
     addChemistryFormulaButton = editor => {
         let self = this;
         editor.ui.registry.addButton("tinyMcewirisformulaEditorChemistry", {
-            text: "",
             icon: "tinymceformulachemistryicon",
-            tooltip: "WIRIS EDITOR chemistry",
+            tooltip: "Chem Editor",
             onAction: function (_) {
                 if (self && self.props && self.props.element && self.props.element.type === 'stanza') {
                     let currentElement = editor.selection.getNode();
@@ -1226,9 +1225,8 @@ export class TinyMceEditor extends Component {
     addMathmlFormulaButton = editor => {
         let self = this;
         editor.ui.registry.addButton("tinyMcewirisformulaEditor", {
-            text: "",
             icon: "tinymceformulaicon",
-            tooltip: "WIRIS EDITOR math",
+            tooltip: "Math Editor",
             onAction: function (_) {
                 if (self && self.props && self.props.element && self.props.element.type === 'stanza') {
                     let currentElement = editor.selection.getNode();
@@ -1270,7 +1268,7 @@ export class TinyMceEditor extends Component {
         editor.ui.registry.addMenuButton("crossLinkingIcon", {
             text: "",
             icon: "crosslinkingicon",
-            tooltip: "Cross Linking",
+            tooltip: "Internal linking",
             fetch: cb => {
                 let items = [];
 
