@@ -35,7 +35,7 @@ export default {
     AP_TYPE:"Asset Popover",
     SLATE_LINK:"Slate Link",
     /*****************Element Type Arrays*******************/
-    elementType: ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza', 'groupedcontent'],
+    elementType: ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza'],
     containerType : ['element-aside', 'manifest', 'citations', 'poetry', 'WORKED_EXAMPLE', 'CONTAINER', 'SECTION_BREAK', 'CITATION', 'POETRY', 'groupedcontent'],
     formattedTitleField : ['formattedTitle','formattedTitleOnly','formattedSubtitle' ],
     parentType : ['WORKED_EXAMPLE', 'CONTAINER', 'CITATION', 'POETRY', 'MULTI_COLUMN'],

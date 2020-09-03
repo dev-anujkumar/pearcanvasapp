@@ -365,8 +365,8 @@ catch (error) {
 function prepareDataForConversionTcm(updatedDataID, getState, dispatch,versionid) {
     const tcmData = getState().tcmReducer.tcmSnapshot;
     let indexes = []
-    tcmData.filter(function (element, index) {
-    if (element.elemURN.indexOf(updatedDataID) !== -1 && element.elemURN.includes('urn:pearson:work')) {
+    tcmData && tcmData.filter(function (element, index) {
+    if (element && element.elemURN && (element.elemURN.indexOf(updatedDataID) !== -1 && element.elemURN.includes('urn:pearson:work'))) {
             indexes.push(index)
         }
     });
@@ -379,11 +379,12 @@ function prepareDataForConversionTcm(updatedDataID, getState, dispatch,versionid
         })
     }
     else {
+        if(tcmData && indexes.length > 0){
         tcmData[indexes]["elemURN"] = updatedDataID
         tcmData[indexes]["txCnt"] = tcmData[indexes]["txCnt"] !== 0 ? tcmData[indexes]["txCnt"] : 1
         tcmData[indexes]["feedback"] = tcmData[indexes]["feedback"] !== null ? tcmData[indexes]["feedback"] : null
         tcmData[indexes]["isPrevAcceptedTxAvailable"] = tcmData[indexes]["isPrevAcceptedTxAvailable"] ? tcmData[indexes]["isPrevAcceptedTxAvailable"] : false
-
+        }
     }
     if (tcmData.length>0) {
         sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });

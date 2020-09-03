@@ -717,7 +717,7 @@ function prepareDataForUpdateTcm(updatedDataID, getState, dispatch,versionedData
     const tcmData = getState().tcmReducer.tcmSnapshot;
     let indexes = []
     tcmData && tcmData.filter(function (element, index) {
-    if (element.elemURN.indexOf(updatedDataID) !== -1 && element.elemURN.includes('urn:pearson:work')) {
+    if (element && element.elemURN && (element.elemURN.indexOf(updatedDataID) !== -1 && element.elemURN.includes('urn:pearson:work'))) {
             indexes.push(index)
         }
     });
@@ -730,11 +730,12 @@ function prepareDataForUpdateTcm(updatedDataID, getState, dispatch,versionedData
         })
     }
     else {
-        tcmData[indexes]["elemURN"] = updatedDataID
-        tcmData[indexes]["txCnt"] = tcmData[indexes]["txCnt"] !== 0 ? tcmData[indexes]["txCnt"] : 1
-        tcmData[indexes]["feedback"] = tcmData[indexes]["feedback"] !== null ? tcmData[indexes]["feedback"] : null
-        tcmData[indexes]["isPrevAcceptedTxAvailable"] = tcmData[indexes]["isPrevAcceptedTxAvailable"] ? tcmData[indexes]["isPrevAcceptedTxAvailable"] : false
-
+        if(tcmData && indexes.length > 0){
+            tcmData[indexes]["elemURN"] = updatedDataID
+            tcmData[indexes]["txCnt"] = tcmData[indexes]["txCnt"] !== 0 ? tcmData[indexes]["txCnt"] : 1
+            tcmData[indexes]["feedback"] = tcmData[indexes]["feedback"] !== null ? tcmData[indexes]["feedback"] : null
+            tcmData[indexes]["isPrevAcceptedTxAvailable"] = tcmData[indexes]["isPrevAcceptedTxAvailable"] ? tcmData[indexes]["isPrevAcceptedTxAvailable"] : false
+        }
     }
   
 if (tcmData.length >0) {
