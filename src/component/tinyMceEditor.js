@@ -1162,7 +1162,6 @@ export class TinyMceEditor extends Component {
     addChemistryFormulaButton = editor => {
         let self = this;
         editor.ui.registry.addButton("tinyMcewirisformulaEditorChemistry", {
-            text: "",
             icon: "tinymceformulachemistryicon",
             tooltip: "WIRIS EDITOR chemistry",
             onAction: function (_) {
@@ -1210,7 +1209,6 @@ export class TinyMceEditor extends Component {
     addMathmlFormulaButton = editor => {
         let self = this;
         editor.ui.registry.addButton("tinyMcewirisformulaEditor", {
-            text: "",
             icon: "tinymceformulaicon",
             tooltip: "WIRIS EDITOR math",
             onAction: function (_) {
