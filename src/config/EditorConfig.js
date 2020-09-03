@@ -135,7 +135,7 @@ export const elementTypeOptions = Object.freeze({
     },
     'BQ' : {
         primaryOption : 'primary-blockquote',
-        secondaryOption : 'secondary-marginalia-attribution',
+        secondaryOption : 'secondary-marginalia',
         label : 'BQ',
     },
     'LO' : {

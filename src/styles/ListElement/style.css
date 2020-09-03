@@ -86,7 +86,7 @@ ul li.listItemNumeroUnoBullet.listItemNumeroUnoCircle::before {
 } */
 
 .disabledListBtn {
-    opacity: 0.3;
+    background: #b3d8e1!important;
     cursor: not-allowed;
     pointer-events: none;
 }

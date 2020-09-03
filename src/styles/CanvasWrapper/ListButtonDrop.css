@@ -44,9 +44,6 @@ i.fa.fa-list-ul:before {
     -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, .12), 0 1px 1px 1px rgba(0, 0, 0, .16);
     -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, .12), 0 1px 1px 1px rgba(0, 0, 0, .16);
     box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 4px 5px 0 rgba(0, 0, 0, 0.14);
-    border-radius: 2px;
-    -moz-border-radius: 2px;
-    -webkit-border-radius: 2px;
     -moz-background-clip: padding;
     -webkit-background-clip: padding-box;
     background-clip: padding-box;
@@ -92,7 +89,7 @@ i.fa.fa-list-ul:before {
 #list-input-layer #listInputCover .fr-btn {
     float: right;
     width: 34px;
-    height: 35px;
+    height: 34px;
     font-size: 100%;
     background: #005a70;
     color: #fff;
@@ -245,7 +242,7 @@ i.fa.fa-list-ul:before {
 }
 
 #list-input-layer .topText {
-    margin: 192px 0 0 5px ;
+    margin: 191px 0 0 5px ;
     font-size: 12px;
     font-family: Open Sans;
     height: 17px;
@@ -266,6 +263,7 @@ i.fa.fa-list-ul:before {
     border-bottom: 2px solid #d8d8d8;
     padding: 0 5px;
     font-size: 16px;
+    font-family: Open Sans!important;
 }
 
 #list-input-layer .list-input-box:focus {
@@ -337,8 +335,8 @@ i.fa.fa-list-ul:before {
     margin: 5px;
     float: left;
     padding: 5px;
-    border: 2px solid #f0f0f0;
-    border-radius: 5px;
+    border: 1px solid #f0f0f0;
+    border-radius: 2px;
     box-sizing: border-box !important;
     user-select: none !important;
     font-family: Open Sans;
@@ -417,4 +415,12 @@ i.fa.fa-list-ul:before {
 
 #listDropWrapper .no-style-button {
     background-image: url('../../images/CanvasWrapper/no-style-normal.png')!important;
+}
+
+.list-options .list-img {
+    margin: 9px 0 0 4px;
+}
+
+.list-options .list-img-none {
+    margin : 28px 0 0 18px;
 }
