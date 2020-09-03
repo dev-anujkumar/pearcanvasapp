@@ -137,7 +137,7 @@
 }
 .leaningobjective-block {
   cursor: pointer;
-  padding: 0 12px 0 0;
+  padding: 0 10px 0 0;
 }
 .learningobjectivedropdown ul {
   padding:0;
@@ -236,6 +236,7 @@ button[title="Cross Linking"] .tox-tbtn__select-label {
 }
 .tox .tox-tbtn--disabled, .tox .tox-tbtn--disabled:hover, .tox .tox-tbtn:disabled, .tox .tox-tbtn:disabled:hover{
   opacity: 0.34!important;
+  cursor:not-allowed!important
 }
 .tox .tox-tbtn--enabled{
   background-color: #ffffff!important;
