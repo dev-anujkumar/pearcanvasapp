@@ -28,7 +28,7 @@ let cypressConfig = {
     toolBarList : ['undo', 'redo', 'formatSelector','bold', 'italic', 'underline','strikethrough', 'removeformat', 'subscript', 'superscript', 'specialcharactor', 'crossLinkingIcon', 'glossary','footnote','mathml','chemml','inlinecode', 'orderedlist','unorderedlist','increaseindent','decreaseindent'],
     elementToolbar: [],
     showHideToolbar: ['formatSelector', 'footnote','glossary','assetpopover'],
-    hideToolbar : ['footnote','glossary','crossLinkingIcon','assetpopover','orderedlist','unorderedlist'],
+    revelToolbar : ['formatSelector', 'footnote','glossary','assetpopover','orderedlist','unorderedlist'],
     headingToolbar : ['formatSelector','italic','clearformatting','increaseindent','footnote','mathml','chemml','superscript','subscript','specialcharactor','undo','redo','crossLinkingIcon','assetpopover','slatetag'],
     codeListingToolbarEnabled: ['formatSelector','strikethrough','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','crossLinkingIcon','assetpopover','slatetag'],
     codeListingToolbarDisabled: ['formatSelector','bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','crossLinkingIcon','assetpopover','slatetag'],

@@ -2204,11 +2204,11 @@ export class TinyMceEditor extends Component {
             else {
                 toolbar = config.codeListingToolbarEnabled;
             }
-        } else if (this.props.placeholder === "Enter Show text" || (this.props && this.props.showHideType && this.props.showHideType == 'revel') || (this.props.placeholder === "Enter Hide text")) {
+        } else if (this.props.placeholder === "Enter Show text" || (this.props.placeholder === "Enter Hide text")) {
             toolbar = config.showHideToolbar
-            // } else if (this.props.placeholder === "Enter Hide text") {
-            //     toolbar = config.showHideToolbar
-        } else if (this.props.placeholder == "Type Something..." && this.props.element && this.props.element.type == 'stanza') {
+        }else if(this.props && this.props.showHideType && this.props.showHideType == 'revel'){
+            toolbar = config.revelToolbar
+        }else if (this.props.placeholder == "Type Something..." && this.props.element && this.props.element.type == 'stanza') {
             toolbar = config.poetryStanzaToolbar;
         } else {
             toolbar = config.elementToolbar;
