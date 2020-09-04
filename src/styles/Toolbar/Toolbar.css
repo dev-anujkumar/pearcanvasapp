@@ -137,7 +137,7 @@
 }
 .leaningobjective-block {
   cursor: pointer;
-  padding: 0 16px 0 0;
+  padding: 0 10px 0 0;
 }
 .learningobjectivedropdown ul {
   padding:0;
@@ -226,15 +226,6 @@
   border-radius: 4px;
   float: right;
 }
-.openAudioIcon{
-    height: 7px;
-    width: 7px;
-    background: #0D8604;
-    position: absolute;
-    border-radius: 50%;
-    margin-left: 12px;
-    margin-top: -23px;
-}
 
 .disableToolbar{
   visibility: hidden;
@@ -245,12 +236,10 @@ button[title="Cross Linking"] .tox-tbtn__select-label {
 }
 .tox .tox-tbtn--disabled, .tox .tox-tbtn--disabled:hover, .tox .tox-tbtn:disabled, .tox .tox-tbtn:disabled:hover{
   opacity: 0.34!important;
+  cursor:not-allowed!important
 }
 .tox .tox-tbtn--enabled{
   background-color: #ffffff!important;
-}
-.tox .tox-tbtn--enabled :not(svg) {
-  fill: #005a70!important;
 }
 .tox .tox-tbtn--enabled :not(svg) {
   fill: #005a70!important;
@@ -289,7 +278,7 @@ div[title="Ordered List"] span.tox-split-button__chevron svg:active {
 .tox .tox-tbtn:focus {
   background: none!important;
 }
-.tox .tox-tbtn:hover:not(.tox-tbtn--disabled) svg {
+.tox .tox-tbtn:hover:not(.tox-tbtn--disabled) svg, .learningobjectiveicon:hover svg,.audioicon:hover svg{
   background-color: #f3f7f8!important;
 }
 .tox .tox-tbtn--enabled svg {
@@ -318,9 +307,6 @@ button[aria-label="formatSelector"].tox-tbtn--select{
 }
 .tox button[aria-label="formatSelector"].tox-tbtn:hover:not(.tox-tbtn--disabled){
   background-color: #f3f7f8!important;
-}
-.editor-toolbar .tox-toolbar__group:last-child{
-  border-right: 1px solid #ccc;
 }
 .collapse-header{
   float: right;
@@ -414,6 +400,18 @@ top: 102px;
 }
 #toolbarGlossaryFootnote svg.math-chem-margin{
 margin-left:6px;
+}
+.tox:not([dir=rtl]) .tox-toolbar__group:not(:last-of-type), .editor-toolbar .tox-toolbar__group:last-child{
+  border-right: 0.5px solid #ccc!important;
+}
+.learningobjectiveicon, .audioicon{
+  width:24px;
+  height:24px;
+}
+@media only screen and (max-width: 1500px) {  
+  .audiodropdown{
+    right:0;
+  }
 }
 @media only screen and (max-width: 1300px) {
   .artboard-parent{

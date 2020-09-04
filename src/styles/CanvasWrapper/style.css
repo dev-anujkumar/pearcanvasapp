@@ -46,7 +46,7 @@
 .panel-text-settings {
     width: 240px;
     overflow-y: auto;
-    position:fixed;
+    position:absolute;
     right: 0;
     height: 100%;
     background-color: #fafafa;

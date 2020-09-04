@@ -7,9 +7,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import '../../styles/CanvasWrapper/ListButtonDrop.css';
-import {LIST_TYPE , LIST_DATA} from './ListTypeData';
 import {removeListHighliting } from '../ListElement/eventBinding'
 import listCheck from '../../images/ElementButtons/listCheck.svg'
+import numbersList from '../../images/ElementButtons/numbersList.svg'
+import alphabetsCapitalList from '../../images/ElementButtons/alphabetsCapitalList.svg'
+import alphabetsSmallList from '../../images/ElementButtons/alphabetsSmallList.svg'
+import romansCapitalList from '../../images/ElementButtons/romansCapitalList.svg'
+import romansSmallList from '../../images/ElementButtons/romansSmallList.svg'
+import noneList from '../../images/ElementButtons/noneList.svg'
 
 /**
  * ListButtonDrop | it is component renders list drop ui on editor tool header
@@ -61,23 +66,6 @@ const onListOptionSelect = (type, props) => {
 /**
  * getHorizontalLines | returns two horizontal parallel lines
  */
-const getHorizontalLines = () =>{
-    return (
-        <span className="list-option-line">
-            <hr/>
-            <hr/> 
-        </span>
-    )
-}
-/**
- * getListData | returns list type data for dropdown to render
- * @param {string} type | type of list to render in dropdown
- */
-const getListData = (type) =>{
-    return LIST_DATA[type].map((listObj)=>{
-        return <span className={`list-option-row ${listObj.class? listObj.class : ''}`}>{listObj.value}{getHorizontalLines()}</span>
-    })
-}
 /**
  * DecimalListIconBox | renders Decimal list icon in list drop
  * @param {object} props | received props to <ListButtonDrop />
@@ -86,7 +74,7 @@ const DecimalListIconBox = (props) => {
     const _listFor = 'decimal';
     return (
         <div className={`list-options ${props.selectedOption === _listFor ? 'selected' : ''}`} onClick={() => { onListOptionSelect(_listFor, props) }} id={`${_listFor}-1`} tabIndex="-1" data-cmd={_listFor}>
-            {getListData(LIST_TYPE.DECIMAL)}
+            <img className={"list-img"} src={numbersList}/>
             <span className="list-opt-tooltip">{_listFor}</span>
         </div>
     )
@@ -99,7 +87,7 @@ const UpperAlphaListIconBox = (props) => {
     const _listFor = 'upper-alpha';
     return (
         <div className={`list-options ${props.selectedOption === _listFor ? 'selected' : ''}`} onClick={() => { onListOptionSelect(_listFor, props) }} id={`${_listFor}-1`} tabIndex="-1" data-cmd={_listFor}>
-            {getListData(LIST_TYPE.UPPER_ALPHA)}
+           <img className={"list-img"} src={alphabetsCapitalList}/>
             <span className="list-opt-tooltip">{_listFor}</span>
         </div>
     )
@@ -112,7 +100,7 @@ const LowerAlphaListIconBox = (props) => {
     const _listFor = 'lower-alpha';
     return (
         <div className={`list-options ${props.selectedOption === _listFor ? 'selected' : ''}`} onClick={() => { onListOptionSelect(_listFor, props) }} id={`${_listFor}-1`} tabIndex="-1" data-cmd={_listFor}>
-            {getListData(LIST_TYPE.LOWER_ALPHA)}
+            <img className={"list-img"} src={alphabetsSmallList}/>
             <span className="list-opt-tooltip">{_listFor}</span>
         </div>
     )
@@ -125,7 +113,7 @@ const UpperRomanListIconBox = (props) => {
     const _listFor = 'upper-roman';
     return (
         <div className={`list-options ${props.selectedOption === _listFor ? 'selected' : ''}`} onClick={() => { onListOptionSelect(_listFor, props) }} id={`${_listFor}-1`} tabIndex="-1" data-cmd={_listFor}>
-            {getListData(LIST_TYPE.UPPER_ROMAN)}
+            <img className={"list-img"} src={romansCapitalList}/>
             <span className="list-opt-tooltip">{_listFor}</span>
         </div>
     )
@@ -138,7 +126,7 @@ const LowerRomanListIconBox = (props) => {
     const _listFor = 'lower-roman';
     return (
         <div className={`list-options ${props.selectedOption === _listFor ? 'selected' : ''}`} onClick={() => { onListOptionSelect(_listFor, props) }} id={`${_listFor}-1`} tabIndex="-1" data-cmd={_listFor}>
-            {getListData(LIST_TYPE.LOWER_ROMAN)}
+            <img className={"list-img"} src={romansSmallList}/>
             <span className="list-opt-tooltip">{_listFor}</span>
         </div>
     )
@@ -151,7 +139,7 @@ const NoStyleListIconBox = (props) => {
     const _listFor = 'none';
     return (
         <div className={`list-options ${props.selectedOption === _listFor ? 'selected' : ''}`} onClick={() => { onListOptionSelect(_listFor, props) }} id={`${_listFor}-1`} tabIndex="-1" data-cmd={_listFor}>
-            <span className="list-option-row no-style">None</span>
+            <img className={"list-img-none"} src={noneList}/>
             <span className="list-opt-tooltip">{_listFor}</span>
         </div>
     )
