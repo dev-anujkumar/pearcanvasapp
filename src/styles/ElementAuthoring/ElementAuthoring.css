@@ -54,3 +54,6 @@ blockquote.blockquoteMarginaliaAttr {
 p[data-mce-bogus="all"] {
     display: none!important
 }
+blockquote.blockquoteMarginalia {
+    padding: 16px 0 20px 1.5em !important;
+ }
