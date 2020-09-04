@@ -3,6 +3,7 @@
  * Description - This Module contains the utility functions to prepare TCM snapshots for Glossary/Footnote/Asset_Popover/Slate_Link
  */
 /**************************Import Modules**************************/
+import config from '../../config/config.js';
 import {slateLinkDetails} from '../TcmSnapshots/TcmSnapshot_Actions.js'
 import { getCurrentlyLinkedImage } from '../AssetPopover/AssetPopover_Actions.js';
 /*************************Import Constants*************************/
@@ -164,8 +165,10 @@ const prepareFootnoteSnapshotContent = (actionStatus, footnoteWipList, footnoteH
         if (footnoteItem.footnotecontent && footnoteItem.footnotecontent[0] && footnoteItem.footnotecontent[0].elementdata) {
             let dataID = footnoteItem.footnotecontent[0].id;
             footnoteText = footnoteHtmlList[dataID];
+            footnoteText = footnoteText ? footnoteText.replace(/(<p.*?>)/g, "").replace(/(<\/p>)/g, "").replace(/<br>/g, "") : "";
         }
-        footnoteData.footnote = `<p class="paragraphNumeroUno">${footnoteText}</p>`
+        footnoteData.footnote = config.isCreateFootnote ? "" :`<p class="paragraphNumeroUno">${footnoteText}</p>`
+        config.isCreateFootnote=false;
         footnoteSnap.push(footnoteData);
     })
     return footnoteSnap
@@ -257,8 +260,8 @@ const setElementTag = {
     "element-blockfeature": {
         subtype: {
             'pullquote': {
-                parentTag: "BQ",
-                childTag: 'pullquote',
+                parentTag: "PQ",
+                // childTag: 'pullquote',
             },
             'marginalia': {
                 parentTag: "BQ",

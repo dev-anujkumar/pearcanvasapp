@@ -1716,6 +1716,7 @@ export class TinyMceEditor extends Component {
         else {
             elementId = this.props.elementId
         }
+        config.isCreateFootnote = true
         getGlossaryFootnoteId(elementId, "FOOTNOTE", res => {
             if (res.data && res.data.id) {
                 let tempDiv = document.createElement('div');
@@ -1777,6 +1778,7 @@ export class TinyMceEditor extends Component {
         if (selectedText.trim() === "") {
             return false
         }
+        config.isCreateGlossary=true
         getGlossaryFootnoteId(this.props.elementId, "GLOSSARY", res => {
             let insertionText = ""
             if (res.data && res.data.id) {

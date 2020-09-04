@@ -341,7 +341,10 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
                 response:response.data,
                 updatedId:updatedData.id
             }
-            tcmSnapshotsForUpdate(elementUpdateData, elementIndex, containerElement, dispatch); 
+            if(!config.isCreateGlossary){
+                tcmSnapshotsForUpdate(elementUpdateData, elementIndex, containerElement, dispatch);
+            }
+            config.isCreateGlossary = false
         }
         /**--------------------------------------------------------------------------------------------------------------*/
 

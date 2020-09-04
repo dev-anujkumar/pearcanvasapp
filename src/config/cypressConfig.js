@@ -64,7 +64,9 @@ let cypressConfig = {
     poetryElementCreationInProgress: false,
     elementStatus: {},
     popupParentElement : {},
-    isDefaultElementInProgress:true
+    isDefaultElementInProgress:true,
+    isCreateGlossary:false,
+    isCreateFootnote:false
 }
 
 

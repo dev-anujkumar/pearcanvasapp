@@ -276,7 +276,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
         }
     }
     /** Project level and element level TCM status */
-    if ((page === 0 && config.tcmStatus && (versioning == "") && !isPopupSlate)|| (calledFrom == "slateRefresh")) {
+    if ((page === 0 && config.tcmStatus && (versioning == ""))|| (calledFrom == "slateRefresh")) {
         /** Show TCM icon header if TCM is on for project level*/
         let messageTcmStatus = {
             TcmStatus: {
@@ -287,7 +287,8 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             'type': "TcmStatusUpdated",
             'message': messageTcmStatus
         })
-        dispatch(handleTCMData(manifestURN));
+        let tcmManifestUrn = isPopupSlate && config.tempSlateManifestURN ? config.tempSlateManifestURN : manifestURN
+        dispatch(handleTCMData(tcmManifestUrn));
         // if (calledFrom !== "slateRefresh") {
         //     dispatch(tcmSnapshot(manifestURN, entityURN))
         // }
