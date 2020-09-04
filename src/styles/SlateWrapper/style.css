@@ -64,9 +64,9 @@
 }
 
 blockquote.blockquoteMarginaliaAttr,blockquote.blockquoteMarginalia{    
-    margin-left: 1.5rem;
+    margin-left: 1.4rem !important;
     padding-left: 1rem;
-    border-left: 1px solid #047a9c !important;
+    border-left: 1px solid #005A70 !important;
 }
 
 #pageNumberForm {
