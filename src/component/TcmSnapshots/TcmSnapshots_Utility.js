@@ -35,7 +35,9 @@ const {
     FORMATTED_TITLE,
     formattedTitleField,
     POSTER_TEXT_OBJ,
-    parentType
+    parentType,
+    bqAttrHtmlTrue,
+    bqAttrHtmlFalse
 }
     = TcmConstants;
 
@@ -564,14 +566,26 @@ export const prepareElementSnapshots = async (element,actionStatus) => {
     let semanticSnapshots = (actionStatus.fromWhere !== "create" && element.type !== CITATION_ELEMENT) ? await setSemanticsSnapshots(element,actionStatus) : {};
 
     elementSnapshot = {
-        contentSnapshot: (element.type === MULTI_COLUMN_GROUP) ? (element.groupdata && element.groupdata.bodymatter && element.groupdata.bodymatter[0].html.text) :
-                         element.html && element.html.text ? element.html.text : "",
+        contentSnapshot: element ? setContentSnapshot(element) : "",
         glossorySnapshot: JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.glossarySnapshot : []),
         footnoteSnapshot:  JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.footnoteSnapshot : []),
         assetPopOverSnapshot:  JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.assetPopoverSnapshot : [])
     }
 
     return elementSnapshot;
+}
+
+const setContentSnapshot = (element) => {
+    let snapshotData = "";
+    if (element.type === MULTI_COLUMN_GROUP && (element.groupdata && element.groupdata.bodymatter && element.groupdata.bodymatter[0].html.text)) {
+        snapshotData = element.groupdata.bodymatter[0].html.text
+    } else if (element.type === BLOCKFEATURE && element.elementdata && element.elementdata.type && element.elementdata.type == 'blockquote') {
+        let blockQuoteText = element.html && element.html.text ? element.html.text : "";
+        snapshotData = blockQuoteText && blockQuoteText.trim() !== "" ? blockQuoteText.replace(bqAttrHtmlTrue, "").replace(bqAttrHtmlFalse, "") : "";
+    } else {
+        snapshotData = element.html && element.html.text ? element.html.text : "";
+    }
+    return snapshotData
 }
 /**
  * @function isEmpty
