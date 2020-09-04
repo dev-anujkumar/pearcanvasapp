@@ -302,7 +302,8 @@ P.paragraphNumeroUnoIndentLevel1, P.paragraphNumeroUnoIndentLevel2, P.paragraphN
 }
 
 .learningobjectivedropdown li:hover {
-    background: #D9E9FF;
+    background-color: #efefef;
+    font-family: 'Open Sans',sans-serif;
     cursor: pointer;
 }
 /* .mce-content-body .Wirisformula[data-custom-editor="chemistry"]{
