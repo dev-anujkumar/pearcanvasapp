@@ -114,20 +114,24 @@
   .learningobjectivedropdown {
     color: black;
     position: absolute;
-    width: 233px;
+    width: 270px;
     overflow: auto;
     z-index: 1;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 400;
     margin-top: 5px;
     box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 4px 5px 0 rgba(0, 0, 0, 0.14);
     background-color: #ffffff;
 }
 
-.learningobjectivedropdown li {
-  padding: 6px 0 6px 10px;
+.learningobjectivedropdown li {    
+  padding: 0 0 0 10px;
   cursor: pointer;
-  margin:0
+  margin:0;
+  font-family: 'Open Sans',sans-serif;
+  font-size: 16px;
+  line-height: 2.5;
+  letter-spacing: normal;
 }
 .learningobjectivedropdown li.disabled {
   pointer-events: none;
@@ -303,7 +307,14 @@ button[aria-label="formatSelector"] span.tox-tbtn__select-label{
 }
 button[aria-label="formatSelector"].tox-tbtn--select{
   max-width : 162px!important;
-  
+  border-radius:0; 
+}
+.tox .tox-collection--list .tox-collection__group{
+  padding:0!important
+}
+.tox-collection--list .tox-collection__item-label{
+  font-family: 'Open Sans',sans-serif;
+  margin-left: 0!important ;
 }
 .tox button[aria-label="formatSelector"].tox-tbtn:hover:not(.tox-tbtn--disabled){
   background-color: #f3f7f8!important;
@@ -412,11 +423,14 @@ margin-left:6px;
   .audiodropdown{
     right:0;
   }
+  .learningobjectivedropdown{
+    right:30px
+  }
 }
 @media only screen and (max-width: 1300px) {
   .artboard-parent{
     margin: 0!important;
-    padding-left: 160px;
+    padding-left: 150px;
     width:100%!important;
   }
 }
