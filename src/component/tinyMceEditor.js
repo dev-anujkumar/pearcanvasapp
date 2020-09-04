@@ -2217,7 +2217,7 @@ export class TinyMceEditor extends Component {
     }
 
     removeBogusTagsFromDom = () => {
-        let bogusTag = document.querySelector(`#cypress-${this.props.index} p[data-mce-bogus="all"]`)
+        let bogusTag = document.querySelector(`#cypress-${this.props.index} [data-mce-bogus="all"]`);
         bogusTag && bogusTag.remove();
     }
 
