@@ -47,7 +47,7 @@ export const setSemanticsSnapshots = async (element,actionStatus) => {
             footnoteWipList = element.elementdata && element.elementdata.footnotes ? element.elementdata.footnotes : [];
             footnoteSnap = prepareFootnoteSnapshotContent(actionStatus, footnoteWipList,footnoteHtmlList);
             assetPopoverList = element.elementdata && element.elementdata.internallinks ? element.elementdata.internallinks : [];
-            assetPopoverSnap = await prepareAssetPopoverSnapshotContent(assetPopoverList)
+            assetPopoverSnap = await prepareAssetPopoverSnapshotContent(assetPopoverList,element)
             break;
 
         case ELEMENT_LIST:
@@ -55,7 +55,7 @@ export const setSemanticsSnapshots = async (element,actionStatus) => {
             let listData = element.type === ELEMENT_LIST ? element.elementdata.listitems: element.poetrylines
             glossarySnap =  await setSnapshotsInListAndPoetry(actionStatus, listData, GLOSSARY, glossaryHtmlList);
             footnoteSnap =  await setSnapshotsInListAndPoetry(actionStatus, listData, FOOTNOTE, footnoteHtmlList);
-            assetPopoverSnap =  await setSnapshotsInListAndPoetry("", listData, ASSET_POPOVER);
+            assetPopoverSnap =  await setSnapshotsInListAndPoetry("", listData, ASSET_POPOVER,undefined,element);
             break;
 
         case BLOCKFEATURE:
@@ -63,7 +63,7 @@ export const setSemanticsSnapshots = async (element,actionStatus) => {
             footnoteWipList = element.elementdata && element.elementdata.authoredtext && element.elementdata.authoredtext.footnotes ? element.elementdata.authoredtext.footnotes : [];
             footnoteSnap = prepareFootnoteSnapshotContent(actionStatus, footnoteWipList,footnoteHtmlList)
             assetPopoverList = element.elementdata && element.elementdata.authoredtext && element.elementdata.authoredtext.internallinks ? element.elementdata.authoredtext.internallinks : [];
-            assetPopoverSnap = await prepareAssetPopoverSnapshotContent(assetPopoverList)
+            assetPopoverSnap = await prepareAssetPopoverSnapshotContent(assetPopoverList,element)
             break;
         default:
             glossarySnap = [];
@@ -88,7 +88,7 @@ export const setSemanticsSnapshots = async (element,actionStatus) => {
  * @param {Array} elementList - List of Glossary/Footnote/Asset_Popover entries in a List/Poetry element
  * @returns {Array} All snapshots for given semantic - Glossary/Footnote/Asset_Popover for List and Poetry element  
 */
-const setSnapshotsInListAndPoetry = async (actionStatus, elementList, semanticType,glossaryFootnoteHtmlList) => {
+const setSnapshotsInListAndPoetry = async (actionStatus, elementList, semanticType,glossaryFootnoteHtmlList,element) => {
     let snapshotsList = []
     await Promise.all(elementList.map( async item => {
         if ((item.type == PARAGRAPH || item.type == POETRY_LINE) && item.authoredtext) {
@@ -100,11 +100,11 @@ const setSnapshotsInListAndPoetry = async (actionStatus, elementList, semanticTy
                 snapshotsList = snapshotsList.concat(prepareFootnoteSnapshotContent(actionStatus, footnoteArray,glossaryFootnoteHtmlList));
             } else if (semanticType === ASSET_POPOVER) {
                 let assetLists = item.authoredtext.internallinks ? item.authoredtext.internallinks : [];
-                let assetSnapList = assetLists.length != 0 ? await prepareAssetPopoverSnapshotContent(assetLists) : [];
+                let assetSnapList = assetLists.length != 0 ? await prepareAssetPopoverSnapshotContent(assetLists,element) : [];
                 snapshotsList = snapshotsList.concat(assetSnapList);
             }
         } else if (item.listitems && item.listitems.length > 0) { // for nested lists
-            snapshotsList = snapshotsList.concat(await setSnapshotsInListAndPoetry(actionStatus, item.listitems, semanticType,glossaryFootnoteHtmlList));
+            snapshotsList = snapshotsList.concat(await setSnapshotsInListAndPoetry(actionStatus, item.listitems, semanticType,glossaryFootnoteHtmlList,element));
         }
     }))
     return snapshotsList
@@ -180,11 +180,13 @@ const prepareFootnoteSnapshotContent = (actionStatus, footnoteWipList, footnoteH
  * @param {Array} assetsList - List of Asset Popover entries
  * @returns {Array} All AssetPopover Snapshots for given element 
 */
-export const prepareAssetPopoverSnapshotContent = async (assetsList) => {
+export const prepareAssetPopoverSnapshotContent = async (assetsList, element) => {
     let assetPopoverSnap = []
+    let elementAP = document.querySelector('div[data-id="' + element.id + '"]')
     if (assetsList && assetsList.length) {
-        await Promise.all(assetsList.map(async assetsItem => {
-            let assetId = assetsItem && assetsItem.linkid && document.querySelector('abbr[data-uri="' + assetsItem.linkid + '"').getAttribute("asset-id");
+        await Promise.all(assetsList.map(async (assetsItem, index) => {
+            let assetIdAll = assetsItem && assetsItem.linkid && elementAP && elementAP.querySelectorAll('abbr');
+            let assetId = assetIdAll[index] && assetIdAll[index].getAttribute('asset-id')
             let data = {
                 assetid: assetId,
                 type: assetsItem.internallinktype === SLATE ? SLATE_LINK : AP_TYPE
