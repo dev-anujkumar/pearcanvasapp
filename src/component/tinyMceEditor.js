@@ -187,6 +187,9 @@ export class TinyMceEditor extends Component {
                         this.removeBogusTagsFromDom();
                         this.removeAttributionBr();
                     }
+                    if(this.props.element.type === "element-blockfeature"){
+                        this.makeBqReplace();
+                    }
                 });
 
                 tinymce.$('.cypress-editable').on('drop', (e, ui) => {
@@ -1420,6 +1423,12 @@ export class TinyMceEditor extends Component {
                     text = text + '<span id="BCEposition"></span>';
                     this.copyContent = text;
                 }
+            } else if(this.props.element.type === "element-blockfeature"){
+                let text = e.clipboardData.getData("text/plain");
+                    text = String(text).replace(/&/g, '&amp;');
+                    text = String(text).replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                    text = text + '<em id="BQposition"></em>';
+                    this.copyContent = text;
             }
         });
     }
@@ -1432,6 +1441,11 @@ export class TinyMceEditor extends Component {
     pastePreProcess = (plugin, args) => {
         let activeElement = tinymce.activeEditor.dom.getParent(tinymce.activeEditor.selection.getStart(), '.cypress-editable');
         if (this.props.element && this.props.element.figuretype && this.props.element.figuretype === "codelisting" && this.notFormatting && (activeElement && activeElement.nodeName === 'CODE')) {
+            args.content = this.copyContent;
+            this.copyContent = '';
+            return;
+        }
+        if(this.props.element.type === "element-blockfeature"){
             args.content = this.copyContent;
             this.copyContent = '';
             return;
@@ -1468,6 +1482,18 @@ export class TinyMceEditor extends Component {
             args.node.appendChild(nodesFragment);
             let self = this;
             setTimeout(() => { self.makeReplace(); }, 0);
+        }
+        else if(this.props.element.type === "element-blockfeature"){
+            let self = this;
+            setTimeout(() => { self.makeBqReplace(); }, 0);
+        }
+    }
+
+    makeBqReplace = () =>{
+        let positionElement = document.getElementById('BQposition');
+        if(positionElement){
+            tinymce.activeEditor.selection.setCursorLocation(positionElement, 0);
+            positionElement.remove();
         }
     }
 
