@@ -186,7 +186,7 @@ export const prepareAssetPopoverSnapshotContent = async (assetsList, element) =>
     if (assetsList && assetsList.length) {
         await Promise.all(assetsList.map(async (assetsItem, index) => {
             let assetIdAll = assetsItem && assetsItem.linkid && elementAP && elementAP.querySelectorAll('abbr');
-            let assetId = assetIdAll[index] && assetIdAll[index].getAttribute('asset-id')
+            let assetId = assetIdAll && assetIdAll[index] && assetIdAll[index].getAttribute('asset-id')
             let data = {
                 assetid: assetId,
                 type: assetsItem.internallinktype === SLATE ? SLATE_LINK : AP_TYPE
