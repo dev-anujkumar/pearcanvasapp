@@ -187,7 +187,7 @@ export class TinyMceEditor extends Component {
                         this.removeBogusTagsFromDom();
                         this.removeAttributionBr();
                     }
-                    if(this.props.element.type === "element-blockfeature"){
+                    if(this.props.element && this.props.element.type === "element-blockfeature"){
                         this.makeBqReplace();
                     }
                 });
@@ -1423,7 +1423,7 @@ export class TinyMceEditor extends Component {
                     text = text + '<span id="BCEposition"></span>';
                     this.copyContent = text;
                 }
-            } else if(this.props.element.type === "element-blockfeature"){
+            } else if(this.props.element && this.props.element.type === "element-blockfeature"){
                 let text = e.clipboardData.getData("text/plain");
                     text = String(text).replace(/&/g, '&amp;');
                     text = String(text).replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -1445,7 +1445,7 @@ export class TinyMceEditor extends Component {
             this.copyContent = '';
             return;
         }
-        if(this.props.element.type === "element-blockfeature"){
+        if(this.props.element && this.props.element.type === "element-blockfeature"){
             args.content = this.copyContent;
             this.copyContent = '';
             return;
@@ -1483,7 +1483,7 @@ export class TinyMceEditor extends Component {
             let self = this;
             setTimeout(() => { self.makeReplace(); }, 0);
         }
-        else if(this.props.element.type === "element-blockfeature"){
+        else if(this.props.element && this.props.element.type === "element-blockfeature"){
             let self = this;
             setTimeout(() => { self.makeBqReplace(); }, 0);
         }
