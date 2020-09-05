@@ -2533,7 +2533,7 @@ export class TinyMceEditor extends Component {
                 if (!tinymce.$(tempdiv).find('.blockquoteTextCredit') || !tinymce.$(tempdiv).find('.blockquoteTextCredit').text().length) {
                     node.innerHTML = this.lastContent;
                 }
-                if(node && node.childNodes[0] && node.childNodes[0].childNodes[0] && !node.childNodes[0].childNodes[0].innerHTML){
+                if(node && node.childNodes[0] && node.childNodes[0].childNodes[0] && !node.childNodes[0].childNodes[0].innerText.trim()){
                     node.childNodes[0].childNodes[0].innerHTML='<br>';
                 }
             }
