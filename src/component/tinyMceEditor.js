@@ -947,6 +947,10 @@ export class TinyMceEditor extends Component {
                     }
                 }
             }
+            if(e && e.target && e.target.classList.contains('blockquoteTextCredit') && key === 8 && !e.target.innerText.trim()){
+                e.preventDefault();
+                return false;
+            }
         });
     }
 
@@ -2526,6 +2530,9 @@ export class TinyMceEditor extends Component {
             if (!tinymce.$(tempdiv).find('.paragraphNummerEins').length || !tinymce.$(tempdiv).find('.paragraphNummerEins').text().length) {
                 if (!tinymce.$(tempdiv).find('.blockquoteTextCredit') || !tinymce.$(tempdiv).find('.blockquoteTextCredit').text().length) {
                     node.innerHTML = this.lastContent;
+                }
+                if(node && node.childNodes[0] && node.childNodes[0].childNodes[0] && !node.childNodes[0].childNodes[0].innerHTML){
+                    node.childNodes[0].childNodes[0].innerHTML='<br>';
                 }
             }
         }
