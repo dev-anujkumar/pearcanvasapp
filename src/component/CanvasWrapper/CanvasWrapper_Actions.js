@@ -276,7 +276,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
         }
     }
     /** Project level and element level TCM status */
-    if ((page === 0 && config.tcmStatus && (versioning == ""))|| (calledFrom == "slateRefresh")) {
+    if ((page === 0 && config.tcmStatus && (versioning == ""))) {
         /** Show TCM icon header if TCM is on for project level*/
         let messageTcmStatus = {
             TcmStatus: {
@@ -289,9 +289,6 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
         })
         let tcmManifestUrn = isPopupSlate && config.tempSlateManifestURN ? config.tempSlateManifestURN : manifestURN
         dispatch(handleTCMData(tcmManifestUrn));
-        // if (calledFrom !== "slateRefresh") {
-        //     dispatch(tcmSnapshot(manifestURN, entityURN))
-        // }
     }
     const elementCount = getState().appStore.slateLength
     let apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}&elementCount=${elementCount}`
