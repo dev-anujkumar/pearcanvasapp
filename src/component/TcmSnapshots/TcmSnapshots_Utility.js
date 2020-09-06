@@ -649,7 +649,7 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
         actionStatusVersioning.action="create"
         actionStatusVersioning.status ="accepted"
         /** After versioning with old snapshots*/
-        prepareTcmSnapshots(oldData, actionStatusVersioning, containerElement, "","")
+        await prepareTcmSnapshots(oldData, actionStatusVersioning, containerElement, "","")
     }
     /** Normal Scenario and after versioning with new snapshots*/
     prepareTcmSnapshots(response, actionStatus, containerElement, "","")
