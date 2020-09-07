@@ -1433,7 +1433,6 @@ export class TinyMceEditor extends Component {
         });
     }
 
-    
     /**
      * Called before paste process
      * @param {*} plugin
