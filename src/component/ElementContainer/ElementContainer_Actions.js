@@ -121,7 +121,8 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
                         contentUrn: deleteSlate.contentUrn
                     },
                     bodymatter: deleteBodymatter,
-                    newVersionUrns: deleteElemData.data
+                    newVersionUrns: deleteElemData.data,
+                    index:index
                 }
                 tcmSnapshotsForDelete(deleteData, type, containerElement)
             }
@@ -265,7 +266,7 @@ export const tcmSnapshotsForDelete = async (elementDeleteData, type, containerEl
         versionStatus = fetchManifestStatus(elementDeleteData.bodymatter, containerElement, type);
     }
     containerElement = await checkContainerElementVersion(containerElement, versionStatus, elementDeleteData.currentSlateData);
-    prepareTcmSnapshots(elementDeleteData.wipData, actionStatus, containerElement, type,elementDeleteData.newVersionUrns);
+    prepareTcmSnapshots(elementDeleteData.wipData, actionStatus, containerElement, type,elementDeleteData.newVersionUrns,elementDeleteData.index);
 }
 
 /**
@@ -434,9 +435,11 @@ export function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, 
     let { contents: _slateContent } = _slateObject;
     let { bodymatter: _slateBodyMatter } = _slateContent;
     let elementId = updatedData.id;
-    //tcm update code   
+    //tcm update code
+    let isPopupElement = parentElement && parentElement.type == 'popup' && (updatedData.metaDataField !== undefined || updatedData.sectionType !== undefined) ? true : false;
+    let noAdditionalFields = (updatedData.metaDataField == undefined && updatedData.sectionType == undefined) ? true : false   
     if (config.tcmStatus) {
-        if (elementTypeTCM.indexOf(updatedData.type) !== -1 && showHideType == undefined) {
+        if (elementTypeTCM.indexOf(updatedData.type) !== -1 && showHideType == undefined && (isPopupElement || noAdditionalFields)) {
             prepareDataForUpdateTcm(updatedData.id, getState, dispatch, versionedData);
         }
     }
