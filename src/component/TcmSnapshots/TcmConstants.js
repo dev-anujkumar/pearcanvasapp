@@ -41,4 +41,5 @@ export default {
     parentType : ['WORKED_EXAMPLE', 'CONTAINER', 'CITATION', 'POETRY', 'MULTI_COLUMN'],
     bqAttrHtmlTrue:'<p class="blockquoteTextCredit" contenteditable="true" data-placeholder="Attribution Text"></p>',
     bqAttrHtmlFalse:'<p class="blockquoteTextCredit" contenteditable="false" data-placeholder="Attribution Text"></p>',
+    bqHiddenText:'<p class="blockquote-hidden" contenteditable="false" style="visibility: hidden; height: 20px;">hidden</p>'
 }

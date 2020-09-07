@@ -53,38 +53,18 @@ export const handleTCMData = (slateManifestUrn) => (dispatch, getState) => {
 
 }
 
-/** TO BE REMOVED ---------> 
-     * @description Send TCM Snapshot for Cos converted elements
-     * @param {String} slateManifestUrn | Slate Manifest
-     * @param {String} slateManifestUrn | Slate Entity
-
-export const tcmSnapshot = (slateManifestUrn,slateEntityUrn) => (dispatch, getState) => {
-    let url = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/tcm/${slateEntityUrn}/${slateManifestUrn}?page=0`;
-    return axios.get(url, {
-        headers: {
-            PearsonSSOSession: config.ssoToken
-        }
-    }).then((res) => {
-        console.log("success")
-    }).catch((error) => {
-        console.log("error")
-    })
-
-}
------------------------> */
 /**
      * @description Send TCM Snapshot for the element
      * @param {Object} snapshotData | TCM Snapshot data
 */
-
 var timerID;
 var allSnapshotData = [];
-export const sendElementTcmSnapshot = async (snapshotData) => {//async (dispatch, getState) => 
-
+export const sendElementTcmSnapshot = async (snapshotData) => {
     let parentData = store.getState().appStore.slateLevelData;
+
     let currentParentData = JSON.parse(JSON.stringify(parentData));
     let currentSlateData = currentParentData[config.slateManifestURN];
-    if (currentSlateData.status === 'approved') {
+    if (currentSlateData && currentSlateData.status === 'approved') {
         await callSnapshotAPI(snapshotData)
     } else {
         allSnapshotData.push(snapshotData);

@@ -425,9 +425,9 @@ export const tcmSnapshotsForConversion = async (elementConversionData,indexes,ap
         let actionStatusVersioning = Object.assign({}, actionStatus);
         actionStatusVersioning.action="create"
         actionStatusVersioning.status ="accepted"
-        prepareTcmSnapshots(oldElementData, actionStatusVersioning, convertParentData, "","");
+        prepareTcmSnapshots(oldElementData, actionStatusVersioning, convertParentData, "","",indexes);
     }
-    prepareTcmSnapshots(response,actionStatus, convertParentData,"","");
+    prepareTcmSnapshots(response,actionStatus, convertParentData,"","",indexes);
 }
 
 const prepareAssessmentDataForConversion = (oldElementData, format) => {
