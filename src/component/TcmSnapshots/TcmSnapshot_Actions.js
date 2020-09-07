@@ -1,5 +1,6 @@
 import axios from 'axios';
 import config from '../../config/config';
+import store from '../../appstore/store.js';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { GET_TCM_RESOURCES, AUTHORING_ELEMENT_UPDATE } from '../../constants/Action_Constants';
 
@@ -78,10 +79,18 @@ export const tcmSnapshot = (slateManifestUrn,slateEntityUrn) => (dispatch, getSt
 
 var timerID;
 var allSnapshotData = [];
-export const sendElementTcmSnapshot = async (snapshotData) => {
+export const sendElementTcmSnapshot = async (snapshotData) => {//async (dispatch, getState) => 
+
+    let parentData = store.getState().appStore.slateLevelData;
+    let currentParentData = JSON.parse(JSON.stringify(parentData));
+    let currentSlateData = currentParentData[config.slateManifestURN];
+    if (currentSlateData.status === 'approved') {
+        await callSnapshotAPI(snapshotData)
+    } else {
         allSnapshotData.push(snapshotData);
-        if (timerID) clearTimeout(timerID); 
-        timerID = setTimeout( async() => {let snapshots = allSnapshotData; allSnapshotData=[]; await callSnapshotAPI(snapshots)}, 500)
+        if (timerID) clearTimeout(timerID);
+        timerID = setTimeout(async () => { let snapshots = allSnapshotData; allSnapshotData = []; await callSnapshotAPI(snapshots) }, 500);        
+    }
 }
 
 const callSnapshotAPI = async(snapshotData) => {
