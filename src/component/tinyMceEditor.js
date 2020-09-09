@@ -163,7 +163,15 @@ export class TinyMceEditor extends Component {
                         if(!isContainsMath && currentNode && currentNode.innerHTML){
                             isContainsMath = currentNode.innerHTML.match(/<img/) ? (currentNode.innerHTML.match(/<img/).input.includes('class="Wirisformula') || currentNode.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula')) : false;
                         }
-                        if (content.trim().length || activeElement.querySelectorAll('ol').length || activeElement.querySelectorAll('ul').length || contentHTML.match(/<math/g) || isContainsMath) {
+                        if(this.props.element.type==="element-blockfeature"){
+                            if (currentNode.children[0] && currentNode.children[0].children[0] &&currentNode.children[0].children[0].innerText.trim() == "" && !currentNode.children[0].children[0].innerText.trim().length && !isContainsMath) {
+                                activeElement.classList.add('place-holder')
+                            }
+                            else {
+                                activeElement.classList.remove('place-holder')
+                            } 
+                        }
+                        else if (content.trim().length || activeElement.querySelectorAll('ol').length || activeElement.querySelectorAll('ul').length || contentHTML.match(/<math/g) || isContainsMath) {
                             if (nodeContent || isContainsMath) {
                                 activeElement.classList.remove('place-holder')
                             }
@@ -659,7 +667,15 @@ export class TinyMceEditor extends Component {
                         activeElement.innerHTML = div.children[0].outerHTML;
                     }
                 }
-                if (activeElement.innerText.trim().length || activeElement.querySelectorAll('ol').length || activeElement.querySelectorAll('ul').length || isContainsMath) {
+                if(this.props.element && this.props.element.type==="element-blockfeature"){
+                    if (activeElement.children[0] && activeElement.children[0].children[0] && activeElement.children[0].children[0].innerText.trim() == "" && !activeElement.children[0].children[0].innerText.trim().length && !isContainsMath) {
+                        activeElement.classList.add('place-holder')
+                    }
+                    else {
+                        activeElement.classList.remove('place-holder')
+                    }
+                }
+                else if (activeElement.innerText.trim().length || activeElement.querySelectorAll('ol').length || activeElement.querySelectorAll('ul').length || isContainsMath) {
                     activeElement.classList.remove('place-holder')
                 }
                 else {
@@ -2121,7 +2137,15 @@ export class TinyMceEditor extends Component {
             let testElem = document.createElement('div');
             testElem.innerHTML = this.props.model.text;
             let isContainsMath = testElem.innerHTML.match(/<img/) ? (testElem.innerHTML.match(/<img/).input.includes('class="Wirisformula') || testElem.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula')) : false;
-            if (testElem.innerText || isContainsMath) {
+            if(this.props.element && this.props.element.type==="element-blockfeature"){
+                if (testElem.children[0] && testElem.children[0].children[0] && testElem.children[0].children[0].innerText.trim() == "" && !testElem.children[0].children[0].innerText.trim().length && !isContainsMath) {
+                    this.placeHolderClass = 'place-holder';
+                }
+                else {
+                    this.placeHolderClass = '';
+                } 
+            }
+            else if (testElem.innerText || isContainsMath) {
                 if (testElem.innerText.trim() == "" && !testElem.innerText.trim().length && !isContainsMath) {
                     this.placeHolderClass = 'place-holder';
                 }
