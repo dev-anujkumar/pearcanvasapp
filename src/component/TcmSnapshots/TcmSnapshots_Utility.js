@@ -608,7 +608,7 @@ const isEmpty = (obj) => {
  * @param {Object} containerElement - Element Parent Data
  * @param {Function} dispatch to dispatch tcmSnapshots
 */
-export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, containerElement, dispatch) => {
+export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, containerElement, dispatch, getState) => {
     let actionStatus = {
         action:"update",
         status:"",
@@ -630,7 +630,8 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
     let oldData = Object.assign({}, response);
     /** set new slate Manifest in store also */
     if(containerElement.slateManifest){
-        delete Object.assign(currentParentData, {[containerElement.slateManifest]: currentParentData[currentSlateData.id] })[currentSlateData.id];
+        delete Object.assign(currentParentData, {[containerElement.slateManifest]: currentParentData[currentSlateData.id] })[currentSlateData.id];     
+        currentParentData[containerElement.slateManifest].status = "wip"
         currentParentData[containerElement.slateManifest].id = containerElement.slateManifest
         dispatch({
             type: VERSIONING_SLATEMANIFEST,

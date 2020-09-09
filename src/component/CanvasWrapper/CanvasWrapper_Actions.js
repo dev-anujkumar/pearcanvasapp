@@ -310,7 +310,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             config.slateManifestURN = newVersionManifestId
             manifestURN = newVersionManifestId
         }
-		if(slateData.data && slateData.data[newVersionManifestId] && slateData.data[newVersionManifestId].type === "popup"){
+		if(slateData.data && slateData.data[newVersionManifestId] && slateData.data[newVersionManifestId].type === "popup" && versionPopupReload !== true){
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
             config.isPopupSlate = true;
             config.savingInProgress = false;
