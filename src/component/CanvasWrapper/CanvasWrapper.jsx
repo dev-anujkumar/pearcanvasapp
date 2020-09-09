@@ -152,7 +152,7 @@ export class CanvasWrapper extends Component {
         return true;
     }
     handleNavClick=(nav)=> {
-        if(config.savingInProgress || config.popupCreationCallInProgress){
+        if(config.savingInProgress || config.popupCreationCallInProgress || config.isSavingElement){
             return false
         }
         sendDataToIframe({'type': ShowLoader,'message': { status: true }});
