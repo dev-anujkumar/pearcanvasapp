@@ -418,13 +418,11 @@ margin-left:6px;
 .learningobjectiveicon, .audioicon{
   width:24px;
   height:24px;
+  position: relative;
 }
 @media only screen and (max-width: 1500px) {  
-  .audiodropdown{
+  .audiodropdown, .learningobjectivedropdown{
     right:0;
-  }
-  .learningobjectivedropdown{
-    right:30px
   }
 }
 @media only screen and (max-width: 1300px) {
