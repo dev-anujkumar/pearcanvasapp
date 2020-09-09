@@ -343,7 +343,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
                 updatedId:updatedData.id
             }
             if(!config.isCreateGlossary){
-                tcmSnapshotsForUpdate(elementUpdateData, elementIndex, containerElement, dispatch,getState);
+                tcmSnapshotsForUpdate(elementUpdateData, elementIndex, containerElement, dispatch);
             }
             config.isCreateGlossary = false
         }

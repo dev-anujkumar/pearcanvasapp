@@ -609,7 +609,7 @@ const isEmpty = (obj) => {
  * @param {Object} containerElement - Element Parent Data
  * @param {Function} dispatch to dispatch tcmSnapshots
 */
-export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, containerElement, dispatch, getState) => {
+export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, containerElement, dispatch) => {
     let actionStatus = {
         action:"update",
         status:"",
