@@ -315,6 +315,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             config.isPopupSlate = true;
             config.savingInProgress = false;
             if (versionPopupReload) {
+                config.isPopupSlate = false;
                 let parentData = getState().appStore.slateLevelData;
                 let newslateData = JSON.parse(JSON.stringify(parentData));
                 newslateData[config.slateManifestURN].contents.bodymatter[versioning.index] = Object.values(slateData.data)[0];

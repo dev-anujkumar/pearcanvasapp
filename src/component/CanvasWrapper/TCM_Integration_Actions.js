@@ -10,6 +10,7 @@ export const loadTrackChanges = (elementId) => {
     if (!checkSlateLock(slateLockInfo)) {
         let slateData = store.getState().appStore.slateLevelData;
         let slateId = config.tempSlateManifestURN ?  config.tempSlateManifestURN : config.slateManifestURN;
+        let popupSlateData = config.tempSlateManifestURN ? slateData[config.slateManifestURN] : {}
         var childObj = [];
         var createManifestObject = (element, type) => {
           if(element && element[type] && element[type].bodymatter){
@@ -20,8 +21,10 @@ export const loadTrackChanges = (elementId) => {
                 obj.index = childObj.length
                 childObj =[...childObj, obj]
               }
-              if(data.id.includes("manifest")){
+              if(data.id.includes("manifest") && data.type !='popup'){
                return createManifestObject(data,'contents')
+              }else if(data.id.includes("manifest") && data.type =='popup'){
+                return creatPopupObject(data)
               }
             })
           }
@@ -41,7 +44,51 @@ export const loadTrackChanges = (elementId) => {
         })
         return columnChildObj;
       }
-        
+      let popupChildren = []
+      let creatPopupObject = async (element) => {
+        let popupChildList = popupBody(element);
+        popupChildList.length > 0 && popupChildList.map(async (data)=>{
+
+          if(data && data.id && data.id.includes("work")){
+            let obj = {}
+            obj.urn = data.id;
+            obj.index = childObj.length
+            popupChildren =[...popupChildren, obj]
+          }
+          if(data && data.id && data.id.includes("manifest")){
+           if(data.type==="groupedcontent" && obj.urn.includes('manifest')){
+                let groupedContent=element.groupeddata.bodymatter;
+                let childData = await createMultiColumnObject(groupedContent)
+                obj.child = childData;
+              }
+              else if(data.type==="popup" && obj.urn.includes('manifest')){
+                let childData = await creatPopupObject(data)
+                obj.child = childData;
+              }
+              else if(data.type!="groupedcontent" && data.type!="popup" && obj.urn.includes('manifest')){
+                let newType = (element.type == 'citations' || data.type == 'poetry') ? 'contents' : 'elementdata'; 
+                let childData = await createManifestObject(data,newType)
+                obj.child = childData;
+              }
+          }
+        })
+        return await popupChildren
+      }
+      let popupBody = (element) => {
+        let popupData = []
+        let popupTitle = element.popupdata && element.popupdata['formatted-title'] ? element.popupdata['formatted-title'] : {}
+        let popupCTA = element.popupdata.postertextobject[0]
+        // popupData = popupData.push(popupTitle)
+        popupData = popupTitle ?  [popupTitle,popupCTA] : [popupCTA]
+        let popupSlate = {};
+        if (popupSlateData && 'contents' in popupSlateData && 'bodymatter' in popupSlateData.contents && popupSlateData.contents.bodymatter.length > 0) {
+          popupSlate = popupSlateData.contents.bodymatter
+        } else if (element.popupdata && element.popupdata.bodymatter && element.popupdata.bodymatter.length > 0) {
+          popupSlate = element.popupdata.bodymatter
+        }
+        popupData = popupData.concat(popupSlate)
+        return popupData
+      }
         if (slateData && slateData[slateId] && slateData[slateId].contents && slateData[slateId].contents.bodymatter) {
           var list = [];
           let elements = slateData[slateId].contents.bodymatter;
@@ -55,7 +102,11 @@ export const loadTrackChanges = (elementId) => {
                 let childData = await createMultiColumnObject(groupedContent)
                 obj.child = childData;
               }
-              else if(element.type!="groupedcontent" && obj.urn.includes('manifest')){
+              else if(element.type==="popup" && obj.urn.includes('manifest')){
+                let childData = await creatPopupObject(element)
+                obj.child = childData;
+              }
+              else if(element.type!="groupedcontent" && element.type!="popup" && obj.urn.includes('manifest')){
                 let newType = (element.type == 'citations' || element.type == 'poetry') ? 'contents' : 'elementdata'; 
                 let childData = await createManifestObject(element,newType)
                 obj.child = childData;
@@ -66,6 +117,7 @@ export const loadTrackChanges = (elementId) => {
         }
 
         let title = store.getState().appStore && store.getState().appStore.slateTitleUpdated ? store.getState().appStore.slateTitleUpdated :  "";
+
         let currentElementId = elementId ? elementId : "";
         let currentSlateTitle = title;
         let currentProjectUrn = config.projectUrn;
