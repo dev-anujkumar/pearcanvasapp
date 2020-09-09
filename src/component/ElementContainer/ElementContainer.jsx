@@ -468,6 +468,9 @@ class ElementContainer extends Component {
      * This function opens TCM w.r.t. current Element
      */
     handleTCM = (e) => {
+        if(config.isSavingElement){
+            return false
+        }
         e.stopPropagation();
         loadTrackChanges(this.props.element.id)
     }
@@ -485,6 +488,7 @@ class ElementContainer extends Component {
         let dataToSend = {}
         let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
         let checkCanvasBlocker = document.querySelector("div.canvas-blocker");
+        config.isSavingElement = true
         switch (previousElementData.type) {
             case elementTypeConstant.AUTHORED_TEXT:
             case elementTypeConstant.LEARNING_OBJECTIVE_ITEM:

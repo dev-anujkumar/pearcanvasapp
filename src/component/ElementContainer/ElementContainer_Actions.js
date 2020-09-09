@@ -388,7 +388,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         }
         
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
-        
+        config.isSavingElement = false
         customEvent.trigger('glossaryFootnoteSave', response.data.id); 
         config.popupCreationCallInProgress = false;
 
@@ -405,6 +405,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         config.popupCreationCallInProgress = false
         console.log("updateElement Api fail", error);
         document.getElementById('link-notification').innerText = "";
+        config.isSavingElement = false
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
     })
 }
