@@ -310,11 +310,12 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             config.slateManifestURN = newVersionManifestId
             manifestURN = newVersionManifestId
         }
-		if(slateData.data && slateData.data[newVersionManifestId] && slateData.data[newVersionManifestId].type === "popup" && versionPopupReload !== true){
+		if(slateData.data && slateData.data[newVersionManifestId] && slateData.data[newVersionManifestId].type === "popup"){
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
             config.isPopupSlate = true;
             config.savingInProgress = false;
             if (versionPopupReload) {
+                config.isPopupSlate = false;
                 let parentData = getState().appStore.slateLevelData;
                 let newslateData = JSON.parse(JSON.stringify(parentData));
                 newslateData[config.slateManifestURN].contents.bodymatter[versioning.index] = Object.values(slateData.data)[0];
