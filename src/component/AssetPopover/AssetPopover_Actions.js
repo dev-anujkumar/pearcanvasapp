@@ -54,6 +54,14 @@ export const apoSearchSaveAction = (apoObject, args) => {
     }
   }
 }
+export const assetIdForSnapshot = (assetID) => {
+  return {
+    type: 'ASSET_ID_SNAPSHOT',
+    payload: {
+      assetID: assetID
+    }
+  }
+}
 
 // export const getCurrentlyLinkedImage = (id, cb) => {
 
