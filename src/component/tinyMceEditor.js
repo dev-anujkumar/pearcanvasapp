@@ -2678,7 +2678,9 @@ export class TinyMceEditor extends Component {
             } else if (this.props.element && this.props.element.type === "poetry" && !this.props.currentElement && elemNode && elemNode.innerHTML !== "") {
                 this.props.createPoetryElements(this.props.poetryField, true, this.props.index, this.props.element)
             } else {
-                this.props.handleBlur(forceupdate, this.props.currentElement, this.props.index, showHideType)
+                setTimeout(()=>{
+                    this.props.handleBlur(forceupdate, this.props.currentElement, this.props.index, showHideType)
+                },0)
             }
         }
         else {
