@@ -4,6 +4,7 @@ import Button from '../ElementButtons';
 import config from '../../config/config';
 import './../../styles/ElementAsideContainer/ElementAsideContainer.css';
 import { hasReviewerRole } from '../../constants/utility.js'
+import CopyUrn from '../CopyUrn';
 
 class SectionSeperator extends Component {
     constructor(props) {
@@ -37,6 +38,46 @@ class SectionSeperator extends Component {
         }
     }
 
+    onCopyContext=(e)=> {
+
+        if (e.currentTarget.classList.contains('activeTagBgColor')) {
+            const parentPosition = this.getParentPosition(e.currentTarget);
+            const scrollTop = document.getElementById('slateWrapper').scrollTop;
+
+            this.copyClickedX = e.clientX - parentPosition.x-30;
+            this.copyClickedY = e.clientY - parentPosition.y + scrollTop + 5;
+            this.toggleCopyMenu(true)
+            e.preventDefault();
+        }
+    }
+
+    getParentPosition = (el) => {
+        var xPos = 0;
+        var yPos = 0;
+
+        while (el) {
+            if (el.tagName == "BODY") {
+                // deal with browser quirks with body/window/document and page scroll
+                var xScroll = el.scrollLeft || document.documentElement.scrollLeft;
+                var yScroll = el.scrollTop || document.documentElement.scrollTop;
+
+                xPos += (el.offsetLeft - xScroll + el.clientLeft);
+                yPos += (el.offsetTop - yScroll + el.clientTop);
+            } else {
+                // for all other non-BODY elements
+                xPos += (el.offsetLeft - el.scrollLeft + el.clientLeft);
+                yPos += (el.offsetTop - el.scrollTop + el.clientTop);
+            }
+
+            el = el.offsetParent;
+        }
+        return { x: xPos, y: yPos }
+    }
+
+    toggleCopyMenu = (value)=> {
+        this.setState({showCopyPopup : value})
+    }
+
      /**
     * 
     * @discription - This function handles the blur event on section
@@ -59,9 +100,10 @@ class SectionSeperator extends Component {
             className={
                 (elemBorderToggle !== 'undefined' && elemBorderToggle) || borderToggle == 'active'? showBorder:""} >
 
+                {this.state.showCopyPopup && <CopyUrn elementId={this.props.element.contentUrn} toggleCopyMenu={this.toggleCopyMenu} copyClickedX={this.copyClickedX} copyClickedY={this.copyClickedY} />}
                 {(elemBorderToggle !== 'undefined' && elemBorderToggle) || borderToggle == 'active' ?
                     <div> 
-                        <Button btnClassName={btnClassName} type="element-label" labelText="SB" />
+                        <Button copyContext={this.onCopyContext} btnClassName={btnClassName} type="element-label" labelText="SB" />
                       {this.props.permissions.includes('elements_add_remove') && !hasReviewerRole() && <Button  onClick={(e) => this.props.showDeleteElemPopup(e,true, element)} type="delete-element" />}
                     </div>:""
                  }
