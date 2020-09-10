@@ -796,7 +796,12 @@ class SlateWrapper extends Component {
          * Need to refactor these all condition and minimize them
          */        
         if (this.props.toggleTocDelete) {
-            if(this.props.tocDeleteMessage&& this.props.tocDeleteMessage.messageType === TYPE_SINGLE_CONTAINER_DELETE){
+            let containerName = null;
+            console.log('this.props.tocDeleteMessage', this.props.tocDeleteMessage);
+            if (this.props.tocDeleteMessage && this.props.tocDeleteMessage.changedValue && this.props.tocDeleteMessage.changedValue.labelText) {
+                containerName = this.props.tocDeleteMessage.changedValue.labelText;
+            }
+            if(this.props.tocDeleteMessage&& this.props.tocDeleteMessage.messageType === TYPE_SINGLE_CONTAINER_DELETE){ 
                 return (
                     <PopUp
                         togglePopup={this.deleteRejected}
@@ -805,6 +810,7 @@ class SlateWrapper extends Component {
                         saveButtonText='Okay'
                         dialogText={SINGLE_CONTAINER_DELETE}
                         tocDelete={true}
+                        itemName = {containerName}
                         tocDeleteClass='tocDeleteClass'
                     />                   
                    
@@ -822,6 +828,7 @@ class SlateWrapper extends Component {
                         dialogText={dialogText}
                         note={note}
                         tocDelete={true}
+                        itemName = {containerName}
                         tocDeleteClass='tocDeleteClass'
                     />
     
@@ -836,6 +843,7 @@ class SlateWrapper extends Component {
                         saveButtonText='Yes'
                         dialogText={DELETE_DIALOG_TEXT}
                         tocDelete={true}
+                        itemName = {containerName}
                         tocDeleteClass='tocDeleteClass'
                     />
     
