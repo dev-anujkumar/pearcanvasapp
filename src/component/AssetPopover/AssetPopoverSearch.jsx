@@ -6,7 +6,7 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import { apoSearchCloseAction, searchForFiguresAction, selectedFigureAction, apoSearchSaveAction, removeAssetLinkAction, getAssetPopoverId } from './AssetPopover_Actions.js';
+import { apoSearchCloseAction, searchForFiguresAction, selectedFigureAction, apoSearchSaveAction, removeAssetLinkAction, getAssetPopoverId, assetIdForSnapshot } from './AssetPopover_Actions.js';
 import '../../styles/AssetPopover/assetPopoverStyles.css';
 import ApiResults from './ApiResults.jsx';
 import { clearAssetPopoverLink } from './openApoFunction.js';
@@ -109,7 +109,8 @@ class AssetPopoverSearch extends React.Component {
      * Remove link 
     */
     removeLink = () => {
-        let assetId = this.props.apoObject && this.props.apoObject.assetId;
+        let assetId = this.props.apoObject && this.props.apoObject.assetId;       
+        this.props.assetIdForSnapshot(assetId)
         clearAssetPopoverLink(assetId);
         this.apoSearchClose();
         setTimeout(() => {
@@ -220,7 +221,8 @@ const mapActionToProps = {
     searchForFigures: searchForFiguresAction,
     selectedFigure: selectedFigureAction,
     apoSearchSave: apoSearchSaveAction,
-    removeAssetLink: removeAssetLinkAction
+    removeAssetLink: removeAssetLinkAction,
+    assetIdForSnapshot: assetIdForSnapshot
 }
 
 /**

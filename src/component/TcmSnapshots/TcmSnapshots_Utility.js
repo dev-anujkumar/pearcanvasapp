@@ -609,7 +609,7 @@ const isEmpty = (obj) => {
  * @param {Object} containerElement - Element Parent Data
  * @param {Function} dispatch to dispatch tcmSnapshots
 */
-export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, containerElement, dispatch) => {
+export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, containerElement, dispatch,assetRemoveidForSnapshot) => {
     let actionStatus = {
         action:"update",
         status:"",
@@ -650,6 +650,7 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
         let actionStatusVersioning = Object.assign({}, actionStatus);
         actionStatusVersioning.action="create"
         actionStatusVersioning.status ="accepted"
+        actionStatusVersioning.assetRemoveidForSnapshot = assetRemoveidForSnapshot
         /** After versioning with old snapshots*/
         prepareTcmSnapshots(oldData, actionStatusVersioning, containerElement, "","",elementIndex)
     }
