@@ -61,7 +61,7 @@ export const loadTrackChanges = (elementId) => {
                 let childData = await createMultiColumnObject(groupedContent)
                 obj.child = childData;
               }
-              else if(data.type==="popup" &&  data.id && .includes('manifest')){
+              else if(data.type==="popup" &&  data.id && data.id.includes('manifest')){
                 let childData = await creatPopupObject(data)
                 obj.child = childData;
               }
