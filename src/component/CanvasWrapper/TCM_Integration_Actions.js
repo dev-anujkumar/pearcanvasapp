@@ -56,16 +56,16 @@ export const loadTrackChanges = (elementId) => {
             popupChildren =[...popupChildren, obj]
           }
           if(data && data.id && data.id.includes("manifest")){
-           if(data.type==="groupedcontent" && obj.urn.includes('manifest')){
+           if(data.type==="groupedcontent" &&  data.id && data.id.includes('manifest')){
                 let groupedContent=element.groupeddata.bodymatter;
                 let childData = await createMultiColumnObject(groupedContent)
                 obj.child = childData;
               }
-              else if(data.type==="popup" && obj.urn.includes('manifest')){
+              else if(data.type==="popup" &&  data.id && .includes('manifest')){
                 let childData = await creatPopupObject(data)
                 obj.child = childData;
               }
-              else if(data.type!="groupedcontent" && data.type!="popup" && obj.urn.includes('manifest')){
+              else if(data.type!="groupedcontent" && data.type!="popup" &&  data.id && data.id.includes('manifest')){
                 let newType = (element.type == 'citations' || data.type == 'poetry') ? 'contents' : 'elementdata'; 
                 let childData = await createManifestObject(data,newType)
                 obj.child = childData;
@@ -97,16 +97,16 @@ export const loadTrackChanges = (elementId) => {
               let obj = {};
               obj.index = index;
               obj.urn = element.id;
-              if(element.type==="groupedcontent" && obj.urn.includes('manifest')){
+              if(element.type==="groupedcontent" && element.id && element.id.includes('manifest')){
                 let groupedContent=element.groupeddata.bodymatter;
                 let childData = await createMultiColumnObject(groupedContent)
                 obj.child = childData;
               }
-              else if(element.type==="popup" && obj.urn.includes('manifest')){
+              else if(element.type==="popup" && element.id && element.id.includes('manifest')){
                 let childData = await creatPopupObject(element)
                 obj.child = childData;
               }
-              else if(element.type!="groupedcontent" && element.type!="popup" && obj.urn.includes('manifest')){
+              else if(element.type!="groupedcontent" && element.type!="popup" && element.id && element.id.includes('manifest')){
                 let newType = (element.type == 'citations' || element.type == 'poetry') ? 'contents' : 'elementdata'; 
                 let childData = await createManifestObject(element,newType)
                 obj.child = childData;
