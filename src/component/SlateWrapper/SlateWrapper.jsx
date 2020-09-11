@@ -797,7 +797,6 @@ class SlateWrapper extends Component {
          */        
         if (this.props.toggleTocDelete) {
             let containerName = null;
-            console.log('this.props.tocDeleteMessage', this.props.tocDeleteMessage);
             if (this.props.tocDeleteMessage && this.props.tocDeleteMessage.changedValue && this.props.tocDeleteMessage.changedValue.labelText) {
                 containerName = this.props.tocDeleteMessage.changedValue.labelText;
             }
