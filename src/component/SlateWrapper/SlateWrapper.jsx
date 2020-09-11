@@ -201,23 +201,14 @@ class SlateWrapper extends Component {
      */
     renderSlateHeader({ slateData: _slateData }) {
         try {
-            if (_slateData !== null && _slateData !== undefined) {
-                if(_slateData[config.slateManifestURN]){
-                    let _slateObject = _slateData[config.slateManifestURN];
-                    let { contents: _slateContent } = _slateObject;
-                    let title = {
-                        text: this.props.slateTitleUpdated
-                    }
-                    let _slateTitle = title.text ? title : _slateContent.title
-                    return (
-                        <SlateHeader onNavigate={this.props.navigate} slateType={config.slateType} slateTitle={_slateTitle} slateLockInfo={this.props.slateLockInfo} />
-                    )
-                }
-                else {
-                    return (
-                        <SmalllLoader />
-                    )
-                }
+            if (_slateData !== null && _slateData !== undefined && _slateData[config.slateManifestURN]) {
+                return (
+                    <SlateHeader slateLockInfo={this.props.slateLockInfo} />
+                )
+            } else {
+                return (
+                    <SmalllLoader />
+                )
             }
         } catch (error) {
             console.error(error)
@@ -796,7 +787,11 @@ class SlateWrapper extends Component {
          * Need to refactor these all condition and minimize them
          */        
         if (this.props.toggleTocDelete) {
-            if(this.props.tocDeleteMessage&& this.props.tocDeleteMessage.messageType === TYPE_SINGLE_CONTAINER_DELETE){
+            let containerName = null;
+            if (this.props.tocDeleteMessage && this.props.tocDeleteMessage.changedValue && this.props.tocDeleteMessage.changedValue.labelText) {
+                containerName = this.props.tocDeleteMessage.changedValue.labelText;
+            }
+            if(this.props.tocDeleteMessage&& this.props.tocDeleteMessage.messageType === TYPE_SINGLE_CONTAINER_DELETE){ 
                 return (
                     <PopUp
                         togglePopup={this.deleteRejected}
@@ -805,6 +800,7 @@ class SlateWrapper extends Component {
                         saveButtonText='Okay'
                         dialogText={SINGLE_CONTAINER_DELETE}
                         tocDelete={true}
+                        itemName = {containerName}
                         tocDeleteClass='tocDeleteClass'
                     />                   
                    
@@ -822,6 +818,7 @@ class SlateWrapper extends Component {
                         dialogText={dialogText}
                         note={note}
                         tocDelete={true}
+                        itemName = {containerName}
                         tocDeleteClass='tocDeleteClass'
                     />
     
@@ -836,6 +833,7 @@ class SlateWrapper extends Component {
                         saveButtonText='Yes'
                         dialogText={DELETE_DIALOG_TEXT}
                         tocDelete={true}
+                        itemName = {containerName}
                         tocDeleteClass='tocDeleteClass'
                     />
     

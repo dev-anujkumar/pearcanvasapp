@@ -332,6 +332,15 @@ export class TinyMceEditor extends Component {
             let keyDownEvent = null
             let syntaxEnabled = document.querySelector('.panel_syntax_highlighting .switch input');
             let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
+            let elementType = this.getElementTypeForToolbar(this.props.element);
+            let attributionElement = false;
+            let headingElement = elementType.includes('Heading');
+            if (elementType === 'Blockquote') {
+                let selectedElement = editor.selection.getNode();
+                if(selectedElement.className === 'blockquoteTextCredit') {
+                    attributionElement = true;
+                }
+            }
             switch (e.command) {
                 case "indent":
                     if (editor.targetElm.findChildren('ol').length || editor.targetElm.findChildren('ul').length) {
@@ -474,14 +483,17 @@ export class TinyMceEditor extends Component {
                         e.stopPropagation();
                     }
                     break;
-                case 'Bold':
-                case 'Italic':
                 case 'Underline':
-                    if (activeElement.nodeName === "CODE") {
-                        if (syntaxEnabled && syntaxEnabled.checked) {
-                            e.preventDefault();
-                            e.stopPropagation();
-                        }
+                case 'Bold':
+                    if(headingElement || elementType === 'Pullquote' || elementType === 'Blockquote' || elementType === 'Learning Objective Item' || attributionElement || (activeElement.nodeName === "CODE" && syntaxEnabled && syntaxEnabled.checked)) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+                    break
+                case 'Italic':
+                    if((activeElement.nodeName === "CODE" && syntaxEnabled && syntaxEnabled.checked)  || elementType === 'Learning Objective Item' || attributionElement)  {
+                        e.preventDefault();
+                        e.stopPropagation();
                     }
                     break;
             }

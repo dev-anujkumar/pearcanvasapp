@@ -46,6 +46,7 @@ import MultiColumnContext from "./MultiColumnContext.js"
 import MultiColumnContainer from "../MultiColumnElement"
 import {handleTCMData} from '../TcmSnapshots/TcmSnapshot_Actions.js';
 import CopyUrn from '../CopyUrn';
+import { OnCopyContext } from '../CopyUrn/copyUtil.js'
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -214,7 +215,7 @@ class ElementContainer extends Component {
             return;
         }
         let tempDiv = document.createElement('div');
-        html = html.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula').replace(/\uFEFF/g,"").replace(/>\s+</g,'><');
+        html = html.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula').replace(/\uFEFF/g,"").replace(/>\s+</g,'><').replace(/data-mce-href="#"/g,'').replace(/ reset/g,'');
         html=html.trim();
         tempDiv.innerHTML = html;
         tinyMCE.$(tempDiv).find('br').remove();
@@ -949,46 +950,9 @@ class ElementContainer extends Component {
         }
     }
 
-    getParentPosition = (el) => {
-        var xPos = 0;
-        var yPos = 0;
-
-        while (el) {
-            if (el.tagName == "BODY") {
-                // deal with browser quirks with body/window/document and page scroll
-                var xScroll = el.scrollLeft || document.documentElement.scrollLeft;
-                var yScroll = el.scrollTop || document.documentElement.scrollTop;
-
-                xPos += (el.offsetLeft - xScroll + el.clientLeft);
-                yPos += (el.offsetTop - yScroll + el.clientTop);
-            } else {
-                // for all other non-BODY elements
-                xPos += (el.offsetLeft - el.scrollLeft + el.clientLeft);
-                yPos += (el.offsetTop - el.scrollTop + el.clientTop);
-            }
-
-            el = el.offsetParent;
-        }
-        return { x: xPos, y: yPos }
-    }
-
-    onCopyContext=(e)=> {
-
-        if (e.currentTarget.classList.contains('activeTagBgColor')) {
-            const parentPosition = this.getParentPosition(e.currentTarget);
-            const scrollTop = document.getElementById('slateWrapper').scrollTop;
-
-            this.copyClickedX = e.clientX - parentPosition.x;
-            this.copyClickedY = e.clientY - parentPosition.y + scrollTop + 10;
-
-            // this.copyClickedX = e.clientX;   //change position to fixed
-            // this.copyClickedY = e.clientY;
-            this.toggleCopyMenu(true)
-            e.preventDefault();
-        }
-    }
-
-    toggleCopyMenu = (value)=> {
+    toggleCopyMenu = (value,copyClickedX,copyClickedY)=> {
+        this.copyClickedX=copyClickedX;
+        this.copyClickedY=copyClickedY;
         this.setState({showCopyPopup : value})
     }
 
@@ -1399,7 +1363,7 @@ class ElementContainer extends Component {
             <div className="editor" data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
                 {this.state.showCopyPopup && <CopyUrn elementId={this.props.element.id} toggleCopyMenu={this.toggleCopyMenu} copyClickedX={this.copyClickedX} copyClickedY={this.copyClickedY} />}
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
-                    <Button type="element-label" btnClassName={`${btnClassName} ${isQuadInteractive} ${this.state.isOpener ? ' ignore-for-drag' : ''}`} labelText={labelText} copyContext={this.onCopyContext} onClick={(event) => this.labelClickHandler(event)} />
+                    <Button type="element-label" btnClassName={`${btnClassName} ${isQuadInteractive} ${this.state.isOpener ? ' ignore-for-drag' : ''}`} labelText={labelText} copyContext={(e)=>{OnCopyContext(e,this.toggleCopyMenu)}} onClick={(event) => this.labelClickHandler(event)} />
                     {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && config.slateType !== 'assessment' ? (<Button type="delete-element" onClick={(e) => this.showDeleteElemPopup(e,true)} />)
                         : null}
                     {this.renderColorPaletteButton(element, permissions)}
