@@ -165,7 +165,7 @@ class PopUp extends React.Component {
             //jsx dialog text
             return (
                 <>
-                    <h2 className='tocDeleteHeader'>Warning!</h2>
+                    <h2 className = 'tocDeleteHeader'>Warning</h2>
                     {props.itemName ? <div className={` ${props.tocDeleteClass}`} >Are you sure you want to delete '<strong>{props.itemName}</strong>'.this action cannot be undone?</div> : <div className={` ${props.tocDeleteClass}`} >{props.dialogText}</div>}
                 </>
             )

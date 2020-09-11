@@ -152,7 +152,7 @@ export class CanvasWrapper extends Component {
         return true;
     }
     handleNavClick=(nav)=> {
-        if(config.savingInProgress || config.popupCreationCallInProgress){
+        if(config.savingInProgress || config.popupCreationCallInProgress || config.isSavingElement){
             return false
         }
         sendDataToIframe({'type': ShowLoader,'message': { status: true }});
@@ -190,7 +190,7 @@ export class CanvasWrapper extends Component {
                         <div id='artboard-containers'>
                             <div class="artboard-parent">
                                 {/*Prev Button */}
-                                {config.isPopupSlate === false && <div className={`navigation-container prev-btn ${config.disablePrev ? 'disabled':""}`}>
+                                {slateData[config.slateManifestURN] && slateData[config.slateManifestURN].type !== 'popup' && <div className={`navigation-container prev-btn ${config.disablePrev ? 'disabled':""}`}>
                                     <div className='navigation-content'>
                                         <div className='navigation-button back' onClick={() => this.handleNavClick("back")}>
                                             <div className='navigation-icon'>{prevIcon}</div>
@@ -207,7 +207,7 @@ export class CanvasWrapper extends Component {
                                     </RootContext.Provider>
                                 </div>
                                  {/*Next Button */}
-                                 {config.isPopupSlate === false && <div className={`navigation-container next-btn ${config.disableNext ? 'disabled':""}`}>
+                                 {slateData[config.slateManifestURN] && slateData[config.slateManifestURN].type !== 'popup' && <div className={`navigation-container next-btn ${config.disableNext ? 'disabled':""}`}>
                                     <div className='navigation-content' >
                                         <div className='navigation-button next' onClick={() => this.handleNavClick("next")}>
                                             <div className='navigation-icon'>{nextIcon}</div>

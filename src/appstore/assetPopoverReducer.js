@@ -10,7 +10,8 @@ const INITIAL_STATE = {
     apoObject : {},
     imageData : [],
     searchTerm : '' ,                        //Figure name to be find
-    currentlyLinkedImageData : {}
+    currentlyLinkedImageData : {},
+    assetID:""
 };
 
 const INITIAL_ACTION = {
@@ -67,6 +68,12 @@ export default function assetPopoverReducer (state = INITIAL_STATE, action = INI
                 apoObject : action.payload.apoObject,
                 imageData : action.payload.imageData,
                 figureIsSelected : false
+            }
+        }
+        case 'ASSET_ID_SNAPSHOT': {
+            return {
+                ...state,
+                assetID : action.payload.assetID
             }
         }
         case 'USE_STATE_IMAGE_DATA' : {

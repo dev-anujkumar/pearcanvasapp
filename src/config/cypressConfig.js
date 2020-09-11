@@ -66,7 +66,8 @@ let cypressConfig = {
     popupParentElement : {},
     isDefaultElementInProgress:true,
     isCreateGlossary:false,
-    isCreateFootnote:false
+    isCreateFootnote:false,
+    isSavingElement:false
 }
 
 

@@ -325,6 +325,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         }
 
         /** [PCAT-8289] -------------------------- TCM Snapshot Data handling ----------------------------*/
+        let assetRemoveidForSnapshot =  getState().assetPopOverSearch.assetID;
         let isPopupElement = parentElement && parentElement.type == 'popup' && (updatedData.metaDataField !== undefined || updatedData.sectionType !== undefined) ? true : false;
         let noAdditionalFields = (updatedData.metaDataField == undefined && updatedData.sectionType == undefined) ? true : false
         if (elementTypeTCM.indexOf(response.data.type) !== -1 && showHideType == undefined && (isPopupElement || noAdditionalFields)) {
@@ -343,7 +344,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
                 updatedId:updatedData.id
             }
             if(!config.isCreateGlossary){
-                tcmSnapshotsForUpdate(elementUpdateData, elementIndex, containerElement, dispatch);
+                tcmSnapshotsForUpdate(elementUpdateData, elementIndex, containerElement, dispatch, assetRemoveidForSnapshot);
             }
             config.isCreateGlossary = false
         }
@@ -389,7 +390,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         }
         
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
-        
+        config.isSavingElement = false
         customEvent.trigger('glossaryFootnoteSave', response.data.id); 
         config.popupCreationCallInProgress = false;
 
@@ -406,6 +407,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         config.popupCreationCallInProgress = false
         console.log("updateElement Api fail", error);
         document.getElementById('link-notification').innerText = "";
+        config.isSavingElement = false
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
     })
 }

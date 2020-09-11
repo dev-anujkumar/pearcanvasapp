@@ -315,6 +315,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             config.isPopupSlate = true;
             config.savingInProgress = false;
             if (versionPopupReload) {
+                config.isPopupSlate = false;
                 let parentData = getState().appStore.slateLevelData;
                 let newslateData = JSON.parse(JSON.stringify(parentData));
                 newslateData[config.slateManifestURN].contents.bodymatter[versioning.index] = Object.values(slateData.data)[0];
@@ -494,7 +495,7 @@ export const fetchSlateAncestorData = (tocNode = {}) => (dispatch, getState) => 
     let newSlateData = currentSlateData;
     if(Object.keys(currentSlateData).length > 0) {
         while('ancestor' in currentSlateData && currentSlateData.ancestor.label !== 'project') {
-            let ancestorTitle = currentSlateData.ancestor.title || 'Title';
+            let ancestorTitle = currentSlateData.ancestor.title || 'Untitled';
             if(Object.keys(tocNode).length > 0 && tocNode.entityUrn === currentSlateData.ancestor.entityUrn &&
                 ancestorTitle !== tocNode.title) {
                 ancestorTitle = tocNode.title;

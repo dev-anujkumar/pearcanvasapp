@@ -338,7 +338,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                 parentElement: data.metaDataField ? fetchElementWipData(tcmMainBodymatter,index,'popup') : undefined,
                 metaDataField: data.metaDataField ? data.metaDataField : undefined
             };
-            tcmSnapshotsForUpdate(elementUpdateData, index, containerElement,store.dispatch);
+            tcmSnapshotsForUpdate(elementUpdateData, index, containerElement,store.dispatch,"");
         }
         /**-------------------------------------------------------------------------------------------------------------*/
         if(res.data.id !== data.id && currentSlateData.status === 'approved'){

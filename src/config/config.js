@@ -12,7 +12,7 @@ let config = {
     SLATE_REFRESH_URL : "https://contentapis-staging.pearsoncms.net/structure-api/container/v2/",
     AUDIO_NARRATION_URL : 'https://contentapis-staging.pearsoncms.net/structure-api/',
     PAGE_NUMBER_UPDATE_ENDPOINT : "https://contentapis-staging.pearsoncms.net/print-api",
-    NARRATIVE_API_ENDPOINT:"https://contentapis-qa.pearsoncms.net/narrative-api/",
+    NARRATIVE_API_ENDPOINT:"https://contentapis-staging.pearsoncms.net/narrative-api/",
     OPENER_ELEMENT_COREAPI_KEY:  "PAMkIwLGoPIJtNZHc1SzowG7GFlHDZHJ",
     AUDIO_API_KEY : "Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld",
     API_URL: "./api",
@@ -63,8 +63,7 @@ let config = {
         CITE_NODE_REF: "ebaaf975-a68b-4ca6-9604-3d37111b847a",
         CITE_REPO_INSTANCC:"https://staging.api.pearson.com/content/cmis/uswip-aws",
         CITE_REPO_NAME:"AWS US"
-    },
-    NARRATIVE_API_ENDPOINT: "https://contentapis-qa.pearsoncms.net/narrative-api/" 
+    }
 };
 
 if (process.env.NODE_ENV === "development") {
