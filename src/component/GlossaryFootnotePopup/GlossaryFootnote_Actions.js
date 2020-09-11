@@ -320,7 +320,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             "Content-Type": "application/json",
             "PearsonSSOSession": config.ssoToken
         }
-    }).then(res => {
+    }).then( async res => {
         let parentData1 = store.getState().appStore.slateLevelData;
         let currentParentData = JSON.parse(JSON.stringify(parentData1));
         let currentSlateData = currentParentData[config.slateManifestURN];
@@ -338,7 +338,12 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                 parentElement: data.metaDataField ? fetchElementWipData(tcmMainBodymatter,index,'popup') : undefined,
                 metaDataField: data.metaDataField ? data.metaDataField : undefined
             };
-            tcmSnapshotsForUpdate(elementUpdateData, index, containerElement,store.dispatch,"");
+            if (currentSlateData.status === 'approved') {
+                await tcmSnapshotsForUpdate(elementUpdateData, index, containerElement, store.dispatch, "");
+            }
+            else {
+                tcmSnapshotsForUpdate(elementUpdateData, index, containerElement, store.dispatch, "");
+            }
         }
         /**-------------------------------------------------------------------------------------------------------------*/
         if(res.data.id !== data.id && currentSlateData.status === 'approved'){

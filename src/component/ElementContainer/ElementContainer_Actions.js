@@ -305,7 +305,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
                 "PearsonSSOSession": config.ssoToken
             }
         }
-    ).then(response => {
+    ).then(async response => {
         let parentData = getState().appStore.slateLevelData;
         let currentParentData = JSON.parse(JSON.stringify(parentData));
         let currentSlateData = currentParentData[config.slateManifestURN];
@@ -341,10 +341,16 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
                 currentParentData: currentParentData,
                 updateBodymatter:updateBodymatter,
                 response:response.data,
-                updatedId:updatedData.id
+                updatedId:updatedData.id,
+                slateManifestUrn:config.slateManifestURN
             }
-            if(!config.isCreateGlossary){
-                tcmSnapshotsForUpdate(elementUpdateData, elementIndex, containerElement, dispatch, assetRemoveidForSnapshot);
+            if(!config.isCreateGlossary){  
+                if (currentSlateData.status === 'approved') {
+                    await tcmSnapshotsForUpdate(elementUpdateData, elementIndex, containerElement, dispatch, assetRemoveidForSnapshot);
+                }
+                else {
+                    tcmSnapshotsForUpdate(elementUpdateData, elementIndex, containerElement, dispatch, assetRemoveidForSnapshot);
+                }        
             }
             config.isCreateGlossary = false
         }
