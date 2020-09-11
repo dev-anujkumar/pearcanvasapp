@@ -48,16 +48,18 @@ export const loadTrackChanges = (elementId) => {
       let creatPopupObject = async (element) => {
         let popupChildList = popupBody(element);
         popupChildList.length > 0 && popupChildList.map(async (data)=>{
-
+          let obj = {}
+          obj.urn = data.id;
+          obj.index = childObj.length
           if(data && data.id && data.id.includes("work")){
-            let obj = {}
-            obj.urn = data.id;
-            obj.index = childObj.length
+            // let obj = {}
+            // obj.urn = data.id;
+            // obj.index = childObj.length
             popupChildren =[...popupChildren, obj]
           }
           if(data && data.id && data.id.includes("manifest")){
            if(data.type==="groupedcontent" &&  data.id && data.id.includes('manifest')){
-                let groupedContent=element.groupeddata.bodymatter;
+                let groupedContent=data.groupeddata.bodymatter;
                 let childData = await createMultiColumnObject(groupedContent)
                 obj.child = childData;
               }
@@ -66,7 +68,7 @@ export const loadTrackChanges = (elementId) => {
                 obj.child = childData;
               }
               else if(data.type!="groupedcontent" && data.type!="popup" &&  data.id && data.id.includes('manifest')){
-                let newType = (element.type == 'citations' || data.type == 'poetry') ? 'contents' : 'elementdata'; 
+                let newType = (data.type == 'citations' || data.type == 'poetry') ? 'contents' : 'elementdata'; 
                 let childData = await createManifestObject(data,newType)
                 obj.child = childData;
               }
