@@ -308,11 +308,14 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
     }
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })  //show saving spinner
 
+    let tcmParentData,tcmMainBodymatter,tcmBodymatter;
+    if (elementTypeData.indexOf(elementType) !== -1 && store.getState().appStore.showHideType == undefined) {
     /** For TCM snapshots */
     let mainSlateId = config.isPopupSlate ? config.tempSlateManifestURN : config.slateManifestURN;
-    let tcmBodymatter = store.getState().appStore.slateLevelData[config.slateManifestURN].contents.bodymatter;
-    let tcmParentData = fetchParentData(tcmBodymatter, index);
-    let tcmMainBodymatter = store.getState().appStore.slateLevelData[mainSlateId].contents.bodymatter;
+     tcmBodymatter = store.getState().appStore.slateLevelData[config.slateManifestURN].contents.bodymatter;
+     tcmParentData = fetchParentData(tcmBodymatter, index);
+     tcmMainBodymatter = store.getState().appStore.slateLevelData[mainSlateId].contents.bodymatter;
+    }
     /** ----------------- */
     let url = `${config.REACT_APP_API_URL}v1/slate/element?type=${type.toUpperCase()}&id=${glossaryfootnoteid}`
     return axios.put(url, JSON.stringify(data), {
