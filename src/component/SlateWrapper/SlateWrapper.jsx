@@ -201,23 +201,14 @@ class SlateWrapper extends Component {
      */
     renderSlateHeader({ slateData: _slateData }) {
         try {
-            if (_slateData !== null && _slateData !== undefined) {
-                if(_slateData[config.slateManifestURN]){
-                    let _slateObject = _slateData[config.slateManifestURN];
-                    let { contents: _slateContent } = _slateObject;
-                    let title = {
-                        text: this.props.slateTitleUpdated
-                    }
-                    let _slateTitle = title.text ? title : _slateContent.title
-                    return (
-                        <SlateHeader onNavigate={this.props.navigate} slateType={config.slateType} slateTitle={_slateTitle} slateLockInfo={this.props.slateLockInfo} />
-                    )
-                }
-                else {
-                    return (
-                        <SmalllLoader />
-                    )
-                }
+            if (_slateData !== null && _slateData !== undefined && _slateData[config.slateManifestURN]) {
+                return (
+                    <SlateHeader slateLockInfo={this.props.slateLockInfo} />
+                )
+            } else {
+                return (
+                    <SmalllLoader />
+                )
             }
         } catch (error) {
             console.error(error)
