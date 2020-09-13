@@ -306,7 +306,7 @@ const tcmSnapshotsDeletePopup = (snapshotsData, defaultKeys, deleVercase, newVer
             elementId: elementId,
             actionStatus: actionStatus
         }
-        console.log(snapshotsDataToSend ,"snapshotsDataToSend")
+
         tcmSnapshotsOnDefaultSlate(snapshotsDataToSend, defaultKeys,containerElement , type ,deleVercase,newVersionUrns,index,"popupSlate")
     })
 }
