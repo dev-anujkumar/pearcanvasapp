@@ -79,7 +79,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
                 }
         }
     }
-    if(type === 'popup' && element.popupdata.bodymatter.length === 0){
+    if(type === 'popup'){
         dispatch(fetchPOPupSlateData(elmId, contentUrn, 0 , element, index)) 
      }
     let elementParentEntityUrn = parentUrn && parentUrn.contentUrn || config.slateEntityURN
