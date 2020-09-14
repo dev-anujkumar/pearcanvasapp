@@ -497,7 +497,7 @@ const prepareAndSendTcmData = async (elementDetails, wipData, defaultKeys, actio
         elementSnapshot: JSON.stringify(await prepareElementSnapshots(wipData,actionStatus,index)),
         ...defaultKeys
     };
-    if(currentSnapshot && currentSnapshot.elementType.includes("CTA")){
+    if(currentSnapshot && currentSnapshot.elementType.includes("CTA") && currentSnapshot.action == 'create'){
         currentSnapshot.status = 'accepted'  
     }
     
