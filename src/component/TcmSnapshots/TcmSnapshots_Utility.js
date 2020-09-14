@@ -353,6 +353,9 @@ const tcmSnapshotsPopupCTA = (snapshotsData, defaultKeys, containerElement, dele
     const { parentElement, sectionType } = containerElement
     const { wipData, elementId, tag, actionStatus, popupInContainer, slateManifestVersioning } = snapshotsData;
     let popupElement = parentElement ? parentElement : wipData;
+    if(defaultKeys && defaultKeys.action == 'create'){
+        defaultKeys.status = 'accepted'                  // on creating POPUP first time status of CTA is accepted to support revert functionality(as CTA is required value for POPUP)
+    }
     let ctaElement = wipData.type === POPUP_ELEMENT ? wipData.popupdata.postertextobject[0] : wipData;
     elementId.parentId = deleVercase ? newVersionUrns[popupElement.id] : popupElement.id;
     tag.parentTag = fetchElementsTag(popupElement);
