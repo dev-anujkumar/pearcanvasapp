@@ -381,6 +381,11 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
                     config.savingInProgress = false
                 }else if(currentSlateData.status === 'approved'){
                     if(currentSlateData.type==="popup"){
+                        if (config.tcmStatus) {
+                            if (elementTypeTCM.indexOf(updatedData.type) !== -1 && showHideType == undefined) {
+                                prepareDataForUpdateTcm(updatedData.id, getState, dispatch, response.data);
+                            }
+                        }
                         sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
                         dispatch(fetchSlateData(currentSlateData.id, currentSlateData.contentUrn, 0, currentSlateData, "", false));
                     }else{
