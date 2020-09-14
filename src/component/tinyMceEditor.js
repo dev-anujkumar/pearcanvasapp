@@ -483,6 +483,7 @@ export class TinyMceEditor extends Component {
                         e.stopPropagation();
                     }
                     break;
+                case 'Strikethrough':
                 case 'Underline':
                 case 'Bold':
                     if(headingElement || elementType === 'Pullquote' || elementType === 'Blockquote' || elementType === 'Learning Objective Item' || attributionElement || (activeElement.nodeName === "CODE" && syntaxEnabled && syntaxEnabled.checked)) {
