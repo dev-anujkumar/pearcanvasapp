@@ -298,7 +298,8 @@ const tcmSnapshotsDeletePopup = (snapshotsData, defaultKeys, deleVercase, newVer
         tag.popupParentTag = fetchElementsTag(wipData);//WE/AS//POPUP
         /* ID of elements*/
         let elementId = {
-            parentId: deleVercase && newVersionUrns[item.id] ? newVersionUrns[item.id] : item.id
+            parentId: deleVercase && newVersionUrns[item.id] ? newVersionUrns[item.id] : item.id,
+            popID: deleVercase && newVersionUrns[wipData.id] ? newVersionUrns[wipData.id] : wipData.id,
         }
         /* Initial snapshotsData of elements*/
         let snapshotsDataToSend = {
@@ -352,6 +353,9 @@ const tcmSnapshotsPopupCTA = (snapshotsData, defaultKeys, containerElement, dele
     const { parentElement, sectionType } = containerElement
     const { wipData, elementId, tag, actionStatus, popupInContainer, slateManifestVersioning } = snapshotsData;
     let popupElement = parentElement ? parentElement : wipData;
+    if(defaultKeys && defaultKeys.action == 'create'){
+        defaultKeys.status = 'accepted'                  // on creating POPUP first time status of CTA is accepted to support revert functionality(as CTA is required value for POPUP)
+    }
     let ctaElement = wipData.type === POPUP_ELEMENT ? wipData.popupdata.postertextobject[0] : wipData;
     elementId.parentId = deleVercase ? newVersionUrns[popupElement.id] : popupElement.id;
     tag.parentTag = fetchElementsTag(popupElement);
@@ -520,15 +524,19 @@ const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,popupInCo
     }
     if (popupInContainer && config.isPopupSlate) {  //WE:BODY:POP:BODY:WE:BODY:P
         elementTag = `${tag.popupParentTag ? tag.popupParentTag + ":" : ""}POP:BODY:${elementTag}`;
-        elementId = `${eleId.popupParentId ? eleId.popupParentId + "+" : ""}${slateManifestVersioning?slateManifestVersioning:config.slateManifestURN}+${elementId}`;
+        elementId = `${eleId.popupParentId ? eleId.popupParentId + "+" : ""}${eleId.popID ? eleId.popID : slateManifestVersioning ? slateManifestVersioning:config.slateManifestURN}+${elementId}`;
     }
     else if (popupInContainer) {                   //WE:BODY:POP:HEAD:CTA | WE:BODY:POP:BODY:P
         elementTag = `${tag.popupParentTag ? tag.popupParentTag + ":" : ""}${elementTag}`;
         elementId = `${eleId.popupParentId ? eleId.popupParentId + "+" : ""}${elementId}`;
     }
-    else if (config.isPopupSlate || popupSlate) {                //POP:BODY:WE:BODY:P
+    else if (config.isPopupSlate) {                //POP:BODY:WE:BODY:P
         elementTag = `POP:BODY:${elementTag}`;
         elementId = `${slateManifestVersioning?slateManifestVersioning:config.slateManifestURN}+${elementId}`;
+    }
+    else if ( popupSlate) {                //POP:BODY:WE:BODY:P
+        elementTag = `POP:BODY:${elementTag}`;
+        elementId = `${eleId.popID}+${elementId}`;
     }
     elementData = {
         elementUrn: elementId,
