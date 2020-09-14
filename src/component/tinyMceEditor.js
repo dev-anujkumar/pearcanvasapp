@@ -332,6 +332,15 @@ export class TinyMceEditor extends Component {
             let keyDownEvent = null
             let syntaxEnabled = document.querySelector('.panel_syntax_highlighting .switch input');
             let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
+            let elementType = this.getElementTypeForToolbar(this.props.element);
+            let attributionElement = false;
+            let headingElement = elementType.includes('Heading');
+            if (elementType === 'Blockquote') {
+                let selectedElement = editor.selection.getNode();
+                if(selectedElement.className === 'blockquoteTextCredit') {
+                    attributionElement = true;
+                }
+            }
             switch (e.command) {
                 case "indent":
                     if (editor.targetElm.findChildren('ol').length || editor.targetElm.findChildren('ul').length) {
@@ -474,14 +483,18 @@ export class TinyMceEditor extends Component {
                         e.stopPropagation();
                     }
                     break;
-                case 'Bold':
-                case 'Italic':
+                case 'Strikethrough':
                 case 'Underline':
-                    if (activeElement.nodeName === "CODE") {
-                        if (syntaxEnabled && syntaxEnabled.checked) {
-                            e.preventDefault();
-                            e.stopPropagation();
-                        }
+                case 'Bold':
+                    if(headingElement || elementType === 'Pullquote' || elementType === 'Blockquote' || elementType === 'Learning Objective Item' || attributionElement || (activeElement.nodeName === "CODE" && syntaxEnabled && syntaxEnabled.checked)) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+                    break
+                case 'Italic':
+                    if((activeElement.nodeName === "CODE" && syntaxEnabled && syntaxEnabled.checked)  || elementType === 'Learning Objective Item' || attributionElement)  {
+                        e.preventDefault();
+                        e.stopPropagation();
                     }
                     break;
             }
@@ -2679,7 +2692,9 @@ export class TinyMceEditor extends Component {
             } else if (this.props.element && this.props.element.type === "poetry" && !this.props.currentElement && elemNode && elemNode.innerHTML.replace(/<br>/g, "").replace(/<p><\/p>/g, "") !== "") {
                 this.props.createPoetryElements(this.props.poetryField, true, this.props.index, this.props.element)
             } else {
-                this.props.handleBlur(forceupdate, this.props.currentElement, this.props.index, showHideType)
+                setTimeout(()=>{
+                    this.props.handleBlur(forceupdate, this.props.currentElement, this.props.index, showHideType)
+                },0)
             }
         }
         else {

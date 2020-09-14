@@ -323,7 +323,6 @@ button[aria-label="formatSelector"].tox-tbtn--select{
   float: right;
   display: flex;
   align-items: center;
-  display: flex;
   height: 100%;
   margin-right: 16px;
 }
@@ -404,7 +403,6 @@ top: 102px;
   position: absolute;
   border-width: 3px;
   border-style: solid;
-  left: 0;
   bottom: 100%;
   left: 40%;
   border-color: transparent transparent rgba(0, 0, 0, 0.65);

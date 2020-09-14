@@ -61,7 +61,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 "PearsonSSOSession": config.ssoToken
             }
         }
-    ).then(createdElemData => {
+    ).then(async createdElemData => {
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         const parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
@@ -82,7 +82,12 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 bodymatter: currentSlateData.contents.bodymatter,
                 response: createdElemData.data
             };
-            tcmSnapshotsForCreate(slateData, type, containerElement, dispatch);
+            if (currentSlateData.status === 'approved') {
+                await tcmSnapshotsForCreate(slateData, type, containerElement, dispatch);
+            }
+            else {
+                tcmSnapshotsForCreate(slateData, type, containerElement, dispatch);
+            }
         }
         /**---------------------------------------------------------------------------------------------------*/
 

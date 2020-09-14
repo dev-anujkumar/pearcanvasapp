@@ -60,17 +60,9 @@ export const handleTCMData = (slateManifestUrn) => (dispatch, getState) => {
 var timerID;
 var allSnapshotData = [];
 export const sendElementTcmSnapshot = async (snapshotData) => {
-    let parentData = store.getState().appStore.slateLevelData;
-
-    let currentParentData = JSON.parse(JSON.stringify(parentData));
-    let currentSlateData = currentParentData[config.slateManifestURN];
-    if (currentSlateData && currentSlateData.status === 'approved') {
-        await callSnapshotAPI(snapshotData)
-    } else {
         allSnapshotData.push(snapshotData);
         if (timerID) clearTimeout(timerID);
         timerID = setTimeout(async () => { let snapshots = allSnapshotData; allSnapshotData = []; await callSnapshotAPI(snapshots) }, 500);        
-    }
 }
 
 const callSnapshotAPI = async(snapshotData) => {
