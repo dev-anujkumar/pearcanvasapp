@@ -298,7 +298,8 @@ const tcmSnapshotsDeletePopup = (snapshotsData, defaultKeys, deleVercase, newVer
         tag.popupParentTag = fetchElementsTag(wipData);//WE/AS//POPUP
         /* ID of elements*/
         let elementId = {
-            parentId: deleVercase && newVersionUrns[item.id] ? newVersionUrns[item.id] : item.id
+            parentId: deleVercase && newVersionUrns[item.id] ? newVersionUrns[item.id] : item.id,
+            popID: deleVercase && newVersionUrns[wipData.id] ? newVersionUrns[wipData.id] : wipData.id,
         }
         /* Initial snapshotsData of elements*/
         let snapshotsDataToSend = {
@@ -520,15 +521,19 @@ const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,popupInCo
     }
     if (popupInContainer && config.isPopupSlate) {  //WE:BODY:POP:BODY:WE:BODY:P
         elementTag = `${tag.popupParentTag ? tag.popupParentTag + ":" : ""}POP:BODY:${elementTag}`;
-        elementId = `${eleId.popupParentId ? eleId.popupParentId + "+" : ""}${slateManifestVersioning?slateManifestVersioning:config.slateManifestURN}+${elementId}`;
+        elementId = `${eleId.popupParentId ? eleId.popupParentId + "+" : ""}${eleId.popID ? eleId.popID : slateManifestVersioning ? slateManifestVersioning:config.slateManifestURN}+${elementId}`;
     }
     else if (popupInContainer) {                   //WE:BODY:POP:HEAD:CTA | WE:BODY:POP:BODY:P
         elementTag = `${tag.popupParentTag ? tag.popupParentTag + ":" : ""}${elementTag}`;
         elementId = `${eleId.popupParentId ? eleId.popupParentId + "+" : ""}${elementId}`;
     }
-    else if (config.isPopupSlate || popupSlate) {                //POP:BODY:WE:BODY:P
+    else if (config.isPopupSlate) {                //POP:BODY:WE:BODY:P
         elementTag = `POP:BODY:${elementTag}`;
         elementId = `${slateManifestVersioning?slateManifestVersioning:config.slateManifestURN}+${elementId}`;
+    }
+    else if ( popupSlate) {                //POP:BODY:WE:BODY:P
+        elementTag = `POP:BODY:${elementTag}`;
+        elementId = `${eleId.popID}+${elementId}`;
     }
     elementData = {
         elementUrn: elementId,
