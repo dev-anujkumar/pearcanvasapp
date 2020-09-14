@@ -79,7 +79,7 @@ export const loadTrackChanges = (elementId) => {
       let popupBody = (element) => {
         let popupData = []
         let popupTitle = element.popupdata && element.popupdata['formatted-title'] ? element.popupdata['formatted-title'] : {}
-        let popupCTA = element.popupdata.postertextobject[0]
+        let popupCTA = element && element.popupdata && element.popupdata.postertextobject && element.popupdata.postertextobject[0]
         // popupData = popupData.push(popupTitle)
         popupData = popupTitle ?  [popupTitle,popupCTA] : [popupCTA]
         let popupSlate = {};

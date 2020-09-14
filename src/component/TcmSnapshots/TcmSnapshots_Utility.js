@@ -619,6 +619,7 @@ const setContentSnapshot = (element) => {
     } else {
         snapshotData = element.html && element.html.text ? element.html.text : "";
     }
+    snapshotData = snapshotData && snapshotData.replace(/data-mce-href="#"/g,'')
     return snapshotData
 }
 /**

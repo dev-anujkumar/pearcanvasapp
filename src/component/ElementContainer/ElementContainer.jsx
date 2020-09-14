@@ -217,6 +217,7 @@ class ElementContainer extends Component {
         let tempDiv = document.createElement('div');
         html = html.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula').replace(/\uFEFF/g,"").replace(/>\s+</g,'><').replace(/data-mce-href="#"/g,'').replace(/ reset/g,'');
         html=html.trim();
+        // console.log("html",html)
         tempDiv.innerHTML = html;
         tinyMCE.$(tempDiv).find('br').remove();
         tinyMCE.$(tempDiv).find('.blockquote-hidden').remove();
@@ -662,9 +663,9 @@ class ElementContainer extends Component {
                     let nodehtml = currentListNode.innerHTML;
                     if(nodehtml && previousElementData.html) {
                         let prevData = this.replaceUnwantedtags(previousElementData.html.text);
-                        prevData = prevData && prevData.replace(/(reset | reset|↵)/g, "");
+                        prevData = prevData && prevData.replace(/(reset | reset|↵)/g, "").replace(/data-mce-href="#"/g,'');
                         let nodeData = this.replaceUnwantedtags(nodehtml);
-                        nodeData = nodeData && nodeData.replace(/(reset | reset|↵)/g, "");
+                        nodeData = nodeData && nodeData.replace(/(reset | reset|↵)/g, "").replace(/data-mce-href="#"/g,'');
                         if ((nodeData !== prevData || forceupdate && !config.savingInProgress) && !assetPopoverPopupIsVisible && !checkCanvasBlocker) {
                             dataToSend = createUpdatedData(previousElementData.type, previousElementData, currentListNode, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, showHideType,undefined)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
