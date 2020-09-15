@@ -523,7 +523,6 @@ const prepareAndSendTcmData = async (elementDetails, wipData, defaultKeys, actio
     if(currentSnapshot && currentSnapshot.elementType.includes("CTA") && currentSnapshot.action == 'create'){
         currentSnapshot.status = 'accepted'  
     }
-    
     await sendElementTcmSnapshot(currentSnapshot)
 }
 
