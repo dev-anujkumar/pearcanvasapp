@@ -71,7 +71,6 @@ export const setSemanticsSnapshots = async (element,actionStatus,index) => {
             assetPopoverSnap = [];
             break;
     }
-
     semanticSnapshots = {
         glossarySnapshot: glossarySnap,
         footnoteSnapshot: footnoteSnap,
