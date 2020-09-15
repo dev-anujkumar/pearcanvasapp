@@ -78,7 +78,7 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
     let hasParentData = containerElement && checkParentData(containerElement)
     /** TCM Snapshots on Popup Slate */
     if (config.isPopupSlate) {
-        if (elementInPopupInContainer) {   /** Elements in Containers/ Simple Elements in PopupSlate Inside WE/Aside */
+        if (elementInPopupInContainer) {   /** Elements in Containers/ Simple Elements in PopupSlate Inside WE/Aside */     
             tcmSnapshotsElementsInPopupInContainer(snapshotsData, defaultKeys, containerElement, type, deleVercase, newVersionUrns,index);
         } else {                           /** Elements in Containers/ Simple Elements in PopupSlate */
             tcmSnapshotsOnDefaultSlate(snapshotsData, defaultKeys, containerElement, type, deleVercase, newVersionUrns,index);
@@ -434,9 +434,11 @@ const tcmSnapshotsPopupInContainer = (snapshotsData, defaultKeys, containerEleme
  * @param {Boolean} deleVercase - Check for delete versioning action
  * @param {Object} newVersionUrns - Latest  Version Urns for delete case
 */
-const tcmSnapshotsElementsInPopupInContainer = (snapshotsData, defaultKeys, containerElement, type, deleVercase, newVersionUrns,index) => {
+const tcmSnapshotsElementsInPopupInContainer = async (snapshotsData, defaultKeys, containerElement, type, deleVercase, newVersionUrns,index) => {
     const { wipData, elementId, tag, actionStatus, slateManifestVersioning } = snapshotsData;
-    const { popupAsideData, popupParentUrn } = config.popupParentElement
+    let popupContainerData = config.popupParentElement
+    await checkContainerPopupVersion(popupContainerData)
+    const { popupAsideData, popupParentUrn } = popupContainerData
     let popupParent = popupAsideData ? popupAsideData : popupParentUrn ? popupParentUrn :  undefined;
     elementId.popupParentId = popupParent && popupParent.id ? popupParent.id : ""; //we:id
     tag.popupParentTag = popupParent && fetchElementsTag(popupParent);//WE/AS
@@ -453,6 +455,27 @@ const tcmSnapshotsElementsInPopupInContainer = (snapshotsData, defaultKeys, cont
         slateManifestVersioning:slateManifestVersioning
     }
     tcmSnapshotsOnDefaultSlate(popupData, defaultKeys, containerElement, type, deleVercase, newVersionUrns,index);
+}
+export const checkContainerPopupVersion = async (containerElement) => {
+    if (containerElement && (containerElement.popupAsideData && containerElement.popupAsideData.element.status === "approved")) {
+        let contentUrn = containerElement.popupAsideData ? containerElement.popupAsideData.contentUrn : containerElement.popupParentUrn ? containerElement.popupParentUrn.contentUrn : ""
+        if (contentUrn) {
+            let newManifestData = await getLatestVersion(contentUrn);
+            if (newManifestData && containerElement.popupAsideData) {
+                    containerElement.popupAsideData.id = newManifestData
+            }
+        }
+    }
+    if (containerElement && containerElement.popupParentUrn && containerElement.popupParentUrn.manifestUrn !== containerElement.popupAsideData.id) {
+        await Promise.all(containerElement.popupAsideData && containerElement.popupAsideData.element.elementdata.bodymatter.map(async (ele) => {
+            if (ele.id === containerElement.popupParentUrn.manifestUrn && ele.status === "approved") {
+                let newSectionManifest = await getLatestVersion(containerElement.popupParentUrn.contentUrn);
+                containerElement.popupParentUrn.manifestUrn = newSectionManifest ? newSectionManifest : containerElement.popupParentUrn.manifestUrn
+
+            }
+        }))
+    }
+    return containerElement
 }
 
 /**
@@ -510,7 +533,6 @@ const prepareAndSendTcmData = async (elementDetails, wipData, defaultKeys, actio
  * @returns {Object} Object that contains the element tag and elementUrn for snapshot 
 */
 const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,popupInContainer,slateManifestVersioning, popupSlate) => {
-    console.log(slateManifestVersioning,"slateManifestVersioning")
     let elementData = {};
     let elementTag = `${tag.parentTag}${isHead ? ":" + isHead : ""}${tag.childTag ? ":" + tag.childTag : ""}`;
     let elementId = `${eleId.parentId}${sectionId && isHead === "BODY" ? "+" + sectionId : ""}${eleId.childId ? "+" + eleId.childId : ""}`
@@ -810,19 +832,17 @@ export const checkContainerElementVersion = async (containerElement, versionStat
         }
     }
     /** latest version for slate*/
-    console.log(currentSlateData,"currentSlateData")
     if (currentSlateData && currentSlateData.status && currentSlateData.status === 'approved') {
         let newSlateManifest = await getLatestVersion(currentSlateData.contentUrn);
         containerElement.slateManifest = newSlateManifest ? newSlateManifest : config.slateManifestURN
-        if(currentSlateData.popupSlateData){
+        if (currentSlateData.popupSlateData && currentSlateData.popupSlateData.status === 'approved') {
             let newPopupSlateManifest = await getLatestVersion(currentSlateData.popupSlateData.contentUrn);
-         containerElement.popupslateManifest = newPopupSlateManifest ? newPopupSlateManifest : config.tempSlateManifestURN
+            containerElement.popupslateManifest = newPopupSlateManifest ? newPopupSlateManifest : config.tempSlateManifestURN
         }
         // if(newSlateManifest)
         // {
         // containerElement.slateManifest = newSlateManifest
         // }
-        console.log(containerElement,"containerElement")
     }
     return containerElement;
 }

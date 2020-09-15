@@ -836,7 +836,6 @@ export const getTableEditorData = (elementid,updatedData) => (dispatch, getState
     if(updatedData && elementid !== updatedData){
         elementId = updatedData;
     }
-    console.log(elementId, config.projectUrn, ">>>>>")
     return axios.get(`${config.REACT_APP_API_URL}v1/slate/narrative/data/${config.projectUrn}/${elementId}`,
         {
             headers: {
@@ -845,7 +844,6 @@ export const getTableEditorData = (elementid,updatedData) => (dispatch, getState
             }
         }
     ).then(response => {
-        console.log(response, "<<<<<<<<<<<<")
         let parentData = getState().appStore.slateLevelData
         const newParentData = JSON.parse(JSON.stringify(parentData));
         if (newParentData[config.slateManifestURN].status === 'wip') {
