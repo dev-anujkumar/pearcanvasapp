@@ -443,8 +443,13 @@ export class TinyMceEditor extends Component {
                     clickedX = coOrds.left;
                     clickedY = coOrds.top + coOrds.height / 2;
                     setTimeout(() => {
-                        tinymce.activeEditor.selection.placeCaretAt(clickedX, clickedY)
-                    }, 1000)
+                        let specialCharNode = document.querySelector('div.tox-collection.tox-collection--grid');
+                        specialCharNode.addEventListener('click',()=>{
+                            setTimeout(()=>{
+                                tinymce.activeEditor.selection.placeCaretAt(clickedX, clickedY)
+                            },0)
+                        })
+                    },0)
                     //this.currentCursorBookmark = editor.selection.bookmarkManager.getBookmark();                
                     break;
                 case "mceInsertContent":
