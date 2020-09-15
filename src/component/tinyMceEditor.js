@@ -2679,8 +2679,9 @@ export class TinyMceEditor extends Component {
             if (this.props.element && this.props.element.type === "citations") {
                 elemNode.innerHTML = elemNode.innerHTML.replace(/<\s*\/?br\s*[\/]?>/g, "");  /**[BG-2578] */
             }
+            const allowedSubElements = ["poetry", "popup", "citations"]
             elemNode.innerHTML = removeBOM(elemNode.innerHTML) // TK-5425 : removing "&#65279" from model
-            if (this.props.element && config.allowedSubElements.includes(this.props.element.type)) {
+            if (this.props.element && allowedSubElements.includes(this.props.element.type)) {
                 //Removing blank/unused tags for "poetry", "popup", "citations"
                 elemNode.innerHTML = removeBlankTags(elemNode.innerHTML)
             }

@@ -67,8 +67,7 @@ let cypressConfig = {
     isDefaultElementInProgress:true,
     isCreateGlossary:false,
     isCreateFootnote:false,
-    isSavingElement:false,
-    allowedSubElements: ["poetry", "popup", "citations"]
+    isSavingElement:false
 }
 
 
