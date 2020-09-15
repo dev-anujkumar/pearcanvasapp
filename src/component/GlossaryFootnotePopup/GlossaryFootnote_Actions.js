@@ -214,7 +214,9 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         }
     } else {
         workEditor = document.getElementById('cypress-' + index)
-        workContainer = workEditor.innerHTML;
+        workContainer = workEditor.innerHTML;      
+        workContainer = workContainer.replace(/data-mce-href="#"/g,'').replace(/ reset/g,'')
+        // console.log("workContainer",workContainer)
         figureDataObj = {
             "text": workContainer
         }

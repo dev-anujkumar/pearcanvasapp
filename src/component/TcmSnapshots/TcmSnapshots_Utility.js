@@ -78,7 +78,7 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
     let hasParentData = containerElement && checkParentData(containerElement)
     /** TCM Snapshots on Popup Slate */
     if (config.isPopupSlate) {
-        if (elementInPopupInContainer) {   /** Elements in Containers/ Simple Elements in PopupSlate Inside WE/Aside */
+        if (elementInPopupInContainer) {   /** Elements in Containers/ Simple Elements in PopupSlate Inside WE/Aside */     
             tcmSnapshotsElementsInPopupInContainer(snapshotsData, defaultKeys, containerElement, type, deleVercase, newVersionUrns,index);
         } else {                           /** Elements in Containers/ Simple Elements in PopupSlate */
             tcmSnapshotsOnDefaultSlate(snapshotsData, defaultKeys, containerElement, type, deleVercase, newVersionUrns,index);
@@ -298,7 +298,8 @@ const tcmSnapshotsDeletePopup = (snapshotsData, defaultKeys, deleVercase, newVer
         tag.popupParentTag = fetchElementsTag(wipData);//WE/AS//POPUP
         /* ID of elements*/
         let elementId = {
-            parentId: deleVercase && newVersionUrns[item.id] ? newVersionUrns[item.id] : item.id
+            parentId: deleVercase && newVersionUrns[item.id] ? newVersionUrns[item.id] : item.id,
+            popID: deleVercase && newVersionUrns[wipData.id] ? newVersionUrns[wipData.id] : wipData.id,
         }
         /* Initial snapshotsData of elements*/
         let snapshotsDataToSend = {
@@ -434,9 +435,11 @@ const tcmSnapshotsPopupInContainer = (snapshotsData, defaultKeys, containerEleme
  * @param {Boolean} deleVercase - Check for delete versioning action
  * @param {Object} newVersionUrns - Latest  Version Urns for delete case
 */
-const tcmSnapshotsElementsInPopupInContainer = (snapshotsData, defaultKeys, containerElement, type, deleVercase, newVersionUrns,index) => {
+const tcmSnapshotsElementsInPopupInContainer = async (snapshotsData, defaultKeys, containerElement, type, deleVercase, newVersionUrns,index) => {
     const { wipData, elementId, tag, actionStatus, slateManifestVersioning } = snapshotsData;
-    const { popupAsideData, popupParentUrn } = config.popupParentElement
+    let popupContainerData = config.popupParentElement
+    await checkContainerPopupVersion(popupContainerData)
+    const { popupAsideData, popupParentUrn } = popupContainerData
     let popupParent = popupAsideData ? popupAsideData : popupParentUrn ? popupParentUrn :  undefined;
     elementId.popupParentId = popupParent && popupParent.id ? popupParent.id : ""; //we:id
     tag.popupParentTag = popupParent && fetchElementsTag(popupParent);//WE/AS
@@ -453,6 +456,27 @@ const tcmSnapshotsElementsInPopupInContainer = (snapshotsData, defaultKeys, cont
         slateManifestVersioning:slateManifestVersioning
     }
     tcmSnapshotsOnDefaultSlate(popupData, defaultKeys, containerElement, type, deleVercase, newVersionUrns,index);
+}
+export const checkContainerPopupVersion = async (containerElement) => {
+    if (containerElement && (containerElement.popupAsideData && containerElement.popupAsideData.element.status === "approved")) {
+        let contentUrn = containerElement.popupAsideData ? containerElement.popupAsideData.contentUrn : containerElement.popupParentUrn ? containerElement.popupParentUrn.contentUrn : ""
+        if (contentUrn) {
+            let newManifestData = await getLatestVersion(contentUrn);
+            if (newManifestData && containerElement.popupAsideData) {
+                    containerElement.popupAsideData.id = newManifestData
+            }
+        }
+    }
+    if (containerElement && containerElement.popupParentUrn && containerElement.popupParentUrn.manifestUrn !== containerElement.popupAsideData.id) {
+        await Promise.all(containerElement.popupAsideData && containerElement.popupAsideData.element.elementdata.bodymatter.map(async (ele) => {
+            if (ele.id === containerElement.popupParentUrn.manifestUrn && ele.status === "approved") {
+                let newSectionManifest = await getLatestVersion(containerElement.popupParentUrn.contentUrn);
+                containerElement.popupParentUrn.manifestUrn = newSectionManifest ? newSectionManifest : containerElement.popupParentUrn.manifestUrn
+
+            }
+        }))
+    }
+    return containerElement
 }
 
 /**
@@ -496,7 +520,9 @@ const prepareAndSendTcmData = async (elementDetails, wipData, defaultKeys, actio
         elementSnapshot: JSON.stringify(await prepareElementSnapshots(wipData,actionStatus,index)),
         ...defaultKeys
     };
-    
+    if(currentSnapshot && currentSnapshot.elementType.includes("CTA") && currentSnapshot.action == 'create'){
+        currentSnapshot.status = 'accepted'  
+    }
     await sendElementTcmSnapshot(currentSnapshot)
 }
 
@@ -510,7 +536,6 @@ const prepareAndSendTcmData = async (elementDetails, wipData, defaultKeys, actio
  * @returns {Object} Object that contains the element tag and elementUrn for snapshot 
 */
 const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,popupInContainer,slateManifestVersioning, popupSlate) => {
-    console.log(slateManifestVersioning,"slateManifestVersioning")
     let elementData = {};
     let elementTag = `${tag.parentTag}${isHead ? ":" + isHead : ""}${tag.childTag ? ":" + tag.childTag : ""}`;
     let elementId = `${eleId.parentId}${sectionId && isHead === "BODY" ? "+" + sectionId : ""}${eleId.childId ? "+" + eleId.childId : ""}`
@@ -520,15 +545,19 @@ const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,popupInCo
     }
     if (popupInContainer && config.isPopupSlate) {  //WE:BODY:POP:BODY:WE:BODY:P
         elementTag = `${tag.popupParentTag ? tag.popupParentTag + ":" : ""}POP:BODY:${elementTag}`;
-        elementId = `${eleId.popupParentId ? eleId.popupParentId + "+" : ""}${slateManifestVersioning?slateManifestVersioning:config.slateManifestURN}+${elementId}`;
+        elementId = `${eleId.popupParentId ? eleId.popupParentId + "+" : ""}${eleId.popID ? eleId.popID : slateManifestVersioning ? slateManifestVersioning:config.slateManifestURN}+${elementId}`;
     }
     else if (popupInContainer) {                   //WE:BODY:POP:HEAD:CTA | WE:BODY:POP:BODY:P
         elementTag = `${tag.popupParentTag ? tag.popupParentTag + ":" : ""}${elementTag}`;
         elementId = `${eleId.popupParentId ? eleId.popupParentId + "+" : ""}${elementId}`;
     }
-    else if (config.isPopupSlate || popupSlate) {                //POP:BODY:WE:BODY:P
+    else if (config.isPopupSlate) {                //POP:BODY:WE:BODY:P
         elementTag = `POP:BODY:${elementTag}`;
         elementId = `${slateManifestVersioning?slateManifestVersioning:config.slateManifestURN}+${elementId}`;
+    }
+    else if ( popupSlate) {                //POP:BODY:WE:BODY:P
+        elementTag = `POP:BODY:${elementTag}`;
+        elementId = `${eleId.popID}+${elementId}`;
     }
     elementData = {
         elementUrn: elementId,
@@ -619,6 +648,7 @@ const setContentSnapshot = (element) => {
     } else {
         snapshotData = element.html && element.html.text ? element.html.text : "";
     }
+    snapshotData = snapshotData && snapshotData.replace(/data-mce-href="#"/g,'')
     return snapshotData
 }
 /**
@@ -810,19 +840,17 @@ export const checkContainerElementVersion = async (containerElement, versionStat
         }
     }
     /** latest version for slate*/
-    console.log(currentSlateData,"currentSlateData")
     if (currentSlateData && currentSlateData.status && currentSlateData.status === 'approved') {
         let newSlateManifest = await getLatestVersion(currentSlateData.contentUrn);
         containerElement.slateManifest = newSlateManifest ? newSlateManifest : config.slateManifestURN
-        if(currentSlateData.popupSlateData){
+        if (currentSlateData.popupSlateData && currentSlateData.popupSlateData.status === 'approved') {
             let newPopupSlateManifest = await getLatestVersion(currentSlateData.popupSlateData.contentUrn);
-         containerElement.popupslateManifest = newPopupSlateManifest ? newPopupSlateManifest : config.tempSlateManifestURN
+            containerElement.popupslateManifest = newPopupSlateManifest ? newPopupSlateManifest : config.tempSlateManifestURN
         }
         // if(newSlateManifest)
         // {
         // containerElement.slateManifest = newSlateManifest
         // }
-        console.log(containerElement,"containerElement")
     }
     return containerElement;
 }

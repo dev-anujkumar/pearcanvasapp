@@ -35,6 +35,7 @@ import {getAllSlatesData} from '../../js/getAllSlatesData'
 import { fetchUsageTypeData } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import { toggleElemBordersAction, togglePageNumberAction } from '../Toolbar/Toolbar_Actions.js';
 import { prevIcon, nextIcon } from '../../../src/images/ElementButtons/ElementButtons.jsx';
+import { assetIdForSnapshot } from '../../component/AssetPopover/AssetPopover_Actions.js';
 export class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
@@ -302,6 +303,7 @@ export default connect(
         setSlateLength,
         toggleElemBordersAction,
         togglePageNumberAction,
-        tcmCosConversionSnapshot
+        tcmCosConversionSnapshot,
+        assetIdForSnapshot
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

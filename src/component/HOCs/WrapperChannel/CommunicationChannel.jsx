@@ -286,6 +286,7 @@ function CommunicationChannel(WrappedComponent) {
                 activeElement.forEach((item) => {
                     if (item.classList.contains('mce-content-body') || !item.classList.contains('place-holder')) {
                         if (item.querySelector(`[asset-id="${linkData.linkId}"]`) || item.querySelector('#' + linkData.linkId)) {
+                           
                             tinymce.activeEditor.undoManager.transact(() => {
                                 item.focus();
                                 editor = item;
@@ -293,6 +294,7 @@ function CommunicationChannel(WrappedComponent) {
                                 linkHTML = linkNode.innerHTML || '';
                                 linkNode.outerHTML = linkHTML;
                                 if (linkData.link == "unlink") {
+                                    this.props.assetIdForSnapshot(linkData.linkId)
                                     linkNotification = "Link removed.";
                                 }
                             });
