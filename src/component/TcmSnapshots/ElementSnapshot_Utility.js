@@ -55,7 +55,7 @@ export const setSemanticsSnapshots = async (element,actionStatus,index) => {
             let listData = element.type === ELEMENT_LIST ? element.elementdata.listitems: element.poetrylines
             glossarySnap =  await setSnapshotsInListAndPoetry(actionStatus, listData, GLOSSARY, glossaryHtmlList,index);
             footnoteSnap =  await setSnapshotsInListAndPoetry(actionStatus, listData, FOOTNOTE, footnoteHtmlList,index);
-            assetPopoverSnap =  await setSnapshotsInListAndPoetry("", listData, ASSET_POPOVER,undefined,index);
+            assetPopoverSnap =  await setSnapshotsInListAndPoetry(actionStatus, listData, ASSET_POPOVER,undefined,index);
             break;
 
         case BLOCKFEATURE:
@@ -71,7 +71,6 @@ export const setSemanticsSnapshots = async (element,actionStatus,index) => {
             assetPopoverSnap = [];
             break;
     }
-
     semanticSnapshots = {
         glossarySnapshot: glossarySnap,
         footnoteSnapshot: footnoteSnap,
