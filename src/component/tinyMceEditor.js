@@ -129,6 +129,14 @@ export class TinyMceEditor extends Component {
                     /*
                         if content is caused by wiris then call blur
                     */
+                    if(e.originalEvent && e.originalEvent.command === "mceInsertContent"){
+                        let specialCharSpan = document.getElementById('specialChar');
+                        if(specialCharSpan) {
+                            specialCharSpan.remove();
+                            e.preventDefault();
+                            return false;
+                        } 
+                    }
                     if (!e.level && editor.selection.getBoundingClientRect()) {
                         clickedX = editor.selection.getBoundingClientRect().left;
                         clickedY = editor.selection.getBoundingClientRect().top;
@@ -183,6 +191,7 @@ export class TinyMceEditor extends Component {
 
                     if (this.props.element && this.props.element.type === "element-blockfeature" && this.props.element.subtype === "quote" && tinymce.activeEditor && tinymce.activeEditor.id && !tinyMCE.activeEditor.id.includes("footnote")) {
                         let blockqtText = document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins') ? document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').innerText : "";
+                        let bqElem = document.getElementById(tinymce.activeEditor.id);
                         if (!blockqtText.trim()) {
                             var MLtext = document.querySelector('#' + tinymce.activeEditor.id + ' > p > img') || document.querySelector('#' + tinymce.activeEditor.id + ' > img')
                             if (MLtext) {
@@ -193,6 +202,14 @@ export class TinyMceEditor extends Component {
                                 tinyMCE.$('#' + tinymce.activeEditor.id).find('div.mce-visual-caret').remove();
                                 tinyMCE.$('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').append("&nbsp;")
 
+                            } 
+                            else {
+                                if (bqElem.firstChild.nodeName === "#text") {
+                                    let textNode = bqElem.firstChild;
+                                    let bqPara = tinyMCE.$(bqElem).find('p.paragraphNummerEins');
+                                    tinyMCE.$(bqPara).find('br').remove();
+                                    bqPara.append(textNode);
+                                }
                             }
                         }
                         this.removeBogusTagsFromDom();
@@ -442,13 +459,26 @@ export class TinyMceEditor extends Component {
                     let coOrds = editor.selection.getBoundingClientRect();
                     clickedX = coOrds.left;
                     clickedY = coOrds.top + coOrds.height / 2;
+                    let blockqt = document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins');
+                    if (!blockqt || blockqt.innerText.trim()) {
+                        editor.selection.setContent('<span id="specialChar"></span>');
+                    }
                     setTimeout(() => {
                         let specialCharNode = document.querySelector('div.tox-collection.tox-collection--grid');
-                        specialCharNode.addEventListener('click',()=>{
-                            setTimeout(()=>{
-                                tinymce.activeEditor.selection.placeCaretAt(clickedX, clickedY)
+                        specialCharNode.addEventListener('click', () => {
+                            setTimeout(() => {
+                                let element = tinyMCE.$(editor.selection.getNode()).find('p.paragraphNummerEins')[0];
+                                let temElm = editor.dom.create('br');
+                                element.appendChild(temElm);
+                                let tempChildNodes = element.childNodes;
+                                editor.selection.setCursorLocation(element.childNodes[tempChildNodes.length - 1], 0);
+                                let brs = element.getElementsByTagName('br');
+                                while (brs.length) {
+                                    brs[0].parentNode.removeChild(brs[0]);
+                                }
+                                //tinymce.activeEditor.selection.placeCaretAt(clickedX, clickedY)
                             },0)
-                        })
+                        }, false)
                     },0)
                     //this.currentCursorBookmark = editor.selection.bookmarkManager.getBookmark();                
                     break;
