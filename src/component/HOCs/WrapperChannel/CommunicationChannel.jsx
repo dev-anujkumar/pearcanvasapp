@@ -286,6 +286,7 @@ function CommunicationChannel(WrappedComponent) {
                 activeElement.forEach((item) => {
                     if (item.classList.contains('mce-content-body') || !item.classList.contains('place-holder')) {
                         if (item.querySelector(`[asset-id="${linkData.linkId}"]`) || item.querySelector('#' + linkData.linkId)) {
+                            this.props.assetIdForSnapshot(linkData.linkId)
                             tinymce.activeEditor.undoManager.transact(() => {
                                 item.focus();
                                 editor = item;

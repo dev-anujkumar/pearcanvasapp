@@ -103,7 +103,6 @@ describe('Testing <PageNumberElement> Component', () => {
             target: { value: '123' }
         };
         wrapper.find('input.textBox').simulate('change', event);
-        console.log(wrapper.debug(),"kanika")
         wrapperInstance.forceUpdate();
         wrapper.update();
         expect(wrapperInstance.state.inputValue).toBe('123');
