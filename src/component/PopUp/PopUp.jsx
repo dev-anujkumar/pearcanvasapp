@@ -166,7 +166,7 @@ class PopUp extends React.Component {
             return (
                 <>
                     <h2 className = 'tocDeleteHeader'>Warning</h2>
-                    {props.saveButtonText === 'Yes' && !props.note ? (props.itemName ? <div className={` ${props.tocDeleteClass}`} >Are you sure you want to delete '<strong>{props.itemName}</strong>'.This action cannot be undone?</div> : <div className={` ${props.tocDeleteClass}`} >Are you sure you want to delete '<strong>Untitled</strong>'.This action cannot be undone?</div>) :  <div className={` ${props.tocDeleteClass}`} >{props.dialogText}</div>}
+                    {props.tocDelete && props.saveButtonText === 'Yes' && !props.note ? (props.itemName ? <div className={` ${props.tocDeleteClass}`} >Are you sure you want to delete '<strong>{props.itemName}</strong>'.This action cannot be undone?</div> : <div className={` ${props.tocDeleteClass}`} >Are you sure you want to delete '<strong>Untitled</strong>'.This action cannot be undone?</div>) :  <div className={` ${props.tocDeleteClass}`} >{props.dialogText}</div>}
                 </>
             )
         }
