@@ -47,7 +47,7 @@ jest.mock('../../../src/js/getAllSlatesData.js', () => {
         setCurrentSlateAncestorData: jest.fn()
     }
 });
-jest.mock('../../../src/component/ElementContainer/TcmSnapshot_Actions', () => {
+jest.mock('../../../src/component/TcmSnapshots/TcmSnapshot_Actions', () => {
     return {
         tcmSnapshot: jest.fn(),
         handleTCMData: jest.fn()
