@@ -459,7 +459,8 @@ export class TinyMceEditor extends Component {
                     let coOrds = editor.selection.getBoundingClientRect();
                     clickedX = coOrds.left;
                     clickedY = coOrds.top + coOrds.height / 2;
-                    let blockqt = document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins');
+                    let elementId = tinymce.activeEditor ? tinymce.activeEditor.id: '';
+                    let blockqt = document.querySelector('#' + elementId + ' blockquote p.paragraphNummerEins');
                     if (!blockqt || blockqt.innerText.trim()) {
                         editor.selection.setContent('<span id="specialChar"></span>');
                     }
