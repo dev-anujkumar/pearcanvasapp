@@ -2757,6 +2757,42 @@ export class TinyMceEditor extends Component {
         this.props.openGlossaryFootnotePopUp && this.props.openGlossaryFootnotePopUp(status, popupType, glossaryfootnoteid, elementId, elementType, index, elementSubType, glossaryTermText, callback, typeWithPopup, this.props.poetryField);
     }
 
+    generateHiddenElement = () => {
+
+        const hiddenBlock = document.createElement('p');
+        hiddenBlock.innerHTML = "hidden";
+        hiddenBlock.classList.add("blockquote-hidden");
+        hiddenBlock.setAttribute("contenteditable", "false");
+        hiddenBlock.style.visibility = "hidden"
+        hiddenBlock.style.height = "20px";
+
+        return hiddenBlock;
+    }
+
+    processBlockquoteHtml = (model,element,lockCondition) => {
+
+        const temDiv = document.createElement('div');
+        let hiddenBlock = this.generateHiddenElement();
+        temDiv.innerHTML = model && model.text ? model.text : '<blockquote class="blockquoteMarginaliaAttr" contenteditable="false"><p class="paragraphNummerEins" contenteditable="true"></p><p class="blockquoteTextCredit" contenteditable="true" data-placeholder="Attribution Text"></p></blockquote>';
+        if (element && element.elementdata && element.elementdata.type === "blockquote" && !tinymce.$(temDiv).find('blockquote p.blockquoteTextCredit').length) {
+            tinymce.$(temDiv).find('blockquote').append('<p class="blockquoteTextCredit" contenteditable="true" data-placeholder="Attribution Text"></p>');
+        }
+        tinyMCE.$(temDiv).find('[data-mce-bogus]') && tinyMCE.$(temDiv).find('[data-mce-bogus]').remove();
+        tinymce.$(temDiv).find('.blockquoteTextCredit').attr('contenteditable', 'true').attr('data-placeholder', 'Attribution Text');
+        if (tinymce.$(temDiv).find('.blockquoteTextCredit') && !tinymce.$(temDiv).find('blockquote p.blockquote-hidden').length) {
+            temDiv.childNodes[0].insertBefore(hiddenBlock, tinymce.$(temDiv).find('.blockquoteTextCredit')[0]);
+        }
+        tinymce.$(temDiv).find('blockquote').attr('contenteditable', 'false');
+        tinymce.$(temDiv).find('.paragraphNummerEins').attr('contenteditable', !lockCondition);
+        if (tinymce.$(temDiv).find('.paragraphNummerEins') && tinymce.$(temDiv).find('.paragraphNummerEins')[0]) {
+            tinymce.$(temDiv).find('.paragraphNummerEins')[0].addEventListener('blur', this.handleBlur);
+        }
+        temDiv.innerHTML = removeBOM(temDiv.innerHTML)
+
+        return temDiv;
+
+    }
+
     render() {
         const { slateLockInfo: { isLocked, userId } } = this.props;
         let lockCondition = isLocked && config.userId !== userId.replace(/.*\(|\)/gi, '');
@@ -2808,28 +2844,8 @@ export class TinyMceEditor extends Component {
                 )
             case 'blockquote':
                 if (this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia"|| this.props.element.elementdata.type === "blockquote")) {
-                    let temDiv = document.createElement('div');
-                    let hiddenBlock = document.createElement('p');
-                    hiddenBlock.innerHTML = "hidden";
-                    hiddenBlock.classList.add("blockquote-hidden");
-                    hiddenBlock.setAttribute("contenteditable","false");
-                    hiddenBlock.style.visibility = "hidden"
-                    hiddenBlock.style.height = "20px";
-                    temDiv.innerHTML = this.props.model && this.props.model.text ? this.props.model.text : '<blockquote class="blockquoteMarginaliaAttr" contenteditable="false"><p class="paragraphNummerEins" contenteditable="true"></p><p class="blockquoteTextCredit" contenteditable="true" data-placeholder="Attribution Text"></p></blockquote>';
-                    if(this.props.element.elementdata.type === "blockquote" && !tinymce.$(temDiv).find('blockquote p.blockquoteTextCredit').length){
-                        tinymce.$(temDiv).find('blockquote').append('<p class="blockquoteTextCredit" contenteditable="true" data-placeholder="Attribution Text"></p>');
-                    }
-                    tinymce.$(temDiv).find('.blockquoteTextCredit').attr('contenteditable', 'true').attr('data-placeholder','Attribution Text');
-                    if (tinymce.$(temDiv).find('.blockquoteTextCredit') && !tinymce.$(temDiv).find('blockquote p.blockquote-hidden').length) {
-                        temDiv.childNodes[0].insertBefore(hiddenBlock,tinymce.$(temDiv).find('.blockquoteTextCredit')[0]);
-                    }
-                    tinymce.$(temDiv).find('blockquote').attr('contenteditable', 'false');
-                    tinymce.$(temDiv).find('.paragraphNummerEins').attr('contenteditable', !lockCondition);
-                    if (tinymce.$(temDiv).find('.paragraphNummerEins') && tinymce.$(temDiv).find('.paragraphNummerEins')[0]) {
-                        tinymce.$(temDiv).find('.paragraphNummerEins')[0].addEventListener('blur', this.handleBlur);
-                    }
+                    let temDiv = this.processBlockquoteHtml(this.props.model,this.props.element,lockCondition);
                     classes = classes + ' blockquote-editor with-attr';
-                    temDiv.innerHTML = removeBOM(temDiv.innerHTML)
                     return (
                         <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={false} dangerouslySetInnerHTML={{ __html: temDiv.innerHTML }} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
                     )
