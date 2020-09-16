@@ -208,7 +208,6 @@ export class TinyMceEditor extends Component {
                                     let textNode = bqElem.firstChild;
                                     let bqPara = tinyMCE.$(bqElem).find('p.paragraphNummerEins');
                                     tinyMCE.$(bqPara).find('br').remove();
-                                    let bqPara = tinyMCE.$(bqElem).find('p.paragraphNummerEins');
                                     bqPara && bqPara.append(textNode);
                                 }
                             }
