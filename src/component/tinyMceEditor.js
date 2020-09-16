@@ -207,7 +207,8 @@ export class TinyMceEditor extends Component {
                                 if (bqElem && bqElem.firstChild && bqElem.firstChild.nodeName === "#text") {
                                     let textNode = bqElem.firstChild;
                                     let bqPara = tinyMCE.$(bqElem).find('p.paragraphNummerEins');
-                                    tinyMCE.$(bqPara).find('br').remove();
+                                    let brs = tinyMCE.$(bqPara).find('br')
+                                    brs && brs.remove();
                                     bqPara && bqPara.append(textNode);
                                 }
                             }
