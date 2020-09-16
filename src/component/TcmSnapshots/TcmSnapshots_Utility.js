@@ -517,9 +517,10 @@ const prepareAndSendTcmData = async (elementDetails, wipData, defaultKeys, actio
         snapshotUrn: elementDetails.elementUrn,
         elementType: elementDetails.elementType,
         elementWip: JSON.stringify(res),
-        elementSnapshot: JSON.stringify(await prepareElementSnapshots(wipData,actionStatus,index)),
+        elementSnapshot: JSON.stringify(await prepareElementSnapshots(wipData,actionStatus,index,elementDetails)),
         ...defaultKeys
     };
+
     if(currentSnapshot && (currentSnapshot.elementType.includes("CTA") || currentSnapshot.elementType.includes("LB")) && currentSnapshot.action == 'create'){
         currentSnapshot.status = 'accepted'  
     }
@@ -624,12 +625,12 @@ export const setSlateType = (wipData, containerElement, type) => {
  * @param {String} element - wipData for element
  * @returns {Object} Element snapshot for TCM_Snapshot
 */
-export const prepareElementSnapshots = async (element,actionStatus,index) => {
+export const prepareElementSnapshots = async (element,actionStatus,index, elementDetails) => {
     let elementSnapshot = {};
     let semanticSnapshots = (actionStatus.fromWhere !== "create" && element.type !== CITATION_ELEMENT) ? await setSemanticsSnapshots(element,actionStatus,index) : {};
 
     elementSnapshot = {
-        contentSnapshot: element ? setContentSnapshot(element) : "",
+        contentSnapshot: element ? setContentSnapshot(element,elementDetails,actionStatus) : "",
         glossorySnapshot: JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.glossarySnapshot : []),
         footnoteSnapshot:  JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.footnoteSnapshot : []),
         assetPopOverSnapshot:  JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.assetPopoverSnapshot : [])
@@ -638,14 +639,17 @@ export const prepareElementSnapshots = async (element,actionStatus,index) => {
     return elementSnapshot;
 }
 
-const setContentSnapshot = (element) => {
+const setContentSnapshot = (element,elementDetails,actionStatus) => {
     let snapshotData = "";
     if (element.type === MULTI_COLUMN_GROUP && (element.groupdata && element.groupdata.bodymatter && element.groupdata.bodymatter[0].html.text)) {
         snapshotData = element.groupdata.bodymatter[0].html.text
     } else if (element.type === BLOCKFEATURE && element.elementdata && element.elementdata.type && element.elementdata.type == 'blockquote') {
         let blockQuoteText = element.html && element.html.text ? element.html.text : "";
         snapshotData = blockQuoteText && blockQuoteText.trim() !== "" ? blockQuoteText.replace(bqHiddenText,"").replace(bqAttrHtmlTrue, "").replace(bqAttrHtmlFalse, "") : "";
-    } else {
+    } else if(elementDetails && elementDetails.elementType && elementDetails.elementType.includes("LB") && actionStatus && actionStatus.action == 'create'){
+        snapshotData = '<p class="paragraphNumeroUno"><br></p>'
+    } 
+    else {
         snapshotData = element.html && element.html.text ? element.html.text : "";
     }
     snapshotData = snapshotData && snapshotData.replace(/data-mce-href="#"/g,'')
