@@ -204,11 +204,12 @@ export class TinyMceEditor extends Component {
 
                             } 
                             else {
-                                if (bqElem.firstChild.nodeName === "#text") {
+                                if (bqElem && bqElem.firstChild && bqElem.firstChild.nodeName === "#text") {
                                     let textNode = bqElem.firstChild;
                                     let bqPara = tinyMCE.$(bqElem).find('p.paragraphNummerEins');
                                     tinyMCE.$(bqPara).find('br').remove();
-                                    bqPara.append(textNode);
+                                    let bqPara = tinyMCE.$(bqElem).find('p.paragraphNummerEins');
+                                    bqPara && bqPara.append(textNode);
                                 }
                             }
                         }
@@ -466,16 +467,18 @@ export class TinyMceEditor extends Component {
                     }
                     setTimeout(() => {
                         let specialCharNode = document.querySelector('div.tox-collection.tox-collection--grid');
-                        specialCharNode.addEventListener('click', () => {
+                        specialCharNode && specialCharNode.addEventListener('click', () => {
                             setTimeout(() => {
                                 let element = tinyMCE.$(editor.selection.getNode()).find('p.paragraphNummerEins')[0];
                                 let temElm = editor.dom.create('br');
-                                element.appendChild(temElm);
-                                let tempChildNodes = element.childNodes;
-                                editor.selection.setCursorLocation(element.childNodes[tempChildNodes.length - 1], 0);
-                                let brs = element.getElementsByTagName('br');
-                                while (brs.length) {
-                                    brs[0].parentNode.removeChild(brs[0]);
+                                if (element) {
+                                    element.appendChild(temElm);
+                                    let tempChildNodes = element.childNodes;
+                                    editor.selection.setCursorLocation(element.childNodes[tempChildNodes.length - 1], 0);
+                                    let brs = element.getElementsByTagName('br');
+                                    while (brs.length) {
+                                        brs[0].parentNode.removeChild(brs[0]);
+                                    }
                                 }
                                 //tinymce.activeEditor.selection.placeCaretAt(clickedX, clickedY)
                             },0)
