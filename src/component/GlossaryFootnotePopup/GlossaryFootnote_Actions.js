@@ -214,7 +214,9 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         }
     } else {
         workEditor = document.getElementById('cypress-' + index)
-        workContainer = workEditor.innerHTML;
+        workContainer = workEditor.innerHTML;      
+        workContainer = workContainer.replace(/data-mce-href="#"/g,'').replace(/ reset/g,'')
+        // console.log("workContainer",workContainer)
         figureDataObj = {
             "text": workContainer
         }
@@ -308,11 +310,14 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
     }
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })  //show saving spinner
 
+    let tcmParentData,tcmMainBodymatter,tcmBodymatter;
+    if (elementTypeData.indexOf(elementType) !== -1 && store.getState().appStore.showHideType == undefined) {
     /** For TCM snapshots */
     let mainSlateId = config.isPopupSlate ? config.tempSlateManifestURN : config.slateManifestURN;
-    let tcmBodymatter = store.getState().appStore.slateLevelData[config.slateManifestURN].contents.bodymatter;
-    let tcmParentData = fetchParentData(tcmBodymatter, index);
-    let tcmMainBodymatter = store.getState().appStore.slateLevelData[mainSlateId].contents.bodymatter;
+     tcmBodymatter = store.getState().appStore.slateLevelData[config.slateManifestURN].contents.bodymatter;
+     tcmParentData = fetchParentData(tcmBodymatter, index);
+     tcmMainBodymatter = store.getState().appStore.slateLevelData[mainSlateId].contents.bodymatter;
+    }
     /** ----------------- */
     let url = `${config.REACT_APP_API_URL}v1/slate/element?type=${type.toUpperCase()}&id=${glossaryfootnoteid}`
     return axios.put(url, JSON.stringify(data), {
@@ -320,7 +325,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             "Content-Type": "application/json",
             "PearsonSSOSession": config.ssoToken
         }
-    }).then(res => {
+    }).then( async res => {
         let parentData1 = store.getState().appStore.slateLevelData;
         let currentParentData = JSON.parse(JSON.stringify(parentData1));
         let currentSlateData = currentParentData[config.slateManifestURN];
@@ -338,7 +343,12 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                 parentElement: data.metaDataField ? fetchElementWipData(tcmMainBodymatter,index,'popup') : undefined,
                 metaDataField: data.metaDataField ? data.metaDataField : undefined
             };
-            tcmSnapshotsForUpdate(elementUpdateData, index, containerElement,store.dispatch);
+            if (currentSlateData.status === 'approved') {
+                await tcmSnapshotsForUpdate(elementUpdateData, index, containerElement, store.dispatch, "");
+            }
+            else {
+                tcmSnapshotsForUpdate(elementUpdateData, index, containerElement, store.dispatch, "");
+            }
         }
         /**-------------------------------------------------------------------------------------------------------------*/
         if(res.data.id !== data.id && currentSlateData.status === 'approved'){

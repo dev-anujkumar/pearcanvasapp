@@ -46,6 +46,7 @@ import MultiColumnContext from "./MultiColumnContext.js"
 import MultiColumnContainer from "../MultiColumnElement"
 import {handleTCMData} from '../TcmSnapshots/TcmSnapshot_Actions.js';
 import CopyUrn from '../CopyUrn';
+import { OnCopyContext } from '../CopyUrn/copyUtil.js'
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -214,8 +215,9 @@ class ElementContainer extends Component {
             return;
         }
         let tempDiv = document.createElement('div');
-        html = html.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula').replace(/\uFEFF/g,"").replace(/>\s+</g,'><');
+        html = html.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula').replace(/\uFEFF/g,"").replace(/>\s+</g,'><').replace(/data-mce-href="#"/g,'').replace(/ reset/g,'');
         html=html.trim();
+        // console.log("html",html)
         tempDiv.innerHTML = html;
         tinyMCE.$(tempDiv).find('br').remove();
         tinyMCE.$(tempDiv).find('.blockquote-hidden').remove();
@@ -468,6 +470,9 @@ class ElementContainer extends Component {
      * This function opens TCM w.r.t. current Element
      */
     handleTCM = (e) => {
+        if(config.isSavingElement){
+            return false
+        }
         e.stopPropagation();
         loadTrackChanges(this.props.element.id)
     }
@@ -577,6 +582,7 @@ class ElementContainer extends Component {
                 if (html && previousElementData.html && (this.replaceUnwantedtags(html) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate) && !assetPopoverPopupIsVisible && !config.savingInProgress && !checkCanvasBlocker && elementType && primaryOption && secondaryOption) {
                     dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDiv, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,parentElement,showHideType, asideData, poetryData)
                     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+                    config.isSavingElement = true
                     this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, showHideType, parentElement, poetryData);
                 }
                 break;
@@ -590,6 +596,7 @@ class ElementContainer extends Component {
                         if(this.figureDifference(this.props.index, previousElementData) || forceupdate && !config.savingInProgress){
                             dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,parentElement,undefined, asideData)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+                            config.isSavingElement = true
                             this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData,undefined,parentElement);
                         }
                         break;
@@ -598,18 +605,21 @@ class ElementContainer extends Component {
                         if (this.figureDifferenceAudioVideo(this.props.index, previousElementData) || forceupdate && !config.savingInProgress) {
                             dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, undefined, asideData)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+                            config.isSavingElement = true
                             this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, undefined,parentElement);
                         }
                         break;
                     case elementTypeConstant.FIGURE_ASSESSMENT:
                         dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, undefined, asideData)
                         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+                        config.isSavingElement = true
                         this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData,undefined,parentElement);
                         break;
                     case elementTypeConstant.INTERACTIVE:
                         if(this.figureDifferenceInteractive(this.props.index, previousElementData) || forceupdate && !config.savingInProgress){
                             dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,parentElement,undefined, asideData)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+                            config.isSavingElement = true
                             this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData,undefined,parentElement)
                         }
                         break;
@@ -618,6 +628,7 @@ class ElementContainer extends Component {
                             if(this.figureDifferenceBlockCode(this.props.index, previousElementData) || forceupdate && !config.savingInProgress){
                                 dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,parentElement,undefined, asideData)
                                 sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+                                config.isSavingElement = true
                                 this.props.updateElement(dataToSend, this.props.index,parentUrn,asideData,undefined,parentElement);
                             }
                             break;
@@ -625,6 +636,7 @@ class ElementContainer extends Component {
                             if(this.figureDifferenceAT(this.props.index, previousElementData) || forceupdate && !config.savingInProgress){
                                 dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,parentElement,undefined, asideData)
                                 sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+                                config.isSavingElement = true
                                 this.props.updateElement(dataToSend, this.props.index,parentUrn,asideData,undefined,parentElement);
                             }
                             break;
@@ -651,12 +663,13 @@ class ElementContainer extends Component {
                     let nodehtml = currentListNode.innerHTML;
                     if(nodehtml && previousElementData.html) {
                         let prevData = this.replaceUnwantedtags(previousElementData.html.text);
-                        prevData = prevData && prevData.replace(/(reset | reset|↵)/g, "");
+                        prevData = prevData && prevData.replace(/(reset | reset|↵)/g, "").replace(/data-mce-href="#"/g,'');
                         let nodeData = this.replaceUnwantedtags(nodehtml);
-                        nodeData = nodeData && nodeData.replace(/(reset | reset|↵)/g, "");
+                        nodeData = nodeData && nodeData.replace(/(reset | reset|↵)/g, "").replace(/data-mce-href="#"/g,'');
                         if ((nodeData !== prevData || forceupdate && !config.savingInProgress) && !assetPopoverPopupIsVisible && !checkCanvasBlocker) {
                             dataToSend = createUpdatedData(previousElementData.type, previousElementData, currentListNode, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, showHideType,undefined)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+                            config.isSavingElement = true
                             this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, showHideType, parentElement);
                         }
                     }
@@ -675,6 +688,7 @@ class ElementContainer extends Component {
                         dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDivForCE, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, showHideType, asideData)
                         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                         parentElement["index"] = this.props.index
+                        config.isSavingElement = true
                         this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, showHideType, parentElement);
                     }
                     break;
@@ -937,46 +951,9 @@ class ElementContainer extends Component {
         }
     }
 
-    getParentPosition = (el) => {
-        var xPos = 0;
-        var yPos = 0;
-
-        while (el) {
-            if (el.tagName == "BODY") {
-                // deal with browser quirks with body/window/document and page scroll
-                var xScroll = el.scrollLeft || document.documentElement.scrollLeft;
-                var yScroll = el.scrollTop || document.documentElement.scrollTop;
-
-                xPos += (el.offsetLeft - xScroll + el.clientLeft);
-                yPos += (el.offsetTop - yScroll + el.clientTop);
-            } else {
-                // for all other non-BODY elements
-                xPos += (el.offsetLeft - el.scrollLeft + el.clientLeft);
-                yPos += (el.offsetTop - el.scrollTop + el.clientTop);
-            }
-
-            el = el.offsetParent;
-        }
-        return { x: xPos, y: yPos }
-    }
-
-    onCopyContext=(e)=> {
-
-        if (e.currentTarget.classList.contains('activeTagBgColor')) {
-            const parentPosition = this.getParentPosition(e.currentTarget);
-            const scrollTop = document.getElementById('slateWrapper').scrollTop;
-
-            this.copyClickedX = e.clientX - parentPosition.x;
-            this.copyClickedY = e.clientY - parentPosition.y + scrollTop + 10;
-
-            // this.copyClickedX = e.clientX;   //change position to fixed
-            // this.copyClickedY = e.clientY;
-            this.toggleCopyMenu(true)
-            e.preventDefault();
-        }
-    }
-
-    toggleCopyMenu = (value)=> {
+    toggleCopyMenu = (value,copyClickedX,copyClickedY)=> {
+        this.copyClickedX=copyClickedX;
+        this.copyClickedY=copyClickedY;
         this.setState({showCopyPopup : value})
     }
 
@@ -1387,7 +1364,7 @@ class ElementContainer extends Component {
             <div className="editor" data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
                 {this.state.showCopyPopup && <CopyUrn elementId={this.props.element.id} toggleCopyMenu={this.toggleCopyMenu} copyClickedX={this.copyClickedX} copyClickedY={this.copyClickedY} />}
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
-                    <Button type="element-label" btnClassName={`${btnClassName} ${isQuadInteractive} ${this.state.isOpener ? ' ignore-for-drag' : ''}`} labelText={labelText} copyContext={this.onCopyContext} onClick={(event) => this.labelClickHandler(event)} />
+                    <Button type="element-label" btnClassName={`${btnClassName} ${isQuadInteractive} ${this.state.isOpener ? ' ignore-for-drag' : ''}`} labelText={labelText} copyContext={(e)=>{OnCopyContext(e,this.toggleCopyMenu)}} onClick={(event) => this.labelClickHandler(event)} />
                     {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && config.slateType !== 'assessment' ? (<Button type="delete-element" onClick={(e) => this.showDeleteElemPopup(e,true)} />)
                         : null}
                     {this.renderColorPaletteButton(element, permissions)}

@@ -244,7 +244,7 @@ i.fa.fa-list-ul:before {
 #list-input-layer .topText {
     margin: 191px 0 0 5px ;
     font-size: 12px;
-    font-family: Open Sans;
+    font-family: 'Open Sans';
     height: 17px;
 }
 
@@ -263,7 +263,7 @@ i.fa.fa-list-ul:before {
     border-bottom: 2px solid #d8d8d8;
     padding: 0 5px;
     font-size: 16px;
-    font-family: Open Sans!important;
+    font-family: 'Open Sans'!important;
 }
 
 #list-input-layer .list-input-box:focus {
@@ -339,7 +339,7 @@ i.fa.fa-list-ul:before {
     border-radius: 2px;
     box-sizing: border-box !important;
     user-select: none !important;
-    font-family: Open Sans;
+    font-family: 'Open Sans';
     font-weight: bold;
     color: #6e6e6e;
     cursor: pointer;

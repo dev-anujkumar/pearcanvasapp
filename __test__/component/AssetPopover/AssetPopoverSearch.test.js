@@ -31,7 +31,8 @@ const store = mockStore({
             apoObject : {},
             imageData : [],
             searchTerm : '' ,                        //Figure name to be find
-            currentlyLinkedImageData : {}
+            currentlyLinkedImageData : {},
+            assetID: ""
     }
 });
 
@@ -41,7 +42,8 @@ let props = {
     searchForFigures : jest.fn(),
     apoSearchClose: jest.fn(),
     selectedFigure:jest.fn(),
-    saveAssetLinkedMedia : jest.fn()
+    saveAssetLinkedMedia : jest.fn(),
+    assetIdForSnapshot: jest.fn()
 }
 
 beforeEach(() => {

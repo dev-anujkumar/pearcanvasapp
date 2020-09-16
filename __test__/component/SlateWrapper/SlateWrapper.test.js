@@ -96,7 +96,6 @@ describe('Testing <SlateWrapper> Component', () => {
             expect(wrapper.find('.element-list').length).toBe(0);
             expect(wrapper.find('ElementContainer').length).toBe(0);
             expect(wrapper.find('SlateHeader').length).toBe(0);
-            expect(wrapper.find('.header-label').length).toBe(0);
         })
     })
     describe('With loading elements', () => {

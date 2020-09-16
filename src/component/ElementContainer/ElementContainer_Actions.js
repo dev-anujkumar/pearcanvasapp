@@ -79,7 +79,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
                 }
         }
     }
-    if(type === 'popup' && element.popupdata.bodymatter.length === 0){
+    if(type === 'popup'){
         dispatch(fetchPOPupSlateData(elmId, contentUrn, 0 , element, index)) 
      }
     let elementParentEntityUrn = parentUrn && parentUrn.contentUrn || config.slateEntityURN
@@ -121,7 +121,8 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
                         contentUrn: deleteSlate.contentUrn
                     },
                     bodymatter: deleteBodymatter,
-                    newVersionUrns: deleteElemData.data
+                    newVersionUrns: deleteElemData.data,
+                    index:index
                 }
                 tcmSnapshotsForDelete(deleteData, type, containerElement)
             }
@@ -265,7 +266,7 @@ export const tcmSnapshotsForDelete = async (elementDeleteData, type, containerEl
         versionStatus = fetchManifestStatus(elementDeleteData.bodymatter, containerElement, type);
     }
     containerElement = await checkContainerElementVersion(containerElement, versionStatus, elementDeleteData.currentSlateData);
-    prepareTcmSnapshots(elementDeleteData.wipData, actionStatus, containerElement, type,elementDeleteData.newVersionUrns);
+    prepareTcmSnapshots(elementDeleteData.wipData, actionStatus, containerElement, type,elementDeleteData.newVersionUrns,elementDeleteData.index);
 }
 
 /**
@@ -304,7 +305,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
                 "PearsonSSOSession": config.ssoToken
             }
         }
-    ).then(response => {
+    ).then(async response => {
         let parentData = getState().appStore.slateLevelData;
         let currentParentData = JSON.parse(JSON.stringify(parentData));
         let currentSlateData = currentParentData[config.slateManifestURN];
@@ -324,6 +325,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         }
 
         /** [PCAT-8289] -------------------------- TCM Snapshot Data handling ----------------------------*/
+        let assetRemoveidForSnapshot =  getState().assetPopOverSearch.assetID;
         let isPopupElement = parentElement && parentElement.type == 'popup' && (updatedData.metaDataField !== undefined || updatedData.sectionType !== undefined) ? true : false;
         let noAdditionalFields = (updatedData.metaDataField == undefined && updatedData.sectionType == undefined) ? true : false
         if (elementTypeTCM.indexOf(response.data.type) !== -1 && showHideType == undefined && (isPopupElement || noAdditionalFields)) {
@@ -339,10 +341,16 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
                 currentParentData: currentParentData,
                 updateBodymatter:updateBodymatter,
                 response:response.data,
-                updatedId:updatedData.id
+                updatedId:updatedData.id,
+                slateManifestUrn:config.slateManifestURN
             }
-            if(!config.isCreateGlossary){
-                tcmSnapshotsForUpdate(elementUpdateData, elementIndex, containerElement, dispatch);
+            if(!config.isCreateGlossary){  
+                if (currentSlateData.status === 'approved') {
+                    await tcmSnapshotsForUpdate(elementUpdateData, elementIndex, containerElement, dispatch, assetRemoveidForSnapshot);
+                }
+                else {
+                    tcmSnapshotsForUpdate(elementUpdateData, elementIndex, containerElement, dispatch, assetRemoveidForSnapshot);
+                }        
             }
             config.isCreateGlossary = false
         }
@@ -373,6 +381,11 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
                     config.savingInProgress = false
                 }else if(currentSlateData.status === 'approved'){
                     if(currentSlateData.type==="popup"){
+                        if (config.tcmStatus) {
+                            if (elementTypeTCM.indexOf(updatedData.type) !== -1 && showHideType == undefined) {
+                                prepareDataForUpdateTcm(updatedData.id, getState, dispatch, response.data);
+                            }
+                        }
                         sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
                         dispatch(fetchSlateData(currentSlateData.id, currentSlateData.contentUrn, 0, currentSlateData, "", false));
                     }else{
@@ -388,7 +401,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         }
         
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
-        
+        config.isSavingElement = false
         customEvent.trigger('glossaryFootnoteSave', response.data.id); 
         config.popupCreationCallInProgress = false;
 
@@ -405,6 +418,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         config.popupCreationCallInProgress = false
         console.log("updateElement Api fail", error);
         document.getElementById('link-notification').innerText = "";
+        config.isSavingElement = false
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
     })
 }
@@ -434,9 +448,11 @@ export function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, 
     let { contents: _slateContent } = _slateObject;
     let { bodymatter: _slateBodyMatter } = _slateContent;
     let elementId = updatedData.id;
-    //tcm update code   
+    //tcm update code
+    let isPopupElement = parentElement && parentElement.type == 'popup' && (updatedData.metaDataField !== undefined || updatedData.sectionType !== undefined) ? true : false;
+    let noAdditionalFields = (updatedData.metaDataField == undefined && updatedData.sectionType == undefined) ? true : false   
     if (config.tcmStatus) {
-        if (elementTypeTCM.indexOf(updatedData.type) !== -1 && showHideType == undefined) {
+        if (elementTypeTCM.indexOf(updatedData.type) !== -1 && showHideType == undefined && (isPopupElement || noAdditionalFields)) {
             prepareDataForUpdateTcm(updatedData.id, getState, dispatch, versionedData);
         }
     }
@@ -820,7 +836,6 @@ export const getTableEditorData = (elementid,updatedData) => (dispatch, getState
     if(updatedData && elementid !== updatedData){
         elementId = updatedData;
     }
-    console.log(elementId, config.projectUrn, ">>>>>")
     return axios.get(`${config.REACT_APP_API_URL}v1/slate/narrative/data/${config.projectUrn}/${elementId}`,
         {
             headers: {
@@ -829,7 +844,6 @@ export const getTableEditorData = (elementid,updatedData) => (dispatch, getState
             }
         }
     ).then(response => {
-        console.log(response, "<<<<<<<<<<<<")
         let parentData = getState().appStore.slateLevelData
         const newParentData = JSON.parse(JSON.stringify(parentData));
         if (newParentData[config.slateManifestURN].status === 'wip') {

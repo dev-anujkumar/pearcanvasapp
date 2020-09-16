@@ -47,35 +47,8 @@ describe('TCM snapshot Action test case', () => {
             expect(type).toBe('GET_TCM_RESOURCES');
         })
     });
-    it('handle tcmdata -slate level cos converted', () => {
-        let slateManifestUrn = "urn:pearson:manifest:bca66109-2c69-4b1b-bea9-a057fd073d54"
-        let slateEntityUrn = "urn:pearson:entity:ba31d1d1-b049-4467-a68f-ffdb610e4549"
-
-        store = mockStore(() => initialState);
-        moxios.wait(() => {
-            const request = moxios.requests.mostRecent();
-            request.respondWith({
-                status: 200
-            });
-        });
-        return store.dispatch(selectActions.tcmSnapshot(slateManifestUrn, slateEntityUrn)).then(() => {
-        })
-    });
-    it('handle tcmdata -slate level cos converted catch statement', () => {
-        let slateManifestUrn = "urn:pearson:manifest:bca66109-2c69-4b1b-bea9-a057fd073d54"
-        let slateEntityUrn = "urn:pearson:entity:ba31d1d1-b049-4467-a68f-ffdb610e4549"
-        moxios.wait(() => {
-            const request = moxios.requests.mostRecent();
-            request.respondWith({
-                status: 404,
-                response: {}
-            });
-        });
-        return store.dispatch(selectActions.tcmSnapshot(slateManifestUrn, slateEntityUrn)).catch((error) => {
-        })
-
-
-    });
+    
+   
     it('handle tcmdata -slate level catch statement', () => {
         let slateManifestUrn = "urn:pearson:manifest:bca66109-2c69-4b1b-bea9-a057fd073d54"
         moxios.wait(() => {

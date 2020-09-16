@@ -1,5 +1,6 @@
 import axios from 'axios';
 import config from '../../config/config';
+import store from '../../appstore/store.js';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { GET_TCM_RESOURCES, AUTHORING_ELEMENT_UPDATE } from '../../constants/Action_Constants';
 
@@ -52,36 +53,16 @@ export const handleTCMData = (slateManifestUrn) => (dispatch, getState) => {
 
 }
 
-/** TO BE REMOVED ---------> 
-     * @description Send TCM Snapshot for Cos converted elements
-     * @param {String} slateManifestUrn | Slate Manifest
-     * @param {String} slateManifestUrn | Slate Entity
-
-export const tcmSnapshot = (slateManifestUrn,slateEntityUrn) => (dispatch, getState) => {
-    let url = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/tcm/${slateEntityUrn}/${slateManifestUrn}?page=0`;
-    return axios.get(url, {
-        headers: {
-            PearsonSSOSession: config.ssoToken
-        }
-    }).then((res) => {
-        console.log("success")
-    }).catch((error) => {
-        console.log("error")
-    })
-
-}
------------------------> */
 /**
      * @description Send TCM Snapshot for the element
      * @param {Object} snapshotData | TCM Snapshot data
 */
-
 var timerID;
 var allSnapshotData = [];
 export const sendElementTcmSnapshot = async (snapshotData) => {
         allSnapshotData.push(snapshotData);
-        if (timerID) clearTimeout(timerID); 
-        timerID = setTimeout( async() => {let snapshots = allSnapshotData; allSnapshotData=[]; await callSnapshotAPI(snapshots)}, 500)
+        if (timerID) clearTimeout(timerID);
+        timerID = setTimeout(async () => { let snapshots = allSnapshotData; allSnapshotData = []; await callSnapshotAPI(snapshots) }, 500);        
 }
 
 const callSnapshotAPI = async(snapshotData) => {

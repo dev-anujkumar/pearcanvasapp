@@ -206,7 +206,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             "Content-Type": "application/json",
             "PearsonSSOSession": config.ssoToken
         }
-    }).then(res =>{
+    }).then(async res =>{
         
         let parentData = store;
         let currentParentData = JSON.parse(JSON.stringify(parentData));
@@ -221,7 +221,16 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                 oldElementData:oldElementData,
                 response:res.data
             }
-            tcmSnapshotsForConversion(elementConversionData,indexes,appStore,dispatch)
+            if (config.isPopupSlate) {
+                elementConversionData.currentSlateData.popupSlateData = currentParentData[config.tempSlateManifestURN]
+            }
+            if (currentSlateData.status === 'approved') {
+                await tcmSnapshotsForConversion(elementConversionData, indexes, appStore, dispatch)
+            }
+            else {
+                tcmSnapshotsForConversion(elementConversionData, indexes, appStore, dispatch)
+            }
+
         }
         /**-----------------------------------------------------------------------------------------------------------*/
 
@@ -425,9 +434,9 @@ export const tcmSnapshotsForConversion = async (elementConversionData,indexes,ap
         let actionStatusVersioning = Object.assign({}, actionStatus);
         actionStatusVersioning.action="create"
         actionStatusVersioning.status ="accepted"
-        prepareTcmSnapshots(oldElementData, actionStatusVersioning, convertParentData, "","");
+        prepareTcmSnapshots(oldElementData, actionStatusVersioning, convertParentData, "","",indexes);
     }
-    prepareTcmSnapshots(response,actionStatus, convertParentData,"","");
+    prepareTcmSnapshots(response,actionStatus, convertParentData,"","",indexes);
 }
 
 const prepareAssessmentDataForConversion = (oldElementData, format) => {

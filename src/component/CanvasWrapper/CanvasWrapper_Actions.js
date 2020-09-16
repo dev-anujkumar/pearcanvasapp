@@ -24,7 +24,7 @@ import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 import elementDataBank from './elementDataBank'
 import figureData from '../ElementFigure/figureTypes.js';
 import { fetchAllSlatesData, setCurrentSlateAncestorData } from '../../js/getAllSlatesData.js';
-import { handleTCMData, tcmSnapshot } from '../TcmSnapshots/TcmSnapshot_Actions.js';
+import { handleTCMData } from '../TcmSnapshots/TcmSnapshot_Actions.js';
 import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
 import { ELM_INT } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
@@ -315,6 +315,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             config.isPopupSlate = true;
             config.savingInProgress = false;
             if (versionPopupReload) {
+                config.isPopupSlate = false;
                 let parentData = getState().appStore.slateLevelData;
                 let newslateData = JSON.parse(JSON.stringify(parentData));
                 newslateData[config.slateManifestURN].contents.bodymatter[versioning.index] = Object.values(slateData.data)[0];
@@ -494,7 +495,7 @@ export const fetchSlateAncestorData = (tocNode = {}) => (dispatch, getState) => 
     let newSlateData = currentSlateData;
     if(Object.keys(currentSlateData).length > 0) {
         while('ancestor' in currentSlateData && currentSlateData.ancestor.label !== 'project') {
-            let ancestorTitle = currentSlateData.ancestor.title || 'Title';
+            let ancestorTitle = currentSlateData.ancestor.title || 'Untitled';
             if(Object.keys(tocNode).length > 0 && tocNode.entityUrn === currentSlateData.ancestor.entityUrn &&
                 ancestorTitle !== tocNode.title) {
                 ancestorTitle = tocNode.title;
