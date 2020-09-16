@@ -104,10 +104,10 @@ export const loadTrackChanges = (elementId) => {
                 let childData = await createMultiColumnObject(groupedContent)
                 obj.child = childData;
               }
-              else if(element.type==="popup" && element.id && element.id.includes('manifest')){
-                let childData = await creatPopupObject(element)
-                obj.child = childData;
-              }
+              // else if(element.type==="popup" && element.id && element.id.includes('manifest')){
+              //   let childData = await creatPopupObject(element)
+              //   obj.child = childData;       // Commenting this beacause it is forming endless recursive cycle
+              // }
               else if(element.type!="groupedcontent" && element.type!="popup" && element.id && element.id.includes('manifest')){
                 let newType = (element.type == 'citations' || element.type == 'poetry') ? 'contents' : 'elementdata'; 
                 let childData = await createManifestObject(element,newType)
