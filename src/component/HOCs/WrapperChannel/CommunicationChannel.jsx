@@ -115,7 +115,7 @@ function CommunicationChannel(WrappedComponent) {
                     }
                     break;
                 case 'projectDetails':
-                    config.tcmStatus = message.tcm.activated;
+                    config.tcmStatus = (message.tcm && message.tcm.activated == true ? true : undefined);
                     config.userId = message['x-prsn-user-id'].toLowerCase();
                     config.userName = message['x-prsn-user-id'].toLowerCase();
                     config.ssoToken = message.ssoToken;

@@ -646,9 +646,10 @@ const setContentSnapshot = (element,elementDetails,actionStatus) => {
     } else if (element.type === BLOCKFEATURE && element.elementdata && element.elementdata.type && element.elementdata.type == 'blockquote') {
         let blockQuoteText = element.html && element.html.text ? element.html.text : "";
         snapshotData = blockQuoteText && blockQuoteText.trim() !== "" ? blockQuoteText.replace(bqHiddenText,"").replace(bqAttrHtmlTrue, "").replace(bqAttrHtmlFalse, "") : "";
-    } else if(elementDetails && elementDetails.elementType && elementDetails.elementType.includes("LB") && actionStatus && actionStatus.action == 'create'){
-        snapshotData = '<p class="paragraphNumeroUno"><br></p>'
     } 
+    // else if(elementDetails && elementDetails.elementType && elementDetails.elementType.includes("LB") && actionStatus && actionStatus.action == 'create'){
+    //     snapshotData = '<p class="paragraphNumeroUno"><br></p>'          // commenting this as this is creating regression in revert secanario
+    // } 
     else {
         snapshotData = element.html && element.html.text ? element.html.text : "";
     }
