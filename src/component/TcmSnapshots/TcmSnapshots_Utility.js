@@ -846,12 +846,12 @@ export const checkContainerElementVersion = async (containerElement, versionStat
     /** latest version for slate*/
     if (currentSlateData && currentSlateData.status && currentSlateData.status === 'approved') {
         let newSlateManifest = await getLatestVersion(currentSlateData.contentUrn);
-        containerElement.slateManifest = newSlateManifest ? newSlateManifest : config.slateManifestURN
-        if (currentSlateData.popupSlateData && currentSlateData.popupSlateData.status === 'approved') {
-            let newPopupSlateManifest = await getLatestVersion(currentSlateData.popupSlateData.contentUrn);
-            containerElement.popupslateManifest = newPopupSlateManifest ? newPopupSlateManifest : config.tempSlateManifestURN
-            config.tcmslatemanifest = containerElement.popupslateManifest
-        }
+        containerElement.slateManifest = newSlateManifest ? newSlateManifest : config.slateManifestURN    
+    }
+    if (currentSlateData.popupSlateData && currentSlateData.popupSlateData.status === 'approved') {
+        let newPopupSlateManifest = await getLatestVersion(currentSlateData.popupSlateData.contentUrn);
+        containerElement.popupslateManifest = newPopupSlateManifest ? newPopupSlateManifest : config.tempSlateManifestURN
+        config.tcmslatemanifest = containerElement.popupslateManifest
     }
     return containerElement;
 }
