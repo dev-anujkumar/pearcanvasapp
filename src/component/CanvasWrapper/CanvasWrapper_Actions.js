@@ -289,7 +289,13 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             'type': "TcmStatusUpdated",
             'message': messageTcmStatus
         })
-        let tcmManifestUrn = isPopupSlate && config.tempSlateManifestURN ? config.tempSlateManifestURN : manifestURN
+        let tcmManifestUrn
+        //  = isPopupSlate && config.tempSlateManifestURN ? config.tempSlateManifestURN : manifestURN
+        if (isPopupSlate && config.cachedActiveElement && config.cachedActiveElement.element && config.cachedActiveElement.element.id == config.slateManifestURN) {
+            tcmManifestUrn = config.tempSlateManifestURN
+        } else {
+            tcmManifestUrn = manifestURN
+        }
         dispatch(handleTCMData(tcmManifestUrn));
     }
     const elementCount = getState().appStore.slateLength
@@ -943,7 +949,9 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
                 bodymatter: currentSlateData.contents.bodymatter,
                 response: response.data
             };
-            prepareDataForTcmCreate(parentElement, _requestData.metaDataField, response.data, getState, dispatch)
+            if(config.tcmStatus){
+                prepareDataForTcmCreate(parentElement, _requestData.metaDataField, response.data, getState, dispatch)
+            }
             tcmSnapshotsForCreate(slateData, _requestData.metaDataField, containerElement, dispatch);
         }
         appendCreatedElement(argObj, response.data)

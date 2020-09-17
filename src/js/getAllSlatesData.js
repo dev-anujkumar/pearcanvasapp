@@ -196,9 +196,10 @@ export const setCurrentSlateAncestorData = (allSlateData) => dispatch => {
  * @returns {Object}
 */
 const setCurrentSlateAncestorDataDetails = (matterTypeData, ancestor, matterType) => {
-    if (matterTypeData && matterTypeData.length > 0 && JSON.stringify(matterTypeData).includes(config.slateManifestURN)) {
+    if (matterTypeData && matterTypeData.length > 0 && (JSON.stringify(matterTypeData).includes(config.slateManifestURN) ||
+        JSON.stringify(matterTypeData).includes(config.slateEntityURN))) {
         for (let key in matterTypeData) {
-            if (matterTypeData[key].containerUrn == config.slateManifestURN) {
+            if (matterTypeData[key].containerUrn == config.slateManifestURN || matterTypeData[key].entityUrn == config.slateEntityURN) {
                 ancestor = Object.assign({},
                     setItemDetails(matterTypeData[key]),
                     {
@@ -207,7 +208,8 @@ const setCurrentSlateAncestorDataDetails = (matterTypeData, ancestor, matterType
                     })
                 return ancestor;
             }
-            else if (matterTypeData[key].contents && JSON.stringify(matterTypeData[key].contents).includes(config.slateManifestURN)) {
+            else if (matterTypeData[key].contents && (JSON.stringify(matterTypeData[key].contents).includes(config.slateManifestURN) ||
+                JSON.stringify(matterTypeData[key].contents).includes(config.slateEntityURN))) {
                 ancestor = Object.assign({},
                     setItemDetails(matterTypeData[key]),
                     {
