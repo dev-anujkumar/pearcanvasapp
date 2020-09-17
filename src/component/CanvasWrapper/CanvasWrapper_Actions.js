@@ -270,9 +270,11 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
 
     if (config.cachedActiveElement && config.cachedActiveElement.element && config.cachedActiveElement.element.type == "popup") {
         config.popupParentElement = {
-            parentElement: config.cachedActiveElement.element,
-            popupAsideData: getState().appStore.asideData,
-            popupParentUrn: getState().appStore.parentUrn
+            parentElement: config.cachedActiveElement.element
+        }
+        if(calledFrom!== "containerVersioning"){
+            config.popupParentElement.popupAsideData= getState().appStore.asideData;
+            config.popupParentElement.popupParentUrn= getState().appStore.parentUrn
         }
     }
     /** Project level and element level TCM status */

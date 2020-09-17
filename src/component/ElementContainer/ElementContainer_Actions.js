@@ -345,7 +345,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
                 slateManifestUrn:config.slateManifestURN
             }
             if(!config.isCreateGlossary){  
-                if (currentSlateData.status === 'approved') {
+                if (currentSlateData && currentSlateData.status === 'approved') {
                     await tcmSnapshotsForUpdate(elementUpdateData, elementIndex, containerElement, dispatch, assetRemoveidForSnapshot);
                 }
                 else {
@@ -464,7 +464,7 @@ export function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, 
             if(asideData && asideData.type == 'element-aside'){
                 asideData.indexes = indexes;
                 if(indexes.length === 2 || indexes.length === 3){
-                    dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:asideData.id, asideData.contentUrn, 0, asideData,"", false));
+                    dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:asideData.id, asideData.contentUrn, 0, asideData,"containerVersioning", false));
                 // }else if(indexes.length === 3){
                 //     dispatch(fetchSlateData(asideData.id,asideData.contentUrn, 0, asideData));
                 }
@@ -472,20 +472,20 @@ export function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, 
 
                 // if(indexes.length === 2 || indexes.length === 3 || indexes === 2 || indexes === 3){
                     parentElement.index = elementIndex;
-                    dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:parentElement.id, parentElement.contentUrn, 0, parentElement,"", false));
+                    dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:parentElement.id, parentElement.contentUrn, 0, parentElement,"containerVersioning", false));
                 // }
             } 
             else if(parentElement && parentElement.type === "popup" && updatedData.elementParentEntityUrn && (updatedData.metaDataField || updatedData.sectionType === "postertextobject") ){
-                dispatch(fetchSlateData(updatedData.slateVersionUrn, updatedData.elementParentEntityUrn, 0, parentElement, "", true)); }
+                dispatch(fetchSlateData(updatedData.slateVersionUrn, updatedData.elementParentEntityUrn, 0, parentElement, "containerVersioning", true)); }
             else if(parentElement && parentElement.type === "showhide"){
                 parentElement.indexes =elementIndex;
-                dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:parentElement.id, parentElement.contentUrn, 0, parentElement,"", false)); 
+                dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:parentElement.id, parentElement.contentUrn, 0, parentElement,"containerVersioning", false)); 
             }
             else if(parentElement && parentElement.type === "citations"){
-                dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:parentElement.id, parentElement.contentUrn, 0, parentElement,"", false));
+                dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:parentElement.id, parentElement.contentUrn, 0, parentElement,"containerVersioning", false));
             }
             else if (parentElement && parentElement.type === "groupedcontent") {
-                dispatch(fetchSlateData(parentElement.id, parentElement.contentUrn, 0, parentElement, "", false));
+                dispatch(fetchSlateData(parentElement.id, parentElement.contentUrn, 0, parentElement, "containerVersioning", false));
             } else {
                 elementIndex = indexes.length == 2 ?indexes[0] : elementIndex
                 newslateData[config.slateManifestURN].contents.bodymatter[elementIndex] = versionedData;
