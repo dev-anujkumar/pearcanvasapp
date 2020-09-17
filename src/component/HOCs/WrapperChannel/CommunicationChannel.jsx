@@ -480,6 +480,7 @@ function CommunicationChannel(WrappedComponent) {
                 config.scrolling = true;
                 config.totalPageCount = 0;
                 config.fromTOC = true;
+                config.tcmslatemanifest= null;
                 config.parentLabel = message.node.nodeParentLabel;
                 this.props.getSlateLockStatus(config.projectUrn, config.slateManifestURN)
                 let slateData = {

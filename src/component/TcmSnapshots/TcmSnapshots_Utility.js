@@ -9,7 +9,6 @@ import { sendElementTcmSnapshot, getLatestVersion } from './TcmSnapshot_Actions.
 import { setSemanticsSnapshots, fetchElementsTag } from './ElementSnapshot_Utility.js';
 /*************************Import Constants*************************/
 import TcmConstants from './TcmConstants.js';
- import { VERSIONING_SLATEMANIFEST } from "./../../constants/Action_Constants";
 
 const {
     elementType,
@@ -851,11 +850,8 @@ export const checkContainerElementVersion = async (containerElement, versionStat
         if (currentSlateData.popupSlateData && currentSlateData.popupSlateData.status === 'approved') {
             let newPopupSlateManifest = await getLatestVersion(currentSlateData.popupSlateData.contentUrn);
             containerElement.popupslateManifest = newPopupSlateManifest ? newPopupSlateManifest : config.tempSlateManifestURN
+            config.tcmslatemanifest = containerElement.popupslateManifest
         }
-        // if(newSlateManifest)
-        // {
-        // containerElement.slateManifest = newSlateManifest
-        // }
     }
     return containerElement;
 }
