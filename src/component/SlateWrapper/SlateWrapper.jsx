@@ -802,6 +802,7 @@ class SlateWrapper extends Component {
                         tocDelete={true}
                         itemName = {containerName}
                         tocDeleteClass='tocDeleteClass'
+                        deleteContainer = {false}
                     />                   
                    
                 )
@@ -820,6 +821,7 @@ class SlateWrapper extends Component {
                         tocDelete={true}
                         itemName = {containerName}
                         tocDeleteClass='tocDeleteClass'
+                        deleteContainer = {false}
                     />
     
                 )
@@ -835,6 +837,7 @@ class SlateWrapper extends Component {
                         tocDelete={true}
                         itemName = {containerName}
                         tocDeleteClass='tocDeleteClass'
+                        deleteContainer = {true}
                     />
     
                 )
