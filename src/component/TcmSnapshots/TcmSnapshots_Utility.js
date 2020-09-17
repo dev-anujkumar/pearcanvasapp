@@ -9,7 +9,6 @@ import { sendElementTcmSnapshot, getLatestVersion } from './TcmSnapshot_Actions.
 import { setSemanticsSnapshots, fetchElementsTag } from './ElementSnapshot_Utility.js';
 /*************************Import Constants*************************/
 import TcmConstants from './TcmConstants.js';
- import { VERSIONING_SLATEMANIFEST } from "./../../constants/Action_Constants";
 
 const {
     elementType,
@@ -847,15 +846,12 @@ export const checkContainerElementVersion = async (containerElement, versionStat
     /** latest version for slate*/
     if (currentSlateData && currentSlateData.status && currentSlateData.status === 'approved') {
         let newSlateManifest = await getLatestVersion(currentSlateData.contentUrn);
-        containerElement.slateManifest = newSlateManifest ? newSlateManifest : config.slateManifestURN
-        if (currentSlateData.popupSlateData && currentSlateData.popupSlateData.status === 'approved') {
-            let newPopupSlateManifest = await getLatestVersion(currentSlateData.popupSlateData.contentUrn);
-            containerElement.popupslateManifest = newPopupSlateManifest ? newPopupSlateManifest : config.tempSlateManifestURN
-        }
-        // if(newSlateManifest)
-        // {
-        // containerElement.slateManifest = newSlateManifest
-        // }
+        containerElement.slateManifest = newSlateManifest ? newSlateManifest : config.slateManifestURN    
+    }
+    if (currentSlateData.popupSlateData && currentSlateData.popupSlateData.status === 'approved') {
+        let newPopupSlateManifest = await getLatestVersion(currentSlateData.popupSlateData.contentUrn);
+        containerElement.popupslateManifest = newPopupSlateManifest ? newPopupSlateManifest : config.tempSlateManifestURN
+        config.tcmslatemanifest = containerElement.popupslateManifest
     }
     return containerElement;
 }

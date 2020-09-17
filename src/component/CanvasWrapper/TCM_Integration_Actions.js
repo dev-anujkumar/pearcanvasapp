@@ -9,7 +9,7 @@ export const loadTrackChanges = (elementId) => {
     let slateLockInfo = store.getState().slateLockReducer.slateLockInfo;
     if (!checkSlateLock(slateLockInfo)) {
         let slateData = store.getState().appStore.slateLevelData;
-        let slateId = slateData[config.slateManifestURN] && slateData[config.slateManifestURN].type == 'popup' &&  config.tempSlateManifestURN ?  config.tempSlateManifestURN 
+        let slateId = slateData[config.slateManifestURN] && slateData[config.slateManifestURN].type == 'popup' ? config.tcmslatemanifest ? config.tcmslatemanifest: config.tempSlateManifestURN
         : config.slateManifestURN;
         let popupSlateData = config.tempSlateManifestURN ? slateData[config.slateManifestURN] : {}
         var childObj = [];

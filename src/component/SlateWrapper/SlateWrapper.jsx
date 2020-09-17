@@ -1136,6 +1136,7 @@ class SlateWrapper extends Component {
         config.tempSlateManifestURN = null
         config.tempSlateEntityURN = null
         config.isPopupSlate = false
+        config.tcmslatemanifest= null
         this.props.openPopupSlate(undefined, popupId)
         this.props.setActiveElement(config.cachedActiveElement.element, config.cachedActiveElement.index)
         if(config.tcmStatus){
