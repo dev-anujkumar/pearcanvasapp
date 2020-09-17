@@ -471,6 +471,8 @@ function CommunicationChannel(WrappedComponent) {
                 config.staleTitle = message.node.unformattedTitle ? message.node.unformattedTitle.en : '';
                 config.slateEntityURN = message.node.entityUrn;
                 config.slateManifestURN = message.node.containerUrn;
+                config.tempSlateManifestURN = null;
+                config.tempSlateEntityURN = null;
                 config.disablePrev = message.disablePrev;
                 config.disableNext = message.disableNext;
                 config.slateType = message.node.nodeLabel;
