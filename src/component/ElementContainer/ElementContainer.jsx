@@ -1038,7 +1038,7 @@ class ElementContainer extends Component {
                 feedback: false
             };
             tcmStatus = this.checkTCMStatus(tcmData, element.id, defaultManifestUrn)
-            if (tcmStatus.tcm || tcmStatus.false) {
+            if (tcmStatus && (tcmStatus.tcm || tcmStatus.feedback)) {
                 return tcmStatus;
             } else {
                 tcmStatus.tcm = false;
@@ -1046,7 +1046,7 @@ class ElementContainer extends Component {
                 for (let index = 0; index < popupChildren.length; index++) {
                     if (popupTcmCount < 1) {
                         status = this.checkTCMStatus(tcmData, popupChildren[index], defaultWorkUrn)
-                        if (status.tcm || status.false) {
+                        if (status && (status.tcm || status.feedback)) {
                             popupTcmCount++;
                         }
                     } else {
