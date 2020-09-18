@@ -9,7 +9,6 @@ import { sendElementTcmSnapshot, getLatestVersion } from './TcmSnapshot_Actions.
 import { setSemanticsSnapshots, fetchElementsTag } from './ElementSnapshot_Utility.js';
 /*************************Import Constants*************************/
 import TcmConstants from './TcmConstants.js';
- import { VERSIONING_SLATEMANIFEST } from "./../../constants/Action_Constants";
 
 const {
     elementType,
@@ -694,9 +693,10 @@ const setContentSnapshot = (element,elementDetails,actionStatus) => {
     } else if (element.type === BLOCKFEATURE && element.elementdata && element.elementdata.type && element.elementdata.type == 'blockquote') {
         let blockQuoteText = element.html && element.html.text ? element.html.text : "";
         snapshotData = blockQuoteText && blockQuoteText.trim() !== "" ? blockQuoteText.replace(bqHiddenText,"").replace(bqAttrHtmlTrue, "").replace(bqAttrHtmlFalse, "") : "";
-    } else if(elementDetails && elementDetails.elementType && elementDetails.elementType.includes("LB") && actionStatus && actionStatus.action == 'create'){
-        snapshotData = '<p class="paragraphNumeroUno"><br></p>'
-    }
+    } 
+    // else if(elementDetails && elementDetails.elementType && elementDetails.elementType.includes("LB") && actionStatus && actionStatus.action == 'create'){
+    //     snapshotData = '<p class="paragraphNumeroUno"><br></p>'          // commenting this as this is creating regression in revert secanario
+    // } 
     else {
         snapshotData = element.html && element.html.text ? element.html.text : "";
     }
@@ -900,15 +900,12 @@ export const checkContainerElementVersion = async (containerElement, versionStat
     /** latest version for slate*/
     if (currentSlateData && currentSlateData.status && currentSlateData.status === 'approved') {
         let newSlateManifest = await getLatestVersion(currentSlateData.contentUrn);
-        containerElement.slateManifest = newSlateManifest ? newSlateManifest : config.slateManifestURN
-        if (currentSlateData.popupSlateData && currentSlateData.popupSlateData.status === 'approved') {
-            let newPopupSlateManifest = await getLatestVersion(currentSlateData.popupSlateData.contentUrn);
-            containerElement.popupslateManifest = newPopupSlateManifest ? newPopupSlateManifest : config.tempSlateManifestURN
-        }
-        // if(newSlateManifest)
-        // {
-        // containerElement.slateManifest = newSlateManifest
-        // }
+        containerElement.slateManifest = newSlateManifest ? newSlateManifest : config.slateManifestURN    
+    }
+    if (currentSlateData.popupSlateData && currentSlateData.popupSlateData.status === 'approved') {
+        let newPopupSlateManifest = await getLatestVersion(currentSlateData.popupSlateData.contentUrn);
+        containerElement.popupslateManifest = newPopupSlateManifest ? newPopupSlateManifest : config.tempSlateManifestURN
+        config.tcmslatemanifest = containerElement.popupslateManifest
     }
     return containerElement;
 }

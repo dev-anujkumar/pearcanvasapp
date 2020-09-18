@@ -206,8 +206,8 @@ const prepareFootnoteSnapshotContent = (actionStatus, footnoteWipList, footnoteH
  * @returns {Array} All AssetPopover Snapshots for given element 
 */
 export const prepareAssetPopoverSnapshotContent = async (assetsList, indexes, actionStatus) => {
-    let tempIndex = indexes && Array.isArray(indexes) ? indexes : (typeof indexes === "number") ? indexes.toString() : indexes.split("-");
-    let assetEleIndex = tempIndex.length > 1 ? tempIndex.join('-') : tempIndex;
+    let tempIndex = indexes && Array.isArray(indexes) ? indexes : (typeof indexes === "number") ? [indexes.toString()] : indexes.split("-");
+    let assetEleIndex = tempIndex && tempIndex.length > 1 ? tempIndex && tempIndex.join('-') : tempIndex;
     let assetPopoverSnap = [];
     let elementAP = document.querySelector(`div#cypress-${assetEleIndex}`)
     if (assetsList && assetsList.length) {

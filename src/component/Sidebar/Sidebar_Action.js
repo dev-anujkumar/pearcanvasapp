@@ -224,7 +224,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             if (config.isPopupSlate) {
                 elementConversionData.currentSlateData.popupSlateData = currentParentData[config.tempSlateManifestURN]
             }
-            if (currentSlateData.status === 'approved') {
+            if (currentSlateData && currentSlateData.status === 'approved') {
                 await tcmSnapshotsForConversion(elementConversionData, indexes, appStore, dispatch)
             }
             else {

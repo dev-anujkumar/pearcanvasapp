@@ -9,7 +9,7 @@ export const loadTrackChanges = (elementId) => {
     let slateLockInfo = store.getState().slateLockReducer.slateLockInfo;
     if (!checkSlateLock(slateLockInfo)) {
         let slateData = store.getState().appStore.slateLevelData;
-        let slateId = slateData[config.slateManifestURN] && slateData[config.slateManifestURN].type == 'popup' &&  config.tempSlateManifestURN ?  config.tempSlateManifestURN 
+        let slateId = slateData[config.slateManifestURN] && slateData[config.slateManifestURN].type == 'popup' ? config.tcmslatemanifest ? config.tcmslatemanifest: config.tempSlateManifestURN
         : config.slateManifestURN;
         let popupSlateData = config.tempSlateManifestURN ? slateData[config.slateManifestURN] : {}
         var childObj = [];
@@ -24,9 +24,10 @@ export const loadTrackChanges = (elementId) => {
               }
               if(data.id.includes("manifest") && data.type !='popup'){
                return createManifestObject(data,'contents')
-              }else if(data.id.includes("manifest") && data.type =='popup'){
-                return creatPopupObject(data)
               }
+              // else if(data.id.includes("manifest") && data.type =='popup'){
+              //   return creatPopupObject(data)
+              // }
             })
           }
           return childObj;
@@ -124,7 +125,7 @@ export const loadTrackChanges = (elementId) => {
         let currentElementId = elementId ? elementId : "";
         let currentSlateTitle = title;
         let currentProjectUrn = config.projectUrn;
-        let currentSlateUrn = config.tempSlateManifestURN ?  config.tempSlateManifestURN : config.slateManifestURN;
+        let currentSlateUrn = config.tcmslatemanifest ? config.tcmslatemanifest: config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN;
         let currentProjectEntityUrn = config.projectEntityUrn;
         let TCMurl = config.TCM_DASHBOARD_UI_URL;
         var trackChange = function(event) {

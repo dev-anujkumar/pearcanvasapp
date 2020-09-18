@@ -270,9 +270,11 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
 
     if (config.cachedActiveElement && config.cachedActiveElement.element && config.cachedActiveElement.element.type == "popup") {
         config.popupParentElement = {
-            parentElement: config.cachedActiveElement.element,
-            popupAsideData: getState().appStore.asideData,
-            popupParentUrn: getState().appStore.parentUrn
+            parentElement: config.cachedActiveElement.element
+        }
+        if(calledFrom!== "containerVersioning"){
+            config.popupParentElement.popupAsideData= getState().appStore.asideData;
+            config.popupParentElement.popupParentUrn= getState().appStore.parentUrn
         }
     }
     /** Project level and element level TCM status */
@@ -287,7 +289,13 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             'type': "TcmStatusUpdated",
             'message': messageTcmStatus
         })
-        let tcmManifestUrn = isPopupSlate && config.tempSlateManifestURN ? config.tempSlateManifestURN : manifestURN
+        let tcmManifestUrn
+        //  = isPopupSlate && config.tempSlateManifestURN ? config.tempSlateManifestURN : manifestURN
+        if (isPopupSlate && config.cachedActiveElement && config.cachedActiveElement.element && config.cachedActiveElement.element.id == config.slateManifestURN) {
+            tcmManifestUrn = config.tempSlateManifestURN
+        } else {
+            tcmManifestUrn = manifestURN
+        }
         dispatch(handleTCMData(tcmManifestUrn));
     }
     const elementCount = getState().appStore.slateLength
@@ -327,6 +335,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                 })
             }
             else if(versioning && versioning.type==="popup"){
+                config.slateManifestURN= Object.values(slateData.data)[0].id
                 let parentData = getState().appStore.slateLevelData;
                 let newslateData = JSON.parse(JSON.stringify(parentData));
                 newslateData[config.slateManifestURN] = Object.values(slateData.data)[0];
@@ -941,7 +950,9 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
                 bodymatter: currentSlateData.contents.bodymatter,
                 response: response.data
             };
-            prepareDataForTcmCreate(parentElement, _requestData.metaDataField, response.data, getState, dispatch)
+            if(config.tcmStatus){
+                prepareDataForTcmCreate(parentElement, _requestData.metaDataField, response.data, getState, dispatch)
+            }
             tcmSnapshotsForCreate(slateData, _requestData.metaDataField, containerElement, dispatch);
         }
         appendCreatedElement(argObj, response.data)

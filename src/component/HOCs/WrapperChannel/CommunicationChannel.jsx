@@ -115,7 +115,7 @@ function CommunicationChannel(WrappedComponent) {
                     }
                     break;
                 case 'projectDetails':
-                    config.tcmStatus = message.tcm.activated;
+                    config.tcmStatus = (message.tcm && message.tcm.activated == true ? true : undefined);
                     config.userId = message['x-prsn-user-id'].toLowerCase();
                     config.userName = message['x-prsn-user-id'].toLowerCase();
                     config.ssoToken = message.ssoToken;
@@ -471,6 +471,8 @@ function CommunicationChannel(WrappedComponent) {
                 config.staleTitle = message.node.unformattedTitle ? message.node.unformattedTitle.en : '';
                 config.slateEntityURN = message.node.entityUrn;
                 config.slateManifestURN = message.node.containerUrn;
+                config.tempSlateManifestURN = null;
+                config.tempSlateEntityURN = null;
                 config.disablePrev = message.disablePrev;
                 config.disableNext = message.disableNext;
                 config.slateType = message.node.nodeLabel;
@@ -480,6 +482,7 @@ function CommunicationChannel(WrappedComponent) {
                 config.scrolling = true;
                 config.totalPageCount = 0;
                 config.fromTOC = true;
+                config.tcmslatemanifest= null;
                 config.parentLabel = message.node.nodeParentLabel;
                 this.props.getSlateLockStatus(config.projectUrn, config.slateManifestURN)
                 let slateData = {
