@@ -9,8 +9,7 @@ import { AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, C
 import { customEvent } from '../../js/utils';
 import { prepareTcmSnapshots,tcmSnapshotsForUpdate,fetchElementWipData,checkContainerElementVersion,fetchManifestStatus } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 import { fetchPOPupSlateData} from '../../component/TcmSnapshots/TcmSnapshot_Actions.js'
-let elementTypeTCM = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza',  'popup'];
-let containerType = ['element-aside', 'manifest', 'citations', 'poetry', 'groupedcontent','popup'];
+import { elementTypeTCM, containerType, allowedFigureTypesForTCM } from "./ElementConstants";
 
 export const addComment = (commentString, elementId) => (dispatch) => {
     let url = `${config.STRUCTURE_API_URL}narrative-api/v2/${elementId}/comment/`
@@ -255,6 +254,9 @@ function contentEditableFalse (updatedData){
  * @param {Function} dispatch to dispatch tcmSnapshots
 */
 export const tcmSnapshotsForDelete = async (elementDeleteData, type, containerElement) => {
+    if (elementDeleteData.wipData.hasOwnProperty("figuretype") && !allowedFigureTypesForTCM.includes(elementDeleteData.wipData.figuretype)) {
+        return false
+    }
     let actionStatus = {
         action:"delete",
         status:"pending",
@@ -337,7 +339,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
                 metaDataField: parentElement && parentElement.type == 'popup' && updatedData.metaDataField ? updatedData.metaDataField : undefined,
                 sectionType : parentElement && parentElement.type == 'popup' && updatedData.sectionType ? updatedData.sectionType : undefined
             },
-            elementUpdateData ={
+            elementUpdateData = {
                 currentParentData: currentParentData,
                 updateBodymatter:updateBodymatter,
                 response:response.data,

@@ -38,7 +38,9 @@ const {
     parentType,
     bqAttrHtmlTrue,
     bqAttrHtmlFalse,
-    bqHiddenText
+    bqHiddenText,
+    FIGURE,
+    allowedFigureTypesForTCM
 }
     = TcmConstants;
 
@@ -517,7 +519,7 @@ const prepareAndSendTcmData = async (elementDetails, wipData, defaultKeys, actio
         snapshotUrn: elementDetails.elementUrn,
         elementType: elementDetails.elementType,
         elementWip: JSON.stringify(res),
-        elementSnapshot: JSON.stringify(await prepareElementSnapshots(wipData,actionStatus,index,elementDetails)),
+        elementSnapshot: wipData.type === FIGURE ? JSON.stringify(await prepareFigureElementSnapshots(wipData, actionStatus, index, elementDetails)) : JSON.stringify(await prepareElementSnapshots(wipData, actionStatus, index, elementDetails)),
         ...defaultKeys
     };
 
@@ -618,6 +620,27 @@ export const setSlateType = (wipData, containerElement, type) => {
 }
 
 /**
+ * @function prepareFigureElementSnapshots
+ * @description This function is to set the keys for tcm snapshots for FIGURE ELEMENT
+ * @param {String} status - status of action performed
+ * @param {Object} action - type of action performed
+ * @param {String} element - wipData for figure element
+ * @returns {Object} Element snapshot for TCM_Snapshot
+*/
+export const prepareFigureElementSnapshots = async (element, actionStatus, index, elementDetails) => {
+    let elementSnapshot = {};
+    let semanticSnapshots = (actionStatus.fromWhere !== "create" && element.type !== CITATION_ELEMENT) ? await setSemanticsSnapshots(element, actionStatus, index) : {};
+    elementSnapshot = {
+        ...element ? setFigureElementContentSnapshot(element, elementDetails, actionStatus) : "",
+        glossorySnapshot: [],
+        footnoteSnapshot:  JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.footnoteSnapshot : []),
+        assetPopOverSnapshot: []
+    }
+    
+    return elementSnapshot;
+}
+
+/**
  * @function prepareElementSnapshots
  * @description This function is to set the common keys for tcm snapshots
  * @param {String} status - status of action performed
@@ -639,6 +662,31 @@ export const prepareElementSnapshots = async (element,actionStatus,index, elemen
     return elementSnapshot;
 }
 
+const setFigureElementContentSnapshot = (element, elementDetails, actionStatus) => {
+    let snapshotData = {
+        title: element.html.title || "",
+        subtitle: element.html.subtitle || "",
+        captions: element.html.captions || "",
+        credits: element.html.credits || "" 
+    }
+    switch (element.figuretype) {
+        case "video":
+            snapshotData["metadata"] = element.figuredata.videoid
+            break;
+        case "audio":
+            snapshotData["metadata"] = element.figuredata.audioid
+            break;
+        case "image":
+        case "table":
+        case "mathImage":
+        default: 
+            snapshotData["metadata"] = element.figuredata.imageid
+            break;
+    }
+    // snapshotData = snapshotData && snapshotData.replace(/data-mce-href="#"/g,'')
+    return snapshotData
+}
+
 const setContentSnapshot = (element,elementDetails,actionStatus) => {
     let snapshotData = "";
     if (element.type === MULTI_COLUMN_GROUP && (element.groupdata && element.groupdata.bodymatter && element.groupdata.bodymatter[0].html.text)) {
@@ -648,7 +696,7 @@ const setContentSnapshot = (element,elementDetails,actionStatus) => {
         snapshotData = blockQuoteText && blockQuoteText.trim() !== "" ? blockQuoteText.replace(bqHiddenText,"").replace(bqAttrHtmlTrue, "").replace(bqAttrHtmlFalse, "") : "";
     } else if(elementDetails && elementDetails.elementType && elementDetails.elementType.includes("LB") && actionStatus && actionStatus.action == 'create'){
         snapshotData = '<p class="paragraphNumeroUno"><br></p>'
-    } 
+    }
     else {
         snapshotData = element.html && element.html.text ? element.html.text : "";
     }
@@ -676,7 +724,10 @@ const isEmpty = (obj) => {
  * @param {Object} containerElement - Element Parent Data
  * @param {Function} dispatch to dispatch tcmSnapshots
 */
-export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, containerElement, dispatch,assetRemoveidForSnapshot) => {
+export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, containerElement, dispatch, assetRemoveidForSnapshot) => {
+    if (elementUpdateData.response.hasOwnProperty("figuretype") && !allowedFigureTypesForTCM.includes(elementUpdateData.response.figuretype)) {
+        return false
+    }
     let actionStatus = {
         action:"update",
         status:"",
@@ -737,6 +788,9 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
  * @param {Function} dispatch to dispatch tcmSnapshots
 */
 export const tcmSnapshotsForCreate = async (elementCreateData, type, containerElement, dispatch) => {
+    if (elementCreateData.response.hasOwnProperty("figuretype") && !allowedFigureTypesForTCM.includes(elementCreateData.response.figuretype)) {
+        return false
+    }
     const actionStatus = {
         action:"create",
         status:"",
