@@ -522,6 +522,10 @@ const prepareAndSendTcmData = async (elementDetails, wipData, defaultKeys, actio
 
     if(currentSnapshot && (currentSnapshot.elementType.includes("CTA") || currentSnapshot.elementType.includes("LB")) && currentSnapshot.action == 'create'){
         currentSnapshot.status = 'accepted'  
+        if(currentSnapshot.elementType.includes("LB")){
+            res.elementdata.text = ''
+            currentSnapshot.elementWip = JSON.stringify(res)
+        }
     }
     await sendElementTcmSnapshot(currentSnapshot)
 }
@@ -646,9 +650,9 @@ const setContentSnapshot = (element,elementDetails,actionStatus) => {
         let blockQuoteText = element.html && element.html.text ? element.html.text : "";
         snapshotData = blockQuoteText && blockQuoteText.trim() !== "" ? blockQuoteText.replace(bqHiddenText,"").replace(bqAttrHtmlTrue, "").replace(bqAttrHtmlFalse, "") : "";
     } 
-    // else if(elementDetails && elementDetails.elementType && elementDetails.elementType.includes("LB") && actionStatus && actionStatus.action == 'create'){
-    //     snapshotData = '<p class="paragraphNumeroUno"><br></p>'          // commenting this as this is creating regression in revert secanario
-    // } 
+    else if(elementDetails && elementDetails.elementType && elementDetails.elementType.includes("LB") && actionStatus && actionStatus.action == 'create'){
+        snapshotData = '<p class="paragraphNumeroUno"><br></p>'          // commenting this as this is creating regression in revert secanario
+    } 
     else {
         snapshotData = element.html && element.html.text ? element.html.text : "";
     }
