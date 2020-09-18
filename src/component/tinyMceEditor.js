@@ -536,6 +536,32 @@ export class TinyMceEditor extends Component {
                         e.stopPropagation();
                     }
                     break;
+                case 'mceToggleFormat': 
+                    if (e.value === "superscript") {
+                        let selectedElement = editor.selection.getNode();
+                        if (selectedElement.tagName.toLowerCase() === 'sup' || (selectedElement.tagName.toLowerCase() === 'a' && selectedElement.parentNode.tagName.toLowerCase() === 'sup')) {
+                            let childNodes = selectedElement.getElementsByTagName('A');
+                            if (childNodes.length || selectedElement.tagName.toLowerCase() === 'a') {
+                                let parentNode = selectedElement.parentNode;
+                                if (selectedElement.tagName.toLowerCase() === 'a') {
+                                    selectedElement = selectedElement.parentNode;
+                                    parentNode = selectedElement.parentNode;
+                                }
+                                parentNode.innerHTML = removeBOM(parentNode.innerHTML);
+                                let existingInnerHTML = '<sup>' + removeBOM(selectedElement.innerHTML) + '</sup>';
+                                let innerHtml = existingInnerHTML + "<span id='_mce_caret' data-mce-bogus='1' data-mce-type='format-caret'>&#65279;</span>";
+                                let parentInnerHtml = parentNode.innerHTML;
+                                let newParentInnerHtml = parentInnerHtml.replace(existingInnerHTML, innerHtml);
+                                parentNode.innerHTML = newParentInnerHtml;
+                                let pointerElement = document.getElementById('_mce_caret');
+                                //editor.selection.select(pointerElement);
+                                editor.selection.setCursorLocation(pointerElement, 1);
+                                e.preventDefault();
+                                e.stopPropagation();
+                            }
+                        }
+
+                    }
             }
         })
     }
@@ -1785,9 +1811,26 @@ export class TinyMceEditor extends Component {
             return false
         }
         let elementId = ""
+        let selectedElement = editor.selection.getNode();
+        if (selectedElement.tagName.toLowerCase() === 'sup' || (selectedElement.tagName.toLowerCase() === 'a' && selectedElement.parentNode.tagName.toLowerCase() === 'sup')) {
+            let parentNode = selectedElement.parentNode;
+            if(selectedElement.tagName.toLowerCase() === 'a') {
+                selectedElement = selectedElement.parentNode;
+                parentNode = selectedElement.parentNode;
+            }
+            parentNode.innerHTML = removeBOM(parentNode.innerHTML);
+            let existingInnerHTML = '<sup>' + removeBOM(selectedElement.innerHTML) + '</sup>';
+            let innerHtml = existingInnerHTML + '<span id="footnote-attacher"></span>';
+            let parentInnerHtml = parentNode.innerHTML;
+            let newParentInnerHtml = parentInnerHtml.replace(existingInnerHTML, innerHtml);
+            parentNode.innerHTML = newParentInnerHtml;
+        }
         if (this.props.element.type === "popup") {
             if ((this.props.popupField === "formatted-title" || this.props.popupField === "formatted-subtitle") && !this.props.currentElement) {
-                editor.selection.setContent('<span id="footnote-attacher"></span>');
+                let footNoteSpan = document.getElementById('footnote-attacher');
+                if(!footNoteSpan) {
+                    editor.selection.setContent('<span id="footnote-attacher"></span>');
+                }
                 await this.props.createPopupUnit(this.props.popupField, true, this.props.index, this.props.element, true)
                 elementId = this.props.currentElement && this.props.currentElement.id
             } else {
