@@ -231,6 +231,9 @@ class SlateWrapper extends Component {
             if (_slateData !== null && _slateData !== undefined) {
                 if (Object.values(_slateData).length > 0) {
                     let _slateObject = _slateData[config.slateManifestURN];
+                    if(_slateObject==undefined){
+                        return false
+                    }
                     let _slateContent = _slateObject.contents
                     let { id: _slateId, type: _slateType } = _slateObject;
                     let { bodymatter: _slateBodyMatter } = _slateContent
