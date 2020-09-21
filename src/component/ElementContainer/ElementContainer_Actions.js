@@ -132,6 +132,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
             let currentSlateData = newParentData[config.slateManifestURN];
             if (currentSlateData.status === 'approved') {
                 if(currentSlateData.type==="popup"){
+                    sendDataToIframe({ 'type': "slatesRefresh", 'message' :true });
                     sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
                     dispatch(fetchSlateData(currentSlateData.id, currentSlateData.contentUrn, 0, currentSlateData, ""));
                 }
@@ -386,6 +387,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
                                 prepareDataForUpdateTcm(updatedData.id, getState, dispatch, response.data);
                             }
                         }
+                        sendDataToIframe({ 'type': "slatesRefresh", 'message' :true });
                         sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
                         dispatch(fetchSlateData(currentSlateData.id, currentSlateData.contentUrn, 0, currentSlateData, "", false));
                     }else{
