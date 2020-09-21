@@ -324,7 +324,7 @@ const tcmSnapshotsDeletePopup = (snapshotsData, defaultKeys, deleVercase, newVer
 */
 const tcmSnapshotsMetadataField = (snapshotsData, defaultKeys, containerElement, deleVercase, newVersionUrns,type,index, calledFrom) => {
     let elementDetails;
-    const { parentElement, metaDataField } = containerElement
+    const { parentElement, metaDataField, CurrentSlateStatus } = containerElement
     const { wipData, elementId, tag, actionStatus, popupInContainer, slateManifestVersioning } = snapshotsData;
     let metaDataFieldID = wipData.type === POPUP_ELEMENT ? wipData.popupdata['formatted-title'] && wipData.popupdata['formatted-title'].id : wipData.id;
     let wipDataTitle = calledFrom == 'delete' ? wipData.popupdata['formatted-title'] : wipData  // delete Whole pop case handling
@@ -335,7 +335,7 @@ const tcmSnapshotsMetadataField = (snapshotsData, defaultKeys, containerElement,
     tag.childTag = fetchElementsTag(parentElement, type ? type : metaDataField ? metaDataField : "");
     let isHeadTag = tag.parentTag == 'POP' ? "HEAD" : ""
     elementDetails = setElementTypeAndUrn(elementId, tag, isHeadTag, "", undefined, popupInContainer,slateManifestVersioning);
-    prepareAndSendTcmData(elementDetails, wipDataTitle, defaultKeys, actionStatus,index);
+    prepareAndSendTcmData(elementDetails, wipDataTitle, defaultKeys, actionStatus,index, CurrentSlateStatus);
 }
 
 /**
@@ -508,7 +508,7 @@ const checkParentData = (containerElement) => {
  * @param {Object} defaultKeys - default tcm_snapshot keys  
  * @param {Function} dispatch - dispatch function  
 */
-const prepareAndSendTcmData = async (elementDetails, wipData, defaultKeys, actionStatus,index) => {
+const prepareAndSendTcmData = async (elementDetails, wipData, defaultKeys, actionStatus,index, CurrentSlateStatus) => {
     let res = Object.assign({}, wipData);
     delete res["html"];
     let currentSnapshot = {
@@ -516,13 +516,13 @@ const prepareAndSendTcmData = async (elementDetails, wipData, defaultKeys, actio
         snapshotUrn: elementDetails.elementUrn,
         elementType: elementDetails.elementType,
         elementWip: JSON.stringify(res),
-        elementSnapshot: JSON.stringify(await prepareElementSnapshots(wipData,actionStatus,index,elementDetails)),
+        elementSnapshot: JSON.stringify(await prepareElementSnapshots(wipData,actionStatus,index,elementDetails, CurrentSlateStatus)),
         ...defaultKeys
     };
 
     if(currentSnapshot && (currentSnapshot.elementType.includes("CTA") || currentSnapshot.elementType.includes("LB")) && currentSnapshot.action == 'create'){
         currentSnapshot.status = 'accepted'  
-        if(currentSnapshot.elementType.includes("LB")){
+        if(currentSnapshot.elementType.includes("LB") && CurrentSlateStatus != 'approved'){
             res.elementdata.text = ''
             currentSnapshot.elementWip = JSON.stringify(res)
         }
@@ -628,12 +628,12 @@ export const setSlateType = (wipData, containerElement, type) => {
  * @param {String} element - wipData for element
  * @returns {Object} Element snapshot for TCM_Snapshot
 */
-export const prepareElementSnapshots = async (element,actionStatus,index, elementDetails) => {
+export const prepareElementSnapshots = async (element,actionStatus,index, elementDetails, CurrentSlateStatus) => {
     let elementSnapshot = {};
     let semanticSnapshots = (actionStatus.fromWhere !== "create" && element.type !== CITATION_ELEMENT) ? await setSemanticsSnapshots(element,actionStatus,index) : {};
 
     elementSnapshot = {
-        contentSnapshot: element ? setContentSnapshot(element,elementDetails,actionStatus) : "",
+        contentSnapshot: element ? setContentSnapshot(element,elementDetails,actionStatus, CurrentSlateStatus) : "",
         glossorySnapshot: JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.glossarySnapshot : []),
         footnoteSnapshot:  JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.footnoteSnapshot : []),
         assetPopOverSnapshot:  JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.assetPopoverSnapshot : [])
@@ -642,7 +642,7 @@ export const prepareElementSnapshots = async (element,actionStatus,index, elemen
     return elementSnapshot;
 }
 
-const setContentSnapshot = (element,elementDetails,actionStatus) => {
+const setContentSnapshot = (element,elementDetails,actionStatus, CurrentSlateStatus) => {
     let snapshotData = "";
     if (element.type === MULTI_COLUMN_GROUP && (element.groupdata && element.groupdata.bodymatter && element.groupdata.bodymatter[0].html.text)) {
         snapshotData = element.groupdata.bodymatter[0].html.text
@@ -650,8 +650,8 @@ const setContentSnapshot = (element,elementDetails,actionStatus) => {
         let blockQuoteText = element.html && element.html.text ? element.html.text : "";
         snapshotData = blockQuoteText && blockQuoteText.trim() !== "" ? blockQuoteText.replace(bqHiddenText,"").replace(bqAttrHtmlTrue, "").replace(bqAttrHtmlFalse, "") : "";
     } 
-    else if(elementDetails && elementDetails.elementType && elementDetails.elementType.includes("LB") && actionStatus && actionStatus.action == 'create'){
-        snapshotData = '<p class="paragraphNumeroUno"><br></p>'          // commenting this as this is creating regression in revert secanario
+    else if(elementDetails && elementDetails.elementType && (elementDetails.elementType.includes("LB") && actionStatus && actionStatus.action == 'create') && CurrentSlateStatus != 'approved' ){
+        snapshotData = '<p class="paragraphNumeroUno"><br></p>'          
     } 
     else {
         snapshotData = element.html && element.html.text ? element.html.text : "";
