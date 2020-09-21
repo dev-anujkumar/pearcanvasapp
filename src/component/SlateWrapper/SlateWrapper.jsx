@@ -1118,7 +1118,7 @@ class SlateWrapper extends Component {
         }
     }
     closePopup = () =>{
-        if (config.savingInProgress) {
+        if (config.savingInProgress || config.isSavingElement) {
             return false
         }
         let popupId = config.slateManifestURN
