@@ -241,7 +241,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         }
         if (currentSlateData.status === 'approved') {
             if(currentSlateData.type==="popup"){
-                sendDataToIframe({ 'type': "slatesRefresh", 'message' :true });
+                sendDataToIframe({ 'type': "tocRefreshVersioning", 'message' :true });
                 sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
                 dispatch(fetchSlateData(currentSlateData.id, currentSlateData.contentUrn, 0, currentSlateData, ""));
             }
