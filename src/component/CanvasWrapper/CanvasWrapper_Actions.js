@@ -474,18 +474,20 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
         }
         /** [TK-3289]- To get Current Slate details */
         dispatch(setCurrentSlateAncestorData(getState().appStore.allSlateData))
-        if(slateData.data && Object.values(slateData.data).length > 0) {
-            let slateTitle = SLATE_TITLE;
-            if('title' in slateData.data[newVersionManifestId].contents && 'text' in slateData.data[newVersionManifestId].contents.title) {
-                slateTitle = slateData.data[newVersionManifestId].contents.title.text || SLATE_TITLE;
+        if (slateData.data[newVersionManifestId].type !== "popup") {
+            if(slateData.data && Object.values(slateData.data).length > 0) {
+                let slateTitle = SLATE_TITLE;
+                if('title' in slateData.data[newVersionManifestId].contents && 'text' in slateData.data[newVersionManifestId].contents.title) {
+                    slateTitle = slateData.data[newVersionManifestId].contents.title.text || SLATE_TITLE;
+                }
+                sendDataToIframe({
+                    'type': "setSlateDetails",
+                    'message': setSlateDetail(slateTitle, newVersionManifestId)
+                });
             }
-            sendDataToIframe({
-                'type': "setSlateDetails",
-                'message': setSlateDetail(slateTitle, newVersionManifestId)
-            });
-        }
 
-        dispatch(fetchSlateAncestorData());
+            dispatch(fetchSlateAncestorData());
+        }
         const elapsedTime = performance.now() - startTime;
         
         sendToDataLayer('slate-load', {
