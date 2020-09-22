@@ -573,6 +573,7 @@ class ElementContainer extends Component {
                 }
                 if(parentElement && parentElement.type === "popup"){
                     html = html.replace(/(<sup><\/sup>)|(<sup><br><\/sup>)/g, "<br>");
+                    html =html.replace(/<br data-mce-bogus="1">/g, '<br>')
                     tempDiv.innerHTML = html
                 }
                 html =html.replace(/(\r\n|\n|\r)/gm, '')
