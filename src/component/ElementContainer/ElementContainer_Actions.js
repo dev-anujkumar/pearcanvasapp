@@ -132,6 +132,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
             let currentSlateData = newParentData[config.slateManifestURN];
             if (currentSlateData.status === 'approved') {
                 if(currentSlateData.type==="popup"){
+                    sendDataToIframe({ 'type': "tocRefreshVersioning", 'message' :true });
                     sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
                     dispatch(fetchSlateData(currentSlateData.id, currentSlateData.contentUrn, 0, currentSlateData, ""));
                 }
@@ -335,14 +336,16 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
                 poetryData: poetryData,
                 parentElement: parentElement && parentElement.type == 'popup' ? parentElement : undefined,
                 metaDataField: parentElement && parentElement.type == 'popup' && updatedData.metaDataField ? updatedData.metaDataField : undefined,
-                sectionType : parentElement && parentElement.type == 'popup' && updatedData.sectionType ? updatedData.sectionType : undefined
+                sectionType : parentElement && parentElement.type == 'popup' && updatedData.sectionType ? updatedData.sectionType : undefined,
+                CurrentSlateStatus: currentSlateData.status
             },
             elementUpdateData ={
                 currentParentData: currentParentData,
                 updateBodymatter:updateBodymatter,
                 response:response.data,
                 updatedId:updatedData.id,
-                slateManifestUrn:config.slateManifestURN
+                slateManifestUrn:config.slateManifestURN,
+                CurrentSlateStatus: currentSlateData.status
             }
             if(!config.isCreateGlossary){  
                 if (currentSlateData && currentSlateData.status === 'approved') {
@@ -386,6 +389,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
                                 prepareDataForUpdateTcm(updatedData.id, getState, dispatch, response.data);
                             }
                         }
+                        sendDataToIframe({ 'type': "tocRefreshVersioning", 'message' :true });
                         sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
                         dispatch(fetchSlateData(currentSlateData.id, currentSlateData.contentUrn, 0, currentSlateData, "", false));
                     }else{
