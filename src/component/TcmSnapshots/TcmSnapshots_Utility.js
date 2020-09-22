@@ -54,7 +54,6 @@ const {
 */
 export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, type, newVersionUrns,index) => {
     const { parentElement, slateManifest,popupslateManifest } = containerElement
-    console.log("footote TCM wipData", wipData)
     /** isContainer : used to set SlateType  */
     let isContainer = setSlateType(wipData,containerElement,type);
     let deleVercase = newVersionUrns ? true : false
@@ -224,7 +223,6 @@ const tcmSnapshotsInContainerElements = (containerElement, snapshotsData, defaul
     }
     tag.parentTag = fetchElementsTag(parentElement);
     tag.childTag = fetchElementsTag(wipData);
-    console.log("tcmSnapshotsInContainerElements TCM", asideData, parentUrn)
     let isHead = asideData && asideData.type === ELEMENT_ASIDE && asideData.subtype === WORKED_EXAMPLE ? parentUrn.manifestUrn == asideData.id ? "HEAD" : "BODY" : "";
     elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "", parentUrn ? parentUrn.columnIndex : -1, popupInContainer, slateManifestVersioning, isPopupSlate);
     prepareAndSendTcmData(elementDetails, wipData, defaultKeys, actionStatus,index);

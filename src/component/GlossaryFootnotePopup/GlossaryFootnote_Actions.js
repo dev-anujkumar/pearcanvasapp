@@ -343,8 +343,6 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                 parentElement: data.metaDataField ? fetchElementWipData(tcmMainBodymatter,index,'popup') : undefined,
                 metaDataField: data.metaDataField ? data.metaDataField : undefined
             };
-            console.log("footote TCM elementUpdateData", elementUpdateData)
-            console.log("footote TCM containerElement", containerElement)
             if (currentSlateData.status === 'approved') {
                 await tcmSnapshotsForUpdate(elementUpdateData, index, containerElement, store.dispatch, "");
             }
