@@ -747,7 +747,7 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
     if ((metaDataField || sectionType) && parentElement && parentElement.type == POPUP_ELEMENT) {
         wipData = metaDataField && parentElement.popupdata && parentElement.popupdata[FORMATTED_TITLE] ? parentElement.popupdata[FORMATTED_TITLE] : parentElement.popupdata && parentElement.popupdata.postertextobject[0] ? parentElement.popupdata.postertextobject[0] : wipData;
     } else {
-        wipData = fetchElementWipData(updateBodymatter, elementIndex, response.type, "")
+        wipData = fetchElementWipData(updateBodymatter, elementIndex, response.type, "", actionStatus.action)
     }
     
     let versionStatus = fetchManifestStatus(updateBodymatter, containerElement, response.type);
@@ -923,7 +923,7 @@ export const checkContainerElementVersion = async (containerElement, versionStat
  * @param {String} entityUrn - entityUrn
  * @returns {Object} WipData for element 
 */
-export const fetchElementWipData = (bodymatter, index, type, entityUrn) => {
+export const fetchElementWipData = (bodymatter, index, type, entityUrn, operationType) => {
     let eleIndex, wipData = {};
     if (typeof index === "number" || (Array.isArray(index) && index.length == 1)) {   /** Delete a container or an element at slate level */
         eleIndex = Array.isArray(index) ? index[0] : index;
@@ -967,14 +967,17 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn) => {
                 }
                 break;
             case FIGURE:
-                if ((eleIndex.length == 2) || (eleIndex.length == 3 && bodymatter[eleIndex[0]].type !== MULTI_COLUMN)) {    /** Inside WE-HEAD | Aside */
+                if (eleIndex.length === 2 && config.isPopupSlate) {  /**Figure inside popup slate */
+                    wipData = bodymatter[eleIndex[0]]
+                }
+                else if ((eleIndex.length === 2) || (eleIndex.length === 3 && bodymatter[eleIndex[0]].type !== MULTI_COLUMN && operationType !== "delete")) {    /** Inside WE-HEAD | Aside */
                     wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]];
                 }
-                else if(eleIndex.length == 3 && bodymatter[eleIndex[0]].type === MULTI_COLUMN){      /** Inside Multi-Column */
-                    wipData = bodymatter[eleIndex[0]].groupeddata.bodymatter[eleIndex[1]].groupdata.bodymatter[eleIndex[2]]
+                else if((eleIndex.length === 4 && bodymatter[eleIndex[0]].type !== MULTI_COLUMN) || (eleIndex.length === 3 && bodymatter[eleIndex[0]].type !== MULTI_COLUMN && operationType === "delete")){      /** Inside WE-HEAD | Aside Delete Scenario */
+                    wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]].contents.bodymatter[eleIndex[2]]
                 }
-                else if (eleIndex.length == 4 && bodymatter[eleIndex[0]].type !== MULTI_COLUMN) {   /** Inside WE-BODY */
-                    wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]].contents.bodymatter[eleIndex[2]];
+                else if(eleIndex.length === 3 && bodymatter[eleIndex[0]].type === MULTI_COLUMN){      /** Inside Multi-Column */
+                    wipData = bodymatter[eleIndex[0]].groupeddata.bodymatter[eleIndex[1]].groupdata.bodymatter[eleIndex[2]]
                 }
                 break;
         }
@@ -1049,7 +1052,16 @@ const setParentUrn = (bodymatter, tempIndex) => {
                 break;
         }
     } else if (tempIndex.length == 4) {
-        parentElement = bodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]]
+        if (bodymatter[tempIndex[0]].type === MULTI_COLUMN) {
+            parentElement = bodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]]
+            multiColumnData = {
+                columnIndex: tempIndex[1],
+                columnName: tempIndex[1] == '0' ? 'C1' : 'C2'
+            }
+        }
+        else {
+            parentElement = bodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]]
+        }
     }
     return {
         parentElement,

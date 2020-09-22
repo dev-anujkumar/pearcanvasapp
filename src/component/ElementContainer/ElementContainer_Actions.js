@@ -104,7 +104,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
             let deleteSlate = deleteParentData[config.slateManifestURN];
             let deleteBodymatter = deleteParentData[config.slateManifestURN].contents.bodymatter;
             if (elementTypeTCM.indexOf(type) !== -1 || containerType.indexOf(type) !== -1) {
-                let wipData = fetchElementWipData(deleteBodymatter, index, type, contentUrn)
+                let wipData = fetchElementWipData(deleteBodymatter, index, type, contentUrn, "delete")
                 let containerElement = {
                     asideData: asideData,
                     parentUrn: parentUrn,
