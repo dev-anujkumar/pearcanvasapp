@@ -651,7 +651,7 @@ const setContentSnapshot = (element,elementDetails,actionStatus, CurrentSlateSta
         snapshotData = blockQuoteText && blockQuoteText.trim() !== "" ? blockQuoteText.replace(bqHiddenText,"").replace(bqAttrHtmlTrue, "").replace(bqAttrHtmlFalse, "") : "";
     } 
     else if(elementDetails && elementDetails.elementType && (elementDetails.elementType.includes("LB") && actionStatus && actionStatus.action == 'create') && CurrentSlateStatus != 'approved' ){
-        snapshotData = '<p></p>'          
+        snapshotData = '<p class="paragraphNumeroUno"><br></p>'          
     } 
     else {
         snapshotData = element.html && element.html.text ? element.html.text : "";
