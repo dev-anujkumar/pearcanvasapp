@@ -633,9 +633,9 @@ export const prepareFigureElementSnapshots = async (element, actionStatus, index
     let semanticSnapshots = (actionStatus.fromWhere !== "create" && element.type !== CITATION_ELEMENT) ? await setSemanticsSnapshots(element, actionStatus, index) : {};
     elementSnapshot = {
         ...element ? setFigureElementContentSnapshot(element, elementDetails, actionStatus) : "",
-        glossorySnapshot: [],
+        glossorySnapshot: JSON.stringify([]),
         footnoteSnapshot:  JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.footnoteSnapshot : []),
-        assetPopOverSnapshot: []
+        assetPopOverSnapshot: JSON.stringify([])
     }
     
     return elementSnapshot;
@@ -947,10 +947,9 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn) => {
             case BLOCKFEATURE:
             case AUTHORED_TEXT:
             case LEARNING_OBJECTIVE:
-            case FIGURE:
                 if (eleIndex.length == 2) {          /** Inside WE-HEAD | Aside */
                     wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]];
-                } else if (eleIndex.length == 3 && bodymatter[eleIndex[0]].type !== MULTI_COLUMN ) {   /** Inside WE-BODY */
+                } else if (eleIndex.length == 3 && bodymatter[eleIndex[0]].type !== MULTI_COLUMN) {   /** Inside WE-BODY */
                     wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]].contents.bodymatter[eleIndex[2]];
                 } else if(eleIndex.length == 3 && bodymatter[eleIndex[0]].type === MULTI_COLUMN){      /** Inside Multi-Column */
                     wipData = bodymatter[eleIndex[0]].groupeddata.bodymatter[eleIndex[1]].groupdata.bodymatter[eleIndex[2]]
@@ -962,6 +961,17 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn) => {
                 } else if (eleIndex.length == 3) {    /** Inside WE-HEAD | Aside */
                     wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]];
                 } else if (eleIndex.length == 4 && bodymatter[eleIndex[0]].type !== MULTI_COLUMN) {   /** Inside WE-BODY */
+                    wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]].contents.bodymatter[eleIndex[2]];
+                }
+                break;
+            case FIGURE:
+                if ((eleIndex.length == 2) || (eleIndex.length == 3 && bodymatter[eleIndex[0]].type !== MULTI_COLUMN)) {    /** Inside WE-HEAD | Aside */
+                    wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]];
+                }
+                else if(eleIndex.length == 3 && bodymatter[eleIndex[0]].type === MULTI_COLUMN){      /** Inside Multi-Column */
+                    wipData = bodymatter[eleIndex[0]].groupeddata.bodymatter[eleIndex[1]].groupdata.bodymatter[eleIndex[2]]
+                }
+                else if (eleIndex.length == 4 && bodymatter[eleIndex[0]].type !== MULTI_COLUMN) {   /** Inside WE-BODY */
                     wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]].contents.bodymatter[eleIndex[2]];
                 }
                 break;
