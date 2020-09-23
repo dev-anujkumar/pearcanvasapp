@@ -967,7 +967,7 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn, operatio
                 }
                 break;
             case FIGURE:
-                if (eleIndex.length === 2 && config.isPopupSlate) {  /**Figure inside popup slate */
+                if (eleIndex.length === 2 && (config.isPopupSlate || bodymatter[eleIndex[0]].type === FIGURE)) {  /**Figure inside popup slate */
                     wipData = bodymatter[eleIndex[0]]
                 }
                 else if ((eleIndex.length === 2) || (eleIndex.length === 3 && bodymatter[eleIndex[0]].type !== MULTI_COLUMN && operationType !== "delete")) {    /** Inside WE-HEAD | Aside */
