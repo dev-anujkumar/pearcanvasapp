@@ -200,6 +200,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     if(config.elementStatus[conversionDataToSend.id] === "approved"){
         config.savingInProgress = true
     }
+    config.isSavingElement = true
     const url = `${config.REACT_APP_API_URL}v1/slate/elementTypeConversion/${overallType}`
     axios.post(url, JSON.stringify(conversionDataToSend), { 
         headers: {
@@ -258,6 +259,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         if (currentSlateData.status === 'wip') {
             config.savingInProgress = false
         }
+        config.isSavingElement = false
         tinymce.activeEditor&&tinymce.activeEditor.undoManager&&tinymce.activeEditor.undoManager.clear();
         /**------------------------------------------------[BG-2676]------------------------------------------------- */
         let posterText = res.data && res.data.html && res.data.html.postertext
@@ -364,6 +366,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         dispatch({type: ERROR_POPUP, payload:{show: true}})
         config.conversionInProcess = false
         config.savingInProgress = false
+        config.isSavingElement = false
     })
 }
 catch (error) {
@@ -532,7 +535,7 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
  * @param {Boolean} fromToolbar | conversion from toolbar (only list type)
  */
 export const conversionElement = (elementData, fromToolbar) => (dispatch, getState) => {
-    if(!config.conversionInProcess && !config.savingInProgress){
+    if(!config.conversionInProcess && !config.savingInProgress && !config.isSavingElement){
         let appStore =  getState().appStore;
         dispatch(handleElementConversion(elementData, appStore.slateLevelData, appStore.activeElement, fromToolbar,appStore.showHideObj));
     } else {
