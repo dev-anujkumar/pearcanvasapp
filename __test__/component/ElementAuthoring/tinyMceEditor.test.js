@@ -62,6 +62,7 @@ jest.mock('../../../src/constants/utility.js', () => {
             return true
         },
         guid: jest.fn(),
+        removeBlankTags:jest.fn()
     }
 })
 jest.mock('../../../src/js/glossaryFootnote.js', () => {

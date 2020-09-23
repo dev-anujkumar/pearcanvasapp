@@ -9,7 +9,9 @@ import config from '../../../src/config/config';
 import { elementAside,slateLevelData1, slateLevelData2, asideDataType1, asideDataType2, elementAsideWorkExample } from '../../../fixtures/elementAsideData';
 import { citationGroupElement } from "../../../fixtures/ElementCitationData";
 import { multiColumnContainer } from "../../../fixtures/multiColumnContainer"
-
+jest.mock('../../../src/component/TcmSnapshots/TcmSnapshots_Utility.js',()=>({
+    tcmSnapshotsForCreate: jest.fn()
+}))
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
