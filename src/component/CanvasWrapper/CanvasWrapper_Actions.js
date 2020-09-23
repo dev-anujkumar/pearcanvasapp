@@ -945,10 +945,7 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
                 metaDataField: _requestData.metaDataField
             };
             let slateData = {
-                currentSlateData: {
-                    status: currentSlateData.status,
-                    contentUrn: currentSlateData.contentUrn
-                },
+                currentParentData:newParentData,
                 bodymatter: currentSlateData.contents.bodymatter,
                 response: response.data
             };

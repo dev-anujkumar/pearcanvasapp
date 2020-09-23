@@ -746,12 +746,16 @@ export const tcmSnapshotsForCreate = async (elementCreateData, type, containerEl
         status:"",
         fromWhere:"create"
     }
+    let currentSlateData = elementCreateData.currentParentData[config.slateManifestURN] 
+    if(config.isPopupSlate){
+        currentSlateData.popupSlateData = elementCreateData.currentParentData[config.tempSlateManifestURN]
+    }
     let versionStatus = {};
     /** This condition is required to check version of elements when bodymatter has elements and is not a container on slate */
     if (elementCreateData.bodymatter && elementCreateData.bodymatter.length !== 0 && (parentType.indexOf(type) === -1)) {
         versionStatus = fetchManifestStatus(elementCreateData.bodymatter, containerElement, type);
     }
-    containerElement = await checkContainerElementVersion(containerElement, versionStatus, elementCreateData.currentSlateData);
+    containerElement = await checkContainerElementVersion(containerElement, versionStatus, currentSlateData);
     prepareTcmSnapshots(elementCreateData.response, actionStatus, containerElement, type,"");
 }
 

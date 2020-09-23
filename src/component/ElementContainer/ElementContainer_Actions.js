@@ -116,10 +116,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
                 }
                 let deleteData = {
                     wipData: wipData,
-                    currentSlateData: {
-                        status: deleteSlate.status,
-                        contentUrn: deleteSlate.contentUrn
-                    },
+                    currentParentData: deleteParentData,
                     bodymatter: deleteBodymatter,
                     newVersionUrns: deleteElemData.data,
                     index:index
@@ -263,10 +260,14 @@ export const tcmSnapshotsForDelete = async (elementDeleteData, type, containerEl
     }
     let parentType = ['element-aside', 'citations', 'poetry', 'groupedcontent', 'popup'];
     let versionStatus = {};
+    let currentSlateData = elementDeleteData.currentParentData[config.slateManifestURN] 
+    if(config.isPopupSlate){
+        currentSlateData.popupSlateData = elementDeleteData.currentParentData[config.tempSlateManifestURN]
+    }
     if ((parentType.indexOf(type) === -1)) {
         versionStatus = fetchManifestStatus(elementDeleteData.bodymatter, containerElement, type);
     }
-    containerElement = await checkContainerElementVersion(containerElement, versionStatus, elementDeleteData.currentSlateData);
+    containerElement = await checkContainerElementVersion(containerElement, versionStatus, currentSlateData);
     prepareTcmSnapshots(elementDeleteData.wipData, actionStatus, containerElement, type,elementDeleteData.newVersionUrns,elementDeleteData.index);
 }
 
