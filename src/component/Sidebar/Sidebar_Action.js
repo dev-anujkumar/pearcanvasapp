@@ -388,7 +388,7 @@ function prepareDataForConversionTcm(updatedDataID, getState, dispatch,versionid
         })
     }
     else {
-        if(tcmData && indexes.length > 0){
+        if(tcmData && indexes.length > 0 && updatedDataID){
         tcmData[indexes]["elemURN"] = updatedDataID
         tcmData[indexes]["txCnt"] = tcmData[indexes]["txCnt"] !== 0 ? tcmData[indexes]["txCnt"] : 1
         tcmData[indexes]["feedback"] = tcmData[indexes]["feedback"] !== null ? tcmData[indexes]["feedback"] : null
