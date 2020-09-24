@@ -25,7 +25,8 @@ const {
     AP_TYPE,
     ASIDE,
     WORKED_EXAMPLE,
-    FIGURE
+    FIGURE,
+    MULTI_COLUMN
 }
     = TcmConstants;
 
@@ -440,4 +441,49 @@ const setMetadataType = {
         'formattedSubtitle': 'popup_label',
         'formattedTitleOnly': 'popup_label'
     }
+}
+
+/**
+ * Generates WIP data for figure
+ * @param {*} bodymatter Slate bodymatter data
+ * @param {*} index index of the element
+ */
+export const generateWipDataForFigure = (bodymatter, index) => {
+    const eleIndex =  index.split("-");
+    let wipData
+    switch(eleIndex.length){
+        case 2:
+            if(bodymatter[eleIndex[0]].type === FIGURE) {
+                wipData = bodymatter[eleIndex[0]]
+            }
+            else if (bodymatter[eleIndex[0]].type === ELEMENT_ASIDE) {
+                wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]]
+            }
+            break;
+        case 3:
+            if(bodymatter[eleIndex[0]].type === FIGURE) {
+                wipData = bodymatter[eleIndex[0]]
+            }
+            else if (bodymatter[eleIndex[0]].type === ELEMENT_ASIDE) { /** Aside and WE */
+                if (bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]].type === FIGURE) { /**Aside or WE-head */
+                    wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]]
+                }
+                else { /** WE body section */
+                    wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]].contents.bodymatter[eleIndex[2]]
+                }
+            }
+            else if (bodymatter[eleIndex[0]].type === MULTI_COLUMN) { /** Multi-column */
+                wipData = bodymatter[eleIndex[0]].groupeddata.bodymatter[eleIndex[1]].groupdata.bodymatter[eleIndex[2]]
+            }
+            break;
+        case 4:
+            if (bodymatter[eleIndex[0]].type === ELEMENT_ASIDE) { /** WE */
+                wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]].contents.bodymatter[eleIndex[2]]
+            }
+            else if (bodymatter[eleIndex[0]].type === MULTI_COLUMN) { /** Multi-column */
+                wipData = bodymatter[eleIndex[0]].groupeddata.bodymatter[eleIndex[1]].groupdata.bodymatter[eleIndex[2]]
+            }
+            break;
+    }
+    return wipData
 }

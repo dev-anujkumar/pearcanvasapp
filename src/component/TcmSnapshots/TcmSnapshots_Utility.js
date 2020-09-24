@@ -6,7 +6,7 @@
 /**************************Import Modules**************************/
 import config from '../../config/config.js';
 import { sendElementTcmSnapshot, getLatestVersion } from './TcmSnapshot_Actions.js';
-import { setSemanticsSnapshots, fetchElementsTag } from './ElementSnapshot_Utility.js';
+import { setSemanticsSnapshots, fetchElementsTag, generateWipDataForFigure } from './ElementSnapshot_Utility.js';
 /*************************Import Constants*************************/
 import TcmConstants from './TcmConstants.js';
 
@@ -768,8 +768,20 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
         if (oldData.poetrylines) {
             oldData.poetrylines = wipData.poetrylines;
         }
-        else{ 
-            oldData.elementdata = wipData.elementdata;
+        else{
+            if (oldData.type === FIGURE) {
+                oldData = {
+                    ...oldData,
+                    title: wipData.title,
+                    subtitle: wipData.subtitle,
+                    captions: wipData.captions,
+                    credits: wipData.credits,
+                    figuredata: wipData.figuredata
+                }
+            }
+            else {
+                oldData.elementdata = wipData.elementdata;
+            }
         }
         oldData.html = wipData.html;
         let actionStatusVersioning = Object.assign({}, actionStatus);
@@ -967,18 +979,7 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn, operatio
                 }
                 break;
             case FIGURE:
-                if (eleIndex.length === 2 && (config.isPopupSlate || bodymatter[eleIndex[0]].type === FIGURE)) {  /**Figure inside popup slate */
-                    wipData = bodymatter[eleIndex[0]]
-                }
-                else if ((eleIndex.length === 2) || (eleIndex.length === 3 && bodymatter[eleIndex[0]].type !== MULTI_COLUMN && operationType !== "delete")) {    /** Inside WE-HEAD | Aside */
-                    wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]];
-                }
-                else if((eleIndex.length === 4 && bodymatter[eleIndex[0]].type !== MULTI_COLUMN) || (eleIndex.length === 3 && bodymatter[eleIndex[0]].type !== MULTI_COLUMN && operationType === "delete")){      /** Inside WE-HEAD | Aside Delete Scenario */
-                    wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]].contents.bodymatter[eleIndex[2]]
-                }
-                else if(eleIndex.length === 3 && bodymatter[eleIndex[0]].type === MULTI_COLUMN){      /** Inside Multi-Column */
-                    wipData = bodymatter[eleIndex[0]].groupeddata.bodymatter[eleIndex[1]].groupdata.bodymatter[eleIndex[2]]
-                }
+                wipData = generateWipDataForFigure(bodymatter, index)
                 break;
         }
     }
