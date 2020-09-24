@@ -100,13 +100,15 @@ const permissionsData = ["login",
     "note_search_comment",
     "note_viewer",
     "lo_edit_metadata",]
-
+    const INITIAL_ACTION = {
+        type: '',
+        payload: {}
+    }
+    
 describe('testing SLATE LEVEL REDUCER cases -->', () => {
 
-    it('should return the initial state', () => {
-        expect(reducer(initialState, {
-
-        })).toEqual(initialState);
+    xit('should return the initial state', () => {
+        expect(reducer(undefined, {})).toEqual(initialState);
     });
     it('case 1- FETCH_SLATE_DATA', () => {
         let output = {

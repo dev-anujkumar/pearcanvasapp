@@ -75,10 +75,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 poetryData: poetryData
             };
             let slateData = {
-                currentSlateData: {
-                    status: currentSlateData.status,
-                    contentUrn: currentSlateData.contentUrn
-                },
+                currentParentData: newParentData,
                 bodymatter: currentSlateData.contents.bodymatter,
                 response: createdElemData.data
             };

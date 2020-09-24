@@ -569,7 +569,6 @@ export class TinyMceEditor extends Component {
                                 let newParentInnerHtml = parentInnerHtml.replace(existingInnerHTML, innerHtml);
                                 parentNode.innerHTML = newParentInnerHtml;
                                 let pointerElement = document.getElementById('_mce_caret');
-                                //editor.selection.select(pointerElement);
                                 if (endPosition) {
                                     editor.selection.setCursorLocation(pointerElement, 1);
                                 } else {
