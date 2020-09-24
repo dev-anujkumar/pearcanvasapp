@@ -282,3 +282,7 @@ ul.slate_assessment_metadata_type_dropdown_options.notselect{
   background-color: rgb(217, 228, 240);
   position: relative;
 }
+
+.slate_assessment_data_details .slate_assessment_data_id_lo,.slate_assessment_data_details .slate_assessment_data_format_lo{
+  display: none;
+}
