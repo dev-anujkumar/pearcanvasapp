@@ -518,7 +518,7 @@ const prepareAndSendTcmData = async (elementDetails, wipData, defaultKeys, actio
         snapshotUrn: elementDetails.elementUrn,
         elementType: elementDetails.elementType,
         elementWip: JSON.stringify(res),
-        elementSnapshot: wipData.type === FIGURE ? JSON.stringify(await prepareFigureElementSnapshots(wipData, actionStatus, index, elementDetails)) : JSON.stringify(await prepareElementSnapshots(wipData, actionStatus, index, elementDetails, CurrentSlateStatus)),
+        elementSnapshot: wipData.type === FIGURE ? JSON.stringify(await prepareFigureElementSnapshots(wipData, actionStatus, index)) : JSON.stringify(await prepareElementSnapshots(wipData, actionStatus, index, elementDetails, CurrentSlateStatus)),
         ...defaultKeys
     };
 
@@ -630,11 +630,11 @@ export const setSlateType = (wipData, containerElement, type) => {
  * @param {String} element - wipData for figure element
  * @returns {Object} Element snapshot for TCM_Snapshot
 */
-export const prepareFigureElementSnapshots = async (element, actionStatus, index, elementDetails) => {
+export const prepareFigureElementSnapshots = async (element, actionStatus, index) => {
     let elementSnapshot = {};
     let semanticSnapshots = (actionStatus.fromWhere !== "create" && element.type !== CITATION_ELEMENT) ? await setSemanticsSnapshots(element, actionStatus, index) : {};
     elementSnapshot = {
-        ...element ? setFigureElementContentSnapshot(element, elementDetails, actionStatus) : "",
+        ...element ? setFigureElementContentSnapshot(element) : "",
         glossorySnapshot: JSON.stringify([]),
         footnoteSnapshot:  JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.footnoteSnapshot : []),
         assetPopOverSnapshot: JSON.stringify([])
@@ -665,7 +665,11 @@ export const prepareElementSnapshots = async (element,actionStatus,index, elemen
     return elementSnapshot;
 }
 
-const setFigureElementContentSnapshot = (element, elementDetails, actionStatus) => {
+/**
+ * Generates content snapshot data for figure element
+ * @param {Object} element Figure element data
+ */
+export const setFigureElementContentSnapshot = (element) => {
     let snapshotData = {
         title: element.html.title || "",
         subtitle: element.html.subtitle || "",
@@ -674,19 +678,18 @@ const setFigureElementContentSnapshot = (element, elementDetails, actionStatus) 
     }
     switch (element.figuretype) {
         case "video":
-            snapshotData["metadata"] = element.figuredata.videoid
+            snapshotData["metadata"] = element.figuredata.videoid.trim().length ? `<p>${element.figuredata.videoid}</p>` : "<p><br></p>"
             break;
         case "audio":
-            snapshotData["metadata"] = element.figuredata.audioid
+            snapshotData["metadata"] = element.figuredata.audioid.trim().length ? `<p>${element.figuredata.audioid}</p>` : "<p><br></p>"
             break;
         case "image":
         case "table":
         case "mathImage":
         default: 
-            snapshotData["metadata"] = element.figuredata.imageid
+            snapshotData["metadata"] = element.figuredata.imageid.trim().length ? `<p>${element.figuredata.imageid}</p>` : "<p><br></p>"
             break;
     }
-    // snapshotData = snapshotData && snapshotData.replace(/data-mce-href="#"/g,'')
     return snapshotData
 }
 
