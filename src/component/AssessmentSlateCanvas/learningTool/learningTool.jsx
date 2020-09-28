@@ -44,6 +44,8 @@ class LearningTool extends React.Component {
                 "myvirtual-child":"myvirtual-x",
                 "myvirtual-life":"myvirtual-x",
                 "socialexplorer-surveys":"socialexplorer",
+                "socialexplorer-pathways":"socialexplorer",
+                "socialexplorer-explorations":"socialexplorer",
                 "writingsolutions":"writingsolutions"
             }
         }
