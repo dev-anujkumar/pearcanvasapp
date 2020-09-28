@@ -11,9 +11,11 @@ class FigureCard extends React.Component {
         this.state = {
             learningType: {
                 "accounting-sims": "Accounting Sims",
+                "socialexplorer-pathways": "Adaptive Pathways",
                 "criminal-justice-sims": "Criminal Justice Sims",
                 "digital-interactives": "Video Library",
                 "economics-sims": "Economic Sims",
+                "socialexplorer-explorations": "Guided Data",
                 "helpdesk": "HelpDesk",
                 "hospitality-sims": "Hospitality Sims",
                 "information-technology-sims": "Information Technology Sims",
