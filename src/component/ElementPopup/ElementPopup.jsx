@@ -43,14 +43,18 @@ class ElementPopup extends React.Component {
     
     renderSlate =()=>{
         const { element, index } = this.props
+        console.log("config before popup",config)
+        console.log("slateManifestURN>>",config.slateManifestURN,"slateEntityURN>>>",config.slateEntityURN)
         config.tempSlateManifestURN = config.slateManifestURN
         config.tempSlateEntityURN = config.slateEntityURN
+        console.log("element id>>",element.id,"element contentUrn>>>",element.contentUrn)
         config.slateManifestURN = element.id
         config.slateEntityURN = element.contentUrn
         config.cachedActiveElement = {
             index,
             element: {...element}
         }
+        console.log("config while open popup",config)
         sendDataToIframe({'type': ShowLoader,'message': { status: true }});
         this.props.fetchSlateData(config.slateManifestURN, config.slateEntityURN, 0, false,"");
     }
