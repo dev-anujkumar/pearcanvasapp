@@ -16,7 +16,7 @@ jest.mock('../../../src/constants/utility.js', () => ({
 jest.mock('../../../src/component/TcmSnapshots/TcmSnapshots_Utility.js', () => ({
     tcmSnapshotsForUpdate: jest.fn()
 }))
-// const cb = new stub();
+let cb = new stub();
 jest.setTimeout(10000);
 
 const element = document.createElement('div');
@@ -1756,7 +1756,7 @@ describe('Tests ElementContainer Actions', () => {
                 "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c",
                 "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
             }
-            store.dispatch(actions.updateFigureData(updateddata, 2, elementId, ""));
+            store.dispatch(actions.updateFigureData(updateddata, 2, elementId, cb));
             //expect(store.getActions()).toEqual(expectedActions);
         })
         it('testing------- UpdateFigure Data Aside------action', () => {
@@ -1809,7 +1809,7 @@ describe('Tests ElementContainer Actions', () => {
                 "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c",
                 "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
             }
-            store.dispatch(actions.updateFigureData(updateddata, "4-0", elementId, ""));
+            store.dispatch(actions.updateFigureData(updateddata, "4-0", elementId, cb));
             //expect(store.getActions()).toEqual(expectedActions);
       
         })
@@ -1863,7 +1863,7 @@ describe('Tests ElementContainer Actions', () => {
                 "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c",
                 "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
             }
-            store.dispatch(actions.updateFigureData(updateddata, "4-1-0", elementId, ""));
+            store.dispatch(actions.updateFigureData(updateddata, "4-1-0", elementId, cb));
             //expect(store.getActions()).toEqual(expectedActions);
       
         })
