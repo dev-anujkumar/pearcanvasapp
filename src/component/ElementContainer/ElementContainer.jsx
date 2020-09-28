@@ -1350,7 +1350,8 @@ class ElementContainer extends Component {
         let borderToggle = this.setBorderToggle(this.props.elemBorderToggle, this.state.borderToggle)
         let btnClassName = this.state.btnClassName;
         let bceOverlay = "";
-        let elementOverlay = ''
+        let elementOverlay = '';
+        let showEditButton = element.type == elementTypeConstant.ASSESSMENT_SLATE && element.elementdata && element.elementdata.assessmentformat == 'puf' ? true : false;
         if (!hasReviewerRole() && this.props.permissions && !(this.props.permissions.includes('access_formatting_bar')||this.props.permissions.includes('elements_add_remove')) ) {
             elementOverlay = <div className="element-Overlay disabled" onClick={() => this.handleFocus()}></div>
         }
@@ -1361,6 +1362,7 @@ class ElementContainer extends Component {
                 btnClassName = '';
             }
         }
+
         return (
             <div className="editor" data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
                 {this.state.showCopyPopup && <CopyUrn elementId={this.props.element.id} toggleCopyMenu={this.toggleCopyMenu} copyClickedX={this.copyClickedX} copyClickedY={this.copyClickedY} />}
@@ -1380,6 +1382,7 @@ class ElementContainer extends Component {
                     {permissions && permissions.includes('note_viewer') && anyOpenComment && <Button elementId={element.id} onClick={(event) => {
                         handleCommentspanel(event,element.id, this.props.index)
                         }} type="comment-flag" />}
+                        {permissions && permissions.includes('elements_add_remove') && showEditButton && <Button type="edit-button" btnClassName={btnClassName} onClick={(e) => this.handleEditButton(e)} />}
                     {feedback ? <Button elementId={element.id} type="feedback" onClick={(event) => this.handleTCM(event)} /> : (tcm && <Button type="tcm" onClick={(event) => this.handleTCM(event)} />)}
                 </div> : ''}
                 {this.state.popup && <PopUp
@@ -1468,7 +1471,10 @@ class ElementContainer extends Component {
         authorAssetPopOver(toggleApoPopup)
         // this.props.assetPopoverPopup(toggleApoPopup)
     }
-
+    handleEditButton  = (event) =>{
+        event.stopPropagation();
+        alert('launch elm portal from here')
+    }
     render = () => {
         const { element } = this.props;
         try {

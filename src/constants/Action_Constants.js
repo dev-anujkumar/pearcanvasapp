@@ -12,7 +12,7 @@ export const SET_PARENT_ASIDE_DATA = "SET_PARENT_ASIDE_DATA"
 export const SET_PARENT_SHOW_DATA = "SET_PARENT_SHOW_DATA"
 export const GET_ALL_SLATES_DATA = "GET_ALL_SLATES_DATA"
 export const SET_CURRENT_SLATE_DATA = "SET_CURRENT_SLATE_DATA"
-export const GET_USAGE_TYPE = "GET_USAGE_TYPE"
+
 
 /*---------------Comments Panel ----------------------*/
 export const FETCH_COMMENTS = 'FETCH_COMMENTS'
@@ -119,3 +119,10 @@ export const GET_TCM_STATUS_OF_PROJECT = 'GET_TCM_STATUS_OF_PROJECT'
 
 /*--------------- Long Slate load ----------------*/
 export const SET_SLATE_LENGTH = 'SET_SLATE_LENGTH'
+
+/*--------------- Assessments ----------------*/
+export const GET_USAGE_TYPE = "GET_USAGE_TYPE"
+export const SET_ASSESSMENT_STATUS = "SET_ASSESSMENT_STATUS"
+export const GET_ASSESSMENT_METADATA = "GET_ASSESSMENT_METADATA"
+export const GET_ASSESSMENT_VERSIONS = "GET_ASSESSMENT_VERSIONS"
+export const RESET_ASSESSMENT_STORE = "RESET_ASSESSMENT_STORE"
