@@ -15,7 +15,7 @@ class FigureCard extends React.Component {
                 "criminal-justice-sims": "Criminal Justice Sims",
                 "digital-interactives": "Video Library",
                 "economics-sims": "Economic Sims",
-                "socialexplorer-explorations": "Guided Data",
+                "socialexplorer-explorations": "Guided Data Explorations",
                 "helpdesk": "HelpDesk",
                 "hospitality-sims": "Hospitality Sims",
                 "information-technology-sims": "Information Technology Sims",

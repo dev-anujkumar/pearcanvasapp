@@ -268,7 +268,7 @@ class LearningTool extends React.Component {
                                     <option value="socialexplorer-pathways">Adaptive Pathways</option>
                                     <option value="criminal-justice-sims"> Criminal Justice Sims</option>
                                     <option value="economics-sims">Economic Sims</option>
-                                    <option value="socialexplorer-explorations">Guided Data</option>
+                                    <option value="socialexplorer-explorations">Guided Data Explorations</option>
                                     <option value="helpdesk">HelpDesk</option>
                                     <option value="hospitality-sims">Hospitality Sims</option>
                                     <option value="information-technology-sims">Information Technology Sims</option>
