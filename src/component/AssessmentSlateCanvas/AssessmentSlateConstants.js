@@ -40,3 +40,6 @@ export const FolderLabelList = {
     'AS':['assessment'],
     'IS':['container-introduction','introductry-slate'] ,
 }
+export const ELM_NEW_VERSION_UPDATE = 'The new version has been placed'
+export const ELM_UPDATE_MSG = 'Are you sure you want to update to the latest version available? It will not be possible to undo.'
+export const ELM_UPDATE_POPUP_HEAD = 'Version Update'

@@ -30,7 +30,8 @@ import {
     tableElemIcon,
     multiColumnContainer,
     elmInteractiveIcon,
-    editIcon
+    editIcon,
+    approvedIcon
 } from '../../images/ElementButtons/ElementButtons.jsx';
 import deleteIcon from '../../images/ElementButtons/deleteIcon.png'
 import splitIcon from '../../images/ElementButtons/splitIcon.png'
@@ -197,6 +198,11 @@ class ElementButton extends Component {
             case ButtonTypes.EDIT_BUTTON:
                 buttonJSX = <span className={`btn-element small edit-button ${btnClassName}`} title="edit" onClick={clickHandlerFn}>
                     {editIcon}
+                </span>
+                break;
+            case ButtonTypes.APPROVE_TICK_ICON:
+                buttonJSX = <span className={`btn-element small approve-icon ${btnClassName}`} onClick={clickHandlerFn}>
+                    {approvedIcon}
                 </span>
                 break;
         }

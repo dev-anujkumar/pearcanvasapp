@@ -18,13 +18,14 @@ import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
 import config from '../../config/config';
 import { TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER, WORKED_EXAMPLE, SECTION_BREAK, METADATA_ANCHOR, LO_LIST, ELEMENT_ASSESSMENT, OPENER,
     ALREADY_USED_SLATE , REMOVE_LINKED_AUDIO, NOT_AUDIO_ASSET, SPLIT_SLATE_WITH_ADDED_AUDIO , ACCESS_DENIED_CONTACT_ADMIN, IN_USE_BY, LOCK_DURATION, SHOW_HIDE,POP_UP ,
-    CITATION, ELEMENT_CITATION,SMARTLINK,POETRY ,STANZA, BLOCKCODE, TABLE_EDITOR, FIGURE_MML, MULTI_COLUMN, MMI_ELM,
+    CITATION, ELEMENT_CITATION,SMARTLINK,POETRY ,STANZA, BLOCKCODE, TABLE_EDITOR, FIGURE_MML, MULTI_COLUMN, MMI_ELM, ELM_NEW_VERSION_UPDATE,
     SINGLE_CONTAINER_DELETE, WITH_PENDING_TRACK, SLATE_UNLINKING, DELETE_DIALOG_TEXT, WITH_PENDING_TRACK_NOTE_MESSAGE, TYPE_SINGLE_CONTAINER_DELETE, TYPE_WITH_PENDING_TRACK, TYPE_UNLINK
 } from './SlateWrapperConstants';
 import PageNumberElement from './PageNumberElement.jsx';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
 import PopUp from '../PopUp';
+import Toast from '../Toast';
 import { hideBlocker, showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';
 import { guid } from '../../constants/utility.js';
 import { fetchAudioNarrationForContainer, deleteAudioNarrationForContainer, showAudioRemovePopup, showAudioSplitPopup , showWrongAudioPopup } from '../AudioNarration/AudioNarration_Actions'
@@ -1184,6 +1185,7 @@ class SlateWrapper extends Component {
                     }
                 </div>
                 <div id="link-notification"></div>
+                {/* <Toast toastMessage={ELM_NEW_VERSION_UPDATE} calledFrom='AS'/> */}
                 <ListButtonDropPortal slateData={this.props.slateData}>
                     {
                         (selectedType, startValue, inputRef) => (

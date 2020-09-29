@@ -286,3 +286,34 @@ ul.slate_assessment_metadata_type_dropdown_options.notselect{
 .slate_assessment_data_details .slate_assessment_data_id_lo,.slate_assessment_data_details .slate_assessment_data_format_lo{
   display: none;
 }
+
+div.elm-update-button {
+  margin: 20px 0px 20px 150px;
+  width: 180px;
+  height: 36px;
+  border-radius: 3px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 2px 1px -1px rgba(0, 0, 0, 0.12), 0 1px 1px 0 rgba(0, 0, 0, 0.14);
+  background-color: #007fa3;
+  padding-top: 9px;
+  padding-bottom: 11px;
+  text-align: center;
+}
+
+div.elm-update-button b.elm-update-button-text {
+  padding-top: 9px;
+  margin-top: 10px;
+  padding-bottom: 11px;
+  width: 180px;
+  height: 16px;
+  text-align: center;
+  text-transform: uppercase;
+  /* font-family: OpenSans; */
+  font-size: 13.8px;
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.16;
+  letter-spacing: 1.25px;
+  text-align: center;
+  color: #ffffff;
+}

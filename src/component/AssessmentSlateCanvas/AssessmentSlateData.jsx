@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 /** ----- Import - Components ----- */
+import PopUp from '../PopUp';
 import LearningTool from './learningTool/learningTool.jsx';
 import RootElmComponent from './elm/RootElmComponent.jsx';
 import { UsageTypeDropdown } from './UsageTypeDropdown/UsageTypeDropdown.jsx';
@@ -10,7 +11,7 @@ import RootCiteTdxComponent from './assessmentCiteTdx/RootCiteTdxComponent.jsx';
 import config from '../../config/config';
 import './../../styles/AssessmentSlateCanvas/AssessmentSlateCanvas.css';
 import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
-import { assessmentFormats, CITE, TDX, PUF, LEARNING_TEMPLATE, LEARNOSITY } from './AssessmentSlateConstants.js';
+import { assessmentFormats, CITE, TDX, PUF, LEARNING_TEMPLATE, LEARNOSITY, ELM_NEW_VERSION_UPDATE, ELM_UPDATE_MSG, ELM_UPDATE_POPUP_HEAD } from './AssessmentSlateConstants.js';
 /** ----- Import - Action Creators ----- */
 import { setCurrentCiteTdx, assessmentSorting } from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
 import { closeLtAction, openLtAction, openLTFunction } from './learningTool/learningToolActions';
@@ -32,6 +33,7 @@ class AssessmentSlateData extends Component {
             isReset: false,
             searchTitle: '',
             filterUUID: '',
+            showUpdatePopup:false
         }
         this.typeRef = React.createRef();
         this.usageTypeRef = React.createRef();
@@ -136,6 +138,62 @@ class AssessmentSlateData extends Component {
         this.props.addPufAssessment(pufObj, this.state.activeAssessmentType);
     }
 
+    updateElm=(event)=>{
+        event.stopPropagation();
+        // alert('update clicked!!!')
+        //show popup
+        this.toggleUpdatePopup(true,event)
+    }
+    showCustomPopup = () => {
+
+        if (this.state.showUpdatePopup) {
+            this.showCanvasBlocker(true);
+            return (
+                <PopUp 
+                    dialogText={ELM_UPDATE_MSG}
+                    active={true}
+                    togglePopup={this.toggleUpdatePopup}
+                    isElmUpdatePopup={true}
+                    updateElmAssessment={this.updateElmAssessment}
+                    isInputDisabled={true}
+                    isElmUpdateClass="elm-update"
+                    elmHeaderText={ELM_UPDATE_POPUP_HEAD}
+                />
+            )
+        }
+        else {
+            return null
+        }
+    }
+    updateElmAssessment = () => {
+        this.toggleUpdatePopup(false)
+        //call action to update elm assessment
+        alert('update callbavk')
+    }
+    /**
+     * Shows lock release popup
+     * @param {*} toggleValue Boolean value
+     * @param {*} event event object
+     */
+    toggleUpdatePopup = (toggleValue, event) => {
+        this.setState({
+            showUpdatePopup: toggleValue
+        })
+        this.showCanvasBlocker(toggleValue);
+        this.prohibitPropagation(event)
+    }
+
+    /**
+     * Prevents event propagation and default behaviour
+     * @param {*} event event object
+     */
+    prohibitPropagation = (event) => {
+        if (event) {
+            event.preventDefault()
+            event.stopPropagation()
+        }
+        return false
+    }
     /**----------- This section consists of Learning Tool/Learning App Assets related methods ----------*/
     /*** @description - This function is to link learning app
      * @param selectedLearningType - selected learning tool asset data
@@ -414,6 +472,9 @@ class AssessmentSlateData extends Component {
                 {<UsageTypeDropdown usageTypeList={this.props.usageTypeList} clickHandlerFn={this.handleAssessmentUsageTypeChange} />}
             </ul>
             <div className="clr"></div>
+            <div onClick={this.updateElm}>Unapproved</div>
+            <div className='elm-update-button'><b className='elm-update-button-text'>Update Available</b></div>
+            <div className="clr"></div>
         </div>
         return assessmentSlate;
     }
@@ -423,6 +484,7 @@ class AssessmentSlateData extends Component {
             return (
                 <div className="AssessmentSlateCanvas">
                     {this.renderAssessmentSlate()}
+                    {this.state.showUpdatePopup && this.showCustomPopup()}
                 </div>
             );
         } catch (error) {

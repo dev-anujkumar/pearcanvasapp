@@ -33,5 +33,6 @@ export default {
     TABLE_EDITOR : "table-editor-elem-button",
     MULTI_COLUMN_CONTAINER : "multi-column-group",
     ELM_INTERACTIVE_ICON:"elmInteractiveIcon",
-    EDIT_BUTTON:"edit-button"
+    EDIT_BUTTON:"edit-button",
+    APPROVE_TICK_ICON:"approve-icon"
 }

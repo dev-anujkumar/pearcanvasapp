@@ -252,7 +252,7 @@
   padding-left: 30px;
   font-size: 15px;
 }
-.lockInputBox>input{
+.lockInputBox>input {
   border: 0.07px solid darkgray;
   height: 20px;
   padding-left: 2px;
@@ -263,4 +263,43 @@
 .listConfirmation {
   letter-spacing: 0.5px;
   line-height: 20px;
+}
+
+.elm-header-bottom {
+  border: 0.75px solid #979797;
+  margin: 10px -15px 10px -15px;
+}
+
+.elm-header {
+  width: 114px;
+  height: 22px;
+  font-size: 15.8px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.modal-content.elm-update {
+  width: 500px;
+  height: 190px;
+  border-radius: 4px;
+  border-top:none;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.5);
+}
+
+.dialog-window.elm-update {
+  width: 453px;
+  height: 60px;
+  font-family: "Helvetica Neue", sans-serif;
+  font-size: 14.8px;
+  font-weight: normal;
+  margin-top: 1.3em;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: rgba(0, 0, 0, 0.6);
 }
