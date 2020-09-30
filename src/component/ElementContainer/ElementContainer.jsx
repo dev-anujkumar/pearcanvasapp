@@ -1351,7 +1351,7 @@ class ElementContainer extends Component {
         let btnClassName = this.state.btnClassName;
         let bceOverlay = "";
         let elementOverlay = '';
-        let showEditButton = element.type == elementTypeConstant.ASSESSMENT_SLATE && element.elementdata && element.elementdata.assessmentformat == 'puf' ? true : false;
+        //let showEditButton = element.type == elementTypeConstant.ASSESSMENT_SLATE && element.elementdata && element.elementdata.assessmentformat == 'puf' ? true : false;
         if (!hasReviewerRole() && this.props.permissions && !(this.props.permissions.includes('access_formatting_bar')||this.props.permissions.includes('elements_add_remove')) ) {
             elementOverlay = <div className="element-Overlay disabled" onClick={() => this.handleFocus()}></div>
         }
@@ -1362,7 +1362,7 @@ class ElementContainer extends Component {
                 btnClassName = '';
             }
         }
-
+        let showEditButton = true
         return (
             <div className="editor" data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
                 {this.state.showCopyPopup && <CopyUrn elementId={this.props.element.id} toggleCopyMenu={this.toggleCopyMenu} copyClickedX={this.copyClickedX} copyClickedY={this.copyClickedY} />}

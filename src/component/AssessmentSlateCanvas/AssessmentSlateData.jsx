@@ -9,6 +9,7 @@ import { UsageTypeDropdown } from './UsageTypeDropdown/UsageTypeDropdown.jsx';
 import RootCiteTdxComponent from './assessmentCiteTdx/RootCiteTdxComponent.jsx';
 /** ----- Import - Dependencies ----- */
 import config from '../../config/config';
+import { approvedIcon } from '../../../src/images/ElementButtons/ElementButtons.jsx';
 import './../../styles/AssessmentSlateCanvas/AssessmentSlateCanvas.css';
 import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import { assessmentFormats, CITE, TDX, PUF, LEARNING_TEMPLATE, LEARNOSITY, ELM_NEW_VERSION_UPDATE, ELM_UPDATE_MSG, ELM_UPDATE_POPUP_HEAD } from './AssessmentSlateConstants.js';
@@ -472,8 +473,9 @@ class AssessmentSlateData extends Component {
                 {<UsageTypeDropdown usageTypeList={this.props.usageTypeList} clickHandlerFn={this.handleAssessmentUsageTypeChange} />}
             </ul>
             <div className="clr"></div>
-            <div onClick={this.updateElm}>Unapproved</div>
-            <div className='elm-update-button'><b className='elm-update-button-text'>Update Available</b></div>
+            {/* <div className="elm-status-div"><span className="approved-button disable">{approvedIcon}</span><p className="approved-button-text disable">Unapproved</p></div> */}
+            {/* <div className="elm-status-div"><span className="approved-button enable">{approvedIcon}</span><p className="approved-button-text enable">Approved</p></div> */}
+            <div className='elm-update-button' onClick={this.updateElm}><b className='elm-update-button-text'>Update Available</b></div>
             <div className="clr"></div>
         </div>
         return assessmentSlate;

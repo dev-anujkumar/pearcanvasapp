@@ -317,3 +317,44 @@ div.elm-update-button b.elm-update-button-text {
   text-align: center;
   color: #ffffff;
 }
+
+
+span.approved-button {
+  width: 24px;
+  height: 24px;
+  margin-right: 5px;
+  margin-top: 3px;
+}
+
+span.approved-button.disable svg path#path2 {
+  opacity: 0.2;
+  background-color: #000000;
+}
+
+span.approved-button.enable svg path#path2 {
+  fill: #15850c;
+}
+
+.elm-status-div p.approved-button-text {
+  padding-top: 8px;
+  font-size: 12px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+}
+
+.elm-status-div p.approved-button-text.enable {
+  color: #15850c;
+}
+
+.elm-status-div p.approved-button-text.disable {
+  opacity: 0.8;
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.elm-status-div {
+  display: flex;
+  margin: 20px 140px;
+}
