@@ -231,14 +231,13 @@ class SlateWrapper extends Component {
             if (_slateData !== null && _slateData !== undefined) {
                 if (Object.values(_slateData).length > 0) {
                     let _slateObject = _slateData[config.slateManifestURN];
-                    console.log("_slateObject>>>>",_slateObject)
                     if(_slateObject==undefined){
                         return false
                     }
                     let _slateContent = _slateObject.contents
                     let { id: _slateId, type: _slateType } = _slateObject;
                     let { bodymatter: _slateBodyMatter } = _slateContent
-                    console.log(_slateId,config.slateType,"_slateBodyMatter>>>>",_slateBodyMatter)
+                    console.log("_slateId to render",_slateId)
                     this['cloneCOSlateControlledSource_' + random] = this.renderElement(_slateBodyMatter, config.slateType, this.props.slateLockInfo)
                     let _context = this;
                     return (
