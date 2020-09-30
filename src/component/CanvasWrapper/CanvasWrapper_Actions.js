@@ -489,6 +489,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
 
             dispatch(fetchSlateAncestorData());
         }
+        console.log("%c CONFIG SLATE URN AFTER FETCH SLATE RESPONSE:", "background: blue; color: black; font-size: 25px", config.slateManifestURN, config.slateEntityURN)
         const elapsedTime = performance.now() - startTime;
         
         sendToDataLayer('slate-load', {
