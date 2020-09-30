@@ -10,6 +10,8 @@ import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js'
 import { checkSlateLock } from '../../js/slateLockUtility.js'
 import { getTitleSubtitleModel } from "../../constants/utility.js"
+import { findKey } from "lodash";
+
 /**
 * @description - Interactive is a class based component. It is defined simply
 * to make a skeleton of the Interactive Element.
@@ -42,12 +44,16 @@ class ElementPopup extends React.Component {
     }
     
     renderSlate =()=>{
-        const { element, index } = this.props
+        const { element, index, slateLevelData } = this.props
         console.log("config before popup",config)
+        const sUrn = findKey(slateLevelData, ["type", "manifest"])
+        const eUrn = slateLevelData[sUrn] && slateLevelData[sUrn].contentUrn
         console.log("slateManifestURN>>",config.slateManifestURN,"slateEntityURN>>>",config.slateEntityURN)
-        config.tempSlateManifestURN = config.slateManifestURN
-        config.tempSlateEntityURN = config.slateEntityURN
-        console.log("element id>>",element.id,"element contentUrn>>>",element.contentUrn)
+        console.log("%c SLATE URN BY NEW METHOD::", "background: black; color: yellow ;font-size: 25px", sUrn)
+        console.log("%c Entity URN::", "background: black; color: yellow ;font-size: 25px", eUrn)
+        config.tempSlateManifestURN = sUrn
+        config.tempSlateEntityURN = eUrn
+        console.log("popup element id>>",element.id,"element contentUrn>>>",element.contentUrn)
         config.slateManifestURN = element.id
         config.slateEntityURN = element.contentUrn
         config.cachedActiveElement = {
@@ -56,6 +62,7 @@ class ElementPopup extends React.Component {
         }
         console.log("config while open popup",config)
         sendDataToIframe({'type': ShowLoader,'message': { status: true }});
+        console.log("%c REQUESTED POPUP SLATE", "background: blue; color: yellow ;font-size: 25px", sUrn, eUrn)
         this.props.fetchSlateData(config.slateManifestURN, config.slateEntityURN, 0, false,"");
     }
 
@@ -167,8 +174,14 @@ class ElementPopup extends React.Component {
 }
 ElementPopup.displayName = "ElementPopup"
 
+const mapStatetoProps = (state) => {
+    return {
+        slateLevelData: state.appStore.slateLevelData
+    }
+}
+
 export default connect(
-    null,
+    mapStatetoProps,
     {
         fetchSlateData,
         createPopupUnit
