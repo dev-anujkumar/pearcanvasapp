@@ -189,3 +189,9 @@
 p.blockquoteTextCredit:empty:not(:focus)::before {
     content: attr(data-placeholder);
 }
+h2 sup a{
+  padding-right: 2px!important;
+}
+h1 sup a{
+  padding-right: 3px!important;
+}

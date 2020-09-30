@@ -336,16 +336,17 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                 })
             }
             else if(versioning && versioning.type==="popup"){
-                config.slateManifestURN= Object.values(slateData.data)[0].id
                 let parentData = getState().appStore.slateLevelData;
                 let newslateData = JSON.parse(JSON.stringify(parentData));
+                delete Object.assign(newslateData, {[Object.values(slateData.data)[0].id]: newslateData[config.slateManifestURN] })[config.slateManifestURN];     
+                config.slateManifestURN= Object.values(slateData.data)[0].id
                 newslateData[config.slateManifestURN] = Object.values(slateData.data)[0];
                 return dispatch({
                     type: AUTHORING_ELEMENT_UPDATE,
                     payload: {
                         slateLevelData: newslateData
                     }
-                })
+                })       
             }
 			else {
                 config.slateManifestURN= Object.values(slateData.data)[0].id
@@ -489,6 +490,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
 
             dispatch(fetchSlateAncestorData());
         }
+        console.log("%c CONFIG SLATE URN AFTER FETCH SLATE RESPONSE:", "background: blue; color: black; font-size: 25px", config.slateManifestURN, config.slateEntityURN)
         const elapsedTime = performance.now() - startTime;
         
         sendToDataLayer('slate-load', {
