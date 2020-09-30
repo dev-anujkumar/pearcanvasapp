@@ -32,11 +32,10 @@ class AssessmentSlateData extends Component {
             isReset: false,
             searchTitle: '',
             filterUUID: '',
+            openUsageDropdown:false,
+            openAssessmentDropdown:false
         }
-        this.typeRef = React.createRef();
-        this.usageTypeRef = React.createRef();
-        this.typeDropdownRef = React.createRef();
-        this.usageTypeDropdownRef = React.createRef();
+        this.dropdownRef = React.createRef();
     }
 
     componentDidMount() {
@@ -48,6 +47,7 @@ class AssessmentSlateData extends Component {
                 activeAssessmentType: this.props.model && this.props.setAssessmentFormat(this.props.model),
             })
         }
+        document.addEventListener("mousedown", this.handleClickOutside);
     }
 
     componentDidUpdate(nextProps) {
@@ -55,7 +55,17 @@ class AssessmentSlateData extends Component {
             this.sendDataAssessment(nextProps);
         }
     }
+    componentWillUnmount() {
+       document.removeEventListener("mousedown", this.handleClickOutside);
+    }
 
+    /*** @description - Close Dropdown on body click
+    */
+    handleClickOutside = e => {
+        if (!(this.dropdownRef.current && this.dropdownRef.current.contains(e.target)) && !(e.target.classList.contains("slate_assessment_type_dropdown")) && (this.state.openUsageDropdown == true || this.state.openAssessmentDropdown == true) ) {
+            this.setState({ openUsageDropdown: false,openAssessmentDropdown:false });
+          }
+    }
     /**--------------------- This section consists of LO in AS related methods --------------------*/
     /*** @description - This function is to handle LO Data in AS */
     sendDataAssessment(nextProps) {
@@ -233,13 +243,10 @@ class AssessmentSlateData extends Component {
 
     /*** @description - This function is to toggle the Assessment Type PopUp*/
     toggleAssessmentTypeDropdown = () => {
-        if (this.typeRef.current.classList.contains('notselect')) {
-            this.typeRef.current.classList.remove('notselect');
-            this.typeDropdownRef.current.classList.remove('notselect')
-        } else {
-            this.typeRef.current.classList.add('notselect');
-            this.typeDropdownRef.current.classList.add('notselect')
-        }
+        this.setState({
+            openAssessmentDropdown: !this.state.openAssessmentDropdown,
+            openUsageDropdown:false
+        });
     }
 
     /*** @description - This function is to handle the Assessment type change
@@ -248,10 +255,10 @@ class AssessmentSlateData extends Component {
     */
     handleAssessmentTypeChange = (type, e) => {
         this.setState({
-            activeAssessmentType: Object.keys(assessmentFormats).find(key => assessmentFormats[key] === type)
+            activeAssessmentType: Object.keys(assessmentFormats).find(key => assessmentFormats[key] === type),
+            openAssessmentDropdown:false,
+            openUsageDropdown:false
         });
-        this.typeDropdownRef.current.classList.add('notselect')
-        this.typeRef.current.classList.add('notselect')
     }
 
     /*** @description - This function is to select the Assessment type from dropdown*/
@@ -270,13 +277,10 @@ class AssessmentSlateData extends Component {
 
     /*** @description - This function is to toggle the Assessment Usage-Type PopUp*/
     toggleUsageTypeDropdown = () => {
-        if (this.usageTypeDropdownRef.current.classList.contains('notselect')) {
-            this.usageTypeDropdownRef.current.classList.remove('notselect')
-            this.usageTypeRef.current.classList.remove('notselect')
-        } else {
-            this.usageTypeDropdownRef.current.classList.add('notselect')
-            this.usageTypeRef.current.classList.add('notselect')
-        }
+        this.setState({
+            openUsageDropdown: !this.state.openUsageDropdown,
+            openAssessmentDropdown:false
+        });
     }
 
     /*** @description - This function is to handle the Assessment Usage-type change
@@ -284,12 +288,15 @@ class AssessmentSlateData extends Component {
      * @param e - event triggered 
     */
     handleAssessmentUsageTypeChange = (usageType, e) => {
+
         this.setState({
             activeAssessmentUsageType: usageType,
+            openUsageDropdown:false,
+            openAssessmentDropdown:false
         });
-        this.usageTypeDropdownRef.current.classList.add('notselect')
-        this.usageTypeRef.current.classList.add('notselect')
+        if(this.props.getAssessmentData && this.props.getAssessmentDataPopup === false && this.state.changeLearningData === false){
         this.props.handleAssessmentBlur(usageType)
+    }
 
     }
 
@@ -337,7 +344,7 @@ class AssessmentSlateData extends Component {
         } else if (getAssessmentData && (getAssessmentDataPopup === true || learningToolStatus)) {
             assessmentSlateJSX = this.showSuccessMessage(slatePlaceholder.title);
         } else {
-            assessmentSlateJSX = this.showNewAssessmentSlate(activeAssessmentType);
+            assessmentSlateJSX = this.showNewAssessmentSlate(activeAssessmentType,activeAssessmentUsageType);
         }
         return assessmentSlateJSX;
     }
@@ -354,26 +361,48 @@ class AssessmentSlateData extends Component {
         </div>
         return successMessage;
     }
-
+    /*** @description - This is the function to set usuage type dropdown
+    * @param assessmentUsageType usuage type 
+    */
+    setUsuageType = (assessmentUsageType) => { 
+        let usuageType = <><div className="slate_assessment_metadata_container">
+            <div className="assessment-label">Select usage type<span className="required">*</span></div>
+            <div className="slate_assessment_type_dropdown" onClick={!hasReviewerRole() && this.toggleUsageTypeDropdown} >
+                <span className="slate_assessment_dropdown_label" id="AssessmentSlateUsageType">{assessmentUsageType ? assessmentUsageType : "Select"}</span>
+                <span className="slate_assessment_dropdown_image"></span>
+                <div className="clr"></div>
+                {this.state.openUsageDropdown &&
+                    <ul className="slate_assessment_type_dropdown_options" ref={this.dropdownRef}>
+                        {<UsageTypeDropdown usageTypeList={this.props.usageTypeList} clickHandlerFn={this.handleAssessmentUsageTypeChange} />}
+                    </ul>
+                }
+            </div>
+            <div className="clr"></div>
+        </div>
+        </>
+        return usuageType;
+    }
     /*** @description This function is to shoe Succes Message on AS
     * @param assessmentType assessment format
     */
-    showNewAssessmentSlate = (assessmentType) => {
-        let assessmentFormatLabel = assessmentType == 'Select' ? assessmentType : assessmentFormats[assessmentType];
-        let disableAddAssessment = assessmentType == 'Select' ? 'slate_assessment_disabled_button' : 'slate_assessment_type_button';
+    showNewAssessmentSlate = (assessmentType, assessmentUsageType) => {
         let newAssessmentSlate = <div className="slate_initial_selection">
-            <div className="slate_assessment_type_label">Please select an assessment type.</div>
-            <div className="slate_assessment_type_dropdown activeDropdown notselect" ref={this.typeRef} onClick={this.toggleAssessmentTypeDropdown}>
-                <span className="slate_assessment_dropdown_label">{assessmentFormatLabel}</span>
-                <span className="slate_assessment_dropdown_image"></span>
-                <div className="clr"></div>
+            {this.setUsuageType(assessmentUsageType)}
+            <div className={`assessment-parent ${assessmentUsageType ? '' : 'disabled'}`}>
+                <div className="assessment-label">Select assessment type</div>
+                <div className="slate_assessment_type_dropdown activeDropdown" onClick={this.toggleAssessmentTypeDropdown}>
+                    <span className="slate_assessment_dropdown_label">{assessmentType ? assessmentFormats[assessmentType] : "Select"}</span>
+                    <span className="slate_assessment_dropdown_image"></span>
+                    <div className="clr"></div>
+                    {this.state.openAssessmentDropdown &&
+                        <ul className="slate_assessment_type_dropdown_options" ref={this.dropdownRef}>
+                            {this.selectAssessmentType()}
+                        </ul>
+                    }
+                </div>
             </div>
-            {
-                <ul className="slate_assessment_type_dropdown_options notselect" ref={this.typeDropdownRef}>
-                    {this.selectAssessmentType()}
-                </ul>
-            }
-            <div className={disableAddAssessment} onClick={(e) => this.mainAddAssessment(e, assessmentType)}>Add assessment</div>
+            <div className="clr"></div>
+            <div className={`slate_assessment_type_button ${assessmentType && assessmentUsageType ? '' : 'disabled'}`} onClick={(e) => this.mainAddAssessment(e, assessmentType)}>Add Asssessment</div>
             <div className="clr"></div>
         </div>
 
@@ -401,18 +430,7 @@ class AssessmentSlateData extends Component {
                     <div className="clr"></div>
                 </div>
             </div>
-            <div className="slate_assessment_metadata_container">
-                <div className="slate_assessment_metadata_type_selectlabel">Select usage type</div>
-                <div className="singleAssessment_Dropdown_activeDropdown notselect" ref={this.usageTypeRef} onClick={!hasReviewerRole() && this.toggleUsageTypeDropdown} >
-                    <span className="slate_assessment_metadata_dropdown_label" id="AssessmentSlateUsageType">{assessmentUsageType}</span>
-                    <span className="slate_assessment_metadata_dropdown_image"></span>
-                    <div className="clr"></div>
-                </div>
-                <div className="clr"></div>
-            </div>
-            <ul className="slate_assessment_metadata_type_dropdown_options notselect" ref={this.usageTypeDropdownRef}>
-                {<UsageTypeDropdown usageTypeList={this.props.usageTypeList} clickHandlerFn={this.handleAssessmentUsageTypeChange} />}
-            </ul>
+            {this.setUsuageType(assessmentUsageType)}
             <div className="clr"></div>
         </div>
         return assessmentSlate;

@@ -176,3 +176,7 @@
     display: inline-block;
     width: 28px;
 }
+.element-dropdown-title.disabled{
+opacity:0.4;
+pointer-events: none;
+}

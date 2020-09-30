@@ -43,7 +43,8 @@ class Sidebar extends Component {
             showSyntaxHighlightingPopup : false,
             bceNumberStartFrom : startNumber,
             podOption : false,
-            podValue : podwidth
+            podValue : podwidth,
+            usuageType:this.props.activeElement.usuageType
         };
     }
 
@@ -75,7 +76,8 @@ class Sidebar extends Component {
                 bceToggleValue : bceToggle,
                 syntaxHighlightingToggleValue : bceSyntaxHighlight,
                 podValue : podValue,
-                podOption : podOption
+                podOption : podOption,
+                usuageType:nextProps.activeElement.usuageType
             };
         }
 
@@ -239,10 +241,14 @@ class Sidebar extends Component {
                 if(this.state.elementDropdown === 'secondary') {
                     active = 'active';
                 }
+                let disabled= '';
+                if(this.state.usuageType === ""){
+                    disabled="disabled";
+                }
 
                 secondaryOptions = <div
                     className={`element-dropdown ${display} ${this.props.showHideObj && this.props.activeElement.elementType? "sidebar-disable": ""} `}>
-                    <div className="element-dropdown-title" data-element="secondary" onClick={this.toggleElementDropdown}>
+                    <div className={`element-dropdown-title ${disabled}`} data-element="secondary" onClick={this.toggleElementDropdown}>
                         {secondaryOptionObject[this.state.activeSecondaryOption].text}
                         {dropdownArrow}
                     </div>
