@@ -1,11 +1,10 @@
 // // IMPORT - Plugins //
-import React from 'react';
 import config from '../../config/config';
 import store from '../../appstore/store'
 import { checkSlateLock } from '../../js/slateLockUtility'
 
 export const loadTrackChanges = (elementId) => {
-    var interval;
+    //var interval;
     let slateLockInfo = store.getState().slateLockReducer.slateLockInfo;
     if (!checkSlateLock(slateLockInfo)) {
         let slateData = store.getState().appStore.slateLevelData;
@@ -122,36 +121,39 @@ export const loadTrackChanges = (elementId) => {
 
         let title = store.getState().appStore && store.getState().appStore.slateTitleUpdated ? store.getState().appStore.slateTitleUpdated :  "";
 
-        let currentElementId = elementId ? elementId : "";
+        //let currentElementId = elementId ? elementId : "";
         let currentSlateTitle = title;
         let currentProjectUrn = config.projectUrn;
         let currentSlateUrn = config.tcmslatemanifest ? config.tcmslatemanifest: config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN;
         let currentProjectEntityUrn = config.projectEntityUrn;
-        let TCMurl = config.TCM_DASHBOARD_UI_URL;
-        var trackChange = function(event) {
-            var postmsg = function(win) {
-                win.postMessage({ "slateTitle": currentSlateTitle, "eURN": currentElementId, "dURN": currentProjectUrn, "sURN": currentSlateUrn, "indexOfElements": list, "entityURN": currentProjectEntityUrn }, TCMurl);
-            };            
-            let url = TCMurl;
-            let pathArray = url.split('/');
-            let protocol = pathArray[0];
-            let host = pathArray[2];
-            let originURL = protocol + '//' + host;
-            // check the origin
-            if (event.origin == originURL)
-                switch (event.data) {
-                    case 'ready':
-                        // e.source = the sending window object
-                        interval = setTimeout(postmsg, 100, event.source);
-                        break;
+        //let TCMurl = config.TCM_DASHBOARD_UI_URL;
+        const QUERY_URL = `?dURN=${currentProjectUrn}&sURN=${currentSlateUrn}&slateTitle=${currentSlateTitle}&entityURN=${currentProjectEntityUrn}`; 
+        const CURRENT_ELEMENT_QUERY = elementId ? `&eURN=${elementId}` : "";
+        // var trackChange = function(event) {
+        //     var postmsg = function(win) {
+        //         win.postMessage({ "slateTitle": currentSlateTitle, "eURN": currentElementId, "dURN": currentProjectUrn, "sURN": currentSlateUrn, "indexOfElements": list, "entityURN": currentProjectEntityUrn }, TCMurl);
+        //     };            
+        //     let url = TCMurl;
+        //     let pathArray = url.split('/');
+        //     let protocol = pathArray[0];
+        //     let host = pathArray[2];
+        //     let originURL = protocol + '//' + host;
+        //     // check the origin
+        //     if (event.origin == originURL)
+        //         switch (event.data) {
+        //             case 'ready':
+        //                 // e.source = the sending window object
+        //                 interval = setTimeout(postmsg, 100, event.source);
+        //                 break;
 
-                    case 'close':
-                        clearInterval(interval);
-                        window.removeEventListener('message', trackChange, false);
-                        break;
-                }
-        }
-        window.addEventListener('message', trackChange, false);
-        window.open(config.TCM_DASHBOARD_UI_URL, 'tcmwin');
+        //             case 'close':
+        //                 clearInterval(interval);
+        //                 window.removeEventListener('message', trackChange, false);
+        //                 break;
+        //         }
+        // }
+        console.log('list ',list)
+        //window.addEventListener('message', trackChange, false);
+        window.open(config.TCM_DASHBOARD_UI_URL+QUERY_URL+CURRENT_ELEMENT_QUERY, 'tcmwin');
     }
 }
