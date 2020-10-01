@@ -188,7 +188,7 @@
   }
 .slate_assessment_metadata_type_dropdown_options{
   position: absolute;
-
+  z-index:9;
   margin-left:136px;
   width: 202px;
   margin-top: 10px;
@@ -197,7 +197,6 @@
 }
 .slate_assessment_metadata_type_dropdown_options.notselect{
   position: absolute;
-
   margin-left:136px;
   width: 202px;
   margin-top: 10px;
@@ -259,6 +258,7 @@
   max-height:220px;
   display: flex;
   overflow:auto;
+  z-index:9;
 }
 ul.slate_assessment_metadata_type_dropdown_options.notselect{
   display: none;
@@ -288,27 +288,28 @@ ul.slate_assessment_metadata_type_dropdown_options.notselect{
 }
 
 div.elm-update-button {
-  margin: 20px 0px 20px 150px;
-  width: 180px;
+  margin: 30px 0px 20px 142px;
+  width: 200px;
   height: 36px;
-  border-radius: 3px;
+  border-radius: 18px;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 2px 1px -1px rgba(0, 0, 0, 0.12), 0 1px 1px 0 rgba(0, 0, 0, 0.14);
   background-color: #007fa3;
   padding-top: 9px;
   padding-bottom: 11px;
   text-align: center;
+  cursor: pointer;
 }
 
 div.elm-update-button b.elm-update-button-text {
   padding-top: 9px;
   margin-top: 10px;
   padding-bottom: 11px;
-  width: 180px;
+  width: 200px;
   height: 16px;
   text-align: center;
   text-transform: uppercase;
   /* font-family: OpenSans; */
-  font-size: 13.8px;
+  font-size: 14px;
   font-weight: 500;
   font-stretch: normal;
   font-style: normal;
@@ -322,7 +323,7 @@ div.elm-update-button b.elm-update-button-text {
 span.approved-button {
   width: 24px;
   height: 24px;
-  margin-right: 5px;
+  margin-right: 12px;
   margin-top: 3px;
 }
 
@@ -337,7 +338,7 @@ span.approved-button.enable svg path#path2 {
 
 .elm-status-div p.approved-button-text {
   padding-top: 8px;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: bold;
   font-stretch: normal;
   font-style: normal;
@@ -350,11 +351,11 @@ span.approved-button.enable svg path#path2 {
 }
 
 .elm-status-div p.approved-button-text.disable {
-  opacity: 0.8;
+  opacity: 0.7;
   color: rgba(0, 0, 0, 0.8);
 }
 
 .elm-status-div {
   display: flex;
-  margin: 20px 140px;
+  margin: 30px 0 20px 142px;
 }

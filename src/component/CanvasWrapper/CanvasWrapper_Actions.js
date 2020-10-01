@@ -28,6 +28,7 @@ import { handleTCMData } from '../TcmSnapshots/TcmSnapshot_Actions.js';
 import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
 import { ELM_INT } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
+import { checkAssessmentStatus } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 
 const findElementType = (element, index) => {
     let elementType = {};
@@ -317,6 +318,16 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
         if(config.slateManifestURN !== newVersionManifestId && slateData.data[newVersionManifestId].type === 'manifest' ){
             config.slateManifestURN = newVersionManifestId
             manifestURN = newVersionManifestId
+        }
+        /** PCAT-8900|8907 - Updating Elm Assessments */
+        if (config.slateType == 'assessment' && slateData && slateData.data && slateData.data[newVersionManifestId]) {
+            let slateBodymatter = slateData.data[newVersionManifestId].contents.bodymatter
+            if (slateBodymatter[0] && slateBodymatter[0].type == 'element-assessment') {
+                let assessmentElement = slateBodymatter[0];
+                if (assessmentElement && assessmentElement.elementdata && assessmentElement.elementdata.assessmentformat == 'puf' && assessmentElement.elementdata.assessmentid) {
+                    dispatch(checkAssessmentStatus(assessmentElement.elementdata.assessmentid,'fromMainSlate'));
+                }
+            }
         }
 		if(slateData.data && slateData.data[newVersionManifestId] && slateData.data[newVersionManifestId].type === "popup"){
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });

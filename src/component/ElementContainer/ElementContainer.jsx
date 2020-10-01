@@ -47,6 +47,7 @@ import MultiColumnContainer from "../MultiColumnElement"
 import {handleTCMData} from '../TcmSnapshots/TcmSnapshot_Actions.js';
 import CopyUrn from '../CopyUrn';
 import { OnCopyContext } from '../CopyUrn/copyUtil.js'
+import { openElmAssessmentPortal } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -1351,7 +1352,7 @@ class ElementContainer extends Component {
         let btnClassName = this.state.btnClassName;
         let bceOverlay = "";
         let elementOverlay = '';
-        //let showEditButton = element.type == elementTypeConstant.ASSESSMENT_SLATE && element.elementdata && element.elementdata.assessmentformat == 'puf' ? true : false;
+        let showEditButton = element.type == elementTypeConstant.ASSESSMENT_SLATE && element.elementdata && element.elementdata.assessmentformat == 'puf' ? true : false;
         if (!hasReviewerRole() && this.props.permissions && !(this.props.permissions.includes('access_formatting_bar')||this.props.permissions.includes('elements_add_remove')) ) {
             elementOverlay = <div className="element-Overlay disabled" onClick={() => this.handleFocus()}></div>
         }
@@ -1362,7 +1363,6 @@ class ElementContainer extends Component {
                 btnClassName = '';
             }
         }
-        let showEditButton = true
         return (
             <div className="editor" data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
                 {this.state.showCopyPopup && <CopyUrn elementId={this.props.element.id} toggleCopyMenu={this.toggleCopyMenu} copyClickedX={this.copyClickedX} copyClickedY={this.copyClickedY} />}
@@ -1471,10 +1471,26 @@ class ElementContainer extends Component {
         authorAssetPopOver(toggleApoPopup)
         // this.props.assetPopoverPopup(toggleApoPopup)
     }
-    handleEditButton  = (event) =>{
+
+    /**
+     * @description - This function is to launch Elm Portal from Cypress.
+     * @param event the click event triggered
+     */
+    handleEditButton = (event) => {
         event.stopPropagation();
-        alert('launch elm portal from here')
+        console.log('Navigating to Elm Portal!!!!!')
+        let { element } = this.props;
+        let fullAssessment = element.type == elementTypeConstant.ASSESSMENT_SLATE && element.elementdata && element.elementdata.assessmentformat == 'puf' && element.elementdata.assessmentid ? true : false;
+        let embeddedAssessment = element.type == elementTypeConstant.FIGURE_ASSESSMENT && element.figuredata && element.figuredata.elementdata && element.figuredata.elementdata.assessmentformat == 'puf' && element.figuredata.elementdata.assessmentid ? true : false;
+        let dataToSend = {
+            assessmentWorkUrn: fullAssessment ? element.elementdata.assessmentid : embeddedAssessment ? element.figuredata.elementdata.assessmentid : "",
+            projDURN: config.projectUrn,
+            containerURN: config.slateManifestURN,
+            assessmentItemWorkUrn: embeddedAssessment ? element.figuredata.elementdata.assessmentitemid : ""
+        }
+        this.props.openElmAssessmentPortal(dataToSend);
     }
+   
     render = () => {
         const { element } = this.props;
         try {
@@ -1574,7 +1590,8 @@ const mapDispatchToProps = (dispatch) => {
         },
         getElementStatus : (elementWorkId, index) => {
             dispatch(getElementStatus(elementWorkId, index))
-        }
+        },
+        openElmAssessmentPortal
     }
 }
 

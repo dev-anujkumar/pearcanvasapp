@@ -2,7 +2,8 @@ import {
     GET_USAGE_TYPE,
     SET_ASSESSMENT_STATUS,
     GET_ASSESSMENT_METADATA,
-    GET_ASSESSMENT_VERSIONS
+    GET_ASSESSMENT_VERSIONS,
+    RESET_ASSESSMENT_STORE
 } from '../constants/Action_Constants';
 
 const INITIAL_STATE = {
@@ -10,7 +11,8 @@ const INITIAL_STATE = {
     assessmentStatus:"",
     entityUrn:"",
     activeWorkUrn:"",
-    latestWorkUrn:""
+    latestWorkUrn:"",
+    latestAssessmentTitle:""
 }
 
 const INITIAL_ACTION = {
@@ -34,7 +36,8 @@ export default function assessmentReducer(state = INITIAL_STATE, action = INITIA
             return {
                 ...state,
                 entityUrn: action.payload.entityUrn,
-                activeWorkUrn: action.payload.activeWorkUrn
+                activeWorkUrn: action.payload.activeWorkUrn,
+                latestAssessmentTitle: action.payload.assessmentTitle
             }
         case GET_ASSESSMENT_VERSIONS:
             return {
@@ -47,7 +50,8 @@ export default function assessmentReducer(state = INITIAL_STATE, action = INITIA
                 entityUrn: "",
                 activeWorkUrn: "",
                 latestWorkUrn: "",
-                assessmentStatus: ""
+                assessmentStatus: "",
+                latestAssessmentTitle:""
             }
         default:
             return state

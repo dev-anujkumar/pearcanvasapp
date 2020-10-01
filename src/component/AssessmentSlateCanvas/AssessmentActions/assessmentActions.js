@@ -1,5 +1,6 @@
 /**Import -Plugins */
 import axios from 'axios';
+import moment from 'moment';
 /**Import -other dependencies */
 import config from '../../../config/config';
 /**Import -constants */
@@ -44,7 +45,10 @@ const prepareUsageTypeData = (res) => {
     return usageTypeList
 }
 
-export const checkAssessmentStatus = (workUrn) => (dispatch) => {
+/**
+ * This action creator is used to fetch the assessment metadata including status
+ */
+export const checkAssessmentStatus = (workUrn, calledFrom) => (dispatch) => {
     let url = `${config.ASSESSMENT_ENDPOINT}assessment/v2/${workUrn}`;
     return axios.get(url, {
         headers: {
@@ -52,23 +56,27 @@ export const checkAssessmentStatus = (workUrn) => (dispatch) => {
             "ApiKey": config.STRUCTURE_APIKEY,
             "PearsonSSOSession": config.ssoToken
         }
-    }).then((res) => {
+    }).then(async (res) => {
         if (res && res.data && res.data.status) {
             let statusString = res.data.status.split("/")
             let assessmentStatus = statusString[statusString.length - 1]
-            dispatch({
+            await dispatch({
                 type: SET_ASSESSMENT_STATUS,
                 payload: {
                     assessmentStatus: assessmentStatus
                 }
             })
-            dispatch({
+            await dispatch({
                 type: GET_ASSESSMENT_METADATA,
                 payload: {
                     entityUrn: res.data.entityUrn,
-                    activeWorkUrn: res.data.versionUrn
+                    activeWorkUrn: res.data.versionUrn,
+                    assessmentTitle: res.data.name ? res.data.name : res.data.defaultTitle ? res.data.defaultTitle : 'Elm assessment'
                 }
             })
+            if (assessmentStatus == 'final' && calledFrom && calledFrom!='fromUpdate') {
+                await dispatch(getLatestAssessmentVersion(res.data.entityUrn))
+            }
         }
     }).catch(() => {
         dispatch({
@@ -80,6 +88,9 @@ export const checkAssessmentStatus = (workUrn) => (dispatch) => {
     })
 }
 
+/**
+ * This action creator is used to fetch all the versions of the assessment/assessment-item
+ */
 export const getLatestAssessmentVersion = (entityUrn) => (dispatch) => {
     let url = `${config.ASSESSMENT_ENDPOINT}entity/${entityUrn}/versions`;
     return axios.get(url, {
@@ -90,8 +101,14 @@ export const getLatestAssessmentVersion = (entityUrn) => (dispatch) => {
         }
     }).then((res) => {
         if (res && res.data && res.data.length > 0) {
-            let latestAssessment = res.data[res.data.length - 1]
-            let assessmentWorkURN = latestAssessment.versionUrn
+            let latestIndex = 0;
+            for (let index = 1; index < res.data.length; index++) {
+                let isAfter = moment(res.data[index].createdDate).isAfter(res.data[latestIndex].createdDate);
+                if (isAfter) {
+                    latestIndex = index;
+                }
+            }
+            let assessmentWorkURN = res.data[latestIndex].versionUrn
             dispatch({
                 type: GET_ASSESSMENT_VERSIONS,
                 payload: {
@@ -116,18 +133,24 @@ export const getLatestAssessmentVersion = (entityUrn) => (dispatch) => {
     })
 }
 
+/**
+ * This action creator is used to launch Elm Assessment Portal from Cypress
+ */
 export const openElmAssessmentPortal = (assessmentData) => {
-    const { workUrn, projDURN, containerURN } = assessmentData
-    let url = `${config.ELM_ASSESSMENT_PORTAL}/launch/editor/assessment/${workUrn}/editInPlace`;
+    let { assessmentWorkUrn, projDURN, containerURN, assessmentItemWorkUrn } = assessmentData
+    let url = `https://assessmentauthoring-qa.pearson.com/launch/editor/assessment/${assessmentWorkUrn}/editInPlace`;
+    if (assessmentItemWorkUrn.trim() != "") {
+        url = `${config.ELM_PORTAL_URL}/launch/editor/assessment/${assessmentWorkUrn}/item/${assessmentItemWorkUrn}/editInPlace`;
+    }
     return axios.post(url, {
-        dUrn: projDURN,
-        cUrn: containerURN
+        "title-durn": projDURN,
+        "container-urn": containerURN
     }, {
         headers: {
             "PearsonSSOSession": config.ssoToken
         }
     }).then((res) => {
-        console.log('Successfully launcedh Elm Assessment Env>>>')
+        console.log('Successfully Navigated to Elm Assessment Portal!!!')
     }).catch((error) => {
         console.log('Unable to Launch Elm Assessment Env>>>', error)
     })
