@@ -1900,6 +1900,7 @@ export class TinyMceEditor extends Component {
             elementId = this.props.elementId
         }
         config.isCreateFootnote = true
+        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
         getGlossaryFootnoteId(elementId, "FOOTNOTE", res => {
             if (res.data && res.data.id) {
                 let tempDiv = document.createElement('div');
@@ -1962,6 +1963,7 @@ export class TinyMceEditor extends Component {
             return false
         }
         config.isCreateGlossary = true
+        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
         getGlossaryFootnoteId(this.props.elementId, "GLOSSARY", res => {
             let insertionText = ""
             if (res.data && res.data.id) {
@@ -1988,7 +1990,6 @@ export class TinyMceEditor extends Component {
         definition = document.querySelector('#glossary-editor-attacher > div > p') && `<p>${document.querySelector('#glossary-editor-attacher > div > p').innerHTML}</p>` || "<p><br/></p>"
         term = term.replace(/<br data-mce-bogus="1">/g, "")
         definition = definition.replace(/<br data-mce-bogus="1">/g, "")
-        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
         customEvent.subscribe('glossaryFootnoteSave', (elementWorkId) => {
             saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType, typeWithPopup, poetryField)
             customEvent.unsubscribe('glossaryFootnoteSave');
