@@ -539,6 +539,9 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
         case elementTypeConstant.BLOCKFEATURE:
         case elementTypeConstant.ELEMENT_LIST:
         case elementTypeConstant.POETRY_STANZA:
+            if (type === 'stanza') { /**Resolve PCAT- 9199 */
+                elementType = 'stanza'
+            }    
             tinyMCE.$(node).find('.blockquote-hidden').remove();
             let innerHTML, innerText;
             let revealTextData = validateRevealAnswerData(showHideType, node, type)
@@ -552,9 +555,6 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
             }
             else if ((attributionText.length > 0 && inputElementSubType == "BLOCKQUOTE") || (attributionText.length > 0 && inputElementSubType == "MARGINALIA")) {
                 inputElementSubType = "MARGINALIA"
-            }
-            if (type === 'stanza') { /**Resolve PCAT- 9199 */
-                elementType = 'stanza'
             }
             dataToReturn = {
                 ...previousElementData,
