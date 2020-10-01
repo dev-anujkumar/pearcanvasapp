@@ -303,7 +303,8 @@
 .learning-tool-margin-left p.ErrorComp{
     position: absolute;
     left: 50%;
-    top: 50%;
+    /* top: 50%; */
+    margin-top: 50px;
     transform: translate(-50%, -50%);
 }
 .tableForApiResults {
