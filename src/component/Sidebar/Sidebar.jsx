@@ -44,7 +44,7 @@ class Sidebar extends Component {
             bceNumberStartFrom : startNumber,
             podOption : false,
             podValue : podwidth,
-            usuageType:this.props.activeElement.usuageType
+            usageType:this.props.activeElement.usageType
         };
     }
 
@@ -77,7 +77,7 @@ class Sidebar extends Component {
                 syntaxHighlightingToggleValue : bceSyntaxHighlight,
                 podValue : podValue,
                 podOption : podOption,
-                usuageType:nextProps.activeElement.usuageType
+                usageType:nextProps.activeElement.usageType
             };
         }
 
@@ -242,7 +242,7 @@ class Sidebar extends Component {
                     active = 'active';
                 }
                 let disabled= '';
-                if(this.state.usuageType === ""){
+                if(this.state.usageType === ""){
                     disabled="disabled";
                 }
 

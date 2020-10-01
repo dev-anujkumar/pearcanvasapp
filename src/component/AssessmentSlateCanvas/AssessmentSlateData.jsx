@@ -101,8 +101,7 @@ class AssessmentSlateData extends Component {
         if (isReset && isSearch) {
             this.setState({ parentPageNo: 1 })
         } else if (isReset) {
-            this.setState({ parentPageNo: 1 })
-            this.setState({ searchTitle: '', filterUUID: '' })
+            this.setState({ parentPageNo: 1, searchTitle: '', filterUUID: '' })
         }
     }
 
@@ -361,11 +360,11 @@ class AssessmentSlateData extends Component {
         </div>
         return successMessage;
     }
-    /*** @description - This is the function to set usuage type dropdown
-    * @param assessmentUsageType usuage type 
+    /*** @description - This is the function to set usageType type dropdown
+    * @param assessmentUsageType usage type 
     */
-    setUsuageType = (assessmentUsageType) => { 
-        let usuageType = <><div className="slate_assessment_metadata_container">
+    setUsageType = (assessmentUsageType) => { 
+        let usageType = <><div className="slate_assessment_metadata_container">
             <div className="assessment-label">Select usage type<span className="required">*</span></div>
             <div className="slate_assessment_type_dropdown" onClick={!hasReviewerRole() && this.toggleUsageTypeDropdown} >
                 <span className="slate_assessment_dropdown_label" id="AssessmentSlateUsageType">{assessmentUsageType ? assessmentUsageType : "Select"}</span>
@@ -380,14 +379,14 @@ class AssessmentSlateData extends Component {
             <div className="clr"></div>
         </div>
         </>
-        return usuageType;
+        return usageType;
     }
     /*** @description This function is to shoe Succes Message on AS
     * @param assessmentType assessment format
     */
     showNewAssessmentSlate = (assessmentType, assessmentUsageType) => {
         let newAssessmentSlate = <div className="slate_initial_selection">
-            {this.setUsuageType(assessmentUsageType)}
+            {this.setUsageType(assessmentUsageType)}
             <div className={`assessment-parent ${assessmentUsageType ? '' : 'disabled'}`}>
                 <div className="assessment-label">Select assessment type</div>
                 <div className="slate_assessment_type_dropdown activeDropdown" onClick={this.toggleAssessmentTypeDropdown}>
@@ -430,7 +429,7 @@ class AssessmentSlateData extends Component {
                     <div className="clr"></div>
                 </div>
             </div>
-            {this.setUsuageType(assessmentUsageType)}
+            {this.setUsageType(assessmentUsageType)}
             <div className="clr"></div>
         </div>
         return assessmentSlate;
