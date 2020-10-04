@@ -286,7 +286,7 @@ class AssessmentSlateData extends Component {
      * @param usageType - the usage-type selected from the dropdown
      * @param e - event triggered 
     */
-    handleAssessmentUsageTypeChange = (usageType, e) => {
+    handleAssessmentUsageTypeChange = (usageType) => {
 
         this.setState({
             activeAssessmentUsageType: usageType,
