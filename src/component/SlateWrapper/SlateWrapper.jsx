@@ -237,7 +237,6 @@ class SlateWrapper extends Component {
                     let _slateContent = _slateObject.contents
                     let { id: _slateId, type: _slateType } = _slateObject;
                     let { bodymatter: _slateBodyMatter } = _slateContent
-                    console.log("_slateId to render",_slateId)
                     this['cloneCOSlateControlledSource_' + random] = this.renderElement(_slateBodyMatter, config.slateType, this.props.slateLockInfo)
                     let _context = this;
                     return (
@@ -1126,7 +1125,6 @@ class SlateWrapper extends Component {
             return false
         }
         let popupId = config.slateManifestURN
-        console.log("popupId>>>>>",popupId)
         if(this.props.slateData[config.tempSlateManifestURN].status === "approved" && this.props.slateData[config.slateManifestURN].status === "wip"){
             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
             sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
@@ -1136,7 +1134,6 @@ class SlateWrapper extends Component {
             this.props.slateData[config.slateManifestURN].index = config.cachedActiveElement.index;
             this.props.fetchSlateData(this.props.slateData[config.slateManifestURN].id, this.props.slateData[config.slateManifestURN].contentUrn,0 , this.props.slateData[config.slateManifestURN],"",true); 
         }
-        console.log("config before closing popup>>>>",config)
         config.slateManifestURN = config.tempSlateManifestURN
         config.slateEntityURN = config.tempSlateEntityURN
         config.tempSlateManifestURN = null
@@ -1148,11 +1145,9 @@ class SlateWrapper extends Component {
         if(config.tcmStatus){
             this.props.handleTCMData(config.slateManifestURN)
         }
-        console.log("config while closing popup",config)
         // Scrolling to the previous element after SAVE  & CLOSE is clicked
         setTimeout(() => {
             let elementDom = document.querySelector(`[data-id="${config.cachedActiveElement.element.id}"]`)
-            console.log("elementDom",elementDom)
             if(elementDom){
                 elementDom.querySelector(`#cypress-${config.cachedActiveElement.index}-0`).click()
             }

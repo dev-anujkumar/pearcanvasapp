@@ -45,24 +45,17 @@ class ElementPopup extends React.Component {
     
     renderSlate =()=>{
         const { element, index, slateLevelData } = this.props
-        console.log("config before popup",config)
         const sUrn = findKey(slateLevelData, ["type", "manifest"])
         const eUrn = slateLevelData[sUrn] && slateLevelData[sUrn].contentUrn
-        console.log("slateManifestURN>>",config.slateManifestURN,"slateEntityURN>>>",config.slateEntityURN)
-        console.log("%c SLATE URN BY NEW METHOD::", "background: black; color: yellow ;font-size: 25px", sUrn)
-        console.log("%c Entity URN::", "background: black; color: yellow ;font-size: 25px", eUrn)
         config.tempSlateManifestURN = sUrn
         config.tempSlateEntityURN = eUrn
-        console.log("popup element id>>",element.id,"element contentUrn>>>",element.contentUrn)
         config.slateManifestURN = element.id
         config.slateEntityURN = element.contentUrn
         config.cachedActiveElement = {
             index,
             element: {...element}
         }
-        console.log("config while open popup",config)
         sendDataToIframe({'type': ShowLoader,'message': { status: true }});
-        console.log("%c REQUESTED POPUP SLATE", "background: blue; color: yellow ;font-size: 25px", sUrn, eUrn)
         this.props.fetchSlateData(config.slateManifestURN, config.slateEntityURN, 0, false,"");
     }
 
