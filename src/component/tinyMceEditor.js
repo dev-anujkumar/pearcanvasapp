@@ -1927,6 +1927,7 @@ export class TinyMceEditor extends Component {
                         editor.insertContent(`<sup><a href="#" id = "${res.data.id}" data-uri="${res.data.id}" data-footnoteelementid="${res.data.id}" class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>`);
                     }
                 }
+                this.footnoteGlossaryProgress = true;
                 this.toggleGlossaryandFootnotePopup(true, "Footnote", res.data.id, () => { this.toggleGlossaryandFootnoteIcon(true); });
                 this.saveContent()
             }
@@ -2684,6 +2685,10 @@ export class TinyMceEditor extends Component {
                 if (this.props.element && this.props.element.type === "element-blockfeature") {
                     this.removeBogusTagsFromDom();
                     this.removeAttributionBr();
+                }
+                if (this.footnoteGlossaryProgress &&  clickedX !== 0 && clickedY !== 0) {  
+                    this.footnoteGlossaryProgress = false;
+                    tinymce.activeEditor.selection.placeCaretAt(clickedX, clickedY) //Placing exact cursor position on clicking.
                 }
             })
         });
