@@ -2662,6 +2662,7 @@ export class TinyMceEditor extends Component {
         let timeoutInstance = setTimeout(() => {
             clearTimeout(timeoutInstance);
             tinymce.init(this.editorConfig).then((d) => {
+                console.log('here')
                 this.setToolbarByElementType();
                 let listLiNodes1 = currentTarget.querySelectorAll('li')
                 if (currentTarget && listLiNodes1 && listLiNodes1.length) {
@@ -2689,7 +2690,12 @@ export class TinyMceEditor extends Component {
                 }
                 if (this.footnoteGlossaryProgress &&  clickedX !== 0 && clickedY !== 0) {  
                     this.footnoteGlossaryProgress = false;
-                    tinymce.activeEditor.selection.placeCaretAt(clickedX, clickedY) //Placing exact cursor position on clicking.
+                    const timer = setInterval(()=>{
+                        if(!config.isGlossarySaving){
+                            clearInterval(timer)
+                            tinymce.activeEditor.selection.placeCaretAt(clickedX, clickedY) //Placing exact cursor position on clicking.
+                        }
+                    },10)
                 }
             })
         });
