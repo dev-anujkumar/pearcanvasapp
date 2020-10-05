@@ -390,7 +390,7 @@ class AssessmentSlateData extends Component {
             <div className={`assessment-parent ${assessmentUsageType ? '' : 'disabled'}`}>
                 <div className="assessment-label">Select assessment type</div>
                 <div className="slate_assessment_type_dropdown activeDropdown" onClick={this.toggleAssessmentTypeDropdown}>
-                    <span className="slate_assessment_dropdown_label">{assessmentType ? assessmentFormats[assessmentType] : "Select"}</span>
+                    <span className="slate_assessment_dropdown_label" title={assessmentType ? assessmentFormats[assessmentType] : ""}>{assessmentType ? assessmentFormats[assessmentType] : "Select"}</span>
                     <span className="slate_assessment_dropdown_image"></span>
                     <div className="clr"></div>
                     {this.state.openAssessmentDropdown &&
