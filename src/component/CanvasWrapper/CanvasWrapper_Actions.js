@@ -147,6 +147,7 @@ const findElementType = (element, index) => {
                             ...elementDataBank[element.type][element.figuretype][assessmentFormat]
                         }
                         element.figuredata.elementdata.assessmentformat = assessmentFormat 
+                        elementType["usageType"]= element.figuredata.elementdata.usagetype ? element.figuredata.elementdata.usagetype : ""
                         break;
                 }
                 break;
