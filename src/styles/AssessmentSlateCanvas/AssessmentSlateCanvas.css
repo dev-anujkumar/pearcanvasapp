@@ -48,6 +48,10 @@
     font-size: 14px;
     color: #606060;
     margin-left: 8px;
+    max-width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .slate_assessment_dropdown_image{
     position: relative;
