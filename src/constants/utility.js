@@ -410,3 +410,23 @@ export const removeBlankTags = htmlString => {
         return domParsed.childNodes[0].lastChild.innerHTML
     }
 }
+
+/**
+ * Removes class from the string
+ * @param {String} htmlString HTML string (model)
+ */
+export const removeUnoClass = (htmlString) => {
+    let domParsed = new DOMParser().parseFromString(htmlString, "text/html")
+    try {
+        let requiredDode = domParsed.body.childNodes[0]
+        let classToRemove = requiredDode.getAttributeNode('class')
+        requiredDode.removeAttributeNode(classToRemove)
+        return requiredDode.outerHTML
+    }
+    catch (error) {
+        /** Probably 'classToRemove' would be null
+         * So, returning input without processing 
+        */
+        return htmlString
+    }
+}
