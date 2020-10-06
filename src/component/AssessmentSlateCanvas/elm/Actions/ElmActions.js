@@ -1,5 +1,5 @@
 import config from '../../../../config/config';
-import { LEARNOSITY, LEARNOSITY_BETA, ELM_INT} from '../../AssessmentSlateConstants';
+import { LEARNOSITY, ELM_INT} from '../../AssessmentSlateConstants';
 import axios from 'axios';
 
 /**
@@ -111,7 +111,7 @@ export const setElmLoading = (flag) => (dispatch)=>{
 
 /*** @description This is function to open search Assessment Screen */
 export const openAssessmentSearchBar = (assessmentType, flag) => dispatch => {
-    if(assessmentType==LEARNOSITY || assessmentType== LEARNOSITY_BETA){
+    if(assessmentType==LEARNOSITY){
         dispatch({ type: 'SET_SEARCH_FLAG', payload: { openSearch: flag } });   
     }
 }

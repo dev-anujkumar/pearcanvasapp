@@ -13,7 +13,7 @@ import {
 import { sendDataToIframe , hasReviewerRole} from '../../constants/utility.js';
 import { connect } from 'react-redux';
 import { ASSESSMENT_ITEM, ASSESSMENT_ITEM_TDX } from '../../constants/Element_Constants';
-import { LEARNOSITY_BETA, FULL_ASSESSMENT_CITE, FULL_ASSESSMENT_TDX, FULL_ASSESSMENT_PUF, LEARNING_APP_TYPE, LEARNOSITY, LEARNING_TEMPLATE, PUF, CITE, TDX } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
+import {  FULL_ASSESSMENT_CITE, FULL_ASSESSMENT_TDX, FULL_ASSESSMENT_PUF, LEARNING_APP_TYPE, LEARNOSITY, LEARNING_TEMPLATE, PUF, CITE, TDX } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 class SlateTagDropdown extends React.Component {
     constructor(props) {
         super(props);
@@ -68,7 +68,6 @@ class SlateTagDropdown extends React.Component {
             case PUF:
             case FULL_ASSESSMENT_PUF:
             case LEARNOSITY:
-            case LEARNOSITY_BETA:
             default: 
                 assessmentTypeLO = ASSESSMENT_ITEM
                 break;

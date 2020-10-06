@@ -13,7 +13,7 @@ import { specialCharacterDecode } from './assessmentCiteTdx/Actions/CiteTdxActio
 import { showTocBlocker, disableHeader, hideTocBlocker, hideToc, ShowCanvasLoader } from '../../js/toggleLoader';
 import { setAssessmentFormat, hasAssessmentID, setAssessmentElement, setAssessmentUsageType } from './AssessmentActions/assessmentUtility.js';
 /*** @description - AssessmentSlateCanvas is a class based component that acts as a container for Assessment Slate */
-export class AssessmentSlateCanvas extends Component {
+class AssessmentSlateCanvas extends Component {
     constructor(props) {
         super(props);
         this.state = {

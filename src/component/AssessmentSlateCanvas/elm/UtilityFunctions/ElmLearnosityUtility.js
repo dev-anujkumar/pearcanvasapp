@@ -4,7 +4,7 @@
 
 // IMPORT - Module dependencies
 import config from '../../../../config/config';
-import { PUF, LEARNOSITY_BETA, LEARNOSITY, ELM_INT, FolderLabelList } from '../../AssessmentSlateConstants.js';
+import { PUF, LEARNOSITY, ELM_INT, FolderLabelList } from '../../AssessmentSlateConstants.js';
 let preparedData = [];
 
 /*** @description - This function is to set the folder name in folder-icon based on type of container
@@ -59,14 +59,14 @@ export const setStatus = (condition, assessmentFormat, propsValue, stateValue) =
         case 'setSearchButtonStatus':
             if (assessmentFormat == PUF || assessmentFormat == ELM_INT) {
                 status = true;
-            } else if (assessmentFormat == LEARNOSITY_BETA) {
+            } else if (assessmentFormat == LEARNOSITY) {
                 if (stateValue.openItemTable == true || (stateValue.openItemTable == false && propsValue.openSearch == true)) {
                     status = true;
                 }
             }
             break;
         case 'setNavigationBarStatus':
-            if (((assessmentFormat == PUF) || (assessmentFormat == ELM_INT) || (assessmentFormat == LEARNOSITY_BETA && !propsValue.openSearch))) {
+            if (((assessmentFormat == PUF) || (assessmentFormat == ELM_INT) || (assessmentFormat == LEARNOSITY && !propsValue.openSearch))) {
                 status = true;
             }
             break;
@@ -82,7 +82,7 @@ export const setStatus = (condition, assessmentFormat, propsValue, stateValue) =
   export const searchAndFilterAssessmentData = (assessmentType, searchAssessmentData, apiData) => {
     let tableData = []
     preparedData = []
-    if (assessmentType === LEARNOSITY_BETA || assessmentType === LEARNOSITY) {
+    if (assessmentType === LEARNOSITY) {
             tableData = filterAssessmentsFromApiData(apiData, "", searchAssessmentData)
     }
     sortSearchResults(tableData,searchAssessmentData)

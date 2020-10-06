@@ -55,7 +55,7 @@ describe('Test---Assessment Utility Functions', () => {
             const spyFunction = jest.spyOn(assessment_UtiltyFn, 'setAssessmentUsageType');
             assessment_UtiltyFn.setAssessmentUsageType(model);
             expect(spyFunction).toHaveBeenCalledWith(model);
-            expect(spyFunction).toHaveReturnedWith('Quiz');
+            expect(spyFunction).toHaveReturnedWith('');
             spyFunction.mockClear();
         });
         it('Test 2.2---setAssessmentUsageType- Assessment_Slate', () => {
@@ -133,5 +133,24 @@ describe('Test---Assessment Utility Functions', () => {
             expect(spyFunction).toHaveBeenCalledWith(elementType);
             spyFunction.mockClear();
         });
+        it('setAssessmentFormat', () => {
+            let model = {
+                elementdata: {assessmentformat:"test"}
+            }
+            const spyFunction = jest.spyOn(assessment_UtiltyFn, 'setAssessmentFormat');
+            assessment_UtiltyFn.setAssessmentFormat(model);
+            expect(spyFunction).toHaveBeenCalledWith(model);
+            spyFunction.mockClear();
+        });
+        it('setAssessmentElement ', () => {
+            let model = {
+                elementdata: {assessmentid:"work:22"}
+            }
+            const spyFunction = jest.spyOn(assessment_UtiltyFn, 'setAssessmentElement');
+            assessment_UtiltyFn.setAssessmentElement(model);
+            expect(spyFunction).toHaveBeenCalledWith(model);
+            spyFunction.mockClear();
+        });
+
     });
 });
