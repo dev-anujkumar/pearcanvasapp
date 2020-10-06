@@ -2662,7 +2662,6 @@ export class TinyMceEditor extends Component {
         let timeoutInstance = setTimeout(() => {
             clearTimeout(timeoutInstance);
             tinymce.init(this.editorConfig).then((d) => {
-                console.log('here')
                 this.setToolbarByElementType();
                 let listLiNodes1 = currentTarget.querySelectorAll('li')
                 if (currentTarget && listLiNodes1 && listLiNodes1.length) {
