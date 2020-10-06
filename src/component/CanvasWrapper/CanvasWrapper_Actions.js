@@ -319,14 +319,11 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             config.slateManifestURN = newVersionManifestId
             manifestURN = newVersionManifestId
         }
-        /** PCAT-8900|8907 - Updating Elm Assessments */
+        /** PCAT-8900 - Updating Full Assessments - Elm */
         if (config.slateType == 'assessment' && slateData && slateData.data && slateData.data[newVersionManifestId]) {
             let slateBodymatter = slateData.data[newVersionManifestId].contents.bodymatter
-            if (slateBodymatter[0] && slateBodymatter[0].type == 'element-assessment') {
-                let assessmentElement = slateBodymatter[0];
-                if (assessmentElement && assessmentElement.elementdata && assessmentElement.elementdata.assessmentformat == 'puf' && assessmentElement.elementdata.assessmentid) {
-                    dispatch(checkAssessmentStatus(assessmentElement.elementdata.assessmentid,'fromMainSlate'));
-                }
+            if (slateBodymatter[0] && slateBodymatter[0].type == 'element-assessment' && slateBodymatter[0].elementdata.assessmentformat == 'puf' && slateBodymatter[0].elementdata.assessmentid) {
+                dispatch(checkAssessmentStatus(slateBodymatter[0].elementdata.assessmentid, 'fromAssessmentSlate'));
             }
         }
 		if(slateData.data && slateData.data[newVersionManifestId] && slateData.data[newVersionManifestId].type === "popup"){

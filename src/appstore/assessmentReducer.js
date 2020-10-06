@@ -1,4 +1,4 @@
-import {     
+import {
     GET_USAGE_TYPE,
     SET_ASSESSMENT_STATUS,
     GET_ASSESSMENT_METADATA,
@@ -7,12 +7,13 @@ import {
 } from '../constants/Action_Constants';
 
 const INITIAL_STATE = {
-    usageTypeListData:{},
-    assessmentStatus:"",
-    entityUrn:"",
-    activeWorkUrn:"",
-    latestWorkUrn:"",
-    latestAssessmentTitle:""
+    usageTypeListData: {},
+    assessmentStatus: "",
+    entityUrn: "",
+    activeWorkUrn: "",
+    latestWorkUrn: "",
+    latestAssessmentTitle: "",
+
 }
 
 const INITIAL_ACTION = {
@@ -28,13 +29,26 @@ export default function assessmentReducer(state = INITIAL_STATE, action = INITIA
                 usageTypeListData: action.payload
             }
         case SET_ASSESSMENT_STATUS:
+            console.log('action.payload', action.payload)
             return {
                 ...state,
-                assessmentStatus: action.payload.assessmentStatus
+                // assessmentStatus: action.payload.assessmentStatus,
+                // entityUrn: action.payload.entityUrn,
+                // activeWorkUrn: action.payload.activeWorkUrn,
+                // latestAssessmentTitle: action.payload.assessmentTitle,
+                // [action.payload.activeWorkUrn]: {
+                //     ...state[action.payload.activeWorkUrn],
+                //     assessmentStatus: action.payload.assessmentStatus,
+                //     entityUrn: action.payload.entityUrn,
+                //     activeWorkUrn: action.payload.activeWorkUrn,
+                //     latestAssessmentTitle: action.payload.assessmentTitle,
+                // }
+                ... action.payload
             }
         case GET_ASSESSMENT_METADATA:
             return {
                 ...state,
+                ...action.payload,
                 entityUrn: action.payload.entityUrn,
                 activeWorkUrn: action.payload.activeWorkUrn,
                 latestAssessmentTitle: action.payload.assessmentTitle
@@ -42,17 +56,22 @@ export default function assessmentReducer(state = INITIAL_STATE, action = INITIA
         case GET_ASSESSMENT_VERSIONS:
             return {
                 ...state,
-                latestWorkUrn: action.payload.latestWorkUrn
+                [action.payload.currentWorkUrn]: {
+                    ...state[action.payload.currentWorkUrn],
+                    latestWorkUrn: action.payload.latestWorkUrn,
+                },
+                // latestWorkUrn: action.payload.latestWorkUrn
             }
         case RESET_ASSESSMENT_STORE:
-            return {
-                ...state,
-                entityUrn: "",
-                activeWorkUrn: "",
-                latestWorkUrn: "",
-                assessmentStatus: "",
-                latestAssessmentTitle:""
-            }
+            return {}
+            // return {
+            //     ...state,
+            //     entityUrn: "",
+            //     activeWorkUrn: "",
+            //     latestWorkUrn: "",
+            //     assessmentStatus: "",
+            //     latestAssessmentTitle:""
+            // }
         default:
             return state
     }

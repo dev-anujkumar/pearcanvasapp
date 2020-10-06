@@ -1478,14 +1478,13 @@ class ElementContainer extends Component {
      */
     handleEditButton = (event) => {
         event.stopPropagation();
-        console.log('Navigating to Elm Portal!!!!!')
         let { element } = this.props;
         let fullAssessment = element.type == elementTypeConstant.ASSESSMENT_SLATE && element.elementdata && element.elementdata.assessmentformat == 'puf' && element.elementdata.assessmentid ? true : false;
         let embeddedAssessment = element.type == elementTypeConstant.FIGURE_ASSESSMENT && element.figuredata && element.figuredata.elementdata && element.figuredata.elementdata.assessmentformat == 'puf' && element.figuredata.elementdata.assessmentid ? true : false;
         let dataToSend = {
             assessmentWorkUrn: fullAssessment ? element.elementdata.assessmentid : embeddedAssessment ? element.figuredata.elementdata.assessmentid : "",
             projDURN: config.projectUrn,
-            containerURN: config.slateManifestURN,
+            containerURN: this.props.currentSlateAncestorData && this.props.currentSlateAncestorData.ancestor.containerUrn,
             assessmentItemWorkUrn: embeddedAssessment ? element.figuredata.elementdata.assessmentitemid : ""
         }
         this.props.openElmAssessmentPortal(dataToSend);
@@ -1591,7 +1590,9 @@ const mapDispatchToProps = (dispatch) => {
         getElementStatus : (elementWorkId, index) => {
             dispatch(getElementStatus(elementWorkId, index))
         },
-        openElmAssessmentPortal
+        openElmAssessmentPortal : (dataToSend) => {
+            dispatch(openElmAssessmentPortal(dataToSend))
+        },
     }
 }
 
@@ -1606,6 +1607,7 @@ const mapStateToProps = (state) => {
         allComments: state.commentsPanelReducer.allComments,
         showHideId: state.appStore.showHideId,
         tcmData: state.tcmReducer.tcmSnapshot,
+        currentSlateAncestorData : state.appStore.currentSlateAncestorData
     }
 }
 

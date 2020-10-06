@@ -174,12 +174,22 @@ class AssessmentSlateData extends Component {
     updateElmAssessment = () => {
         this.toggleUpdatePopup(false, event);
         this.props.checkElmAssessmentStatus(this.props.assessmentReducer.latestWorkUrn, 'fromUpdate');
+        const { latestWorkUrn, assessmentTitle } = this.props.assessmentReducer[this.props.assessmentSlateObj.assessmentId]
         let updatedElmObj = {
-            id: this.props.assessmentReducer.latestWorkUrn,
-            title: this.props.assessmentReducer.latestAssessmentTitle,
+            id: latestWorkUrn,
+            title: assessmentTitle,
             usagetype: this.state.activeAssessmentUsageType
         }
         this.props.addPufAssessment(updatedElmObj, this.state.activeAssessmentType);
+        let updateSuccess = document.getElementById('link-notification');
+            updateSuccess.innerText = ELM_NEW_VERSION_UPDATE;
+            updateSuccess.classList.add('show-update')
+            // updateSuccess.style.display = "block";
+        setTimeout(() => {
+            updateSuccess.classList.remove('show-update')
+            // updateSuccess.style.display = "none";
+            updateSuccess.innerText = "";
+        }, 4000);
     }
 
     /**
@@ -428,13 +438,13 @@ class AssessmentSlateData extends Component {
     /*** @description This function is to show Approved/Unapproved Status on AS */
     showElmVersionStatus = () => {
         let updateDiv;
-        this.addElmSpaActionListener()
-        const { assessmentStatus, latestWorkUrn, activeWorkUrn } = this.props.assessmentReducer
+        // this.addElmSpaActionListener()
+        const { assessmentStatus, latestWorkUrn, activeWorkUrn } = this.props.assessmentReducer[this.props.assessmentSlateObj.assessmentId]
         if (assessmentStatus == 'final' && (latestWorkUrn != activeWorkUrn)) {
             updateDiv = <div className='elm-update-button' onClick={this.updateElm}><b className='elm-update-button-text'>Update Available</b></div>
         } else {
-            let approveText = assessmentStatus == 'wip' ? "Unapproved" : "Approved"
-            let approveIconClass = assessmentStatus == 'wip' ? "disable" : "enable"
+            let approveText = assessmentStatus == 'wip' ? "Unapproved" :  assessmentStatus == 'final' ? "Approved" : ""
+            let approveIconClass = assessmentStatus == 'wip' ? "disable" : assessmentStatus == 'final' ? "enable" : ""
             updateDiv = <div className="elm-status-div"><span className={"approved-button " + approveIconClass}>{approvedIcon}</span><p className={"approved-button-text " + approveIconClass}>{approveText}</p></div>
         }
 

@@ -200,7 +200,10 @@ class PopUp extends React.Component {
         }
         else if (props.isElmUpdatePopup) {
             return (
-                <div className={`dialog-window ${props.isElmUpdateClass}`} >{props.dialogText}</div>
+                <>
+                    <h2 className='tocDeleteHeader'>{this.props.elmHeaderText}</h2>
+                    <div className={`dialog-window ${props.isElmUpdateClass}`} >{props.dialogText}</div>
+                </>
             )
         }
         else {
@@ -219,16 +222,15 @@ class PopUp extends React.Component {
         )
     }
     render() {
-        const { active, assessmentClass, isElmUpdateClass } = this.props;
+        const { active, assessmentClass, isElmApiError } = this.props;
         return (
             <div className="model">
                 {
                     active ?
                         <div tabIndex="0" className={`model-popup ${assessmentClass}`} ref={this.modelRef}>
-                            <div className={`modal-content ${assessmentClass}`}>
-                                {/*  ${isElmUpdateClass ? isElmUpdateClass : ''} */}
+                            <div className={`modal-content ${isElmApiError ? isElmApiError : ''} ${assessmentClass}`}>
                                 {this.renderCloseSymbol(this.props)}
-                                {this.props.isElmUpdatePopup && this.showElmHeader()}
+                                {/* {this.props.isElmUpdatePopup && this.showElmHeader()} */}
                                 {this.renderDialogText(this.props)}
                                 <div className={`dialog-input ${assessmentClass}`}>
                                     {this.renderInputBox(this.props)}

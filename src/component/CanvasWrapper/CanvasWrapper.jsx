@@ -36,6 +36,7 @@ import { fetchUsageTypeData } from '../AssessmentSlateCanvas/AssessmentActions/a
 import { toggleElemBordersAction, togglePageNumberAction } from '../Toolbar/Toolbar_Actions.js';
 import { prevIcon, nextIcon } from '../../../src/images/ElementButtons/ElementButtons.jsx';
 import { assetIdForSnapshot } from '../../component/AssetPopover/AssetPopover_Actions.js';
+import {handleElmPortalEvents} from '../ElementContainer/AssessmentEventHandling.js';
 export class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
@@ -72,6 +73,7 @@ export class CanvasWrapper extends Component {
             'message': true
         })
         this.props.getSlateLockStatus(config.projectUrn ,config.slateManifestURN) 
+        handleElmPortalEvents();
         localStorage.removeItem('newElement');
         window.onbeforeunload = () => {
             let slateId = config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
@@ -178,6 +180,7 @@ export class CanvasWrapper extends Component {
                     togglePopup={this.ReleaseErrorPopup}
                     isLockReleasePopup={true}
                     isInputDisabled={true}
+                    isElmApiError={this.props.ErrorPopup.isElmApiError}
                 />}
                 {/** Ends of custom error popup */}
                 <div id="editor-toolbar" className="editor-toolbar">

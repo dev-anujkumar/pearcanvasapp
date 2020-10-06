@@ -303,3 +303,7 @@
   letter-spacing: normal;
   color: rgba(0, 0, 0, 0.6);
 }
+
+.modal-content.elm-api-error{
+  text-align: center;
+}
