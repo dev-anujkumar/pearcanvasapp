@@ -63,6 +63,7 @@ export const positionListDrop = (event) => {
  */
 export const bindKeyDownEvent = (editor, e, element,showHideCallback) => {
     const anchorNode = editor.selection.getSel().anchorNode;
+    let imgElement = anchorNode && anchorNode.getElementsByTagName ? anchorNode.getElementsByTagName('IMG') : [];
     const newNode = anchorNode.closest('div.showHide');
     // let isOnlyMathmlFlag = false;
     const _selRange = editor.selection.getRng(true);
@@ -94,7 +95,7 @@ export const bindKeyDownEvent = (editor, e, element,showHideCallback) => {
     /**
      * Case - pressing Enter on blank list item
      */
-    if (anchorNode.tagName === "LI" || anchorNode.tagName === "BR" || (nodeNames.includes(anchorNode.tagName))) {
+    if ((anchorNode.tagName === "LI" && !imgElement.length ) || anchorNode.tagName === "BR" || (nodeNames.includes(anchorNode.tagName))) {
         if ((e.metaKey && e.which === 13) || (e.which === 13)) {
             // if only mathml image is present in editor //
             if ((editor.targetElm.textContent.length === 0) ||

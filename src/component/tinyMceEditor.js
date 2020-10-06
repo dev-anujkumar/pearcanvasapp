@@ -2238,6 +2238,8 @@ export class TinyMceEditor extends Component {
                 }
 
                 let termText = tinyMCE.$("#" + currentId) && tinyMCE.$("#" + currentId).html();
+                //PCAT-9077 - duplicate toolbar issue on element creation
+                tinymce.remove()
                 tinymce.init(this.editorConfig).then((d) => {
                     if (this.editorRef.current) {
                         if (termText && termText.length && this.props.element.type === 'figure') {
@@ -2689,7 +2691,12 @@ export class TinyMceEditor extends Component {
                 }
                 if (this.footnoteGlossaryProgress &&  clickedX !== 0 && clickedY !== 0) {  
                     this.footnoteGlossaryProgress = false;
-                    tinymce.activeEditor.selection.placeCaretAt(clickedX, clickedY) //Placing exact cursor position on clicking.
+                    const timer = setInterval(()=>{
+                        if(!config.isGlossarySaving){
+                            clearInterval(timer)
+                            tinymce.activeEditor.selection.placeCaretAt(clickedX, clickedY) //Placing exact cursor position on clicking.
+                        }
+                    },10)
                 }
             })
         });
