@@ -140,7 +140,7 @@ const dispatchVersionError = (dispatch) => {
  */
 export const openElmAssessmentPortal = (assessmentData) => async (dispatch) => {
     let { assessmentWorkUrn, projDURN, containerURN, assessmentItemWorkUrn } = assessmentData
-    let url = `https://assessmentauthoring-dev.pearson.com/launch/editor/assessment/${assessmentWorkUrn}/editInPlace`;
+    let url = `${config.ELM_PORTAL_URL}/launch/editor/assessment/${assessmentWorkUrn}/editInPlace`;
     if (assessmentItemWorkUrn.trim() != "") {
         url = `${config.ELM_PORTAL_URL}/launch/editor/assessment/${assessmentWorkUrn}/item/${assessmentItemWorkUrn}/editInPlace`;
     }
