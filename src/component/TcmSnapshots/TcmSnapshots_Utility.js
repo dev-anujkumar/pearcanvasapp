@@ -324,7 +324,7 @@ const tcmSnapshotsDeletePopup = (snapshotsData, defaultKeys, deleVercase, newVer
 */
 const tcmSnapshotsMetadataField = (snapshotsData, defaultKeys, containerElement, deleVercase, newVersionUrns,type,index, calledFrom) => {
     let elementDetails;
-    const { parentElement, metaDataField, CurrentSlateStatus } = containerElement
+    const { parentElement, metaDataField, CurrentSlateStatus, isMetaFieldExist } = containerElement
     const { wipData, elementId, tag, actionStatus, popupInContainer, slateManifestVersioning } = snapshotsData;
     let metaDataFieldID = wipData.type === POPUP_ELEMENT ? wipData.popupdata['formatted-title'] && wipData.popupdata['formatted-title'].id : wipData.id;
     let wipDataTitle = calledFrom == 'delete' ? wipData.popupdata['formatted-title'] : wipData  // delete Whole pop case handling
@@ -335,6 +335,7 @@ const tcmSnapshotsMetadataField = (snapshotsData, defaultKeys, containerElement,
     tag.childTag = fetchElementsTag(parentElement, type ? type : metaDataField ? metaDataField : "");
     let isHeadTag = tag.parentTag == 'POP' ? "HEAD" : ""
     elementDetails = setElementTypeAndUrn(elementId, tag, isHeadTag, "", undefined, popupInContainer,slateManifestVersioning);
+    elementDetails.isMetaFieldExist = isMetaFieldExist
     prepareAndSendTcmData(elementDetails, wipDataTitle, defaultKeys, actionStatus,index, CurrentSlateStatus);
 }
 
@@ -650,7 +651,7 @@ const setContentSnapshot = (element,elementDetails,actionStatus, CurrentSlateSta
         let blockQuoteText = element.html && element.html.text ? element.html.text : "";
         snapshotData = blockQuoteText && blockQuoteText.trim() !== "" ? blockQuoteText.replace(bqHiddenText,"").replace(bqAttrHtmlTrue, "").replace(bqAttrHtmlFalse, "") : "";
     } 
-    else if(elementDetails && elementDetails.elementType && (elementDetails.elementType.includes("LB") && actionStatus && actionStatus.action == 'create') && CurrentSlateStatus != 'approved' ){
+    else if(elementDetails && elementDetails.elementType && (elementDetails.elementType.includes("LB") && actionStatus && actionStatus.action == 'create') && CurrentSlateStatus != 'approved' && elementDetails.isMetaFieldExist === true){
         snapshotData = '<p></p>'          
     } 
     else {
