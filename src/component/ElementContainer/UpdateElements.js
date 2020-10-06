@@ -531,7 +531,7 @@ const getMetaDataFieldForPopup = ({ popupdata: _popupdata }, _previousElementDat
  * @param {*} containerContext 
  */
 export const createUpdatedData = (type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext,parentElement,showHideType,asideData, poetryData) => {
-    let { appStore, elementStatusReducer } = store.getState()
+    let { appStore } = store.getState()
     let dataToReturn = {}
     switch (type){
         case elementTypeConstant.AUTHORED_TEXT:
@@ -539,12 +539,16 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
         case elementTypeConstant.BLOCKFEATURE:
         case elementTypeConstant.ELEMENT_LIST:
         case elementTypeConstant.POETRY_STANZA:
+            if (type === 'stanza') { /**Resolve PCAT- 9199 */
+                elementType = 'stanza'
+            }    
             tinyMCE.$(node).find('.blockquote-hidden').remove();
             let innerHTML, innerText;
             let revealTextData = validateRevealAnswerData(showHideType, node, type)
             innerHTML = revealTextData.innerHTML
             innerText = revealTextData.innerText
             let attributionText=tinyMCE.$(node).find('.blockquoteTextCredit').text()
+            let inputElementType=elementTypes[elementType][primaryOption]['enum'];
             let inputElementSubType=elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'];
             if ((attributionText.length == 0 && inputElementSubType == "MARGINALIA") || (attributionText.length == 0 && inputElementSubType == "BLOCKQUOTE")) {
                 inputElementSubType = "BLOCKQUOTE"
@@ -562,7 +566,7 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                     footnotes : previousElementData.html.footnotes || {},
                     glossaryentries : previousElementData.html.glossaryentries || {},
                 },
-                inputType : parentElement && (parentElement.type === "popup" || parentElement.type === "citations" || parentElement.type === "showhide" && previousElementData.type === "element-authoredtext" || parentElement.type === "poetry" && previousElementData.type === "element-authoredtext") ? "AUTHORED_TEXT" : elementTypes[elementType][primaryOption]['enum'],
+                inputType : parentElement && (parentElement.type === "popup" || parentElement.type === "citations" || parentElement.type === "showhide" && previousElementData.type === "element-authoredtext" || parentElement.type === "poetry" && previousElementData.type === "element-authoredtext") ? "AUTHORED_TEXT" : inputElementType,
                 inputSubType : parentElement && (parentElement.type == "popup" || parentElement.type === "poetry") ? "NA" : inputElementSubType
             }
 
@@ -578,12 +582,6 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                 else {
                     dataToReturn.metaDataField = getMetaDataFieldForPopup(parentElement, previousElementData)
                 }
-                /* if(parentElement.popupdata["formatted-title"] && parentElement.popupdata["formatted-title"]["id"] === previousElementData.id){
-                    dataToReturn.metaDataField = "formattedTitle";
-                } 
-                else if(parentElement.popupdata["postertextobject"][0]["id"] === previousElementData.id){
-                    dataToReturn.sectionType = "postertextobject";
-                }*/
             } else if(parentElement && parentElement.type === "poetry"){
                 if(parentElement.contents && parentElement.contents["formatted-title"] && parentElement.contents["formatted-title"]["id"] === previousElementData.id){
                     dataToReturn["metaDataField"] = "formattedTitle";
@@ -611,7 +609,6 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                         break;
                     case elementTypeConstant.FIGURE_VIDEO:
                     case elementTypeConstant.FIGURE_AUDIO:
-                     //   console.log("Figure VIDEO new data::>>", node.innerHTML)
                         dataToReturn = generateCommonFigureData(index, previousElementData, elementType, primaryOption, secondaryOption)
                         break;
                     case elementTypeConstant.FIGURE_ASSESSMENT:

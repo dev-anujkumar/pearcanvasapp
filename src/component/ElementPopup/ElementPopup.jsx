@@ -10,6 +10,8 @@ import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js'
 import { checkSlateLock } from '../../js/slateLockUtility.js'
 import { getTitleSubtitleModel } from "../../constants/utility.js"
+import { findKey } from "lodash";
+
 /**
 * @description - Interactive is a class based component. It is defined simply
 * to make a skeleton of the Interactive Element.
@@ -42,19 +44,17 @@ class ElementPopup extends React.Component {
     }
     
     renderSlate =()=>{
-        const { element, index } = this.props
-        console.log("config before popup",config)
-        console.log("slateManifestURN>>",config.slateManifestURN,"slateEntityURN>>>",config.slateEntityURN)
-        config.tempSlateManifestURN = config.slateManifestURN
-        config.tempSlateEntityURN = config.slateEntityURN
-        console.log("element id>>",element.id,"element contentUrn>>>",element.contentUrn)
+        const { element, index, slateLevelData } = this.props
+        const sUrn = findKey(slateLevelData, ["type", "manifest"])
+        const eUrn = slateLevelData[sUrn] && slateLevelData[sUrn].contentUrn
+        config.tempSlateManifestURN = sUrn
+        config.tempSlateEntityURN = eUrn
         config.slateManifestURN = element.id
         config.slateEntityURN = element.contentUrn
         config.cachedActiveElement = {
             index,
             element: {...element}
         }
-        console.log("config while open popup",config)
         sendDataToIframe({'type': ShowLoader,'message': { status: true }});
         this.props.fetchSlateData(config.slateManifestURN, config.slateEntityURN, 0, false,"");
     }
@@ -63,9 +63,11 @@ class ElementPopup extends React.Component {
      * Creates Title/Subtitle element if not present.
      */
     createPopupUnit = async (popupField, forceupdate, index, parentElement, createdFromFootnote) => {
-        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-        config.popupCreationCallInProgress = true
-        await this.props.createPopupUnit(popupField, parentElement, (currentElementData) => this.props.handleBlur(forceupdate, currentElementData, index, null), index, config.slateManifestURN, createdFromFootnote)
+        if (!config.popupCreationCallInProgress) {
+            sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+            config.popupCreationCallInProgress = true
+            await this.props.createPopupUnit(popupField, parentElement, (currentElementData) => this.props.handleBlur(forceupdate, currentElementData, index, null), index, config.slateManifestURN, createdFromFootnote)
+        }
     }
     renderPopup = () => {        
         const {index, element, slateLockInfo} = this.props
@@ -167,8 +169,14 @@ class ElementPopup extends React.Component {
 }
 ElementPopup.displayName = "ElementPopup"
 
+const mapStatetoProps = (state) => {
+    return {
+        slateLevelData: state.appStore.slateLevelData
+    }
+}
+
 export default connect(
-    null,
+    mapStatetoProps,
     {
         fetchSlateData,
         createPopupUnit

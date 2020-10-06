@@ -34,11 +34,12 @@ class LearningTool extends React.Component {
                 "helpdesk":"knowdl",
                 "hospitality-sims":"knowdl",
                 "information-technology-sims":"knowdl",
-                "Personal Finance":"knowdl",
+                "personal-finance-experience":"knowdl",
                 "Psychology Sims":"knowdl",
                 "qual-sims":"knowdl",
                 "soundbytes":"knowdl",
                 "political-science-sims":"knowdl",
+                "video-library":"knowdl",
                 "video-submission":"mediashare",
                 "video-quiz":"mediashare",
                 "myvirtual-child":"myvirtual-x",
@@ -268,7 +269,7 @@ class LearningTool extends React.Component {
                                     <option value="socialexplorer-pathways">Adaptive Pathways</option>
                                     <option value="criminal-justice-sims"> Criminal Justice Sims</option>
                                     <option value="economics-sims">Economic Sims</option>
-                                    <option value="socialexplorer-explorations">Guided Data</option>
+                                    <option value="socialexplorer-explorations">Guided Data Explorations</option>
                                     <option value="helpdesk">HelpDesk</option>
                                     <option value="hospitality-sims">Hospitality Sims</option>
                                     <option value="information-technology-sims">Information Technology Sims</option>
@@ -276,7 +277,7 @@ class LearningTool extends React.Component {
                                     <option value="video-submission">Shared Media</option>
                                     <option value="myvirtual-child">MyVirtualChild</option>
                                     <option value="myvirtual-life">MyVirtualLife</option>
-                                    <option value="knowdl">Personal Finance </option>
+                                    <option value="personal-finance-experience">Personal Finance </option>
                                     <option value="political-science-sims">Political Science Sims</option>
                                     <option value="qual-sims">Qualitative Business Sims</option>
                                     <option value="soundbytes">Sound Bytes</option>

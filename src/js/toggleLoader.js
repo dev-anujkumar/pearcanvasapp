@@ -1,5 +1,5 @@
 import { sendDataToIframe } from '../constants/utility.js';
-
+import {ShowLoader} from '../constants/IFrameMessageTypes.js';
 /** 
  * method 'showBlocker' used to send the message to wrapper via html 5 message for enabling tocBlocker
  *  **/
@@ -37,4 +37,12 @@ export const hideTocBlocker = () => {
 
 export const disableHeader = (message) => {
     sendDataToIframe({'type': "headerDisable",'message': message});
+}
+
+export const hideToc = () => {
+    sendDataToIframe({ 'type': 'hideToc', 'message': {} });
+}
+
+export const ShowCanvasLoader = (status) => {
+    sendDataToIframe({'type': ShowLoader,'message': { status: status }});
 }
