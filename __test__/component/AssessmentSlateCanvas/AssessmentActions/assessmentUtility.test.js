@@ -139,16 +139,17 @@ describe('Test---Assessment Utility Functions', () => {
             }
             const spyFunction = jest.spyOn(assessment_UtiltyFn, 'setAssessmentFormat');
             assessment_UtiltyFn.setAssessmentFormat(model);
-            expect(spyFunction).toHaveBeenCalledWith(model);
+            expect(spyFunction).toHaveReturnedWith("test");
             spyFunction.mockClear();
         });
         it('setAssessmentElement ', () => {
             let model = {
-                elementdata: {assessmentid:"work:22"}
+                elementdata: {assessmentid:"urn:pearson:work:b47ee1a3-e652-4b2b-bfc5-563d40a8373d"}
             }
             const spyFunction = jest.spyOn(assessment_UtiltyFn, 'setAssessmentElement');
             assessment_UtiltyFn.setAssessmentElement(model);
-            expect(spyFunction).toHaveBeenCalledWith(model);
+            expect(spyFunction).toHaveReturnedWith( {"assessmentId": "urn:pearson:work:b47ee1a3-e652-4b2b-bfc5-563d40a8373d", "itemId": "", "title": ""}
+            );
             spyFunction.mockClear();
         });
 
