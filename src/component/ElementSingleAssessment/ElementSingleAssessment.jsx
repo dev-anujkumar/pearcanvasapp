@@ -275,7 +275,7 @@ static getDerivedStateFromProps(nextProps, prevState) {
                 <div className="singleAssessmentIdInfo" ><strong>{(this.state.elementType !== "puf" && this.state.elementType !== "learnosity") ? "ID: " : "Product ID: "}</strong>{this.state.assessmentId ? this.state.assessmentId : (model.figuredata.elementdata ? model.figuredata.elementdata.assessmentid : "")}</div>
                 <div className={`singleAssessmentItemIdInfo ${(this.state.elementType !== "puf" && this.state.elementType !== "learnosity")? '':'puf-assessment-id'}`} ><strong>ITEM ID: </strong>{this.state.assessmentItemId?this.state.assessmentItemId:(model.figuredata.elementdata ? model.figuredata.elementdata.assessmentitemid : "")}</div>                             
                 <div className="singleAssessment_Dropdown_Container">
-                    <div className="singleAssessment_Dropdown_SelectLabel">Select usage type*</div>
+                    <div className="singleAssessment_Dropdown_SelectLabel">Select usage type<span className="required">*</span></div>
                     <div className="singleAssessment_Dropdown_activeDropdown" onClick={ !hasReviewerRole() && this.toggleUsageTypeDropdown} >
                         <span className="singleAssessment_Dropdown_currentLabel">{this.state.activeAsseessmentUsageType?this.state.activeAsseessmentUsageType:'Select'}</span>
                         <span className="singleAssessment_Dropdown_arrow">{dropdownArrow}</span>

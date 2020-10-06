@@ -341,7 +341,7 @@ class AssessmentSlateData extends Component {
         } else if (getAssessmentData && getAssessmentDataPopup === false && changeLearningData === false) {
             assessmentSlateJSX = this.showFinalAssessmentSlate(slatePlaceholder, activeAssessmentType, assessmentSlateObj, activeAssessmentUsageType);
         } else if (getAssessmentData && (getAssessmentDataPopup === true || learningToolStatus)) {
-            assessmentSlateJSX = this.showSuccessMessage(slatePlaceholder.title);
+            assessmentSlateJSX = this.showSuccessMessage(slatePlaceholder.title,activeAssessmentUsageType);
         } else {
             assessmentSlateJSX = this.showNewAssessmentSlate(activeAssessmentType,activeAssessmentUsageType);
         }
@@ -351,11 +351,11 @@ class AssessmentSlateData extends Component {
     /*** @description This function is to shoe Succes Message on AS
     * @param title assessment title
     */
-    showSuccessMessage = (title) => {
+    showSuccessMessage = (title, activeAssessmentUsageType) => {
         let successMessage = <div className="slate_popup_get_selection">
             <div className="slate_popup_get_image lazyload"></div>
             <div className="slate_popup_get_title">{"'" + title + "'"}</div>
-            <div className="slate_popup_get_added">Successfully added</div>
+            <div className="slate_popup_get_added">{activeAssessmentUsageType} added successfully</div>
             <div className="clr"></div>
         </div>
         return successMessage;
