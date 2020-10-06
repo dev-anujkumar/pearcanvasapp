@@ -4,7 +4,7 @@
 import React from 'react';
 import '../../../../../styles/AssessmentSlateCanvas/elm/RootElmComponent.css';
 import Button from './../../../../ElementButtons';
-import { LEARNOSITY_BETA, LEARNOSITY, ELM_INT } from '../../../AssessmentSlateConstants';
+import { LEARNOSITY, ELM_INT } from '../../../AssessmentSlateConstants';
 const ElmHeader = (props) => {
 
     const { closeElmWindow, activeAssessmentType } = props;
@@ -14,7 +14,6 @@ const ElmHeader = (props) => {
             case ELM_INT:
                 header = "Interactives";
                 break;
-            case LEARNOSITY_BETA:
             case LEARNOSITY:
                 header = "Learnosity Assessments";
                 break;

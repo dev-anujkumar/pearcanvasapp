@@ -3,7 +3,7 @@
 */
 import React from 'react';
 import '../../../../../styles/AssessmentSlateCanvas/elm/ElmTable.css';
-import { ERROR_MESSAGE_ELM_RESOURCE, ERROR_MESSAGE_ELM_ITEMS, ERROR_MESSAGE_LEARNOSITY, ERROR_MESSAGE_ELM_DEFAULT, PUF, LEARNOSITY_BETA, ERROR_MESSAGE_ELM_INTERACTIVES, ELM_INT } from '../../../AssessmentSlateConstants.js'
+import { ERROR_MESSAGE_ELM_RESOURCE, ERROR_MESSAGE_ELM_ITEMS, ERROR_MESSAGE_LEARNOSITY, ERROR_MESSAGE_ELM_DEFAULT, PUF, LEARNOSITY, ERROR_MESSAGE_ELM_INTERACTIVES, ELM_INT } from '../../../AssessmentSlateConstants.js'
 
 const ElmError = (props) => {
 
@@ -13,7 +13,7 @@ const ElmError = (props) => {
             errorMessage = ERROR_MESSAGE_ELM_INTERACTIVES
         } else if (props && (props.activeAssessmentType == PUF) && props.errFlag) {
             errorMessage = ERROR_MESSAGE_ELM_RESOURCE
-        } else if (props && (props.activeAssessmentType == LEARNOSITY_BETA) && (props.errFlag || (props.filterResults == 'No Results'))) {
+        } else if (props && (props.activeAssessmentType == LEARNOSITY) && (props.errFlag || (props.filterResults == 'No Results'))) {
             errorMessage = ERROR_MESSAGE_LEARNOSITY
         } else if (props && (props.itemApiStatus != "200")) {
             errorMessage = ERROR_MESSAGE_ELM_ITEMS

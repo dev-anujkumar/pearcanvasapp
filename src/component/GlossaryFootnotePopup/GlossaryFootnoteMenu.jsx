@@ -7,6 +7,7 @@ import PropTypes from 'prop-types'
 import { saveGlossaryAndFootnote } from "./GlossaryFootnote_Actions.js"
 import { ShowLoader } from '../../constants/IFrameMessageTypes';
 import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
+import config from '../../config/config';
 
 /**
 * @description - GlossaryFootnoteMenu is a class based component. It is defined simply
@@ -147,6 +148,7 @@ class GlossaryFootnoteMenu extends React.Component {
             term = this.replaceUnwantedtags(term)
             definition = this.replaceUnwantedtags(definition)
             if(this.glossaryFootnoteDifference(term, definition, this.props.glossaryFootNoteCurrentValue.glossaryContentText, this.props.glossaryFootNoteCurrentValue.footnoteContentText, glossaryFootnoteValue.type.toLowerCase())){
+                config.isGlossarySaving = true;
                 sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
                 saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType, typeWithPopup, poetryField)
             }

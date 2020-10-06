@@ -159,6 +159,7 @@ static getDerivedStateFromProps(nextProps, prevState) {
     /*** @description - This function will be called to save the assessment data */
     saveAssessment = () =>{ 
             this.props.handleBlur("","",this.props.index);
+            this.props.handleFocus();
     }
     /*** @description - This function is to close CITE/TDX PopUp
   */
@@ -274,30 +275,29 @@ static getDerivedStateFromProps(nextProps, prevState) {
                 <div className="singleAssessmentIdInfo" ><strong>{(this.state.elementType !== "puf" && this.state.elementType !== "learnosity") ? "ID: " : "Product ID: "}</strong>{this.state.assessmentId ? this.state.assessmentId : (model.figuredata.elementdata ? model.figuredata.elementdata.assessmentid : "")}</div>
                 <div className={`singleAssessmentItemIdInfo ${(this.state.elementType !== "puf" && this.state.elementType !== "learnosity")? '':'puf-assessment-id'}`} ><strong>ITEM ID: </strong>{this.state.assessmentItemId?this.state.assessmentItemId:(model.figuredata.elementdata ? model.figuredata.elementdata.assessmentitemid : "")}</div>                             
                 <div className="singleAssessment_Dropdown_Container">
-                    <div className="singleAssessment_Dropdown_SelectLabel">Select usage type</div>
-                    <div className={this.state.asseessmentUsageTypeDropdown ? "singleAssessment_Dropdown_activeDropdown select" : "singleAssessment_Dropdown_activeDropdown notselect"} onClick={ !hasReviewerRole() && this.toggleUsageTypeDropdown} >
-                        <span className="singleAssessment_Dropdown_currentLabel">{this.state.activeAsseessmentUsageType?this.state.activeAsseessmentUsageType:'Quiz'}</span>
+                    <div className="singleAssessment_Dropdown_SelectLabel">Select usage type<span className="required">*</span></div>
+                    <div className="singleAssessment_Dropdown_activeDropdown" onClick={ !hasReviewerRole() && this.toggleUsageTypeDropdown} >
+                        <span className="singleAssessment_Dropdown_currentLabel">{this.state.activeAsseessmentUsageType?this.state.activeAsseessmentUsageType:'Select'}</span>
                         <span className="singleAssessment_Dropdown_arrow">{dropdownArrow}</span>
-                    </div>
-
-                </div>
-                {
+                        {
                     this.state.asseessmentUsageTypeDropdown ? (
-                        <ul className="singleAssessment_Dropdown_options">
+                        <ul className="slate_assessment_type_dropdown_options">
                             {<UsageTypeDropdown usageTypeList={this.props.usageTypeList} clickHandlerFn={this.handleAssessmentTypeChange} />}
                         </ul>
                     ) : null
                 }
-
+                    </div>
+                   
+                </div>
                 <div className={`pearson-component ${assessmentKeys && assessmentKeys.assessmentItemType ? assessmentKeys.assessmentItemType : ""}`}
                     data-type={assessmentKeys && assessmentKeys.assessmentItemType ? assessmentKeys.assessmentItemType : ""}
                     data-assessment={this.state.assessmentId ? this.state.assessmentId : (model.figuredata.elementdata ? model.figuredata.elementdata.assessmentid : "")}
                     data-assessment-item={this.state.assessmentItemId ? this.state.assessmentItemId : (model.figuredata.elementdata ? model.figuredata.elementdata.assessmentitemid : "")}
                     data-item-type={this.state.elementType !== "tdx" ? "assessmentItem" : "tdxAssessmentItem"}
-                    onClick={(e) => this.addAssessmentResource(e)}>
+                    onClick={(e) => this.state.activeAsseessmentUsageType ? this.addAssessmentResource(e): null}>
                     <img src="https://cite-media-stg.pearson.com/legacy_paths/8efb9941-4ed3-44a3-8310-1106d3715c3e/FPO-assessment.png"
                         data-src="https://cite-media-stg.pearson.com/legacy_paths/8efb9941-4ed3-44a3-8310-1106d3715c3e/FPO-assessment.png"
-                        title="View Image" alt="" className="imageTextWidth lazyloaded imageeee"></img>
+                        title="View Image" alt="" className={`imageTextWidth lazyloaded imageeee ${this.state.activeAsseessmentUsageType ? "" : "default-img" }`}></img>
                 </div>
             </figure>
 

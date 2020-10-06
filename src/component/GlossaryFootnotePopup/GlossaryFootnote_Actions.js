@@ -30,6 +30,10 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
         const slateId = config.slateManifestURN;
         const parentData = store.getState().appStore.slateLevelData;
         let newParentData = JSON.parse(JSON.stringify(parentData));
+        let currentSlateData = newParentData[config.slateManifestURN];
+        if(currentSlateData.type==="popup" && currentSlateData.status === "approved" && config.isCreateFootnote){
+            return false;
+        }
         let newBodymatter = newParentData[slateId].contents.bodymatter;
         var footnoteContentText, glossaryFootElem = {}, glossaryContentText, tempGlossaryContentText;
         let tempIndex = index && typeof (index) !== 'number' && index.split('-');
@@ -107,7 +111,7 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                     }
                 }
 
-            }
+            }       
         }
 
         switch (semanticType) {
@@ -343,7 +347,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                 parentElement: data.metaDataField ? fetchElementWipData(tcmMainBodymatter,index,'popup') : undefined,
                 metaDataField: data.metaDataField ? data.metaDataField : undefined
             };
-            if (currentSlateData.status === 'approved') {
+            if (currentSlateData && currentSlateData.status === 'approved') {
                 await tcmSnapshotsForUpdate(elementUpdateData, index, containerElement, store.dispatch, "");
             }
             else {
@@ -499,9 +503,11 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         
         sendDataToIframe({'type': HideLoader,'message': { status: false }});  
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
+        config.isGlossarySaving = false;
     }).catch(err => {
         store.dispatch({type: ERROR_POPUP, payload:{show: true}})
         console.log("save glossary footnote API error : ", err);
+        config.isGlossarySaving = false;
         sendDataToIframe({'type': HideLoader,'message': { status: false }});
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
     })

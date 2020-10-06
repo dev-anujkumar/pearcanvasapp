@@ -20,7 +20,7 @@ export const setAssessmentTitle = (model) => {
  * * @param model - object containig element data
 */
 export const setAssessmentUsageType = (model) => {
-    let usagetype = "Quiz";
+    let usagetype = "";
     if (model && model.type && model.type === "element-assessment" && model.elementdata && model.elementdata.usagetype) {
         usagetype = model.elementdata.usagetype
     } else if (model && model.figuretype && model.figuretype === "assessment" && model.figuredata && model.figuredata.elementdata && model.figuredata.elementdata.usagetype) {
@@ -62,7 +62,7 @@ export const setAssessmentProperties = (elementType) => {
 * @param model - element's details
 */
 export const setAssessmentFormat = (model) => {
-    let format = 'Select';
+    let format = '';
     if ('elementdata' in model && 'assessmentformat' in model.elementdata && model.elementdata.assessmentformat !== 'fpo') {
         format = model.elementdata.assessmentformat;
     }

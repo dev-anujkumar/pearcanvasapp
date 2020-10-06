@@ -21,7 +21,7 @@ import elementTypeConstant from './ElementConstants'
 import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } from './../CanvasWrapper/CanvasWrapper_Actions';
 import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
-import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags } from '../../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
@@ -217,7 +217,6 @@ class ElementContainer extends Component {
         let tempDiv = document.createElement('div');
         html = html.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula').replace(/\uFEFF/g,"").replace(/>\s+</g,'><').replace(/data-mce-href="#"/g,'').replace(/ reset/g,'');
         html=html.trim();
-        // console.log("html",html)
         tempDiv.innerHTML = html;
         tinyMCE.$(tempDiv).find('br').remove();
         tinyMCE.$(tempDiv).find('.blockquote-hidden').remove();
@@ -573,8 +572,11 @@ class ElementContainer extends Component {
                 }
                 if(parentElement && parentElement.type === "popup"){
                     html = html.replace(/(<sup><\/sup>)|(<sup><br><\/sup>)/g, "<br>");
-                    html =html.replace(/<br data-mce-bogus="1">/g, '<br>')
+                    html = html.replace(/<br data-mce-bogus="1">/g, '<br>')
                     tempDiv.innerHTML = html
+                    if (!isPosterTextSelected) {
+                        previousElementData.html.text = removeUnoClass(previousElementData.html.text) //BG-3278 (support to be improved)
+                    }
                 }
                 html =html.replace(/(\r\n|\n|\r)/gm, '')
                 previousElementData.html.text= previousElementData.html.text.replace(/<br data-mce-bogus="1">/g, "<br>").replace(/(\r\n|\n|\r)/gm, '');
