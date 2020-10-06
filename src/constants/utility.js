@@ -430,3 +430,11 @@ export const removeUnoClass = (htmlString) => {
         return htmlString
     }
 }
+
+/**
+ * Returns the type of the slate
+ * @param {Object} slateObj Slate data
+ */
+export const getSlateType = (slateObj) => {
+    return slateObj && slateObj.type ? slateObj.type : null
+}
