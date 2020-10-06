@@ -1900,6 +1900,7 @@ export class TinyMceEditor extends Component {
             elementId = this.props.elementId
         }
         config.isCreateFootnote = true
+        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
         getGlossaryFootnoteId(elementId, "FOOTNOTE", res => {
             if (res.data && res.data.id) {
                 let tempDiv = document.createElement('div');
@@ -1927,6 +1928,7 @@ export class TinyMceEditor extends Component {
                         editor.insertContent(`<sup><a href="#" id = "${res.data.id}" data-uri="${res.data.id}" data-footnoteelementid="${res.data.id}" class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>`);
                     }
                 }
+                this.footnoteGlossaryProgress = true;
                 this.toggleGlossaryandFootnotePopup(true, "Footnote", res.data.id, () => { this.toggleGlossaryandFootnoteIcon(true); });
                 this.saveContent()
             }
@@ -1962,6 +1964,7 @@ export class TinyMceEditor extends Component {
             return false
         }
         config.isCreateGlossary = true
+        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
         getGlossaryFootnoteId(this.props.elementId, "GLOSSARY", res => {
             let insertionText = ""
             if (res.data && res.data.id) {
@@ -1988,7 +1991,6 @@ export class TinyMceEditor extends Component {
         definition = document.querySelector('#glossary-editor-attacher > div > p') && `<p>${document.querySelector('#glossary-editor-attacher > div > p').innerHTML}</p>` || "<p><br/></p>"
         term = term.replace(/<br data-mce-bogus="1">/g, "")
         definition = definition.replace(/<br data-mce-bogus="1">/g, "")
-        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
         customEvent.subscribe('glossaryFootnoteSave', (elementWorkId) => {
             saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType, typeWithPopup, poetryField)
             customEvent.unsubscribe('glossaryFootnoteSave');
@@ -2684,6 +2686,15 @@ export class TinyMceEditor extends Component {
                 if (this.props.element && this.props.element.type === "element-blockfeature") {
                     this.removeBogusTagsFromDom();
                     this.removeAttributionBr();
+                }
+                if (this.footnoteGlossaryProgress &&  clickedX !== 0 && clickedY !== 0) {  
+                    this.footnoteGlossaryProgress = false;
+                    const timer = setInterval(()=>{
+                        if(!config.isGlossarySaving){
+                            clearInterval(timer)
+                            tinymce.activeEditor.selection.placeCaretAt(clickedX, clickedY) //Placing exact cursor position on clicking.
+                        }
+                    },10)
                 }
             })
         });

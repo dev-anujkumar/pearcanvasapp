@@ -19,37 +19,25 @@ float: right;
 position: relative;
 top: 0px;
 right: 8px;
-width: 15px;
-height: 15px;
+width: 8px;
 }
-.singleAssessment_Dropdown_activeDropdown.select{
+.singleAssessment_Dropdown_activeDropdown{
 width: 200px;
 float: left;
-border: 1px solid #c0c0c0;
-border-radius: 25px;
-background: #fff;
 padding: 8px;
 cursor: pointer;
-background-color: rgb(217, 228, 240);
 position: relative;
+border-radius: 18px;
+border: solid 1px silver;
+background-color: #ffffff;
 }
-.singleAssessment_Dropdown_activeDropdown.notselect{
-    width: 200px;
-    float: left;
-    border: 1px solid #c0c0c0;
-    border-radius: 25px;
-    background: #fff;
-    padding: 8px;
-    cursor: pointer;
-    position: relative;
-    }
 .singleAssessment_Dropdown_SelectLabel{
     width: 120px;
     float: left;
     font-size: 13px;
     color: #424242;
     position: relative;
-    top: 6px;
+    top: 6px; 
 }
 .singleAssessment_Dropdown_options{
     position: absolute;
@@ -82,4 +70,7 @@ position: relative;
 
 .puf-assessment-id{
     display: none;
+}
+.figureAssessment .default-img{
+    filter: invert(40%) sepia(0%) saturate(0%) hue-rotate(236deg) brightness(110%) contrast(89%);
 }

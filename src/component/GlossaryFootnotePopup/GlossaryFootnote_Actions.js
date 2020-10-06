@@ -503,9 +503,11 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         
         sendDataToIframe({'type': HideLoader,'message': { status: false }});  
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
+        config.isGlossarySaving = false;
     }).catch(err => {
         store.dispatch({type: ERROR_POPUP, payload:{show: true}})
         console.log("save glossary footnote API error : ", err);
+        config.isGlossarySaving = false;
         sendDataToIframe({'type': HideLoader,'message': { status: false }});
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
     })
