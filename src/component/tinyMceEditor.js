@@ -2689,7 +2689,12 @@ export class TinyMceEditor extends Component {
                 }
                 if (this.footnoteGlossaryProgress &&  clickedX !== 0 && clickedY !== 0) {  
                     this.footnoteGlossaryProgress = false;
-                    tinymce.activeEditor.selection.placeCaretAt(clickedX, clickedY) //Placing exact cursor position on clicking.
+                    const timer = setInterval(()=>{
+                        if(!config.isGlossarySaving){
+                            clearInterval(timer)
+                            tinymce.activeEditor.selection.placeCaretAt(clickedX, clickedY) //Placing exact cursor position on clicking.
+                        }
+                    },10)
                 }
             })
         });
