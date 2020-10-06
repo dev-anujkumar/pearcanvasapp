@@ -48,6 +48,7 @@ import {handleTCMData} from '../TcmSnapshots/TcmSnapshot_Actions.js';
 import CopyUrn from '../CopyUrn';
 import { OnCopyContext } from '../CopyUrn/copyUtil.js'
 import { openElmAssessmentPortal } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
+import {handleElmPortalEvents} from '../ElementContainer/AssessmentEventHandling.js';
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -104,6 +105,7 @@ class ElementContainer extends Component {
             btnClassName: '',
             isOpener: this.props.element.type === elementTypeConstant.OPENER
         })
+        handleElmPortalEvents();
         document.addEventListener('click',()=>{
             this.setState({showCopyPopup : false})
         });

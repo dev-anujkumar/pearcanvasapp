@@ -32,17 +32,6 @@ export default function assessmentReducer(state = INITIAL_STATE, action = INITIA
             console.log('action.payload', action.payload)
             return {
                 ...state,
-                // assessmentStatus: action.payload.assessmentStatus,
-                // entityUrn: action.payload.entityUrn,
-                // activeWorkUrn: action.payload.activeWorkUrn,
-                // latestAssessmentTitle: action.payload.assessmentTitle,
-                // [action.payload.activeWorkUrn]: {
-                //     ...state[action.payload.activeWorkUrn],
-                //     assessmentStatus: action.payload.assessmentStatus,
-                //     entityUrn: action.payload.entityUrn,
-                //     activeWorkUrn: action.payload.activeWorkUrn,
-                //     latestAssessmentTitle: action.payload.assessmentTitle,
-                // }
                 ... action.payload
             }
         case GET_ASSESSMENT_METADATA:
@@ -60,18 +49,9 @@ export default function assessmentReducer(state = INITIAL_STATE, action = INITIA
                     ...state[action.payload.currentWorkUrn],
                     latestWorkUrn: action.payload.latestWorkUrn,
                 },
-                // latestWorkUrn: action.payload.latestWorkUrn
             }
         case RESET_ASSESSMENT_STORE:
             return {}
-            // return {
-            //     ...state,
-            //     entityUrn: "",
-            //     activeWorkUrn: "",
-            //     latestWorkUrn: "",
-            //     assessmentStatus: "",
-            //     latestAssessmentTitle:""
-            // }
         default:
             return state
     }
