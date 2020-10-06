@@ -9,6 +9,10 @@
     overflow: auto;
 }
 
+.slate-wrapper.popup-slate {
+    height: calc(100% - 115px);
+}
+
 #link-notification {
     position: fixed;
     bottom: 5%;

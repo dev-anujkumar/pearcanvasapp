@@ -148,6 +148,7 @@ const findElementType = (element, index) => {
                             ...elementDataBank[element.type][element.figuretype][assessmentFormat]
                         }
                         element.figuredata.elementdata.assessmentformat = assessmentFormat 
+                        elementType["usageType"]= element.figuredata.elementdata.usagetype ? element.figuredata.elementdata.usagetype : ""
                         break;
                 }
                 break;
@@ -343,16 +344,17 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                 })
             }
             else if(versioning && versioning.type==="popup"){
-                config.slateManifestURN= Object.values(slateData.data)[0].id
                 let parentData = getState().appStore.slateLevelData;
                 let newslateData = JSON.parse(JSON.stringify(parentData));
+                delete Object.assign(newslateData, {[Object.values(slateData.data)[0].id]: newslateData[config.slateManifestURN] })[config.slateManifestURN];     
+                config.slateManifestURN= Object.values(slateData.data)[0].id
                 newslateData[config.slateManifestURN] = Object.values(slateData.data)[0];
                 return dispatch({
                     type: AUTHORING_ELEMENT_UPDATE,
                     payload: {
                         slateLevelData: newslateData
                     }
-                })
+                })       
             }
 			else {
                 config.slateManifestURN= Object.values(slateData.data)[0].id
