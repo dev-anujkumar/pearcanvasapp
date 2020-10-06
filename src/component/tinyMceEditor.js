@@ -2238,6 +2238,8 @@ export class TinyMceEditor extends Component {
                 }
 
                 let termText = tinyMCE.$("#" + currentId) && tinyMCE.$("#" + currentId).html();
+                //PCAT-9077 - duplicate toolbar issue on element creation
+                tinymce.remove()
                 tinymce.init(this.editorConfig).then((d) => {
                     if (this.editorRef.current) {
                         if (termText && termText.length && this.props.element.type === 'figure') {
@@ -2611,7 +2613,7 @@ export class TinyMceEditor extends Component {
              * Using timeout - init tinymce instance only when default events stack becomes empty
              */
             currentTarget.focus();
-            let termText = newCurrentTargetNode && newCurrentTargetNode.html();
+            let termText = newCurrentTargetNode && newCurrentTargetNode.html();      
             tinymce.init(this.editorConfig).then(() => {
                 if (termText && termText.length && 'type' in this.props.element && this.props.element.type !== 'poetry' && this.props.element.type !== 'element-list' &&
                     !(this.props.element.type === "showhide" && this.props.currentElement.type === 'element-list')) {
