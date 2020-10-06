@@ -574,7 +574,9 @@ class ElementContainer extends Component {
                     html = html.replace(/(<sup><\/sup>)|(<sup><br><\/sup>)/g, "<br>");
                     html = html.replace(/<br data-mce-bogus="1">/g, '<br>')
                     tempDiv.innerHTML = html
-                    previousElementData.html.text = removeUnoClass(previousElementData.html.text) //BG-3278 (support to be improved)
+                    if (!isPosterTextSelected) {
+                        previousElementData.html.text = removeUnoClass(previousElementData.html.text) //BG-3278 (support to be improved)
+                    }
                 }
                 html =html.replace(/(\r\n|\n|\r)/gm, '')
                 previousElementData.html.text= previousElementData.html.text.replace(/<br data-mce-bogus="1">/g, "<br>").replace(/(\r\n|\n|\r)/gm, '');
