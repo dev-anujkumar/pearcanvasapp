@@ -152,13 +152,12 @@ class AssessmentSlateData extends Component {
 
     /*** @description This function is used to open Version update Popup */
     updateElm = (event) => {
+        this.toggleUpdatePopup(true, event);
         event.stopPropagation();
-        this.toggleUpdatePopup(true, event)
     }
 
     /*** @description This function is used to render Version update Popup */
     showCustomPopup = () => {
-
         if (this.state.showUpdatePopup) {
             this.showCanvasBlocker(true);
             return (
@@ -193,10 +192,8 @@ class AssessmentSlateData extends Component {
         let updateSuccess = document.getElementById('link-notification');
             updateSuccess.innerText = ELM_NEW_VERSION_UPDATE;
             updateSuccess.classList.add('show-update')
-            // updateSuccess.style.display = "block";
         setTimeout(() => {
             updateSuccess.classList.remove('show-update')
-            // updateSuccess.style.display = "none";
             updateSuccess.innerText = "";
         }, 4000);
     }
@@ -370,12 +367,12 @@ class AssessmentSlateData extends Component {
 
         this.setState({
             activeAssessmentUsageType: usageType,
-            openUsageDropdown:false,
-            openAssessmentDropdown:false
+            openUsageDropdown: false,
+            openAssessmentDropdown: false
         });
-        if(this.props.getAssessmentData && this.props.getAssessmentDataPopup === false && this.state.changeLearningData === false){
-        this.props.handleAssessmentBlur(usageType)
-    }
+        if (this.props.getAssessmentData && this.props.getAssessmentDataPopup === false && this.state.changeLearningData === false) {
+            this.props.handleAssessmentBlur(usageType)
+        }
 
     }
 
@@ -526,7 +523,7 @@ class AssessmentSlateData extends Component {
             </div>
             {this.setUsageType(assessmentUsageType)}
             <div className="clr"></div>
-            {this.showElmVersionStatus()}
+            {this.state.activeAssessmentType == PUF && this.showElmVersionStatus()}
             <div className="clr"></div>
         </div>
         return assessmentSlate;

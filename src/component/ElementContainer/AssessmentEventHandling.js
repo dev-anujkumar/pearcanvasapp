@@ -29,7 +29,7 @@ export const handleElmPortalEvents = () => {
                 console.log('event.origin',event.origin)
                 if (data) {//event.origin == config.ELM_PORTAL_URL && event.origin == 'https://127.0.0.1:3001' && 
                     console.log('IF behavior!!!!!',data);
-                    currentWorkUrn &&  store.dispatch(checkAssessmentStatus(currentWorkUrn, 'fromElmPortal'));
+                    currentWorkUrn.trim() != "" &&  store.dispatch(checkAssessmentStatus(currentWorkUrn, 'fromElmPortal'));
                     window.removeEventListener('message', elmAssessmentUpdate, false);
                 } else {
                     console.log('else case!!!!!');

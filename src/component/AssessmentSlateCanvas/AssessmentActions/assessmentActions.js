@@ -77,8 +77,8 @@ export const checkAssessmentStatus = (workUrn, calledFrom) => (dispatch) => {
                     }
                 }
             })
-            if (assessmentStatus == 'final' && calledFrom && calledFrom!='fromUpdate') {
-                await dispatch(getLatestAssessmentVersion(res.data.entityUrn,workUrn))
+            if (assessmentStatus == 'final' && calledFrom && calledFrom != 'fromUpdate') {
+                await dispatch(getLatestAssessmentVersion(res.data.entityUrn, workUrn))
             }
         }
     }).catch(() => {
@@ -94,7 +94,7 @@ export const checkAssessmentStatus = (workUrn, calledFrom) => (dispatch) => {
 /**
  * This action creator is used to fetch all the versions of the assessment/assessment-item
  */
-export const getLatestAssessmentVersion = (entityUrn,workUrn) => (dispatch) => {
+export const getLatestAssessmentVersion = (entityUrn, workUrn) => (dispatch) => {
     let url = `${config.ASSESSMENT_ENDPOINT}entity/${entityUrn}/versions`;
     return axios.get(url, {
         headers: {
@@ -148,21 +148,17 @@ export const openElmAssessmentPortal = (assessmentData) => async (dispatch) => {
         "projectUrn": projDURN,
         "containerUrn": containerURN
     })
-    const resp = await fetch(url, {
-        method: 'POST',
+    return axios.post(url, requestPayload, {
         headers: {
             "Accept": "application/json",
             "Content-Type": "application/json",
             "PearsonSSOSession": config.ssoToken,
-            // "credentials": 'include'
-            withCredentials: true,
-        },
-        body: requestPayload
-    })
-    try {
-        const res = await resp
+            "withCredentials": true,
+        }
+    }
+    ).then(res => {
         console.log('Successfully Navigated to Elm Assessment Portal!!!', res)
-    } catch (error) {
+    }).catch(error => {
         console.log('Unable to Launch Elm Assessment Env>>>', error)
         dispatch({
             type: ELM_PORTAL_API_ERROR,
@@ -172,5 +168,5 @@ export const openElmAssessmentPortal = (assessmentData) => async (dispatch) => {
                 isElmApiError: 'elm-api-error'
             }
         })
-    }
+    })
 }

@@ -105,7 +105,7 @@ class ElementContainer extends Component {
             btnClassName: '',
             isOpener: this.props.element.type === elementTypeConstant.OPENER
         })
-        handleElmPortalEvents();
+     //   handleElmPortalEvents();
         document.addEventListener('click',()=>{
             this.setState({showCopyPopup : false})
         });
