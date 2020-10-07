@@ -149,6 +149,11 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
             tcmSnapshotUtility.fetchElementWipData(bodymatter1, "1-1", 'element-list')
             expect(spyFunction).toHaveBeenCalledWith(bodymatter1, "1-1", 'element-list')
         })
+        it('Test-3.7-Function--3--fetchElementWipData - figure in slate', () => {
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'fetchElementWipData');
+            tcmSnapshotUtility.fetchElementWipData(bodymatter1, "3", 'figure')
+            expect(spyFunction).toHaveBeenCalledWith(bodymatter1, "3", 'figure')
+        })
     });
     describe('Test-4-Function--4--fetchParentData', () => {
         let manifest1 = "urn:pearson:manifest:90b59454-2e5d-46f2-968f-fd1d636d0edb";
@@ -343,4 +348,33 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
             expect(spyFunction).toHaveBeenCalledWith(bodymatter, parentElement, type);
         })
     });
+    describe('Test-7-Figure snapshots helper functions', () => {
+        const { setSemanticsSnapshotsData } = tcmTestData
+        it('Test-7.1-Function--1--setFigureElementContentSnapshot - for figure image', () => {
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'setFigureElementContentSnapshot');
+            tcmSnapshotUtility.setFigureElementContentSnapshot(setSemanticsSnapshotsData.figure);
+            expect(spyFunction).toHaveBeenCalledWith(setSemanticsSnapshotsData.figure);
+        })
+        it('Test-7.2-Function--1--setFigureElementContentSnapshot - for figure audio', () => {
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'setFigureElementContentSnapshot');
+            tcmSnapshotUtility.setFigureElementContentSnapshot(setSemanticsSnapshotsData.audio);
+            expect(spyFunction).toHaveBeenCalledWith(setSemanticsSnapshotsData.audio);
+        })
+        it('Test-7.3-Function--1--setFigureElementContentSnapshot - for figure video', () => {
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'setFigureElementContentSnapshot');
+            tcmSnapshotUtility.setFigureElementContentSnapshot(setSemanticsSnapshotsData.video);
+            expect(spyFunction).toHaveBeenCalledWith(setSemanticsSnapshotsData.video);
+        })
+        it('Test-7.3-Function--1--prepareFigureElementSnapshots - for figure', () => {
+            let actionStatus = {
+                action: "update",
+                status: "pending",
+                fromWhere: "update"
+            },
+            index = "2-1";
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'prepareFigureElementSnapshots');
+            tcmSnapshotUtility.prepareFigureElementSnapshots(setSemanticsSnapshotsData.figure, actionStatus, index);
+            expect(spyFunction).toHaveBeenCalledWith(setSemanticsSnapshotsData.figure, actionStatus, index);
+        })
+    })
 })
