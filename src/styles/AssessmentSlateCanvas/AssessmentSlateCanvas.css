@@ -122,9 +122,6 @@
     width: 25%;
     font-weight: normal;
   }
-  .slate_fetch_canvas .assessment-label .required{
-    display:none;
-  }
   .slate_fetch_canvas .slate_assessment_type_dropdown{
     margin-left: 0;
   }
