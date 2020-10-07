@@ -316,7 +316,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             document.getElementsByClassName("slate-tag-icon")[0].classList.remove("disable");
          }     
         let newVersionManifestId=Object.values(slateData.data)[0].id
-        if(config.slateManifestURN !== newVersionManifestId && slateData.data[newVersionManifestId].type === 'manifest' ){
+        if(config.slateManifestURN !== newVersionManifestId && (slateData.data[newVersionManifestId].type === 'manifest' || slateData.data[newVersionManifestId].type === "chapterintro")){
             config.slateManifestURN = newVersionManifestId
             manifestURN = newVersionManifestId
         }
@@ -952,7 +952,8 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
                 parentElement: parentElement,
                 asideData: getState().appStore.asideData,
                 parentUrn: getState().appStore.parentUrn,
-                metaDataField: _requestData.metaDataField
+                metaDataField: _requestData.metaDataField,
+                isMetaFieldExist: true
             };
             let slateData = {
                 currentParentData:newParentData,
