@@ -23,6 +23,7 @@ export const LEARNOSITY = 'learnosity'
 
 /*--------------- Interactive Format Constants -------------------*/
 export const ELM_INT = "mmi-elm"
+export const MMI = 'mmi'
 
 /*--------------- Assessment Error Messages -------------------*/
 export const ERROR_MESSAGE_ELM_RESOURCE = "This project has no Elm assessments currently. Please add an Elm assessment to this project first."

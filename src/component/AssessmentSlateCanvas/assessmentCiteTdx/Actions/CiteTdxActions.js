@@ -1,5 +1,5 @@
 import config from '../../../../config/config';
-import { FULL_ASSESSMENT_CITE, FULL_ASSESSMENT_TDX } from '../../AssessmentSlateConstants';
+import { CITE, TDX , MMI} from '../../AssessmentSlateConstants';
 import axios from 'axios';
 
 /**
@@ -13,10 +13,10 @@ export const getCiteTdxData = (assessmentType, assessmentTitle, filterUUID, page
 
     let searchTitle = (assessmentTitle == undefined || assessmentTitle == '') ? '' : assessmentTitle;
     searchTitle= specialCharacterEncode(searchTitle)
-    var assessmentDispatchType = (assessmentType === FULL_ASSESSMENT_CITE)? 'GET_CITE_RESOURCES': (assessmentType === FULL_ASSESSMENT_TDX)?'GET_TDX_RESOURCES': 'GET_MMI_RESOURCES';
+    var assessmentDispatchType = (assessmentType === CITE)? 'GET_CITE_RESOURCES': (assessmentType === TDX)?'GET_TDX_RESOURCES': 'GET_MMI_RESOURCES';
     let pageSize=25;
 
-    let url = `${config.ASSESSMENT_ENDPOINT}assessments/v3/search?taxonomicTypes=${assessmentType === FULL_ASSESSMENT_CITE ? `CITE` : assessmentType === FULL_ASSESSMENT_TDX? `TDX` :'MMI'}&status=approved&name=${searchTitle}&page=${startPage}&pageSize=${pageSize}&sortAttribute=${sortBy}&sortOrder=${sortOrder}&collation.caseSensitivity=false&groupByEntity=true`;
+    let url = `${config.ASSESSMENT_ENDPOINT}assessments/v3/search?taxonomicTypes=${assessmentType === CITE ? CITE.toUpperCase() : assessmentType === TDX? TDX.toUpperCase() :MMI.toUpperCase()}&status=approved&name=${searchTitle}&page=${startPage}&pageSize=${pageSize}&sortAttribute=${sortBy}&sortOrder=${sortOrder}&collation.caseSensitivity=false&groupByEntity=true`;
 
     return axios.get(url, {
         headers: {
@@ -91,9 +91,9 @@ export const filterCiteTdxData = (assessmentType, assessmentTitle, filterUUID) =
     let url = `${config.ASSESSMENT_ENDPOINT}assessment/v2/urn:pearson:work:${filterUUID}`;
     
     var filterData = { assessments: [] };
-    var assessmentDispatchtype = (assessmentType === FULL_ASSESSMENT_CITE)? 'GET_CITE_RESOURCES': (assessmentType === FULL_ASSESSMENT_TDX)?'GET_TDX_RESOURCES': 'GET_MMI_RESOURCES';
+    var assessmentDispatchtype = (assessmentType === CITE)? 'GET_CITE_RESOURCES': (assessmentType === TDX)?'GET_TDX_RESOURCES': 'GET_MMI_RESOURCES';
 
-    var typeAssessment = (assessmentType === FULL_ASSESSMENT_CITE)? 'CITE': (assessmentType === FULL_ASSESSMENT_TDX)?'TDX': 'MMI';
+    var typeAssessment = (assessmentType === CITE)? CITE.toUpperCase() : (assessmentType === TDX)? TDX.toUpperCase(): MMI.toUpperCase();
 
     return axios.get(url, {
         headers: {
