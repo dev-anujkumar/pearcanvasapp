@@ -24,7 +24,9 @@ const {
     SLATE_LINK,
     AP_TYPE,
     ASIDE,
-    WORKED_EXAMPLE
+    WORKED_EXAMPLE,
+    FIGURE,
+    MULTI_COLUMN
 }
     = TcmConstants;
 
@@ -65,6 +67,16 @@ export const setSemanticsSnapshots = async (element,actionStatus,index) => {
             assetPopoverList = element.elementdata && element.elementdata.authoredtext && element.elementdata.authoredtext.internallinks ? element.elementdata.authoredtext.internallinks : [];
             assetPopoverSnap = await prepareAssetPopoverSnapshotContent(assetPopoverList,index,actionStatus)
             break;
+        case FIGURE:
+            glossarySnap = []
+            assetPopoverSnap = []
+            footnoteWipList = { 
+                subtitle: element.subtitle ? element.subtitle.footnotes : [], 
+                caption: element.captions ? element.captions.footnotes : [], 
+                credit: element.credits ? element.credits.footnotes : []
+            }
+            footnoteSnap = prepareFigureFootnoteSnapshotContent(actionStatus, footnoteWipList, footnoteHtmlList)
+            break;
         default:
             glossarySnap = [];
             footnoteSnap = [];
@@ -77,6 +89,21 @@ export const setSemanticsSnapshots = async (element,actionStatus,index) => {
         assetPopoverSnapshot: assetPopoverSnap
     }
     return semanticSnapshots
+}
+
+/**
+ * @function prepareFigureFootnoteSnapshotContent
+ * @description-This function is to prepare snapshot content for each Glossary entry
+ * @param {String} status - status of the action performed
+ * @param {Array} footnoteList - List of Footnote entries
+ * @returns {Array} All Footnote Snapshots for given element 
+*/
+const prepareFigureFootnoteSnapshotContent = (actionStatus, footnoteWipList, footnoteHtmlList) => {
+    return [
+            ...prepareFootnoteSnapshotContent(actionStatus, footnoteWipList.subtitle, footnoteHtmlList),
+            ...prepareFootnoteSnapshotContent(actionStatus, footnoteWipList.caption, footnoteHtmlList),
+            ...prepareFootnoteSnapshotContent(actionStatus, footnoteWipList.credit, footnoteHtmlList)
+        ]
 }
 
 /** 
@@ -232,6 +259,9 @@ export const fetchElementsTag = (element,metadataField) => {
         case BLOCKFEATURE:
             eleSubType = element.elementdata.type
             break;
+        case FIGURE:
+            eleSubType = element.figuretype
+            break;
         default:
             eleSubType = ""
             break;
@@ -382,6 +412,25 @@ const setElementTag = {
                 childTag: ""
             },
         }
+    },
+    "figure": {
+        subtype: {
+            'image': {
+                parentTag: "Fg"
+            },
+            'table': {
+                parentTag: "TB"
+            },
+            'mathImage': {
+                parentTag: "EQ"
+            },
+            'audio': {
+                parentTag: "AUD" 
+            },
+            'video': {
+                parentTag: "VID" 
+            }
+        }
     }
 }
 
@@ -392,4 +441,49 @@ const setMetadataType = {
         'formattedSubtitle': 'popup_label',
         'formattedTitleOnly': 'popup_label'
     }
+}
+
+/**
+ * Generates WIP data for figure
+ * @param {*} bodymatter Slate bodymatter data
+ * @param {*} index index of the element
+ */
+export const generateWipDataForFigure = (bodymatter, index) => {
+    const eleIndex =  index.split("-");
+    let wipData
+    switch(eleIndex.length){
+        case 2:
+            if(bodymatter[eleIndex[0]].type === FIGURE) {
+                wipData = bodymatter[eleIndex[0]]
+            }
+            else if (bodymatter[eleIndex[0]].type === ELEMENT_ASIDE) {
+                wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]]
+            }
+            break;
+        case 3:
+            if(bodymatter[eleIndex[0]].type === FIGURE) {
+                wipData = bodymatter[eleIndex[0]]
+            }
+            else if (bodymatter[eleIndex[0]].type === ELEMENT_ASIDE) { /** Aside and WE */
+                if (bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]].type === FIGURE) { /**Aside or WE-head */
+                    wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]]
+                }
+                else { /** WE body section */
+                    wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]].contents.bodymatter[eleIndex[2]]
+                }
+            }
+            else if (bodymatter[eleIndex[0]].type === MULTI_COLUMN) { /** Multi-column */
+                wipData = bodymatter[eleIndex[0]].groupeddata.bodymatter[eleIndex[1]].groupdata.bodymatter[eleIndex[2]]
+            }
+            break;
+        case 4:
+            if (bodymatter[eleIndex[0]].type === ELEMENT_ASIDE) { /** WE */
+                wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]].contents.bodymatter[eleIndex[2]]
+            }
+            else if (bodymatter[eleIndex[0]].type === MULTI_COLUMN) { /** Multi-column */
+                wipData = bodymatter[eleIndex[0]].groupeddata.bodymatter[eleIndex[1]].groupdata.bodymatter[eleIndex[2]]
+            }
+            break;
+    }
+    return wipData
 }

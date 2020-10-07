@@ -16,7 +16,7 @@ jest.mock("../../../src/component/TcmSnapshots/TcmSnapshot_Actions.js", () => {
 
 describe('-----------------------Test ElementSnapshot_Utility Functions-----------------------', () => {
     describe('Test-1-Function--1--setSemanticsSnapshots', () => {
-        const { stanza, paragraph, blockquote } = tcmTestData.setSemanticsSnapshotsData
+        const { stanza, paragraph, blockquote, figure } = tcmTestData.setSemanticsSnapshotsData
         let actionStatus = {
             action:"create",
             status:"accepted",
@@ -45,9 +45,15 @@ describe('-----------------------Test ElementSnapshot_Utility Functions---------
             expect(spyFunction).toHaveBeenCalledWith(blockquote,actionStatus);
 
         })
+        it('Test-1.5-Function--1--setSemanticsSnapshots - figure', () => {
+            const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'setSemanticsSnapshots');
+            elementSnapshotUtilityFn.setSemanticsSnapshots(figure, actionStatus );
+            expect(spyFunction).toHaveBeenCalledWith(figure, actionStatus);
+
+        })
     });
     describe('Test-2-Function--2--fetchElementsTag', () => {
-        const { paragraph, heading, list, blockquote, aside, workedexample, stanza } = tcmTestData.fetchElementTagData
+        const { paragraph, heading, list, blockquote, aside, workedexample, stanza, figure } = tcmTestData.fetchElementTagData
         it('Test-2.1-Function--2--fetchElementsTag - Paragraph', () => {
             const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'fetchElementsTag');
             elementSnapshotUtilityFn.fetchElementsTag(paragraph)
@@ -83,6 +89,51 @@ describe('-----------------------Test ElementSnapshot_Utility Functions---------
             elementSnapshotUtilityFn.fetchElementsTag(stanza)
             expect(spyFunction).toHaveReturnedWith('ST')
         })
+        it('Test-2.8-Function--2--fetchElementsTag - figure', () => {
+            const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'fetchElementsTag');
+            elementSnapshotUtilityFn.fetchElementsTag(figure)
+            expect(spyFunction).toHaveReturnedWith('Fg')
+        })
     });
-    
+    describe('Test-3-Function--3--generateWipDataForFigure', () => {
+        const { slate1, slate2 } = tcmTestData
+        const manifestUrn = "urn:pearson:manifest:90b59454-2e5d-46f2-968f-fd1d636d0edb"
+        const manifestUrn2 = "urn:pearson:manifest:2ec00412-840e-40bf-ae11-d399c5067c9a"
+        it('Test-3.1--generateWipDataForFigure - figure - slate', () => {
+            const { bodymatter } = slate1[manifestUrn].contents
+            const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'generateWipDataForFigure');
+            elementSnapshotUtilityFn.generateWipDataForFigure(bodymatter, "3-1")
+            expect(spyFunction).toHaveReturnedWith(bodymatter[3])
+        })
+        it('Test-3.2--generateWipDataForFigure - figure - in aside', () => {
+            const { bodymatter } = slate1[manifestUrn].contents
+            const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'generateWipDataForFigure');
+            elementSnapshotUtilityFn.generateWipDataForFigure(bodymatter, "2-1")
+            expect(spyFunction).toHaveReturnedWith(bodymatter[2].elementdata.bodymatter[1])
+        })
+        it('Test-3.2--generateWipDataForFigure - figure - in WE', () => {
+            const { bodymatter } = slate1[manifestUrn].contents
+            const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'generateWipDataForFigure');
+            elementSnapshotUtilityFn.generateWipDataForFigure(bodymatter, "2-2-2")
+            expect(spyFunction).toHaveReturnedWith(bodymatter[2].elementdata.bodymatter[2].contents.bodymatter[2])
+        })
+        it('Test-3.3--generateWipDataForFigure - figure - in slate - footnote updation', () => {
+            const { bodymatter } = slate1[manifestUrn].contents
+            const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'generateWipDataForFigure');
+            elementSnapshotUtilityFn.generateWipDataForFigure(bodymatter, "3-2-2")
+            expect(spyFunction).toHaveReturnedWith(bodymatter[3])
+        })
+        it('Test-3.4--generateWipDataForFigure - figure - in Multi Column', () => {
+            const { bodymatter } = slate2[manifestUrn2].contents
+            const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'generateWipDataForFigure');
+            elementSnapshotUtilityFn.generateWipDataForFigure(bodymatter, "3-0-0")
+            expect(spyFunction).toHaveReturnedWith(bodymatter[3].groupeddata.bodymatter[0].groupdata.bodymatter[0])
+        })
+        it('Test-3.5--generateWipDataForFigure - figure - in Multi Column - footnote updation', () => {
+            const { bodymatter } = slate2[manifestUrn2].contents
+            const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'generateWipDataForFigure');
+            elementSnapshotUtilityFn.generateWipDataForFigure(bodymatter, "3-0-0-1")
+            expect(spyFunction).toHaveReturnedWith(bodymatter[3].groupeddata.bodymatter[0].groupdata.bodymatter[0])
+        })
+    })
 });
