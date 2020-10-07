@@ -944,7 +944,8 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
                 parentElement: parentElement,
                 asideData: getState().appStore.asideData,
                 parentUrn: getState().appStore.parentUrn,
-                metaDataField: _requestData.metaDataField
+                metaDataField: _requestData.metaDataField,
+                isMetaFieldExist: true
             };
             let slateData = {
                 currentParentData:newParentData,
