@@ -22,7 +22,7 @@ let expectedState1 = {
         activeWorkUrn: "urn:pearson:work:8fb703b9-4e21-4dac-968e-baf9323467af",
         assessmentStatus: "final",
         assessmentTitle: "Quiz: 7.4 Developing Relationships",
-        entityUrn: "urn:pearson:entity:c785c0f6-6fc7-4f51-855c-0677738a9d86"
+        assessmentEntityUrn: "urn:pearson:entity:c785c0f6-6fc7-4f51-855c-0677738a9d86"
     }
 }
 let expectedState2 = {
@@ -31,7 +31,7 @@ let expectedState2 = {
         activeWorkUrn: "urn:pearson:work:8fb703b9-4e21-4dac-968e-baf9323467af",
         assessmentStatus: "final",
         assessmentTitle: "Quiz: 7.4 Developing Relationships",
-        entityUrn: "urn:pearson:entity:c785c0f6-6fc7-4f51-855c-0677738a9d86",
+        assessmentEntityUrn: "urn:pearson:entity:c785c0f6-6fc7-4f51-855c-0677738a9d86",
         latestWorkUrn: "urn:pearson:work:ce9b7d24-fa62-4b1c-9e3f-d08a9dd5b8a6"
     }
 }

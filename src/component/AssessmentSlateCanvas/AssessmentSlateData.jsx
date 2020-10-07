@@ -181,7 +181,8 @@ class AssessmentSlateData extends Component {
     /*** @description This function is used to update elm assessment after click on update from Version update Popup */
     updateElmAssessment = () => {
         this.toggleUpdatePopup(false, event);
-        this.props.checkElmAssessmentStatus(this.props.assessmentReducer.latestWorkUrn, 'fromUpdate');
+        this.showCanvasBlocker(false);
+        this.props.checkElmAssessmentStatus(this.props.assessmentReducer[this.props.assessmentSlateObj.assessmentId].latestWorkUrn, 'fromUpdate');
         const { latestWorkUrn, assessmentTitle } = this.props.assessmentReducer[this.props.assessmentSlateObj.assessmentId]
         let updatedElmObj = {
             id: latestWorkUrn,
@@ -191,11 +192,14 @@ class AssessmentSlateData extends Component {
         this.props.addPufAssessment(updatedElmObj, this.state.activeAssessmentType);
         let updateSuccess = document.getElementById('link-notification');
             updateSuccess.innerText = ELM_NEW_VERSION_UPDATE;
-            updateSuccess.classList.add('show-update')
+            updateSuccess.style.display='block';
+            // updateSuccess.classList.add('show-update')
         setTimeout(() => {
-            updateSuccess.classList.remove('show-update')
+            // updateSuccess.classList.remove('show-update')
             updateSuccess.innerText = "";
-        }, 4000);
+            updateSuccess.style.display='none';
+        }, 2000);
+        this.props.handleCanvasBlocker.disableHeader(false);
     }
 
     /**
@@ -408,7 +412,6 @@ class AssessmentSlateData extends Component {
         const { activeAssessmentType, showElmComponent, showCiteTdxComponent, changeLearningData, activeAssessmentUsageType } = this.state;
         let slatePlaceholder = assessmentSlateObj && activeAssessmentType && this.setAssessmentPlaceholder(activeAssessmentType, assessmentSlateObj)
         let assessmentSlateJSX;
-
         if ((activeAssessmentType === PUF || activeAssessmentType === LEARNOSITY) && showElmComponent === true) {
             return <RootElmComponent activeAssessmentType={activeAssessmentType} closeElmWindow={() => this.closeElmWindow()} activeUsageType={activeAssessmentUsageType} elementType={'assessment'} addPufFunction={this.addPufAssessment}/>
         } else if ((activeAssessmentType === CITE || activeAssessmentType === TDX) && showCiteTdxComponent === true) {
@@ -445,8 +448,8 @@ class AssessmentSlateData extends Component {
         if (assessmentStatus == 'final' && (latestWorkUrn != activeWorkUrn)) {
             updateDiv = <div className='elm-update-button' onClick={this.updateElm}><b className='elm-update-button-text'>Update Available</b></div>
         } else {
-            let approveText = assessmentStatus == 'wip' ? "Unapproved" :  assessmentStatus == 'final' ? "Approved" : ""
-            let approveIconClass = assessmentStatus == 'wip' ? "disable" : assessmentStatus == 'final' ? "enable" : ""
+            const approveText = assessmentStatus == 'final' ? "Approved" : "Unapproved"
+            const approveIconClass = assessmentStatus == 'final' ? "enable" : "disable"
             updateDiv = <div className="elm-status-div"><span className={"approved-button " + approveIconClass}>{approvedIcon}</span><p className={"approved-button-text " + approveIconClass}>{approveText}</p></div>
         }
         return updateDiv
@@ -522,9 +525,9 @@ class AssessmentSlateData extends Component {
                 </div>
             </div>
             {this.setUsageType(assessmentUsageType)}
-            <div className="clr"></div>
+            {/* <div className="clr"></div> */}
             {this.state.activeAssessmentType == PUF && this.showElmVersionStatus()}
-            <div className="clr"></div>
+            {/* <div className="clr"></div> */}
         </div>
         return assessmentSlate;
     }
@@ -548,7 +551,7 @@ AssessmentSlateData.displayName = "AssessmentSlateData"
 const mapStateToProps = state => {
     return {
         usageTypeList: state.appStore.usageTypeListData.usageTypeList,
-        assessmentReducer: state.assessmentReducer,
+        assessmentReducer: state.assessmentReducer
     };
 };
 

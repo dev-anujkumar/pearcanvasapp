@@ -62,23 +62,23 @@ export const checkAssessmentStatus = (workUrn, calledFrom) => (dispatch) => {
             "ApiKey": config.STRUCTURE_APIKEY,
             "PearsonSSOSession": config.ssoToken
         }
-    }).then(async (res) => {
+    }).then( (res) => {
         if (res && res.data && res.data.status) {
             let statusString = res.data.status.split("/")
             let assessmentStatus = statusString[statusString.length - 1]
-            await dispatch({
+            dispatch({
                 type: SET_ASSESSMENT_STATUS,
                 payload: {
                     [workUrn]: {
                         assessmentStatus: assessmentStatus,
-                        entityUrn: res.data.entityUrn,
+                        assessmentEntityUrn: res.data.entityUrn,
                         activeWorkUrn: res.data.versionUrn,
                         assessmentTitle: res.data.name ? res.data.name : res.data.defaultTitle ? res.data.defaultTitle : 'Elm assessment'
                     }
                 }
             })
             if (assessmentStatus == 'final' && calledFrom && calledFrom != 'fromUpdate') {
-                await dispatch(getLatestAssessmentVersion(res.data.entityUrn, workUrn))
+                 dispatch(getLatestAssessmentVersion(res.data.entityUrn, workUrn))
             }
         }
     }).catch(() => {
@@ -138,7 +138,7 @@ const dispatchVersionError = (dispatch) => {
 /**
  * This action creator is used to launch Elm Assessment Portal from Cypress
  */
-export const openElmAssessmentPortal = (assessmentData) => async (dispatch) => {
+export const openElmAssessmentPortal = (assessmentData) => (dispatch) => {
     let { assessmentWorkUrn, projDURN, containerURN, assessmentItemWorkUrn } = assessmentData
     let url = `${config.ELM_PORTAL_URL}/launch/editor/assessment/${assessmentWorkUrn}/editInPlace`;
     if (assessmentItemWorkUrn.trim() != "") {
@@ -159,7 +159,7 @@ export const openElmAssessmentPortal = (assessmentData) => async (dispatch) => {
     ).then(res => {
         console.log('Successfully Navigated to Elm Assessment Portal!!!', res)
     }).catch(error => {
-        console.log('Unable to Launch Elm Assessment Env>>>', error)
+        console.error('Unable to Launch Elm Assessment Env>>>', error)
         dispatch({
             type: ELM_PORTAL_API_ERROR,
             payload: {

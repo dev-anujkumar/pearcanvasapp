@@ -213,14 +213,6 @@ class PopUp extends React.Component {
         }
     }
 
-    showElmHeader = () => {
-        return (
-            <>
-                <div className={`${this.props.isElmUpdatePopup ? 'elm-header' : ""}`}>{this.props.elmHeaderText}</div>
-                <hr className={`${this.props.isElmUpdatePopup ? 'elm-header-bottom' : ""}`} />
-            </>
-        )
-    }
     render() {
         const { active, assessmentClass, isElmApiError } = this.props;
         return (
@@ -230,7 +222,6 @@ class PopUp extends React.Component {
                         <div tabIndex="0" className={`model-popup ${assessmentClass}`} ref={this.modelRef}>
                             <div className={`modal-content ${isElmApiError ? isElmApiError : ''} ${assessmentClass}`}>
                                 {this.renderCloseSymbol(this.props)}
-                                {/* {this.props.isElmUpdatePopup && this.showElmHeader()} */}
                                 {this.renderDialogText(this.props)}
                                 <div className={`dialog-input ${assessmentClass}`}>
                                     {this.renderInputBox(this.props)}

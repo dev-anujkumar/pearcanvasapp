@@ -105,7 +105,7 @@ class ElementContainer extends Component {
             btnClassName: '',
             isOpener: this.props.element.type === elementTypeConstant.OPENER
         })
-     //   handleElmPortalEvents();
+        //   handleElmPortalEvents();
         document.addEventListener('click',()=>{
             this.setState({showCopyPopup : false})
         });
@@ -1356,7 +1356,7 @@ class ElementContainer extends Component {
         let btnClassName = this.state.btnClassName;
         let bceOverlay = "";
         let elementOverlay = '';
-        let showEditButton = element.type == elementTypeConstant.ASSESSMENT_SLATE && element.elementdata && element.elementdata.assessmentformat == 'puf' ? true : false;
+        let showEditButton = element.type == elementTypeConstant.ASSESSMENT_SLATE && element.elementdata && element.elementdata.assessmentformat == 'puf' && element.elementdata.assessmentid ? true : false;
         if (!hasReviewerRole() && this.props.permissions && !(this.props.permissions.includes('access_formatting_bar')||this.props.permissions.includes('elements_add_remove')) ) {
             elementOverlay = <div className="element-Overlay disabled" onClick={() => this.handleFocus()}></div>
         }
