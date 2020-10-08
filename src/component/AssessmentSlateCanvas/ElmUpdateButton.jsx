@@ -11,7 +11,6 @@ import './../../styles/AssessmentSlateCanvas/AssessmentSlateCanvas.css';
 const ElmUpdateButton = (props) => {
 
     const { elmAssessment, updateElmVersion } = props;
-    console.log('props',props)
     const setUpdateDiv = (assessment) => {
         let updateDiv;
         const { assessmentStatus, latestWorkUrn, activeWorkUrn } = assessment

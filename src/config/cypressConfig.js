@@ -68,8 +68,7 @@ let cypressConfig = {
     isCreateGlossary:false,
     isCreateFootnote:false,
     isSavingElement:false,
-    tcmslatemanifest:"",    
-    createMetadataInProgress:false,
+    tcmslatemanifest:""
 }
 
 

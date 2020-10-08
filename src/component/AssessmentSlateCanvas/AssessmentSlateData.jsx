@@ -192,8 +192,8 @@ class AssessmentSlateData extends Component {
         }
         this.props.addPufAssessment(updatedElmObj, this.state.activeAssessmentType);
         this.props.handleCanvasBlocker.disableHeader(false);
-        this.props.showToastMessage(true)
-        this.props.setToastMessage(ELM_NEW_VERSION_UPDATE)
+        this.props.showToastMessage(true);
+        this.props.setToastMessage(ELM_NEW_VERSION_UPDATE);
     }
 
     /**
@@ -438,7 +438,6 @@ class AssessmentSlateData extends Component {
     /*** @description This function is to show Approved/Unapproved Status on AS */
     showElmVersionStatus = () => {
         let elmAssessment = this.props.assessmentReducer[this.props.assessmentSlateObj.assessmentId]
-        console.log(this.props.assessmentSlateObj,'elmAssessment',this.props.assessmentReducer)
         return (<ElmUpdateButton
             elmAssessment={elmAssessment}
             updateElmVersion={this.updateElm}
@@ -554,7 +553,6 @@ const mapActionToProps = {
     checkElmAssessmentStatus : checkAssessmentStatus,
     showToastMessage: showToastMessage,
     setToastMessage: setToastMessage
-
 }
 
 export default connect(

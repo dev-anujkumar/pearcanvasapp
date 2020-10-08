@@ -1596,7 +1596,7 @@ const mapDispatchToProps = (dispatch) => {
         },
         openElmAssessmentPortal : (dataToSend) => {
             dispatch(openElmAssessmentPortal(dataToSend))
-        },
+        }
     }
 }
 

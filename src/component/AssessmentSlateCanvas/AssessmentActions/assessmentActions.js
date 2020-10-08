@@ -153,7 +153,7 @@ export const openElmAssessmentPortal = (assessmentData) => (dispatch) => {
             "Accept": "application/json",
             "Content-Type": "application/json",
             "PearsonSSOSession": config.ssoToken,
-            "withCredentials": true,
+            "Access-Control-Allow-Origin":"*"
         }
     }
     ).then(res => {
