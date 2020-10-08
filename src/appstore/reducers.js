@@ -37,7 +37,9 @@ import {
     PAGE_NUMBER_LOADER,
     GET_USAGE_TYPE ,
     SET_SLATE_LENGTH,
-    VERSIONING_SLATEMANIFEST  
+    VERSIONING_SLATEMANIFEST,
+    SET_TOAST_MESSAGE,
+    SHOW_TOAST_MESSAGE
 } from '../constants/Action_Constants';
 
 /**
@@ -65,7 +67,9 @@ const INITIAL_STATE = {
     allElemPageData:[],
     pageNumberLoading:false,
     usageTypeListData:{},
-    slateLength: "25"
+    slateLength: "25",
+    toastMessage:"",
+    showToast:false
 };
 
 const INITIAL_ACTION = {
@@ -225,6 +229,16 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
             return {
                 ...state,
                 slateLength: action.payload
+            }
+        case SET_TOAST_MESSAGE:
+            return {
+                ...state,
+                toastMessage: action.payload
+            }
+        case SHOW_TOAST_MESSAGE:
+            return {
+                ...state,
+                showToast: action.payload
             }
         default:
             return state;

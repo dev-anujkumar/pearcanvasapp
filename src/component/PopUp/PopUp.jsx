@@ -94,7 +94,7 @@ class PopUp extends React.Component {
         if (props.isElmUpdatePopup) {
             return (
                 <div className={`dialog-buttons ${props.isElmUpdateClass}`}>
-                    <span className={`save-button ${props.isElmUpdateClass}`} onClick={props.updateElmAssessment}>Update</span>
+                    <span className={`save-button ${props.isElmUpdateClass}`} onClick={(e) => props.updateElmAssessment(e)}>Update</span>
                     <span className={`cancel-button ${props.isElmUpdateClass}`} id='close-container' onClick={(e) => props.togglePopup(false,e)}>Cancel</span>
                 </div>
             )

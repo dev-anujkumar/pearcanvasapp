@@ -3,13 +3,13 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 /** ----- Import - Components ----- */
 import PopUp from '../PopUp';
+import ElmUpdateButton from './ElmUpdateButton.jsx';
 import LearningTool from './learningTool/learningTool.jsx';
 import RootElmComponent from './elm/RootElmComponent.jsx';
 import { UsageTypeDropdown } from './UsageTypeDropdown/UsageTypeDropdown.jsx';
 import RootCiteTdxComponent from './assessmentCiteTdx/RootCiteTdxComponent.jsx';
 /** ----- Import - Dependencies ----- */
 import config from '../../config/config';
-import { approvedIcon } from '../../../src/images/ElementButtons/ElementButtons.jsx';
 import './../../styles/AssessmentSlateCanvas/AssessmentSlateCanvas.css';
 import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import { assessmentFormats, CITE, TDX, PUF, LEARNING_TEMPLATE, LEARNOSITY, ELM_NEW_VERSION_UPDATE, ELM_UPDATE_MSG, ELM_UPDATE_POPUP_HEAD } from './AssessmentSlateConstants.js';
@@ -17,6 +17,7 @@ import { assessmentFormats, CITE, TDX, PUF, LEARNING_TEMPLATE, LEARNOSITY, ELM_N
 import { setCurrentCiteTdx, assessmentSorting } from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
 import { closeLtAction, openLtAction, openLTFunction } from './learningTool/learningToolActions';
 import { checkAssessmentStatus } from './AssessmentActions/assessmentActions.js';
+import { showToastMessage, setToastMessage } from '../Toast/ToastActions.js';
 /**
 * Module | AssessmentSlateData
 * description | This is the child Component of Assessment Slate
@@ -179,7 +180,7 @@ class AssessmentSlateData extends Component {
     }
 
     /*** @description This function is used to update elm assessment after click on update from Version update Popup */
-    updateElmAssessment = () => {
+    updateElmAssessment = (event) => {
         this.toggleUpdatePopup(false, event);
         this.showCanvasBlocker(false);
         this.props.checkElmAssessmentStatus(this.props.assessmentReducer[this.props.assessmentSlateObj.assessmentId].latestWorkUrn, 'fromUpdate');
@@ -190,16 +191,9 @@ class AssessmentSlateData extends Component {
             usagetype: this.state.activeAssessmentUsageType
         }
         this.props.addPufAssessment(updatedElmObj, this.state.activeAssessmentType);
-        let updateSuccess = document.getElementById('link-notification');
-            updateSuccess.innerText = ELM_NEW_VERSION_UPDATE;
-            updateSuccess.style.display='block';
-            // updateSuccess.classList.add('show-update')
-        setTimeout(() => {
-            // updateSuccess.classList.remove('show-update')
-            updateSuccess.innerText = "";
-            updateSuccess.style.display='none';
-        }, 2000);
         this.props.handleCanvasBlocker.disableHeader(false);
+        this.props.showToastMessage(true)
+        this.props.setToastMessage(ELM_NEW_VERSION_UPDATE)
     }
 
     /**
@@ -443,16 +437,12 @@ class AssessmentSlateData extends Component {
 
     /*** @description This function is to show Approved/Unapproved Status on AS */
     showElmVersionStatus = () => {
-        let updateDiv;
-        const { assessmentStatus, latestWorkUrn, activeWorkUrn } = this.props.assessmentReducer[this.props.assessmentSlateObj.assessmentId]
-        if (assessmentStatus == 'final' && (latestWorkUrn != activeWorkUrn)) {
-            updateDiv = <div className='elm-update-button' onClick={this.updateElm}><b className='elm-update-button-text'>Update Available</b></div>
-        } else {
-            const approveText = assessmentStatus == 'final' ? "Approved" : "Unapproved"
-            const approveIconClass = assessmentStatus == 'final' ? "enable" : "disable"
-            updateDiv = <div className="elm-status-div"><span className={"approved-button " + approveIconClass}>{approvedIcon}</span><p className={"approved-button-text " + approveIconClass}>{approveText}</p></div>
-        }
-        return updateDiv
+        let elmAssessment = this.props.assessmentReducer[this.props.assessmentSlateObj.assessmentId]
+        console.log(this.props.assessmentSlateObj,'elmAssessment',this.props.assessmentReducer)
+        return (<ElmUpdateButton
+            elmAssessment={elmAssessment}
+            updateElmVersion={this.updateElm}
+        />)
     }
 
     /*** @description - This is the function to set usageType type dropdown
@@ -561,7 +551,9 @@ const mapActionToProps = {
     openLtAction: openLtAction,
     closeLtAction: closeLtAction,
     openLTFunction: openLTFunction,
-    checkElmAssessmentStatus : checkAssessmentStatus
+    checkElmAssessmentStatus : checkAssessmentStatus,
+    showToastMessage: showToastMessage,
+    setToastMessage: setToastMessage
 
 }
 

@@ -25,6 +25,7 @@ import PageNumberElement from './PageNumberElement.jsx';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
 import PopUp from '../PopUp';
+import Toast from '../Toast';
 import { hideBlocker, showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';
 import { guid } from '../../constants/utility.js';
 import { fetchAudioNarrationForContainer, deleteAudioNarrationForContainer, showAudioRemovePopup, showAudioSplitPopup , showWrongAudioPopup } from '../AudioNarration/AudioNarration_Actions'
@@ -1185,6 +1186,7 @@ class SlateWrapper extends Component {
                     }
                 </div>
                 <div id="link-notification"></div>
+                {this.props.showToast  && <Toast active={true}/>}
                 <ListButtonDropPortal slateData={this.props.slateData}>
                     {
                         (selectedType, startValue, inputRef) => (
@@ -1239,7 +1241,8 @@ const mapStateToProps = state => {
         openAudio: state.audioReducer.openAudio,
         indexSplit : state.audioReducer.indexSplit,
         accesDeniedPopup : state.appStore.accesDeniedPopup,
-        showSlateLockPopupValue: state.metadataReducer.showSlateLockPopup
+        showSlateLockPopupValue: state.metadataReducer.showSlateLockPopup,
+        showToast: state.appStore.showToast
     };
 };
 
