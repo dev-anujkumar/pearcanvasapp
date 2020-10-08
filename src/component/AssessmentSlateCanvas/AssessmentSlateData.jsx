@@ -438,7 +438,6 @@ class AssessmentSlateData extends Component {
     /*** @description This function is to show Approved/Unapproved Status on AS */
     showElmVersionStatus = () => {
         let elmAssessment = this.props.assessmentReducer[this.props.assessmentSlateObj.assessmentId]
-        console.log(this.props.assessmentSlateObj,'elmAssessment',this.props.assessmentReducer)
         return (<ElmUpdateButton
             elmAssessment={elmAssessment}
             updateElmVersion={this.updateElm}
