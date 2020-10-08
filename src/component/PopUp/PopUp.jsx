@@ -180,7 +180,7 @@ class PopUp extends React.Component {
         }
         else if (props.isLockReleasePopup) {
             return (
-                <div className={`dialog-window delete-element-text ${props.slateLockClass}`} >{props.dialogText}</div>
+                <div className={`dialog-window delete-element-text ${props.isElmApiError ? props.isElmApiError : ''} ${props.slateLockClass}`} >{props.dialogText}</div>
             )
         }
         else if (props.isSplitSlatePopup) {
@@ -208,19 +208,19 @@ class PopUp extends React.Component {
         }
         else {
             return (
-                <div className={`dialog-window ${props.assessmentClass}`} >{props.dialogText}</div>
+                <div className={`dialog-window  ${props.assessmentClass}`} >{props.dialogText}</div>
             )
         }
     }
 
     render() {
-        const { active, assessmentClass, isElmApiError } = this.props;
+        const { active, assessmentClass } = this.props;
         return (
             <div className="model">
                 {
                     active ?
                         <div tabIndex="0" className={`model-popup ${assessmentClass}`} ref={this.modelRef}>
-                            <div className={`modal-content ${isElmApiError ? isElmApiError : ''} ${assessmentClass}`}>
+                            <div className={`modal-content ${assessmentClass}`}>
                                 {this.renderCloseSymbol(this.props)}
                                 {this.renderDialogText(this.props)}
                                 <div className={`dialog-input ${assessmentClass}`}>
