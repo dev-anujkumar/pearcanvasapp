@@ -270,8 +270,9 @@ div.elm-update-button {
   border-radius: 18px;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 2px 1px -1px rgba(0, 0, 0, 0.12), 0 1px 1px 0 rgba(0, 0, 0, 0.14);
   background-color: #007fa3;
-  padding-top: 9px;
-  padding-bottom: 11px;
+  /* padding-top: 9px;
+  padding-bottom: 11px; */
+  padding: 10px;
   text-align: center;
   cursor: pointer;
 }
