@@ -27,10 +27,6 @@ jest.mock('../../../src/constants/utility.js', () => ({
     sendDataToIframe: jest.fn(),
     hasReviewerRole: jest.fn()
 }))
-jest.mock('../../../src/component/Toast/ToastActions.js', () => ({
-    showToastMessage: jest.fn(),
-    setToastMessage: jest.fn()
-}))
 jest.mock('../../../src/component/AssessmentSlateCanvas/elm/RootElmComponent.jsx', () => {
     return function () {
         return (<div className="elm-wrapper">null</div>)
@@ -148,7 +144,8 @@ let props = {
     openLtAction: jest.fn(),
     closeLtAction: jest.fn(),
     openLTFunction: jest.fn(),
-    checkElmAssessmentStatus: jest.fn()
+    checkElmAssessmentStatus: jest.fn(),
+    showToastMessage: jest.fn()
 }
 describe('Testing Assessment Slate Data component', () => {
     let store = mockStore(initialState);
@@ -358,7 +355,6 @@ describe('Testing Assessment Slate Data component', () => {
             assessmentSlateObj={pufObj}
             getAssessmentData={true}
             getAssessmentDataPopup={false}
-            showToastMessage={jest.fn()}
         /></Provider>)
         let assessmentSlateInstance6 = component6.find('AssessmentSlateData').instance();
         assessmentSlateInstance6.setState({
@@ -395,7 +391,7 @@ describe('Testing Assessment Slate Data component', () => {
             assessmentSlateInstance6.showCustomPopup();
             expect(assessmentSlateInstance6.state.showUpdatePopup).toBe(true)
         })
-        it('Test 7.3-updateElmAssessment', () => {
+        it('Test 7.4-updateElmAssessment', () => {
             document.getElementById = () => {
                 return {
                     innerText: "",
@@ -424,12 +420,12 @@ describe('Testing Assessment Slate Data component', () => {
             assessmentSlateInstance6.updateElmAssessment(event);
             expect(assessmentSlateInstance6.props.assessmentReducer).toEqual(expectedProps)
         })
-        it('Test 7.4-closeElmWindow', () => {
+        it('Test 7.5-closeElmWindow', () => {
             jest.spyOn(assessmentSlateInstance6, 'closeElmWindow')
             assessmentSlateInstance6.closeElmWindow();
             expect(assessmentSlateInstance6.state.showElmComponent).toBe(false)
         })
-        it('Test 7.5.1-showElmVersionStatus -IF', () => {
+        it('Test 7.6.1-showElmVersionStatus -IF', () => {
             let expectedProps = {
                 'urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464':
                 {
@@ -444,7 +440,7 @@ describe('Testing Assessment Slate Data component', () => {
             assessmentSlateInstance6.showElmVersionStatus();
             expect(assessmentSlateInstance6.props.assessmentReducer).toEqual(expectedProps)
         })
-        it('Test 7.5.2-showElmVersionStatus -ELSE', () => {
+        it('Test 7.6.2-showElmVersionStatus -ELSE', () => {
             let expectedProps = {
                 'urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464': expectedRes2
             }

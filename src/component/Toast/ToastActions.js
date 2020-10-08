@@ -6,7 +6,7 @@ import {
 /** Action handlers for Toast Component */
 
 /** This action is used to show/hide Toast component */
-export const showToastMessage = (value) => dispatch => {
+export const showToastMessage = (value) => {
     return {
         type: SHOW_TOAST_MESSAGE,
         payload: value

@@ -192,8 +192,8 @@ class AssessmentSlateData extends Component {
         }
         this.props.addPufAssessment(updatedElmObj, this.state.activeAssessmentType);
         this.props.handleCanvasBlocker.disableHeader(false);
-        this.props.showToastMessage(true)
-        this.props.setToastMessage(ELM_NEW_VERSION_UPDATE)
+        this.props.showToastMessage(true);
+        this.props.setToastMessage(ELM_NEW_VERSION_UPDATE);
     }
 
     /**
@@ -553,7 +553,6 @@ const mapActionToProps = {
     checkElmAssessmentStatus : checkAssessmentStatus,
     showToastMessage: showToastMessage,
     setToastMessage: setToastMessage
-
 }
 
 export default connect(
