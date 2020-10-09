@@ -1862,7 +1862,7 @@ export class TinyMceEditor extends Component {
             if (!endPosition) {
                 innerHtml = '<span id="footnote-attacher"></span>' + existingInnerHTML;
             }
-            let parentInnerHtml = parentNode.innerHTML;
+            let parentInnerHtml = removeBOM(parentNode.innerHTML);
             let newParentInnerHtml = parentInnerHtml.replace(existingInnerHTML, innerHtml);
             parentNode.innerHTML = newParentInnerHtml;
         }
@@ -1895,9 +1895,17 @@ export class TinyMceEditor extends Component {
                 }
             }
             elementId = this.props.elementId
+            let footNoteSpan = document.getElementById('footnote-attacher');
+            if (!footNoteSpan) {
+                editor.selection.setContent('<span id="footnote-attacher"></span>');
+            }
         }
         else {
             elementId = this.props.elementId
+            let footNoteSpan = document.getElementById('footnote-attacher');
+            if (!footNoteSpan) {
+                editor.selection.setContent('<span id="footnote-attacher"></span>');
+            }
         }
         config.isCreateFootnote = true
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
