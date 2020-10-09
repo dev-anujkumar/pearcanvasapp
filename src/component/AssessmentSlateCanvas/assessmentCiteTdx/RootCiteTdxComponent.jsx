@@ -21,7 +21,6 @@ class RootCiteTdxComponent extends Component {
     }
   }
   componentDidMount() {
-    console.count("componentDidMount")
     const {currentPageNo} =this.state;
     const {searchTitle, filterUUID} = this.props;
     if (searchTitle != '' || filterUUID != '') {

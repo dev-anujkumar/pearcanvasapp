@@ -90,14 +90,16 @@ class CiteTdxTable extends Component {
                     { (isLoading == false) && (assessmenterrFlag == false) && apiData && apiData.assessments && apiData.assessments.length > 0 &&
                         <table className='assessment-table-class'>
                             <thead>
+                                <tr>
                                 {this.tableHeaders.map(item => (
-                                    <th className={`assessment-row-class ${item.toLowerCase()}`}>{item}
+                                    <th key={`assessment-${item}`} className={`assessment-row-class ${item.toLowerCase()}`}>{item}
                                     {(item === "Title" || item === "Date Modified")  && this.state.sortBy[item] &&
                                     <div className={`sort-icon ${this.state.sortBy[item].className} ${apiData.assessments.length > 1 ? '':'disabled'}`} onClick={() => this.setSort(item)}>{this.state.sortBy[item].sortIcon}</div>
                                     }
                                     </th>
 
                                 ))}
+                                </tr>
                             </thead>
                             <tbody>
                                 {apiData.assessments.map((item, index) => {

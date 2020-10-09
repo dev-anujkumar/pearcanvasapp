@@ -59,6 +59,9 @@ class CiteTdxFooter extends Component {
         this.props.resetPage(true);
         this.props.closeWindowAssessment();
     }
+    handleFocus = (event) => {
+       event.stopPropagation();
+    }
 
     render() {
         const { currentPage } = this.state;
@@ -89,8 +92,8 @@ class CiteTdxFooter extends Component {
                 </div>}
                 {/** @description Footer right Section code starts here ---- */}
                 <div className="assesmentfooter-inner">
-                    <button className="assessmentpopup cancel-assessment noSelect" onClick={this.handleClose}>CANCEL</button>
-                    <button className={`assessmentpopup add-assessment noSelect ${addClass}`} onClick={this.sendCiteTdxAssessment}>SELECT</button>
+                    <button className="assessmentpopup cancel-assessment noSelect" onClick={this.handleClose} onFocus={this.handleFocus}>CANCEL</button>
+                    <button className={`assessmentpopup add-assessment noSelect ${addClass}`} onClick={this.sendCiteTdxAssessment} onFocus={this.handleFocus}>SELECT</button>
                 </div>
             </div>
 
