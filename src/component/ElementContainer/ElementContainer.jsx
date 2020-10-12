@@ -111,12 +111,12 @@ class ElementContainer extends Component {
         });
     }
 
-    componentDidUpdate() {
-        if(this.props.searchParent !== '' && document.querySelector("div.canvas-blocker")) {
-            // sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } });
-        }
-        // sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } });urn:pearson:manifest:579f5393-883b-4a22-8000-50cc5a802464
-    }
+    // componentDidUpdate() {
+    //     if(this.props.searchParent !== '' && document.querySelector("div.canvas-blocker")) {
+    //         // sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } });
+    //     }
+    //     // sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } });urn:pearson:manifest:579f5393-883b-4a22-8000-50cc5a802464
+    // }
 
     componentWillUnmount() {
         if (config.releaseCallCount === 0) {
