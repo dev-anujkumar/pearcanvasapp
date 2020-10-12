@@ -566,9 +566,9 @@ export class TinyMceEditor extends Component {
                                 }
                                 parentNode.innerHTML = removeBOM(parentNode.innerHTML);
                                 let existingInnerHTML = '<sup>' + removeBOM(selectedElement.innerHTML) + '</sup>';
-                                let innerHtml = existingInnerHTML + "<span id='_mce_caret' data-mce-bogus='1' data-mce-type='format-caret'>&#65279;</span>";
+                                let innerHtml = existingInnerHTML + "<span id='_mce_caret' data-mce-bogus='1' data-mce-type='format-caret'>&#8203;&#65279;</span>";
                                 if (!endPosition) {
-                                    innerHtml = "<span id='_mce_caret' data-mce-bogus='1' data-mce-type='format-caret'>&#65279;</span>" + existingInnerHTML;
+                                    innerHtml = "<span id='_mce_caret' data-mce-bogus='1' data-mce-type='format-caret'>&#8203;&#65279;</span>" + existingInnerHTML;
                                 }
                                 let parentInnerHtml = parentNode.innerHTML;
                                 let newParentInnerHtml = parentInnerHtml.replace(existingInnerHTML, innerHtml);
@@ -1851,7 +1851,7 @@ export class TinyMceEditor extends Component {
             } else {
                 let chindNodes = selectedElement.childNodes;
                 if (chindNodes.length) {
-                    if (chindNodes[0].nodeType === Node.TEXT_NODE) {
+                    if (chindNodes[0].nodeType === Node.TEXT_NODE && ( chindNodes[0].parentElement && chindNodes[0].parentElement.nodeName.toLocaleLowerCase()!=='sup')) {
                         endPosition = false;
                     }
                 }
@@ -1862,7 +1862,7 @@ export class TinyMceEditor extends Component {
             if (!endPosition) {
                 innerHtml = '<span id="footnote-attacher"></span>' + existingInnerHTML;
             }
-            let parentInnerHtml = parentNode.innerHTML;
+            let parentInnerHtml = removeBOM(parentNode.innerHTML);
             let newParentInnerHtml = parentInnerHtml.replace(existingInnerHTML, innerHtml);
             parentNode.innerHTML = newParentInnerHtml;
         }
@@ -1895,9 +1895,17 @@ export class TinyMceEditor extends Component {
                 }
             }
             elementId = this.props.elementId
+            let footNoteSpan = document.getElementById('footnote-attacher');
+            if (!footNoteSpan) {
+                editor.selection.setContent('<span id="footnote-attacher"></span>');
+            }
         }
         else {
             elementId = this.props.elementId
+            let footNoteSpan = document.getElementById('footnote-attacher');
+            if (!footNoteSpan) {
+                editor.selection.setContent('<span id="footnote-attacher"></span>');
+            }
         }
         config.isCreateFootnote = true
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
@@ -2812,6 +2820,7 @@ export class TinyMceEditor extends Component {
             let elemNode = document.getElementById(`cypress-${this.props.index}`)
             elemNode.innerHTML = elemNode.innerHTML.replace(/<br data-mce-bogus="1">/g, "");
             elemNode.innerHTML = elemNode.innerHTML.replace(/disc square/g, "disc").replace(/disc circle/g, "disc");
+            elemNode.innerHTML = elemNode.innerHTML.replace(/[\u200B-\u200D\uFEFF]/g, '');
             if (this.props.element && this.props.element.type === "citations") {
                 elemNode.innerHTML = elemNode.innerHTML.replace(/<\s*\/?br\s*[\/]?>/g, "");  /**[BG-2578] */
             }
