@@ -27,10 +27,7 @@ const _Toolbar = props => {
       }, [props.setSlateEntity, props.setSlateParent]); 
 
     useEffect(() => {
-        changeAudioNarration();
-        // if(config.isPopupSlate) {
-        //     searchToggle(false);
-        // }
+        changeAudioNarration()
     }, [props.openAudio ,props.addAudio])
 
     /**
