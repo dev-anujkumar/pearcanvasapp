@@ -1851,7 +1851,7 @@ export class TinyMceEditor extends Component {
             } else {
                 let chindNodes = selectedElement.childNodes;
                 if (chindNodes.length) {
-                    if (chindNodes[0].nodeType === Node.TEXT_NODE) {
+                    if (chindNodes[0].nodeType === Node.TEXT_NODE && ( chindNodes[0].parentElement && chindNodes[0].parentElement.nodeName.toLocaleLowerCase()!=='sup')) {
                         endPosition = false;
                     }
                 }
