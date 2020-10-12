@@ -21,7 +21,7 @@ import elementTypeConstant from './ElementConstants'
 import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } from './../CanvasWrapper/CanvasWrapper_Actions';
 import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
-import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags } from '../../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
@@ -47,6 +47,8 @@ import MultiColumnContainer from "../MultiColumnElement"
 import {handleTCMData} from '../TcmSnapshots/TcmSnapshot_Actions.js';
 import CopyUrn from '../CopyUrn';
 import { OnCopyContext } from '../CopyUrn/copyUtil.js'
+import { openElmAssessmentPortal } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
+import {handleElmPortalEvents} from '../ElementContainer/AssessmentEventHandling.js';
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -103,6 +105,7 @@ class ElementContainer extends Component {
             btnClassName: '',
             isOpener: this.props.element.type === elementTypeConstant.OPENER
         })
+        //   handleElmPortalEvents();
         document.addEventListener('click',()=>{
             this.setState({showCopyPopup : false})
         });
@@ -224,7 +227,6 @@ class ElementContainer extends Component {
         let tempDiv = document.createElement('div');
         html = html.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula').replace(/\uFEFF/g,"").replace(/>\s+</g,'><').replace(/data-mce-href="#"/g,'').replace(/ reset/g,'');
         html=html.trim();
-        // console.log("html",html)
         tempDiv.innerHTML = html;
         tinyMCE.$(tempDiv).find('br').remove();
         tinyMCE.$(tempDiv).find('.blockquote-hidden').remove();
@@ -580,7 +582,11 @@ class ElementContainer extends Component {
                 }
                 if(parentElement && parentElement.type === "popup"){
                     html = html.replace(/(<sup><\/sup>)|(<sup><br><\/sup>)/g, "<br>");
+                    html = html.replace(/<br data-mce-bogus="1">/g, '<br>')
                     tempDiv.innerHTML = html
+                    if (!isPosterTextSelected) {
+                        previousElementData.html.text = removeUnoClass(previousElementData.html.text) //BG-3278 (support to be improved)
+                    }
                 }
                 html =html.replace(/(\r\n|\n|\r)/gm, '')
                 previousElementData.html.text= previousElementData.html.text.replace(/<br data-mce-bogus="1">/g, "<br>").replace(/(\r\n|\n|\r)/gm, '');
@@ -1356,7 +1362,8 @@ class ElementContainer extends Component {
         let borderToggle = this.setBorderToggle(this.props.elemBorderToggle, this.state.borderToggle)
         let btnClassName = this.state.btnClassName;
         let bceOverlay = "";
-        let elementOverlay = ''
+        let elementOverlay = '';
+        let showEditButton = element.type == elementTypeConstant.ASSESSMENT_SLATE && element.elementdata && element.elementdata.assessmentformat == 'puf' && element.elementdata.assessmentid ? true : false;
         if (!hasReviewerRole() && this.props.permissions && !(this.props.permissions.includes('access_formatting_bar')||this.props.permissions.includes('elements_add_remove')) ) {
             elementOverlay = <div className="element-Overlay disabled" onClick={() => this.handleFocus()}></div>
         }
@@ -1393,6 +1400,7 @@ class ElementContainer extends Component {
                     {permissions && permissions.includes('note_viewer') && anyOpenComment && <Button elementId={element.id} onClick={(event) => {
                         handleCommentspanel(event,element.id, this.props.index)
                         }} type="comment-flag" />}
+                        {permissions && permissions.includes('elements_add_remove') && showEditButton && <Button type="edit-button" btnClassName={btnClassName} onClick={(e) => this.handleEditButton(e)} />}
                     {feedback ? <Button elementId={element.id} type="feedback" onClick={(event) => this.handleTCM(event)} /> : (tcm && <Button type="tcm" onClick={(event) => this.handleTCM(event)} />)}
                 </div> : ''}
                 {this.state.popup && <PopUp
@@ -1482,6 +1490,24 @@ class ElementContainer extends Component {
         // this.props.assetPopoverPopup(toggleApoPopup)
     }
 
+    /**
+     * @description - This function is to launch Elm Portal from Cypress.
+     * @param event the click event triggered
+     */
+    handleEditButton = (event) => {
+        event.stopPropagation();
+        let { element } = this.props;
+        let fullAssessment = element.type == elementTypeConstant.ASSESSMENT_SLATE && element.elementdata && element.elementdata.assessmentformat == 'puf' && element.elementdata.assessmentid ? true : false;
+        let embeddedAssessment = element.type == elementTypeConstant.FIGURE_ASSESSMENT && element.figuredata && element.figuredata.elementdata && element.figuredata.elementdata.assessmentformat == 'puf' && element.figuredata.elementdata.assessmentid ? true : false;
+        let dataToSend = {
+            assessmentWorkUrn: fullAssessment ? element.elementdata.assessmentid : embeddedAssessment ? element.figuredata.elementdata.assessmentid : "",
+            projDURN: config.projectUrn,
+            containerURN: this.props.currentSlateAncestorData && this.props.currentSlateAncestorData.ancestor.containerUrn,
+            assessmentItemWorkUrn: embeddedAssessment ? element.figuredata.elementdata.assessmentitemid : ""
+        }
+        this.props.openElmAssessmentPortal(dataToSend);
+    }
+   
     render = () => {
         const { element } = this.props;
         try {
@@ -1581,6 +1607,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         getElementStatus : (elementWorkId, index) => {
             dispatch(getElementStatus(elementWorkId, index))
+        },
+        openElmAssessmentPortal : (dataToSend) => {
+            dispatch(openElmAssessmentPortal(dataToSend))
         }
     }
 }
@@ -1596,7 +1625,8 @@ const mapStateToProps = (state) => {
         allComments: state.commentsPanelReducer.allComments,
         showHideId: state.appStore.showHideId,
         tcmData: state.tcmReducer.tcmSnapshot,
-        searchUrn: state.searchReducer.searchTerm
+        searchUrn: state.searchReducer.searchTerm,
+        currentSlateAncestorData : state.appStore.currentSlateAncestorData
     }
 }
 

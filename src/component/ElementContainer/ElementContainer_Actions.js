@@ -9,8 +9,7 @@ import { AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, C
 import { customEvent } from '../../js/utils';
 import { prepareTcmSnapshots,tcmSnapshotsForUpdate,fetchElementWipData,checkContainerElementVersion,fetchManifestStatus } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 import { fetchPOPupSlateData} from '../../component/TcmSnapshots/TcmSnapshot_Actions.js'
-let elementTypeTCM = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza',  'popup'];
-let containerType = ['element-aside', 'manifest', 'citations', 'poetry', 'groupedcontent','popup'];
+import { elementTypeTCM, containerType, allowedFigureTypesForTCM } from "./ElementConstants";
 
 export const addComment = (commentString, elementId) => (dispatch) => {
     let url = `${config.STRUCTURE_API_URL}narrative-api/v2/${elementId}/comment/`
@@ -105,7 +104,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
             let deleteSlate = deleteParentData[config.slateManifestURN];
             let deleteBodymatter = deleteParentData[config.slateManifestURN].contents.bodymatter;
             if (elementTypeTCM.indexOf(type) !== -1 || containerType.indexOf(type) !== -1) {
-                let wipData = fetchElementWipData(deleteBodymatter, index, type, contentUrn)
+                let wipData = fetchElementWipData(deleteBodymatter, index, type, contentUrn, "delete")
                 let containerElement = {
                     asideData: asideData,
                     parentUrn: parentUrn,
@@ -116,10 +115,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
                 }
                 let deleteData = {
                     wipData: wipData,
-                    currentSlateData: {
-                        status: deleteSlate.status,
-                        contentUrn: deleteSlate.contentUrn
-                    },
+                    currentParentData: deleteParentData,
                     bodymatter: deleteBodymatter,
                     newVersionUrns: deleteElemData.data,
                     index:index
@@ -256,6 +252,9 @@ function contentEditableFalse (updatedData){
  * @param {Function} dispatch to dispatch tcmSnapshots
 */
 export const tcmSnapshotsForDelete = async (elementDeleteData, type, containerElement) => {
+    if (elementDeleteData.wipData.hasOwnProperty("figuretype") && !allowedFigureTypesForTCM.includes(elementDeleteData.wipData.figuretype)) {
+        return false
+    }
     let actionStatus = {
         action:"delete",
         status:"pending",
@@ -263,10 +262,14 @@ export const tcmSnapshotsForDelete = async (elementDeleteData, type, containerEl
     }
     let parentType = ['element-aside', 'citations', 'poetry', 'groupedcontent', 'popup'];
     let versionStatus = {};
+    let currentSlateData = elementDeleteData.currentParentData[config.slateManifestURN] 
+    if(config.isPopupSlate){
+        currentSlateData.popupSlateData = elementDeleteData.currentParentData[config.tempSlateManifestURN]
+    }
     if ((parentType.indexOf(type) === -1)) {
         versionStatus = fetchManifestStatus(elementDeleteData.bodymatter, containerElement, type);
     }
-    containerElement = await checkContainerElementVersion(containerElement, versionStatus, elementDeleteData.currentSlateData);
+    containerElement = await checkContainerElementVersion(containerElement, versionStatus, currentSlateData);
     prepareTcmSnapshots(elementDeleteData.wipData, actionStatus, containerElement, type,elementDeleteData.newVersionUrns,elementDeleteData.index);
 }
 
@@ -339,7 +342,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
                 sectionType : parentElement && parentElement.type == 'popup' && updatedData.sectionType ? updatedData.sectionType : undefined,
                 CurrentSlateStatus: currentSlateData.status
             },
-            elementUpdateData ={
+            elementUpdateData = {
                 currentParentData: currentParentData,
                 updateBodymatter:updateBodymatter,
                 response:response.data,
@@ -753,7 +756,7 @@ function prepareDataForUpdateTcm(updatedDataID, getState, dispatch,versionedData
         })
     }
     else {
-        if(tcmData && indexes.length > 0){
+        if(tcmData && indexes.length > 0 && updatedDataID){
             tcmData[indexes]["elemURN"] = updatedDataID
             tcmData[indexes]["txCnt"] = tcmData[indexes]["txCnt"] !== 0 ? tcmData[indexes]["txCnt"] : 1
             tcmData[indexes]["feedback"] = tcmData[indexes]["feedback"] !== null ? tcmData[indexes]["feedback"] : null

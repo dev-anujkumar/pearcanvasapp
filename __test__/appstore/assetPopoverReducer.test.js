@@ -11,7 +11,8 @@ const INITIAL_STATE = {
     apoObject: {},
     imageData: [],
     searchTerm: '',                        //Figure name to be find
-    currentlyLinkedImageData: {}
+    currentlyLinkedImageData: {},
+    "assetID": ""
 };
 
 const mockFigureData = [{

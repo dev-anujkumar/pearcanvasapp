@@ -13,7 +13,7 @@ import AssessmentSearchBar from '../AssessmentSearchBar';
 // IMPORT - Dependencies // 
 import config from './../../../../../config/config';
 import '../../../../../styles/AssessmentSlateCanvas/elm/ElmTable.css';
-import { FULL_ASSESSMENT_PUF, PUF, LEARNOSITY_BETA, ELM_INT } from '../../../AssessmentSlateConstants.js'
+import { FULL_ASSESSMENT_PUF, PUF, LEARNOSITY, ELM_INT } from '../../../AssessmentSlateConstants.js'
 import { elmSortUp, elmSortDown, elmNavigateBack } from './../../../../../images/ElementButtons/ElementButtons.jsx';
 import { openAssessmentSearchBar, setSearchTerm,setElmLoading } from '../../Actions/ElmActions.js';
 import { setStatus, searchAndFilterAssessmentData, setParentUrn, tableDataSorting, setInteractiveType } from '../../UtilityFunctions/ElmLearnosityUtility.js';
@@ -339,7 +339,7 @@ class ElmTableComponent extends Component {
             this.setParentAssessment(this.state.currentAssessmentSelected.urn, this.state.currentAssessmentSelected.title, this.state.currentAssessmentSelected.previousUrn)
         }
         else{
-            let assessmentFormat = (this.props.activeAssessmentType == FULL_ASSESSMENT_PUF || this.props.activeAssessmentType == PUF) ? PUF : LEARNOSITY_BETA;
+            let assessmentFormat = (this.props.activeAssessmentType == FULL_ASSESSMENT_PUF || this.props.activeAssessmentType == PUF) ? PUF : LEARNOSITY;
             
             if(this.props.activeAssessmentType == ELM_INT){
                 obj = {
@@ -436,7 +436,7 @@ class ElmTableComponent extends Component {
     render() {
         const { isLoading, itemApiStatus, errFlag, elmLoading, itemErrorFlag, openSearch,searchTerm } = this.props.elmReducer;
         const { tableValue, openItemTable, parentUrn, parentTitle, sortIcon, openedFrom, addFlag,filterResults } = this.state;
-        let assessmentFormat = (this.props.activeAssessmentType == FULL_ASSESSMENT_PUF || this.props.activeAssessmentType == PUF) ? PUF : LEARNOSITY_BETA;
+        let assessmentFormat = (this.props.activeAssessmentType == FULL_ASSESSMENT_PUF || this.props.activeAssessmentType == PUF) ? PUF : LEARNOSITY;
         /** Set render condition variables using setStatus function */
         if(this.props.activeAssessmentType == ELM_INT){
             assessmentFormat = ELM_INT
@@ -475,8 +475,8 @@ class ElmTableComponent extends Component {
                             <p className="title-header">{parentTitle}</p>
                         </div>}
                         {/** Assessment Search Bar */}
-                        {(assessmentFormat == LEARNOSITY_BETA && openSearch && openItemTable==false) && <AssessmentSearchBar filterAssessmentData={this.searchAssessmentData} assessmentType={'learnosity'} searchTerm={searchTerm}/>}
-                        <div className={`main-div ${(assessmentFormat == LEARNOSITY_BETA && openSearch && showLoader==false) ? 'has-search' : showItemLoader ? 'item-table' : (showNavigationBar==false && showLoader==true)?'show-loader':''}`}>
+                        {(assessmentFormat == LEARNOSITY && openSearch && openItemTable==false) && <AssessmentSearchBar filterAssessmentData={this.searchAssessmentData} assessmentType={'learnosity'} searchTerm={searchTerm}/>}
+                        <div className={`main-div ${(assessmentFormat == LEARNOSITY && openSearch && showLoader==false) ? 'has-search' : showItemLoader ? 'item-table' : (showNavigationBar==false && showLoader==true)?'show-loader':''}`}>
                             {showLoader &&  <div className="elm-loader"></div>}
                             {showErrorStatus ?
                                 /** ELM Picker Error Div */

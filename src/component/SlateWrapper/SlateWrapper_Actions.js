@@ -24,7 +24,8 @@ import { sendDataToIframe } from '../../constants/utility.js';
 import { HideLoader, ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
-let elementType = ['WORKED_EXAMPLE', 'CONTAINER', 'SECTION_BREAK', 'TEXT', 'CITATION', 'ELEMENT_CITATION', 'POETRY', 'STANZA' , 'MULTI_COLUMN','POP_UP'];
+import * as slateWrapperConstants from "./SlateWrapperConstants"
+
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
 };
@@ -68,17 +69,14 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         let currentSlateData = newParentData[config.slateManifestURN];
 
         /** [PCAT-8289] ---------------------------- TCM Snapshot Data handling ------------------------------*/
-        if (elementType.indexOf(type) !== -1) {
+        if (slateWrapperConstants.elementType.indexOf(type) !== -1) {
             let containerElement = {
                 asideData: asideData,
                 parentUrn: parentUrn,
                 poetryData: poetryData
             };
             let slateData = {
-                currentSlateData: {
-                    status: currentSlateData.status,
-                    contentUrn: currentSlateData.contentUrn
-                },
+                currentParentData: newParentData,
                 bodymatter: currentSlateData.contents.bodymatter,
                 response: createdElemData.data
             };
@@ -158,7 +156,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
             newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
         }
         if (config.tcmStatus) {
-            if (elementType.indexOf(type) !== -1) {
+            if (slateWrapperConstants.elementType.indexOf(type) !== -1) {
                 prepareDataForTcmCreate(type, createdElementData, getState, dispatch);
             }
         }
@@ -207,41 +205,53 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
 export function prepareDataForTcmCreate(type, createdElementData, getState, dispatch) {
     let elmUrn = [];
     const tcmData = getState().tcmReducer.tcmSnapshot;
-    if (type === "WORKED_EXAMPLE" || type === "CONTAINER") {
-        createdElementData.elementdata.bodymatter.map((item) => {
-            if (item.type == "manifest") {
-                item.contents.bodymatter.map((ele) => {
-                    elmUrn.push(ele.id)
-                })
-            }
-            else {
-                elmUrn.push(item.id)
-            }
 
-        })
+    switch(type){
+        case slateWrapperConstants.WORKED_EXAMPLE:
+        case slateWrapperConstants.CONTAINER:
+            createdElementData.elementdata.bodymatter.map((item) => {
+                if (item.type == "manifest") {
+                    item.contents.bodymatter.map((ele) => {
+                        elmUrn.push(ele.id)
+                    })
+                }
+                else {
+                    elmUrn.push(item.id)
+                }
+    
+            })
+            break;
+        case slateWrapperConstants.SECTION_BREAK:
+        case slateWrapperConstants.CITATION:
+        case slateWrapperConstants.POETRY:
+            createdElementData.contents.bodymatter.map((item) => {
+                elmUrn.push(item.id)
+            })
+            break;
+        case slateWrapperConstants.TEXT:
+        case slateWrapperConstants.ELEMENT_CITATION:
+        case slateWrapperConstants.STANZA:
+        case slateWrapperConstants.IMAGE:
+        case slateWrapperConstants.VIDEO:
+        case slateWrapperConstants.AUDIO:
+            elmUrn.push(createdElementData.id)
+            break;
+        case slateWrapperConstants.MULTI_COLUMN:
+            /** First Column */
+            createdElementData.groupeddata.bodymatter[0].groupdata.bodymatter.map(item => {
+                elmUrn.push(item.id)
+            })
+            /** Second Column */
+            createdElementData.groupeddata.bodymatter[1].groupdata.bodymatter.map(item => {
+                elmUrn.push(item.id)
+            })
+            break;
+        case slateWrapperConstants.POP_UP:
+            elmUrn.push(createdElementData.popupdata.postertextobject[0].id)
+            elmUrn.push(createdElementData.popupdata.bodymatter[0].id)
+            break;
     }
-    else if (type === 'SECTION_BREAK' || type == "CITATION" || type === "POETRY") {
-        createdElementData.contents.bodymatter.map((item) => {
-            elmUrn.push(item.id)
-        })
-    }
-    else if (type === 'TEXT' || type === 'ELEMENT_CITATION' || type === "STANZA") {
-        elmUrn.push(createdElementData.id)
-    }
-    else if (type === "MULTI_COLUMN") {
-        /** First Column */
-        createdElementData.groupeddata.bodymatter[0].groupdata.bodymatter.map(item => {
-            elmUrn.push(item.id)
-        })
-        /** Second Column */
-        createdElementData.groupeddata.bodymatter[1].groupdata.bodymatter.map(item => {
-            elmUrn.push(item.id)
-        })
-    }
-    else if (type === 'POP_UP') {
-        elmUrn.push(createdElementData.popupdata.postertextobject[0].id)
-        elmUrn.push(createdElementData.popupdata.bodymatter[0].id)
-    }
+
     elmUrn.map((item) => {
         return tcmData.push({
             "txCnt": 1,

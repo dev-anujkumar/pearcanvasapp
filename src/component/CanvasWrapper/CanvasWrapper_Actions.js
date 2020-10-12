@@ -28,6 +28,7 @@ import { handleTCMData } from '../TcmSnapshots/TcmSnapshot_Actions.js';
 import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
 import { ELM_INT } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
+import { checkAssessmentStatus } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 
 const findElementType = (element, index) => {
     let elementType = {};
@@ -147,6 +148,7 @@ const findElementType = (element, index) => {
                             ...elementDataBank[element.type][element.figuretype][assessmentFormat]
                         }
                         element.figuredata.elementdata.assessmentformat = assessmentFormat 
+                        elementType["usageType"]= element.figuredata.elementdata.usagetype ? element.figuredata.elementdata.usagetype : ""
                         break;
                 }
                 break;
@@ -314,9 +316,16 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             document.getElementsByClassName("slate-tag-icon")[0].classList.remove("disable");
          }     
         let newVersionManifestId=Object.values(slateData.data)[0].id
-        if(config.slateManifestURN !== newVersionManifestId && slateData.data[newVersionManifestId].type === 'manifest' ){
+        if(config.slateManifestURN !== newVersionManifestId && (slateData.data[newVersionManifestId].type === 'manifest' || slateData.data[newVersionManifestId].type === "chapterintro")){
             config.slateManifestURN = newVersionManifestId
             manifestURN = newVersionManifestId
+        }
+        /** PCAT-8900 - Updating Full Assessments - Elm */
+        if (config.slateType == 'assessment' && slateData && slateData.data[newVersionManifestId]) {
+            let slateBodymatter = slateData.data[newVersionManifestId].contents.bodymatter
+            if (slateBodymatter[0] && slateBodymatter[0].type == 'element-assessment' && slateBodymatter[0].elementdata.assessmentformat == 'puf' && slateBodymatter[0].elementdata.assessmentid) {
+                dispatch(checkAssessmentStatus(slateBodymatter[0].elementdata.assessmentid, 'fromAssessmentSlate'));
+            }
         }
 		if(slateData.data && slateData.data[newVersionManifestId] && slateData.data[newVersionManifestId].type === "popup"){
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
@@ -335,16 +344,17 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                 })
             }
             else if(versioning && versioning.type==="popup"){
-                config.slateManifestURN= Object.values(slateData.data)[0].id
                 let parentData = getState().appStore.slateLevelData;
                 let newslateData = JSON.parse(JSON.stringify(parentData));
+                delete Object.assign(newslateData, {[Object.values(slateData.data)[0].id]: newslateData[config.slateManifestURN] })[config.slateManifestURN];     
+                config.slateManifestURN= Object.values(slateData.data)[0].id
                 newslateData[config.slateManifestURN] = Object.values(slateData.data)[0];
                 return dispatch({
                     type: AUTHORING_ELEMENT_UPDATE,
                     payload: {
                         slateLevelData: newslateData
                     }
-                })
+                })       
             }
 			else {
                 config.slateManifestURN= Object.values(slateData.data)[0].id
@@ -942,13 +952,11 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
                 parentElement: parentElement,
                 asideData: getState().appStore.asideData,
                 parentUrn: getState().appStore.parentUrn,
-                metaDataField: _requestData.metaDataField
+                metaDataField: _requestData.metaDataField,
+                isMetaFieldExist: true
             };
             let slateData = {
-                currentSlateData: {
-                    status: currentSlateData.status,
-                    contentUrn: currentSlateData.contentUrn
-                },
+                currentParentData:newParentData,
                 bodymatter: currentSlateData.contents.bodymatter,
                 response: response.data
             };

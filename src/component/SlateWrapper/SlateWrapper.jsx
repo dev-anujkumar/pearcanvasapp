@@ -11,7 +11,7 @@ import ElementSaprator from '../ElementSaprator';
 import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
 import { SlateFooter } from './SlateFooter.jsx';
 import { createElement, swapElement, setSplittedElementIndex, updatePageNumber, accessDenied } from './SlateWrapper_Actions';
-import { sendDataToIframe } from '../../constants/utility.js';
+import { sendDataToIframe, getSlateType } from '../../constants/utility.js';
 import { ShowLoader, SplitCurrentSlate } from '../../constants/IFrameMessageTypes.js';
 import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
 import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
@@ -25,6 +25,7 @@ import PageNumberElement from './PageNumberElement.jsx';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
 import PopUp from '../PopUp';
+import Toast from '../Toast';
 import { hideBlocker, showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';
 import { guid } from '../../constants/utility.js';
 import { fetchAudioNarrationForContainer, deleteAudioNarrationForContainer, showAudioRemovePopup, showAudioSplitPopup , showWrongAudioPopup } from '../AudioNarration/AudioNarration_Actions'
@@ -1177,6 +1178,7 @@ class SlateWrapper extends Component {
                 </div>
             )
         }
+        const slateType = getSlateType(this.props.slateData[config.slateManifestURN])
         return (
             <React.Fragment>
                 <div className='title-head-wrapper'>
@@ -1186,12 +1188,13 @@ class SlateWrapper extends Component {
                           :this.renderSlateHeader(this.props)
                     } 
                 </div>
-                <div id="slateWrapper" className='slate-wrapper' onScroll={this.handleScroll}>
+                <div id="slateWrapper" className={`slate-wrapper ${slateType === "popup" ? "popup-slate": ""}`} onScroll={this.handleScroll}>
                     {
                         this.renderSlate(this.props)
                     }
                 </div>
                 <div id="link-notification"></div>
+                {this.props.showToast  && <Toast active={true}/>}
                 <ListButtonDropPortal slateData={this.props.slateData}>
                     {
                         (selectedType, startValue, inputRef) => (
@@ -1247,7 +1250,8 @@ const mapStateToProps = state => {
         indexSplit : state.audioReducer.indexSplit,
         accesDeniedPopup : state.appStore.accesDeniedPopup,
         showSlateLockPopupValue: state.metadataReducer.showSlateLockPopup,
-        searchParent: state.searchReducer.parentId
+        searchParent: state.searchReducer.parentId,
+        showToast: state.appStore.showToast
     };
 };
 

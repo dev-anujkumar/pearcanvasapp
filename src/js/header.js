@@ -31,7 +31,7 @@ export const publishContent = function (type) {
         c4PublishObj.publishSlate(projectURN,firstSlate,citeURN);
     }
     else if(type == 'projectPreview') {
-        c4PublishObj.publishTitle(projectURN,"",citeURN, undefined, true);
+        c4PublishObj.publishTitle(projectURN,firstSlate,citeURN, undefined, true);
 
     }
 }

@@ -24,56 +24,56 @@
     height: 500px;
   }
   .slate_initial_selection{
-    margin: 0px 150px!important;
-    padding: 100px 0;
-    width: 344px;
+    margin: 0px 140px!important;
+    padding: 120px 0;
+    position: relative;
   }
   .slate_assessment_type_label{
     font-size: 16px;
     color: #424242;
     text-align: center;
   }
-  .slate_assessment_type_dropdown.notselect{
-    border: 1px solid #c0c0c0;
-    margin: 20px 0 10px;
-    border-radius: 25px;
-    background: #fff;
-    padding: 8px;
-    cursor: pointer;
-    position: relative;
-  }
   .slate_assessment_type_dropdown{
-    border: 1px solid #c0c0c0;
-    margin: 20px 0 10px;
-    border-radius: 25px;
-    background-color: rgb(217, 228, 240);
     padding: 8px;
     cursor: pointer;
     position: relative;
+    width: 200px;
+    border-radius: 18px;
+    border: solid 1px #a9a9a9;
+    background-color: #ffffff;
+    margin-left: auto;
   }
-  .slate_assessment_dropdown_label, .slate_assessment_metadata_dropdown_label{
+  .slate_assessment_dropdown_label{
     float:left;
     font-size: 14px;
     color: #606060;
     margin-left: 8px;
+    max-width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
-  .slate_assessment_dropdown_image, .slate_assessment_metadata_dropdown_image{
-    float:right;
-    border-left: 7px solid transparent;
-    border-right: 7px solid transparent;
-    border-top: 7px solid #424242;
+  .slate_assessment_dropdown_image{
     position: relative;
-    top: 5px;
+    top: 7px;
     right: 8px;
+    float: right;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px solid #424242;
+    vertical-align: middle;
   }
   .slate_assessment_type_dropdown_options{
-    /* background-color: white; */
     position: absolute;
-    width: 340px;
+    max-height:220px;
+    overflow:auto;
+    position: absolute;
+    width: 180px;
+    margin-top: 9px;
+    z-index: 9;
+    padding: 0;
   }
-  .slate_assessment_type_dropdown_options.notselect{
-    display: none;
-  }
+
   li.slate_assessment_dropdown_name{
       list-style: none;
       padding:10px;
@@ -87,6 +87,14 @@
     background-color: #fff;
     cursor: pointer;
     margin: 0px !important;
+    font-size: 12px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.5;
+    letter-spacing: normal;
+    color: #252525;
+    font-family: 'Open Sans',sans-serif;
 
   }
   .slate_assessment_dropdown_name:hover, .slate_assessment_metadata_dropdown_name:hover { 
@@ -94,28 +102,28 @@
     color:#fff;
   }
   .slate_assessment_type_button{
-    margin: 25px 80px;
+    margin: 36px auto 0;
     font-size: 14px;
-    background-color: #1565c0;
     color: #fff;
-    border-radius: 25px;
+    border-radius: 20px;
+    background-color: #005a70;
     padding: 10px;
     text-align: center;
     cursor: pointer;
+    width: 200px;
   }
-  .slate_assessment_disabled_button{
-    margin: 25px 80px;
-    font-size: 14px;
-    background-color: #ccc;
-    border-radius: 25px;
-    padding: 10px;
-    text-align: center;
-    cursor: not-allowed !important;
-    color: gray !important;
-  }
+
   .slate_fetch_canvas{
     margin: 0px 10px 0px 100px;
     padding: 100px 0 0 0;
+  }
+  .slate_fetch_canvas .assessment-label{
+    float: left;
+    width: 25%;
+    font-weight: normal;
+  }
+  .slate_fetch_canvas .slate_assessment_type_dropdown{
+    margin-left: 0;
   }
   .slate_assessment_data_container{
     margin-bottom: 30px;
@@ -186,27 +194,6 @@
     cursor: pointer;
     position: relative;
   }
-.slate_assessment_metadata_type_dropdown_options{
-  position: absolute;
-
-  margin-left:136px;
-  width: 202px;
-  margin-top: 10px;
-  max-height:220px;
-  overflow:auto;
-}
-.slate_assessment_metadata_type_dropdown_options.notselect{
-  position: absolute;
-
-  margin-left:136px;
-  width: 202px;
-  margin-top: 10px;
-  max-height:220px;
-  overflow:auto;
-  display: none;
-}
-
-
 
 .slate_popup_get_image{
   background: url(../../images/AssessmentSlateCanvas/success_icon.png) no-repeat;
@@ -259,9 +246,7 @@
   max-height:220px;
   display: flex;
   overflow:auto;
-}
-ul.slate_assessment_metadata_type_dropdown_options.notselect{
-  display: none;
+  z-index:9;
 }
 .single_assessment_metadata_dropdown_label{
   float:left;
@@ -271,14 +256,118 @@ ul.slate_assessment_metadata_type_dropdown_options.notselect{
   text-transform: capitalize;
 }
 
-.singleAssessment_Dropdown_activeDropdown{
+.slate_assessment_data_details .slate_assessment_data_id_lo,.slate_assessment_data_details .slate_assessment_data_format_lo{
+  display: none;
+}
+
+div.elm-update-button {
+  margin: 30px 0px 20px 142px;
   width: 200px;
-  float: left;
-  border: 1px solid #c0c0c0;
-  border-radius: 25px;
-  background: #fff;
-  padding: 8px;
+  height: 36px;
+  border-radius: 18px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 2px 1px -1px rgba(0, 0, 0, 0.12), 0 1px 1px 0 rgba(0, 0, 0, 0.14);
+  background-color: #007fa3;
+  /* padding-top: 9px;
+  padding-bottom: 11px; */
+  padding: 10px;
+  text-align: center;
   cursor: pointer;
-  background-color: rgb(217, 228, 240);
-  position: relative;
+}
+
+div.elm-update-button b.elm-update-button-text {
+  padding-top: 9px;
+  margin-top: 10px;
+  padding-bottom: 11px;
+  width: 200px;
+  height: 16px;
+  text-align: center;
+  text-transform: uppercase;
+  /* font-family: OpenSans; */
+  font-size: 14px;
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.16;
+  letter-spacing: 1.25px;
+  text-align: center;
+  color: #ffffff;
+}
+
+
+span.approved-button {
+  width: 24px;
+  height: 24px;
+  margin-right: 12px;
+  margin-top: 3px;
+}
+
+span.approved-button.disable svg path#path2 {
+  opacity: 0.2;
+  background-color: #000000;
+}
+
+span.approved-button.enable svg path#path2 {
+  fill: #15850c;
+}
+
+.elm-status-div p.approved-button-text {
+  padding-top: 8px;
+  font-size: 13px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+}
+
+.elm-status-div p.approved-button-text.enable {
+  color: #15850c;
+}
+
+.elm-status-div p.approved-button-text.disable {
+  opacity: 0.7;
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.elm-status-div {
+  display: flex;
+  margin: 30px 0 20px 142px;
+}
+
+.show-update#link-notification{
+  display: block;
+}
+.assessment-label{
+  font-size: 14px;
+  font-weight: 600;
+  color: #424242;
+  display: inline;
+}
+.slate_assessment_metadata_container, .assessment-parent{
+  display: flex;
+  align-items: center;
+  position:relative;
+}
+.slate_assessment_metadata_container{
+  margin: 0 0 16px;
+}
+.assessment-parent.disabled .assessment-label,.assessment-parent.disabled .slate_assessment_dropdown_label{
+  color:#999999;
+}
+.assessment-parent.disabled .slate_assessment_dropdown_image{
+  border-top: 4px solid #999999;
+}
+.slate_assessment_type_button.disabled{
+  background-color: #cccccc;
+  color: #808080;
+  cursor: not-allowed;
+  pointer-events:none;
+}
+.assessment-label .required,.singleAssessment_Dropdown_SelectLabel .required{
+  color:#ff0000;
+}
+.assessment-parent.disabled .slate_assessment_type_dropdown{
+  border: solid 1px #c1c1c1;
+  cursor:not-allowed;
+  pointer-events:none;
 }

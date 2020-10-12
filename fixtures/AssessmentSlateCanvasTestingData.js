@@ -12,8 +12,38 @@ export const assessmentSlateDefault = {
     "versionUrn": "urn:pearson:work:4da32e71-a6b5-4daa-84ed-fb72d6b0aa74",
     "contentUrn": "urn:pearson:entity:30e2df12-8683-4ef7-b064-d889d4d480f6"
 }
+export const defaultAS = {
+    "id": "urn:pearson:work:332ca0f1-9088-412c-a5da-60489b5b4165",
+    "type": "element-assessment",
+    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+    "elementdata": {
+        "schema": "http://schemas.pearson.com/wip-authoring/assessment/1#/definitions/assessment",
+        "assessmentid": "",
+        "assessmentformat": "fpo"
+    },
+    "versionUrn": "urn:pearson:work:332ca0f1-9088-412c-a5da-60489b5b4165",
+    "contentUrn": "urn:pearson:entity:f7ac732c-212a-4737-a34d-cd3a362039af",
+    "status": "wip"
+}
+export const DefaultAssessmentSlateData = {
+    "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e": {
+        "contentUrn": "urn:pearson:entity:c8240c45-ba81-4a8a-8f9e-32b68108eb4e",
+        "id": "urn:pearson:manifest:3c780b1f-06ad-4e3d-b226-6775cba97b29",
+        "schema": "http://schemas.pearson.com/wip-authoring/manifest/1",
+        "type": "manifest",
+        "versionUrn": "urn:pearson:manifest:3c780b1f-06ad-4e3d-b226-6775cba97b29",
+        "contents": {
+            "backmatter": [],
+            "frontmatter": [],
+            "schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest",
+            "bodymatter": [
+                defaultAS
+            ]
+        }
+    }
+}
 
-export const assessmentSlateWithData = {
+export const assessmentSlateTDX = {
     "id": "urn:pearson:work:4da32e71-a6b5-4daa-84ed-fb72d6b0aa74",
     "type": "element-assessment",
     "schema": "http://schemas.pearson.com/wip-authoring/element/1",
@@ -27,7 +57,20 @@ export const assessmentSlateWithData = {
     "versionUrn": "urn:pearson:work:4da32e71-a6b5-4daa-84ed-fb72d6b0aa74",
     "contentUrn": "urn:pearson:entity:30e2df12-8683-4ef7-b064-d889d4d480f6"
 }
-
+export const assessmentSlateELM = {
+    "id": "urn:pearson:work:4da32e71-a6b5-4daa-84ed-fb72d6b0aa74",
+    "type": "element-assessment",
+    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+    "elementdata": {
+        "schema": "http://schemas.pearson.com/wip-authoring/assessment/1#/definitions/assessment",
+        "assessmentid": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+        "assessmentformat": "puf",
+        "usagetype": "Quiz",
+        "assessmenttitle":"Open response question updated",
+    },
+    "versionUrn": "urn:pearson:work:4da32e71-a6b5-4daa-84ed-fb72d6b0aa74",
+    "contentUrn": "urn:pearson:entity:30e2df12-8683-4ef7-b064-d889d4d480f6"
+}
 export const mockELMResponse = {
     "versionUrn": "urn:pearson:distributable:3e872df6-834c-45f5-b5c7-c7b525fab1ef",
     "contentUrn": "urn:pearson:entity:dfeb8286-217e-40a4-8d40-3ced46e469e0",

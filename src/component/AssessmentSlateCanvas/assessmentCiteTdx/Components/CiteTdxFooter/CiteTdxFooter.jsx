@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import '../../../../../styles/AssessmentSlateCanvas/assessmentCiteTdx/RootCiteTdxComponent.css';
 import './CiteTdxPagination.css';
 import { getCiteTdxData } from '../../Actions/CiteTdxActions'
-
+import { CITE,TDX } from '../../../AssessmentSlateConstants.js'
 class CiteTdxFooter extends Component {
 
     constructor(props) {
@@ -64,7 +64,7 @@ class CiteTdxFooter extends Component {
         const { currentPage } = this.state;
         const { filterUUID } = this.props;
         const { citeApiData, tdxApiData, mmiApiData, isLoading } = this.props;
-        const apiData = (this.props.assessmentType === "Full Assessment CITE") ? citeApiData : (this.props.assessmentType === "Full Assessment TDX") ? tdxApiData : mmiApiData;
+        const apiData = (this.props.assessmentType === CITE) ? citeApiData : (this.props.assessmentType === TDX) ? tdxApiData : mmiApiData;
         let hideNavigationPrevious = (currentPage <= 1) ? 'hideNavigation' : '';
         let hideNavigationNext = ((apiData && apiData.assessments && apiData.assessments.length == 0) || (apiData && apiData.assessments && apiData.assessments.length < 25)) ? 'hideNavigation' : '';
         let disableClick = (isLoading) ? 'disableClick' : '';

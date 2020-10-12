@@ -91,6 +91,14 @@ class PopUp extends React.Component {
                 </div>
             )
         }
+        if (props.isElmUpdatePopup) {
+            return (
+                <div className={`dialog-buttons ${props.isElmUpdateClass}`}>
+                    <span className={`save-button ${props.isElmUpdateClass}`} onClick={(e) => props.updateElmAssessment(e)}>Update</span>
+                    <span className={`cancel-button ${props.isElmUpdateClass}`} id='close-container' onClick={(e) => props.togglePopup(false,e)}>Cancel</span>
+                </div>
+            )
+        }
         else {
             return (
                 <div className={`dialog-buttons ${props.assessmentClass}`}>
@@ -106,7 +114,7 @@ class PopUp extends React.Component {
     * @param {event} 
     */
     renderInputBox = (props) => {
-        if (props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.tocDelete || props.removeConfirmation || props.wrongAudio || props.lockForTOC || props.sytaxHighlight || props.listConfirmation) {
+        if (props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.tocDelete || props.removeConfirmation || props.wrongAudio || props.lockForTOC || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup) {
             return null
         }
         else if (props.isLockPopup && props.withInputBox && !props.lockForTOC) {
@@ -133,7 +141,7 @@ class PopUp extends React.Component {
     }
 
     renderCloseSymbol = (props) => {
-        if (props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.tocDelete || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation) {
+        if (props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.tocDelete || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup) {
             return null
         }
         else {
@@ -172,7 +180,7 @@ class PopUp extends React.Component {
         }
         else if (props.isLockReleasePopup) {
             return (
-                <div className={`dialog-window delete-element-text ${props.slateLockClass}`} >{props.dialogText}</div>
+                <div className={`dialog-window delete-element-text ${props.isElmApiError ? props.isElmApiError : ''} ${props.slateLockClass}`} >{props.dialogText}</div>
             )
         }
         else if (props.isSplitSlatePopup) {
@@ -190,13 +198,20 @@ class PopUp extends React.Component {
                 <div className={`dialog-window ${props.audioRemoveClass}`} >{props.dialogText}</div>
             )
         }
+        else if (props.isElmUpdatePopup) {
+            return (
+                <>
+                    <h2 className='tocDeleteHeader'>{this.props.elmHeaderText}</h2>
+                    <div className={`dialog-window ${props.isElmUpdateClass}`} >{props.dialogText}</div>
+                </>
+            )
+        }
         else {
             return (
-                <div className={`dialog-window ${props.assessmentClass}`} >{props.dialogText}</div>
+                <div className={`dialog-window  ${props.assessmentClass}`} >{props.dialogText}</div>
             )
         }
     }
-
 
     render() {
         const { active, assessmentClass } = this.props;

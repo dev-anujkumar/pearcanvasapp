@@ -184,6 +184,7 @@ export class CanvasWrapper extends Component {
                     togglePopup={this.ReleaseErrorPopup}
                     isLockReleasePopup={true}
                     isInputDisabled={true}
+                    isElmApiError={this.props.ErrorPopup.isElmApiError}
                 />}
                 {/** Ends of custom error popup */}
                 <div id="editor-toolbar" className="editor-toolbar">

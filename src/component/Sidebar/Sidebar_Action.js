@@ -11,10 +11,10 @@ import elementTypes from './../Sidebar/elementTypes';
 import figureDataBank from '../../js/figure_data_bank';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
-import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
+import { POD_DEFAULT_VALUE, allowedFigureTypesForTCM } from '../../constants/Element_Constants'
 import { prepareTcmSnapshots,checkContainerElementVersion,fetchManifestStatus,fetchParentData } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 let imageSource = ['image','table','mathImage'],imageDestination = ['primary-image-figure','primary-image-table','primary-image-equation']
-let elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza'];
+const elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza', 'figure'];
 
 export const convertElement = (oldElementData, newElementData, oldElementInfo, store, indexes, fromToolbar,showHideObj) => (dispatch,getState) => {
     let { appStore } =  getState();
@@ -200,6 +200,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     if(config.elementStatus[conversionDataToSend.id] === "approved"){
         config.savingInProgress = true
     }
+    config.isSavingElement = true
     const url = `${config.REACT_APP_API_URL}v1/slate/elementTypeConversion/${overallType}`
     axios.post(url, JSON.stringify(conversionDataToSend), { 
         headers: {
@@ -258,6 +259,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         if (currentSlateData.status === 'wip') {
             config.savingInProgress = false
         }
+        config.isSavingElement = false
         tinymce.activeEditor&&tinymce.activeEditor.undoManager&&tinymce.activeEditor.undoManager.clear();
         /**------------------------------------------------[BG-2676]------------------------------------------------- */
         let posterText = res.data && res.data.html && res.data.html.postertext
@@ -364,6 +366,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         dispatch({type: ERROR_POPUP, payload:{show: true}})
         config.conversionInProcess = false
         config.savingInProgress = false
+        config.isSavingElement = false
     })
 }
 catch (error) {
@@ -389,7 +392,7 @@ function prepareDataForConversionTcm(updatedDataID, getState, dispatch,versionid
         })
     }
     else {
-        if(tcmData && indexes.length > 0){
+        if(tcmData && indexes.length > 0 && updatedDataID){
         tcmData[indexes]["elemURN"] = updatedDataID
         tcmData[indexes]["txCnt"] = tcmData[indexes]["txCnt"] !== 0 ? tcmData[indexes]["txCnt"] : 1
         tcmData[indexes]["feedback"] = tcmData[indexes]["feedback"] !== null ? tcmData[indexes]["feedback"] : null
@@ -416,12 +419,15 @@ function prepareDataForConversionTcm(updatedDataID, getState, dispatch,versionid
  * @param {Function} dispatch to dispatch tcmSnapshots
 */
 export const tcmSnapshotsForConversion = async (elementConversionData,indexes,appStore,dispatch) => {
+    const { oldElementData, response, currentSlateData } = elementConversionData
+    if (response.hasOwnProperty("figuretype") && !allowedFigureTypesForTCM.includes(response.figuretype)) {
+        return false
+    }
     let actionStatus = {
         action:"update",
         status:"",
         fromWhere:"conversion"
     }
-    const {oldElementData,response,currentSlateData}=elementConversionData
     let convertAppStore = JSON.parse(JSON.stringify(appStore.slateLevelData));
     let convertSlate = convertAppStore[config.slateManifestURN];
     let convertBodymatter = convertSlate.contents.bodymatter;
@@ -532,7 +538,7 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
  * @param {Boolean} fromToolbar | conversion from toolbar (only list type)
  */
 export const conversionElement = (elementData, fromToolbar) => (dispatch, getState) => {
-    if(!config.conversionInProcess && !config.savingInProgress){
+    if(!config.conversionInProcess && !config.savingInProgress && !config.isSavingElement){
         let appStore =  getState().appStore;
         dispatch(handleElementConversion(elementData, appStore.slateLevelData, appStore.activeElement, fromToolbar,appStore.showHideObj));
     } else {
