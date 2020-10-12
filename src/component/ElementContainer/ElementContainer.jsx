@@ -108,6 +108,13 @@ class ElementContainer extends Component {
         });
     }
 
+    componentDidUpdate() {
+        if(this.props.searchParent !== '' && document.querySelector("div.canvas-blocker")) {
+            // sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } });
+        }
+        // sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } });urn:pearson:manifest:579f5393-883b-4a22-8000-50cc5a802464
+    }
+
     componentWillUnmount() {
         if (config.releaseCallCount === 0) {
             this.props.releaseSlateLock(config.projectUrn, config.slateManifestURN)
@@ -1360,8 +1367,15 @@ class ElementContainer extends Component {
                 btnClassName = '';
             }
         }
+
+        // Check if searched URN match the element URN
+        let searched = '';
+        if(this.props.searchUrn !== '' && this.props.searchUrn === element.id) {
+            searched = 'searched';
+        }
+
         return (
-            <div className="editor" data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
+            <div className={`editor ${searched}`} data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
                 {this.state.showCopyPopup && <CopyUrn elementId={this.props.element.id} toggleCopyMenu={this.toggleCopyMenu} copyClickedX={this.copyClickedX} copyClickedY={this.copyClickedY} />}
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                     <Button type="element-label" btnClassName={`${btnClassName} ${isQuadInteractive} ${this.state.isOpener ? ' ignore-for-drag' : ''}`} labelText={labelText} copyContext={(e)=>{OnCopyContext(e,this.toggleCopyMenu)}} onClick={(event) => this.labelClickHandler(event)} />
@@ -1582,6 +1596,7 @@ const mapStateToProps = (state) => {
         allComments: state.commentsPanelReducer.allComments,
         showHideId: state.appStore.showHideId,
         tcmData: state.tcmReducer.tcmSnapshot,
+        searchUrn: state.searchReducer.searchTerm
     }
 }
 

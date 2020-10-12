@@ -63,6 +63,9 @@ let initialState = {
     elementStatusReducer: {
         "urn:pearson:work:ee2b0c11-75eb-4a21-87aa-578750b5301d": "wip"       
     },
+    searchReducer: {
+        searchTerm: ""
+    }
 };
 jest.mock('../../../src/component/ElementContainer/ElementContainer_Actions.js', () => {
     return {

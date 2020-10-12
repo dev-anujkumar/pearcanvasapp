@@ -6,17 +6,20 @@ import '../../styles/Toolbar/Toolbar.css';
 import SlateTagDropdown from '../ElementMetaDataAnchor/SlateTagDropdown.jsx';
 
 import { toggleElemBordersAction } from './Toolbar_Actions.js';
-import { slateTagDisable, slateTagEnable, audioNarration, audioNarrationEnable, collapseHeader, expandHeader } from '../../images/TinyMce/TinyMce.jsx';
+import { slateTagDisable, slateTagEnable, audioNarration, audioNarrationEnable, collapseHeader, expandHeader, searchIcon,
+    searchClose, searchUp, searchDown } from '../../images/TinyMce/TinyMce.jsx';
 import { checkSlateLock } from '../../js/slateLockUtility.js'
 import AddAudioBook from '../AudioNarration/AddAudioBook.jsx';
-import OpenAudioBook from '../AudioNarration/OpenAudioBook.jsx'
-import { hasReviewerRole, sendDataToIframe } from '../../constants/utility.js'
+import OpenAudioBook from '../AudioNarration/OpenAudioBook.jsx';
+import { hasReviewerRole, sendDataToIframe } from '../../constants/utility.js';
+import SearchComponent from './Search/Search.jsx';
 
 const _Toolbar = props => {
     const [lodropdown, setLODropdown] = useState(false);
     const [addDropDown, setValueAdd] = useState(false);
     const [openDropDown, setValueOpen] = useState(false);
     const [showHeader, setHeaderValue] = useState(true);
+    const [UrnSearch, searchToggle] = useState(false);
 
     useEffect(() => {
         setLODropdown(false);
@@ -91,72 +94,96 @@ const _Toolbar = props => {
     }
     let accessToolbar = (props.permissions && props.permissions.includes('access_formatting_bar')) ? "" : " disableToolbar"
 
+    /**
+     * Functiona for search box toggle
+     */
+    function handleSearchToggle(e, status = false) {
+        e.stopPropagation();
+        searchToggle(status);
+    }
+
+    // Filter search icon for popup
+    let popupFilter = '';
+    if(config.isPopupSlate) {
+        popupFilter = 'popup';
+    }
+
     return (
         <>
-        <div className='toolbar-container'>
-            <div className={"header" + accessToolbar} id="tinymceToolbar"></div>
-            {/* ***********************Slate Tag in toolbar******************************************** */}
-            {config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && props.slateType !== "container-introduction" &&
-                <div className="leaningobjective-block">
-                    <div className="learningobjectiveicon">
-                        <div className="learningobjectiveicon slate-tag-icon" title="Slate Tag" onClick={_handleLODropdown}>
-                            {props.isLOExist ? slateTagEnable : slateTagDisable}
+            <div className='toolbar-container'>
+                <div className={"header" + accessToolbar} id="tinymceToolbar"></div>
+                {/* ***********************Slate Tag in toolbar******************************************** */}
+                {config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && props.slateType !== "container-introduction" &&
+                    <div className="leaningobjective-block">
+                        <div className="learningobjectiveicon">
+                            <div className="learningobjectiveicon slate-tag-icon" title="Slate Tag" onClick={_handleLODropdown}>
+                                {props.isLOExist ? slateTagEnable : slateTagDisable}
+                            </div>
+                            {lodropdown &&
+                                <SlateTagDropdown permissions={props.permissions} currentSlateLOData={props.currentSlateLOData} handleLODropdown={_handleLODropdown} closeLODropdown={closeLODropdown} />
+                            }
                         </div>
-                        {lodropdown &&
-                            <SlateTagDropdown permissions={props.permissions} currentSlateLOData={props.currentSlateLOData} handleLODropdown={_handleLODropdown} closeLODropdown={closeLODropdown} />
-                        }
                     </div>
-                </div>
-            }
+                }
 
-            {/* ***********************Audio Narration in toolbar******************************************** */}
-            {   /* Add Audio if there is no audio exists in slate */
-                (props.addAudio && (!hasReviewerRole())) &&
-                <div className={"audio-block" + accessToolbar}>
-                    <div className="audioicon">
-                        <div className="audio audioicon" title="Audio Tag" onClick={() => {
-                            if (checkSlateLock(props.slateLockInfo)) {
-                                return false
-                            }
-                            else {
-                                _handleAddDropdown()
-                            }
-                        }}>
-                            {audioNarration}
-                        </div>
+                {/* ***********************Audio Narration in toolbar******************************************** */}
+                {   /* Add Audio if there is no audio exists in slate */
+                    (props.addAudio && (!hasReviewerRole())) &&
+                    <div className={"audio-block" + accessToolbar}>
+                        <div className="audioicon">
+                            <div className="audio audioicon" title="Audio Tag" onClick={() => {
+                                if (checkSlateLock(props.slateLockInfo)) {
+                                    return false
+                                }
+                                else {
+                                    _handleAddDropdown()
+                                }
+                            }}>
+                                {audioNarration}
+                            </div>
 
-                        {addDropDown && <AddAudioBook closeAddAudioBook={closeAddAudioBook} />}
-                    </div>
-                </div>
-            }
-            {
-                // for Enabling the audio Narration icon
-                /* Open Audio if already exists in slate */
-                (props.openAudio) &&
-                <div className="audio-block">
-                    <div className="audioicon">
-                        <div className="audio audioicon" title="Audio Tag" onClick={() => {
-                            if (checkSlateLock(props.slateLockInfo)) {
-                                return false
-                            }
-                            else {
-                                _handleOpenDropdown()
-                            }
-                        }}>
-                            {audioNarrationEnable}
+                            {addDropDown && <AddAudioBook closeAddAudioBook={closeAddAudioBook} />}
                         </div>
-                        {openDropDown && <OpenAudioBook closeAudioBookDialog={closeAudioBookDialog} />}
                     </div>
-                </div>
-            }
-            {/* *****end**** */}
-        </div>
-            {/* ***********************Collapse Header******************************************** */}
-            <div className="collapse-header" onClick={() => { showHideHeader() }}>
-                {showHeader ? collapseHeader : expandHeader}
+                }
+                {
+                    // for Enabling the audio Narration icon
+                    /* Open Audio if already exists in slate */
+                    (props.openAudio) &&
+                    <div className="audio-block">
+                        <div className="audioicon">
+                            <div className="audio audioicon" title="Audio Tag" onClick={() => {
+                                if (checkSlateLock(props.slateLockInfo)) {
+                                    return false
+                                }
+                                else {
+                                    _handleOpenDropdown()
+                                }
+                            }}>
+                                {audioNarrationEnable}
+                            </div>
+                            {openDropDown && <OpenAudioBook closeAudioBookDialog={closeAudioBookDialog} />}
+                        </div>
+                    </div>
+                }
+                {/* *****end**** */}
             </div>
-    </>
-        
+            {/* ***********************Collapse Header******************************************** */}
+            <div className="side-icons">
+                {<div className={`icon search-urn ${popupFilter}`} onClick={e => { handleSearchToggle(e, true) }}>
+                    {searchIcon}
+                    <SearchComponent
+                        search={UrnSearch}
+                        searchTerm={props.searchUrn || ''}
+                        onClose={handleSearchToggle}
+                        icons={{ searchClose, searchUp, searchDown }}
+                    />
+                </div>}
+                <div className="icon collapse-header" onClick={() => { showHideHeader() }}>
+                    {showHeader ? collapseHeader : expandHeader}
+                </div>
+            </div>
+        </>   
     )
 }
 
@@ -172,7 +199,8 @@ const mapStateToProps = (state) => {
         addAudio: state.audioReducer.addAudio,
         openAudio: state.audioReducer.openAudio,
         setSlateParent: state.appStore.setSlateParent,
-        slateLockInfo: state.slateLockReducer.slateLockInfo
+        slateLockInfo: state.slateLockReducer.slateLockInfo,
+        searchUrn: state.searchReducer.searchTerm
     }
 }
 

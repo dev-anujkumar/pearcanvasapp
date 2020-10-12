@@ -13,6 +13,7 @@ import errorPopup from './errorPopupReducer';
 import citeTdxReducer from './citeTdxReducer';
 import tcmReducer from './tcmReducer';
 import elementStatusReducer from "./elementStatusReducer";
+import searchReducer from './searchReducer';
 
 export default combineReducers({
     appStore: appReducer,
@@ -28,5 +29,6 @@ export default combineReducers({
     errorPopup,
     citeTdxReducer,
     tcmReducer,
-    elementStatusReducer
+    elementStatusReducer,
+    searchReducer
 });
