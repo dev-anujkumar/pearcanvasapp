@@ -29,6 +29,7 @@ import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
 import { ELM_INT } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 import { checkAssessmentStatus } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
+import { getContainerData } from './../Toolbar/Search/Search_Action.js';
 
 const findElementType = (element, index) => {
     let elementType = {};
@@ -506,6 +507,11 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             entityURN,
             projectURN: config.projectUrn,
         });
+
+        // Read element URN to search from project URL
+        let queryStrings = new URLSearchParams(window.location.search);
+        let searchTerm = queryStrings.get('searchElement') || '';
+        dispatch(getContainerData(searchTerm));
     });
 };
 

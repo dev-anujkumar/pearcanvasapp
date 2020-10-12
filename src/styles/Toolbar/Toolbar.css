@@ -436,6 +436,9 @@ margin-left:6px;
 
 /******************************** Search Component UI ****************************************************/
 
+.editor-toolbar.popup .search-urn {
+  display: none;
+}
 .search-wrapper {
   top: 0;
   right: 48px;
@@ -512,9 +515,3 @@ margin-left:6px;
   opacity: 0.45;
   pointer-events: none;
 }
-/* .icon.search-urn.popup .search-wrapper .search-element .search-input input {
-  pointer-events: none;
-}
-.icon.search-urn.popup .search-wrapper .search-element {
-  background-color: #f9f9f9;
-} */
