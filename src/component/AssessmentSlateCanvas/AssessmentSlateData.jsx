@@ -57,11 +57,13 @@ class AssessmentSlateData extends Component {
 
     componentDidUpdate(prevProps) {
         if (this.props.getAssessmentDataPopup !== prevProps.getAssessmentDataPopup) {
-            this.sendDataAssessment(prevProps);
+            this.sendDataAssessment(this.props);
         }
-        if (this.state.activeAssessmentType == PUF && ((this.props.assessmentSlateObj.title) && (prevProps.assessmentSlateObj.assessmentId && prevProps.assessmentReducer && prevProps.assessmentReducer[prevProps.assessmentSlateObj.assessmentId] && prevProps.assessmentReducer[prevProps.assessmentSlateObj.assessmentId].assessmentTitle))) {
-            if (this.props.assessmentSlateObj.title != prevProps.assessmentReducer[prevProps.assessmentSlateObj.assessmentId].assessmentTitle) {
-                this.updateElmOnSaveEvent(prevProps);
+        const { assessmentSlateObj, assessmentReducer } = this.props;
+        if (this.state.activeAssessmentType == PUF &&
+            ((assessmentSlateObj.title) && (assessmentReducer && (assessmentReducer[assessmentSlateObj.assessmentId] && assessmentReducer[assessmentSlateObj.assessmentId].assessmentTitle)))) {
+            if (assessmentSlateObj.title != (assessmentReducer[assessmentSlateObj.assessmentId].assessmentTitle)) {
+                this.updateElmOnSaveEvent(this.props);
             }
         }
     }
@@ -189,17 +191,20 @@ class AssessmentSlateData extends Component {
     updateElmAssessment = async (event) => {
         this.toggleUpdatePopup(false, event);
         this.showCanvasBlocker(false);
-        await this.props.checkElmAssessmentStatus(this.props.assessmentReducer[this.props.assessmentSlateObj.assessmentId].latestWorkUrn, 'fromUpdate',this.props.assessmentSlateObj.assessmentId);
+        await this.props.checkElmAssessmentStatus(this.props.assessmentReducer[this.props.assessmentSlateObj.assessmentId].latestWorkUrn, 'fromUpdate', this.props.assessmentSlateObj.assessmentId);
         const { latestWorkUrn, assessmentTitle } = this.props.assessmentReducer[this.props.assessmentSlateObj.assessmentId]
         let updatedElmObj = {
             id: latestWorkUrn,
             title: assessmentTitle,
             usagetype: this.state.activeAssessmentUsageType
         }
-        this.props.addPufAssessment(updatedElmObj, this.state.activeAssessmentType,'insert',()=>{
+        if (latestWorkUrn != this.props.assessmentSlateObj.assessmentId) {
+            updatedElmObj.title = this.props.assessmentReducer[latestWorkUrn].assessmentTitle
+        }
+        this.props.addPufAssessment(updatedElmObj, this.state.activeAssessmentType, 'insert', () => {
             this.props.showToastMessage(true);
             this.props.setToastMessage(ELM_NEW_VERSION_UPDATE);
-            this.props.updateAssessmentVersion(this.props.assessmentSlateObj.assessmentId,latestWorkUrn);
+            this.props.updateAssessmentVersion(this.props.assessmentSlateObj.assessmentId, latestWorkUrn);
         });
         this.props.handleCanvasBlocker.disableHeader(false);
         this.props.handleCanvasBlocker.hideTocBlocker(false);
@@ -421,11 +426,8 @@ class AssessmentSlateData extends Component {
     renderAssessmentSlate = () => {
         this.setSlateTagIcon();
 
-        const { getAssessmentData, getAssessmentDataPopup, assessmentSlateObj, assessmentReducer } = this.props;
-        const { activeAssessmentType, showElmComponent, showCiteTdxComponent, changeLearningData, activeAssessmentUsageType } = this.state;//&& (assessmentReducer[assessmentSlateObj.assessmentId].assessmentStatus == 'wip' || assessmentReducer[assessmentSlateObj.assessmentId].assessmentStatus == 'final' && assessmentReducer[assessmentSlateObj.assessmentId].activeWorkUrn == 
-        if (this.state.activeAssessmentType == PUF && assessmentReducer[assessmentSlateObj.assessmentId] && assessmentReducer[assessmentSlateObj.assessmentId].assessmentTitle && assessmentSlateObj.title != assessmentReducer[assessmentSlateObj.assessmentId].assessmentTitle) { 
-            this.updateElmOnSaveEvent(this.props);
-        }
+        const { getAssessmentData, getAssessmentDataPopup, assessmentSlateObj } = this.props;
+        const { activeAssessmentType, showElmComponent, showCiteTdxComponent, changeLearningData, activeAssessmentUsageType } = this.state;
         let slatePlaceholder = assessmentSlateObj && activeAssessmentType && this.setAssessmentPlaceholder(activeAssessmentType, assessmentSlateObj)
         let assessmentSlateJSX;
         if ((activeAssessmentType === PUF || activeAssessmentType === LEARNOSITY) && showElmComponent === true) {
