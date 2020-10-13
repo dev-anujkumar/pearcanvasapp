@@ -8,7 +8,8 @@ import {
     GET_USAGE_TYPE,
     SET_ASSESSMENT_STATUS,
     GET_ASSESSMENT_VERSIONS,
-    ELM_PORTAL_API_ERROR
+    ELM_PORTAL_API_ERROR,
+    RESET_ASSESSMENT_STORE
 } from "../../../constants/Action_Constants";
 import { ELM_PORTAL_ERROR_MSG } from '../AssessmentSlateConstants.js';
 
@@ -54,7 +55,7 @@ const prepareUsageTypeData = (res) => {
 /**
  * This action creator is used to fetch the assessment metadata including status
  */
-export const checkAssessmentStatus = (workUrn, calledFrom, currentWorkUrn) => (dispatch) => {
+export const checkAssessmentStatus = (workUrn, calledFrom, currentWorkUrn, currentWorkData) => (dispatch) => {
     let url = `${config.ASSESSMENT_ENDPOINT}assessment/v2/${workUrn}`;
     return axios.get(url, {
         headers: {
@@ -70,33 +71,33 @@ export const checkAssessmentStatus = (workUrn, calledFrom, currentWorkUrn) => (d
                 showUpdateStatus: false
             };
             if (calledFrom == 'fromNextVersion') {
+                dataForUpdate = { ...currentWorkData }
                 dataForUpdate.showUpdateStatus = checkAssessmentNextVersion(res.data, currentWorkUrn);
                 dataForUpdate.latestWorkUrn = dataForUpdate.showUpdateStatus == true ? workUrn : currentWorkUrn;
-                dataForUpdate.assessmentTitle = res.data.name ? res.data.name : res.data.defaultTitle ? res.data.defaultTitle : 'Elm assessment'
+                // dataForUpdate.assessmentTitle = res.data.name ? res.data.name : res.data.defaultTitle ? res.data.defaultTitle : 'Elm assessment'
             } else {
                 dataForUpdate = {
                     assessmentStatus: assessmentStatus,
                     assessmentEntityUrn: res.data.entityUrn,
                     activeWorkUrn: res.data.versionUrn,
                     assessmentTitle: res.data.name ? res.data.name : res.data.defaultTitle ? res.data.defaultTitle : 'Elm assessment',
+                    showUpdateStatus: false,
                     ...dataForUpdate
                 }
             }
             let assessmentUrn = calledFrom == 'fromNextVersion' ? currentWorkUrn : workUrn
-            dispatch({
-                type: SET_ASSESSMENT_STATUS,
-                payload: {
-                    // [assessmentUrn]: {...dataForUpdate},
-                    currentWorkUrn: assessmentUrn,
-                    dataForUpdate: dataForUpdate
-                }
-            })
-            if (assessmentStatus == 'final' && calledFrom && (calledFrom != 'fromUpdate')) {
-                dispatch(getLatestAssessmentVersion(res.data.entityUrn, workUrn, res.data.dateCreated))
+            if (assessmentStatus == 'wip' || (calledFrom == 'fromNextVersion')) {
+                dispatch({
+                    type: SET_ASSESSMENT_STATUS,
+                    payload: {
+                        currentWorkUrn: assessmentUrn,
+                        dataForUpdate: dataForUpdate
+                    }
+                })
             }
-            // else if (calledFrom == 'fromUpdate') { /* Update all other assessments with same assessmentID in the project */
-            //     dispatch(updateAssessmentVersion(currentWorkUrn, workUrn))
-            // }
+            if (assessmentStatus == 'final' && calledFrom && (calledFrom != 'fromUpdate')) {
+                dispatch(getLatestAssessmentVersion(res.data.entityUrn, workUrn, res.data.dateCreated, dataForUpdate))
+            }
         }
     }).catch(() => {
         dispatch({
@@ -126,7 +127,7 @@ const checkAssessmentNextVersion = (nextData, previousWorkUrn) => {
 /**
  * This action creator is used to fetch all the versions of the assessment/assessment-item
  */
-export const getLatestAssessmentVersion = (entityUrn, workUrn, createdDate) => (dispatch) => {
+export const getLatestAssessmentVersion = (entityUrn, workUrn, createdDate, previousData) => (dispatch) => {
     let url = `${config.ASSESSMENT_ENDPOINT}entity/${entityUrn}/versions`;
     return axios.get(url, {
         headers: {
@@ -139,11 +140,12 @@ export const getLatestAssessmentVersion = (entityUrn, workUrn, createdDate) => (
             let assessmentLatestWorkURN = res.data[getLatestIndex(res.data)].versionUrn //Latest WorkURN
             let newVersions = res.data.filter(assessment => new Date(assessment.createdDate) > new Date(createdDate)) //List of All versions created after current WorkURN
             if (newVersions && newVersions.length == 1) {        //Show Approved Status
-                dispatch(checkAssessmentStatus(newVersions[0].versionUrn, 'fromNextVersion', workUrn))//"elmVersionIsClean": true
+                dispatch(checkAssessmentStatus(newVersions[0].versionUrn, 'fromNextVersion', workUrn, previousData))//"elmVersionIsClean": true
             } else if (newVersions && newVersions.length > 1) {  //Show UPDATE button
                 dispatch({
                     type: GET_ASSESSMENT_VERSIONS,
                     payload: {
+                        ...previousData,
                         currentWorkUrn: workUrn,
                         latestWorkUrn: assessmentLatestWorkURN,
                         showUpdateStatus: true
@@ -236,4 +238,11 @@ export const updateAssessmentVersion = (oldWorkUrn, updatedWorkUrn) => dispatch 
             }
         })
     })
+}
+
+export const resetAssessmentStore = () => {
+    return {
+        type: RESET_ASSESSMENT_STORE,
+        payload: {}
+    }
 }
