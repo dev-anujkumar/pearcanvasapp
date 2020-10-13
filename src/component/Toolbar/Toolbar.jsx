@@ -27,7 +27,7 @@ const _Toolbar = props => {
       }, [props.setSlateEntity, props.setSlateParent]); 
 
     useEffect(() => {
-        changeAudioNarration() 
+        changeAudioNarration()
     }, [props.openAudio ,props.addAudio])
 
     /**
@@ -102,10 +102,11 @@ const _Toolbar = props => {
         searchToggle(status);
     }
 
-    // Filter search icon for popup
-    let popupFilter = '';
+    let searchElm = UrnSearch;
+    let searchTerm = props.searchUrn || '';
     if(config.isPopupSlate) {
-        popupFilter = 'popup';
+        searchElm = false;
+        searchTerm = '';
     }
 
     return (
@@ -170,11 +171,11 @@ const _Toolbar = props => {
             </div>
             {/* ***********************Collapse Header******************************************** */}
             <div className="side-icons">
-                {<div className={`icon search-urn ${popupFilter}`} onClick={e => { handleSearchToggle(e, true) }}>
+                {<div className="icon search-urn" onClick={e => { handleSearchToggle(e, true) }}>
                     {searchIcon}
                     <SearchComponent
-                        search={UrnSearch}
-                        searchTerm={props.searchUrn || ''}
+                        search={searchElm}
+                        searchTerm={searchTerm}
                         onClose={handleSearchToggle}
                         icons={{ searchClose, searchUp, searchDown }}
                     />

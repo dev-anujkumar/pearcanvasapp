@@ -36,7 +36,7 @@ import { fetchUsageTypeData } from '../AssessmentSlateCanvas/AssessmentActions/a
 import { toggleElemBordersAction, togglePageNumberAction } from '../Toolbar/Toolbar_Actions.js';
 import { prevIcon, nextIcon } from '../../../src/images/ElementButtons/ElementButtons.jsx';
 import { assetIdForSnapshot } from '../../component/AssetPopover/AssetPopover_Actions.js';
-import { getContainerData } from '../Toolbar/Search/Search_Action.js';
+
 export class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
@@ -78,11 +78,6 @@ export class CanvasWrapper extends Component {
             let slateId = config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
             this.props.releaseSlateLock(config.projectUrn, slateId)
         }
-
-        // Read element URN to search from project URL
-        let queryStrings = new URLSearchParams(window.location.search);
-        let searchTerm = queryStrings.get('searchElement') || '';
-        this.props.getContainerData(searchTerm);
     }
 
 
@@ -172,7 +167,13 @@ export class CanvasWrapper extends Component {
     }
     render() {
         let slateData = this.props.slateLevelData
-        let isReviewerRoleClass = hasReviewerRole() ? " reviewer-role" : ""
+        let isReviewerRoleClass = hasReviewerRole() ? " reviewer-role" : "";
+        // Filter search icon for popup
+        let popupFilter = '';
+        if(config.isPopupSlate) {
+            popupFilter = 'popup';
+        }
+        
         return (
             <div className='content-composer'>
                 {this.props.showBlocker ? <div className="canvas-blocker" ></div> : '' }
@@ -187,7 +188,7 @@ export class CanvasWrapper extends Component {
                     isElmApiError={this.props.ErrorPopup.isElmApiError}
                 />}
                 {/** Ends of custom error popup */}
-                <div id="editor-toolbar" className="editor-toolbar">
+                <div id="editor-toolbar" className={`editor-toolbar ${popupFilter}`}>
                     {/* editor tool goes here */}
                     <Toolbar />
                     {/* custom list editor component */}
@@ -311,7 +312,6 @@ export default connect(
         toggleElemBordersAction,
         togglePageNumberAction,
         tcmCosConversionSnapshot,
-        assetIdForSnapshot,
-        getContainerData
+        assetIdForSnapshot
     }
 )(CommunicationChannelWrapper(CanvasWrapper));
