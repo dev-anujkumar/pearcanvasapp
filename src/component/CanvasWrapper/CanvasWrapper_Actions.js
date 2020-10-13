@@ -28,7 +28,7 @@ import { handleTCMData } from '../TcmSnapshots/TcmSnapshot_Actions.js';
 import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
 import { ELM_INT } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
-import { checkAssessmentStatus } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
+import { checkAssessmentStatus , resetAssessmentStore } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import { getContainerData } from './../Toolbar/Search/Search_Action.js';
 
 const findElementType = (element, index) => {
@@ -301,6 +301,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
         }
         dispatch(handleTCMData(tcmManifestUrn));
     }
+    dispatch(resetAssessmentStore());//reset Assessment Store
     const elementCount = getState().appStore.slateLength;
     let apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}&elementCount=${elementCount}`
     if (versionPopupReload) {
