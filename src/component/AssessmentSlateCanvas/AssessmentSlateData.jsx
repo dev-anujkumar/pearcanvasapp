@@ -191,7 +191,7 @@ class AssessmentSlateData extends Component {
             title: assessmentTitle,
             usagetype: this.state.activeAssessmentUsageType
         }
-        this.props.addPufAssessment(updatedElmObj, this.state.activeAssessmentType,'update',()=>{
+        this.props.addPufAssessment(updatedElmObj, this.state.activeAssessmentType,'insert',()=>{
             this.props.showToastMessage(true);
             this.props.setToastMessage(ELM_NEW_VERSION_UPDATE);
             this.props.updateAssessmentVersion(this.props.assessmentSlateObj.assessmentId,latestWorkUrn);
@@ -215,7 +215,7 @@ class AssessmentSlateData extends Component {
 
     updateElmOnSaveEvent = () => {
         const { assessmentReducer, assessmentSlateObj } = this.props
-        if (this.state.activeAssessmentType == 'puf' && assessmentReducer[assessmentSlateObj.assessmentId] && assessmentReducer[assessmentSlateObj.assessmentId].assessmentTitle && assessmentSlateObj.title != assessmentReducer[assessmentSlateObj.assessmentId].assessmentTitle) {
+        if (this.state.activeAssessmentType == 'puf' && assessmentReducer[assessmentSlateObj.assessmentId] && assessmentReducer[assessmentSlateObj.assessmentId].assessmentTitle && assessmentSlateObj.title != assessmentReducer[assessmentSlateObj.assessmentId].assessmentTitle && assessmentReducer[assessmentSlateObj.assessmentId].assessmentStatus == 'wip') {
             let pufObj = {
                 id: assessmentSlateObj.assessmentId,
                 title: this.props.assessmentReducer[assessmentSlateObj.assessmentId].assessmentTitle,
