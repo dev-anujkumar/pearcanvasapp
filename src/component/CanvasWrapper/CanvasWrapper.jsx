@@ -36,6 +36,7 @@ import { fetchUsageTypeData } from '../AssessmentSlateCanvas/AssessmentActions/a
 import { toggleElemBordersAction, togglePageNumberAction } from '../Toolbar/Toolbar_Actions.js';
 import { prevIcon, nextIcon } from '../../../src/images/ElementButtons/ElementButtons.jsx';
 import { assetIdForSnapshot } from '../../component/AssetPopover/AssetPopover_Actions.js';
+import { getContainerData } from '../Toolbar/Search/Search_Action.js';
 export class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
@@ -77,6 +78,11 @@ export class CanvasWrapper extends Component {
             let slateId = config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
             this.props.releaseSlateLock(config.projectUrn, slateId)
         }
+
+        // Read element URN to search from project URL
+        let queryStrings = new URLSearchParams(window.location.search);
+        let searchTerm = queryStrings.get('searchElement') || '';
+        this.props.getContainerData(searchTerm);
     }
 
 
@@ -305,6 +311,7 @@ export default connect(
         toggleElemBordersAction,
         togglePageNumberAction,
         tcmCosConversionSnapshot,
-        assetIdForSnapshot
+        assetIdForSnapshot,
+        getContainerData
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

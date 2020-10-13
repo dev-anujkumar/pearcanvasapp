@@ -63,7 +63,10 @@ let initialState = {
     tcmReducer:{
         tcmSnapshot:{}
     },
-    elementStatusReducer: {}
+    elementStatusReducer: {},
+    searchReducer: {
+        searchTerm: ""
+    }
 }
 
 const mockStore = configureMockStore(middlewares)

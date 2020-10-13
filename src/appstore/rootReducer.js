@@ -13,6 +13,7 @@ import errorPopup from './errorPopupReducer';
 import citeTdxReducer from './citeTdxReducer';
 import tcmReducer from './tcmReducer';
 import elementStatusReducer from "./elementStatusReducer";
+import searchReducer from './searchReducer';
 import assessmentReducer from './assessmentReducer';
 
 export default combineReducers({
@@ -30,5 +31,6 @@ export default combineReducers({
     citeTdxReducer,
     tcmReducer,
     elementStatusReducer,
+    searchReducer,
     assessmentReducer
 });

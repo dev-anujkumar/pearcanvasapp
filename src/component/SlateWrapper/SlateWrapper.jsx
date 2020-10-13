@@ -70,6 +70,14 @@ class SlateWrapper extends Component {
         window.addEventListener('scroll',this.handleScroll)
     }
 
+    componentDidUpdate() {
+        if(this.props.searchParent !== '' && document.querySelector(`div[data-id="${this.props.searchParent}"]`)) {
+            let divObj = document.querySelector(`div[data-id="${this.props.searchParent}"]`).offsetTop;
+            document.getElementById('slateWrapper').scrollTop = divObj;
+            // sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } });
+        }
+    }
+
     handleScroll = (e) => {
         forceCheck();
         if (config.totalPageCount <= config.page) return false;
@@ -912,7 +920,7 @@ class SlateWrapper extends Component {
                            <React.Fragment key={element.id}>
                                <LazyLoad 
                                     once={true}
-                                    placeholder={<div>Loading...</div>}
+                                    placeholder={<div data-id={element.id}>Loading...</div>}
                                 >
                                     {
                                         index === 0 && _slateType !== 'assessment' && config.isCO === false ?
@@ -1242,6 +1250,7 @@ const mapStateToProps = state => {
         indexSplit : state.audioReducer.indexSplit,
         accesDeniedPopup : state.appStore.accesDeniedPopup,
         showSlateLockPopupValue: state.metadataReducer.showSlateLockPopup,
+        searchParent: state.searchReducer.parentId,
         showToast: state.appStore.showToast
     };
 };

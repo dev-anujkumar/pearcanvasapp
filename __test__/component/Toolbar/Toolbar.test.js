@@ -42,6 +42,9 @@ const store = mockStore({
             timestamp: "",
             userId: ""
         }
+    },
+    searchReducer: {
+        searchTerm: ""
     }
 });
 

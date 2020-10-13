@@ -67,6 +67,9 @@ let initialState = {
     elementStatusReducer: {
         "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635": "wip"       
     },
+    searchReducer: {
+        searchTerm: ""
+    }
 }
 
 let store = mockStore(initialState);

@@ -11,7 +11,7 @@ import elementTypes from './../Sidebar/elementTypes';
 import figureDataBank from '../../js/figure_data_bank';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
-import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
+import { POD_DEFAULT_VALUE, allowedFigureTypesForTCM } from '../../constants/Element_Constants'
 import { prepareTcmSnapshots,checkContainerElementVersion,fetchManifestStatus,fetchParentData } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 let imageSource = ['image','table','mathImage'],imageDestination = ['primary-image-figure','primary-image-table','primary-image-equation']
 const elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza', 'figure'];
@@ -419,12 +419,15 @@ function prepareDataForConversionTcm(updatedDataID, getState, dispatch,versionid
  * @param {Function} dispatch to dispatch tcmSnapshots
 */
 export const tcmSnapshotsForConversion = async (elementConversionData,indexes,appStore,dispatch) => {
+    const { oldElementData, response, currentSlateData } = elementConversionData
+    if (response.hasOwnProperty("figuretype") && !allowedFigureTypesForTCM.includes(response.figuretype)) {
+        return false
+    }
     let actionStatus = {
         action:"update",
         status:"",
         fromWhere:"conversion"
     }
-    const {oldElementData,response,currentSlateData}=elementConversionData
     let convertAppStore = JSON.parse(JSON.stringify(appStore.slateLevelData));
     let convertSlate = convertAppStore[config.slateManifestURN];
     let convertBodymatter = convertSlate.contents.bodymatter;
