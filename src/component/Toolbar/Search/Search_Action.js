@@ -22,7 +22,7 @@ export const getContainerData = (searchTerm) => {
         let parent = '';
         let elementIndex = 0;
         let bodymatter = {};
-        let slateData = getState().appStore.slateLevelData[config.slateManifestURN].contents.bodymatter || {};
+        let slateData = getState().appStore.slateLevelData[config.slateManifestURN] ? getState().appStore.slateLevelData[config.slateManifestURN].contents.bodymatter || {} : {};
 
         if(/^(urn\:pearson\:(work|manifest)\:\w{8}(\-\w{4}){3}\-\w{12})$/gi.test(searchTerm) ) {
             await axiosObject.get(`${config.REACT_APP_API_URL}v1/slate/${config.projectUrn}/contentHierarchy/${config.slateEntityURN}/elementids`)

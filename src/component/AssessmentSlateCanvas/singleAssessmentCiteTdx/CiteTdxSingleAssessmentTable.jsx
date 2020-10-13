@@ -41,10 +41,12 @@ class CiteTdxTable extends Component {
                 <CiteLoader isLoading={this.props.isLoading} citeErrorFlag={this.props.citeErrorFlag} />
                         <table className='assessment-table-class single-assessment'>
                             <thead>
+                                <tr>
                                 {(isLoading == false) && (assessmenterrFlag == false) && this.tableHeaders.map(item => (
-                                     <th className={`assessment-row-class ${item.toLowerCase()}`}>{item}
+                                     <th key={`assessment-${item}`} className={`assessment-row-class ${item.toLowerCase()}`}>{item}
                                     </th>
                                 ))}
+                                </tr>
                             </thead>
                             {(isLoading == false) && (assessmenterrFlag == false) && this.props.singleAssessmentData && this.props.singleAssessmentData.data && this.props.singleAssessmentData.data.length > 0 &&
                             <tbody>
