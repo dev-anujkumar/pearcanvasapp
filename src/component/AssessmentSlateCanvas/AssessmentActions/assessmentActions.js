@@ -228,7 +228,7 @@ export const updateAssessmentVersion = (oldWorkUrn, updatedWorkUrn) => dispatch 
     }).catch(() => {
         console.error("Unable to update the latest workUrn for >>>>", oldWorkUrn)
         dispatch({
-            type: ELM_PORTAL_ERROR_MSG,
+            type: ELM_PORTAL_API_ERROR,
             payload: {
                 show: true,
                 errorMessage: 'Unable to Update Other Insatnces of this Assessment',
