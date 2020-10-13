@@ -16,7 +16,7 @@ import { assessmentFormats, CITE, TDX, PUF, LEARNING_TEMPLATE, LEARNOSITY, ELM_N
 /** ----- Import - Action Creators ----- */
 import { setCurrentCiteTdx, assessmentSorting } from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
 import { closeLtAction, openLtAction, openLTFunction } from './learningTool/learningToolActions';
-import { checkAssessmentStatus } from './AssessmentActions/assessmentActions.js';
+import { checkAssessmentStatus, updateAssessmentVersion } from './AssessmentActions/assessmentActions.js';
 import { showToastMessage, setToastMessage } from '../Toast/ToastActions.js';
 /**
 * Module | AssessmentSlateData
@@ -51,6 +51,7 @@ class AssessmentSlateData extends Component {
             this.setState({
                 activeAssessmentType: this.props.model && this.props.setAssessmentFormat(this.props.model),
             })
+            // this.updateElmOnSaveEvent();
         }
         document.addEventListener("mousedown", this.handleClickOutside);
     }
@@ -147,7 +148,7 @@ class AssessmentSlateData extends Component {
     * @param pufObj - The object contains data about Elm/Learnosity Assessment 
     */
     addPufAssessment = (pufObj) => {
-        this.props.addPufAssessment(pufObj, this.state.activeAssessmentType);
+        this.props.addPufAssessment(pufObj, this.state.activeAssessmentType,'insert');
         this.props.checkElmAssessmentStatus(pufObj.id,'fromAddElm');
     }
 
@@ -180,21 +181,23 @@ class AssessmentSlateData extends Component {
     }
 
     /*** @description This function is used to update elm assessment after click on update from Version update Popup */
-    updateElmAssessment = (event) => {
+    updateElmAssessment = async (event) => {
         this.toggleUpdatePopup(false, event);
         this.showCanvasBlocker(false);
-        this.props.checkElmAssessmentStatus(this.props.assessmentReducer[this.props.assessmentSlateObj.assessmentId].latestWorkUrn, 'fromUpdate',this.props.assessmentSlateObj.assessmentId);
+        await this.props.checkElmAssessmentStatus(this.props.assessmentReducer[this.props.assessmentSlateObj.assessmentId].latestWorkUrn, 'fromUpdate',this.props.assessmentSlateObj.assessmentId);
         const { latestWorkUrn, assessmentTitle } = this.props.assessmentReducer[this.props.assessmentSlateObj.assessmentId]
         let updatedElmObj = {
             id: latestWorkUrn,
             title: assessmentTitle,
             usagetype: this.state.activeAssessmentUsageType
         }
-        this.props.addPufAssessment(updatedElmObj, this.state.activeAssessmentType);
+        this.props.addPufAssessment(updatedElmObj, this.state.activeAssessmentType,'insert',()=>{
+            this.props.showToastMessage(true);
+            this.props.setToastMessage(ELM_NEW_VERSION_UPDATE);
+            this.props.updateAssessmentVersion(this.props.assessmentSlateObj.assessmentId,latestWorkUrn);
+        });
         this.props.handleCanvasBlocker.disableHeader(false);
         this.props.handleCanvasBlocker.hideTocBlocker(false);
-        this.props.showToastMessage(true);
-        this.props.setToastMessage(ELM_NEW_VERSION_UPDATE);
     }
 
     /**
@@ -210,6 +213,17 @@ class AssessmentSlateData extends Component {
         this.prohibitPropagation(event)
     }
 
+    updateElmOnSaveEvent = () => {
+        const { assessmentReducer, assessmentSlateObj } = this.props
+        if (this.state.activeAssessmentType == 'puf' && assessmentReducer[assessmentSlateObj.assessmentId] && assessmentReducer[assessmentSlateObj.assessmentId].assessmentTitle && assessmentSlateObj.title != assessmentReducer[assessmentSlateObj.assessmentId].assessmentTitle && assessmentReducer[assessmentSlateObj.assessmentId].assessmentStatus == 'wip') {
+            let pufObj = {
+                id: assessmentSlateObj.assessmentId,
+                title: this.props.assessmentReducer[assessmentSlateObj.assessmentId].assessmentTitle,
+                usagetype: this.state.activeAssessmentUsageType
+            }
+            this.props.addPufAssessment(pufObj, this.state.activeAssessmentType, 'update');
+        }
+    }
     /**
      * Prevents event propagation and default behaviour
      * @param {*} event event object
@@ -403,6 +417,7 @@ class AssessmentSlateData extends Component {
     /*** @description - This function is to render the Assessment Slate Element*/
     renderAssessmentSlate = () => {
         this.setSlateTagIcon();
+        this.updateElmOnSaveEvent();
         const { getAssessmentData, getAssessmentDataPopup, assessmentSlateObj } = this.props;
         const { activeAssessmentType, showElmComponent, showCiteTdxComponent, changeLearningData, activeAssessmentUsageType } = this.state;
         let slatePlaceholder = assessmentSlateObj && activeAssessmentType && this.setAssessmentPlaceholder(activeAssessmentType, assessmentSlateObj)
@@ -554,7 +569,8 @@ const mapActionToProps = {
     openLTFunction: openLTFunction,
     checkElmAssessmentStatus : checkAssessmentStatus,
     showToastMessage: showToastMessage,
-    setToastMessage: setToastMessage
+    setToastMessage: setToastMessage,
+    updateAssessmentVersion: updateAssessmentVersion
 }
 
 export default connect(
