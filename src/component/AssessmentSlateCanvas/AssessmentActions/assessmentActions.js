@@ -54,9 +54,9 @@ const prepareUsageTypeData = (res) => {
 /**
  * This action creator is used to fetch the assessment metadata including status
  */
-export const checkAssessmentStatus = (workUrn, calledFrom, currentWorkUrn) => async (dispatch) => {
+export const checkAssessmentStatus = (workUrn, calledFrom, currentWorkUrn) => (dispatch) => {
     let url = `${config.ASSESSMENT_ENDPOINT}assessment/v2/${workUrn}`;
-    return await axios.get(url, {
+    return axios.get(url, {
         headers: {
             "Content-Type": "application/json",
             "ApiKey": config.STRUCTURE_APIKEY,
@@ -71,7 +71,7 @@ export const checkAssessmentStatus = (workUrn, calledFrom, currentWorkUrn) => as
             };
             if (calledFrom == 'fromNextVersion') {
                 dataForUpdate.showUpdateStatus = checkAssessmentNextVersion(res.data, currentWorkUrn);
-                dataForUpdate.latestWorkUrn = dataForUpdate.showUpdateStatus == true ?  workUrn : currentWorkUrn;
+                dataForUpdate.latestWorkUrn = dataForUpdate.showUpdateStatus == true ? workUrn : currentWorkUrn;
                 dataForUpdate.assessmentTitle = res.data.name ? res.data.name : res.data.defaultTitle ? res.data.defaultTitle : 'Elm assessment'
             } else {
                 dataForUpdate = {
@@ -93,9 +93,10 @@ export const checkAssessmentStatus = (workUrn, calledFrom, currentWorkUrn) => as
             })
             if (assessmentStatus == 'final' && calledFrom && (calledFrom != 'fromUpdate')) {
                 dispatch(getLatestAssessmentVersion(res.data.entityUrn, workUrn, res.data.dateCreated))
-            } else if (calledFrom == 'fromUpdate') { /* Update all other assessments with same assessmentID in the project */
-                dispatch(updateAssessmentVersion(currentWorkUrn, workUrn))
             }
+            // else if (calledFrom == 'fromUpdate') { /* Update all other assessments with same assessmentID in the project */
+            //     dispatch(updateAssessmentVersion(currentWorkUrn, workUrn))
+            // }
         }
     }).catch(() => {
         dispatch({
@@ -190,8 +191,12 @@ export const openElmAssessmentPortal = (assessmentData) => (dispatch) => {
         url = `${config.ELM_PORTAL_URL}/launch/editor/assessment/${assessmentWorkUrn}/item/${assessmentItemWorkUrn}/editInPlace?containerUrn=${containerURN}&projectUrn=${projDURN}`;
     }
     try {
-        window.open(url);
-        console.log('Successfully Navigated to Elm Assessment Portal!!!')
+        let elmWindow = window.open(url);
+        if (elmWindow.closed) {
+            console.log('Error in Navigating to Elm Assessment Portal!!!')
+        } else {
+            console.log('Successfully Navigated to Elm Assessment Portal!!!')
+        }
     } catch (error) {
         console.error('Unable to Launch Elm Assessment Env>>>', error)
         dispatch({
@@ -210,7 +215,7 @@ export const openElmAssessmentPortal = (assessmentData) => (dispatch) => {
  * @param oldWorkUrn current workURN of the assessment
  * @param updatedWorkUrn latest workURN of the assessment
  */
-export const updateAssessmentVersion = (oldWorkUrn, updatedWorkUrn) => {
+export const updateAssessmentVersion = (oldWorkUrn, updatedWorkUrn) => dispatch => {
     let url = `${config.SLATE_REFRESH_URL}${config.projectUrn}/updateAllAssessments/${oldWorkUrn}/${updatedWorkUrn}`;
     return axios.post(url, {}, {
         headers: {
@@ -222,5 +227,13 @@ export const updateAssessmentVersion = (oldWorkUrn, updatedWorkUrn) => {
         console.log(res, "res")
     }).catch(() => {
         console.error("Unable to update the latest workUrn for >>>>", oldWorkUrn)
+        dispatch({
+            type: ELM_PORTAL_ERROR_MSG,
+            payload: {
+                show: true,
+                errorMessage: 'Unable to Update Other Insatnces of this Assessment',
+                isElmApiError: 'elm-api-error'
+            }
+        })
     })
 }

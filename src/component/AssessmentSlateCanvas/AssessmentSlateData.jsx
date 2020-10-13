@@ -16,7 +16,7 @@ import { assessmentFormats, CITE, TDX, PUF, LEARNING_TEMPLATE, LEARNOSITY, ELM_N
 /** ----- Import - Action Creators ----- */
 import { setCurrentCiteTdx, assessmentSorting } from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
 import { closeLtAction, openLtAction, openLTFunction } from './learningTool/learningToolActions';
-import { checkAssessmentStatus } from './AssessmentActions/assessmentActions.js';
+import { checkAssessmentStatus, updateAssessmentVersion } from './AssessmentActions/assessmentActions.js';
 import { showToastMessage, setToastMessage } from '../Toast/ToastActions.js';
 /**
 * Module | AssessmentSlateData
@@ -180,21 +180,23 @@ class AssessmentSlateData extends Component {
     }
 
     /*** @description This function is used to update elm assessment after click on update from Version update Popup */
-    updateElmAssessment = (event) => {
+    updateElmAssessment = async (event) => {
         this.toggleUpdatePopup(false, event);
         this.showCanvasBlocker(false);
-        this.props.checkElmAssessmentStatus(this.props.assessmentReducer[this.props.assessmentSlateObj.assessmentId].latestWorkUrn, 'fromUpdate',this.props.assessmentSlateObj.assessmentId);
+        await this.props.checkElmAssessmentStatus(this.props.assessmentReducer[this.props.assessmentSlateObj.assessmentId].latestWorkUrn, 'fromUpdate',this.props.assessmentSlateObj.assessmentId);
         const { latestWorkUrn, assessmentTitle } = this.props.assessmentReducer[this.props.assessmentSlateObj.assessmentId]
         let updatedElmObj = {
             id: latestWorkUrn,
             title: assessmentTitle,
             usagetype: this.state.activeAssessmentUsageType
         }
-        this.props.addPufAssessment(updatedElmObj, this.state.activeAssessmentType);
+        this.props.addPufAssessment(updatedElmObj, this.state.activeAssessmentType,()=>{
+            this.props.showToastMessage(true);
+            this.props.setToastMessage(ELM_NEW_VERSION_UPDATE);
+            this.props.updateAssessmentVersion(this.props.assessmentSlateObj.assessmentId,latestWorkUrn);
+        });
         this.props.handleCanvasBlocker.disableHeader(false);
         this.props.handleCanvasBlocker.hideTocBlocker(false);
-        this.props.showToastMessage(true);
-        this.props.setToastMessage(ELM_NEW_VERSION_UPDATE);
     }
 
     /**
@@ -554,7 +556,8 @@ const mapActionToProps = {
     openLTFunction: openLTFunction,
     checkElmAssessmentStatus : checkAssessmentStatus,
     showToastMessage: showToastMessage,
-    setToastMessage: setToastMessage
+    setToastMessage: setToastMessage,
+    updateAssessmentVersion: updateAssessmentVersion
 }
 
 export default connect(
