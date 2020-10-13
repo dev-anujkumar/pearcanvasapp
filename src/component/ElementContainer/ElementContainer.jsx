@@ -105,7 +105,6 @@ class ElementContainer extends Component {
             btnClassName: '',
             isOpener: this.props.element.type === elementTypeConstant.OPENER
         })
-        //   handleElmPortalEvents();
         document.addEventListener('click',()=>{
             this.setState({showCopyPopup : false})
         });
@@ -116,6 +115,7 @@ class ElementContainer extends Component {
             this.props.releaseSlateLock(config.projectUrn, config.slateManifestURN)
             config.releaseCallCount += 1
         }
+        handleElmPortalEvents('remove');/** Remove Elm-Assessment Update eventListener */
     }
 
     componentWillReceiveProps(newProps) {
@@ -1491,6 +1491,7 @@ class ElementContainer extends Component {
             containerURN: this.props.currentSlateAncestorData && this.props.currentSlateAncestorData.ancestor.containerUrn,
             assessmentItemWorkUrn: embeddedAssessment ? element.figuredata.elementdata.assessmentitemid : ""
         }
+        handleElmPortalEvents();/** Add Elm-Assessment Update eventListener */
         this.props.openElmAssessmentPortal(dataToSend);
     }
    

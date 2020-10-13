@@ -12,7 +12,7 @@ import RootCiteTdxComponent from './assessmentCiteTdx/RootCiteTdxComponent.jsx';
 import config from '../../config/config';
 import './../../styles/AssessmentSlateCanvas/AssessmentSlateCanvas.css';
 import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
-import { assessmentFormats, CITE, TDX, PUF, LEARNING_TEMPLATE, LEARNOSITY, ELM_NEW_VERSION_UPDATE, ELM_UPDATE_MSG, ELM_UPDATE_POPUP_HEAD } from './AssessmentSlateConstants.js';
+import { assessmentFormats, CITE, TDX, PUF, LEARNING_TEMPLATE, LEARNOSITY, ELM_NEW_VERSION_UPDATE, ELM_UPDATE_MSG, ELM_UPDATE_POPUP_HEAD, ELM_UPDATE_BUTTON } from './AssessmentSlateConstants.js';
 /** ----- Import - Action Creators ----- */
 import { setCurrentCiteTdx, assessmentSorting } from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
 import { closeLtAction, openLtAction, openLTFunction } from './learningTool/learningToolActions';
@@ -183,7 +183,7 @@ class AssessmentSlateData extends Component {
     updateElmAssessment = (event) => {
         this.toggleUpdatePopup(false, event);
         this.showCanvasBlocker(false);
-        this.props.checkElmAssessmentStatus(this.props.assessmentReducer[this.props.assessmentSlateObj.assessmentId].latestWorkUrn, 'fromUpdate');
+        this.props.checkElmAssessmentStatus(this.props.assessmentReducer[this.props.assessmentSlateObj.assessmentId].latestWorkUrn, 'fromUpdate',this.props.assessmentSlateObj.assessmentId);
         const { latestWorkUrn, assessmentTitle } = this.props.assessmentReducer[this.props.assessmentSlateObj.assessmentId]
         let updatedElmObj = {
             id: latestWorkUrn,
@@ -192,6 +192,7 @@ class AssessmentSlateData extends Component {
         }
         this.props.addPufAssessment(updatedElmObj, this.state.activeAssessmentType);
         this.props.handleCanvasBlocker.disableHeader(false);
+        this.props.handleCanvasBlocker.hideTocBlocker(false);
         this.props.showToastMessage(true);
         this.props.setToastMessage(ELM_NEW_VERSION_UPDATE);
     }
@@ -437,11 +438,14 @@ class AssessmentSlateData extends Component {
 
     /*** @description This function is to show Approved/Unapproved Status on AS */
     showElmVersionStatus = () => {
-        let elmAssessment = this.props.assessmentReducer[this.props.assessmentSlateObj.assessmentId]
-        return (<ElmUpdateButton
-            elmAssessment={elmAssessment}
-            updateElmVersion={this.updateElm}
-        />)
+        let elmAssessment = this.props.assessmentReducer[this.props.assessmentSlateObj.assessmentId];
+        if (elmAssessment) {
+            return (<ElmUpdateButton
+                elmAssessment={elmAssessment}
+                updateElmVersion={this.updateElm}
+                buttonText={ELM_UPDATE_BUTTON}
+            />)
+        }
     }
 
     /*** @description - This is the function to set usageType type dropdown
@@ -514,9 +518,7 @@ class AssessmentSlateData extends Component {
                 </div>
             </div>
             {this.setUsageType(assessmentUsageType)}
-            {/* <div className="clr"></div> */}
             {this.state.activeAssessmentType == PUF && this.showElmVersionStatus()}
-            {/* <div className="clr"></div> */}
         </div>
         return assessmentSlate;
     }

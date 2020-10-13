@@ -24,14 +24,22 @@ export default function assessmentReducer(state = INITIAL_STATE, action = INITIA
         case SET_ASSESSMENT_STATUS:
             return {
                 ...state,
-                ...action.payload
+                [action.payload.currentWorkUrn]: {
+                    ...state[action.payload.currentWorkUrn],
+                    ...action.payload.dataForUpdate
+                }
             }
+            // return {
+            //     ...state,
+            //     ...action.payload
+            // }
         case GET_ASSESSMENT_VERSIONS:
             return {
                 ...state,
                 [action.payload.currentWorkUrn]: {
                     ...state[action.payload.currentWorkUrn],
                     latestWorkUrn: action.payload.latestWorkUrn,
+                    showUpdateStatus: action.payload.showUpdateStatus
                 },
             }
         case RESET_ASSESSMENT_STORE:

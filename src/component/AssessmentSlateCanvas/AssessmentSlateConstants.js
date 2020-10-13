@@ -41,6 +41,7 @@ export const FolderLabelList = {
     'AS':['assessment'],
     'IS':['container-introduction','introductry-slate'] ,
 }
+export const ELM_UPDATE_BUTTON = 'Update Available'
 export const ELM_NEW_VERSION_UPDATE = 'The new version has been placed'
 export const ELM_UPDATE_POPUP_HEAD = 'Version Update'
 export const ELM_PORTAL_ERROR_MSG = "Something went wrong. Please try again!"

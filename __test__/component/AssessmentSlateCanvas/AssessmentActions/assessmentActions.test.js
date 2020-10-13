@@ -147,7 +147,32 @@ describe('-----------------Testing Assessment Actions-----------------', () => {
             expect(spyFunction).toHaveBeenCalled();
             spyFunction.mockClear();
         });
-        it('Test-2.3---checkAssessmentStatus-Catch', () => {
+        it('Test-2.3---checkAssessmentStatus-Then - calledFrom = "fromNextVersion"', () => {
+            let workUrn = "urn:pearson:work:a5cdf7e1-d65c-4be0-9827-1f396e631beb";
+            expectedResponse.status = "https://schema.pearson.com/ns/contentlifecyclestatus/final"
+            let responseData = {
+                data: expectedResponse
+            }
+            let expectedPayload = {
+                [workUrn]:
+                {
+                    assessmentStatus: "wip",
+                    entityUrn: "urn:pearson:entity:b18ba4aa-3e2b-4650-8bd6-3ae70bd17c07",
+                    activeWorkUrn: "urn:pearson:work:a5cdf7e1-d65c-4be0-9827-1f396e631beb",
+                    assessmentTitle: "Elm Assessments title is C0A5CT5T5E"
+                }
+            }
+            let dispatch = (obj) => {
+                expect(obj.type).toBe(SET_ASSESSMENT_STATUS);
+                expect(obj.payload).toEqual(expectedPayload);
+            }
+            const spyFunction = jest.spyOn(assessment_Actions, 'checkAssessmentStatus');
+            axios.get = jest.fn(() => Promise.resolve(responseData));
+            assessment_Actions.checkAssessmentStatus(workUrn, 'fromNextVersion')(dispatch);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        });
+        it('Test-2.4---checkAssessmentStatus-Catch', () => {
             let workUrn = "urn:pearson:work:a5cdf7e1-d65c-4be0-9827-1f396e631beb";
             let dispatch = (obj) => {
                 expect(obj.type).toBe(SET_ASSESSMENT_STATUS);
@@ -161,7 +186,7 @@ describe('-----------------Testing Assessment Actions-----------------', () => {
         });
     });
     describe('Test-3----------------- getLatestAssessmentVersion-----------------', () => {
-        it('Test-1.1---getLatestAssessmentVersion-Then', () => {
+        it('Test-1.1---getLatestAssessmentVersion-Then - newVersions.length == 1', () => {
             let entityUrn = "urn:pearson:entity:c785c0f6-6fc7-4f51-855c-0677738a9d86";
             let workUrn = "urn:pearson:work:8fb703b9-4e21-4dac-968e-baf9323467af";
             let responseData = {
@@ -180,7 +205,35 @@ describe('-----------------Testing Assessment Actions-----------------', () => {
             }
             const spyFunction = jest.spyOn(assessment_Actions, 'getLatestAssessmentVersion');
             axios.get = jest.fn(() => Promise.resolve(responseData));
-            assessment_Actions.getLatestAssessmentVersion(entityUrn, workUrn)(dispatch);
+            assessment_Actions.getLatestAssessmentVersion(entityUrn, workUrn, "2020-08-18T11:05:27.169Z")(dispatch);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+
+        });
+        it('Test-1.1---getLatestAssessmentVersion-Then - newVersions.length > 1', () => {
+            let entityUrn = "urn:pearson:entity:c785c0f6-6fc7-4f51-855c-0677738a9d86";
+            let workUrn = "urn:pearson:work:8fb703b9-4e21-4dac-968e-baf9323467af";
+            let responseData = {
+                data: [{
+                    "versionUrn": "urn:pearson:work:8fb703b9-4e21-4dac-968e-baf9323467af",
+                    "createdDate": "2020-08-18T11:05:27.169Z"
+                }, {
+                    "versionUrn": "urn:pearson:work:ce9b7d24-fa62-4b1c-9e3f-d08a9dd5b8a6",
+                    "createdDate": "2020-10-05T09:40:11.769Z"
+                },
+                {
+                    "versionUrn": "urn:pearson:work:ae9b7d24-fa62-4b1c-9e3f-d08a9dd5b8a6",
+                    "createdDate": "2020-10-05T09:50:11.769Z"
+                }]
+            }
+            let dispatch = (obj) => {
+                expect(obj.type).toBe(GET_ASSESSMENT_VERSIONS);
+                expect(obj.payload.currentWorkUrn).toEqual("urn:pearson:work:8fb703b9-4e21-4dac-968e-baf9323467af");
+                expect(obj.payload.latestWorkUrn).toEqual("urn:pearson:work:ce9b7d24-fa62-4b1c-9e3f-d08a9dd5b8a6");
+            }
+            const spyFunction = jest.spyOn(assessment_Actions, 'getLatestAssessmentVersion');
+            axios.get = jest.fn(() => Promise.resolve(responseData));
+            assessment_Actions.getLatestAssessmentVersion(entityUrn, workUrn, "2020-08-18T11:05:27.169Z")(dispatch);
             expect(spyFunction).toHaveBeenCalled();
             spyFunction.mockClear();
 

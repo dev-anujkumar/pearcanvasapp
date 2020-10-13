@@ -7,7 +7,8 @@ let props = {
     elmAssessment: {
         activeWorkUrn: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
         assessmentStatus: "wip",
-        latestWorkUrn: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec565"
+        latestWorkUrn: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec565",
+        showUpdateStatus: false
     }
 }
 describe('Testing ElmUpdateButton component', () => {
@@ -22,8 +23,10 @@ describe('Testing ElmUpdateButton component', () => {
             elmAssessment: {
                 activeWorkUrn: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
                 assessmentStatus: "final",
-                latestWorkUrn: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec565"
-            }
+                latestWorkUrn: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec565",
+                showUpdateStatus: true
+            },
+            buttonText: 'Update Available'
         }
         const component1 = mount(<ElmUpdateButton {...props} />)
         expect(component1).toHaveLength(1);

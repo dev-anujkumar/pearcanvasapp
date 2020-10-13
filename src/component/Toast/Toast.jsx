@@ -12,7 +12,7 @@ class Toast extends Component {
     componentDidMount() {
         setTimeout(() => {
             this.hideToast();
-        }, 2000)
+        }, 4000)
     }
 
     hideToast = () => {
@@ -20,11 +20,11 @@ class Toast extends Component {
     }
 
     render() {
-        return (
-            <>
-                {this.props.active ? <div id="toast-message">{this.props.toastMessage}</div> : null}
-            </>
-        );
+        if (this.props.active) {
+            return <div id="toast-message">{this.props.toastMessage}</div>
+        } else {
+            return null
+        }
     }
 }
 
