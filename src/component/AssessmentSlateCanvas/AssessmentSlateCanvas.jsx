@@ -38,10 +38,10 @@ class AssessmentSlateCanvas extends Component {
     * @description - This is the function to add Elm/Learnosity Assessments to Assessment Slate 
     * @param pufObj - The object contains data about Elm/Learnosity Assessment 
     */
-    addPufAssessment = (pufObj, activeAssessmentType, cb) => {
+    addPufAssessment = (pufObj, activeAssessmentType, updateType, cb) => {
         showTocBlocker();
         disableHeader(true);
-        this.updateAssessment(pufObj.id, "", pufObj.title, activeAssessmentType, pufObj.usagetype, 'insert');
+        this.updateAssessment(pufObj.id, "", pufObj.title, activeAssessmentType, pufObj.usagetype, updateType);
         if (cb) {
             cb();
         }
@@ -105,6 +105,8 @@ class AssessmentSlateCanvas extends Component {
                 getAssessmentData: false
             })
         }
+        disableHeader(false);
+        hideTocBlocker(false);
     }
 
     /*** @description - This function is to handle Focus on the Assessment element on click*/

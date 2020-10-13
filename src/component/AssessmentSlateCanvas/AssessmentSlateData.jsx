@@ -51,6 +51,7 @@ class AssessmentSlateData extends Component {
             this.setState({
                 activeAssessmentType: this.props.model && this.props.setAssessmentFormat(this.props.model),
             })
+            // this.updateElmOnSaveEvent();
         }
         document.addEventListener("mousedown", this.handleClickOutside);
     }
@@ -147,7 +148,7 @@ class AssessmentSlateData extends Component {
     * @param pufObj - The object contains data about Elm/Learnosity Assessment 
     */
     addPufAssessment = (pufObj) => {
-        this.props.addPufAssessment(pufObj, this.state.activeAssessmentType);
+        this.props.addPufAssessment(pufObj, this.state.activeAssessmentType,'insert');
         this.props.checkElmAssessmentStatus(pufObj.id,'fromAddElm');
     }
 
@@ -190,7 +191,7 @@ class AssessmentSlateData extends Component {
             title: assessmentTitle,
             usagetype: this.state.activeAssessmentUsageType
         }
-        this.props.addPufAssessment(updatedElmObj, this.state.activeAssessmentType,()=>{
+        this.props.addPufAssessment(updatedElmObj, this.state.activeAssessmentType,'update',()=>{
             this.props.showToastMessage(true);
             this.props.setToastMessage(ELM_NEW_VERSION_UPDATE);
             this.props.updateAssessmentVersion(this.props.assessmentSlateObj.assessmentId,latestWorkUrn);
@@ -212,6 +213,17 @@ class AssessmentSlateData extends Component {
         this.prohibitPropagation(event)
     }
 
+    updateElmOnSaveEvent = () => {
+        const { assessmentReducer, assessmentSlateObj } = this.props
+        if (this.state.activeAssessmentType == 'puf' && assessmentReducer[assessmentSlateObj.assessmentId] && assessmentReducer[assessmentSlateObj.assessmentId].assessmentTitle && assessmentSlateObj.title != assessmentReducer[assessmentSlateObj.assessmentId].assessmentTitle) {
+            let pufObj = {
+                id: assessmentSlateObj.assessmentId,
+                title: this.props.assessmentReducer[assessmentSlateObj.assessmentId].assessmentTitle,
+                usagetype: this.state.activeAssessmentUsageType
+            }
+            this.props.addPufAssessment(pufObj, this.state.activeAssessmentType, 'update');
+        }
+    }
     /**
      * Prevents event propagation and default behaviour
      * @param {*} event event object
@@ -405,6 +417,7 @@ class AssessmentSlateData extends Component {
     /*** @description - This function is to render the Assessment Slate Element*/
     renderAssessmentSlate = () => {
         this.setSlateTagIcon();
+        this.updateElmOnSaveEvent();
         const { getAssessmentData, getAssessmentDataPopup, assessmentSlateObj } = this.props;
         const { activeAssessmentType, showElmComponent, showCiteTdxComponent, changeLearningData, activeAssessmentUsageType } = this.state;
         let slatePlaceholder = assessmentSlateObj && activeAssessmentType && this.setAssessmentPlaceholder(activeAssessmentType, assessmentSlateObj)

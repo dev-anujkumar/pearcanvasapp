@@ -231,7 +231,7 @@ export const updateAssessmentVersion = (oldWorkUrn, updatedWorkUrn) => dispatch 
             type: ELM_PORTAL_API_ERROR,
             payload: {
                 show: true,
-                errorMessage: 'Unable to Update Other Insatnces of this Assessment',
+                errorMessage: 'Unable to Update Other Instances of this Assessment in the Project',
                 isElmApiError: 'elm-api-error'
             }
         })
