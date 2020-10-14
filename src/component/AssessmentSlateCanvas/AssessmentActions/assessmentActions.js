@@ -222,8 +222,7 @@ export const updateAssessmentVersion = (oldWorkUrn, updatedWorkUrn) => dispatch 
     return axios.post(url, {}, {
         headers: {
             "Cache-Control": "no-cache",
-            "PearsonSSOSession": config.ssoToken,
-            "Access-Control-Allow-Origin": "*"
+            "PearsonSSOSession": config.ssoToken
         }
     }).then((res) => {
         console.log(res, "res")
