@@ -26,7 +26,7 @@ describe('Testing Toast component', () => {
     it('Test hideToast', () => {
         let sypFunc = jest.spyOn(instance, 'hideToast')
         instance.hideToast();
-        expect(sypFunc).toHaveHaveBeenCalled();
+        expect(sypFunc).toHaveBeenCalled();
         expect(component.find('div#toast-message')).toHaveLength(1);
     })
 });
