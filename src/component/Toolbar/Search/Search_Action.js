@@ -9,7 +9,7 @@ export const searchEvent = {
     totalCount: 0,
 };
 
-export const getContainerData = (searchTerm) => {
+export const getContainerData = (searchTerm, deeplink = false) => {
     const axiosObject = axios.create({
         headers: {
             'Content-Type': 'application/json',
@@ -60,6 +60,6 @@ export const getContainerData = (searchTerm) => {
             searchEvent.totalCount = 0;
         }
 
-        dispatch({ type: SET_SEARCH_URN, payload, parent });
+        dispatch({ type: SET_SEARCH_URN, payload, parent, deeplink });
     }
 }

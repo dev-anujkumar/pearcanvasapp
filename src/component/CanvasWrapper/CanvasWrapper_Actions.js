@@ -511,7 +511,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
 
         // Read element URN to search from project URL
         let queryStrings = new URLSearchParams(window.location.search);
-        if(queryStrings.get('searchElement')) {
+        if(queryStrings.get('searchElement') && getState().searchReducer.deeplink) {
             let searchTerm = queryStrings.get('searchElement') || '';
             dispatch(getContainerData(searchTerm));
         }
