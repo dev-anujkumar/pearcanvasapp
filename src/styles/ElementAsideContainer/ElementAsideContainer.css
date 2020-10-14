@@ -23,6 +23,14 @@
     margin-left: -8px;
     margin-right: -8px;
 }
+.aside-section-break.searched > .section-seperator {
+    border: 1px solid #ff9b19;
+    box-shadow: 0 0 4px 0 #ff9b19;
+    background-color: rgba(255, 226, 164, 0.3);
+}
+.aside-section-break.searched > .section-seperator > div > .btn-element.element-label {
+    background-color: #ff9b19;
+}
 .section-seperator .btn-element.element-label {
     position: absolute;
     left: -33px

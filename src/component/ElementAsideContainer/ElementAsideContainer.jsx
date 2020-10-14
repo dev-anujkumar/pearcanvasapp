@@ -273,8 +273,14 @@ class ElementAsideContainer extends Component {
         let elementLength = _containerBodyMatter.length
         this['cloneCOSlateControlledSource_3' + random] = this.renderElement(_containerBodyMatter, parentUrn, parentIndex, elementLength)
 
+        // Check if searched URN match the section break URN
+        let searched = '';
+        if(this.props.searchUrn !== '' && this.props.searchUrn === _elementId) {
+            searched = 'searched';
+        }
+
         return (
-            <div className="aside-section-break" data-id={_elementId}>
+            <div className={`aside-section-break ${searched}`} data-id={_elementId}>
                 <SectionSeperator
                     elemBorderToggle={elemBorderToggle}
                     borderToggle={borderToggle}
@@ -543,6 +549,7 @@ ElementAsideContainer.propTypes = {
 
 const mapStateToProps = state => {
     return {
+        searchUrn: state.searchReducer.searchTerm
     };
 };
 
