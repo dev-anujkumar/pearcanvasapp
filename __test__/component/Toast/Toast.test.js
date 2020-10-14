@@ -9,7 +9,7 @@ const mockStore = configureMockStore(middlewares);
 
 let initialState={
     appStore: {
-        toastMessage: "Test Message",
+        toastMessage: "Test Message"
     }
 }
 describe('Testing Toast component', () => {
