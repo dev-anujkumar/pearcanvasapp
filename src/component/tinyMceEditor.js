@@ -570,7 +570,7 @@ export class TinyMceEditor extends Component {
                                 if (!endPosition) {
                                     innerHtml = "<span id='_mce_caret' data-mce-bogus='1' data-mce-type='format-caret'>&#8203;&#65279;</span>" + existingInnerHTML;
                                 }
-                                let parentInnerHtml = parentNode.innerHTML;
+                                let parentInnerHtml = removeBOM(parentNode.innerHTML);
                                 let newParentInnerHtml = parentInnerHtml.replace(existingInnerHTML, innerHtml);
                                 parentNode.innerHTML = newParentInnerHtml;
                                 let pointerElement = document.getElementById('_mce_caret');
