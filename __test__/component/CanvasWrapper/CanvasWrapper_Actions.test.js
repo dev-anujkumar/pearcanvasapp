@@ -23,7 +23,8 @@ import {
     SET_OLD_IMAGE_PATH,
     SET_PARENT_SHOW_DATA,
     SET_PARENT_ASIDE_DATA,
-    AUTHORING_ELEMENT_UPDATE
+    AUTHORING_ELEMENT_UPDATE,
+    OPEN_POPUP_SLATE
 } from '../../../src/constants/Action_Constants';
 import config from '../../../src/config/config.js';
 import * as canvasActions from '../../../src/component/CanvasWrapper/CanvasWrapper_Actions';
@@ -1242,4 +1243,12 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
             spyFunction.mockClear();
         })
     });
+    it('Test 8-setSlateLength', () => {
+        let expectedResult = {
+            type: 'SET_SLATE_LENGTH',
+            payload: 25
+        }
+        let result = canvasActions.setSlateLength(25)
+        expect(result).toEqual(expectedResult);
+    })
 });
