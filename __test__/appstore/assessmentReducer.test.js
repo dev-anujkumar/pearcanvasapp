@@ -16,6 +16,15 @@ const INITIAL_ACTION = {
     payload: {}
 }
 
+let payload1 = {
+    currentWorkUrn: "urn:pearson:work:8fb703b9-4e21-4dac-968e-baf9323467af",
+    dataForUpdate: {
+        activeWorkUrn: "urn:pearson:work:8fb703b9-4e21-4dac-968e-baf9323467af",
+        assessmentStatus: "final",
+        assessmentTitle: "Quiz: 7.4 Developing Relationships",
+        assessmentEntityUrn: "urn:pearson:entity:c785c0f6-6fc7-4f51-855c-0677738a9d86"
+    }
+}
 let expectedState1 = {
     usageTypeListData: {},
     "urn:pearson:work:8fb703b9-4e21-4dac-968e-baf9323467af": {
@@ -54,7 +63,7 @@ describe('Test AssessmentReducer', () => {
     it('SET_ASSESSMENT_STATUS', () => {
         expect(reducer(INITIAL_STATE, {
             type: SET_ASSESSMENT_STATUS,
-            payload: expectedState1
+            payload: payload1
         })).toEqual({ usageTypeListData: {}, ...expectedState1 })
     })
     it('GET_ASSESSMENT_VERSIONS', () => {

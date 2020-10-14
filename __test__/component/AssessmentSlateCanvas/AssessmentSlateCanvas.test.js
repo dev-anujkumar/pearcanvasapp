@@ -128,7 +128,7 @@ describe('Testing Assessment Slate Canvas component', () => {
             pufInstance.forceUpdate();
             expect(pufInstance.state.assessmentFormat).toEqual('puf');
             expect(pufInstance.state.getAssessmentData).toEqual(true);
-            expect(pufInstance.state.getAssessmentDataPopup).toEqual(true);
+            expect(pufInstance.state.getAssessmentDataPopup).toEqual(false);
             expect(pufInstance.addPufAssessment).toHaveBeenCalledWith(pufObj, 'puf');
         });
     })

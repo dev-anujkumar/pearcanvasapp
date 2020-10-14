@@ -308,4 +308,48 @@ describe('-----------------Testing Assessment Actions-----------------', () => {
             spyFunction.mockClear();
         });
     });
+    describe('Test-5----------------- updateAssessmentVersion-----------------', () => {
+        it('Test-5.1---updateAssessmentVersion-Then', () => {
+            let oldWorkUrn = "urn:pearson:work:8fb703b9-4e21-4dac-968e-baf9323467af"
+            let updatedWorkUrn = "urn:pearson:work:9db703b9-4e21-4dac-968e-baf9323467af"
+            let responseData = {
+                data: { status: "202" }
+            }
+            const spyFunction = jest.spyOn(assessment_Actions, 'updateAssessmentVersion');
+            axios.post = jest.fn(() => Promise.resolve(responseData));
+            assessment_Actions.updateAssessmentVersion(oldWorkUrn, updatedWorkUrn);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+
+        });
+        it('Test-5.2---updateAssessmentVersion-Catch', async () => {
+            let assessmentData = {
+                assessmentWorkUrn: "urn:pearson:work:8fb703b9-4e21-4dac-968e-baf9323467af",
+                projDURN: "urn:pearson:distributable:8f1ceb41-da2c-4fc1-896d-fc4d2566fa0b",
+                containerURN: "urn:pearson:manifest:bd47b002-d949-4a60-948d-e9c652c297e0",
+                assessmentItemWorkUrn: ""
+            }
+            let dispatch = (obj) => {
+                expect(obj.type).toBe(ELM_PORTAL_API_ERROR);
+                expect(obj.payload.showError).toEqual(true);
+                expect(obj.payload.errorMessage).toEqual('Unable to Update Other Instances of this Assessment in the Project');
+                expect(obj.payload.isElmApiError).toEqual('elm-api-error');
+            }
+            const spyFunction = jest.spyOn(assessment_Actions, 'updateAssessmentVersion');
+            axios.post = await jest.fn().mockImplementationOnce(() => Promise.reject({}));
+            assessment_Actions.updateAssessmentVersion(assessmentData)(dispatch);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        }); 
+    });
+    describe('Test-6----------------- resetAssessmentStore-----------------', () => {
+        it('Test-6.1---resetAssessmentStore', () => {
+            const spyFunction = jest.spyOn(assessment_Actions, 'resetAssessmentStore');
+            let result = assessment_Actions.resetAssessmentStore();
+            expect(result.type).toEqual('RESET_ASSESSMENT_STORE');
+            expect(result.payload).toEqual({});
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        });
+    })
 })

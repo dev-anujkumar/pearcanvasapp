@@ -191,6 +191,7 @@ class AssessmentSlateData extends Component {
     updateElmAssessment = async (event) => {
         this.toggleUpdatePopup(false, event);
         this.showCanvasBlocker(false);
+        let oldWorkUrn = this.props.assessmentSlateObj.assessmentId
         await this.props.checkElmAssessmentStatus(this.props.assessmentReducer[this.props.assessmentSlateObj.assessmentId].latestWorkUrn, 'fromUpdate', this.props.assessmentSlateObj.assessmentId);
         const { latestWorkUrn, assessmentTitle } = this.props.assessmentReducer[this.props.assessmentSlateObj.assessmentId]
         let updatedElmObj = {
@@ -204,7 +205,7 @@ class AssessmentSlateData extends Component {
         this.props.addPufAssessment(updatedElmObj, this.state.activeAssessmentType, 'insert', () => {
             this.props.showToastMessage(true);
             this.props.setToastMessage(ELM_NEW_VERSION_UPDATE);
-            this.props.updateAssessmentVersion(this.props.assessmentSlateObj.assessmentId, latestWorkUrn);
+            this.props.updateAssessmentVersion(oldWorkUrn, latestWorkUrn);
         });
         this.props.handleCanvasBlocker.disableHeader(false);
         this.props.handleCanvasBlocker.hideTocBlocker(false);
