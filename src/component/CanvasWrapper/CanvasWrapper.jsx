@@ -197,7 +197,7 @@ export class CanvasWrapper extends Component {
                 <div className='workspace'>               
                     <div id='canvas' className={'canvas'+ isReviewerRoleClass}>
                         <div id='artboard-containers'>
-                            <div class="artboard-parent">
+                            <div className="artboard-parent">
                                 {/*Prev Button */}
                                 {slateData[config.slateManifestURN] && slateData[config.slateManifestURN].type !== 'popup' && <div className={`navigation-container prev-btn ${config.disablePrev ? 'disabled':""}`}>
                                     <div className='navigation-content'>
