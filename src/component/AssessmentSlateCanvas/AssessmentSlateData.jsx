@@ -161,7 +161,7 @@ class AssessmentSlateData extends Component {
 
     /*** @description This function is used to open Version update Popup */
     updateElm = (event) => {
-        if (hasReviewerRole()) {
+        if (hasReviewerRole() || !(this.props.permissions && this.props.permissions.includes('elements_add_remove'))) {
             return true;
         }
         this.toggleUpdatePopup(true, event);
@@ -466,13 +466,11 @@ class AssessmentSlateData extends Component {
     /*** @description This function is to show Approved/Unapproved Status on AS */
     showElmVersionStatus = () => {
         let elmAssessment = this.props.assessmentReducer[this.props.assessmentSlateObj.assessmentId];
-        let hasUpdatePermission = this.props.permissions && this.props.permissions.includes('elements_add_remove') ? "" : "disable-update"
         if (elmAssessment) {
             return (<ElmUpdateButton
                 elmAssessment={elmAssessment}
                 updateElmVersion={this.updateElm}
                 buttonText={ELM_UPDATE_BUTTON}
-                hasUpdatePermission={hasUpdatePermission}
             />)
         }
     }

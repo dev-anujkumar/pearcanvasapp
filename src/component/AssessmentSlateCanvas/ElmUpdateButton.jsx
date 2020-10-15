@@ -10,12 +10,12 @@ import './../../styles/AssessmentSlateCanvas/AssessmentSlateCanvas.css';
 
 const ElmUpdateButton = (props) => {
 
-    const { elmAssessment, updateElmVersion, buttonText, hasUpdatePermission } = props;
+    const { elmAssessment, updateElmVersion, buttonText } = props;
     const setUpdateDiv = (assessment) => {
         let updateDiv;
         const { assessmentStatus, showUpdateStatus } = assessment
         if (showUpdateStatus === true) {
-            updateDiv = <div className={`elm-update-button ${hasUpdatePermission}`} onClick={updateElmVersion}><b className='elm-update-button-text'>{buttonText}</b></div>
+            updateDiv = <div className="elm-update-button" onClick={updateElmVersion}><b className='elm-update-button-text'>{buttonText}</b></div>
         } else {
             const approveText = assessmentStatus == 'final' ? "Approved" : "Unapproved"
             const approveIconClass = assessmentStatus == 'final' ? "enable" : "disable"
