@@ -5005,6 +5005,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                 },
                 ...editor2
             }
+            tinymce.remove = jest.fn()
             component.setProps({
                 ...props,
                 permissions: ["login", "logout"],
