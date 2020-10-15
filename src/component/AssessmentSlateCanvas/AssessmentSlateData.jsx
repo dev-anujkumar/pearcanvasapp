@@ -161,6 +161,9 @@ class AssessmentSlateData extends Component {
 
     /*** @description This function is used to open Version update Popup */
     updateElm = (event) => {
+        if (hasReviewerRole() || !(this.props.permissions && this.props.permissions.includes('elements_add_remove'))) {
+            return true;
+        }
         this.toggleUpdatePopup(true, event);
         event.stopPropagation();
     }
