@@ -94,7 +94,16 @@ export const popup = {
         }]
     }
 }
-
+export const mainSlateData = {"urn:pearson:manifest:84a2137b-da6d-4577-8a17-8c9806c887c1" :{
+    "id": "urn:pearson:manifest:84a2137b-da6d-4577-8a17-8c9806c887c1",
+    "type": "manifest",
+    "versionUrn": "urn:pearson:manifest:84a2137b-da6d-4577-8a17-8c9806c887c1",
+    "contentUrn": "urn:pearson:entity:5094db18-29f2-46c8-8529-a8153220e5c7",
+    "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/popup",
+    "contents": {
+        "bodymatter": [popup]
+    }
+}}
 export const popupData = {
     "urn:pearson:manifest:84a2137b-da6d-4577-8a17-8c9806c887c1": {
         "id": "urn:pearson:manifest:84a2137b-da6d-4577-8a17-8c9806c887c1",

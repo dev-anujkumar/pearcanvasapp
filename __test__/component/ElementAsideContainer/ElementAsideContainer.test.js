@@ -119,7 +119,7 @@ describe('Testing ElementAside component with props', () => {
 
         it('should render  sectionBreak function correctly', () => {
             let sectionBreak = instance.sectionBreak(section)
-            expect(sectionBreak.props.className).toEqual('aside-section-break');
+            expect((sectionBreak.props.className).trim()).toEqual('aside-section-break');
         })
 
         it('should render  renderElement function correctly', () => {

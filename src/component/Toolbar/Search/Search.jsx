@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
 
 import { SELECTORS, PLACEHOLDER } from './../../../constants/Search_Constants.js';
@@ -8,6 +8,7 @@ const SearchComponent = props => {
     const [searchTerm, handleChange] = useState(props.searchTerm || '');
     const [searchIndex, handleSearchIndex] = useState(searchEvent.index || 0);
     const [searchTotalCount, handleSearchTotalData] = useState(searchEvent.totalCount || 0);
+    let searchRef = useRef();
 
     useEffect(() => {
         if(props.searchTerm !== '' && props.searchTerm !== searchTerm) {
@@ -20,7 +21,16 @@ const SearchComponent = props => {
         if(searchTotalCount !== searchEvent.totalCount) {
             handleSearchTotalData(searchEvent.totalCount);
         }
+        
+        document.addEventListener("mousedown", e => handleSearchBlur(e));
     });
+
+    const handleSearchBlur = (evt) => {
+        if(searchRef && !searchRef.contains(evt.target)) {
+            console.log('focused:::',searchRef.current);
+            handleClose(evt);
+        }
+    }
 
     const renderSelector = () => {
         return SELECTORS.map(item => <div key={item} className="selector">{item}</div>);
@@ -50,9 +60,13 @@ const SearchComponent = props => {
         handleSearchIndex(searchEvent.index);
         handleSearchTotalData(searchEvent.totalCount);
     }
+
+    const setSearchRef = element => {
+        searchRef = element;
+    }
     
     return (
-        <div className={`search-wrapper ${props.search ? 'active' : ''}`}>
+        <div ref={setSearchRef} className={`search-wrapper ${props.search ? 'active' : ''}`}>
             <div className="search-element">
                 {renderSelector()}
                 <div className="search-input">

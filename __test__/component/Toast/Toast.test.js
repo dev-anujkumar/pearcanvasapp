@@ -7,10 +7,6 @@ import Toast from '../../../src/component/Toast/Toast.jsx';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
-jest.mock('../../../src/component/Toast/ToastActions.js', () => ({
-    showToastMessage: jest.fn(),
-    setToastMessage: jest.fn()
-}));
 let initialState={
     appStore: {
         toastMessage: "Test Message"
@@ -19,7 +15,8 @@ let initialState={
 describe('Testing Toast component', () => {
     let store = mockStore(initialState);
     let props = {
-        active: true
+        active: true,
+        showToastMessage: jest.fn()
     }
     const component = mount(<Provider store={store}><Toast {...props} /></Provider>)
     const instance = component.find('Toast').instance();
@@ -29,7 +26,7 @@ describe('Testing Toast component', () => {
     it('Test hideToast', () => {
         let sypFunc = jest.spyOn(instance, 'hideToast')
         instance.hideToast();
-        expect(sypFunc).toHaveHaveBeenCalled();
+        expect(sypFunc).toHaveBeenCalled();
         expect(component.find('div#toast-message')).toHaveLength(1);
     })
 });
