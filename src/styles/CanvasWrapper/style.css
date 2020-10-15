@@ -165,7 +165,7 @@
   .navigation-text{
     width: 100%;
     margin-top: 10px;
-    font-family: 'Open Sans';
+    font-family: 'Open Sans', sans-serif;
     font-size: 12px;
     font-weight: normal;
     font-stretch: normal;

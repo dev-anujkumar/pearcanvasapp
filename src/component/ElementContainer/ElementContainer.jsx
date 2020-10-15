@@ -1499,11 +1499,11 @@ class ElementContainer extends Component {
         let { element } = this.props;
         let fullAssessment = element.type == elementTypeConstant.ASSESSMENT_SLATE && element.elementdata && element.elementdata.assessmentformat == 'puf' && element.elementdata.assessmentid ? true : false;
         let embeddedAssessment = element.type == elementTypeConstant.FIGURE_ASSESSMENT && element.figuredata && element.figuredata.elementdata && element.figuredata.elementdata.assessmentformat == 'puf' && element.figuredata.elementdata.assessmentid ? true : false;
-        let containerURN = config.parentEntityUrn == 'Front Matter' || config.parentEntityUrn == 'Back Matter' ? config.slateManifestURN : this.props.currentSlateAncestorData && this.props.currentSlateAncestorData.ancestor.containerUrn ? this.props.currentSlateAncestorData.ancestor.containerUrn : config.projectUrn
+        // let containerURN = config.parentEntityUrn == 'Front Matter' || config.parentEntityUrn == 'Back Matter' ? config.slateManifestURN : this.props.currentSlateAncestorData && this.props.currentSlateAncestorData.ancestor.containerUrn ? this.props.currentSlateAncestorData.ancestor.containerUrn : config.projectUrn
         let dataToSend = {
             assessmentWorkUrn: fullAssessment ? element.elementdata.assessmentid : embeddedAssessment ? element.figuredata.elementdata.assessmentid : "",
             projDURN: config.projectUrn,
-            containerURN: containerURN,
+            containerURN: config.slateManifestURN,
             assessmentItemWorkUrn: embeddedAssessment ? element.figuredata.elementdata.assessmentitemid : ""
         }
         handleElmPortalEvents();/** Add Elm-Assessment Update eventListener */

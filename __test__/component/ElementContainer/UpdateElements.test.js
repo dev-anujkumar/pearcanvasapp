@@ -1,5 +1,5 @@
 import * as updateFunction from '../../../src/component/ElementContainer/UpdateElements';
-import { citationElementData, elementAuthoredText, figureData, audioVideoData, interactiveData, mathMLData, blockCodeEditorData, singleAssessmentData, assessmentSlateData, openerElementData,asideElementData, interactiveDataPDF,poetryElementData } from '../../../fixtures/UpdateElementsTestData';
+import { poetryTitle, stanzaData, citationElementData, elementAuthoredText, figureData, audioVideoData, interactiveData, mathMLData, blockCodeEditorData, singleAssessmentData, assessmentSlateData, openerElementData,asideElementData, interactiveDataPDF,poetryElementData } from '../../../fixtures/UpdateElementsTestData';
 import tinyMCE from 'tinymce/tinymce'
 import config from "../../../src/config/config.js"
 jest.mock('./../../../src/constants/utility.js', () => ({
@@ -340,16 +340,16 @@ describe('Test for UpdateElements Functions', () => {
     })
     it('Test for ELEMENT-TYPE----->figure---->stanza', () => {
         let type = "stanza",
-            previousElementData = interactiveDataPDF,
+            previousElementData = stanzaData,
             node = {},
-            elementType = "element-interactive",
-            primaryOption = "primary-mmi",
-            secondaryOption = "secondary-interactive-mmi",
+            elementType = "stanza",
+            primaryOption = "primary-stanza",
+            secondaryOption = "secondary-stanza",
             activeEditorId = "cypress-7-1",
             index = 7,
             containerContext = {},
             parentElement = {
-                type: 'showhide',
+                type: 'poetry',
                 id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y'
             };
         jest.spyOn(updateFunction, 'createUpdatedData')
@@ -357,19 +357,16 @@ describe('Test for UpdateElements Functions', () => {
         expect(updateFunction.createUpdatedData).toHaveBeenCalledWith(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement)
     })
     it('Test for ELEMENT-TYPE----->poetry', () => {
-        let type = "stanza",
-            previousElementData = poetryElementData,
+        let type = "element-authoredtext",
+            previousElementData = poetryTitle,
             node = {},
-            elementType = "poetry",
-            primaryOption = "primary-poetry",
-            secondaryOption = "secondary-poetry",
+            elementType = "element-authoredtext",
+            primaryOption = "primary-paragraph",
+            secondaryOption = "secondary-paragraph",
             activeEditorId = "cypress-0-1",
             index = "0-1",
             containerContext = {},
-            parentElement = {
-                type: 'poetry',
-                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y'
-            };
+            parentElement = poetryElementData
         jest.spyOn(updateFunction, 'createUpdatedData')
         updateFunction.createUpdatedData(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement);
         expect(updateFunction.createUpdatedData).toHaveBeenCalledWith(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement)
@@ -427,70 +424,47 @@ describe('Test for UpdateElements Functions', () => {
         expect(updateFunction.createUpdatedData).toHaveBeenCalledWith(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement)
     })
     it('Test for ELEMENT-TYPE----->poetry title', () => {
-        let type = "stanza",
-            previousElementData = poetryElementData,
+        let type = "element-authoredtext",
+            previousElementData = poetryTitle,
             node = {},
-            elementType = "poetry",
-            primaryOption = "primary-poetry",
-            secondaryOption = "secondary-poetry",
+            elementType = "element-authoredtext",
+            primaryOption = "primary-paragraph",
+            secondaryOption = "secondary-paragraph",
             activeEditorId = "cypress-0-1",
             index = "0-1",
             containerContext = {},
-            parentElement = {
-                type: 'poetry',
-                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y',
-                contents : {
-                    "formatted-title" : { id : "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636" },
-                    "formatted-subtitle" : { id : "urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f3135" },
-                    "postertextobject" : [ { id : "urn:pearson:work:681c7a22-e40a-451f-9f87-dae336cfb2c0" } ] ,
-                }
-            };
+            parentElement = poetryElementData;
         jest.spyOn(updateFunction, 'createUpdatedData')
         updateFunction.createUpdatedData(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement);
         expect(updateFunction.createUpdatedData).toHaveBeenCalledWith(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement)
     })
     it('Test for ELEMENT-TYPE----->poetry subtitle', () => {
-        let type = "stanza",
-            previousElementData = poetryElementData,
+        let type = "element-authoredtext",
+            previousElementData = poetryTitle,
             node = {},
-            elementType = "poetry",
-            primaryOption = "primary-poetry",
-            secondaryOption = "secondary-poetry",
+            elementType = "element-authoredtext",
+            primaryOption = "primary-paragraph",
+            secondaryOption = "secondary-paragraph",
             activeEditorId = "cypress-0-1",
             index = "0-1",
             containerContext = {},
-            parentElement = {
-                type: 'poetry',
-                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y',
-                contents : {
-                    "formatted-title" : { id : "urn:pearson:work:681c7a22-e40a-451f-9f87-dae336cfb2c0" },
-                    "formatted-subtitle" : { id : "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636" },
-                    "postertextobject" : [ { id : "urn:pearson:work:681c7a22-e40a-451f-9f87-dae336cfb2c0" } ] ,
-                }
-            };
+            parentElement = poetryElementData
         jest.spyOn(updateFunction, 'createUpdatedData')
         updateFunction.createUpdatedData(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement);
         expect(updateFunction.createUpdatedData).toHaveBeenCalledWith(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement)
     })
     it('Test for ELEMENT-TYPE----->poetry credits summary', () => {
-        let type = "stanza",
-            previousElementData = poetryElementData,
+        let type = "element-authoredtext",
+            previousElementData = poetryTitle,
             node = {},
-            elementType = "poetry",
-            primaryOption = "primary-poetry",
-            secondaryOption = "secondary-poetry",
+            elementType = "element-authoredtext",
+            primaryOption = "primary-paragraph",
+            secondaryOption = "secondary-paragraph",
             activeEditorId = "cypress-0-1",
             index = "0-1",
             containerContext = {},
-            parentElement = {
-                type: 'poetry',
-                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y',
-                contents : {
-                    "formatted-title" : { id : "urn:pearson:work:681c7a22-e40a-451f-9f87-dae336cfb2c0" },
-                    "formatted-subtitle" : { id : "urn:pearson:work:681c7a22-e40a-451f-9f87-dae336cfb2c0" },
-                    "creditsarray" : [ { id : "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636" } ] ,
-                }
-            };
+            parentElement = poetryElementData
+ 
         jest.spyOn(updateFunction, 'createUpdatedData')
         updateFunction.createUpdatedData(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement);
         expect(updateFunction.createUpdatedData).toHaveBeenCalledWith(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement)
