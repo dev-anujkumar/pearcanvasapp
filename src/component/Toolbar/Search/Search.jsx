@@ -27,7 +27,6 @@ const SearchComponent = props => {
 
     const handleSearchBlur = (evt) => {
         if(searchRef && !searchRef.contains(evt.target)) {
-            console.log('focused:::',searchRef.current);
             handleClose(evt);
         }
     }
