@@ -49,7 +49,7 @@ export const getContainerData = (searchTerm, deeplink = false) => {
                     if(elementIndex > slateLength) {
                         dispatch(fetchSlateData(config.slateManifestURN,config.slateEntityURN, ++config.page,'',""));
                     }
-                    slateLength += getState().appStore.slateLength;
+                    slateLength = Number(slateLength) + Number(getState().appStore.slateLength);
                 } while(elementIndex > slateLength);
 
                 searchEvent.index = 1;
