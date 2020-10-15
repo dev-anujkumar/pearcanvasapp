@@ -31,7 +31,8 @@ jest.mock('./../../../src/constants/utility.js', () => ({
     encodeHTMLInWiris: jest.fn(),
     matchHTMLwithRegex:jest.fn(),
     createTitleSubtitleModel:jest.fn(),
-    removeBlankTags: jest.fn()
+    removeBlankTags: jest.fn(),
+    removeUnoClass: jest.fn()
 }))
 jest.mock('./../../../src/config/config.js', () => ({
     colors : ["#000000", "#003057", "#505759", "#005A70", "#006128"],
@@ -281,7 +282,7 @@ describe('Test for element container component', () => {
             expect(spyhandleBlur).toHaveBeenCalled()
             spyhandleBlur.mockClear()
         })
-        it('Render Element Container ----->handleBlur popup', () => {
+        xit('Render Element Container ----->handleBlur popup', () => {
             let props = {
                 element: wipData.popup,
                 permissions: [],

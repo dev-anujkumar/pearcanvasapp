@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { mount } from 'enzyme';
 import ElementPopup from '../../../src/component/ElementPopup';
-import { popup } from '../../../fixtures/ElementPopup';
+import { mainSlateData, popup } from '../../../fixtures/ElementPopup';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
@@ -15,9 +15,10 @@ jest.mock('../../../src/component/tinyMceEditor.js', () => {
     }
 })
 const initialState = {
-    slateLevelData : {},
+    
     appStore : {
-        slateLength: '25'
+        slateLength: '25',
+        slateLevelData : mainSlateData
     }
 }
 let store = mockStore(initialState);
