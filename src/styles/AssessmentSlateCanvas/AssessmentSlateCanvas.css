@@ -371,3 +371,10 @@ span.approved-button.enable svg path#path2 {
   cursor:not-allowed;
   pointer-events:none;
 }
+
+.elm-update-button.disable-update{
+    background-color: #cccccc;
+    color: #808080;
+    cursor: not-allowed;
+    pointer-events: none;
+}

@@ -26,7 +26,8 @@ describe('Testing ElmUpdateButton component', () => {
                 latestWorkUrn: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec565",
                 showUpdateStatus: true
             },
-            buttonText: 'Update Available'
+            buttonText: 'Update Available',
+            hasUpdatePermission: ""
         }
         const component1 = mount(<ElmUpdateButton {...props} />)
         expect(component1).toHaveLength(1);
