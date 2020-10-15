@@ -291,8 +291,8 @@
 }
 
 .dialog-window.elm-update {
-  width: 453px;
-  height: 60px;
+  width: 450px;
+  /* height: 60px; */
   font-family: "Helvetica Neue", sans-serif;
   font-size: 14.8px;
   font-weight: normal;
