@@ -15,7 +15,7 @@ const ElmUpdateButton = (props) => {
         let updateDiv;
         const { assessmentStatus, showUpdateStatus } = assessment
         if (showUpdateStatus === true) {
-            updateDiv = <div className="elm-update-button" onClick={updateElmVersion}><b className='elm-update-button-text'>{buttonText}</b></div>
+            updateDiv = <div className='elm-update-button' onClick={updateElmVersion}><b className='elm-update-button-text'>{buttonText}</b></div>
         } else {
             const approveText = assessmentStatus == 'final' ? "Approved" : "Unapproved"
             const approveIconClass = assessmentStatus == 'final' ? "enable" : "disable"
