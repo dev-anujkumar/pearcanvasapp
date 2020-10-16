@@ -62,7 +62,9 @@ class AssessmentSlateData extends Component {
         const { assessmentSlateObj, assessmentReducer } = this.props;
         if (this.state.activeAssessmentType == PUF &&
             ((assessmentSlateObj.title) && (assessmentReducer && (assessmentReducer[assessmentSlateObj.assessmentId] && assessmentReducer[assessmentSlateObj.assessmentId].assessmentTitle)))) {
-            if (assessmentSlateObj.title != (assessmentReducer[assessmentSlateObj.assessmentId].assessmentTitle)) {
+            let prevPropsTitle = prevProps && prevProps.assessmentReducer && prevProps.assessmentReducer[assessmentSlateObj.assessmentId] && prevProps.assessmentReducer[assessmentSlateObj.assessmentId].assessmentTitle
+            if ((assessmentSlateObj.title != (assessmentReducer[assessmentSlateObj.assessmentId].assessmentTitle))
+                && (prevPropsTitle != assessmentReducer[assessmentSlateObj.assessmentId].assessmentTitle)) {
                 this.updateElmOnSaveEvent(this.props);
             }
         }
