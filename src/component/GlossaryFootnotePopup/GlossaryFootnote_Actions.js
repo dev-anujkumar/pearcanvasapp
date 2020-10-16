@@ -7,7 +7,7 @@ import { tcmSnapshotsForUpdate, fetchParentData, fetchElementWipData } from '../
 const {
     REACT_APP_API_URL
 } = config
-
+import { allowedFigureTypesForTCM } from "../ElementContainer/ElementConstants";
 import { OPEN_GLOSSARY_FOOTNOTE, UPDATE_FOOTNOTEGLOSSARY, ERROR_POPUP, GET_TCM_RESOURCES } from "./../../constants/Action_Constants";
 const elementTypeData = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza', 'figure'];
 
@@ -490,7 +490,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         //tcm update code  for glossary/footnote 
         if (config.tcmStatus) {
             if (elementTypeData.indexOf(elementType) !== -1) {
-                prepareDataForUpdateTcm(elementWorkId, res.data.id);
+                prepareDataForUpdateTcm(elementWorkId, res.data.id, res.data);
             }
         }
 
@@ -513,7 +513,10 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
     })
 }
 //TCM Update
-function prepareDataForUpdateTcm(updatedDataID,versionedData) {
+function prepareDataForUpdateTcm(updatedDataID,versionedData, resData) {
+    if (resData.hasOwnProperty("figuretype") && !allowedFigureTypesForTCM.includes(resData.figuretype)) {
+        return false
+    }
     const tcmData = store.getState().tcmReducer.tcmSnapshot;
     let indexes = []
     tcmData.filter(function (element, index) {
