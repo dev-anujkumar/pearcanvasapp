@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import config from '../../config/config';
 
@@ -20,6 +20,7 @@ const _Toolbar = props => {
     const [openDropDown, setValueOpen] = useState(false);
     const [showHeader, setHeaderValue] = useState(true);
     const [UrnSearch, searchToggle] = useState(false);
+    let searchInputRef = useRef();
 
     useEffect(() => {
         setLODropdown(false);
@@ -100,6 +101,9 @@ const _Toolbar = props => {
     function handleSearchToggle(e, status = false) {
         e.stopPropagation();
         searchToggle(status);
+        if(status) {
+            searchInputRef.current.focus();
+        }
     }
 
     let searchElm = UrnSearch;
@@ -175,6 +179,7 @@ const _Toolbar = props => {
                     {searchIcon}
                     <SearchComponent
                         search={searchElm}
+                        searchInputRef={searchInputRef}
                         searchTerm={searchTerm}
                         onClose={handleSearchToggle}
                         icons={{ searchClose, searchUp, searchDown }}

@@ -69,7 +69,7 @@ const SearchComponent = props => {
             <div className="search-element">
                 {renderSelector()}
                 <div className="search-input">
-                    <input type="text" placeholder={PLACEHOLDER} value={searchTerm} onChange={handleSearchChange} />
+                    <input ref={props.searchInputRef} type="text" placeholder={PLACEHOLDER} value={searchTerm} onChange={handleSearchChange} />
                     <div className="search-index">{`${searchIndex}/${searchTotalCount}`}</div>
                 </div>
                 <div className="actions">
