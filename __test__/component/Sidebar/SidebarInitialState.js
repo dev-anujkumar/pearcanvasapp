@@ -254,7 +254,7 @@ export default {
     },
     "Aside_OldData": {
         id: "urn:pearson:work:188d143b-101c-400d-80f5-3102b25483bb",
-        type: "element-authoredtext",
+        type: "element-blockfeature",
         schema: "http://schemas.pearson.com/wip-authoring/element/1",
         elementdata: {
             schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
@@ -268,7 +268,8 @@ export default {
         status: "wip",
         tcm: false,
         feedback: false,
-        comments: false
+        comments: false,
+        subtype : 'sidebar'
     },
     "Aside_NewData": {
         elementId: "urn:pearson:work:188d143b-101c-400d-80f5-3102b25483bb",
