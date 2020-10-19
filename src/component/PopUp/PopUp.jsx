@@ -42,7 +42,7 @@ class PopUp extends React.Component {
     * @param {event} 
     */
     renderButtons = (props) => {
-        if (props.isLockPopup || props.isLockReleasePopup || props.wrongAudio) { //Slate lock popup
+        if (props.isLockPopup || props.isLockReleasePopup || props.wrongAudio || props.showConfirmation) { //Slate lock popup
             showBlocker(true); showTocBlocker();
             return (
                 <div className={`dialog-buttons ${props.slateLockClass}`}>
@@ -114,7 +114,7 @@ class PopUp extends React.Component {
     * @param {event} 
     */
     renderInputBox = (props) => {
-        if (props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.tocDelete || props.removeConfirmation || props.wrongAudio || props.lockForTOC || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup) {
+        if (props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.tocDelete || props.removeConfirmation || props.wrongAudio || props.lockForTOC || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation) {
             return null
         }
         else if (props.isLockPopup && props.withInputBox && !props.lockForTOC) {

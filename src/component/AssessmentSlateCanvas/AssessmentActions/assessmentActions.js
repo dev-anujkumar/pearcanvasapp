@@ -9,7 +9,8 @@ import {
     SET_ASSESSMENT_STATUS,
     GET_ASSESSMENT_VERSIONS,
     ELM_PORTAL_API_ERROR,
-    RESET_ASSESSMENT_STORE
+    RESET_ASSESSMENT_STORE,
+    ASSESSMENT_CONFIRMATION_POPUP
 } from "../../../constants/Action_Constants";
 import { ELM_PORTAL_ERROR_MSG } from '../AssessmentSlateConstants.js';
 
@@ -217,16 +218,17 @@ export const openElmAssessmentPortal = (assessmentData) => (dispatch) => {
  * @param oldWorkUrn current workURN of the assessment
  * @param updatedWorkUrn latest workURN of the assessment
  */
-export const updateAssessmentVersion = (oldWorkUrn, updatedWorkUrn) => dispatch => {
+export const updateAssessmentVersion = (oldWorkUrn, updatedWorkUrn,type) => dispatch => {
     let url = `${config.SLATE_REFRESH_URL}${config.projectUrn}/updateAllAssessments/${oldWorkUrn}/${updatedWorkUrn}`;
     return axios.post(url, {}, {
         headers: {
             "Cache-Control": "no-cache",
-            "PearsonSSOSession": config.ssoToken,
-            "Access-Control-Allow-Origin": "*"
+            "PearsonSSOSession": config.ssoToken
         }
     }).then((res) => {
-        console.log(res, "res")
+        if(res.status== 202 && type === "assessments"){
+            dispatch(assessmentConfirmationPopup(true));
+        }
     }).catch(() => {
         console.error("Unable to update the latest workUrn for >>>>", oldWorkUrn)
         dispatch({
@@ -244,5 +246,36 @@ export const resetAssessmentStore = () => {
     return {
         type: RESET_ASSESSMENT_STORE,
         payload: {}
+    }
+}
+
+
+export const checkEntityUrn =  (assessmentID) => async (dispatch) => {
+    let workIds = []
+    await Promise.all(assessmentID && assessmentID.map((item) => {
+        let url = `${config.ASSESSMENT_ENDPOINT}assessment/v2/${item}`;
+        return axios.get(url, {
+            headers: {
+                "Content-Type": "application/json",
+                "ApiKey": config.STRUCTURE_APIKEY,
+                "PearsonSSOSession": config.ssoToken
+            }
+        }).then((res) => {
+            if (res && res.data && res.data.status) {
+                workIds.push(res.data.entityUrn)
+            }
+        }).catch(() => {
+            console.log("error in finding entityurn")
+        })
+    }))
+    if (workIds && workIds.length > 0 && workIds[0] === workIds[1]) {
+        dispatch(updateAssessmentVersion(assessmentID[0], assessmentID[1], "assessments"))
+    }
+
+}
+export const assessmentConfirmationPopup = (data) => {
+    return {
+        type: ASSESSMENT_CONFIRMATION_POPUP,
+        payload: data
     }
 }
