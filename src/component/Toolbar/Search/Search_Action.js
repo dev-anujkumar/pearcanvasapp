@@ -9,7 +9,7 @@ export const searchEvent = {
     totalCount: 0,
 };
 
-export const getContainerData = (searchTerm) => {
+export const getContainerData = (searchTerm, deeplink = false) => {
     const axiosObject = axios.create({
         headers: {
             'Content-Type': 'application/json',
@@ -49,7 +49,7 @@ export const getContainerData = (searchTerm) => {
                     if(elementIndex > slateLength) {
                         dispatch(fetchSlateData(config.slateManifestURN,config.slateEntityURN, ++config.page,'',""));
                     }
-                    slateLength += getState().appStore.slateLength;
+                    slateLength = Number(slateLength) + Number(getState().appStore.slateLength);
                 } while(elementIndex > slateLength);
 
                 searchEvent.index = 1;
@@ -60,6 +60,6 @@ export const getContainerData = (searchTerm) => {
             searchEvent.totalCount = 0;
         }
 
-        dispatch({ type: SET_SEARCH_URN, payload, parent });
+        dispatch({ type: SET_SEARCH_URN, payload, parent, deeplink });
     }
 }

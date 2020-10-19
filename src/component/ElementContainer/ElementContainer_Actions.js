@@ -389,7 +389,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
                     if(currentSlateData.type==="popup"){
                         if (config.tcmStatus) {
                             if (elementTypeTCM.indexOf(updatedData.type) !== -1 && showHideType == undefined) {
-                                prepareDataForUpdateTcm(updatedData.id, getState, dispatch, response.data);
+                                prepareDataForUpdateTcm(updatedData.id, getState, dispatch, response.data, updatedData);
                             }
                         }
                         sendDataToIframe({ 'type': "tocRefreshVersioning", 'message' :true });
@@ -424,7 +424,6 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         config.savingInProgress = false
         config.popupCreationCallInProgress = false
         console.log("updateElement Api fail", error);
-        document.getElementById('link-notification').innerText = "";
         config.isSavingElement = false
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
     })
@@ -460,7 +459,7 @@ export function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, 
     let noAdditionalFields = (updatedData.metaDataField == undefined && updatedData.sectionType == undefined) ? true : false   
     if (config.tcmStatus) {
         if (elementTypeTCM.indexOf(updatedData.type) !== -1 && showHideType == undefined && (isPopupElement || noAdditionalFields)) {
-            prepareDataForUpdateTcm(updatedData.id, getState, dispatch, versionedData);
+            prepareDataForUpdateTcm(updatedData.id, getState, dispatch, versionedData, updatedData);
         }
     }
     if(versionedData){
@@ -739,7 +738,10 @@ export function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, 
     
 }
 //TCM Update
-function prepareDataForUpdateTcm(updatedDataID, getState, dispatch,versionedData) {
+function prepareDataForUpdateTcm(updatedDataID, getState, dispatch,versionedData,updatedData) {
+    if (updatedData.hasOwnProperty("figuretype") && !allowedFigureTypesForTCM.includes(updatedData.figuretype)) {
+        return false
+    }
     const tcmData = getState().tcmReducer.tcmSnapshot;
     let indexes = []
     tcmData && tcmData.filter(function (element, index) {

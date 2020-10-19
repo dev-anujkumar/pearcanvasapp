@@ -550,7 +550,7 @@ export class TinyMceEditor extends Component {
                                 let parentNode = selectedElement.parentNode;
                                 let endPosition = true;
                                 if (selectedElement.tagName.toLowerCase() === 'a') {
-                                    let bomPosition = selectedElement.innerHTML.indexOf("﻿");
+                                    let bomPosition = selectedElement.innerHTML.lastIndexOf("﻿");
                                     if (bomPosition === 0) {
                                         endPosition = false;
                                     }
@@ -570,7 +570,7 @@ export class TinyMceEditor extends Component {
                                 if (!endPosition) {
                                     innerHtml = "<span id='_mce_caret' data-mce-bogus='1' data-mce-type='format-caret'>&#8203;&#65279;</span>" + existingInnerHTML;
                                 }
-                                let parentInnerHtml = parentNode.innerHTML;
+                                let parentInnerHtml = removeBOM(parentNode.innerHTML);
                                 let newParentInnerHtml = parentInnerHtml.replace(existingInnerHTML, innerHtml);
                                 parentNode.innerHTML = newParentInnerHtml;
                                 let pointerElement = document.getElementById('_mce_caret');
@@ -1904,7 +1904,14 @@ export class TinyMceEditor extends Component {
             elementId = this.props.elementId
             let footNoteSpan = document.getElementById('footnote-attacher');
             if (!footNoteSpan) {
-                editor.selection.setContent('<span id="footnote-attacher"></span>');
+                let liNode = editor.selection.getNode().getElementsByTagName ? editor.selection.getNode().getElementsByTagName('LI') : [];
+                if (liNode.length && this.props.element && this.props.element.type === "element-list") {
+                    let liInnerHtml = liNode[0].innerHTML;
+                    liInnerHtml = '<span id="footnote-attacher"></span>' + liInnerHtml;
+                    liNode[0].innerHTML = liInnerHtml;
+                } else{
+                    editor.selection.setContent('<span id="footnote-attacher"></span>');
+                }
             }
         }
         config.isCreateFootnote = true

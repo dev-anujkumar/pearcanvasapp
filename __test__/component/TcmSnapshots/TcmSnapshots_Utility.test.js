@@ -97,7 +97,7 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
             }
             let manifest1 = "urn:pearson:manifest:90b59454-2e5d-46f2-968f-fd1d636d0edb"
              const { slate1 } = tcmTestData
-            let aside = slate1[manifest1].contents.bodymatter[2].elementdata.bodymatter[1];
+            let aside = slate1[manifest1].contents.bodymatter[2].elementdata.bodymatter[2];
              const spyFunction = jest.spyOn(tcmSnapshotUtility, 'prepareTcmSnapshots');
              tcmSnapshotUtility.prepareTcmSnapshots(aside,actionStatus,asideContainer,"SECTION_BREAK","");
              expect(spyFunction).toHaveBeenCalledWith(aside, actionStatus,asideContainer,"SECTION_BREAK","");
@@ -135,8 +135,8 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
         })
         it('Test-3.5-Function--3--fetchElementWipData - BQ in WE-Body', () => {
             const spyFunction = jest.spyOn(tcmSnapshotUtility, 'fetchElementWipData');
-            tcmSnapshotUtility.fetchElementWipData(bodymatter1, "2-1-0", 'element-blockfeature')
-            expect(spyFunction).toHaveBeenCalledWith(bodymatter1, "2-1-0", 'element-blockfeature')
+            tcmSnapshotUtility.fetchElementWipData(bodymatter1, "2-2-0", 'element-blockfeature')
+            expect(spyFunction).toHaveBeenCalledWith(bodymatter1, "2-2-0", 'element-blockfeature')
 
         })
         it('Test-3.6-Function--3--fetchElementWipData - LO in SB', () => {

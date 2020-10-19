@@ -60,7 +60,7 @@
   }
 
   .toolbar-container{
-    width: calc(100% - 80px);
+    width: calc(100% - 85px);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -327,7 +327,7 @@ button[aria-label="formatSelector"].tox-tbtn--select{
   margin-right: 16px;
 }
 .side-icons .icon {
-  margin-left: 8px;
+  margin-left: 13px;
 }
 .side-icons .icon svg{
   cursor: pointer;
@@ -441,7 +441,7 @@ margin-left:6px;
 }
 .search-wrapper {
   top: 0;
-  right: 48px;
+  right: 46px;
   height: 49px;
   width: 0;
   opacity: 0;
@@ -478,7 +478,7 @@ margin-left:6px;
   height: 100%;
   display: flex;
   align-items: center;
-  width: calc(100% - 160px);
+  width: calc(100% - 163px);
 }
 .search-wrapper .search-element .search-input input{
   height: 100%;
@@ -486,13 +486,14 @@ margin-left:6px;
   border: 0 none;
   padding: 8px;
   font-size: 14px;
+  outline: none;
 }
 /* .icon.search-urn.popup .search-wrapper .search-element .search-input input {
   pointer-events: none;
 } */
 .search-wrapper .search-element .search-input .search-index {
   height: calc(100% - 16px);
-  padding-right: 8px;
+  padding-right: 5px;
   font-size: 14px;
   display: flex;
   align-items: center;
