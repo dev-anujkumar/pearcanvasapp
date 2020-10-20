@@ -9,6 +9,7 @@ import { sendElementTcmSnapshot, getLatestVersion } from './TcmSnapshot_Actions.
 import { setSemanticsSnapshots, fetchElementsTag, generateWipDataForFigure } from './ElementSnapshot_Utility.js';
 /*************************Import Constants*************************/
 import TcmConstants from './TcmConstants.js';
+import { storeOldAssetForTCM } from '../ElementContainer/ElementContainer_Actions'
 
 const {
     elementType,
@@ -782,6 +783,7 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
                     credits: wipData.credits,
                     figuredata: figureData
                 }
+                dispatch(storeOldAssetForTCM({}))
             }
             else {
                 oldData.elementdata = wipData.elementdata;
