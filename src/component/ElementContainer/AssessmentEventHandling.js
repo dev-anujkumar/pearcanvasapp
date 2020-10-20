@@ -38,7 +38,7 @@ export const handleElmPortalEvents = (action = 'add') => {
 }
 
 /** This function handles Slate-Refresh when an Elm Event is received */
-const handleRefreshSlate = (dispatch) => {
+export const handleRefreshSlate = (dispatch) => {
     localStorage.removeItem('newElement');
     config.slateManifestURN = config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
     config.slateEntityURN = config.tempSlateEntityURN ? config.tempSlateEntityURN : config.slateEntityURN
@@ -58,4 +58,7 @@ const handleRefreshSlate = (dispatch) => {
             getSlateLockStatus(config.projectUrn, config.slateManifestURN)
         }))
     });
+}
+export const reloadSlate = () => {
+    handleRefreshSlate(store.dispatch);
 }

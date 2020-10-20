@@ -351,5 +351,14 @@ describe('-----------------Testing Assessment Actions-----------------', () => {
             expect(spyFunction).toHaveBeenCalled();
             spyFunction.mockClear();
         });
+        it('Test-6.1---assessmentConfirmationPopup', () => {
+            const spyFunction = jest.spyOn(assessment_Actions, 'assessmentConfirmationPopup');
+            let result = assessment_Actions.assessmentConfirmationPopup(true);
+            expect(result.type).toEqual('ASSESSMENT_CONFIRMATION_POPUP');
+            expect(result.payload).toEqual(true);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        });
+        
     })
 })

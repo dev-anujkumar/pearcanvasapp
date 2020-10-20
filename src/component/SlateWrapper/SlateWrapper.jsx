@@ -37,6 +37,8 @@ import { handleTCMData } from '../TcmSnapshots/TcmSnapshot_Actions.js'
 import {
     fetchSlateData
 } from '../CanvasWrapper/CanvasWrapper_Actions';
+import { assessmentConfirmationPopup } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions';
+import { reloadSlate } from '../../component/ElementContainer/AssessmentEventHandling';
 import LazyLoad, {forceCheck} from "react-lazyload";
 
 let random = guid();
@@ -1046,7 +1048,18 @@ class SlateWrapper extends Component {
         this.props.showWrongAudioPopup(false)
         }
     }
-
+    /**
+    * @description - toggleAssessmentPopup function responsible for showing popup for latest version.
+    */
+    toggleAssessmentPopup = () => {
+        this.props.showBlocker(false)
+        hideTocBlocker()
+        hideBlocker()
+        if(this.props.showConfirmationPopup){
+            reloadSlate();
+            this.props.assessmentConfirmationPopup(false)
+        }
+    }
     /**
     * @description - processRemoveConfirmation function responsible for opening confirmation popup for removing the narrative audio.
     */
@@ -1100,6 +1113,28 @@ class SlateWrapper extends Component {
         }
     }
 
+    /**
+    * @description - showAssessmentConfirmationPopup function responsible for opening confirmation popup for updating embeded assessments .
+    */
+    showAssessmentConfirmationPopup = () => {
+        if (this.props.showConfirmationPopup) {
+            this.props.showBlocker(true)
+            showTocBlocker();
+            const dialogText = ` All other Assessment Items in this project will now be updated to the new version of this Assessment`
+            return (
+                <PopUp dialogText={dialogText}
+                    active={true}
+                    saveButtonText='OK'
+                    showConfirmation={true}
+                    assessmentClass="lock-message"
+                    togglePopup={this.toggleAssessmentPopup}
+                />
+            )
+        }
+        else {
+            return null
+        }
+    }
     showLockReleasePopup = () => {
         if (this.state.showReleasePopup) {
             this.props.showBlocker(true)
@@ -1221,6 +1256,7 @@ class SlateWrapper extends Component {
                 {/* ***************Audio Narration remove Popup **************** */}
                 {this.showAudioRemoveConfirmationPopup()}
                 {this.showLockReleasePopup()}
+                {this.showAssessmentConfirmationPopup()}
             </React.Fragment>
         );
     }
@@ -1258,7 +1294,8 @@ const mapStateToProps = state => {
         showSlateLockPopupValue: state.metadataReducer.showSlateLockPopup,
         searchParent: state.searchReducer.parentId,
         commentSearchParent: state.commentSearchReducer.parentId,
-        showToast: state.appStore.showToast
+        showToast: state.appStore.showToast,
+        showConfirmationPopup: state.assessmentReducer.showConfirmationPopup,
     };
 };
 
@@ -1284,7 +1321,8 @@ export default connect(
         openPopupSlate,
         showSlateLockPopup,
         handleTCMData,
-        fetchSlateData
+        fetchSlateData,
+        assessmentConfirmationPopup
 
     }
 )(SlateWrapper);

@@ -351,7 +351,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         //tcm conversion code   
         if (config.tcmStatus) {
             if (elementType.indexOf(oldElementData.type) !== -1) {
-                prepareDataForConversionTcm(oldElementData.id, getState, dispatch,res.data.id);
+                prepareDataForConversionTcm(oldElementData.id, getState, dispatch,res.data.id, res.data);
             }
         }   
         dispatch({
@@ -375,7 +375,10 @@ catch (error) {
     dispatch({type: ERROR_POPUP, payload:{show: true}})
 }
 }
-function prepareDataForConversionTcm(updatedDataID, getState, dispatch,versionid) {
+function prepareDataForConversionTcm(updatedDataID, getState, dispatch,versionid, resData) {
+    if (resData.hasOwnProperty("figuretype") && !allowedFigureTypesForTCM.includes(resData.figuretype)) {
+        return false
+    }
     const tcmData = getState().tcmReducer.tcmSnapshot;
     let indexes = []
     tcmData && tcmData.filter(function (element, index) {
