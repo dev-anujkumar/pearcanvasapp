@@ -1413,6 +1413,7 @@ class ElementContainer extends Component {
                     showDeleteElemPopup={this.state.showDeleteElemPopup}
                     sectionBreak={this.state.sectionBreak}
                     deleteElement={this.deleteElement}
+                    isAddComment ={true}
                 />}
                 {this.props.children &&
                     <PageNumberContext.Consumer>
