@@ -15,6 +15,7 @@ const store = mockStore({
     metadataReducer: { currentSlateLOData: {} },
     audioReducer: {openRemovePopUp: false},
     searchReducer: {searchTerm: '', parentId: '', deeplink: false},
+    commentSearchReducer: {commentSearchTerm: '', parentId: ''},
     assessmentReducer:{showConfirmationPopup:false}
 })
 import config from '../../../src/config/config';
@@ -179,6 +180,7 @@ describe('Testing <SlateWrapper> Component', () => {
                 metadataReducer: { currentSlateLOData: {} },
                 audioReducer: {openRemovePopUp: false},
                 searchReducer: {searchTerm: '', parentId: '', deeplink: false},
+                commentSearchReducer: {commentSearchTerm: '', parentId: ''},
                 assessmentReducer:{showConfirmationPopup:false}
             })
             const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props} /> </Provider>)
@@ -200,6 +202,7 @@ describe('Testing <SlateWrapper> Component', () => {
                 metadataReducer: { currentSlateLOData: {} },
                 audioReducer: {openRemovePopUp: false},
                 searchReducer: {searchTerm: '', parentId: '', deeplink: false},
+                commentSearchReducer: {commentSearchTerm: '', parentId: ''},
                 assessmentReducer:{showConfirmationPopup:false}
             })
             const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props} /> </Provider>)
@@ -221,6 +224,7 @@ describe('Testing <SlateWrapper> Component', () => {
                 metadataReducer: { currentSlateLOData: {} },
                 audioReducer: {openRemovePopUp: false},
                 searchReducer: {searchTerm: '', parentId: '', deeplink: false},
+                commentSearchReducer: {commentSearchTerm: '', parentId: ''},
                 assessmentReducer:{showConfirmationPopup:false}
             })
             //config.savingInProgress=true
@@ -261,6 +265,7 @@ describe('Testing <SlateWrapper> Component', () => {
                 metadataReducer: { currentSlateLOData: {} },
                 audioReducer: {openRemovePopUp: false},
                 searchReducer: {searchTerm: '', parentId: '', deeplink: false},
+                commentSearchReducer: {commentSearchTerm: '', parentId: ''},
                 assessmentReducer:{showConfirmationPopup:false}
             })
             const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props } tocDeleteMessage = {{ messageType : 'test' }} /> </Provider>)
@@ -347,6 +352,7 @@ describe('Testing <SlateWrapper> Component', () => {
                 openRemovePopUp : true,
                 showAudioRemovePopup : jest.fn(),
                 searchReducer: {searchTerm: '', parentId: '', deeplink: false},
+                commentSearchReducer: {commentSearchTerm: '', parentId: ''},
                 assessmentReducer:{showConfirmationPopup:false}
             })
             const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props } /> </Provider>)
@@ -368,6 +374,7 @@ describe('Testing <SlateWrapper> Component', () => {
                 metadataReducer: { currentSlateLOData: {} },
                 audioReducer: {openSplitPopUp: true},
                 searchReducer: {searchTerm: '', parentId: '', deeplink: false},
+                commentSearchReducer: {commentSearchTerm: '', parentId: ''},
                 assessmentReducer:{showConfirmationPopup:false}
             })
             const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props } /> </Provider>)
@@ -398,6 +405,7 @@ describe('Testing <SlateWrapper> Component', () => {
                 audioReducer: {openRemovePopUp: false},
                 withinLockPeriod: true,
                 searchReducer: {searchTerm: '', parentId: '', deeplink: false},
+                commentSearchReducer: {commentSearchTerm: '', parentId: ''},
                 assessmentReducer:{showConfirmationPopup:false}
             })
             const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props } /> </Provider>)
@@ -431,6 +439,7 @@ describe('Testing <SlateWrapper> Component', () => {
                 audioReducer: {openRemovePopUp: false},
                 withinLockPeriod: true,
                 searchReducer: {searchTerm: '', parentId: '', deeplink: false},
+                commentSearchReducer: {commentSearchTerm: '', parentId: ''},
                 assessmentReducer:{showConfirmationPopup:false}
             })
             const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props } accesDeniedPopup = {true} /> </Provider>)
@@ -466,6 +475,7 @@ describe('Testing <SlateWrapper> Component', () => {
                 metadataReducer: { currentSlateLOData: {} },
                 audioReducer: {openRemovePopUp: true},
                 searchReducer: {searchTerm: '', parentId: '', deeplink: false},
+                commentSearchReducer: {commentSearchTerm: '', parentId: ''},
                 assessmentReducer:{showConfirmationPopup:false}
             })
             const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props} /> </Provider>)
@@ -502,6 +512,7 @@ describe('Testing <SlateWrapper> Component', () => {
                 metadataReducer: { currentSlateLOData: {} },
                 audioReducer: {openRemovePopUp: false, openSplitPopUp: true},
                 searchReducer: {searchTerm: '', parentId: '', deeplink: false},
+                commentSearchReducer: {commentSearchTerm: '', parentId: ''},
                 assessmentReducer:{showConfirmationPopup:false}
             })
             const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props} /> </Provider>)
@@ -538,6 +549,7 @@ describe('Testing <SlateWrapper> Component', () => {
                 metadataReducer: { currentSlateLOData: {} },
                 audioReducer: {openRemovePopUp: false, openSplitPopUp: true},
                 searchReducer: {searchTerm: '', parentId: '', deeplink: false},
+                commentSearchReducer: {commentSearchTerm: '', parentId: ''},
                 assessmentReducer:{showConfirmationPopup:false}
             })
             const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props} /> </Provider>)
@@ -574,6 +586,7 @@ describe('Testing <SlateWrapper> Component', () => {
                 metadataReducer: { currentSlateLOData: {} },
                 audioReducer: {openRemovePopUp: false, openSplitPopUp: true},
                 searchReducer: {searchTerm: '', parentId: '', deeplink: false},
+                commentSearchReducer: {commentSearchTerm: '', parentId: ''},
                 assessmentReducer:{showConfirmationPopup:false}
             })
             const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props} /> </Provider>)
@@ -644,6 +657,7 @@ describe('splihandler function', () => {
         metadataReducer: { currentSlateLOData: {} },
         audioReducer: {openRemovePopUp: false},
         searchReducer: {searchTerm: '', parentId: '', deeplink: false},
+        commentSearchReducer: {commentSearchTerm: '', parentId: ''},
         assessmentReducer:{showConfirmationPopup:false}
     })
     //config.savingInProgress=true
@@ -727,6 +741,7 @@ describe('splihandler function', () => {
             metadataReducer: { currentSlateLOData: {} },
             audioReducer: {openRemovePopUp: false, openWrongAudioPopup : true, openSplitPopUp:false},
             searchReducer: {searchTerm: '', parentId: '', deeplink: false},
+            commentSearchReducer: {commentSearchTerm: '', parentId: ''},
             assessmentReducer:{showConfirmationPopup:false}
         })
         //config.savingInProgress=true
@@ -764,6 +779,7 @@ describe('splihandler function', () => {
             metadataReducer: { currentSlateLOData: {} },
             audioReducer: {openRemovePopUp: false, openWrongAudioPopup : true, openSplitPopUp:false},
             searchReducer: {searchTerm: '', parentId: '', deeplink: false},
+            commentSearchReducer: {commentSearchTerm: '', parentId: ''},
             assessmentReducer:{showConfirmationPopup:false}
         })
         
