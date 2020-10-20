@@ -9,6 +9,7 @@ import { sendElementTcmSnapshot, getLatestVersion } from './TcmSnapshot_Actions.
 import { setSemanticsSnapshots, fetchElementsTag, generateWipDataForFigure } from './ElementSnapshot_Utility.js';
 /*************************Import Constants*************************/
 import TcmConstants from './TcmConstants.js';
+import { remove } from 'lodash';
 
 const {
     elementType,
@@ -701,11 +702,11 @@ const setContentSnapshot = (element, elementDetails, actionStatus, CurrentSlateS
     } else if (element.type === BLOCKFEATURE && element.elementdata && element.elementdata.type && element.elementdata.type == 'blockquote') {
         let blockQuoteText = element.html && element.html.text ? element.html.text : "";
         snapshotData = blockQuoteText && blockQuoteText.trim() !== "" ? blockQuoteText.replace(bqHiddenText,"").replace(bqAttrHtmlTrue, "").replace(bqAttrHtmlFalse, "") : "";
-    } 
-    else if(elementDetails && elementDetails.elementType && (elementDetails.elementType.includes("LB") && actionStatus && actionStatus.action == 'create') && CurrentSlateStatus != 'approved' && elementDetails.isMetaFieldExist === true){
+    } else if(elementDetails && elementDetails.elementType && (elementDetails.elementType.includes("LB") && actionStatus && actionStatus.action == 'create') && CurrentSlateStatus != 'approved' && elementDetails.isMetaFieldExist === true){
         snapshotData = '<p></p>'          
-    } 
-    else {
+    } else if(element.type === ELEMENT_LIST && element.html && element.html.text){
+        snapshotData = element.html.text.replace(/<br>/g,"")
+    } else {
         snapshotData = element.html && element.html.text ? element.html.text : "";
     }
     snapshotData = snapshotData && snapshotData.replace(/data-mce-href="#"/g,'')
