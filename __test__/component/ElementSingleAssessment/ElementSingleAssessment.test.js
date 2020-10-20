@@ -1,7 +1,6 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import ElementSingleAssessment from '../../../src/component/ElementSingleAssessment/ElementSingleAssessment';
-import { c2AssessmentModule } from '../../../src/js/c2_assessment_module';
 import {  singleAssessmentCITEDefault} from '../../../fixtures/ElementSingleAssessmentTestData'
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
