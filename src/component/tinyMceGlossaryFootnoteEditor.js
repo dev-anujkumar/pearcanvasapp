@@ -317,7 +317,9 @@ export class ReactEditor extends React.Component {
     }
     setFormattingToolbar('disableTinymceToolbar')
     if (!_isEditorPlaced) {
-      this.editorRef.current.focus();
+      setTimeout(()=>{
+        this.editorRef.current.focus();
+      },0)
       this.editorConfig.selector = '#' + this.editorRef.current.id;
       let glossaryNode = document.getElementById('glossary-0')
       let footnoteNode = document.getElementById('footnote-0')
