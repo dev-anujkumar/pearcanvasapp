@@ -71,10 +71,16 @@ class SlateWrapper extends Component {
     }
 
     componentDidUpdate() {
+        let divObj = 0;
         if(this.props.searchParent !== '' && document.querySelector(`div[data-id="${this.props.searchParent}"]`)) {
-            let divObj = document.querySelector(`div[data-id="${this.props.searchParent}"]`).offsetTop;
+            divObj = document.querySelector(`div[data-id="${this.props.searchParent}"]`).offsetTop;
             document.getElementById('slateWrapper').scrollTop = divObj;
             // sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } });
+        }
+
+        if(this.props.commentSearchParent !== '' && document.querySelector(`div[data-id="${this.props.commentSearchParent}"]`)) {
+            divObj = document.querySelector(`div[data-id="${this.props.commentSearchParent}"]`).offsetTop;
+            document.getElementById('slateWrapper').scrollTop = divObj;
         }
     }
 
@@ -1251,6 +1257,7 @@ const mapStateToProps = state => {
         accesDeniedPopup : state.appStore.accesDeniedPopup,
         showSlateLockPopupValue: state.metadataReducer.showSlateLockPopup,
         searchParent: state.searchReducer.parentId,
+        commentSearchParent: state.commentSearchReducer.parentId,
         showToast: state.appStore.showToast
     };
 };

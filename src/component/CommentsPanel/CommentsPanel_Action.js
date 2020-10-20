@@ -14,6 +14,8 @@ import {
     ERROR_POPUP
 } from '../../constants/Action_Constants';
 
+import { getCommentElements } from './../Toolbar/Search/Search_Action';
+
 
 /**
  * 
@@ -49,6 +51,8 @@ export const fetchComments = (contentUrn, title) => dispatch => {
                     index: 0
                 }
             })
+
+            dispatch(getCommentElements(currentWorkId));
             //Replaces to the original URL to prevent multiple panel toggle
             window.history.replaceState(null, null, `/toc-wrapper/index.html?projectUrn=${config.projectUrn}&entityUrn=${config.projectEntityUrn}`);
         }
