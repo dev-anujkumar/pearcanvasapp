@@ -9,13 +9,6 @@ export const searchEvent = {
     totalCount: 0,
 };
 
-// const axiosObject = axios.create({
-//     headers: {
-//         'Content-Type': 'application/json',
-//         'PearsonSSOSession': config.ssoToken
-//     }
-// });
-
 export const getContainerData = (searchTerm, deeplink = false) => {
     const axiosObject = axios.create({
         headers: {
