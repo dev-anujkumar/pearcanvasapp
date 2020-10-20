@@ -9,7 +9,6 @@ import { sendElementTcmSnapshot, getLatestVersion } from './TcmSnapshot_Actions.
 import { setSemanticsSnapshots, fetchElementsTag, generateWipDataForFigure } from './ElementSnapshot_Utility.js';
 /*************************Import Constants*************************/
 import TcmConstants from './TcmConstants.js';
-import { remove } from 'lodash';
 
 const {
     elementType,
