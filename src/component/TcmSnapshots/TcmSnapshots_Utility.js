@@ -678,12 +678,20 @@ export const setFigureElementContentSnapshot = (element) => {
         captions: element.html.captions || "",
         credits: element.html.credits || "" 
     }
+    let programLang = element.figuredata.programlanguage && element.figuredata.programlanguage != 'Select' ? element.figuredata.programlanguage : ''
     switch (element.figuretype) {
         case "video":
             snapshotData["metadata"] = element.figuredata.videoid.trim().length ? `<p>${element.figuredata.videoid}</p>` : "<p><br></p>"
             break;
         case "audio":
             snapshotData["metadata"] = element.figuredata.audioid.trim().length ? `<p>${element.figuredata.audioid}</p>` : "<p><br></p>"
+            break;
+        case "codelisting":             // for BCE
+            snapshotData["codeblock"] = prepareCodeBlock(element)
+            snapshotData["metadata"] = `<p>Syntax-highlighting: ${element.figuredata.syntaxhighlighting || true}</p><p>Language: ${programLang}</p><p>Line Number: ${element.figuredata.numbered || true}</p><p>Start numbering from: ${element.figuredata.startNumber || "1"}</p>`
+            break;
+        case "authoredtext":            // for MML
+            snapshotData["mathblock"] = element.figuredata.elementdata.text ? `<p>${element.figuredata.elementdata.text}</p>` : "<p><br></p>"
             break;
         case "image":
         case "table":
@@ -693,6 +701,22 @@ export const setFigureElementContentSnapshot = (element) => {
             break;
     }
     return snapshotData
+}
+
+/**
+ * Prepares code block text for BCE
+ * @param {Object} element Figure element data
+ */
+const prepareCodeBlock = (element) => {
+    let codeBlockLength = element.figuredata.preformattedtext && element.figuredata.preformattedtext.length || 0
+    let codeblock = []
+    let lineBlock
+    codeBlockLength && element.figuredata.preformattedtext.forEach(blockLine => {
+        lineBlock = `<span>${blockLine.text}</span>`
+        codeblock.push(lineBlock)
+    });
+
+     return `<p>${codeblock}</p>`
 }
 
 const setContentSnapshot = (element, elementDetails, actionStatus, CurrentSlateStatus) => {

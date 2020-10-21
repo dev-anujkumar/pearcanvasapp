@@ -429,6 +429,12 @@ const setElementTag = {
             },
             'video': {
                 parentTag: "VID" 
+            },
+            "codelisting":{
+                parentTag: "BCE" 
+            },
+            "authoredtext":{
+                parentTag: "MML" 
             }
         }
     }
