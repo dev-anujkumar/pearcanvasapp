@@ -77,7 +77,7 @@ export const getCommentElements = (q) => {
         let elementIndex = 0;
         let bodymatter = {};
         let slateData = getState().appStore.slateLevelData[config.slateManifestURN] ? getState().appStore.slateLevelData[config.slateManifestURN].contents.bodymatter || {} : {};
-        console.log('see:::', q);
+        
         if(/^(urn\:pearson\:(work|manifest)\:\w{8}(\-\w{4}){3}\-\w{12})$/gi.test(q) ) {
             await axiosObject.get(`${config.REACT_APP_API_URL}v1/slate/${config.projectUrn}/contentHierarchy/${config.slateEntityURN}/elementids`)
             .then(res => {
