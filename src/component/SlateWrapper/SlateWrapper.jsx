@@ -78,7 +78,7 @@ class SlateWrapper extends Component {
         let divObj = 0;
         if(this.props.searchParent !== '' && document.querySelector(`div[data-id="${this.props.searchParent}"]`)) {
             divObj = document.querySelector(`div[data-id="${this.props.searchParent}"]`).offsetTop;
-            if(this.props.searchNode !== '' && this.props.searchNode !== this.props.searchParent) {
+            if(this.props.searchNode !== '' && document.querySelector(`div[data-id="${this.props.searchNode}"]`) && this.props.searchNode !== this.props.searchParent) {
                 divObj += document.querySelector(`div[data-id="${this.props.searchNode}"]`).offsetTop;
             }
             document.getElementById('slateWrapper').scrollTop = divObj;
@@ -86,7 +86,7 @@ class SlateWrapper extends Component {
 
         if(this.props.commentSearchParent !== '' && document.querySelector(`div[data-id="${this.props.commentSearchParent}"]`)) {
             divObj = document.querySelector(`div[data-id="${this.props.commentSearchParent}"]`).offsetTop;
-            if(this.props.commentSearchNode !== '' && this.props.commentSearchNode !== this.props.commentSearchParent) {
+            if(this.props.commentSearchNode !== '' && document.querySelector(`div[data-id="${this.props.commentSearchNode}"]`) && this.props.commentSearchNode !== this.props.commentSearchParent) {
                 divObj += document.querySelector(`div[data-id="${this.props.commentSearchNode}"]`).offsetTop;
             }
             document.getElementById('slateWrapper').scrollTop = divObj;
