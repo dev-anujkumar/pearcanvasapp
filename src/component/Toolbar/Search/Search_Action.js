@@ -84,6 +84,7 @@ export const getCommentElements = (q) => {
                 bodymatter = res.data[config.slateManifestURN].contents.bodymatter;
             });
             if((JSON.stringify(bodymatter)).indexOf(q) >= 0) {
+                config.fromTOC = false;
                 payload = q;
                 bodymatter.forEach((item, index) => {
                     if((JSON.stringify(item)).indexOf(q) >= 0) {
