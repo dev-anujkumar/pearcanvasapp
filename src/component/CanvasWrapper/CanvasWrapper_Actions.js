@@ -605,7 +605,7 @@ const setOldAudioVideoPath = (getState, activeElement, elementIndex, type) => {
         case "audio":
             if (typeof (index) == 'number') {
                 if (newBodymatter[index].versionUrn == activeElement.id) {
-                    oldPath = (bodymatter[index].figuredata.audio && bodymatter[index].figuredata.audio.path) || ""
+                    oldPath = bodymatter[index].figuredata.audioid || ""
                 }
             } else {
                 let indexes = index.split('-');
@@ -613,17 +613,18 @@ const setOldAudioVideoPath = (getState, activeElement, elementIndex, type) => {
                 if (indexesLen == 2) {
                     condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
                     if (condition.versionUrn == activeElement.id) {
-                        oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.audio && bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.audio.path
+                        oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.audio && bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.audioid
                     }
                 } else if (indexesLen == 3 && parentUrn && parentUrn.elementType === "group") {
                     condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
                     if (condition.versionUrn == activeElement.id) {
-                        oldPath = condition.figuredata.audio && condition.figuredata.audio.path || ""
+                        oldPath = condition.figuredata.audioid || ""
                     }
                 } else if (indexesLen == 3) {
                     condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
                     if (condition.versionUrn == activeElement.id) {
-                        oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata.audio && bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata.audio.path
+                        oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata.audioid 
+                        // && bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata.audio.path
                     }
                 }
             }
@@ -631,7 +632,8 @@ const setOldAudioVideoPath = (getState, activeElement, elementIndex, type) => {
         case "video":
             if (typeof (index) == 'number') {
                 if (newBodymatter[index].versionUrn == activeElement.id) {
-                    oldPath = bodymatter[index].figuredata.videos[0].path || ""
+                    oldPath = bodymatter[index].figuredata.videoid || ""
+                    // bodymatter[index].figuredata.videos[0].path || ""
                 }
             } else {
                 let indexes = index.split('-');
@@ -639,17 +641,17 @@ const setOldAudioVideoPath = (getState, activeElement, elementIndex, type) => {
                 if (indexesLen == 2) {
                     condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
                     if (condition.versionUrn == activeElement.id) {
-                        oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.videos[0].path
+                        oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.videoid
                     }
                 } else if (indexesLen == 3 && parentUrn && parentUrn.elementType === "group") {
                     condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
                     if (condition.versionUrn == activeElement.id) {
-                        oldPath = condition.figuredata.videos[0].path || ""
+                        oldPath = condition.figuredata.videoid || ""
                     }
                 } else if (indexesLen == 3) {
                     condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
                     if (condition.versionUrn == activeElement.id) {
-                        oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata.videos[0].path
+                        oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata.videoid
                     }
                 }
             }
@@ -733,6 +735,7 @@ export const setActiveElement = (activeElement = {}, index = 0,parentUrn = {},as
             break;
         case "video":
             let oldVideoId = setOldAudioVideoPath(getState, activeElement, index, activeElement.figuretype)
+            console.log("oldVideoId",oldVideoId)
             dispatch({
                 type: SET_OLD_IMAGE_PATH,
                 payload: {
