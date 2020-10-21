@@ -174,7 +174,7 @@ class PopUp extends React.Component {
             return (
                 <>
                     <h2 className = 'tocDeleteHeader'>Warning</h2>
-                    {props.tocDelete && props.deleteContainer ? (props.itemName ? <div className={` ${props.tocDeleteClass}`} >Are you sure you want to delete '<strong>{props.itemName}</strong>'.This action cannot be undone?</div> : <div className={` ${props.tocDeleteClass}`} >Are you sure you want to delete '<strong>Untitled</strong>'.This action cannot be undone?</div>) :  <div className={` ${props.tocDeleteClass}`} >{props.dialogText}</div>}
+                    {props.tocDelete && props.deleteContainer ? (props.itemName ? <div className={` ${props.tocDeleteClass}`} >Are you sure you want to delete '<strong>{props.itemName}</strong>'.This action cannot be undone?</div> : <div className={` ${props.tocDeleteClass}`} >Are you sure you want to delete '<strong>Untitled</strong>'.This action cannot be undone?</div>) :  <div className={`dialog-window  ${props.tocDeleteClass}`} >{props.dialogText}</div>}
                 </>
             )
         }
@@ -206,9 +206,14 @@ class PopUp extends React.Component {
                 </>
             )
         }
+        else if(props.showConfirmation){
+            return (
+                <div className={`dialog-window ${props.assessmentClass}`}><strong>Note: </strong>{props.dialogText}</div>
+            )
+        }
         else {
             return (
-                <div className={`dialog-window  ${props.assessmentClass}`} >{props.dialogText}</div>
+                <div className={`dialog-window  ${props.isAddComment ? 'add-comment' : ""} ${props.assessmentClass}`} >{props.dialogText}</div>
             )
         }
     }
