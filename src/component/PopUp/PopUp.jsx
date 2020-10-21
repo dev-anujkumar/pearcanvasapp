@@ -206,11 +206,6 @@ class PopUp extends React.Component {
                 </>
             )
         }
-        else if(props.showConfirmation){
-            return (
-                <div className={`dialog-window ${props.assessmentClass}`}><strong>Note: </strong>{props.dialogText}</div>
-            )
-        }
         else {
             return (
                 <div className={`dialog-window  ${props.isAddComment ? 'add-comment' : ""} ${props.assessmentClass}`} >{props.dialogText}</div>
