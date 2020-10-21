@@ -712,7 +712,7 @@ const prepareCodeBlock = (element) => {
     let codeblock = []
     let lineBlock
     codeBlockLength && element.figuredata.preformattedtext.forEach(blockLine => {
-        lineBlock = `<span>${blockLine.text}</span>`
+        lineBlock = `<span>${blockLine.text ? blockLine.text : '<br>'}</span>`
         codeblock.push(lineBlock)
     });
 
