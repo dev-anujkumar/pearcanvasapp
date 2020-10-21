@@ -926,6 +926,7 @@ export const checkContainerElementVersion = async (containerElement, versionStat
     /** latest version for slate*/
     if (currentSlateData && currentSlateData.status && currentSlateData.status === 'approved') {
         let newSlateManifest = await getLatestVersion(currentSlateData.contentUrn);
+        config.tcmslatemanifest = newSlateManifest;
         containerElement.slateManifest = newSlateManifest ? newSlateManifest : config.slateManifestURN    
     }
     if (currentSlateData.popupSlateData && currentSlateData.popupSlateData.status === 'approved') {
