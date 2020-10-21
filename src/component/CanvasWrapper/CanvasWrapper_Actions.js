@@ -735,7 +735,6 @@ export const setActiveElement = (activeElement = {}, index = 0,parentUrn = {},as
             break;
         case "video":
             let oldVideoId = setOldAudioVideoPath(getState, activeElement, index, activeElement.figuretype)
-            console.log("oldVideoId",oldVideoId)
             dispatch({
                 type: SET_OLD_IMAGE_PATH,
                 payload: {
