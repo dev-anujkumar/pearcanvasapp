@@ -9,6 +9,7 @@ import { sendElementTcmSnapshot, getLatestVersion } from './TcmSnapshot_Actions.
 import { setSemanticsSnapshots, fetchElementsTag, generateWipDataForFigure } from './ElementSnapshot_Utility.js';
 /*************************Import Constants*************************/
 import TcmConstants from './TcmConstants.js';
+import { storeOldAssetForTCM } from '../ElementContainer/ElementContainer_Actions'
 
 const {
     elementType,
@@ -741,7 +742,7 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
         status:"",
         fromWhere:"update"
     }
-    let {updateBodymatter, response,updatedId,currentParentData} = elementUpdateData;
+    let {updateBodymatter, response,updatedId,currentParentData, figureData} = elementUpdateData;
     let currentSlateData = currentParentData[config.slateManifestURN] 
     if(config.isPopupSlate){
         currentSlateData.popupSlateData = currentParentData[config.tempSlateManifestURN]
@@ -780,8 +781,9 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
                     subtitle: wipData.subtitle,
                     captions: wipData.captions,
                     credits: wipData.credits,
-                    figuredata: wipData.figuredata
+                    figuredata: figureData
                 }
+                dispatch(storeOldAssetForTCM({}))
             }
             else {
                 oldData.elementdata = wipData.elementdata;
