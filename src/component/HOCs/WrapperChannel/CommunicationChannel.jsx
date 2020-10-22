@@ -96,15 +96,6 @@ function CommunicationChannel(WrappedComponent) {
                 case 'disableNext':
                     config.disableNext = true;//message.disableNext;
                     break;
-                // case 'swappedIS':
-                // case 'ISDeleted':
-                // case 'TocLoader':
-                //     {
-                //         /**
-                //          * TO BE IMPLEMENTED
-                //          *  */
-                //     }
-                //     break;
                 case 'refreshElementWithTable':
                     {
                         this.setTableData(message.elementId, message.updatedData);
@@ -123,11 +114,8 @@ function CommunicationChannel(WrappedComponent) {
 
                     }
                     break;
-                case 'updateSlateTitleByID':
-                    this.updateSlateTitleByID(message);
-                    break;
                 case 'projectDetails':
-                    config.tcmStatus = message.tcm.activated;
+                    config.tcmStatus = (message.tcm && message.tcm.activated == true ? true : undefined);
                     config.userId = message['x-prsn-user-id'].toLowerCase();
                     config.userName = message['x-prsn-user-id'].toLowerCase();
                     config.ssoToken = message.ssoToken;
@@ -137,6 +125,7 @@ function CommunicationChannel(WrappedComponent) {
                     config.alfrescoMetaData = message;
                     config.book_title = message.name;
                     this.props.fetchAuthUser()
+                    this.props.tcmCosConversionSnapshot()       // for creation of pre-snapshots for cos converted projects
                     break;
                 case 'permissionsDetails':
                     this.handlePermissioning(message);
@@ -217,11 +206,37 @@ function CommunicationChannel(WrappedComponent) {
                     }
                     break;
                 case 'pageLink':
-                    this.updatePageLink(message);
+                    if(message && message.link === 'unlink'){
+                        this.deleteTocItem(message)
+
+                    } else {
+                        this.updatePageLink(message);
+                    }
+                    break;
+                case 'slateLengthChanged':
+                    this.changeSlateLength(message);
+                    break;
+                case 'parentChanging':
+                    this.props.fetchSlateAncestorData(message || {});
+                    break;
+                case 'elementBorder':
+                    this.props.toggleElemBordersAction()
+                    break;
+                case 'pageNumber':
+                    this.props.togglePageNumberAction()
                     break;
             }
         }
 
+        /**
+         * Updates the element count and refreshes slate
+         * @param {String} message element count in a slate 
+         */
+        changeSlateLength = (message) => {
+            this.props.setSlateLength(message)
+            this.handleRefreshSlate()
+        }
+        
         /**
          * Handle the element update action on linking a page
          */
@@ -237,10 +252,9 @@ function CommunicationChannel(WrappedComponent) {
                 elementId = linkData.elementId || "";
                 pageId = linkData.pageId || "";
 
-                let elementContainer = document.querySelector('.element-container[data-id="' + linkData.elementId + '"]');
+                let elementContainer = document.querySelector('.element-container[data-id="' + linkData.elementId + '"]');              
                 activeElement = elementContainer.querySelectorAll('.cypress-editable');
                 activeElement.forEach((item) => {
-                    // console.log('active element:::', item, item.classList.contains('mce-content-body'));
                     if (item.classList.contains('mce-content-body') || !item.classList.contains('place-holder')) {
                         if (item.querySelector(`[asset-id="${linkData.linkId}"]`) || item.querySelector('#' + linkData.linkId)) {
                             tinymce.activeEditor.undoManager.transact(() => {
@@ -270,9 +284,9 @@ function CommunicationChannel(WrappedComponent) {
                 let elementContainer = document.querySelector('.element-container[data-id="' + linkData.elementId + '"]');
                 activeElement = elementContainer.querySelectorAll('.cypress-editable');
                 activeElement.forEach((item) => {
-                    // console.log('active element:::', item, item.classList.contains('mce-content-body'));
                     if (item.classList.contains('mce-content-body') || !item.classList.contains('place-holder')) {
                         if (item.querySelector(`[asset-id="${linkData.linkId}"]`) || item.querySelector('#' + linkData.linkId)) {
+                           
                             tinymce.activeEditor.undoManager.transact(() => {
                                 item.focus();
                                 editor = item;
@@ -280,6 +294,7 @@ function CommunicationChannel(WrappedComponent) {
                                 linkHTML = linkNode.innerHTML || '';
                                 linkNode.outerHTML = linkHTML;
                                 if (linkData.link == "unlink") {
+                                    this.props.assetIdForSnapshot(linkData.linkId)
                                     linkNotification = "Link removed.";
                                 }
                             });
@@ -291,9 +306,9 @@ function CommunicationChannel(WrappedComponent) {
             document.getElementById('link-notification').innerText = linkNotification;
             sendDataToIframe({ 'type': TocToggle, 'message': { "open": false } });
 
-            setTimeout(async () => {
+            setTimeout(() => {
                 if (editor) {
-                    await editor.click();
+                    editor.click();
                     editor.blur();
                 }
             }, 500);
@@ -393,7 +408,7 @@ function CommunicationChannel(WrappedComponent) {
                 config.totalPageCount = 0;
                 config.pageLimit = 0;
                 config.fromTOC = false;
-                sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': { slateRefreshStatus: 'Refreshing' } });
+                sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': { slateRefreshStatus: 'Refreshing...' } });
                 this.props.handleSlateRefresh(id, () => {
                     config.isSlateLockChecked = false;
                     this.props.getSlateLockStatus(config.projectUrn, config.slateManifestURN)
@@ -456,6 +471,8 @@ function CommunicationChannel(WrappedComponent) {
                 config.staleTitle = message.node.unformattedTitle ? message.node.unformattedTitle.en : '';
                 config.slateEntityURN = message.node.entityUrn;
                 config.slateManifestURN = message.node.containerUrn;
+                config.tempSlateManifestURN = null;
+                config.tempSlateEntityURN = null;
                 config.disablePrev = message.disablePrev;
                 config.disableNext = message.disableNext;
                 config.slateType = message.node.nodeLabel;
@@ -465,12 +482,14 @@ function CommunicationChannel(WrappedComponent) {
                 config.scrolling = true;
                 config.totalPageCount = 0;
                 config.fromTOC = true;
+                config.tcmslatemanifest= null;
                 config.parentLabel = message.node.nodeParentLabel;
                 this.props.getSlateLockStatus(config.projectUrn, config.slateManifestURN)
                 let slateData = {
                     currentProjectId: config.projectUrn,
                     slateEntityUrn: config.slateEntityURN
                 }
+                config.isPopupSlate = false;
                 this.props.fetchAudioNarrationForContainer(slateData)
                 this.props.clearElementStatus()
                 this.props.fetchUsageTypeData('assessment');
@@ -596,27 +615,6 @@ function CommunicationChannel(WrappedComponent) {
                 tocDeleteMessage: newMessage
             })
         }
-
-        updateSlateTitleByID = (messageObj) => {
-            if (messageObj.slateType && (messageObj.slateType === 'section' || messageObj.slateType === 'assessment')) {
-                this.updateTitleSlate(messageObj);
-            }
-            else if (messageObj.slateType === 'container-introduction') {
-                if (this.props.introObject.isCO === false && messageObj.slateID === this.props.introObject.introSlate) {
-                    this.updateTitleSlate(messageObj);
-                }
-                else {
-                    this.fetchOpenerData(messageObj);
-                }
-            }
-        }
-
-        fetchOpenerData = (messageObj) => {
-            /**
-             * TO BE IMPLEMENTED
-             *  */
-        }
-
         updateTitleSlate = (messageObj) => {
             /**
              * TO BE IMPLEMENTED
@@ -678,7 +676,7 @@ function CommunicationChannel(WrappedComponent) {
         render() {
             return (
                 <React.Fragment>
-                    <WrappedComponent {...this.props} showBlocker={this.state.showBlocker} showCanvasBlocker={this.showCanvasBlocker} toggleTocDelete={this.state.toggleTocDelete} tocDeleteMessage={this.state.tocDeleteMessage} modifyState={this.modifyState} />
+                    <WrappedComponent {...this.props} showBlocker={this.state.showBlocker} showCanvasBlocker={this.showCanvasBlocker} toggleTocDelete={this.state.toggleTocDelete} tocDeleteMessage={this.state.tocDeleteMessage} modifyState={this.modifyState} updatePageLink={this.updatePageLink}/>
                     {this.showLockPopup()}
                 </React.Fragment>
             )

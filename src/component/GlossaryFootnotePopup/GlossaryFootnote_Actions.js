@@ -3,12 +3,13 @@ import config from '../../config/config';
 import store from '../../appstore/store.js'
 import { sendDataToIframe, createTitleSubtitleModel } from '../../constants/utility.js';
 import { HideLoader } from '../../constants/IFrameMessageTypes.js';
-
+import { tcmSnapshotsForUpdate, fetchParentData, fetchElementWipData } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 const {
     REACT_APP_API_URL
 } = config
 
 import { OPEN_GLOSSARY_FOOTNOTE, UPDATE_FOOTNOTEGLOSSARY, ERROR_POPUP, GET_TCM_RESOURCES } from "./../../constants/Action_Constants";
+let elementTypeData = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza'];
 
 export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, typeWithPopup, poetryField) => async (dispatch) => {
     
@@ -32,9 +33,12 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
         let newBodymatter = newParentData[slateId].contents.bodymatter;
         var footnoteContentText, glossaryFootElem = {}, glossaryContentText, tempGlossaryContentText;
         let tempIndex = index && typeof (index) !== 'number' && index.split('-');
-        if(tempIndex.length == 4 && elementType == 'figure'){ //Figure inside WE
+        if(tempIndex.length == 4 && elementType == 'figure' && newBodymatter[tempIndex[0]].type !== "groupedcontent"){ //Figure inside WE
             glossaryFootElem = newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]]
-        }else if(tempIndex.length == 3 && elementType == 'figure'){
+        }else if(tempIndex.length == 4 && elementType == 'figure' && newBodymatter[tempIndex[0]].type === "groupedcontent"){ //Figure inside Multi-Column
+            glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]]
+        }
+        else if(tempIndex.length == 3 && elementType == 'figure'){
             glossaryFootElem = newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]]
         }else if (elementType === "figure") {
             let tempUpdatedIndex = index.split('-');
@@ -93,7 +97,9 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                     if(elementType==='stanza'){
                         condition = newBodymatter[indexes[0]].contents.bodymatter[indexes[2]]
                     }
-                    else{
+                    else if (newBodymatter[indexes[0]].type === "groupedcontent") { //All elements inside multi-column except figure
+                        condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
+                    } else {
                         condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
                     }
                     if (condition.versionUrn == elementWorkId) {
@@ -147,6 +153,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
     let newParentData = JSON.parse(JSON.stringify(parentData));
     let newBodymatter = newParentData[slateId].contents.bodymatter;
     let workEditor, workContainer;
+    let currentElement = store.getState().appStore.activeElement;
 
     /** Feedback status from elementData */
     let elementNodeData = document.querySelector(`[data-id='${elementWorkId}']`)?document.querySelector(`[data-id='${elementWorkId}']`).outerHTML.includes('feedback'):false
@@ -154,10 +161,11 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
 
     //Get updated innerHtml of element for API request 
     if (elementType == 'figure') {
-        let label, title, captions, credits, elementIndex, text;
+        let label, title, captions, credits, elementIndex, text, postertext;
         let preformattedtext = null;
         let tableAsHTML = null;
         let tempIndex = index &&  typeof (index) !== 'number' && index.split('-');
+        let hasCtaText = ["secondary-interactive-smartlink-pdf", "secondary-interactive-smartlink-web", "secondary-interactive-smartlink-pop-up-web-link"];
         if(tempIndex.length == 4){//Figure inside a WE
             elementIndex = tempIndex[0]+'-'+tempIndex[1]+'-'+tempIndex[2]
         }else if(tempIndex.length == 3){ //section 2 in WE figure
@@ -180,10 +188,14 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         }else if (elementSubType === 'interactive' || elementSubType === "codelisting" || elementSubType === "authoredtext"){
             captions = document.getElementById('cypress-' + elementIndex + '-3').innerHTML //cypress-1-3
             credits = document.getElementById('cypress-' + elementIndex + '-4').innerHTML //cypress-1-4
+            let index2Data = document.getElementById('cypress-' + elementIndex + '-2') ;//cypress-1-2
+            let hasData = index2Data && index2Data.innerHTML ? index2Data.innerHTML : "";
             if(elementSubType === 'codelisting') {
                 preformattedtext = document.getElementById('cypress-' + elementIndex + '-2').innerHTML ;
             } else if (elementSubType === 'authoredtext') {
                 text = document.getElementById('cypress-' + elementIndex + '-2').innerHTML ;
+            }else if(elementSubType === 'interactive' && hasCtaText.indexOf(currentElement.secondaryOption) !==-1){ 
+                postertext = hasData; //BG-2628 Fixes
             }
         }
        
@@ -191,7 +203,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             "title": label.match(/<p>/g) ? label : `<p>${label}</p>`,
             "subtitle": title.match(/<p>/g) ? title : `<p>${title}</p>`,
             "text": text ? text : "",
-            "postertext": "",
+            "postertext": (hasCtaText.indexOf(currentElement.secondaryOption) !== -1) ? postertext  ? postertext.match(/<p>/g) ? postertext : `<p>${postertext}</p>` : "<p></p>" : "",
             "tableasHTML": tableAsHTML ? tableAsHTML : '',
             "captions": captions ? captions.match(/<p>/g) ? captions : `<p>${captions}</p>` : "<p></p>",
             "credits": credits ? credits.match(/<p>/g) ? credits : `<p>${credits}</p>` : "<p></p>"
@@ -202,7 +214,9 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         }
     } else {
         workEditor = document.getElementById('cypress-' + index)
-        workContainer = workEditor.innerHTML;
+        workContainer = workEditor.innerHTML;      
+        workContainer = workContainer.replace(/data-mce-href="#"/g,'').replace(/ reset/g,'')
+        // console.log("workContainer",workContainer)
         figureDataObj = {
             "text": workContainer
         }
@@ -294,55 +308,60 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             data.metaDataField = "formattedTitle";
         }
     }
-    if(index &&  typeof (index) !== 'number' && elementType !== 'figure'  && typeWithPopup !== 'popup' && typeWithPopup !== 'poetry'){
-        let tempIndex =  index.split('-');
-        if(tempIndex.length === 2){
-            if(newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].id === elementWorkId){
-                data.isHead = true;
-                if(newBodymatter[tempIndex[0]].subtype === "sidebar"){
-                    data.parentType = "element-aside";
-                }else{
-                    data.parentType = "workedexample";
-                }
-            }
-        }else if(tempIndex.length === 3){
-            if(elementType==='stanza'){
-                if (newBodymatter[tempIndex[0]].contents.bodymatter[tempIndex[2]].id === elementWorkId){
-                    data.isHead = false;
-                    data.parentType = "poetry";
-                }
-            }
-            else if(newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]].id === elementWorkId){
-                data.isHead = false;
-                if(newBodymatter[tempIndex[0]].subtype === "workedexample"){
-                    data.parentType = "workedexample";
-                }
-            }
-        }
-    }
-
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })  //show saving spinner
-    
+
+    let tcmParentData,tcmMainBodymatter,tcmBodymatter;
+    if (elementTypeData.indexOf(elementType) !== -1 && store.getState().appStore.showHideType == undefined) {
+    /** For TCM snapshots */
+    let mainSlateId = config.isPopupSlate ? config.tempSlateManifestURN : config.slateManifestURN;
+     tcmBodymatter = store.getState().appStore.slateLevelData[config.slateManifestURN].contents.bodymatter;
+     tcmParentData = fetchParentData(tcmBodymatter, index);
+     tcmMainBodymatter = store.getState().appStore.slateLevelData[mainSlateId].contents.bodymatter;
+    }
+    /** ----------------- */
     let url = `${config.REACT_APP_API_URL}v1/slate/element?type=${type.toUpperCase()}&id=${glossaryfootnoteid}`
-    
     return axios.put(url, JSON.stringify(data), {
         headers: {
             "Content-Type": "application/json",
             "PearsonSSOSession": config.ssoToken
         }
-    }).then(res => {
+    }).then( async res => {
         let parentData1 = store.getState().appStore.slateLevelData;
         let currentParentData = JSON.parse(JSON.stringify(parentData1));
         let currentSlateData = currentParentData[config.slateManifestURN];
+        /** [PCAT-8289] ----------------------------------- TCM Snapshot Data handling ---------------------------------*/
+        if (elementTypeData.indexOf(elementType) !== -1 && store.getState().appStore.showHideType == undefined) {
+            let elementUpdateData ={
+                currentParentData: currentParentData,
+                updateBodymatter:tcmBodymatter,
+                response: res.data,
+                updatedId:elementWorkId
+            },
+            containerElement = {
+                asideData:tcmParentData.asideData,
+                parentUrn:tcmParentData.parentUrn,
+                parentElement: data.metaDataField ? fetchElementWipData(tcmMainBodymatter,index,'popup') : undefined,
+                metaDataField: data.metaDataField ? data.metaDataField : undefined
+            };
+            if (currentSlateData.status === 'approved') {
+                await tcmSnapshotsForUpdate(elementUpdateData, index, containerElement, store.dispatch, "");
+            }
+            else {
+                tcmSnapshotsForUpdate(elementUpdateData, index, containerElement, store.dispatch, "");
+            }
+        }
+        /**-------------------------------------------------------------------------------------------------------------*/
         if(res.data.id !== data.id && currentSlateData.status === 'approved'){
             sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
         }
         let tempIndex = index &&  typeof (index) !== 'number' && index.split('-');
-        if(tempIndex.length == 4 && typeWithPopup !== "popup"){//Figure inside a WE
+        if (tempIndex.length == 4 && newBodymatter[tempIndex[0]].type === "groupedcontent") { //Figure inside a Multi-column container
+            newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]] = res.data
+        } else if (tempIndex.length == 4 && typeWithPopup !== "popup") {//Figure inside a WE
             newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]] = res.data
-        }else if(tempIndex.length ==3 && elementType =='figure'){//section 2 figure in WE
+        } else if (tempIndex.length == 3 && elementType =='figure') {//section 2 figure in WE
             newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]] = res.data
-        }else if (elementType === "figure") {
+        } else if (elementType === "figure") {
             let updatedIndex = index.split('-')[0];
             newBodymatter[updatedIndex] = res.data;
         } 
@@ -443,27 +462,34 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                     if(elementType==='stanza'){
                         condition = newBodymatter[indexes[0]].contents.bodymatter[indexes[2]]
                     }
-                    else{
+                    else if(newBodymatter[indexes[0]].type ==='groupedcontent'){
+                        condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
+                    }
+                    else {
                         condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
                     }
                     if (condition.versionUrn == elementWorkId) {
                         if(elementType==='stanza'){
                             newBodymatter[indexes[0]].contents.bodymatter[indexes[2]] = res.data
                         }
-                        else{
+                        else if(newBodymatter[indexes[0]].type ==='groupedcontent'){
+                            newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]] = res.data
+                        }
+                        else {
                             newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]] = res.data
                         }
+                        
                     }
                 }
             }
         }
         //tcm update code  for glossary/footnote 
         if (config.tcmStatus) {
-            let elementTypeData = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza'];
             if (elementTypeData.indexOf(elementType) !== -1) {
                 prepareDataForUpdateTcm(elementWorkId, res.data.id);
             }
         }
+
         store.dispatch({
             type: UPDATE_FOOTNOTEGLOSSARY,
             payload: {

@@ -4,6 +4,8 @@ import Button from '../ElementButtons';
 import config from '../../config/config';
 import './../../styles/ElementAsideContainer/ElementAsideContainer.css';
 import { hasReviewerRole } from '../../constants/utility.js'
+import CopyUrn from '../CopyUrn';
+import { OnCopyContext } from '../CopyUrn/copyUtil.js'
 
 class SectionSeperator extends Component {
     constructor(props) {
@@ -37,6 +39,12 @@ class SectionSeperator extends Component {
         }
     }
 
+    toggleCopyMenu = (value,copyClickedX,copyClickedY)=> {
+        this.copyClickedX=copyClickedX;
+        this.copyClickedY=copyClickedY;
+        this.setState({showCopyPopup : value})
+    }
+
      /**
     * 
     * @discription - This function handles the blur event on section
@@ -59,9 +67,10 @@ class SectionSeperator extends Component {
             className={
                 (elemBorderToggle !== 'undefined' && elemBorderToggle) || borderToggle == 'active'? showBorder:""} >
 
+                {this.state.showCopyPopup && <CopyUrn elementId={this.props.element.contentUrn} toggleCopyMenu={this.toggleCopyMenu} copyClickedX={this.copyClickedX} copyClickedY={this.copyClickedY} />}
                 {(elemBorderToggle !== 'undefined' && elemBorderToggle) || borderToggle == 'active' ?
                     <div> 
-                        <Button btnClassName={btnClassName} type="element-label" labelText="SB" />
+                        <Button copyContext={(e)=>{OnCopyContext(e,this.toggleCopyMenu,true)}} btnClassName={btnClassName} type="element-label" labelText="SB" />
                       {this.props.permissions.includes('elements_add_remove') && !hasReviewerRole() && <Button  onClick={(e) => this.props.showDeleteElemPopup(e,true, element)} type="delete-element" />}
                     </div>:""
                  }

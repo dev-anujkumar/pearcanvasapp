@@ -5,6 +5,7 @@
 
 // IMPORT - dependencies
 require('./polyfills.js')
+import tinyMCE from 'tinymce';
 
 /* ------------------------------ START - List toolbar button methods ----------------------------- */
 /**
@@ -12,10 +13,10 @@ require('./polyfills.js')
  */
 export const insertUoListButton = (editor, onIconClick) => {
     editor.ui.registry.addButton('customUoListButton', {
-        text: '<i class="fa fa-list-ul" aria-hidden="true"></i>',
+        icon:"customuolistbutton",
         tooltip: 'Unordered List',
         onAction: () => {
-            onIconClick('disc');
+            onIconClick('unordered','disc');
         }
     });
 }
@@ -23,11 +24,15 @@ export const insertUoListButton = (editor, onIconClick) => {
 /**
  * insertListButton | inserts custom list button with icon in existing editor toolbar
  */
-export const insertListButton = (editor) => {
-    editor.ui.registry.addButton('customListButton', {
-        text: '<i class="fa fa-list-ol" aria-hidden="true"></i>',
+export const insertListButton = (editor, onIconClick) => {
+    editor.ui.registry.addSplitButton('customListButton', {
         tooltip: 'Ordered List',
+        icon:"customlistbutton",
         onAction: () => {
+            onIconClick('ordered','decimal');
+        },
+        onItemAction: function () {},
+        fetch: function () {
             positionListDrop(event);
         }
     });
@@ -42,7 +47,7 @@ export const positionListDrop = (event) => {
     let _listWrapperDiv = document.querySelector('#listDropWrapper');
     // *** let { width: _wrapperWidth } = _listWrapperDiv.getBoundingClientRect(); *** //
     let _wrapperWidth = 275;  // static because dom remains hidden //
-    let _offsetLeft = _targetLeft - (_wrapperWidth / 2) + (_targetWidth / 2);
+    let _offsetLeft = _targetLeft - (_wrapperWidth / 2) + (_targetWidth / 2) + 104.5;
     _listWrapperDiv.style.left = `${_offsetLeft}px`;
     if (!_listWrapperDiv.querySelector('.fr-popup').classList.contains('fr-active')) {
         _listWrapperDiv.querySelector('.fr-popup').classList.add('fr-active');
@@ -317,6 +322,13 @@ export const bindKeyDownEvent = (editor, e, element,showHideCallback) => {
             listUpdatedOnce = true;
             return false;
         });
+
+        let activeLiNode = document.getElementsByClassName("cypress-editable mce-content-body mce-edit-focus")
+        
+        if (activeLiNode && activeLiNode[0]) {
+            const activeNodeOffsetLeft = tinyMCE.$(editor.selection.getNode())[0].offsetLeft
+            activeLiNode[0].scrollLeft = activeNodeOffsetLeft
+        }
     }
     if (isOnlyListElement && !listUpdatedOnce) {
         let timeoutInstance = setTimeout(() => {
@@ -392,8 +404,6 @@ export const updateNestedList = (element) => {
 
     let lowerRomanClassList = ['lower-roman', 'lower-alpha', 'decimal', 'lower-roman'];
     let lowerRomanLiClassList = ['listItemNumeroUnoLowerRoman', 'listItemNumeroUnoLowerAlpha', 'listItemNumeroUnoNumber', 'listItemNumeroUnoLowerRoman'];
-
-    let UlClassList = ['disc', 'square', 'circle', 'disc'];
     let UlLiClassList = ['listItemNumeroUnoDisc', 'listItemNumeroUnoSquare', 'listItemNumeroUnoCircle', 'listItemNumeroUnoDisc'];
 
     let allOlElement = element.querySelectorAll('ol');
@@ -458,7 +468,6 @@ export const updateNestedList = (element) => {
             case "disc":
             default:
                 allOlElement[i].classList.add('disc');
-                //allOlElement[i].classList.add(UlClassList[treelevel - 1]);
                 [...childLielement].forEach((elem) => { elem.classList.add('listItemNumeroUnoBullet') });
                 [...childLielement].forEach((elem) => { elem.classList.add(UlLiClassList[treelevel - 1]) });
                 break;
@@ -533,6 +542,24 @@ const createDefaultOlLi = (treelevel, olClass, listType, element) => {
         olEle.append(liEle)
         element.innerHTML = ""
         element.append(olEle)
+    }
+}
+
+export const removeListHighliting = _ => {
+    let listToolbar = document.querySelector('button[title="Unordered List"]')
+    listToolbar && listToolbar.classList.remove('tox-tbtn--enabled')
+
+    listToolbar = document.querySelector('div[title="Ordered List"]')
+    listToolbar && listToolbar.classList.remove('tox-tbtn--enabled')
+}
+
+export const highlightListIcon = props => {
+    if (props.element.subtype === "disc" || (props.currentElement && props.currentElement.subtype === "disc")) {
+        let listToolbar = document.querySelector('button[title="Unordered List"]')
+        listToolbar && listToolbar.classList.add('tox-tbtn--enabled')
+    } else {
+        let listToolbar = document.querySelector('div[title="Ordered List"]');
+        listToolbar && listToolbar.classList.add('tox-tbtn--enabled')
     }
 }
 /* ------------------------------ END - List customized events method ----------------------------- */

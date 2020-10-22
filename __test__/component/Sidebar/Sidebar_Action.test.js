@@ -26,6 +26,10 @@ const initialState = {
     appStore: {
         slateLevelData: slateData.SlateData1,
         activeElement: activeElementData.paragraph
+    },
+    elementStatusReducer:{},
+    tcmReducer:{
+        tcmSnapshot:{}
     }
 }
 const initialState2 = {
@@ -34,23 +38,39 @@ const initialState2 = {
         activeElement: activeElementData.assessment,
         parentUrn:{}
     },
+    elementStatusReducer:{},
+    tcmReducer:{
+        tcmSnapshot:{}
+    }
 }
 const initialState3 = {
     appStore: {
         slateLevelData: slateData.SlateData1,
         activeElement:activeElementData.image
     },
+    elementStatusReducer:{},
+    tcmReducer:{
+        tcmSnapshot:{}
+    }
 }
 const initialState4 = {
     appStore: {
         slateLevelData: slateData.SlateData1,
         activeElement: activeElementData.video
     },
+    elementStatusReducer:{},
+    tcmReducer:{
+        tcmSnapshot:{}
+    }
 }
 const initialState5 = {
     appStore: {
         slateLevelData: slateData.SlateData1,
         activeElement:activeElementData.interactive
+    },
+    elementStatusReducer:{},
+    tcmReducer:{
+        tcmSnapshot:{}
     }
 }
 const initialState6 = {
@@ -58,36 +78,60 @@ const initialState6 = {
         slateLevelData: slateData.SlateData1,
         activeElement:activeElementData.blockcode
     },
+    elementStatusReducer:{},
+    tcmReducer:{
+        tcmSnapshot:{}
+    }
 }
 const initialState7 = {
     appStore: {
         slateLevelData: slateData.SlateData1,
         activeElement:activeElementData.list
     },
+    elementStatusReducer:{},
+    tcmReducer:{
+        tcmSnapshot:{}
+    }
 }
 const initialState8 = {
     appStore: {
         slateLevelData: slateData.SlateData1,
         activeElement: activeElementData.workedexample
     },
+    elementStatusReducer:{},
+    tcmReducer:{
+        tcmSnapshot:{}
+    }
 }
 const initialState9 = {
     appStore: {
         slateLevelData: slateData.SlateData1,
         activeElement:activeElementData.aside 
     },
+    elementStatusReducer:{},
+    tcmReducer:{
+        tcmSnapshot:{}
+    }
 }
 const initialState10 = {
     appStore: {
         slateLevelData: slateData.SlateData1,
         activeElement:activeElementData.aside_authoredtext
     },
+    elementStatusReducer:{},
+    tcmReducer:{
+        tcmSnapshot:{}
+    }
 }
 const initialState11 = {
     appStore: {
         slateLevelData: slateData.SlateData1,
         activeElement: activeElementData.we_authoredtext
     },
+    elementStatusReducer:{},
+    tcmReducer:{
+        tcmSnapshot:{}
+    }
 }
 const initialState12 = {
     appStore: {
@@ -99,6 +143,10 @@ const initialState12 = {
             elementType: "element-aside"
         }
     },
+    elementStatusReducer:{},
+    tcmReducer:{
+        tcmSnapshot:{}
+    }
 }
 const initialState13 = {
     appStore: {
@@ -110,6 +158,10 @@ const initialState13 = {
             elementType: "manifest"
         }
     },
+    elementStatusReducer:{},
+    tcmReducer:{
+        tcmSnapshot:{}
+    }
 }
 const initialState14 = {
     appStore: {
@@ -121,6 +173,10 @@ const initialState14 = {
             elementType: "element-aside"            
         }
     },
+    elementStatusReducer:{},
+    tcmReducer:{
+        tcmSnapshot:{}
+    }
 }
 const initialState15 = {
     appStore: {
@@ -132,12 +188,20 @@ const initialState15 = {
             elementType: "element-aside"
         },
     },
+    elementStatusReducer:{},
+    tcmReducer:{
+        tcmSnapshot:{}
+    }
 }
 const initialState16 = {
     appStore: {
         slateLevelData: slateData.SlateData4,
         activeElement: activeElementData.SH_ActiveElement,
         parentUrn: {}
+    },
+    elementStatusReducer:{},
+    tcmReducer:{
+        tcmSnapshot:{}
     }
 }
 const initialState17 = {
@@ -149,6 +213,10 @@ const initialState17 = {
             contentUrn: "urn:pearson:entity:808c0c76-1786-455a-8410-4f250384b142",
             elementType: "element-aside"
         },
+    },
+    elementStatusReducer:{},
+    tcmReducer:{
+        tcmSnapshot:{}
     }
 }
 const initialState18 = {
@@ -160,6 +228,10 @@ const initialState18 = {
             contentUrn: "urn:pearson:entity:5d6c4a51-2587-4250-8423-061b67aebe5e",
             elementType: "element-aside"
         },
+    },
+    elementStatusReducer:{},
+    tcmReducer:{
+        tcmSnapshot:{}
     }
 }
 const initialState19 = {
@@ -167,6 +239,10 @@ const initialState19 = {
         slateLevelData: slateData.SlateData4,
         activeElement: activeElementData.BlockCode_OldInfo,
         parentUrn: {},
+    },
+    elementStatusReducer:{},
+    tcmReducer:{
+        tcmSnapshot:{}
     }
 }
 describe('Test - Sidebar_Actions',()=>{
@@ -964,4 +1040,47 @@ describe('Test handleElementConversion- ShowHide in WE-Paragraph to List', () =>
         expect(spyconversionElement).toHaveBeenCalled()
         spyconversionElement.mockClear()
     });
+});
+describe('Test convertElement- Paragraph for snapshot MOCK API CALL', () => {
+
+    it('Test convertElement  -we MOCK API CALL', async () => {
+        let expectedRes = {
+            status: 200,
+            statusText: "",
+            data: activeElementData.BlockCode_OldData
+        }
+        let elementData = {
+            elementId: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1a",
+            elementType: "element-authoredtext",
+            labelText: "H1",
+            primaryOption: "primary-heading",
+            secondaryOption: "secondary-heading-1",
+            toolbar: ["bold", "underline", "strikethrough", "orderedlist", "unorderedlist", "increaseindent", "decreaseindent", "glossary", "assetpopover", "slatetag", "redo"]
+        }
+        let elementinfo = {
+            elementId: "urn:pearson:work:4b70896d-090a-4566-97f1-30c080a708b5",
+            elementType: "element-authoredtext",
+            elementWipType: "element-authoredtext",
+            index: 0,
+            primaryOption: "primary-paragraph",
+            secondaryOption: "secondary-paragraph",
+            tag: "P"
+        }
+        let olddata = {
+            contentUrn: "urn:pearson:entity:6d443d7e-5a0d-48ea-bce9-6d12a717aba2",
+            elementdata: { schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", text: "" },
+            html: { text: "<p class='paragraphNumeroUno'><br></p>" },
+            id: "urn:pearson:work:4b70896d-090a-4566-97f1-30c080a708b5",
+            schema: "http://schemas.pearson.com/wip-authoring/element/1",
+            status: "wip",
+            type: "element-authoredtext",
+            versionUrn: "urn:pearson:work:4b70896d-090a-4566-97f1-30c080a708b5"
+        }
+        config.tcmStatus = true
+        axios.post.mockImplementation(() => Promise.resolve(expectedRes));
+        let store1 = mockStore(() => initialState19);
+        let nextStore = slateData.SlateData4
+        let result = await store1.dispatch(sidebarAction.convertElement(olddata, elementData, elementinfo, nextStore, ["3"]));
+    });
+    
 });

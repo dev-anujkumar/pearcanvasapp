@@ -45,6 +45,8 @@ export const UPDATE_FOOTNOTEGLOSSARY = "UPDATE_FOOTNOTEGLOSSARY"
 
 /*-----------------Toolbar----------------------------*/
 export const TOGGLE_BORDERS = 'TOGGLE_BORDERS'
+export const TOGGLE_PAGE_NUMBER = 'TOGGLE_PAGE_NUMBER'
+
 
 /*---------------Slate Lock -------------------*/
 export const SET_SLATE_LOCK_STATUS = "SET_SLATE_LOCK_STATUS"
@@ -110,7 +112,10 @@ export const CREATE_SHOW_HIDE_ELEMENT = "CREATE_SHOW_HIDE_ELEMENT"
 export const DELETE_SHOW_HIDE_ELEMENT = "DELETE_SHOW_HIDE_ELEMENT"
 
 /*--------------- Slate Title -------------------*/
-export const SLATE_TITLE = 'Title'
+export const SLATE_TITLE = 'Untitled'
 /*--------------- TCM Snapshot -------------------*/
 export const GET_TCM_RESOURCES = 'GET_TCM_RESOURCES'
 export const GET_TCM_STATUS_OF_PROJECT = 'GET_TCM_STATUS_OF_PROJECT'
+
+/*--------------- Long Slate load ----------------*/
+export const SET_SLATE_LENGTH = 'SET_SLATE_LENGTH'

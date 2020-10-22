@@ -191,88 +191,43 @@ const elementDataBank = {
                 "secondaryOption" : "secondary-audio-smartlink"
             },
         },
-        "interactive" : {
-            "elementType" : "element-interactive",
+        "interactive": {
+            "elementType": "element-interactive",
+            "mmi": {
+                "tag": "Quad",
+                "primaryOption": "primary-mmi",
+                "secondaryOption": "secondary-interactive-mmi"
+            },
+            "mmi-elm": {
+                "tag": "ELM",
+                "primaryOption": "primary-elm-interactive",
+                "secondaryOption": "secondary-elm-interactive"
+            },
             "3rd-party": {
-                "primaryOption" : "primary-smartlink",
-                "secondaryOption" : "secondary-interactive-smartlink-third"
+                "tag": "SL",
+                "primaryOption": "primary-smartlink",
+                "secondaryOption": "secondary-interactive-smartlink-third"
             },
             "pdf": {
-                "primaryOption" : "primary-smartlink",
-                "secondaryOption" : "secondary-interactive-smartlink-pdf"
+                "tag": "SL",
+                "primaryOption": "primary-smartlink",
+                "secondaryOption": "secondary-interactive-smartlink-pdf"
             },
             "web-link": {
-                "primaryOption" : "primary-smartlink",
-                "secondaryOption" : "secondary-interactive-smartlink-web"
+                "tag": "SL",
+                "primaryOption": "primary-smartlink",
+                "secondaryOption": "secondary-interactive-smartlink-web"
             },
             "pop-up-web-link": {
-                "primaryOption" : "primary-smartlink",
-                "secondaryOption" : "secondary-interactive-smartlink-pop-up-web-link"
+                "tag": "SL",
+                "primaryOption": "primary-smartlink",
+                "secondaryOption": "secondary-interactive-smartlink-pop-up-web-link"
             },
             "table": {
-                "primaryOption" : "primary-smartlink",
-                "secondaryOption" : "secondary-interactive-smartlink-tab"
-            },
-            "showhide": {
-                "primaryOption" : "primary-showhide",
-                "secondaryOption" : "secondary-interactive-showhide"
-            },
-            "fpo": {
-                "primaryOption" : "primary-mmi",
-                "secondaryOption" : "secondary-interactive-mmi"
-            },
-            "flashcards": {
-                "primaryOption" : "primary-mmi",
-                "secondaryOption" : "secondary-interactive-mmi"
-            },
-            "video-mcq": {
-                "primaryOption" : "primary-mmi",
-                "secondaryOption" : "secondary-interactive-mmi"
-            },
-            "mcq": {
-                "primaryOption" : "primary-mmi",
-                "secondaryOption" : "secondary-interactive-mmi"
-            },
-            "hotspot": {
-                "primaryOption" : "primary-mmi",
-                "secondaryOption" : "secondary-interactive-mmi"
-            },
-            "accountingtable": {
-                "primaryOption" : "primary-mmi",
-                "secondaryOption" : "secondary-interactive-mmi"
-            },
-            "gallery-video": {
-                "primaryOption" : "primary-mmi",
-                "secondaryOption" : "secondary-interactive-mmi"
-            },
-            "gallery-image": {
-                "primaryOption" : "primary-mmi",
-                "secondaryOption" : "secondary-interactive-mmi"
-            },
-            "graph": {
-                "primaryOption" : "primary-mmi",
-                "secondaryOption" : "secondary-interactive-mmi"
-            },
-            "simulation": {
-                "primaryOption" : "primary-mmi",
-                "secondaryOption" : "secondary-interactive-mmi"
-            },
-            "survey": {
-                "primaryOption" : "primary-mmi",
-                "secondaryOption" : "secondary-interactive-mmi"
-            },
-            "timeline": {
-                "primaryOption" : "primary-mmi",
-                "secondaryOption" : "secondary-interactive-mmi"
-            },
-            "fill-in-blank": {
-                "primaryOption" : "primary-mmi",
-                "secondaryOption" : "secondary-interactive-mmi"
-            },
-            "guided-example": {
-                "primaryOption" : "primary-mmi",
-                "secondaryOption" : "secondary-interactive-mmi"
-            },
+                "tag": "SL",
+                "primaryOption": "primary-smartlink",
+                "secondaryOption": "secondary-interactive-smartlink-tab"
+            }
         },
         "assessment" : {
             "elementType" : "element-assessment",
@@ -380,6 +335,22 @@ const elementDataBank = {
         "elementType" : "stanza",
         "primaryOption" : "primary-stanza",
         "secondaryOption" : "secondary-stanza"
+    },
+    "groupedcontent": {
+        "elementType" : "groupedcontent",
+        "primaryOption" : "primary-multicolumn",
+        "wider-60-40" : {
+            "secondaryOption" : "secondary-multicolumn-wider"
+        },
+        "wider-50-50" : {
+            "secondaryOption" : "secondary-multicolumn-half"
+        },
+        "text-width-60-40" : {
+            "secondaryOption" : "secondary-multicolumn-wider-text"
+        },
+        "text-width-50-50" : {
+            "secondaryOption" : "secondary-multicolumn-half-text"
+        }
     }
 }
 

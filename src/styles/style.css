@@ -118,8 +118,8 @@ table p {
     margin-top : 15px !important;
 }
 .cypress-editable.blockquote-editor.place-holder::before{
-    margin-top: 50px;
-    margin-left: 30px;
+    margin-top: 54px;
+    margin-left: 34px;
 }
 .element-container.lo .cypress-editable.place-holder::before {
     font-size: 18px !important;
@@ -129,6 +129,10 @@ table p {
     display:none !important;
 }
 
+.container-multi-column-group.wider-60-40.column-1 .element-container.h1 .cypress-editable.place-holder::before, .container-multi-column-group.text-width-60-40.column-1 .element-container.h1 .cypress-editable.place-holder::before {
+    font-size: 23px !important;
+    margin-top: -9px !important;
+}
 .element-container.h1 .cypress-editable.place-holder::before {
     font-size: 23px !important;
     margin-top: 2px !important;
@@ -240,8 +244,8 @@ i.fa.fa-asterisk,.fa .fa-bookmark {
 
 .toolbar-disabled {
     pointer-events: none;
-    visibility: hidden;
     cursor: default;
+    opacity: 0.34
 }
 
 #tinymceToolbar .tox-toolbar.disable {
@@ -268,7 +272,8 @@ i.fa.fa-asterisk,.fa .fa-bookmark {
 }
 
 #tinymceToolbar {
-    min-width: 681px;
+    display:inline-block;
+    padding: 8px 9px 8px 0;
 }
 
 #tinymceToolbar .tox .tox-collection--list .tox-collection__item[title="Figure Link"],
@@ -297,7 +302,8 @@ P.paragraphNumeroUnoIndentLevel1, P.paragraphNumeroUnoIndentLevel2, P.paragraphN
 }
 
 .learningobjectivedropdown li:hover {
-    background: #D9E9FF;
+    background-color: #efefef;
+    font-family: 'Open Sans',sans-serif;
     cursor: pointer;
 }
 /* .mce-content-body .Wirisformula[data-custom-editor="chemistry"]{
@@ -313,30 +319,41 @@ table code {
 
 /*  Cross Link Content Design  */
 
-abbr[title="Slate Link"] {
+/* abbr[title="Slate Link"] {
     padding-right: 15px;
-}
-
+} */
 abbr[title="Slate Link"]:not(.sup):not(.sub)::after,
 abbr[title="Slate Link"] sub::after,
 abbr[title="Slate Link"] sup::after {
     content: url('./../images/PageLink/link.svg');
     height: 10px;
+    top: 0;
+    right: 0;
+    left: 0;
     bottom: 1px;
-    padding-left: 1px;
-    position: absolute;
+    margin: 0 auto;
+    padding: 0 2px;
+    position: relative;
     text-decoration: underline dotted;
     border-bottom: 1.1px dotted #007FA3;
 }
 
 /*  Cross Link dropdown color Design  */
 .tox .tox-collection--list .tox-collection__item--active:not(.tox-collection__item--state-disabled){
-    background-color: #007FA3 !important;
+    background-color: #efefef !important;
 }
 
 .tox .tox-collection--list .tox-collection__item--active:not(.tox-collection__item--state-disabled) .tox-collection__item-label{
-    color: #ffffff !important;
+    color: #000000 !important;
 }
 p code, ul code, ol code{
     color: inherit;
+}
+
+/******* Alfresco Windo ***********/
+.overlay-0-0.overlayLittle-0-1 {
+    align-items: initial;
+}
+.overlay-0-0.overlayLittle-0-1 div[class^="modal-"] {
+    margin: auto;
 }

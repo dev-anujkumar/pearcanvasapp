@@ -11,10 +11,13 @@ import elementTypes from './../Sidebar/elementTypes';
 import figureDataBank from '../../js/figure_data_bank';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
+import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
+import { prepareTcmSnapshots,checkContainerElementVersion,fetchManifestStatus,fetchParentData } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 let imageSource = ['image','table','mathImage'],imageDestination = ['primary-image-figure','primary-image-table','primary-image-equation']
+let elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza'];
 
 export const convertElement = (oldElementData, newElementData, oldElementInfo, store, indexes, fromToolbar,showHideObj) => (dispatch,getState) => {
-    let { appStore, elementStatusReducer } =  getState();
+    let { appStore } =  getState();
     try {
         let conversionDataToSend = {};
     // Input Element
@@ -50,6 +53,12 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                 }
             }
 
+            /* On conversion of primary option type, change the POD value to default value */
+            if((oldElementData.figuretype  === 'image'|| oldElementData.figuretype === "table" || oldElementData.figuretype === "mathImage") &&
+            inputPrimaryOptionType !== outputPrimaryOptionType ){
+                oldElementData.figuredata.podwidth = POD_DEFAULT_VALUE
+            }
+
         /* on Conversion removing the tinymce instance for BCE element*/
         if ((outputPrimaryOptionType && outputPrimaryOptionType['enum'] === "BLOCK_CODE_EDITOR" || newElementData && newElementData['primaryOption'] === 'primary-blockcode-equation') &&
             newElementData['secondaryOption'] === "secondary-blockcode-language-default") {
@@ -72,14 +81,18 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     outputPrimaryOptionEnum = outputPrimaryOptionType['enum']
 
         if (oldElementData.figuretype === "assessment") {
-            /**-----------Sidebar Conversion fro Single Assessment-----------*/
+            /**-----------Sidebar Conversion for Single Assessment-----------*/
             let assessmentData = prepareAssessmentDataForConversion(oldElementData, outputSubType.text)
             oldElementData = assessmentData.oldElementData;
             inputSubTypeEnum = inputSubType['enum'];
             outputSubTypeEnum = outputSubType['enum'];
         }
-
-    /**
+        /** Remove subtype key on conversion from BQ to P/H/LO*/
+        let textPrimaryOption = ["primary-paragraph", "primary-heading", 'primary-learning-objective']
+        if (oldElementInfo.primaryOption === "primary-blockquote" && oldElementData.subtype && (textPrimaryOption.includes(newElementData.primaryOption))) {
+            delete oldElementData.subtype
+        }
+    /**s
      * Patch [code in If block] - in case list is being converted from toolbar and there are some unsaved changes in current element
      * then send dom html data instead of sending store data
      */
@@ -111,7 +124,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         /**
          * case - if bullet list is being converted into bullet again then explicitly proceed with paragraph coversion
          */
-        if (inputPrimaryOptionEnum === outputPrimaryOptionEnum && inputSubTypeEnum === outputSubTypeEnum && outputSubTypeEnum === "DISC" && fromToolbar) {
+        if (inputPrimaryOptionEnum === outputPrimaryOptionEnum && outputPrimaryOptionEnum==="LIST" && inputSubTypeEnum === outputSubTypeEnum && fromToolbar) {
             outputPrimaryOptionEnum = "AUTHORED_TEXT"
             outputSubTypeEnum = "NA"
         }
@@ -120,7 +133,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
          * case - if element list is being converted into paragraph from sidepanel
          * [BG-2515] | Remove subtype during list to paragraph or heading conversion
          */
-        if (oldElementInfo.primaryOption === "primary-list" && (newElementData.primaryOption === "primary-paragraph" || newElementData.primaryOption === "primary-heading") && oldElementData.subtype) {
+        if (oldElementInfo.primaryOption === "primary-list" && (textPrimaryOption.includes(newElementData.primaryOption)) && oldElementData.subtype) {
             delete oldElementData.subtype
         }
 
@@ -167,42 +180,10 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         outputType : outputPrimaryOptionEnum,
         outputSubType: outputSubTypeEnum,
         projectUrn : config.projectUrn,
-        slateVersionUrn:Object.keys(appStore.parentUrn).length !== 0 ? appStore.parentUrn.manifestUrn: config.slateManifestURN,
+        slateVersionUrn:appStore.parentUrn && Object.keys(appStore.parentUrn).length !== 0 ? appStore.parentUrn.manifestUrn: config.slateManifestURN,
         counterIncrement: (newElementData.startvalue > 0) ? (newElementData.startvalue) : 1, // earlier default by 0
         index: indexes[indexes.length - 1],
-        slateEntity : Object.keys(appStore.parentUrn).length !== 0 ?appStore.parentUrn.contentUrn:config.slateEntityURN
-    }
-
-    let elmIndexes = indexes ? indexes : 0;
-    let slateBodyMatter = store[config.slateManifestURN].contents.bodymatter;
-    if(elmIndexes.length === 2 && slateBodyMatter[elmIndexes[0]].subtype == "workedexample" ){
-        if(slateBodyMatter[elmIndexes[0]].elementdata.bodymatter[elmIndexes[1]].id === conversionDataToSend.id){
-            conversionDataToSend.isHead = true;
-            conversionDataToSend.parentType = "workedexample";
-        }
-    }else if(elmIndexes.length === 3 && slateBodyMatter[elmIndexes[0]].subtype == "workedexample"){
-        if(slateBodyMatter[elmIndexes[0]].elementdata.bodymatter[elmIndexes[1]].contents.bodymatter[elmIndexes[2]].id === conversionDataToSend.id){
-            conversionDataToSend.isHead = false;
-            conversionDataToSend.parentType = "workedexample";
-        }
-    }else if(elmIndexes.length === 2 && slateBodyMatter[elmIndexes[0]].subtype == "sidebar"){
-        if(slateBodyMatter[elmIndexes[0]].elementdata.bodymatter[elmIndexes[1]].id === conversionDataToSend.id){
-            conversionDataToSend.isHead = false;
-            conversionDataToSend.parentType = "element-aside";
-        }
-    }
-
-    if(conversionDataToSend.outputType==="SHOW_HIDE"||conversionDataToSend.outputType==="POP_UP"){
-        slateBodyMatter.forEach((elem)=>{
-            if(elem.type==="element-aside"){
-                elem.elementdata.bodymatter.forEach((nestElem)=>{
-                    if(nestElem.id===conversionDataToSend.id){
-                        conversionDataToSend.slateVersionUrn = elem.versionUrn;
-                        conversionDataToSend.slateEntity = elem.contentUrn;
-                    }
-                })
-            }
-        })
+        slateEntity : appStore.parentUrn && Object.keys(appStore.parentUrn).length !== 0 ?appStore.parentUrn.contentUrn:config.slateEntityURN
     }
 
     if (newElementData.primaryOption !== "primary-list" && conversionDataToSend.inputType === conversionDataToSend.outputType && conversionDataToSend.inputSubType === conversionDataToSend.outputSubType) {
@@ -216,26 +197,52 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     conversionDataToSend["elementParentEntityUrn"] = parentEntityUrn
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
     config.conversionInProcess = true
-    if(elementStatusReducer[conversionDataToSend.id] === "approved"){
+    if(config.elementStatus[conversionDataToSend.id] === "approved"){
         config.savingInProgress = true
     }
+    config.isSavingElement = true
     const url = `${config.REACT_APP_API_URL}v1/slate/elementTypeConversion/${overallType}`
     axios.post(url, JSON.stringify(conversionDataToSend), { 
         headers: {
             "Content-Type": "application/json",
             "PearsonSSOSession": config.ssoToken
         }
-    }).then(res =>{
+    }).then(async res =>{
+        
+        let parentData = store;
+        let currentParentData = JSON.parse(JSON.stringify(parentData));
+        let currentSlateData = currentParentData[config.slateManifestURN];
+        /** [PCAT-8289] -------------------------------- TCM Snapshot Data handling ----------------------------------*/
+        if (elementType.indexOf(oldElementData.type) !== -1 && showHideObj == undefined) {
+            let elementConversionData ={
+                currentSlateData:{
+                    status: currentSlateData.status,
+                    contentUrn: currentSlateData.contentUrn
+                },
+                oldElementData:oldElementData,
+                response:res.data
+            }
+            if (config.isPopupSlate) {
+                elementConversionData.currentSlateData.popupSlateData = currentParentData[config.tempSlateManifestURN]
+            }
+            if (currentSlateData && currentSlateData.status === 'approved') {
+                await tcmSnapshotsForConversion(elementConversionData, indexes, appStore, dispatch)
+            }
+            else {
+                tcmSnapshotsForConversion(elementConversionData, indexes, appStore, dispatch)
+            }
+
+        }
+        /**-----------------------------------------------------------------------------------------------------------*/
+
         if (res && res.data && res.data.type && res.data.type === 'figure' && res.data.figuretype && res.data.figuretype === 'codelisting') {
             if (res.data.figuredata && !res.data.figuredata.programlanguage) {
                 res.data.figuredata.programlanguage = 'Select';
             }
         }
-        let parentData = store;
-        let currentParentData = JSON.parse(JSON.stringify(parentData));
-        let currentSlateData = currentParentData[config.slateManifestURN];
         if (currentSlateData.status === 'approved') {
             if(currentSlateData.type==="popup"){
+                sendDataToIframe({ 'type': "tocRefreshVersioning", 'message' :true });
                 sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
                 dispatch(fetchSlateData(currentSlateData.id, currentSlateData.contentUrn, 0, currentSlateData, ""));
             }
@@ -252,6 +259,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         if (currentSlateData.status === 'wip') {
             config.savingInProgress = false
         }
+        config.isSavingElement = false
         tinymce.activeEditor&&tinymce.activeEditor.undoManager&&tinymce.activeEditor.undoManager.clear();
         /**------------------------------------------------[BG-2676]------------------------------------------------- */
         let posterText = res.data && res.data.html && res.data.html.postertext
@@ -285,6 +293,8 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                     focusedElement[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].interactivedata[showHideObj.showHideType][indexes[4]] = res.data
                     break
             }
+        } else if (appStore.parentUrn.elementType === "group") {
+            focusedElement[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]] = res.data
         } else {
             indexes.forEach(index => {
                 if(focusedElement[index]){
@@ -340,7 +350,6 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         }
         //tcm conversion code   
         if (config.tcmStatus) {
-            let elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza'];
             if (elementType.indexOf(oldElementData.type) !== -1) {
                 prepareDataForConversionTcm(oldElementData.id, getState, dispatch,res.data.id);
             }
@@ -357,6 +366,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         dispatch({type: ERROR_POPUP, payload:{show: true}})
         config.conversionInProcess = false
         config.savingInProgress = false
+        config.isSavingElement = false
     })
 }
 catch (error) {
@@ -368,8 +378,8 @@ catch (error) {
 function prepareDataForConversionTcm(updatedDataID, getState, dispatch,versionid) {
     const tcmData = getState().tcmReducer.tcmSnapshot;
     let indexes = []
-    tcmData.filter(function (element, index) {
-    if (element.elemURN.indexOf(updatedDataID) !== -1 && element.elemURN.includes('urn:pearson:work')) {
+    tcmData && tcmData.filter(function (element, index) {
+    if (element && element.elemURN && (element.elemURN.indexOf(updatedDataID) !== -1 && element.elemURN.includes('urn:pearson:work'))) {
             indexes.push(index)
         }
     });
@@ -382,11 +392,12 @@ function prepareDataForConversionTcm(updatedDataID, getState, dispatch,versionid
         })
     }
     else {
+        if(tcmData && indexes.length > 0 && updatedDataID){
         tcmData[indexes]["elemURN"] = updatedDataID
         tcmData[indexes]["txCnt"] = tcmData[indexes]["txCnt"] !== 0 ? tcmData[indexes]["txCnt"] : 1
         tcmData[indexes]["feedback"] = tcmData[indexes]["feedback"] !== null ? tcmData[indexes]["feedback"] : null
         tcmData[indexes]["isPrevAcceptedTxAvailable"] = tcmData[indexes]["isPrevAcceptedTxAvailable"] ? tcmData[indexes]["isPrevAcceptedTxAvailable"] : false
-
+        }
     }
     if (tcmData.length>0) {
         sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });
@@ -397,6 +408,39 @@ function prepareDataForConversionTcm(updatedDataID, getState, dispatch,versionid
             data: tcmData
         }
     })
+}
+
+/**
+ * @function tcmSnapshotsForConversion
+ * @description-This function is to prepare snapshot during create element process
+ * @param {Object} elementConversionData - Object containing required element data
+ * @param {String} indexes - index of element
+ * @param {Object} appStore - store data
+ * @param {Function} dispatch to dispatch tcmSnapshots
+*/
+export const tcmSnapshotsForConversion = async (elementConversionData,indexes,appStore,dispatch) => {
+    let actionStatus = {
+        action:"update",
+        status:"",
+        fromWhere:"conversion"
+    }
+    const {oldElementData,response,currentSlateData}=elementConversionData
+    let convertAppStore = JSON.parse(JSON.stringify(appStore.slateLevelData));
+    let convertSlate = convertAppStore[config.slateManifestURN];
+    let convertBodymatter = convertSlate.contents.bodymatter;
+    let convertParentData = fetchParentData(convertBodymatter,indexes);
+    let versionStatus = fetchManifestStatus(convertBodymatter, convertParentData,response.type);
+    /** latest version for WE/CE/PE/AS/2C*/
+    convertParentData = await checkContainerElementVersion(convertParentData, versionStatus, currentSlateData)
+    if (oldElementData.id !== response.id) {
+        oldElementData.id = response.id
+        oldElementData.versionUrn = response.id
+        let actionStatusVersioning = Object.assign({}, actionStatus);
+        actionStatusVersioning.action="create"
+        actionStatusVersioning.status ="accepted"
+        prepareTcmSnapshots(oldElementData, actionStatusVersioning, convertParentData, "","",indexes);
+    }
+    prepareTcmSnapshots(response,actionStatus, convertParentData,"","",indexes);
 }
 
 const prepareAssessmentDataForConversion = (oldElementData, format) => {
@@ -438,7 +482,8 @@ const prepareAssessmentDataForConversion = (oldElementData, format) => {
     return asessmentConversionData
 }
 
-export const handleElementConversion = (elementData, store, activeElement, fromToolbar,showHideObj) => dispatch => {
+export const handleElementConversion = (elementData, store, activeElement, fromToolbar,showHideObj) => (dispatch, getState) => {
+    let { appStore } = getState()
     store = JSON.parse(JSON.stringify(store));
     if(Object.keys(store).length > 0) {
         let storeElement = store[config.slateManifestURN];
@@ -460,6 +505,9 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
                     break;
             }
             dispatch(convertElement(oldElementData, elementData, activeElement, store, indexes, fromToolbar, showHideObj))
+        } else if (appStore && appStore.parentUrn && appStore.parentUrn.elementType === "group") {
+            let elementOldData = bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
+            dispatch(convertElement(elementOldData, elementData, activeElement, store, indexes, fromToolbar, showHideObj))
         } else {
             indexes.forEach(index => {
                 if(bodymatter[index]){
@@ -487,7 +535,7 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
  * @param {Boolean} fromToolbar | conversion from toolbar (only list type)
  */
 export const conversionElement = (elementData, fromToolbar) => (dispatch, getState) => {
-    if(!config.conversionInProcess && !config.savingInProgress){
+    if(!config.conversionInProcess && !config.savingInProgress && !config.isSavingElement){
         let appStore =  getState().appStore;
         dispatch(handleElementConversion(elementData, appStore.slateLevelData, appStore.activeElement, fromToolbar,appStore.showHideObj));
     } else {

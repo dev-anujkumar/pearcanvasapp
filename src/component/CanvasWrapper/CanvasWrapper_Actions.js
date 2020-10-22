@@ -11,7 +11,10 @@ import {
     SET_PARENT_SHOW_DATA,
     ERROR_POPUP,
     SLATE_TITLE,
-    GET_PAGE_NUMBER
+    GET_PAGE_NUMBER,
+    SET_SLATE_LENGTH,
+    SET_CURRENT_SLATE_DATA,
+    GET_TCM_RESOURCES
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
@@ -21,13 +24,17 @@ import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 import elementDataBank from './elementDataBank'
 import figureData from '../ElementFigure/figureTypes.js';
 import { fetchAllSlatesData, setCurrentSlateAncestorData } from '../../js/getAllSlatesData.js';
-import { handleTCMData, tcmSnapshot } from '../../component/ElementContainer/TcmSnapshot_Actions';
+import { handleTCMData } from '../TcmSnapshots/TcmSnapshot_Actions.js';
+import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
+import { ELM_INT } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
+import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 
 const findElementType = (element, index) => {
     let elementType = {};
     elementType['tag'] = '';
     let altText = "";
     let longDesc = "";
+    let podwidth = POD_DEFAULT_VALUE
     try {
         switch (element.type) {
             case 'element-authoredtext':
@@ -64,16 +71,23 @@ const findElementType = (element, index) => {
                             let figureAlignment = figureType[element['alignment']]
                             subType = figureAlignment['imageDimension']
                         }
+                        if(element.figuretype === "image" || element.figuretype === "table" || element.figuretype === "mathImage"){
+                            if(element.figuredata && !element.figuredata.podwidth){
+                                element.figuredata.podwidth = POD_DEFAULT_VALUE
+                            }
+                        }
                         //  if (element.subtype == "" || element.subtype == undefined) {                        
                         element.subtype = subType
                         //  } 
                         altText = element.figuredata.alttext ? element.figuredata.alttext : ""
                         longDesc = element.figuredata.longdescription ? element.figuredata.longdescription : ""
+                        podwidth = element.figuredata.podwidth
                         elementType = {
                             elementType: elementDataBank[element.type][element.figuretype]["elementType"],
                             primaryOption: elementDataBank[element.type][element.figuretype]["primaryOption"],
                             altText,
                             longDesc,
+                            podwidth,
                             ...elementDataBank[element.type][element.figuretype][element.subtype]
                         }
                         if (!elementType.secondaryOption) {
@@ -105,6 +119,9 @@ const findElementType = (element, index) => {
                         break;
                     case "video":
                     case "audio":
+                        if(element.figuredata.srctype && element.figuredata.srctype==='internal'){
+                            element.figuredata.srctype='externallink'
+                        }
                         elementType = {
                             elementType: elementDataBank[element.type][element.figuretype]["elementType"],
                             primaryOption: elementDataBank[element.type][element.figuretype]["primaryOption"],
@@ -113,11 +130,13 @@ const findElementType = (element, index) => {
                         break;
                     case "interactive":
                         altText = element.figuredata.alttext ? element.figuredata.alttext : "";
+                        let interactiveFormat = element.figuredata.interactiveformat;
+                        let interactiveData = (interactiveFormat == "mmi" || interactiveFormat == ELM_INT) ? element.figuredata.interactiveformat : element.figuredata.interactivetype;
                         elementType = {
                             elementType: elementDataBank[element.type][element.figuretype]["elementType"],
-                            primaryOption: elementDataBank[element.type][element.figuretype][element.figuredata.interactivetype]["primaryOption"],
-                            secondaryOption: elementDataBank[element.type][element.figuretype][element.figuredata.interactivetype]["secondaryOption"],
-                            altText
+                            primaryOption: elementDataBank[element.type][element.figuretype][interactiveData]["primaryOption"],
+                            altText,
+                            ...elementDataBank[element.type][element.figuretype][interactiveData]
                         }
                         break;
                     case "assessment":
@@ -187,6 +206,18 @@ const findElementType = (element, index) => {
                 }
                 elementType = { ...elementDataBank["element-authoredtext"] }
                 break;
+            case  'groupedcontent':
+                elementType = {
+                    elementType: elementDataBank[element.type]["elementType"],
+                    primaryOption: elementDataBank[element.type]["primaryOption"]  
+                }
+                if (element.width && element.groupproportions) {
+                    elementType["secondaryOption"] = elementDataBank[element.type][`${element.width}-${element.groupproportions}`]["secondaryOption"]
+                }
+                else {
+                    elementType["secondaryOption"] = elementDataBank[element.type]["wider-50-50"]["secondaryOption"] 
+                }
+                break;
             default:
                 elementType = { ...elementDataBank["element-authoredtext"] }
         }
@@ -235,9 +266,19 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
         }
     });
    
+    let isPopupSlate = config.cachedActiveElement && config.cachedActiveElement.element && config.cachedActiveElement.element.type == "popup" ? true :false;
 
+    if (config.cachedActiveElement && config.cachedActiveElement.element && config.cachedActiveElement.element.type == "popup") {
+        config.popupParentElement = {
+            parentElement: config.cachedActiveElement.element
+        }
+        if(calledFrom!== "containerVersioning"){
+            config.popupParentElement.popupAsideData= getState().appStore.asideData;
+            config.popupParentElement.popupParentUrn= getState().appStore.parentUrn
+        }
+    }
     /** Project level and element level TCM status */
-    if (page === 0 && config.tcmStatus && versioning === "") {
+    if ((page === 0 && config.tcmStatus && (versioning == ""))) {
         /** Show TCM icon header if TCM is on for project level*/
         let messageTcmStatus = {
             TcmStatus: {
@@ -248,15 +289,19 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             'type': "TcmStatusUpdated",
             'message': messageTcmStatus
         })
-
-        dispatch(handleTCMData(manifestURN));
-        if (calledFrom !== "slateRefresh") {
-            dispatch(tcmSnapshot(manifestURN, entityURN))
+        let tcmManifestUrn
+        //  = isPopupSlate && config.tempSlateManifestURN ? config.tempSlateManifestURN : manifestURN
+        if (isPopupSlate && config.cachedActiveElement && config.cachedActiveElement.element && config.cachedActiveElement.element.id == config.slateManifestURN) {
+            tcmManifestUrn = config.tempSlateManifestURN
+        } else {
+            tcmManifestUrn = manifestURN
         }
+        dispatch(handleTCMData(tcmManifestUrn));
     }
-    let apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}`
+    const elementCount = getState().appStore.slateLength
+    let apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}&elementCount=${elementCount}`
     if (versionPopupReload) {
-        apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}&metadata=true`
+        apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}&metadata=true&elementCount=${elementCount}`
     } 
     return axios.get(apiUrl, {
         headers: {
@@ -278,6 +323,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             config.isPopupSlate = true;
             config.savingInProgress = false;
             if (versionPopupReload) {
+                config.isPopupSlate = false;
                 let parentData = getState().appStore.slateLevelData;
                 let newslateData = JSON.parse(JSON.stringify(parentData));
                 newslateData[config.slateManifestURN].contents.bodymatter[versioning.index] = Object.values(slateData.data)[0];
@@ -289,6 +335,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                 })
             }
             else if(versioning && versioning.type==="popup"){
+                config.slateManifestURN= Object.values(slateData.data)[0].id
                 let parentData = getState().appStore.slateLevelData;
                 let newslateData = JSON.parse(JSON.stringify(parentData));
                 newslateData[config.slateManifestURN] = Object.values(slateData.data)[0];
@@ -345,7 +392,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                             slateLevelData: newslateData
                         }
                     })
-                } else if (versioning.type === 'citations' || versioning.type === 'poetry') {
+                } else if (versioning.type === 'citations' || versioning.type === 'poetry' || versioning.type === 'groupedcontent') {
                     let parentData = getState().appStore.slateLevelData;
                     let newslateData = JSON.parse(JSON.stringify(parentData));
                     let index
@@ -412,6 +459,11 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                             type: SET_ACTIVE_ELEMENT,
                             payload: {}
                         });
+
+                        let slateWrapperNode = document.getElementById('slateWrapper');
+                        if (slateWrapperNode) {
+                            slateWrapperNode.scrollTop = 0;
+                        }
                     }
                     //}
                     // config.isFetchSlateInProgress = false;
@@ -422,17 +474,20 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
         }
         /** [TK-3289]- To get Current Slate details */
         dispatch(setCurrentSlateAncestorData(getState().appStore.allSlateData))
-        if(slateData.data && Object.values(slateData.data).length > 0) {
-            let slateTitle = SLATE_TITLE;
-            if('title' in slateData.data[newVersionManifestId].contents && 'text' in slateData.data[newVersionManifestId].contents.title) {
-                slateTitle = slateData.data[newVersionManifestId].contents.title.text || SLATE_TITLE;
+        if (slateData.data[newVersionManifestId].type !== "popup") {
+            if(slateData.data && Object.values(slateData.data).length > 0) {
+                let slateTitle = SLATE_TITLE;
+                if('title' in slateData.data[newVersionManifestId].contents && 'text' in slateData.data[newVersionManifestId].contents.title) {
+                    slateTitle = slateData.data[newVersionManifestId].contents.title.text || SLATE_TITLE;
+                }
+                sendDataToIframe({
+                    'type': "setSlateDetails",
+                    'message': setSlateDetail(slateTitle, newVersionManifestId)
+                });
             }
-            sendDataToIframe({
-                'type': "setSlateDetails",
-                'message': setSlateDetail(slateTitle, newVersionManifestId)
-            });
-        }
 
+            dispatch(fetchSlateAncestorData());
+        }
         const elapsedTime = performance.now() - startTime;
         
         sendToDataLayer('slate-load', {
@@ -443,6 +498,38 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
         });
     });
 };
+
+export const fetchSlateAncestorData = (tocNode = {}) => (dispatch, getState) => {
+    let structure = [];
+    let changeFlag = false;
+    let currentSlateData = getState().appStore.currentSlateAncestorData;
+    let newSlateData = currentSlateData;
+    if(Object.keys(currentSlateData).length > 0) {
+        while('ancestor' in currentSlateData && currentSlateData.ancestor.label !== 'project') {
+            let ancestorTitle = currentSlateData.ancestor.title || 'Untitled';
+            if(Object.keys(tocNode).length > 0 && tocNode.entityUrn === currentSlateData.ancestor.entityUrn &&
+                ancestorTitle !== tocNode.title) {
+                ancestorTitle = tocNode.title;
+                changeFlag = true;
+                currentSlateData.ancestor.title = tocNode.title;
+            }
+
+            structure.unshift(ancestorTitle);
+            currentSlateData = currentSlateData.ancestor;
+        }
+    }
+
+    if(changeFlag) {
+        dispatch({
+            type: SET_CURRENT_SLATE_DATA,
+            payload: {
+                currentSlateAncestorData: newSlateData
+            }
+        });
+    }
+    
+    sendDataToIframe({ 'type': 'projectStructure', 'message': { structure } })
+}
 
 const setSlateDetail = (slateTitle, slateManifestURN) => {
     let env = requestConfigURI().toLowerCase();
@@ -455,6 +542,7 @@ const setSlateDetail = (slateTitle, slateManifestURN) => {
 
 const setOldImagePath = (getState, activeElement, elementIndex = 0) => {
     let parentData = getState().appStore.slateLevelData,
+        { parentUrn } = getState().appStore,
         oldPath,
         index = elementIndex;
     const newParentData = JSON.parse(JSON.stringify(parentData));
@@ -472,6 +560,11 @@ const setOldImagePath = (getState, activeElement, elementIndex = 0) => {
             if (condition.versionUrn == activeElement.id) {
                 oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.path
             }
+        } else if (indexesLen == 3 && parentUrn && parentUrn.elementType === "group") {
+            condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
+            if (condition.versionUrn == activeElement.id) {
+                oldPath = condition.figuredata.path || ""
+            }
         } else if (indexesLen == 3) {
             condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
             if (condition.versionUrn == activeElement.id) {
@@ -483,6 +576,7 @@ const setOldImagePath = (getState, activeElement, elementIndex = 0) => {
 }
 const setOldAudioVideoPath = (getState, activeElement, elementIndex, type) => {
     let parentData = getState().appStore.slateLevelData,
+        { parentUrn } = getState().appStore,
         oldPath,
         index = elementIndex;
     const newParentData = JSON.parse(JSON.stringify(parentData));
@@ -501,6 +595,11 @@ const setOldAudioVideoPath = (getState, activeElement, elementIndex, type) => {
                     condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
                     if (condition.versionUrn == activeElement.id) {
                         oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.audio && bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.audio.path
+                    }
+                } else if (indexesLen == 3 && parentUrn && parentUrn.elementType === "group") {
+                    condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
+                    if (condition.versionUrn == activeElement.id) {
+                        oldPath = condition.figuredata.audio && condition.figuredata.audio.path || ""
                     }
                 } else if (indexesLen == 3) {
                     condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
@@ -523,6 +622,11 @@ const setOldAudioVideoPath = (getState, activeElement, elementIndex, type) => {
                     if (condition.versionUrn == activeElement.id) {
                         oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.videos[0].path
                     }
+                } else if (indexesLen == 3 && parentUrn && parentUrn.elementType === "group") {
+                    condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
+                    if (condition.versionUrn == activeElement.id) {
+                        oldPath = condition.figuredata.videos[0].path || ""
+                    }
                 } else if (indexesLen == 3) {
                     condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
                     if (condition.versionUrn == activeElement.id) {
@@ -537,6 +641,7 @@ const setOldAudioVideoPath = (getState, activeElement, elementIndex, type) => {
 }
 const setOldinteractiveIdPath = (getState, activeElement, elementIndex) => {
     let parentData = getState().appStore.slateLevelData,
+        { parentUrn } = getState().appStore,
         oldPath,
         index = elementIndex;
     const newParentData = JSON.parse(JSON.stringify(parentData));
@@ -553,6 +658,11 @@ const setOldinteractiveIdPath = (getState, activeElement, elementIndex) => {
             condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
             if (condition.versionUrn == activeElement.id) {
                 oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.interactiveid || ""
+            }
+        } else if (indexesLen == 3 && parentUrn && parentUrn.elementType === "group") {
+            condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
+            if (condition.versionUrn == activeElement.id) {
+                oldPath = condition.figuredata.interactiveid || ""
             }
         } else if (indexesLen == 3) {
             condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
@@ -660,6 +770,27 @@ export const openPopupSlate = (element, popupId) => dispatch => {
 }
 
 /**
+ * Create the pre-snapshots for cos converted projects
+ * @param {*}  
+ */
+
+export const tcmCosConversionSnapshot = () => dispatch => {
+    console.log("config", config.projectUrn)
+    return axios.patch(`/cypress/trackchanges-srvr/pre-snapshot/${config.projectUrn}`, {
+        headers: {
+            "Content-Type": "application/json",
+            "PearsonSSOSession": config.ssoToken,
+            "Accept": "application/json"
+        }
+    }).then((response) => {
+        // console.log("response", response)
+    })
+        .catch(err => {
+            console.log('axios Error', err);
+        })
+}
+
+/**
  * Appends the created Unit element to the parent element and then to the slate.
  * @param {*} paramObj 
  * @param {*} responseData 
@@ -701,7 +832,14 @@ const appendCreatedElement = async (paramObj, responseData) => {
                 targetPopupElement.popupdata["formatted-title"].html.text = createTitleSubtitleModel("", elemNode.innerHTML)
             }
             targetPopupElement.popupdata["formatted-title"].elementdata.text = elemNode.innerText
-            _slateObject.contents.bodymatter[popupElementIndex] = targetPopupElement
+            // _slateObject.contents.bodymatter[popupElementIndex] = targetPopupElement
+            if (popupElementIndex.length === 3) {
+                _slateObject.contents.bodymatter[popupElementIndex[0]].elementdata.bodymatter[popupElementIndex[1]] = targetPopupElement
+            } else if (popupElementIndex.length === 4) {
+                _slateObject.contents.bodymatter[popupElementIndex[0]].elementdata.bodymatter[popupElementIndex[1]].contents.bodymatter[popupElementIndex[2]] = targetPopupElement
+            } else {
+                _slateObject.contents.bodymatter[popupElementIndex[0]] = targetPopupElement
+            }
         }
     }
     else if(parentElement.type === "citations"){
@@ -722,6 +860,39 @@ const appendCreatedElement = async (paramObj, responseData) => {
     if(cb && !createdFromFootnote){
         await cb(responseData)
     }
+}
+
+/**
+ * @description prepareDataForTcmCreate -> tracks tcm txCnt for creation of metadat-field.
+ * @param {*} parentElement Parent popup element/ citation group container
+ * @param {*} popupField formatted title or formatted-subtitle
+ * @param {*} responseData API response
+ * @param {*} getState store
+ * @param {*} dispatch dispatch fn
+ */
+function prepareDataForTcmCreate(parentElement, popupField , responseData, getState, dispatch) {
+    let elmUrn = [];
+    const tcmData = getState().tcmReducer.tcmSnapshot;
+    let formattedTitleField = ['formattedTitle','formattedTitleOnly','formattedSubtitle' ];
+    if (parentElement && parentElement.type =='popup' && formattedTitleField.indexOf(popupField) !==-1 ) {
+        elmUrn.push(responseData.id)
+    }
+    elmUrn.map((item) => {
+        return tcmData.push({
+            "txCnt": 1,
+            "isPrevAcceptedTxAvailable": false,
+            "elemURN": item,
+            "feedback": null
+        })
+    })
+    if(tcmData.length > 0 ){
+        sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });}
+    dispatch({
+        type: GET_TCM_RESOURCES,
+        payload: {
+            data: tcmData
+        }
+    })
 }
 
 /**
@@ -762,6 +933,29 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
             cb,
             popupField,
             createdFromFootnote
+        }
+        if (parentElement && parentElement.type == 'popup') {
+            const parentData = getState().appStore.slateLevelData;
+            const newParentData = JSON.parse(JSON.stringify(parentData));
+            let currentSlateData = newParentData[config.slateManifestURN];
+            let containerElement = {
+                parentElement: parentElement,
+                asideData: getState().appStore.asideData,
+                parentUrn: getState().appStore.parentUrn,
+                metaDataField: _requestData.metaDataField
+            };
+            let slateData = {
+                currentSlateData: {
+                    status: currentSlateData.status,
+                    contentUrn: currentSlateData.contentUrn
+                },
+                bodymatter: currentSlateData.contents.bodymatter,
+                response: response.data
+            };
+            if(config.tcmStatus){
+                prepareDataForTcmCreate(parentElement, _requestData.metaDataField, response.data, getState, dispatch)
+            }
+            tcmSnapshotsForCreate(slateData, _requestData.metaDataField, containerElement, dispatch);
         }
         appendCreatedElement(argObj, response.data)
 
@@ -838,4 +1032,11 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
        // dispatch({type: ERROR_POPUP, payload:{show: true}})
         config.savingInProgress = false
     })
+}
+
+export const setSlateLength = (length) => {
+    return {
+        type: SET_SLATE_LENGTH,
+        payload: length
+    }
 }

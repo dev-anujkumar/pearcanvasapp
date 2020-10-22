@@ -9,21 +9,21 @@
     cursor:default;
   }
   
-  .modal-content {   
-    border-radius: 5px;
-    -moz-box-shadow: inset 0 1px #a6a6a6, 0 0 0 1px rgba(0, 0, 0, 0.08);
-    -webkit-box-shadow: inset 0 1px #a6a6a6, 0 0 0 1px rgba(0, 0, 0, 0.08);
-    box-shadow: inset 0 1px #a6a6a6, 0 0 0 1px rgba(0, 0, 0, 0.08);
+  .modal-content {
+    border-top: 5px solid #005a70;
+    -moz-box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 4px 5px 0 rgba(0, 0, 0, 0.14);
+    -webkit-box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 4px 5px 0 rgba(0, 0, 0, 0.14);
+    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 4px 5px 0 rgba(0, 0, 0, 0.14);
     font-family: "Helvetica Neue", sans-serif;
     color: #847676;
-    padding: 1.2em;
+    padding: 15px;
     position: relative;
     margin: 0 auto;
     max-width: 100%;
-    width: 500px;
-    font-size: 1.2em;
-    line-height: 1.0em;
-    background-color: white;
+    width: 520px;
+    font-size: 16px;
+    line-height: 16px;
+    background-color: #ffffff;
     top: 38%;
     transform: translateY(-50%);
     animation-name: animatetop;
@@ -108,8 +108,7 @@
     margin-top:10px;
 }
    .cancel-button{
-    border-radius: 3px;
-    border: 0;
+    border-radius: 2px;
     float: right;
     margin: 0 0 0 .5em;
     font-family: inherit;
@@ -117,15 +116,16 @@
     letter-spacing: .1em;
     font-size: .8em;
     line-height: 1em;
-    padding: .75em 2em;
-    background: #e0e0e0;
-    color: #777;
+    padding: 8px 20px;
+    background: #FFFFFF;
+    color: #005a70;
     cursor: pointer;
+    border: 1px solid #dcdcdc;
     animation: blink 1.1s infinite;
   }
 
-  .save-button{
-    border-radius: 3px;
+.save-button{
+    border-radius: 2px;
     border: 0;
     float: right;
     margin: 0 0 0 .5em;
@@ -135,10 +135,12 @@
     font-size: .8em;
     line-height: 1em;
     padding: .75em 2em;
-    background: #007fa3;
+    background: #005a70;
     color: #fff;
     cursor: pointer;
-    animation: blink 1.1s infinite;
+}
+.save-button:hover {
+  background: #07313b;
 }
 
 @keyframes blink {
@@ -212,17 +214,16 @@
 }
 .tocDeleteHeader {
   font-family: "Helvetica Neue", sans-serif;
-  /* color: #847676; */
   line-height: 2.0em;
-  margin-bottom: .5em;
-  font-size: 1.5em;
-  color: #007fa3;
-  font-weight: bold;
+  margin-bottom: 17px;
+  font-size: 16px;
+  color: #005a70;
+  font-weight: 600;
 }
 .tocDeleteClass {
   font-family: "Helvetica Neue", sans-serif;
-  color: #847676;
-  line-height: 25px;
+  color: #000000;
+  line-height: 1.38;
 }
 .popup-note-message {
     color: #645454;
@@ -257,4 +258,9 @@
   padding-left: 2px;
   width: 82%;
   text-transform: capitalize;
+}
+
+.listConfirmation {
+  letter-spacing: 0.5px;
+  line-height: 20px;
 }

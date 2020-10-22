@@ -1,13 +1,11 @@
 .title-head-wrapper {
-    height: 35px;
-    /* margin: 0px 10px; */
     margin-left: 10px;
     display: table;
 }
 
 .slate-wrapper {
     height: calc(100% - 60px);
-    padding: 8px;
+    padding: 10px 8px;
     overflow: auto;
 }
 
@@ -66,9 +64,9 @@
 }
 
 blockquote.blockquoteMarginaliaAttr,blockquote.blockquoteMarginalia{    
-    margin-left: 1.5rem;
+    margin-left: 1.4rem !important;
     padding-left: 1rem;
-    border-left: 1px solid #047a9c !important;
+    border-left: 1px solid #005A70 !important;
 }
 
 #pageNumberForm {
@@ -293,4 +291,7 @@ blockquote.blockquoteMarginaliaAttr,blockquote.blockquoteMarginalia{
 
 .showHide .cypress-editable{
     min-height: 50px !important;
+}
+.pearson-component.image.figureData.table-figure-data table caption {
+    margin-top: 2%;
 }

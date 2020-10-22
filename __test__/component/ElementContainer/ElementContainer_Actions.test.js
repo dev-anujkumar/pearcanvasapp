@@ -20,7 +20,7 @@ const element = document.createElement('div');
     element.innerHTML = "<p>Link Notification</p>";
     document.body.appendChild(element);
     
-xdescribe('Tests ElementContainer Actions', () => {
+describe('Tests ElementContainer Actions', () => {
     let initialState = {
         slateLevelData: slateLevelData,
         appStore: slateLevelData,
@@ -46,12 +46,15 @@ xdescribe('Tests ElementContainer Actions', () => {
             elementIndex: ""
         },
         tcmReducer:{
-            tcmSnapshot:{}
+            tcmSnapshot:[]
         }
     };
     let initialState2 ={...initialState,
         slateLevelData: slateWithCitationElement.slateLevelData,  
-        appStore: {slateLevelData:slateWithCitationElement.slateLevelData}
+        appStore: {slateLevelData:slateWithCitationElement.slateLevelData},
+        tcmReducer : {
+            tcmSnapshot: [{elemURN: "2", txCnt: 1}]
+        }
     }
     // let store = mockStore(() => initialState);
 
@@ -256,7 +259,7 @@ xdescribe('Tests ElementContainer Actions', () => {
             return store.dispatch(actions.deleteElement(elementId, type, "", "", contentUrn)).then(() => {
             });
         })
-        it('testing------- Delete Element aside type------action', () => {
+        xit('testing------- Delete Element aside type------action', () => {
             let store = mockStore(() => initialState);
             config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
             config.projectUrn = "urn:pearson:distributable:3e872df6-834c-45f5-b5c7-c7b525fab1ef"
@@ -316,7 +319,7 @@ xdescribe('Tests ElementContainer Actions', () => {
                 expect(store.getActions()).toEqual(expectedActions);
             });
         })
-        it('testing------- Delete Element manifest------action', () => {
+        xit('testing------- Delete Element manifest------action', () => {
             let store = mockStore(() => initialState);
             config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
             config.projectUrn = "urn:pearson:distributable:3e872df6-834c-45f5-b5c7-c7b525fab1ef"
@@ -353,7 +356,7 @@ xdescribe('Tests ElementContainer Actions', () => {
                 expect(store.getActions()).toEqual(expectedActions);
             });
         })
-        it('testing------- Delete Element Poetry------action', () => {
+        xit('testing------- Delete Element Poetry------action', () => {
             let store = mockStore(() => initialState);
             config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
             config.projectUrn = "urn:pearson:distributable:3e872df6-834c-45f5-b5c7-c7b525fab1ef"
@@ -395,6 +398,7 @@ xdescribe('Tests ElementContainer Actions', () => {
     describe('testing------- UPDATE ELEMENT------action', () => {
         it('testing------- Update Element------action', () => {
             let store = mockStore(() => initialState);
+            
             const updatedData = {
                 "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
                 "type": "element-authoredtext",
@@ -432,7 +436,6 @@ xdescribe('Tests ElementContainer Actions', () => {
                 manifestUrn: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
                 elementType: "element-authoredtext"
             }
-
             let asideData = {
                 type: "element-authoredtext",
                 id: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
@@ -503,7 +506,7 @@ xdescribe('Tests ElementContainer Actions', () => {
             });
         })
 
-        it('testing------- Update Element popup------action', () => {
+        xit('testing------- Update Element popup------action', () => {
             let store = mockStore(() => initialState);
             const updatedData =  {
                 "id": "urn:pearson:work:8a81206d-2fa2-4f62-a012-2b516dcebb75",
@@ -1066,6 +1069,7 @@ xdescribe('Tests ElementContainer Actions', () => {
                 delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].tcm;
             });
         })
+        
 
         xit('testing------- Update Element LO versioning------action', () => {
             let store = mockStore(() => initialState);
@@ -1275,6 +1279,48 @@ xdescribe('Tests ElementContainer Actions', () => {
                 delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].slateEntity;
                 delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].tcm;
                 expect(store.getActions().type).toEqual(expectedActions.type);
+            });
+        })
+        it('testing------- Update Element for tcm icon------action', () => {
+            let store = mockStore(() => initialState);
+            
+            const updatedData = {
+                "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                "type": "element-authoredtext",
+                "subtype": "",
+                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                "elementdata": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "html": {
+                    "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                },
+                "comments": false,
+                "tcm": true,
+                "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+                "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+            }
+
+            moxios.wait(() => {
+                const request = moxios.requests.mostRecent();
+                request.respondWith({
+                    status: 200,
+                    response: updatedData
+                });
+            });
+            let parentUrn = {
+                manifestUrn: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                elementType: "element-authoredtext"
+            }
+           config.tcmStatus= true
+            let asideData = {
+                type: "element-authoredtext",
+                id: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+
+            };
+            return store.dispatch(actions.updateElement(updatedData, 0, parentUrn, asideData)).then(() => {
             });
         })
     })
@@ -1868,9 +1914,9 @@ xdescribe('Tests ElementContainer Actions', () => {
         });
     })
     })
-    xdescribe('testing----------- Citation Element -------------',()=>{
+    describe('testing----------- Citation Element -------------',()=>{
        
-        it('testing------- Delete Element citations type------action', () => {
+        xit('testing------- Delete Element citations type------action', () => {
             let store = mockStore(() => initialState2);
             config.slateManifestURN='urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'
             let contentUrn = "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r43",
@@ -2008,6 +2054,34 @@ xdescribe('Tests ElementContainer Actions', () => {
             return store.dispatch(actions.updateElement(updatedData, "0", parentUrn, asideData, null, parentElement, null)).then(() => {
                 expect(store.getActions()[0].type).toEqual(expectedActions[0].type);
             });
+        })
+
+        it('testing------- showError------method', () => {
+            let store = mockStore(() => initialState2);
+            const spyShowError  = jest.spyOn(actions, 'showError') 
+            actions.showError({}, store.dispatch, "Test error");
+            expect(spyShowError).toHaveBeenCalled()
+            expect(spyShowError).toHaveReturnedWith(undefined);
+            spyShowError.mockClear()
+        })
+        it('testing------- prepareTCMforDelete------method', () => {
+            let store = mockStore(() => initialState2);
+            const spyPrepareTCMforDelete  = jest.spyOn(actions, 'prepareTCMforDelete') 
+            actions.prepareTCMforDelete("1", store.dispatch, store.getState);
+            expect(spyPrepareTCMforDelete).toHaveBeenCalled()
+            expect(spyPrepareTCMforDelete).toHaveReturnedWith(undefined);
+            spyPrepareTCMforDelete.mockClear()
+        })
+        it('testing------- updateStoreInCanvas------method', () => {
+            let store = mockStore(() => initialState2);
+            const spyUpdateStoreInCanvas  = jest.spyOn(actions, 'updateStoreInCanvas')
+            let asideData = {indexes: ["1","1"], type : 'element-aside'}
+            let parentElement = {
+                type : 'poetry'
+            }
+            actions.updateStoreInCanvas({slateVersionUrn: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"}, asideData, {}, store.dispatch, store.getState, {}, "1", null, parentElement, null);
+            expect(spyUpdateStoreInCanvas).toHaveBeenCalled()
+            spyUpdateStoreInCanvas.mockClear()
         })
     })
 })

@@ -27,13 +27,11 @@ import {
     citationElement,
     stanzaIcon,
     blockTextIcon,
-    tableElemIcon
+    tableElemIcon,
+    multiColumnContainer,
+    elmInteractiveIcon
 } from '../../images/ElementButtons/ElementButtons.jsx';
 import deleteIcon from '../../images/ElementButtons/deleteIcon.png'
-import forwardNavActive from '../../images/ElementButtons/forwardNavActive.png'
-import forwardNavDisable from '../../images/ElementButtons/forwardNav_disabled.png';
-import backwardNavActive from '../../images/ElementButtons/backwardNavActive.png'
-import backwardNavDisable from '../../images/ElementButtons/backwardNav_disabled.png';
 import splitIcon from '../../images/ElementButtons/splitIcon.png'
 import expandIcon from '../../images/ElementButtons/expandIcon.png'
 import colorPalette from '../../images/ElementButtons/colorPalette.png'
@@ -67,7 +65,7 @@ class ElementButton extends Component {
                     </span>
                 break;
             case buttonTypes.ELEMENT_BLOCK_LABEL:
-                buttonJSX = <span className={`btn-element element-label ${btnClassName}`} onClick={clickHandlerFn}>{labelText}</span>
+                buttonJSX = <span className={`btn-element element-label ${btnClassName}`} onContextMenu={this.props.copyContext} onClick={clickHandlerFn}>{labelText}</span>
                 break;
             case buttonTypes.DELETE_ELEMENT:
                 buttonJSX = <span className="btn-element delete-icon" onClick={clickHandlerFn}>
@@ -77,18 +75,6 @@ class ElementButton extends Component {
                 buttonJSX = <span className="btn-element small tcm-icon" title="Track Changes" onClick={clickHandlerFn}>
                     {tcmIcon}
                     </span>
-                break;
-            case buttonTypes.FORWARD_NAVIGATION:
-                buttonJSX = <span className="btn-element forward-nav-active" onClick={clickHandlerFn}><img src={forwardNavActive} /></span>
-                break;
-            case buttonTypes.FORWARD_NAVIGATION_DISABLE:
-                buttonJSX = <span className="btn-element forward-nav-disable" onClick={clickHandlerFn}><img src={forwardNavDisable} /></span>
-                break;
-            case buttonTypes.BACKWARD_NAVIGATION:
-                buttonJSX = <span className="btn-element backward-nav-active" onClick={clickHandlerFn}><img src={backwardNavActive} /></span>
-                break;
-            case buttonTypes.BACKWARD_NAVIGATION_DISABLE:
-                buttonJSX = <span className="btn-element backward-nav-disable" onClick={clickHandlerFn}><img src={backwardNavDisable} /></span>
                 break;
             case buttonTypes.EXPAND:
                 buttonJSX = <span className="btn-element expand-icon" onClick={clickHandlerFn}><img src={expandIcon} /></span>
@@ -196,6 +182,17 @@ class ElementButton extends Component {
                 buttonJSX = <span className="btn-element table-editor-elem" onClick={clickHandlerFn}>
                     {tableElemIcon}
                 </span>
+                break;
+            case buttonTypes.MULTI_COLUMN_CONTAINER:
+                buttonJSX = <span className="btn-element multi-column-group" onClick={clickHandlerFn}>
+                    {multiColumnContainer}
+                </span>
+                break;
+            case ButtonTypes.ELM_INTERACTIVE_ICON:
+                buttonJSX = <span className="" onClick={clickHandlerFn}>
+                    {elmInteractiveIcon}
+                </span>
+                break;
         }
         return buttonJSX
     }

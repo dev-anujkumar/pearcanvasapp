@@ -1,3 +1,4 @@
+import moment from 'moment';
 import store from '../../appstore/store.js';
 import {
   APO_SEARCH_SAVE,
@@ -8,7 +9,6 @@ import {
   IMAGES_FROM_API_FAIL
 } from '../../constants/Action_Constants';
 import config from '../../config/config.js'
-import axios from 'axios';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader , HideLoader} from '../../constants/IFrameMessageTypes.js';
 let currentlySearching = false;
@@ -51,6 +51,14 @@ export const apoSearchSaveAction = (apoObject, args) => {
     payload: {
       apoObject: apoObject,
       imageData: args
+    }
+  }
+}
+export const assetIdForSnapshot = (assetID) => {
+  return {
+    type: 'ASSET_ID_SNAPSHOT',
+    payload: {
+      assetID: assetID
     }
   }
 }
@@ -218,8 +226,14 @@ export const getCurrentlyLinkedImage = async (id, cb) => {
 
     let data = await response.json()
     if (data.length) {
-
-      let workId = data[data.length - 1].versionUrn;
+      let latestIndex = 0;
+      for(let index = 1; index < data.length; index++) {
+        let isAfter = moment(data[index].createdDate).isAfter(data[latestIndex].createdDate);
+        if(isAfter) {
+          latestIndex = index;
+        }
+      }
+      let workId = data[latestIndex].versionUrn;
 
         currentlyLinkedData = await getElementVersionContent(workId)
         cb(currentlyLinkedData)

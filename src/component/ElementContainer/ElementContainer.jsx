@@ -21,7 +21,7 @@ import elementTypeConstant from './ElementConstants'
 import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } from './../CanvasWrapper/CanvasWrapper_Actions';
 import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
-import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel } from '../../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
@@ -42,7 +42,11 @@ import CitationGroup from '../CitationGroup'
 import CitationElement from '../CitationElement'
 import ElementPoetry from '../ElementPoetry';
 import ElementPoetryStanza from '../ElementPoetry/ElementPoetryStanza.jsx';
-import {handleTCMData} from './TcmSnapshot_Actions';
+import MultiColumnContext from "./MultiColumnContext.js"
+import MultiColumnContainer from "../MultiColumnElement"
+import {handleTCMData} from '../TcmSnapshots/TcmSnapshot_Actions.js';
+import CopyUrn from '../CopyUrn';
+import { OnCopyContext } from '../CopyUrn/copyUtil.js'
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -93,12 +97,15 @@ class ElementContainer extends Component {
     }
 
     componentDidMount() {
-        this.getElementVersionStatus(this.props.element, this.props.elementStatus)
+        this.getElementVersionStatus(this.props.element, config.elementStatus)
         this.setState({
             ElementId: this.props.element.id,
             btnClassName: '',
             isOpener: this.props.element.type === elementTypeConstant.OPENER
         })
+        document.addEventListener('click',()=>{
+            this.setState({showCopyPopup : false})
+        });
     }
 
     componentWillUnmount() {
@@ -208,8 +215,9 @@ class ElementContainer extends Component {
             return;
         }
         let tempDiv = document.createElement('div');
-        html = html.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula').replace(/\uFEFF/g,"").replace(/>\s+</g,'><');
+        html = html.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula').replace(/\uFEFF/g,"").replace(/>\s+</g,'><').replace(/data-mce-href="#"/g,'').replace(/ reset/g,'');
         html=html.trim();
+        // console.log("html",html)
         tempDiv.innerHTML = html;
         tinyMCE.$(tempDiv).find('br').remove();
         tinyMCE.$(tempDiv).find('.blockquote-hidden').remove();
@@ -233,6 +241,7 @@ class ElementContainer extends Component {
         tinyMCE.$(tempDiv).find('a').removeAttr('data-mce-href');
         tinyMCE.$(tempDiv).find('a').removeAttr('data-mce-selected');
         tinyMCE.$(tempDiv).find('a').removeAttr('data-custom-editor');
+        tempDiv.innerHTML = removeBlankTags(tempDiv.innerHTML)
         return encodeHTMLInWiris(tempDiv.innerHTML);
     }
 
@@ -242,7 +251,7 @@ class ElementContainer extends Component {
      * @param {*} previousElementData old element data
      */
     figureDifference = (index, previousElementData) => {
-
+       
         let titleDOM = document.getElementById(`cypress-${index}-0`),
             subtitleDOM = document.getElementById(`cypress-${index}-1`),
             captionDOM = document.getElementById(`cypress-${index}-2`),
@@ -252,7 +261,7 @@ class ElementContainer extends Component {
             subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
             captionHTML = captionDOM ? captionDOM.innerHTML : "",
             creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
-
+  
         captionHTML = captionHTML.match(/<p>/g) ? captionHTML : `<p>${captionHTML}</p>`
         creditsHTML = creditsHTML.match(/<p>/g) ? creditsHTML : `<p>${creditsHTML}</p>`
         subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
@@ -264,11 +273,18 @@ class ElementContainer extends Component {
         titleHTML = this.removeClassesFromHtml(titleHTML)
 
         let defaultImageUrl = "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png";
+
+        let getAttributeBCE = document.querySelector(`div.element-container.active[data-id="${previousElementData.id}"] div.figureElement`) 
+            || document.querySelector(`div.element-container.fg.showBorder[data-id="${previousElementData.id}"] div.figureElement`)
+        let podwidth = getAttributeBCE && getAttributeBCE.getAttribute("podwidth")
+
         return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
             subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
             captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
             creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
             (this.props.oldImage ? this.props.oldImage : defaultImageUrl) !== (previousElementData.figuredata.path ? previousElementData.figuredata.path : defaultImageUrl)
+          || podwidth !== (previousElementData.figuredata.podwidth  ?
+           previousElementData.figuredata.podwidth : '') && podwidth !== null
         );
     }
 
@@ -309,19 +325,6 @@ class ElementContainer extends Component {
         if(previousElementData.html && previousElementData.html.preformattedtext === '<p></p>'){
             previousElementData.html.preformattedtext = '<p><span class="codeNoHighlightLine"></span></p>'
         }
-        // if (titleHTML !== previousElementData.html.title ||
-        //     subtitleHTML !== previousElementData.html.subtitle ||
-        //     captionHTML !== previousElementData.html.captions ||
-        //     creditsHTML !== previousElementData.html.credits ||
-        //     preformattedText !== previousElementData.figuredata.preformattedtext.join('\n').trim() ||
-        //     startNumber !== previousElementData.figuredata.startNumber ||
-        //     isNumbered !== previousElementData.figuredata.numbered
-        //     ){
-        //         return 1
-        //     }
-        //     else {
-        //         return 0
-        //     }
         return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
             subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
             captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
@@ -364,17 +367,6 @@ class ElementContainer extends Component {
             let posterTextHTML = pdfPosterTextDOM ? pdfPosterTextDOM.innerHTML : ""
             posterTextHTML = posterTextHTML.match(/(<p.*?>.*?<\/p>)/g)?posterTextHTML:`<p>${posterTextHTML}</p>`
             
-            // if(titleHTML !== previousElementData.html.title ||
-            //     subtitleHTML !== previousElementData.html.subtitle || 
-            //     captionHTML !== previousElementData.html.captions ||
-            //     creditsHTML !== previousElementData.html.credits || 
-            //     posterTextHTML !== previousElementData.html.postertext
-            //     ){
-            //         return 1
-            //     }
-            //     else {
-            //         return 0
-            //     }
             let oldPosterText = previousElementData.html && previousElementData.html.postertext ? previousElementData.html.postertext.match(/(<p.*?>.*?<\/p>)/g) ? previousElementData.html.postertext : `<p>${previousElementData.html.postertext}</p>` : "<p></p>";
             return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
                 subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
@@ -478,6 +470,9 @@ class ElementContainer extends Component {
      * This function opens TCM w.r.t. current Element
      */
     handleTCM = (e) => {
+        if(config.isSavingElement){
+            return false
+        }
         e.stopPropagation();
         loadTrackChanges(this.props.element.id)
     }
@@ -500,7 +495,7 @@ class ElementContainer extends Component {
             case elementTypeConstant.LEARNING_OBJECTIVE_ITEM:
             case elementTypeConstant.BLOCKFEATURE:
             case elementTypeConstant.POETRY_STANZA:
-            let index  = (parentElement.type == "showhide" ||  parentElement.type == "popup" || parentElement.type == "poetry" || parentElement.type == "citations")? activeEditorId:`cypress-${this.props.index}`
+            let index  = (parentElement.type == "showhide" ||  parentElement.type == "popup" || parentElement.type == "poetry" || parentElement.type == "citations" || parentElement.type == "groupedcontent")? activeEditorId:`cypress-${this.props.index}`
             if (this.props.element && this.props.element.type === "element-blockfeature" && this.props.element.subtype === "quote" && tinyMCE.activeEditor && tinyMCE.activeEditor.id  && !tinyMCE.activeEditor.id.includes("footnote")) {
                 let blockqtText = document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins')?document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').innerText:"";
                 if (!blockqtText.trim()) {
@@ -578,14 +573,17 @@ class ElementContainer extends Component {
                 }
                 if(parentElement && parentElement.type === "popup"){
                     html = html.replace(/(<sup><\/sup>)|(<sup><br><\/sup>)/g, "<br>");
+                    html =html.replace(/<br data-mce-bogus="1">/g, '<br>')
                     tempDiv.innerHTML = html
                 }
                 html =html.replace(/(\r\n|\n|\r)/gm, '')
                 previousElementData.html.text= previousElementData.html.text.replace(/<br data-mce-bogus="1">/g, "<br>").replace(/(\r\n|\n|\r)/gm, '');
                 previousElementData.html.text = previousElementData.html.text.replace(/data-mce-bogus="all"/g, '')
-                if (html && previousElementData.html && (this.replaceUnwantedtags(html) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate) && !assetPopoverPopupIsVisible && !config.savingInProgress && !checkCanvasBlocker) {
+                tempDiv.innerHTML = removeBlankTags(tempDiv.innerHTML)
+                if (html && previousElementData.html && (this.replaceUnwantedtags(html) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate) && !assetPopoverPopupIsVisible && !config.savingInProgress && !checkCanvasBlocker && elementType && primaryOption && secondaryOption) {
                     dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDiv, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,parentElement,showHideType, asideData, poetryData)
                     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+                    config.isSavingElement = true
                     this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, showHideType, parentElement, poetryData);
                 }
                 break;
@@ -597,44 +595,50 @@ class ElementContainer extends Component {
                     case elementTypeConstant.FIGURE_MATH_IMAGE:
                     case elementTypeConstant.FIGURE_TABLE_EDITOR:
                         if(this.figureDifference(this.props.index, previousElementData) || forceupdate && !config.savingInProgress){
-                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,undefined,undefined, asideData)
+                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,parentElement,undefined, asideData)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                            this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData,undefined,undefined);
+                            config.isSavingElement = true
+                            this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData,undefined,parentElement);
                         }
                         break;
                     case elementTypeConstant.FIGURE_VIDEO:
                     case elementTypeConstant.FIGURE_AUDIO:
                         if (this.figureDifferenceAudioVideo(this.props.index, previousElementData) || forceupdate && !config.savingInProgress) {
-                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, undefined, undefined, asideData)
+                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, undefined, asideData)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                            this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, undefined, undefined);
+                            config.isSavingElement = true
+                            this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, undefined,parentElement);
                         }
                         break;
                     case elementTypeConstant.FIGURE_ASSESSMENT:
-                        dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, undefined, undefined, asideData)
+                        dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, undefined, asideData)
                         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                        this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData,undefined,undefined);
+                        config.isSavingElement = true
+                        this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData,undefined,parentElement);
                         break;
                     case elementTypeConstant.INTERACTIVE:
                         if(this.figureDifferenceInteractive(this.props.index, previousElementData) || forceupdate && !config.savingInProgress){
-                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,undefined,undefined, asideData)
+                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,parentElement,undefined, asideData)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                            this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData,undefined,undefined)
+                            config.isSavingElement = true
+                            this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData,undefined,parentElement)
                         }
                         break;
 
                     case elementTypeConstant.FIGURE_CODELISTING:
                             if(this.figureDifferenceBlockCode(this.props.index, previousElementData) || forceupdate && !config.savingInProgress){
-                                dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,undefined,undefined, asideData)
+                                dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,parentElement,undefined, asideData)
                                 sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                                this.props.updateElement(dataToSend, this.props.index,parentUrn,asideData,undefined,undefined);
+                                config.isSavingElement = true
+                                this.props.updateElement(dataToSend, this.props.index,parentUrn,asideData,undefined,parentElement);
                             }
                             break;
                     case elementTypeConstant.FIGURE_AUTHORED_TEXT:
                             if(this.figureDifferenceAT(this.props.index, previousElementData) || forceupdate && !config.savingInProgress){
-                                dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,undefined,undefined, asideData)
+                                dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,parentElement,undefined, asideData)
                                 sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                                this.props.updateElement(dataToSend, this.props.index,parentUrn,asideData,undefined,undefined);
+                                config.isSavingElement = true
+                                this.props.updateElement(dataToSend, this.props.index,parentUrn,asideData,undefined,parentElement);
                             }
                             break;
                 }
@@ -655,16 +659,18 @@ class ElementContainer extends Component {
                         tinyMCE.$(currentListNode).find('li')[i].innerHTML= tinyMCE.$(currentListNode).find('li')[i].innerHTML.replace( /[\r\n]+/gm, "" ); 
                         tinyMCE.$(currentListNode).find('li')[i].innerHTML = tinyMCE.$(currentListNode).find('li')[i].innerHTML.replace(/^\s+|\s+$/g, '&nbsp;');
                         tinyMCE.$(currentListNode).find('li')[i].innerHTML = tinyMCE.$(currentListNode).find('li')[i].innerHTML.replace(/(<sup><\/sup>)|(<sup><br><\/sup>)/g, "");
-                    } 
+                    }
+                    currentListNode.innerHTML = removeBlankTags(currentListNode.innerHTML)
                     let nodehtml = currentListNode.innerHTML;
                     if(nodehtml && previousElementData.html) {
                         let prevData = this.replaceUnwantedtags(previousElementData.html.text);
-                        prevData = prevData.replace(/(reset | reset|↵)/g, "");
+                        prevData = prevData && prevData.replace(/(reset | reset|↵)/g, "").replace(/data-mce-href="#"/g,'');
                         let nodeData = this.replaceUnwantedtags(nodehtml);
-                        nodeData = nodeData.replace(/(reset | reset|↵)/g, "");
+                        nodeData = nodeData && nodeData.replace(/(reset | reset|↵)/g, "").replace(/data-mce-href="#"/g,'');
                         if ((nodeData !== prevData || forceupdate && !config.savingInProgress) && !assetPopoverPopupIsVisible && !checkCanvasBlocker) {
                             dataToSend = createUpdatedData(previousElementData.type, previousElementData, currentListNode, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, showHideType,undefined)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+                            config.isSavingElement = true
                             this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, showHideType, parentElement);
                         }
                     }
@@ -677,10 +683,13 @@ class ElementContainer extends Component {
                     let tempDivForCE = document.createElement('div');
                     tempDivForCE.innerHTML = ceHtml;
                     ceHtml = tempDivForCE.innerHTML;
+                    tempDivForCE.innerHTML = removeBlankTags(tempDivForCE.innerHTML)
+                    ceHtml = removeBlankTags(ceHtml)
                     if (ceHtml && previousElementData.html && (this.replaceUnwantedtags(ceHtml) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate) && !config.savingInProgress) {
                         dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDivForCE, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, showHideType, asideData)
                         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                         parentElement["index"] = this.props.index
+                        config.isSavingElement = true
                         this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, showHideType, parentElement);
                     }
                     break;
@@ -695,7 +704,7 @@ class ElementContainer extends Component {
         let activeEditorId = elemIndex ? `cypress-${elemIndex}` : (tinyMCE.activeEditor ? tinyMCE.activeEditor.id : '')
         let node = document.getElementById(activeEditorId);
         let element = currrentElement ? currrentElement : this.props.element
-        let parentElement = ((currrentElement && currrentElement.type === elementTypeConstant.CITATION_ELEMENT) || (this.props.parentElement && this.props.parentElement.type === 'poetry')) ? this.props.parentElement : this.props.element
+        let parentElement = ((currrentElement && currrentElement.type === elementTypeConstant.CITATION_ELEMENT) || (this.props.parentElement && (this.props.parentElement.type === 'poetry' || this.props.parentElement.type === "groupedcontent"))) ? this.props.parentElement : this.props.element
         this.handleContentChange(node, element, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType)
     }
 
@@ -900,23 +909,8 @@ class ElementContainer extends Component {
         }
         this.handleCommentPopup(false,e);
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-
-        /* // This condition is to delete whole Container Group element when only one element is left and that too getting deleted
-        if (this.props.parentElement && this.props.parentElement.type === "citations" && this.props.parentElement.contents && this.props.parentElement.contents.bodymatter.length === 1) {
-            id = this.props.parentElement.id
-            type = this.props.parentElement.type
-            contentUrn = this.props.parentElement.contentUrn
-            index = index.split("-")[0]
-        }
-        // This condition to delete whole aside element when only one element in it deleted
-        else if (this.props.parentElement && this.props.parentElement.subtype !== "workedexample" && this.props.parentElement.elementdata && this.props.parentElement.elementdata.bodymatter.length === 1) {
-            id = this.props.parentElement.id
-            type = this.props.parentElement.type
-            contentUrn = this.props.parentElement.contentUrn
-        } */
-
         // api needs to run from here
-        this.props.deleteElement(id, type, parentUrn, asideData, contentUrn, index, poetryData);
+        this.props.deleteElement(id, type, parentUrn, asideData, contentUrn, index, poetryData, this.props.element);
         this.setState({
             sectionBreak: null
         })
@@ -958,6 +952,117 @@ class ElementContainer extends Component {
         }
     }
 
+    toggleCopyMenu = (value,copyClickedX,copyClickedY)=> {
+        this.copyClickedX=copyClickedX;
+        this.copyClickedY=copyClickedY;
+        this.setState({showCopyPopup : value})
+    }
+
+    /**
+     * Handling border style and properties
+     * @param {*} elemBorderToggleFromProp Slate level border based on toggle
+     * @param {*} borderToggleFromState Element level border based on focus
+     */
+    setBorderToggle = (elemBorderToggleFromProp, borderToggleFromState) => {
+        if (elemBorderToggleFromProp !== 'undefined' && elemBorderToggleFromProp) {
+            if (borderToggleFromState == 'active') {
+                return borderToggleFromState
+            }
+            else {
+                return 'showBorder'
+            }
+        }
+        else {
+            if (borderToggleFromState == 'active') {
+                return borderToggleFromState
+            }
+            else {
+                return 'hideBorder'
+            }
+        }
+    }
+    
+    /**
+    * @description - getPopupChildUrns is responsible for creating an array of wUrn of child elements of Popup Element
+    * @param {*} element active element - Popup
+    */
+    getPopupChildUrns = (element) => {
+        let popupChildUrns = [];
+        if (element && element.type == 'popup') {
+            if (element.popupdata && element.popupdata.bodymatter && element.popupdata.bodymatter.length > 0) {
+                popupChildUrns.push(element.popupdata.bodymatter[0].id);
+            }
+            if (element.popupdata && element.popupdata['formatted-title']) {
+                popupChildUrns.push(element.popupdata['formatted-title'].id);
+            }
+            if (element.popupdata && element.popupdata.postertextobject[0]) {
+                popupChildUrns.push(element.popupdata.postertextobject[0].id);
+            }
+        }
+        return popupChildUrns
+    }
+    /**
+    * @description - checkTCMStatus is responsible for setting the tcm status for the element
+    * @param {*} tcmData tcm data for elements on the slate
+    * @param {*} element active element id
+    */
+    checkTCMStatus = (tcmData, elementId, defaultUrn) => {
+        let tcmButtonStatus = {}, tcm, feedback;
+        tcm = tcmData.filter(tcmelm => {
+            let elementUrn = tcmelm.elemURN;
+            return (elementId.includes(defaultUrn) && elementUrn.indexOf(elementId) !== -1) && tcmelm.txCnt && tcmelm.txCnt > 0
+        }).length > 0;
+        feedback = tcmData.filter(feedbackelm => {
+            let elementUrn = feedbackelm.elemURN;
+            return (elementId.includes(defaultUrn) && elementUrn.indexOf(elementId) !== -1) && feedbackelm.feedback && feedbackelm.feedback !== null
+        }).length > 0;
+        tcmButtonStatus = {
+            tcm: tcm,
+            feedback: feedback
+        }
+        return tcmButtonStatus;
+    }
+    /**
+    * @description - showTCMButton is responsible for showing the tcm/feedback icon on the element
+    * @param {*} tcmData tcm data for elements on the slate
+    * @param {*} element active element
+    */
+    showTCMButton = (tcmData, element) => {
+        let tcmStatus = {};
+        let defaultWorkUrn = 'urn:pearson:work';
+        let defaultManifestUrn = 'urn:pearson:manifest';
+        if (element.type == 'popup') {
+            let popupChildren = this.getPopupChildUrns(element);
+            let popupTcmCount = 0;
+            let status = {
+                tcm: false,
+                feedback: false
+            };
+            tcmStatus = this.checkTCMStatus(tcmData, element.id, defaultManifestUrn)
+            if (tcmStatus && (tcmStatus.tcm || tcmStatus.feedback)) {
+                return tcmStatus;
+            } else {
+                tcmStatus.tcm = false;
+                tcmStatus.feedback = false;
+                for (let index = 0; index < popupChildren.length; index++) {
+                    if (popupTcmCount < 1) {
+                        status = this.checkTCMStatus(tcmData, popupChildren[index], defaultWorkUrn)
+                        if (status && (status.tcm || status.feedback)) {
+                            popupTcmCount++;
+                        }
+                    } else {
+                        break;
+                    }
+                }
+            }
+            tcmStatus.tcm = status.tcm
+            tcmStatus.feedback = status.feedback
+        } else {
+            tcmStatus = this.checkTCMStatus(tcmData, element.id, defaultWorkUrn)
+        }
+        return tcmStatus;
+    }
+
     /**
      * Render Element function takes current element from bodymatter and render it into currnet slate 
      * @param {element} 
@@ -968,16 +1073,23 @@ class ElementContainer extends Component {
         let labelText = fetchElementTag(element, index);
         config.elementToolbar = this.props.activeElement.toolbar || [];
         let anyOpenComment = allComments.filter(({ commentStatus, commentOnEntity }) => commentOnEntity === element.id && commentStatus.toLowerCase() === "open").length > 0
+        let isQuadInteractive = "";
         /** Handle TCM for tcm enable elements */
         let tcm = false;
         let feedback = false;
+        let tcmStatus = {};
+        tcmStatus = this.showTCMButton(tcmData, element)
+        tcm = tcmStatus.tcm
+        feedback = tcmStatus.feedback
+        /** OLD TCM ICON FLOW -----> to be removed
         tcm = tcmData.filter(tcmelm => {
             let elementUrn = tcmelm.elemURN;
             return (element.id.includes('urn:pearson:work') && elementUrn.indexOf(element.id) !== -1) && tcmelm.txCnt && tcmelm.txCnt > 0}).length>0;
         feedback = tcmData.filter(feedbackelm => {
             let elementUrn = feedbackelm.elemURN;
             return (element.id.includes('urn:pearson:work') && elementUrn.indexOf(element.id) !== -1) && feedbackelm.feedback && feedbackelm.feedback !== null}).length>0;
-       /* TODO need better handling with a function and dynamic component rendering with label text*/
+        */
+        /* TODO need better handling with a function and dynamic component rendering with label text*/
         if (labelText) {
             switch (element.type) {
                 case elementTypeConstant.ASSESSMENT_SLATE:
@@ -1019,21 +1131,14 @@ class ElementContainer extends Component {
                             labelText = 'Qu';
                             break;
                         case elementTypeConstant.INTERACTIVE:
-                            switch (element.figuredata.interactiveformat) {
-                                case elementTypeConstant.INTERACTIVE_MMI:
-                                    editor = <ElementInteractive accessDenied={this.props.accessDenied} showBlocker={this.props.showBlocker} updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} />;
-                                    labelText = element.figuredata.interactivetype == 'showhide' ? 'SH' : 'MMI';
-                                    break;
-                                case elementTypeConstant.INTERACTIVE_EXTERNAL_LINK:
-                                case elementTypeConstant.INTERACTIVE_NARRATIVE_LINK:
-                                    editor = <ElementInteractive accessDenied={this.props.accessDenied} showBlocker={this.props.showBlocker} updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} />;
-                                    labelText = LABELS[element.figuredata.interactiveformat];
-                                    break;
-                            }
+                            editor = <ElementInteractive accessDenied={this.props.accessDenied} showBlocker={this.props.showBlocker} updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} />;
+                            labelText = LABELS[element.figuredata.interactiveformat];
+                            isQuadInteractive = labelText === "Quad" ? "quad-interactive" : "";
+                            break;
                     }
                     break;
                 case elementTypeConstant.ELEMENT_LIST:
-                    editor = <ListElement permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onListSelect={this.props.onListSelect} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} />;
+                    editor = <ListElement showBlocker={this.props.showBlocker} permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onListSelect={this.props.onListSelect} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} />;
                     labelText = 'OL'
                     if ((element.subtype || element.elementdata.subtype) === 'disc')
                         labelText = 'UL'
@@ -1110,7 +1215,7 @@ class ElementContainer extends Component {
                         slateLockInfo: slateLockInfo,
                         onClick: this.handleFocus,
                         glossaryFootnoteValue: this.props.glossaryFootnoteValue,
-                        elementStatus: this.props.elementStatus,
+                        elementStatus: config.elementStatus,
                         openAssetPopoverPopUp: this.openAssetPopoverPopUp,
                         openGlossaryFootnotePopUp: this.openGlossaryFootnotePopUp,
                         getElementStatus: this.props.getElementStatus
@@ -1214,12 +1319,35 @@ class ElementContainer extends Component {
                     glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}/>
                     labelText = 'ST'
                     break;
+                
+                case elementTypeConstant.MULTI_COLUMN:
+                    editor = <MultiColumnContext.Provider value={{
+                        activeElement: this.props.activeElement,
+                        showBlocker: this.props.showBlocker,
+                        permissions: permissions,
+                        index: index,
+                        element: element,
+                        slateLockInfo: slateLockInfo,
+                        handleCommentspanel : handleCommentspanel,
+                        isBlockerActive : this.props.isBlockerActive,
+                        onClickCapture : this.props.onClickCapture,
+                        elementSeparatorProps : elementSepratorProps,
+                        setActiveElement : this.props.setActiveElement,
+                        onListSelect : this.props.onListSelect,
+                        handleFocus: this.handleFocus,
+                        handleBlur: this.handleBlur,
+                        deleteElement: this.deleteElement,
+                        splithandlerfunction: this.props.splithandlerfunction,
+                    }}><MultiColumnContainer />
+                    </MultiColumnContext.Provider>;
+                    labelText = '2C'
+                    break;
             }
         } else {
             editor = <p className="incorrect-data">Incorrect Data - {element.id}</p>;
         }
 
-        let borderToggle = this.state.borderToggle;
+        let borderToggle = this.setBorderToggle(this.props.elemBorderToggle, this.state.borderToggle)
         let btnClassName = this.state.btnClassName;
         let bceOverlay = "";
         let elementOverlay = ''
@@ -1233,18 +1361,18 @@ class ElementContainer extends Component {
                 btnClassName = '';
             }
         }
-
         return (
             <div className="editor" data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
+                {this.state.showCopyPopup && <CopyUrn elementId={this.props.element.id} toggleCopyMenu={this.toggleCopyMenu} copyClickedX={this.copyClickedX} copyClickedY={this.copyClickedY} />}
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
-                    <Button type="element-label" btnClassName={`${btnClassName} ${this.state.isOpener ? ' ignore-for-drag' : ''}`} labelText={labelText}  onClick={(event) => this.labelClickHandler(event)} />
+                    <Button type="element-label" btnClassName={`${btnClassName} ${isQuadInteractive} ${this.state.isOpener ? ' ignore-for-drag' : ''}`} labelText={labelText} copyContext={(e)=>{OnCopyContext(e,this.toggleCopyMenu)}} onClick={(event) => this.labelClickHandler(event)} />
                     {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && config.slateType !== 'assessment' ? (<Button type="delete-element" onClick={(e) => this.showDeleteElemPopup(e,true)} />)
                         : null}
                     {this.renderColorPaletteButton(element, permissions)}
                     {this.renderColorTextButton(element, permissions)}
                 </div>
                     : ''}
-                <div className={`element-container ${labelText.toLowerCase()} ${borderToggle}`} data-id={element.id} onFocus={() => this.toolbarHandling('remove')} onBlur={() => this.toolbarHandling('add')} onClick = {(e)=>this.handleFocus("","",e,labelText)}>
+                <div className={`element-container ${labelText.toLowerCase()=="2c"? "multi-column":labelText.toLowerCase()} ${borderToggle}`} data-id={element.id} onFocus={() => this.toolbarHandling('remove')} onBlur={() => this.toolbarHandling('add')} onClick = {(e)=>this.handleFocus("","",e,labelText)}>
                     {elementOverlay}{bceOverlay}{editor}
                 </div>
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
@@ -1399,8 +1527,8 @@ const mapDispatchToProps = (dispatch) => {
         setActiveElement: (element, index, parentUrn, asideData, updateFromC2Flag, showHideObj) => {
             dispatch(setActiveElement(element, index, parentUrn, asideData, updateFromC2Flag, showHideObj))
         },
-        deleteElement: (id, type, parentUrn, asideData, contentUrn, index, poetryData) => {
-            dispatch(deleteElement(id, type, parentUrn, asideData, contentUrn, index, poetryData))
+        deleteElement: (id, type, parentUrn, asideData, contentUrn, index, poetryData, element) => {
+            dispatch(deleteElement(id, type, parentUrn, asideData, contentUrn, index, poetryData, element))
         },
         glossaaryFootnotePopup: (glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, callback, typeWithPopup, poetryField) => {
             dispatch(glossaaryFootnotePopup(glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, typeWithPopup, poetryField)).then(() => {
@@ -1455,7 +1583,6 @@ const mapStateToProps = (state) => {
         allComments: state.commentsPanelReducer.allComments,
         showHideId: state.appStore.showHideId,
         tcmData: state.tcmReducer.tcmSnapshot,
-        elementStatus: state.elementStatusReducer
     }
 }
 

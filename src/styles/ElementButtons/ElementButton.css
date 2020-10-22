@@ -31,7 +31,9 @@
     cursor: move;
     background-color: grey;
 }
-
+.btn-element.element-label.quad-interactive{
+    font-size: 12px;
+}
 .btn-element.flag-icon {
     background-color: #fa5d54;
 }
@@ -104,7 +106,7 @@
     padding-top: 2px;
 }
 
-.btn-element.text-elem, .image-elem, .audio-elem, .interactive-elem, .container-elem, .worked-exp-elem, .assessment-elem, .opener-elem, .section-break-elem, .metadata-anchor,.interactive-elem-button,.citation-elem,.container-elem-button, .block-text-button , .btn-element.stanza-elem, .table-editor-elem{
+.btn-element.text-elem, .image-elem, .audio-elem, .interactive-elem, .container-elem, .worked-exp-elem, .assessment-elem, .opener-elem, .section-break-elem, .metadata-anchor,.interactive-elem-button,.citation-elem,.container-elem-button, .block-text-button , .btn-element.stanza-elem, .table-editor-elem, .multi-column-group{
     width: 30px;
     height: 30px;
     display: flex;
@@ -118,8 +120,12 @@
     opacity: 1;
     fill: #9e9e9e!important;
 }
-.citation-elem:hover text{
+
+.citation-elem:hover text, .multi-column-group:hover path{
     fill:black;
+}
+.multi-column-group:hover{
+    border: solid 1px #434343;
 }
 .text-elem:hover, .image-elem:hover, .audio-elem:hover, .interactive-elem:hover, .container-elem:hover, .worked-exp-elem:hover, .assessment-elem:hover, .opener-elem:hover, .section-break-elem:hover, .metadata-anchor:hover,.interactive-elem-button:hover, .citation-elem:hover,.container-elem-button:hover,.block-text-button:hover , .stanza-elem:hover, .table-editor-elem:hover{
     opacity: 1;
@@ -167,7 +173,7 @@
 }
 
 .activeTagBgColor {
-    background-color: green !important;
+    background-color: #005a70 !important;
 }
 .btn-element.lock-icon{
     padding: 0;

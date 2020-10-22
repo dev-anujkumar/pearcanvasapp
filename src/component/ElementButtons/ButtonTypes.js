@@ -5,10 +5,6 @@ export default {
     ELEMENT_BLOCK_LABEL : "element-label",
     DELETE_ELEMENT : "delete-element",
     TCM : "tcm",
-    FORWARD_NAVIGATION : "forward-nav-active",
-    FORWARD_NAVIGATION_DISABLE : "forward-nav-disable",
-    BACKWARD_NAVIGATION : "backward-nav-active",
-    BACKWARD_NAVIGATION_DISABLE : "backward-nav-disable",
     EXPAND : "expand",
     SPLIT_SLATE : "split",
     COLOR_PALETTE : "color-palette",
@@ -34,5 +30,7 @@ export default {
     SHOW_HIDE : "show-hide-elem",
     POP_UP : "popup-elem",
     BLOCK_TEXT : "block-text-button",
-    TABLE_EDITOR : "table-editor-elem-button"
+    TABLE_EDITOR : "table-editor-elem-button",
+    MULTI_COLUMN_CONTAINER : "multi-column-group",
+    ELM_INTERACTIVE_ICON:"elmInteractiveIcon"
 }

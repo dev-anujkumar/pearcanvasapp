@@ -23,53 +23,14 @@ import {
 import { sendDataToIframe } from '../../constants/utility.js';
 import { HideLoader, ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
-
+import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
+let elementType = ['WORKED_EXAMPLE', 'CONTAINER', 'SECTION_BREAK', 'TEXT', 'CITATION', 'ELEMENT_CITATION', 'POETRY', 'STANZA' , 'MULTI_COLUMN','POP_UP'];
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
 };
 
-function prepareDataForTcmUpdate(updatedData, parentData, asideData, poetryData) {
-    if (parentData && (parentData.elementType === "element-aside" || parentData.elementType === "citations" 
-        || parentData.elementType === "poetry")) {
-        updatedData.isHead = true;
-    } else if (parentData && parentData.elementType === "manifest") {
-        updatedData.isHead = false;
-    }
-    if(updatedData.type === "POP_UP" || updatedData.type === "SHOW_HIDE"){
-        updatedData.parentType = updatedData.type==="POP_UP"? "popup":"showhide";
-    }
-    else if (asideData && asideData.type === "element-aside") {
-        if (asideData.subtype === "workedexample") {
-            updatedData.parentType = "workedexample";
-        } else {
-            updatedData.parentType = "element-aside";
-        }
-    } else if ((poetryData && poetryData.type === 'poetry') || (parentData && parentData.elementType === "poetry")){
-        updatedData.parentType = "poetry";
-    }
-    // updatedData.projectURN = config.projectUrn;
-    // updatedData.slateEntity = poetryData && poetryData.contentUrn || config.slateEntityURN;
-}
-
-function createNewVersionOfSlate(){
-    fetch(`${config.STRUCTURE_API_URL}structure-api/context/v2/${config.projectUrn}/container/${config.slateEntityURN}/version`, {
-            method: 'PUT',
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json",
-                "PearsonSSOSession": config.ssoToken,
-                "ApiKey": config.APO_API_KEY,
-            }
-        })
-            .then(res => res.json())
-            .then((res) => {
-                sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
-        })
-}
-
 export const createElement = (type, index, parentUrn, asideData, outerAsideIndex, loref, cb,poetryData) => (dispatch, getState) => {
     config.currentInsertedIndex = index;
-    config.currentInsertedType = type;
     let  popupSlateData = getState().appStore.popupSlateData
     localStorage.setItem('newElement', 1);
     let slateEntityUrn = parentUrn && parentUrn.contentUrn || popupSlateData && popupSlateData.contentUrn || poetryData && poetryData.contentUrn || config.slateEntityURN
@@ -87,8 +48,11 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
     else if (type == 'ELEMENT_CITATION') {
         _requestData.parentType = "citations"
     }
+    else if (parentUrn && parentUrn.elementType === 'group') {
+        _requestData["parentType"] = "groupedcontent"
+        _requestData["columnName"] = parentUrn.columnName
+    }
 
-    prepareDataForTcmUpdate(_requestData, parentUrn, asideData, poetryData)
     return axios.post(`${config.REACT_APP_API_URL}v1/slate/element`,
         JSON.stringify(_requestData),
         {
@@ -97,13 +61,39 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 "PearsonSSOSession": config.ssoToken
             }
         }
-    ).then(createdElemData => {
+    ).then(async createdElemData => {
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         const parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
         let currentSlateData = newParentData[config.slateManifestURN];
+
+        /** [PCAT-8289] ---------------------------- TCM Snapshot Data handling ------------------------------*/
+        if (elementType.indexOf(type) !== -1) {
+            let containerElement = {
+                asideData: asideData,
+                parentUrn: parentUrn,
+                poetryData: poetryData
+            };
+            let slateData = {
+                currentSlateData: {
+                    status: currentSlateData.status,
+                    contentUrn: currentSlateData.contentUrn
+                },
+                bodymatter: currentSlateData.contents.bodymatter,
+                response: createdElemData.data
+            };
+            if (currentSlateData.status === 'approved') {
+                await tcmSnapshotsForCreate(slateData, type, containerElement, dispatch);
+            }
+            else {
+                tcmSnapshotsForCreate(slateData, type, containerElement, dispatch);
+            }
+        }
+        /**---------------------------------------------------------------------------------------------------*/
+
         if (currentSlateData.status === 'approved') {
             if(currentSlateData.type==="popup"){
+                sendDataToIframe({ 'type': "tocRefreshVersioning", 'message' :true });
                 sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
                 dispatch(fetchSlateData(currentSlateData.id, currentSlateData.contentUrn, 0, currentSlateData, ""));
             } else {
@@ -157,11 +147,17 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 }
             })  
         }
+        else if (asideData && asideData.type === 'groupedcontent') {
+            newParentData[config.slateManifestURN].contents.bodymatter.map((item, i) => {
+                if (item.id === asideData.id) {
+                    item.groupeddata.bodymatter[parentUrn.columnIndex].groupdata.bodymatter.splice(index, 0, createdElementData)
+                }
+            })
+        }
         else {
             newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
         }
         if (config.tcmStatus) {
-            let elementType = ['WORKED_EXAMPLE', 'CONTAINER', 'SECTION_BREAK', 'TEXT', 'CITATION', 'ELEMENT_CITATION', 'POETRY', 'STANZA'];
             if (elementType.indexOf(type) !== -1) {
                 prepareDataForTcmCreate(type, createdElementData, getState, dispatch);
             }
@@ -174,13 +170,13 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 slateLevelData: newParentData
             }
         })
-        if(type === "SHOW_HIDE"){
+        /*if(type === "SHOW_HIDE"){
             let showHideRevealElement = document.getElementById(`cypress-${index}-2-0`)
                if(showHideRevealElement){
                     showHideRevealElement.focus()
                     showHideRevealElement.blur()
                } 
-            }
+            }*/
         if (cb) {
             cb();
         }   
@@ -208,7 +204,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
     })
 }
 
-function prepareDataForTcmCreate(type, createdElementData, getState, dispatch) {
+export function prepareDataForTcmCreate(type, createdElementData, getState, dispatch) {
     let elmUrn = [];
     const tcmData = getState().tcmReducer.tcmSnapshot;
     if (type === "WORKED_EXAMPLE" || type === "CONTAINER") {
@@ -232,7 +228,20 @@ function prepareDataForTcmCreate(type, createdElementData, getState, dispatch) {
     else if (type === 'TEXT' || type === 'ELEMENT_CITATION' || type === "STANZA") {
         elmUrn.push(createdElementData.id)
     }
-
+    else if (type === "MULTI_COLUMN") {
+        /** First Column */
+        createdElementData.groupeddata.bodymatter[0].groupdata.bodymatter.map(item => {
+            elmUrn.push(item.id)
+        })
+        /** Second Column */
+        createdElementData.groupeddata.bodymatter[1].groupdata.bodymatter.map(item => {
+            elmUrn.push(item.id)
+        })
+    }
+    else if (type === 'POP_UP') {
+        elmUrn.push(createdElementData.popupdata.postertextobject[0].id)
+        elmUrn.push(createdElementData.popupdata.bodymatter[0].id)
+    }
     elmUrn.map((item) => {
         return tcmData.push({
             "txCnt": 1,
@@ -330,6 +339,14 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                         }
                     });
                 }
+                else if (containerTypeElem && containerTypeElem == '2C') {
+                    newBodymatter[dataObj.containerIndex].groupeddata.bodymatter[dataObj.columnIndex].groupdata.bodymatter.move(oldIndex, newIndex);
+                    /* newBodymatter.forEach(element => {
+                        if (element.id == poetryId) {
+                            element.contents.bodymatter.move(oldIndex, newIndex);
+                        }
+                    }); */
+                }
                 else {
                     newParentData[slateId].contents.bodymatter.move(oldIndex, newIndex);
                 }
@@ -352,7 +369,7 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
             /* For hiding the spinning loader send HideLoader message to Wrapper component */
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
             dispatch({type: ERROR_POPUP, payload:{show: true}})
-            // console.log('Error occured while swaping element', err)
+            console.log('Error occured while swaping element', err)
         })
 }
 
@@ -643,7 +660,7 @@ export const getPageNumber = (elementID) => (dispatch, getState) => {
         })
        return response.data;
     }).catch((error) => {
-        console.log(error,"error")
+        console.log(error)
         let newPageNumber = {
             id: elementID,
             pageNumber: ""

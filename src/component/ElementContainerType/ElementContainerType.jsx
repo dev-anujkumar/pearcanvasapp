@@ -2,6 +2,7 @@
  * Component for Container Type Elements
  */
 import React, { useEffect, useState, useRef } from 'react'
+import config from '../../config/config';
 import '../../styles/ElementContainerType/ElementContainerType.css'
 export default function ElementContainerType(props) {
     const { closeDropDown, data } = props
@@ -33,8 +34,11 @@ export default function ElementContainerType(props) {
     }
 
     const renderMenu = (propsData) => {
+        let {elementType,text} = props
         return propsData && propsData.map((item, index) => {
-            if(props.elementType === "element-aside" && props.text === "block-text-button" && item.text === "Block Poetry"){
+            if (((elementType === "element-aside" || elementType === "group") && text === "block-text-button" && item.text === "Block Poetry") ||
+            (text === "interactive-elem-button" && (elementType === "group" && (item.text === "Add Show Hide" || item.text === "Add Pop Up")))
+            || (config.isPopupSlate && item.text === "Add Pop Up")) {
                 return null
             }
             else {

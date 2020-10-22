@@ -4,8 +4,8 @@
 
 // IMPORT - Module dependencies
 import config from '../../../../config/config';
-import { PUF, LEARNOSITY_BETA, LEARNOSITY, FolderLabelList } from '../../AssessmentSlateConstants.js';
-let preparedData = []
+import { PUF, LEARNOSITY_BETA, LEARNOSITY, ELM_INT, FolderLabelList } from '../../AssessmentSlateConstants.js';
+let preparedData = [];
 
 /*** @description - This function is to set the folder name in folder-icon based on type of container
      * @param label- label of container
@@ -57,7 +57,7 @@ export const setStatus = (condition, assessmentFormat, propsValue, stateValue) =
     let status = false;
     switch (condition) {
         case 'setSearchButtonStatus':
-            if (assessmentFormat == PUF) {
+            if (assessmentFormat == PUF || assessmentFormat == ELM_INT) {
                 status = true;
             } else if (assessmentFormat == LEARNOSITY_BETA) {
                 if (stateValue.openItemTable == true || (stateValue.openItemTable == false && propsValue.openSearch == true)) {
@@ -66,7 +66,7 @@ export const setStatus = (condition, assessmentFormat, propsValue, stateValue) =
             }
             break;
         case 'setNavigationBarStatus':
-            if (((assessmentFormat == PUF) || (assessmentFormat == LEARNOSITY_BETA && !propsValue.openSearch))) {
+            if (((assessmentFormat == PUF) || (assessmentFormat == ELM_INT) || (assessmentFormat == LEARNOSITY_BETA && !propsValue.openSearch))) {
                 status = true;
             }
             break;
@@ -187,12 +187,12 @@ export const dynamicSort = (property,sortByRelevance) => {
   */
 function dynamicSortMultiple() {
 
-    var props = arguments;
+    let props = arguments;
     let sortByRelevanceData, propertyArray=[];
     if(props.length && props[props.length-1] && props[props.length-1].status === true ){
         sortByRelevanceData = props[props.length-1]
         delete  props[props.length-1]
-        for(var i =0;i<props.length;i++){
+        for(let i =0;i<props.length;i++){
            if(props[i] != null ){
             propertyArray.push(props[i])
            } 
@@ -202,13 +202,9 @@ function dynamicSortMultiple() {
         propertyArray = props
     }
     return function (data1, data2) {
-        var i = 0,
-            result = 0,
-
-            numberOfProperties = propertyArray.length;
-
+        let i = 0,result = 0,numberOfProperties = propertyArray.length;
         while (result === 0 && i < numberOfProperties) {
-            result = dynamicSort(propertyArray[i],sortByRelevanceData)(data1, data2);
+            result = dynamicSort(propertyArray[i], sortByRelevanceData)(data1, data2);
             i++;
         }
         return result;
@@ -247,8 +243,52 @@ export const tableDataSorting = (openInnerTable, tableValue, order) => {
         if(typeBasedData && typeBasedData['assessment']){
             sortedAssessments = typeBasedData['assessment'].sort(dynamicSortMultiple(key1, key2))
         }
+        if(typeBasedData && typeBasedData['interactive']){
+            sortedAssessments = typeBasedData['interactive'].sort(dynamicSortMultiple(key1, key2))
+        }
         sortedData = sortedContainers.concat(sortedAssessments)
     }
 
     return sortedData
+}
+
+/*** @description - This object is used for mapping elm-interactives */
+export const interactiveTypeList = {
+    'flashcards' : {
+    'label' : 'Flashcard',
+    'value' : 'flashcard',
+    'wipValue' : 'flashcards'
+    },
+    'imageSlideShow' : {
+    'label' : 'Image Gallery',
+    'value' : 'imageGallery',
+    'wipValue' : 'gallery-image'
+    },
+    'videoSlideShow' : {
+    'label' : 'Video Gallery',
+    'value' : 'videoGallery',
+    'wipValue' : 'gallery-video'
+    },
+    'userControlledAnimation' : {
+    'label' : 'User-Controlled Animation',
+    'value' : 'userControlledAnimation',
+    'wipValue' : 'simulation'
+    }
+}
+
+/*** @description - This is function to set interactive type for elm-interactive assets
+    * @param asset - current asset for elm-interactive
+   */
+export const setInteractiveType = (asset) => {
+    let interactiveTypeData = {
+        wipValue: "",
+        label: ""
+    }
+    let oldInteractiveTypes = ['userControlledAnimation', 'imageSlideShow', 'videoSlideShow'];
+    const { interactiveType, label } = asset.additionalMetadata;
+
+    interactiveTypeData.label = oldInteractiveTypes.indexOf(interactiveType) > -1 || label == undefined? interactiveTypeList[interactiveType].label : label ;
+    interactiveTypeData.wipValue = oldInteractiveTypes.indexOf(interactiveType) > -1 ? interactiveTypeList[interactiveType].wipValue : interactiveType;
+
+    return interactiveTypeData;
 }

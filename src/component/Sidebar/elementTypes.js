@@ -68,7 +68,7 @@ export default {
             subtype: {
                 'secondary-pullquote': {
                     text: 'Pullquote',
-                    labelText: 'BQ',
+                    labelText: 'PQ',
                     enum: 'PULLQUOTE'
                 },
                 'secondary-marginalia': {
@@ -91,7 +91,7 @@ export default {
         },
         'primary-list': {
             text: 'List',
-            toolbar: [],
+            toolbar: ['formatSelector'],
             enum: 'LIST',
             subtype: {
                 'secondary-list-1': {
@@ -137,7 +137,7 @@ export default {
     'figure': {
         'primary-image-figure': {
             text: 'Figure Image',
-            toolbar: ['crossLinkingIcon','assetpopover','decreaseindent','glossary'],
+            toolbar: ['formatSelector','crossLinkingIcon','assetpopover','glossary','decreaseindent'],
             enum: 'IMAGE',
             subtype: {
                 'secondary-image-figure-width': {
@@ -179,7 +179,7 @@ export default {
         },
         'primary-image-table': {
             text: 'Table Image',
-            toolbar: ['crossLinkingIcon','assetpopover','decreaseindent','glossary'],
+            toolbar: ['formatSelector','crossLinkingIcon','assetpopover','glossary','decreaseindent'],
             enum: 'TABLE',
             subtype: {
                 'secondary-image-table-half': {
@@ -216,7 +216,7 @@ export default {
         },
         'primary-image-equation': {
             text: 'Math Image',
-            toolbar: ['crossLinkingIcon','assetpopover','decreaseindent','glossary'],
+            toolbar: ['formatSelector','crossLinkingIcon','assetpopover','glossary','decreaseindent'],
             enum: 'MATH',
             subtype: {
                 'secondary-image-equation-half': {
@@ -253,7 +253,7 @@ export default {
         },
         'primary-mathml-equation': {
             text: 'Block Math',
-            toolbar: ['crossLinkingIcon','assetpopover','decreaseindent','glossary'],
+            toolbar: ['formatSelector','crossLinkingIcon','assetpopover','glossary','decreaseindent'],
             enum: 'MATH_ML_CHEM_EDITOR',
             subtype: {
                 'secondary-mathml-equation': {
@@ -265,7 +265,7 @@ export default {
         },
         'primary-blockcode-equation': {
             text: 'Block Code',
-            toolbar: ['crossLinkingIcon','assetpopover','decreaseindent','glossary'],
+            toolbar: ['formatSelector','crossLinkingIcon','assetpopover','glossary','decreaseindent'],
             enum: 'BLOCK_CODE_EDITOR',
             subtype: {
                 'secondary-blockcode-language-default': {
@@ -417,7 +417,7 @@ export default {
         },
         'primary-editor-table-equation': {
             text: 'Table Editor',
-            toolbar: ['crossLinkingIcon','assetpopover','decreaseindent', 'glossary'],
+            toolbar: ['formatSelector','crossLinkingIcon','assetpopover','glossary','decreaseindent'],
             enum: 'TABLE_EDITOR',
             subtype: {
                 'secondary-editor-table-equation': {
@@ -432,7 +432,7 @@ export default {
     'video-audio': {
         'primary-video': {
             text: 'Video',
-            toolbar: ['crossLinkingIcon','assetpopover', 'glossary'],
+            toolbar: ['formatSelector','crossLinkingIcon','assetpopover', 'glossary'],
             enum: 'VIDEO',
             subtype: {
                 'secondary-video-smartlink': {
@@ -440,18 +440,12 @@ export default {
                     labelText: 'VID',
                     enum: 'EXTERNAL_LINK',
                     wipValue : 'externallink'
-                },
-                'secondary-video-alfresco': {
-                    text: 'Alfresco Video Link',
-                    labelText: 'VID',
-                    enum: 'INTERNAL_LINK',
-                    wipValue:'internal'
                 }
             }
         },
         'primary-audio': {
             text: 'Audio',
-            toolbar: ['crossLinkingIcon','assetpopover', 'glossary'],
+            toolbar: ['formatSelector', 'crossLinkingIcon','assetpopover', 'glossary'],
             enum: 'AUDIO',
             subtype: {
                 'secondary-audio-smartlink': {
@@ -459,12 +453,6 @@ export default {
                     labelText: 'AUD',
                     enum: 'EXTERNAL_LINK',
                     wipValue : 'externallink'
-                },
-                'secondary-audio-alfresco': {
-                    text: 'Alfresco Audio Link',
-                    labelText: 'AUD',
-                    enum: 'INTERNAL_LINK',
-                    wipValue:'internal'
                 }
             }
         },
@@ -556,7 +544,7 @@ export default {
     'element-workedexample': {
         'primary-workedexample-we1': {
             text: 'Worked Example 1',
-            toolbar:['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','crossLinkingIcon','assetpopover','slatetag'],
+            toolbar:['formatSelector','bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','crossLinkingIcon','assetpopover','slatetag'],
             enum: 'WORKED_EXAMPLE',
             subtype: {
                 'secondary-workedexample-we1': {
@@ -568,7 +556,7 @@ export default {
         },
         'primary-workedexample-we2': {
             text: 'Worked Example 2',
-            toolbar:['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','crossLinkingIcon','assetpopover','slatetag'],
+            toolbar:['formatSelector', 'bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','crossLinkingIcon','assetpopover','slatetag'],
             enum: 'WORKED_EXAMPLE',
             subtype: {
                 'secondary-workedexample-we2': {
@@ -641,15 +629,28 @@ export default {
         },
         enumType: 'assessment',		
     },
-    'element-interactive': {
+     'element-interactive': {
+        'primary-elm-interactive': {
+            text: 'Elm Interactive',
+            toolbar: ['formatSelector','crossLinkingIcon','assetpopover', 'glossary'],
+            enum: 'MMI_ELM',
+            subtype: {
+                'secondary-elm-interactive': {
+                    text: 'Elm Interactive',
+                    labelText: 'ELM',
+                    enum: 'FLASHCARDS',
+                    wipValue: 'fpo'
+                }
+            }
+        },
         'primary-mmi': {
-            text: 'MMI',
-            toolbar: ['crossLinkingIcon','assetpopover', 'glossary'],
+            text: 'Quad Interactive',
+            toolbar: ['formatSelector','crossLinkingIcon','assetpopover', 'glossary'],
             enum: 'MMI',
             subtype: {
                 'secondary-interactive-mmi': {
-                    text: 'MMI',
-                    labelText: 'MMI',
+                    text: 'Quad',
+                    labelText: 'QUAD',
                     enum: 'FLASHCARDS',
                     wipValue: 'fpo'
                 }
@@ -657,7 +658,7 @@ export default {
         },
         'primary-smartlink': {
             text: 'Smart Link',
-            toolbar: ['crossLinkingIcon','assetpopover', 'glossary'],
+            toolbar: ['formatSelector','crossLinkingIcon','assetpopover', 'glossary'],
             enum: 'EXTERNAL_LINK',
             subtype: {
                 'secondary-interactive-smartlink-third': {
@@ -697,7 +698,7 @@ export default {
     "popup": {
         "primary-popup": {
             text: 'Pop up window',
-            toolbar: ['crossLinkingIcon', 'assetpopover','decreaseindent','glossary', 'orderedlist', 'unorderedlist'],
+            toolbar: ['formatSelector','crossLinkingIcon', 'assetpopover','glossary', 'orderedlist', 'unorderedlist','decreaseindent'],
             dropdownDisabled: true,
             subtype: {
                 'secondary-popup': {
@@ -749,7 +750,7 @@ export default {
         'primary-citations-group': {
             text: 'Citation Group',
             enum: 'CITATION',
-            toolbar: ['footnote', 'increaseindent', 'decreaseindent', 'glossary', 'crossLinkingIcon', 'assetpopover', 'orderedlist', 'unorderedlist'],
+            toolbar: ['formatSelector','footnote', 'increaseindent', 'decreaseindent', 'glossary', 'crossLinkingIcon', 'assetpopover', 'orderedlist', 'unorderedlist'],
             subtype: {
                 'secondary-citations-group': {
                     text: 'Citation Group',
@@ -763,7 +764,7 @@ export default {
         'primary-element-citation': {
             text: 'Citation',
             enum: 'ELEMENT_CITATION',
-            toolbar: ['footnote', 'increaseindent', 'decreaseindent', 'glossary', 'crossLinkingIcon', 'assetpopover', 'orderedlist', 'unorderedlist'],
+            toolbar: ['formatSelector','footnote', 'increaseindent', 'decreaseindent', 'glossary', 'crossLinkingIcon', 'assetpopover', 'orderedlist', 'unorderedlist'],
             subtype: {
                 'secondary-element-citation': {
                     text: 'Citation element',
@@ -777,7 +778,7 @@ export default {
         "primary-poetry": {
             text: 'Block Poetry',
             enum: 'POETRY',
-            toolbar: ['crossLinkingIcon','assetpopover','decreaseindent','glossary', 'orderedlist', 'unorderedlist'],
+            toolbar: ['formatSelector','crossLinkingIcon','assetpopover','glossary', 'orderedlist', 'unorderedlist','decreaseindent'],
             dropdownDisabled: true,
             subtype: {
                 'secondary-poetry': {
@@ -802,5 +803,35 @@ export default {
                 }
             }
         } 
+    },
+    'groupedcontent': {		
+        'primary-multicolumn': {		
+            text: '2 Column',
+            toolbar: [],
+            enum: 'MULTI_COLUMN',		
+            subtype: {		
+                'secondary-multicolumn-wider': {
+                    text: 'Wider than text width 60/40%',
+                    labelText: '2C',
+                    enum: 'WIDER_60_40'
+                },
+                'secondary-multicolumn-half': {
+                    text: 'Wider than text width 50/50%',
+                    labelText: '2C',
+                    enum: 'WIDER_50_50'
+                },
+                'secondary-multicolumn-wider-text': {
+                    text: 'Text width 60/40%',
+                    labelText: '2C',
+                    enum: 'TEXT_WIDTH_60_40'
+                },
+                'secondary-multicolumn-half-text': {
+                    text: 'Text width 50/50%',
+                    labelText: '2C',
+                    enum: 'TEXT_WIDTH_50_50'
+                }
+            }		
+        },
+        enumType: 'multicolumn'		
     }
 };

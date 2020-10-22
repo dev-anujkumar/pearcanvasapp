@@ -18,6 +18,7 @@ export default {
 /****************Figure Interactive Element************************ */
     INTERACTIVE : "interactive",
     INTERACTIVE_MMI : "mmi",
+    INTERACTIVE_ELM : "mmi-elm",
     INTERACTIVE_EXTERNAL_LINK : "external-link",
     INTERACTIVE_SHOW_HIDE : "showhide",
     INTERACTIVE_NARRATIVE_LINK : "narrative-link",
@@ -46,7 +47,10 @@ export default {
 
 /****************Poetry element************************ */  
     POETRY_ELEMENT: "poetry",
-    POETRY_STANZA: "stanza"
+    POETRY_STANZA: "stanza",
+
+/****************Multi Column element************************ */
+    MULTI_COLUMN: "groupedcontent"
 }
 
 export const LABELS = {
@@ -62,6 +66,8 @@ export const LABELS = {
     "external-link": "SL",
     "narrative-link": "Pop",
     "workedexample": "WE",
-    "poetry": "PE"
+    "poetry": "PE",
+    "mmi":"Quad",
+    "mmi-elm":"ELM"
 }
 

@@ -3,11 +3,9 @@
 */
 
 import React, { useContext, useEffect } from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types'
 import TinyMceEditor from "../tinyMceEditor";
 // import { showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader'
-import config from '../../config/config';
 import '../../styles/ElementShowHide/ElementShowHide.css'
 import ListElement from '../ListElement'
 import ElementContainerContext from '../ElementContainer/ElementContainerContext.js'
@@ -26,7 +24,8 @@ const ShowHideTinyMce = (props) => {
         glossaryFootnoteValue,
         glossaaryFootnotePopup,
         elementStatus,
-        getElementStatus
+        getElementStatus,
+        showBlocker
     } = context;
     const { currentElement, activeShowHide, createShowHideElement, deleteShowHideUnit, innerIndex, placeholder, showHideType } = props;
 
@@ -36,7 +35,7 @@ const ShowHideTinyMce = (props) => {
     const effectCallback = () => {
         if (currentElement && currentElement.id.match(/work/g) && !elementStatus[currentElement.id]) {
             // call element status API
-           getElementStatus(currentElement.id, innerIndex)
+            getElementStatus(currentElement.id, innerIndex)
         }
     }
 
@@ -46,21 +45,32 @@ const ShowHideTinyMce = (props) => {
     useEffect(effectCallback, [currentElement.id])
 
     if (currentElement.type == 'element-list') {
-        <ListElement
+        return <ListElement
             permissions={permissions}
             openAssetPopoverPopUp={openAssetPopoverPopUp}
             openGlossaryFootnotePopUp={openGlossaryFootnotePopUp}
             handleFocus={handleFocus}
+            handleEditorFocus={handleFocus}
             handleBlur={handleBlur}
             index={props.index}
             elementId={currentElement.id}
+            id={currentElement.id}
+            elementId={elementId}
             element={element}
             model={currentElement.html}
             slateLockInfo={slateLockInfo}
             onListSelect={onListSelect}
             glossaryFootnoteValue={glossaryFootnoteValue}
             glossaaryFootnotePopup={glossaaryFootnotePopup}
-            showHideType={showHideType} />
+            showHideType={showHideType}
+            showBlocker={showBlocker}
+            innerIndex={innerIndex}
+            placeholder={placeholder}
+            model={props.model}
+            activeShowHide={activeShowHide}
+            createShowHideElement={createShowHideElement}
+            currentElement={currentElement}
+            deleteShowHideUnit={deleteShowHideUnit} />
     }
     return (
         <TinyMceEditor permissions={permissions}
@@ -83,6 +93,7 @@ const ShowHideTinyMce = (props) => {
             currentElement={currentElement}
             onListSelect={onListSelect}
             deleteShowHideUnit={deleteShowHideUnit}
+            showBlocker={showBlocker}
         />)
 }
 
@@ -98,15 +109,15 @@ ShowHideTinyMce.propTypes = {
     model: PropTypes.string,
     /**  Handler to show active show hide element */
     activeShowHide: PropTypes.func,
-     /**  Placeholder of the element */
+    /**  Placeholder of the element */
     placeholder: PropTypes.string,
-      /**  Type of the element : Show,hide,reveal */
+    /**  Type of the element : Show,hide,reveal */
     showHideType: PropTypes.string,
-     /** Stores the object of the current element of the show hide */
+    /** Stores the object of the current element of the show hide */
     currentElement: PropTypes.object,
-       /** Handler to create new show hide on enter */
+    /** Handler to create new show hide on enter */
     createShowHideElement: PropTypes.func,
-     /** Handler to delete new show hide on backspace */
+    /** Handler to delete new show hide on backspace */
     deleteShowHideUnit: PropTypes.func,
 }
 

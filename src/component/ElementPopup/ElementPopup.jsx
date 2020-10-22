@@ -31,7 +31,7 @@ class ElementPopup extends React.Component {
     }
     handlepopupSlateClick = (event) => {
         this.props.handleFocus();
-        if(config.popupCreationCallInProgress){
+        if(config.popupCreationCallInProgress || config.isSavingElement){
             return false
         }
         if(event.target.classList.contains("buttonWidgetPU")){

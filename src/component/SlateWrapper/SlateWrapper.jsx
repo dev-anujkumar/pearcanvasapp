@@ -18,7 +18,9 @@ import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
 import config from '../../config/config';
 import { TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER, WORKED_EXAMPLE, SECTION_BREAK, METADATA_ANCHOR, LO_LIST, ELEMENT_ASSESSMENT, OPENER,
     ALREADY_USED_SLATE , REMOVE_LINKED_AUDIO, NOT_AUDIO_ASSET, SPLIT_SLATE_WITH_ADDED_AUDIO , ACCESS_DENIED_CONTACT_ADMIN, IN_USE_BY, LOCK_DURATION, SHOW_HIDE,POP_UP ,
-    CITATION, ELEMENT_CITATION,SMARTLINK,POETRY ,STANZA, BLOCKCODE, TABLE_EDITOR, FIGURE_MML} from './SlateWrapperConstants';
+    CITATION, ELEMENT_CITATION,SMARTLINK,POETRY ,STANZA, BLOCKCODE, TABLE_EDITOR, FIGURE_MML, MULTI_COLUMN, MMI_ELM,
+    SINGLE_CONTAINER_DELETE, WITH_PENDING_TRACK, SLATE_UNLINKING, DELETE_DIALOG_TEXT, WITH_PENDING_TRACK_NOTE_MESSAGE, TYPE_SINGLE_CONTAINER_DELETE, TYPE_WITH_PENDING_TRACK, TYPE_UNLINK
+} from './SlateWrapperConstants';
 import PageNumberElement from './PageNumberElement.jsx';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
@@ -30,13 +32,14 @@ import { setSlateLock, releaseSlateLock, setLockPeriodFlag, getSlateLockStatus }
 import { setActiveElement,openPopupSlate } from '../CanvasWrapper/CanvasWrapper_Actions';
 // import { OPEN_AM } from '../../js/auth_module';
 import { showSlateLockPopup } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
-import { handleTCMData } from '../ElementContainer/TcmSnapshot_Actions'
+import { handleTCMData } from '../TcmSnapshots/TcmSnapshot_Actions.js'
 import {
     fetchSlateData
 } from '../CanvasWrapper/CanvasWrapper_Actions';
-
+import LazyLoad, {forceCheck} from "react-lazyload";
 
 let random = guid();
+
 class SlateWrapper extends Component {
     constructor(props) {
         super(props);
@@ -56,6 +59,7 @@ class SlateWrapper extends Component {
     }
 
     componentDidMount() {
+        forceCheck();
         if (document.getElementById("cypress-0")) {
             document.getElementById("cypress-0").focus();
         }
@@ -66,6 +70,7 @@ class SlateWrapper extends Component {
     }
 
     handleScroll = (e) => {
+        forceCheck();
         if (config.totalPageCount <= config.page) return false;
         // const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;        
         let scrollPosition = Number(e.target.scrollTop + e.target.clientHeight + 100);
@@ -108,6 +113,7 @@ class SlateWrapper extends Component {
     }
 
     static getDerivedStateFromProps = (props, state) => {
+        forceCheck();
         /**
          * updateTimer is for updating Time for slate refresh
          */
@@ -195,31 +201,17 @@ class SlateWrapper extends Component {
      */
     renderSlateHeader({ slateData: _slateData }) {
         try {
-            if (_slateData !== null && _slateData !== undefined) {
-                if(_slateData[config.slateManifestURN]){
-                // if (Object.values(_slateData).length > 0) {
-                    // let _slateObject = Object.values(_slateData)[0];
-                    let _slateObject = _slateData[config.slateManifestURN];
-                    let { contents: _slateContent } = _slateObject;
-                    let title = {
-                        text: this.props.slateTitleUpdated
-                    }
-                    let _slateTitle = title.text ? title : _slateContent.title
-                    return (
-                        <SlateHeader onNavigate={this.props.navigate} slateType={config.slateType} slateTitle={_slateTitle} slateLockInfo={this.props.slateLockInfo} />
-                    )
-                }
-                else {
-                    return (
-                        <SmalllLoader />
-                    )
-                }
-            }
-            else {
-                // handle error
+            if (_slateData !== null && _slateData !== undefined && _slateData[config.slateManifestURN]) {
+                return (
+                    <SlateHeader slateLockInfo={this.props.slateLockInfo} />
+                )
+            } else {
+                return (
+                    <SmalllLoader />
+                )
             }
         } catch (error) {
-            // handle error
+            console.error(error)
         }
     }
 
@@ -239,6 +231,9 @@ class SlateWrapper extends Component {
             if (_slateData !== null && _slateData !== undefined) {
                 if (Object.values(_slateData).length > 0) {
                     let _slateObject = _slateData[config.slateManifestURN];
+                    if(_slateObject==undefined){
+                        return false
+                    }
                     let _slateContent = _slateObject.contents
                     let { id: _slateId, type: _slateType } = _slateObject;
                     let { bodymatter: _slateBodyMatter } = _slateContent
@@ -261,7 +256,7 @@ class SlateWrapper extends Component {
                                         dataIdAttr: 'data-id',
                                         scroll: true, // or HTMLElement
                                         filter: ".ignore-for-drag",
-                                        draggable: ".editor",
+                                        draggable: ".lazyload-wrapper",
                                         // ignoreNextClick : false,
                                         preventOnFilter: false,
                                         forceFallback: true,
@@ -316,11 +311,9 @@ class SlateWrapper extends Component {
                     )
                 }
             }
-            else {
-                // handle error
-            }
         } catch (error) {
             // handle error
+            console.error(error)
         }
     }
 
@@ -356,9 +349,6 @@ class SlateWrapper extends Component {
         if (context.props.withinLockPeriod) {
             callback(config.projectUrn, Object.keys(context.props.slateData)[0])
             context.props.setLockPeriodFlag(false)
-            /* context.setState({
-                showReleasePopup: true
-            }) */
         }
     }
 
@@ -538,7 +528,7 @@ class SlateWrapper extends Component {
         let indexToinsert
         let outerIndex
         // Detects element insertion from the topmost element separator
-        if ((firstOne || type === "opener-elem") && (!config.isCO)) {
+        if (((firstOne || type === "opener-elem") && (!config.isCO)) || (firstOne && parentUrn)) {
             indexToinsert = Number(index)
         } else {
             indexToinsert = Number(index + 1)
@@ -621,6 +611,12 @@ class SlateWrapper extends Component {
             case 'table-editor-elem-button':
                 this.props.createElement(TABLE_EDITOR, indexToinsert, parentUrn, asideData, null, null);
                 break;
+            case 'multi-column-group':
+                this.props.createElement(MULTI_COLUMN, indexToinsert, parentUrn, asideData, null, null, null, null)
+                break;
+            case 'elm-interactive-elem':
+                this.props.createElement(MMI_ELM, indexToinsert, parentUrn, asideData, null, null, null);
+                break;
             case 'text-elem':
             default:
                 this.props.createElement(TEXT, indexToinsert, parentUrn, asideData, null, null, null);
@@ -682,6 +678,12 @@ class SlateWrapper extends Component {
                 buttonType: 'worked-exp-elem',
                 buttonHandler: () => this.splithandlerfunction('worked-exp-elem', index, firstOne, parentUrn),
                 tooltipText: 'Worked Example',
+                tooltipDirection: 'left'
+            },
+            {
+                buttonType: 'multi-column-group',
+                buttonHandler: () => this.splithandlerfunction('multi-column-group', index, firstOne, parentUrn),
+                tooltipText: 'Multi Column',
                 tooltipDirection: 'left'
             },
             {
@@ -767,6 +769,14 @@ class SlateWrapper extends Component {
         this.deleteRejected()
     }
 
+    unlinkAccepted = () => {
+        this.props.updatePageLink(this.props.tocDeleteMessage);
+        hideBlocker();
+        hideTocBlocker();
+        disableHeader(true);
+        this.props.modifyState(false)
+    }
+
     deleteRejected = () => {
         hideBlocker();
         hideTocBlocker();
@@ -778,33 +788,43 @@ class SlateWrapper extends Component {
     showTocDeletePopup = () => {
         /**
          * Need to refactor these all condition and minimize them
-         */
+         */        
         if (this.props.toggleTocDelete) {
-            if(this.props.tocDeleteMessage&& this.props.tocDeleteMessage.messageType === 'singleContainerDelete'){
+            let containerName = null;
+            if (this.props.tocDeleteMessage && this.props.tocDeleteMessage.changedValue && this.props.tocDeleteMessage.changedValue.labelText) {
+                containerName = this.props.tocDeleteMessage.changedValue.labelText;
+            }
+            if(this.props.tocDeleteMessage&& this.props.tocDeleteMessage.messageType === TYPE_SINGLE_CONTAINER_DELETE){ 
                 return (
                     <PopUp
                         togglePopup={this.deleteRejected}
                         active={true}
                         saveContent={this.deleteAccepted}
                         saveButtonText='Okay'
-                        dialogText='A project must have at least one Part/Chapter. Please add another Part/Chapter before deleting this one'
+                        dialogText={SINGLE_CONTAINER_DELETE}
                         tocDelete={true}
+                        itemName = {containerName}
                         tocDeleteClass='tocDeleteClass'
+                        deleteContainer = {false}
                     />                   
                    
                 )
             }
-            else if(this.props.tocDeleteMessage && this.props.tocDeleteMessage.messageType === 'withPendingTrack'){
+            else if(this.props.tocDeleteMessage && (this.props.tocDeleteMessage.messageType === TYPE_WITH_PENDING_TRACK || this.props.tocDeleteMessage.link === TYPE_UNLINK)){
+                let dialogText = (this.props.tocDeleteMessage.messageType === TYPE_WITH_PENDING_TRACK) ? WITH_PENDING_TRACK : SLATE_UNLINKING
+                let note = (this.props.tocDeleteMessage.messageType === TYPE_WITH_PENDING_TRACK) ? WITH_PENDING_TRACK_NOTE_MESSAGE : ''
                 return (
                     <PopUp
                         togglePopup={this.deleteRejected}
                         active={true}
-                        saveContent={this.deleteAccepted}
+                        saveContent={(this.props.tocDeleteMessage.messageType === TYPE_WITH_PENDING_TRACK) ? this.deleteAccepted : this.unlinkAccepted}
                         saveButtonText='Yes'
-                        dialogText=' Are you sure you want to delete this slate/container with pending changes?'
-                        note='Note:There will be no undo available after deletion'
+                        dialogText={dialogText}
+                        note={note}
                         tocDelete={true}
+                        itemName = {containerName}
                         tocDeleteClass='tocDeleteClass'
+                        deleteContainer = {false}
                     />
     
                 )
@@ -816,9 +836,11 @@ class SlateWrapper extends Component {
                         active={true}
                         saveContent={this.deleteAccepted}
                         saveButtonText='Yes'
-                        dialogText='Are you sure you want to delete, this action cannot be undone?'
+                        dialogText={DELETE_DIALOG_TEXT}
                         tocDelete={true}
+                        itemName = {containerName}
                         tocDeleteClass='tocDeleteClass'
+                        deleteContainer = {true}
                     />
     
                 )
@@ -873,11 +895,11 @@ class SlateWrapper extends Component {
         try {
             if (_elements !== null && _elements !== undefined) {
                 this.renderButtonsonCondition(_elements);
-                if (_elements.length === 0 && _slateType == "assessment") {
-                    this.isDefaultElementInProgress = true;
+                if (_elements.length === 0 && _slateType == "assessment" && config.isDefaultElementInProgress) {
+                    config.isDefaultElementInProgress = false;
                     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
                     this.props.createElement(ELEMENT_ASSESSMENT, "0", '', '', '', '', () => {
-                        this.isDefaultElementInProgress = false;
+                        config.isDefaultElementInProgress = true;
                     });
                 }
                 else if (_elements.length === 0 && _slateType != "assessment") {
@@ -885,65 +907,71 @@ class SlateWrapper extends Component {
                 }
                 return _elements.map((element, index) => {
                         return (
+                            
                            <React.Fragment key={element.id}>
-                                {
-                                    index === 0 && _slateType !== 'assessment' && config.isCO === false ?
+                               <LazyLoad 
+                                    once={true}
+                                    placeholder={<div>Loading...</div>}
+                                >
+                                    {
+                                        index === 0 && _slateType !== 'assessment' && config.isCO === false ?
+                                            <ElementSaprator
+                                                firstOne={index === 0}
+                                                index={index}
+                                                esProps={this.elementSepratorProps(index, true)}
+                                                elementType=""
+                                                permissions={this.props.permissions}
+                                                showAudioSplitPopup={this.props.showAudioSplitPopup}
+                                                openAudio={this.props.openAudio}
+                                                onClickCapture={this.checkSlateLockStatus}
+                                                splithandlerfunction={this.splithandlerfunction}
+                                            />
+                                            : index === 0 && config.isCO === true ? <div className="noSeparatorContainer"></div> : null
+                                    }
+                                    <ElementContainer
+                                        openCustomPopup = {this.openCustomPopup}
+                                        slateType={_slateType}
+                                        element={element}
+                                        index={index}
+                                        handleCommentspanel={this.props.handleCommentspanel}
+                                        elementSepratorProps={this.elementSepratorProps}
+                                        showBlocker={this.props.showBlocker}
+                                        isBlockerActive={this.props.isBlockerActive}
+                                        onListSelect={this.props.convertToListElement}
+                                        onClickCapture={this.checkSlateLockStatus}
+                                        isLOExist={this.props.isLOExist}
+                                        splithandlerfunction={this.splithandlerfunction}
+                                    >
+                                        {
+                                            (isHovered, isPageNumberEnabled, activeElement, permissions) => (
+                                                <PageNumberElement pageLoading={pageLoading}
+                                                    updatePageNumber={this.props.updatePageNumber}
+                                                    element={element} _slateType={_slateType}
+                                                    isHovered={isHovered}
+                                                    isPageNumberEnabled={isPageNumberEnabled}
+                                                    activeElement={activeElement}
+                                                    permissions={permissions} />
+                                            )
+                                        }
+                                    </ElementContainer>
+                                    {_slateType !== 'assessment' ?
                                         <ElementSaprator
-                                            firstOne={index === 0}
                                             index={index}
-                                            esProps={this.elementSepratorProps(index, true)}
+                                            esProps={this.elementSepratorProps(index, false)}
                                             elementType=""
+                                            slateType={_slateType}
+                                            toggleSplitSlatePopup={this.toggleSplitSlatePopup}
                                             permissions={this.props.permissions}
                                             showAudioSplitPopup={this.props.showAudioSplitPopup}
                                             openAudio={this.props.openAudio}
                                             onClickCapture={this.checkSlateLockStatus}
                                             splithandlerfunction={this.splithandlerfunction}
                                         />
-                                        : index === 0 && config.isCO === true ? <div className="noSeparatorContainer"></div> : null
-                                }
-                                <ElementContainer
-                                    openCustomPopup = {this.openCustomPopup}
-                                    slateType={_slateType}
-                                    element={element}
-                                    index={index}
-                                    handleCommentspanel={this.props.handleCommentspanel}
-                                    elementSepratorProps={this.elementSepratorProps}
-                                    showBlocker={this.props.showBlocker}
-                                    isBlockerActive={this.props.isBlockerActive}
-                                    onListSelect={this.props.convertToListElement}
-                                    onClickCapture={this.checkSlateLockStatus}
-                                    isLOExist={this.props.isLOExist}
-                                    splithandlerfunction={this.splithandlerfunction}
-                                >
-                                    {
-                                        (isHovered, isPageNumberEnabled, activeElement, permissions) => (
-                                            <PageNumberElement pageLoading={pageLoading}
-                                                updatePageNumber={this.props.updatePageNumber}
-                                                element={element} _slateType={_slateType}
-                                                isHovered={isHovered}
-                                                isPageNumberEnabled={isPageNumberEnabled}
-                                                activeElement={activeElement}
-                                                permissions={permissions} />
-                                        )
+                                        : null
                                     }
-                                </ElementContainer>
-                                {_slateType !== 'assessment' ?
-                                    <ElementSaprator
-                                        index={index}
-                                        esProps={this.elementSepratorProps(index, false)}
-                                        elementType=""
-                                        slateType={_slateType}
-                                        toggleSplitSlatePopup={this.toggleSplitSlatePopup}
-                                        permissions={this.props.permissions}
-                                        showAudioSplitPopup={this.props.showAudioSplitPopup}
-                                        openAudio={this.props.openAudio}
-                                        onClickCapture={this.checkSlateLockStatus}
-                                         splithandlerfunction={this.splithandlerfunction}
-                                    />
-                                    : null
-                                }
-                              
+                                </LazyLoad>
                             </React.Fragment>
+                           
                           
                         )
                 })
@@ -1093,7 +1121,7 @@ class SlateWrapper extends Component {
         }
     }
     closePopup = () =>{
-        if (config.savingInProgress) {
+        if (config.savingInProgress || config.isSavingElement) {
             return false
         }
         let popupId = config.slateManifestURN
@@ -1111,6 +1139,7 @@ class SlateWrapper extends Component {
         config.tempSlateManifestURN = null
         config.tempSlateEntityURN = null
         config.isPopupSlate = false
+        config.tcmslatemanifest= null
         this.props.openPopupSlate(undefined, popupId)
         this.props.setActiveElement(config.cachedActiveElement.element, config.cachedActiveElement.index)
         if(config.tcmStatus){

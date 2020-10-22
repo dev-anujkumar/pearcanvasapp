@@ -109,7 +109,8 @@ module.exports = {
             //To add defer property in script tags
             defaultAttribute: 'defer'
         }),
-        new CopyPlugin([
+        new CopyPlugin({ 
+            patterns:[
             {
                 from: path.join(__dirname, 'src/favicon.ico'),
                 to: path.join(__dirname, 'dist/')
@@ -118,7 +119,7 @@ module.exports = {
                 from: path.join(__dirname, 'src/static/health.html'),
                 to: path.join(__dirname, 'dist/')
             }
-        ]),
+        ]}),
         new BundleAnalyzerPlugin({
             analyzerMode: 'static'
         }),
