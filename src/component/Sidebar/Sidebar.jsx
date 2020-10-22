@@ -297,7 +297,7 @@ class Sidebar extends Component {
             }
     
             if(attributionsList.length > 0) {
-                let activeElement = document.querySelector(`[data-id="${this.props.activeElement.elementId}"]`)
+                //let activeElement = document.querySelector(`[data-id="${this.props.activeElement.elementId}"]`)
                 //let attrNode = activeElement ? activeElement.querySelector(".blockquoteTextCredit") : null
                 let attrValue = ""
                 attributions = attributionsList.map(item => {
