@@ -2,7 +2,8 @@ import {
     GET_USAGE_TYPE,
     SET_ASSESSMENT_STATUS,
     GET_ASSESSMENT_VERSIONS,
-    RESET_ASSESSMENT_STORE
+    RESET_ASSESSMENT_STORE,
+    ASSESSMENT_CONFIRMATION_POPUP
 } from '../constants/Action_Constants';
 
 const INITIAL_STATE = {
@@ -42,6 +43,12 @@ export default function assessmentReducer(state = INITIAL_STATE, action = INITIA
                     showUpdateStatus: action.payload.showUpdateStatus
                 },
             }
+        case ASSESSMENT_CONFIRMATION_POPUP: {
+            return {
+                ...state,
+                showConfirmationPopup: action.payload
+            }
+        }
         case RESET_ASSESSMENT_STORE:
             return {}
         default:

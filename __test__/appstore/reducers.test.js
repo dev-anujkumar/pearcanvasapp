@@ -20,11 +20,12 @@ import {
     UPDATE_PAGENUMBER_SUCCESS,
     UPDATE_PAGENUMBER,
     UPDATE_PAGENUMBER_FAIL,
-    ACCESS_DENIED_POPUP
+    ACCESS_DENIED_POPUP,
+    STORE_OLD_ASSET_FOR_TCM
 
 } from '../../src/constants/Action_Constants';
 import mockData from '../../src/appstore/mockdata';
-import { createstoreWithFigure, newslateData } from '../../fixtures/slateTestingData';
+import { createstoreWithFigure, newslateData, figureDataTCM } from '../../fixtures/slateTestingData';
 
 const initialState = {
     slateLevelData: {},
@@ -349,6 +350,17 @@ describe('testing SLATE LEVEL REDUCER cases -->', () => {
         expect(reducer(initialState, {
             type: ACCESS_DENIED_POPUP,
             payload: true
+        })).toEqual(output)
+    });
+    it('case 22- STORE_OLD_ASSET_FOR_TCM', () => {
+        let output = {
+            ...initialState,
+            oldFiguredata: figureDataTCM
+        };
+        expect(reducer(initialState, {
+            type: STORE_OLD_ASSET_FOR_TCM,
+            payload: {
+                oldFiguredata : figureDataTCM}
         })).toEqual(output)
     });
 });

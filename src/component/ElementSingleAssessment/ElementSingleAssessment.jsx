@@ -16,6 +16,7 @@ import { setCurrentCiteTdx, setCurrentInnerCiteTdx, assessmentSorting, specialCh
 import RootElmComponent from '../AssessmentSlateCanvas/elm/RootElmComponent.jsx';
 import { setAssessmentTitle, setAssessmentUsageType, setAssessmentProperties } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 import { resetElmStore } from '../AssessmentSlateCanvas/elm/Actions/ElmActions.js';
+import {checkEntityUrn } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js'
 
 /*** @description - ElementSingleAssessment is a class based component. It is defined simply to make a skeleton of the assessment-type element .*/
 
@@ -157,9 +158,12 @@ static getDerivedStateFromProps(nextProps, prevState) {
         this.props.handleBlur("","",this.props.index);
     }
     /*** @description - This function will be called to save the assessment data */
-    saveAssessment = () =>{ 
+    saveAssessment = (cb) =>{ 
             this.props.handleBlur("","",this.props.index);
             this.props.handleFocus();
+            if (cb) {
+                cb();
+            }
     }
     /*** @description - This function is to close CITE/TDX PopUp
   */
@@ -206,7 +210,13 @@ static getDerivedStateFromProps(nextProps, prevState) {
         else{
             this.setState({ assessmentId: citeTdxObj.id, assessmentItemId: citeTdxObj.singleAssessmentID.versionUrn, assessmentTitle: specialCharacterDecode(citeTdxObj.title) },
                 () => {
-                    this.saveAssessment();
+                    let oldAssessmentId = this.props.model.figuredata.elementdata.assessmentid
+                    this.saveAssessment(() => {
+                        if (oldAssessmentId !== citeTdxObj.id) {
+                            let data = [oldAssessmentId, citeTdxObj.id]
+                            this.props.checkEntityUrn(data)
+                        }
+                    });
                 })
         }
        
@@ -351,7 +361,8 @@ const mapActionToProps = {
     setCurrentCiteTdx: setCurrentCiteTdx,
     setCurrentInnerCiteTdx: setCurrentInnerCiteTdx,
     assessmentSorting: assessmentSorting,
-    resetElmStore: resetElmStore
+    resetElmStore: resetElmStore,
+    checkEntityUrn:checkEntityUrn
 }
 
 

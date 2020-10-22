@@ -456,13 +456,14 @@ class ElementContainer extends Component {
         creditsHTML = this.removeClassesFromHtml(creditsHTML)
         subtitleHTML = this.removeClassesFromHtml(subtitleHTML)
         titleHTML = this.removeClassesFromHtml(titleHTML)
-        let defaultImageUrl =  "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png";
+        let assetId = previousElementData.figuretype == 'video' ? previousElementData.figuredata.videoid : (previousElementData.figuredata.audioid ? previousElementData.figuredata.audioid : "")
+       // let defaultImageUrl =  "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png";
         return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
             subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
             captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
             creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
-            //    this.props.oldImage !== newAudioVideoId
-            (defaultImageUrl !== (previousElementData.figuredata.posterimage && previousElementData.figuredata.posterimage.path)) //PCAT-6815  fixes
+                this.props.oldImage !== assetId
+           // (defaultImageUrl !== (previousElementData.figuredata.posterimage && previousElementData.figuredata.posterimage.path)) //PCAT-6815  fixes
         );
     }
 
@@ -1413,6 +1414,7 @@ class ElementContainer extends Component {
                     showDeleteElemPopup={this.state.showDeleteElemPopup}
                     sectionBreak={this.state.sectionBreak}
                     deleteElement={this.deleteElement}
+                    isAddComment ={true}
                 />}
                 {this.props.children &&
                     <PageNumberContext.Consumer>

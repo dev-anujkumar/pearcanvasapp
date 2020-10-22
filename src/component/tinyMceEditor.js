@@ -132,7 +132,11 @@ export class TinyMceEditor extends Component {
                     if (e.originalEvent && e.originalEvent.command === "mceInsertContent") {
                         let specialCharSpan = document.getElementById('specialChar');
                         if (specialCharSpan) {
-                            specialCharSpan.remove();
+                            if(this.props.element && this.props.element.type === 'element-blockfeature' && this.props.element.elementdata && this.props.element.elementdata.type !=="pullquote"){
+                                specialCharSpan.remove();
+                            } else{
+                                specialCharSpan.outerHTML = specialCharSpan.innerHTML;
+                            }
                             e.preventDefault();
                             return false;
                         }

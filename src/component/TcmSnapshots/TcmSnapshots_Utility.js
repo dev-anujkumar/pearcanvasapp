@@ -9,6 +9,7 @@ import { sendElementTcmSnapshot, getLatestVersion } from './TcmSnapshot_Actions.
 import { setSemanticsSnapshots, fetchElementsTag, generateWipDataForFigure } from './ElementSnapshot_Utility.js';
 /*************************Import Constants*************************/
 import TcmConstants from './TcmConstants.js';
+import { storeOldAssetForTCM } from '../ElementContainer/ElementContainer_Actions'
 
 const {
     elementType,
@@ -701,11 +702,11 @@ const setContentSnapshot = (element, elementDetails, actionStatus, CurrentSlateS
     } else if (element.type === BLOCKFEATURE && element.elementdata && element.elementdata.type && element.elementdata.type == 'blockquote') {
         let blockQuoteText = element.html && element.html.text ? element.html.text : "";
         snapshotData = blockQuoteText && blockQuoteText.trim() !== "" ? blockQuoteText.replace(bqHiddenText,"").replace(bqAttrHtmlTrue, "").replace(bqAttrHtmlFalse, "") : "";
-    } 
-    else if(elementDetails && elementDetails.elementType && (elementDetails.elementType.includes("LB") && actionStatus && actionStatus.action == 'create') && CurrentSlateStatus != 'approved' && elementDetails.isMetaFieldExist === true){
+    } else if(elementDetails && elementDetails.elementType && (elementDetails.elementType.includes("LB") && actionStatus && actionStatus.action == 'create') && CurrentSlateStatus != 'approved' && elementDetails.isMetaFieldExist === true){
         snapshotData = '<p></p>'          
-    } 
-    else {
+    } else if(element.type === ELEMENT_LIST && element.html && element.html.text){
+        snapshotData = element.html.text.replace(/<br>/g,"")
+    } else {
         snapshotData = element.html && element.html.text ? element.html.text : "";
     }
     snapshotData = snapshotData && snapshotData.replace(/data-mce-href="#"/g,'')
@@ -741,7 +742,7 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
         status:"",
         fromWhere:"update"
     }
-    let {updateBodymatter, response,updatedId,currentParentData} = elementUpdateData;
+    let {updateBodymatter, response,updatedId,currentParentData, figureData} = elementUpdateData;
     let currentSlateData = currentParentData[config.slateManifestURN] 
     if(config.isPopupSlate){
         currentSlateData.popupSlateData = currentParentData[config.tempSlateManifestURN]
@@ -780,8 +781,9 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
                     subtitle: wipData.subtitle,
                     captions: wipData.captions,
                     credits: wipData.credits,
-                    figuredata: wipData.figuredata
+                    figuredata: figureData
                 }
+                dispatch(storeOldAssetForTCM({}))
             }
             else {
                 oldData.elementdata = wipData.elementdata;
@@ -924,6 +926,7 @@ export const checkContainerElementVersion = async (containerElement, versionStat
     /** latest version for slate*/
     if (currentSlateData && currentSlateData.status && currentSlateData.status === 'approved') {
         let newSlateManifest = await getLatestVersion(currentSlateData.contentUrn);
+        // config.tcmslatemanifest = newSlateManifest;
         containerElement.slateManifest = newSlateManifest ? newSlateManifest : config.slateManifestURN    
     }
     if (currentSlateData.popupSlateData && currentSlateData.popupSlateData.status === 'approved') {

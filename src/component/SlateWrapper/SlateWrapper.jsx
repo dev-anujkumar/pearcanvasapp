@@ -37,7 +37,11 @@ import { handleTCMData } from '../TcmSnapshots/TcmSnapshot_Actions.js'
 import {
     fetchSlateData
 } from '../CanvasWrapper/CanvasWrapper_Actions';
+import { assessmentConfirmationPopup } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions';
+import { reloadSlate } from '../../component/ElementContainer/AssessmentEventHandling';
 import LazyLoad, {forceCheck} from "react-lazyload";
+
+import { getCommentElements } from './../Toolbar/Search/Search_Action.js';
 
 let random = guid();
 
@@ -71,10 +75,22 @@ class SlateWrapper extends Component {
     }
 
     componentDidUpdate() {
+        let divObj = 0;
         if(this.props.searchParent !== '' && document.querySelector(`div[data-id="${this.props.searchParent}"]`)) {
-            let divObj = document.querySelector(`div[data-id="${this.props.searchParent}"]`).offsetTop;
+            divObj = document.querySelector(`div[data-id="${this.props.searchParent}"]`).offsetTop;
+            if(this.props.searchNode !== '' && document.querySelector(`div[data-id="${this.props.searchNode}"]`) && this.props.searchNode !== this.props.searchParent) {
+                divObj += document.querySelector(`div[data-id="${this.props.searchNode}"]`).offsetTop;
+            }
             document.getElementById('slateWrapper').scrollTop = divObj;
-            // sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } });
+        }
+
+        if(this.props.commentSearchParent !== '' && document.querySelector(`div[data-id="${this.props.commentSearchParent}"]`)) {
+            divObj = document.querySelector(`div[data-id="${this.props.commentSearchParent}"]`).offsetTop;
+            if(this.props.commentSearchNode !== '' && document.querySelector(`div[data-id="${this.props.commentSearchNode}"]`) && this.props.commentSearchNode !== this.props.commentSearchParent) {
+                divObj += document.querySelector(`div[data-id="${this.props.commentSearchNode}"]`).offsetTop;
+            }
+            document.getElementById('slateWrapper').scrollTop = divObj;
+            this.props.getCommentElements('');
         }
     }
 
@@ -1040,7 +1056,18 @@ class SlateWrapper extends Component {
         this.props.showWrongAudioPopup(false)
         }
     }
-
+    /**
+    * @description - toggleAssessmentPopup function responsible for showing popup for latest version.
+    */
+    toggleAssessmentPopup = () => {
+        this.props.showBlocker(false)
+        hideTocBlocker()
+        hideBlocker()
+        if(this.props.showConfirmationPopup){
+            reloadSlate();
+            this.props.assessmentConfirmationPopup(false)
+        }
+    }
     /**
     * @description - processRemoveConfirmation function responsible for opening confirmation popup for removing the narrative audio.
     */
@@ -1094,6 +1121,28 @@ class SlateWrapper extends Component {
         }
     }
 
+    /**
+    * @description - showAssessmentConfirmationPopup function responsible for opening confirmation popup for updating embeded assessments .
+    */
+    showAssessmentConfirmationPopup = () => {
+        if (this.props.showConfirmationPopup) {
+            this.props.showBlocker(true)
+            showTocBlocker();
+            const dialogText = ` All other Assessment Items in this project will now be updated to the new version of this Assessment`
+            return (
+                <PopUp dialogText={dialogText}
+                    active={true}
+                    saveButtonText='OK'
+                    showConfirmation={true}
+                    assessmentClass="lock-message"
+                    togglePopup={this.toggleAssessmentPopup}
+                />
+            )
+        }
+        else {
+            return null
+        }
+    }
     showLockReleasePopup = () => {
         if (this.state.showReleasePopup) {
             this.props.showBlocker(true)
@@ -1215,6 +1264,7 @@ class SlateWrapper extends Component {
                 {/* ***************Audio Narration remove Popup **************** */}
                 {this.showAudioRemoveConfirmationPopup()}
                 {this.showLockReleasePopup()}
+                {this.showAssessmentConfirmationPopup()}
             </React.Fragment>
         );
     }
@@ -1251,7 +1301,11 @@ const mapStateToProps = state => {
         accesDeniedPopup : state.appStore.accesDeniedPopup,
         showSlateLockPopupValue: state.metadataReducer.showSlateLockPopup,
         searchParent: state.searchReducer.parentId,
-        showToast: state.appStore.showToast
+        searchNode: state.searchReducer.searchTerm,
+        commentSearchParent: state.commentSearchReducer.parentId,
+        commentSearchNode: state.commentSearchReducer.commentSearchTerm,
+        showToast: state.appStore.showToast,
+        showConfirmationPopup: state.assessmentReducer.showConfirmationPopup,
     };
 };
 
@@ -1277,7 +1331,8 @@ export default connect(
         openPopupSlate,
         showSlateLockPopup,
         handleTCMData,
-        fetchSlateData
-
+        fetchSlateData,
+        getCommentElements,
+        assessmentConfirmationPopup,
     }
 )(SlateWrapper);
