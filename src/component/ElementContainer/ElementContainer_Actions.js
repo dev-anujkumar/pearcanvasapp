@@ -5,11 +5,12 @@ import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import {
     fetchSlateData
 } from '../CanvasWrapper/CanvasWrapper_Actions';
-import { AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP, OPEN_GLOSSARY_FOOTNOTE,DELETE_SHOW_HIDE_ELEMENT, GET_TCM_RESOURCES} from "./../../constants/Action_Constants";
+import { AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP, OPEN_GLOSSARY_FOOTNOTE,DELETE_SHOW_HIDE_ELEMENT, GET_TCM_RESOURCES, STORE_OLD_ASSET_FOR_TCM } from "./../../constants/Action_Constants";
 import { customEvent } from '../../js/utils';
 import { prepareTcmSnapshots,tcmSnapshotsForUpdate,fetchElementWipData,checkContainerElementVersion,fetchManifestStatus } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 import { fetchPOPupSlateData} from '../../component/TcmSnapshots/TcmSnapshot_Actions.js'
 import { elementTypeTCM, containerType, allowedFigureTypesForTCM } from "./ElementConstants";
+import * as elementContainerHelpers from "./ElementContainer_helpers";
 
 export const addComment = (commentString, elementId) => (dispatch) => {
     let url = `${config.STRUCTURE_API_URL}narrative-api/v2/${elementId}/comment/`
@@ -444,6 +445,7 @@ function updateLOInStore(updatedData, versionedData, getState, dispatch) {
         }
     })
 }
+
 export function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getState, versionedData, elementIndex, showHideType, parentElement, poetryData){
     //direct dispatching in store
     let parentData = getState().appStore.slateLevelData;
@@ -463,45 +465,19 @@ export function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, 
         }
     }
     if(versionedData){
-        if (updatedData && updatedData.pageNumberRef) {
-            versionedData.pageNumberRef = updatedData.pageNumberRef
+        const argObj = {
+            updatedData,
+            asideData,
+            dispatch,
+            versionedData,
+            elementIndex,
+            parentElement,
+            fetchSlateData,
+            AUTHORING_ELEMENT_UPDATE,
+            newslateData,
+            slateManifestURN: config.slateManifestURN
         }
-        let indexes = elementIndex && elementIndex.length > 0 ? elementIndex.split('-') : 0;
-            if(asideData && asideData.type == 'element-aside'){
-                asideData.indexes = indexes;
-                if(indexes.length === 2 || indexes.length === 3){
-                    dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:asideData.id, asideData.contentUrn, 0, asideData,"containerVersioning", false));
-                // }else if(indexes.length === 3){
-                //     dispatch(fetchSlateData(asideData.id,asideData.contentUrn, 0, asideData));
-                }
-            } else if(parentElement && parentElement.type == 'poetry'){
-
-                // if(indexes.length === 2 || indexes.length === 3 || indexes === 2 || indexes === 3){
-                    parentElement.index = elementIndex;
-                    dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:parentElement.id, parentElement.contentUrn, 0, parentElement,"containerVersioning", false));
-                // }
-            } 
-            else if(parentElement && parentElement.type === "popup" && updatedData.elementParentEntityUrn && (updatedData.metaDataField || updatedData.sectionType === "postertextobject") ){
-                dispatch(fetchSlateData(updatedData.slateVersionUrn, updatedData.elementParentEntityUrn, 0, parentElement, "containerVersioning", true)); }
-            else if(parentElement && parentElement.type === "showhide"){
-                parentElement.indexes =elementIndex;
-                dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:parentElement.id, parentElement.contentUrn, 0, parentElement,"containerVersioning", false)); 
-            }
-            else if(parentElement && parentElement.type === "citations"){
-                dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:parentElement.id, parentElement.contentUrn, 0, parentElement,"containerVersioning", false));
-            }
-            else if (parentElement && parentElement.type === "groupedcontent") {
-                dispatch(fetchSlateData(parentElement.id, parentElement.contentUrn, 0, parentElement, "containerVersioning", false));
-            } else {
-                elementIndex = indexes.length == 2 ?indexes[0] : elementIndex
-                newslateData[config.slateManifestURN].contents.bodymatter[elementIndex] = versionedData;
-            }
-        return dispatch({
-            type: AUTHORING_ELEMENT_UPDATE,
-            payload: {
-                slateLevelData: newslateData
-            }
-        })
+        elementContainerHelpers.updateNewVersionElementInStore(argObj)
     }
     else {
         if(parentElement && parentElement.type === "citations"){
