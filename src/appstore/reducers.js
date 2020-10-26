@@ -39,7 +39,8 @@ import {
     SET_SLATE_LENGTH,
     VERSIONING_SLATEMANIFEST,
     SET_TOAST_MESSAGE,
-    SHOW_TOAST_MESSAGE
+    SHOW_TOAST_MESSAGE,
+    STORE_OLD_ASSET_FOR_TCM
 } from '../constants/Action_Constants';
 
 /**
@@ -239,6 +240,11 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
             return {
                 ...state,
                 showToast: action.payload
+            }
+        case STORE_OLD_ASSET_FOR_TCM:
+            return {
+                ...state,
+                oldFiguredata: action.payload.oldFiguredata
             }
         default:
             return state;

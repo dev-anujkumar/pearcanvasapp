@@ -2063,3 +2063,14 @@ export const slateWithCitationElement ={
     }
 }
 }
+
+export const figureDataTCM = {
+    figuredata : {
+        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+        "imageid": "urn:pearson:alfresco:28154019-35d4-4b5b-9da6-fdc6335e1595",
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/28154019-35d4-4b5b-9da6-fdc6335e1595/1addNew.png",
+        "height": "768",
+        "width": "1366",
+        "type": "image"
+        }
+}
