@@ -681,7 +681,7 @@ export const setFigureElementContentSnapshot = (element) => {
     let programLang = element.figuredata.programlanguage && element.figuredata.programlanguage != 'Select' ? element.figuredata.programlanguage : ''
     let toggleSyntaxhighlight = element.figuredata.syntaxhighlighting == true ? 'ON' : 'OFF'
     let toggleNumber = element.figuredata.numbered == true ? 'ON' : 'OFF'
-    let startNumberField = element.figuredata.startNumber ? "1" : "NA"
+    let startNumberField = element.figuredata.startNumber ? element.figuredata.startNumber : "NA"
     switch (element.figuretype) {
         case "video":
             snapshotData["metadata"] = element.figuredata.videoid.trim().length ? `<p>${element.figuredata.videoid}</p>` : "<p><br></p>"
@@ -691,8 +691,6 @@ export const setFigureElementContentSnapshot = (element) => {
             break;
         case "codelisting":             // for BCE
             snapshotData["codeblock"] =  element.html.preformattedtext ? element.html.preformattedtext : "<p><br></p>"
-            // element.html.preformattedtext ? element.html.preformattedtext : "<p><br></p>"
-            //  prepareCodeBlock(element)
             snapshotData["metadata"] = `<p><span class='bce-metadata'>Syntax-highlighting: </span>${toggleSyntaxhighlight}</p><p><span class='bce-metadata'>Language: </span>${programLang}</p><p><span class='bce-metadata'>Line Number: </span>${toggleNumber}</p><p><span class='bce-metadata'>Start numbering from: </span>${startNumberField}</p>`
             break;
         case "authoredtext":            // for MML
@@ -708,22 +706,6 @@ export const setFigureElementContentSnapshot = (element) => {
     return snapshotData
 }
 
-/**
- * Prepares code block text for BCE
- * @param {Object} element Figure element data
- */
-//  const prepareCodeBlock = (element) => {
-//     let codeBlockLength = element.figuredata.preformattedtext && element.figuredata.preformattedtext.length || 0
-//     let codeblock = []
-//     let lineBlock
-//     codeBlockLength && element.figuredata.preformattedtext.forEach(blockLine => {
-//         lineBlock = `<p>${blockLine.text ? blockLine.text : '<br>'}</p>`
-//         codeblock.push(lineBlock)
-//     });
-
-//     codeblock = `${codeblock}`
-//     return codeblock ? codeblock.replace(/,/g, "") : `<p><br></p>`
-// }
 
 const setContentSnapshot = (element, elementDetails, actionStatus, CurrentSlateStatus) => {
     let snapshotData = "";
