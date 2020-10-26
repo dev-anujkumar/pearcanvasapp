@@ -47,7 +47,7 @@ import MultiColumnContainer from "../MultiColumnElement"
 import {handleTCMData} from '../TcmSnapshots/TcmSnapshot_Actions.js';
 import CopyUrn from '../CopyUrn';
 import { OnCopyContext } from '../CopyUrn/copyUtil.js'
-import { openElmAssessmentPortal } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
+import { openElmAssessmentPortal, checkAssessmentStatus, resetAssessmentStore, fetchLatestAssessmentItemId } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import {handleElmPortalEvents} from '../ElementContainer/AssessmentEventHandling.js';
 class ElementContainer extends Component {
     constructor(props) {
@@ -105,6 +105,17 @@ class ElementContainer extends Component {
             btnClassName: '',
             isOpener: this.props.element.type === elementTypeConstant.OPENER
         })
+         /** PCAT-8907 - Updating Embedded Assessments - Elm */
+         let { element } = this.props
+         let embeddedAssessment = element.type == elementTypeConstant.FIGURE && element.figuretype == elementTypeConstant.FIGURE_ASSESSMENT && element.figuredata && element.figuredata.elementdata && element.figuredata.elementdata.assessmentformat == 'puf' && element.figuredata.elementdata.assessmentid ? true : false;
+         if (this.props.element && embeddedAssessment === true) {
+             // resetAssessmentStore();
+             if (this.props.assessmentReducer.updateElmItemId) {
+                console.log('add check', this.props.assessmentReducer.updateElmItemId)
+            }
+            console.log('in didmount')
+             this.props.checkAssessmentStatus(element.figuredata.elementdata.assessmentid, 'fromAssessmentSlate')
+         }
         document.addEventListener('click',()=>{
             this.setState({showCopyPopup : false})
         });
@@ -1363,7 +1374,8 @@ class ElementContainer extends Component {
         let btnClassName = this.state.btnClassName;
         let bceOverlay = "";
         let elementOverlay = '';
-        let showEditButton = element.type == elementTypeConstant.ASSESSMENT_SLATE && element.elementdata && element.elementdata.assessmentformat == 'puf' && element.elementdata.assessmentid ? true : false;
+        // let showEditButton = element.type == elementTypeConstant.ASSESSMENT_SLATE && element.elementdata && element.elementdata.assessmentformat == 'puf' && element.elementdata.assessmentid ? true : false;
+        let showEditButton = this.showElmEditButton().fullAssessment || this.showElmEditButton().embeddedAssessment ? true : false
         if (!hasReviewerRole() && this.props.permissions && !(this.props.permissions.includes('access_formatting_bar')||this.props.permissions.includes('elements_add_remove')) ) {
             elementOverlay = <div className="element-Overlay disabled" onClick={() => this.handleFocus()}></div>
         }
@@ -1491,6 +1503,15 @@ class ElementContainer extends Component {
         // this.props.assetPopoverPopup(toggleApoPopup)
     }
 
+    showElmEditButton = () => {
+        let { element } = this.props;
+        let fullAssessment = element.type == elementTypeConstant.ASSESSMENT_SLATE && element.elementdata && element.elementdata.assessmentformat == 'puf' && element.elementdata.assessmentid ? true : false;
+        let embeddedAssessment = element.type == elementTypeConstant.FIGURE && element.figuretype == elementTypeConstant.FIGURE_ASSESSMENT && element.figuredata && element.figuredata.elementdata && element.figuredata.elementdata.assessmentformat == 'puf' && element.figuredata.elementdata.assessmentid ? true : false;
+        return {
+            fullAssessment: fullAssessment,
+            embeddedAssessment: embeddedAssessment
+        }
+    }
     /**
      * @description - This function is to launch Elm Portal from Cypress.
      * @param event the click event triggered
@@ -1499,14 +1520,19 @@ class ElementContainer extends Component {
         event.stopPropagation();
         let { element } = this.props;
         let fullAssessment = element.type == elementTypeConstant.ASSESSMENT_SLATE && element.elementdata && element.elementdata.assessmentformat == 'puf' && element.elementdata.assessmentid ? true : false;
-        let embeddedAssessment = element.type == elementTypeConstant.FIGURE_ASSESSMENT && element.figuredata && element.figuredata.elementdata && element.figuredata.elementdata.assessmentformat == 'puf' && element.figuredata.elementdata.assessmentid ? true : false;
-        // let containerURN = config.parentEntityUrn == 'Front Matter' || config.parentEntityUrn == 'Back Matter' ? config.slateManifestURN : this.props.currentSlateAncestorData && this.props.currentSlateAncestorData.ancestor.containerUrn ? this.props.currentSlateAncestorData.ancestor.containerUrn : config.projectUrn
+        // let embeddedAssessment = element.type == elementTypeConstant.FIGURE_ASSESSMENT && element.figuredata && element.figuredata.elementdata && element.figuredata.elementdata.assessmentformat == 'puf' && element.figuredata.elementdata.assessmentid ? true : false;
+        let embeddedAssessment = element.type == elementTypeConstant.FIGURE && element.figuretype == elementTypeConstant.FIGURE_ASSESSMENT && element.figuredata && element.figuredata.elementdata && element.figuredata.elementdata.assessmentformat == 'puf' && element.figuredata.elementdata.assessmentid ? true : false;
         let dataToSend = {
             assessmentWorkUrn: fullAssessment ? element.elementdata.assessmentid : embeddedAssessment ? element.figuredata.elementdata.assessmentid : "",
             projDURN: config.projectUrn,
             containerURN: config.slateManifestURN,
             assessmentItemWorkUrn: embeddedAssessment ? element.figuredata.elementdata.assessmentitemid : ""
         }
+        // if (this.props.assessmentReducer.updateElmItemId) {
+            // console.log('add check', this.props.assessmentReducer.updateElmItemId)//
+            this.props.fetchLatestAssessmentItemId(element.figuredata.elementdata.assessmentid, element.figuredata.elementdata.assessmentitemid)
+            // checkAssessmentStatus(dataToSend.assessmentItemWorkUrn, 'fromEditButton')
+        // }
         handleElmPortalEvents();/** Add Elm-Assessment Update eventListener */
         this.props.openElmAssessmentPortal(dataToSend);
     }
@@ -1602,21 +1628,29 @@ const mapDispatchToProps = (dispatch) => {
         deleteShowHideUnit: (id, type, contentUrn, index, eleIndex, parentId, cb, parentElement, parentElementIndex) => {
             dispatch(deleteShowHideUnit(id, type, contentUrn, index, eleIndex, parentId, cb, parentElement, parentElementIndex))
         },
-        createPoetryUnit: (poetryField, parentElement,cb, popupElementIndex, slateManifestURN) => {
-            dispatch(createPoetryUnit(poetryField, parentElement,cb, popupElementIndex, slateManifestURN))
+        createPoetryUnit: (poetryField, parentElement, cb, popupElementIndex, slateManifestURN) => {
+            dispatch(createPoetryUnit(poetryField, parentElement, cb, popupElementIndex, slateManifestURN))
         },
         handleTCMData: () => {
             dispatch(handleTCMData())
         },
-        getElementStatus : (elementWorkId, index) => {
+        getElementStatus: (elementWorkId, index) => {
             dispatch(getElementStatus(elementWorkId, index))
         },
-        openElmAssessmentPortal : (dataToSend) => {
+        openElmAssessmentPortal: (dataToSend) => {
             dispatch(openElmAssessmentPortal(dataToSend))
+        },
+        checkAssessmentStatus: (workUrn, calledFrom, currentWorkUrn, currentWorkData, parentURN) => {
+            dispatch(checkAssessmentStatus(workUrn, calledFrom, currentWorkUrn, currentWorkData, parentURN))
+        },
+        resetAssessmentStore: () => {
+            dispatch(resetAssessmentStore())
+        },
+        fetchLatestAssessmentItemId: (assessmentId, assessmentItemId) => {
+            dispatch(fetchLatestAssessmentItemId(assessmentId, assessmentItemId))
         }
     }
 }
-
 const mapStateToProps = (state) => {
     return {
         elemBorderToggle: state.toolbarReducer.elemBorderToggle,
@@ -1629,7 +1663,8 @@ const mapStateToProps = (state) => {
         showHideId: state.appStore.showHideId,
         tcmData: state.tcmReducer.tcmSnapshot,
         searchUrn: state.searchReducer.searchTerm,
-        currentSlateAncestorData : state.appStore.currentSlateAncestorData
+        currentSlateAncestorData : state.appStore.currentSlateAncestorData,
+        assessmentReducer : state.assessmentReducer
     }
 }
 

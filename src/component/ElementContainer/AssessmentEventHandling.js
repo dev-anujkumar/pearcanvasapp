@@ -2,7 +2,7 @@
 import React from 'react';
 import config from '../../config/config';
 import store from '../../appstore/store'
-// import { checkAssessmentStatus } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
+import { checkAssessmentStatus } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import { checkSlateLock } from '../../js/slateLockUtility';
 import { releaseSlateLockWithCallback, getSlateLockStatus } from '../CanvasWrapper/SlateLock_Actions';
 import { handleSlateRefresh } from '../CanvasWrapper/SlateRefresh_Actions';
@@ -19,11 +19,18 @@ export const handleElmPortalEvents = (action = 'add') => {
             try {
                 const { data } = event;
                 if (action == 'add' && data && data.source == 'elm') {
-                    // console.log('Elm Events(TO BE REMOVED LATER) ONLY ADDED FOR TESTING---->', event.data)
+                    console.log('Elm Events(TO BE REMOVED LATER) ONLY ADDED FOR TESTING---->', event.data)
                     handleRefreshSlate(store.dispatch);
-                    if (data.action == 'approve') {
-                    // handleRefreshSlate(store.dispatch);
-                    window.removeEventListener('message', elmAssessmentUpdate, false);
+                    if (data.action == 'approve' || data.action == 'commit') {
+                        if(data.type == 'item' && data.action == 'commit'){
+                            console.log('store',store.getState().assessmentReducer)
+                            // store.dispatch({
+                            //     type: 'UPDATE_ELM_ITEM',
+                            //     payload: true
+                            // })
+                            // store.dispatch(checkAssessmentStatus(assessmentItemId, 'fromEditButton', assessmentId, {}, { type: 'assessment-item' }))
+                        }
+                        window.removeEventListener('message', elmAssessmentUpdate, false);
                     }
                 }
                 if (action == 'remove') {

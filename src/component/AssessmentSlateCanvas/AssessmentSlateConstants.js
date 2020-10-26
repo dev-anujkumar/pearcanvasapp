@@ -46,3 +46,5 @@ export const ELM_NEW_VERSION_UPDATE = 'The new version has been placed'
 export const ELM_UPDATE_POPUP_HEAD = 'Version Update'
 export const ELM_PORTAL_ERROR_MSG = "Something went wrong. Please try again!"
 export const ELM_UPDATE_MSG = 'Are you sure you want to update to the latest version available? It will not be possible to undo.'
+export const ELM_EMBEDDED_NEW_VERSION_UPDATE = 'The new version has been placed and all other items from this Assessment have been updated.'
+export const AUTO_UPDATE_FAIL_ERROR = 'Unable to Update Other Instances of this Assessment in the Project'
