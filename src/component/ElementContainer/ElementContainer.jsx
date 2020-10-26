@@ -105,17 +105,19 @@ class ElementContainer extends Component {
             btnClassName: '',
             isOpener: this.props.element.type === elementTypeConstant.OPENER
         })
-         /** PCAT-8907 - Updating Embedded Assessments - Elm */
-         let { element } = this.props
-         let embeddedAssessment = element.type == elementTypeConstant.FIGURE && element.figuretype == elementTypeConstant.FIGURE_ASSESSMENT && element.figuredata && element.figuredata.elementdata && element.figuredata.elementdata.assessmentformat == 'puf' && element.figuredata.elementdata.assessmentid ? true : false;
-         if (this.props.element && embeddedAssessment === true) {
-             // resetAssessmentStore();
-             if (this.props.assessmentReducer.updateElmItemId) {
-                console.log('add check', this.props.assessmentReducer.updateElmItemId)
-            }
+        /** PCAT-8907 - Updating Embedded Assessments - Elm */
+        let { element } = this.props
+        let embeddedAssessment = element.type == elementTypeConstant.FIGURE && element.figuretype == elementTypeConstant.FIGURE_ASSESSMENT && element.figuredata && element.figuredata.elementdata && element.figuredata.elementdata.assessmentformat == 'puf' && element.figuredata.elementdata.assessmentid ? true : false;
+        if (this.props.element && embeddedAssessment === true) {
             console.log('in didmount')
-             this.props.checkAssessmentStatus(element.figuredata.elementdata.assessmentid, 'fromAssessmentSlate')
-         }
+            let itemData = {
+                itemId: element.figuredata.elementdata.assessmentitemid,
+                parentId: element.figuredata.elementdata.assessmentid,
+                type: 'assessment-item',
+            }
+            //  this.props.checkAssessmentStatus(element.figuredata.elementdata.assessmentid, 'fromAssessmentSlate')
+            this.props.checkAssessmentStatus(element.figuredata.elementdata.assessmentid, 'fromElementContainer', "", "", itemData)
+        }
         document.addEventListener('click',()=>{
             this.setState({showCopyPopup : false})
         });
@@ -722,13 +724,17 @@ class ElementContainer extends Component {
     /**
      * Will be called on element blur and a saving call will be made
      */
-    handleBlur = (forceupdate, currrentElement, elemIndex, showHideType) => {
+    handleBlur = (forceupdate, currrentElement, elemIndex, showHideType, calledFrom) => {
         const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
         let activeEditorId = elemIndex ? `cypress-${elemIndex}` : (tinyMCE.activeEditor ? tinyMCE.activeEditor.id : '')
         let node = document.getElementById(activeEditorId);
         let element = currrentElement ? currrentElement : this.props.element
         let parentElement = ((currrentElement && currrentElement.type === elementTypeConstant.CITATION_ELEMENT) || (this.props.parentElement && (this.props.parentElement.type === 'poetry' || this.props.parentElement.type === "groupedcontent"))) ? this.props.parentElement : this.props.element
-        this.handleContentChange(node, element, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType)
+        if (calledFrom && calledFrom == 'fromEmbeddedAssessment') {
+            this.handleContentChange(node, element, 'element-assessment', 'primary-single-assessment', 'secondary-single-assessment-' + this.props.element.figuredata.elementdata.assessmentformat, activeEditorId, forceupdate, parentElement, showHideType);
+        } else {
+            this.handleContentChange(node, element, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType)
+        }
     }
 
     /**
@@ -1520,7 +1526,6 @@ class ElementContainer extends Component {
         event.stopPropagation();
         let { element } = this.props;
         let fullAssessment = element.type == elementTypeConstant.ASSESSMENT_SLATE && element.elementdata && element.elementdata.assessmentformat == 'puf' && element.elementdata.assessmentid ? true : false;
-        // let embeddedAssessment = element.type == elementTypeConstant.FIGURE_ASSESSMENT && element.figuredata && element.figuredata.elementdata && element.figuredata.elementdata.assessmentformat == 'puf' && element.figuredata.elementdata.assessmentid ? true : false;
         let embeddedAssessment = element.type == elementTypeConstant.FIGURE && element.figuretype == elementTypeConstant.FIGURE_ASSESSMENT && element.figuredata && element.figuredata.elementdata && element.figuredata.elementdata.assessmentformat == 'puf' && element.figuredata.elementdata.assessmentid ? true : false;
         let dataToSend = {
             assessmentWorkUrn: fullAssessment ? element.elementdata.assessmentid : embeddedAssessment ? element.figuredata.elementdata.assessmentid : "",
@@ -1528,11 +1533,6 @@ class ElementContainer extends Component {
             containerURN: config.slateManifestURN,
             assessmentItemWorkUrn: embeddedAssessment ? element.figuredata.elementdata.assessmentitemid : ""
         }
-        // if (this.props.assessmentReducer.updateElmItemId) {
-            // console.log('add check', this.props.assessmentReducer.updateElmItemId)//
-            this.props.fetchLatestAssessmentItemId(element.figuredata.elementdata.assessmentid, element.figuredata.elementdata.assessmentitemid)
-            // checkAssessmentStatus(dataToSend.assessmentItemWorkUrn, 'fromEditButton')
-        // }
         handleElmPortalEvents();/** Add Elm-Assessment Update eventListener */
         this.props.openElmAssessmentPortal(dataToSend);
     }

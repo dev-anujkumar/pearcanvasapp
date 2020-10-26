@@ -82,9 +82,6 @@ export const checkAssessmentStatus = (workUrn, calledFrom, currentWorkUrn, curre
                 dataForUpdate = { currentWorkUrn: currentWorkUrn }
                 await dispatch(getLatestAssessmentVersion(res.data.entityUrn, workUrn, res.data.dateCreated, dataForUpdate, itemData.type));
             } 
-            // else if (calledFrom == 'fromEditButton'){
-            //     await dispatch(getLatestAssessmentVersion(res.data.entityUrn, workUrn, res.data.dateCreated,{}, calledFrom));
-            // }
             else {
                 dataForUpdate = {
                     assessmentStatus: assessmentStatus,
@@ -109,7 +106,7 @@ export const checkAssessmentStatus = (workUrn, calledFrom, currentWorkUrn, curre
                 }
             }
             if (assessmentStatus == 'final' && calledFrom && (calledFrom != 'fromUpdate')) {
-                dispatch(getLatestAssessmentVersion(res.data.entityUrn, workUrn, res.data.dateCreated, dataForUpdate))
+                dispatch(getLatestAssessmentVersion(res.data.entityUrn, workUrn, res.data.dateCreated, dataForUpdate,"",itemData))
             }
         }
     }).catch(() => {
@@ -140,7 +137,7 @@ const checkAssessmentNextVersion = (nextData, previousWorkUrn) => {
 /**
  * This action creator is used to fetch all the versions of the assessment/assessment-item
  */
-export const getLatestAssessmentVersion = (entityUrn, workUrn, createdDate, previousData, type) => (dispatch) => {
+export const getLatestAssessmentVersion = (entityUrn, workUrn, createdDate, previousData, type,itemData) => (dispatch) => {
     let url = `${config.ASSESSMENT_ENDPOINT}entity/${entityUrn}/versions`;
     return axios.get(url, {
         headers: {
@@ -157,7 +154,6 @@ export const getLatestAssessmentVersion = (entityUrn, workUrn, createdDate, prev
                     type: UPDATE_ELM_ITEM_ID,
                     payload: {
                         currentWorkUrn: previousData.currentWorkUrn,
-                        // updateElmItemId: assessmentLatestWorkURN,
                         updatedItem : {
                             oldItemId: workUrn,
                             latestItemId : assessmentLatestWorkURN
@@ -165,19 +161,8 @@ export const getLatestAssessmentVersion = (entityUrn, workUrn, createdDate, prev
                     }
                 })
             }
-            // else if(type == 'fromEditButton'){
-            //     dispatch({
-            //         type: LATEST_ELM_ITEM_ID,
-            //         payload: {
-            //             updatedItem : {
-            //                 oldItemId: workUrn,
-            //                 latestItemId : assessmentLatestWorkURN
-            //             }
-            //         }
-            //     })
-            // }
             else if (newVersions && newVersions.length == 1) {   //Show Approved Status
-                dispatch(checkAssessmentStatus(newVersions[0].versionUrn, 'fromNextVersion', workUrn, previousData))//"elmVersionIsClean": true
+                dispatch(checkAssessmentStatus(newVersions[0].versionUrn, 'fromNextVersion', workUrn, previousData, itemData))//"elmVersionIsClean": true
             } else if (newVersions && newVersions.length > 1) {  //Show UPDATE button
                 dispatch({
                     type: GET_ASSESSMENT_VERSIONS,
