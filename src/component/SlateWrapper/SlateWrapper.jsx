@@ -825,7 +825,7 @@ class SlateWrapper extends Component {
                         togglePopup={this.deleteRejected}
                         active={true}
                         saveContent={this.deleteAccepted}
-                        saveButtonText='Okay'
+                        saveButtonText='OK'
                         dialogText={SINGLE_CONTAINER_DELETE}
                         tocDelete={true}
                         itemName = {containerName}
