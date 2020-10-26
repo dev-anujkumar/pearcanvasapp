@@ -149,7 +149,7 @@
     background-color: #def8ff;
   }
   .navigation-content:active .navigation-button{ 
-    border: solid 1px #005a70;;
+    border: solid 1px #005a70;
   }
   .navigation-button.next{
     padding: 40px 2px 40px 12px;
