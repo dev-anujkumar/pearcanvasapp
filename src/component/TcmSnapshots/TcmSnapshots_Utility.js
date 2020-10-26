@@ -679,6 +679,9 @@ export const setFigureElementContentSnapshot = (element) => {
         credits: element.html.credits || "" 
     }
     let programLang = element.figuredata.programlanguage && element.figuredata.programlanguage != 'Select' ? element.figuredata.programlanguage : ''
+    let toggleSyntaxhighlight = element.figuredata.syntaxhighlighting == true ? 'ON' : 'OFF'
+    let toggleNumber = element.figuredata.numbered == true ? 'ON' : 'OFF'
+    let startNumberField = element.figuredata.startNumber ? "1" : "NA"
     switch (element.figuretype) {
         case "video":
             snapshotData["metadata"] = element.figuredata.videoid.trim().length ? `<p>${element.figuredata.videoid}</p>` : "<p><br></p>"
@@ -687,11 +690,13 @@ export const setFigureElementContentSnapshot = (element) => {
             snapshotData["metadata"] = element.figuredata.audioid.trim().length ? `<p>${element.figuredata.audioid}</p>` : "<p><br></p>"
             break;
         case "codelisting":             // for BCE
-            snapshotData["codeblock"] = prepareCodeBlock(element)
-            snapshotData["metadata"] = `<p>Syntax-highlighting: ${element.figuredata.syntaxhighlighting || true}</p><p>Language: ${programLang}</p><p>Line Number: ${element.figuredata.numbered || true}</p><p>Start numbering from: ${element.figuredata.startNumber || "1"}</p>`
+            snapshotData["codeblock"] =  element.html.preformattedtext ? element.html.preformattedtext : "<p><br></p>"
+            // element.html.preformattedtext ? element.html.preformattedtext : "<p><br></p>"
+            //  prepareCodeBlock(element)
+            snapshotData["metadata"] = `<p><span class='bce-metadata'>Syntax-highlighting: </span>${toggleSyntaxhighlight}</p><p><span class='bce-metadata'>Language: </span>${programLang}</p><p><span class='bce-metadata'>Line Number: </span>${toggleNumber}</p><p><span class='bce-metadata'>Start numbering from: </span>${startNumberField}</p>`
             break;
         case "authoredtext":            // for MML
-            snapshotData["mathblock"] = element.figuredata.elementdata.text ? `<p>${element.figuredata.elementdata.text}</p>` : "<p><br></p>"
+            snapshotData["metadata"] = element.figuredata.elementdata.text ? `<p>${element.figuredata.elementdata.text}</p>` : "<p><br></p>"
             break;
         case "image":
         case "table":
@@ -707,17 +712,18 @@ export const setFigureElementContentSnapshot = (element) => {
  * Prepares code block text for BCE
  * @param {Object} element Figure element data
  */
-const prepareCodeBlock = (element) => {
-    let codeBlockLength = element.figuredata.preformattedtext && element.figuredata.preformattedtext.length || 0
-    let codeblock = []
-    let lineBlock
-    codeBlockLength && element.figuredata.preformattedtext.forEach(blockLine => {
-        lineBlock = `<span>${blockLine.text ? blockLine.text : '<br>'}</span>`
-        codeblock.push(lineBlock)
-    });
+//  const prepareCodeBlock = (element) => {
+//     let codeBlockLength = element.figuredata.preformattedtext && element.figuredata.preformattedtext.length || 0
+//     let codeblock = []
+//     let lineBlock
+//     codeBlockLength && element.figuredata.preformattedtext.forEach(blockLine => {
+//         lineBlock = `<p>${blockLine.text ? blockLine.text : '<br>'}</p>`
+//         codeblock.push(lineBlock)
+//     });
 
-     return `<p>${codeblock}</p>`
-}
+//     codeblock = `${codeblock}`
+//     return codeblock ? codeblock.replace(/,/g, "") : `<p><br></p>`
+// }
 
 const setContentSnapshot = (element, elementDetails, actionStatus, CurrentSlateStatus) => {
     let snapshotData = "";
