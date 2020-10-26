@@ -67,7 +67,6 @@
     position: absolute;
     max-height:220px;
     overflow:auto;
-    position: absolute;
     width: 180px;
     margin-top: 9px;
     z-index: 9;
@@ -278,10 +277,6 @@ div.elm-update-button b.elm-update-button-text {
   padding-top: 9px;
   margin-top: 10px;
   padding-bottom: 11px;
-  /* width: 200px; */
-  /* height: 16px; */
-  text-align: center;
-  /* text-transform: uppercase; */
   font-family: 'Open Sans', sans-serif;
   font-size: 14px;
   font-weight: 500;

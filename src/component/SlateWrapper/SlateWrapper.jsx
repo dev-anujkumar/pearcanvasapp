@@ -451,7 +451,7 @@ class SlateWrapper extends Component {
         }
         else{
             if(config.savingInProgress){
-                window.tinymce.activeEditor.selection.placeCaretAt(0, 0);
+                window.tinymce && window.tinymce.activeEditor && window.tinymce.activeEditor.selection.placeCaretAt(0, 0);
                 this.prohibitPropagation(event)
             }
             this.props.getSlateLockStatus(config.projectUrn, config.slateManifestURN)
@@ -825,7 +825,7 @@ class SlateWrapper extends Component {
                         togglePopup={this.deleteRejected}
                         active={true}
                         saveContent={this.deleteAccepted}
-                        saveButtonText='Okay'
+                        saveButtonText='OK'
                         dialogText={SINGLE_CONTAINER_DELETE}
                         tocDelete={true}
                         itemName = {containerName}

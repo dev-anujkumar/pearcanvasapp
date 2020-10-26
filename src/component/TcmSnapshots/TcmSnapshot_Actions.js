@@ -1,6 +1,5 @@
 import axios from 'axios';
 import config from '../../config/config';
-import store from '../../appstore/store.js';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { GET_TCM_RESOURCES, AUTHORING_ELEMENT_UPDATE } from '../../constants/Action_Constants';
 

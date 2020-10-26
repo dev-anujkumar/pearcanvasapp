@@ -51,7 +51,7 @@ class PopUp extends React.Component {
             )
         }
         else if (props.tocDelete) {
-            if (props.saveButtonText === 'Okay') {
+            if (props.saveButtonText === 'OK') {
                 return (
                     <div className={`dialog-buttons ${props.tocDeleteClass}`}>
                         <span className="save-button" onClick={props.saveContent}>{props.saveButtonText}</span>
