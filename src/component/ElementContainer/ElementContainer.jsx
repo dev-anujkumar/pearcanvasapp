@@ -47,8 +47,8 @@ import MultiColumnContainer from "../MultiColumnElement"
 import {handleTCMData} from '../TcmSnapshots/TcmSnapshot_Actions.js';
 import CopyUrn from '../CopyUrn';
 import { OnCopyContext } from '../CopyUrn/copyUtil.js'
-import { openElmAssessmentPortal, checkAssessmentStatus, resetAssessmentStore, fetchLatestAssessmentItemId } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
-import {handleElmPortalEvents} from '../ElementContainer/AssessmentEventHandling.js';
+import { openElmAssessmentPortal, checkAssessmentStatus, resetAssessmentStore } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
+import { handleElmPortalEvents } from '../ElementContainer/AssessmentEventHandling.js';
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -1379,7 +1379,6 @@ class ElementContainer extends Component {
         let btnClassName = this.state.btnClassName;
         let bceOverlay = "";
         let elementOverlay = '';
-        // let showEditButton = element.type == elementTypeConstant.ASSESSMENT_SLATE && element.elementdata && element.elementdata.assessmentformat == 'puf' && element.elementdata.assessmentid ? true : false;
         let showEditButton = this.showElmEditButton().fullAssessment || this.showElmEditButton().embeddedAssessment ? true : false
         if (!hasReviewerRole() && this.props.permissions && !(this.props.permissions.includes('access_formatting_bar')||this.props.permissions.includes('elements_add_remove')) ) {
             elementOverlay = <div className="element-Overlay disabled" onClick={() => this.handleFocus()}></div>
@@ -1627,13 +1626,13 @@ const mapDispatchToProps = (dispatch) => {
         deleteShowHideUnit: (id, type, contentUrn, index, eleIndex, parentId, cb, parentElement, parentElementIndex) => {
             dispatch(deleteShowHideUnit(id, type, contentUrn, index, eleIndex, parentId, cb, parentElement, parentElementIndex))
         },
-        createPoetryUnit: (poetryField, parentElement, cb, popupElementIndex, slateManifestURN) => {
-            dispatch(createPoetryUnit(poetryField, parentElement, cb, popupElementIndex, slateManifestURN))
+        createPoetryUnit: (poetryField, parentElement,cb, popupElementIndex, slateManifestURN) => {
+            dispatch(createPoetryUnit(poetryField, parentElement,cb, popupElementIndex, slateManifestURN))
         },
         handleTCMData: () => {
             dispatch(handleTCMData())
         },
-        getElementStatus: (elementWorkId, index) => {
+        getElementStatus:(elementWorkId, index) => {
             dispatch(getElementStatus(elementWorkId, index))
         },
         openElmAssessmentPortal: (dataToSend) => {
@@ -1644,12 +1643,10 @@ const mapDispatchToProps = (dispatch) => {
         },
         resetAssessmentStore: () => {
             dispatch(resetAssessmentStore())
-        },
-        fetchLatestAssessmentItemId: (assessmentId, assessmentItemId) => {
-            dispatch(fetchLatestAssessmentItemId(assessmentId, assessmentItemId))
         }
     }
 }
+
 const mapStateToProps = (state) => {
     return {
         elemBorderToggle: state.toolbarReducer.elemBorderToggle,

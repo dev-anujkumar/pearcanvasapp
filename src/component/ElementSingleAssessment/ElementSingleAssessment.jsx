@@ -443,8 +443,8 @@ class ElementSingleAssessment extends Component {
                 <header>
                     <h4 className={this.state.elementType !== "tdx" ? "heading4AssessmentItemNumberLabel" : "heading4TdxAssessmentItemNumberLabel"} id="single_assessment_title">{(this.state.elementType !== PUF && this.state.elementType !== LEARNOSITY) ? "" : "Assessment Title:"}{this.state.assessmentTitle}</h4>
                 </header>
+                <div className="singleAssessmentIdInfo" ><strong>{(this.state.elementType !== PUF && this.state.elementType !== LEARNOSITY) ? "ID: " : "Product ID: "}</strong>{this.state.assessmentId ? this.state.assessmentId : (model.figuredata.elementdata ? model.figuredata.elementdata.assessmentid : "")}</div>
                 <div className={`singleAssessmentItemIdInfo ${(this.state.elementType !== PUF && this.state.elementType !== LEARNOSITY)? '':'puf-assessment-id'}`} ><strong>ITEM ID: </strong>{this.state.assessmentItemId?this.state.assessmentItemId:(model.figuredata.elementdata ? model.figuredata.elementdata.assessmentitemid : "")}</div>                             
-                <div className={`singleAssessmentItemIdInfo `} ><strong>ITEM ID: </strong>{this.state.assessmentItemId ? this.state.assessmentItemId : (model.figuredata.elementdata ? model.figuredata.elementdata.assessmentitemid : "")}</div>
                 <div className="singleAssessment_Dropdown_Container">
                     <div className="single-assessment-usagetype-container">
                         <div className="singleAssessment_Dropdown_SelectLabel">Select usage type<span className="required">*</span></div>
