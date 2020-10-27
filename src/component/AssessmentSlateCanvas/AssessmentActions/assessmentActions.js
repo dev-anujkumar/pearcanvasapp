@@ -268,7 +268,7 @@ export const checkEntityUrn =  (assessmentID) => async (dispatch) => {
             console.log("error in finding entityurn")
         })
     }))
-    if (workIds && workIds.length > 0 && workIds[0] === workIds[1]) {
+    if (workIds.length > 1 && workIds[0] === workIds[1]) {
         dispatch(updateAssessmentVersion(assessmentID[0], assessmentID[1], "assessments"))
     }
 
