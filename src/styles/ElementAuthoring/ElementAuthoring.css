@@ -50,16 +50,10 @@ h3.pullQuoteNumeroUno{
 }
 blockquote.blockquoteMarginaliaAttr {
     padding: 1.0em 0.25em 1.5em;
-    pointer-events: none!important;
 }
-p[data-mce-bogus=“all”] {
+p[data-mce-bogus="all"] {
     display: none!important
 }
 blockquote.blockquoteMarginalia {
     padding: 16px 0 20px 1.5em !important;
-    pointer-events: none!important;
-}
-p.blockquoteTextCredit,
-p.paragraphNummerEins{
-    pointer-events: all!important;
-}
+ }
