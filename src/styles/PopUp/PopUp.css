@@ -51,12 +51,8 @@
 
   .dialog-window,.dialog-window.single_assessment{
     color: #007fa3;
-    font-weight: bold;
     font-family: Helvetica, sans-serif;
     font-size: 16px;
-    font-weight: normal;
-    font-stretch: normal;
-    font-style: normal;
     line-height: 20px;
     letter-spacing: normal;
   }
@@ -133,7 +129,6 @@
     border: 0;
     float: right;
     font-family: inherit;
-    font-size: .8em;
     background: #005a70;
     color: #fff;
     cursor: pointer;
