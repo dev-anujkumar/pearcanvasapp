@@ -29,11 +29,44 @@ const CopyUrn = props => {
         e.stopPropagation();
     }
 
+    const performCutCopy = (event, componentProps, type) => {
+        event.stopPropagation()
+        let elementDetailsToSet = {
+            element: {
+                ...componentProps.element
+            },
+            operationType: type,
+            activeAnimation: true
+        }
+        componentProps.setElementDetails(elementDetailsToSet)
+        componentProps.toggleCopyMenu(false)
+    }
+    
+    const renderCutCopyOption = (componentProps) => {
+        const acceptedTypes = ["element-authoredtext", "element-blockfeature", "element-learningobjectives"]
+        if (!componentProps.inContainer && acceptedTypes.includes(componentProps.element.type)) {
+            return (
+                <>
+                    <div className="copyUrn" onClick={(e) => performCutCopy(e, componentProps, "copy")}>
+                        Copy Selection
+                    </div>
+                    <div className="copyUrn" onClick={(e) => performCutCopy(e, componentProps, "cut")}>
+                        Cut Selection
+                    </div>
+                </>
+            )
+        }
+        return null
+    }
+
+    const positionStyle = { left: `${props.copyClickedX}px`, top: `${props.copyClickedY}px` }
     return (
-        <div>
-            <div style={{ left: `${props.copyClickedX}px`, top: `${props.copyClickedY}px` }} className={'copyUrn'} onClick={(e) => { copyToClipBoard(e, props.elementId) }}>
-                Copy {props.elementId.includes('work') ? 'Work' : 'Manifest'} URN
+        <div style={positionStyle} className="copy-menu-container">
+            <div className="copy-menu">
+                <div className="copyUrn" onClick={(e) => { copyToClipBoard(e, props.element.id || props.element.versionUrn) }}>Copy {props.element.id.includes('work') ? 'Work' : 'Manifest'} URN</div>
+                {renderCutCopyOption(props)}
             </div>
+            
             <div className='blockerBgDiv' tabIndex="0" onClick={(e) => { hideAPOOnOuterClick(e) }}></div>
         </div>
     )
