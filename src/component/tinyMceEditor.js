@@ -548,6 +548,16 @@ export class TinyMceEditor extends Component {
                 case 'mceToggleFormat':
                     if (e.value === "superscript") {
                         let selectedElement = editor.selection.getNode();
+                        if(selectedElement.tagName.toLowerCase() !== 'sup' && selectedElement.tagName.toLowerCase() !== 'a') {
+                            let innerHTML = selectedElement.textContent;
+                            let regExp = /[a-zA-Z0-9]/g;
+                            if(!regExp.test(innerHTML) && selectedElement.lastChild.tagName && selectedElement.lastChild.tagName === 'SUP') {
+                                let anchorElement = selectedElement.lastChild.getElementsByTagName('A');
+                                if(anchorElement.length) {
+                                    selectedElement = anchorElement[0];
+                                }
+                            }
+                        }
                         if (selectedElement.tagName.toLowerCase() === 'sup' || (selectedElement.tagName.toLowerCase() === 'a' && selectedElement.parentNode.tagName.toLowerCase() === 'sup')) {
                             let childNodes = selectedElement.getElementsByTagName('A');
                             if (childNodes.length || selectedElement.tagName.toLowerCase() === 'a') {
