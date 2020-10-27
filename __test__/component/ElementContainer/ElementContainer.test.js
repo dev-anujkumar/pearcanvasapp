@@ -5,6 +5,7 @@ import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 import { comments } from '../../../fixtures/commentPanelData.js'
 import thunk from 'redux-thunk';
+import { JSDOM } from 'jsdom';
 const middlewares = [thunk];
 import config from "../../../src/config/config.js"
 import wipData from './wipData';
@@ -72,6 +73,15 @@ jest.mock('./../../../src/component/ElementContainer/ElementContainer_Actions.js
         }
     }
 })
+global.document = (new JSDOM()).window.Element;
+if (!global.Element.prototype.hasOwnProperty("innerText")) {
+    Object.defineProperty(global.Element.prototype, 'innerText', {
+        get() {
+            return this.textContent;
+        },
+    });
+
+}
 const mockStore = configureMockStore(middlewares);
 const store = mockStore({
     appStore: {

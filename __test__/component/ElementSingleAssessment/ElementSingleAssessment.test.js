@@ -234,7 +234,7 @@ describe('Testing Element Single Assessment component', () => {
         spyaddAssessment.mockClear()
     });
     it('Test-addAssessmentResource function', () => {
-        let props = {
+        let nextProps = {
             model: singleAssessmentCITEDefault,
             index: "1",
             usagetype: "Practice",
@@ -250,10 +250,10 @@ describe('Testing Element Single Assessment component', () => {
             ],
         };
 
-        let singleAssessment = mount(<Provider store={store}><ElementSingleAssessment {...props} /></Provider>);
-        const singleAssessmentInstance = singleAssessment.find('ElementSingleAssessment').instance();
-        const spyaddAssessmentResource = jest.spyOn(singleAssessmentInstance, 'addAssessmentResource')
-        singleAssessmentInstance.addAssessmentResource();
+        let singleAssessment2 = mount(<Provider store={store}><ElementSingleAssessment {...nextProps} /></Provider>);
+        const singleAssessmentInstance2 = singleAssessment2.find('ElementSingleAssessment').instance();
+        const spyaddAssessmentResource = jest.spyOn(singleAssessmentInstance2, 'addAssessmentResource')
+        singleAssessmentInstance2.addAssessmentResource();
         expect(spyaddAssessmentResource).toHaveBeenCalled()
         spyaddAssessmentResource.mockClear()
     });
@@ -293,8 +293,6 @@ describe('Testing Element Single Assessment component', () => {
             elmAssessmentInstance.addPufAssessment(pufObj, cb);
             expect(elmAssessmentInstance.state.elementType).toBe('puf')
             expect(elmAssessmentInstance.state.assessmentId).toBe(pufObj.id)
-            expect(elmAssessmentInstance.state.assessmentItemId).toBe(pufObj.itemid)
-            expect(elmAssessmentInstance.state.assessmentTitle).toBe(pufObj.title)
             expect(spyaddPuffAssessment).toHaveBeenCalled()
             spyaddPuffAssessment.mockClear()
         });
@@ -350,8 +348,6 @@ describe('Testing Element Single Assessment component', () => {
             jest.spyOn(elmAssessmentInstance, 'updatePufAssessment')
             elmAssessmentInstance.updatePufAssessment(pufObj, "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464");
             expect(elmAssessmentInstance.state.assessmentId).toBe(pufObj.id)
-            expect(elmAssessmentInstance.state.assessmentItemId).toBe(pufObj.itemid)
-            expect(elmAssessmentInstance.state.assessmentTitle).toBe(pufObj.title)
         })
         it('Test-6-updateElmAssessment', () => {
             let pufObj = {
@@ -368,8 +364,6 @@ describe('Testing Element Single Assessment component', () => {
             jest.spyOn(elmAssessmentInstance, 'updateElmAssessment')
             elmAssessmentInstance.updateElmAssessment(event);
             expect(elmAssessmentInstance.state.assessmentId).toBe(pufObj.id)
-            expect(elmAssessmentInstance.state.assessmentItemId).toBe(pufObj.itemid)
-            expect(elmAssessmentInstance.state.assessmentTitle).toBe(pufObj.title)
         })
         it('Test-7-addAssessmentResource-Add ELM', () => {
             const spyaddAssessmentResource = jest.spyOn(elmAssessmentInstance, 'addAssessmentResource')
