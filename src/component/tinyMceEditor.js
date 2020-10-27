@@ -1064,25 +1064,25 @@ export class TinyMceEditor extends Component {
                 }
             }
             if (activeElement.nodeName === "CODE") {
-                let key = e.keyCode || e.which;
-                if (key != undefined && (key === 8 || key === 46)) {
-                    spanHandlers.handleBackSpaceAndDeleteKyeDown(editor, key, e, 'codeNoHighlightLine');
+                let tempKey = e.keyCode || e.which;
+                if (tempKey != undefined && (tempKey === 8 || tempKey === 46)) {
+                    spanHandlers.handleBackSpaceAndDeleteKyeDown(editor, tempKey, e, 'codeNoHighlightLine');
                 } else {
-                    if (key != undefined && key === 9) {
+                    if (tempKey != undefined && tempKey === 9) {
                         e.preventDefault();
                     } else if (e.ctrlKey) {
-                        if (key != undefined && (key === 66 || key === 98 || key === 73 || key === 105 || key === 85 || key === 117)) {
+                        if (tempKey != undefined && (tempKey === 66 || tempKey === 98 || tempKey === 73 || tempKey === 105 || tempKey === 85 || tempKey === 117)) {
                             this.gRange = editor.selection.getRng();
                         }
                     }
                 }
             }
             if (activeElement.nodeName == "DIV" && this.props.element.type === 'stanza') {
-                let key = e.keyCode || e.which;
-                if (key != undefined && (key === 8 || key === 46)) {
-                    spanHandlers.handleBackSpaceAndDeleteKyeDown(editor, key, e, 'poetryLine');
+                let tempKey = e.keyCode || e.which;
+                if (tempKey != undefined && (tempKey === 8 || tempKey === 46)) {
+                    spanHandlers.handleBackSpaceAndDeleteKyeDown(editor, tempKey, e, 'poetryLine');
                 } else {
-                    if (key != undefined && key === 9) {
+                    if (tempKey != undefined && tempKey === 9) {
                         e.preventDefault();
                     }
                 }
