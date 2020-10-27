@@ -9,68 +9,44 @@ class FigureCard extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            learningType: {
-                "accounting-sims": "Accounting Sims",
-                "socialexplorer-pathways": "Adaptive Pathways",
-                "criminal-justice-sims": "Criminal Justice Sims",
-                "video-library": "Video Library",
-                "economics-sims": "Economic Sims",
-                "socialexplorer-explorations": "Guided Data Explorations",
-                "helpdesk": "HelpDesk",
-                "hospitality-sims": "Hospitality Sims",
-                "information-technology-sims": "Information Technology Sims",
-                "qual-sims": "Qualitative Business Sims",
-                "soundbytes": "Sound Bytes",
-                "personal-finance-experience": "Personal Finance",
-                "political-science-sims":"Political Science Sims",
-                "Psychology Sims": "Psychology Sims",
-                "video-submission": "Shared Media",
-                "video-quiz": "Media Quiz",
-                "myvirtual-child": "MyVirtualChild",
-                "myvirtual-life": "MyVirtualLife",
-                "socialexplorer-surveys": "Surveys and Inventories",
-                "writingsolutions": "Writing Solutions"
-            }
         }
     }
 
-    figureCardFunction =() =>{
+    figureCardFunction = () => {
         this.props.selectedFigure(this.props.apiResultObject)
     }
 
     render() {
-
+        const { forInputKey, apiResultObject, selectedResult, capitalizeString } = this.props
         return (
-            <tr className={(this.props.selectedResult && (this.props.selectedResult.learningtemplateUrn == this.props.apiResultObject.learningtemplateUrn)) ? "modalCard highlightSelectedRow" : "modalCard"} >
+            <tr className={(selectedResult && (selectedResult.learningtemplateUrn == apiResultObject.learningtemplateUrn)) ? "modalCard highlightSelectedRow" : "modalCard"} >
                 <td className="tableRowData">
                     <input
                         type="radio"
-                        value={this.props.apiResultObject.learningtemplateUrn}
+                        value={apiResultObject.learningtemplateUrn}
                         name="radioElem"
                         className="inputElem learningRadioButton"
-                        checked={this.props.selectedResult.learningtemplateUrn === this.props.apiResultObject.learningtemplateUrn}
+                        checked={selectedResult.learningtemplateUrn === apiResultObject.learningtemplateUrn}
                         onChange={this.figureCardFunction}
-                        id={this.props.forInputKey}
-                        key={this.props.apiResultObject.learningtemplateUrn}
+                        id={forInputKey}
+                        key={apiResultObject.learningtemplateUrn}
                     />
-                {/* </td>
-                <td className="tableRow"> */}
-                    <p className="tableRow">{this.state.learningType[this.props.apiResultObject.type]}</p>
+                    <p className="tableRow">{capitalizeString(apiResultObject.type)}</p>
                 </td>
                 <td className="tableRowData">
-                    <p className="tableRow" htmlFor={this.props.forInputKey}>{this.props.apiResultObject.disciplines.en.join(", ")}</p>
+                    <p className="tableRow" htmlFor={forInputKey}>{apiResultObject.disciplines.en.join(", ")}</p>
                 </td>
                 <td className="tableRowData">
-                    <p className="tableRow" htmlFor={this.props.forInputKey}>{this.props.apiResultObject.label.en}</p>
+                    <p className="tableRow" htmlFor={forInputKey}>{apiResultObject.label.en}</p>
                 </td>
                 <td className="tableRowData">
-                    <p className="tableRow" htmlFor={this.props.forInputKey}>{this.props.apiResultObject.dateModified}</p>
+                    <p className="tableRow" htmlFor={forInputKey}>{apiResultObject.dateModified}</p>
                 </td>
                 <td className="tableRowData">
-                    <p className="tableRow" htmlFor={this.props.forInputKey}>{this.props.apiResultObject.keywords && this.props.apiResultObject.keywords.en ? this.props.apiResultObject.keywords.en.join(", ") : "-"}</p>
+                    <p className="tableRow" htmlFor={forInputKey}>{apiResultObject.keywords && apiResultObject.keywords.en ? apiResultObject.keywords.en.join(", ") : "-"}</p>
                 </td>
                 <td className="tableRowData">
-                    <p className="tableRow" htmlFor={this.props.forInputKey}>{this.props.apiResultObject.templateid ? this.props.apiResultObject.templateid : "-"}</p>
+                    <p className="tableRow" htmlFor={forInputKey}>{apiResultObject.templateid ? apiResultObject.templateid : "-"}</p>
                 </td>
             </tr>
         );

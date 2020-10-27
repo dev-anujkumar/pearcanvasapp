@@ -25,12 +25,14 @@ class ApiResults extends React.Component {
     apiResultsJsx = (apiResponseForBody, selectedFigure, selectedResult) => {
         if (apiResponseForBody.length >= 1) {
             let cardForApiResults = apiResponseForBody.map((value, index) => {
-                return <FigureCard 
-                forInputKey={index} 
-                key={index} 
-                apiResultObject={value} 
-                selectedResult={selectedResult} 
-                selectedFigure={selectedFigure}/>
+                return <FigureCard
+                    forInputKey={index}
+                    key={index}
+                    apiResultObject={value}
+                    selectedResult={selectedResult}
+                    selectedFigure={selectedFigure}
+                    capitalizeString={this.props.capitalizeString}
+                />
             });
             return cardForApiResults;
         } else {
