@@ -5,11 +5,10 @@ import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import {
     fetchSlateData
 } from '../CanvasWrapper/CanvasWrapper_Actions';
-import { AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP,DELETE_SHOW_HIDE_ELEMENT, GET_TCM_RESOURCES, STORE_OLD_ASSET_FOR_TCM } from "./../../constants/Action_Constants";
-import { prepareTcmSnapshots, fetchElementWipData, checkContainerElementVersion, fetchManifestStatus } from '../TcmSnapshots/TcmSnapshots_Utility.js';
+import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP,DELETE_SHOW_HIDE_ELEMENT, STORE_OLD_ASSET_FOR_TCM } from "./../../constants/Action_Constants";
 import { fetchPOPupSlateData} from '../../component/TcmSnapshots/TcmSnapshot_Actions.js'
-import { elementTypeTCM, containerType, allowedFigureTypesForTCM } from "./ElementConstants";
-import * as elementContainerHelpers from "./ElementContainer_helpers";
+import { processAndStoreUpdatedResponse, updateStoreInCanvas } from "./ElementContainerUpdate_helpers";
+import { onDeleteSuccess } from "./ElementContainerDelete_helpers";
 
 export const addComment = (commentString, elementId) => (dispatch) => {
     let url = `${config.STRUCTURE_API_URL}narrative-api/v2/${elementId}/comment/`
@@ -55,7 +54,7 @@ export const addComment = (commentString, elementId) => (dispatch) => {
         })
 }
 
-export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, index, poetryData, element) => (dispatch, getState) => {
+export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, index, poetryData, element) => async (dispatch, getState) => {
 
     const prepareDeleteRequestData = (elementType) => {
         switch (elementType) {
@@ -86,7 +85,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
     let indexToBeSent = index || "0"
     _requestData = { ..._requestData, index: indexToBeSent.toString().split('-')[indexToBeSent.toString().split('-').length - 1], elementParentEntityUrn }
 
-    return axios.post(`${config.REACT_APP_API_URL}v1/slate/deleteElement`,
+    const deleteElemData = await axios.post(`${config.REACT_APP_API_URL}v1/slate/deleteElement`,
         JSON.stringify(_requestData),
         {
             headers: {
@@ -94,142 +93,26 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
                 "PearsonSSOSession": config.ssoToken
             }
         }
-    ).then(deleteElemData => {
-        if (deleteElemData.status === 200) {
-            sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
-            const parentData = getState().appStore.slateLevelData;
-            const deleteParentData = JSON.parse(JSON.stringify(parentData));
-
-            /** [PCAT-8289] -------------------------- TCM Snapshot Data handling ----------------------------*/
-            let deleteBodymatter = deleteParentData[config.slateManifestURN].contents.bodymatter;
-            if (elementTypeTCM.indexOf(type) !== -1 || containerType.indexOf(type) !== -1) {
-                let wipData = fetchElementWipData(deleteBodymatter, index, type, contentUrn, "delete")
-                let containerElement = {
-                    asideData: asideData,
-                    parentUrn: parentUrn,
-                    poetryData: poetryData,
-                    parentElement: wipData && wipData.type == 'popup' ? wipData : undefined,
-                    metaDataField: wipData && wipData.type == 'popup' && wipData.popupdata['formatted-title'] ? 'formattedTitle' : undefined,
-                    sectionType : wipData && wipData.type == 'popup' ? 'postertextobject' : undefined
-                }
-                let deleteData = {
-                    wipData: wipData,
-                    currentParentData: deleteParentData,
-                    bodymatter: deleteBodymatter,
-                    newVersionUrns: deleteElemData.data,
-                    index:index
-                }
-                tcmSnapshotsForDelete(deleteData, type, containerElement)
-            }
-            /**-----------------------------------------------------------------------------------------------*/
-
-            const newParentData = JSON.parse(JSON.stringify(parentData));
-            let currentSlateData = newParentData[config.slateManifestURN];
-            if (currentSlateData.status === 'approved') {
-                if(currentSlateData.type==="popup"){
-                    sendDataToIframe({ 'type': "tocRefreshVersioning", 'message' :true });
-                    sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
-                    dispatch(fetchSlateData(currentSlateData.id, currentSlateData.contentUrn, 0, currentSlateData, ""));
-                }
-                else{
-                    sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
-                    sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
-                }
-
-            return false;
+    )
+    if (deleteElemData.status === 200) {
+        const deleteArgs = {
+            deleteElemData: deleteElemData.data,
+            dispatch,
+            getState,
+            elmId,
+            type,
+            parentUrn,
+            asideData,
+            contentUrn,
+            index,
+            poetryData,
+            fetchSlateData
         }
-
-        if (parentUrn && parentUrn.elementType == "group") {
-            let elIndex = index.toString().split('-') 
-            newParentData[config.slateManifestURN].contents.bodymatter[elIndex[0]].groupeddata.bodymatter[elIndex[1]].groupdata.bodymatter.splice(elIndex[2], 1)
-        } else {
-            let bodymatter = newParentData[config.slateManifestURN].contents.bodymatter
-            bodymatter.forEach((element, key) => {
-                if (element.id === elmId) {
-                    bodymatter.splice(key, 1);
-                } else if (parentUrn && parentUrn.elementType == "element-aside") {
-                    if (element.id === parentUrn.manifestUrn) {
-                        element.elementdata.bodymatter.forEach((ele, indexInner) => {
-                            if (ele.id === elmId) {
-                                element.elementdata.bodymatter.splice(indexInner, 1);
-                            }
-                        })
-                    }
-                } else if(poetryData && poetryData.type == 'poetry') {
-                    if (element.id === poetryData.parentUrn) {
-                        element.contents.bodymatter.forEach((ele, indexInner) => {
-                            if (ele.id === elmId) {
-                                element.contents.bodymatter.splice(indexInner, 1);
-                            }
-                        })
-                    }
-                }
-                else if (parentUrn && parentUrn.elementType == "manifest") {
-                    if (element.id === asideData.id) {
-                        element.elementdata.bodymatter.forEach((ele) => {
-                            if (ele.id == parentUrn.manifestUrn) {
-                                ele.contents.bodymatter.forEach((el, indexInner) => {
-                                    if (el.id === elmId) {
-                                        ele.contents.bodymatter.splice(indexInner, 1);
-                                    }
-                                })
-                            }
-
-                        })
-                    }
-                } else if (parentUrn && parentUrn.elementType == "citations"){
-                    if (element.id === parentUrn.manifestUrn) {
-                        let innerIndex = index.split("-")
-                        element.contents.bodymatter.splice([innerIndex[1] - 1], 1)
-                    }
-                }
-            })
-        }
-
-
-            dispatch({
-                type: AUTHORING_ELEMENT_CREATED,
-                payload: {
-                    slateLevelData: newParentData
-                }
-            })
-              /** Delete Tcm data on element delete*/
-              if (config.tcmStatus) {
-                prepareTCMforDelete(elmId, dispatch,getState);
-            }
-        }
-
-    }).catch(error => {
-        showError(error, dispatch, "delete Api fail")
-    })
-}
-/** Delete Tcm data on element delete*/
-export function prepareTCMforDelete(elmId, dispatch,getState) {
-        let tcmData = getState().tcmReducer.tcmSnapshot;
-        tcmData = tcmData && tcmData.filter(function (tcm) {
-            return !tcm.elemURN.includes(elmId);
-        });
-        dispatch({
-            type: GET_TCM_RESOURCES,
-            payload: {
-                data: tcmData
-            }
-        });
-        if(tcmData.length > 0){
-            tcmData.some(function (elem) {
-                if (elem.txCnt > 0) {
-                    sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });
-                    return true;
-                }
-                else {
-                    sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'false' });
-                }
-            });
-        }
-        else{
-            sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'false' });
-        }
-        
+        onDeleteSuccess(deleteArgs)
+    } 
+    else {
+        showError(deleteElemData.status, dispatch, "delete Api failed")
+    }
 }
 
 function contentEditableFalse (updatedData){
@@ -243,41 +126,11 @@ function contentEditableFalse (updatedData){
 }
 
 /**
- * @function tcmSnapshotsForDelete
- * @description-This function is to prepare snapshot during create element process
- * @param {Object} elementUpdateData - Object containing required element data
- * @param {String} type - type of element
- * @param {Object} containerElement - Element Parent Data
- * @param {Function} dispatch to dispatch tcmSnapshots
-*/
-export const tcmSnapshotsForDelete = async (elementDeleteData, type, containerElement) => {
-    if (elementDeleteData.wipData.hasOwnProperty("figuretype") && !allowedFigureTypesForTCM.includes(elementDeleteData.wipData.figuretype)) {
-        return false
-    }
-    let actionStatus = {
-        action:"delete",
-        status:"pending",
-        fromWhere:"delete"
-    }
-    let parentType = ['element-aside', 'citations', 'poetry', 'groupedcontent', 'popup'];
-    let versionStatus = {};
-    let currentSlateData = elementDeleteData.currentParentData[config.slateManifestURN] 
-    if(config.isPopupSlate){
-        currentSlateData.popupSlateData = elementDeleteData.currentParentData[config.tempSlateManifestURN]
-    }
-    if ((parentType.indexOf(type) === -1)) {
-        versionStatus = fetchManifestStatus(elementDeleteData.bodymatter, containerElement, type);
-    }
-    containerElement = await checkContainerElementVersion(containerElement, versionStatus, currentSlateData);
-    prepareTcmSnapshots(elementDeleteData.wipData, actionStatus, containerElement, type,elementDeleteData.newVersionUrns,elementDeleteData.index);
-}
-
-/**
  * API to update the element data
  * @param {*} updatedData the updated content
  * @param {*} elementIndex index of the element on the slate
  */
-export const updateElement = (updatedData, elementIndex, parentUrn, asideData, showHideType, parentElement, poetryData) => (dispatch, getState) => {
+export const updateElement = (updatedData, elementIndex, parentUrn, asideData, showHideType, parentElement, poetryData) => async (dispatch, getState) => {
     if(hasReviewerRole()){
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
         return ;
@@ -297,7 +150,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         showHideType,
         parentElement
     }
-    elementContainerHelpers.updateStoreInCanvas(helperArgs)
+    updateStoreInCanvas(helperArgs)
     let updatedData1 = JSON.parse(JSON.stringify(updatedData))
     if (showHideType && showHideType === "postertextobject" && !(updatedData1.elementdata.text.trim().length || updatedData1.html.text.match(/<img/))) {
         updatedData1 = {
@@ -311,7 +164,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
             }
         }
     }
-    return axios.put(`${config.REACT_APP_API_URL}v1/slate/element`,
+    const response = await axios.put(`${config.REACT_APP_API_URL}v1/slate/element`,
     updatedData1,
         {
             headers: {
@@ -319,7 +172,8 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
                 "PearsonSSOSession": config.ssoToken
             }
         }
-    ).then(async response => {
+    )
+    try {
         const updateArgs = {
             updatedData,
             elementIndex,
@@ -334,16 +188,16 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
             fetchSlateData,
             responseData : response.data
         }
-        elementContainerHelpers.processAndStoreUpdatedResponse(updateArgs)
-        
-    }).catch(error => {
+        processAndStoreUpdatedResponse(updateArgs)
+    }   
+    catch(error) {
         dispatch({type: ERROR_POPUP, payload:{show: true}})
         config.savingInProgress = false
         config.popupCreationCallInProgress = false
         console.log("updateElement Api fail", error);
         config.isSavingElement = false
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
-    })
+    }
 }
 
 export const updateFigureData = (figureData, elementIndex, elementId, cb) => (dispatch, getState) => {
@@ -611,7 +465,7 @@ export const deleteShowHideUnit = (elementId, type, parentUrn, index,eleIndex, p
 export const showError = (error, dispatch, errorMessage) => {
     dispatch({type: ERROR_POPUP, payload:{show: true}})
     sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
-    console.log(errorMessage, error)
+    console.error(errorMessage, error)
 }
 
 const cascadeElement = (parentElement, dispatch, parentElementIndex) => {

@@ -1,21 +1,15 @@
 // Helper methods
 import { customEvent } from '../../js/utils';
 import { tcmSnapshotsForUpdate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
-import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
+import { sendDataToIframe } from '../../constants/utility.js';
 
 //Constants
-import { 
-    AUTHORING_ELEMENT_CREATED,
-    ADD_NEW_COMMENT,
+import {
     AUTHORING_ELEMENT_UPDATE,
-    CREATE_SHOW_HIDE_ELEMENT,
-    ERROR_POPUP,
     OPEN_GLOSSARY_FOOTNOTE,
-    DELETE_SHOW_HIDE_ELEMENT,
     GET_TCM_RESOURCES, 
-    STORE_OLD_ASSET_FOR_TCM 
-} from "./../../constants/Action_Constants";
-import { elementTypeTCM, containerType, allowedFigureTypesForTCM } from "./ElementConstants";
+} from "../../constants/Action_Constants";
+import { elementTypeTCM, allowedFigureTypesForTCM } from "./ElementConstants";
 import config from '../../config/config';
 
 export const updateNewVersionElementInStore = (paramObj) => {
@@ -540,7 +534,7 @@ export const updateStoreInCanvas = (params) => {
     if (config.tcmStatus) {
         if (elementTypeTCM.indexOf(updatedData.type) !== -1 && showHideType == undefined && (isPopupElement || noAdditionalFields)) {
             const tcmDataArgs = {
-                updatedDataID: updatedData.id, getState, dispatch, versionedData: responseData, updatedData
+                updatedDataID: updatedData.id, getState, dispatch, versionedData, updatedData
             }
             prepareDataForUpdateTcm(tcmDataArgs);
         }
