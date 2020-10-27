@@ -11,9 +11,7 @@ import {
     ELM_PORTAL_API_ERROR,
     RESET_ASSESSMENT_STORE,
     ASSESSMENT_CONFIRMATION_POPUP,
-    UPDATE_ELM_ITEM_ID,
-    LATEST_ELM_ITEM_ID,
-    CURRENT_ITEM_ID
+    UPDATE_ELM_ITEM_ID
 } from "../../../constants/Action_Constants";
 import { ELM_PORTAL_ERROR_MSG, AUTO_UPDATE_FAIL_ERROR } from '../AssessmentSlateConstants.js';
 
@@ -299,23 +297,4 @@ export const assessmentConfirmationPopup = (data) => {
         type: ASSESSMENT_CONFIRMATION_POPUP,
         payload: data
     }
-}
-
-export const updateElmItemOnCommitEvent = (value) => {
-    return {
-        type: 'UPDATE_ELM_ITEM',
-        payload: value
-    }
-}
-
-export const fetchLatestAssessmentItemId = (assessmentId, assessmentItemId) => dispatch => {
-    dispatch({
-        type: CURRENT_ITEM_ID,
-        payload: {
-            currentAssessment: {
-                id: assessmentId,
-                itemid: assessmentItemId
-            }
-        }
-    })
 }

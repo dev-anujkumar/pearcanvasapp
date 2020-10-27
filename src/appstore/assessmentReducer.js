@@ -4,14 +4,11 @@ import {
     GET_ASSESSMENT_VERSIONS,
     RESET_ASSESSMENT_STORE,
     ASSESSMENT_CONFIRMATION_POPUP,
-    UPDATE_ELM_ITEM_ID,
-    UPDATE_ELM_ITEM
+    UPDATE_ELM_ITEM_ID
 } from '../constants/Action_Constants';
 
 const INITIAL_STATE = {
-    usageTypeListData: {},
-    updateElmItemId: false,
-    currentAssessment:{}
+    usageTypeListData: {}
 }
 
 const INITIAL_ACTION = {
@@ -66,12 +63,6 @@ export default function assessmentReducer(state = INITIAL_STATE, action = INITIA
                 ...state,
                 [action.payload.currentWorkUrn]: {
                     ...state[action.payload.currentWorkUrn],
-                }
-            }
-            case UPDATE_ELM_ITEM: {
-                return {
-                    ...state,
-                    updateElmItemId: action.payload
                 }
             }
         default:

@@ -109,13 +109,11 @@ class ElementContainer extends Component {
         let { element } = this.props
         let embeddedAssessment = element.type == elementTypeConstant.FIGURE && element.figuretype == elementTypeConstant.FIGURE_ASSESSMENT && element.figuredata && element.figuredata.elementdata && element.figuredata.elementdata.assessmentformat == 'puf' && element.figuredata.elementdata.assessmentid ? true : false;
         if (this.props.element && embeddedAssessment === true) {
-            console.log('in didmount')
             let itemData = {
                 itemId: element.figuredata.elementdata.assessmentitemid,
                 parentId: element.figuredata.elementdata.assessmentid,
                 type: 'assessment-item',
             }
-            //  this.props.checkAssessmentStatus(element.figuredata.elementdata.assessmentid, 'fromAssessmentSlate')
             this.props.checkAssessmentStatus(element.figuredata.elementdata.assessmentid, 'fromElementContainer', "", "", itemData)
         }
         document.addEventListener('click',()=>{
@@ -1664,8 +1662,7 @@ const mapStateToProps = (state) => {
         showHideId: state.appStore.showHideId,
         tcmData: state.tcmReducer.tcmSnapshot,
         searchUrn: state.searchReducer.searchTerm,
-        currentSlateAncestorData : state.appStore.currentSlateAncestorData,
-        assessmentReducer : state.assessmentReducer
+        currentSlateAncestorData : state.appStore.currentSlateAncestorData
     }
 }
 

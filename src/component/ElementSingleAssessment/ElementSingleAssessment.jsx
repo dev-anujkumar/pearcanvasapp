@@ -298,6 +298,7 @@ class ElementSingleAssessment extends Component {
         }
     }
 
+    /*** @description - This function is to update ELM Assessment on Save Event from ELM Portal */
     updateElmOnSaveEvent = (props) => {
         const { assessmentReducer } = props;
         let latestItemId = (assessmentReducer[this.state.assessmentId].items && assessmentReducer[this.state.assessmentId].items[this.state.assessmentItemId])
@@ -308,6 +309,7 @@ class ElementSingleAssessment extends Component {
             hideTocBlocker(false);
         }))
     }
+
     /*** @description This function is to show Approved/Unapproved Status on AS */
     showElmVersionStatus = () => {
         let elmAssessment = this.props.assessmentReducer[this.state.assessmentId];
@@ -365,6 +367,7 @@ class ElementSingleAssessment extends Component {
         }
     }
 
+    /*** @description This function is used to handle Canvas Blocker on Update */
     showCanvasBlocker = (value) => {
         if (value == true) {
             showTocBlocker();
@@ -428,11 +431,9 @@ class ElementSingleAssessment extends Component {
     }
     /** ----------------------------------------------------------------------------------------------------------- */
 
-
     /*** @description - This function is for handling the different types of figure-element.
     * @param model object that defined the type of element
     */
-
     renderAssessmentType = (model) => {
         var assessmentJSX;
         let assessmentKeys = setAssessmentProperties(this.state.elementType)
@@ -477,6 +478,7 @@ class ElementSingleAssessment extends Component {
         </div>
         return assessmentJSX;
     }
+
     render() {
         const { model, index } = this.props;
         return (
