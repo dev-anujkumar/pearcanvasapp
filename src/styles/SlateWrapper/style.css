@@ -268,7 +268,7 @@ blockquote.blockquoteMarginaliaAttr,blockquote.blockquoteMarginalia{
 }
 .loadingpagenumber:after {
     content: ' .';
-    font: 3em/2% Impact;
+    font: 3em/2% Impact, sans-serif;
     animation: dots 1s steps(5, end) infinite;}
   
   @keyframes dots {
