@@ -328,7 +328,10 @@ export const slateLevelData = {
                             "show": [
                                 {
                                     "type": "element-authoredtext",
-                                    "id": "urn:pearson:work:e4495bc8-7fd5-4d9c-bd4c-1a879ad34019"
+                                    "id": "urn:pearson:work:e4495bc8-7fd5-4d9c-bd4c-1a879ad34019",
+                                    "elementdata": {
+                                        "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                                    }
                                 }
                             ],
                             "hide": [
