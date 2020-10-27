@@ -104,7 +104,8 @@ export const checkAssessmentStatus = (workUrn, calledFrom, currentWorkUrn, curre
                 }
             }
             if (assessmentStatus == 'final' && calledFrom && (calledFrom != 'fromUpdate')) {
-                dispatch(getLatestAssessmentVersion(res.data.entityUrn, workUrn, res.data.dateCreated, dataForUpdate,"",itemData))
+                let itemType = itemData && itemData.type ? itemData.type : ""
+                dispatch(getLatestAssessmentVersion(res.data.entityUrn, workUrn, res.data.dateCreated, dataForUpdate, itemType, itemData))
             }
         }
     }).catch(() => {

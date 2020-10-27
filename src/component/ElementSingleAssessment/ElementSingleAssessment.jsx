@@ -66,14 +66,14 @@ class ElementSingleAssessment extends Component {
         if (this.state.elementType == PUF &&
             (this.state.assessmentId && assessmentReducer && assessmentReducer[this.state.assessmentId] && assessmentReducer[this.state.assessmentId].items)) {
             let latestItemId = assessmentReducer[this.state.assessmentId].items && assessmentReducer[this.state.assessmentId].items[this.state.assessmentItemId]
-            if (assessmentReducer[this.state.assessmentId].showUpdateStatus == false && (latestItemId && this.state.assessmentItemId != (latestItemId))) {
+            if ((assessmentReducer[this.state.assessmentId].showUpdateStatus == false && (latestItemId && this.state.assessmentItemId != latestItemId)) || (this.state.assessmentTitle != assessmentReducer[this.state.assessmentId].assessmentTitle)) {
                 this.updateElmOnSaveEvent(this.props);
             }
         }
     }
 
     componentDidMount() {
-        let title = this.props.model && setAssessmentTitle(this.props.model) != null?  setAssessmentTitle(this.props.model).replace(/<\/?[^>]+(>|$)/g,""): null;
+        let title = this.props.model && setAssessmentTitle(this.props.model) != null ? setAssessmentTitle(this.props.model).replace(/<\/?[^>]+(>|$)/g, "") : null;
         this.setState({
             assessmentTitle: title,
             activeAsseessmentUsageType: this.props.model && setAssessmentUsageType(this.props.model),
@@ -87,6 +87,17 @@ class ElementSingleAssessment extends Component {
                 this.handleAssessmentFocus();
             }, 0)
         }
+        // /** PCAT-8907 - Updating Embedded Assessments - Elm */
+        // let { model } = this.props
+        // // let embeddedAssessment = model.type == elementTypeConstant.FIGURE && model.figuretype == elementTypeConstant.FIGURE_ASSESSMENT && element.figuredata && element.figuredata.elementdata && element.figuredata.elementdata.assessmentformat == 'puf' && element.figuredata.elementdata.assessmentid ? true : false;
+        // if (this.props.model) {
+        //     let itemData = {
+        //         itemId: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.assessmentitemid,
+        //         parentId: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.assessmentid,
+        //         type: 'assessment-item',
+        //     }
+        //     this.props.checkAssessmentStatus(model.figuredata.elementdata.assessmentid, 'fromElementContainer', "", "", itemData)
+        // }
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
@@ -302,9 +313,10 @@ class ElementSingleAssessment extends Component {
     updateElmOnSaveEvent = (props) => {
         const { assessmentReducer } = props;
         let latestItemId = (assessmentReducer[this.state.assessmentId].items && assessmentReducer[this.state.assessmentId].items[this.state.assessmentItemId])
+        let latestTitle = (assessmentReducer[this.state.assessmentId] && assessmentReducer[this.state.assessmentId].assessmentTitle)
         showTocBlocker();
         disableHeader(true);
-        this.setState({ assessmentItemId: latestItemId }, () => this.saveAssessment(() => {
+        this.setState({ assessmentItemId: latestItemId, assessmentTitle: latestTitle }, () => this.saveAssessment(() => {
             disableHeader(false);
             hideTocBlocker(false);
         }))
@@ -444,7 +456,8 @@ class ElementSingleAssessment extends Component {
                     <h4 className={this.state.elementType !== "tdx" ? "heading4AssessmentItemNumberLabel" : "heading4TdxAssessmentItemNumberLabel"} id="single_assessment_title">{(this.state.elementType !== PUF && this.state.elementType !== LEARNOSITY) ? "" : "Assessment Title:"}{this.state.assessmentTitle}</h4>
                 </header>
                 <div className="singleAssessmentIdInfo" ><strong>{(this.state.elementType !== PUF && this.state.elementType !== LEARNOSITY) ? "ID: " : "Product ID: "}</strong>{this.state.assessmentId ? this.state.assessmentId : (model.figuredata.elementdata ? model.figuredata.elementdata.assessmentid : "")}</div>
-                <div className={`singleAssessmentItemIdInfo ${(this.state.elementType !== PUF && this.state.elementType !== LEARNOSITY)? '':'puf-assessment-id'}`} ><strong>ITEM ID: </strong>{this.state.assessmentItemId?this.state.assessmentItemId:(model.figuredata.elementdata ? model.figuredata.elementdata.assessmentitemid : "")}</div>                             
+                <div className={`singleAssessmentItemIdInfo ${(this.state.elementType !== LEARNOSITY)? '':'puf-assessment-id'}`} ><strong>ITEM ID: </strong>{this.state.assessmentItemId?this.state.assessmentItemId:(model.figuredata.elementdata ? model.figuredata.elementdata.assessmentitemid : "")}</div>                      
+                {/* <div className={`singleAssessmentItemIdInfo ${(this.state.elementType !== PUF && this.state.elementType !== LEARNOSITY)? '':'puf-assessment-id'}`} ><strong>ITEM ID: </strong>{this.state.assessmentItemId?this.state.assessmentItemId:(model.figuredata.elementdata ? model.figuredata.elementdata.assessmentitemid : "")}</div>                              */}
                 <div className="singleAssessment_Dropdown_Container">
                     <div className="single-assessment-usagetype-container">
                         <div className="singleAssessment_Dropdown_SelectLabel">Select usage type<span className="required">*</span></div>
