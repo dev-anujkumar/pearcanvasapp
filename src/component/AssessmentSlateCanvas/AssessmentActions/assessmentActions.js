@@ -67,8 +67,8 @@ export const checkAssessmentStatus = (workUrn, calledFrom, currentWorkUrn, curre
         }
     }).then(async (res) => {
         if (res && res.data && res.data.status) {
-            let statusString = res.data.status.split("/")
-            let assessmentStatus = statusString[statusString.length - 1]
+            let statusString = res.data.status.split("/");
+            let assessmentStatus = statusString[statusString.length - 1];
             let dataForUpdate = {
                 showUpdateStatus: false
             };
@@ -79,8 +79,7 @@ export const checkAssessmentStatus = (workUrn, calledFrom, currentWorkUrn, curre
             } else if (calledFrom == 'fromGetItemId' || calledFrom == 'fromEditButton') {
                 dataForUpdate = { currentWorkUrn: currentWorkUrn }
                 await dispatch(getLatestAssessmentVersion(res.data.entityUrn, workUrn, res.data.dateCreated, dataForUpdate, itemData.type));
-            } 
-            else {
+            } else {
                 dataForUpdate = {
                     assessmentStatus: assessmentStatus,
                     assessmentEntityUrn: res.data.entityUrn,
@@ -104,7 +103,7 @@ export const checkAssessmentStatus = (workUrn, calledFrom, currentWorkUrn, curre
                 }
             }
             if (assessmentStatus == 'final' && calledFrom && (calledFrom != 'fromUpdate')) {
-                let itemType = itemData && itemData.type ? itemData.type : ""
+                let itemType = calledFrom == 'fromGetItemId' && itemData && itemData.type ? itemData.type : ""
                 dispatch(getLatestAssessmentVersion(res.data.entityUrn, workUrn, res.data.dateCreated, dataForUpdate, itemType, itemData))
             }
         }
