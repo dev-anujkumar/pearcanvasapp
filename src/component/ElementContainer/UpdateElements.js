@@ -382,7 +382,7 @@ export const generateAssessmentData = (index, previousElementData, elementType, 
     let assessmentNodeSelector = `div[data-id='${previousElementData.id}'] figure.figureAssessment `;
     let assessmenttitle = document.querySelector(assessmentNodeSelector + '#single_assessment_title').innerText; //PCAT-6828 fixed
     let assessmentId = document.querySelector(assessmentNodeSelector + 'div.singleAssessmentIdInfo').innerText;
-    let isPuf = previousElementData && previousElementData.figuredata && previousElementData.figuredata.elementdata && (previousElementData.figuredata.elementdata.assessmentformat === "puf" || previousElementData.figuredata.elementdata.assessmentformat === "learnosity");
+    // let isPuf = previousElementData && previousElementData.figuredata && previousElementData.figuredata.elementdata && (previousElementData.figuredata.elementdata.assessmentformat === "puf" || previousElementData.figuredata.elementdata.assessmentformat === "learnosity");
     let getAsid = '';
     let assessmenttTitleHTML = `<p>${assessmenttitle}</p>`;
     let dataToSend = {
