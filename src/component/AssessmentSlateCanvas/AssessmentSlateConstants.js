@@ -53,3 +53,7 @@ export const AUTO_UPDATE_FAIL_ERROR = 'Unable to Update Other Instances of this 
 export const ELEMENT_FIGURE = 'figure'
 export const FIGURE_ASSESSMENT = 'assessment'
 export const ELEMENT_ASSESSMENT = 'element-assessment'
+export const PRIMARY_SINGLE_ASSESSMENT = 'primary-single-assessment'
+export const SECONDARY_SINGLE_ASSESSMENT = 'secondary-single-assessment-'
+export const PRIMARY_SLATE_ASSESSMENT = 'primary-assessment-slate'
+export const SECONDARY_SLATE_ASSESSMENT = 'secondary-assessment-'
