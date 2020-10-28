@@ -119,10 +119,11 @@ export function ElementSaprator(props) {
     }
 
     const renderPasteButton = () => {
-        console.log("Element Separator Props:>>>>>",props)
         if (!(props.asideData || props.parentUrn)) {
             return (
-                <Button type="split" /> 
+                <div className="paste-button-wrapper">
+                    <Button type="split" />
+                </div> 
             )
         }
         return null  
@@ -137,9 +138,7 @@ export function ElementSaprator(props) {
             <div className='elemDiv-hr'>
                 <hr className='horizontalLine' />
             </div>
-            <div className="paste-button-wrapper">
-                {renderPasteButton()}
-            </div>
+            {renderPasteButton()}
             <div className='elemDiv-expand'>
                 <div className="dropdown" ref={buttonRef}>
                     <Tooltip direction='left' tooltipText='Element Picker'>
