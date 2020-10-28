@@ -68,7 +68,17 @@ let initialState = {
         "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635": "wip"       
     },
     searchReducer: {
-        searchTerm: ""
+        searchTerm: "",
+        parentId: "",
+        deeplink: true,
+        scroll: false,
+        scrollTop: 0
+    },
+    commentSearchReducer: {
+        commentSearchTerm: "",
+        parentId: "",
+        scroll: false,
+        scrollTop: 0
     }
 }
 

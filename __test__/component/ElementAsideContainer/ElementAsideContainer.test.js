@@ -64,7 +64,17 @@ let initialState = {
         "urn:pearson:work:ee2b0c11-75eb-4a21-87aa-578750b5301d": "wip"       
     },
     searchReducer: {
-        searchTerm: ""
+        searchTerm: "",
+        parentId: "",
+        deeplink: true,
+        scroll: false,
+        scrollTop: 0
+    },
+    commentSearchReducer: {
+        commentSearchTerm: "",
+        parentId: "",
+        scroll: false,
+        scrollTop: 0
     }
 };
 jest.mock('../../../src/component/ElementContainer/ElementContainer_Actions.js', () => {

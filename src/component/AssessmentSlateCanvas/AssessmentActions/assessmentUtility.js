@@ -2,7 +2,7 @@
  * Module - assessmentUtility
  * Description - This file contains utility functions related to assessments (full and embedded)
  */
-import { LEARNING_TEMPLATE } from '../AssessmentSlateConstants.js';
+import { LEARNING_TEMPLATE, PUF, ELEMENT_FIGURE, FIGURE_ASSESSMENT, ELEMENT_ASSESSMENT } from '../AssessmentSlateConstants.js';
 /** This is a function to set Assessment Title for Embedded Assessment
  * * @param model - object containig element data
 */
@@ -95,4 +95,34 @@ export const hasAssessmentID = (model) => {
     let hasId;
     hasId = model && model.elementdata && model.elementdata.assessmentid ? true : false
     return hasId;
+}
+
+/***
+* @description - This is the function to check if a full assessment is elm assessment
+* @param element - element's details
+*/
+export const checkFullElmAssessment = (element) => {
+    if (element && element.type == ELEMENT_ASSESSMENT && element.elementdata && element.elementdata.assessmentformat == PUF && element.elementdata.assessmentid) {
+        return true;
+    }
+    return false;
+}
+
+/***
+* @description - This is the function to check if an embedded assessment is elm assessment
+* @param element - element's details
+*/
+export const checkEmbeddedElmAssessment = (element) => {
+    if (element && element.type == ELEMENT_FIGURE && element.figuretype == FIGURE_ASSESSMENT && element.figuredata && element.figuredata.elementdata && element.figuredata.elementdata.assessmentformat == PUF && element.figuredata.elementdata.assessmentid) {
+        return true;
+    }
+    return false;
+}
+
+/*** @description - This is the function to check if an elm embedded assessment has update available */
+export const checkElmAssessmentStatus = (assessmentId, props) => {
+    if (assessmentId && props && props.assessmentReducer && props.assessmentReducer[assessmentId] && props.assessmentReducer[assessmentId].showUpdateStatus == true) {
+        return true;
+    }
+    return false;
 }
