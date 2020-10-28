@@ -50,6 +50,9 @@ import { OnCopyContext } from '../CopyUrn/copyUtil.js'
 import { openElmAssessmentPortal, checkAssessmentStatus, resetAssessmentStore } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import { handleElmPortalEvents } from '../ElementContainer/AssessmentEventHandling.js';
 import { checkFullElmAssessment, checkEmbeddedElmAssessment } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
+import { setScroll } from './../Toolbar/Search/Search_Action.js';
+import { SET_SEARCH_URN, SET_COMMENT_SEARCH_URN } from './../../constants/Search_Constants.js';
+
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -122,12 +125,34 @@ class ElementContainer extends Component {
         });
     }
 
-    // componentDidUpdate() {
-    //     if(this.props.searchParent !== '' && document.querySelector("div.canvas-blocker")) {
-    //         // sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } });
-    //     }
-    //     // sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } });urn:pearson:manifest:579f5393-883b-4a22-8000-50cc5a802464
-    // }
+    componentDidUpdate() {
+        let divObj = 0;
+        if(this.props.searchParent !== '' && document.querySelector(`div[data-id="${this.props.searchParent}"]`)) {
+            divObj = document.querySelector(`div[data-id="${this.props.searchParent}"]`).offsetTop;
+            if(this.props.searchUrn !== '' && document.querySelector(`div[data-id="${this.props.searchUrn}"]`) && this.props.searchUrn !== this.props.searchParent) {
+                divObj += document.querySelector(`div[data-id="${this.props.searchUrn}"]`).offsetTop;
+            }
+
+            divObj = Math.round(divObj);
+            if(this.props.searchScrollTop !== divObj) {
+                this.props.setScroll({ 'type': SET_SEARCH_URN, scrollTop: divObj });
+                document.getElementById('slateWrapper').scrollTop = divObj;
+            }
+        }
+
+        if(this.props.commentSearchParent !== '' && document.querySelector(`div[data-id="${this.props.commentSearchParent}"]`)) {
+            divObj = document.querySelector(`div[data-id="${this.props.commentSearchParent}"]`).offsetTop;
+            if(this.props.commentSearchUrn !== '' && document.querySelector(`div[data-id="${this.props.commentSearchUrn}"]`) && this.props.commentSearchUrn !== this.props.commentSearchParent) {
+                divObj += document.querySelector(`div[data-id="${this.props.commentSearchUrn}"]`).offsetTop;
+            }
+
+            divObj = Math.round(divObj);
+            if(this.props.commentSearchScrollTop !== divObj) {
+                this.props.setScroll({ 'type': SET_COMMENT_SEARCH_URN, scrollTop: divObj });
+                document.getElementById('slateWrapper').scrollTop = divObj;
+            }
+        }
+    }
 
     componentWillUnmount() {
         if (config.releaseCallCount === 0) {
@@ -1635,6 +1660,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         resetAssessmentStore: () => {
             dispatch(resetAssessmentStore())
+        },
+        setScroll: (type) => {
+            dispatch(setScroll(type))
         }
     }
 }
@@ -1651,6 +1679,13 @@ const mapStateToProps = (state) => {
         showHideId: state.appStore.showHideId,
         tcmData: state.tcmReducer.tcmSnapshot,
         searchUrn: state.searchReducer.searchTerm,
+        searchParent: state.searchReducer.parentId,
+        searchScroll: state.searchReducer.scroll,
+        searchScrollTop: state.searchReducer.scrollTop,
+        commentSearchUrn: state.commentSearchReducer.commentSearchTerm,
+        commentSearchParent: state.commentSearchReducer.parentId,
+        commentSearchScroll: state.commentSearchReducer.scroll,
+        commentSearchScrollTop: state.commentSearchReducer.scrollTop,
         currentSlateAncestorData : state.appStore.currentSlateAncestorData
     }
 }
