@@ -49,6 +49,7 @@ import CopyUrn from '../CopyUrn';
 import { OnCopyContext } from '../CopyUrn/copyUtil.js'
 import { openElmAssessmentPortal, checkAssessmentStatus, resetAssessmentStore } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import { handleElmPortalEvents } from '../ElementContainer/AssessmentEventHandling.js';
+import { checkFullElmAssessment, checkEmbeddedElmAssessment } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -107,12 +108,12 @@ class ElementContainer extends Component {
         })
         /** PCAT-8907 - Updating Embedded Assessments - Elm */
         let { element } = this.props
-        let embeddedAssessment = element.type == elementTypeConstant.FIGURE && element.figuretype == elementTypeConstant.FIGURE_ASSESSMENT && element.figuredata && element.figuredata.elementdata && element.figuredata.elementdata.assessmentformat == 'puf' && element.figuredata.elementdata.assessmentid ? true : false;
+        let embeddedAssessment = checkEmbeddedElmAssessment(element);
         if (this.props.element && embeddedAssessment === true) {
             let itemData = {
                 itemId: element.figuredata.elementdata.assessmentitemid,
                 parentId: element.figuredata.elementdata.assessmentid,
-                type: 'assessment-item',
+                type: 'assessment-item'
             }
             this.props.checkAssessmentStatus(element.figuredata.elementdata.assessmentid, 'fromElementContainer', "", "", itemData)
         }
@@ -1379,7 +1380,7 @@ class ElementContainer extends Component {
         let btnClassName = this.state.btnClassName;
         let bceOverlay = "";
         let elementOverlay = '';
-        let showEditButton = this.showElmEditButton().fullAssessment || this.showElmEditButton().embeddedAssessment ? true : false
+        let showEditButton = checkFullElmAssessment(element) || checkEmbeddedElmAssessment(element) ? true : false
         if (!hasReviewerRole() && this.props.permissions && !(this.props.permissions.includes('access_formatting_bar')||this.props.permissions.includes('elements_add_remove')) ) {
             elementOverlay = <div className="element-Overlay disabled" onClick={() => this.handleFocus()}></div>
         }
@@ -1507,15 +1508,6 @@ class ElementContainer extends Component {
         // this.props.assetPopoverPopup(toggleApoPopup)
     }
 
-    showElmEditButton = () => {
-        let { element } = this.props;
-        let fullAssessment = element.type == elementTypeConstant.ASSESSMENT_SLATE && element.elementdata && element.elementdata.assessmentformat == 'puf' && element.elementdata.assessmentid ? true : false;
-        let embeddedAssessment = element.type == elementTypeConstant.FIGURE && element.figuretype == elementTypeConstant.FIGURE_ASSESSMENT && element.figuredata && element.figuredata.elementdata && element.figuredata.elementdata.assessmentformat == 'puf' && element.figuredata.elementdata.assessmentid ? true : false;
-        return {
-            fullAssessment: fullAssessment,
-            embeddedAssessment: embeddedAssessment
-        }
-    }
     /**
      * @description - This function is to launch Elm Portal from Cypress.
      * @param event the click event triggered
@@ -1523,8 +1515,8 @@ class ElementContainer extends Component {
     handleEditButton = (event) => {
         event.stopPropagation();
         let { element } = this.props;
-        let fullAssessment = element.type == elementTypeConstant.ASSESSMENT_SLATE && element.elementdata && element.elementdata.assessmentformat == 'puf' && element.elementdata.assessmentid ? true : false;
-        let embeddedAssessment = element.type == elementTypeConstant.FIGURE && element.figuretype == elementTypeConstant.FIGURE_ASSESSMENT && element.figuredata && element.figuredata.elementdata && element.figuredata.elementdata.assessmentformat == 'puf' && element.figuredata.elementdata.assessmentid ? true : false;
+        let fullAssessment = checkFullElmAssessment(element);
+        let embeddedAssessment = checkEmbeddedElmAssessment(element);
         let dataToSend = {
             assessmentWorkUrn: fullAssessment ? element.elementdata.assessmentid : embeddedAssessment ? element.figuredata.elementdata.assessmentid : "",
             projDURN: config.projectUrn,

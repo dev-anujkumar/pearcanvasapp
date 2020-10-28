@@ -384,11 +384,6 @@ export const generateAssessmentData = (index, previousElementData, elementType, 
     let assessmentId = document.querySelector(assessmentNodeSelector + 'div.singleAssessmentIdInfo').innerText;
     let isPuf = previousElementData && previousElementData.figuredata && previousElementData.figuredata.elementdata && (previousElementData.figuredata.elementdata.assessmentformat === "puf" || previousElementData.figuredata.elementdata.assessmentformat === "learnosity");
     let getAsid = '';
-
-    if (isPuf) {
-        assessmenttitle = assessmenttitle.split(':')[1];
-    }
-
     let assessmenttTitleHTML = `<p>${assessmenttitle}</p>`;
     let dataToSend = {
         ...previousElementData,
@@ -400,11 +395,7 @@ export const generateAssessmentData = (index, previousElementData, elementType, 
     }
 
     dataToSend.figuredata.elementdata;
-    if (isPuf) {
-        getAsid = assessmentId && assessmentId.split(' ').length && assessmentId.split(' ')[2];
-    } else {
         getAsid = assessmentId && assessmentId.split(' ').length && assessmentId.split(' ')[1];
-    }
         let assessmentItemId = document.querySelector(assessmentNodeSelector + 'div.singleAssessmentItemIdInfo').innerText;
         let getAsItemid = assessmentItemId && assessmentItemId.split(' ')[2];
         dataToSend.figuredata.elementdata.assessmentitemid = getAsItemid ? getAsItemid : "";

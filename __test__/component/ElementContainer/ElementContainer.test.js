@@ -1315,19 +1315,6 @@ describe('Test for element container component', () => {
             expect(elementContainerInstance2.props.element.figuredata.elementdata.assessmentformat).toBe('puf')
             spyFunction.mockClear()
         })
-        it('Test-2------>showElmEditButton', () => {
-            let expectedObj = {
-                fullAssessment: false,
-                embeddedAssessment: true
-            }
-            const spyFunction = jest.spyOn(elementContainerInstance2, 'showElmEditButton')
-            let returnObj = elementContainerInstance2.showElmEditButton();
-            expect(elementContainerInstance2.props.element.figuredata.elementdata.assessmentformat).toBe('puf')
-            expect(returnObj).toEqual(expectedObj)
-            expect(spyFunction).toHaveBeenCalled()
-            spyFunction.mockClear()
-        })
-
     })
 });
 

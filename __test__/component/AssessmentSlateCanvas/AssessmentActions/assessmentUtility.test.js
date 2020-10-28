@@ -133,25 +133,117 @@ describe('Test---Assessment Utility Functions', () => {
             expect(spyFunction).toHaveBeenCalledWith(elementType);
             spyFunction.mockClear();
         });
-        it('setAssessmentFormat', () => {
-            let model = {
-                elementdata: {assessmentformat:"test"}
+    });
+    it('Test 4---setAssessmentFormat', () => {
+        let model = {
+            elementdata: { assessmentformat: "test" }
+        }
+        const spyFunction = jest.spyOn(assessment_UtiltyFn, 'setAssessmentFormat');
+        assessment_UtiltyFn.setAssessmentFormat(model);
+        expect(spyFunction).toHaveReturnedWith("test");
+        spyFunction.mockClear();
+    });
+    it('Test 5---setAssessmentElement ', () => {
+        let model = {
+            elementdata: { assessmentid: "urn:pearson:work:b47ee1a3-e652-4b2b-bfc5-563d40a8373d" }
+        }
+        const spyFunction = jest.spyOn(assessment_UtiltyFn, 'setAssessmentElement');
+        assessment_UtiltyFn.setAssessmentElement(model);
+        expect(spyFunction).toHaveReturnedWith({ "assessmentId": "urn:pearson:work:b47ee1a3-e652-4b2b-bfc5-563d40a8373d", "itemId": "", "title": "" }
+        );
+        spyFunction.mockClear();
+    });
+    it('Test 6---hasAssessmentID ', () => {
+        let model = {
+            elementdata: { assessmentid: "urn:pearson:work:b47ee1a3-e652-4b2b-bfc5-563d40a8373d" }
+        }
+        const spyFunction = jest.spyOn(assessment_UtiltyFn, 'hasAssessmentID');
+        assessment_UtiltyFn.hasAssessmentID(model);
+        expect(spyFunction).toHaveReturnedWith(true)
+        spyFunction.mockClear();
+    });
+    it('Test 7.1---checkFullElmAssessment-If', () => {
+        let model = {
+            type: 'element-assessment',
+            elementdata: {
+                assessmentformat: "puf",
+                assessmentid: "urn:pearson:work:b47ee1a3-e652-4b2b-bfc5-563d40a8373d"
             }
-            const spyFunction = jest.spyOn(assessment_UtiltyFn, 'setAssessmentFormat');
-            assessment_UtiltyFn.setAssessmentFormat(model);
-            expect(spyFunction).toHaveReturnedWith("test");
-            spyFunction.mockClear();
-        });
-        it('setAssessmentElement ', () => {
-            let model = {
-                elementdata: {assessmentid:"urn:pearson:work:b47ee1a3-e652-4b2b-bfc5-563d40a8373d"}
+        }
+        const spyFunction = jest.spyOn(assessment_UtiltyFn, 'checkFullElmAssessment');
+        assessment_UtiltyFn.checkFullElmAssessment(model);
+        expect(spyFunction).toHaveReturnedWith(true)
+        spyFunction.mockClear();
+    });
+    it('Test 7.2---checkFullElmAssessment-Else', () => {
+        let model = {
+            type: 'element-assessment',
+            elementdata: {
+                assessmentid: "urn:pearson:work:b47ee1a3-e652-4b2b-bfc5-563d40a8373d"
             }
-            const spyFunction = jest.spyOn(assessment_UtiltyFn, 'setAssessmentElement');
-            assessment_UtiltyFn.setAssessmentElement(model);
-            expect(spyFunction).toHaveReturnedWith( {"assessmentId": "urn:pearson:work:b47ee1a3-e652-4b2b-bfc5-563d40a8373d", "itemId": "", "title": ""}
-            );
-            spyFunction.mockClear();
-        });
-
+        }
+        const spyFunction = jest.spyOn(assessment_UtiltyFn, 'checkFullElmAssessment');
+        assessment_UtiltyFn.checkFullElmAssessment(model);
+        expect(spyFunction).toHaveReturnedWith(false)
+        spyFunction.mockClear();
+    });
+    it('Test 8.1---checkEmbeddedElmAssessment-If', () => {
+        let model = {
+            type: 'figure',
+            figuretype: 'assessment',
+            figuredata: {
+                elementdata: {
+                    assessmentformat: "puf",
+                    assessmentid: "urn:pearson:work:b47ee1a3-e652-4b2b-bfc5-563d40a8373d"
+                }
+            }
+        }
+        const spyFunction = jest.spyOn(assessment_UtiltyFn, 'checkEmbeddedElmAssessment');
+        assessment_UtiltyFn.checkEmbeddedElmAssessment(model);
+        expect(spyFunction).toHaveReturnedWith(true)
+        spyFunction.mockClear();
+    });
+    it('Test 8.2---checkEmbeddedElmAssessment-Else', () => {
+        let model = {
+            type: 'figure',
+            figuretype: 'assessment',
+            figuredata: {
+                elementdata: {
+                    assessmentid: "urn:pearson:work:b47ee1a3-e652-4b2b-bfc5-563d40a8373d"
+                }
+            }
+        }
+        const spyFunction = jest.spyOn(assessment_UtiltyFn, 'checkEmbeddedElmAssessment');
+        assessment_UtiltyFn.checkEmbeddedElmAssessment(model);
+        expect(spyFunction).toHaveReturnedWith(false)
+        spyFunction.mockClear();
+    });
+    it('Test 9.1---checkElmAssessmentStatus-If', () => {
+        let assessmentId = "urn:pearson:work:b47ee1a3-e652-4b2b-bfc5-563d40a8373d",
+            props = {
+                assessmentReducer: {
+                    "urn:pearson:work:b47ee1a3-e652-4b2b-bfc5-563d40a8373d": {
+                        showUpdateStatus: false
+                    }
+                }
+            }
+        const spyFunction = jest.spyOn(assessment_UtiltyFn, 'checkElmAssessmentStatus');
+        assessment_UtiltyFn.checkElmAssessmentStatus(assessmentId, props);
+        expect(spyFunction).toHaveReturnedWith(false)
+        spyFunction.mockClear();
+    });
+    it('Test 9.2---checkElmAssessmentStatus-Else', () => {
+        let assessmentId = "urn:pearson:work:b47ee1a3-e652-4b2b-bfc5-563d40a8373d",
+            props = {
+                assessmentReducer: {
+                    "urn:pearson:work:b47ee1a3-e652-4b2b-bfc5-563d40a8373d": {
+                        showUpdateStatus: true
+                    }
+                }
+            }
+        const spyFunction = jest.spyOn(assessment_UtiltyFn, 'checkElmAssessmentStatus');
+        assessment_UtiltyFn.checkElmAssessmentStatus(assessmentId, props);
+        expect(spyFunction).toHaveReturnedWith(true)
+        spyFunction.mockClear();
     });
 });

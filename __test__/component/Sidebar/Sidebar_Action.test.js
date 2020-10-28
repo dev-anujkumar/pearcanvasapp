@@ -822,7 +822,6 @@ describe('Test - Sidebar_Actions',()=>{
             }
         })
         it('Test convertElement  -assessment type', () => {
-            store = mockStore(() => initialState2);
             let newData = {
                 elementId: "urn:pearson:work:fa8ebea3-d9ba-4aec-8658-2f944841404a",
                 elementType: "element-assessment",
@@ -831,13 +830,6 @@ describe('Test - Sidebar_Actions',()=>{
                 secondaryOption: "secondary-single-assessment-tdx",
                 toolbar: ["bold", "italic", "underline", "strikethrough", "clearformatting", "increaseindent", "decreaseindent", "footnote", "glossary", "orderedlist", "unorderedlist", "mathml", "chemml", "inlinecode", "superscript", "subscript", "specialcharactor", "undo", "redo", "assetpopover", "slatetag"]
             }
-            // let assessmentDiv = document.createElement('div');
-            // assessmentDiv.setAttribute('data-id', 'urn:pearson:work:fa8ebea3-d9ba-4aec-8658-2f944841404a')
-            // let usageTypeSpan = document.createElement('span');
-            // usageTypeSpan.className = 'singleAssessment_Dropdown_currentLabel';
-            // usageTypeSpan.innerText = 'Quiz';
-            // assessmentDiv.appendChild(usageTypeSpan)
-            // document.body.appendChild(assessmentDiv)
             let store = mockStore(() => initialState2);
             const spyconversionElement = jest.spyOn(sidebarAction, 'conversionElement')
             store.dispatch(sidebarAction.conversionElement(newData));
@@ -845,14 +837,6 @@ describe('Test - Sidebar_Actions',()=>{
             spyconversionElement.mockClear()
         });
         it('Test convertElement  -assessment type 2', () => {
-            store = mockStore(() => initialState2);
-            // let assessmentDiv2 = document.createElement('div');
-            // assessmentDiv2.setAttribute('data-id', 'urn:pearson:work:fa8ebea3-d9ba-4aec-8658-2f944841404a')
-            // let usageTypeSpan2 = document.createElement('span');
-            // usageTypeSpan2.className = 'singleAssessment_Dropdown_currentLabel';
-            // usageTypeSpan2.innerText = 'Quiz';
-            // assessmentDiv2.appendChild(usageTypeSpan2)
-            // document.body.appendChild(assessmentDiv2)
             store = mockStore(() => initialState2);
             const spyconversionElement = jest.spyOn(sidebarAction, 'convertElement')
             store.dispatch(sidebarAction.convertElement(activeElementData.SingleAssessment_OldData,activeElementData.SingleAssessment_NewData,activeElementData.SingleAssessment_OldInfo,slateData.slateData1,3));
