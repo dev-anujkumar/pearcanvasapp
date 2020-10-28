@@ -65,7 +65,17 @@ let initialState = {
     },
     elementStatusReducer: {},
     searchReducer: {
-        searchTerm: ""
+        searchTerm: "",
+        parentId: "",
+        deeplink: true,
+        scroll: false,
+        scrollTop: 0
+    },
+    commentSearchReducer: {
+        commentSearchTerm: "",
+        parentId: "",
+        scroll: false,
+        scrollTop: 0
     }
 }
 
