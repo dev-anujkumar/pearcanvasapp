@@ -118,6 +118,17 @@ export function ElementSaprator(props) {
         }
     }
 
+    const renderPasteButton = () => {
+        if (!(props.asideData || props.parentUrn)) {
+            return (
+                <div className="paste-button-wrapper">
+                    <Button type="split" />
+                </div> 
+            )
+        }
+        return null  
+    }
+    
     return (
         <div className={showClass ? 'elementSapratorContainer opacityClassOn ignore-for-drag' : 'elementSapratorContainer ignore-for-drag'}>
             <div className='elemDiv-split' onClickCapture={(e) => props.onClickCapture(e)}>
@@ -127,6 +138,7 @@ export function ElementSaprator(props) {
             <div className='elemDiv-hr'>
                 <hr className='horizontalLine' />
             </div>
+            {renderPasteButton()}
             <div className='elemDiv-expand'>
                 <div className="dropdown" ref={buttonRef}>
                     <Tooltip direction='left' tooltipText='Element Picker'>
