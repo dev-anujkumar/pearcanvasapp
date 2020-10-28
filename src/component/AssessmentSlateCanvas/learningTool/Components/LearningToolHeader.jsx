@@ -22,8 +22,8 @@ const LearningToolHeader = (props) => {
     * @param {Array} learningToolList - Array of response for learning systems Dropdown
     */
     const renderLearningAppTypeDropdown = (learningToolList) => {
-        let learningToolData = Object.keys(learningToolList).map((learningTemplate, index) => {
-            return <option key={index} value={learningTemplate}>{capitalizeString(learningTemplate)}</option>
+        let learningToolData = Object.values(learningToolList).map((learningTemplate, index) => {
+            return <option key={index} value={learningTemplate.appType}>{learningTemplate.label}</option>
         })
         return learningToolData;
     }

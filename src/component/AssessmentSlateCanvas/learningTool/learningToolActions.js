@@ -15,7 +15,7 @@ import {
   LINK_BUTTON_DISABLE,
   GET_LEARNING_SYSTEMS
 } from '../../../constants/Action_Constants';
-import {learningSystemList, TAXONOMIC_ID_DISCIPLINES, TAXONOMIC_ID_LEARNING_SYSTEM, LT_LA_API_ERROR } from './learningToolUtility';
+import {learningSystemList, learningSystemsData, TAXONOMIC_ID_DISCIPLINES, TAXONOMIC_ID_LEARNING_SYSTEM, LT_LA_API_ERROR } from './learningToolUtility';
 
 /**
   * @discription - This action is dispatched when search of leaning template
@@ -106,7 +106,7 @@ export const learningToolSearchAction = (learningToolSearchValue, toolType1, lea
 export const openLTFunction = (taxonomyId) => dispatch => {
 
   if (taxonomyId === TAXONOMIC_ID_LEARNING_SYSTEM) {
-    dispatch(fetchLearningSystems(learningSystemList))
+    dispatch(fetchLearningSystems(learningSystemsData))
   } else {
     let url = `${config.ASSESSMENT_ENDPOINT}learningtemplate/v2/taxonomy/${taxonomyId}?locale=en`;
     return axios.get(url,
@@ -121,9 +121,10 @@ export const openLTFunction = (taxonomyId) => dispatch => {
     ).then(res => {
       if (taxonomyId === TAXONOMIC_ID_DISCIPLINES) {
         dispatch(getDiscipline(res.data))
-      } else {
-        dispatch(fetchLearningSystems(res.data))/** To be used when the API is integrated */
-      }
+      } 
+      // else {
+      //   dispatch(fetchLearningSystems(res.data))/** To be used when the API is integrated */
+      // }
     },
       err => showError(err, dispatch)
     ).catch(error => {
