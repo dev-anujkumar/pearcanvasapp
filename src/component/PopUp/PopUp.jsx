@@ -51,7 +51,7 @@ class PopUp extends React.Component {
             )
         }
         else if (props.tocDelete) {
-            if (props.saveButtonText === 'Okay') {
+            if (props.saveButtonText === 'OK') {
                 return (
                     <div className={`dialog-buttons ${props.tocDeleteClass}`}>
                         <span className="save-button" onClick={props.saveContent}>{props.saveButtonText}</span>
@@ -204,11 +204,6 @@ class PopUp extends React.Component {
                     <h2 className='tocDeleteHeader'>{this.props.elmHeaderText}</h2>
                     <div className={`dialog-window ${props.isElmUpdateClass}`} >{props.dialogText}</div>
                 </>
-            )
-        }
-        else if(props.showConfirmation){
-            return (
-                <div className={`dialog-window ${props.assessmentClass}`}><strong>Note: </strong>{props.dialogText}</div>
             )
         }
         else {

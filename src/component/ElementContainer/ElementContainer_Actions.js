@@ -101,7 +101,6 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
             const deleteParentData = JSON.parse(JSON.stringify(parentData));
 
             /** [PCAT-8289] -------------------------- TCM Snapshot Data handling ----------------------------*/
-            let deleteSlate = deleteParentData[config.slateManifestURN];
             let deleteBodymatter = deleteParentData[config.slateManifestURN].contents.bodymatter;
             if (elementTypeTCM.indexOf(type) !== -1 || containerType.indexOf(type) !== -1) {
                 let wipData = fetchElementWipData(deleteBodymatter, index, type, contentUrn, "delete")
