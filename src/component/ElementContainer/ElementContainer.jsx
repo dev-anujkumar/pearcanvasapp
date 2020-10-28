@@ -1436,10 +1436,12 @@ class ElementContainer extends Component {
             ...elementDetails,
             sourceSlateManifestUrn: config.slateManifestURN,
             sourceSlateEntityUrn: config.slateEntityURN,
-            //enumtype:
+            //type: enum type to be included
         }
         console.log("Element Details action to be dispatched from here", detailsToSet)
-        // this.props.setElementToPaste(elementDetails)
+
+        /** Dispatch details to the store */
+        // this.props.setElementToPaste(detailsToSet)
     }
     
     /**
