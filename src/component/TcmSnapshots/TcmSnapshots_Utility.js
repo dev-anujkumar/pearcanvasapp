@@ -689,10 +689,9 @@ export const setFigureElementContentSnapshot = (element, actionStatus) => {
         case "codelisting":             // for BCE
             snapshotData["codeblock"] =  element.html.preformattedtext ? element.html.preformattedtext : "<p><br></p>"
             snapshotData["metadata"] = prepareMetablock(element, actionStatus)
-            // `<p><span class='bce-metadata'>Syntax-highlighting: </span>${toggleSyntaxhighlight}</p><p><span class='bce-metadata'>Language: </span>${programLang}</p><p><span class='bce-metadata'>Line Number: </span>${toggleNumber}</p><p><span class='bce-metadata'>Start numbering from: </span>${startNumberField}</p>`
             break;
         case "authoredtext":            // for MML
-            snapshotData["metadata"] = element.figuredata.elementdata.text ? `<p>${element.figuredata.elementdata.text}</p>` : "<p><br></p>"
+            snapshotData["metadata"] = element.html.text ? `<p>${element.html.text}</p>` : "<p><br></p>"
             break;
         case "image":
         case "table":
@@ -710,11 +709,11 @@ const prepareMetablock = (element, actionStatus) => {
     let toggleNumber = element.figuredata.numbered == true ? 'ON' : 'OFF'
     let startNumberField = element.figuredata.startNumber ? element.figuredata.startNumber : "NA"
     let finalMetaBlock
-    if (actionStatus.fromWhere == "create") {
-        finalMetaBlock = `<p><span class='bce-metadata'>Syntax-highlighting: ${toggleSyntaxhighlight}</span></p><p><span class='bce-metadata'>Language: ${programLang}</span></p><p><span class='bce-metadata'>Line Number: ${toggleNumber}</span></p><p><span class='bce-metadata'>Start numbering from: ${startNumberField}</span></p>`
-    } else {
+    // if (actionStatus.fromWhere == "create") {
+    //     finalMetaBlock = `<p><span class='bce-metadata'>Syntax-highlighting: ${toggleSyntaxhighlight}</span></p><p><span class='bce-metadata'>Language: ${programLang}</span></p><p><span class='bce-metadata'>Line Number: ${toggleNumber}</span></p><p><span class='bce-metadata'>Start numbering from: ${startNumberField}</span></p>`
+    // } else {
         finalMetaBlock = `<p><span class='bce-metadata'>Syntax-highlighting: </span>${toggleSyntaxhighlight}</p><p><span class='bce-metadata'>Language: </span>${programLang}</p><p><span class='bce-metadata'>Line Number: </span>${toggleNumber}</p><p><span class='bce-metadata'>Start numbering from: </span>${startNumberField}</p>`
-    }
+    // }
     return finalMetaBlock
 }
 
@@ -805,7 +804,7 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
                     subtitle: wipData.subtitle,
                     captions: wipData.captions,
                     credits: wipData.credits,
-                    figuredata: figureData
+                    figuredata: figureData ? figureData : wipData.figuredata
                 }
                 dispatch(storeOldAssetForTCM({}))
             }
