@@ -1384,7 +1384,7 @@ class ElementContainer extends Component {
         const inContainer = this.props.parentUrn ? true : false
         return (
             <div className={`editor ${searched}`} data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
-                {this.state.showCopyPopup && <CopyUrn inContainer={inContainer} setElementDetails={this.setElementDetails} element={this.props.element} toggleCopyMenu={this.toggleCopyMenu} copyClickedX={this.copyClickedX} copyClickedY={this.copyClickedY} />}
+                {this.state.showCopyPopup && <CopyUrn index={index} inContainer={inContainer} setElementDetails={this.setElementDetails} element={this.props.element} toggleCopyMenu={this.toggleCopyMenu} copyClickedX={this.copyClickedX} copyClickedY={this.copyClickedY} />}
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                     <Button type="element-label" btnClassName={`${btnClassName} ${isQuadInteractive} ${this.state.isOpener ? ' ignore-for-drag' : ''}`} labelText={labelText} copyContext={(e)=>{OnCopyContext(e,this.toggleCopyMenu)}} onClick={(event) => this.labelClickHandler(event)} />
                     {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && config.slateType !== 'assessment' ? (<Button type="delete-element" onClick={(e) => this.showDeleteElemPopup(e,true)} />)
@@ -1434,7 +1434,9 @@ class ElementContainer extends Component {
     setElementDetails = (elementDetails) => {
         const detailsToSet = { 
             ...elementDetails,
-            sourceSlateUrn: config.slateManifestURN 
+            sourceSlateManifestUrn: config.slateManifestURN,
+            sourceSlateEntityUrn: config.slateEntityURN,
+            //enumtype:
         }
         console.log("Element Details action to be dispatched from here", detailsToSet)
         // this.props.setElementToPaste(elementDetails)

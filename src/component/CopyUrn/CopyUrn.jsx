@@ -36,14 +36,15 @@ const CopyUrn = props => {
                 ...componentProps.element
             },
             operationType: type,
-            activeAnimation: true
+            activeAnimation: true,
+            sourceElementIndex: componentProps.index
         }
         componentProps.setElementDetails(elementDetailsToSet)
         componentProps.toggleCopyMenu(false)
     }
     
     const renderCutCopyOption = (componentProps) => {
-        const acceptedTypes = ["element-authoredtext", "element-blockfeature", "element-learningobjectives"]
+        const acceptedTypes = ["element-authoredtext", "element-blockfeature", "element-learningobjectives", "element-list"]
         if (!componentProps.inContainer && acceptedTypes.includes(componentProps.element.type)) {
             return (
                 <>
