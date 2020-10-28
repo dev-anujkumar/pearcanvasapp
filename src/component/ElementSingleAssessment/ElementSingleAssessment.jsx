@@ -282,7 +282,7 @@ class ElementSingleAssessment extends Component {
                 let itemData = {
                     itemId: pufObj.itemid,
                     parentId: pufObj.id,
-                    type: 'assessment-item',
+                    type: 'assessment-item'
                 }
                 this.props.checkAssessmentStatus(pufObj.id, 'fromAddElm',"","",itemData);
                 let oldAssessmentId = this.props.model.figuredata.elementdata.assessmentid;
@@ -388,7 +388,7 @@ class ElementSingleAssessment extends Component {
         let itemData = {
             itemId: this.state.assessmentItemId,
             parentId: this.state.assessmentId,
-            type: 'assessment-item',
+            type: 'assessment-item'
         }
         await this.props.checkAssessmentStatus(this.props.assessmentReducer[this.state.assessmentId].latestWorkUrn, 'fromUpdate', this.state.assessmentId, "", itemData)
         const { latestWorkUrn, assessmentTitle, items } = this.props.assessmentReducer[this.state.assessmentId];
