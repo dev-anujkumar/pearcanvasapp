@@ -49,6 +49,9 @@ import CopyUrn from '../CopyUrn';
 import { OnCopyContext } from '../CopyUrn/copyUtil.js'
 import { openElmAssessmentPortal } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import {handleElmPortalEvents} from '../ElementContainer/AssessmentEventHandling.js';
+import { setScroll } from './../Toolbar/Search/Search_Action.js';
+import { SET_SEARCH_URN, SET_COMMENT_SEARCH_URN } from './../../constants/Search_Constants.js';
+
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -110,12 +113,62 @@ class ElementContainer extends Component {
         });
     }
 
-    // componentDidUpdate() {
-    //     if(this.props.searchParent !== '' && document.querySelector("div.canvas-blocker")) {
-    //         // sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } });
-    //     }
-    //     // sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } });urn:pearson:manifest:579f5393-883b-4a22-8000-50cc5a802464
-    // }
+    elementInViewport2(element) {
+        // var top = el.offsetTop;
+        // var left = el.offsetLeft;
+        // var width = el.offsetWidth;
+        // var height = el.offsetHeight;
+      
+        // while(el.offsetParent) {
+        //   el = el.offsetParent;
+        //   top += el.offsetTop;
+        //   left += el.offsetLeft;
+        // }
+      
+        // return (
+        //   top < (window.pageYOffset + window.innerHeight) &&
+        //   left < (window.pageXOffset + window.innerWidth) &&
+        //   (top + height) > window.pageYOffset &&
+        //   (left + width) > window.pageXOffset
+        // );
+
+        const rect = element.getBoundingClientRect();
+        return (
+            rect.top >= 0 &&
+            rect.left >= 0 &&
+            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+        );
+      }
+
+    componentDidUpdate() {
+        let divObj = 0;
+        if(this.props.searchParent !== '' && document.querySelector(`div[data-id="${this.props.searchParent}"]`)) {
+            divObj = document.querySelector(`div[data-id="${this.props.searchParent}"]`).offsetTop;
+            if(this.props.searchUrn !== '' && document.querySelector(`div[data-id="${this.props.searchUrn}"]`) && this.props.searchUrn !== this.props.searchParent) {
+                divObj += document.querySelector(`div[data-id="${this.props.searchUrn}"]`).offsetTop;
+            }
+
+            divObj = Math.round(divObj);
+            if(this.props.searchScrollTop !== divObj) {
+                this.props.setScroll({ 'type': SET_SEARCH_URN, scrollTop: divObj });
+                document.getElementById('slateWrapper').scrollTop = divObj;
+            }
+        }
+
+        if(this.props.commentSearchParent !== '' && document.querySelector(`div[data-id="${this.props.commentSearchParent}"]`)) {
+            divObj = document.querySelector(`div[data-id="${this.props.commentSearchParent}"]`).offsetTop;
+            if(this.props.commentSearchUrn !== '' && document.querySelector(`div[data-id="${this.props.commentSearchUrn}"]`) && this.props.commentSearchUrn !== this.props.commentSearchParent) {
+                divObj += document.querySelector(`div[data-id="${this.props.commentSearchUrn}"]`).offsetTop;
+            }
+
+            divObj = Math.round(divObj);
+            if(this.props.commentSearchScrollTop !== divObj) {
+                this.props.setScroll({ 'type': SET_COMMENT_SEARCH_URN, scrollTop: divObj });
+                document.getElementById('slateWrapper').scrollTop = divObj;
+            }
+        }
+    }
 
     componentWillUnmount() {
         if (config.releaseCallCount === 0) {
@@ -1614,6 +1667,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         openElmAssessmentPortal : (dataToSend) => {
             dispatch(openElmAssessmentPortal(dataToSend))
+        },
+        setScroll: (type) => {
+            dispatch(setScroll(type))
         }
     }
 }
@@ -1630,6 +1686,13 @@ const mapStateToProps = (state) => {
         showHideId: state.appStore.showHideId,
         tcmData: state.tcmReducer.tcmSnapshot,
         searchUrn: state.searchReducer.searchTerm,
+        searchParent: state.searchReducer.parentId,
+        searchScroll: state.searchReducer.scroll,
+        searchScrollTop: state.searchReducer.scrollTop,
+        commentSearchUrn: state.commentSearchReducer.commentSearchTerm,
+        commentSearchParent: state.commentSearchReducer.parentId,
+        commentSearchScroll: state.commentSearchReducer.scroll,
+        commentSearchScrollTop: state.commentSearchReducer.scrollTop,
         currentSlateAncestorData : state.appStore.currentSlateAncestorData
     }
 }

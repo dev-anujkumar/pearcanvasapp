@@ -41,8 +41,6 @@ import { assessmentConfirmationPopup } from '../AssessmentSlateCanvas/Assessment
 import { reloadSlate } from '../../component/ElementContainer/AssessmentEventHandling';
 import LazyLoad, {forceCheck} from "react-lazyload";
 
-import { getCommentElements } from './../Toolbar/Search/Search_Action.js';
-
 let random = guid();
 
 class SlateWrapper extends Component {
@@ -76,7 +74,7 @@ class SlateWrapper extends Component {
 
     componentDidUpdate() {
         let divObj = 0;
-        if(this.props.searchParent !== '' && document.querySelector(`div[data-id="${this.props.searchParent}"]`)) {
+        if(this.props.searchParent !== '' && document.querySelector(`div[data-id="${this.props.searchParent}"]`) && !this.props.searchScroll) {
             divObj = document.querySelector(`div[data-id="${this.props.searchParent}"]`).offsetTop;
             if(this.props.searchNode !== '' && document.querySelector(`div[data-id="${this.props.searchNode}"]`) && this.props.searchNode !== this.props.searchParent) {
                 divObj += document.querySelector(`div[data-id="${this.props.searchNode}"]`).offsetTop;
@@ -84,13 +82,12 @@ class SlateWrapper extends Component {
             document.getElementById('slateWrapper').scrollTop = divObj;
         }
 
-        if(this.props.commentSearchParent !== '' && document.querySelector(`div[data-id="${this.props.commentSearchParent}"]`)) {
+        if(this.props.commentSearchParent !== '' && document.querySelector(`div[data-id="${this.props.commentSearchParent}"]`) && !this.props.commentSearchScroll) {
             divObj = document.querySelector(`div[data-id="${this.props.commentSearchParent}"]`).offsetTop;
             if(this.props.commentSearchNode !== '' && document.querySelector(`div[data-id="${this.props.commentSearchNode}"]`) && this.props.commentSearchNode !== this.props.commentSearchParent) {
                 divObj += document.querySelector(`div[data-id="${this.props.commentSearchNode}"]`).offsetTop;
             }
             document.getElementById('slateWrapper').scrollTop = divObj;
-            this.props.getCommentElements('');
         }
     }
 
@@ -1302,8 +1299,10 @@ const mapStateToProps = state => {
         showSlateLockPopupValue: state.metadataReducer.showSlateLockPopup,
         searchParent: state.searchReducer.parentId,
         searchNode: state.searchReducer.searchTerm,
+        searchScroll: state.searchReducer.scroll,
         commentSearchParent: state.commentSearchReducer.parentId,
         commentSearchNode: state.commentSearchReducer.commentSearchTerm,
+        commentSearchScroll: state.commentSearchReducer.scroll,
         showToast: state.appStore.showToast,
         showConfirmationPopup: state.assessmentReducer.showConfirmationPopup,
     };
@@ -1332,7 +1331,6 @@ export default connect(
         showSlateLockPopup,
         handleTCMData,
         fetchSlateData,
-        getCommentElements,
         assessmentConfirmationPopup,
     }
 )(SlateWrapper);
