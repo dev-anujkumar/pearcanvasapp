@@ -7,7 +7,8 @@ import {LT_API_RESULT,
     GET_DISCIPLINE,
     REMOVE_SELECTED_DATA,
     GET_DISCIPLINE_FAIL,
-    LT_TYPE_FILTER_SELECTED
+    LT_TYPE_FILTER_SELECTED,
+    GET_LEARNING_SYSTEMS
   } from '../constants/Action_Constants';
 
 const INITIAL_STATE = {
@@ -24,7 +25,9 @@ const INITIAL_STATE = {
     linkButtonDisable : true,
     apiResponseForDis : [],
     learningToolDisValue : '',
-    numberOfRows : 25
+    numberOfRows : 25,
+    learningSystems:[],
+    showTypeFilterValues: false
 };
 
 const INITIAL_ACTION = {
@@ -120,6 +123,13 @@ export default function learningToolReducer (state = INITIAL_STATE, action = INI
                 ...state,
                 selectedResultFormApi : "",
              
+            }
+        }        
+        case GET_LEARNING_SYSTEMS: {                
+            return {
+                ...state,
+                learningSystems : action.payload.learningSystems,
+                showDisFilterValues: action.payload.showDisFilterValues
             }
         }
         default :
