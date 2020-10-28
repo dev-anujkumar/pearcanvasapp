@@ -20,11 +20,10 @@ export const handleElmPortalEvents = (action = 'add') => {
                 const { data } = event;
                 if (action == 'add' && data && data.source == 'elm') {
                     // console.log('Elm Events(TO BE REMOVED LATER) ONLY ADDED FOR TESTING---->', event.data)
-                    handleRefreshSlate(store.dispatch);
-                    if (data.action == 'approve') {
-                    // handleRefreshSlate(store.dispatch);
-                    window.removeEventListener('message', elmAssessmentUpdate, false);
+                    if (data.action == 'approve' || data.action == 'commit') {
+                        window.removeEventListener('message', elmAssessmentUpdate, false);
                     }
+                    handleRefreshSlate(store.dispatch);
                 }
                 if (action == 'remove') {
                     window.removeEventListener('message', elmAssessmentUpdate, false);
