@@ -119,7 +119,8 @@ export function ElementSaprator(props) {
     }
 
     const renderPasteButton = () => {
-        if (!(props.asideData || props.parentUrn)) {
+        const allowedRoles = ["admin", "manager", "edit", "default_user"];
+        if (!(props.asideData || props.parentUrn) && allowedRoles.includes(props.userRole)) {
             return (
                 <div className="paste-button-wrapper">
                     <Button type="split" />

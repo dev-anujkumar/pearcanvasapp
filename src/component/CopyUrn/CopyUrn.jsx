@@ -29,37 +29,6 @@ const CopyUrn = props => {
         e.stopPropagation();
     }
 
-    const performCutCopy = (event, componentProps, type) => {
-        event.stopPropagation()
-        let elementDetailsToSet = {
-            element: {
-                ...componentProps.element
-            },
-            operationType: type,
-            activeAnimation: true,
-            sourceElementIndex: componentProps.index
-        }
-        componentProps.setElementDetails(elementDetailsToSet)
-        componentProps.toggleCopyMenu(false)
-    }
-    
-    const renderCutCopyOption = (componentProps) => {
-        const acceptedTypes = ["element-authoredtext", "element-blockfeature", "element-learningobjectives", "element-list"]
-        if (!componentProps.inContainer && acceptedTypes.includes(componentProps.element.type)) {
-            return (
-                <>
-                    <div className="copyUrn" onClick={(e) => performCutCopy(e, componentProps, "copy")}>
-                        Copy Selection
-                    </div>
-                    <div className="copyUrn" onClick={(e) => performCutCopy(e, componentProps, "cut")}>
-                        Cut Selection
-                    </div>
-                </>
-            )
-        }
-        return null
-    }
-
     const positionStyle = { left: `${props.copyClickedX}px`, top: `${props.copyClickedY}px` }
     return (
         <div style={positionStyle} className="copy-menu-container">
@@ -74,3 +43,37 @@ const CopyUrn = props => {
 }
 
 export default CopyUrn;
+
+export const renderCutCopyOption = (componentProps) => {
+    const { inContainer, userRole, element: { type } } = componentProps
+    const acceptedTypes = ["element-authoredtext", "element-blockfeature", "element-learningobjectives", "element-list"],
+            allowedRoles = ["admin", "manager", "edit", "default_user"];
+            
+    if (!inContainer && acceptedTypes.includes(type) && allowedRoles.includes(userRole)) {
+        return (
+            <>
+                <div className="copyUrn" onClick={(e) => performCutCopy(e, componentProps, "copy")}>
+                    Copy Selection
+                </div>
+                <div className="copyUrn" onClick={(e) => performCutCopy(e, componentProps, "cut")}>
+                    Cut Selection
+                </div>
+            </>
+        )
+    }
+    return null
+}
+
+export const performCutCopy = (event, componentProps, type) => {
+    event.stopPropagation()
+    let elementDetailsToSet = {
+        element: {
+            ...componentProps.element
+        },
+        operationType: type,
+        activeAnimation: true,
+        sourceElementIndex: componentProps.index
+    }
+    componentProps.setElementDetails(elementDetailsToSet)
+    componentProps.toggleCopyMenu(false)
+}

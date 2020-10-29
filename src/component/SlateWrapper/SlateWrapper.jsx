@@ -898,6 +898,7 @@ class SlateWrapper extends Component {
         return (
             <>
                 <ElementSaprator
+                    userRole={_props.userRole}
                     firstOne={true}
                     index={0}
                     esProps={this.elementSepratorProps(0, true)}
@@ -941,6 +942,7 @@ class SlateWrapper extends Component {
                                     {
                                         index === 0 && _slateType !== 'assessment' && config.isCO === false ?
                                             <ElementSaprator
+                                                userRole={this.props.userRole}
                                                 firstOne={index === 0}
                                                 index={index}
                                                 esProps={this.elementSepratorProps(index, true)}
@@ -954,6 +956,7 @@ class SlateWrapper extends Component {
                                             : index === 0 && config.isCO === true ? <div className="noSeparatorContainer"></div> : null
                                     }
                                     <ElementContainer
+                                        userRole={this.props.userRole}
                                         openCustomPopup = {this.openCustomPopup}
                                         slateType={_slateType}
                                         element={element}
@@ -981,6 +984,7 @@ class SlateWrapper extends Component {
                                     </ElementContainer>
                                     {_slateType !== 'assessment' ?
                                         <ElementSaprator
+                                            userRole={this.props.userRole}
                                             index={index}
                                             esProps={this.elementSepratorProps(index, false)}
                                             elementType=""
@@ -1306,6 +1310,7 @@ const mapStateToProps = state => {
         commentSearchNode: state.commentSearchReducer.commentSearchTerm,
         showToast: state.appStore.showToast,
         showConfirmationPopup: state.assessmentReducer.showConfirmationPopup,
+        userRole: state.appStore.roleId
     };
 };
 
