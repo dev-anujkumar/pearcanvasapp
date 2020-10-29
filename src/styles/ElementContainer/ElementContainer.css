@@ -22,6 +22,12 @@
     padding: 1px 7px;
 }
 
+.editor.cut .element-container.active,
+.editor.copy .element-container.active,
+.editor.cut .showBorder, .editor.copy .showBorder {
+    border: 1.5px dashed #005a70 !important;
+}
+
 .element-container.ct.active {
     border: 1.5px solid #005a70 !important;
 }

@@ -47,6 +47,7 @@ import MultiColumnContainer from "../MultiColumnElement"
 import {handleTCMData} from '../TcmSnapshots/TcmSnapshot_Actions.js';
 import CopyUrn from '../CopyUrn';
 import { OnCopyContext } from '../CopyUrn/copyUtil.js'
+import { setSelection } from './../CopyUrn/CopyUrn_Action.js';
 import { openElmAssessmentPortal } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import {handleElmPortalEvents} from '../ElementContainer/AssessmentEventHandling.js';
 import { setScroll } from './../Toolbar/Search/Search_Action.js';
@@ -1406,9 +1407,21 @@ class ElementContainer extends Component {
         if(this.props.searchUrn !== '' && this.props.searchUrn === element.id) {
             searched = 'searched';
         }
+
+        let selection = '';
+        let selectionOverlay = '';
+        if(this.props.elementSelection && Object.keys(this.props.elementSelection).length > 0 &&
+            'element' in this.props.elementSelection && element.id === this.props.elementSelection.element.id) {
+            selection = 'copy';
+            if('operationType' in this.props.elementSelection && this.props.elementSelection.operationType === 'cut') {
+                selection = 'cut';
+                selectionOverlay = <div className="element-Overlay disabled"></div>;
+            }
+        }
+
         const inContainer = this.props.parentUrn ? true : false
         return (
-            <div className={`editor ${searched}`} data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
+            <div className={`editor ${searched} ${selection}`} data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
                 {this.state.showCopyPopup && <CopyUrn index={index} inContainer={inContainer} setElementDetails={this.setElementDetails} element={this.props.element} toggleCopyMenu={this.toggleCopyMenu} copyClickedX={this.copyClickedX} copyClickedY={this.copyClickedY} />}
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                     <Button type="element-label" btnClassName={`${btnClassName} ${isQuadInteractive} ${this.state.isOpener ? ' ignore-for-drag' : ''}`} labelText={labelText} copyContext={(e)=>{OnCopyContext(e,this.toggleCopyMenu)}} onClick={(event) => this.labelClickHandler(event)} />
@@ -1419,7 +1432,7 @@ class ElementContainer extends Component {
                 </div>
                     : ''}
                 <div className={`element-container ${labelText.toLowerCase()=="2c"? "multi-column":labelText.toLowerCase()} ${borderToggle}`} data-id={element.id} onFocus={() => this.toolbarHandling('remove')} onBlur={() => this.toolbarHandling('add')} onClick = {(e)=>this.handleFocus("","",e,labelText)}>
-                    {elementOverlay}{bceOverlay}{editor}
+                    {selectionOverlay}{elementOverlay}{bceOverlay}{editor}
                 </div>
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                     {permissions && permissions.includes('notes_adding') && <Button type="add-comment" btnClassName={btnClassName} onClick={(e) => this.handleCommentPopup(true, e)} />}
@@ -1466,7 +1479,7 @@ class ElementContainer extends Component {
         console.log("Element Details action to be dispatched from here", detailsToSet)
 
         /** Dispatch details to the store */
-        // this.props.setElementToPaste(detailsToSet)
+        this.props.setSelection(detailsToSet);
     }
     
     /**
@@ -1659,6 +1672,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         setScroll: (type) => {
             dispatch(setScroll(type))
+        },
+        setSelection: (params) => {
+            dispatch(setSelection(params))
         }
     }
 }
@@ -1682,7 +1698,8 @@ const mapStateToProps = (state) => {
         commentSearchParent: state.commentSearchReducer.parentId,
         commentSearchScroll: state.commentSearchReducer.scroll,
         commentSearchScrollTop: state.commentSearchReducer.scrollTop,
-        currentSlateAncestorData : state.appStore.currentSlateAncestorData
+        currentSlateAncestorData : state.appStore.currentSlateAncestorData,
+        elementSelection: state.selectionReducer.selection
     }
 }
 
