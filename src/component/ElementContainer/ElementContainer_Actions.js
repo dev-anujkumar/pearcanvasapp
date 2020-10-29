@@ -115,7 +115,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
     }
 }
 
-function contentEditableFalse (updatedData){
+export const contentEditableFalse = (updatedData) => {
     if(updatedData.type == "element-blockfeature"){
         if(updatedData.html && updatedData.html.text){
             let data = updatedData.html.text;

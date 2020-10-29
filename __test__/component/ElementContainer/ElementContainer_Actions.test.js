@@ -935,6 +935,29 @@ describe('Tests ElementContainer Actions', () => {
             expect(spyShowError).toHaveReturnedWith(undefined);
             spyShowError.mockClear()
         })
-        
+        it("contentEditableFalse helper method", () => {
+            const dataToUpdate = {
+                "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                "type": "element-blockfeature",
+                "subtype": "",
+                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                "elementdata": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "html": {
+                    "text": "<p class=\"pullquoteNumeroUno\">Blockquote text</p>"
+                },
+                "comments": false,
+                "tcm": true,
+                "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+            }
+    
+            const spycontentEditableFalse  = jest.spyOn(actions, 'contentEditableFalse')
+            actions.contentEditableFalse(dataToUpdate)
+            expect(spycontentEditableFalse).toHaveReturnedWith(dataToUpdate)
+            spycontentEditableFalse.mockClear()
+        })
     })
 })
