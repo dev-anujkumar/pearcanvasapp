@@ -975,7 +975,8 @@ export const slateTestData = {
             primaryOption: "primary-mmi",
             secondaryOption: "secondary-interactive-mmi",
             tag: "QUAD",
-            toolbar: ['formatSelector','crossLinkingIcon','assetpopover', 'glossary']
+            toolbar: ['formatSelector','crossLinkingIcon','assetpopover', 'glossary'],
+            longDesc: ""
         },
         figureInMultiColumn: {
             elementType: 'figure',
@@ -1020,7 +1021,8 @@ export const slateTestData = {
             primaryOption: "primary-mmi",
             secondaryOption: "secondary-interactive-mmi",
             tag: "QUAD",
-            toolbar: ['formatSelector','crossLinkingIcon','assetpopover', 'glossary']
+            toolbar: ['formatSelector','crossLinkingIcon','assetpopover', 'glossary'],
+            longDesc:""
         },
         figureInAside: {
             elementType: 'figure',
@@ -1065,7 +1067,8 @@ export const slateTestData = {
             primaryOption: "primary-mmi",
             secondaryOption: "secondary-interactive-mmi",
             tag: "QUAD",
-            toolbar: ['formatSelector','crossLinkingIcon','assetpopover', 'glossary']
+            toolbar: ['formatSelector','crossLinkingIcon','assetpopover', 'glossary'],
+            longDesc:""
         },
         figureInWE: {
             elementType: 'figure',
@@ -1110,7 +1113,8 @@ export const slateTestData = {
             primaryOption: "primary-mmi",
             secondaryOption: "secondary-interactive-mmi",
             tag: "QUAD",
-            toolbar: ['formatSelector','crossLinkingIcon','assetpopover', 'glossary']
+            toolbar: ['formatSelector','crossLinkingIcon','assetpopover', 'glossary'],
+            longDesc:""
         },
     },
     ImageFigureData: {
