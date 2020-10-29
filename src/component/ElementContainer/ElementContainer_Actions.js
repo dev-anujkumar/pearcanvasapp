@@ -333,7 +333,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         let isPopupElement = parentElement && parentElement.type == 'popup' && (updatedData.metaDataField !== undefined || updatedData.sectionType !== undefined) ? true : false;
         let noAdditionalFields = (updatedData.metaDataField == undefined && updatedData.sectionType == undefined) ? true : false
         let oldFigureData = getState().appStore.oldFiguredata
-        if (elementTypeTCM.indexOf(response.data.type) !== -1 && showHideType == undefined && (isPopupElement || noAdditionalFields)) {
+        if (elementTypeTCM.indexOf(response.data.type) !== -1 && (showHideType == undefined || showHideType == '') && (isPopupElement || noAdditionalFields)) {
             let containerElement = {
                 asideData: asideData,
                 parentUrn: parentUrn,
@@ -390,7 +390,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
                 }else if(currentSlateData.status === 'approved'){
                     if(currentSlateData.type==="popup"){
                         if (config.tcmStatus) {
-                            if (elementTypeTCM.indexOf(updatedData.type) !== -1 && showHideType == undefined) {
+                            if (elementTypeTCM.indexOf(updatedData.type) !== -1 && (showHideType == undefined || showHideType == '')) {
                                 prepareDataForUpdateTcm(updatedData.id, getState, dispatch, response.data, updatedData);
                             }
                         }
@@ -460,7 +460,7 @@ export function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, 
     let isPopupElement = parentElement && parentElement.type == 'popup' && (updatedData.metaDataField !== undefined || updatedData.sectionType !== undefined) ? true : false;
     let noAdditionalFields = (updatedData.metaDataField == undefined && updatedData.sectionType == undefined) ? true : false   
     if (config.tcmStatus) {
-        if (elementTypeTCM.indexOf(updatedData.type) !== -1 && showHideType == undefined && (isPopupElement || noAdditionalFields)) {
+        if (elementTypeTCM.indexOf(updatedData.type) !== -1 && (showHideType == undefined || showHideType == '') && (isPopupElement || noAdditionalFields)) {
             prepareDataForUpdateTcm(updatedData.id, getState, dispatch, versionedData, updatedData);
         }
     }
