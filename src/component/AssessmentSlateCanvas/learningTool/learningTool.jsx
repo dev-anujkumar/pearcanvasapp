@@ -30,7 +30,7 @@ class LearningTool extends React.Component {
             selectedLearningDiscipline: "",
             selectedLearningAppType: "",
             showError: false,
-            learningSystem: ""
+            // learningSystem: ""
         }
     }
 
@@ -49,7 +49,7 @@ class LearningTool extends React.Component {
     setlearningAppType = (e) => {
         let selectedTypeValue = e.target.value;
         this.setState({
-            learningSystem: this.props.learningSystems[selectedTypeValue].learningSystem,
+            // learningSystem: this.props.learningSystems[selectedTypeValue].learningSystem,
             selectedLearningAppType: selectedTypeValue
         })
     }
@@ -76,11 +76,13 @@ class LearningTool extends React.Component {
 
     /**
     * @discription - This function is for searching in searchbar and dispatch an action
-    * @param {event} - event 
-    * @param {String} tempLearningToolTypeValue - value of learning tool type selected from dropdown
+    * @param {String} searchTitle - value of template label/title to be searched
+    * @param {String} searchKeyword - value of keyword to be searched
     */
-    learningToolSearchClick(searchKeyword) {
-        this.props.learningToolSearchAction(this.state.learningSystem, this.state.selectedLearningAppType, "", searchKeyword);
+    learningToolSearchClick(searchTitle, searchKeyword) {
+        const { selectedLearningAppType } = this.state
+        const learningSystem = this.props.learningSystems[selectedLearningAppType].learningSystem
+        this.props.learningToolSearchAction(learningSystem, selectedLearningAppType, searchTitle, searchKeyword);
     }
 
     /**

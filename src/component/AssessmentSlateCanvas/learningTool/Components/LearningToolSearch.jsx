@@ -6,6 +6,7 @@ import '../../../../styles/AssessmentSlateCanvas/LearningTool/LearningTool.css';
 const LearningToolSearch = (props) => {
 
     const [searchKeyword, setSearchKeyword] = useState('');
+    const [searchTitle, setSearchTitle] = useState('');
     const { error_icon, showError, selectedTypeValue, searchTextCondition } = props;
 
     /*** @description - This function is to call search function for the search term 
@@ -13,7 +14,7 @@ const LearningToolSearch = (props) => {
     */
     const handleSearch = e => {
         e.preventDefault();
-        props.learningToolSearchAction(searchKeyword);//send for search
+        props.learningToolSearchAction(searchTitle,searchKeyword);//send for search
     }
 
     /*** @description - This function is to handle the value in searchbar input
@@ -23,6 +24,13 @@ const LearningToolSearch = (props) => {
         let value = event.target.value;
         setSearchKeyword(value);
         // props.validateSearch(event, value);
+    }
+    /*** @description - This function is to handle the value in searchbar input
+ * @param event - event triggered
+*/
+    const handleTitleChange = (event) => {
+        let value = event.target.value;
+        setSearchTitle(value);
     }
     return (
         <div className="learningToolHeaderSearchDiv">
@@ -34,6 +42,15 @@ const LearningToolSearch = (props) => {
                     name="search2"
                     value={searchKeyword}
                     onChange={handleKeywordChange}
+                    placeholder="Enter Keyword to search"
+                />
+                <input
+                    className={`learningToolSearchBar ${showError ? "error" : ""}`}
+                    id="learningToolSearchBar"
+                    type="text"
+                    name="search2"
+                    value={searchTitle}
+                    onChange={handleTitleChange}
                     placeholder="Enter Keyword to search"
                 />
                 {showError ? <img className="exclamation-icon" src={error_icon}></img> : ""}
