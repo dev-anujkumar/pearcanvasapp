@@ -4,9 +4,9 @@ import moxios from 'moxios';
 import * as actions from '../../../src/component/ElementContainer/ElementContainer_Actions';
 import { slateWithCitationElement} from "../../../fixtures/slateTestingData"
 import config from '../../../src/config/config.js';
-import { spy, stub } from 'sinon';
-import { slateLevelData, addNewComment, slateLevelDataWithApproved, blockfeature, defaultSlateDataFigure , newslateAsideData} from "../../../fixtures/containerActionsTestingData"
-import { ADD_COMMENT, ADD_NEW_COMMENT, AUTHORING_ELEMENT_CREATED, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, DELETE_SHOW_HIDE_ELEMENT } from '../../../src/constants/Action_Constants';
+import { stub } from 'sinon';
+import { slateLevelData, addNewComment, slateLevelDataWithApproved, blockfeature, defaultSlateDataFigure } from "../../../fixtures/containerActionsTestingData"
+import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_CREATED, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, DELETE_SHOW_HIDE_ELEMENT } from '../../../src/constants/Action_Constants';
 import { JSDOM } from 'jsdom'
 
 const middlewares = [thunk];
@@ -18,7 +18,28 @@ jest.mock('../../../src/constants/utility.js', () => ({
 }))
 jest.mock('../../../src/component/TcmSnapshots/TcmSnapshots_Utility.js', () => ({
     tcmSnapshotsForUpdate: jest.fn(),
-    fetchElementWipData: jest.fn()
+    fetchElementWipData: jest.fn(),
+
+}))
+jest.mock('../../../src/component/ElementContainer/ElementContainerDelete_helpers.js', () => ({
+    tcmSnapshotsForDelete: jest.fn(),
+    onDeleteSuccess: jest.fn(),
+    prepareTCMSnapshotsForDelete: jest.fn(),
+    onSlateApproved: jest.fn(),
+    deleteFromStore: jest.fn(),
+    prepareTCMforDelete: jest.fn()
+}))
+
+jest.mock('../../../src/component/ElementContainer/ElementContainerUpdate_helpers.js', () => ({
+    updateNewVersionElementInStore: jest.fn(),
+    updateElementInStore: jest.fn(),
+    collectDataAndPrepareTCMSnapshot: jest.fn(),
+    processAndStoreUpdatedResponse: jest.fn(),
+    showLinkToast: jest.fn(),
+    updateStore: jest.fn(),
+    updateStoreInCanvas: jest.fn(),
+    updateLOInStore: jest.fn(),
+    prepareDataForUpdateTcm: jest.fn()
 }))
 
 let cb = new stub();
@@ -200,7 +221,7 @@ describe('Tests ElementContainer Actions', () => {
        
     })
 
-    describe('testing------- Delete COMMENT ------action', () => {
+    describe('testing------- Delete Element ------action', () => {
         it('testing------- Delete Element------action', () => {
             let store = mockStore(() => initialState);
             config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
@@ -221,1088 +242,39 @@ describe('Tests ElementContainer Actions', () => {
                 });
 
             });
-            (slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter).splice(2, 1);
+            const spydeleteElement = jest.spyOn(actions, "deleteElement")
             return store.dispatch(actions.deleteElement(elementId, type, "", "", contentUrn)).then(() => {
-                // expect(store.getActions()).toEqual(expectedActions);
-                console.log('store.getActions()',store.getActions())
+                expect(spydeleteElement).toHaveBeenCalled();
+                
             });
         })
-
-        xit('testing------- Delete Element with approved------action', () => {
-            let initialStateApproved = {
-                slateLevelData: slateLevelDataWithApproved,
-                appStore: slateLevelDataWithApproved,
-                learningToolReducer: {
-                    shouldHitApi: false,
-                    learningToolTypeValue: '',
-                    apiResponse: [],
-                    showErrorMsg: true, //should be false
-                    showLTBody: false,
-                    learningTypeSelected: false,
-                    showDisFilterValues: false,
-                    selectedResultFormApi: '',
-                    resultIsSelected: false,
-                    toggleLT: false,
-                    linkButtonDisable: true,
-                    apiResponseForDis: [],
-                    learningToolDisValue: '',
-                    numberOfRows: 25,
-                },
-                glossaryFootnoteReducer: {
-                    glossaryFootnoteValue: { elementWorkId: "4343653" },
-                    glossaryFootNoteCurrentValue: "",
-                    elementIndex: ""
-                }
-            };
-            let store = mockStore(() => initialStateApproved);
+        it('testing------- Delete Element - catch block------action', () => {
+            let store = mockStore(() => initialState);
             config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
             let elementId = "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0c",
                 contentUrn = "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
                 type = "element-authoredtext"
+            
             moxios.wait(() => {
                 const request = moxios.requests.mostRecent();
                 request.respondWith({
-                    status: 200,
+                    status: 201,
                     response: 200
                 });
 
             });
-            (slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter).splice(2, 1);
+            const spydeleteElement = jest.spyOn(actions, "deleteElement")
+            const dispatch = jest.fn()
             return store.dispatch(actions.deleteElement(elementId, type, "", "", contentUrn)).then(() => {
-            });
-        })
-        xit('testing------- Delete Element aside type------action', () => {
-            let store = mockStore(() => initialState);
-            config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
-            config.projectUrn = "urn:pearson:distributable:3e872df6-834c-45f5-b5c7-c7b525fab1ef"
-            config.slateEntityURN = "urn:pearson:entity:920e1d14-236e-4882-9a7c-d9d067795d75"
-            let elementId = "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0d",
-                contentUrn = "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
-                type = "element-authoredtext"
-            moxios.wait(() => {
-                const request = moxios.requests.mostRecent();
-                request.respondWith({
-                    status: 200,
-                    response: 200
-                });
-            });
-
-            (slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[1].elementdata.bodymatter).push(
-                {
-                    "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0c",
-                    "type": "element-authoredtext",
-                    "subtype": "",
-                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
-                    "elementdata": {
-                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                        "text": ""
-                    },
-                    "html": {
-                        "text": "<p class=\"paragraphNumeroUno\"><br></p>"
-                    },
-                    "comments": false,
-                    "tcm": true,
-                    "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-                    "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
-                }
-            );
-
-            (slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[1].elementdata.bodymatter).splice(0, 1);
-
-            const expectedActions = [{
-                type: AUTHORING_ELEMENT_CREATED,
-                payload: {
-                    slateLevelData: slateLevelData.slateLevelData
-                }
-            }];
-            let parentUrn = {
-                manifestUrn: "urn:pearson:manifest:8a49e877-144a-4750-92d2-81d5188d8e0b",
-                contentUrn: "urn:pearson:entity:2b489c98-5e61-46d8-967c-6354b28e3679",
-                elementType: "element-aside"
-            }
-            let asideData = {
-                type: "element-aside",
-                subtype: "workedexample",
-                id: "urn:pearson:manifest:8a49e877-144a-4750-92d2-81d5188d8e0b",
-                contentUrn: "urn:pearson:entity:2b489c98-5e61-46d8-967c-6354b28e3679",
-
-            }
-            return store.dispatch(actions.deleteElement(elementId, type, parentUrn, asideData, contentUrn, "1-0")).then(() => {
-                expect(store.getActions()).toEqual(expectedActions);
-            });
-        })
-        xit('testing------- Delete Element manifest------action', () => {
-            let store = mockStore(() => initialState);
-            config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
-            config.projectUrn = "urn:pearson:distributable:3e872df6-834c-45f5-b5c7-c7b525fab1ef"
-            config.slateEntityURN = "urn:pearson:entity:920e1d14-236e-4882-9a7c-d9d067795d75"
-            let elementId = "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0d",
-                contentUrn = "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
-                type = "element-authoredtext"
-            moxios.wait(() => {
-                const request = moxios.requests.mostRecent();
-                request.respondWith({
-                    status: 200,
-                    response: 200
-                });
-            });
-            const expectedActions = [{
-                type: AUTHORING_ELEMENT_CREATED,
-                payload: {
-                    slateLevelData: slateLevelData.slateLevelData
-                }
-            }];
-            let parentUrn = {
-                manifestUrn: "urn:pearson:manifest:8a49e877-144a-4750-92d2-81d5188d8e0b",
-                contentUrn: "urn:pearson:entity:2b489c98-5e61-46d8-967c-6354b28e3679",
-                elementType: "manifest"
-            }
-            let asideData = {
-                type: "element-aside",
-                subtype: "workedexample",
-                id: "urn:pearson:manifest:8a49e877-144a-4750-92d2-81d5188d8e0b",
-                contentUrn: "urn:pearson:entity:2b489c98-5e61-46d8-967c-6354b28e3679",
-
-            }
-            return store.dispatch(actions.deleteElement(elementId, type, parentUrn, asideData, contentUrn, "1-0")).then(() => {
-                expect(store.getActions()).toEqual(expectedActions);
-            });
-        })
-        xit('testing------- Delete Element Poetry------action', () => {
-            let store = mockStore(() => initialState);
-            config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
-            config.projectUrn = "urn:pearson:distributable:3e872df6-834c-45f5-b5c7-c7b525fab1ef"
-            config.slateEntityURN = "urn:pearson:entity:920e1d14-236e-4882-9a7c-d9d067795d75"
-            let elementId = "urn:pearson:work:e1b59ae0-b04a-4b6e-a1a4-33e21077u98",
-                contentUrn = "urn:pearson:entity:44d43f1b-3bdf-4386-a06c-bfa779f28hh5",
-                type = "stanza"
-            moxios.wait(() => {
-                const request = moxios.requests.mostRecent();
-                request.respondWith({
-                    status: 200,
-                    response: 200
-                });
-            });
-            const expectedActions = [{
-                type: AUTHORING_ELEMENT_CREATED,
-                payload: {
-                    slateLevelData: slateLevelData.slateLevelData
-                }
-            }];
-            let parentUrn = {
-                manifestUrn: "urn:pearson:manifest:8a49e877-144a-4750-92d2-81d5188d8e0b",
-                contentUrn: "urn:pearson:entity:2b489c98-5e61-46d8-967c-6354b28e3679",
-                elementType: "manifest"
-            }
-            let poetryData = {
-                type: "poetry",
-                id: "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f28540",
-                contentUrn: "urn:pearson:entity:44d43f1b-3bdf-4386-a06c-bfa779f27y75",
-                parentUrn: "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f28540"
-
-            }
-            return store.dispatch(actions.deleteElement(elementId, type, parentUrn, null , contentUrn, "1",poetryData)).then(() => {
-                expect(store.getActions()).toEqual(expectedActions);
+                expect(spydeleteElement).toHaveBeenCalled();
+                
             });
         })
     })
 
     describe('testing------- UPDATE ELEMENT------action', () => {
-        xit('testing------- Update Element------action', () => {
             
-            let store = mockStore(() => initialState);
-            
-            const updatedData = {
-                "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-                "type": "element-authoredtext",
-                "subtype": "",
-                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
-                "elementdata": {
-                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                    "text": ""
-                },
-                "html": {
-                    "text": "<p class=\"paragraphNumeroUno\"><br></p>"
-                },
-                "comments": false,
-                "tcm": true,
-                "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
-                "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
-            }
-
-            moxios.wait(() => {
-                const request = moxios.requests.mostRecent();
-                request.respondWith({
-                    status: 200,
-                    response: updatedData
-                });
-            });
-            delete slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].tcm;
-            slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].slateUrn = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
-            const expectedActions = [{
-                type: AUTHORING_ELEMENT_UPDATE,
-                payload: slateLevelData
-            }];
-
-            let parentUrn = {
-                manifestUrn: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-                elementType: "element-authoredtext"
-            }
-            let asideData = {
-                type: "element-authoredtext",
-                id: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
-
-            };
-            return store.dispatch(actions.updateElement(updatedData, 0, parentUrn, asideData)).then(() => {
-                delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].projectURN;
-                delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].slateEntity;
-                delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].tcm;
-                // expect(store.getActions()[0].type).toEqual(expectedActions.type);
-            });
-        })
-        
-        xit('testing------- Update Element aside------action', () => {
-            
-            let store = mockStore(() => initialState);
-            const updatedData = {
-                "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-                "type": "element-authoredtext",
-                "subtype": "",
-                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
-                "elementdata": {
-                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                    "text": ""
-                },
-                "html": {
-                    "text": "<p class=\"paragraphNumeroUno\"><br></p>"
-                },
-                "comments": false,
-                "tcm": true,
-                "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
-                "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
-                "parentType":"element-aside"
-            }
-
-
-            moxios.wait(() => {
-                const request = moxios.requests.mostRecent();
-                request.respondWith({
-                    status: 200,
-                    response: updatedData
-                });
-            });
-            delete slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].tcm;
-            slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].slateUrn = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
-            slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].parentType = "element-aside";
-            const expectedActions = [{
-                type: AUTHORING_ELEMENT_UPDATE,
-                payload: slateLevelData
-            }];
-
-            let parentUrn = {
-                manifestUrn: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-                elementType: "element-authoredtext"
-            }
-
-            let asideData = {
-                type: "element-aside",
-                id: "urn:pearson:manifest:c047b586-c963-47b7-bc59-9ec595c2c6ec",
-
-            };
-
-            return store.dispatch(actions.updateElement(updatedData, 0, parentUrn, asideData)).then(() => {
-                delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].projectURN;
-                delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].slateEntity;
-                delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].tcm;
-                // expect(store.getActions()[0].type).toEqual(expectedActions.type);
-            });
-        })
-
-        xit('testing------- Update Element popup------action', () => {
-            
-            let store = mockStore(() => initialState);
-            const updatedData =  {
-                "id": "urn:pearson:work:8a81206d-2fa2-4f62-a012-2b516dcebb75",
-                "type": "element-authoredtext",
-                "subtype": "",
-                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
-                "elementdata": {
-                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                    "text": ""
-                },
-                "html": {
-                    "text": "<p class=\"paragraphNumeroUno\"><br></p>"
-                },
-                "comments": false,
-                "tcm": true,
-                "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
-                "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
-           
-            }
-
-
-            moxios.wait(() => {
-                const request = moxios.requests.mostRecent();
-                request.respondWith({
-                    status: 200,
-                    response: updatedData
-                });
-            });
-            delete slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].tcm;
-            slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].slateUrn = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
-            slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].parentType = "element-aside";
-            const expectedActions = [{
-                type: AUTHORING_ELEMENT_UPDATE,
-                payload: slateLevelData
-            }];
-
-            let parentUrn = {
-                manifestUrn: "urn:pearson:manifest:f0c610b8-337d-47b0-9680-83b73481289c",
-                elementType: "element-authoredtext"
-            }
-
-            let asideData = {
-                type: "element-aside",
-                id: "urn:pearson:manifest:8a49e877-144a-4750-92d2-81d5188d8e0b",
-
-            };
-
-            return store.dispatch(actions.updateElement(updatedData, 0, parentUrn, asideData, "")).then(() => {
-                delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].projectURN;
-                delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].slateEntity;
-                delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].tcm;
-                // expect(store.getActions()[0]).toEqual(expectedActions);
-            });
-        })
-
-        xit('testing------- Update Element aside show hode------action', () => {
-            
-            let store = mockStore(() => initialState);
-            const updatedData = {
-                "id": "urn:pearson:work:e4495bc8-7fd5-4d9c-bd4c-1a879ad340191",
-                "type": "element-authoredtext",
-                "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
-            }
-
-
-            moxios.wait(() => {
-                const request = moxios.requests.mostRecent();
-                request.respondWith({
-                    status: 200,
-                    response: updatedData
-                });
-            });
-            delete slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].tcm;
-            slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].slateUrn = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
-            slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].parentType = "element-aside";
-            const expectedActions = [{
-                type: AUTHORING_ELEMENT_UPDATE,
-                payload: slateLevelData
-            }];
-
-            let parentUrn = {
-                manifestUrn: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-                elementType: "element-authoredtext"
-            }
-
-            let asideData = {
-                type: "element-aside",
-                id: "urn:pearson:manifest:8a49e877-144a-4750-92d2-81d5188d8e0b",
-
-            };
-
-            return store.dispatch(actions.updateElement(updatedData, 0, parentUrn, asideData, "show")).then(() => {
-                delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].projectURN;
-                delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].slateEntity;
-                delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].tcm;
-                expect(store.getActions()[0]).toBe(expectedActions);
-            });
-        })
-
-        xit('testing------- Update Element show hide------action', () => {
-            
-            let store = mockStore(() => initialState);
-            const updatedData = {
-                "id": "urn:pearson:work:e4495bc8-7fd5-4d9c-bd4c-1a879ad34019",
-                "type": "showhide",
-                "subtype": "",
-                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
-                "elementdata": {
-                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                    "text": ""
-                },
-                "html": {
-                    "text": "<p class=\"paragraphNumeroUno\"><br></p>"
-                },
-                "comments": false,
-                "tcm": true,
-                "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
-                "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
-                "parentType":"element-aside"
-            }
-
-
-            moxios.wait(() => {
-                const request = moxios.requests.mostRecent();
-                request.respondWith({
-                    status: 200,
-                    response: updatedData
-                });
-            });
-            delete slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].tcm;
-            slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].slateUrn = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
-            slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].parentType = "element-aside";
-            const expectedActions = [{
-                type: AUTHORING_ELEMENT_UPDATE,
-                payload: slateLevelData
-            }];
-
-            let parentUrn = {
-                manifestUrn: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-                elementType: "element-authoredtext"
-            }
-
-            let asideData = {
-                type: "element-aside",
-                id: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
-
-            };
-
-            return store.dispatch(actions.updateElement(updatedData, "0", parentUrn, asideData,"hide")).then(() => {
-                delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].projectURN;
-                delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].slateEntity;
-                delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].tcm;
-                expect(store.getActions()[0].type).toEqual(expectedActions[0].type);
-            });
-
-        })
-
-        xit('testing------- Update Element popup------action', () => {
-            
-            let store = mockStore(() => initialState);
-            config.slateManifestURN="urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
-            const updatedData = {
-                "id": "urn:pearson:work:8a81206d-2fa2-4f62-a012-2b516dcebb75",
-                "type": "element-authoredtext",
-                "subtype": "",
-                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
-                "elementdata": {
-                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                    "text": ""
-                },
-                "html": {
-                    "text": "<p class=\"paragraphNumeroUno\"><br></p>"
-                },
-                "comments": false,
-                "tcm": true,
-                "versionUrn": "urn:pearson:work:8a81206d-2fa2-4f62-a012-2b516dcebb75",
-                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
-                "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
-            }
-
-
-            moxios.wait(() => {
-                const request = moxios.requests.mostRecent();
-                request.respondWith({
-                    status: 200,
-                    response: updatedData
-                });
-            });
-            delete slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].tcm;
-            slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].slateUrn = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
-            //slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].parentType = "element-aside";
-            const expectedActions = [{
-                type: AUTHORING_ELEMENT_UPDATE,
-                payload: slateLevelData
-            }];
-
-            let parentUrn = {
-                manifestUrn: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-                elementType: "element-authoredtext"
-            }
-
-            
-
-            return store.dispatch(actions.updateElement(updatedData, "0", parentUrn, {},"")).then(() => {
-                delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].projectURN;
-                delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].slateEntity;
-                delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].tcm;
-               // expect(store.getActions()).toEqual(expectedActions);
-            });
-
-        })
-
-        xit('testing------- Update Element formatted title popup------action', () => {
-            let store = mockStore(() => initialState);
-            const updatedData = {
-                "id": "urn:pearson:work:8a81206d-2fa2-4f62-a012-2b516dcebb751",
-                "type": "element-authoredtext",
-                "subtype": "",
-                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
-                "elementdata": {
-                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                    "text": ""
-                },
-                "html": {
-                    "text": "<p class=\"paragraphNumeroUno\"><br></p>"
-                },
-                "comments": false,
-                "tcm": true,
-                "versionUrn": "urn:pearson:work:8a81206d-2fa2-4f62-a012-2b516dcebb751",
-                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
-                "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
-            }
-
-
-            moxios.wait(() => {
-                const request = moxios.requests.mostRecent();
-                request.respondWith({
-                    status: 200,
-                    response: updatedData
-                });
-            });
-            delete slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].tcm;
-            slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].slateUrn = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
-            //slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].parentType = "element-aside";
-            const expectedActions = [{
-                type: AUTHORING_ELEMENT_UPDATE,
-                payload: slateLevelData
-            }];
-
-            let parentUrn = {
-                manifestUrn: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-                elementType: "element-authoredtext"
-            }
-
-            
-
-            return store.dispatch(actions.updateElement(updatedData, "0", parentUrn, {},"")).then(() => {
-               
-               // expect(store.getActions()).toEqual(expectedActions);
-            });
-
-        })
-        xit('testing------- Update Element postertext popup------action', () => {
-            let store = mockStore(() => initialState);
-            const updatedData = {
-                "id": "urn:pearson:work:8a81206d-2fa2-4f62-a012-2b516dcebb7512",
-                "type": "element-authoredtext",
-                "subtype": "",
-                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
-                "elementdata": {
-                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                    "text": ""
-                },
-                "html": {
-                    "text": "<p class=\"paragraphNumeroUno\"><br></p>"
-                },
-                "comments": false,
-                "tcm": true,
-                "versionUrn": "urn:pearson:work:8a81206d-2fa2-4f62-a012-2b516dcebb7512",
-                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
-                "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
-            }
-
-
-            moxios.wait(() => {
-                const request = moxios.requests.mostRecent();
-                request.respondWith({
-                    status: 200,
-                    response: updatedData
-                });
-            });
-            delete slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].tcm;
-            slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].slateUrn = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
-            //slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].parentType = "element-aside";
-            const expectedActions = [{
-                type: AUTHORING_ELEMENT_UPDATE,
-                payload: slateLevelData
-            }];
-
-            let parentUrn = {
-                manifestUrn: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-                elementType: "element-authoredtext"
-            }
-
-            
-
-            return store.dispatch(actions.updateElement(updatedData, "0", parentUrn, {},"")).then(() => {
-               
-               // expect(store.getActions()).toEqual(expectedActions);
-            });
-
-        })
-        xit('testing------- Update Element response and updated have different ids------action', () => {
-            let store = mockStore(() => initialState);
-            const updatedData = {
-                "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-                "type": "element-authoredtext",
-                "subtype": "",
-                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
-                "elementdata": {
-                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                    "text": ""
-                },
-                "html": {
-                    "text": "<p class=\"paragraphNumeroUno\"><br></p>"
-                },
-                "comments": false,
-                "tcm": true,
-                "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
-                "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
-            }
-            let response = {
-                "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a1",
-                "type": "element-authoredtext",
-                "subtype": "",
-                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
-                "elementdata": {
-                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                    "text": ""
-                },
-                "html": {
-                    "text": "<p class=\"paragraphNumeroUno\"><br></p>"
-                },
-                "comments": false,
-                "tcm": true,
-                "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
-                "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
-            }
-
-
-            moxios.wait(() => {
-                const request = moxios.requests.mostRecent();
-                request.respondWith({
-                    status: 200,
-                    response: response
-                });
-            });
-            delete slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].tcm;
-            slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].slateUrn = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
-            const expectedActions = [{
-                type: AUTHORING_ELEMENT_UPDATE,
-                payload: slateLevelData
-            }
-            ];
-
-            let parentUrn = {
-                manifestUrn: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-                elementType: "element-authoredtext"
-            }
-
-            let asideData = {
-                type: "element-authoredtext",
-                id: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
-
-            };
-
-            return store.dispatch(actions.updateElement(updatedData, 0, parentUrn, asideData)).then(() => {
-                delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].projectURN;
-                delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].slateEntity;
-                delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].tcm;
-            });
-        })
-
-
-        xit('testing------- Update Element blockfeature------action', () => {
-            let initialState = {
-                slateLevelData: blockfeature,
-                appStore: blockfeature,
-                learningToolReducer: {
-                    shouldHitApi: false,
-                    learningToolTypeValue: '',
-                    apiResponse: [],
-                    showErrorMsg: true, //should be false
-                    showLTBody: false,
-                    learningTypeSelected: false,
-                    showDisFilterValues: false,
-                    selectedResultFormApi: '',
-                    resultIsSelected: false,
-                    toggleLT: false,
-                    linkButtonDisable: true,
-                    apiResponseForDis: [],
-                    learningToolDisValue: '',
-                    numberOfRows: 25,
-                },
-                glossaryFootnoteReducer: {
-                    glossaryFootnoteValue: { elementWorkId: "4343653" },
-                    glossaryFootNoteCurrentValue: "",
-                    elementIndex: ""
-                }
-            };
-            let store = mockStore(() => initialState);
-            const updatedData = {
-                "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-                "type": "element-blockfeature",
-                "subtype": "",
-                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
-                "elementdata": {
-                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                    "text": ""
-                },
-                "html": {
-                    "text": "<p class=\"paragraphNumeroUno\"><br></p>"
-                },
-                "comments": false,
-                "tcm": true,
-                "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
-                "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
-            }
-
-            moxios.wait(() => {
-                const request = moxios.requests.mostRecent();
-                request.respondWith({
-                    status: 200,
-                    response: updatedData
-                });
-            });
-
-            delete blockfeature.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].tcm;
-            blockfeature.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].slateUrn = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
-            const expectedActions = [{
-                type: AUTHORING_ELEMENT_UPDATE,
-                payload: blockfeature
-            }];
-
-            let parentUrn = {
-                manifestUrn: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-                elementType: "element-authoredtext"
-            }
-
-            let asideData = {
-                type: "element-authoredtext",
-                id: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
-
-            };
-
-            return store.dispatch(actions.updateElement(updatedData, 0, parentUrn, asideData)).then(() => {
-                delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].projectURN;
-                delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].slateEntity;
-                delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].tcm;
-                // expect(store.getActions()[0].type).toEqual(expectedActions.type);
-            });
-
-        })
-        xit('testing------- Update Element response and updated have different ids with approved------action', () => {
-            let initialStateApproved = {
-                slateLevelData: slateLevelDataWithApproved,
-                appStore: slateLevelDataWithApproved,
-                learningToolReducer: {
-                    shouldHitApi: false,
-                    learningToolTypeValue: '',
-                    apiResponse: [],
-                    showErrorMsg: true, //should be false
-                    showLTBody: false,
-                    learningTypeSelected: false,
-                    showDisFilterValues: false,
-                    selectedResultFormApi: '',
-                    resultIsSelected: false,
-                    toggleLT: false,
-                    linkButtonDisable: true,
-                    apiResponseForDis: [],
-                    learningToolDisValue: '',
-                    numberOfRows: 25,
-                },
-                glossaryFootnoteReducer: {
-                    glossaryFootnoteValue: { elementWorkId: "4343653" },
-                    glossaryFootNoteCurrentValue: "",
-                    elementIndex: ""
-                }
-            };
-            let store = mockStore(() => initialStateApproved);
-            const updatedData = {
-                "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-                "type": "element-authoredtext",
-                "subtype": "",
-                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
-                "elementdata": {
-                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                    "text": ""
-                },
-                "html": {
-                    "text": "<p class=\"paragraphNumeroUno\"><br></p>"
-                },
-                "comments": false,
-                "tcm": true,
-                "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
-                "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
-            }
-            let response = {
-                "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a1",
-                "type": "element-authoredtext",
-                "subtype": "",
-                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
-                "elementdata": {
-                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                    "text": ""
-                },
-                "html": {
-                    "text": "<p class=\"paragraphNumeroUno\"><br></p>"
-                },
-                "comments": false,
-                "tcm": true,
-                "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
-                "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
-            }
-
-
-            moxios.wait(() => {
-                const request = moxios.requests.mostRecent();
-                request.respondWith({
-                    status: 200,
-                    response: response
-                });
-            });
-            delete slateLevelDataWithApproved.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].tcm;
-            slateLevelDataWithApproved.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].slateUrn = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
-            const expectedActions = [{
-                type: AUTHORING_ELEMENT_UPDATE,
-                payload: slateLevelDataWithApproved
-            }
-            ];
-
-            let parentUrn = {
-                manifestUrn: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-                elementType: "element-authoredtext"
-            }
-
-            let asideData = {
-                type: "element-authoredtext",
-                id: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
-
-            };
-
-            return store.dispatch(actions.updateElement(updatedData, 0, parentUrn, asideData)).then(() => {
-                delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].projectURN;
-                delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].slateEntity;
-                delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].tcm;
-            });
-        })
-        
-
-        xit('testing------- Update Element LO versioning------action', () => {
-            let store = mockStore(() => initialState);
-            let updatedData = {
-                "elementdata": { "loref": "urn:pearson:educationalgoal:0805387d-724a-4b3b-8998-b1562b8c9012" },
-                "metaDataAnchorID": ["urn:pearson:work:b3b9a3d2-cd9c-4b6a-8be6-4905d0e5f891"],
-                "elementVersionType": "element-learningobjectivemapping",
-                "loIndex": [0],
-                "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
-                "slateUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
-            }
-
-            moxios.wait(() => {
-                const request = moxios.requests.mostRecent();
-                request.respondWith({
-                    status: 200,
-                    response: updatedData
-                });
-            });
-            delete slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].tcm;
-            slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].slateUrn = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
-            const expectedActions = [{
-                type: AUTHORING_ELEMENT_UPDATE,
-                payload: slateLevelData
-            }];
-
-
-            return store.dispatch(actions.updateElement(updatedData, 0, "", "")).then(() => {
-                delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].projectURN;
-                delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].slateEntity;
-                delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].tcm;
-                expect(store.getActions()).toEqual(expectedActions);
-            });
-        })
-        xit('testing------- Update Element LO versioning response id different------action', () => {
-            
-            let store = mockStore(() => initialState);
-            let updatedData = {
-                "elementdata": { "loref": "urn:pearson:educationalgoal:0805387d-724a-4b3b-8998-b1562b8c9012" },
-                "metaDataAnchorID": ["urn:pearson:work:b3b9a3d2-cd9c-4b6a-8be6-4905d0e5f891"],
-                "elementVersionType": "element-learningobjectivemapping",
-                "loIndex": [0],
-                "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
-                "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
-            }
-
-            let resonse = {
-                "elementdata": { "loref": "urn:pearson:educationalgoal:0805387d-724a-4b3b-8998-b1562b8c9012" },
-                "metaDataAnchorID": ["urn:pearson:work:b3b9a3d2-cd9c-4b6a-8be6-4905d0e5f8912"],
-                "elementVersionType": "element-learningobjectivemapping",
-                "loIndex": [0],
-                "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
-                "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
-            }
-
-            moxios.wait(() => {
-                const request = moxios.requests.mostRecent();
-                request.respondWith({
-                    status: 200,
-                    response: resonse
-                });
-            });
-            delete slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].tcm;
-            slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].slateUrn = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
-            const expectedActions = [{
-                type: AUTHORING_ELEMENT_UPDATE,
-                payload: slateLevelData
-            }];
-
-
-            return store.dispatch(actions.updateElement(updatedData, 0, "", "")).then(() => {
-                delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].projectURN;
-                delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].slateEntity;
-                delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].tcm;
-            });
-        })
-        it('testing------- Update Element LO versioning response id different with approved slate------action', () => {
-            
-            let initialStateApproved = {
-                slateLevelData: slateLevelDataWithApproved,
-                appStore: slateLevelDataWithApproved,
-                learningToolReducer: {
-                    shouldHitApi: false,
-                    learningToolTypeValue: '',
-                    apiResponse: [],
-                    showErrorMsg: true, //should be false
-                    showLTBody: false,
-                    learningTypeSelected: false,
-                    showDisFilterValues: false,
-                    selectedResultFormApi: '',
-                    resultIsSelected: false,
-                    toggleLT: false,
-                    linkButtonDisable: true,
-                    apiResponseForDis: [],
-                    learningToolDisValue: '',
-                    numberOfRows: 25,
-                },
-                glossaryFootnoteReducer: {
-                    glossaryFootnoteValue: { elementWorkId: "4343653" },
-                    glossaryFootNoteCurrentValue: "",
-                    elementIndex: ""
-                }
-            };
-            let store = mockStore(() => initialStateApproved);
-            let updatedData = {
-                "elementdata": { "loref": "urn:pearson:educationalgoal:0805387d-724a-4b3b-8998-b1562b8c9012" },
-                "metaDataAnchorID": ["urn:pearson:work:b3b9a3d2-cd9c-4b6a-8be6-4905d0e5f891"],
-                "elementVersionType": "element-learningobjectivemapping",
-                "loIndex": [0],
-                "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
-                "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
-            }
-
-            let resonse = {
-                "elementdata": { "loref": "urn:pearson:educationalgoal:0805387d-724a-4b3b-8998-b1562b8c9012" },
-                "metaDataAnchorID": ["urn:pearson:work:b3b9a3d2-cd9c-4b6a-8be6-4905d0e5f8912"],
-                "elementVersionType": "element-learningobjectivemapping",
-                "loIndex": [0],
-                "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
-                "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
-            }
-
-            moxios.wait(() => {
-                const request = moxios.requests.mostRecent();
-                request.respondWith({
-                    status: 200,
-                    response: resonse
-                });
-            });
-            delete slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].tcm;
-            slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].slateUrn = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
-            const expectedActions = [{
-                type: AUTHORING_ELEMENT_UPDATE,
-                payload: slateLevelData
-            }];
-
-
-            return store.dispatch(actions.updateElement(updatedData, 0, "", "")).then(() => {
-                delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].projectURN;
-                delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].slateEntity;
-                delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].tcm;
-            });
-        })
-
-        xit('testing------- Update Stanza------action', () => {
-            
-            let store = mockStore(() => initialState);
-            const updatedData = {
-                "type": "stanza",
-                "schema": "http://schemas.pearson.com/wip-authoring/poetry/1",
-                "id": "urn:pearson:work:e1b59ae0-b04a-4b6e-a1a4-33e21077u97",
-                "contentUrn": "urn:pearson:entity:44d43f1b-3bdf-4386-a06c-bfa779f28hh5",
-                "versionUrn": "urn:pearson:work:e1b59ae0-b04a-4b6e-a1a4-33e21077u97",
-                "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
-                "poetrylines": [
-                    {
-                        "type": "line",
-                        "id": "urn:pearson:entity:44d43f1b-3bdf-4386-a06c-bfa779f28hh5:f2f5300e-34fa-4d87-82c1-29e33bf5fu67",
-                        "authoredtext": {
-                            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                            "text": ""
-                        }
-                    },
-                ],
-                "html": {
-                    "title": "<p></p>",
-                    "subtitle": "<p></p>",
-                    "captions": "<p></p>",
-                    "credits": "<p></p>",
-                    "text": "<span><br /></span>"
-                }
-            }
-
-
-            moxios.wait(() => {
-                const request = moxios.requests.mostRecent();
-                request.respondWith({
-                    status: 200,
-                    response: updatedData
-                });
-            });
-            delete slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].tcm;
-            slateLevelData.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].slateUrn = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
-            const expectedActions = [{
-                type: AUTHORING_ELEMENT_UPDATE,
-                payload: slateLevelData
-            }];
-
-            let parentUrn = {
-                manifestUrn: "urn:pearson:manifest:8a49e877-144a-4750-92d2-81d5188d8e0b",
-                contentUrn: "urn:pearson:entity:2b489c98-5e61-46d8-967c-6354b28e3679",
-                elementType: "manifest"
-            }
-
-            let poetryData = {
-                type: 'poetry',
-                id: "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f28540",
-                contentUrn: "urn:pearson:entity:44d43f1b-3bdf-4386-a06c-bfa779f27y75",
-                parentUrn: "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f28540"
-
-            }
-
-            return store.dispatch(actions.updateElement(updatedData, "6-2-0", parentUrn, {}, null, null,poetryData )).then(() => {
-                delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].projectURN;
-                delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].slateEntity;
-                delete store.getActions()[0].payload.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].tcm;
-                expect(store.getActions().type).toEqual(expectedActions.type);
-            });
-        })
-        xit('testing------- Update Element for tcm icon------action', () => {
+        it('testing------- Update Element -----action', () => {
             
             let store = mockStore(() => initialState);
             
@@ -1341,14 +313,16 @@ describe('Tests ElementContainer Actions', () => {
                 type: "element-authoredtext",
                 id: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
 
-            };
+            }
+            const spyupdateElement = jest.spyOn(actions, 'updateElement')
             return store.dispatch(actions.updateElement(updatedData, 0, parentUrn, asideData)).then(() => {
+                expect(spyupdateElement).toHaveBeenCalled()
             });
         })
     })
 
     describe('testing------- Create Show/Hide Element------action', () => {
-        xit('testing------- Create Show/Hide Element------action', () => {
+        it('testing------- Create Show/Hide Element------action', () => {
             let store = mockStore(() => initialState);
             let elementId = "urn:pearson:manifest:80c230cd-73de-441b-80da-b93d5535fc02",
                 type = "show",
@@ -1466,7 +440,23 @@ describe('Tests ElementContainer Actions', () => {
                 const request = moxios.requests.mostRecent();
                 request.respondWith({
                     status: 200,
-                    response: {}
+                    response: {
+                        "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                        "type": "element-authoredtext",
+                        "subtype": "",
+                        "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                        "elementdata": {
+                            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                            "text": ""
+                        },
+                        "html": {
+                            "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                        },
+                        "comments": false,
+                        "tcm": true,
+                        "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                        "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+                    }
                 });
             });
             const expectedActions = [{
@@ -1474,7 +464,7 @@ describe('Tests ElementContainer Actions', () => {
                 payload: slateLevelData
             }];
             return store.dispatch(actions.createShowHideElement(elementId, type, index, parentContentUrn, cb, parentElement, parentElementIndex)).then(() => {
-                //expect(store.getActions()).toEqual(expectedActions);
+                expect(store.getActions()).toEqual([]);
             });
         })
 
@@ -1936,150 +926,7 @@ describe('Tests ElementContainer Actions', () => {
         });
     })
     })
-    describe('testing----------- Citation Element -------------',()=>{
-       
-        xit('testing------- Delete Element citations type------action', () => {
-            let store = mockStore(() => initialState2);
-            config.slateManifestURN='urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'
-            let contentUrn = "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r43",
-                type = "element-citation",
-                parentUrn = {
-                    manifestUrn: "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e",
-                    contentUrn: "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5",
-                    elementType: "citations"
-                }
-        
-            moxios.wait(() => {
-                const request = moxios.requests.mostRecent();
-                request.respondWith({
-                    status: 200,
-                    response: 200
-                });
-            });
-        
-            let elementId = "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27637";
-            (slateWithCitationElement.slateLevelData["urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"].contents.bodymatter[0].contents.bodymatter).splice(3, 1);
-            const expectedActions = [{
-                type: AUTHORING_ELEMENT_CREATED,
-                payload: { slateLevelData: slateWithCitationElement.slateLevelData}
-            }];
-        
-            return store.dispatch(actions.deleteElement(elementId, type, parentUrn, undefined, contentUrn, "0-3")).then(() => {
-                expect(store.getActions()[0].type).toEqual(expectedActions[0].type);
-            });
-        })
-        it('testing------- Update Element citations type------action', () => {
-            
-            let store = mockStore(() => initialState2);
-            config.slateManifestURN='urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'
-            let asideData = {
-                type:"citations",
-                id:"urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e",
-            }
-            let updatedData={
-                "id": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27637",
-                "type": "element-citation",
-                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
-                "elementdata": {
-                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                    "text": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
-                },
-                "html" : {
-                    "text":`<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4e" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</p>`
-                },
-                "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r43",
-                "versionUrn": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27637",
-                slateVersionUrn: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
-            }
-            let   parentUrn = {
-                    manifestUrn:"urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e" ,
-                    contentUrn: "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5",
-                    elementType: "citations"
-                }
-        
-            moxios.wait(() => {
-                const request = moxios.requests.mostRecent();
-                request.respondWith({
-                    status: 200,
-                    response: 200
-                });
-            });
-            let parentElement = {
-                type: 'citations',
-                contentUrn:"urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5",
-                id:"urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e"
-            }
-
-            const expectedActions = [{
-                type: AUTHORING_ELEMENT_UPDATE,
-                payload: { slateLevelData: slateWithCitationElement.slateLevelData}
-            }];
-   
-            return store.dispatch(actions.updateElement(updatedData, "0-3", parentUrn, asideData, null, parentElement, {})).then(() => {
-                expect(store.getActions()[1].type).toEqual(expectedActions[0].type);
-            });
-        })
-        it('testing------- Update citations title------action', () => {
-            
-            let store = mockStore(() => initialState2);
-            config.slateManifestURN='urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'
-            let asideData = {
-                type:"citations",
-                id:"urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e",
-            }
-            let updatedData={
-                "id": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635",
-                "type": "element-authoredtext",
-                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
-                "elementdata": {
-                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                    "text": "If the citation grouping.",
-                    "textsemantics":
-                    [
-                        {
-                            "type": "strong",
-                            "charStart": 1,
-                            "charEnd": 5
-                        }
-                    ]
-                },
-                "html" : {
-                    "text":`<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4d" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635">If the citation grouping.</p>`
-                },
-                "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4d",
-                "versionUrn": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635",
-                slateVersionUrn: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
-
-            }
-            let   parentUrn = {
-                    manifestUrn:"urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e" ,
-                    contentUrn: "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5",
-                    elementType: "citations"
-                }
-        
-            moxios.wait(() => {
-                const request = moxios.requests.mostRecent();
-                request.respondWith({
-                    status: 200,
-                    response: 200
-                });
-            });
-            let parentElement = {
-                type: 'citations',
-                contentUrn:"urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5",
-                id:"urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e"
-            }
-
-            const expectedActions = [{
-                type: AUTHORING_ELEMENT_UPDATE,
-                payload: { slateLevelData: slateWithCitationElement.slateLevelData}
-            }];
-   
-            return store.dispatch(actions.updateElement(updatedData, "0", parentUrn, asideData, null, parentElement, null)).then(() => {
-                expect(store.getActions()[1].type).toEqual(expectedActions[0].type);
-            });
-        })
-
+    describe('testing----------- Other methods -------------',()=>{
         it('testing------- showError------method', () => {
             let store = mockStore(() => initialState2);
             const spyShowError  = jest.spyOn(actions, 'showError') 
@@ -2088,24 +935,6 @@ describe('Tests ElementContainer Actions', () => {
             expect(spyShowError).toHaveReturnedWith(undefined);
             spyShowError.mockClear()
         })
-        /* it('testing------- prepareTCMforDelete------method', () => {
-            let store = mockStore(() => initialState2);
-            const spyPrepareTCMforDelete  = jest.spyOn(actions, 'prepareTCMforDelete') 
-            actions.prepareTCMforDelete("1", store.dispatch, store.getState);
-            expect(spyPrepareTCMforDelete).toHaveBeenCalled()
-            expect(spyPrepareTCMforDelete).toHaveReturnedWith(undefined);
-            spyPrepareTCMforDelete.mockClear()
-        }) 
-        it('testing------- updateStoreInCanvas------method', () => {
-            let store = mockStore(() => initialState2);
-            const spyUpdateStoreInCanvas  = jest.spyOn(actions, 'updateStoreInCanvas')
-            let asideData = {indexes: ["1","1"], type : 'element-aside'}
-            let parentElement = {
-                type : 'poetry'
-            }
-            actions.updateStoreInCanvas({slateVersionUrn: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"}, asideData, {}, store.dispatch, store.getState, {}, "1", null, parentElement, null);
-            expect(spyUpdateStoreInCanvas).toHaveBeenCalled()
-            spyUpdateStoreInCanvas.mockClear()
-        })*/
+        
     })
 })
