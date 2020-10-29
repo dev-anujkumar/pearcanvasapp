@@ -18,8 +18,7 @@ jest.mock('../../../src/constants/utility.js', () => ({
 }))
 jest.mock('../../../src/component/TcmSnapshots/TcmSnapshots_Utility.js', () => ({
     tcmSnapshotsForUpdate: jest.fn(),
-    fetchElementWipData: jest.fn(),
-
+    fetchElementWipData: jest.fn()
 }))
 jest.mock('../../../src/component/ElementContainer/ElementContainerDelete_helpers.js', () => ({
     tcmSnapshotsForDelete: jest.fn(),
@@ -366,10 +365,6 @@ describe('Tests ElementContainer Actions', () => {
                     response: {}
                 });
             });
-            const expectedActions = [{
-                type: CREATE_SHOW_HIDE_ELEMENT,
-                payload: slateLevelData
-            }];
             return store.dispatch(actions.createShowHideElement(elementId, type, index, parentContentUrn, cb, parentElement, parentElementIndex)).then(() => {
                 expect(store.getActions()[0].type).toEqual('CREATE_SHOW_HIDE_ELEMENT');
             });
@@ -513,12 +508,107 @@ describe('Tests ElementContainer Actions', () => {
                     response: {}
                 });
             });
-            const expectedActions = [{
-                type: CREATE_SHOW_HIDE_ELEMENT,
-                payload: slateLevelData
-            }];
+
             return store.dispatch(actions.createShowHideElement(elementId, type, index, parentContentUrn, cb, parentElement, parentElementIndex)).then(() => {
                 expect(store.getActions()[0].type).toEqual('GET_PAGE_NUMBER');
+            });
+        })
+        it('testing------- Create Show/Hide Element inside aside------action', () => {
+            let store = mockStore(() => initialState);
+            let elementId = "urn:pearson:manifest:80c230cd-73de-441b-80da-b93d5535fc02",
+                type = "show",
+                index = "1-1-0-0",
+                cb = jest.fn(),
+                parentContentUrn = "urn:pearson:entity:8341cba0-98b1-4952-aa62-a905ae8438a9",
+                parentElement = {
+                    id: "urn:pearson:manifest:3a6f5764-6428-4241-862b-cd2673fa4017",
+                    type: "showhide",
+                    schema: "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/showhide",
+                    versionUrn: "urn:pearson:manifest:3a6f5764-6428-4241-862b-cd2673fa4017",
+                    contentUrn: "urn:pearson:entity:8341cba0-98b1-4952-aa62-a905ae8438a9",
+                    interactivedata: {
+                        "postertextobject": [
+                            {
+                                "type": "element-authoredtext",
+                                "contentUrn": "urn:pearson:entity:5e36e9b2-08f6-4841-bb2f-1beb08f28905",
+                                "id": "urn:pearson:work:305cc470-3d3e-45f8-ae5d-4b10eff07e8f"
+                            }
+                        ],
+                        "show": [
+                            {
+                                "type": "element-authoredtext",
+                                "id": "urn:pearson:work:e4495bc8-7fd5-4d9c-bd4c-1a879ad34019"
+                            }
+                        ],
+                        "hide": [
+                            {
+                                "type": "element-authoredtext",
+                                "id": "urn:pearson:work:743ddeed-104e-44ad-8f11-affdcf1b2019"
+                            }
+                        ]
+                    }
+                },
+                parentElementIndex = "0"
+
+            moxios.wait(() => {
+                const request = moxios.requests.mostRecent();
+                request.respondWith({
+                    status: 200,
+                    response: {}
+                });
+            });
+            
+            return store.dispatch(actions.createShowHideElement(elementId, type, index, parentContentUrn, cb, parentElement, parentElementIndex)).then(() => {
+                expect(store.getActions()[0].type).toEqual('CREATE_SHOW_HIDE_ELEMENT');
+            });
+        })
+        it('testing------- Create Show/Hide Element inside WE------action', () => {
+            let store = mockStore(() => initialState);
+            let elementId = "urn:pearson:manifest:80c230cd-73de-441b-80da-b93d5535fc02",
+                type = "show",
+                index = "3-1-2-0-0",
+                cb = jest.fn(),
+                parentContentUrn = "urn:pearson:entity:8341cba0-98b1-4952-aa62-a905ae8438a9",
+                parentElement = {
+                    id: "urn:pearson:manifest:3a6f5764-6428-4241-862b-cd2673fa4017",
+                    type: "showhide",
+                    schema: "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/showhide",
+                    versionUrn: "urn:pearson:manifest:3a6f5764-6428-4241-862b-cd2673fa4017",
+                    contentUrn: "urn:pearson:entity:8341cba0-98b1-4952-aa62-a905ae8438a9",
+                    interactivedata: {
+                        "postertextobject": [
+                            {
+                                "type": "element-authoredtext",
+                                "contentUrn": "urn:pearson:entity:5e36e9b2-08f6-4841-bb2f-1beb08f28905",
+                                "id": "urn:pearson:work:305cc470-3d3e-45f8-ae5d-4b10eff07e8f"
+                            }
+                        ],
+                        "show": [
+                            {
+                                "type": "element-authoredtext",
+                                "id": "urn:pearson:work:e4495bc8-7fd5-4d9c-bd4c-1a879ad34019"
+                            }
+                        ],
+                        "hide": [
+                            {
+                                "type": "element-authoredtext",
+                                "id": "urn:pearson:work:743ddeed-104e-44ad-8f11-affdcf1b2019"
+                            }
+                        ]
+                    }
+                },
+                parentElementIndex = "0"
+
+            moxios.wait(() => {
+                const request = moxios.requests.mostRecent();
+                request.respondWith({
+                    status: 200,
+                    response: {}
+                });
+            });
+            
+            return store.dispatch(actions.createShowHideElement(elementId, type, index, parentContentUrn, cb, parentElement, parentElementIndex)).then(() => {
+                expect(store.getActions()[0].type).toEqual('CREATE_SHOW_HIDE_ELEMENT');
             });
         })
     })
@@ -555,6 +645,113 @@ describe('Tests ElementContainer Actions', () => {
                 expect(store.getActions()[0].type).toEqual('GET_PAGE_NUMBER');
             });
 
+        })
+
+        it('testing------- Delete SHOW HIDE ELEMENT inside aside------action', () => {
+            let store = mockStore(() => initialState);
+
+            let elementId = "urn:pearson:manifest:80c230cd-73de-441b-80da-b93d5535fc02",
+                type = "show",
+                index = "1-1-0-0",
+                eleIndex = "1-1-0-0",
+                parentId = "urn:pearson:manifest:80c230cd-73de-441b-80da-b93d5535fc02",
+                parentUrn = "urn:pearson:entity:8341cba0-98b1-4952-aa62-a905ae8438a9",
+                parentElement = {
+                    id: "urn:pearson:manifest:3a6f5764-6428-4241-862b-cd2673fa4017",
+                    type: "showhide",
+                    schema: "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/showhide",
+                    versionUrn: "urn:pearson:manifest:3a6f5764-6428-4241-862b-cd2673fa4017",
+                    contentUrn: "urn:pearson:entity:8341cba0-98b1-4952-aa62-a905ae8438a9",
+                    interactivedata: {
+                        "postertextobject": [
+                            {
+                                "type": "element-authoredtext",
+                                "contentUrn": "urn:pearson:entity:5e36e9b2-08f6-4841-bb2f-1beb08f28905",
+                                "id": "urn:pearson:work:305cc470-3d3e-45f8-ae5d-4b10eff07e8f"
+                            }
+                        ],
+                        "show": [
+                            {
+                                "type": "element-authoredtext",
+                                "id": "urn:pearson:work:e4495bc8-7fd5-4d9c-bd4c-1a879ad34019"
+                            }
+                        ],
+                        "hide": [
+                            {
+                                "type": "element-authoredtext",
+                                "id": "urn:pearson:work:743ddeed-104e-44ad-8f11-affdcf1b2019"
+                            }
+                        ]
+                    }
+                },
+                parentElementIndex = "0",
+                cb = jest.fn();
+
+            moxios.wait(() => {
+                const request = moxios.requests.mostRecent();
+                request.respondWith({
+                    status: 200,
+                    response: {}
+                });
+            });
+
+            return store.dispatch(actions.deleteShowHideUnit(elementId, type, parentUrn, index, eleIndex, parentId, cb, parentElement, parentElementIndex)).then(() => {
+                expect(cb).toBeCalled();
+                expect(store.getActions()[0].type).toEqual(DELETE_SHOW_HIDE_ELEMENT);
+            });
+
+        })
+        it('testing------- Delete Show/Hide Element inside WE------action', () => {
+            let store = mockStore(() => initialState);
+            let elementId = "urn:pearson:manifest:80c230cd-73de-441b-80da-b93d5535fc02",
+                type = "show",
+                index = "3-1-2-0-0",
+                eleIndex = "3-1-2-0-0",
+                cb = jest.fn(),
+                parentId = "urn:pearson:manifest:f0c610b8-337d-47b0-9680-83b73481289c",
+                parentUrn = "urn:pearson:entity:8341cba0-98b1-4952-aa62-a905ae8438a9",
+                parentElement = {
+                    id: "urn:pearson:manifest:3a6f5764-6428-4241-862b-cd2673fa4017",
+                    type: "showhide",
+                    schema: "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/showhide",
+                    versionUrn: "urn:pearson:manifest:3a6f5764-6428-4241-862b-cd2673fa4017",
+                    contentUrn: "urn:pearson:entity:8341cba0-98b1-4952-aa62-a905ae8438a9",
+                    interactivedata: {
+                        "postertextobject": [
+                            {
+                                "type": "element-authoredtext",
+                                "contentUrn": "urn:pearson:entity:5e36e9b2-08f6-4841-bb2f-1beb08f28905",
+                                "id": "urn:pearson:work:305cc470-3d3e-45f8-ae5d-4b10eff07e8f"
+                            }
+                        ],
+                        "show": [
+                            {
+                                "type": "element-authoredtext",
+                                "id": "urn:pearson:work:e4495bc8-7fd5-4d9c-bd4c-1a879ad34019"
+                            }
+                        ],
+                        "hide": [
+                            {
+                                "type": "element-authoredtext",
+                                "id": "urn:pearson:work:743ddeed-104e-44ad-8f11-affdcf1b2019"
+                            }
+                        ]
+                    }
+                },
+                parentElementIndex = "0"
+
+            moxios.wait(() => {
+                const request = moxios.requests.mostRecent();
+                request.respondWith({
+                    status: 200,
+                    response: {}
+                });
+            });
+            
+            const spydeleteShowHideUnit = jest.spyOn(actions,"deleteShowHideUnit")
+            return store.dispatch(actions.deleteShowHideUnit(elementId, type, parentUrn, index, eleIndex, parentId, cb, parentElement, parentElementIndex)).then(() => {
+                expect(spydeleteShowHideUnit).toHaveBeenCalled()
+            });
         })
         it('testing------- Delete SHOW HIDE ELEMENT with approved------action', () => {
             let initialStateApproved = {
@@ -926,7 +1123,15 @@ describe('Tests ElementContainer Actions', () => {
         });
     })
     })
-    describe('testing----------- Other methods -------------',()=>{
+    describe('testing----------- Other methods -------------',() => {
+
+        let initialState3 = {
+            slateLevelData: slateLevelData,
+            appStore: {
+                slateLevelData : slateLevelData.slateLevelData
+            }
+        }
+        config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
         it('testing------- showError------method', () => {
             let store = mockStore(() => initialState2);
             const spyShowError  = jest.spyOn(actions, 'showError') 
@@ -959,5 +1164,20 @@ describe('Tests ElementContainer Actions', () => {
             expect(spycontentEditableFalse).toHaveReturnedWith(dataToUpdate)
             spycontentEditableFalse.mockClear()
         })
+        it("updateFigureData helper method - simple figure", () => {
+            let store = mockStore(() => initialState3);
+
+            const figureData = {},
+                elementIndex = 6,
+                elementId = "urn:pearson:work:01e6b4a6-efb5-4f0b-b0e7-cdb47a84e4eb",
+                dispatch = jest.fn(),
+                getState = store.getState;
+
+            const spyupdateFigureData = jest.spyOn(actions, 'updateFigureData')
+            actions.updateFigureData(figureData, elementIndex, elementId, cb)(dispatch, getState)
+            expect(spyupdateFigureData).toHaveBeenCalled()
+            spyupdateFigureData.mockClear()
+        })
+
     })
 })

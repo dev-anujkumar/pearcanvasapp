@@ -14,7 +14,8 @@ jest.mock('../../../src/constants/utility.js', () => ({
     hasReviewerRole: jest.fn()
 }))
 jest.mock('../../../src/component/TcmSnapshots/TcmSnapshots_Utility.js', () => ({
-    tcmSnapshotsForUpdate: jest.fn()
+    tcmSnapshotsForUpdate: jest.fn(),
+    checkContainerElementVersion: jest.fn()
 }))
 let cb = new stub();
 jest.setTimeout(10000);
@@ -286,7 +287,7 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
         spydeleteFromStore.mockClear()
     })
     describe("TCM helper methods", () => {
-        it("tcmSnapshotsForDelete - normal element", () => {
+        it("tcmSnapshotsForDelete - normal element", async () => {
         
             let deleteData = {
                 wipData: updatedData,
@@ -295,16 +296,22 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 newVersionUrns: updatedData,
                 index: "0"
             }
-            let args = { 
-                elementDeleteData: deleteData,
-                type: "element-authoredtext",
-                containerElement: null
-            }
             
             const spytcmSnapshotsForDelete = jest.spyOn(deleteHelpers, "tcmSnapshotsForDelete")
-            deleteHelpers.tcmSnapshotsForDelete(args)
+            deleteHelpers.tcmSnapshotsForDelete(deleteData, "element-authoredtext", {})
             expect(spytcmSnapshotsForDelete).toHaveBeenCalled()
             spytcmSnapshotsForDelete.mockClear()
+        })
+        it("onSlateApproved", async () => {
+            const currentSlateData = { type: "popup"},
+                dispatch = jest.fn(),
+                fetchSlateData = jest.fn();
+            
+            const spyonSlateApproved = jest.spyOn(deleteHelpers, "onSlateApproved")
+            deleteHelpers.onSlateApproved(currentSlateData, dispatch, fetchSlateData)
+            expect(spyonSlateApproved).toHaveBeenCalled()
+            expect(spyonSlateApproved).toHaveReturnedWith(false)
+            spyonSlateApproved.mockClear()
         })
     })
 })
