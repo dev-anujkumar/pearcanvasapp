@@ -5,29 +5,6 @@
 
 /** @discription This object consists of list of  learning App types */
 export const learningSystemList = {
-    "accounting-sims":"knowdl",                     //"Accounting Sims"
-    "criminal-justice-sims":"knowdl",               //"Criminal Justice Sims"
-    "digital-interactives":"knowdl",
-    "economics-sims":"knowdl",                      //"Economic Sims"
-    "helpdesk":"knowdl",                            //"HelpDesk"
-    "hospitality-sims":"knowdl",                    //"Hospitality Sims"
-    "information-technology-sims":"knowdl",         //"Information Technology Sims"
-    "personal-finance-experience":"knowdl",         //"Personal Finance"
-    "Psychology Sims":"knowdl",                     //"Psychology Sims"
-    "qual-sims":"knowdl",                           //"Qualitative Business Sims",
-    "soundbytes":"knowdl",                          //"Sound Bytes"
-    "political-science-sims":"knowdl",              //"Political Science Sims"
-    "video-library":"knowdl",                       //"Video Library"
-    "video-submission":"mediashare",                //"Shared Media"
-    "video-quiz":"mediashare",                      //"Media Quiz" 
-    "myvirtual-child":"myvirtual-x",                //"MyVirtualChild"
-    "myvirtual-life":"myvirtual-x",                 //"MyVirtualLife"
-    "socialexplorer-surveys":"socialexplorer",      //"Surveys and Inventories"
-    "socialexplorer-pathways":"socialexplorer",     // "Adaptive Pathways"
-    "socialexplorer-explorations":"socialexplorer", //"Guided Data Explorations"
-    "writingsolutions":"writingsolutions"           //"Writing Solutions"  
-}
-export const learningSystemsData = {
     "accounting-sims": {
         learningSystem: "knowdl",
         appType: "accounting-sims",

@@ -5,7 +5,7 @@ import React from 'react';
 import '../../../../styles/AssessmentSlateCanvas/LearningTool/LearningTool.css';
 const LearningToolHeader = (props) => {
 
-    const { learningAppType, learningSystems, learningToolDisFilter, apiResponseForDis, showDisFilterValues, capitalizeString } = props;
+    const { setlearningAppType, learningSystems, setlearningToolDiscipline, apiResponseForDis, showDisFilterValues, capitalizeString } = props;
     /**
     * @discription - This function is for rendering disipline filter dynamically
     * @param {Array} disciplineApiResponse - Array of response from discipline API
@@ -32,14 +32,14 @@ const LearningToolHeader = (props) => {
     
     return (
         <div className="learningToolHeaderTypeFilter">
-            <span className="spanLTFilterType">Learning App Type <span className="required-field">*</span></span>
-            <select className="learningToolType" onChange={learningAppType}>
+            <div className="spanLTFilterType">Learning App Type <span className="required-field">*</span></div>
+            <select className="learningToolType" onChange={setlearningAppType}>
                 <option value="" selected>Select One</option>
                 {renderLearningAppTypeDropdown(learningSystems)}
             </select>
             {/* Render the discipline dropdown dynamically */}
             <span className="spanLTFilterDis">Discipline</span>
-            <select className="learningToolDis" onChange={learningToolDisFilter}>
+            <select className="learningToolDis" onChange={setlearningToolDiscipline}>
                 <option value="" selected>Select One</option>
                 {showDisFilterValues ? renderDisFilter(apiResponseForDis) : disabledOption }
             </select>

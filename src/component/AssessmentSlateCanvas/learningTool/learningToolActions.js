@@ -15,16 +15,15 @@ import {
   LINK_BUTTON_DISABLE,
   GET_LEARNING_SYSTEMS
 } from '../../../constants/Action_Constants';
-import {learningSystemList, learningSystemsData, TAXONOMIC_ID_DISCIPLINES, TAXONOMIC_ID_LEARNING_SYSTEM, LT_LA_API_ERROR } from './learningToolUtility';
+import {learningSystemList, TAXONOMIC_ID_DISCIPLINES, TAXONOMIC_ID_LEARNING_SYSTEM, LT_LA_API_ERROR } from './learningToolUtility';
 
 /**
   * @discription - This action is dispatched when search of leaning template
   * @param {String} toolType - value of learning tool type selected from dropdown
   * @param {String} learningSystem - value of learning system type selected
   */
-export const toolTypeFilterSelectedAction = (toolType, learningSystem) => dispatch => {
-
-  let url = config.ASSESSMENT_ENDPOINT + `learningtemplate/v2/?learningsystem= ${learningSystem}&&type=${toolType}`
+export const learningToolSearchAction = (learningSystem, learningAppType, searchLabel = "", searchKeyword = "") => dispatch => {
+  let url = setSearchUrl(learningSystem, learningAppType, searchLabel, searchKeyword);
   return axios.get(url,
     {
       headers: {
@@ -42,9 +41,10 @@ export const toolTypeFilterSelectedAction = (toolType, learningSystem) => dispat
           learningTypeSelected: true,
           showDisFilterValues: true,
           showLTBody: true,
-          learningToolTypeValue: toolType
+          learningToolTypeValue: learningAppType
         }
-      })},
+      })
+    },
       err => dispatch({
         type: LT_API_RESULT_FAIL, payload: {
           error: err,
@@ -56,48 +56,11 @@ export const toolTypeFilterSelectedAction = (toolType, learningSystem) => dispat
     })
 };
 
-/**
-  * @discription - This action is dispatched when search of leaning template with keyword
-  * @param {String} learningToolSearchValue - value of keyword to be searched
-  * @param {String} toolType1 - value of learning tool type selected from dropdown
-  * @param {String} learningSystem - value of learning system type selected
-  */
-export const learningToolSearchAction = (learningToolSearchValue, toolType1, learningSystem) => dispatch => {
-
-  let url = config.ASSESSMENT_ENDPOINT + `learningtemplate/v2/?learningsystem= ${learningSystem}&&type=${toolType1}&&keyword=${learningToolSearchValue}`
-  if (learningToolSearchValue) {
-    return axios.get(url,
-      {
-        headers: {
-          'X-Roles': 'ContentPlanningAdmin',
-          'Content-Type': 'application/json',
-          'apikey': config.STRUCTURE_APIKEY,
-          'pearsonssosession': config.ssoToken
-        }
-      }
-    )
-      .then(res => {
-        dispatch({
-          type: LT_API_RESULT, payload: {
-            apiResponse: res.data,
-            learningTypeSelected: true,
-            showDisFilterValues: true,
-            showLTBody: true,
-            learningToolTypeValue: toolType1
-          }
-        })},
-        err => dispatch({
-          type: LT_API_RESULT_FAIL, payload: {
-            error: err,
-            showDisFilterValues: false
-          }
-        })
-      ).catch(error => {
-        //console.log('this is error while fetching from LT_LA api', error)
-    })
-  }
-};
-
+const setSearchUrl = (learningSystem, learningAppType, searchLabel, searchKeyword) => {
+  let url = config.ASSESSMENT_ENDPOINT + `learningsystem=${learningSystem}&type=${learningAppType}&label=${searchLabel}&keyword=${searchKeyword}`
+  url = `https://contentapis-qa.pearsoncms.net/assessment-api/learningtemplate/v2/?learningsystem=socialexplorer&type=socialexplorer-pathways&label=Adaptive Pathway 15.2: Understanding Schizophrenia&keyword=LammOB1e`
+  return url
+}
 /**
   * @discription This action is dispached to fetch dropdown values for Learning Systems 
   *               and Disciplines based on taxomonic IDs
@@ -106,7 +69,7 @@ export const learningToolSearchAction = (learningToolSearchValue, toolType1, lea
 export const openLTFunction = (taxonomyId) => dispatch => {
 
   if (taxonomyId === TAXONOMIC_ID_LEARNING_SYSTEM) {
-    dispatch(fetchLearningSystems(learningSystemsData))
+    dispatch(fetchLearningSystems(learningSystemList))
   } else {
     let url = `${config.ASSESSMENT_ENDPOINT}learningtemplate/v2/taxonomy/${taxonomyId}?locale=en`;
     return axios.get(url,

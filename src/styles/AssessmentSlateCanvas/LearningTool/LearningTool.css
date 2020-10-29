@@ -71,6 +71,7 @@
 
 .spanLTFilterType {
     /* margin-left: 100px; */
+    display: inline-block;
     margin-right: 10px;
     font-family: 'Open Sans', sans-serif;
     font-size: 11px;
@@ -482,3 +483,7 @@ td.tableRowData{
         width : 960px;
     }
 }
+
+.spanLTFilterType .required-field{
+    color:red;
+} 
