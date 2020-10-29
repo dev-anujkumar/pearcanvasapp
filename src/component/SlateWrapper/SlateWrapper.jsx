@@ -41,6 +41,8 @@ import { assessmentConfirmationPopup } from '../AssessmentSlateCanvas/Assessment
 import { reloadSlate } from '../../component/ElementContainer/AssessmentEventHandling';
 import LazyLoad, {forceCheck} from "react-lazyload";
 
+import { getCommentElements } from './../Toolbar/Search/Search_Action.js';
+
 let random = guid();
 
 class SlateWrapper extends Component {
@@ -79,15 +81,25 @@ class SlateWrapper extends Component {
             if(this.props.searchNode !== '' && document.querySelector(`div[data-id="${this.props.searchNode}"]`) && this.props.searchNode !== this.props.searchParent) {
                 divObj += document.querySelector(`div[data-id="${this.props.searchNode}"]`).offsetTop;
             }
+
+            divObj = Math.round(divObj);
             document.getElementById('slateWrapper').scrollTop = divObj;
         }
 
-        if(this.props.commentSearchParent !== '' && document.querySelector(`div[data-id="${this.props.commentSearchParent}"]`) && !this.props.commentSearchScroll) {
+        if(this.props.commentSearchParent !== '' && document.querySelector(`div[data-id="${this.props.commentSearchParent}"]`)) {
             divObj = document.querySelector(`div[data-id="${this.props.commentSearchParent}"]`).offsetTop;
             if(this.props.commentSearchNode !== '' && document.querySelector(`div[data-id="${this.props.commentSearchNode}"]`) && this.props.commentSearchNode !== this.props.commentSearchParent) {
                 divObj += document.querySelector(`div[data-id="${this.props.commentSearchNode}"]`).offsetTop;
             }
-            document.getElementById('slateWrapper').scrollTop = divObj;
+
+            divObj = Math.round(divObj);
+            if(!this.props.commentSearchScroll) {
+                document.getElementById('slateWrapper').scrollTop = divObj;
+            }
+            
+            if(this.props.commentSearchScrollTop === divObj) {
+                this.props.getCommentElements('');
+            }
         }
     }
 
@@ -1303,6 +1315,7 @@ const mapStateToProps = state => {
         commentSearchParent: state.commentSearchReducer.parentId,
         commentSearchNode: state.commentSearchReducer.commentSearchTerm,
         commentSearchScroll: state.commentSearchReducer.scroll,
+        commentSearchScrollTop: state.commentSearchReducer.scrollTop,
         showToast: state.appStore.showToast,
         showConfirmationPopup: state.assessmentReducer.showConfirmationPopup,
     };
@@ -1332,5 +1345,6 @@ export default connect(
         handleTCMData,
         fetchSlateData,
         assessmentConfirmationPopup,
+        getCommentElements
     }
 )(SlateWrapper);

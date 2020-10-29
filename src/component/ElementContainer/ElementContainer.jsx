@@ -52,7 +52,7 @@ import { handleElmPortalEvents } from '../ElementContainer/AssessmentEventHandli
 import { checkFullElmAssessment, checkEmbeddedElmAssessment } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 import { setScroll } from './../Toolbar/Search/Search_Action.js';
 import { SET_SEARCH_URN, SET_COMMENT_SEARCH_URN } from './../../constants/Search_Constants.js';
-
+import { ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, SECONDARY_SINGLE_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -113,12 +113,14 @@ class ElementContainer extends Component {
         let { element } = this.props
         let embeddedAssessment = checkEmbeddedElmAssessment(element);
         if (this.props.element && embeddedAssessment === true) {
-            let itemData = {
-                itemId: element.figuredata.elementdata.assessmentitemid,
-                parentId: element.figuredata.elementdata.assessmentid,
+            const assessmentID = element.figuredata.elementdata.assessmentid;
+            const assessmentItemID = element.figuredata.elementdata.assessmentitemid;
+            const itemData = {
+                itemId: assessmentItemID,
+                parentId: assessmentID,
                 type: 'assessment-item'
             }
-            this.props.checkAssessmentStatus(element.figuredata.elementdata.assessmentid, 'fromElementContainer', "", "", itemData)
+            this.props.checkAssessmentStatus(assessmentID, 'fromElementContainer', "", "", itemData)
         }
         document.addEventListener('click',()=>{
             this.setState({showCopyPopup : false})
@@ -756,7 +758,8 @@ class ElementContainer extends Component {
         let element = currrentElement ? currrentElement : this.props.element
         let parentElement = ((currrentElement && currrentElement.type === elementTypeConstant.CITATION_ELEMENT) || (this.props.parentElement && (this.props.parentElement.type === 'poetry' || this.props.parentElement.type === "groupedcontent"))) ? this.props.parentElement : this.props.element
         if (calledFrom && calledFrom == 'fromEmbeddedAssessment') {
-            this.handleContentChange(node, element, 'element-assessment', 'primary-single-assessment', 'secondary-single-assessment-' + this.props.element.figuredata.elementdata.assessmentformat, activeEditorId, forceupdate, parentElement, showHideType);
+            const seconadaryAssessment = SECONDARY_SINGLE_ASSESSMENT + this.props.element.figuredata.elementdata.assessmentformat;
+            this.handleContentChange(node, element, ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, seconadaryAssessment, activeEditorId, forceupdate, parentElement, showHideType);
         } else {
             this.handleContentChange(node, element, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType)
         }
@@ -780,10 +783,10 @@ class ElementContainer extends Component {
             } else {
                 dataToSend.elementdata.assessmenttitle = assessmentData.title;
             }
-            this.handleContentChange('', dataToSend, 'element-assessment', 'primary-assessment-slate', 'secondary-assessment-' + assessmentData.format)
+            this.handleContentChange('', dataToSend, ELEMENT_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT + assessmentData.format)
         } else {
             dataToSend.elementdata.usagetype = assessmentData;
-            this.handleContentChange('', dataToSend, 'element-assessment', 'primary-assessment-slate', 'secondary-assessment-' + this.props.element.elementdata.assessmentformat)
+            this.handleContentChange('', dataToSend, ELEMENT_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT + this.props.element.elementdata.assessmentformat)
         }
 
     }
@@ -1405,7 +1408,7 @@ class ElementContainer extends Component {
         let btnClassName = this.state.btnClassName;
         let bceOverlay = "";
         let elementOverlay = '';
-        let showEditButton = checkFullElmAssessment(element) || checkEmbeddedElmAssessment(element) ? true : false
+        let showEditButton = checkFullElmAssessment(element) || checkEmbeddedElmAssessment(element)
         if (!hasReviewerRole() && this.props.permissions && !(this.props.permissions.includes('access_formatting_bar')||this.props.permissions.includes('elements_add_remove')) ) {
             elementOverlay = <div className="element-Overlay disabled" onClick={() => this.handleFocus()}></div>
         }

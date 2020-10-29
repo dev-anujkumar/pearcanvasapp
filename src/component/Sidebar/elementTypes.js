@@ -665,7 +665,17 @@ export default {
                     text: '3rd Party',
                     labelText: 'SL',
                     enum: 'THIRD_PARTY',
-                    wipValue: '3rd-party'
+                    wipValue: '3rd-party',
+                    attributes: {
+                        alt_text: {
+                            text: 'Alt Text',
+                            isEditable: false
+                        },
+                        long_description: {
+                            text: 'Long Description',
+                            isEditable: false
+                        }            
+                    }
                 },
                 'secondary-interactive-smartlink-pdf': {
                     text: 'PDF',
@@ -677,7 +687,13 @@ export default {
                     text: 'External Website Link',
                     labelText: 'SL',
                     enum: 'WEB_LINK',
-                    wipValue: 'web-link'
+                    wipValue: 'web-link',
+                    attributes: {
+                        long_description: {
+                            text: 'Long Description',
+                            isEditable: false
+                        } 
+                    }
                 },
                 'secondary-interactive-smartlink-pop-up-web-link': {
                     text: 'Legacy Web Link',
