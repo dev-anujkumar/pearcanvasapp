@@ -354,6 +354,7 @@ class ElementFigure extends Component {
             </div>
         } else {
             /**JSX for Figure Image, Table Image, Math Image, Table Editor*/
+            const alfrescoSite = config.alfrescoMetaData.alfresco.repositoryFolder;
             figureJsx = <div className={divClass} resource="">
                 <figure className={figureClass} resource="">
                     <header className="figure-header">
@@ -362,7 +363,14 @@ class ElementFigure extends Component {
 
                         <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${index}-1`} placeholder="Enter Title..." tagName={'h4'} className={figTitleClass + " figureTitle "} model={model.html.subtitle} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} />
 
-                    </header>
+                    </header>{
+                        model && model.figuretype !== 'tableasmarkup' && <div className="figure-wrapper">
+                        <h4>Image ID : {  model.figuredata && model.figuredata.imageid  ? model.figuredata.imageid :"" }</h4>
+                        <h4>Image Path : {this.state.imgSrc  ? this.state.imgSrc :(model.figuredata.path && model.figuredata.path !== DEFAULT_IMAGE_SOURCE ? model.figuredata.path : "") }</h4>
+                        <h4>Alfresco Site : { model.figuredata && model.figuredata.path && model.figuredata.path !== DEFAULT_IMAGE_SOURCE ? alfrescoSite  : ""}</h4>
+                    </div>
+                    }
+                    
                     <div className={`pearson-component image figureData ${this.props.model.figuredata.tableasHTML !== "" ? 'table-figure-data' : ""}`} data-type={dataType} onClick={this.addFigureResource} >
                         {this.props.model.figuretype === "tableasmarkup" && (this.props.model.figuredata.tableasHTML && (this.props.model.figuredata.tableasHTML !== "" || this.props.model.figuredata.tableasHTML !== undefined)) ?
                             <div id={`${index}-tableData`} className={imageDimension} dangerouslySetInnerHTML={{ __html: this.props.model.figuredata.tableasHTML }} ></div>
