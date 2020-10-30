@@ -118,12 +118,12 @@ export function ElementSaprator(props) {
         }
     }
 
-    const renderPasteButton = () => {
+    const renderPasteButton = (separatorProps) => {
         const allowedRoles = ["admin", "manager", "edit", "default_user"];
         if (!(props.asideData || props.parentUrn) && allowedRoles.includes(props.userRole)) {
             return (
                 <div className="paste-button-wrapper">
-                    <Button type="split" />
+                    <Button type="split" onClick={() => pasteElement(separatorProps)} />
                 </div> 
             )
         }
@@ -139,7 +139,7 @@ export function ElementSaprator(props) {
             <div className='elemDiv-hr'>
                 <hr className='horizontalLine' />
             </div>
-            {renderPasteButton()}
+            {renderPasteButton(props)}
             <div className='elemDiv-expand'>
                 <div className="dropdown" ref={buttonRef}>
                     <Tooltip direction='left' tooltipText='Element Picker'>
@@ -330,6 +330,15 @@ function typeOfContainerElements(elem, props) {
         return;
     }
     
+}
+
+export const pasteElement = (separatorProps) => {
+    const { firstOne, index } = separatorProps.props
+    const insertionIndex = firstOne ? index : index + 1
+    const pasteFnArgs = {
+        index: insertionIndex
+    }
+    separatorProps.pasteElement(pasteFnArgs)
 }
 
 const mapStateToProps = (state) => ({

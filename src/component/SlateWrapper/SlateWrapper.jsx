@@ -10,7 +10,8 @@ import ElementContainer from '../ElementContainer';
 import ElementSaprator from '../ElementSaprator';
 import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
 import { SlateFooter } from './SlateFooter.jsx';
-import { createElement, swapElement, setSplittedElementIndex, updatePageNumber, accessDenied } from './SlateWrapper_Actions';
+/** pasteElement function location to be changed */
+import { createElement, swapElement, setSplittedElementIndex, updatePageNumber, accessDenied, pasteElement } from './SlateWrapper_Actions';
 import { sendDataToIframe, getSlateType } from '../../constants/utility.js';
 import { ShowLoader, SplitCurrentSlate } from '../../constants/IFrameMessageTypes.js';
 import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
@@ -908,6 +909,7 @@ class SlateWrapper extends Component {
                     openAudio={_props.openAudio}
                     onClickCapture={this.checkSlateLockStatus}
                     splithandlerfunction={this.splithandlerfunction}
+                    pasteElement={this.props.pasteElement}
                 />
             </>
         )
@@ -1339,5 +1341,6 @@ export default connect(
         fetchSlateData,
         getCommentElements,
         assessmentConfirmationPopup,
+        pasteElement
     }
 )(SlateWrapper);
