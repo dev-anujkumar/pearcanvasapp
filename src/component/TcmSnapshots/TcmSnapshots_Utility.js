@@ -691,7 +691,7 @@ export const setFigureElementContentSnapshot = (element, actionStatus) => {
             snapshotData["metadata"] = prepareMetablock(element, actionStatus)
             break;
         case "authoredtext":            // for MML
-            snapshotData["metadata"] = element.html.text ? `<p>${element.html.text}</p>` : "<p><br></p>"
+            snapshotData["metadata"] = element.html.text ? `${element.html.text}` : "<p><br></p>"
             break;
         case "image":
         case "table":
