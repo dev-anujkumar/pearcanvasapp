@@ -47,8 +47,12 @@ import MultiColumnContainer from "../MultiColumnElement"
 import {handleTCMData} from '../TcmSnapshots/TcmSnapshot_Actions.js';
 import CopyUrn from '../CopyUrn';
 import { OnCopyContext } from '../CopyUrn/copyUtil.js'
+import { setSelection } from './../CopyUrn/CopyUrn_Action.js';
 import { openElmAssessmentPortal } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import {handleElmPortalEvents} from '../ElementContainer/AssessmentEventHandling.js';
+import { setScroll } from './../Toolbar/Search/Search_Action.js';
+import { SET_SEARCH_URN, SET_COMMENT_SEARCH_URN } from './../../constants/Search_Constants.js';
+
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -110,12 +114,34 @@ class ElementContainer extends Component {
         });
     }
 
-    // componentDidUpdate() {
-    //     if(this.props.searchParent !== '' && document.querySelector("div.canvas-blocker")) {
-    //         // sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } });
-    //     }
-    //     // sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } });urn:pearson:manifest:579f5393-883b-4a22-8000-50cc5a802464
-    // }
+    componentDidUpdate() {
+        let divObj = 0;
+        if(this.props.searchParent !== '' && document.querySelector(`div[data-id="${this.props.searchParent}"]`)) {
+            divObj = document.querySelector(`div[data-id="${this.props.searchParent}"]`).offsetTop;
+            if(this.props.searchUrn !== '' && document.querySelector(`div[data-id="${this.props.searchUrn}"]`) && this.props.searchUrn !== this.props.searchParent) {
+                divObj += document.querySelector(`div[data-id="${this.props.searchUrn}"]`).offsetTop;
+            }
+
+            divObj = Math.round(divObj);
+            if(this.props.searchScrollTop !== divObj) {
+                this.props.setScroll({ 'type': SET_SEARCH_URN, scrollTop: divObj });
+                document.getElementById('slateWrapper').scrollTop = divObj;
+            }
+        }
+
+        if(this.props.commentSearchParent !== '' && document.querySelector(`div[data-id="${this.props.commentSearchParent}"]`)) {
+            divObj = document.querySelector(`div[data-id="${this.props.commentSearchParent}"]`).offsetTop;
+            if(this.props.commentSearchUrn !== '' && document.querySelector(`div[data-id="${this.props.commentSearchUrn}"]`) && this.props.commentSearchUrn !== this.props.commentSearchParent) {
+                divObj += document.querySelector(`div[data-id="${this.props.commentSearchUrn}"]`).offsetTop;
+            }
+
+            divObj = Math.round(divObj);
+            if(this.props.commentSearchScrollTop !== divObj) {
+                this.props.setScroll({ 'type': SET_COMMENT_SEARCH_URN, scrollTop: divObj });
+                document.getElementById('slateWrapper').scrollTop = divObj;
+            }
+        }
+    }
 
     componentWillUnmount() {
         if (config.releaseCallCount === 0) {
@@ -1381,10 +1407,22 @@ class ElementContainer extends Component {
         if(this.props.searchUrn !== '' && this.props.searchUrn === element.id) {
             searched = 'searched';
         }
+
+        let selection = '';
+        let selectionOverlay = '';
+        if(this.props.elementSelection && Object.keys(this.props.elementSelection).length > 0 &&
+            'element' in this.props.elementSelection && element.id === this.props.elementSelection.element.id) {
+            selection = 'copy';
+            if('operationType' in this.props.elementSelection && this.props.elementSelection.operationType === 'cut') {
+                selection = 'cut';
+                selectionOverlay = <div className="element-Overlay disabled"></div>;
+            }
+        }
+
         const inContainer = this.props.parentUrn ? true : false
         return (
-            <div className={`editor ${searched}`} data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
-                {this.state.showCopyPopup && <CopyUrn userRole={this.props.userRole} index={index} inContainer={inContainer} setElementDetails={this.setElementDetails} element={this.props.element} toggleCopyMenu={this.toggleCopyMenu} copyClickedX={this.copyClickedX} copyClickedY={this.copyClickedY} />}
+            <div className={`editor ${searched} ${selection}`} data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
+                {this.renderCopyComponent(this.props, index, inContainer)}
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                     <Button type="element-label" btnClassName={`${btnClassName} ${isQuadInteractive} ${this.state.isOpener ? ' ignore-for-drag' : ''}`} labelText={labelText} copyContext={(e)=>{OnCopyContext(e,this.toggleCopyMenu)}} onClick={(event) => this.labelClickHandler(event)} />
                     {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && config.slateType !== 'assessment' ? (<Button type="delete-element" onClick={(e) => this.showDeleteElemPopup(e,true)} />)
@@ -1394,7 +1432,7 @@ class ElementContainer extends Component {
                 </div>
                     : ''}
                 <div className={`element-container ${labelText.toLowerCase()=="2c"? "multi-column":labelText.toLowerCase()} ${borderToggle}`} data-id={element.id} onFocus={() => this.toolbarHandling('remove')} onBlur={() => this.toolbarHandling('add')} onClick = {(e)=>this.handleFocus("","",e,labelText)}>
-                    {elementOverlay}{bceOverlay}{editor}
+                    {selectionOverlay}{elementOverlay}{bceOverlay}{editor}
                 </div>
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                     {permissions && permissions.includes('notes_adding') && <Button type="add-comment" btnClassName={btnClassName} onClick={(e) => this.handleCommentPopup(true, e)} />}
@@ -1428,6 +1466,30 @@ class ElementContainer extends Component {
     }
 
     /**
+     * Renders the Cut/Copy Urn/element dialog menu
+     * @param {*} _props 
+     * @param {*} index 
+     * @param {*} inContainer 
+     */
+    renderCopyComponent = (_props, index, inContainer) => {
+        if (this.state.showCopyPopup) {
+            return (
+                <CopyUrn 
+                    userRole={_props.userRole}
+                    index={index}
+                    inContainer={inContainer}
+                    setElementDetails={this.setElementDetails}
+                    element={_props.element}
+                    toggleCopyMenu={this.toggleCopyMenu}
+                    copyClickedX={this.copyClickedX} 
+                    copyClickedY={this.copyClickedY} 
+                />
+            )
+        }
+        return null
+    }
+    
+    /**
      * Sets element details to store
      * @param {*} elementDetails Element details along with type of operation (Cut/Copy)
      */
@@ -1441,7 +1503,7 @@ class ElementContainer extends Component {
         console.log("Element Details action to be dispatched from here", detailsToSet)
 
         /** Dispatch details to the store */
-        // this.props.setElementToPaste(detailsToSet)
+        this.props.setSelection(detailsToSet);
     }
     
     /**
@@ -1631,6 +1693,12 @@ const mapDispatchToProps = (dispatch) => {
         },
         openElmAssessmentPortal : (dataToSend) => {
             dispatch(openElmAssessmentPortal(dataToSend))
+        },
+        setScroll: (type) => {
+            dispatch(setScroll(type))
+        },
+        setSelection: (params) => {
+            dispatch(setSelection(params))
         }
     }
 }
@@ -1647,7 +1715,15 @@ const mapStateToProps = (state) => {
         showHideId: state.appStore.showHideId,
         tcmData: state.tcmReducer.tcmSnapshot,
         searchUrn: state.searchReducer.searchTerm,
-        currentSlateAncestorData : state.appStore.currentSlateAncestorData
+        searchParent: state.searchReducer.parentId,
+        searchScroll: state.searchReducer.scroll,
+        searchScrollTop: state.searchReducer.scrollTop,
+        commentSearchUrn: state.commentSearchReducer.commentSearchTerm,
+        commentSearchParent: state.commentSearchReducer.parentId,
+        commentSearchScroll: state.commentSearchReducer.scroll,
+        commentSearchScrollTop: state.commentSearchReducer.scrollTop,
+        currentSlateAncestorData : state.appStore.currentSlateAncestorData,
+        elementSelection: state.selectionReducer.selection
     }
 }
 
