@@ -15,7 +15,7 @@ import config from '../../config/config';
 import { ShowLoader, HideLoader, TocRefreshVersioning, SendMessageForVersioning } from '../../constants/IFrameMessageTypes.js';
 
 export const onDeleteSuccess = (params) => {
-    let {
+    const {
         deleteElemData,
         dispatch,
         getState,
@@ -46,7 +46,7 @@ export const onDeleteSuccess = (params) => {
     }
     prepareTCMSnapshotsForDelete(tcmDeleteArgs)
 
-    let currentSlateData = newParentData[config.slateManifestURN];
+    const currentSlateData = newParentData[config.slateManifestURN];
     if (currentSlateData.status === 'approved') {
         return onSlateApproved(currentSlateData, dispatch, fetchSlateData)  
     }
@@ -98,7 +98,7 @@ export function prepareTCMforDelete(elmId, dispatch, getState) {
 }
 
 export const deleteFromStore = (params) => {
-    let {
+    const {
         dispatch,
         elmId,
         parentUrn,
@@ -109,7 +109,7 @@ export const deleteFromStore = (params) => {
     } = params
 
     if (parentUrn && parentUrn.elementType == "group") {
-        let elIndex = index.toString().split('-') 
+        const elIndex = index.toString().split('-') 
         newParentData[config.slateManifestURN].contents.bodymatter[elIndex[0]].groupeddata.bodymatter[elIndex[1]].groupdata.bodymatter.splice(elIndex[2], 1)
     } else {
         let bodymatter = newParentData[config.slateManifestURN].contents.bodymatter
@@ -148,7 +148,7 @@ export const deleteFromStore = (params) => {
                 }
             } else if (parentUrn && parentUrn.elementType == "citations"){
                 if (element.id === parentUrn.manifestUrn) {
-                    let innerIndex = index.split("-")
+                    const innerIndex = index.split("-")
                     element.contents.bodymatter.splice([innerIndex[1] - 1], 1)
                 }
             }
@@ -178,7 +178,7 @@ export const onSlateApproved = (currentSlateData, dispatch, fetchSlateData) => {
 
 
 export const prepareTCMSnapshotsForDelete = (params) => {
-    let {
+    const {
         deleteParentData,
         deleteElemData,
         type,
@@ -189,10 +189,10 @@ export const prepareTCMSnapshotsForDelete = (params) => {
         poetryData
     } = params
 
-    let deleteBodymatter = deleteParentData[config.slateManifestURN].contents.bodymatter;
+    const deleteBodymatter = deleteParentData[config.slateManifestURN].contents.bodymatter;
     if (elementTypeTCM.indexOf(type) !== -1 || containerType.indexOf(type) !== -1) {
-        let wipData = fetchElementWipData(deleteBodymatter, index, type, contentUrn, "delete")
-        let containerElement = {
+        const wipData = fetchElementWipData(deleteBodymatter, index, type, contentUrn, "delete")
+        const containerElement = {
             asideData,
             parentUrn,
             poetryData,
@@ -200,7 +200,7 @@ export const prepareTCMSnapshotsForDelete = (params) => {
             metaDataField: wipData && wipData.type == 'popup' && wipData.popupdata['formatted-title'] ? 'formattedTitle' : undefined,
             sectionType : wipData && wipData.type == 'popup' ? 'postertextobject' : undefined
         }
-        let deleteData = {
+        const deleteData = {
             wipData,
             currentParentData: deleteParentData,
             bodymatter: deleteBodymatter,
@@ -223,12 +223,12 @@ export const tcmSnapshotsForDelete = async (elementDeleteData, type, containerEl
     if (elementDeleteData.wipData.hasOwnProperty("figuretype") && !allowedFigureTypesForTCM.includes(elementDeleteData.wipData.figuretype)) {
         return false
     }
-    let actionStatus = {
+    const actionStatus = {
         action:"delete",
         status:"pending",
         fromWhere:"delete"
     }
-    let parentType = ['element-aside', 'citations', 'poetry', 'groupedcontent', 'popup'];
+    const parentType = ['element-aside', 'citations', 'poetry', 'groupedcontent', 'popup'];
     let versionStatus = {};
     let currentSlateData = elementDeleteData.currentParentData[config.slateManifestURN] 
     if(config.isPopupSlate){

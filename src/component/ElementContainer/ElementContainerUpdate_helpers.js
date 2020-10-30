@@ -60,7 +60,7 @@ export const updateNewVersionElementInStore = (paramObj) => {
 }
 
 export const updateElementInStore = (paramsObj) => {
-    let {
+    const {
         updatedData,
         asideData,
         parentUrn,
@@ -78,7 +78,7 @@ export const updateElementInStore = (paramsObj) => {
 
     if(parentElement && parentElement.type === "citations"){
         if(updatedData.type === "element-citation"){
-            let indexes = elementIndex.split("-")
+            const indexes = elementIndex.split("-")
             _slateBodyMatter[indexes[0]].contents.bodymatter[indexes[1] - 1] = {...updatedData,
                 tcm: _slateObject.tcm ? true : false
             }
@@ -89,7 +89,7 @@ export const updateElementInStore = (paramsObj) => {
             }
         }
     } else if (parentElement && parentElement.type === "groupedcontent") {
-        let indexes = elementIndex.split("-")
+        const indexes = elementIndex.split("-")
         let element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
         _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]] = {
             ...element,
@@ -127,7 +127,7 @@ export const updateElementInStore = (paramsObj) => {
             } else if (asideData && asideData.type == 'element-aside') {
                 
                 if (element.id == asideData.id) {
-                    let nestedBodyMatter = element.elementdata.bodymatter.map((nestedEle) => {
+                    const nestedBodyMatter = element.elementdata.bodymatter.map((nestedEle) => {
                         /*This condition add object of element in existing element  in aside */
                         if (nestedEle.id == elementId) {
                             nestedEle = {
@@ -172,7 +172,7 @@ export const updateElementInStore = (paramsObj) => {
                         }
                         else if (nestedEle.type == "manifest" && nestedEle.id == parentUrn.manifestUrn) {
                             /*This condition add object of element in existing element  in section of aside */
-                            let elementObject = nestedEle.contents.bodymatter.map((ele) => {
+                            const elementObject = nestedEle.contents.bodymatter.map((ele) => {
                                 if (ele.id == elementId) {
                                     ele = {
                                         ...ele,
@@ -266,7 +266,7 @@ export const updateElementInStore = (paramsObj) => {
                     element.contents.creditsarray[0] = updatedData;
                 }
                 else {
-                    let newPoetryBodymatter = element.contents.bodymatter.map((stanza) => {
+                    const newPoetryBodymatter = element.contents.bodymatter.map((stanza) => {
                         if (stanza.id === elementId) {
                             stanza = {
                                 ...stanza,
@@ -305,7 +305,7 @@ export const updateElementInStore = (paramsObj) => {
 }
 
 export const collectDataAndPrepareTCMSnapshot = async (params) => {
-    let {
+    const {
         getState,
         dispatch,
         updatedData,
@@ -321,12 +321,12 @@ export const collectDataAndPrepareTCMSnapshot = async (params) => {
         currentParentData
     } = params
 
-    let assetRemoveidForSnapshot = getState().assetPopOverSearch.assetID;
-    let isPopupElement = parentElement && parentElement.type === 'popup' && (updatedData.metaDataField !== undefined || updatedData.sectionType !== undefined) ? true : false;
-    let noAdditionalFields = (updatedData.metaDataField == undefined && updatedData.sectionType == undefined) ? true : false
-    let oldFigureData = getState().appStore.oldFiguredata
+    const assetRemoveidForSnapshot = getState().assetPopOverSearch.assetID;
+    const isPopupElement = parentElement && parentElement.type === 'popup' && (updatedData.metaDataField !== undefined || updatedData.sectionType !== undefined) ? true : false;
+    const noAdditionalFields = (updatedData.metaDataField == undefined && updatedData.sectionType == undefined) ? true : false
+    const oldFigureData = getState().appStore.oldFiguredata
     if (elementTypeTCM.indexOf(responseData.type) !== -1 && (!showHideType || showHideType === '') && (isPopupElement || noAdditionalFields)) {
-        let containerElement = {
+        const containerElement = {
             asideData,
             parentUrn,
             poetryData,
@@ -359,7 +359,7 @@ export const collectDataAndPrepareTCMSnapshot = async (params) => {
 
 
 export const processAndStoreUpdatedResponse = async (params) => {
-    let {
+    const {
         updatedData,
         elementIndex,
         parentUrn,
@@ -374,9 +374,9 @@ export const processAndStoreUpdatedResponse = async (params) => {
         fetchSlateData
     } = params
 
-    let parentData = getState().appStore.slateLevelData;
-    let currentParentData = JSON.parse(JSON.stringify(parentData));
-    let currentSlateData = currentParentData[config.slateManifestURN];
+    const parentData = getState().appStore.slateLevelData;
+    const currentParentData = JSON.parse(JSON.stringify(parentData));
+    const currentSlateData = currentParentData[config.slateManifestURN];
     let { glossaryFootnoteValue, glossaryFootNoteCurrentValue, elementIndex: elementIndexFootnote } = getState().glossaryFootnoteReducer
 
     if(responseData.id !== updatedData.id){
@@ -431,7 +431,7 @@ export const showLinkToast = (toastNode) => {
 }
 
 export const updateStore = (paramObj) => {
-    let {
+    const {
         updatedData,
         elementIndex,
         parentUrn,
@@ -510,7 +510,7 @@ export const updateStore = (paramObj) => {
 }
 
 export const updateStoreInCanvas = (params) => {
-    let {
+    const {
         updatedData,
         asideData,
         parentUrn,
@@ -523,12 +523,12 @@ export const updateStoreInCanvas = (params) => {
         fetchSlateData
     } = params
     //direct dispatching in store
-    let parentData = getState().appStore.slateLevelData;
-    let newslateData = JSON.parse(JSON.stringify(parentData));
+    const parentData = getState().appStore.slateLevelData;
+    const newslateData = JSON.parse(JSON.stringify(parentData));
    
     //tcm update code
-    let isPopupElement = parentElement && parentElement.type == 'popup' && (updatedData.metaDataField !== undefined || updatedData.sectionType !== undefined) ? true : false;
-    let noAdditionalFields = (updatedData.metaDataField == undefined && updatedData.sectionType == undefined) ? true : false   
+    const isPopupElement = parentElement && parentElement.type == 'popup' && (updatedData.metaDataField !== undefined || updatedData.sectionType !== undefined) ? true : false;
+    const noAdditionalFields = (updatedData.metaDataField == undefined && updatedData.sectionType == undefined) ? true : false   
     if (config.tcmStatus) {
         if (elementTypeTCM.indexOf(updatedData.type) !== -1 && (!showHideType || showHideType === '') && (isPopupElement || noAdditionalFields)) {
             const tcmDataArgs = {
@@ -558,7 +558,7 @@ export const updateStoreInCanvas = (params) => {
 }
 
 export const updateLOInStore = ({ updatedData, versionedData, getState, dispatch }) => {
-    let parentData = getState().appStore.slateLevelData;
+    const parentData = getState().appStore.slateLevelData;
     let newslateData = JSON.parse(JSON.stringify(parentData));
     if (versionedData) {
         for (let i = 0; i < updatedData.loIndex.length; i++) {
