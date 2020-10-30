@@ -189,7 +189,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
             responseData : response.data
         }
         processAndStoreUpdatedResponse(updateArgs)
-    }   
+    }
     catch(error) {
         dispatch({type: ERROR_POPUP, payload:{show: true}})
         config.savingInProgress = false
