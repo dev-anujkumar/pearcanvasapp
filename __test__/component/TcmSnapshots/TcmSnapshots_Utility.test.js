@@ -365,6 +365,16 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
             tcmSnapshotUtility.setFigureElementContentSnapshot(setSemanticsSnapshotsData.video);
             expect(spyFunction).toHaveBeenCalledWith(setSemanticsSnapshotsData.video);
         })
+        it('Test-7.3-Function--1--setFigureElementContentSnapshot - for authoredtext', () => {
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'setFigureElementContentSnapshot');
+            tcmSnapshotUtility.setFigureElementContentSnapshot(setSemanticsSnapshotsData.authoredtext);
+            expect(spyFunction).toHaveBeenCalledWith(setSemanticsSnapshotsData.authoredtext);
+        })
+        it('Test-7.3-Function--1--setFigureElementContentSnapshot - for codelisting', () => {
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'setFigureElementContentSnapshot');
+            tcmSnapshotUtility.setFigureElementContentSnapshot(setSemanticsSnapshotsData.codelisting);
+            expect(spyFunction).toHaveBeenCalledWith(setSemanticsSnapshotsData.codelisting);
+        })
         it('Test-7.3-Function--1--prepareFigureElementSnapshots - for figure', () => {
             let actionStatus = {
                 action: "update",
