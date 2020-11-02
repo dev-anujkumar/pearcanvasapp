@@ -58,7 +58,6 @@ config.ASSET_POPOVER_ENDPOINT = "https://contentapis-staging.pearsoncms.net/mani
 config.STRUCTURE_APIKEY = 'Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld'
 config.PRODUCTAPI_ENDPOINT = "https://contentapis-staging.pearsoncms.net/product-api/"
 config.projectUrn = "urn:pearson:distributable:3e872df6-834c-45f5-b5c7-c7b525fab1ef"
-// config.parentEntityUrn= "bodyMatter"
 config.slateType = "assessment"
 let permissions = [
     "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",

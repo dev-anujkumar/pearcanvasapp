@@ -47,8 +47,12 @@ import MultiColumnContainer from "../MultiColumnElement"
 import {handleTCMData} from '../TcmSnapshots/TcmSnapshot_Actions.js';
 import CopyUrn from '../CopyUrn';
 import { OnCopyContext } from '../CopyUrn/copyUtil.js'
-import { openElmAssessmentPortal } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
-import {handleElmPortalEvents} from '../ElementContainer/AssessmentEventHandling.js';
+import { openElmAssessmentPortal, checkAssessmentStatus, resetAssessmentStore } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
+import { handleElmPortalEvents } from '../ElementContainer/AssessmentEventHandling.js';
+import { checkFullElmAssessment, checkEmbeddedElmAssessment } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
+import { setScroll } from './../Toolbar/Search/Search_Action.js';
+import { SET_SEARCH_URN, SET_COMMENT_SEARCH_URN } from './../../constants/Search_Constants.js';
+import { ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, SECONDARY_SINGLE_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -105,17 +109,52 @@ class ElementContainer extends Component {
             btnClassName: '',
             isOpener: this.props.element.type === elementTypeConstant.OPENER
         })
+        /** PCAT-8907 - Updating Embedded Assessments - Elm */
+        let { element } = this.props
+        let embeddedAssessment = checkEmbeddedElmAssessment(element);
+        if (this.props.element && embeddedAssessment === true) {
+            const assessmentID = element.figuredata.elementdata.assessmentid;
+            const assessmentItemID = element.figuredata.elementdata.assessmentitemid;
+            const itemData = {
+                itemId: assessmentItemID,
+                parentId: assessmentID,
+                type: 'assessment-item'
+            }
+            this.props.checkAssessmentStatus(assessmentID, 'fromElementContainer', "", "", itemData)
+        }
         document.addEventListener('click',()=>{
             this.setState({showCopyPopup : false})
         });
     }
 
-    // componentDidUpdate() {
-    //     if(this.props.searchParent !== '' && document.querySelector("div.canvas-blocker")) {
-    //         // sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } });
-    //     }
-    //     // sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } });urn:pearson:manifest:579f5393-883b-4a22-8000-50cc5a802464
-    // }
+    componentDidUpdate() {
+        let divObj = 0;
+        if(this.props.searchParent !== '' && document.querySelector(`div[data-id="${this.props.searchParent}"]`)) {
+            divObj = document.querySelector(`div[data-id="${this.props.searchParent}"]`).offsetTop;
+            if(this.props.searchUrn !== '' && document.querySelector(`div[data-id="${this.props.searchUrn}"]`) && this.props.searchUrn !== this.props.searchParent) {
+                divObj += document.querySelector(`div[data-id="${this.props.searchUrn}"]`).offsetTop;
+            }
+
+            divObj = Math.round(divObj);
+            if(this.props.searchScrollTop !== divObj) {
+                this.props.setScroll({ 'type': SET_SEARCH_URN, scrollTop: divObj });
+                document.getElementById('slateWrapper').scrollTop = divObj;
+            }
+        }
+
+        if(this.props.commentSearchParent !== '' && document.querySelector(`div[data-id="${this.props.commentSearchParent}"]`)) {
+            divObj = document.querySelector(`div[data-id="${this.props.commentSearchParent}"]`).offsetTop;
+            if(this.props.commentSearchUrn !== '' && document.querySelector(`div[data-id="${this.props.commentSearchUrn}"]`) && this.props.commentSearchUrn !== this.props.commentSearchParent) {
+                divObj += document.querySelector(`div[data-id="${this.props.commentSearchUrn}"]`).offsetTop;
+            }
+
+            divObj = Math.round(divObj);
+            if(this.props.commentSearchScrollTop !== divObj) {
+                this.props.setScroll({ 'type': SET_COMMENT_SEARCH_URN, scrollTop: divObj });
+                document.getElementById('slateWrapper').scrollTop = divObj;
+            }
+        }
+    }
 
     componentWillUnmount() {
         if (config.releaseCallCount === 0) {
@@ -712,13 +751,18 @@ class ElementContainer extends Component {
     /**
      * Will be called on element blur and a saving call will be made
      */
-    handleBlur = (forceupdate, currrentElement, elemIndex, showHideType) => {
+    handleBlur = (forceupdate, currrentElement, elemIndex, showHideType, calledFrom) => {
         const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
         let activeEditorId = elemIndex ? `cypress-${elemIndex}` : (tinyMCE.activeEditor ? tinyMCE.activeEditor.id : '')
         let node = document.getElementById(activeEditorId);
         let element = currrentElement ? currrentElement : this.props.element
         let parentElement = ((currrentElement && currrentElement.type === elementTypeConstant.CITATION_ELEMENT) || (this.props.parentElement && (this.props.parentElement.type === 'poetry' || this.props.parentElement.type === "groupedcontent"))) ? this.props.parentElement : this.props.element
-        this.handleContentChange(node, element, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType)
+        if (calledFrom && calledFrom == 'fromEmbeddedAssessment') {
+            const seconadaryAssessment = SECONDARY_SINGLE_ASSESSMENT + this.props.element.figuredata.elementdata.assessmentformat;
+            this.handleContentChange(node, element, ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, seconadaryAssessment, activeEditorId, forceupdate, parentElement, showHideType);
+        } else {
+            this.handleContentChange(node, element, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType)
+        }
     }
 
     /**
@@ -739,10 +783,10 @@ class ElementContainer extends Component {
             } else {
                 dataToSend.elementdata.assessmenttitle = assessmentData.title;
             }
-            this.handleContentChange('', dataToSend, 'element-assessment', 'primary-assessment-slate', 'secondary-assessment-' + assessmentData.format)
+            this.handleContentChange('', dataToSend, ELEMENT_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT + assessmentData.format)
         } else {
             dataToSend.elementdata.usagetype = assessmentData;
-            this.handleContentChange('', dataToSend, 'element-assessment', 'primary-assessment-slate', 'secondary-assessment-' + this.props.element.elementdata.assessmentformat)
+            this.handleContentChange('', dataToSend, ELEMENT_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT + this.props.element.elementdata.assessmentformat)
         }
 
     }
@@ -1364,7 +1408,7 @@ class ElementContainer extends Component {
         let btnClassName = this.state.btnClassName;
         let bceOverlay = "";
         let elementOverlay = '';
-        let showEditButton = element.type == elementTypeConstant.ASSESSMENT_SLATE && element.elementdata && element.elementdata.assessmentformat == 'puf' && element.elementdata.assessmentid ? true : false;
+        let showEditButton = checkFullElmAssessment(element) || checkEmbeddedElmAssessment(element)
         if (!hasReviewerRole() && this.props.permissions && !(this.props.permissions.includes('access_formatting_bar')||this.props.permissions.includes('elements_add_remove')) ) {
             elementOverlay = <div className="element-Overlay disabled" onClick={() => this.handleFocus()}></div>
         }
@@ -1499,9 +1543,8 @@ class ElementContainer extends Component {
     handleEditButton = (event) => {
         event.stopPropagation();
         let { element } = this.props;
-        let fullAssessment = element.type == elementTypeConstant.ASSESSMENT_SLATE && element.elementdata && element.elementdata.assessmentformat == 'puf' && element.elementdata.assessmentid ? true : false;
-        let embeddedAssessment = element.type == elementTypeConstant.FIGURE_ASSESSMENT && element.figuredata && element.figuredata.elementdata && element.figuredata.elementdata.assessmentformat == 'puf' && element.figuredata.elementdata.assessmentid ? true : false;
-        // let containerURN = config.parentEntityUrn == 'Front Matter' || config.parentEntityUrn == 'Back Matter' ? config.slateManifestURN : this.props.currentSlateAncestorData && this.props.currentSlateAncestorData.ancestor.containerUrn ? this.props.currentSlateAncestorData.ancestor.containerUrn : config.projectUrn
+        let fullAssessment = checkFullElmAssessment(element);
+        let embeddedAssessment = checkEmbeddedElmAssessment(element);
         let dataToSend = {
             assessmentWorkUrn: fullAssessment ? element.elementdata.assessmentid : embeddedAssessment ? element.figuredata.elementdata.assessmentid : "",
             projDURN: config.projectUrn,
@@ -1609,11 +1652,20 @@ const mapDispatchToProps = (dispatch) => {
         handleTCMData: () => {
             dispatch(handleTCMData())
         },
-        getElementStatus : (elementWorkId, index) => {
+        getElementStatus:(elementWorkId, index) => {
             dispatch(getElementStatus(elementWorkId, index))
         },
-        openElmAssessmentPortal : (dataToSend) => {
+        openElmAssessmentPortal: (dataToSend) => {
             dispatch(openElmAssessmentPortal(dataToSend))
+        },
+        checkAssessmentStatus: (workUrn, calledFrom, currentWorkUrn, currentWorkData, parentURN) => {
+            dispatch(checkAssessmentStatus(workUrn, calledFrom, currentWorkUrn, currentWorkData, parentURN))
+        },
+        resetAssessmentStore: () => {
+            dispatch(resetAssessmentStore())
+        },
+        setScroll: (type) => {
+            dispatch(setScroll(type))
         }
     }
 }
@@ -1630,6 +1682,13 @@ const mapStateToProps = (state) => {
         showHideId: state.appStore.showHideId,
         tcmData: state.tcmReducer.tcmSnapshot,
         searchUrn: state.searchReducer.searchTerm,
+        searchParent: state.searchReducer.parentId,
+        searchScroll: state.searchReducer.scroll,
+        searchScrollTop: state.searchReducer.scrollTop,
+        commentSearchUrn: state.commentSearchReducer.commentSearchTerm,
+        commentSearchParent: state.commentSearchReducer.parentId,
+        commentSearchScroll: state.commentSearchReducer.scroll,
+        commentSearchScrollTop: state.commentSearchReducer.scrollTop,
         currentSlateAncestorData : state.appStore.currentSlateAncestorData
     }
 }

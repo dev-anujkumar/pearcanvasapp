@@ -19,11 +19,12 @@ export const handleElmPortalEvents = (action = 'add') => {
             try {
                 const { data } = event;
                 if (action == 'add' && data && data.source == 'elm') {
-                    // console.log('Elm Events(TO BE REMOVED LATER) ONLY ADDED FOR TESTING---->', event.data)
-                    handleRefreshSlate(store.dispatch);
+                    console.log('Elm Events(TO BE REMOVED LATER) ONLY ADDED FOR TESTING---->', event.data)
                     if (data.action == 'approve') {
-                    // handleRefreshSlate(store.dispatch);
-                    window.removeEventListener('message', elmAssessmentUpdate, false);
+                        window.removeEventListener('message', elmAssessmentUpdate, false);
+                    }
+                    if (data.type == 'assessment') {
+                        handleRefreshSlate(store.dispatch);
                     }
                 }
                 if (action == 'remove') {

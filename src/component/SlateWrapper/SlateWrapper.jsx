@@ -76,11 +76,13 @@ class SlateWrapper extends Component {
 
     componentDidUpdate() {
         let divObj = 0;
-        if(this.props.searchParent !== '' && document.querySelector(`div[data-id="${this.props.searchParent}"]`)) {
+        if(this.props.searchParent !== '' && document.querySelector(`div[data-id="${this.props.searchParent}"]`) && !this.props.searchScroll) {
             divObj = document.querySelector(`div[data-id="${this.props.searchParent}"]`).offsetTop;
             if(this.props.searchNode !== '' && document.querySelector(`div[data-id="${this.props.searchNode}"]`) && this.props.searchNode !== this.props.searchParent) {
                 divObj += document.querySelector(`div[data-id="${this.props.searchNode}"]`).offsetTop;
             }
+
+            divObj = Math.round(divObj);
             document.getElementById('slateWrapper').scrollTop = divObj;
         }
 
@@ -89,8 +91,15 @@ class SlateWrapper extends Component {
             if(this.props.commentSearchNode !== '' && document.querySelector(`div[data-id="${this.props.commentSearchNode}"]`) && this.props.commentSearchNode !== this.props.commentSearchParent) {
                 divObj += document.querySelector(`div[data-id="${this.props.commentSearchNode}"]`).offsetTop;
             }
-            document.getElementById('slateWrapper').scrollTop = divObj;
-            this.props.getCommentElements('');
+
+            divObj = Math.round(divObj);
+            if(!this.props.commentSearchScroll) {
+                document.getElementById('slateWrapper').scrollTop = divObj;
+            }
+            
+            if(this.props.commentSearchScrollTop === divObj) {
+                this.props.getCommentElements('');
+            }
         }
     }
 
@@ -451,7 +460,7 @@ class SlateWrapper extends Component {
         }
         else{
             if(config.savingInProgress){
-                window.tinymce.activeEditor.selection.placeCaretAt(0, 0);
+                window.tinymce && window.tinymce.activeEditor && window.tinymce.activeEditor.selection.placeCaretAt(0, 0);
                 this.prohibitPropagation(event)
             }
             this.props.getSlateLockStatus(config.projectUrn, config.slateManifestURN)
@@ -825,7 +834,7 @@ class SlateWrapper extends Component {
                         togglePopup={this.deleteRejected}
                         active={true}
                         saveContent={this.deleteAccepted}
-                        saveButtonText='Okay'
+                        saveButtonText='OK'
                         dialogText={SINGLE_CONTAINER_DELETE}
                         tocDelete={true}
                         itemName = {containerName}
@@ -1302,8 +1311,11 @@ const mapStateToProps = state => {
         showSlateLockPopupValue: state.metadataReducer.showSlateLockPopup,
         searchParent: state.searchReducer.parentId,
         searchNode: state.searchReducer.searchTerm,
+        searchScroll: state.searchReducer.scroll,
         commentSearchParent: state.commentSearchReducer.parentId,
         commentSearchNode: state.commentSearchReducer.commentSearchTerm,
+        commentSearchScroll: state.commentSearchReducer.scroll,
+        commentSearchScrollTop: state.commentSearchReducer.scrollTop,
         showToast: state.appStore.showToast,
         showConfirmationPopup: state.assessmentReducer.showConfirmationPopup,
     };
@@ -1332,7 +1344,7 @@ export default connect(
         showSlateLockPopup,
         handleTCMData,
         fetchSlateData,
-        getCommentElements,
         assessmentConfirmationPopup,
+        getCommentElements
     }
 )(SlateWrapper);

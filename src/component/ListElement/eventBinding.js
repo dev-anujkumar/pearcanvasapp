@@ -352,7 +352,7 @@ const reformatting = (editor) => {
     let allLiElement = editor.targetElm.querySelectorAll('li')
     let getSelfInnerText = (elememt) => {
         return [].reduce.call(elememt.childNodes, function (a, b) {
-            return a + (b.nodeType === 3 ? b.textContent : '');
+            return a + (b ? b.textContent : '');
         }, '');
     }
     for (let i = 0; i < allLiElement.length; i++) {
