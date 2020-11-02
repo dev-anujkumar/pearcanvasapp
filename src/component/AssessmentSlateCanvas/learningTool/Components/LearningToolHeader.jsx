@@ -45,7 +45,7 @@ const LearningToolHeader = (props) => {
     */
     const handleKeywordChange = (value) => {
         setSearchKeyword(value);
-        validateSearch(event, value);
+        validateSearch(value);
     }
 
     /*** @description - This function is to handle the value in searchbar input

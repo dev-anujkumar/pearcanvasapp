@@ -77,7 +77,7 @@ class LearningTool extends React.Component {
     /**
      * @discription - This function is for validating the format of input in search bar
      */
-    validateSearch = (e, searchText) => {
+    validateSearch = (searchText) => {
         this.setState({ searchValue: searchText })
         let searchValue = searchText
         let regex = /^[A-Za-z0-9 " "\-]{0,100}$/

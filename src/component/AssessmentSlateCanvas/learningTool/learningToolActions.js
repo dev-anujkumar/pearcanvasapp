@@ -208,5 +208,5 @@ const showError = (error, dispatch) => {
       showDisFilterValues: false
     }
   })
-  console.log(LT_LA_API_ERROR, error)
+  console.error(LT_LA_API_ERROR, error)
 }
