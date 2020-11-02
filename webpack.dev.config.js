@@ -151,7 +151,7 @@ module.exports = {
         https: true,
         open: true,
         overlay: true,
-        port: 9000,
+        port: 443,
         index: 'index.html',
         hot: true,
         proxy: [{
