@@ -354,7 +354,7 @@ class ElementFigure extends Component {
             </div>
         } else {
             /**JSX for Figure Image, Table Image, Math Image, Table Editor*/
-            const alfrescoSite = config.alfrescoMetaData.alfresco.repositoryFolder;
+            const alfrescoSite = config.alfrescoMetaData && config.alfrescoMetaData.alfresco && config.alfrescoMetaData.alfresco.repositoryFolder;
             figureJsx = <div className={divClass} resource="">
                 <figure className={figureClass} resource="">
                     <header className="figure-header">
