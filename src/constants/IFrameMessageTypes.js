@@ -24,4 +24,5 @@ export const ViewLearningObjectiveSlateDropdown = "View Learning Objective"
 export const UnlinkSlateDropdown ="Unlink Slate"
 export const AddLearningObjectiveAssessmentDropdown ="Add From Existing"
 export const SlateLockStatus = "SlateLockStatus"
-
+export const TocRefreshVersioning = "tocRefreshVersioning"
+export const SendMessageForVersioning = "sendMessageForVersioning"
