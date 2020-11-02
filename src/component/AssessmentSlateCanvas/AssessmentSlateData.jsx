@@ -12,13 +12,11 @@ import RootCiteTdxComponent from './assessmentCiteTdx/RootCiteTdxComponent.jsx';
 import config from '../../config/config';
 import './../../styles/AssessmentSlateCanvas/AssessmentSlateCanvas.css';
 import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
-import { TAXONOMIC_ID_LEARNING_SYSTEM, TAXONOMIC_ID_DISCIPLINES } from './learningTool/learningToolUtility.js';
-import { assessmentFormats, CITE, TDX, PUF, LEARNING_TEMPLATE, LEARNOSITY, ELM_NEW_VERSION_UPDATE, ELM_UPDATE_MSG, ELM_UPDATE_POPUP_HEAD, ELM_UPDATE_BUTTON } from './AssessmentSlateConstants.js';
+import { assessmentFormats, CITE, TDX, PUF, LEARNING_TEMPLATE, LEARNOSITY, ELM_UPDATE_MSG, ELM_UPDATE_POPUP_HEAD, ELM_UPDATE_BUTTON } from './AssessmentSlateConstants.js';
 /** ----- Import - Action Creators ----- */
 import { setCurrentCiteTdx, assessmentSorting } from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
 import { closeLtAction, openLtAction, openLTFunction } from './learningTool/learningToolActions';
 import { checkAssessmentStatus, updateAssessmentVersion } from './AssessmentActions/assessmentActions.js';
-import { showToastMessage, setToastMessage } from '../Toast/ToastActions.js';
 /**
 * Module | AssessmentSlateData
 * description | This is the child Component of Assessment Slate
@@ -209,8 +207,6 @@ class AssessmentSlateData extends Component {
             updatedElmObj.title = this.props.assessmentReducer[latestWorkUrn].assessmentTitle
         }
         this.props.addPufAssessment(updatedElmObj, this.state.activeAssessmentType, 'insert', () => {
-            this.props.showToastMessage(true);
-            this.props.setToastMessage(ELM_NEW_VERSION_UPDATE);
             this.props.updateAssessmentVersion(oldWorkUrn, latestWorkUrn);
         });
         this.props.handleCanvasBlocker.disableHeader(false);
@@ -584,8 +580,6 @@ const mapActionToProps = {
     closeLtAction: closeLtAction,
     openLTFunction: openLTFunction,
     checkElmAssessmentStatus : checkAssessmentStatus,
-    showToastMessage: showToastMessage,
-    setToastMessage: setToastMessage,
     updateAssessmentVersion: updateAssessmentVersion
 }
 

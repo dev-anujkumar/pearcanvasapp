@@ -636,7 +636,7 @@ export const prepareFigureElementSnapshots = async (element, actionStatus, index
     let elementSnapshot = {};
     let semanticSnapshots = (actionStatus.fromWhere !== "create" && element.type !== CITATION_ELEMENT) ? await setSemanticsSnapshots(element, actionStatus, index) : {};
     elementSnapshot = {
-        ...element ? setFigureElementContentSnapshot(element) : "",
+        ...element ? setFigureElementContentSnapshot(element,actionStatus) : "",
         glossorySnapshot: JSON.stringify([]),
         footnoteSnapshot:  JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.footnoteSnapshot : []),
         assetPopOverSnapshot: JSON.stringify([])
@@ -671,19 +671,27 @@ export const prepareElementSnapshots = async (element,actionStatus,index, elemen
  * Generates content snapshot data for figure element
  * @param {Object} element Figure element data
  */
-export const setFigureElementContentSnapshot = (element) => {
+export const setFigureElementContentSnapshot = (element, actionStatus) => {
     let snapshotData = {
         title: element.html.title || "",
         subtitle: element.html.subtitle || "",
         captions: element.html.captions || "",
         credits: element.html.credits || "" 
     }
+
     switch (element.figuretype) {
         case "video":
             snapshotData["metadata"] = element.figuredata.videoid.trim().length ? `<p>${element.figuredata.videoid}</p>` : "<p><br></p>"
             break;
         case "audio":
             snapshotData["metadata"] = element.figuredata.audioid.trim().length ? `<p>${element.figuredata.audioid}</p>` : "<p><br></p>"
+            break;
+        case "codelisting":             // for BCE
+            snapshotData["codeblock"] =  element.html.preformattedtext ? element.html.preformattedtext : "<p><br></p>"
+            snapshotData["metadata"] = prepareMetablock(element, actionStatus)
+            break;
+        case "authoredtext":            // for MML
+            snapshotData["metadata"] = element.html.text ? `${element.html.text}` : "<p><br></p>"
             break;
         case "image":
         case "table":
@@ -694,6 +702,21 @@ export const setFigureElementContentSnapshot = (element) => {
     }
     return snapshotData
 }
+
+const prepareMetablock = (element, actionStatus) => {
+    let programLang = element.figuredata.programlanguage && element.figuredata.programlanguage != 'Select' ? element.figuredata.programlanguage : ''
+    let toggleSyntaxhighlight = element.figuredata.syntaxhighlighting == true ? 'ON' : 'OFF'
+    let toggleNumber = element.figuredata.numbered == true ? 'ON' : 'OFF'
+    let startNumberField = element.figuredata.startNumber ? element.figuredata.startNumber : "NA"
+    let finalMetaBlock
+    // if (actionStatus.fromWhere == "create") {
+    //     finalMetaBlock = `<p><span class='bce-metadata'>Syntax-highlighting: ${toggleSyntaxhighlight}</span></p><p><span class='bce-metadata'>Language: ${programLang}</span></p><p><span class='bce-metadata'>Line Number: ${toggleNumber}</span></p><p><span class='bce-metadata'>Start numbering from: ${startNumberField}</span></p>`
+    // } else {
+        finalMetaBlock = `<p><span class='bce-metadata'>Syntax-highlighting: </span>${toggleSyntaxhighlight}</p><p><span class='bce-metadata'>Language: </span>${programLang}</p><p><span class='bce-metadata'>Line Number: </span>${toggleNumber}</p><p><span class='bce-metadata'>Start numbering from: </span>${startNumberField}</p>`
+    // }
+    return finalMetaBlock
+}
+
 
 const setContentSnapshot = (element, elementDetails, actionStatus, CurrentSlateStatus) => {
     let snapshotData = "";
@@ -781,7 +804,7 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
                     subtitle: wipData.subtitle,
                     captions: wipData.captions,
                     credits: wipData.credits,
-                    figuredata: figureData
+                    figuredata: figureData ? figureData : wipData.figuredata
                 }
                 dispatch(storeOldAssetForTCM({}))
             }

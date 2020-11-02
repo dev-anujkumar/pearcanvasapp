@@ -10,9 +10,10 @@ import {
     GET_ASSESSMENT_VERSIONS,
     ELM_PORTAL_API_ERROR,
     RESET_ASSESSMENT_STORE,
-    ASSESSMENT_CONFIRMATION_POPUP
+    ASSESSMENT_CONFIRMATION_POPUP,
+    UPDATE_ELM_ITEM_ID
 } from "../../../constants/Action_Constants";
-import { ELM_PORTAL_ERROR_MSG } from '../AssessmentSlateConstants.js';
+import { ELM_PORTAL_ERROR_MSG, AUTO_UPDATE_FAIL_ERROR } from '../AssessmentSlateConstants.js';
 
 /**
  * This action creator is used to fetch usage-type based on entityType
@@ -56,7 +57,7 @@ const prepareUsageTypeData = (res) => {
 /**
  * This action creator is used to fetch the assessment metadata including status
  */
-export const checkAssessmentStatus = (workUrn, calledFrom, currentWorkUrn, currentWorkData) => (dispatch) => {
+export const checkAssessmentStatus = (workUrn, calledFrom, currentWorkUrn, currentWorkData, itemData) => (dispatch) => {
     let url = `${config.ASSESSMENT_ENDPOINT}assessment/v2/${workUrn}`;
     return axios.get(url, {
         headers: {
@@ -64,10 +65,10 @@ export const checkAssessmentStatus = (workUrn, calledFrom, currentWorkUrn, curre
             "ApiKey": config.STRUCTURE_APIKEY,
             "PearsonSSOSession": config.ssoToken
         }
-    }).then((res) => {
+    }).then(async (res) => {
         if (res && res.data && res.data.status) {
-            let statusString = res.data.status.split("/")
-            let assessmentStatus = statusString[statusString.length - 1]
+            let statusString = res.data.status.split("/");
+            let assessmentStatus = statusString[statusString.length - 1];
             let dataForUpdate = {
                 showUpdateStatus: false
             };
@@ -75,7 +76,9 @@ export const checkAssessmentStatus = (workUrn, calledFrom, currentWorkUrn, curre
                 dataForUpdate = { ...currentWorkData }
                 dataForUpdate.showUpdateStatus = checkAssessmentNextVersion(res.data, currentWorkUrn);
                 dataForUpdate.latestWorkUrn = dataForUpdate.showUpdateStatus == true ? workUrn : currentWorkUrn;
-                // dataForUpdate.assessmentTitle = res.data.name ? res.data.name : res.data.defaultTitle ? res.data.defaultTitle : 'Elm assessment'
+            } else if (calledFrom == 'fromGetItemId' || calledFrom == 'fromEditButton') {
+                dataForUpdate = { currentWorkUrn: currentWorkUrn }
+                await dispatch(getLatestAssessmentVersion(res.data.entityUrn, workUrn, res.data.dateCreated, dataForUpdate, itemData.type));
             } else {
                 dataForUpdate = {
                     assessmentStatus: assessmentStatus,
@@ -84,7 +87,7 @@ export const checkAssessmentStatus = (workUrn, calledFrom, currentWorkUrn, curre
                     assessmentTitle: res.data.name ? res.data.name : res.data.defaultTitle ? res.data.defaultTitle : 'Elm assessment',
                     showUpdateStatus: false,
                     ...dataForUpdate
-                }
+                };
             }
             let assessmentUrn = calledFrom == 'fromNextVersion' ? currentWorkUrn : workUrn
             if (assessmentStatus == 'wip' || (calledFrom == 'fromNextVersion')) {
@@ -95,9 +98,13 @@ export const checkAssessmentStatus = (workUrn, calledFrom, currentWorkUrn, curre
                         dataForUpdate: dataForUpdate
                     }
                 })
+                if (itemData && itemData.type == 'assessment-item') {
+                    await dispatch(checkAssessmentStatus(itemData.itemId, 'fromGetItemId', itemData.parentId, "", itemData))
+                }
             }
             if (assessmentStatus == 'final' && calledFrom && (calledFrom != 'fromUpdate')) {
-                dispatch(getLatestAssessmentVersion(res.data.entityUrn, workUrn, res.data.dateCreated, dataForUpdate))
+                let itemType = calledFrom == 'fromGetItemId' && itemData && itemData.type ? itemData.type : ""
+                dispatch(getLatestAssessmentVersion(res.data.entityUrn, workUrn, res.data.dateCreated, dataForUpdate, itemType, itemData))
             }
         }
     }).catch(() => {
@@ -128,7 +135,7 @@ const checkAssessmentNextVersion = (nextData, previousWorkUrn) => {
 /**
  * This action creator is used to fetch all the versions of the assessment/assessment-item
  */
-export const getLatestAssessmentVersion = (entityUrn, workUrn, createdDate, previousData) => (dispatch) => {
+export const getLatestAssessmentVersion = (entityUrn, workUrn, createdDate, previousData, type,itemData) => (dispatch) => {
     let url = `${config.ASSESSMENT_ENDPOINT}entity/${entityUrn}/versions`;
     return axios.get(url, {
         headers: {
@@ -140,8 +147,20 @@ export const getLatestAssessmentVersion = (entityUrn, workUrn, createdDate, prev
         if (res && res.data && res.data.length > 0) {
             let assessmentLatestWorkURN = res.data[getLatestIndex(res.data)].versionUrn //Latest WorkURN
             let newVersions = res.data.filter(assessment => new Date(assessment.createdDate) > new Date(createdDate)) //List of All versions created after current WorkURN
-            if (newVersions && newVersions.length == 1) {        //Show Approved Status
-                dispatch(checkAssessmentStatus(newVersions[0].versionUrn, 'fromNextVersion', workUrn, previousData))//"elmVersionIsClean": true
+            if (type == 'assessment-item') {
+                dispatch({
+                    type: UPDATE_ELM_ITEM_ID,
+                    payload: {
+                        currentWorkUrn: previousData.currentWorkUrn,
+                        updatedItem : {
+                            oldItemId: workUrn,
+                            latestItemId : assessmentLatestWorkURN
+                        }
+                    }
+                })
+            }
+            else if (newVersions && newVersions.length == 1) {   //Show Approved Status
+                dispatch(checkAssessmentStatus(newVersions[0].versionUrn, 'fromNextVersion', workUrn, previousData, itemData))//"elmVersionIsClean": true
             } else if (newVersions && newVersions.length > 1) {  //Show UPDATE button
                 dispatch({
                     type: GET_ASSESSMENT_VERSIONS,
@@ -218,7 +237,7 @@ export const openElmAssessmentPortal = (assessmentData) => (dispatch) => {
  * @param oldWorkUrn current workURN of the assessment
  * @param updatedWorkUrn latest workURN of the assessment
  */
-export const updateAssessmentVersion = (oldWorkUrn, updatedWorkUrn,type) => dispatch => {
+export const updateAssessmentVersion = (oldWorkUrn, updatedWorkUrn) => dispatch => {
     let url = `${config.SLATE_REFRESH_URL}${config.projectUrn}/updateAllAssessments/${oldWorkUrn}/${updatedWorkUrn}`;
     return axios.post(url, {}, {
         headers: {
@@ -226,7 +245,7 @@ export const updateAssessmentVersion = (oldWorkUrn, updatedWorkUrn,type) => disp
             "PearsonSSOSession": config.ssoToken
         }
     }).then((res) => {
-        if(res.status== 202 && type === "assessments"){
+        if (res.status == 202) {
             dispatch(assessmentConfirmationPopup(true));
         }
     }).catch(() => {
@@ -235,7 +254,7 @@ export const updateAssessmentVersion = (oldWorkUrn, updatedWorkUrn,type) => disp
             type: ELM_PORTAL_API_ERROR,
             payload: {
                 show: true,
-                errorMessage: 'Unable to Update Other Instances of this Assessment in the Project',
+                errorMessage: AUTO_UPDATE_FAIL_ERROR,
                 isElmApiError: 'elm-api-error'
             }
         })
@@ -250,7 +269,7 @@ export const resetAssessmentStore = () => {
 }
 
 
-export const checkEntityUrn =  (assessmentID) => async (dispatch) => {
+export const checkEntityUrn = (assessmentID) => async (dispatch) => {
     let workIds = []
     await Promise.all(assessmentID && assessmentID.map((item) => {
         let url = `${config.ASSESSMENT_ENDPOINT}assessment/v2/${item}`;
@@ -268,11 +287,11 @@ export const checkEntityUrn =  (assessmentID) => async (dispatch) => {
             console.log("error in finding entityurn")
         })
     }))
-    if (workIds.length > 1 && workIds[0] === workIds[1]) {
-        dispatch(updateAssessmentVersion(assessmentID[0], assessmentID[1], "assessments"))
+    if (workIds && workIds.length > 0 && workIds[0] === workIds[1]) {
+        dispatch(updateAssessmentVersion(assessmentID[0], assessmentID[1]))
     }
-
 }
+
 export const assessmentConfirmationPopup = (data) => {
     return {
         type: ASSESSMENT_CONFIRMATION_POPUP,

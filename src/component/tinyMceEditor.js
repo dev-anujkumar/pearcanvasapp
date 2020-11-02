@@ -2895,6 +2895,7 @@ export class TinyMceEditor extends Component {
 
         return hiddenBlock;
     }
+    
 
     processBlockquoteHtml = (model, element, lockCondition) => {
 
