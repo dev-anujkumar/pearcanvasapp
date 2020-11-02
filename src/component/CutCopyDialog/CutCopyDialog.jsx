@@ -1,28 +1,6 @@
 import React from 'react'
 
-const CopyUrn = props => {
-
-    const copyToClipBoard = (e, text) => {
-        e.stopPropagation();
-        const tempElement = document.createElement('textarea');
-        tempElement.value = text;
-        document.body.appendChild(tempElement);
-        tempElement.select();
-        document.execCommand('copy');
-        document.body.removeChild(tempElement);
-        props.toggleCopyMenu(false);
-        let linkNotification = document.getElementById('link-notification');
-        if (text.includes('work')) {
-            linkNotification.innerText = "Work URN copied to clipboard";
-        } else {
-            linkNotification.innerText = "Manifest URN copied to clipboard";
-        }
-        linkNotification.style.display = "block";
-        setTimeout(() => {
-            linkNotification.style.display = "none";
-            linkNotification.innerText = "";
-        }, 4000);
-    }
+const CutCopyDialog = props => {
 
     const hideAPOOnOuterClick = (e) => {
         props.toggleCopyMenu(false);
@@ -33,7 +11,7 @@ const CopyUrn = props => {
     return (
         <div style={positionStyle} className="copy-menu-container">
             <div className="copy-menu">
-                <div className="copyUrn" onClick={(e) => { copyToClipBoard(e, props.element.id || props.element.versionUrn) }}>Copy {props.element.id.includes('work') ? 'Work' : 'Manifest'} URN</div>
+                <div className="copyUrn" onClick={(e) => { copyToClipBoard(e, props) }}>Copy {props.element.id.includes('work') ? 'Work' : 'Manifest'} URN</div>
                 {renderCutCopyOption(props)}
             </div>
             
@@ -42,7 +20,7 @@ const CopyUrn = props => {
     )
 }
 
-export default CopyUrn;
+export default CutCopyDialog;
 
 export const renderCutCopyOption = (componentProps) => {
     const { inContainer, userRole, element: { type } } = componentProps
@@ -76,4 +54,27 @@ export const performCutCopy = (event, componentProps, type) => {
     }
     componentProps.setElementDetails(elementDetailsToSet)
     componentProps.toggleCopyMenu(false)
+}
+
+export const copyToClipBoard = (e, _props) => {
+    e.stopPropagation();
+    const text = _props.element.id || _props.element.versionUrn
+    const tempElement = document.createElement('textarea');
+    tempElement.value = text;
+    document.body.appendChild(tempElement);
+    tempElement.select();
+    document.execCommand('copy');
+    document.body.removeChild(tempElement);
+    _props.toggleCopyMenu(false);
+    let linkNotification = document.getElementById('link-notification');
+    if (text.includes('work')) {
+        linkNotification.innerText = "Work URN copied to clipboard";
+    } else {
+        linkNotification.innerText = "Manifest URN copied to clipboard";
+    }
+    linkNotification.style.display = "block";
+    setTimeout(() => {
+        linkNotification.style.display = "none";
+        linkNotification.innerText = "";
+    }, 4000);
 }
