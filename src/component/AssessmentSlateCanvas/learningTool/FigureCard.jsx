@@ -5,6 +5,7 @@
 */
 import React from 'react';
 import PropTypes from 'prop-types'
+import { capitalizeString } from './learningToolUtility.js';
 class FigureCard extends React.Component {
     constructor(props) {
         super(props);
@@ -17,7 +18,7 @@ class FigureCard extends React.Component {
     }
 
     render() {
-        const { forInputKey, apiResultObject, selectedResult, capitalizeString } = this.props
+        const { forInputKey, apiResultObject, selectedResult } = this.props
         return (
             <tr className={(selectedResult && (selectedResult.learningtemplateUrn == apiResultObject.learningtemplateUrn)) ? "modalCard highlightSelectedRow" : "modalCard"} >
                 <td className="tableRowData">
@@ -55,13 +56,9 @@ class FigureCard extends React.Component {
 FigureCard.displayName = "FigureCard"
 
 FigureCard.propTypes = {
-    /** Unique key for each input field */
     forInputKey: PropTypes.number,
-    /** this objects holds the value of all Learning tool to show */
     apiResultObject: PropTypes.object,
-    /** this objects holds the value of selected Learning tempelate to show */
     selectedResult: PropTypes.object,
-    /**selected entery from table of body */
     selectedFigure: PropTypes.object
 }
 export default FigureCard;

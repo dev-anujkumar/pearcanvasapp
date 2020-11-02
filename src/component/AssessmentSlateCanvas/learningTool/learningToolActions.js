@@ -22,8 +22,9 @@ import {learningSystemList, TAXONOMIC_ID_DISCIPLINES, TAXONOMIC_ID_LEARNING_SYST
   * @param {String} toolType - value of learning tool type selected from dropdown
   * @param {String} learningSystem - value of learning system type selected
   */
-export const learningToolSearchAction = (learningSystem, learningAppType, searchLabel = "", searchKeyword = "") => dispatch => {
-  let url = setSearchUrl(learningSystem, learningAppType, searchLabel, searchKeyword);
+export const learningToolSearchAction = (learningSystem, learningAppType, searchLabel, searchKeyword) => dispatch => {
+  let url = config.ASSESSMENT_ENDPOINT + `learningtemplate/v2/?learningsystem=${learningSystem}&&type=${learningAppType}&&label=${searchLabel}&&keyword=${searchKeyword}`;
+  
   return axios.get(url,
     {
       headers: {
@@ -38,10 +39,8 @@ export const learningToolSearchAction = (learningSystem, learningAppType, search
       dispatch({
         type: LT_API_RESULT, payload: {
           apiResponse: res.data,
-          learningTypeSelected: true,
           showDisFilterValues: true,
-          showLTBody: true,
-          learningToolTypeValue: learningAppType
+          showLTBody: true
         }
       })
     },
@@ -56,11 +55,6 @@ export const learningToolSearchAction = (learningSystem, learningAppType, search
     })
 };
 
-const setSearchUrl = (learningSystem, learningAppType, searchLabel, searchKeyword) => {
-  let url = config.ASSESSMENT_ENDPOINT + `learningsystem=${learningSystem}&type=${learningAppType}&label=${searchLabel}&keyword=${searchKeyword}`
-  url = `https://contentapis-qa.pearsoncms.net/assessment-api/learningtemplate/v2/?learningsystem=socialexplorer&type=socialexplorer-pathways&label=Adaptive Pathway 15.2: Understanding Schizophrenia&keyword=LammOB1e`
-  return url
-}
 /**
   * @discription This action is dispached to fetch dropdown values for Learning Systems 
   *               and Disciplines based on taxomonic IDs
@@ -84,10 +78,10 @@ export const openLTFunction = (taxonomyId) => dispatch => {
     ).then(res => {
       if (taxonomyId === TAXONOMIC_ID_DISCIPLINES) {
         dispatch(getDiscipline(res.data))
-      } 
-      // else {
-      //   dispatch(fetchLearningSystems(res.data))/** To be used when the API is integrated */
-      // }
+      }
+      /* else {
+         dispatch(fetchLearningSystems(res.data)) --------> To be used when the API is integrated 
+      }*/
     },
       err => showError(err, dispatch)
     ).catch(error => {
@@ -198,7 +192,7 @@ export const fetchLearningSystems = (learningSystems) => {
     type: GET_LEARNING_SYSTEMS,
     payload: {
       showDisFilterValues: true,
-      learningSystems: learningSystems /** change to [ prepareLearningSystemsList(learningSystems) ] when the API is integrated */
+      learningSystems: learningSystems
     }
   }
 };

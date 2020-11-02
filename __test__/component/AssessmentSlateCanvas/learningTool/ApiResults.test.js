@@ -1,24 +1,26 @@
 import React from 'react';
-import { mount, shallow } from 'enzyme';
-import ApiResults  from '../../../../src/component/AssessmentSlateCanvas/learningTool/ApiResults';
-import {tempFiguresForResults,disciplines,apiResultObject,selectedResult} from '../../../../fixtures/learningTool'
-import { spy, stub } from 'sinon';
-const selectedFigure = new stub();
-xdescribe('Testing Figure Card component with props', () => {
+import { mount } from 'enzyme';
+import ApiResults from '../../../../src/component/AssessmentSlateCanvas/learningTool/ApiResults';
+import { tempFiguresForResults, selectedResult } from '../../../../fixtures/learningTool'
+
+jest.mock('../../../../src/component/AssessmentSlateCanvas/learningTool/FigureCard.jsx', () => {
+    return function () {
+        return (<tr className="modalCard">null</tr>)
+    }
+})
+
+describe('Testing Learning Tool ApiResults component', () => {
     let props = {
-        apiResponseData: apiResultObject,
-        selectedResult:selectedResult
-      }
-    let wrapper = mount( < ApiResults  selectedFigure = {selectedFigure}
-         {...props} />) 
+        apiResponseData: tempFiguresForResults,
+        selectedResult: selectedResult,
+        selectedFigure: jest.fn()
+    }
+    let wrapper = mount(< ApiResults  {...props} />)
     const instance = wrapper.find('ApiResults').instance();
-  
-    it('should have render component', () => {
-        expect(wrapper.find(".learning-tool-margin-left")).toHaveLength(1)
+
+    it('Render ApiResults', () => {
+        expect(wrapper).toHaveLength(1);
+        expect(instance).toBeDefined();
     })
 
-     it('should have apiResultsJsx  component', () => {
-        instance.apiResultsJsx(tempFiguresForResults);
-    }) 
-
-    })
+})

@@ -13,19 +13,14 @@ import {LT_API_RESULT,
 
 const INITIAL_STATE = {
     shouldHitApi : false,
-    learningToolTypeValue : '',
     apiResponse : [],
-    showErrorMsg : true, //should be false
     showLTBody : false,
-    learningTypeSelected : false,
     showDisFilterValues : false,
     selectedResultFormApi : '',
     resultIsSelected : false,
     toggleLT : false,
     linkButtonDisable : true,
     apiResponseForDis : [],
-    learningToolDisValue : '',
-    numberOfRows : 25,
     learningSystems:[],
     showTypeFilterValues: false
 };
@@ -40,41 +35,31 @@ export default function learningToolReducer (state = INITIAL_STATE, action = INI
         case LT_TYPE_FILTER_SELECTED :
             return {
                 ...state,
-                shouldHitApi : action.payload.shouldHitApi,
-                learningToolTypeValue : action.payload.learningToolTypeValue,
+                shouldHitApi : action.payload.shouldHitApi
         }
         case LT_API_RESULT :
             return {
                 ...state,
                 selectedResultFormApi : '',
-                apiResponse : action.payload.apiResponse.filter((value, index, array) => {
+                apiResponse: action.payload.apiResponse.filter((value, index, array) => {
                     let tempDisToMatchArray = value.disciplines.en;
-                    if(state.learningToolDisValue !==''){
+                    if (state.learningToolDisValue !== '') {
                         let temp1 = tempDisToMatchArray.indexOf(state.learningToolDisValue.toLowerCase());
-                        // if (temp1 >= 0) {
-                        //     return true
-                        // } else {
-                        //     return false
-                        // }
                         return temp1 >= 0;
-                    }else{
+                    } else {
                         return true;
                     }
- 
                 }),
                 showDisFilterValues : action.payload.showDisFilterValues,
                 showLTBody : action.payload.showLTBody,
-                learningTypeSelected : action.payload.learningTypeSelected,
-                linkButtonDisable : true,
-                learningToolTypeValue : action.payload.learningToolTypeValue
+                linkButtonDisable : true
         }
         case LT_API_RESULT_FAIL :
             return {
                 ...state,
-                showErrorMsg : true,
                 showDisFilterValues : action.payload.showDisFilterValues
         }
-        case SELECTED_FIGURE: {                 //Selected Figure name
+        case SELECTED_FIGURE: {
             return {
                 ...state,
                 selectedResultFormApi : action.payload.selectedFigure,
@@ -112,13 +97,7 @@ export default function learningToolReducer (state = INITIAL_STATE, action = INI
 
             }
         }
-        case PAGINATION: {                
-            return {
-                ...state,
-                numberOfRows : action.payload.numberOfRows,
-            }
-        }
-        case REMOVE_SELECTED_DATA: {                 //Selected Figure name
+        case REMOVE_SELECTED_DATA: {
             return {
                 ...state,
                 selectedResultFormApi : "",

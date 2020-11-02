@@ -1,15 +1,20 @@
 /**
-* Search Bar Component of Learning Tool/Learning App Assessment
+* Results Table Component of Learning Tool/Learning App Assessment
 */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import ErrorComp from '../ErrorComp.jsx';
 import ApiResults from '../ApiResults.jsx';
+import {ERROR_MESSAGE} from '../learningToolUtility.js';
 import '../../../../styles/AssessmentSlateCanvas/LearningTool/LearningTool.css';
 const LearningToolBody = (props) => {
 
     const [resultsPerPage, setResultsPerPage] = useState(25);
-    const [totalPage, setTotalPage] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
-    const { apiResponse, selectedResultData, learningToolPageLimit, selectedFigure, learningToolTableHeaders, capitalizeString } = props;
+    const { apiResponse, selectedResultData, learningToolPageLimit, selectedFigure, learningToolTableHeaders } = props;
+    
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [apiResponse]);
 
     /**
     * @discription - This function is for implementing the pagination
@@ -17,8 +22,6 @@ const LearningToolBody = (props) => {
     */
     const paginationFunction = (e) => {
         let numberOfRows = e.target.value;
-        const totalPages = Math.ceil(apiResponse.length / numberOfRows);
-        setTotalPage(totalPages);
         setCurrentPage(1);
         setResultsPerPage(numberOfRows);
     }
@@ -36,32 +39,28 @@ const LearningToolBody = (props) => {
     *@discription - nextPage handles the button for next in pagination
     */
     const nextPage = () => {
-        if (currentPage < totalPage) {
+        const totalPages = Math.ceil(apiResponse.length / resultsPerPage)
+        if (currentPage < totalPages) {
             setCurrentPage(currentPage + 1);
         }
     }
+
     /**
-    * ```jsx of the POPUP body```
     * @discription - This function is for rendering the body of the popup table
-    * 
     * @param {Array} tempFiguresForResults - Array of Api response
     * @param {Array} selectedResult - Array of results
-    * @param {String} learningToolDisValue - String of the value selected from discipline dropdown
-    * @param {Number} tempNumberOfRows - number that is selected from pagination dropdown
     * @return {String} - returns the jsx code of the body part of learning tool popup
     */
     const showltBodyJsx = (tempFiguresForResults, selectedResult) => {
-        /**
-        * If value of discipline selected
-        */
+
         let ltBodyJsx;
-        let apiResponseForBody;
-        apiResponseForBody = tempFiguresForResults;
+        let apiResponseForBody = tempFiguresForResults;
         const indexOfLastData = currentPage * resultsPerPage;
         const indexOfFirstData = indexOfLastData - resultsPerPage;
         const apiResponseLearningTemp = apiResponseForBody.slice(indexOfFirstData, indexOfLastData);
-
-        ltBodyJsx = <div>
+        const totalPages = Math.ceil(apiResponseForBody.length / resultsPerPage)
+        ltBodyJsx = (
+        <>
             <div className="learningToolResultsTableHeader">
                 <span className="learningToolPagesDropdownLabel1">Displaying </span>
                 <select className="learningToolPages" onChange={(e) => paginationFunction(e)}>
@@ -70,23 +69,29 @@ const LearningToolBody = (props) => {
                 </select>
                 <span className="learningToolPagesDropdownLabel2">results</span>
                 <span className="paginationButtons">
-                    <button className="leftPage previous round" onClick={prevPage}><span className="fa fa-caret-left arrow-icon"></span></button><span>{apiResponseForBody.length ? currentPage + "-" + totalPage : "0"}</span>
+                    <button className="leftPage previous round" onClick={prevPage}><span className="fa fa-caret-left arrow-icon"></span></button><span>{apiResponseForBody.length ? currentPage + "-" + totalPages : "0"}</span>
                     <button className="rightPage next round" onClick={nextPage}><span className="fa fa-caret-right arrow-icon"></span ></button>
                 </span>
             </div>
             <div className="learningToolBody scroller" id="style-2">
-                <table className="learningToolTable">
-                    {apiResponseLearningTemp.length ? <thead className="tableForApiResults">
-                        {learningToolTableHeaders.map((tableHeader, index) =>
-                            <th key={index} className="tableHeader">{tableHeader}</th>)}
-                    </thead>
-                        : ''}
-                    {<tbody className="learning-tool-margin-left">
-                        <ApiResults selectedResult={selectedResult} selectedFigure={selectedFigure} apiResponseData={apiResponseLearningTemp} capitalizeString={capitalizeString} />
-                    </tbody>}
-                </table>
+                    <table className="learningToolTable">
+                        {apiResponseLearningTemp.length ? <thead className="tableForApiResults">
+                            {learningToolTableHeaders.map((tableHeader, index) =>
+                                <th key={index} className="tableHeader">{tableHeader}</th>)}
+                        </thead>
+                            : ''}
+                        {<tbody className="learning-tool-margin-left">
+                            {apiResponseLearningTemp.length >= 1 ? <ApiResults
+                                selectedResult={selectedResult}
+                                selectedFigure={selectedFigure}
+                                apiResponseData={apiResponseLearningTemp}
+                            />
+                                : <ErrorComp errorMsg={ERROR_MESSAGE} />}
+                        </tbody>}
+                    </table>
             </div>
-        </div>
+        </>
+        )
 
         return ltBodyJsx;
     }
