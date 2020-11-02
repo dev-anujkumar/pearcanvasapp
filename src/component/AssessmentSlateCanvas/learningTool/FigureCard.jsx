@@ -5,7 +5,7 @@
 */
 import React from 'react';
 import PropTypes from 'prop-types'
-import { capitalizeString } from './learningToolUtility.js';
+import { learningSystemList } from './learningToolUtility.js';
 class FigureCard extends React.Component {
     constructor(props) {
         super(props);
@@ -32,7 +32,7 @@ class FigureCard extends React.Component {
                         id={forInputKey}
                         key={apiResultObject.learningtemplateUrn}
                     />
-                    <p className="tableRow">{capitalizeString(apiResultObject.type)}</p>
+                    <p className="tableRow">{learningSystemList[apiResultObject.type].label}</p>
                 </td>
                 <td className="tableRowData">
                     <p className="tableRow" htmlFor={forInputKey}>{apiResultObject.disciplines.en.join(", ")}</p>

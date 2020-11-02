@@ -57,7 +57,7 @@ const LearningToolBody = (props) => {
         let apiResponseForBody = tempFiguresForResults;
         const indexOfLastData = currentPage * resultsPerPage;
         const indexOfFirstData = indexOfLastData - resultsPerPage;
-        const apiResponseLearningTemp = apiResponseForBody.slice(indexOfFirstData, indexOfLastData);
+        const apiResponseLearningTemp = tempFiguresForResults.slice(indexOfFirstData, indexOfLastData);
         const totalPages = Math.ceil(apiResponseForBody.length / resultsPerPage)
         ltBodyJsx = (
         <>
