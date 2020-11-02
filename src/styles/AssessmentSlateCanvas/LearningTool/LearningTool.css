@@ -316,10 +316,6 @@ div.learningToolHeaderSearchDiv {
     display: inline-flex;
 }
 
-/* div.learningToolHeaderSearchBar, button.learningToolSearchButton {
-    position: relative;
-    top: 20px;
-} */
 
 /** Api Results Table Header Data CSS*/
 .learning-tool-margin-left {
@@ -466,12 +462,18 @@ td.tableRowData {
         max-height: 350px;
         max-width: 98%;
     }
+    .learning-tool-header td {
+        padding: 0 6px;
+    }
 }
 
 @media only screen and (max-width:1000px) {
     .learningToolContainer {
         max-height: 300px;
         width: 960px;
+    }
+    .learning-tool-header td {
+        padding: 0 6px;
     }
 }
 
