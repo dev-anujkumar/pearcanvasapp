@@ -1,7 +1,7 @@
 import {LT_API_RESULT,
     LT_API_RESULT_FAIL,
     SELECTED_FIGURE,
-    PAGINATION,
+    // PAGINATION,
     LEARNING_TOOL_DIS_VALUE,
     TOGGLE_LT_POPUP,
     GET_DISCIPLINE,
@@ -22,7 +22,8 @@ const INITIAL_STATE = {
     linkButtonDisable : true,
     apiResponseForDis : [],
     learningSystems:[],
-    showTypeFilterValues: false
+    showTypeFilterValues: false,
+    learningToolDisValue:""
 };
 
 const INITIAL_ACTION = {

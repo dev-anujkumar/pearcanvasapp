@@ -228,13 +228,21 @@ div.learningAppType {
 .leftPage {
     font-size: 25px;
     margin-right: 10px;
+    background-color: grey;
+    border: 0;
 }
 
 .rightPage {
     font-size: 25px;
     margin-left: 10px;
+    background-color: grey;
+    border: 0;
 }
-
+.page-limit{
+    font-size: 15px;
+    line-height: 1.7;
+    vertical-align: top;
+}
 .error {
     border: 2px solid red;
     background-color: #ffe5e7;
@@ -399,6 +407,7 @@ td.tableRowData {
 
 .arrow-icon {
     color: #d2cdcdf0;
+    vertical-align: top;
 }
 
 .scroller {

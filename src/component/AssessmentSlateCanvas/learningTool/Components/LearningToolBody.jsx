@@ -69,7 +69,8 @@ const LearningToolBody = (props) => {
                 </select>
                 <span className="learningToolPagesDropdownLabel2">results</span>
                 <span className="paginationButtons">
-                    <button className="leftPage previous round" onClick={prevPage}><span className="fa fa-caret-left arrow-icon"></span></button><span>{apiResponseForBody.length ? currentPage + "-" + totalPages : "0"}</span>
+                    <button className="leftPage previous round" onClick={prevPage}><span className="fa fa-caret-left arrow-icon"></span></button>
+                    <span className="page-limit">{apiResponseForBody.length ? currentPage + "-" + totalPages : "0"}</span>
                     <button className="rightPage next round" onClick={nextPage}><span className="fa fa-caret-right arrow-icon"></span ></button>
                 </span>
             </div>
