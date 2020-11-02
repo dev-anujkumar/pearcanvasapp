@@ -401,7 +401,7 @@ const htmlEntityList = {
  */
 export const removeBlankTags = htmlString => {
     let domParsed = new DOMParser().parseFromString(htmlString, "text/html")
-    let emptyNodes = domParsed.childNodes[0].lastChild.querySelectorAll("*:not(img):not(head):not(br):not(p):not(li):empty")
+    let emptyNodes = domParsed.childNodes[0].lastChild.querySelectorAll("*:not(img):not(head):not(br):not(p):not(li):not(#blankLine):empty")
     if(emptyNodes && emptyNodes.length) {
         emptyNodes.forEach(x => x.remove())
         return removeBlankTags(domParsed.childNodes[0].lastChild.innerHTML)
