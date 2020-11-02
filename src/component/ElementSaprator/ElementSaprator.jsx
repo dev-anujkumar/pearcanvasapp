@@ -123,7 +123,7 @@ export function ElementSaprator(props) {
         if (!(props.asideData || props.parentUrn) && allowedRoles.includes(props.userRole)) {
             return (
                 <div className="paste-button-wrapper">
-                    <Button type="split" /* onClick={() => pasteElement(separatorProps)} */ />
+                    <Button type="split" onClick={() => pasteElement(separatorProps)} />
                 </div> 
             )
         }

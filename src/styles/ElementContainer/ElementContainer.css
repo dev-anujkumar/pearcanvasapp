@@ -59,6 +59,11 @@
     opacity: 0.1;
 }
 
+.editor.cut .element-Overlay.disabled {
+    z-index: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
 .showBorder {
     border: 1px solid #737373;
 }
