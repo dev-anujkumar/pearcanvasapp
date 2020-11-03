@@ -37,7 +37,8 @@ export const learningToolSearchAction = (learningSystem, learningAppType, search
   )
     .then(res => {
       dispatch({
-        type: LT_API_RESULT, payload: {
+        type: LT_API_RESULT, 
+        payload: {
           apiResponse: res.data,
           showDisFilterValues: true,
           showLTBody: true
@@ -45,7 +46,8 @@ export const learningToolSearchAction = (learningSystem, learningAppType, search
       })
     },
       err => dispatch({
-        type: LT_API_RESULT_FAIL, payload: {
+        type: LT_API_RESULT_FAIL, 
+        payload: {
           error: err,
           showDisFilterValues: false
         }

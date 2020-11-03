@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { mount, shallow } from 'enzyme';
 import LearningToolHeader from '../../../../src/component/AssessmentSlateCanvas/learningTool/Components/LearningToolHeader';
 import { learningSystemList, disciplines } from '../../../../fixtures/learningTool'
-// import InputSearch from '../../../../src/component/InputSearch';
+
 jest.mock('../../../../src/component/DropdownMenu', () => {
     return function () {
         return (<ul className="dropdown-parent"><li></li></ul>)
@@ -35,7 +35,8 @@ describe('Testing Learning Tool LearningToolHeader component', () => {
             learningToolSearchAction: jest.fn()
         }
         let event = {
-            preventDefault: jest.fn()
+            preventDefault: jest.fn(),
+            stopPropagation: jest.fn()
         }
         let wrapper;
 
@@ -59,7 +60,7 @@ describe('Testing Learning Tool LearningToolHeader component', () => {
             expect(wrapper.find('.learning-tool-header tr.row-2 div.learningAppType').at(1)).toHaveLength(1);
         })
     })
-    describe('Dropdown Menus Testing', () => {
+    describe('handleKeywordChange Testing', () => {
         let newProps = {
             searchProps: {
                 showError: true,
@@ -97,7 +98,7 @@ describe('Testing Learning Tool LearningToolHeader component', () => {
             expect(wrapper.find('.learning-tool-header tr.row-2 td input#learningToolSearchBar').at(0)).toHaveLength(1);
         })
     })
-    xdescribe('Input handleKeywordChange Testing', () => {
+    xdescribe('handleDropdownChange Testing', () => {
         let newProps = {
             searchProps: {
                 showError: true,
@@ -121,16 +122,19 @@ describe('Testing Learning Tool LearningToolHeader component', () => {
         let wrapper;
         beforeEach(() => {
             wrapper = shallow(<LearningToolHeader {...newProps} />);
-            wrapper.instance().handleKeywordChange('Test');
         });
 
         afterEach(() => {
             jest.clearAllMocks();
         });
 
-        it('Test handleKeywordChange', () => {
-            wrapper.find('.learning-tool-header tr.row-2 td input#learningToolSearchBar').at(0).simulate('change', event);
-            expect(wrapper.find('.learning-tool-header tr.row-2 td input#learningToolSearchBar').at(0)).toHaveLength(1);
+        xit('Test handleDropdownChange', () => {
+            const setOpenAppTypeDropdown = jest.fn();
+            const handleClick = jest.spyOn(React, "useState");
+            handleClick.mockImplementation(openAppTypeDropdown => [openAppTypeDropdown, setOpenAppTypeDropdown]);
+            expect(setOpenAppTypeDropdown).toBeTruthy();
+            wrapper.find('.learning-tool-header tr.row-2 td ul.dropdown-parent li').simulate('change', event);            
+            expect(wrapper.find('.learning-tool-header tr.row-2 td ul.dropdown-parent li').at(0)).toHaveLength(1);
         });
     });
 });
