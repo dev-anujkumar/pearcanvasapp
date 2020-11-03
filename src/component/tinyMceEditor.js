@@ -862,8 +862,9 @@ export class TinyMceEditor extends Component {
                     if (key != undefined && key === 13) {
                         //activeElement.innerHTML += '<span class="poetryLine"><br /></span>';
                         tinymce.$(`div[data-id="${this.props.elementId}"] .poetryLine`).each(function () {
-                            let imgTag = this && this.getElementsByTagName("img")
-                            if ((this.innerHTML === '' || this.innerHTML === "<br>" || this.textContent.trim() == '') && !(imgTag && imgTag.length)) {
+                            let imgTag = this && this.getElementsByTagName("img");
+                            const blankLines = this && this.getElementsByClassName("answerLineContent")
+                            if ((this.innerHTML === '' || this.innerHTML === "<br>" || this.textContent.trim() == '') && !(imgTag && imgTag.length) && !(blankLines && blankLines.length)) {
                                 this.remove();
                             }
                         })
@@ -1058,9 +1059,10 @@ export class TinyMceEditor extends Component {
                         currentElement = checkSpan[0];
                     }
                 }
-                let imgTag = currentElement && currentElement.getElementsByTagName("img")
+                let imgTag = currentElement && currentElement.getElementsByTagName("img");
+                const blankLines = currentElement && currentElement.getElementsByClassName('answerLineContent')
                 if (currentElement && currentElement.tagName == 'SPAN' &&
-                    (currentElement == '<br>' || currentElement.textContent.trim() == '') && !(imgTag && imgTag.length)) {
+                    (currentElement == '<br>' || currentElement.textContent.trim() == '') && !(imgTag && imgTag.length) && !(blankLines && blankLines.length)) {
                     let poetryStanza = tinymce.$(`div[data-id="${this.props.elementId}"] .poetryLine`);
                     if (poetryStanza && poetryStanza.length > 1) {
                         currentElement.remove();
@@ -2905,7 +2907,8 @@ export class TinyMceEditor extends Component {
             if (poetryStanza.length > 1) {
                 poetryStanza.each(function () {
                     let imgTag = this && this.getElementsByTagName("img")
-                    if ((this.innerHTML === '' || this.innerHTML === "<br>" || this.textContent.trim() == '') && !(imgTag && imgTag.length)) {
+                    const blankLines = this && this.getElementsByClassName("answerLineContent")
+                    if ((this.innerHTML === '' || this.innerHTML === "<br>" || this.textContent.trim() == '') && !(imgTag && imgTag.length) && !(blankLines && blankLines.length)) {
                         this.remove();
                     }
                 })
