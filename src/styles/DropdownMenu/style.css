@@ -1,6 +1,6 @@
 .dropdown-li-item{
     cursor: pointer;
-    width: max-content;
+    /* width: max-content; */
     padding: 5px 8px;
     list-style: none;
     background-color: #fff;
