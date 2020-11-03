@@ -1411,7 +1411,8 @@ class ElementContainer extends Component {
         let selection = '';
         let selectionOverlay = '';
         if(this.props.elementSelection && Object.keys(this.props.elementSelection).length > 0 &&
-            'element' in this.props.elementSelection && element.id === this.props.elementSelection.element.id) {
+            'element' in this.props.elementSelection && element.id === this.props.elementSelection.element.id &&
+            'activeAnimation' in this.props.elementSelection && this.props.elementSelection.activeAnimation) {
             selection = 'copy';
             if('operationType' in this.props.elementSelection && this.props.elementSelection.operationType === 'cut') {
                 selection = 'cut';

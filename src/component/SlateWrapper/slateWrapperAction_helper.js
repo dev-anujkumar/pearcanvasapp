@@ -8,6 +8,8 @@ import { sendDataToIframe } from '../../constants/utility.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 
+import { SET_SELECTION } from './../../constants/Action_Constants.js';
+
 export const onPasteSuccess = async (params) => {
     const {
         responseData,
@@ -15,59 +17,73 @@ export const onPasteSuccess = async (params) => {
         getState
     } = params
 
-    sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
-    const parentData = getState().appStore.slateLevelData;
-    const newParentData = JSON.parse(JSON.stringify(parentData));
-    const currentSlateData = newParentData[config.slateManifestURN];
-
-    /** [PCAT-8289] ---------------------------- TCM Snapshot Data handling ------------------------------*/
-    if (slateWrapperConstants.elementType.indexOf(type) !== -1) {
-        const snapArgs = {
-            newParentData,
-            currentSlateData,
-            asideData: null,
-            poetryData: null,
-            parentUrn: null,
-            type,
-            responseData,
-            dispatch
-        }
-
-        handleTCMSnapshotsForCreation(snapArgs)
-    }
-    /**---------------------------------------------------------------------------------------------------*/
-
-    if (currentSlateData.status === 'approved') {
-        if(currentSlateData.type==="popup"){
-            sendDataToIframe({ 'type': "tocRefreshVersioning", 'message' :true });
-            sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
-            dispatch(fetchSlateData(currentSlateData.id, currentSlateData.contentUrn, 0, currentSlateData, ""));
-        } else {
-            sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
-            sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
-            return false;
-        }
-    }
-    else {
-        newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, responseData);
+    // Store Update on Paste Element
+    let operationType = '';
+    if(Object.keys(getState().selectionReducer.selection).length > 0 && 'operationType' in getState().selectionReducer.selection) {
+        operationType = getState().selectionReducer.selection.operationType;
     }
 
-    if (config.tcmStatus) {
-        if (slateWrapperConstants.elementType.indexOf(type) !== -1) {
-            prepareDataForTcmCreate(type, responseData, getState, dispatch);
-        }
+    if(operationType === 'copy') {
+        let selection = Object.assign({}, getState().selectionReducer.selection);
+        selection.activeAnimation = false;
+        dispatch({ type: SET_SELECTION, payload: selection });
+    } else if(operationType === 'cut') {
+        dispatch({ type: SET_SELECTION, payload: {} });
     }
+
+    // sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
+    // const parentData = getState().appStore.slateLevelData;
+    // const newParentData = JSON.parse(JSON.stringify(parentData));
+    // const currentSlateData = newParentData[config.slateManifestURN];
+
+    // /** [PCAT-8289] ---------------------------- TCM Snapshot Data handling ------------------------------*/
+    // if (slateWrapperConstants.elementType.indexOf(type) !== -1) {
+    //     const snapArgs = {
+    //         newParentData,
+    //         currentSlateData,
+    //         asideData: null,
+    //         poetryData: null,
+    //         parentUrn: null,
+    //         type,
+    //         responseData,
+    //         dispatch
+    //     }
+
+    //     handleTCMSnapshotsForCreation(snapArgs)
+    // }
+    // /**---------------------------------------------------------------------------------------------------*/
+
+    // if (currentSlateData.status === 'approved') {
+    //     if(currentSlateData.type==="popup"){
+    //         sendDataToIframe({ 'type': "tocRefreshVersioning", 'message' :true });
+    //         sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
+    //         dispatch(fetchSlateData(currentSlateData.id, currentSlateData.contentUrn, 0, currentSlateData, ""));
+    //     } else {
+    //         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
+    //         sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+    //         return false;
+    //     }
+    // }
+    // else {
+    //     newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, responseData);
+    // }
+
+    // if (config.tcmStatus) {
+    //     if (slateWrapperConstants.elementType.indexOf(type) !== -1) {
+    //         prepareDataForTcmCreate(type, responseData, getState, dispatch);
+    //     }
+    // }
     
-    dispatch({
-        type: AUTHORING_ELEMENT_CREATED,
-        payload: {
-            slateLevelData: newParentData
-        }
-    })
+    // dispatch({
+    //     type: AUTHORING_ELEMENT_CREATED,
+    //     payload: {
+    //         slateLevelData: newParentData
+    //     }
+    // })
 
-    if (cb) {
-        cb();
-    }
+    // if (cb) {
+    //     cb();
+    // }
 }
 
 export const handleTCMSnapshotsForCreation = async (params) => {

@@ -642,42 +642,43 @@ export const pasteElement = (params) => async (dispatch, getState) => {
         "index": index,
         "type": type
     };*/
-    try {
-        const apiUrl = `${config.REACT_APP_API_URL}v1/slate/element`
-        const createdElemData = await axios.post(apiUrl,
-            JSON.stringify(_requestData),
-            {
-                headers: {
-                    "Content-Type": "application/json",
-                    "PearsonSSOSession": config.ssoToken
-                }
-            }
-        ) 
+    // try {
+        // const apiUrl = `${config.REACT_APP_API_URL}v1/slate/element`
+        // const createdElemData = await axios.post(apiUrl,
+        //     JSON.stringify(_requestData),
+        //     {
+        //         headers: {
+        //             "Content-Type": "application/json",
+        //             "PearsonSSOSession": config.ssoToken
+        //         }
+        //     }
+        // ) 
         
         const pasteSuccessArgs = {
-            responseData: createdElemData.data,
+            responseData: {}, //createdElemData.data,
             dispatch,
             getState
-        }
-        // onPasteSuccess(pasteSuccessArgs)
-    }
-    catch(error) {
-        // Element mock creation
-        const parentData = getState().appStore.slateLevelData;
-        const newParentData = JSON.parse(JSON.stringify(parentData));
-        const createdElementData = openerData
-        newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
-        dispatch({
-            type: AUTHORING_ELEMENT_CREATED,
-            payload: {
-                slateLevelData: newParentData
-            }
-        })
-        sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
-        dispatch({type: ERROR_POPUP, payload:{show: true}})
-        console.log("create Api fail", error);
-        if (cb) {
-            cb();
-        }
-    }
+        };
+
+        onPasteSuccess(pasteSuccessArgs)
+    // }
+    // catch(error) {
+    //     // Element mock creation
+    //     const parentData = getState().appStore.slateLevelData;
+    //     const newParentData = JSON.parse(JSON.stringify(parentData));
+    //     const createdElementData = openerData
+    //     newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
+    //     dispatch({
+    //         type: AUTHORING_ELEMENT_CREATED,
+    //         payload: {
+    //             slateLevelData: newParentData
+    //         }
+    //     })
+    //     sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
+    //     dispatch({type: ERROR_POPUP, payload:{show: true}})
+    //     console.log("create Api fail", error);
+    //     if (cb) {
+    //         cb();
+    //     }
+    // }
 }

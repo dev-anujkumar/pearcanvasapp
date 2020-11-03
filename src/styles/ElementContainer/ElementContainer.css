@@ -60,7 +60,7 @@
 }
 
 .editor.cut .element-Overlay.disabled {
-    z-index: 0;
+    z-index: 1;
     background-color: rgba(0, 0, 0, 0.7);
 }
 
@@ -75,7 +75,7 @@
 
 .copy-menu-container {
     position: absolute;
-    z-index: 1;
+    z-index: 2;
     box-shadow: 1px 1px 6px 0px grey;
 }
 

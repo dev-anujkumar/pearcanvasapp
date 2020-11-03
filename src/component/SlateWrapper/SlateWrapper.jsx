@@ -951,6 +951,7 @@ class SlateWrapper extends Component {
                                                 openAudio={this.props.openAudio}
                                                 onClickCapture={this.checkSlateLockStatus}
                                                 splithandlerfunction={this.splithandlerfunction}
+                                                pasteElement={this.props.pasteElement}
                                             />
                                             : index === 0 && config.isCO === true ? <div className="noSeparatorContainer"></div> : null
                                     }
@@ -994,6 +995,7 @@ class SlateWrapper extends Component {
                                             openAudio={this.props.openAudio}
                                             onClickCapture={this.checkSlateLockStatus}
                                             splithandlerfunction={this.splithandlerfunction}
+                                            pasteElement={this.props.pasteElement}
                                         />
                                         : null
                                     }
