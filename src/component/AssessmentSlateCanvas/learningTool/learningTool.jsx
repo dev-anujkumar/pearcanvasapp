@@ -131,7 +131,7 @@ class LearningTool extends React.Component {
                     {showLTBody ? <LearningToolBody apiResponse={apiResponse} selectedResultData={selectedResultFormApi} learningToolPageLimit={learningToolPages} selectedFigure={this.selectedFigure} learningToolTableHeaders={learningToolTableHeaders} capitalizeString={capitalizeString} /> : ''}
                     {/* Footer for the popUp */}
                     <div className="learningToolFooter">
-                        <button disabled={this.props.linkButtonDisable == false ? linkButtonDisable : true} className="learning-tool-button" onClick={this.linkLearningApp}>{BUTTON_TEXT_LINK}</button>
+                        <button disabled={this.props.learningToolReducer.linkButtonDisable == false ? linkButtonDisable : true} className="learning-tool-button" onClick={this.linkLearningApp}>{BUTTON_TEXT_LINK}</button>
                         <button className="learning-tool-button learning-tool-cancel" onClick={this.closeLt}>{BUTTON_TEXT_CANCEL}</button>
                     </div>
                 </div>
