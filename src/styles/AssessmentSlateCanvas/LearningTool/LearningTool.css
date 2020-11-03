@@ -391,6 +391,7 @@ td.tableRowData {
 
 .arrow-icon {
     color: #d2cdcdf0;
+    cursor: pointer;
     vertical-align: top;
 }
 
