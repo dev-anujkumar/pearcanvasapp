@@ -1288,7 +1288,7 @@ export class TinyMceEditor extends Component {
                                         blankLine.innerHTML = '<br/>';
                                         tinyMCE.$('#' + tinymce.activeEditor.id)[0].innerHTML = removeBOM(tinyMCE.$('#' + tinymce.activeEditor.id)[0].innerHTML);
                                     }
-                                } else if (self.props.element && self.props.element.type === "element-blockfeature" && self.props.element.subtype === "quote") {
+                                } else if (self.props.element && self.props.element.type === "element-blockfeature" && self.props.element.elementdata && self.props.element.elementdata.type !=="pullquote") {
                                         const blankLine = document.querySelector('#' + tinymce.activeEditor.id + ' > p > span#blankLine') || document.querySelector('#' + tinymce.activeEditor.id + ' > span#blankLine');
                                         const blockqtText = document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins') ? document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').innerText : "";
                                         if (!blockqtText.trim()) {
