@@ -354,7 +354,6 @@ class ElementFigure extends Component {
             </div>
         } else {
             /**JSX for Figure Image, Table Image, Math Image, Table Editor*/
-            const alfrescoSite = config.alfrescoMetaData && config.alfrescoMetaData.alfresco && config.alfrescoMetaData.alfresco.repositoryFolder;
             figureJsx = <div className={divClass} resource="">
                 <figure className={figureClass} resource="">
                     <header className="figure-header">
@@ -367,7 +366,6 @@ class ElementFigure extends Component {
                         model && model.figuretype !== 'tableasmarkup' && <div className="figure-wrapper">
                         <h4>Image ID : {  model.figuredata && model.figuredata.imageid  ? model.figuredata.imageid :"" }</h4>
                         <h4>Image Path : {this.state.imgSrc  ? this.state.imgSrc :(model.figuredata.path && model.figuredata.path !== DEFAULT_IMAGE_SOURCE ? model.figuredata.path : "") }</h4>
-                        <h4>Alfresco Site : { model.figuredata && model.figuredata.path && model.figuredata.path !== DEFAULT_IMAGE_SOURCE ? alfrescoSite  : ""}</h4>
                     </div>
                     }
                     
