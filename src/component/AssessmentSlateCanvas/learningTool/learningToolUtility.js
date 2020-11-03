@@ -10,6 +10,11 @@ export const learningSystemList = {
         appType: "accounting-sims",
         label: "Accounting Sims"
     },
+    "socialexplorer-pathways": {
+        learningSystem: "socialexplorer",
+        appType: "socialexplorer-pathways",
+        label: "Adaptive Pathways"
+    },
     "criminal-justice-sims": {
         learningSystem: "knowdl",
         appType: "criminal-justice-sims",
@@ -24,6 +29,11 @@ export const learningSystemList = {
         learningSystem: "knowdl",
         appType: "economics-sims",
         label: "Economic Sims"
+    },
+    "socialexplorer-explorations": {
+        learningSystem: "socialexplorer",
+        appType: "socialexplorer-explorations",
+        label: "Guided Data Explorations"
     },
     "helpdesk": {
         learningSystem: "knowdl",
@@ -40,6 +50,21 @@ export const learningSystemList = {
         appType: "information-technology-sims",
         label: "Information Technology Sims"
     },
+    "video-quiz": {
+        learningSystem: "mediashare",
+        appType: "video-quiz",
+        label: "Media Quiz"
+    },
+    "myvirtual-child": {
+        learningSystem: "myvirtual-x",
+        appType: "myvirtual-child",
+        label: "My Virtual Child"
+    },
+    "myvirtual-life": {
+        learningSystem: "myvirtual-x",
+        appType: "myvirtual-life",
+        label: "My Virtual Life"
+    },
     "personal-finance-experience": {
         learningSystem: "knowdl",
         appType: "personal-finance-experience",
@@ -55,61 +80,36 @@ export const learningSystemList = {
         appType: "qual-sims",
         label: "Qualitative Business Sims"
     },
+    "video-submission": {
+        learningSystem: "mediashare",
+        appType: "video-submission",
+        label: "Shared Media"
+    },
     "soundbytes": {
         learningSystem: "knowdl",
         appType: "soundbytes",
         label: "Sound Bytes"
-    },
-    "business-media-library": {
-        learningSystem: "knowdl",
-        appType: "business-media-library",
-        label: "Business Media"
-    },
-    "video-library": {
-        learningSystem: "knowdl",
-        appType: "video-library",
-        label: "Video Library"
-    },
-    "myvirtual-child": {
-        learningSystem: "myvirtual-x",
-        appType: "myvirtual-child",
-        label: "MyVirtualChild"
-    },
-    "myvirtual-life": {
-        learningSystem: "myvirtual-x",
-        appType: "myvirtual-life",
-        label: "MyVirtualLife"
     },
     "socialexplorer-surveys": {
         learningSystem: "socialexplorer",
         appType: "socialexplorer-surveys",
         label: "Surveys and Inventories"
     },
-    "socialexplorer-pathways": {
-        learningSystem: "socialexplorer",
-        appType: "socialexplorer-pathways",
-        label: "Adaptive Pathways"
-    },
-    "socialexplorer-explorations": {
-        learningSystem: "socialexplorer",
-        appType: "socialexplorer-explorations",
-        label: "Guided Data Explorations"
-    },
-    "video-submission": {
-        learningSystem: "mediashare",
-        appType: "video-submission",
-        label: "Shared Media"
-    },
-    "video-quiz": {
-        learningSystem: "mediashare",
-        appType: "video-quiz",
-        label: "Media Quiz"
+    "video-library": {
+        learningSystem: "knowdl",
+        appType: "video-library",
+        label: "Video Library"
     },
     "writingsolutions": {
         learningSystem: "writingsolutions",
         appType: "writingsolutions",
         label: "Writing Solutions"
     }
+    /*"business-media-library": {
+        learningSystem: "knowdl",
+        appType: "business-media-library",
+        label: "Business Media"
+    },*/
 }
 /** @discription This Array consists of list of  learning Tool Table Headers */
 export const learningToolTableHeaders = [
