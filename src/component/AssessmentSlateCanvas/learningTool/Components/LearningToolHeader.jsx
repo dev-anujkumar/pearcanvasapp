@@ -59,7 +59,7 @@ const LearningToolHeader = (props) => {
         const newValue = listItem === DEFAULT_OPTION ? "" : listItem
         if (listType === TYPE_DISCIPLINE) {
             setDiscipline(newValue == "" ? DEFAULT_OPTION : newValue.prefLabel);
-            setlearningToolDiscipline(newValue.prefLabel);
+            setlearningToolDiscipline(newValue == "" ? newValue : newValue.prefLabel);
         }
         else {
             setAppType(newValue == "" ? DEFAULT_OPTION : listItem.label)
