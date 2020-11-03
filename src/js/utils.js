@@ -441,8 +441,10 @@ export const spanHandlers = {
                 elementSearch.nextSibling.remove();
                 let innerSpans = elementSearch.getElementsByTagName('span');
                 for (let index = 0; index < innerSpans.length; index++) {
-                    let innerHtml = innerSpans[index].innerHTML;
-                    innerSpans[index].outerHTML = innerHtml;
+                    if(!innerSpans[index].classList.contains('answerLineContent')){
+                        let innerHtml = innerSpans[index].innerHTML;
+                        innerSpans[index].outerHTML = innerHtml;
+                    }
                 }
                 if (elementSearch.textContent.trim() == '') {
                     if (elementSearch.innerHTML == '') {
@@ -468,13 +470,17 @@ export const spanHandlers = {
                 }
                 innerSpans = elementSearch.getElementsByTagName('span');
                 for (let index = 0; index < innerSpans.length; index++) {
-                    let innerHtml = innerSpans[index].innerHTML;
-                    innerSpans[index].outerHTML = innerHtml;
+                    if(!innerSpans[index].classList.contains('answerLineContent')){
+                        let innerHtml = innerSpans[index].innerHTML;
+                        innerSpans[index].outerHTML = innerHtml;
+                    }
                 }
                 let innerSpansSibling = elementSearch.nextSibling.getElementsByTagName('span');
                 for (let index = 0; index < innerSpansSibling.length; index++) {
-                    let innerHtml = innerSpansSibling[index].innerHTML;
-                    innerSpansSibling[index].outerHTML = innerHtml;
+                    if(!innerSpansSibling[index].classList.contains('answerLineContent')){
+                        let innerHtml = innerSpansSibling[index].innerHTML;
+                        innerSpansSibling[index].outerHTML = innerHtml;
+                    }
                 }
                 if (elementSearch.nextSibling.textContent.trim() == '') {
                     if (elementSearch.nextSibling.innerHTML == '') {
@@ -499,8 +505,10 @@ export const spanHandlers = {
                 }
                 innerSpansSibling = elementSearch.nextSibling.getElementsByTagName('span');
                 for (let index = 0; index < innerSpansSibling.length; index++) {
-                    let innerHtml = innerSpansSibling[index].innerHTML;
-                    innerSpansSibling[index].outerHTML = innerHtml;
+                    if(!innerSpansSibling[index].classList.contains('answerLineContent')){
+                        let innerHtml = innerSpansSibling[index].innerHTML;
+                        innerSpansSibling[index].outerHTML = innerHtml;
+                    }
                 }
                 elementSearch.nextSibling.removeAttribute("data-id");
                 elementSearch.nextSibling.className = childClass;
