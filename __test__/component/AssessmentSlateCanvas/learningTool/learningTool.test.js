@@ -18,7 +18,7 @@ const closePopUp = new stub();
 const closelearningPopup = new stub();
 const selectedFigure = new stub();
 const learningAppType = new stub();
-describe('Testing Learning tool component with props', () => {
+xdescribe('Testing Learning tool component with props', () => {
     let wrapper = mount(<Provider store={store}>
         < LearningTool
             linkLearningApp={linkLearningApp}

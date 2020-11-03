@@ -64,7 +64,7 @@ describe('Tests Learning Tool  action', () => {
     });
    
     afterEach(() => moxios.uninstall());
- it('testing---toolTypeFilterSelectedAction comment action',()=>{
+ xit('testing---toolTypeFilterSelectedAction comment action',()=>{
      let toolType = "knowdl";
      let learningSystem = "knowdl"
     store = mockStore(() => initialState);
@@ -122,7 +122,7 @@ describe('Tests Learning Tool  action', () => {
    });
 })
 
-it('testing--- openLTFunction action',()=>{
+xit('testing--- openLTFunction action',()=>{
   
    store = mockStore(() => initialState);
    const expectedActions = [{
