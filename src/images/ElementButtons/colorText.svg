@@ -6,7 +6,7 @@
             <g id="Group-3" transform="translate(0.000000, 96.000000)">
                 <rect id="Rectangle-Copy" fill="#00695C" fillRule="nonzero" x="0" y="0" width="30" height="30"></rect>
                 <g id="icon/img/text-color" transform="translate(3.000000, 3.000000)">
-                    <rect id="Rectangle" fillOpacity="0" fill="#EEEEEE" x="0" y="0" width="24" height="24"></rect>
+                    <rect id="Rectangle" fill-opacity="0" fill="#EEEEEE" x="0" y="0" width="24" height="24"></rect>
                     <path d="M20,18 L20,21 L4,21 L4,18 L20,18 Z M12.4285714,3 L17.1428571,15 L15.2142857,15 L14.2457143,12.4285714 L8.88857143,12.4285714 L7.92857143,15 L6,15 L10.7142857,3 L12.4285714,3 Z M11.5714286,5.28857143 L9.53142857,10.7142857 L13.6028571,10.7142857 L11.5714286,5.28857143 Z" id="Combined-Shape" fill="#FFFFFF"></path>
                 </g>
             </g>
