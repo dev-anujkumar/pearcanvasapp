@@ -83,7 +83,7 @@ const LearningToolHeader = (props) => {
                     <td onClick={!hasReviewerRole() && toggleAppTypeDropdown}>{/* Learning AppType Dropdown */}
                         <div className="learningAppType" title={selectedAppType ? selectedAppType : DEFAULT_OPTION}>
                             <span className="selected-learning-tool">{selectedAppType ? selectedAppType : DEFAULT_OPTION}</span>
-                            <span className="dropdown-arrow"></span>
+                            <span className="dropdown-menu-arrow"></span>
                         </div>
                         {openAppTypeDropdown &&
                             <Dropdown ulClass={'learningAppType'} type={TYPE_LEARNING_APP} dropdownList={Object.values(learningSystems)} dropdownClass={'learning-tool-dropdown'} clickHandlerFn={handleDropdownChange} hasDefaultOption={true} />}
@@ -91,7 +91,7 @@ const LearningToolHeader = (props) => {
                     <td onClick={!hasReviewerRole() && toggleDisciplineDropdown}>{/* Discipline Dropdown */}
                         <div className="learningAppType" title={selectedDiscipline ? selectedDiscipline : DEFAULT_OPTION}>
                             <span className="selected-learning-tool">{selectedDiscipline ? selectedDiscipline : DEFAULT_OPTION}</span>
-                            <span className="dropdown-arrow"></span>
+                            <span className="dropdown-menu-arrow"></span>
                         </div>
                         {showDisFilterValues ? openDisciplineDropdown &&
                             <Dropdown ulClass={'learningAppType'} type={TYPE_DISCIPLINE} dropdownList={apiResponseForDis.options} dropdownClass={'learning-tool-dropdown'} clickHandlerFn={handleDropdownChange} hasDefaultOption={true} />

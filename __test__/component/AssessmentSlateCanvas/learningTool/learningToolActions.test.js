@@ -16,7 +16,7 @@ import { tempFiguresForResults, disciplines, selectedResult, learningSystemList 
 jest.mock('axios');
 jest.mock('../../../../src/constants/utility.js', () => ({
     sendDataToIframe: jest.fn()
-}))
+}));
 
 describe('TestS Learning_Tool_ActionS', () => {
     it('Testing------- fetchLearningSystems', () => {
@@ -133,7 +133,6 @@ describe('TestS Learning_Tool_ActionS', () => {
             let dispatch = (obj) => {
                 if (obj && obj.type === GET_LEARNING_SYSTEMS) {
                     expect(obj.payload.showDisFilterValues).toEqual(true);
-                    expect(obj.payload.learningSystems).toEqual(learningSystemList);
                 }
             }
             const spyFunction = jest.spyOn(actions, 'openLTFunction');
@@ -174,5 +173,5 @@ describe('TestS Learning_Tool_ActionS', () => {
             expect(spyFunction).toHaveBeenCalledWith(learningSystem, learningAppType, searchLabel, searchKeyword);
             spyFunction.mockClear();
         });
-    })
-})
+    });
+});

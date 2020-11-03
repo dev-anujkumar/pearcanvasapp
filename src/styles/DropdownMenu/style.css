@@ -1,6 +1,5 @@
 .dropdown-li-item{
     cursor: pointer;
-    /* width: max-content; */
     padding: 5px 8px;
     list-style: none;
     background-color: #fff;
@@ -8,9 +7,9 @@
     font-size: 14px;
 }
 
-.dropdown-arrow{
+.dropdown-menu-arrow{
     position: relative;
-    top: 6px;
+    top: 8px;
     margin-left: 2px;
     right: 2px;
     float: right;

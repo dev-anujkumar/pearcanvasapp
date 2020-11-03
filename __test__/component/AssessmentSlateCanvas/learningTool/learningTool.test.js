@@ -72,8 +72,7 @@ describe('Testing LearningTool component', () => {
     it('Test linkLearningApp', () => {
         jest.spyOn(instance, 'linkLearningApp')
         instance.linkLearningApp();
-        expect(instance.linkLearningApp).toHaveBeenCalled()
-        expect(typeof instance.props.linkLearningApp).toBe("function")
-        expect(instance.props.selectedResultFormApi).toBe(selectedResult)
+        expect(instance.linkLearningApp).toHaveBeenCalled();
+        expect(typeof instance.props.linkLearningApp).toBe("function");
     })
 })
