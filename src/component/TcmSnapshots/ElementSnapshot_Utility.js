@@ -73,7 +73,7 @@ export const setSemanticsSnapshots = async (element,actionStatus,index) => {
             footnoteWipList = { 
                 subtitle: element.subtitle ? element.subtitle.footnotes : [], 
                 caption: element.captions ? element.captions.footnotes : [], 
-                credit: element.credits ? element.credits.footnotes : [],
+                credit: element.credits ? element.credits.footnotes : []
             }
 
            if(element.figuretype == "authoredtext"){
