@@ -163,11 +163,11 @@ class AssessmentSlateData extends Component {
 
     /*** @description This function is used to open Version update Popup */
     updateElm = (event) => {
+        this.prohibitPropagation(event);
         if (hasReviewerRole() || !(this.props.permissions && this.props.permissions.includes('elements_add_remove'))) {
             return true;
         }
         this.toggleUpdatePopup(true, event);
-        event.stopPropagation();
     }
 
     /*** @description This function is used to render Version update Popup */
@@ -220,11 +220,13 @@ class AssessmentSlateData extends Component {
      * @param {*} event event object
      */
     toggleUpdatePopup = (toggleValue, event) => {
+        if (event) {
+            event.preventDefault();
+        }
         this.setState({
             showUpdatePopup: toggleValue
         })
         this.showCanvasBlocker(toggleValue);
-        this.prohibitPropagation(event)
     }
 
     updateElmOnSaveEvent = (props) => {

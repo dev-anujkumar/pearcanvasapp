@@ -243,6 +243,7 @@ class ElementSingleAssessment extends Component {
     * @param e - The event triggered
     */
     addAssessmentResource = (e) => {
+        this.prohibitPropagation(e);
         if (this.props.permissions && this.props.permissions.includes('quad_linking_assessment') && !hasReviewerRole()) {
             if (this.state.elementType !== PUF && this.state.elementType !== LEARNOSITY) {
                 this.toggleAssessmentPopup(e, true)
@@ -326,11 +327,11 @@ class ElementSingleAssessment extends Component {
 
     /*** @description This function is used to open Version update Popup */
     openUpdateElmPopup = (event) => {
+        this.prohibitPropagation(event);   
         if (hasReviewerRole() || !(this.props.permissions && this.props.permissions.includes('elements_add_remove'))) {
             return true;
         }
         this.toggleUpdatePopup(true, event);
-        event.stopPropagation();
     }
 
     /**
@@ -339,11 +340,13 @@ class ElementSingleAssessment extends Component {
      * @param {*} event event object
      */
     toggleUpdatePopup = (toggleValue, event) => {
+        if (event) {
+            event.preventDefault();
+        }
         this.setState({
             showElmUpdatePopup: toggleValue
         })
         this.showCanvasBlocker(toggleValue);
-        this.prohibitPropagation(event)
     }
 
     /*** @description This function is used to render Version update Popup */
