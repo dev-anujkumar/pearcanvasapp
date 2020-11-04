@@ -15,15 +15,16 @@ import {
   LINK_BUTTON_DISABLE,
   GET_LEARNING_SYSTEMS
 } from '../../../constants/Action_Constants';
-import {learningSystemList, TAXONOMIC_ID_DISCIPLINES, TAXONOMIC_ID_LEARNING_SYSTEM, LT_LA_API_ERROR } from './learningToolUtility';
-
+import { learningSystemList, TAXONOMIC_ID_DISCIPLINES, TAXONOMIC_ID_LEARNING_SYSTEM, LT_LA_API_ERROR } from './learningToolUtility';
+import { specialCharacterEncode } from '../assessmentCiteTdx/Actions/CiteTdxActions.js';
 /**
   * @discription - This action is dispatched when search of leaning template
   * @param {String} toolType - value of learning tool type selected from dropdown
   * @param {String} learningSystem - value of learning system type selected
   */
 export const learningToolSearchAction = (learningSystem, learningAppType, searchLabel, searchKeyword) => dispatch => {
-  let url = config.ASSESSMENT_ENDPOINT + `learningtemplate/v2/?learningsystem=${learningSystem}&&type=${learningAppType}&&label=${searchLabel}&&keyword=${searchKeyword}`;
+  let searchTitle = specialCharacterEncode(searchLabel);
+  let url = config.ASSESSMENT_ENDPOINT + `learningtemplate/v2/?learningsystem=${learningSystem}&&type=${learningAppType}&&label=${searchTitle}&&keyword=${searchKeyword}`;
   
   return axios.get(url,
     {

@@ -157,7 +157,7 @@ export const assessmentSorting = (sortBy,sortOrder) => (dispatch, getState) => {
         }
     })
 }
-function specialCharacterEncode(title){
+export const specialCharacterEncode = (title) => {
     let searchTitle=encodeURIComponent(title);
     let specialCharacters={
         "\\(":"%28",
