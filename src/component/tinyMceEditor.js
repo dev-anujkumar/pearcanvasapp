@@ -2880,6 +2880,9 @@ export class TinyMceEditor extends Component {
             let innerHtml = this.innerHTML;
             this.outerHTML = innerHtml;
         })
+        tinymce.$('span.answerLineContent').each(function (){
+            this.removeAttribute('data-mce-selected');
+        })
         if (!checkCanvasBlocker) {
             tinymce.$('span[class="page-link-attacher"]').each(function () {
                 let innerHtml = this.innerHTML;
