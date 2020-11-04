@@ -633,8 +633,8 @@ export const pasteElement = (params) => async (dispatch, getState) => {
     const {
         index
     } = params
-    // config.currentInsertedIndex = index;
-    // localStorage.setItem('newElement', 1);
+    config.currentInsertedIndex = index;
+    localStorage.setItem('newElement', 1);
 
     /*let _requestData = {
         "projectUrn": config.projectUrn,

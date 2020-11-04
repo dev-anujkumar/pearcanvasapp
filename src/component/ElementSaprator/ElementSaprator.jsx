@@ -122,9 +122,11 @@ export function ElementSaprator(props) {
         const allowedRoles = ["admin", "manager", "edit", "default_user"];
         if (!(props.asideData || props.parentUrn) && allowedRoles.includes(props.userRole)) {
             return (
-                <div className="paste-button-wrapper">
-                    <Button type="split" onClick={() => pasteElement(separatorProps)} />
-                </div> 
+                <div className="elemDiv-expand paste-button-wrapper">
+                    <Tooltip direction='left' tooltipText='Paste element'>
+                        <Button type="expand" onClick={() => pasteElement(separatorProps)} />
+                    </Tooltip>
+                </div>
             )
         }
         return null  
