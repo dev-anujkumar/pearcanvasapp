@@ -14,7 +14,7 @@ import {
     UPDATE_ELM_ITEM_ID
 } from "../../../constants/Action_Constants";
 import { ELM_PORTAL_ERROR_MSG, AUTO_UPDATE_FAIL_ERROR } from '../AssessmentSlateConstants.js';
-
+import { handleRefreshSlate } from '../../ElementContainer/AssessmentEventHandling.js';
 /**
  * This action creator is used to fetch usage-type based on entityType
  */
@@ -67,8 +67,7 @@ export const checkAssessmentStatus = (workUrn, calledFrom, currentWorkUrn, curre
         }
     }).then(async (res) => {
         if (res && res.data && res.data.status) {
-            let statusString = res.data.status.split("/");
-            let assessmentStatus = statusString[statusString.length - 1];
+            let assessmentStatus = setAssessmentStatus(res.data.status);
             let dataForUpdate = {
                 showUpdateStatus: false
             };
@@ -76,7 +75,7 @@ export const checkAssessmentStatus = (workUrn, calledFrom, currentWorkUrn, curre
                 dataForUpdate = { ...currentWorkData }
                 dataForUpdate.showUpdateStatus = checkAssessmentNextVersion(res.data, currentWorkUrn);
                 dataForUpdate.latestWorkUrn = dataForUpdate.showUpdateStatus == true ? workUrn : currentWorkUrn;
-            } else if (calledFrom == 'fromGetItemId' || calledFrom == 'fromEditButton') {
+            } else if (calledFrom == 'fromGetItemId') {
                 dataForUpdate = { currentWorkUrn: currentWorkUrn }
                 await dispatch(getLatestAssessmentVersion(res.data.entityUrn, workUrn, res.data.dateCreated, dataForUpdate, itemData.type));
             } else {
@@ -90,6 +89,9 @@ export const checkAssessmentStatus = (workUrn, calledFrom, currentWorkUrn, curre
                 };
             }
             let assessmentUrn = calledFrom == 'fromNextVersion' ? currentWorkUrn : workUrn
+            if (assessmentStatus == 'wip' && calledFrom && (calledFrom == 'fromUpdate')) {
+                dataForUpdate.latestVersionClean = checkElmVersionIsClean(res.data);
+            }
             if (assessmentStatus == 'wip' || (calledFrom == 'fromNextVersion')) {
                 dispatch({
                     type: SET_ASSESSMENT_STATUS,
@@ -117,6 +119,12 @@ export const checkAssessmentStatus = (workUrn, calledFrom, currentWorkUrn, curre
     })
 }
 
+const setAssessmentStatus = (responseStatus) => {
+    let statusString = responseStatus.split("/");
+    const assessmentStatus = statusString[statusString.length - 1];
+    return assessmentStatus;
+}
+
 /**
  * @description This function is to set "showUpdateStatus" to handle update button status
  * @param {*} nextData metadata for the nextWorkUrn of the assessment
@@ -124,18 +132,27 @@ export const checkAssessmentStatus = (workUrn, calledFrom, currentWorkUrn, curre
  */
 const checkAssessmentNextVersion = (nextData, previousWorkUrn) => {
     let createDate = new Date(nextData.dateCreated);
-    let versionStatus = nextData.additionalMetadata.find(item => item.hasOwnProperty('elmVersionIsClean'));
-    let checkElmVersionIsClean = versionStatus && versionStatus.elmVersionIsClean == true ? true : false;
-    if ((nextData.status.includes('final')) || (checkElmVersionIsClean == false) || (new Date(nextData.dateModified) > createDate.setSeconds(createDate.getSeconds() + 10)) || (nextData.isVersionOf && nextData.isVersionOf[0] !== previousWorkUrn)) {
+    const checkVersionIsClean = checkElmVersionIsClean(nextData);
+    if ((nextData.status.includes('final')) || (checkVersionIsClean == false) || (new Date(nextData.dateModified) > createDate.setSeconds(createDate.getSeconds() + 10)) || (nextData.isVersionOf && nextData.isVersionOf[0] !== previousWorkUrn)) {
         return true//update
     }
     return false//ispproved
 }
 
 /**
+ * @description This function is to set checkElmVersionIsClean to handle update button status
+ * @param {*} responseData Response data for a work urn
+ */
+const checkElmVersionIsClean = (responseData) => {
+    const versionStatus = responseData.additionalMetadata.find(item => item.hasOwnProperty('elmVersionIsClean'));
+    const isVersionClean = versionStatus && versionStatus.elmVersionIsClean == true ? true : false;
+    return isVersionClean;
+}
+
+/**
  * This action creator is used to fetch all the versions of the assessment/assessment-item
  */
-export const getLatestAssessmentVersion = (entityUrn, workUrn, createdDate, previousData, type,itemData) => (dispatch) => {
+export const getLatestAssessmentVersion = (entityUrn, workUrn, createdDate, previousData, type, itemData) => (dispatch) => {
     let url = `${config.ASSESSMENT_ENDPOINT}entity/${entityUrn}/versions`;
     return axios.get(url, {
         headers: {
@@ -145,32 +162,16 @@ export const getLatestAssessmentVersion = (entityUrn, workUrn, createdDate, prev
         }
     }).then((res) => {
         if (res && res.data && res.data.length > 0) {
-            let assessmentLatestWorkURN = res.data[getLatestIndex(res.data)].versionUrn //Latest WorkURN
+            let latestIndex = getLatestIndex(res.data);
+            let assessmentLatestWorkURN = res.data[latestIndex].versionUrn //Latest WorkURN
             let newVersions = res.data.filter(assessment => new Date(assessment.createdDate) > new Date(createdDate)) //List of All versions created after current WorkURN
             if (type == 'assessment-item') {
-                dispatch({
-                    type: UPDATE_ELM_ITEM_ID,
-                    payload: {
-                        currentWorkUrn: previousData.currentWorkUrn,
-                        updatedItem : {
-                            oldItemId: workUrn,
-                            latestItemId : assessmentLatestWorkURN
-                        }
-                    }
-                })
-            }
-            else if (newVersions && newVersions.length == 1) {   //Show Approved Status
+                dispatchUpdatedItemId(dispatch, previousData, workUrn, assessmentLatestWorkURN);
+            } else if (newVersions && newVersions.length == 1) {   //Show Approved Status
                 dispatch(checkAssessmentStatus(newVersions[0].versionUrn, 'fromNextVersion', workUrn, previousData, itemData))//"elmVersionIsClean": true
-            } else if (newVersions && newVersions.length > 1) {  //Show UPDATE button
-                dispatch({
-                    type: GET_ASSESSMENT_VERSIONS,
-                    payload: {
-                        ...previousData,
-                        currentWorkUrn: workUrn,
-                        latestWorkUrn: assessmentLatestWorkURN,
-                        showUpdateStatus: true
-                    }
-                })
+            } else if (newVersions && newVersions.length > 1) {    //Show UPDATE button
+                let prevLatestWorkUrn = res.data[getSecondLatestIndex(res.data, latestIndex)].versionUrn;
+                dispatchLatestWorkUrn(dispatch, previousData, workUrn, assessmentLatestWorkURN, prevLatestWorkUrn);
             } else {
                 dispatchVersionError(dispatch, workUrn);
             }
@@ -194,11 +195,45 @@ const getLatestIndex = (allVersions) => {
     return latestIndex
 }
 
+const getSecondLatestIndex = (allVersions, latest) => {
+    let latestIndex = 0;
+    let latestArray = allVersions;
+    latestArray.splice(latest, 1);
+    latestIndex = getLatestIndex(latestArray);
+    return latestIndex
+}
+
 const dispatchVersionError = (dispatch, workUrn) => {
     dispatch({
         type: GET_ASSESSMENT_VERSIONS,
         payload: {
             latestWorkUrn: workUrn
+        }
+    })
+}
+
+const dispatchUpdatedItemId = (dispatch, previousData, workUrn, assessmentLatestWorkURN) => {
+    dispatch({
+        type: UPDATE_ELM_ITEM_ID,
+        payload: {
+            currentWorkUrn: previousData.currentWorkUrn,
+            updatedItem: {
+                oldItemId: workUrn,
+                latestItemId: assessmentLatestWorkURN
+            }
+        }
+    })
+}
+
+const dispatchLatestWorkUrn = (dispatch, previousData, workUrn, assessmentLatestWorkURN, prevLatestWorkUrn = "") => {
+    dispatch({
+        type: GET_ASSESSMENT_VERSIONS,
+        payload: {
+            ...previousData,
+            currentWorkUrn: workUrn,
+            latestWorkUrn: assessmentLatestWorkURN,
+            showUpdateStatus: true,
+            prevLatestWorkUrn: prevLatestWorkUrn
         }
     })
 }
@@ -258,6 +293,7 @@ export const updateAssessmentVersion = (oldWorkUrn, updatedWorkUrn) => dispatch 
                 isElmApiError: 'elm-api-error'
             }
         })
+        handleRefreshSlate(dispatch);
     })
 }
 

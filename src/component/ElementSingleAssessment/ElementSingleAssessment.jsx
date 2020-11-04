@@ -394,13 +394,15 @@ class ElementSingleAssessment extends Component {
             type: 'assessment-item'
         }
         await this.props.checkAssessmentStatus(this.props.assessmentReducer[this.state.assessmentId].latestWorkUrn, 'fromUpdate', this.state.assessmentId, "", itemData)
-        const { latestWorkUrn, assessmentTitle, items } = this.props.assessmentReducer[this.state.assessmentId];
+        const { latestWorkUrn, assessmentTitle, items, prevLatestWorkUrn } = this.props.assessmentReducer[this.state.assessmentId];
+        const { latestVersionClean } = this.props.assessmentReducer[latestWorkUrn]
         let updatedElmObj = {
             id: latestWorkUrn,
             itemid: items[this.state.assessmentItemId],
             title: assessmentTitle,
             usagetype: this.state.activeAsseessmentUsageType
         }
+        updatedElmObj.id = latestVersionClean == true ? prevLatestWorkUrn : latestWorkUrn
         if (latestWorkUrn != this.state.assessmentId) {
             updatedElmObj.title = this.props.assessmentReducer[latestWorkUrn].assessmentTitle
         }

@@ -192,18 +192,18 @@ class AssessmentSlateData extends Component {
         }
     }
 
-    /*** @description This function is used to update elm assessment after click on update from Version update Popup */
     updateElmAssessment = async (event) => {
         this.toggleUpdatePopup(false, event);
         this.showCanvasBlocker(false);
         let oldWorkUrn = this.props.assessmentSlateObj.assessmentId
         await this.props.checkElmAssessmentStatus(this.props.assessmentReducer[this.props.assessmentSlateObj.assessmentId].latestWorkUrn, 'fromUpdate', this.props.assessmentSlateObj.assessmentId);
-        const { latestWorkUrn, assessmentTitle } = this.props.assessmentReducer[this.props.assessmentSlateObj.assessmentId]
+        const { latestWorkUrn, assessmentTitle, prevLatestWorkUrn } = this.props.assessmentReducer[this.props.assessmentSlateObj.assessmentId]
+        const { latestVersionClean } = this.props.assessmentReducer[latestWorkUrn]
         let updatedElmObj = {
-            id: latestWorkUrn,
             title: assessmentTitle,
             usagetype: this.state.activeAssessmentUsageType
         }
+        updatedElmObj.id = latestVersionClean == true ? prevLatestWorkUrn : latestWorkUrn
         if (latestWorkUrn != this.props.assessmentSlateObj.assessmentId) {
             updatedElmObj.title = this.props.assessmentReducer[latestWorkUrn].assessmentTitle
         }
