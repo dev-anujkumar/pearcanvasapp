@@ -23,8 +23,8 @@ import { specialCharacterEncode } from '../assessmentCiteTdx/Actions/CiteTdxActi
   * @param {String} learningSystem - value of learning system type selected
   */
 export const learningToolSearchAction = (learningSystem, learningAppType, searchLabel, searchKeyword) => dispatch => {
-  let searchTitle = specialCharacterEncode(searchLabel);
-  let url = config.ASSESSMENT_ENDPOINT + `learningtemplate/v2/?learningsystem=${learningSystem}&&type=${learningAppType}&&label=${searchTitle}&&keyword=${searchKeyword}`;
+  const searchTitle = specialCharacterEncode(searchLabel);
+  const url = config.ASSESSMENT_ENDPOINT + `learningtemplate/v2/?learningsystem=${learningSystem}&&type=${learningAppType}&&label=${searchTitle}&&keyword=${searchKeyword}`;
   
   return axios.get(url,
     {
