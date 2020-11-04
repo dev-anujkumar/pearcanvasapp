@@ -2,7 +2,7 @@
 * Search Bar Component of Learning Tool/Learning App Assessment
 */
 import React, { useState } from 'react';
-import { searchHeaders, DISABLED_OPTION, TYPE_LEARNING_APP, TYPE_DISCIPLINE, DEFAULT_OPTION, PLACEHOLDER_TITLE, PLACEHOLDER_KEYWORD, BUTTON_TEXT_SEARCH } from '../learningToolUtility.js';
+import { searchHeaders, TYPE_LEARNING_APP, TYPE_DISCIPLINE, DEFAULT_OPTION, PLACEHOLDER_TITLE, PLACEHOLDER_KEYWORD, BUTTON_TEXT_SEARCH } from '../learningToolUtility.js';
 import '../../../../styles/DropdownMenu/style.css';
 import error_icon from '../../../../images/AssessmentSlateCanvas/error_icon.svg'
 import { hasReviewerRole } from '../../../../constants/utility.js';
@@ -19,7 +19,7 @@ const LearningToolHeader = (props) => {
 
     const {
         searchProps: { showError, searchTextCondition, validateSearch },
-        dropdownProps: { selectedTypeValue, setlearningAppType, learningSystems, setlearningToolDiscipline, apiResponseForDis, showDisFilterValues }
+        dropdownProps: { selectedTypeValue, setlearningAppType, learningSystems, setlearningToolDiscipline, apiResponseForDis }
     } = props;
 
     /*** @description - This function is to call search function for the search term 
@@ -93,9 +93,8 @@ const LearningToolHeader = (props) => {
                             <span className="selected-learning-tool">{selectedDiscipline ? selectedDiscipline : DEFAULT_OPTION}</span>
                             <span className="dropdown-menu-arrow"></span>
                         </div>
-                        {showDisFilterValues ? openDisciplineDropdown &&
-                            <Dropdown ulClass={'learningAppType'} type={TYPE_DISCIPLINE} dropdownList={apiResponseForDis.options} dropdownClass={'learning-tool-dropdown'} clickHandlerFn={handleDropdownChange} hasDefaultOption={true} />
-                            : DISABLED_OPTION}
+                        {openDisciplineDropdown &&
+                            <Dropdown ulClass={'learningAppType'} type={TYPE_DISCIPLINE} dropdownList={apiResponseForDis.options} dropdownClass={'learning-tool-dropdown'} clickHandlerFn={handleDropdownChange} hasDefaultOption={true} />}
                     </td>
                     <td>{/* Search Keyword */}
                         <InputSearch searchId={"learningToolSearchBar"} searchClass={`learningToolSearchBar ${showError ? "error" : ""}`} maxInputLimit={100} placeholderText={PLACEHOLDER_KEYWORD} searchValueHandler={handleKeywordChange} />
