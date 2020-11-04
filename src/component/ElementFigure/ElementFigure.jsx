@@ -364,8 +364,8 @@ class ElementFigure extends Component {
 
                     </header>{
                         model && model.figuretype !== 'tableasmarkup' && <div className="figure-wrapper">
-                        <h4>Image ID : {  model.figuredata && model.figuredata.imageid  ? model.figuredata.imageid :"" }</h4>
-                        <h4>Image Path : {this.state.imgSrc  ? this.state.imgSrc :(model.figuredata.path && model.figuredata.path !== DEFAULT_IMAGE_SOURCE ? model.figuredata.path : "") }</h4>
+                        <div className='image-figure'><p className='image-text'>Image ID: </p> <span className='image-info'> {  model.figuredata && model.figuredata.imageid  ? model.figuredata.imageid :"" } </span> </div>
+                        <div className='image-figure'><p className='image-text'>Image Path: </p> <span className='image-info'> {this.state.imgSrc  ? this.state.imgSrc :(model.figuredata.path && model.figuredata.path !== DEFAULT_IMAGE_SOURCE ? model.figuredata.path : "") }</span> </div>
                     </div>
                     }
                     
