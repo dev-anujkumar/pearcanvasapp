@@ -206,7 +206,7 @@ export const updateFigureData = (figureData, elementIndex, elementId, cb) => (di
         index = elementIndex;
     const newParentData = JSON.parse(JSON.stringify(parentData));
     let newBodymatter = newParentData[config.slateManifestURN].contents.bodymatter;
-    let dataToSend;
+    let dataToSend = {};
     if (typeof (index) == 'number') {
         if (newBodymatter[index].versionUrn == elementId) {
             if (newBodymatter[index].figuretype === "assessment") {
