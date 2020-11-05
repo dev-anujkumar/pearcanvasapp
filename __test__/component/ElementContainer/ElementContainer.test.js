@@ -52,6 +52,9 @@ jest.mock('./../../../src/component/ElementContainer/UpdateElements.js', () => {
         },
         createUpdatedData: () => {
             return jest.fn()
+        },
+        handleBlankLineDom: () => {
+            return jest.fn()
         }
     }
 })

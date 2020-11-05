@@ -18,7 +18,9 @@ const replaceUnwantedtags = (html,flag) => {
     if(flag){
         tempDiv.innerHTML = tempDiv.innerHTML.replace(/<br>/g, "").replace(/(<sup><\/sup>)/g, "");
     }
-    return removeBlankTags(tempDiv.innerHTML);
+    tempDiv.innerHTML = removeBlankTags(tempDiv.innerHTML)
+    tempDiv.innerHTML = handleBlankLineDom(tempDiv.innerHTML)
+    return tempDiv.innerHTML;
 }
 
 /**
@@ -662,4 +664,11 @@ export const createOpenerElementData = (elementData, elementType, primaryOption,
         config.savingInProgress = true
     }
     return dataToReturn;
+}
+export const handleBlankLineDom = (html,replaceText)=>{
+    if(replaceText){
+        return html.replace(/<span contenteditable="false" id="blankLine" class="answerLineContent"><br><\/span>/g,`<span contenteditable="false" id="blankLine" class="answerLineContent">${replaceText}</span>`)
+    } else {
+        return html.replace(/<span contenteditable="false" id="blankLine" class="answerLineContent"><\/span>/g,'<span contenteditable="false" id="blankLine" class="answerLineContent"><br></span>')
+    }
 }
