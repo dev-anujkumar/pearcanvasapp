@@ -147,6 +147,7 @@ div.learningAppType {
 }
 
 .learningToolBody {
+    position: relative;
     margin: 0px 6px 0px 10px;
     border: 1px solid lightgrey;
     height: 285px;
