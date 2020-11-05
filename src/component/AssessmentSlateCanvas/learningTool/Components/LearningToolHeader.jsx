@@ -2,7 +2,7 @@
 * Search Bar Component of Learning Tool/Learning App Assessment
 */
 import React, { useState } from 'react';
-import { searchHeaders, DISABLED_OPTION, TYPE_LEARNING_APP, TYPE_DISCIPLINE, DEFAULT_OPTION, PLACEHOLDER_TITLE, PLACEHOLDER_KEYWORD, BUTTON_TEXT_SEARCH } from '../learningToolUtility.js';
+import { searchHeaders, TYPE_LEARNING_APP, TYPE_DISCIPLINE, DEFAULT_OPTION, PLACEHOLDER_TITLE, PLACEHOLDER_KEYWORD, BUTTON_TEXT_SEARCH } from '../learningToolUtility.js';
 import '../../../../styles/DropdownMenu/style.css';
 import error_icon from '../../../../images/AssessmentSlateCanvas/error_icon.svg'
 import { hasReviewerRole } from '../../../../constants/utility.js';
@@ -18,7 +18,7 @@ const LearningToolHeader = (props) => {
     const [openDisciplineDropdown, setOpenDisciplineDropdown] = useState(false);
 
     const {
-        searchProps: { showError, searchTextCondition, validateSearch },
+        searchProps: { showError, searchTextCondition, validateSearch, searchLoading },
         dropdownProps: { selectedTypeValue, setlearningAppType, learningSystems, setlearningToolDiscipline, apiResponseForDis, showDisFilterValues }
     } = props;
 
@@ -89,13 +89,12 @@ const LearningToolHeader = (props) => {
                             <Dropdown ulClass={'learningAppType'} type={TYPE_LEARNING_APP} dropdownList={Object.values(learningSystems)} dropdownClass={'learning-tool-dropdown'} clickHandlerFn={handleDropdownChange} hasDefaultOption={true} />}
                     </td>
                     <td onClick={!hasReviewerRole() && toggleDisciplineDropdown}>{/* Discipline Dropdown */}
-                        <div className="learningAppType" title={selectedDiscipline ? selectedDiscipline : DEFAULT_OPTION}>
+                        <div className={`learningAppType ${showDisFilterValues? "disable-dropdown" :""}`} title={selectedDiscipline ? selectedDiscipline : DEFAULT_OPTION}>
                             <span className="selected-learning-tool">{selectedDiscipline ? selectedDiscipline : DEFAULT_OPTION}</span>
                             <span className="dropdown-menu-arrow"></span>
                         </div>
                         {showDisFilterValues ? openDisciplineDropdown &&
-                            <Dropdown ulClass={'learningAppType'} type={TYPE_DISCIPLINE} dropdownList={apiResponseForDis.options} dropdownClass={'learning-tool-dropdown'} clickHandlerFn={handleDropdownChange} hasDefaultOption={true} />
-                            : DISABLED_OPTION}
+                            <Dropdown ulClass={'learningAppType'} type={TYPE_DISCIPLINE} dropdownList={apiResponseForDis.options} dropdownClass={'learning-tool-dropdown'} clickHandlerFn={handleDropdownChange} hasDefaultOption={true} />:null}
                     </td>
                     <td>{/* Search Keyword */}
                         <InputSearch searchId={"learningToolSearchBar"} searchClass={`learningToolSearchBar ${showError ? "error" : ""}`} maxInputLimit={100} placeholderText={PLACEHOLDER_KEYWORD} searchValueHandler={handleKeywordChange} />
@@ -106,7 +105,7 @@ const LearningToolHeader = (props) => {
                         <InputSearch searchId={"learningToolSearchBar"} searchClass={"learningToolSearchBar"} maxInputLimit={100} placeholderText={PLACEHOLDER_TITLE} searchValueHandler={setSearchTitle} />
                     </td>
                     <td>
-                        <button disabled={!selectedTypeValue} className="learning-tool-button" onClick={handleSearch}>{BUTTON_TEXT_SEARCH}</button>
+                        <button disabled={!selectedTypeValue || searchLoading} className="learning-tool-button" onClick={handleSearch}>{BUTTON_TEXT_SEARCH}</button>
                     </td>
                 </tr>
             </tbody>

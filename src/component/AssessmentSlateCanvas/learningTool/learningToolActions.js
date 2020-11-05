@@ -13,7 +13,8 @@ import {
   GET_DISCIPLINE,
   REMOVE_SELECTED_DATA,
   LINK_BUTTON_DISABLE,
-  GET_LEARNING_SYSTEMS
+  GET_LEARNING_SYSTEMS,
+  SET_LT_LA_SEARCH_LOADING
 } from '../../../constants/Action_Constants';
 import { learningSystemList, TAXONOMIC_ID_DISCIPLINES, TAXONOMIC_ID_LEARNING_SYSTEM, LT_LA_API_ERROR } from './learningToolUtility';
 import { specialCharacterEncode } from '../assessmentCiteTdx/Actions/CiteTdxActions.js';
@@ -25,7 +26,7 @@ import { specialCharacterEncode } from '../assessmentCiteTdx/Actions/CiteTdxActi
 export const learningToolSearchAction = (learningSystem, learningAppType, searchLabel, searchKeyword) => dispatch => {
   const searchTitle = specialCharacterEncode(searchLabel);
   const url = config.ASSESSMENT_ENDPOINT + `learningtemplate/v2/?learningsystem=${learningSystem}&&type=${learningAppType}&&label=${searchTitle}&&keyword=${searchKeyword}`;
-  
+  dispatch({ type: SET_LT_LA_SEARCH_LOADING, payload: { searchLoading: true, showLTBody:true } });
   return axios.get(url,
     {
       headers: {
@@ -42,19 +43,22 @@ export const learningToolSearchAction = (learningSystem, learningAppType, search
         payload: {
           apiResponse: res.data,
           showDisFilterValues: true,
-          showLTBody: true
+          showLTBody: true,
+          errorFlag: false,
+          searchLoading: false
         }
       })
     },
-      err => dispatch({
+    ).catch(error => {
+      console.error('Error in fetching from LT_LA API', error)
+      dispatch({
         type: LT_API_RESULT_FAIL, 
         payload: {
-          error: err,
-          showDisFilterValues: false
+          showLTBody: true,
+          errorFlag: true,
+          searchLoading: false
         }
       })
-    ).catch(error => {
-      //console.log('this is error while fetching from LT_LA api', error)
     })
 };
 

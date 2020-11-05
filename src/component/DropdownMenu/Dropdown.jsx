@@ -20,7 +20,7 @@ export const Dropdown = (props) => {
     }
 
     const renderDropdown = (listType) => {
-        let learningToolData = dropdownList.map((listItem, index) => {
+        let learningToolData = dropdownList && dropdownList.map((listItem, index) => {
             return <li
                 key={index}
                 className={`dropdown-li-item ${dropdownClass}`}
