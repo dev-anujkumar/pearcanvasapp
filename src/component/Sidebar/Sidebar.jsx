@@ -51,12 +51,10 @@ class Sidebar extends Component {
     static getDerivedStateFromProps = (nextProps, prevState) => {
         if(Object.keys(nextProps.activeElement).length > 0) {
             let elementDropdown = prevState.elementDropdown;
-            let numberStartFrom = prevState.bceNumberStartFrom;
             let podValue = prevState.podValue;
             let podOption = prevState.podOption
             if(nextProps.activeElement.elementId !== prevState.activeElementId) {
                 elementDropdown = '';
-                numberStartFrom = nextProps.activeElement.startNumber;
                 podValue = nextProps.activeElement.podwidth;
                 podOption = false
             }
@@ -68,7 +66,7 @@ class Sidebar extends Component {
                 activePrimaryOption: nextProps.activeElement.primaryOption,
                 activeSecondaryOption: nextProps.activeElement.secondaryOption,
                 activeLabelText: nextProps.activeElement.tag,
-                bceNumberStartFrom : numberStartFrom,
+                bceNumberStartFrom : nextProps.activeElement.startNumber,
                 bceToggleValue : nextProps.activeElement.numbered,
                 syntaxHighlightingToggleValue : nextProps.activeElement.syntaxhighlighting,
                 podValue : podValue,
