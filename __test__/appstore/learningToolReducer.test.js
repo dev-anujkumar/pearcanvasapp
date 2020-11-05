@@ -24,7 +24,8 @@ const INITIAL_STATE = {
     apiResponseForDis: [],
     learningToolDisValue: '',
     learningSystems: [],
-    showTypeFilterValues: false
+    showTypeFilterValues: false,
+    errorFlag:false
 };
 const INITIAL_STATE2 = {
     shouldHitApi: false,
@@ -370,6 +371,8 @@ describe('Testing Learning Tool Reducer cases -->', () => {
                 apiResponse: mock_LT_API_RESULT,
                 linkButtonDisable: true,
                 selectedResultFormApi: '',
+                errorFlag:false,
+                searchLoading:false
             }
         })).toEqual({
             ...INITIAL_STATE,
@@ -378,17 +381,25 @@ describe('Testing Learning Tool Reducer cases -->', () => {
             apiResponse: mock_LT_API_RESULT,
             linkButtonDisable: true,
             selectedResultFormApi: '',
+            errorFlag:false,
+            searchLoading:false
         })
     })
     it('Test 3- LT_API_RESULT_FAIL', () => {
         expect(reducer(INITIAL_STATE, {
             type: LT_API_RESULT_FAIL,
             payload: {
-                showDisFilterValues: false
+                showDisFilterValues: false,
+                errorFlag:true,
+                searchLoading:false,
+                showLTBody: true
             }
         })).toEqual({
             ...INITIAL_STATE,
-            showDisFilterValues: false
+            showDisFilterValues: false,
+            errorFlag:true,
+            searchLoading:false,
+            showLTBody: true
         })
     })
     it('Test 4- TOGGLE_LT_POPUP', () => {
@@ -514,12 +525,10 @@ describe('Testing Learning Tool Reducer cases -->', () => {
         expect(reducer(INITIAL_STATE, {
             type: GET_LEARNING_SYSTEMS,
             payload: {
-                learningSystems: learningSystemList,
-                showDisFilterValues: true
+                learningSystems: learningSystemList
             }
         })).toEqual({
             ...INITIAL_STATE,
-            showDisFilterValues: true,
             learningSystems: learningSystemList
         });
     })

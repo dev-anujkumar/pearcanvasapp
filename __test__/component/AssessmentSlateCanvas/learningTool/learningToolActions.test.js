@@ -23,7 +23,6 @@ describe('TestS Learning_Tool_ActionS', () => {
         let expectedResult = {
             type: GET_LEARNING_SYSTEMS,
             payload: {
-                showDisFilterValues: true,
                 learningSystems: learningSystemList
             }
         }
@@ -132,7 +131,7 @@ describe('TestS Learning_Tool_ActionS', () => {
         it('Testing------- TAXONOMIC_ID_LEARNING_SYSTEM', () => {
             let dispatch = (obj) => {
                 if (obj && obj.type === GET_LEARNING_SYSTEMS) {
-                    expect(obj.payload.showDisFilterValues).toEqual(true);
+                    expect(obj.type).toEqual(GET_LEARNING_SYSTEMS);
                 }
             }
             const spyFunction = jest.spyOn(actions, 'openLTFunction');
@@ -143,7 +142,6 @@ describe('TestS Learning_Tool_ActionS', () => {
         it('Testing------- TAXONOMIC_ID_LEARNING_SYSTEM', () => {
             let dispatch = (obj) => {
                 if (obj && obj.type === LT_API_RESULT_FAIL) {
-                    expect(obj.payload.showDisFilterValues).toEqual(true);
                     expect(obj.payload.learningSystems).toEqual(learningSystemList);
                 }
             }
