@@ -1280,14 +1280,14 @@ export class TinyMceEditor extends Component {
                         type: 'menuitem',
                         text: 'Insert a Blank',
                         onAction: function () {
-                                editor.selection.setContent('<span contentEditable="false" id="blankLine" class="answerLineContent"><br/></span>');
+                                editor.selection.setContent('<span contentEditable="false" id="blankLine" class="answerLineContent"><br></span>');
                                 if(self.props.element && self.props.element.type === "element-list"){
                                     const listLiText = document.querySelector('#' + tinymce.activeEditor.id + ' li') ? document.querySelector('#' + tinymce.activeEditor.id + ' li').innerText : "";
                                     if (!listLiText.trim()) {
                                         const blankLine = document.querySelector('#' + tinymce.activeEditor.id + ' span#blankLine');
                                         tinyMCE.$('#' + tinymce.activeEditor.id + ' li').find('br').remove();
                                         document.querySelector('#' + tinymce.activeEditor.id + ' li').append(blankLine);
-                                        blankLine.innerHTML = '<br/>';
+                                        blankLine.innerHTML = '<br>';
                                         tinyMCE.$('#' + tinymce.activeEditor.id)[0].innerHTML = removeBOM(tinyMCE.$('#' + tinymce.activeEditor.id)[0].innerHTML);
                                     }
                                 } else if (self.props.element && self.props.element.type === "element-blockfeature" && self.props.element.elementdata && self.props.element.elementdata.type !=="pullquote") {
@@ -1296,7 +1296,7 @@ export class TinyMceEditor extends Component {
                                         if (!blockqtText.trim()) {
                                             tinyMCE.$('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').find('br').remove();
                                             document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').append(blankLine);
-                                            blankLine.innerHTML = '<br/>';
+                                            blankLine.innerHTML = '<br>';
                                             tinyMCE.$('#' + tinymce.activeEditor.id)[0].innerHTML = removeBOM(tinyMCE.$('#' + tinymce.activeEditor.id)[0].innerHTML);
                                         }
                                 }
