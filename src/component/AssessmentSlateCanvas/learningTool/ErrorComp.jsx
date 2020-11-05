@@ -5,7 +5,7 @@ import React from 'react';
 
 const ErrorComp = (props) => {
     return (
-        <p className="ErrorComp">{props.errorMsg}</p>
+        <p className={`ErrorComp ${props.errorClass}`}>{props.errorMsg}</p>
     );
 }
 

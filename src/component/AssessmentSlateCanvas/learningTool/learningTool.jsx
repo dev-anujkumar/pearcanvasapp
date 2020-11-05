@@ -95,11 +95,12 @@ class LearningTool extends React.Component {
     }
 
     render() {
-        const { showLTBody, apiResponse, learningSystems, linkButtonDisable, apiResponseForDis, showDisFilterValues, selectedResultFormApi } = this.props.learningToolReducer
+        const { searchLoading, errorFlag, showLTBody, apiResponse, learningSystems, linkButtonDisable, apiResponseForDis, showDisFilterValues, selectedResultFormApi } = this.props.learningToolReducer
         const searchProps = {
             showError: this.state.showError,
             searchTextCondition: LT_LA_SEARCH_TEXT,
-            validateSearch: this.validateSearch
+            validateSearch: this.validateSearch,
+            searchLoading: searchLoading
         }
         const dropdownProps = {
             selectedTypeValue: this.state.selectedLearningAppType,
@@ -128,7 +129,7 @@ class LearningTool extends React.Component {
                     </div>
                     <hr />
                     {/* Body of the popup table */}
-                    {showLTBody ? <LearningToolBody apiResponse={apiResponse} selectedResultData={selectedResultFormApi} learningToolPageLimit={learningToolPages} selectedFigure={this.selectedFigure} learningToolTableHeaders={learningToolTableHeaders} capitalizeString={capitalizeString} /> : ''}
+                    {<LearningToolBody searchLoading={searchLoading} showLTBody={showLTBody} errorFlag={errorFlag} apiResponse={apiResponse} selectedResultData={selectedResultFormApi} learningToolPageLimit={learningToolPages} selectedFigure={this.selectedFigure} learningToolTableHeaders={learningToolTableHeaders} capitalizeString={capitalizeString} />}
                     {/* Footer for the popUp */}
                     <div className="learningToolFooter">
                         <button disabled={this.props.learningToolReducer.linkButtonDisable == false ? linkButtonDisable : true} className="learning-tool-button" onClick={this.linkLearningApp}>{BUTTON_TEXT_LINK}</button>

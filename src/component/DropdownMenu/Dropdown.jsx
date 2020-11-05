@@ -6,7 +6,7 @@ import { TYPE_DISCIPLINE, TYPE_LEARNING_APP, DEFAULT_OPTION } from './DropdownCo
 import { hasReviewerRole } from '../../constants/utility.js';
 export const Dropdown = (props) => {
 
-    const { type, dropdownList, dropdownClass, clickHandlerFn, hasDefaultOption, ulClass } = props;
+    const { type, dropdownList, dropdownClass, clickHandlerFn, hasDefaultOption, ulClass, showDropdown } = props;
 
     const setDisplayValue = (listType, listItem) => {
         switch (listType) {
@@ -20,7 +20,7 @@ export const Dropdown = (props) => {
     }
 
     const renderDropdown = (listType) => {
-        let learningToolData = dropdownList.map((listItem, index) => {
+        let learningToolData = dropdownList && dropdownList.map((listItem, index) => {
             return <li
                 key={index}
                 className={`dropdown-li-item ${dropdownClass}`}
@@ -34,7 +34,7 @@ export const Dropdown = (props) => {
     return (
         <ul className={`dropdown-parent ${ulClass}`}>
             {hasDefaultOption && <li className={`dropdown-li-item ${dropdownClass}`} onClick={(e) => !hasReviewerRole() && clickHandlerFn(DEFAULT_OPTION, e, type)}>{DEFAULT_OPTION}</li>}
-            {renderDropdown(type)}
+            {showDropdown && renderDropdown(type)}
         </ul>
     )
 }

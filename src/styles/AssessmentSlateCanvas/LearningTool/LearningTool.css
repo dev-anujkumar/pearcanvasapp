@@ -505,3 +505,12 @@ ul.dropdown-parent::-webkit-scrollbar-thumb {
     border-radius: 21px;
     background-color: #4E4E4E;
 }
+
+p.ErrorComp.ltla-api-fail{
+    padding-top: 65px;
+    font-size: 13px;
+}
+
+ul.dropdown-parent.learningAppType.dis-api-fail{
+    width: 180px;
+}

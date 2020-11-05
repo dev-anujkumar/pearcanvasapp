@@ -7,7 +7,8 @@ import {LT_API_RESULT,
     REMOVE_SELECTED_DATA,
     GET_DISCIPLINE_FAIL,
     LT_TYPE_FILTER_SELECTED,
-    GET_LEARNING_SYSTEMS
+    GET_LEARNING_SYSTEMS,
+    SET_LT_LA_SEARCH_LOADING
   } from '../constants/Action_Constants';
 
 const INITIAL_STATE = {
@@ -22,7 +23,8 @@ const INITIAL_STATE = {
     apiResponseForDis : [],
     learningSystems:[],
     showTypeFilterValues: false,
-    learningToolDisValue:""
+    learningToolDisValue:"",
+    errorFlag: false
 };
 
 const INITIAL_ACTION = {
@@ -52,12 +54,16 @@ export default function learningToolReducer (state = INITIAL_STATE, action = INI
                 }),
                 showDisFilterValues : action.payload.showDisFilterValues,
                 showLTBody : action.payload.showLTBody,
-                linkButtonDisable : true
+                linkButtonDisable : true,
+                errorFlag: action.payload.errorFlag,
+                searchLoading : action.payload.searchLoading
         }
         case LT_API_RESULT_FAIL :
             return {
                 ...state,
-                showDisFilterValues : action.payload.showDisFilterValues
+                errorFlag: action.payload.errorFlag,
+                showLTBody: action.payload.showLTBody,
+                searchLoading : action.payload.searchLoading
         }
         case SELECTED_FIGURE: {
             return {
@@ -107,8 +113,14 @@ export default function learningToolReducer (state = INITIAL_STATE, action = INI
         case GET_LEARNING_SYSTEMS: {                
             return {
                 ...state,
-                learningSystems : action.payload.learningSystems,
-                showDisFilterValues: action.payload.showDisFilterValues
+                learningSystems : action.payload.learningSystems
+            }
+        }
+        case SET_LT_LA_SEARCH_LOADING: {
+            return {
+                ...state,
+                showLTBody: action.payload.showLTBody,
+                searchLoading : action.payload.searchLoading
             }
         }
         default :

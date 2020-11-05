@@ -4,13 +4,13 @@
 import React, { useState, useEffect } from 'react';
 import ErrorComp from '../ErrorComp.jsx';
 import ApiResults from '../ApiResults.jsx';
-import {ERROR_MESSAGE} from '../learningToolUtility.js';
+import { ERROR_MESSAGE_ELM_DEFAULT, ERROR_MESSAGE_LEARNOSITY } from '../../AssessmentSlateConstants.js';
 import '../../../../styles/AssessmentSlateCanvas/LearningTool/LearningTool.css';
 const LearningToolBody = (props) => {
 
     const [resultsPerPage, setResultsPerPage] = useState(25);
     const [currentPage, setCurrentPage] = useState(1);
-    const { apiResponse, selectedResultData, learningToolPageLimit, selectedFigure, learningToolTableHeaders } = props;
+    const { searchLoading, apiResponse, selectedResultData, learningToolPageLimit, selectedFigure, learningToolTableHeaders, showLTBody, errorFlag } = props;
     
     useEffect(() => {
         setCurrentPage(1);
@@ -60,38 +60,41 @@ const LearningToolBody = (props) => {
         const apiResponseLearningTemp = tempFiguresForResults.slice(indexOfFirstData, indexOfLastData);
         const totalPages = Math.ceil(apiResponseForBody.length / resultsPerPage)
         ltBodyJsx = (
-        <>
-            <div className="learningToolResultsTableHeader">
-                <span className="learningToolPagesDropdownLabel1">Displaying </span>
-                <select className="learningToolPages" onChange={(e) => paginationFunction(e)}>
-                    {learningToolPageLimit.map((pagesNos) =>
-                        <option value={pagesNos}>{pagesNos}</option>)}
-                </select>
-                <span className="learningToolPagesDropdownLabel2">results</span>
-                <span className="paginationButtons">
-                    <button className="leftPage previous round" onClick={prevPage}><span className="fa fa-caret-left arrow-icon"></span></button>
-                    <span className="page-limit">{apiResponseForBody.length ? currentPage + "-" + totalPages : "0"}</span>
-                    <button className="rightPage next round" onClick={nextPage}><span className="fa fa-caret-right arrow-icon"></span ></button>
-                </span>
-            </div>
-            <div className="learningToolBody scroller" id="style-2">
-                    <table className="learningToolTable">
-                        {apiResponseLearningTemp.length ? <thead className="tableForApiResults">
-                            {learningToolTableHeaders.map((tableHeader, index) =>
-                                <th key={index} className="tableHeader">{tableHeader}</th>)}
-                        </thead>
-                            : ''}
-                        {<tbody className="learning-tool-margin-left">
-                            {apiResponseLearningTemp.length >= 1 ? <ApiResults
-                                selectedResult={selectedResult}
-                                selectedFigure={selectedFigure}
-                                apiResponseData={apiResponseLearningTemp}
-                            />
-                                : <ErrorComp errorMsg={ERROR_MESSAGE} />}
-                        </tbody>}
-                    </table>
-            </div>
-        </>
+            <>
+                {showLTBody && <div className="learningToolResultsTableHeader">
+                    {!errorFlag && apiResponseLearningTemp.length ? <><span className="learningToolPagesDropdownLabel1">Displaying </span>
+                        <select className="learningToolPages" onChange={(e) => paginationFunction(e)}>
+                            {learningToolPageLimit.map((pagesNos) =>
+                                <option value={pagesNos}>{pagesNos}</option>)}
+                        </select>
+                        <span className="learningToolPagesDropdownLabel2">results</span>
+                        <span className="paginationButtons">
+                            <button className="leftPage previous round" onClick={prevPage}><span className="fa fa-caret-left arrow-icon"></span></button>
+                            <span className="page-limit">{apiResponseForBody.length ? currentPage + "-" + totalPages : "0"}</span>
+                            <button className="rightPage next round" onClick={nextPage}><span className="fa fa-caret-right arrow-icon"></span ></button>
+                        </span>
+                    </> : null}
+                </div>}
+                {showLTBody && <div className="learningToolBody scroller" id="style-2">
+                    {searchLoading && <div className="elm-loader"></div>}
+                    {searchLoading ==  false ? errorFlag == true ? <ErrorComp errorClass={'ltla-api-fail'} errorMsg={ERROR_MESSAGE_ELM_DEFAULT} />
+                        : <table className="learningToolTable">
+                            {apiResponseLearningTemp.length ? <thead className="tableForApiResults">
+                                {learningToolTableHeaders.map((tableHeader, index) =>
+                                    <th key={index} className="tableHeader">{tableHeader}</th>)}
+                            </thead>
+                                : ''}
+                            {<tbody className="learning-tool-margin-left">
+                                {apiResponseLearningTemp.length >= 1 ? <ApiResults
+                                    selectedResult={selectedResult}
+                                    selectedFigure={selectedFigure}
+                                    apiResponseData={apiResponseLearningTemp}
+                                />
+                                    : <ErrorComp errorMsg={ERROR_MESSAGE_LEARNOSITY} />}
+                            </tbody>}
+                        </table>:""}
+                </div>}
+            </>
         )
 
         return ltBodyJsx;
