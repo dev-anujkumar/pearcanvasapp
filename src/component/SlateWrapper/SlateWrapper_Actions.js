@@ -630,55 +630,71 @@ export const pageData = (pageNumberData) => (dispatch, getState) => {
 }
 
 export const pasteElement = (params) => async (dispatch, getState) => {
-    const {
-        index
-    } = params
-    config.currentInsertedIndex = index;
-    localStorage.setItem('newElement', 1);
+    let selection = getState().selectionReducer.selection || {};
 
-    /*let _requestData = {
-        "projectUrn": config.projectUrn,
-        "slateEntityUrn": config.slateEntityURN,
-        "index": index,
-        "type": type
-    };*/
-    // try {
-        // const apiUrl = `${config.REACT_APP_API_URL}v1/slate/element`
-        // const createdElemData = await axios.post(apiUrl,
-        //     JSON.stringify(_requestData),
-        //     {
-        //         headers: {
-        //             "Content-Type": "application/json",
-        //             "PearsonSSOSession": config.ssoToken
-        //         }
-        //     }
-        // ) 
+    if(Object.keys(selection).length > 0 && 'element' in selection) {
+        const {
+            index
+        } = params
+        config.currentInsertedIndex = index;
+        localStorage.setItem('newElement', 1);
         
-        const pasteSuccessArgs = {
-            responseData: {}, //createdElemData.data,
-            dispatch,
-            getState
+    
+        let _requestData = {
+            "content": [{
+                "type": selection.element.type,
+                "index": index,
+                "inputType": "AUTHORED_TEXT",
+                "inputSubType": "NA",
+                "schema": selection.element.schema,
+                "html": selection.element.html,
+            }]
         };
+        try {
 
-        onPasteSuccess(pasteSuccessArgs)
-    // }
-    // catch(error) {
-    //     // Element mock creation
-    //     const parentData = getState().appStore.slateLevelData;
-    //     const newParentData = JSON.parse(JSON.stringify(parentData));
-    //     const createdElementData = openerData
-    //     newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
-    //     dispatch({
-    //         type: AUTHORING_ELEMENT_CREATED,
-    //         payload: {
-    //             slateLevelData: newParentData
-    //         }
-    //     })
-    //     sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
-    //     dispatch({type: ERROR_POPUP, payload:{show: true}})
-    //     console.log("create Api fail", error);
-    //     if (cb) {
-    //         cb();
-    //     }
-    // }
+            return await axios.post(
+                `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/slate/${config.slateEntityURN}/element/paste`,
+                JSON.stringify(_requestData),
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "PearsonSSOSession": config.ssoToken
+                    }
+                }
+            ).then(async createdElemData => {
+                if (createdElemData && createdElemData.status == '200') {
+                    let responseData = Object.values(createdElemData.data)
+                    const pasteSuccessArgs = {
+                        responseData: responseData[0],
+                        index,
+                        dispatch,
+                        getState
+                    };
+            
+                    onPasteSuccess(pasteSuccessArgs)
+                }
+            }).catch(error => {
+                //     // Element mock creation
+                //     const parentData = getState().appStore.slateLevelData;
+                //     const newParentData = JSON.parse(JSON.stringify(parentData));
+                //     const createdElementData = openerData
+                //     newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
+                //     dispatch({
+                //         type: AUTHORING_ELEMENT_CREATED,
+                //         payload: {
+                //             slateLevelData: newParentData
+                //         }
+                //     })
+                //     sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
+                //     dispatch({type: ERROR_POPUP, payload:{show: true}})
+                    console.log("API Error Response:::", error);
+                    //     if (cb) {
+                    //         cb();
+                    //     }
+            })
+        }
+        catch(error) {
+            console.log("Exceptional Error on pasting the element:::", error);
+        }
+    }
 }
