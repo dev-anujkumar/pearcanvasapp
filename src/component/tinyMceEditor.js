@@ -2822,8 +2822,10 @@ export class TinyMceEditor extends Component {
                     this.footnoteGlossaryProgress = false;
                     const timer = setInterval(()=>{
                         if(!config.isGlossarySaving){
-                            clearInterval(timer)
-                            tinymce.activeEditor.selection.placeCaretAt(clickedX, clickedY) //Placing exact cursor position on clicking.
+                            if(!document.getElementsByClassName('glossary-toolbar-wrapper').length){
+                                clearInterval(timer)
+                                tinymce.activeEditor.selection.placeCaretAt(clickedX, clickedY) //Placing exact cursor position on clicking.
+                            }
                         }
                     },10)
                 }
