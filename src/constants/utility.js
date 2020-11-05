@@ -7,6 +7,7 @@
 import config from '../config/config';
 import cypressConfig from '../config/cypressConfig';
 import store from '../appstore/store'
+import { handleBlankLineDom } from '../component/ElementContainer/UpdateElements';
 
 // DECLARATION - const or variables 
 const WRAPPER_URL = config.WRAPPER_URL; // TO BE IMPORTED
@@ -178,6 +179,9 @@ export const getTitleSubtitleModel = (model, modelType) => {
 export const createTitleSubtitleModel = (titleHTML, subtitleHTML) => {
     let labelHTML = titleHTML.replace(/<br>/g, ""),
         titleModel = subtitleHTML.replace(/<br>/g, "")
+
+    labelHTML = handleBlankLineDom(labelHTML);
+    titleModel = handleBlankLineDom(titleModel);
 
     if(labelHTML === ""){
         return `<p>${titleModel}</p>`

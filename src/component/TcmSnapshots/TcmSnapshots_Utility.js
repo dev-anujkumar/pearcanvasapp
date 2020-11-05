@@ -10,6 +10,7 @@ import { setSemanticsSnapshots, fetchElementsTag, generateWipDataForFigure } fro
 /*************************Import Constants*************************/
 import TcmConstants from './TcmConstants.js';
 import { storeOldAssetForTCM } from '../ElementContainer/ElementContainer_Actions'
+import { handleBlankLineDom } from '../ElementContainer/UpdateElements.js';
 
 const {
     elementType,
@@ -732,7 +733,7 @@ const setContentSnapshot = (element, elementDetails, actionStatus, CurrentSlateS
     } else {
         snapshotData = element.html && element.html.text ? element.html.text : "";
     }
-    snapshotData = snapshotData.replace(/<span contenteditable="false" id="blankLine" class="answerLineContent"><br><\/span>/g,'<span contenteditable="false" id="blankLine" class="answerLineContent">BlankLine</span>')
+    snapshotData = handleBlankLineDom(snapshotData,'BlankLine');
     snapshotData = snapshotData && snapshotData.replace(/data-mce-href="#"/g,'')
     return snapshotData
 }
