@@ -674,10 +674,10 @@ export const prepareElementSnapshots = async (element,actionStatus,index, elemen
  */
 export const setFigureElementContentSnapshot = (element, actionStatus) => {
     let snapshotData = {
-        title: element.html.title || "",
-        subtitle: element.html.subtitle || "",
-        captions: element.html.captions || "",
-        credits: element.html.credits || "" 
+        title: handleBlankLineDom(element.html.title, 'BlankLine') || "",
+        subtitle: handleBlankLineDom(element.html.subtitle, 'BlankLine') || "",
+        captions: handleBlankLineDom(element.html.captions, 'BlankLine') || "",
+        credits: handleBlankLineDom(element.html.credits, 'BlankLine') || "" 
     }
 
     switch (element.figuretype) {
@@ -692,7 +692,7 @@ export const setFigureElementContentSnapshot = (element, actionStatus) => {
             snapshotData["metadata"] = prepareMetablock(element, actionStatus)
             break;
         case "authoredtext":            // for MML
-            snapshotData["metadata"] = element.html.text ? `${element.html.text}` : "<p><br></p>"
+            snapshotData["metadata"] = element.html.text ? `${handleBlankLineDom(element.html.text, 'BlankLine')}` : "<p><br></p>"
             break;
         case "image":
         case "table":
