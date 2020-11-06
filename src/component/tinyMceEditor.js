@@ -319,7 +319,6 @@ export class TinyMceEditor extends Component {
     editorExecCommand = (editor) => {
         editor.on('ExecCommand', (e) => {
             let range = editor.selection.getRng();
-            console.log('range', range);
             let content = e.target.getContent();
             let selectContent = editor.selection.getContent();
             let node = editor.selection.getNode();
@@ -331,7 +330,6 @@ export class TinyMceEditor extends Component {
             let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
             let sel = window.getSelection();
             let tempRange = sel.getRangeAt(0);
-            console.log('tempRange', tempRange);
             if (this.props.element.type === 'stanza') {
                 if (editor.selection.getNode().tagName.toLowerCase() !== 'span' || editor.selection.getNode().className.toLowerCase() !== 'poetryLine') {
                     node = editor.selection.getNode().closest('.poetryLine');
