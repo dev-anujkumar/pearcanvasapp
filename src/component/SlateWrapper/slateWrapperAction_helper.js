@@ -9,6 +9,7 @@ import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 
 import { SET_SELECTION } from './../../constants/Action_Constants.js';
+import { deleteElement } from './../ElementContainer/ElementContainer_Actions.js';
 
 export const onPasteSuccess = async (params) => {
     const {
@@ -17,20 +18,6 @@ export const onPasteSuccess = async (params) => {
         dispatch,
         getState
     } = params
-
-    // Store Update on Paste Element
-    let operationType = '';
-    if(Object.keys(getState().selectionReducer.selection).length > 0 && 'operationType' in getState().selectionReducer.selection) {
-        operationType = getState().selectionReducer.selection.operationType;
-    }
-
-    if(operationType === 'copy') {
-        let selection = Object.assign({}, getState().selectionReducer.selection);
-        selection.activeAnimation = false;
-        dispatch({ type: SET_SELECTION, payload: selection });
-    } else if(operationType === 'cut') {
-        dispatch({ type: SET_SELECTION, payload: {} });
-    }
 
     sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
     const parentData = getState().appStore.slateLevelData;
@@ -75,6 +62,26 @@ export const onPasteSuccess = async (params) => {
             slateLevelData: newParentData
         }
     })
+
+    // Store Update on Paste Element
+    let operationType = '';
+    if(Object.keys(getState().selectionReducer.selection).length > 0 && 'operationType' in getState().selectionReducer.selection) {
+        operationType = getState().selectionReducer.selection.operationType;
+    }
+
+    if('deleteElm' in getState().selectionReducer.selection && operationType === 'cut') {
+        let deleteElm = getState().selectionReducer.selection.deleteElm;
+        dispatch(deleteElement(deleteElm.id, deleteElm.type, deleteElm.parentUrn, deleteElm.asideData, deleteElm.contentUrn, deleteElm.index, deleteElm.poetryData, getState().selectionReducer.selection.element));
+    }
+
+    if(operationType === 'copy') {
+        let selection = Object.assign({}, getState().selectionReducer.selection);
+        selection.activeAnimation = false;
+        selection.deleteElm = {};
+        dispatch({ type: SET_SELECTION, payload: selection });
+    } else if(operationType === 'cut') {
+        dispatch({ type: SET_SELECTION, payload: {} });
+    }
 }
 
 export const handleTCMSnapshotsForCreation = async (params) => {

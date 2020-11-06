@@ -1495,10 +1495,22 @@ class ElementContainer extends Component {
      * @param {*} elementDetails Element details along with type of operation (Cut/Copy)
      */
     setElementDetails = (elementDetails) => {
+        let { parentUrn, asideData, element, poetryData } = this.props;
+        let { id, type, contentUrn } = element;
+        let index = this.props.index
+
+        if(!parentUrn) {
+            parentUrn = {
+                manifestUrn: config.slateManifestURN,
+                contentUrn: config.slateEntityURN
+            }
+        }
+
         const detailsToSet = { 
             ...elementDetails,
             sourceSlateManifestUrn: config.slateManifestURN,
             sourceSlateEntityUrn: config.slateEntityURN,
+            deleteElm: { id, type, parentUrn, asideData, contentUrn, index, poetryData}
             //type: enum type to be included
         }
         console.log("Element Details action to be dispatched from here", detailsToSet)
