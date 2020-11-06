@@ -30,7 +30,7 @@ import PageNumberContext from '../CanvasWrapper/PageNumberContext.js';
 import { authorAssetPopOver } from '../AssetPopover/openApoFunction.js';
 import { LABELS } from './ElementConstants.js';
 import { updateFigureData } from './ElementContainer_Actions.js';
-import { createUpdatedData, createOpenerElementData } from './UpdateElements.js';
+import { createUpdatedData, createOpenerElementData, handleBlankLineDom } from './UpdateElements.js';
 import { loadTrackChanges } from '../CanvasWrapper/TCM_Integration_Actions';
 import ElementPopup from '../ElementPopup'
 import { updatePageNumber, accessDenied } from '../SlateWrapper/SlateWrapper_Actions';
@@ -592,17 +592,19 @@ class ElementContainer extends Component {
 
                     let imgTaginLabel = titleDOMNode && titleDOMNode.getElementsByTagName("img")
                     let imgTaginTitle = subtitleDOMNode && subtitleDOMNode.getElementsByTagName("img")
+                    let blankLineLabel = titleDOMNode && titleDOMNode.getElementsByClassName("answerLineContent")
+                    let blankLineTitle = subtitleDOMNode && subtitleDOMNode.getElementsByClassName("answerLineContent")
                     if (parentElement.type === "poetry" || parentElement.type === "popup") {
-                        if((titleDOMNode.textContent === '') && !(imgTaginLabel && imgTaginLabel.length)){
+                        if((titleDOMNode.textContent === '') && !(imgTaginLabel && imgTaginLabel.length) && !(blankLineLabel && blankLineLabel.length)){
                             titleHTML = ""
                         }
-                        if ((subtitleDOMNode.textContent === '') && !(imgTaginTitle && imgTaginTitle.length)) {
+                        if ((subtitleDOMNode.textContent === '') && !(imgTaginTitle && imgTaginTitle.length) && !(blankLineTitle && blankLineTitle.length)) {
                             subtitleHTML = ""
                         }
                         tempDiv.innerHTML = createTitleSubtitleModel(titleHTML, subtitleHTML)
                     }
                     else if(parentElement.type === "citations"){
-                        if((titleDOMNode.textContent === '') && !(imgTaginLabel && imgTaginLabel.length)){
+                        if((titleDOMNode.textContent === '') && !(imgTaginLabel && imgTaginLabel.length) && !(blankLineLabel && blankLineLabel.length)){
                             titleHTML = ""
                         }
                         tempDiv.innerHTML = createTitleSubtitleModel("", titleHTML)
@@ -736,6 +738,7 @@ class ElementContainer extends Component {
                     tempDivForCE.innerHTML = ceHtml;
                     ceHtml = tempDivForCE.innerHTML;
                     tempDivForCE.innerHTML = removeBlankTags(tempDivForCE.innerHTML)
+                    tempDivForCE.innerHTML = handleBlankLineDom(tempDivForCE.innerHTML);
                     ceHtml = removeBlankTags(ceHtml)
                     if (ceHtml && previousElementData.html && (this.replaceUnwantedtags(ceHtml) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate) && !config.savingInProgress) {
                         dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDivForCE, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, showHideType, asideData)

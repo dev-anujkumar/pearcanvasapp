@@ -12,6 +12,7 @@ import RootCiteTdxComponent from './assessmentCiteTdx/RootCiteTdxComponent.jsx';
 import config from '../../config/config';
 import './../../styles/AssessmentSlateCanvas/AssessmentSlateCanvas.css';
 import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
+import { TAXONOMIC_ID_LEARNING_SYSTEM, TAXONOMIC_ID_DISCIPLINES } from './learningTool/learningToolUtility.js';
 import { assessmentFormats, CITE, TDX, PUF, LEARNING_TEMPLATE, LEARNOSITY, ELM_UPDATE_MSG, ELM_UPDATE_POPUP_HEAD, ELM_UPDATE_BUTTON } from './AssessmentSlateConstants.js';
 /** ----- Import - Action Creators ----- */
 import { setCurrentCiteTdx, assessmentSorting } from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
@@ -162,11 +163,11 @@ class AssessmentSlateData extends Component {
 
     /*** @description This function is used to open Version update Popup */
     updateElm = (event) => {
+        this.prohibitPropagation(event);
         if (hasReviewerRole() || !(this.props.permissions && this.props.permissions.includes('elements_add_remove'))) {
             return true;
         }
         this.toggleUpdatePopup(true, event);
-        event.stopPropagation();
     }
 
     /*** @description This function is used to render Version update Popup */
@@ -191,18 +192,18 @@ class AssessmentSlateData extends Component {
         }
     }
 
-    /*** @description This function is used to update elm assessment after click on update from Version update Popup */
     updateElmAssessment = async (event) => {
         this.toggleUpdatePopup(false, event);
         this.showCanvasBlocker(false);
         let oldWorkUrn = this.props.assessmentSlateObj.assessmentId
         await this.props.checkElmAssessmentStatus(this.props.assessmentReducer[this.props.assessmentSlateObj.assessmentId].latestWorkUrn, 'fromUpdate', this.props.assessmentSlateObj.assessmentId);
-        const { latestWorkUrn, assessmentTitle } = this.props.assessmentReducer[this.props.assessmentSlateObj.assessmentId]
+        const { latestWorkUrn, assessmentTitle, prevLatestWorkUrn } = this.props.assessmentReducer[this.props.assessmentSlateObj.assessmentId]
+        const { latestVersionClean } = this.props.assessmentReducer[latestWorkUrn]
         let updatedElmObj = {
-            id: latestWorkUrn,
             title: assessmentTitle,
             usagetype: this.state.activeAssessmentUsageType
         }
+        updatedElmObj.id = latestVersionClean == true ? prevLatestWorkUrn : latestWorkUrn
         if (latestWorkUrn != this.props.assessmentSlateObj.assessmentId) {
             updatedElmObj.title = this.props.assessmentReducer[latestWorkUrn].assessmentTitle
         }
@@ -219,11 +220,13 @@ class AssessmentSlateData extends Component {
      * @param {*} event event object
      */
     toggleUpdatePopup = (toggleValue, event) => {
+        if (event) {
+            event.preventDefault();
+        }
         this.setState({
             showUpdatePopup: toggleValue
         })
         this.showCanvasBlocker(toggleValue);
-        this.prohibitPropagation(event)
     }
 
     updateElmOnSaveEvent = (props) => {
@@ -258,7 +261,8 @@ class AssessmentSlateData extends Component {
 
     /*** @description - This function is to change the learning system */
     changeLearningApp() {
-        this.props.openLTFunction();
+        this.props.openLTFunction(TAXONOMIC_ID_LEARNING_SYSTEM);
+        this.props.openLTFunction(TAXONOMIC_ID_DISCIPLINES);
         this.props.openLtAction();
         this.setState({
             activeAssessmentType: LEARNING_TEMPLATE,

@@ -234,9 +234,17 @@
 .disableToolbar{
   visibility: hidden;
 }
-
+button[title="Special Character"] .tox-tbtn__select-label,
 button[title="Cross Linking"] .tox-tbtn__select-label {
   margin: 0;
+}
+span.answerLineContent {
+  border-bottom: 1px solid black;
+  width: 75px;
+  display: inline-block;
+  margin: 0px 2px;
+  position: relative;
+  bottom: 5px;
 }
 .tox .tox-tbtn--disabled, .tox .tox-tbtn--disabled:hover, .tox .tox-tbtn:disabled, .tox .tox-tbtn:disabled:hover{
   opacity: 0.34!important;

@@ -10,6 +10,7 @@ import { setSemanticsSnapshots, fetchElementsTag, generateWipDataForFigure } fro
 /*************************Import Constants*************************/
 import TcmConstants from './TcmConstants.js';
 import { storeOldAssetForTCM } from '../ElementContainer/ElementContainer_Actions'
+import { handleBlankLineDom } from '../ElementContainer/UpdateElements.js';
 
 const {
     elementType,
@@ -691,7 +692,7 @@ export const setFigureElementContentSnapshot = (element, actionStatus) => {
             snapshotData["metadata"] = prepareMetablock(element, actionStatus)
             break;
         case "authoredtext":            // for MML
-            snapshotData["metadata"] = element.html.text ? `<p>${element.html.text}</p>` : "<p><br></p>"
+            snapshotData["metadata"] = element.html.text ? `${element.html.text}` : "<p><br></p>"
             break;
         case "image":
         case "table":
@@ -732,6 +733,7 @@ const setContentSnapshot = (element, elementDetails, actionStatus, CurrentSlateS
     } else {
         snapshotData = element.html && element.html.text ? element.html.text : "";
     }
+    snapshotData = handleBlankLineDom(snapshotData,'BlankLine');
     snapshotData = snapshotData && snapshotData.replace(/data-mce-href="#"/g,'')
     return snapshotData
 }

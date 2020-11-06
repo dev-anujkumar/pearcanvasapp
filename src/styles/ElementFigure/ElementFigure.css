@@ -399,3 +399,23 @@ th ol li.listItemNumeroUnoNone:before {
 .pearson-component.image.figureData.table-figure-data {
     overflow: auto;
 }
+
+.figure-wrapper {
+    padding-left: 10px;
+    margin-bottom: 5px;
+}
+.figure-wrapper  .image-figure{
+    padding:6px 0;
+    display: flex;
+}
+.figure-wrapper  .image-info{
+    overflow-wrap: anywhere;
+    width: 100%;
+    margin-top: -3px;
+}
+
+.image-text{
+    width:110px;
+    font-weight: 700;
+    font-size:11px;
+}

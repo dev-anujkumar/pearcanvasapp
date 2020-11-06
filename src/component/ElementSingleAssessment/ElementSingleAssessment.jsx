@@ -243,6 +243,7 @@ class ElementSingleAssessment extends Component {
     * @param e - The event triggered
     */
     addAssessmentResource = (e) => {
+        this.prohibitPropagation(e);
         if (this.props.permissions && this.props.permissions.includes('quad_linking_assessment') && !hasReviewerRole()) {
             if (this.state.elementType !== PUF && this.state.elementType !== LEARNOSITY) {
                 this.toggleAssessmentPopup(e, true)
@@ -326,11 +327,11 @@ class ElementSingleAssessment extends Component {
 
     /*** @description This function is used to open Version update Popup */
     openUpdateElmPopup = (event) => {
+        this.prohibitPropagation(event);   
         if (hasReviewerRole() || !(this.props.permissions && this.props.permissions.includes('elements_add_remove'))) {
             return true;
         }
         this.toggleUpdatePopup(true, event);
-        event.stopPropagation();
     }
 
     /**
@@ -339,11 +340,13 @@ class ElementSingleAssessment extends Component {
      * @param {*} event event object
      */
     toggleUpdatePopup = (toggleValue, event) => {
+        if (event) {
+            event.preventDefault();
+        }
         this.setState({
             showElmUpdatePopup: toggleValue
         })
         this.showCanvasBlocker(toggleValue);
-        this.prohibitPropagation(event)
     }
 
     /*** @description This function is used to render Version update Popup */
@@ -391,13 +394,15 @@ class ElementSingleAssessment extends Component {
             type: 'assessment-item'
         }
         await this.props.checkAssessmentStatus(this.props.assessmentReducer[this.state.assessmentId].latestWorkUrn, 'fromUpdate', this.state.assessmentId, "", itemData)
-        const { latestWorkUrn, assessmentTitle, items } = this.props.assessmentReducer[this.state.assessmentId];
+        const { latestWorkUrn, assessmentTitle, items, prevLatestWorkUrn } = this.props.assessmentReducer[this.state.assessmentId];
+        const { latestVersionClean } = this.props.assessmentReducer[latestWorkUrn]
         let updatedElmObj = {
             id: latestWorkUrn,
             itemid: items[this.state.assessmentItemId],
             title: assessmentTitle,
             usagetype: this.state.activeAsseessmentUsageType
         }
+        updatedElmObj.id = latestVersionClean == true ? prevLatestWorkUrn : latestWorkUrn
         if (latestWorkUrn != this.state.assessmentId) {
             updatedElmObj.title = this.props.assessmentReducer[latestWorkUrn].assessmentTitle
         }

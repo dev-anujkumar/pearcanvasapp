@@ -1,28 +1,25 @@
 import React from 'react';
-import { mount, shallow } from 'enzyme';
-import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
-const middlewares = [thunk];
-import { Provider } from 'react-redux';
+import { mount } from 'enzyme';
 import FigureCard from '../../../../src/component/AssessmentSlateCanvas/learningTool/FigureCard';
-import {tempFiguresForResults,disciplines,apiResultObject,selectedResult} from '../../../../fixtures/learningTool'
-import { spy, stub } from 'sinon';
-const selectedFigure = new stub();
-describe('Testing Figure Card component with props', () => {
-    let props = {
-        apiResultObject: apiResultObject,
-        selectedResult:selectedResult
-      }
-    let wrapper = mount( < FigureCard selectedFigure = {selectedFigure}
-         {...props} />) 
-    const instance = wrapper.find('FigureCard').instance();
-  
-    it('should have render component', () => {
-        expect(wrapper.find(".inputElem")).toHaveLength(1)
-    })
+import {apiResultObject,selectedResult} from '../../../../fixtures/learningTool'
 
-    it('should have figureCardFunction component', () => {
+describe('Testing Learning Tool FigureCard component', () => {
+    let props = {
+        forInputKey: 2,
+        apiResultObject: apiResultObject,
+        selectedResult: selectedResult,
+        selectedFigure: jest.fn()
+    }
+    let wrapper = mount(< FigureCard {...props} />)
+    const instance = wrapper.find('FigureCard').instance();
+
+    it('Render FigureCard', () => {
+        expect(wrapper.find(".modalCard")).toHaveLength(1);
+        expect(instance).toBeDefined();
+        expect(instance.props.apiResultObject.label.en).toBe("Accounting Sim -1");
+        expect(instance.props.apiResultObject.templateid).toBe("W-x02_001");
+        jest.spyOn(instance,'figureCardFunction');
         instance.figureCardFunction();
     })
 
-    })
+})

@@ -193,11 +193,6 @@
     width: 85%;
 }
 
-.container-multi-column-group.wider-50-50 .single-assessment-elm-update-container .elm-update-button.embedded-assessment,
-.container-multi-column-group.wider-60-40.column-1 .single-assessment-elm-update-container .elm-update-button.embedded-assessment {
-    width: 85%;
-}
-
 /* For single asessment dropdown */
 .container-multi-column-group.wider-60-40.column-1 .singleAssessment_Dropdown_activeDropdown {
     width: 73%;

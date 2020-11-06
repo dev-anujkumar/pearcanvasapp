@@ -37,7 +37,8 @@ export default function assessmentReducer(state = INITIAL_STATE, action = INITIA
                 [action.payload.currentWorkUrn]: {
                     ...state[action.payload.currentWorkUrn],
                     latestWorkUrn: action.payload.latestWorkUrn,
-                    showUpdateStatus: action.payload.showUpdateStatus
+                    showUpdateStatus: action.payload.showUpdateStatus,
+                    prevLatestWorkUrn: action.payload.prevLatestWorkUrn
                 },
             }
         case ASSESSMENT_CONFIRMATION_POPUP: {

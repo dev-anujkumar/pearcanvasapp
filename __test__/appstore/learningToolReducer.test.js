@@ -3,22 +3,19 @@ import {
     LT_API_RESULT,
     LT_API_RESULT_FAIL,
     SELECTED_FIGURE,
-    PAGINATION,
     LEARNING_TOOL_DIS_VALUE,
     TOGGLE_LT_POPUP,
     GET_DISCIPLINE,
     REMOVE_SELECTED_DATA,
     GET_DISCIPLINE_FAIL,
-    LT_TYPE_FILTER_SELECTED
+    LT_TYPE_FILTER_SELECTED,
+    GET_LEARNING_SYSTEMS
 } from '../../src/constants/Action_Constants';
-
+import { learningSystemList } from '../../fixtures/learningTool';
 const INITIAL_STATE = {
     shouldHitApi: false,
-    learningToolTypeValue: '',
     apiResponse: [],
-    showErrorMsg: true, //should be false
     showLTBody: false,
-    learningTypeSelected: false,
     showDisFilterValues: false,
     selectedResultFormApi: '',
     resultIsSelected: false,
@@ -26,7 +23,9 @@ const INITIAL_STATE = {
     linkButtonDisable: true,
     apiResponseForDis: [],
     learningToolDisValue: '',
-    numberOfRows: 25
+    learningSystems: [],
+    showTypeFilterValues: false,
+    errorFlag:false
 };
 const INITIAL_STATE2 = {
     shouldHitApi: false,
@@ -342,135 +341,195 @@ const mock_SELECTED_FIGURE = {
         ]
     }
 }
-const temp = ["art",
-    "biologyandmicrobiology"]
 
+const INITIAL_ACTION = {
+    type: '',
+    payload: {}
+}
 describe('Testing Learning Tool Reducer cases -->', () => {
 
     it('should return the initial state', () => {
-        expect(reducer(undefined, {})).toEqual(INITIAL_STATE);
+        expect(reducer(undefined, INITIAL_ACTION)).toEqual(INITIAL_STATE);
     });
     it('Test 1- LT_TYPE_FILTER_SELECTED', () => {
-        reducer(INITIAL_STATE, {
+        expect(reducer(INITIAL_STATE, {
             type: LT_TYPE_FILTER_SELECTED,
             payload: {
-                shouldHitApi: true,
-                learningToolTypeValue: '',
+                shouldHitApi: true
             }
-        })
+        })).toEqual({
+            ...INITIAL_STATE,
+            shouldHitApi: true
+        });
     })
     it('Test 2- LT_API_RESULT', () => {
-        reducer(INITIAL_STATE, {
+        expect(reducer(INITIAL_STATE, {
             type: LT_API_RESULT,
             payload: {
-                learningToolTypeValue: "accounting-sims",
-                learningTypeSelected: true,
                 showDisFilterValues: true,
                 showLTBody: true,
                 apiResponse: mock_LT_API_RESULT,
                 linkButtonDisable: true,
                 selectedResultFormApi: '',
+                errorFlag:false,
+                searchLoading:false
             }
+        })).toEqual({
+            ...INITIAL_STATE,
+            showDisFilterValues: true,
+            showLTBody: true,
+            apiResponse: mock_LT_API_RESULT,
+            linkButtonDisable: true,
+            selectedResultFormApi: '',
+            errorFlag:false,
+            searchLoading:false
         })
     })
     it('Test 3- LT_API_RESULT_FAIL', () => {
-        reducer(INITIAL_STATE, {
+        expect(reducer(INITIAL_STATE, {
             type: LT_API_RESULT_FAIL,
             payload: {
-                showErrorMsg: true,
-                showDisFilterValues: false
+                showDisFilterValues: false,
+                errorFlag:true,
+                searchLoading:false,
+                showLTBody: true
             }
+        })).toEqual({
+            ...INITIAL_STATE,
+            showDisFilterValues: false,
+            errorFlag:true,
+            searchLoading:false,
+            showLTBody: true
         })
     })
     it('Test 4- TOGGLE_LT_POPUP', () => {
-        reducer(INITIAL_STATE, {
+        expect(reducer(INITIAL_STATE, {
             type: TOGGLE_LT_POPUP,
             payload: {
-                toggleLT: false, apiResponse: [],
+                toggleLT: false,
+                apiResponse: [],
                 showLTBody: false,
                 linkButtonDisable: false,
                 learningToolDisValue: ''
             }
+        })).toEqual({
+            ...INITIAL_STATE,
+            toggleLT: false,
+            apiResponse: [],
+            showLTBody: false,
+            linkButtonDisable: false,
+            learningToolDisValue: ''
         })
     })
     it('Test 5- SELECTED_FIGURE', () => {
-        reducer(INITIAL_STATE, {
+        expect(reducer({ ...INITIAL_STATE, apiResponse: mock_LT_API_RESULT }, {
             type: SELECTED_FIGURE,
             payload: {
-                selectedResultFormApi: mock_SELECTED_FIGURE,
+                selectedFigure: mock_SELECTED_FIGURE,
                 resultIsSelected: true,
                 linkButtonDisable: false
             }
+        })).toEqual({
+            ...INITIAL_STATE,
+            apiResponse: mock_LT_API_RESULT,
+            selectedResultFormApi: mock_SELECTED_FIGURE,
+            resultIsSelected: true,
+            linkButtonDisable: false
         })
     })
     it('Test 6- GET_DISCIPLINE', () => {
-        reducer(INITIAL_STATE, {
+        expect(reducer(INITIAL_STATE, {
             type: GET_DISCIPLINE,
             payload: {
                 showDisFilterValues: true,
                 apiResponseForDis: mock_GET_DISCIPLINE
             }
+        })).toEqual({
+            ...INITIAL_STATE,
+            showDisFilterValues: true,
+            apiResponseForDis: mock_GET_DISCIPLINE
         })
     })
     it('Test 7- LEARNING_TOOL_DIS_VALUE', () => {
-        reducer(INITIAL_STATE, {
+        expect(reducer(INITIAL_STATE, {
             type: LEARNING_TOOL_DIS_VALUE,
             payload: {
                 learningToolDisValue: "art"
             }
+        })).toEqual({
+            ...INITIAL_STATE,
+            learningToolDisValue: "art"
         })
     })
     it('Test 8- GET_DISCIPLINE_FAIL', () => {
-        reducer(INITIAL_STATE, {
+        expect(reducer(INITIAL_STATE, {
             type: GET_DISCIPLINE_FAIL,
             payload: {
                 showDisFilterValues: false
             }
+        })).toEqual({
+            ...INITIAL_STATE,
+            showDisFilterValues: false
         })
     })
-    it('Test 9- PAGINATION', () => {
-        reducer(INITIAL_STATE, {
-            type: PAGINATION,
-            payload: {
-                numberOfRows: 24
-            }
-        })
-    })
-    it('Test 10- REMOVE_SELECTED_DATA', () => {
-        reducer(INITIAL_STATE, {
+    it('Test 9- REMOVE_SELECTED_DATA', () => {
+        expect(reducer(INITIAL_STATE, {
             type: REMOVE_SELECTED_DATA,
             payload: {
-                selectedResultFormApi: "",
+                selectedResultFormApi: ""
             }
+        })).toEqual({
+            ...INITIAL_STATE,
+            selectedResultFormApi: ""
         })
     })
-    it('Test 11- LT_API_RESULT for if-case', () => {
-        let tempDisToMatchArray = temp;
-        reducer(INITIAL_STATE2, {
+    it('Test 10- LT_API_RESULT for if-case', () => {
+        expect(reducer(INITIAL_STATE2, {
             type: LT_API_RESULT,
             payload: {
-                learningToolDisValue: "mathematics",
-                learningTypeSelected: true,
                 showDisFilterValues: true,
                 showLTBody: true,
                 apiResponse: mock_LT_API_RESULT,
                 linkButtonDisable: true,
-                selectedResultFormApi: '',
+                selectedResultFormApi: ''
             }
+        })).toEqual({
+            ...INITIAL_STATE2,
+            showDisFilterValues: true,
+            showLTBody: true,
+            apiResponse: [],
+            linkButtonDisable: true,
+            selectedResultFormApi: ''
         })
     })
-    it('Test 12- LT_API_RESULT for if-else-case', () => {
-        reducer(INITIAL_STATE3, {
+    it('Test 11- LT_API_RESULT for if-else-case', () => {
+        expect(reducer(INITIAL_STATE3, {
             type: LT_API_RESULT,
             payload: {
-                learningToolDisValue: "art",
-                learningTypeSelected: true,
                 showDisFilterValues: true,
                 showLTBody: true,
                 apiResponse: mock_LT_API_RESULT,
                 linkButtonDisable: true,
-                selectedResultFormApi: '',
+                selectedResultFormApi: ''
             }
+        })).toEqual({
+            ...INITIAL_STATE3,
+            showDisFilterValues: true,
+            showLTBody: true,
+            apiResponse: mock_LT_API_RESULT,
+            linkButtonDisable: true,
+            selectedResultFormApi: ''
         })
+    })
+    it('Test 12- GET_LEARNING_SYSTEMS', () => {
+        expect(reducer(INITIAL_STATE, {
+            type: GET_LEARNING_SYSTEMS,
+            payload: {
+                learningSystems: learningSystemList
+            }
+        })).toEqual({
+            ...INITIAL_STATE,
+            learningSystems: learningSystemList
+        });
     })
 });
