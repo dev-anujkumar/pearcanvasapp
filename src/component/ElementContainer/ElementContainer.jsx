@@ -53,6 +53,8 @@ import {handleElmPortalEvents} from '../ElementContainer/AssessmentEventHandling
 import { setScroll } from './../Toolbar/Search/Search_Action.js';
 import { SET_SEARCH_URN, SET_COMMENT_SEARCH_URN } from './../../constants/Search_Constants.js';
 
+import elementTypes from './../Sidebar/elementTypes.js';
+
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -1497,7 +1499,9 @@ class ElementContainer extends Component {
     setElementDetails = (elementDetails) => {
         let { parentUrn, asideData, element, poetryData } = this.props;
         let { id, type, contentUrn } = element;
-        let index = this.props.index
+        let index = this.props.index;
+        let inputType = '';
+        let inputSubType = '';
 
         if(!parentUrn) {
             parentUrn = {
@@ -1506,11 +1510,20 @@ class ElementContainer extends Component {
             }
         }
 
+        if('activeElement' in this.props && Object.keys(this.props.activeElement).length > 0 && 'elementType' in this.props.activeElement &&
+            'primaryOption' in this.props.activeElement && 'secondaryOption' in this.props.activeElement) {
+            let { elementType, primaryOption, secondaryOption } = this.props.activeElement;
+            inputType = elementTypes[elementType][primaryOption]['enum'] || '';
+            inputSubType = elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'] || '';
+        }
+
         const detailsToSet = { 
             ...elementDetails,
             sourceSlateManifestUrn: config.slateManifestURN,
             sourceSlateEntityUrn: config.slateEntityURN,
-            deleteElm: { id, type, parentUrn, asideData, contentUrn, index, poetryData}
+            deleteElm: { id, type, parentUrn, asideData, contentUrn, index, poetryData},
+            inputType,
+            inputSubType
             //type: enum type to be included
         }
         console.log("Element Details action to be dispatched from here", detailsToSet)

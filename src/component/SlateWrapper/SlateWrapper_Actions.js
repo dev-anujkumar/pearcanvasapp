@@ -644,10 +644,11 @@ export const pasteElement = (params) => async (dispatch, getState) => {
             "content": [{
                 "type": selection.element.type,
                 "index": index,
-                "inputType": "AUTHORED_TEXT",
-                "inputSubType": "NA",
+                "inputType": selection.inputType,
+                "inputSubType": selection.inputSubType,
                 "schema": selection.element.schema,
                 "html": selection.element.html,
+                "slateVersionUrn": config.slateManifestURN
             }]
         };
         try {
