@@ -20,7 +20,7 @@ import PopUp from '../PopUp';
 import ElmUpdateButton from '../AssessmentSlateCanvas/ElmUpdateButton.jsx'
 import { DEFAULT_ASSESSMENT_SOURCE } from '../../constants/Element_Constants.js';
 import { PUF, LEARNOSITY, ELM_UPDATE_BUTTON, ELM_UPDATE_POPUP_HEAD, ELM_UPDATE_MSG } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
-import { checkAssessmentStatus, updateAssessmentVersion, checkEntityUrn } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
+import { checkAssessmentStatus, updateAssessmentVersion, checkEntityUrn, saveAutoUpdateData } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 
 /*** @description - ElementSingleAssessment is a class based component. It is defined simply to make a skeleton of the assessment-type element .*/
 
@@ -228,7 +228,7 @@ class ElementSingleAssessment extends Component {
                 () => {
                     let oldAssessmentId = this.props.model.figuredata.elementdata.assessmentid
                     this.saveAssessment(() => {
-                        if (oldAssessmentId !== citeTdxObj.id) {
+                        if (oldAssessmentId && oldAssessmentId !== citeTdxObj.id) {
                             let data = [oldAssessmentId, citeTdxObj.id]
                             this.props.checkEntityUrn(data)
                         }
@@ -288,7 +288,7 @@ class ElementSingleAssessment extends Component {
                 this.props.checkAssessmentStatus(pufObj.id, 'fromAddElm',"","",itemData);
                 let oldAssessmentId = this.props.model.figuredata.elementdata.assessmentid;
                 this.saveAssessment(() => {
-                    if (oldAssessmentId !== pufObj.id) {
+                    if (oldAssessmentId && oldAssessmentId !== pufObj.id) {
                         let data = [oldAssessmentId, pufObj.id]
                         this.props.checkEntityUrn(data)
                     }
@@ -418,9 +418,10 @@ class ElementSingleAssessment extends Component {
     updatePufAssessment = (pufObj, oldElmAssessmentId) => {
         showTocBlocker();
         disableHeader(true);
+        this.props.saveAutoUpdateData(oldElmAssessmentId, pufObj.id);
         this.setState({ assessmentId: pufObj.id, assessmentItemId: pufObj.itemid, assessmentTitle: pufObj.title },
             () => {
-                this.saveAssessment(() => this.props.updateAssessmentVersion(oldElmAssessmentId, this.state.assessmentId));
+                this.saveAssessment();
             })
     }
 
@@ -538,7 +539,8 @@ const mapActionToProps = {
     resetElmStore: resetElmStore,
     checkEntityUrn:checkEntityUrn,
     checkAssessmentStatus: checkAssessmentStatus,
-    updateAssessmentVersion: updateAssessmentVersion
+    updateAssessmentVersion: updateAssessmentVersion,
+    saveAutoUpdateData: saveAutoUpdateData
 }
 
 export default connect(
