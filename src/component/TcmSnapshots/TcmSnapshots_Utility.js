@@ -708,13 +708,9 @@ const prepareMetablock = (element, actionStatus) => {
     let programLang = element.figuredata.programlanguage && element.figuredata.programlanguage != 'Select' ? element.figuredata.programlanguage : ''
     let toggleSyntaxhighlight = element.figuredata.syntaxhighlighting == true ? 'ON' : 'OFF'
     let toggleNumber = element.figuredata.numbered == true ? 'ON' : 'OFF'
-    let startNumberField = element.figuredata.startNumber ? element.figuredata.startNumber : "NA"
-    let finalMetaBlock
-    // if (actionStatus.fromWhere == "create") {
-    //     finalMetaBlock = `<p><span class='bce-metadata'>Syntax-highlighting: ${toggleSyntaxhighlight}</span></p><p><span class='bce-metadata'>Language: ${programLang}</span></p><p><span class='bce-metadata'>Line Number: ${toggleNumber}</span></p><p><span class='bce-metadata'>Start numbering from: ${startNumberField}</span></p>`
-    // } else {
-        finalMetaBlock = `<p><span class='bce-metadata'>Syntax-highlighting: </span>${toggleSyntaxhighlight}</p><p><span class='bce-metadata'>Language: </span>${programLang}</p><p><span class='bce-metadata'>Line Number: </span>${toggleNumber}</p><p><span class='bce-metadata'>Start numbering from: </span>${startNumberField}</p>`
-    // }
+    let startNumberField = element.figuredata.startNumber && toggleNumber == 'ON' ? element.figuredata.startNumber : "NA"
+    let finalMetaBlock = `<p><span class='bce-metadata'>Syntax-highlighting: </span>${toggleSyntaxhighlight}</p><p><span class='bce-metadata'>Language: </span>${programLang}</p><p><span class='bce-metadata'>Line Number: </span>${toggleNumber}</p><p><span class='bce-metadata'>Start numbering from: </span>${startNumberField}</p>`
+
     return finalMetaBlock
 }
 
@@ -767,7 +763,7 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
         status:"",
         fromWhere:"update"
     }
-    let {updateBodymatter, response,updatedId,currentParentData, figureData} = elementUpdateData;
+    let {updateBodymatter, response,updatedId,currentParentData} = elementUpdateData;
     let currentSlateData = currentParentData[config.slateManifestURN] 
     if(config.isPopupSlate){
         currentSlateData.popupSlateData = currentParentData[config.tempSlateManifestURN]
@@ -794,6 +790,7 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
     //         payload: {slateLevelData:currentParentData}
     //     })
     // }
+
     if (response.id !== updatedId) {
         if (oldData.poetrylines) {
             oldData.poetrylines = wipData.poetrylines;
@@ -806,9 +803,11 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
                     subtitle: wipData.subtitle,
                     captions: wipData.captions,
                     credits: wipData.credits,
-                    figuredata: figureData ? figureData : wipData.figuredata
+                    figuredata: elementUpdateData && elementUpdateData.figureData && Object.keys(elementUpdateData.figureData).length > 0 ? elementUpdateData.figureData : wipData.figuredata
                 }
-                dispatch(storeOldAssetForTCM({}))
+                if( elementUpdateData && elementUpdateData.figureData && Object.keys(elementUpdateData.figureData).length > 0){
+                    dispatch(storeOldAssetForTCM({}))
+                }
             }
             else {
                 oldData.elementdata = wipData.elementdata;
