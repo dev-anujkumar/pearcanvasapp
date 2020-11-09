@@ -70,7 +70,8 @@ const INITIAL_STATE = {
     usageTypeListData:{},
     slateLength: "25",
     toastMessage:"",
-    showToast:false
+    showToast:false,
+    oldFiguredata : {}
 };
 
 const INITIAL_ACTION = {
