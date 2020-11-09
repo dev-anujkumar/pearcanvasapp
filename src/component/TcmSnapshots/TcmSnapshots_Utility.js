@@ -801,9 +801,9 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
                     subtitle: wipData.subtitle,
                     captions: wipData.captions,
                     credits: wipData.credits,
-                    figuredata: elementUpdateData.figureData && Object.keys(elementUpdateData.figureData).length > 0 ? elementUpdateData.figureData : wipData.figuredata
+                    figuredata: elementUpdateData && elementUpdateData.figureData && Object.keys(elementUpdateData.figureData).length > 0 ? elementUpdateData.figureData : wipData.figuredata
                 }
-                if(Object.keys(elementUpdateData.figureData).length > 0){
+                if( elementUpdateData && elementUpdateData.figureData && Object.keys(elementUpdateData.figureData).length > 0){
                     dispatch(storeOldAssetForTCM({}))
                 }
             }
