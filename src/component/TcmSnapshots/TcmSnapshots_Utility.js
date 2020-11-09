@@ -761,7 +761,7 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
         status:"",
         fromWhere:"update"
     }
-    let {updateBodymatter, response,updatedId,currentParentData, figureData} = elementUpdateData;
+    let {updateBodymatter, response,updatedId,currentParentData} = elementUpdateData;
     let currentSlateData = currentParentData[config.slateManifestURN] 
     if(config.isPopupSlate){
         currentSlateData.popupSlateData = currentParentData[config.tempSlateManifestURN]
@@ -788,7 +788,7 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
     //         payload: {slateLevelData:currentParentData}
     //     })
     // }
-    console.log("figureData>>>>>>>>>>>", Object.keys(elementUpdateData.figureData).length)
+
     if (response.id !== updatedId) {
         if (oldData.poetrylines) {
             oldData.poetrylines = wipData.poetrylines;
