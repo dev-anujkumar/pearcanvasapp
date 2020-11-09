@@ -151,6 +151,24 @@ export class TinyMceEditor extends Component {
                             let innerHtml = this.innerHTML;
                             this.outerHTML = innerHtml;
                         })
+                        tinymce.$('.Wirisformula').each(function () {
+                            
+                            let mathformula = this.getAttribute('mathmlformula')
+                            console.log(this,"getmath",mathformula)
+                            if(mathformula){
+                                let res = mathformula.substr(0, 2);
+                                let res2=mathformula.substr(2, 2);
+                                //let formulafolder=res+res2/mathformula
+                                let path='https://cite-media-stg.pearson.com/legacy_paths/wiris-dev-mathtype-cache/cache/'+res+'/'+res2+'/'+mathformula+'.png'
+                                console.log("path>>>>>",path)
+                                this.setAttribute('src', path)
+                                this.removeAttribute('mathmlformula')
+                            }
+                            
+                            
+                            this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
+                            this.naturalWidth && this.setAttribute('width', this.naturalWidth)
+                        });
                         if (!config.savingInProgress) {
                             if ((this.props.element.type === "popup" || this.props.element.type === "citations") && !this.props.currentElement) {
                                 this.props.createPopupUnit(this.props.popupField, true, this.props.index, this.props.element)
@@ -2362,7 +2380,6 @@ export class TinyMceEditor extends Component {
                  */
                 let tempFirstContainerHtml = tinyMCE.$("#" + (this.editorRef.current ? this.editorRef.current.id : 'cypress-0')).html()
                 tempFirstContainerHtml = tempFirstContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
-
                 //Test Case Changes
                 if (this.editorRef.current && document.getElementById(this.editorRef.current.id)) {
                     document.getElementById(this.editorRef.current.id).innerHTML = tempFirstContainerHtml;
@@ -2683,7 +2700,6 @@ export class TinyMceEditor extends Component {
                 tempContainerHtml = tinyMCE.$("[data-id='" + previousTargetId + "'] .cypress-editable").html()
                 tempNewContainerHtml = tinyMCE.$("[data-id='" + currentTargetId + "'] .cypress-editable").html()
             }
-
             tempContainerHtml = tempContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
             tempNewContainerHtml = tempNewContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
 
