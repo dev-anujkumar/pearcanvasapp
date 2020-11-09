@@ -45,9 +45,9 @@ import ElementPoetryStanza from '../ElementPoetry/ElementPoetryStanza.jsx';
 import MultiColumnContext from "./MultiColumnContext.js"
 import MultiColumnContainer from "../MultiColumnElement"
 import {handleTCMData} from '../TcmSnapshots/TcmSnapshot_Actions.js';
-import CopyUrn from '../CopyUrn';
-import { OnCopyContext } from '../CopyUrn/copyUtil.js'
-import { setSelection } from './../CopyUrn/CopyUrn_Action.js';
+import CutCopyDialog from '../CutCopyDialog';
+import { OnCopyContext } from '../CutCopyDialog/copyUtil.js'
+import { setSelection } from '../CutCopyDialog/CopyUrn_Action.js';
 import { openElmAssessmentPortal } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import {handleElmPortalEvents} from '../ElementContainer/AssessmentEventHandling.js';
 import { setScroll } from './../Toolbar/Search/Search_Action.js';
@@ -1477,7 +1477,7 @@ class ElementContainer extends Component {
     renderCopyComponent = (_props, index, inContainer) => {
         if (this.state.showCopyPopup) {
             return (
-                <CopyUrn 
+                <CutCopyDialog 
                     userRole={_props.userRole}
                     index={index}
                     inContainer={inContainer}

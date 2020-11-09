@@ -1,4 +1,4 @@
-import { SET_SELECTION } from './../../constants/Action_Constants';
+import { SET_SELECTION } from '../../constants/Action_Constants';
 
 export const setSelection = (param) => {
     return dispatch => {
