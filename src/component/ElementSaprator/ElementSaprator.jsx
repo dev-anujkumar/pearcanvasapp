@@ -124,7 +124,7 @@ export function ElementSaprator(props) {
             return (
                 <div className="elemDiv-expand paste-button-wrapper">
                     <Tooltip direction='left' tooltipText='Paste element'>
-                        <Button type="expand" onClick={() => pasteElement(separatorProps)} />
+                        <Button type="paste" onClick={() => pasteElement(separatorProps)} />
                     </Tooltip>
                 </div>
             )

@@ -39,7 +39,7 @@ import expandIcon from '../../images/ElementButtons/expandIcon.png'
 import colorPalette from '../../images/ElementButtons/colorPalette.png'
 import colorText from '../../images/ElementButtons/colorText.svg'
 import closeContainer from '../../images/ElementButtons/container_close.png';
-import pasteIcon from '../../images/ElementButtons/contentPaste.svg'
+import pasteIcon from '../../images/ElementButtons/contentPaste.png'
 import ButtonTypes from './ButtonTypes.js';
 
 class ElementButton extends Component {
