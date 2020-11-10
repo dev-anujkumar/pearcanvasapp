@@ -11,7 +11,8 @@ import {
     ELM_PORTAL_API_ERROR,
     RESET_ASSESSMENT_STORE,
     ASSESSMENT_CONFIRMATION_POPUP,
-    UPDATE_ELM_ITEM_ID
+    UPDATE_ELM_ITEM_ID,
+    SAVE_AUTO_UPDATE_ID
 } from "../../../constants/Action_Constants";
 import { ELM_PORTAL_ERROR_MSG, AUTO_UPDATE_FAIL_ERROR } from '../AssessmentSlateConstants.js';
 import { handleRefreshSlate } from '../../ElementContainer/AssessmentEventHandling.js';
@@ -274,6 +275,7 @@ export const openElmAssessmentPortal = (assessmentData) => (dispatch) => {
  */
 export const updateAssessmentVersion = (oldWorkUrn, updatedWorkUrn) => dispatch => {
     let url = `${config.SLATE_REFRESH_URL}${config.projectUrn}/updateAllAssessments/${oldWorkUrn}/${updatedWorkUrn}`;
+    dispatch(saveAutoUpdateData("",""));
     return axios.post(url, {}, {
         headers: {
             "Cache-Control": "no-cache",
@@ -332,5 +334,15 @@ export const assessmentConfirmationPopup = (data) => {
     return {
         type: ASSESSMENT_CONFIRMATION_POPUP,
         payload: data
+    }
+}
+
+export const saveAutoUpdateData = (oldAssessmentId, newAssessmentId) => {
+    return {
+        type: SAVE_AUTO_UPDATE_ID,
+        payload: {
+            oldAssessmentId: oldAssessmentId,
+            newAssessmentId: newAssessmentId
+        }
     }
 }
