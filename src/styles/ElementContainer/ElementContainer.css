@@ -25,7 +25,29 @@
 .editor.cut .element-container.active,
 .editor.copy .element-container.active,
 .editor.cut .showBorder, .editor.copy .showBorder {
-    border: 1.5px dashed #005a70 !important;
+    /* border: 1.5px border-dance #005a70 !important; */
+    /* border: 1.5px dashed #005a70 !important; */
+
+    border: none;
+    background: linear-gradient(90deg, #005a70 50%, transparent 50%), linear-gradient(90deg, #005a70 50%, transparent 50%), linear-gradient(0deg, #005a70 50%, transparent 50%), linear-gradient(0deg, #005a70 50%, transparent 50%);
+    background-repeat: repeat-x, repeat-x, repeat-y, repeat-y;
+    background-size: 15px 2px, 15px 2px, 2px 16px, 2px 16px;
+    
+    background-position: left top, right bottom, left bottom, right 1.5px top;
+    /* background-position: 0px 0px, 0px 63px, 0px 100px, 684px 0px; */
+    padding: 10px;
+    animation: border-dance 0.5s infinite linear;
+}
+
+@keyframes border-dance {
+    0% {
+        background-position:left top, right bottom, left bottom, right 1.5px top;
+      /* background-position: 0px 0px, 300px 63px, 0px 150px, 684px 0px; */
+    }
+    100% {
+      background-position: left 15px top, right 15px bottom , left bottom 15px , right 1.5px top 15px;
+      /* background-position: 300px 0px, 0px 63px, 0px 0px, 684px 150px; */
+    }
 }
 
 .element-container.ct.active {
