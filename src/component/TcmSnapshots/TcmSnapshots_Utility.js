@@ -706,8 +706,8 @@ export const setFigureElementContentSnapshot = (element, actionStatus) => {
 
 const prepareMetablock = (element, actionStatus) => {
     let programLang = element.figuredata.programlanguage && element.figuredata.programlanguage != 'Select' ? element.figuredata.programlanguage : ''
-    let toggleSyntaxhighlight = element.figuredata.syntaxhighlighting == true ? 'ON' : 'OFF'
-    let toggleNumber = element.figuredata.numbered == true ? 'ON' : 'OFF'
+    let toggleSyntaxhighlight = element.figuredata.syntaxhighlighting == false ? 'OFF' : 'ON'
+    let toggleNumber = element.figuredata.numbered == false ? 'OFF' : 'ON'
     let startNumberField = element.figuredata.startNumber && toggleNumber == 'ON' ? element.figuredata.startNumber : "NA"
     let finalMetaBlock = `<p><span class='bce-metadata'>Syntax-highlighting: </span>${toggleSyntaxhighlight}</p><p><span class='bce-metadata'>Language: </span>${programLang}</p><p><span class='bce-metadata'>Line Number: </span>${toggleNumber}</p><p><span class='bce-metadata'>Start numbering from: </span>${startNumberField}</p>`
 
