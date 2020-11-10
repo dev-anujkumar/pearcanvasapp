@@ -4,7 +4,8 @@ import {
     GET_ASSESSMENT_VERSIONS,
     RESET_ASSESSMENT_STORE,
     ASSESSMENT_CONFIRMATION_POPUP,
-    UPDATE_ELM_ITEM_ID
+    UPDATE_ELM_ITEM_ID,
+    SAVE_AUTO_UPDATE_ID
 } from '../constants/Action_Constants';
 
 const INITIAL_STATE = {
@@ -65,6 +66,11 @@ export default function assessmentReducer(state = INITIAL_STATE, action = INITIA
                 [action.payload.currentWorkUrn]: {
                     ...state[action.payload.currentWorkUrn],
                 }
+            }
+        case SAVE_AUTO_UPDATE_ID:
+            return {
+                ...state,
+                saveAutoUpdateData: action.payload
             }
         default:
             return state
