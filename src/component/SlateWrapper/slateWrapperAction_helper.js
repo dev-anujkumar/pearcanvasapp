@@ -72,7 +72,7 @@ export const onPasteSuccess = async (params) => {
 
     if (config.tcmStatus) {
         if (slateWrapperConstants.elementType.indexOf("TEXT") !== -1) {
-            prepareDataForTcmCreate(type, responseData, getState, dispatch);
+            prepareDataForTcmCreate("TEXT", responseData, getState, dispatch);
         }
     }
     
