@@ -27,6 +27,8 @@ import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 import * as slateWrapperConstants from "./SlateWrapperConstants"
 import { onPasteSuccess, prepareDataForTcmCreate } from "./slateWrapperAction_helper"
 
+import { SET_SELECTION } from './../../constants/Action_Constants.js';
+
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
 };
@@ -366,6 +368,21 @@ export const handleSplitSlate = (newSlateObj) => (dispatch, getState) => {
             }
         }
     ).then(res => {
+        // Update selection store data after split
+        let selection = getState().selectionReducer.selection || {};
+        if(Object.keys(selection).length > 0 && selection.sourceSlateEntityUrn === config.slateEntityURN && selection.sourceElementIndex >= splitIndex) {
+            selection.sourceSlateEntityUrn = newSlateObj.entityUrn;
+            selection.sourceSlateManifestUrn = newSlateObj.containerUrn;
+            selection.element.slateVersionUrn = newSlateObj.containerUrn;
+
+            if('deleteElm' in selection && Object.keys(selection.deleteElm).length > 0) {
+                selection.deleteElm.parentUrn.contentUrn = newSlateObj.entityUrn;
+                selection.deleteElm.parentUrn.manifestUrn = newSlateObj.containerUrn;
+            }
+
+            dispatch({ type: SET_SELECTION, payload: selection });
+        }
+
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
         let parentData = getState().appStore.slateLevelData;
         let currentParentData = JSON.parse(JSON.stringify(parentData));

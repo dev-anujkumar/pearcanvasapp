@@ -1,4 +1,5 @@
 // Constants
+import axios from 'axios';
 import config from '../../config/config';
 import { AUTHORING_ELEMENT_CREATED, GET_TCM_RESOURCES } from '../../constants/Action_Constants';
 import { HideLoader, ShowLoader, projectPendingTcStatus } from '../../constants/IFrameMessageTypes.js';
@@ -25,7 +26,8 @@ export const onPasteSuccess = async (params) => {
         operationType = getState().selectionReducer.selection.operationType;
     }
 
-    if('deleteElm' in getState().selectionReducer.selection && operationType === 'cut') {
+    let elmExist = await checkElementExistence(getState().selectionReducer.selection.sourceSlateEntityUrn, getState().selectionReducer.selection.deleteElm.id);
+    if('deleteElm' in getState().selectionReducer.selection && operationType === 'cut' && elmExist) {
         let deleteElm = getState().selectionReducer.selection.deleteElm;
         dispatch(deleteElement(deleteElm.id, deleteElm.type, deleteElm.parentUrn, deleteElm.asideData, deleteElm.contentUrn, deleteElm.index, deleteElm.poetryData, getState().selectionReducer.selection.element));
     }
@@ -82,6 +84,38 @@ export const onPasteSuccess = async (params) => {
             slateLevelData: newParentData
         }
     })
+}
+
+export const checkElementExistence = async (slateEntityUrn = '', elementEntity = '') => {
+    let exist = false;
+    let bodymatter = [];
+    if(slateEntityUrn && elementEntity) {
+        const axiosObject = axios.create({
+            headers: {
+                'Content-Type': 'application/json',
+                'PearsonSSOSession': config.ssoToken
+            }
+        });
+
+        await axiosObject.get(`${config.REACT_APP_API_URL}v1/slate/${config.projectUrn}/contentHierarchy/${slateEntityUrn}/elementids`)
+        .then(res => {
+            if(res && res.status == 200) {
+                bodymatter = (Object.values(res.data)[0]).contents.bodymatter || [];
+            }
+        })
+        .catch(error => {
+            console.log('Element IDs API error:::', error);
+        });
+
+        if(bodymatter.length > 0) {
+            let matches = ((JSON.stringify(bodymatter)).match(new RegExp(`(id(\"|\'|):(\"|\'|)${elementEntity})`, 'g'))) || [];
+            if (matches.length > 0) {
+                exist = true;
+            }
+        }
+    }
+
+    return exist;
 }
 
 export const handleTCMSnapshotsForCreation = async (params) => {
