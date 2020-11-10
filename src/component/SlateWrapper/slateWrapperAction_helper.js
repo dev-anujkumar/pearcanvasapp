@@ -19,50 +19,6 @@ export const onPasteSuccess = async (params) => {
         getState
     } = params
 
-    sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
-    const parentData = getState().appStore.slateLevelData;
-    const newParentData = JSON.parse(JSON.stringify(parentData));
-    const currentSlateData = newParentData[config.slateManifestURN];
-
-    /** [PCAT-8289] ---------------------------- TCM Snapshot Data handling ------------------------------*/
-    // if (slateWrapperConstants.elementType.indexOf(type) !== -1) {
-    //     const snapArgs = {
-    //         newParentData,
-    //         currentSlateData,
-    //         asideData: null,
-    //         poetryData: null,
-    //         parentUrn: null,
-    //         type,
-    //         responseData,
-    //         dispatch
-    //     }
-
-    //     handleTCMSnapshotsForCreation(snapArgs)
-    // }
-    /**---------------------------------------------------------------------------------------------------*/
-
-    if (currentSlateData.status === 'approved') {
-        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
-        sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
-        return false;
-    }
-    
-    newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, responseData);
-    
-
-    // if (config.tcmStatus) {
-    //     if (slateWrapperConstants.elementType.indexOf(type) !== -1) {
-    //         prepareDataForTcmCreate(type, responseData, getState, dispatch);
-    //     }
-    // }
-    
-    dispatch({
-        type: AUTHORING_ELEMENT_CREATED,
-        payload: {
-            slateLevelData: newParentData
-        }
-    })
-
     // Store Update on Paste Element
     let operationType = '';
     if(Object.keys(getState().selectionReducer.selection).length > 0 && 'operationType' in getState().selectionReducer.selection) {
@@ -82,6 +38,50 @@ export const onPasteSuccess = async (params) => {
     } else if(operationType === 'cut') {
         dispatch({ type: SET_SELECTION, payload: {} });
     }
+
+    sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
+    const parentData = getState().appStore.slateLevelData;
+    const newParentData = JSON.parse(JSON.stringify(parentData));
+    const currentSlateData = newParentData[config.slateManifestURN];
+
+    /** [PCAT-8289] ---------------------------- TCM Snapshot Data handling ------------------------------*/
+    if (slateWrapperConstants.elementType.indexOf("TEXT") !== -1) {
+        const snapArgs = {
+            newParentData,
+            currentSlateData,
+            asideData: null,
+            poetryData: null,
+            parentUrn: null,
+            type: "TEXT",
+            responseData,
+            dispatch
+        }
+
+        handleTCMSnapshotsForCreation(snapArgs)
+    }
+    /**---------------------------------------------------------------------------------------------------*/
+
+    if (currentSlateData.status === 'approved') {
+        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
+        sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+        return false;
+    }
+    
+    newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, responseData);
+    
+
+    if (config.tcmStatus) {
+        if (slateWrapperConstants.elementType.indexOf("TEXT") !== -1) {
+            prepareDataForTcmCreate(type, responseData, getState, dispatch);
+        }
+    }
+    
+    dispatch({
+        type: AUTHORING_ELEMENT_CREATED,
+        payload: {
+            slateLevelData: newParentData
+        }
+    })
 }
 
 export const handleTCMSnapshotsForCreation = async (params) => {
