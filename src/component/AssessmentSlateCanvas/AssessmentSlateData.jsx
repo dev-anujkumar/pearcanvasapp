@@ -519,7 +519,7 @@ class AssessmentSlateData extends Component {
                 </div>
             </div>
             <div className="clr"></div>
-            <div className={`slate_assessment_type_button ${assessmentType && assessmentUsageType ? '' : 'disabled'}`} onClick={(e) => this.mainAddAssessment(e, assessmentType)}>Add Asssessment</div>
+            <div className={`slate_assessment_type_button ${assessmentType && assessmentUsageType ? '' : 'disabled'}`} onClick={(e) => this.mainAddAssessment(e, assessmentType)}>Add Assessment</div>
             <div className="clr"></div>
         </div>
 
