@@ -329,6 +329,12 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             altText,
             longDesc
         };
+        if(newElementData.primaryOption=='primary-blockcode-equation'){
+            activeElementObject.numbered= res.data.figuredata.numbered || true
+          activeElementObject.startNumber= res.data.figuredata.startNumber || "1"
+           activeElementObject.syntaxhighlighting= res.data.figuredata.syntaxhighlighting || true
+            
+        }
         dispatch({
             type: FETCH_SLATE_DATA,
             payload: store
@@ -362,17 +368,17 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     
     .catch(err =>{
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
-        console.log("Conversion Error >> ",err)
         dispatch({type: ERROR_POPUP, payload:{show: true}})
         config.conversionInProcess = false
         config.savingInProgress = false
         config.isSavingElement = false
+        console.error("Conversion Error >> ",err)
     })
 }
 catch (error) {
-    console.log(error)
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
     dispatch({type: ERROR_POPUP, payload:{show: true}})
+    console.error(error)
 }
 }
 function prepareDataForConversionTcm(updatedDataID, getState, dispatch,versionid, resData) {
@@ -547,4 +553,14 @@ export const conversionElement = (elementData, fromToolbar) => (dispatch, getSta
     } else {
         return false;
     }
+}
+
+export const setBCEMetadata = (attribute,value) => (dispatch, getState) => {
+    let activeElement =  getState().appStore.activeElement;
+    activeElement[attribute]=value
+    dispatch({
+        type: SET_ACTIVE_ELEMENT,
+        payload: activeElement
+    });
+
 }

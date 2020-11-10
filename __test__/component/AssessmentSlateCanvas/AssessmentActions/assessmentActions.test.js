@@ -390,8 +390,15 @@ describe('-----------------Testing Assessment Actions-----------------', () => {
                 status: 202
             }
             let dispatch = (obj) => {
-                expect(obj.type).toBe('ASSESSMENT_CONFIRMATION_POPUP');
-                expect(obj.payload).toEqual(true);
+                if(obj.type==='ASSESSMENT_CONFIRMATION_POPUP'){
+                    expect(obj.type).toBe('ASSESSMENT_CONFIRMATION_POPUP');
+                    expect(obj.payload).toEqual(true);
+                }else {
+                    expect(obj.type).toBe('SAVE_AUTO_UPDATE_ID');
+                    expect(obj.payload.oldAssessmentId).toEqual("");
+                    expect(obj.payload.newAssessmentId).toEqual("");
+                }
+
             }
             const spyFunction = jest.spyOn(assessment_Actions, 'updateAssessmentVersion');
             axios.post = jest.fn(() => Promise.resolve(responseData));
@@ -408,10 +415,15 @@ describe('-----------------Testing Assessment Actions-----------------', () => {
                 assessmentItemWorkUrn: ""
             }
             let dispatch = (obj) => {
-                expect(obj.type).toBe(ELM_PORTAL_API_ERROR);
-                expect(obj.payload.showError).toEqual(true);
-                expect(obj.payload.errorMessage).toEqual('Unable to Update Other Instances of this Assessment in the Project');
-                expect(obj.payload.isElmApiError).toEqual('elm-api-error');
+                if(obj.type == ELM_PORTAL_API_ERROR){
+                    expect(obj.type).toBe(ELM_PORTAL_API_ERROR);
+                    expect(obj.payload.showError).toEqual(true);
+                    expect(obj.payload.errorMessage).toEqual('Unable to Update Other Instances of this Assessment in the Project');
+                    expect(obj.payload.isElmApiError).toEqual('elm-api-error');
+                }else {
+                    expect(obj.type).toBe('SAVE_AUTO_UPDATE_ID');
+                }
+               
             }
             const spyFunction = jest.spyOn(assessment_Actions, 'updateAssessmentVersion');
             axios.post = await jest.fn().mockImplementationOnce(() => Promise.reject({}));
