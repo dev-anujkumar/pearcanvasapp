@@ -5,9 +5,11 @@ import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 import { comments } from '../../../fixtures/commentPanelData.js'
 import thunk from 'redux-thunk';
+import { JSDOM } from 'jsdom';
 const middlewares = [thunk];
 import config from "../../../src/config/config.js"
 import wipData from './wipData';
+import { singleAssessmentElmDefault } from '../../../fixtures/ElementSingleAssessmentTestData'
 jest.mock('./../../../src/component/SlateWrapper/PageNumberElement', () => {
     return (<div>null</div>)
 })
@@ -50,6 +52,9 @@ jest.mock('./../../../src/component/ElementContainer/UpdateElements.js', () => {
         },
         createUpdatedData: () => {
             return jest.fn()
+        },
+        handleBlankLineDom: () => {
+            return jest.fn()
         }
     }
 })
@@ -71,6 +76,15 @@ jest.mock('./../../../src/component/ElementContainer/ElementContainer_Actions.js
         }
     }
 })
+global.document = (new JSDOM()).window.Element;
+if (!global.Element.prototype.hasOwnProperty("innerText")) {
+    Object.defineProperty(global.Element.prototype, 'innerText', {
+        get() {
+            return this.textContent;
+        },
+    });
+
+}
 const mockStore = configureMockStore(middlewares);
 const store = mockStore({
     appStore: {
@@ -1237,58 +1251,83 @@ describe('Test for element container component', () => {
             elementContainerInstance.componentWillReceiveProps(newProps);
             expect(elementContainerInstance.state.borderToggle).toBe("hideBorder")
         })  
-
+        describe('Test-Update Element Functions', () => {
+            let props = {
+                element: wipData.aside,
+                permissions: [
+                    "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
+                    "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
+                    "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
+                ],
+                    updateElement: jest.fn(),
+                    elemBorderToggle:false
+            };
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            it('Render Element Container ----->AssessmentSlate-update-LT/LA', () => {
+                let props = {
+                    element: wipData.assessmentSlate,
+                    permissions: [],
+                    updateElement: jest.fn()
+                };
+                let assessmentData = {
+                    id: "urn:pearson:learningtemplate:802c9a49-b5cb-4278-a330-edb4048bcc7f",
+                    format: 'learningtemplate',
+                    usageType: 'Quiz',
+                    learningsystem:"knowdl",
+                    templateid: "2019-09-13-006",
+                    templatetype:"criminal-justice-sims",
+                    templatelabel:"How Does Barbara Corcoran Pick Her Investments on Shark Tank? - 9/13",
+                }
+                let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+                const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+                const spyhandleBlurAssessmentSlate  = jest.spyOn(elementContainerInstance, 'handleBlurAssessmentSlate') 
+                elementContainerInstance.handleBlurAssessmentSlate(assessmentData);
+                expect(spyhandleBlurAssessmentSlate).toHaveBeenCalledWith(assessmentData)
+                spyhandleBlurAssessmentSlate.mockClear()
+            })
+            it('Render Element Container ----->AssessmentSlate-update-usageType update', () => {
+                let props = {
+                    element: wipData.assessmentSlate,
+                    permissions: [],
+                    updateElement: jest.fn()
+                };
+                let assessmentData = 'Homework'
+                let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+                const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+                const spyhandleBlurAssessmentSlate  = jest.spyOn(elementContainerInstance, 'handleBlurAssessmentSlate') 
+                elementContainerInstance.handleBlurAssessmentSlate(assessmentData);
+                expect(spyhandleBlurAssessmentSlate).toHaveBeenCalledWith(assessmentData)
+                spyhandleBlurAssessmentSlate.mockClear()
+            })
+    
+        })
     })
-    describe('Test-Update Element Functions', () => {
-        let props = {
-            element: wipData.aside,
+    describe('Test-Elm Assessent Functions', () => {
+        let newProps = {
+            element: singleAssessmentElmDefault,
             permissions: [
                 "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
                 "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
                 "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
             ],
-                updateElement: jest.fn(),
-                elemBorderToggle:false
+            updateElement: jest.fn(),
+            elemBorderToggle: false,
+            openElmAssessmentPortal: jest.fn()
         };
-        let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
-        const elementContainerInstance = elementContainer.find('ElementContainer').instance();
-        it('Render Element Container ----->AssessmentSlate-update-LT/LA', () => {
-            let props = {
-                element: wipData.assessmentSlate,
-                permissions: [],
-                updateElement: jest.fn()
-            };
-            let assessmentData = {
-                id: "urn:pearson:learningtemplate:802c9a49-b5cb-4278-a330-edb4048bcc7f",
-                format: 'learningtemplate',
-                usageType: 'Quiz',
-                learningsystem:"knowdl",
-                templateid: "2019-09-13-006",
-                templatetype:"criminal-justice-sims",
-                templatelabel:"How Does Barbara Corcoran Pick Her Investments on Shark Tank? - 9/13",
-            }
-            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
-            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
-            const spyhandleBlurAssessmentSlate  = jest.spyOn(elementContainerInstance, 'handleBlurAssessmentSlate') 
-            elementContainerInstance.handleBlurAssessmentSlate(assessmentData);
-            expect(spyhandleBlurAssessmentSlate).toHaveBeenCalledWith(assessmentData)
-            spyhandleBlurAssessmentSlate.mockClear()
+        let event = {
+            stopPropagation: jest.fn(),
+            preventDefault: jest.fn()
+        }
+        let elementContainer2 = mount(<Provider store={store}><ElementContainer {...newProps} /></Provider>);
+        const elementContainerInstance2 = elementContainer2.find('ElementContainer').instance();
+        it('Test-1------>handleEditButton', () => {
+            const spyFunction = jest.spyOn(elementContainerInstance2, 'handleEditButton')
+            elementContainerInstance2.handleEditButton(event);
+            expect(spyFunction).toHaveBeenCalledWith(event)
+            expect(elementContainerInstance2.props.element.figuredata.elementdata.assessmentformat).toBe('puf')
+            spyFunction.mockClear()
         })
-        it('Render Element Container ----->AssessmentSlate-update-usageType update', () => {
-            let props = {
-                element: wipData.assessmentSlate,
-                permissions: [],
-                updateElement: jest.fn()
-            };
-            let assessmentData = 'Homework'
-            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
-            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
-            const spyhandleBlurAssessmentSlate  = jest.spyOn(elementContainerInstance, 'handleBlurAssessmentSlate') 
-            elementContainerInstance.handleBlurAssessmentSlate(assessmentData);
-            expect(spyhandleBlurAssessmentSlate).toHaveBeenCalledWith(assessmentData)
-            spyhandleBlurAssessmentSlate.mockClear()
-        })
-
     })
 });
 

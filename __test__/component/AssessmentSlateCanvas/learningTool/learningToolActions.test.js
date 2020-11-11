@@ -1,11 +1,7 @@
-import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
-import { createStore, applyMiddleware, compose } from 'redux';
-//import rootReducer from '../../../../src/Appstore/rootReducer.js';
-import moxios from 'moxios';
 import * as actions from '../../../../src/component/AssessmentSlateCanvas/learningTool/learningToolActions';
 import axios from 'axios';
-import {LT_API_RESULT,
+import {
+    LT_API_RESULT,
     LT_API_RESULT_FAIL,
     SELECTED_FIGURE,
     PAGINATION,
@@ -13,238 +9,167 @@ import {LT_API_RESULT,
     TOGGLE_LT_POPUP,
     GET_DISCIPLINE,
     REMOVE_SELECTED_DATA,
-    LINK_BUTTON_DISABLE
-  } from '../../../../src/constants/Action_Constants';
-  import {tempFiguresForResults,disciplines,selectedResult} from '../../../../fixtures/learningTool'
-const middlewares = [thunk];
-const mockStore = configureMockStore(middlewares);
+    LINK_BUTTON_DISABLE,
+    GET_LEARNING_SYSTEMS
+} from '../../../../src/constants/Action_Constants';
+import { tempFiguresForResults, disciplines, selectedResult, learningSystemList } from '../../../../fixtures/learningTool'
+jest.mock('axios');
 jest.mock('../../../../src/constants/utility.js', () => ({
     sendDataToIframe: jest.fn()
-}))
+}));
 
-let  initialState = {
-    shouldHitApi : false,
-    learningToolTypeValue : '',
-    apiResponse : [],
-    showErrorMsg : true, //should be false
-    showLTBody : false,
-    learningTypeSelected : false,
-    showDisFilterValues : false,
-    selectedResultFormApi : '',
-    resultIsSelected : false,
-    toggleLT : false,
-    linkButtonDisable : true,
-    apiResponseForDis : [],
-    learningToolDisValue : '',
-    numberOfRows : 25
-};
-
-describe('Tests Learning Tool  action', () => {
-    let store = mockStore(() => initialState);
-
-    beforeEach(() => {
-        initialState = {
-            shouldHitApi : false,
-            learningToolTypeValue : '',
-            apiResponse : [],
-            showErrorMsg : true, //should be false
-            showLTBody : false,
-            learningTypeSelected : false,
-            showDisFilterValues : false,
-            selectedResultFormApi : '',
-            resultIsSelected : false,
-            toggleLT : false,
-            linkButtonDisable : true,
-            apiResponseForDis : [],
-            learningToolDisValue : '',
-            numberOfRows : 25
-        };
-
-        moxios.install();
+describe('TestS Learning_Tool_ActionS', () => {
+    it('Testing------- fetchLearningSystems', () => {
+        let expectedResult = {
+            type: GET_LEARNING_SYSTEMS,
+            payload: {
+                learningSystems: learningSystemList
+            }
+        }
+        let result = actions.fetchLearningSystems(learningSystemList)
+        expect(result).toEqual(expectedResult);
+        expect(expectedResult.type).toBe(GET_LEARNING_SYSTEMS);
     });
-   
-    afterEach(() => moxios.uninstall());
- it('testing---toolTypeFilterSelectedAction comment action',()=>{
-     let toolType = "knowdl";
-     let learningSystem = "knowdl"
-    store = mockStore(() => initialState);
-    const expectedActions = [{
-        type: LT_API_RESULT, payload: {
-            apiResponse: tempFiguresForResults,
-            learningTypeSelected: true,
-            showDisFilterValues: true,
-            showLTBody: true,
-            learningToolTypeValue: toolType
-          }
-    
-    }];
-    moxios.wait(() => {
-        const request = moxios.requests.mostRecent();
-        request.respondWith({
-            status: 200,
-            response: tempFiguresForResults
+    it('Testing------- linkDisable', () => {
+        let expectedResult = {
+            type: LINK_BUTTON_DISABLE
+        }
+        let result = actions.linkDisable()
+        expect(result).toEqual(expectedResult);
+        expect(expectedResult.type).toBe(LINK_BUTTON_DISABLE);
+    });
+    it('Testing------- removeSelectedData', () => {
+        let expectedResult = {
+            type: REMOVE_SELECTED_DATA
+        }
+        let result = actions.removeSelectedData()
+        expect(result).toEqual(expectedResult);
+        expect(expectedResult.type).toBe(REMOVE_SELECTED_DATA);
+    });
+    it('Testing------- getDiscipline', () => {
+        let expectedResult = {
+            type: GET_DISCIPLINE,
+            payload: {
+                showDisFilterValues: true,
+                apiResponseForDis: disciplines
+            }
+        }
+        let result = actions.getDiscipline(disciplines)
+        expect(result).toEqual(expectedResult);
+        expect(expectedResult.type).toBe(GET_DISCIPLINE);
+    });
+    it('Testing------- openLtAction', () => {
+        let expectedResult = {
+            type: TOGGLE_LT_POPUP,
+            payload: {
+                toggleLT: true
+            }
+        }
+        let result = actions.openLtAction()
+        expect(result).toEqual(expectedResult);
+        expect(expectedResult.type).toBe(TOGGLE_LT_POPUP);
+    });
+    it('Testing------- closeLtAction', () => {
+        let expectedResult = {
+            type: TOGGLE_LT_POPUP,
+            payload: {
+                toggleLT: false
+            }
+        }
+        let result = actions.closeLtAction()
+        expect(result).toEqual(expectedResult);
+        expect(expectedResult.type).toBe(TOGGLE_LT_POPUP);
+    });
+    it('Testing------- learningToolDisFilterAction', () => {
+        let expectedResult = {
+            type: LEARNING_TOOL_DIS_VALUE,
+            payload: {
+                learningToolDisValue: 'art'
+            }
+        }
+        let result = actions.learningToolDisFilterAction('art')
+        expect(result).toEqual(expectedResult);
+        expect(expectedResult.type).toBe(LEARNING_TOOL_DIS_VALUE);
+    });
+    it('Testing------- paginationFunctionAction', () => {
+        let expectedResult = {
+            type: PAGINATION,
+            payload: {
+                numberOfRows: 25
+            }
+        }
+        let result = actions.paginationFunctionAction(25)
+        expect(result).toEqual(expectedResult);
+        expect(expectedResult.type).toBe(PAGINATION);
+    });
+    it('Testing------- selectedFigureAction', () => {
+        let expectedResult = {
+            type: SELECTED_FIGURE,
+            payload: {
+                selectedFigure: selectedResult
+            }
+        }
+        let result = actions.selectedFigureAction(selectedResult)
+        expect(result).toEqual(expectedResult);
+        expect(expectedResult.type).toBe(SELECTED_FIGURE);
+    });
+    describe('Testing------- openLTFunction', () => {
+        it('Testing------- TAXONOMIC_ID_DISCIPLINES', () => {
+            let responseData = { data: disciplines }
+            let dispatch = (obj) => {
+                if (obj && obj.type === GET_DISCIPLINE) {
+                    expect(obj.payload.showDisFilterValues).toEqual(true);
+                    expect(obj.payload.apiResponseForDis).toEqual(disciplines);
+                }
+            }
+            const spyFunction = jest.spyOn(actions, 'openLTFunction');
+            axios.get = jest.fn(() => Promise.resolve(responseData));
+            actions.openLTFunction('disciplines')(dispatch);
+            expect(spyFunction).toHaveBeenCalledWith('disciplines');
+            spyFunction.mockClear();
+        });
+        it('Testing------- TAXONOMIC_ID_LEARNING_SYSTEM', () => {
+            let dispatch = (obj) => {
+                if (obj && obj.type === GET_LEARNING_SYSTEMS) {
+                    expect(obj.type).toEqual(GET_LEARNING_SYSTEMS);
+                }
+            }
+            const spyFunction = jest.spyOn(actions, 'openLTFunction');
+            actions.openLTFunction('learningsystem')(dispatch);
+            expect(spyFunction).toHaveBeenCalledWith('learningsystem');
+            spyFunction.mockClear();
+        });
+        it('Testing------- TAXONOMIC_ID_LEARNING_SYSTEM', () => {
+            let dispatch = (obj) => {
+                if (obj && obj.type === LT_API_RESULT_FAIL) {
+                    expect(obj.payload.learningSystems).toEqual(learningSystemList);
+                }
+            }
+            axios.get = jest.fn(() => Promise.reject({}));
+            const spyFunction = jest.spyOn(actions, 'openLTFunction');
+            actions.openLTFunction('learningsystem')(dispatch);
+            spyFunction.mockClear();
+        });
+    })
+    describe('Testing------- learningToolSearchAction', () => {
+        it('Testing------- learningToolSearchAction', () => {
+            let learningSystem = 'knowdl',
+                learningAppType = 'helpdesk',
+                searchLabel = 'Title',
+                searchKeyword = 'Test'
+            let responseData = { data: tempFiguresForResults }
+            let dispatch = (obj) => {
+                if (obj && obj.type === LT_API_RESULT) {
+                    expect(obj.payload.showDisFilterValues).toEqual(true);
+                    expect(obj.payload.apiResponse).toEqual(disciplines);
+                    expect(obj.payload.showLTBody).toEqual(tempFiguresForResults);
+                }
+            }
+            const spyFunction = jest.spyOn(actions, 'learningToolSearchAction');
+            axios.get = jest.fn(() => Promise.resolve(responseData));
+            actions.learningToolSearchAction(learningSystem, learningAppType, searchLabel, searchKeyword)(dispatch);
+            expect(spyFunction).toHaveBeenCalledWith(learningSystem, learningAppType, searchLabel, searchKeyword);
+            spyFunction.mockClear();
         });
     });
-
-    return store.dispatch(actions.toolTypeFilterSelectedAction(toolType, learningSystem)).then(() => {
-        const { type, payload } = store.getActions()[0];
-         expect(type).toBe(LT_API_RESULT);
-        //expect(payload.title).toBe(title);
-    });
- })
-
- it('testing---learningToolSearchAction comment action',()=>{
-    let toolType1 = "knowdl";
-    let learningSystem = "knowdl"
-   store = mockStore(() => initialState);
-   const expectedActions = [{
-       type: LT_API_RESULT, payload: {
-           apiResponse: tempFiguresForResults,
-           learningTypeSelected: true,
-           showDisFilterValues: true,
-           showLTBody: true,
-           learningToolTypeValue: toolType1
-         }
-   
-   }];
-   moxios.wait(() => {
-       const request = moxios.requests.mostRecent();
-       request.respondWith({
-           status: 200,
-           response: tempFiguresForResults
-       });
-   });
-
-   return store.dispatch(actions.learningToolSearchAction(toolType1, learningSystem)).then(() => {
-       const { type, payload } = store.getActions()[0];
-        expect(type).toBe(LT_API_RESULT);
-       //expect(payload.title).toBe(title);
-   });
-})
-
-it('testing--- openLTFunction action',()=>{
-  
-   store = mockStore(() => initialState);
-   const expectedActions = [{
-    type: GET_DISCIPLINE, payload: {
-      showDisFilterValues: true,
-      apiResponseForDis: disciplines
-    }
-   }];
-   moxios.wait(() => {
-       const request = moxios.requests.mostRecent();
-       request.respondWith({
-           status: 200,
-           response: disciplines
-       });
-   });
-
-   return store.dispatch(actions.openLTFunction ()).then(() => {
-       const { type, payload } = store.getActions()[0];
-        expect(type).toBe(GET_DISCIPLINE);
-       //expect(payload.title).toBe(title);
-   });
-})
-
-it('testing------- selectedFigureAction   action',()=>{
-    store = mockStore(() => initialState);
-     let selectedFigure = selectedResult;
-    const expectedActions = [{
-        type: SELECTED_FIGURE,
-        payload: selectedResult
-    
-    }];
-
-     store.dispatch(actions.selectedFigureAction(selectedResult))
-    const { type, payload } = store.getActions()[0];
-    expect(type).toBe(SELECTED_FIGURE);
-   // expect(store.getActions()).toEqual(expectedActions);
- })
-
- it('testing------- paginationFunctionAction   action',()=>{
-    store = mockStore(() => initialState);
-     let numberOfRows = 5;
-    const expectedActions = [{
-        type: PAGINATION,
-        payload: numberOfRows
-    
-    }];
-
-     store.dispatch(actions.paginationFunctionAction(5))
-    const { type, payload } = store.getActions()[0];
-    expect(type).toBe(PAGINATION);
- })
-
- it('testing------- learningToolDisFilterAction   action',()=>{
-    store = mockStore(() => initialState);
-     let numberOfRows = 5;
-    const expectedActions = [{
-        type: PAGINATION,
-        payload: numberOfRows
-    
-    }];
-
-     store.dispatch(actions.paginationFunctionAction(5))
-    const { type, payload } = store.getActions()[0];
-    expect(type).toBe(PAGINATION);
- })
-
- it('testing------- closeLtAction   action',()=>{
-    store = mockStore(() => initialState);
-     let toggleLT = false
-    const expectedActions = [{
-        type: TOGGLE_LT_POPUP,
-        payload: toggleLT
-    
-    }];
-
-     store.dispatch(actions.closeLtAction())
-    const { type, payload } = store.getActions()[0];
-    expect(type).toBe(TOGGLE_LT_POPUP);
- })
-
- it('testing------- openLtAction   action',()=>{
-    store = mockStore(() => initialState);
-     let toggleLT = false
-    const expectedActions = [{
-        type: TOGGLE_LT_POPUP,
-        payload: toggleLT
-    
-    }];
-
-     store.dispatch(actions.openLtAction())
-    const { type, payload } = store.getActions()[0];
-    expect(type).toBe(TOGGLE_LT_POPUP);
- })
-
- it('testing------- getDiscipline   action',()=>{
-    store = mockStore(() => initialState);
-     let showDisFilterValues = false;
-     let apiResponseForDis = disciplines;
-    const expectedActions = [{
-        type: GET_DISCIPLINE,
-        payload: {
-            showDisFilterValues,
-            apiResponseForDis
-        }
-    
-    }];
-
-     store.dispatch(actions.getDiscipline())
-    const { type, payload } = store.getActions()[0];
-    expect(type).toBe(GET_DISCIPLINE);
- })
-
- it('testing------- removeSelectedData   action',()=>{
-    store = mockStore(() => initialState);
-     store.dispatch(actions.removeSelectedData())
-    const { type, payload } = store.getActions()[0];
-    expect(type).toBe(REMOVE_SELECTED_DATA);
- })
- it('testing------- linkDisable   action',()=>{
-    store = mockStore(() => initialState);
-     store.dispatch(actions.linkDisable())
-    const { type, payload } = store.getActions()[0];
-    expect(type).toBe(LINK_BUTTON_DISABLE);
- })
-})
+});

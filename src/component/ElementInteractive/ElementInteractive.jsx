@@ -295,8 +295,8 @@ class Interactive extends React.Component {
         let smartLinkString = (imageData.desc && imageData.desc.toLowerCase() !== "eps media") ? imageData.desc : "{}";
         let smartLinkDesc = smartLinkString !== "{}" ? JSON.parse(smartLinkString) : "";
         let smartLinkType = smartLinkDesc !== "" ? smartLinkDesc.smartLinkType : "";
-
-
+        let altText = (imageData.body && imageData.body.results && imageData.body.results[0] && imageData.body.results[0].properties['s.avs:jsonString'].value && imageData.body.results[0].properties['s.avs:jsonString'].value[0].imageAltText) ? imageData.body.results[0].properties['s.avs:jsonString'].value[0].imageAltText : "";
+        let longDescription = (imageData.body && imageData.body.results && imageData.body.results[0] && imageData.body.results[0].properties['s.avs:jsonString'].value && imageData.body.results[0].properties['s.avs:jsonString'].value[0].linkLongDesc) ? imageData.body.results[0].properties['s.avs:jsonString'].value[0].linkLongDesc : "";
         if (smartLinkType) {
             let uniqInterString = imageData && imageData.req && imageData.req.url;
             let uniqueIDInteractive;
@@ -346,6 +346,12 @@ class Interactive extends React.Component {
                         "path": epsURL
                     },
                     "path": smartLinkPath[0]
+                }
+                if(interactivetype === "3rd-party"){
+                    figuredata.alttext= altText
+                }
+                if(interactivetype === "3rd-party" ||interactivetype === "web-link"){
+                    figuredata.longdescription= longDescription
                 }
                 this.props.updateFigureData(figuredata, this.props.index, this.props.elementId,()=>{
                     this.props.handleFocus("updateFromC2")

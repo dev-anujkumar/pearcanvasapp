@@ -10,6 +10,7 @@ import { setSemanticsSnapshots, fetchElementsTag, generateWipDataForFigure } fro
 /*************************Import Constants*************************/
 import TcmConstants from './TcmConstants.js';
 import { storeOldAssetForTCM } from '../ElementContainer/ElementContainer_Actions'
+import { handleBlankLineDom } from '../ElementContainer/UpdateElements.js';
 
 const {
     elementType,
@@ -636,7 +637,7 @@ export const prepareFigureElementSnapshots = async (element, actionStatus, index
     let elementSnapshot = {};
     let semanticSnapshots = (actionStatus.fromWhere !== "create" && element.type !== CITATION_ELEMENT) ? await setSemanticsSnapshots(element, actionStatus, index) : {};
     elementSnapshot = {
-        ...element ? setFigureElementContentSnapshot(element) : "",
+        ...element ? setFigureElementContentSnapshot(element,actionStatus) : "",
         glossorySnapshot: JSON.stringify([]),
         footnoteSnapshot:  JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.footnoteSnapshot : []),
         assetPopOverSnapshot: JSON.stringify([])
@@ -671,19 +672,27 @@ export const prepareElementSnapshots = async (element,actionStatus,index, elemen
  * Generates content snapshot data for figure element
  * @param {Object} element Figure element data
  */
-export const setFigureElementContentSnapshot = (element) => {
+export const setFigureElementContentSnapshot = (element, actionStatus) => {
     let snapshotData = {
-        title: element.html.title || "",
-        subtitle: element.html.subtitle || "",
-        captions: element.html.captions || "",
-        credits: element.html.credits || "" 
+        title: handleBlankLineDom(element.html.title, 'BlankLine') || "",
+        subtitle: handleBlankLineDom(element.html.subtitle, 'BlankLine') || "",
+        captions: handleBlankLineDom(element.html.captions, 'BlankLine') || "",
+        credits: handleBlankLineDom(element.html.credits, 'BlankLine') || "" 
     }
+
     switch (element.figuretype) {
         case "video":
             snapshotData["metadata"] = element.figuredata.videoid.trim().length ? `<p>${element.figuredata.videoid}</p>` : "<p><br></p>"
             break;
         case "audio":
             snapshotData["metadata"] = element.figuredata.audioid.trim().length ? `<p>${element.figuredata.audioid}</p>` : "<p><br></p>"
+            break;
+        case "codelisting":             // for BCE
+            snapshotData["codeblock"] =  element.html.preformattedtext ? element.html.preformattedtext : "<p><br></p>"
+            snapshotData["metadata"] = prepareMetablock(element, actionStatus)
+            break;
+        case "authoredtext":            // for MML
+            snapshotData["metadata"] = element.html.text ? `${handleBlankLineDom(element.html.text, 'BlankLine')}` : "<p><br></p>"
             break;
         case "image":
         case "table":
@@ -694,6 +703,17 @@ export const setFigureElementContentSnapshot = (element) => {
     }
     return snapshotData
 }
+
+const prepareMetablock = (element, actionStatus) => {
+    let programLang = element.figuredata.programlanguage && element.figuredata.programlanguage != 'Select' ? element.figuredata.programlanguage : ''
+    let toggleSyntaxhighlight = element.figuredata.syntaxhighlighting == false ? 'OFF' : 'ON'
+    let toggleNumber = element.figuredata.numbered == false ? 'OFF' : 'ON'
+    let startNumberField = element.figuredata.startNumber && toggleNumber == 'ON' ? element.figuredata.startNumber : "NA"
+    let finalMetaBlock = `<p><span class='bce-metadata'>Syntax-highlighting: </span>${toggleSyntaxhighlight}</p><p><span class='bce-metadata'>Language: </span>${programLang}</p><p><span class='bce-metadata'>Line Number: </span>${toggleNumber}</p><p><span class='bce-metadata'>Start numbering from: </span>${startNumberField}</p>`
+
+    return finalMetaBlock
+}
+
 
 const setContentSnapshot = (element, elementDetails, actionStatus, CurrentSlateStatus) => {
     let snapshotData = "";
@@ -709,6 +729,7 @@ const setContentSnapshot = (element, elementDetails, actionStatus, CurrentSlateS
     } else {
         snapshotData = element.html && element.html.text ? element.html.text : "";
     }
+    snapshotData = handleBlankLineDom(snapshotData,'BlankLine');
     snapshotData = snapshotData && snapshotData.replace(/data-mce-href="#"/g,'')
     return snapshotData
 }
@@ -742,7 +763,7 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
         status:"",
         fromWhere:"update"
     }
-    let {updateBodymatter, response,updatedId,currentParentData, figureData} = elementUpdateData;
+    let {updateBodymatter, response,updatedId,currentParentData} = elementUpdateData;
     let currentSlateData = currentParentData[config.slateManifestURN] 
     if(config.isPopupSlate){
         currentSlateData.popupSlateData = currentParentData[config.tempSlateManifestURN]
@@ -769,6 +790,7 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
     //         payload: {slateLevelData:currentParentData}
     //     })
     // }
+
     if (response.id !== updatedId) {
         if (oldData.poetrylines) {
             oldData.poetrylines = wipData.poetrylines;
@@ -781,9 +803,11 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
                     subtitle: wipData.subtitle,
                     captions: wipData.captions,
                     credits: wipData.credits,
-                    figuredata: figureData ? figureData : wipData.figuredata
+                    figuredata: elementUpdateData && elementUpdateData.figureData && Object.keys(elementUpdateData.figureData).length > 0 ? elementUpdateData.figureData : wipData.figuredata
                 }
-                dispatch(storeOldAssetForTCM({}))
+                if( elementUpdateData && elementUpdateData.figureData && Object.keys(elementUpdateData.figureData).length > 0){
+                    dispatch(storeOldAssetForTCM({}))
+                }
             }
             else {
                 oldData.elementdata = wipData.elementdata;

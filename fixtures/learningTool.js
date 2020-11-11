@@ -232,3 +232,110 @@ export const selectedResult ={
 	},
 	"dateModified": "2019-04-04T16:57:44.002Z"
 }
+export const learningSystemList = {
+    "accounting-sims": {
+        learningSystem: "knowdl",
+        appType: "accounting-sims",
+        label: "Accounting Sims"
+    },
+    "criminal-justice-sims": {
+        learningSystem: "knowdl",
+        appType: "criminal-justice-sims",
+        label: "Criminal Justice Sims"
+    },
+    "digital-interactives": {
+        learningSystem: "knowdl",
+        appType: "digital-interactives",
+        label: "Digital Interactives"
+    },
+    "economics-sims": {
+        learningSystem: "knowdl",
+        appType: "economics-sims",
+        label: "Economic Sims"
+    },
+    "helpdesk": {
+        learningSystem: "knowdl",
+        appType: "helpdesk",
+        label: "HelpDesk"
+    },
+    "hospitality-sims": {
+        learningSystem: "knowdl",
+        appType: "hospitality-sims",
+        label: "Hospitality Sims"
+    },
+    "information-technology-sims": {
+        learningSystem: "knowdl",
+        appType: "information-technology-sims",
+        label: "Information Technology Sims"
+    },
+    "personal-finance-experience": {
+        learningSystem: "knowdl",
+        appType: "personal-finance-experience",
+        label: "Personal Finance"
+    },
+    "political-science-sims": {
+        learningSystem: "knowdl",
+        appType: "political-science-sims",
+        label: "Political Science Sims"
+    },
+    "qual-sims": {
+        learningSystem: "knowdl",
+        appType: "qual-sims",
+        label: "Qualitative Business Sims"
+    },
+    "soundbytes": {
+        learningSystem: "knowdl",
+        appType: "soundbytes",
+        label: "Sound Bytes"
+    },
+    "business-media-library": {
+        learningSystem: "knowdl",
+        appType: "business-media-library",
+        label: "Business Media"
+    },
+    "video-library": {
+        learningSystem: "knowdl",
+        appType: "video-library",
+        label: "Video Library"
+    },
+    "myvirtual-child": {
+        learningSystem: "myvirtual-x",
+        appType: "myvirtual-child",
+        label: "MyVirtualChild"
+    },
+    "myvirtual-life": {
+        learningSystem: "myvirtual-x",
+        appType: "myvirtual-life",
+        label: "MyVirtualLife"
+    },
+    "socialexplorer-surveys": {
+        learningSystem: "socialexplorer",
+        appType: "socialexplorer-surveys",
+        label: "Surveys and Inventories"
+    },
+    "socialexplorer-pathways": {
+        learningSystem: "socialexplorer",
+        appType: "socialexplorer-pathways",
+        label: "Adaptive Pathways"
+    },
+    "socialexplorer-explorations": {
+        learningSystem: "socialexplorer",
+        appType: "socialexplorer-explorations",
+        label: "Guided Data Explorations"
+    },
+    "video-submission": {
+        learningSystem: "mediashare",
+        appType: "video-submission",
+        label: "Shared Media"
+    },
+    "video-quiz": {
+        learningSystem: "mediashare",
+        appType: "video-quiz",
+        label: "Media Quiz"
+    },
+    "writingsolutions": {
+        learningSystem: "writingsolutions",
+        appType: "writingsolutions",
+        label: "Writing Solutions"
+    }
+}

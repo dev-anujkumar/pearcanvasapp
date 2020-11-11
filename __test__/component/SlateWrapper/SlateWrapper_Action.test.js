@@ -9,6 +9,7 @@ import config from '../../../src/config/config';
 import { elementAside,slateLevelData1, slateLevelData2, asideDataType1, asideDataType2, elementAsideWorkExample } from '../../../fixtures/elementAsideData';
 import { citationGroupElement } from "../../../fixtures/ElementCitationData";
 import { multiColumnContainer } from "../../../fixtures/multiColumnContainer"
+import { popup } from "../../../fixtures/ElementPopup"
 jest.mock('../../../src/component/TcmSnapshots/TcmSnapshots_Utility.js',()=>({
     tcmSnapshotsForCreate: jest.fn()
 }))
@@ -915,11 +916,13 @@ describe('Tests Slate Wrapper Actions', () => {
         };
         store = mockStore(() => initialState);
         const type = "CITATION";
+        const type1 = "SECTION_BREAK"
         config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
         const createdElementData = citationGroupElement
     
         const spyPrepareDataForTcmCreate = jest.spyOn(actions, 'prepareDataForTcmCreate')
         actions.prepareDataForTcmCreate(type, createdElementData, store.getState, store.dispatch)
+        actions.prepareDataForTcmCreate(type1, createdElementData, store.getState, store.dispatch)
         expect(spyPrepareDataForTcmCreate).toHaveBeenCalled()
         expect(spyPrepareDataForTcmCreate).toHaveReturnedWith(undefined);
     });
@@ -937,6 +940,26 @@ describe('Tests Slate Wrapper Actions', () => {
         const type = "MULTI_COLUMN";
         config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
         const createdElementData = multiColumnContainer
+    
+        const spyPrepareDataForTcmCreate = jest.spyOn(actions, 'prepareDataForTcmCreate')
+        actions.prepareDataForTcmCreate(type, createdElementData, store.getState, store.dispatch)
+        expect(spyPrepareDataForTcmCreate).toHaveBeenCalled()
+        expect(spyPrepareDataForTcmCreate).toHaveReturnedWith(undefined);
+    });
+    it('testing------- prepareDataForTcmCreate for POP_UP ------function', () => {
+        initialState = {
+            appStore : {
+                slateLevelData: slateLevelData2,
+                activeElement: {},
+                splittedElementIndex: 0,
+                pageNumberData: {},
+            },
+            tcmReducer: {tcmSnapshot: []}
+        };
+        store = mockStore(() => initialState);
+        const type = "POP_UP";
+        config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
+        const createdElementData = popup
     
         const spyPrepareDataForTcmCreate = jest.spyOn(actions, 'prepareDataForTcmCreate')
         actions.prepareDataForTcmCreate(type, createdElementData, store.getState, store.dispatch)

@@ -1,3 +1,5 @@
+import { multiColumnContainer } from "./multiColumnContainer"
+
 export const slateData = {
     "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e": {
         "id": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
@@ -2056,7 +2058,8 @@ export const slateWithCitationElement ={
                         },
                         "contentUrn": "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5",
                         "versionUrn": "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e"
-                    }
+                    },
+                    { ...multiColumnContainer }
                 ]
             }
         

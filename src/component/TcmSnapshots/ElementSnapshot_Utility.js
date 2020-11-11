@@ -75,6 +75,10 @@ export const setSemanticsSnapshots = async (element,actionStatus,index) => {
                 caption: element.captions ? element.captions.footnotes : [], 
                 credit: element.credits ? element.credits.footnotes : []
             }
+
+           if(element.figuretype == "authoredtext"){
+                footnoteWipList.metadata = element.figuredata.elementdata.footnotes ? element.figuredata.elementdata.footnotes : []
+           }
             footnoteSnap = prepareFigureFootnoteSnapshotContent(actionStatus, footnoteWipList, footnoteHtmlList)
             break;
         default:
@@ -102,7 +106,8 @@ const prepareFigureFootnoteSnapshotContent = (actionStatus, footnoteWipList, foo
     return [
             ...prepareFootnoteSnapshotContent(actionStatus, footnoteWipList.subtitle, footnoteHtmlList),
             ...prepareFootnoteSnapshotContent(actionStatus, footnoteWipList.caption, footnoteHtmlList),
-            ...prepareFootnoteSnapshotContent(actionStatus, footnoteWipList.credit, footnoteHtmlList)
+            ...prepareFootnoteSnapshotContent(actionStatus, footnoteWipList.credit, footnoteHtmlList),
+            ...prepareFootnoteSnapshotContent(actionStatus, footnoteWipList.metadata, footnoteHtmlList)
         ]
 }
 
@@ -429,6 +434,12 @@ const setElementTag = {
             },
             'video': {
                 parentTag: "VID" 
+            },
+            "codelisting":{
+                parentTag: "BCE" 
+            },
+            "authoredtext":{
+                parentTag: "MML" 
             }
         }
     }
