@@ -28,6 +28,7 @@ import { MULTIPLE_LINE_POETRY_ERROR_POPUP } from '../constants/Action_Constants'
 import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER } from '../component/SlateWrapper/SlateWrapperConstants.js';
 import { conversionElement } from './Sidebar/Sidebar_Action';
 import elementList from './Sidebar/elementTypes';
+import { utils } from 'sortablejs';
 
 let context = {};
 let clickedX = 0;
@@ -133,9 +134,9 @@ export class TinyMceEditor extends Component {
                     if (e.originalEvent && e.originalEvent.command === "mceInsertContent") {
                         let specialCharSpan = document.getElementById('specialChar');
                         if (specialCharSpan) {
-                            if(this.props.element && this.props.element.type === 'element-blockfeature' && this.props.element.elementdata && this.props.element.elementdata.type !=="pullquote"){
+                            if (this.props.element && this.props.element.type === 'element-blockfeature' && this.props.element.elementdata && this.props.element.elementdata.type !== "pullquote") {
                                 specialCharSpan.remove();
-                            } else{
+                            } else {
                                 specialCharSpan.outerHTML = specialCharSpan.innerHTML;
                             }
                             e.preventDefault();
@@ -318,8 +319,17 @@ export class TinyMceEditor extends Component {
     editorExecCommand = (editor) => {
         editor.on('ExecCommand', (e) => {
             let range = editor.selection.getRng();
-            let content = e.target.getContent()
+            let content = e.target.getContent();
+            let selectContent = editor.selection.getContent();
             let node = editor.selection.getNode();
+            let nodeName = node ? node.tagName.toLowerCase() : null;
+            let dataURI = null;
+            if (nodeName === 'dfn') {
+                dataURI = node.getAttribute('data-uri');
+            }
+            let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
+            let sel = window.getSelection();
+            let tempRange = sel.getRangeAt(0);
             if (this.props.element.type === 'stanza') {
                 if (editor.selection.getNode().tagName.toLowerCase() !== 'span' || editor.selection.getNode().className.toLowerCase() !== 'poetryLine') {
                     node = editor.selection.getNode().closest('.poetryLine');
@@ -345,8 +355,36 @@ export class TinyMceEditor extends Component {
                 spanHandlers.handleFormattingTags(editor, this.props.elementId, 'code', codeParent, 'codeNoHighlightLine', range);
             }
             if (this.props.element && this.props.element.type === 'element-blockfeature') {
-                if(node && node.className === 'blockquoteTextCredit') {
+                if (node && node.className === 'blockquoteTextCredit') {
                     setFormattingToolbar('disableTinymceToolbar')
+                }
+            }
+            if (e.command === 'mceToggleFormat' && e.value === 'italic') {
+                let parser = new DOMParser();
+                let htmlDoc = parser.parseFromString(selectContent, 'text/html');
+                let dfnTags = htmlDoc.getElementsByTagName('DFN');
+                if ((nodeName && nodeName === 'dfn') || dfnTags.length) {
+                    let dfnAttribute = [];
+                    if (nodeName && nodeName === 'dfn') {
+                        dfnAttribute.push(dataURI);
+                    } else {
+                        for (let index = 0; index < dfnTags.length; index++) {
+                            dfnAttribute.push(dfnTags[index].getAttribute('data-uri'));
+                        }
+                    }
+                    for (let index = 0; index < dfnAttribute.length; index++) {
+                        let dfn = activeElement.querySelector(`dfn[data-uri="${dfnAttribute[index]}"]`);
+                        let emTag = dfn.closest('em');
+                        if (emTag) {
+                            dfn.innerHTML = '<em>' + dfn.innerHTML + '</em>'
+                            if (emTag.textContent === dfn.textContent) {
+                                let innerHTML = emTag.innerHTML;
+                                emTag.outerHTML = innerHTML;
+                            } else {
+                                spanHandlers.splitOnTag(emTag.parentNode, dfn);
+                            }
+                        }
+                    }
                 }
             }
 
@@ -552,12 +590,12 @@ export class TinyMceEditor extends Component {
                 case 'mceToggleFormat':
                     if (e.value === "superscript") {
                         let selectedElement = editor.selection.getNode();
-                        if(selectedElement.tagName.toLowerCase() !== 'sup' && selectedElement.tagName.toLowerCase() !== 'a') {
+                        if (selectedElement.tagName.toLowerCase() !== 'sup' && selectedElement.tagName.toLowerCase() !== 'a') {
                             let innerHTML = selectedElement.textContent;
                             let regExp = /[a-zA-Z0-9]/g;
-                            if(!regExp.test(innerHTML) && selectedElement.lastChild.tagName && selectedElement.lastChild.tagName === 'SUP') {
+                            if (!regExp.test(innerHTML) && selectedElement.lastChild.tagName && selectedElement.lastChild.tagName === 'SUP') {
                                 let anchorElement = selectedElement.lastChild.getElementsByTagName('A');
-                                if(anchorElement.length) {
+                                if (anchorElement.length) {
                                     selectedElement = anchorElement[0];
                                 }
                             }
@@ -665,6 +703,12 @@ export class TinyMceEditor extends Component {
          */
         else if (e.target.nodeName == "DFN" || e.target.closest("dfn")) {
             let uri = e.target.dataset.uri;
+            if (e.target.nodeName == "DFN") {
+                uri = e.target.dataset.uri;
+            } else {
+                let parent = e.target.closest("dfn");
+                uri = parent.getAttribute('data-uri');
+            }
             this.glossaryBtnInstance.setDisabled(true)
             if (alreadyExist) {
                 cbFunc = () => {
@@ -1967,7 +2011,7 @@ export class TinyMceEditor extends Component {
             } else {
                 let chindNodes = selectedElement.childNodes;
                 if (chindNodes.length) {
-                    if (chindNodes[0].nodeType === Node.TEXT_NODE && ( chindNodes[0].parentElement && chindNodes[0].parentElement.nodeName.toLocaleLowerCase()!=='sup')) {
+                    if (chindNodes[0].nodeType === Node.TEXT_NODE && (chindNodes[0].parentElement && chindNodes[0].parentElement.nodeName.toLocaleLowerCase() !== 'sup')) {
                         endPosition = false;
                     }
                 }
@@ -2025,7 +2069,7 @@ export class TinyMceEditor extends Component {
                     let liInnerHtml = liNode[0].innerHTML;
                     liInnerHtml = '<span id="footnote-attacher"></span>' + liInnerHtml;
                     liNode[0].innerHTML = liInnerHtml;
-                } else{
+                } else {
                     editor.selection.setContent('<span id="footnote-attacher"></span>');
                 }
             }
@@ -2822,7 +2866,7 @@ export class TinyMceEditor extends Component {
                     this.removeBogusTagsFromDom();
                     this.removeAttributionBr();
                 }
-                if (this.footnoteGlossaryProgress &&  clickedX !== 0 && clickedY !== 0) {  
+                if (this.footnoteGlossaryProgress && clickedX !== 0 && clickedY !== 0) {
                     this.footnoteGlossaryProgress = false;
                     const timer = setInterval(()=>{
                         if(!config.isGlossarySaving){
@@ -2831,7 +2875,7 @@ export class TinyMceEditor extends Component {
                                 tinymce.activeEditor.selection.placeCaretAt(clickedX, clickedY) //Placing exact cursor position on clicking.
                             }
                         }
-                    },10)
+                    }, 10)
                 }
             })
         });
@@ -3005,7 +3049,7 @@ export class TinyMceEditor extends Component {
 
         return hiddenBlock;
     }
-    
+
 
     processBlockquoteHtml = (model, element, lockCondition) => {
 
