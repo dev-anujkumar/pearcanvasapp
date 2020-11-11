@@ -57,6 +57,10 @@
     right: -16px;
 }
 
+.elemDiv-expand.paste-button-wrapper {
+    bottom: 0;
+}
+
 
 .dropbtn {
     background-color: #3498DB;

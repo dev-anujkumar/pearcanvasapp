@@ -45,14 +45,17 @@ import ElementPoetryStanza from '../ElementPoetry/ElementPoetryStanza.jsx';
 import MultiColumnContext from "./MultiColumnContext.js"
 import MultiColumnContainer from "../MultiColumnElement"
 import {handleTCMData} from '../TcmSnapshots/TcmSnapshot_Actions.js';
-import CopyUrn from '../CopyUrn';
-import { OnCopyContext } from '../CopyUrn/copyUtil.js'
+import CutCopyDialog from '../CutCopyDialog';
+import { OnCopyContext } from '../CutCopyDialog/copyUtil.js'
+import { setSelection } from '../CutCopyDialog/CopyUrn_Action.js';
 import { openElmAssessmentPortal, checkAssessmentStatus, resetAssessmentStore } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
-import { handleElmPortalEvents } from '../ElementContainer/AssessmentEventHandling.js';
+import {handleElmPortalEvents} from '../ElementContainer/AssessmentEventHandling.js';
 import { checkFullElmAssessment, checkEmbeddedElmAssessment } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 import { setScroll } from './../Toolbar/Search/Search_Action.js';
 import { SET_SEARCH_URN, SET_COMMENT_SEARCH_URN } from './../../constants/Search_Constants.js';
 import { ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, SECONDARY_SINGLE_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
+import elementTypes from './../Sidebar/elementTypes.js';
+
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -1429,9 +1432,22 @@ class ElementContainer extends Component {
             searched = 'searched';
         }
 
+        let selection = '';
+        let selectionOverlay = '';
+        if(this.props.elementSelection && Object.keys(this.props.elementSelection).length > 0 &&
+            'element' in this.props.elementSelection && element.id === this.props.elementSelection.element.id &&
+            'activeAnimation' in this.props.elementSelection && this.props.elementSelection.activeAnimation) {
+            selection = 'copy';
+            if('operationType' in this.props.elementSelection && this.props.elementSelection.operationType === 'cut') {
+                selection = 'cut';
+                selectionOverlay = <div className="element-Overlay disabled"></div>;
+            }
+        }
+
+        const inContainer = this.props.parentUrn ? true : false
         return (
-            <div className={`editor ${searched}`} data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
-                {this.state.showCopyPopup && <CopyUrn elementId={this.props.element.id} toggleCopyMenu={this.toggleCopyMenu} copyClickedX={this.copyClickedX} copyClickedY={this.copyClickedY} />}
+            <div className={`editor ${searched} ${selection}`} data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
+                {this.renderCopyComponent(this.props, index, inContainer)}
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                     <Button type="element-label" btnClassName={`${btnClassName} ${isQuadInteractive} ${this.state.isOpener ? ' ignore-for-drag' : ''}`} labelText={labelText} copyContext={(e)=>{OnCopyContext(e,this.toggleCopyMenu)}} onClick={(event) => this.labelClickHandler(event)} />
                     {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && config.slateType !== 'assessment' ? (<Button type="delete-element" onClick={(e) => this.showDeleteElemPopup(e,true)} />)
@@ -1441,7 +1457,7 @@ class ElementContainer extends Component {
                 </div>
                     : ''}
                 <div className={`element-container ${labelText.toLowerCase()=="2c"? "multi-column":labelText.toLowerCase()} ${borderToggle}`} data-id={element.id} onFocus={() => this.toolbarHandling('remove')} onBlur={() => this.toolbarHandling('add')} onClick = {(e)=>this.handleFocus("","",e,labelText)}>
-                    {elementOverlay}{bceOverlay}{editor}
+                    {selectionOverlay}{elementOverlay}{bceOverlay}{editor}
                 </div>
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                     {permissions && permissions.includes('notes_adding') && <Button type="add-comment" btnClassName={btnClassName} onClick={(e) => this.handleCommentPopup(true, e)} />}
@@ -1474,6 +1490,72 @@ class ElementContainer extends Component {
         );
     }
 
+    /**
+     * Renders the Cut/Copy Urn/element dialog menu
+     * @param {*} _props 
+     * @param {*} index 
+     * @param {*} inContainer 
+     */
+    renderCopyComponent = (_props, index, inContainer) => {
+        if (this.state.showCopyPopup) {
+            return (
+                <CutCopyDialog 
+                    userRole={_props.userRole}
+                    index={index}
+                    inContainer={inContainer}
+                    setElementDetails={this.setElementDetails}
+                    element={_props.element}
+                    toggleCopyMenu={this.toggleCopyMenu}
+                    copyClickedX={this.copyClickedX} 
+                    copyClickedY={this.copyClickedY} 
+                />
+            )
+        }
+        return null
+    }
+    
+    /**
+     * Sets element details to store
+     * @param {*} elementDetails Element details along with type of operation (Cut/Copy)
+     */
+    setElementDetails = (elementDetails) => {
+        let { parentUrn, asideData, element, poetryData } = this.props;
+        let { id, type, contentUrn } = element;
+        let index = this.props.index;
+        let inputType = '';
+        let inputSubType = '';
+
+        if(!parentUrn) {
+            parentUrn = {
+                manifestUrn: config.slateManifestURN,
+                contentUrn: config.slateEntityURN
+            }
+        }
+
+        if('activeElement' in this.props && Object.keys(this.props.activeElement).length > 0 && 'elementType' in this.props.activeElement &&
+            'primaryOption' in this.props.activeElement && 'secondaryOption' in this.props.activeElement) {
+            let { elementType, primaryOption, secondaryOption } = this.props.activeElement;
+            inputType = elementTypes[elementType][primaryOption]['enum'] || '';
+            inputSubType = elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'] || '';
+        }
+        if (elementDetails.element && elementDetails.element.type === "element-list") {
+            elementDetails.element.html.text = elementDetails.element.html.text.replace(/counter-increment:section/g, "counter-increment: section")
+        }
+        const detailsToSet = { 
+            ...elementDetails,
+            sourceSlateManifestUrn: config.slateManifestURN,
+            sourceSlateEntityUrn: config.slateEntityURN,
+            deleteElm: { id, type, parentUrn, asideData, contentUrn, index, poetryData},
+            inputType,
+            inputSubType
+            //type: enum type to be included
+        }
+        console.log("Element Details action to be dispatched from here", detailsToSet)
+
+        /** Dispatch details to the store */
+        this.props.setSelection(detailsToSet);
+    }
+    
     /**
      * @description - This function is for handling the closing and opening of popup.
      * @param {event} popup
@@ -1669,6 +1751,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         setScroll: (type) => {
             dispatch(setScroll(type))
+        },
+        setSelection: (params) => {
+            dispatch(setSelection(params))
         }
     }
 }
@@ -1692,7 +1777,8 @@ const mapStateToProps = (state) => {
         commentSearchParent: state.commentSearchReducer.parentId,
         commentSearchScroll: state.commentSearchReducer.scroll,
         commentSearchScrollTop: state.commentSearchReducer.scrollTop,
-        currentSlateAncestorData : state.appStore.currentSlateAncestorData
+        currentSlateAncestorData : state.appStore.currentSlateAncestorData,
+        elementSelection: state.selectionReducer.selection
     }
 }
 

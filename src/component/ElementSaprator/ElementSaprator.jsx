@@ -118,6 +118,25 @@ export function ElementSaprator(props) {
         }
     }
 
+    const renderPasteButton = (separatorProps) => {
+        const allowedRoles = ["admin", "manager", "edit", "default_user"];
+        if (!(props.asideData || props.parentUrn) && allowedRoles.includes(props.userRole)) {
+            return (
+                <div className="elemDiv-expand paste-button-wrapper">
+                    <Tooltip direction='left' tooltipText='Paste element'>
+                        <Button type="paste" onClick={() => pasteElement(separatorProps)} />
+                    </Tooltip>
+                </div>
+            )
+        }
+        return null  
+    }
+
+    let pasteRender = false;
+    if(props.elementSelection && Object.keys(props.elementSelection).length > 0) {
+        pasteRender = true;
+    }
+    
     return (
         <div className={showClass ? 'elementSapratorContainer opacityClassOn ignore-for-drag' : 'elementSapratorContainer ignore-for-drag'}>
             <div className='elemDiv-split' onClickCapture={(e) => props.onClickCapture(e)}>
@@ -127,6 +146,7 @@ export function ElementSaprator(props) {
             <div className='elemDiv-hr'>
                 <hr className='horizontalLine' />
             </div>
+            {pasteRender ? renderPasteButton(props) : ''}
             <div className='elemDiv-expand'>
                 <div className="dropdown" ref={buttonRef}>
                     <Tooltip direction='left' tooltipText='Element Picker'>
@@ -319,8 +339,19 @@ function typeOfContainerElements(elem, props) {
     
 }
 
+export const pasteElement = (separatorProps) => {
+    const index = separatorProps.index;
+    const firstOne = separatorProps.firstOne || false;
+    const insertionIndex = firstOne ? index : index + 1
+    const pasteFnArgs = {
+        index: insertionIndex
+    }
+    separatorProps.pasteElement(pasteFnArgs)
+}
+
 const mapStateToProps = (state) => ({
-    setSlateParent :  state.appStore.setSlateParent
+    setSlateParent :  state.appStore.setSlateParent,
+    elementSelection: state.selectionReducer.selection
 })
 
 export default connect(mapStateToProps, {})(ElementSaprator)
