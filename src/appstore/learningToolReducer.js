@@ -1,30 +1,30 @@
 import {LT_API_RESULT,
     LT_API_RESULT_FAIL,
     SELECTED_FIGURE,
-    PAGINATION,
     LEARNING_TOOL_DIS_VALUE,
     TOGGLE_LT_POPUP,
     GET_DISCIPLINE,
     REMOVE_SELECTED_DATA,
     GET_DISCIPLINE_FAIL,
-    LT_TYPE_FILTER_SELECTED
+    LT_TYPE_FILTER_SELECTED,
+    GET_LEARNING_SYSTEMS,
+    SET_LT_LA_SEARCH_LOADING
   } from '../constants/Action_Constants';
 
 const INITIAL_STATE = {
     shouldHitApi : false,
-    learningToolTypeValue : '',
     apiResponse : [],
-    showErrorMsg : true, //should be false
     showLTBody : false,
-    learningTypeSelected : false,
     showDisFilterValues : false,
     selectedResultFormApi : '',
     resultIsSelected : false,
     toggleLT : false,
     linkButtonDisable : true,
     apiResponseForDis : [],
-    learningToolDisValue : '',
-    numberOfRows : 25
+    learningSystems:[],
+    showTypeFilterValues: false,
+    learningToolDisValue:"",
+    errorFlag: false
 };
 
 const INITIAL_ACTION = {
@@ -37,41 +37,35 @@ export default function learningToolReducer (state = INITIAL_STATE, action = INI
         case LT_TYPE_FILTER_SELECTED :
             return {
                 ...state,
-                shouldHitApi : action.payload.shouldHitApi,
-                learningToolTypeValue : action.payload.learningToolTypeValue,
+                shouldHitApi : action.payload.shouldHitApi
         }
         case LT_API_RESULT :
             return {
                 ...state,
                 selectedResultFormApi : '',
-                apiResponse : action.payload.apiResponse.filter((value, index, array) => {
+                apiResponse: action.payload.apiResponse.filter((value, index, array) => {
                     let tempDisToMatchArray = value.disciplines.en;
-                    if(state.learningToolDisValue !==''){
+                    if (state.learningToolDisValue !== '') {
                         let temp1 = tempDisToMatchArray.indexOf(state.learningToolDisValue.toLowerCase());
-                        // if (temp1 >= 0) {
-                        //     return true
-                        // } else {
-                        //     return false
-                        // }
                         return temp1 >= 0;
-                    }else{
+                    } else {
                         return true;
                     }
- 
                 }),
                 showDisFilterValues : action.payload.showDisFilterValues,
                 showLTBody : action.payload.showLTBody,
-                learningTypeSelected : action.payload.learningTypeSelected,
                 linkButtonDisable : true,
-                learningToolTypeValue : action.payload.learningToolTypeValue
+                errorFlag: action.payload.errorFlag,
+                searchLoading : action.payload.searchLoading
         }
         case LT_API_RESULT_FAIL :
             return {
                 ...state,
-                showErrorMsg : true,
-                showDisFilterValues : action.payload.showDisFilterValues
+                errorFlag: action.payload.errorFlag,
+                showLTBody: action.payload.showLTBody,
+                searchLoading : action.payload.searchLoading
         }
-        case SELECTED_FIGURE: {                 //Selected Figure name
+        case SELECTED_FIGURE: {
             return {
                 ...state,
                 selectedResultFormApi : action.payload.selectedFigure,
@@ -109,17 +103,24 @@ export default function learningToolReducer (state = INITIAL_STATE, action = INI
 
             }
         }
-        case PAGINATION: {                
-            return {
-                ...state,
-                numberOfRows : action.payload.numberOfRows,
-            }
-        }
-        case REMOVE_SELECTED_DATA: {                 //Selected Figure name
+        case REMOVE_SELECTED_DATA: {
             return {
                 ...state,
                 selectedResultFormApi : "",
              
+            }
+        }        
+        case GET_LEARNING_SYSTEMS: {                
+            return {
+                ...state,
+                learningSystems : action.payload.learningSystems
+            }
+        }
+        case SET_LT_LA_SEARCH_LOADING: {
+            return {
+                ...state,
+                showLTBody: action.payload.showLTBody,
+                searchLoading : action.payload.searchLoading
             }
         }
         default :

@@ -213,7 +213,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         let currentParentData = JSON.parse(JSON.stringify(parentData));
         let currentSlateData = currentParentData[config.slateManifestURN];
         /** [PCAT-8289] -------------------------------- TCM Snapshot Data handling ----------------------------------*/
-        if (elementType.indexOf(oldElementData.type) !== -1 && showHideObj == undefined) {
+        if (elementType.indexOf(oldElementData.type) !== -1 && (showHideObj == undefined || showHideObj == "")) {
             let elementConversionData ={
                 currentSlateData:{
                     status: currentSlateData.status,
@@ -329,6 +329,12 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             altText,
             longDesc
         };
+        if(newElementData.primaryOption=='primary-blockcode-equation'){
+            activeElementObject.numbered= res.data.figuredata.numbered
+          activeElementObject.startNumber= res.data.figuredata.startNumber
+           activeElementObject.syntaxhighlighting= res.data.figuredata.syntaxhighlighting
+            
+        }
         dispatch({
             type: FETCH_SLATE_DATA,
             payload: store
@@ -362,17 +368,17 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     
     .catch(err =>{
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
-        console.log("Conversion Error >> ",err)
         dispatch({type: ERROR_POPUP, payload:{show: true}})
         config.conversionInProcess = false
         config.savingInProgress = false
         config.isSavingElement = false
+        console.error("Conversion Error >> ",err)
     })
 }
 catch (error) {
-    console.log(error)
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
     dispatch({type: ERROR_POPUP, payload:{show: true}})
+    console.error(error)
 }
 }
 function prepareDataForConversionTcm(updatedDataID, getState, dispatch,versionid, resData) {
@@ -547,4 +553,14 @@ export const conversionElement = (elementData, fromToolbar) => (dispatch, getSta
     } else {
         return false;
     }
+}
+
+export const setBCEMetadata = (attribute,value) => (dispatch, getState) => {
+    let activeElement =  getState().appStore.activeElement;
+    activeElement[attribute]=value
+    dispatch({
+        type: SET_ACTIVE_ELEMENT,
+        payload: activeElement
+    });
+
 }

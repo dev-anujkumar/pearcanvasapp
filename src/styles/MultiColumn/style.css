@@ -86,6 +86,9 @@
 .container-multi-column-group.text-width-60-40.column-1 {
     width: 40%;
 }
+.container-multi-column-group.wider-50-50 .singleAssessment_Dropdown_Container , .container-multi-column-group.wider-60-40 .singleAssessment_Dropdown_Container {
+    height: max-content;
+}
 
 /***************************** 50-50 *****************************************/
 /***** C1 & C2 *******/
@@ -109,6 +112,11 @@
 .container-multi-column-group.wider-50-50 .slate_assessment_type_dropdown_options, .container-multi-column-group.text-width-50-50 .slate_assessment_type_dropdown_options {
     width: 90%;
     height: 180px;
+}
+
+.container-multi-column-group.wider-50-50 .single-assessment-elm-update-container .elm-update-button.embedded-assessment{
+
+    margin-top: 10px;
 }
 /***************/
 
@@ -137,6 +145,22 @@
     max-width: 88%;
 }
 
+/* For single asessment Elm Status Div */
+.container-multi-column-group.wider-50-50 .single-assessment-usagetype-container,.container-multi-column-group.wider-60-40.column-0 .single-assessment-usagetype-container {
+    display: flex;
+}
+
+.container-multi-column-group.wider-50-50 .single-assessment-elm-update-container,.container-multi-column-group.wider-60-40.column-0 .single-assessment-elm-update-container {
+    text-align: center;
+    display: flex;
+    margin-top: 5px;
+}
+.container-multi-column-group.wider-50-50 .single-assessment-elm-update-container .elm-status-div.embedded-assessment,
+.container-multi-column-group.wider-50-50 .single-assessment-elm-update-container .elm-update-button.embedded-assessment,
+.container-multi-column-group.wider-60-40.column-0 .single-assessment-elm-update-container .elm-status-div.embedded-assessment,
+.container-multi-column-group.wider-60-40.column-0 .single-assessment-elm-update-container .elm-update-button.embedded-assessment {
+    margin: 5px auto;
+}
 /************/
 
 /***** C2 *****/
@@ -144,6 +168,29 @@
 .container-multi-column-group.wider-60-40.column-1 .singleAssessment_Dropdown_SelectLabel {
     width: 20%;
     margin-bottom: 10px;
+}
+
+/* For single asessment Elm Status Div */
+.container-multi-column-group.wider-50-50 .singleAssessment_Dropdown_activeDropdown.isElmUpdate,.container-multi-column-group.wider-60-40.column-1 .singleAssessment_Dropdown_activeDropdown.isElmUpdate {
+    margin-right: 0px;
+}
+
+.container-multi-column-group.wider-60-40.column-1 .single-assessment-elm-update-container.has-update {
+    display: block;
+}
+.container-multi-column-group.wider-60-40.column-1 .single-assessment-elm-update-container {
+    display: inline-block;
+    text-align: center;
+    margin-top: 5px;
+}
+
+.container-multi-column-group.wider-60-40.column-1 .single-assessment-elm-update-container .elm-status-div.embedded-assessment,
+.container-multi-column-group.wider-60-40.column-1 .single-assessment-elm-update-container .elm-update-button.embedded-assessment {
+    margin: 5px auto;
+}
+.container-multi-column-group.wider-50-50 .single-assessment-elm-update-container .elm-update-button.embedded-assessment,
+.container-multi-column-group.wider-60-40.column-1 .single-assessment-elm-update-container .elm-update-button.embedded-assessment {
+    width: 85%;
 }
 
 /* For single asessment dropdown */

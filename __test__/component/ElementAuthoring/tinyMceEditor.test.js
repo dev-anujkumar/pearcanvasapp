@@ -2961,6 +2961,120 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
             instance.editorKeyup(nextEditor);
             expect(spyeditorKeyup).toHaveBeenCalled()
         });
+        it('Test-28.3.3-Method--26--editorKeyup-BlankLine Element-KeyCode=37',()=>{
+            let event = {
+                preventDefault: () => { },
+                stopPropagation: () => { },
+                type: 'keyup',
+                which: 37
+            }
+            let nextEditor = {
+                on: (temp, cb) => { cb(event) },
+                targetElm: {
+                    findChildren: () => {
+                        return {
+                            length: 0
+                        };
+                    },
+                    dispatchEvent: () => { }
+                },
+                selection: { getNode : ()=>{ return {closest : ()=>{},tagName : 'span'}}, getStart : jest.fn(), setCursorLocation: jest.fn() },
+                dom: {
+                    getParent: () => {
+                        return {
+                            innerHTML: '<span class="bce place-holder">SampleCode</span>',
+                            children: [
+                                {
+                                    tagName: 'DIV'
+                                }
+                            ],
+                            innerText: "hello",
+                            querySelectorAll: jest.fn(),
+                            classList: {
+                                remove: jest.fn(),
+                                contains: jest.fn(),
+                            },
+                            nodeName: "DIV"
+
+                        }
+                    }
+                },
+                children: ['<code class="bce place-holder">hello<ol></code>'],
+                classList: ["cypress-editable", "mce-content-body", "mce-edit-focus", 'place-holder']
+            }
+            component.setProps({
+                ...props,
+                permissions: ["login", "logout"],
+                tagName: "SPAN",
+                elementId: "work:urn",
+                element: {
+                    "type": "stanza"
+                },
+                model: {},
+                placeholder: "",
+            })
+            component.update();
+            const spyeditorKeyup = jest.spyOn(instance, 'editorKeyup')
+            instance.editorKeyup(nextEditor);
+            expect(spyeditorKeyup).toHaveBeenCalled();
+        });
+        it('Test-28.3.4-Method--26--editorKeyup-BlankLine Element-KeyCode=39',()=>{
+            let event = {
+                preventDefault: () => { },
+                stopPropagation: () => { },
+                type: 'keyup',
+                which: 39
+            }
+            let nextEditor = {
+                on: (temp, cb) => { cb(event) },
+                targetElm: {
+                    findChildren: () => {
+                        return {
+                            length: 0
+                        };
+                    },
+                    dispatchEvent: () => { }
+                },
+                selection: { getNode : ()=>{ return {closest : ()=>{},tagName : 'span'}}, getStart : jest.fn(), setCursorLocation: jest.fn() },
+                dom: {
+                    getParent: () => {
+                        return {
+                            innerHTML: '<span class="bce place-holder">SampleCode</span>',
+                            children: [
+                                {
+                                    tagName: 'DIV'
+                                }
+                            ],
+                            innerText: "hello",
+                            querySelectorAll: jest.fn(),
+                            classList: {
+                                remove: jest.fn(),
+                                contains: jest.fn(),
+                            },
+                            nodeName: "DIV"
+
+                        }
+                    }
+                },
+                children: ['<code class="bce place-holder">hello<ol></code>'],
+                classList: ["cypress-editable", "mce-content-body", "mce-edit-focus", 'place-holder']
+            }
+            component.setProps({
+                ...props,
+                permissions: ["login", "logout"],
+                tagName: "SPAN",
+                elementId: "work:urn",
+                element: {
+                    "type": "stanza"
+                },
+                model: {},
+                placeholder: "",
+            })
+            component.update();
+            const spyeditorKeyup = jest.spyOn(instance, 'editorKeyup')
+            instance.editorKeyup(nextEditor);
+            expect(spyeditorKeyup).toHaveBeenCalled();
+        });
     });
     describe('Test-29-Method--27--editorKeydown', () => {
         it('Test-29.1-Method--27--editorKeydown-Other Elements-keyCode:9', () => {

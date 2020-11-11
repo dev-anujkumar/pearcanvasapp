@@ -31,7 +31,7 @@ import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 import { checkAssessmentStatus , resetAssessmentStore } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import { getContainerData } from './../Toolbar/Search/Search_Action.js';
 
-const findElementType = (element, index) => {
+export const findElementType = (element, index) => {
     let elementType = {};
     elementType['tag'] = '';
     let altText = "";
@@ -132,12 +132,14 @@ const findElementType = (element, index) => {
                         break;
                     case "interactive":
                         altText = element.figuredata.alttext ? element.figuredata.alttext : "";
+                        longDesc = element.figuredata.longdescription ? element.figuredata.longdescription : ""
                         let interactiveFormat = element.figuredata.interactiveformat;
                         let interactiveData = (interactiveFormat == "mmi" || interactiveFormat == ELM_INT) ? element.figuredata.interactiveformat : element.figuredata.interactivetype;
                         elementType = {
                             elementType: elementDataBank[element.type][element.figuretype]["elementType"],
                             primaryOption: elementDataBank[element.type][element.figuretype][interactiveData]["primaryOption"],
                             altText,
+                            longDesc,
                             ...elementDataBank[element.type][element.figuretype][interactiveData]
                         }
                         break;
@@ -766,7 +768,7 @@ export const fetchAuthUser = () => dispatch => {
 		document.cookie = (userInfo.lastName)?`LAST_NAME=${userInfo.lastName};path=/;`:`LAST_NAME=;path=/;`;
     })
         .catch(err => {
-            console.log('axios Error', err);
+            console.error('axios Error', err);
             //dispatch({type: 'FETCH_AUTH_USER_REJECTED', payload: err}) // NOt using
         })
 }
@@ -796,7 +798,6 @@ export const openPopupSlate = (element, popupId) => dispatch => {
  */
 
 export const tcmCosConversionSnapshot = () => dispatch => {
-    console.log("config", config.projectUrn)
     return axios.patch(`/cypress/trackchanges-srvr/pre-snapshot/${config.projectUrn}`, {
         headers: {
             "Content-Type": "application/json",
@@ -807,7 +808,7 @@ export const tcmCosConversionSnapshot = () => dispatch => {
         // console.log("response", response)
     })
         .catch(err => {
-            console.log('axios Error', err);
+            console.error('axios Error', err);
         })
 }
 

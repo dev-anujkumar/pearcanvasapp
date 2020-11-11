@@ -225,6 +225,9 @@ function CommunicationChannel(WrappedComponent) {
                 case 'pageNumber':
                     this.props.togglePageNumberAction()
                     break;
+                case 'GetActiveSlate':
+                    sendDataToIframe({ 'type': 'GetActiveSlate', 'message': { slateEntityURN: config.slateEntityURN } });
+                    break;
             }
         }
 

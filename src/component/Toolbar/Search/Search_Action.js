@@ -59,7 +59,7 @@ export const getContainerData = (searchTerm, deeplink = false) => {
             searchEvent.totalCount = 0;
         }
 
-        dispatch({ type: SET_SEARCH_URN, payload, parent, deeplink, scroll: false });
+        dispatch({ type: SET_SEARCH_URN, payload, parent, deeplink, scroll: false, scrollTop: 0 });
     }
 }
 
@@ -103,7 +103,7 @@ export const getCommentElements = (q) => {
             }
         }
 
-        dispatch({ type: SET_COMMENT_SEARCH_URN, payload, parent, scroll: false });
+        dispatch({ type: SET_COMMENT_SEARCH_URN, payload, parent, scroll: false, scrollTop: 0 });
     }
 }
 

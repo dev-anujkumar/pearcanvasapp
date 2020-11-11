@@ -4,7 +4,7 @@ import config from '../../config/config';
 import { matchHTMLwithRegex, removeBlankTags } from '../../constants/utility.js'
 import store from '../../appstore/store'
 import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
-
+import { findElementType } from "../CanvasWrapper/CanvasWrapper_Actions";
 const indivisualData = {
     schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
     textsemantics: [ ],
@@ -18,7 +18,9 @@ const replaceUnwantedtags = (html,flag) => {
     if(flag){
         tempDiv.innerHTML = tempDiv.innerHTML.replace(/<br>/g, "").replace(/(<sup><\/sup>)/g, "");
     }
-    return removeBlankTags(tempDiv.innerHTML);
+    tempDiv.innerHTML = removeBlankTags(tempDiv.innerHTML)
+    tempDiv.innerHTML = handleBlankLineDom(tempDiv.innerHTML)
+    return tempDiv.innerHTML;
 }
 
 /**
@@ -382,13 +384,8 @@ export const generateAssessmentData = (index, previousElementData, elementType, 
     let assessmentNodeSelector = `div[data-id='${previousElementData.id}'] figure.figureAssessment `;
     let assessmenttitle = document.querySelector(assessmentNodeSelector + '#single_assessment_title').innerText; //PCAT-6828 fixed
     let assessmentId = document.querySelector(assessmentNodeSelector + 'div.singleAssessmentIdInfo').innerText;
-    let isPuf = previousElementData && previousElementData.figuredata && previousElementData.figuredata.elementdata && (previousElementData.figuredata.elementdata.assessmentformat === "puf" || previousElementData.figuredata.elementdata.assessmentformat === "learnosity");
+    // let isPuf = previousElementData && previousElementData.figuredata && previousElementData.figuredata.elementdata && (previousElementData.figuredata.elementdata.assessmentformat === "puf" || previousElementData.figuredata.elementdata.assessmentformat === "learnosity");
     let getAsid = '';
-
-    if (isPuf) {
-        assessmenttitle = assessmenttitle.split(':')[1];
-    }
-
     let assessmenttTitleHTML = `<p>${assessmenttitle}</p>`;
     let dataToSend = {
         ...previousElementData,
@@ -400,11 +397,7 @@ export const generateAssessmentData = (index, previousElementData, elementType, 
     }
 
     dataToSend.figuredata.elementdata;
-    if (isPuf) {
-        getAsid = assessmentId && assessmentId.split(' ').length && assessmentId.split(' ')[2];
-    } else {
         getAsid = assessmentId && assessmentId.split(' ').length && assessmentId.split(' ')[1];
-    }
         let assessmentItemId = document.querySelector(assessmentNodeSelector + 'div.singleAssessmentItemIdInfo').innerText;
         let getAsItemid = assessmentItemId && assessmentItemId.split(' ')[2];
         dataToSend.figuredata.elementdata.assessmentitemid = getAsItemid ? getAsItemid : "";
@@ -539,6 +532,8 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
         case elementTypeConstant.BLOCKFEATURE:
         case elementTypeConstant.ELEMENT_LIST:
         case elementTypeConstant.POETRY_STANZA:
+            const elementTypeObj = findElementType(previousElementData, index)
+            console.log("type:::::", type)
             if (type === 'stanza') { /**Resolve PCAT- 9199 */
                 elementType = 'stanza'
             }    
@@ -548,8 +543,8 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
             innerHTML = revealTextData.innerHTML
             innerText = revealTextData.innerText
             let attributionText=tinyMCE.$(node).find('.blockquoteTextCredit').text()
-            let inputElementType=elementTypes[elementType][primaryOption]['enum'];
-            let inputElementSubType=elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'];
+            let inputElementType = elementTypes[elementTypeObj.elementType][elementTypeObj.primaryOption]['enum'];
+            let inputElementSubType = elementTypes[elementTypeObj.elementType][elementTypeObj.primaryOption]['subtype'][elementTypeObj.secondaryOption]['enum'];
             if ((attributionText.length == 0 && inputElementSubType == "MARGINALIA") || (attributionText.length == 0 && inputElementSubType == "BLOCKQUOTE")) {
                 inputElementSubType = "BLOCKQUOTE"
             }
@@ -569,7 +564,11 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                 inputType : parentElement && (parentElement.type === "popup" || parentElement.type === "citations" || parentElement.type === "showhide" && previousElementData.type === "element-authoredtext" || parentElement.type === "poetry" && previousElementData.type === "element-authoredtext") ? "AUTHORED_TEXT" : inputElementType,
                 inputSubType : parentElement && (parentElement.type == "popup" || parentElement.type === "poetry") ? "NA" : inputElementSubType
             }
-
+            console.log("dataToReturn: inputType-", dataToReturn.inputType, "inputSubType-:", dataToReturn.inputSubType)
+            console.log("elementType::" , elementType, "primaryOption:::", primaryOption)
+            console.log("CORRECT elementTypeObj.elementType::" , elementTypeObj.elementType, "primaryOption:::", elementTypeObj.primaryOption)
+            console.log("secondaryOption:::", secondaryOption)
+            console.log("CORRECT elementTypeObj.secondaryOption:::", elementTypeObj.secondaryOption)
             if(type==="stanza"){
                 dataToReturn.html.text=`<p>${innerHTML}</p>`
                 delete dataToReturn.poetrylines;
@@ -671,4 +670,13 @@ export const createOpenerElementData = (elementData, elementType, primaryOption,
         config.savingInProgress = true
     }
     return dataToReturn;
+}
+export const handleBlankLineDom = (html,replaceText)=>{
+    if(replaceText){
+        html = html.replace(/<span contenteditable="false" id="blankLine" class="answerLineContent"><br><\/span>/g,`<span contenteditable="false" id="blankLine" class="answerLineContent">${replaceText}</span>`)
+        html = html.replace(/<span contenteditable="false" id="blankLine" class="answerLineContent"><\/span>/g,`<span contenteditable="false" id="blankLine" class="answerLineContent">${replaceText}</span>`)
+        return html;
+    } else {
+        return html.replace(/<span contenteditable="false" id="blankLine" class="answerLineContent"><\/span>/g,'<span contenteditable="false" id="blankLine" class="answerLineContent"><br></span>')
+    }
 }
