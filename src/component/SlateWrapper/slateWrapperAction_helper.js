@@ -63,7 +63,7 @@ export const onPasteSuccess = async (params) => {
     }
     /**---------------------------------------------------------------------------------------------------*/
 
-    if (currentSlateData.status === 'approved') {
+    if (currentSlateData.status === 'approved' && operationType === 'copy') {
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
         sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
         return false;
