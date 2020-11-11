@@ -1502,9 +1502,9 @@ class ElementContainer extends Component {
         let index = this.props.index;
         let inputType = '';
         let inputSubType = '';
-
+        let cutCopyParentUrn ='';
         if(!parentUrn) {
-            parentUrn = {
+            cutCopyParentUrn = {
                 manifestUrn: config.slateManifestURN,
                 contentUrn: config.slateEntityURN
             }
@@ -1523,7 +1523,7 @@ class ElementContainer extends Component {
             ...elementDetails,
             sourceSlateManifestUrn: config.slateManifestURN,
             sourceSlateEntityUrn: config.slateEntityURN,
-            deleteElm: { id, type, parentUrn, asideData, contentUrn, index, poetryData},
+            deleteElm: { id, type, parentUrn, asideData, contentUrn, index, poetryData, cutCopyParentUrn},
             inputType,
             inputSubType
             //type: enum type to be included

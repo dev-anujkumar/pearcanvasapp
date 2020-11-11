@@ -29,7 +29,7 @@ export const onPasteSuccess = async (params) => {
     let elmExist = await checkElementExistence(getState().selectionReducer.selection.sourceSlateEntityUrn, getState().selectionReducer.selection.deleteElm.id);
     if('deleteElm' in getState().selectionReducer.selection && operationType === 'cut' && elmExist) {
         let deleteElm = getState().selectionReducer.selection.deleteElm;
-        dispatch(deleteElement(deleteElm.id, deleteElm.type, deleteElm.parentUrn, deleteElm.asideData, deleteElm.contentUrn, deleteElm.index, deleteElm.poetryData, getState().selectionReducer.selection.element));
+        dispatch(deleteElement(deleteElm.id, deleteElm.type, deleteElm.parentUrn, deleteElm.asideData, deleteElm.contentUrn, deleteElm.index, deleteElm.poetryData, getState().selectionReducer.selection.element,deleteElm.cutCopyParentUrn));
     }
 
     if(operationType === 'copy') {

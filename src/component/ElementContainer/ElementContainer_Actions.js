@@ -55,7 +55,7 @@ export const addComment = (commentString, elementId) => (dispatch) => {
         })
 }
 
-export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, index, poetryData, element) => (dispatch, getState) => {
+export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, index, poetryData, element, cutCopyParentUrn) => (dispatch, getState) => {
 
     const prepareDeleteRequestData = (elementType) => {
         switch (elementType) {
@@ -73,7 +73,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
             default:
                 return {
                     "projectUrn": config.projectUrn,
-                    "entityUrn": parentUrn ? parentUrn.contentUrn : config.slateEntityURN,
+                    "entityUrn": cutCopyParentUrn? cutCopyParentUrn.contentUrn: parentUrn ? parentUrn.contentUrn : config.slateEntityURN,
                     "workUrn": elmId
                 }
         }
@@ -81,7 +81,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
     if(type === 'popup'){
         dispatch(fetchPOPupSlateData(elmId, contentUrn, 0 , element, index)) 
      }
-    let elementParentEntityUrn = parentUrn && parentUrn.contentUrn || config.slateEntityURN
+    let elementParentEntityUrn = cutCopyParentUrn ? cutCopyParentUrn.contentUrn : parentUrn && parentUrn.contentUrn || config.slateEntityURN
     let _requestData = prepareDeleteRequestData(type)
     let indexToBeSent = index || "0"
     _requestData = { ..._requestData, index: indexToBeSent.toString().split('-')[indexToBeSent.toString().split('-').length - 1], elementParentEntityUrn }
