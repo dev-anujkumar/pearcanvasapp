@@ -768,7 +768,7 @@ export const fetchAuthUser = () => dispatch => {
 		document.cookie = (userInfo.lastName)?`LAST_NAME=${userInfo.lastName};path=/;`:`LAST_NAME=;path=/;`;
     })
         .catch(err => {
-            console.log('axios Error', err);
+            console.error('axios Error', err);
             //dispatch({type: 'FETCH_AUTH_USER_REJECTED', payload: err}) // NOt using
         })
 }
@@ -798,7 +798,6 @@ export const openPopupSlate = (element, popupId) => dispatch => {
  */
 
 export const tcmCosConversionSnapshot = () => dispatch => {
-    console.log("config", config.projectUrn)
     return axios.patch(`/cypress/trackchanges-srvr/pre-snapshot/${config.projectUrn}`, {
         headers: {
             "Content-Type": "application/json",
@@ -809,7 +808,7 @@ export const tcmCosConversionSnapshot = () => dispatch => {
         // console.log("response", response)
     })
         .catch(err => {
-            console.log('axios Error', err);
+            console.error('axios Error', err);
         })
 }
 

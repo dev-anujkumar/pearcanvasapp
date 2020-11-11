@@ -402,10 +402,14 @@ th ol li.listItemNumeroUnoNone:before {
 
 .figure-wrapper {
     padding-left: 10px;
-    margin-bottom: 5px;
+    margin-bottom: 9px;
 }
 .figure-wrapper  .image-figure{
-    padding:6px 0;
+    padding-top:3px;
+    display: flex;
+}
+.figure-wrapper  .image-figure-path{
+    padding-top:6px;
     display: flex;
 }
 .figure-wrapper  .image-info{
@@ -415,7 +419,7 @@ th ol li.listItemNumeroUnoNone:before {
 }
 
 .image-text{
-    width:110px;
+    width:100px;
     font-weight: 700;
     font-size:11px;
 }
