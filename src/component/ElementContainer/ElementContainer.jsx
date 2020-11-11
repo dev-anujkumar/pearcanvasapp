@@ -1516,7 +1516,9 @@ class ElementContainer extends Component {
             inputType = elementTypes[elementType][primaryOption]['enum'] || '';
             inputSubType = elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'] || '';
         }
-
+        if (elementDetails.element && elementDetails.element.type === "element-list") {
+            elementDetails.element.html.text = elementDetails.element.html.text.replace(/counter-increment:section/g, "counter-increment: section")
+        }
         const detailsToSet = { 
             ...elementDetails,
             sourceSlateManifestUrn: config.slateManifestURN,
