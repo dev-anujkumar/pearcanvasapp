@@ -43,6 +43,7 @@ const { TEXT,
 export function ElementSaprator(props) {
     const [showClass, setShowClass] = useState(false);
     const [data, setData] = useState([]);
+    const [pasteIcon, togglePaste] = useState(true);
     const [showInteractiveOption, setshowInteractiveOption] = useState({status:false,type:""});
     let propsData={data,setData,showInteractiveOption,setshowInteractiveOption,props}
     const { esProps, elementType, sectionBreak, permissions } = props
@@ -61,6 +62,10 @@ export function ElementSaprator(props) {
                 setShowClass(false)
             }
         })
+
+        if(!pasteIcon && props.elementSelection && Object.keys(props.elementSelection).length == 0) {
+            togglePaste(true);
+        }
     });
 
     /**
@@ -118,13 +123,13 @@ export function ElementSaprator(props) {
         }
     }
 
-    const renderPasteButton = (separatorProps) => {
+    const renderPasteButton = (separatorProps, type) => {
         const allowedRoles = ["admin", "manager", "edit", "default_user"];
         if (!(props.asideData || props.parentUrn) && allowedRoles.includes(props.userRole)) {
             return (
-                <div className="elemDiv-expand paste-button-wrapper">
+                <div className={`elemDiv-expand paste-button-wrapper ${(type == 'cut' && !pasteIcon) ? 'disabled' : ''}`}>
                     <Tooltip direction='left' tooltipText='Paste element'>
-                        <Button type="paste" onClick={() => pasteElement(separatorProps)} />
+                        <Button type="paste" onClick={() => pasteElement(separatorProps, togglePaste, type)} />
                     </Tooltip>
                 </div>
             )
@@ -133,8 +138,10 @@ export function ElementSaprator(props) {
     }
 
     let pasteRender = false;
+    let operationType = '';
     if(props.elementSelection && Object.keys(props.elementSelection).length > 0) {
         pasteRender = true;
+        operationType = props.elementSelection.operationType || '';
     }
     
     return (
@@ -146,7 +153,7 @@ export function ElementSaprator(props) {
             <div className='elemDiv-hr'>
                 <hr className='horizontalLine' />
             </div>
-            {pasteRender ? renderPasteButton(props) : ''}
+            {pasteRender ? renderPasteButton(props, operationType) : ''}
             <div className='elemDiv-expand'>
                 <div className="dropdown" ref={buttonRef}>
                     <Tooltip direction='left' tooltipText='Element Picker'>
@@ -339,7 +346,10 @@ function typeOfContainerElements(elem, props) {
     
 }
 
-export const pasteElement = (separatorProps) => {
+export const pasteElement = (separatorProps, togglePaste, type) => {
+    if(type == 'cut') {
+        togglePaste(false);
+    }
     const index = separatorProps.index;
     const firstOne = separatorProps.firstOne || false;
     const insertionIndex = firstOne ? index : index + 1
