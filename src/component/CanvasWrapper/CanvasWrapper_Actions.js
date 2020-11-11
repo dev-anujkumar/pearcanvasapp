@@ -31,7 +31,7 @@ import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 import { checkAssessmentStatus , resetAssessmentStore } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import { getContainerData } from './../Toolbar/Search/Search_Action.js';
 
-const findElementType = (element, index) => {
+export const findElementType = (element, index) => {
     let elementType = {};
     elementType['tag'] = '';
     let altText = "";
