@@ -330,9 +330,9 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             longDesc
         };
         if(newElementData.primaryOption=='primary-blockcode-equation'){
-            activeElementObject.numbered= res.data.figuredata.numbered || true
-          activeElementObject.startNumber= res.data.figuredata.startNumber || "1"
-           activeElementObject.syntaxhighlighting= res.data.figuredata.syntaxhighlighting || true
+            activeElementObject.numbered= res.data.figuredata.numbered
+          activeElementObject.startNumber= res.data.figuredata.startNumber
+           activeElementObject.syntaxhighlighting= res.data.figuredata.syntaxhighlighting
             
         }
         dispatch({
