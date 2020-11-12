@@ -1153,6 +1153,7 @@ class SlateWrapper extends Component {
                     showConfirmation={true}
                     assessmentClass="lock-message"
                     togglePopup={this.toggleAssessmentPopup}
+                    hideCanvasBlocker={this.props.showBlocker}
                 />
             )
         }
