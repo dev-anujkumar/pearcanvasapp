@@ -397,6 +397,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                 on: (temp, cb) => { cb(event) },
                 selection: editor.selection,
                 setContent: () => { },
+                dom : { getParent(){return }}
             }
             let setContent = jest.spyOn(nextEditor, 'setContent');
             instance.editorExecCommand(nextEditor);
@@ -416,6 +417,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                 on: (temp, cb) => { cb(event) },
                 selection: editor.selection,
                 setContent: () => { },
+                dom : { getParent(){return }}
             }
             let setContent = jest.spyOn(nextEditor, 'setContent');
             instance.editorExecCommand(nextEditor);
@@ -435,6 +437,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                 on: (temp, cb) => { cb(event) },
                 selection: editor.selection,
                 setContent: () => { },
+                dom : { getParent(){return }}
             }
             const moveToBookmark = jest.spyOn(nextEditor.selection.bookmarkManager, 'moveToBookmark');
             instance.editorExecCommand(nextEditor);
@@ -453,6 +456,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                 on: (temp, cb) => { cb(event) },
                 selection: editor.selection,
                 setContent: () => { },
+                dom : { getParent(){return }}
             }
             instance.props = {
                 ...props,
@@ -481,6 +485,37 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                 on: (temp, cb) => { cb(event) },
                 selection: editor.selection,
                 setContent: () => { },
+                dom : { getParent(){return }}
+            }
+            instance.props = {
+                ...props,
+                permissions: ["login", "logout"],
+                tagName: "CODE",
+                elementId: "work:urn",
+                element: { type: "figure", figuretype: "codelisting" }
+            }
+            component.update();
+            let mySpyFunction = jest.spyOn(instance, 'editorExecCommand');
+            instance.editorExecCommand(nextEditor);
+            expect(mySpyFunction).toHaveBeenCalled()
+            expect(instance.props.element.type).toBe('figure')
+            expect(instance.props.element.figuretype).toBe('codelisting')
+        })
+        it('Test-5.6-Method--3--editorExecCommand --For Glossary Italicizing',() => {
+            let event = {
+                target: {
+                    getContent: () => {
+                        return "Test"
+                    }
+                },
+                command: 'mceToggleFormat',
+                value: 'italic'
+            }
+            let nextEditor = {
+                on: (temp, cb) => { cb(event) },
+                selection: editor.selection,
+                setContent: () => { },
+                dom : { getParent(){return }}
             }
             instance.props = {
                 ...props,
@@ -4059,7 +4094,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                     id: "",
                     dataset: { uri: "uri" },
                     nodeName: "DFNN",
-                    closest: () => { return true; }
+                    closest: () => { return { getAttribute(){return}} }
                 },
                 type: "click",
                 clipboardData: {
