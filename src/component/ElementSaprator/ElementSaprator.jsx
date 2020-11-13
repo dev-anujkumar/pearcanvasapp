@@ -11,7 +11,6 @@ import { hasReviewerRole } from '../../constants/utility.js';
 import elementTypeConstant, { containerTypeArray } from './ElementSepratorConstants.js';
 import '../../styles/ElementSaprator/ElementSaprator.css'
 import ElementContainerType from '../ElementContainerType/ElementContainerType.jsx'
-
 const { TEXT, 
     IMAGE, 
     AUDIO, 
@@ -120,7 +119,7 @@ export function ElementSaprator(props) {
 
     const renderPasteButton = (separatorProps) => {
         const allowedRoles = ["admin", "manager", "edit", "default_user"];
-        if (!(props.asideData || props.parentUrn) && allowedRoles.includes(props.userRole)) {
+        if (!(props.asideData || props.parentUrn || config.isPopupSlate) && allowedRoles.includes(props.userRole)) {
             return (
                 <div className="elemDiv-expand paste-button-wrapper">
                     <Tooltip direction='left' tooltipText='Paste element'>
