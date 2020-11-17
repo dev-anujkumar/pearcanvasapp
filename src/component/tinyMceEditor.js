@@ -2063,14 +2063,16 @@ export class TinyMceEditor extends Component {
             elementId = this.props.elementId
             let footNoteSpan = document.getElementById('footnote-attacher');
             if (!footNoteSpan) {
-                let liNode = editor.selection.getNode().getElementsByTagName ? editor.selection.getNode().getElementsByTagName('LI') : [];
-                if (liNode.length && this.props.element && this.props.element.type === "element-list") {
+                //let liNode = editor.selection.getNode().getElementsByTagName ? editor.selection.getNode().getElementsByTagName('LI') : [];
+                //console.log('editor.selection.getNode()', editor.selection.getNode());
+                editor.selection.setContent('<span id="footnote-attacher"></span>'); //Fixing the issue BG-3561
+                /*if (liNode.length && this.props.element && this.props.element.type === "element-list") {
                     let liInnerHtml = liNode[0].innerHTML;
                     liInnerHtml = '<span id="footnote-attacher"></span>' + liInnerHtml;
                     liNode[0].innerHTML = liInnerHtml;
                 } else {
                     editor.selection.setContent('<span id="footnote-attacher"></span>');
-                }
+                }*/
             }
         }
         config.isCreateFootnote = true

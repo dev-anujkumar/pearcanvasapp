@@ -346,6 +346,7 @@ function typeOfContainerElements(elem, props) {
 }
 
 export const pasteElement = (separatorProps, togglePaste, type) => {
+    if(config.savingInProgress) return false
     if(type == 'cut') {
         togglePaste(false);
     }
