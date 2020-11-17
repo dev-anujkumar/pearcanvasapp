@@ -152,20 +152,15 @@ export class TinyMceEditor extends Component {
                             this.outerHTML = innerHtml;
                         })
                         tinymce.$('.Wirisformula').each(function () {
-                            
                             let mathformula = this.getAttribute('mathmlformula')
-                            console.log(this,"getmath",mathformula)
                             if(mathformula){
                                 let res = mathformula.substr(0, 2);
                                 let res2=mathformula.substr(2, 2);
-                                //let formulafolder=res+res2/mathformula
-                                let path='https://cite-media-stg.pearson.com/legacy_paths/wiris-dev-mathtype-cache/cache/'+res+'/'+res2+'/'+mathformula+'.png'
+                                let s3ImagePath=config.S3MathImagePath?config.S3MathImagePath:"https://cite-media-stg.pearson.com/legacy_paths/wiris-dev-mathtype-cache/cache/"
+                                let path=s3ImagePath+res+'/'+res2+'/'+mathformula+'.png'
                                 console.log("path>>>>>",path)
                                 this.setAttribute('src', path)
-                                this.removeAttribute('mathmlformula')
                             }
-                            
-                            
                             this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
                             this.naturalWidth && this.setAttribute('width', this.naturalWidth)
                         });
