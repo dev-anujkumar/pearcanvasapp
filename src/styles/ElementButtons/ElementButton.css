@@ -47,6 +47,7 @@
 
 .btn-element.split-icon,
 .btn-element.expand-icon,
+.btn-element.paste-icon,
 .btn-element.forward-nav-active,
 .btn-element.backward-nav-active,
 .btn-element.color-palette {
@@ -57,7 +58,7 @@
     background-color: transparent;
 }
 
-.split-icon,.expand-icon{
+.split-icon,.expand-icon,.paste-icon{
     padding: 0;
 }
 
@@ -83,8 +84,9 @@
     height: 28px;
 }
 
-.btn-element.expand-icon > img {
-    width: 36px;
+.btn-element.expand-icon > img,
+.btn-element.paste-icon > img {
+    width: 24px; /* 36px; */
 }
 .btn-element.close-container {
     width: 10%;
@@ -96,7 +98,7 @@
     padding: 0;
 }
 
-.expand-icon{
+.expand-icon, .paste-icon {
     width: 30px;
     height: 30px;
     left: -2px;
@@ -104,6 +106,11 @@
     cursor: pointer;
     margin-bottom: -6px;
     padding-top: 2px;
+    margin-right: -3px;
+}
+
+.paste-icon {
+    margin-right: 0;
 }
 
 .btn-element.text-elem, .image-elem, .audio-elem, .interactive-elem, .container-elem, .worked-exp-elem, .assessment-elem, .opener-elem, .section-break-elem, .metadata-anchor,.interactive-elem-button,.citation-elem,.container-elem-button, .block-text-button , .btn-element.stanza-elem, .table-editor-elem, .multi-column-group{
