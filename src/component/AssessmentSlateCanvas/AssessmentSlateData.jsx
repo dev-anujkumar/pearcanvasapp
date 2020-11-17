@@ -203,12 +203,13 @@ class AssessmentSlateData extends Component {
             title: assessmentTitle,
             usagetype: this.state.activeAssessmentUsageType
         }
-        updatedElmObj.id = latestVersionClean == true ? prevLatestWorkUrn : latestWorkUrn
+        const updatedAssessmentID = latestVersionClean == true ? prevLatestWorkUrn : latestWorkUrn;
+        updatedElmObj.id = updatedAssessmentID
         if (latestWorkUrn != this.props.assessmentSlateObj.assessmentId) {
             updatedElmObj.title = this.props.assessmentReducer[latestWorkUrn].assessmentTitle
         }
         this.props.addPufAssessment(updatedElmObj, this.state.activeAssessmentType, 'insert', () => {
-            this.props.updateAssessmentVersion(oldWorkUrn, latestWorkUrn);
+            this.props.updateAssessmentVersion(oldWorkUrn, updatedAssessmentID);
         });
         this.props.handleCanvasBlocker.disableHeader(false);
         this.props.handleCanvasBlocker.hideTocBlocker(false);

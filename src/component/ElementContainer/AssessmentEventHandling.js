@@ -1,8 +1,7 @@
 /**Import -Plugins */
 import React from 'react';
 import config from '../../config/config';
-import store from '../../appstore/store'
-// import { checkAssessmentStatus } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
+import store from '../../appstore/store';
 import { checkSlateLock } from '../../js/slateLockUtility';
 import { releaseSlateLockWithCallback, getSlateLockStatus } from '../CanvasWrapper/SlateLock_Actions';
 import { handleSlateRefresh } from '../CanvasWrapper/SlateRefresh_Actions';
