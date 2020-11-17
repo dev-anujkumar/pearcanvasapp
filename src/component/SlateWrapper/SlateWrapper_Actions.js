@@ -25,6 +25,9 @@ import { HideLoader, ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 import * as slateWrapperConstants from "./SlateWrapperConstants"
+import { onPasteSuccess, prepareDataForTcmCreate } from "./slateWrapperAction_helper"
+
+import { SET_SELECTION } from './../../constants/Action_Constants.js';
 
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
@@ -202,76 +205,6 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
     })
 }
 
-export function prepareDataForTcmCreate(type, createdElementData, getState, dispatch) {
-    let elmUrn = [];
-    const tcmData = getState().tcmReducer.tcmSnapshot;
-
-    switch(type){
-        case slateWrapperConstants.WORKED_EXAMPLE:
-        case slateWrapperConstants.CONTAINER:
-            createdElementData.elementdata.bodymatter.map((item) => {
-                if (item.type == "manifest") {
-                    item.contents.bodymatter.map((ele) => {
-                        elmUrn.push(ele.id)
-                    })
-                }
-                else {
-                    elmUrn.push(item.id)
-                }
-    
-            })
-            break;
-        case slateWrapperConstants.SECTION_BREAK:
-        case slateWrapperConstants.CITATION:
-        case slateWrapperConstants.POETRY:
-            createdElementData.contents.bodymatter.map((item) => {
-                elmUrn.push(item.id)
-            })
-            break;
-        case slateWrapperConstants.TEXT:
-        case slateWrapperConstants.ELEMENT_CITATION:
-        case slateWrapperConstants.STANZA:
-        case slateWrapperConstants.IMAGE:
-        case slateWrapperConstants.VIDEO:
-        case slateWrapperConstants.AUDIO:
-        case slateWrapperConstants.FIGURE_MML:
-        case slateWrapperConstants.BLOCKCODE:
-            elmUrn.push(createdElementData.id)
-            break;
-        case slateWrapperConstants.MULTI_COLUMN:
-            /** First Column */
-            createdElementData.groupeddata.bodymatter[0].groupdata.bodymatter.map(item => {
-                elmUrn.push(item.id)
-            })
-            /** Second Column */
-            createdElementData.groupeddata.bodymatter[1].groupdata.bodymatter.map(item => {
-                elmUrn.push(item.id)
-            })
-            break;
-        case slateWrapperConstants.POP_UP:
-            elmUrn.push(createdElementData.popupdata.postertextobject[0].id)
-            elmUrn.push(createdElementData.popupdata.bodymatter[0].id)
-            break;
-    }
-
-    elmUrn.map((item) => {
-        return tcmData.push({
-            "txCnt": 1,
-            "isPrevAcceptedTxAvailable": false,
-            "elemURN": item,
-            "feedback": null
-        })
-    })
-    if(tcmData.length > 0 ){
-        sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });}
-    dispatch({
-        type: GET_TCM_RESOURCES,
-        payload: {
-            data: tcmData
-        }
-    })
-}
-
 export const swapElement = (dataObj, cb) => (dispatch, getState) => {
     const { oldIndex, newIndex, currentSlateEntityUrn, swappedElementData, containerTypeElem, asideId, poetryId} = dataObj;
     const slateId = config.slateManifestURN;
@@ -435,6 +368,21 @@ export const handleSplitSlate = (newSlateObj) => (dispatch, getState) => {
             }
         }
     ).then(res => {
+        // Update selection store data after split
+        let selection = getState().selectionReducer.selection || {};
+        if(Object.keys(selection).length > 0 && selection.sourceSlateEntityUrn === config.slateEntityURN && selection.sourceElementIndex >= splitIndex) {
+            selection.sourceSlateEntityUrn = newSlateObj.entityUrn;
+            selection.sourceSlateManifestUrn = newSlateObj.containerUrn;
+            selection.element.slateVersionUrn = newSlateObj.containerUrn;
+
+            if('deleteElm' in selection && Object.keys(selection.deleteElm).length > 0) {
+                selection.deleteElm.cutCopyParentUrn.contentUrn = newSlateObj.entityUrn;
+                selection.deleteElm.cutCopyParentUrn.manifestUrn = newSlateObj.containerUrn;
+            }
+
+            dispatch({ type: SET_SELECTION, payload: selection });
+        }
+
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
         let parentData = getState().appStore.slateLevelData;
         let currentParentData = JSON.parse(JSON.stringify(parentData));
@@ -456,11 +404,6 @@ export const handleSplitSlate = (newSlateObj) => (dispatch, getState) => {
         dispatch({type: ERROR_POPUP, payload:{show: true}})
     })
 }
-
-/**
- * getElementPageNumber | is to get page number on pagenumber option toggle
- */
-export const getElementPageNumber = () => (dispatch) => { }
 
 /**
  * setElementPageNumber | is to set page number relative to element back to store and backend
@@ -621,7 +564,6 @@ export const setSlateEntity = (setSlateEntityParams) => (dispatch, getState) => 
     })
 }
 
-
 export const accessDenied = (value) => (dispatch, getState) => {
     dispatch({
         type: ACCESS_DENIED_POPUP,
@@ -702,4 +644,75 @@ export const pageData = (pageNumberData) => (dispatch, getState) => {
             allElemPageData : getState().appStore.allElemPageData
         }
     });
+}
+
+export const pasteElement = (params) => async (dispatch, getState) => {
+    let selection = getState().selectionReducer.selection || {};
+
+    if(Object.keys(selection).length > 0 && 'element' in selection) {
+        const {
+            index
+        } = params
+        config.currentInsertedIndex = index;
+        localStorage.setItem('newElement', 1);
+        
+    
+        let _requestData = {
+            "content": [{
+                "type": selection.element.type,
+                "index": index,
+                "inputType": selection.inputType,
+                "inputSubType": selection.inputSubType,
+                "schema": selection.element.schema,
+                "html": selection.element.html,
+                "slateVersionUrn": config.slateManifestURN
+            }]
+        };
+        try {
+
+            return await axios.post(
+                `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/slate/${config.slateEntityURN}/element/paste`,
+                JSON.stringify(_requestData),
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "PearsonSSOSession": config.ssoToken
+                    }
+                }
+            ).then(async createdElemData => {
+                if (createdElemData && createdElemData.status == '200') {
+                    let responseData = Object.values(createdElemData.data)
+                    const pasteSuccessArgs = {
+                        responseData: responseData[0],
+                        index,
+                        dispatch,
+                        getState
+                    };
+            
+                    onPasteSuccess(pasteSuccessArgs)
+                }
+            }).catch(error => {
+                //     // Element mock creation
+                //     const parentData = getState().appStore.slateLevelData;
+                //     const newParentData = JSON.parse(JSON.stringify(parentData));
+                //     const createdElementData = openerData
+                //     newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
+                //     dispatch({
+                //         type: AUTHORING_ELEMENT_CREATED,
+                //         payload: {
+                //             slateLevelData: newParentData
+                //         }
+                //     })
+                //     sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
+                //     dispatch({type: ERROR_POPUP, payload:{show: true}})
+                    console.log("API Error Response:::", error);
+                    //     if (cb) {
+                    //         cb();
+                    //     }
+            })
+        }
+        catch(error) {
+            console.log("Exceptional Error on pasting the element:::", error);
+        }
+    }
 }
