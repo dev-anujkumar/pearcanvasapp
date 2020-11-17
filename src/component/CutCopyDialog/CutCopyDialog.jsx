@@ -12,7 +12,7 @@ const CutCopyDialog = props => {
         <div style={positionStyle} className="copy-menu-container">
             <div className="copy-menu">
                 {renderCutCopyOption(props)}
-                <div className="copyUrn" onClick={(e) => { copyToClipBoard(e, props.element.id || props.element.versionUrn) }}>Copy {props.element.id.includes('work') ? 'Work' : 'Manifest'} URN</div>
+                <div className="copyUrn" onClick={(e) => { copyToClipBoard(e, props) }}>Copy {props.element.id.includes('work') ? 'Work' : 'Manifest'} URN</div>
             </div>
             
             <div className='blockerBgDiv' tabIndex="0" onClick={(e) => { hideAPOOnOuterClick(e) }}></div>
