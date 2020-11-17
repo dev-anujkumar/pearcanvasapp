@@ -157,7 +157,7 @@ export class TinyMceEditor extends Component {
                             if(mathformula){
                                 let res = mathformula.substr(0, 2);
                                 let res2=mathformula.substr(2, 2);
-                                let s3ImagePath=config.S3MathImagePath?config.S3MathImagePath:"https://cite-media-stg.pearson.com/legacy_paths/wiris-dev-mathtype-cache/cache/"
+                                let s3ImagePath=config.S3MathImagePath?config.S3MathImagePath:"https://cite-media-stg.pearson.com/legacy_paths/wiris-dev-mathtype-cache-use/cache/"
                                 let path=s3ImagePath+res+'/'+res2+'/'+mathformula+'.png'
                                 console.log("path>>>>>",path)
                                 this.setAttribute('src', path)
