@@ -6,7 +6,7 @@ import React from 'react';
 import '../../styles/PopUp/PopUp.css';
 import PropTypes from 'prop-types'
 import { SECTION_BREAK_DELETE_TEXT } from '../../constants/Element_Constants'
-import { showTocBlocker, showBlocker } from '../../js/toggleLoader';
+import { showTocBlocker, showBlocker, hideBlocker } from '../../js/toggleLoader';
 /**
 * @description - PopUp is a class based component. It is defined simply
 * to make a skeleton of PopUps.
@@ -36,6 +36,10 @@ class PopUp extends React.Component {
                 document.querySelector(".save-button").click();
             }
         });
+        if (this.props.showConfirmation) {
+            hideBlocker();
+            this.props.hideCanvasBlocker(false)
+        }
     }
     /**
     * @description - This function is to handle the buttons (save ,cancel, ok).

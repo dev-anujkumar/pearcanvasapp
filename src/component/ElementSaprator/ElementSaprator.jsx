@@ -11,7 +11,6 @@ import { hasReviewerRole } from '../../constants/utility.js';
 import elementTypeConstant, { containerTypeArray } from './ElementSepratorConstants.js';
 import '../../styles/ElementSaprator/ElementSaprator.css'
 import ElementContainerType from '../ElementContainerType/ElementContainerType.jsx'
-
 const { TEXT, 
     IMAGE, 
     AUDIO, 
@@ -125,7 +124,7 @@ export function ElementSaprator(props) {
 
     const renderPasteButton = (separatorProps, type) => {
         const allowedRoles = ["admin", "manager", "edit", "default_user"];
-        if (!(props.asideData || props.parentUrn) && allowedRoles.includes(props.userRole)) {
+        if (!(props.asideData || props.parentUrn || config.isPopupSlate) && allowedRoles.includes(props.userRole)) {
             return (
                 <div className={`elemDiv-expand paste-button-wrapper ${(type == 'cut' && !pasteIcon) ? 'disabled' : ''}`} onClickCapture={(e) => props.onClickCapture(e)}>
                     <Tooltip direction='left' tooltipText='Paste element'>
@@ -347,6 +346,7 @@ function typeOfContainerElements(elem, props) {
 }
 
 export const pasteElement = (separatorProps, togglePaste, type) => {
+    if(config.savingInProgress) return false
     if(type == 'cut') {
         togglePaste(false);
     }

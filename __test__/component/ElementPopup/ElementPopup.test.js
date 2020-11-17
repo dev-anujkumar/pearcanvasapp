@@ -8,6 +8,7 @@ import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
+import config from '../../../src/config/config.js';
 
 jest.mock('../../../src/component/tinyMceEditor.js', () => {
     return function () {
@@ -15,10 +16,9 @@ jest.mock('../../../src/component/tinyMceEditor.js', () => {
     }
 })
 const initialState = {
-    
-    appStore : {
+    appStore: {
         slateLength: '25',
-        slateLevelData : mainSlateData
+        slateLevelData: mainSlateData
     }
 }
 let store = mockStore(initialState);
@@ -39,9 +39,12 @@ describe('Testing Element Show Hide component', () => {
         handleBlur: jest.fn(),
         handleFocus: jest.fn(),
         accessDenied: jest.fn(),
-        openPopupSlate:jest.fn(),
+        openPopupSlate: jest.fn(),
         fetchSlateData: jest.fn(),
-        element: popup
+        element: popup,
+        activeElement:{
+            elementId:''
+        }
     }
     const component = mount(<Provider store={store}><ElementPopup {...props} /></Provider>)
     test('renders without crashing', () => {
@@ -58,6 +61,32 @@ describe('Testing Element Show Hide component', () => {
         elementPopupInstance.forceUpdate();
         expect(spyRenderSlatefunction).toHaveBeenCalled()
         spyRenderSlatefunction.mockClear()
+    })
+    it('componentWillUnmount should be called on unmount', () => {
+        const component = mount(<Provider store={store}><ElementPopup {...props} /></Provider>)
+        const componentWillUnmount = jest.spyOn(component.instance(), 'componentWillUnmount');
+        component.unmount();
+        expect(componentWillUnmount).toHaveBeenCalled();
+    });
+    it("handlepopupSlateClick method - if block -event ", () => {
+        const instance = component.find('ElementPopup').instance();
+        const spyhandleFocus = jest.spyOn(instance, 'handlepopupSlateClick')
+        config.popupCreationCallInProgress = false
+        config.isSavingElement = false
+        let event = {
+            target: {
+                classList: { contains:()=>{return true;}}
+            }
+        }
+        instance.handlepopupSlateClick(event);
+        expect(spyhandleFocus).toHaveBeenCalled()
+    })
+
+    it('createPopupUnit method', () => {
+        const instance = component.find('ElementPopup').instance();
+        const spycreatePopupUnit = jest.spyOn(instance, 'createPopupUnit')
+        instance.createPopupUnit(null, null, {}, "2-0", {}, null)
+        expect(spycreatePopupUnit).toHaveBeenCalled()
     })
 
 

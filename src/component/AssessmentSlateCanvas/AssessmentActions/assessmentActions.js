@@ -286,7 +286,6 @@ export const updateAssessmentVersion = (oldWorkUrn, updatedWorkUrn) => dispatch 
             dispatch(assessmentConfirmationPopup(true));
         }
     }).catch(() => {
-        console.error("Unable to update the latest workUrn for >>>>", oldWorkUrn)
         dispatch({
             type: ELM_PORTAL_API_ERROR,
             payload: {
@@ -296,6 +295,7 @@ export const updateAssessmentVersion = (oldWorkUrn, updatedWorkUrn) => dispatch 
             }
         })
         handleRefreshSlate(dispatch);
+        console.error("Unable to update the latest workUrn for >>>>", oldWorkUrn)
     })
 }
 

@@ -362,7 +362,7 @@ const reformatting = (editor) => {
             let selfInnerText = getSelfInnerText(currentLi)
             let firstChildTag = currentLi.children[0].tagName
 
-            if (selfInnerText === "" && firstChildTag !== "BR") {
+            if (selfInnerText === "" && firstChildTag !== "BR" && firstChildTag !== "IMG") {
                 let parentOl = currentLi.parentNode
                 let closestLi = parentOl.closest('li')
                 if ((closestLi.findChildren('ol').length > 0) || (closestLi.findChildren('ul').length > 0)) {
