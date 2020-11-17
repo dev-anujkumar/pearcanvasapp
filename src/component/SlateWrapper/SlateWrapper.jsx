@@ -10,7 +10,8 @@ import ElementContainer from '../ElementContainer';
 import ElementSaprator from '../ElementSaprator';
 import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
 import { SlateFooter } from './SlateFooter.jsx';
-import { createElement, swapElement, setSplittedElementIndex, updatePageNumber, accessDenied } from './SlateWrapper_Actions';
+/** pasteElement function location to be changed */
+import { createElement, swapElement, setSplittedElementIndex, updatePageNumber, accessDenied, pasteElement } from './SlateWrapper_Actions';
 import { sendDataToIframe, getSlateType } from '../../constants/utility.js';
 import { ShowLoader, SplitCurrentSlate } from '../../constants/IFrameMessageTypes.js';
 import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
@@ -907,6 +908,7 @@ class SlateWrapper extends Component {
         return (
             <>
                 <ElementSaprator
+                    userRole={_props.userRole}
                     firstOne={true}
                     index={0}
                     esProps={this.elementSepratorProps(0, true)}
@@ -916,6 +918,7 @@ class SlateWrapper extends Component {
                     openAudio={_props.openAudio}
                     onClickCapture={this.checkSlateLockStatus}
                     splithandlerfunction={this.splithandlerfunction}
+                    pasteElement={this.props.pasteElement}
                 />
             </>
         )
@@ -950,6 +953,7 @@ class SlateWrapper extends Component {
                                     {
                                         index === 0 && _slateType !== 'assessment' && config.isCO === false ?
                                             <ElementSaprator
+                                                userRole={this.props.userRole}
                                                 firstOne={index === 0}
                                                 index={index}
                                                 esProps={this.elementSepratorProps(index, true)}
@@ -959,10 +963,12 @@ class SlateWrapper extends Component {
                                                 openAudio={this.props.openAudio}
                                                 onClickCapture={this.checkSlateLockStatus}
                                                 splithandlerfunction={this.splithandlerfunction}
+                                                pasteElement={this.props.pasteElement}
                                             />
                                             : index === 0 && config.isCO === true ? <div className="noSeparatorContainer"></div> : null
                                     }
                                     <ElementContainer
+                                        userRole={this.props.userRole}
                                         openCustomPopup = {this.openCustomPopup}
                                         slateType={_slateType}
                                         element={element}
@@ -990,6 +996,7 @@ class SlateWrapper extends Component {
                                     </ElementContainer>
                                     {_slateType !== 'assessment' ?
                                         <ElementSaprator
+                                            userRole={this.props.userRole}
                                             index={index}
                                             esProps={this.elementSepratorProps(index, false)}
                                             elementType=""
@@ -1000,6 +1007,7 @@ class SlateWrapper extends Component {
                                             openAudio={this.props.openAudio}
                                             onClickCapture={this.checkSlateLockStatus}
                                             splithandlerfunction={this.splithandlerfunction}
+                                            pasteElement={this.props.pasteElement}
                                         />
                                         : null
                                     }
@@ -1319,6 +1327,7 @@ const mapStateToProps = state => {
         commentSearchScrollTop: state.commentSearchReducer.scrollTop,
         showToast: state.appStore.showToast,
         showConfirmationPopup: state.assessmentReducer.showConfirmationPopup,
+        userRole: state.appStore.roleId
     };
 };
 
@@ -1346,6 +1355,7 @@ export default connect(
         handleTCMData,
         fetchSlateData,
         assessmentConfirmationPopup,
-        getCommentElements
+        getCommentElements,
+        pasteElement
     }
 )(SlateWrapper);

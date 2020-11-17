@@ -117,7 +117,6 @@ export const SLATE_TITLE = 'Untitled'
 /*--------------- TCM Snapshot -------------------*/
 export const GET_TCM_RESOURCES = 'GET_TCM_RESOURCES'
 export const GET_TCM_STATUS_OF_PROJECT = 'GET_TCM_STATUS_OF_PROJECT'
-export const VERSIONING_SLATEMANIFEST = "VERSIONING_SLATEMANIFEST"
 export const STORE_OLD_ASSET_FOR_TCM = 'STORE_OLD_ASSET_FOR_TCM'
 
 /*--------------- Long Slate load ----------------*/
@@ -133,3 +132,7 @@ export const ELM_PORTAL_API_ERROR = "ELM_PORTAL_ERROR"
 export const ASSESSMENT_CONFIRMATION_POPUP = "ASSESSMENT_CONFIRMATION_POPUP"
 export const UPDATE_ELM_ITEM_ID = "UPDATE_ELM_ITEM_ID"
 export const SAVE_AUTO_UPDATE_ID = 'SAVE_AUTO_UPDATE_ID'
+export const VERSIONING_SLATEMANIFEST = "VERSIONING_SLATEMANIFEST"
+
+/* --------------- Selection Constants ------------------------*/
+export const SET_SELECTION = 'SET_SELECTION'
