@@ -1,8 +1,19 @@
 import React from 'react'
 import CutCopyDialog, * as cutCopyComp from "../../../src/component/CutCopyDialog/CutCopyDialog.jsx"
 import { shallow } from 'enzyme';
-// import { JSDOM } from 'jsdom'
-// global.document = (new JSDOM()).window.Element;
+import { JSDOM } from 'jsdom'
+
+global.document = (new JSDOM()).window.Element;
+global.document.execCommand = () => true
+global.document.getElementById = () => {
+    return {
+        innerText : "",
+        style: {
+            display: "block"
+        }
+    }
+}
+
 describe("CutCopyDialog - Component testing", () => {
     const props = {
         userRole: "admin",
@@ -51,7 +62,19 @@ describe("CutCopyDialog - Component testing", () => {
             expect(spyrenderCutCopyOption).toHaveBeenCalledWith(props)
             expect(spyrenderCutCopyOption).not.toHaveReturnedWith(null)
         })
-        xit("copyToClipBoard method", () => {
+        it("renderCutCopyOption method - returning null dom", () => {
+            const props1 = {
+                userRole: "reviewer",
+                element: {
+                    "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a"
+                }
+            }
+            const spyrenderCutCopyOption = jest.spyOn(cutCopyComp, "renderCutCopyOption")
+            cutCopyComp.renderCutCopyOption(props1)
+            expect(spyrenderCutCopyOption).toHaveBeenCalledWith(props1)
+            expect(spyrenderCutCopyOption).toHaveReturnedWith(null)
+        })
+        it("copyToClipBoard method", () => {
             const eventObj = {
                 stopPropagation: jest.fn()
             }
@@ -60,6 +83,15 @@ describe("CutCopyDialog - Component testing", () => {
             expect(spycopyToClipBoard).toHaveBeenCalledWith(eventObj, props)
             expect(spycopyToClipBoard).not.toHaveReturnedWith(null)
         })
-        
+        it("hideAPOOnOuterClick method", () => {
+            const eventObj = {
+                stopPropagation: jest.fn()
+            }
+            const toggleFn = jest.fn()
+            const spyhideAPOOnOuterClick = jest.spyOn(cutCopyComp, "hideAPOOnOuterClick")
+            cutCopyComp.hideAPOOnOuterClick(eventObj, toggleFn)
+            expect(spyhideAPOOnOuterClick).toHaveBeenCalledWith(eventObj, toggleFn)
+            expect(toggleFn).toHaveBeenCalled()
+        })
     })
 })

@@ -2,7 +2,8 @@ export const OnCopyContext=(e,toggleFunction,isSb)=> {
 
     if (e.currentTarget.classList.contains('activeTagBgColor')) {
         const parentPosition = getParentPosition(e.currentTarget);
-        const scrollTop = document.getElementById('slateWrapper').scrollTop;
+        const slateWrapperNode = document.getElementById('slateWrapper')
+        const scrollTop = slateWrapperNode && slateWrapperNode.scrollTop || 0;
 
         const xOffSet = isSb ? -30 : 0;
         const yOffSet = isSb ? 5 : 10
@@ -13,7 +14,7 @@ export const OnCopyContext=(e,toggleFunction,isSb)=> {
     }
 }
 
-const getParentPosition = (el) => {
+export const getParentPosition = (el) => {
     var xPos = 0;
     var yPos = 0;
 
