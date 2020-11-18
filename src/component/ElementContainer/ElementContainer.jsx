@@ -1531,7 +1531,8 @@ class ElementContainer extends Component {
                 contentUrn: config.slateEntityURN
             }
         }
-
+        cutCopyParentUrn.sourceSlateManifestUrn = config.slateManifestURN
+        cutCopyParentUrn.slateLevelData= this.props.slateLevelData
         if('activeElement' in this.props && Object.keys(this.props.activeElement).length > 0 && 'elementType' in this.props.activeElement &&
             'primaryOption' in this.props.activeElement && 'secondaryOption' in this.props.activeElement) {
             let { elementType, primaryOption, secondaryOption } = this.props.activeElement;
@@ -1778,7 +1779,8 @@ const mapStateToProps = (state) => {
         commentSearchScroll: state.commentSearchReducer.scroll,
         commentSearchScrollTop: state.commentSearchReducer.scrollTop,
         currentSlateAncestorData : state.appStore.currentSlateAncestorData,
-        elementSelection: state.selectionReducer.selection
+        elementSelection: state.selectionReducer.selection,
+        slateLevelData: state.appStore.slateLevelData
     }
 }
 

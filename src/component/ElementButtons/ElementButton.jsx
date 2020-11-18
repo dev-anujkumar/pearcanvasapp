@@ -207,7 +207,7 @@ class ElementButton extends Component {
                 </span>
                 break;
             case ButtonTypes.PASTE:
-                buttonJSX = <span className="btn-element expand-icon" onClick={clickHandlerFn}><img src={pasteIcon} /></span>
+                buttonJSX = <span className="btn-element paste-icon" onClick={clickHandlerFn}><img src={pasteIcon} /></span>
                 break;
         }
         return buttonJSX
