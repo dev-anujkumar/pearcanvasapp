@@ -1314,7 +1314,7 @@ export class TinyMceEditor extends Component {
      */
     setSpecialCharIcon = editor => {
         editor.ui.registry.addIcon(
-            "specialcharaters",
+            "specialcharacters",
             charmap
         );        
     }
@@ -1324,14 +1324,14 @@ export class TinyMceEditor extends Component {
      */
     addSpecialCharIcon = editor => {
         const self = this;
-        editor.ui.registry.addMenuButton("specialcharaters", {
+        editor.ui.registry.addMenuButton("specialcharacters", {
             text: "",
-            icon: "specialcharaters",
+            icon: "specialcharacters",
             tooltip: "Special Character",
             fetch: function (callback) {
                 var items = [{
                         type: 'menuitem',
-                        text: 'Insert Special Charater',
+                        text: 'Insert Special Character',
                         onAction: function () {
                             tinymce.activeEditor.execCommand('mceShowCharmap');
                         }
