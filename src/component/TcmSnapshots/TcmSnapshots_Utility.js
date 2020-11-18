@@ -55,11 +55,11 @@ const {
  * @param {Object} newVersionUrns - Latest  Version Urns for delete case
 */
 export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, type, newVersionUrns,index) => {
-    const { parentElement, slateManifest,popupslateManifest } = containerElement
+    const { parentElement, slateManifest,popupslateManifest,cutCopyParentUrn } = containerElement
     /** isContainer : used to set SlateType  */
     let isContainer = setSlateType(wipData,containerElement,type);
     let deleVercase = newVersionUrns ? true : false
-    let defaultKeys = config.isPopupSlate ? setDefaultKeys(actionStatus, true, true, popupslateManifest) : setDefaultKeys(actionStatus, isContainer,"",slateManifest);
+    let defaultKeys = config.isPopupSlate ? setDefaultKeys(actionStatus, true, true, popupslateManifest, cutCopyParentUrn) : setDefaultKeys(actionStatus, isContainer,"",slateManifest,cutCopyParentUrn);
     /* Tag of elements*/
     let tag = {
         parentTag: fetchElementsTag(wipData)
@@ -581,13 +581,13 @@ const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,popupInCo
  * @param {Object} action - type of action performed
  * @returns {Object} Default keys for the snapshot
 */
-export const setDefaultKeys = (actionStatus, isContainer, inPopupSlate, slatePopupManifestUrn) => {
+export const setDefaultKeys = (actionStatus, isContainer, inPopupSlate, slatePopupManifestUrn, cutCopyParentUrn) => {
     const {action,status} = actionStatus
     let tcmKeys = {}
    
     tcmKeys = {
-        slateID:  slatePopupManifestUrn ?  slatePopupManifestUrn : inPopupSlate ? config.tempSlateManifestURN:config.slateManifestURN,
-        slateUrn:   slatePopupManifestUrn ?  slatePopupManifestUrn : inPopupSlate ? config.tempSlateManifestURN:config.slateManifestURN,
+        slateID:  slatePopupManifestUrn ?  slatePopupManifestUrn : inPopupSlate ? config.tempSlateManifestURN: cutCopyParentUrn && cutCopyParentUrn.sourceSlateManifestUrn ? cutCopyParentUrn.sourceSlateManifestUrn :config.slateManifestURN,
+        slateUrn:   slatePopupManifestUrn ?  slatePopupManifestUrn : inPopupSlate ? config.tempSlateManifestURN: cutCopyParentUrn && cutCopyParentUrn.sourceSlateManifestUrn ? cutCopyParentUrn.sourceSlateManifestUrn :config.slateManifestURN,
         projectUrn: config.projectUrn,
         index: 0,
         action: action,
@@ -953,7 +953,7 @@ export const checkContainerElementVersion = async (containerElement, versionStat
         // config.tcmslatemanifest = newSlateManifest;
         containerElement.slateManifest = newSlateManifest ? newSlateManifest : config.slateManifestURN    
     }
-    if (currentSlateData.popupSlateData && currentSlateData.popupSlateData.status === 'approved') {
+    if (currentSlateData && currentSlateData.popupSlateData && currentSlateData.popupSlateData.status === 'approved') {
         let newPopupSlateManifest = await getLatestVersion(currentSlateData.popupSlateData.contentUrn);
         containerElement.popupslateManifest = newPopupSlateManifest ? newPopupSlateManifest : config.tempSlateManifestURN
         config.tcmslatemanifest = containerElement.popupslateManifest

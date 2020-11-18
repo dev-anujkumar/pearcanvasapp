@@ -26,23 +26,25 @@ export const onDeleteSuccess = (params) => {
         contentUrn,
         index,
         poetryData,
+        cutCopyParentUrn,
         fetchSlateData
     } = params
 
     sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
     const parentData = getState().appStore.slateLevelData;
     const newParentData = JSON.parse(JSON.stringify(parentData));
-
+    let cutcopyParentData=  cutCopyParentUrn && cutCopyParentUrn.slateLevelData ?  cutCopyParentUrn.slateLevelData :""
     /** [PCAT-8289] -- TCM Snapshot Data handling --*/
     const tcmDeleteArgs = {
-        deleteParentData: newParentData,
+        deleteParentData: cutcopyParentData ? JSON.parse(JSON.stringify(cutCopyParentUrn.slateLevelData)) : newParentData,
         deleteElemData,
         type,
         parentUrn,
         asideData,
         contentUrn,
         index,
-        poetryData
+        poetryData,
+        cutCopyParentUrn
     }
     prepareTCMSnapshotsForDelete(tcmDeleteArgs)
 
@@ -186,10 +188,11 @@ export const prepareTCMSnapshotsForDelete = (params) => {
         asideData,
         contentUrn,
         index,
-        poetryData
+        poetryData,
+        cutCopyParentUrn
     } = params
 
-    const deleteBodymatter = deleteParentData[config.slateManifestURN].contents.bodymatter;
+    const deleteBodymatter = cutCopyParentUrn && cutCopyParentUrn.slateLevelData ? deleteParentData[cutCopyParentUrn.sourceSlateManifestUrn].contents.bodymatter :deleteParentData[config.slateManifestURN].contents.bodymatter;
     if (elementTypeTCM.indexOf(type) !== -1 || containerType.indexOf(type) !== -1) {
         const wipData = fetchElementWipData(deleteBodymatter, index, type, contentUrn, "delete")
         const containerElement = {
@@ -198,7 +201,8 @@ export const prepareTCMSnapshotsForDelete = (params) => {
             poetryData,
             parentElement: wipData && wipData.type == 'popup' ? wipData : undefined,
             metaDataField: wipData && wipData.type == 'popup' && wipData.popupdata['formatted-title'] ? 'formattedTitle' : undefined,
-            sectionType : wipData && wipData.type == 'popup' ? 'postertextobject' : undefined
+            sectionType : wipData && wipData.type == 'popup' ? 'postertextobject' : undefined,
+            cutCopyParentUrn
         }
         const deleteData = {
             wipData,
@@ -220,6 +224,7 @@ export const prepareTCMSnapshotsForDelete = (params) => {
  * @param {Function} dispatch to dispatch tcmSnapshots
 */
 export const tcmSnapshotsForDelete = async (elementDeleteData, type, containerElement) => {
+    let {cutCopyParentUrn} =  containerElement
     if (elementDeleteData.wipData.hasOwnProperty("figuretype") && !allowedFigureTypesForTCM.includes(elementDeleteData.wipData.figuretype)) {
         return false
     }
@@ -230,7 +235,7 @@ export const tcmSnapshotsForDelete = async (elementDeleteData, type, containerEl
     }
     const parentType = ['element-aside', 'citations', 'poetry', 'groupedcontent', 'popup'];
     let versionStatus = {};
-    let currentSlateData = elementDeleteData.currentParentData[config.slateManifestURN] 
+    let currentSlateData = cutCopyParentUrn && cutCopyParentUrn.sourceSlateManifestUrn? elementDeleteData.currentParentData[cutCopyParentUrn.sourceSlateManifestUrn] :elementDeleteData.currentParentData[config.slateManifestURN] 
     if(config.isPopupSlate){
         currentSlateData.popupSlateData = elementDeleteData.currentParentData[config.tempSlateManifestURN]
     }

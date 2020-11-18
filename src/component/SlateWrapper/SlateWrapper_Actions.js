@@ -669,8 +669,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
             }]
         };
         try {
-
-            return await axios.post(
+            const createdElemData = await axios.post(
                 `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/slate/${config.slateEntityURN}/element/paste`,
                 JSON.stringify(_requestData),
                 {
@@ -679,37 +678,18 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                         "PearsonSSOSession": config.ssoToken
                     }
                 }
-            ).then(async createdElemData => {
-                if (createdElemData && createdElemData.status == '200') {
-                    let responseData = Object.values(createdElemData.data)
-                    const pasteSuccessArgs = {
-                        responseData: responseData[0],
-                        index,
-                        dispatch,
-                        getState
-                    };
-            
-                    onPasteSuccess(pasteSuccessArgs)
-                }
-            }).catch(error => {
-                //     // Element mock creation
-                //     const parentData = getState().appStore.slateLevelData;
-                //     const newParentData = JSON.parse(JSON.stringify(parentData));
-                //     const createdElementData = openerData
-                //     newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
-                //     dispatch({
-                //         type: AUTHORING_ELEMENT_CREATED,
-                //         payload: {
-                //             slateLevelData: newParentData
-                //         }
-                //     })
-                //     sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
-                //     dispatch({type: ERROR_POPUP, payload:{show: true}})
-                    console.log("API Error Response:::", error);
-                    //     if (cb) {
-                    //         cb();
-                    //     }
-            })
+            )
+            if (createdElemData && createdElemData.status == '200') {
+                let responseData = Object.values(createdElemData.data)
+                const pasteSuccessArgs = {
+                    responseData: responseData[0],
+                    index,
+                    dispatch,
+                    getState
+                };
+        
+                onPasteSuccess(pasteSuccessArgs)
+            }
         }
         catch(error) {
             console.log("Exceptional Error on pasting the element:::", error);

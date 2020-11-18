@@ -106,6 +106,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
             contentUrn,
             index,
             poetryData,
+            cutCopyParentUrn,
             fetchSlateData
         }
         onDeleteSuccess(deleteArgs)

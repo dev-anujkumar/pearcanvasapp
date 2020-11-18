@@ -152,6 +152,19 @@ export class TinyMceEditor extends Component {
                             let innerHtml = this.innerHTML;
                             this.outerHTML = innerHtml;
                         })
+                        tinymce.$('.Wirisformula').each(function () {
+                            let mathformula = this.getAttribute('mathmlformula')
+                            if(mathformula){
+                                let res = mathformula.substr(0, 2);
+                                let res2=mathformula.substr(2, 2);
+                                let s3ImagePath=config.S3MathImagePath?config.S3MathImagePath:"https://cite-media-stg.pearson.com/legacy_paths/wiris-dev-mathtype-cache-use/cache/"
+                                let path=s3ImagePath+res+'/'+res2+'/'+mathformula+'.png'
+                                this.setAttribute('src', path)
+                                this.removeAttribute('mathmlformula')
+                            }
+                            this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
+                            this.naturalWidth && this.setAttribute('width', this.naturalWidth)
+                        });
                         if (!config.savingInProgress) {
                             if ((this.props.element.type === "popup" || this.props.element.type === "citations") && !this.props.currentElement) {
                                 this.props.createPopupUnit(this.props.popupField, true, this.props.index, this.props.element)
@@ -1301,7 +1314,7 @@ export class TinyMceEditor extends Component {
      */
     setSpecialCharIcon = editor => {
         editor.ui.registry.addIcon(
-            "specialcharaters",
+            "specialcharacters",
             charmap
         );        
     }
@@ -1311,14 +1324,14 @@ export class TinyMceEditor extends Component {
      */
     addSpecialCharIcon = editor => {
         const self = this;
-        editor.ui.registry.addMenuButton("specialcharaters", {
+        editor.ui.registry.addMenuButton("specialcharacters", {
             text: "",
-            icon: "specialcharaters",
+            icon: "specialcharacters",
             tooltip: "Special Character",
             fetch: function (callback) {
                 var items = [{
                         type: 'menuitem',
-                        text: 'Insert Special Charater',
+                        text: 'Insert Special Character',
                         onAction: function () {
                             tinymce.activeEditor.execCommand('mceShowCharmap');
                         }
@@ -2407,7 +2420,6 @@ export class TinyMceEditor extends Component {
                  */
                 let tempFirstContainerHtml = tinyMCE.$("#" + (this.editorRef.current ? this.editorRef.current.id : 'cypress-0')).html()
                 tempFirstContainerHtml = tempFirstContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
-
                 //Test Case Changes
                 if (this.editorRef.current && document.getElementById(this.editorRef.current.id)) {
                     document.getElementById(this.editorRef.current.id).innerHTML = tempFirstContainerHtml;
@@ -2728,7 +2740,6 @@ export class TinyMceEditor extends Component {
                 tempContainerHtml = tinyMCE.$("[data-id='" + previousTargetId + "'] .cypress-editable").html()
                 tempNewContainerHtml = tinyMCE.$("[data-id='" + currentTargetId + "'] .cypress-editable").html()
             }
-
             tempContainerHtml = tempContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
             tempNewContainerHtml = tempNewContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
 

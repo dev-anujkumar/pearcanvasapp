@@ -2,11 +2,6 @@ import React from 'react'
 
 const CutCopyDialog = props => {
 
-    const hideAPOOnOuterClick = (e) => {
-        props.toggleCopyMenu(false);
-        e.stopPropagation();
-    }
-
     const positionStyle = { left: `${props.copyClickedX}px`, top: `${props.copyClickedY}px` }
     return (
         <div style={positionStyle} className="copy-menu-container">
@@ -15,7 +10,7 @@ const CutCopyDialog = props => {
                 <div className="copyUrn" onClick={(e) => { copyToClipBoard(e, props) }}>Copy {props.element.id.includes('work') ? 'Work' : 'Manifest'} URN</div>
             </div>
             
-            <div className='blockerBgDiv' tabIndex="0" onClick={(e) => { hideAPOOnOuterClick(e) }}></div>
+            <div className='blockerBgDiv' tabIndex="0" onClick={(e) => { hideAPOOnOuterClick(e, props.toggleCopyMenu) }}></div>
         </div>
     )
 }
@@ -67,14 +62,21 @@ export const copyToClipBoard = (e, _props) => {
     document.body.removeChild(tempElement);
     _props.toggleCopyMenu(false);
     let linkNotification = document.getElementById('link-notification');
-    if (text.includes('work')) {
-        linkNotification.innerText = "Work URN copied to clipboard";
-    } else {
-        linkNotification.innerText = "Manifest URN copied to clipboard";
+    if (linkNotification) {
+        if (text.includes('work')) {
+            linkNotification.innerText = "Work URN copied to clipboard";
+        } else {
+            linkNotification.innerText = "Manifest URN copied to clipboard";
+        }
+        linkNotification.style.display = "block";
+        setTimeout(() => {
+            linkNotification.style.display = "none";
+            linkNotification.innerText = "";
+        }, 4000);
     }
-    linkNotification.style.display = "block";
-    setTimeout(() => {
-        linkNotification.style.display = "none";
-        linkNotification.innerText = "";
-    }, 4000);
+}
+
+export const hideAPOOnOuterClick = (e, toggleCopyMenu) => {
+    toggleCopyMenu(false);
+    e.stopPropagation();
 }
