@@ -378,8 +378,11 @@ export const handleSplitSlate = (newSlateObj) => (dispatch, getState) => {
             if('deleteElm' in selection && Object.keys(selection.deleteElm).length > 0) {
                 selection.deleteElm.cutCopyParentUrn.contentUrn = newSlateObj.entityUrn;
                 selection.deleteElm.cutCopyParentUrn.manifestUrn = newSlateObj.containerUrn;
+                selection.deleteElm.cutCopyParentUrn.slateLevelData = null;
+                selection.deleteElm.index = (selection.sourceElementIndex - splitIndex);
             }
 
+            selection.sourceElementIndex = (selection.sourceElementIndex - splitIndex);
             dispatch({ type: SET_SELECTION, payload: selection });
         }
 

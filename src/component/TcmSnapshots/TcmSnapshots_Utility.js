@@ -586,8 +586,8 @@ export const setDefaultKeys = (actionStatus, isContainer, inPopupSlate, slatePop
     let tcmKeys = {}
    
     tcmKeys = {
-        slateID:  slatePopupManifestUrn ?  slatePopupManifestUrn : inPopupSlate ? config.tempSlateManifestURN: cutCopyParentUrn && cutCopyParentUrn.sourceSlateManifestUrn ? cutCopyParentUrn.sourceSlateManifestUrn :config.slateManifestURN,
-        slateUrn:   slatePopupManifestUrn ?  slatePopupManifestUrn : inPopupSlate ? config.tempSlateManifestURN: cutCopyParentUrn && cutCopyParentUrn.sourceSlateManifestUrn ? cutCopyParentUrn.sourceSlateManifestUrn :config.slateManifestURN,
+        slateID:  slatePopupManifestUrn ?  slatePopupManifestUrn : inPopupSlate ? config.tempSlateManifestURN: cutCopyParentUrn && cutCopyParentUrn.manifestUrn ? cutCopyParentUrn.manifestUrn :config.slateManifestURN,
+        slateUrn:   slatePopupManifestUrn ?  slatePopupManifestUrn : inPopupSlate ? config.tempSlateManifestURN: cutCopyParentUrn && cutCopyParentUrn.manifestUrn ? cutCopyParentUrn.manifestUrn :config.slateManifestURN,
         projectUrn: config.projectUrn,
         index: 0,
         action: action,

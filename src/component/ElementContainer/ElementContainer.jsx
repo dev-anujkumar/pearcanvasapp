@@ -1541,8 +1541,10 @@ class ElementContainer extends Component {
         }
 
         if(elementDetails.element && elementDetails.element.type === "element-blockfeature" &&
-            'elementdata' in elementDetails.element && 'attribution' in elementDetails.element.elementdata &&
-            elementDetails.element.elementdata.attribution != '') {
+            'elementdata' in elementDetails.element && 'authoredtext' in elementDetails.element.elementdata &&
+            'text' in elementDetails.element.elementdata.authoredtext && elementDetails.element.elementdata.authoredtext.text != '' &&
+            'text' in elementDetails.element.elementdata && elementDetails.element.elementdata.text != '' &&
+            elementDetails.element.elementdata.text != elementDetails.element.elementdata.authoredtext.text) {
                 inputSubType = "MARGINALIA";
         }
 

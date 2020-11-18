@@ -33,7 +33,7 @@ export const onDeleteSuccess = (params) => {
     sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
     const parentData = getState().appStore.slateLevelData;
     const newParentData = JSON.parse(JSON.stringify(parentData));
-    let cutcopyParentData=  cutCopyParentUrn && cutCopyParentUrn.slateLevelData ?  cutCopyParentUrn.slateLevelData :""
+    let cutcopyParentData=  cutCopyParentUrn && cutCopyParentUrn.slateLevelData ?  cutCopyParentUrn.slateLevelData : null
     /** [PCAT-8289] -- TCM Snapshot Data handling --*/
     const tcmDeleteArgs = {
         deleteParentData: cutcopyParentData ? JSON.parse(JSON.stringify(cutCopyParentUrn.slateLevelData)) : newParentData,
