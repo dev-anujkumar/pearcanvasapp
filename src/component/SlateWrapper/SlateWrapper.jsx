@@ -948,7 +948,7 @@ class SlateWrapper extends Component {
                            <React.Fragment key={element.id}>
                                <LazyLoad 
                                     once={true}
-                                    placeholder={<div data-id={element.id}>Loading...</div>}
+                                    placeholder={<div data-id={element.id}><LargeLoader /></div>}
                                 >
                                     {
                                         index === 0 && _slateType !== 'assessment' && config.isCO === false ?
