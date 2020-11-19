@@ -1539,13 +1539,14 @@ class ElementContainer extends Component {
             inputType = elementTypes[elementType][primaryOption]['enum'] || '';
             inputSubType = elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'] || '';
         }
-
+        
         if(elementDetails.element && elementDetails.element.type === "element-blockfeature" &&
-            'elementdata' in elementDetails.element && 'authoredtext' in elementDetails.element.elementdata &&
-            'text' in elementDetails.element.elementdata.authoredtext && elementDetails.element.elementdata.authoredtext.text != '' &&
-            'text' in elementDetails.element.elementdata && elementDetails.element.elementdata.text != '' &&
-            elementDetails.element.elementdata.text != elementDetails.element.elementdata.authoredtext.text) {
+            'html' in elementDetails.element && 'text' in elementDetails.element.html) {
+            let attribution = (elementDetails.element.html.text).match(new RegExp(`(<p class="blockquoteTextCredit".*?><\/p>)`, 'gi'));
+            
+            if(!attribution) {
                 inputSubType = "MARGINALIA";
+            }
         }
 
         if (elementDetails.element && elementDetails.element.type === "element-list") {
