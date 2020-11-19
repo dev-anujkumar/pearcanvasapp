@@ -88,6 +88,7 @@ export const onPasteSuccess = async (params) => {
             slateLevelData: newParentData
         }
     })
+    sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
 }
 
 export const checkElementExistence = async (slateEntityUrn = '', elementEntity = '') => {

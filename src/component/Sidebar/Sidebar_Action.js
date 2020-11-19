@@ -21,6 +21,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     try {
         let conversionDataToSend = {};
     // Input Element
+    let oldElementFigureData ;
     const inputPrimaryOptionsList = elementTypes[oldElementInfo['elementType']],
         inputPrimaryOptionType = inputPrimaryOptionsList[oldElementInfo['primaryOption']],
         overallType = inputPrimaryOptionsList['enumType']
@@ -72,6 +73,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             }
         }
         if(oldElementData.figuretype && oldElementData.figuretype === "codelisting" && newElementData['primaryOption'] === "primary-blockcode-equation") {
+            oldElementFigureData = JSON.parse(JSON.stringify(oldElementData.figuredata));
             oldElementData.figuredata.programlanguage = elementTypes[newElementData['elementType']][newElementData['primaryOption']].subtype[newElementData['secondaryOption']].text;
              oldElementData.figuredata.preformattedtext = [];
         }
@@ -214,6 +216,9 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         let currentSlateData = currentParentData[config.slateManifestURN];
         /** [PCAT-8289] -------------------------------- TCM Snapshot Data handling ----------------------------------*/
         if (elementType.indexOf(oldElementData.type) !== -1 && (showHideObj == undefined || showHideObj == "")) {
+            if(oldElementData && oldElementData.figuretype == "codelisting"){
+                oldElementData.figuredata = oldElementFigureData
+            }           
             let elementConversionData ={
                 currentSlateData:{
                     status: currentSlateData.status,
