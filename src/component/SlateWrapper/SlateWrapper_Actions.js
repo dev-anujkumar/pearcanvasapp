@@ -695,6 +695,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
             }
         }
         catch(error) {
+            sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
             console.log("Exceptional Error on pasting the element:::", error);
         }
     }

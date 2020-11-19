@@ -7,8 +7,9 @@ import PropTypes from 'prop-types'
 import Button from '../ElementButtons'
 import Tooltip from '../Tooltip'
 import config from '../../config/config';
-import { hasReviewerRole } from '../../constants/utility.js';
+import { hasReviewerRole, sendDataToIframe } from '../../constants/utility.js';
 import elementTypeConstant, { containerTypeArray } from './ElementSepratorConstants.js';
+import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import '../../styles/ElementSaprator/ElementSaprator.css'
 import ElementContainerType from '../ElementContainerType/ElementContainerType.jsx'
 const { TEXT, 
@@ -347,6 +348,7 @@ function typeOfContainerElements(elem, props) {
 
 export const pasteElement = (separatorProps, togglePaste, type) => {
     if(config.savingInProgress) return false
+    sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
     if(type == 'cut') {
         togglePaste(false);
     }
