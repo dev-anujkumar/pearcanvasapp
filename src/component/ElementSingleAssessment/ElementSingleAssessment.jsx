@@ -21,7 +21,7 @@ import ElmUpdateButton from '../AssessmentSlateCanvas/ElmUpdateButton.jsx'
 import { DEFAULT_ASSESSMENT_SOURCE } from '../../constants/Element_Constants.js';
 import { PUF, LEARNOSITY, ELM_UPDATE_BUTTON, ELM_UPDATE_POPUP_HEAD, ELM_UPDATE_MSG } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import { checkAssessmentStatus, updateAssessmentVersion, checkEntityUrn, saveAutoUpdateData } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
-
+import config from '../../config/config';
 /*** @description - ElementSingleAssessment is a class based component. It is defined simply to make a skeleton of the assessment-type element .*/
 
 class ElementSingleAssessment extends Component {
@@ -67,7 +67,9 @@ class ElementSingleAssessment extends Component {
         if (elementType == PUF && (assessmentId && assessmentReducer && assessmentReducer[assessmentId] && assessmentReducer[assessmentId].items)) {
             let latestItemId = assessmentReducer[assessmentId].items && assessmentReducer[assessmentId].items[assessmentItemId]
             if ((assessmentReducer[assessmentId].showUpdateStatus == false && (latestItemId && assessmentItemId != latestItemId)) || (assessmentTitle != assessmentReducer[assessmentId].assessmentTitle)) {
-                this.updateElmOnSaveEvent(this.props);
+                if(!config.savingInProgress && !config.isSavingElement){
+                    this.updateElmOnSaveEvent(this.props);
+                }
             }
         }
     }
