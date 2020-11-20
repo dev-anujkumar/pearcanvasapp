@@ -960,7 +960,7 @@ export class TinyMceEditor extends Component {
                 }
                 const keyPressed = e.keyCode || e.which;
                 if (keyPressed === 37 || keyPressed === 39) {
-                    if (editor.selection.getNode().tagName.toLowerCase() === 'span' || editor.selection.getNode().className.toLowerCase() === 'answerLineContent') {
+                    if (editor.selection.getNode().tagName.toLowerCase() === 'span' && editor.selection.getNode().className.toLowerCase() === 'answerLineContent') {
                         this.handleBlankLineArrowKeys(keyPressed, editor)
                     }
                 }
