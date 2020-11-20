@@ -2525,9 +2525,10 @@ export class TinyMceEditor extends Component {
      * React's lifecycle method. Called immediately after updating occurs. Not called for the initial render.
      */
     componentDidUpdate(prevProps) {
+        let currentNode = document.getElementById('cypress-' + this.props.index);
         let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");
         if (isBlockQuote) {
-            this.lastContent = document.getElementById('cypress-' + this.props.index).innerHTML;
+            this.lastContent = currentNode.innerHTML; // document.getElementById('cypress-' + this.props.index).innerHTML;
         }
         if (this.elementConverted || prevProps.element.subtype !== this.props.element.subtype) {
             let elementTypeNode = document.querySelector('button[aria-label="formatSelector"] .tox-tbtn__select-label');
@@ -2547,6 +2548,65 @@ export class TinyMceEditor extends Component {
         this.removeMultiTinyInstance();
         this.handlePlaceholder()
         tinymce.$('.blockquote-editor').attr('contenteditable', false)
+
+        if(/(<math.*?>.*?<\/math>)/gim.test(currentNode.innerHTML)) {
+            currentNode.innerHTML = this.getNodeContent();
+        }
+    }
+
+    getNodeContent = () => {
+        switch (this.props.tagName) {
+            case 'p':
+                let paraModel = this.props.model
+                paraModel = removeBOM(paraModel)
+                return paraModel;
+
+            case 'h4':
+                let model = ""
+                if (this.props.element && this.props.element.type === "popup") {
+                    model = this.props.model && this.props.model.replace(/class="paragraphNumeroUno"/g, "")
+                }
+                else {
+                    model = this.props.model;
+                }
+                let tempDiv = document.createElement('div');
+                tempDiv.innerHTML = model;
+                if (tempDiv && tempDiv.children && tempDiv.children.length && tempDiv.children[0].tagName === 'P') {
+                    model = tempDiv.children[0].innerHTML;
+                }
+                model = removeBOM(model)
+                return model;
+
+            case 'code':
+                let codeModel = this.props.model
+                codeModel = removeBOM(codeModel)
+                return codeModel;
+
+            case 'blockquote':
+                if (this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote")) {
+                    let temDiv = this.processBlockquoteHtml(this.props.model, this.props.element, lockCondition);
+                    return temDiv.innerHTML;
+                } else {
+                    let pqModel = this.props.model && this.props.model.text || '<p class="paragraphNumeroUno"><br/></p>'
+                    pqModel = removeBOM(pqModel)
+                    return pqModel;
+                }
+
+            case 'figureCredit':
+                let figCreditModel = this.props.model
+                figCreditModel = removeBOM(figCreditModel)
+                return figCreditModel;
+
+            case 'element-citation':
+                let ctModel = this.props.model && this.props.model.text || '<p class="paragraphNumeroUnoCitation"><br/></p>'
+                ctModel = removeBOM(ctModel)
+                return ctModel;
+
+            default:
+                let defModel = this.props.model && this.props.model.text ? this.props.model.text : (typeof (this.props.model) === 'string' ? this.props.model : '<p class="paragraphNumeroUno"><br/></p>')
+                defModel = removeBOM(defModel)
+                return defModel;
+        }
     }
 
     removeMultiTinyInstance = () => {
