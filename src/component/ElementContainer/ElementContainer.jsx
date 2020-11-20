@@ -1544,7 +1544,7 @@ class ElementContainer extends Component {
             'html' in elementDetails.element && 'text' in elementDetails.element.html) {
             let attribution = (elementDetails.element.html.text).match(new RegExp(`(<p class="blockquoteTextCredit".*?><\/p>)`, 'gi'));
             
-            if(!attribution) {
+            if(!attribution && (elementDetails.element && elementDetails.element.elementdata && elementDetails.element.elementdata.type !== "pullquote")) {
                 inputSubType = "MARGINALIA";
             }
         }
