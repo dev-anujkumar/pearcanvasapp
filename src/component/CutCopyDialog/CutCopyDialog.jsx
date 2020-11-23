@@ -1,12 +1,12 @@
 import React from 'react'
-
+import config from './../../config/config';
 const CutCopyDialog = props => {
 
     const positionStyle = { left: `${props.copyClickedX}px`, top: `${props.copyClickedY}px` }
     return (
         <div style={positionStyle} className="copy-menu-container">
             <div className="copy-menu">
-                {renderCutCopyOption(props)}
+                {!config.isPopupSlate && renderCutCopyOption(props)}
                 <div className="copyUrn" onClick={(e) => { copyToClipBoard(e, props) }}>Copy {props.element.id.includes('work') ? 'Work' : 'Manifest'} URN</div>
             </div>
             
