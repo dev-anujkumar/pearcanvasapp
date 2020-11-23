@@ -208,7 +208,7 @@ export const prepareTCMSnapshotsForDelete = (params) => {
             wipData,
             currentParentData: deleteParentData,
             bodymatter: deleteBodymatter,
-            newVersionUrns: deleteElemData.data,
+            newVersionUrns: deleteElemData,
             index
         }
         tcmSnapshotsForDelete(deleteData, type, containerElement)
