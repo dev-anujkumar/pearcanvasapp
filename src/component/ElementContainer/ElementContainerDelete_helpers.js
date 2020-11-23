@@ -182,7 +182,6 @@ export const onSlateApproved = (currentSlateData, dispatch, fetchSlateData) => {
 export const prepareTCMSnapshotsForDelete = (params) => {
     const {
         deleteParentData,
-        deleteElemData,
         type,
         parentUrn,
         asideData,
@@ -208,7 +207,6 @@ export const prepareTCMSnapshotsForDelete = (params) => {
             wipData,
             currentParentData: deleteParentData,
             bodymatter: deleteBodymatter,
-            newVersionUrns: deleteElemData.data,
             index
         }
         tcmSnapshotsForDelete(deleteData, type, containerElement)
@@ -243,5 +241,5 @@ export const tcmSnapshotsForDelete = async (elementDeleteData, type, containerEl
         versionStatus = fetchManifestStatus(elementDeleteData.bodymatter, containerElement, type);
     }
     containerElement = await checkContainerElementVersion(containerElement, versionStatus, currentSlateData);
-    prepareTcmSnapshots(elementDeleteData.wipData, actionStatus, containerElement, type,elementDeleteData.newVersionUrns,elementDeleteData.index);
+    prepareTcmSnapshots(elementDeleteData.wipData, actionStatus, containerElement, type,elementDeleteData.index);
 }
