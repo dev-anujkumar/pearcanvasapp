@@ -61,7 +61,8 @@ export const onPasteSuccess = async (params) => {
             parentUrn: null,
             type: "TEXT",
             responseData,
-            dispatch
+            dispatch,
+            index
         }
 
         await handleTCMSnapshotsForCreation(snapArgs)
@@ -132,7 +133,8 @@ export const handleTCMSnapshotsForCreation = async (params) => {
         parentUrn,
         type,
         responseData,
-        dispatch
+        dispatch,
+        index
     } = params
 
     const containerElement = {
@@ -146,10 +148,10 @@ export const handleTCMSnapshotsForCreation = async (params) => {
         response: responseData
     };
     if (currentSlateData.status === 'approved') {
-        await tcmSnapshotsForCreate(slateData, type, containerElement, dispatch);
+        await tcmSnapshotsForCreate(slateData, type, containerElement, dispatch, index);
     }
     else {
-        tcmSnapshotsForCreate(slateData, type, containerElement, dispatch);
+        tcmSnapshotsForCreate(slateData, type, containerElement, dispatch, index);
     }
 }
 

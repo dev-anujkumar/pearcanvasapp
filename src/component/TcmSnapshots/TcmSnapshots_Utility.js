@@ -54,7 +54,7 @@ const {
  * @param {String} type - type of element
  * @param {Object} newVersionUrns - Latest  Version Urns for delete case
 */
-export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, type, newVersionUrns,index) => {
+export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, type, newVersionUrns, index) => {
     const { parentElement, slateManifest,popupslateManifest,cutCopyParentUrn } = containerElement
     /** isContainer : used to set SlateType  */
     let isContainer = setSlateType(wipData,containerElement,type);
@@ -833,7 +833,7 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
  * @param {Object} containerElement - Element Parent Data
  * @param {Function} dispatch to dispatch tcmSnapshots
 */
-export const tcmSnapshotsForCreate = async (elementCreateData, type, containerElement, dispatch) => {
+export const tcmSnapshotsForCreate = async (elementCreateData, type, containerElement, dispatch, index) => {
     if (elementCreateData.response.hasOwnProperty("figuretype") && !allowedFigureTypesForTCM.includes(elementCreateData.response.figuretype)) {
         return false
     }
@@ -852,7 +852,7 @@ export const tcmSnapshotsForCreate = async (elementCreateData, type, containerEl
         versionStatus = fetchManifestStatus(elementCreateData.bodymatter, containerElement, type);
     }
     containerElement = await checkContainerElementVersion(containerElement, versionStatus, currentSlateData);
-    prepareTcmSnapshots(elementCreateData.response, actionStatus, containerElement, type,"");
+    prepareTcmSnapshots(elementCreateData.response, actionStatus, containerElement, type,"", index);
 }
 
 /**
