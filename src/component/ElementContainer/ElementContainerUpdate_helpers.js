@@ -344,18 +344,9 @@ export const collectDataAndPrepareTCMSnapshot = async (params) => {
             CurrentSlateStatus: currentSlateData.status,
             figureData: oldFigureData
         }
-        if(!config.isCreateGlossary){
-            if (currentSlateData && currentSlateData.status === 'approved') {
-                await tcmSnapshotsForUpdate(elementUpdateData, elementIndex, containerElement, dispatch, assetRemoveidForSnapshot);
-            }
-            else {
-                tcmSnapshotsForUpdate(elementUpdateData, elementIndex, containerElement, dispatch, assetRemoveidForSnapshot);
-            }  
+        if (!config.isCreateGlossary) {
+            tcmSnapshotsForUpdate(elementUpdateData, elementIndex, containerElement, dispatch, assetRemoveidForSnapshot);
         }
-        /** Commented Code for Fix related to BG-3591 */
-        // if (!config.isCreateGlossary) {
-        //     tcmSnapshotsForUpdate(elementUpdateData, elementIndex, containerElement, dispatch, assetRemoveidForSnapshot);
-        // }
         config.isCreateGlossary = false
     }
     return false
@@ -408,13 +399,11 @@ export const processAndStoreUpdatedResponse = async (params) => {
         showHideType,
         currentParentData
     }
-    collectDataAndPrepareTCMSnapshot(snapshotArgs)
-    /** Commented Code for Fix related to BG-3591 */
-    // if (currentSlateData && currentSlateData.status === 'approved') {
-    //     await collectDataAndPrepareTCMSnapshot(snapshotArgs)
-    // } else {
-    //     collectDataAndPrepareTCMSnapshot(snapshotArgs)
-    // }
+    if (currentSlateData && currentSlateData.status === 'approved') {
+        await collectDataAndPrepareTCMSnapshot(snapshotArgs)
+    } else {
+        collectDataAndPrepareTCMSnapshot(snapshotArgs)
+    }
 
     /** Check applied so that element does not gets copied to next slate while navigating */
     if (config.slateManifestURN === updatedData.slateVersionUrn) {  
