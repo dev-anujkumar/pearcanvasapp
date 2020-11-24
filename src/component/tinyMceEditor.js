@@ -2898,11 +2898,26 @@ export class TinyMceEditor extends Component {
     }
 
     /**
+     * Replaces a class and attribute in wiris img tag to prevent conversion to XML
+     * @param {*} currentTargetId current editor ID
+     */
+    replaceWirisClassAndAttr = (currentTargetId) => {
+        const currentNode = document.getElementById(currentTargetId)
+        let tempFirstContainerHtml = currentNode && currentNode.innerHTML
+        if (typeof tempFirstContainerHtml === "string") {
+            tempFirstContainerHtml = tempFirstContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
+            currentNode.innerHTML = tempFirstContainerHtml
+            return;
+        }
+    }
+    
+    /**
      * handleBlur | gets triggered when any editor element is blurred
      * @param {*} e  event object
      */
     handleBlur = (e, forceupdate) => {
         let checkCanvasBlocker = document.querySelector("div.canvas-blocker");
+        this.replaceWirisClassAndAttr(e.currentTarget.id)
         let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");
         if (isBlockQuote && this.isctrlPlusV) {
             e.preventDefault();
