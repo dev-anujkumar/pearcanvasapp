@@ -347,7 +347,7 @@ const tcmSnapshotsPopupCTA = (snapshotsData, defaultKeys, containerElement,index
 const tcmSnapshotsInPopupElement = (snapshotsData, defaultKeys, containerElement, type,index) => {
     const { metaDataField, sectionType } = containerElement
     if (defaultKeys.action === 'create' && type == POP_UP) {     /** Create Popup */
-        tcmSnapshotsPopupCTA(snapshotsData, defaultKeys, containerElemen,index);
+        tcmSnapshotsPopupCTA(snapshotsData, defaultKeys, containerElement,index);
         tcmSnapshotsCreatePopup(snapshotsData, defaultKeys,index);
     }
     else if((defaultKeys.action === 'delete' && type == POPUP_ELEMENT)) {            /** Delete Popup */

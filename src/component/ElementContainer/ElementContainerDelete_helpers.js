@@ -222,7 +222,7 @@ export const prepareTCMSnapshotsForDelete = (params) => {
  * @param {Function} dispatch to dispatch tcmSnapshots
 */
 export const tcmSnapshotsForDelete = async (elementDeleteData, type, containerElement) => {
-    let {cutCopyParentUrn} =  containerElement
+    let {cutCopyParentUrn,parentUrn} =  containerElement
     if (elementDeleteData.wipData.hasOwnProperty("figuretype") && !allowedFigureTypesForTCM.includes(elementDeleteData.wipData.figuretype)) {
         return false
     }
@@ -237,7 +237,7 @@ export const tcmSnapshotsForDelete = async (elementDeleteData, type, containerEl
     if(config.isPopupSlate){
         currentSlateData.popupSlateData = elementDeleteData.currentParentData[config.tempSlateManifestURN]
     }
-    if ((parentType.indexOf(type) === -1)) {
+    if ((parentType.indexOf(type) === -1) || (type === "element-aside" && parentUrn && elementDeleteData.wipData.type === "manifest") ) {
         versionStatus = fetchManifestStatus(elementDeleteData.bodymatter, containerElement, type);
     }
     containerElement = await checkContainerElementVersion(containerElement, versionStatus, currentSlateData);
