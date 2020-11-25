@@ -165,16 +165,17 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
             }
         }
     }
-    const response = await axios.put(`${config.REACT_APP_API_URL}v1/slate/element`,
-    updatedData1,
-        {
-            headers: {
-                "Content-Type": "application/json",
-                "PearsonSSOSession": config.ssoToken
-            }
-        }
-    )
     try {
+        const response = await axios.put(`${config.REACT_APP_API_URL}v1/slate/element`,
+        updatedData1,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    "PearsonSSOSession": config.ssoToken
+                }
+            }
+        )
+    
         const updateArgs = {
             updatedData,
             elementIndex,
@@ -195,9 +196,9 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         dispatch({type: ERROR_POPUP, payload:{show: true}})
         config.savingInProgress = false
         config.popupCreationCallInProgress = false
-        console.log("updateElement Api fail", error);
         config.isSavingElement = false
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
+        console.error("updateElement Api fail", error);
     }
 }
 
