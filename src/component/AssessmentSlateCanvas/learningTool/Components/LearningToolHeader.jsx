@@ -60,12 +60,13 @@ const LearningToolHeader = (props) => {
         setOpenDisciplineDropdown(false);
         const newValue = listItem === DEFAULT_OPTION ? "" : listItem
         if (listType === TYPE_DISCIPLINE) {
-            setDiscipline(newValue == "" ? DEFAULT_OPTION : newValue.prefLabel);
-            setlearningToolDiscipline(newValue == "" ? newValue : newValue.prefLabel);
+            setDiscipline(newValue == "" ? DEFAULT_OPTION : listItem);
+            setlearningToolDiscipline(newValue == "" ? newValue : listItem);
         }
         else {
-            setAppType(newValue == "" ? DEFAULT_OPTION : listItem.label)
-            setlearningAppType(newValue == "" ? newValue : newValue.appType);
+            const appType = newValue == "" ? newValue : Object.values(learningSystems).find(value => value.label == listItem).appType;
+            setAppType(newValue == "" ? DEFAULT_OPTION : listItem)
+            setlearningAppType(appType);
         }
         event.stopPropagation();
     }
@@ -82,21 +83,21 @@ const LearningToolHeader = (props) => {
                     })}
                 </tr>
                 <tr className='row-2'>
-                    <td onClick={!hasReviewerRole() && toggleAppTypeDropdown}>{/* Learning AppType Dropdown */}
+                    <td className='data-apptype' onClick={!hasReviewerRole() && toggleAppTypeDropdown}>{/* Learning AppType Dropdown */}
                         <div className="learningAppType" title={selectedAppType ? selectedAppType : DEFAULT_OPTION}>
                             <span className="selected-learning-tool">{selectedAppType ? selectedAppType : DEFAULT_OPTION}</span>
                             <span className="dropdown-menu-arrow"></span>
                         </div>
                         {openAppTypeDropdown &&
-                            <Dropdown showDropdown={true} ulClass={'learningAppType'} type={TYPE_LEARNING_APP} dropdownList={Object.values(learningSystems)} dropdownClass={'learning-tool-dropdown'} clickHandlerFn={handleDropdownChange} hasDefaultOption={true} />}
+                            <Dropdown showDropdown={true} ulClass={'learningAppType'} type={TYPE_LEARNING_APP} dropdownList={Object.values(learningSystems).map(system=> system.label)} dropdownClass={'learning-tool-dropdown'} clickHandlerFn={handleDropdownChange} hasDefaultOption={true} />}
                     </td>
-                    <td onClick={!hasReviewerRole() && toggleDisciplineDropdown}>{/* Discipline Dropdown */}
+                    <td className='data-disc' onClick={!hasReviewerRole() && toggleDisciplineDropdown}>{/* Discipline Dropdown */}
                         <div className="learningAppType" title={selectedDiscipline ? selectedDiscipline : DEFAULT_OPTION}>
                             <span className="selected-learning-tool">{selectedDiscipline ? selectedDiscipline : DEFAULT_OPTION}</span>
                             <span className="dropdown-menu-arrow"></span>
                         </div>
                         {showDisFilterValues ? openDisciplineDropdown &&
-                            <Dropdown showDropdown={showDisFilterValues} ulClass={`learningAppType ${showDisFilterValues == false ? "dis-api-fail" : ""}`} type={TYPE_DISCIPLINE} dropdownList={apiResponseForDis.options} dropdownClass={'learning-tool-dropdown'} clickHandlerFn={handleDropdownChange} hasDefaultOption={true} /> : null}
+                            <Dropdown showDropdown={showDisFilterValues} ulClass={`learningAppType ${showDisFilterValues == false ? "dis-api-fail" : ""}`} type={TYPE_DISCIPLINE} dropdownList={apiResponseForDis.options.map(discipline => discipline.prefLabel)} dropdownClass={'learning-tool-dropdown'} clickHandlerFn={handleDropdownChange} hasDefaultOption={true} /> : null}
                     </td>
                     <td>{/* Search Keyword */}
                         <InputSearch searchId={"learningToolSearchBar"} searchClass={`learningToolSearchBar ${showError ? "error" : ""}`} maxInputLimit={100} placeholderText={PLACEHOLDER_KEYWORD} searchValueHandler={handleKeywordChange} />
