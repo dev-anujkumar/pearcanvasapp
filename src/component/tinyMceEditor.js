@@ -2896,20 +2896,6 @@ export class TinyMceEditor extends Component {
         }
         tinyMCE.$('.cypress-editable').css('caret-color', 'black')
     }
-
-    /**
-     * Replaces a class and attribute in wiris img tag to prevent conversion to XML
-     * @param {*} currentTargetId current editor ID
-     */
-    replaceWirisClassAndAttr = (currentTargetId) => {
-        const currentNode = document.getElementById(currentTargetId)
-        let tempFirstContainerHtml = currentNode && currentNode.innerHTML
-        if (typeof tempFirstContainerHtml === "string") {
-            tempFirstContainerHtml = tempFirstContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
-            currentNode.innerHTML = tempFirstContainerHtml
-            return;
-        }
-    }
     
     /**
      * handleBlur | gets triggered when any editor element is blurred
@@ -2952,7 +2938,6 @@ export class TinyMceEditor extends Component {
             e.stopPropagation();
             return;
         }
-        // this.replaceWirisClassAndAttr(e.currentTarget.id)
         tinymce.$('span[data-mce-type="bookmark"]').each(function () {
             let innerHtml = this.innerHTML;
             this.outerHTML = innerHtml;
