@@ -2917,7 +2917,6 @@ export class TinyMceEditor extends Component {
      */
     handleBlur = (e, forceupdate) => {
         let checkCanvasBlocker = document.querySelector("div.canvas-blocker");
-        this.replaceWirisClassAndAttr(e.currentTarget.id)
         let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");
         if (isBlockQuote && this.isctrlPlusV) {
             e.preventDefault();
@@ -2953,6 +2952,7 @@ export class TinyMceEditor extends Component {
             e.stopPropagation();
             return;
         }
+        // this.replaceWirisClassAndAttr(e.currentTarget.id)
         tinymce.$('span[data-mce-type="bookmark"]').each(function () {
             let innerHtml = this.innerHTML;
             this.outerHTML = innerHtml;
