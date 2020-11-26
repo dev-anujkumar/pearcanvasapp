@@ -11,6 +11,7 @@ import { setSemanticsSnapshots, fetchElementsTag, generateWipDataForFigure } fro
 import TcmConstants from './TcmConstants.js';
 import { storeOldAssetForTCM } from '../ElementContainer/ElementContainer_Actions'
 import { handleBlankLineDom } from '../ElementContainer/UpdateElements.js';
+import { OPEN_AUDIO_NARRATION } from '../../constants/Action_Constants.js';
 
 const {
     elementType,
@@ -120,7 +121,7 @@ const tcmSnapshotsOnDefaultSlate = (snapshotsData, defaultKeys, containerElement
         tcmSnapshotsCreateSectionBreak(containerElement, snapshotsData, defaultKeys,index, isPopupSlate)
     }
     /* action on element in WE/PE/CG/2C */
-    else if (poetryData || asideData || parentUrn) {
+    else if ((poetryData || asideData || parentUrn ) ) {
         tcmSnapshotsInContainerElements(containerElement, snapshotsData, defaultKeys,index, isPopupSlate)
     }
     /* action on PE and CG */
@@ -131,6 +132,7 @@ const tcmSnapshotsOnDefaultSlate = (snapshotsData, defaultKeys, containerElement
     else if (wipData.type === MULTI_COLUMN) {
         tcmSnapshotsMultiColumn(containerElement, snapshotsData, defaultKeys,index, isPopupSlate);
     }
+    
     else {
         let elementDetails = setElementTypeAndUrn(elementId, tag, "", "", undefined, popupInContainer, slateManifestVersioning, isPopupSlate);
         prepareAndSendTcmData(elementDetails, wipData, defaultKeys, actionStatus,index);
@@ -268,26 +270,23 @@ const tcmSnapshotsCreatePopup = (snapshotsData, defaultKeys,index) => {
 }
 
 const tcmSnapshotsDeletePopup = (snapshotsData, defaultKeys,index, containerElement,type) => {
-    const { wipData,  actionStatus } = snapshotsData;
+    const { wipData,  actionStatus,popupInContainer,tag, elementId } = snapshotsData;
     wipData.popupdata && wipData.popupdata.bodymatter.map((item) => {
-        let tag = {
-            parentTag: fetchElementsTag(item)
-        }
-        tag.popupParentTag = fetchElementsTag(wipData);//WE/AS//POPUP
+        tag.childTag=""
+        tag.parentTag= fetchElementsTag(item)
         /* ID of elements*/
-        let elementId = {
-            parentId: item.id,
-            popID:  wipData.id,
-        }
+        elementId.parentId= item.id;
+        elementId.popID=  wipData.id;
+        elementId.childId=""
         /* Initial snapshotsData of elements*/
         let snapshotsDataToSend = {
             tag: tag,
             wipData: item,
             elementId: elementId,
-            actionStatus: actionStatus
+            actionStatus: actionStatus,
+            popupInContainer
         }
-
-        tcmSnapshotsOnDefaultSlate(snapshotsDataToSend, defaultKeys,containerElement , type ,index,"popupSlate")
+        tcmSnapshotsOnDefaultSlate(snapshotsDataToSend, defaultKeys,"" , type ,index,"popupSlate")
     })
 }
 
@@ -516,7 +515,7 @@ const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,popupInCo
         elementTag = `${tag.parentTag}${(eleIndex == 0) ? ':C1' : ':C2'}${tag.childTag ? ":" + tag.childTag : ""}`   ; 
         elementId =  `${eleId.parentId}${eleId.columnId ? "+" + eleId.columnId : ""}${eleId.childId ? "+" + eleId.childId : ""}`
     }
-    if (popupInContainer && config.isPopupSlate) {  //WE:BODY:POP:BODY:WE:BODY:P
+    if ((popupInContainer && config.isPopupSlate) || (popupInContainer && popupSlate)) {  //WE:BODY:POP:BODY:WE:BODY:P
         elementTag = `${tag.popupParentTag ? tag.popupParentTag + ":" : ""}POP:BODY:${elementTag}`;
         elementId = `${eleId.popupParentId ? eleId.popupParentId + "+" : ""}${eleId.popID ? eleId.popID : slateManifestVersioning ? slateManifestVersioning:config.slateManifestURN}+${elementId}`;
     }
@@ -532,6 +531,7 @@ const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,popupInCo
         elementTag = `POP:BODY:${elementTag}`;
         elementId = `${eleId.popID}+${elementId}`;
     }
+   
     elementData = {
         elementUrn: elementId,
         elementType: elementTag
@@ -968,14 +968,8 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn, operatio
                     wipData = bodymatter[eleIndex[0]].groupeddata.bodymatter[eleIndex[1]].groupdata.bodymatter[eleIndex[2]]
                 }
                 break;
-            case POPUP_ELEMENT:/** To set Parent Element from GlossaryFootnote Action- Create title from footnote */
-                if (eleIndex.length == 2) {           /** Formatted-title in Popup Element */
-                    wipData = bodymatter[eleIndex[0]];
-                } else if (eleIndex.length == 3) {    /** Inside WE-HEAD | Aside */
-                    wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]];
-                } else if (eleIndex.length == 4 && bodymatter[eleIndex[0]].type !== MULTI_COLUMN) {   /** Inside WE-BODY */
-                    wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]].contents.bodymatter[eleIndex[2]];
-                }
+            case POPUP_ELEMENT:/** To set Parent Element from GlossaryFootnote Action- Create title from footnote */           
+                wipData = popupWipData(bodymatter, eleIndex,operationType,wipData)
                 break;
             case FIGURE:
                 wipData = generateWipDataForFigure(bodymatter, index)
@@ -985,6 +979,26 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn, operatio
     return wipData;
 }
 
+export const popupWipData = (bodymatter, eleIndex,operationType,wipData) => {
+    if(operationType != "delete"){
+        if (eleIndex.length == 2) {           /** Formatted-title in Popup Element */
+            wipData = bodymatter[eleIndex[0]];
+        } else if (eleIndex.length == 3) {    /** Inside WE-HEAD | Aside */
+            wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]];
+        } else if (eleIndex.length == 4 && bodymatter[eleIndex[0]].type !== MULTI_COLUMN) {   /** Inside WE-BODY */
+            wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]].contents.bodymatter[eleIndex[2]];
+        }
+    }
+    else{
+        if (eleIndex.length == 2) {           /** Formatted-title in Popup Element */
+            wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]];
+        }
+        else if(eleIndex.length == 3){
+            wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]].contents.bodymatter[eleIndex[2]];
+        }
+    }
+    return wipData;
+}
 /**
  * @function fetchParentData
  * @description This function is to set the parentData for the element
