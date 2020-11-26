@@ -2919,7 +2919,7 @@ export class TinyMceEditor extends Component {
         }
         tinyMCE.$('.cypress-editable').css('caret-color', 'black')
     }
-
+    
     /**
      * handleBlur | gets triggered when any editor element is blurred
      * @param {*} e  event object
