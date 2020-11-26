@@ -2581,7 +2581,10 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                 preventDefault: jest.fn(),
                 stopPropagation: jest.fn(),
                 target: {
-                    id: ""
+                    id: "",
+                    classList : {
+                        contains : ()=>{ return true; }
+                    }
                 },
                 type: "click",
                 clipboardData: {
@@ -2620,7 +2623,10 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                 preventDefault: jest.fn(),
                 stopPropagation: jest.fn(),
                 target: {
-                    id: ""
+                    id: "",
+                    classList : {
+                        contains : ()=>{ return true; }
+                    }
                 },
                 type: "click",
                 clipboardData: {
@@ -2671,7 +2677,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                     },
                     dispatchEvent: () => { }
                 },
-                selection: editor.selection,
+                selection: {...editor.selection, getNode : ()=>{ return {...editor.selection.getNode(), className : 'WirisFormula'}}},
                 dom: domObj,
                 children: ['<p class="paragraphNumeroUno">hello</p>'],
                 classList: ["cypress-editable", "mce-content-body", "mce-edit-focus", 'place-holder']
@@ -3013,7 +3019,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                     },
                     dispatchEvent: () => { }
                 },
-                selection: { getNode : ()=>{ return {closest : ()=>{},tagName : 'span'}}, getStart : jest.fn(), setCursorLocation: jest.fn() },
+                selection: { getNode : ()=>{ return {closest : ()=>{},tagName : 'span', className : ''}}, getStart : jest.fn(), setCursorLocation: jest.fn() },
                 dom: {
                     getParent: () => {
                         return {
@@ -3070,7 +3076,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                     },
                     dispatchEvent: () => { }
                 },
-                selection: { getNode : ()=>{ return {closest : ()=>{},tagName : 'span'}}, getStart : jest.fn(), setCursorLocation: jest.fn() },
+                selection: { getNode : ()=>{ return {closest : ()=>{},tagName : 'span', className : ''}}, getStart : jest.fn(), setCursorLocation: jest.fn() },
                 dom: {
                     getParent: () => {
                         return {
@@ -4437,7 +4443,10 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                     id: "",
                     parentElement: { nodeName: "SUP", childNodes: [{ nodeName: 'A' }] },
                     dataset: { uri: "uri" },
-                    nodeName: "SUP"
+                    nodeName: "SUP",
+                    classList : {
+                        contains : ()=>{ }
+                    }
                 },
                 clipboardData: {
                     getData: () => { return pasteString }
@@ -4584,7 +4593,10 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                     id: "",
                     parentElement: { nodeName: "SUP", childNodes: [{ nodeName: 'A' }] },
                     dataset: { uri: "uri" },
-                    nodeName: "SUP"
+                    nodeName: "SUP",
+                    classList : {
+                        contains: () => { return true; },
+                    }
                 },
                 clipboardData: {
                     getData: () => { return pasteString }
@@ -4734,7 +4746,11 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                     id: "",
                     parentElement: { nodeName: "SUP", childNodes: [{ nodeName: 'A' }] },
                     dataset: { uri: "uri" },
-                    nodeName: "SUP"
+                    nodeName: "SUP",
+                    classList: {
+                        contains: () => { },
+                        remove: () => { }
+                    }
                 },
                 clipboardData: {
                     getData: () => { return pasteString }
@@ -4886,7 +4902,11 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                     id: "",
                     parentElement: { nodeName: "SUP", childNodes: [{ nodeName: 'A' }] },
                     dataset: { uri: "uri" },
-                    nodeName: "SUP"
+                    nodeName: "SUP",
+                    classList: {
+                        contains: () => { },
+                        remove: () => { }
+                    }
                 },
                 clipboardData: {
                     getData: () => { return pasteString }
