@@ -121,7 +121,7 @@ const tcmSnapshotsOnDefaultSlate = (snapshotsData, defaultKeys, containerElement
         tcmSnapshotsCreateSectionBreak(containerElement, snapshotsData, defaultKeys,index, isPopupSlate)
     }
     /* action on element in WE/PE/CG/2C */
-    else if ((poetryData || asideData || parentUrn ) ) {
+    else if (poetryData || asideData || parentUrn) {
         tcmSnapshotsInContainerElements(containerElement, snapshotsData, defaultKeys,index, isPopupSlate)
     }
     /* action on PE and CG */
@@ -132,7 +132,6 @@ const tcmSnapshotsOnDefaultSlate = (snapshotsData, defaultKeys, containerElement
     else if (wipData.type === MULTI_COLUMN) {
         tcmSnapshotsMultiColumn(containerElement, snapshotsData, defaultKeys,index, isPopupSlate);
     }
-    
     else {
         let elementDetails = setElementTypeAndUrn(elementId, tag, "", "", undefined, popupInContainer, slateManifestVersioning, isPopupSlate);
         prepareAndSendTcmData(elementDetails, wipData, defaultKeys, actionStatus,index);
