@@ -11,7 +11,6 @@ import { setSemanticsSnapshots, fetchElementsTag, generateWipDataForFigure } fro
 import TcmConstants from './TcmConstants.js';
 import { storeOldAssetForTCM } from '../ElementContainer/ElementContainer_Actions'
 import { handleBlankLineDom } from '../ElementContainer/UpdateElements.js';
-import { OPEN_AUDIO_NARRATION } from '../../constants/Action_Constants.js';
 
 const {
     elementType,
