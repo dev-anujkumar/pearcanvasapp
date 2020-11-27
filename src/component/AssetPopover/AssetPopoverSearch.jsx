@@ -53,8 +53,9 @@ class AssetPopoverSearch extends React.Component {
         let originalText, domNode, assetPopoverDomId;
 
         if (Object.keys(apoObject).length) {
-            document.getElementById(tinymce.activeEditor.id).focus()
-            domNode = document.querySelector('abbr[asset-id="' + apoObject.assetId + '"');
+            const currentElementNode = document.getElementById(tinymce.activeEditor.id)
+            currentElementNode.focus()
+            domNode = currentElementNode.querySelector('abbr[asset-id="' + apoObject.assetId + '"');
             originalText = domNode.innerHTML;
             assetPopoverDomId = apoObject.assetId;
             domNode.outerHTML = '<abbr title="Asset Popover" asset-id="' + assetPopoverDomId + '" data-uri="' + elementId + '" class="Pearson-Component AssetPopoverTerm">' + originalText + '</abbr>';
