@@ -165,8 +165,8 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 prepareDataForTcmCreate(type, createdElementData, getState, dispatch);
             }
         }
-        
-        replaceWirisClassAndAttr(tinymce.activeEditor.id)
+        const activeEditorId = tinymce && tinymce.activeEditor && tinymce.activeEditor.id
+        replaceWirisClassAndAttr(activeEditorId)
         dispatch({
             type: AUTHORING_ELEMENT_CREATED,
             payload: {

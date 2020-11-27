@@ -2070,6 +2070,9 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                     match: () => { },
                     formatChanged: () => { return jest.fn() },
                     unbind: () => { }
+                },
+                dom: {
+                    getParent: () => {}
                 }
             }
             const spyaddGlossary = jest.spyOn(instance, 'addGlossary')
@@ -2104,7 +2107,11 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                     getContent: () => {
                         return '<p><span className="poetryLine">Hello</span></p>';
                     },
-                    setContent: () => { }
+                    setContent: () => { },
+                    getStart: () => { }
+                },
+                dom: {
+                    getParent: () => {}
                 }
             }
             const spyaddGlossary = jest.spyOn(instance, 'addGlossary')
@@ -3019,7 +3026,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                     },
                     dispatchEvent: () => { }
                 },
-                selection: { getNode : ()=>{ return {closest : ()=>{},tagName : 'span', className : ''}}, getStart : jest.fn(), setCursorLocation: jest.fn() },
+                selection: { getNode : ()=>{ return {closest : ()=>{},tagName : 'span',className:{toLowerCase:() =>{}} }}, getStart : jest.fn(), setCursorLocation: jest.fn() },
                 dom: {
                     getParent: () => {
                         return {
@@ -3076,7 +3083,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                     },
                     dispatchEvent: () => { }
                 },
-                selection: { getNode : ()=>{ return {closest : ()=>{},tagName : 'span', className : ''}}, getStart : jest.fn(), setCursorLocation: jest.fn() },
+                selection: { getNode : ()=>{ return {closest : ()=>{},tagName : 'span',className:{toLowerCase:() =>{}} }}, getStart : jest.fn(), setCursorLocation: jest.fn() },
                 dom: {
                     getParent: () => {
                         return {
