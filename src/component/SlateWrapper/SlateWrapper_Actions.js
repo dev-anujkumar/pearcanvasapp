@@ -20,7 +20,7 @@ import {
 
 } from '../../constants/Action_Constants';
 
-import { sendDataToIframe, replaceWirisClassAndAttr } from '../../constants/utility.js';
+import { sendDataToIframe, replaceWirisClassAndAttr, getSlateType } from '../../constants/utility.js';
 import { HideLoader, ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
@@ -39,7 +39,8 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
     let  popupSlateData = getState().appStore.popupSlateData
     localStorage.setItem('newElement', 1);
     let slateEntityUrn = parentUrn && parentUrn.contentUrn || popupSlateData && popupSlateData.contentUrn || poetryData && poetryData.contentUrn || config.slateEntityURN
-
+    const parentData = getState().appStore.slateLevelData;
+    const newParentData = JSON.parse(JSON.stringify(parentData));
     let _requestData = {
         "projectUrn": config.projectUrn,
         "slateEntityUrn":slateEntityUrn,
@@ -52,6 +53,12 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
     } 
     else if (type == 'ELEMENT_CITATION') {
         _requestData.parentType = "citations"
+    }
+    else if (type === "LO_LIST"){
+        const slateType = getSlateType(newParentData[config.slateManifestURN])
+        if(slateType === "partintro"){
+            _requestData.isPart = "Y"
+        }
     }
     else if (parentUrn && parentUrn.elementType === 'group') {
         _requestData["parentType"] = "groupedcontent"
@@ -68,8 +75,6 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         }
     ).then(async createdElemData => {
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
-        const parentData = getState().appStore.slateLevelData;
-        const newParentData = JSON.parse(JSON.stringify(parentData));
         let currentSlateData = newParentData[config.slateManifestURN];
 
         /** [PCAT-8289] ---------------------------- TCM Snapshot Data handling ------------------------------*/
