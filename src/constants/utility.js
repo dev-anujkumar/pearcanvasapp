@@ -442,3 +442,16 @@ export const removeUnoClass = (htmlString) => {
 export const getSlateType = (slateObj) => {
     return slateObj && slateObj.type ? slateObj.type : null
 }
+
+/**
+ * Replaces a class and attribute in wiris img tag to prevent conversion to XML
+ * @param {*} currentTargetId current editor ID
+ */
+export const replaceWirisClassAndAttr = (currentTargetId) => {
+    const currentTarget = document.getElementById(currentTargetId)
+    let tempFirstContainerHtml = currentTarget && currentTarget.innerHTML
+    if (typeof tempFirstContainerHtml === "string") {
+        tempFirstContainerHtml = tempFirstContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
+        currentTarget.innerHTML = tempFirstContainerHtml
+    }
+}

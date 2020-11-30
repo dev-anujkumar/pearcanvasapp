@@ -1,4 +1,4 @@
-import { sendDataToIframe } from '../../constants/utility.js';
+import { sendDataToIframe, replaceWirisClassAndAttr } from '../../constants/utility.js';
 import { 
     prepareTcmSnapshots,
     fetchElementWipData,
@@ -13,6 +13,7 @@ import {
 import { elementTypeTCM, containerType, allowedFigureTypesForTCM } from "./ElementConstants";
 import config from '../../config/config';
 import { ShowLoader, HideLoader, TocRefreshVersioning, SendMessageForVersioning } from '../../constants/IFrameMessageTypes.js';
+import tinymce from 'tinymce'
 
 export const onDeleteSuccess = (params) => {
     const {
@@ -30,6 +31,8 @@ export const onDeleteSuccess = (params) => {
         fetchSlateData
     } = params
 
+    const activeEditorId = tinymce && tinymce.activeEditor && tinymce.activeEditor.id
+    replaceWirisClassAndAttr(activeEditorId)
     sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
     const parentData = getState().appStore.slateLevelData;
     const newParentData = JSON.parse(JSON.stringify(parentData));
@@ -52,7 +55,6 @@ export const onDeleteSuccess = (params) => {
     if (currentSlateData.status === 'approved') {
         return onSlateApproved(currentSlateData, dispatch, fetchSlateData)  
     }
-
     const args = {
         dispatch,
         elmId,
@@ -208,7 +210,7 @@ export const prepareTCMSnapshotsForDelete = (params) => {
             wipData,
             currentParentData: deleteParentData,
             bodymatter: deleteBodymatter,
-            newVersionUrns: deleteElemData.data,
+            newVersionUrns: deleteElemData,
             index
         }
         tcmSnapshotsForDelete(deleteData, type, containerElement)

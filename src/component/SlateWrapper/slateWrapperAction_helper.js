@@ -5,13 +5,13 @@ import { AUTHORING_ELEMENT_CREATED, GET_TCM_RESOURCES } from '../../constants/Ac
 import { HideLoader, ShowLoader, projectPendingTcStatus } from '../../constants/IFrameMessageTypes.js';
 import * as slateWrapperConstants from "./SlateWrapperConstants"
 //Helper methods
-import { sendDataToIframe } from '../../constants/utility.js';
+import { sendDataToIframe, replaceWirisClassAndAttr } from '../../constants/utility.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 
 import { SET_SELECTION } from './../../constants/Action_Constants.js';
 import { deleteElement } from './../ElementContainer/ElementContainer_Actions.js';
-
+import tinymce from 'tinymce'
 export const onPasteSuccess = async (params) => {
     const {
         responseData,
@@ -20,6 +20,8 @@ export const onPasteSuccess = async (params) => {
         getState
     } = params    
 
+    const activeEditorId = tinymce && tinymce.activeEditor && tinymce.activeEditor.id
+    replaceWirisClassAndAttr(activeEditorId)
     // Store Update on Paste Element
     let operationType = '';
     if (Object.keys(getState().selectionReducer.selection).length > 0 && 'operationType' in getState().selectionReducer.selection) {
@@ -61,7 +63,8 @@ export const onPasteSuccess = async (params) => {
             parentUrn: null,
             type: "TEXT",
             responseData,
-            dispatch
+            dispatch,
+            index
         }
 
         await handleTCMSnapshotsForCreation(snapArgs)
@@ -132,7 +135,8 @@ export const handleTCMSnapshotsForCreation = async (params) => {
         parentUrn,
         type,
         responseData,
-        dispatch
+        dispatch,
+        index
     } = params
 
     const containerElement = {
@@ -146,10 +150,10 @@ export const handleTCMSnapshotsForCreation = async (params) => {
         response: responseData
     };
     if (currentSlateData.status === 'approved') {
-        await tcmSnapshotsForCreate(slateData, type, containerElement, dispatch);
+        await tcmSnapshotsForCreate(slateData, type, containerElement, dispatch, index);
     }
     else {
-        tcmSnapshotsForCreate(slateData, type, containerElement, dispatch);
+        tcmSnapshotsForCreate(slateData, type, containerElement, dispatch, index);
     }
 }
 

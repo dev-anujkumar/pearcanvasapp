@@ -18,7 +18,7 @@ import CanvasWrapper from './component/CanvasWrapper';
 import './styles/style.css';
 
 
-console.log("!!!!!! ---- canvas-1.14.36 ---- !!!!!!")
+console.log("!!!!!! ---- canvas-1.15.9 ---- !!!!!!")
 
 
 class App extends Component {

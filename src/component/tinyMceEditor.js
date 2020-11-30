@@ -385,17 +385,7 @@ export class TinyMceEditor extends Component {
                         }
                     }
                     for (let index = 0; index < dfnAttribute.length; index++) {
-                        let dfn = activeElement.querySelector(`dfn[data-uri="${dfnAttribute[index]}"]`);
-                        let emTag = dfn.closest('em');
-                        if (emTag) {
-                            dfn.innerHTML = '<em>' + dfn.innerHTML + '</em>'
-                            if (emTag.textContent === dfn.textContent) {
-                                let innerHTML = emTag.innerHTML;
-                                emTag.outerHTML = innerHTML;
-                            } else {
-                                spanHandlers.splitOnTag(emTag.parentNode, dfn);
-                            }
-                        }
+                        this.handleGlossaryForItalic(activeElement, dfnAttribute[index]);
                     }
                 }
             }
@@ -2127,6 +2117,21 @@ export class TinyMceEditor extends Component {
         this.props.learningObjectiveOperations(text);
     }
 
+    // Handle Glossary for Italic
+    handleGlossaryForItalic = (activeElement, dataURIId) => {
+        let dfn = activeElement.querySelector(`dfn[data-uri="${dataURIId}"]`);
+        let emTag = dfn.closest('em');
+        if (emTag) {
+            dfn.innerHTML = '<em>' + dfn.innerHTML + '</em>'
+            if (emTag.textContent === dfn.textContent) {
+                let innerHTML = emTag.innerHTML;
+                emTag.outerHTML = innerHTML;
+            } else {
+                spanHandlers.splitOnTag(emTag.parentNode, dfn);
+            }
+        }
+    }
+
     /**
      * Called when glossary button is clicked. Responsible for adding glossary
      * @param {*} editor  editor instance 
@@ -2136,6 +2141,7 @@ export class TinyMceEditor extends Component {
         let parser = new DOMParser();
         let htmlDoc = parser.parseFromString(sText, 'text/html');
         let spans = htmlDoc.getElementsByClassName("poetryLine");
+        let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
         if (spans && spans.length) {
             store.dispatch({
                 type: MULTIPLE_LINE_POETRY_ERROR_POPUP,
@@ -2160,6 +2166,7 @@ export class TinyMceEditor extends Component {
                 insertionText = `<dfn data-uri= ${res.data.id} class="Pearson-Component GlossaryTerm">${selectedText}</dfn>`
             }
             editor.selection.setContent(insertionText);
+            this.handleGlossaryForItalic(activeElement, res.data.id);
             this.toggleGlossaryandFootnotePopup(true, "Glossary", res.data && res.data.id || null, () => { this.toggleGlossaryandFootnoteIcon(true); });
             this.saveContent()
         })
@@ -2956,7 +2963,7 @@ export class TinyMceEditor extends Component {
         }
         tinyMCE.$('.cypress-editable').css('caret-color', 'black')
     }
-
+    
     /**
      * handleBlur | gets triggered when any editor element is blurred
      * @param {*} e  event object
