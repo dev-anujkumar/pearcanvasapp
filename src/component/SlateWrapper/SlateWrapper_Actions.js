@@ -654,7 +654,6 @@ export const pasteElement = (params) => async (dispatch, getState) => {
         config.currentInsertedIndex = index;
         localStorage.setItem('newElement', 1);
         
-    
         let _requestData = {
             "content": [{
                 "type": selection.element.type,
@@ -666,6 +665,16 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                 "slateVersionUrn": config.slateManifestURN
             }]
         };
+
+        if(selection.element.type === "figure") {
+            _requestData = {
+                "content": [{
+                    ..._requestData.content[0],
+                    "figuredata": selection.element.figuredata
+                }]
+            }
+        }
+
         try {
             const createdElemData = await axios.post(
                 `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/slate/${config.slateEntityURN}/element/paste`,
