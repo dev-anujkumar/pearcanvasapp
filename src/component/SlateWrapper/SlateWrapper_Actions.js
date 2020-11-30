@@ -54,9 +54,9 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
     else if (type == 'ELEMENT_CITATION') {
         _requestData.parentType = "citations"
     }
-    else if (type === "LO_LIST"){
+    else if (type && type === "LO_LIST"){
         const slateType = getSlateType(newParentData[config.slateManifestURN])
-        if(slateType === "partintro"){
+        if(slateType && slateType === "partintro"){
             _requestData.isPart = "Y"
         }
     }
