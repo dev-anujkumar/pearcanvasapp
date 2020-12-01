@@ -14,7 +14,7 @@ import { CITE, TDX } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js'
 import RootSingleAssessmentComponent from '../AssessmentSlateCanvas/singleAssessmentCiteTdx/RootSingleAssessmentComponent.jsx'
 import { setCurrentCiteTdx, setCurrentInnerCiteTdx, assessmentSorting, specialCharacterDecode } from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
 import RootElmComponent from '../AssessmentSlateCanvas/elm/RootElmComponent.jsx';
-import { setAssessmentTitle, setAssessmentUsageType, setAssessmentProperties, checkElmAssessmentStatus } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
+import { setAssessmentTitle, setAssessmentUsageType, setAssessmentProperties, checkElmAssessmentStatus, setAssessmentItemTitle } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 import { resetElmStore } from '../AssessmentSlateCanvas/elm/Actions/ElmActions.js';
 import PopUp from '../PopUp';
 import ElmUpdateButton from '../AssessmentSlateCanvas/ElmUpdateButton.jsx'
@@ -43,7 +43,8 @@ class ElementSingleAssessment extends Component {
             isReset: false,
             searchTitle : '',
             filterUUID : '',
-            openedFrom:''
+            openedFrom:'',
+            assessmentItemTitle: this.props.model && setAssessmentItemTitle(this.props.model)
         };
     }
 
@@ -78,7 +79,9 @@ class ElementSingleAssessment extends Component {
             assessmentTitle: title,
             activeAsseessmentUsageType: this.props.model && setAssessmentUsageType(this.props.model),
             assessmentId: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.assessmentid ? this.props.model.figuredata.elementdata.assessmentid : null,
-            assessmentItemId: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.assessmentitemid ? this.props.model.figuredata.elementdata.assessmentitemid : null
+            assessmentItemId: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.assessmentitemid ? this.props.model.figuredata.elementdata.assessmentitemid : null,
+            assessmentItemTitle: this.props.model && setAssessmentItemTitle(this.props.model)
+        
         })
         let newElement = localStorage.getItem('newElement');
         if (newElement) {
@@ -96,7 +99,8 @@ class ElementSingleAssessment extends Component {
                 assessmentId: nextProps.model.figuredata && nextProps.model.figuredata.elementdata && nextProps.model.figuredata.elementdata.assessmentid ? nextProps.model.figuredata.elementdata.assessmentid : "",
                 assessmentItemId: nextProps.model.figuredata && nextProps.model.figuredata.elementdata && nextProps.model.figuredata.elementdata.assessmentitemid ? nextProps.model.figuredata.elementdata.assessmentitemid : "",
                 assessmentTitle: title,
-                elementType: nextProps.model.figuredata.elementdata.assessmentformat || ""
+                elementType: nextProps.model.figuredata.elementdata.assessmentformat || "",
+                assessmentItemTitle: setAssessmentItemTitle(nextProps.model)
             };
         }
 
@@ -112,12 +116,13 @@ class ElementSingleAssessment extends Component {
         value ? showTocBlocker(value) : hideTocBlocker(value)
         this.props.assessmentSorting("","");
         if (this.state.assessmentId && this.state.assessmentItemId ) {
-            this.props.setCurrentCiteTdx({ 
-                "versionUrn": this.state.assessmentId, 
+            this.props.setCurrentCiteTdx({
+                "versionUrn": this.state.assessmentId,
                 "name": this.state.assessmentTitle,
             });
-            this.props.setCurrentInnerCiteTdx({ 
-                "versionUrn": this.state.assessmentItemId
+            this.props.setCurrentInnerCiteTdx({
+                "versionUrn": this.state.assessmentItemId,
+                "name": this.state.assessmentItemTitle
             });
             this.setState({
                 showSinglePopup: value,
@@ -224,7 +229,7 @@ class ElementSingleAssessment extends Component {
             })
         }
         else{
-            this.setState({ assessmentId: citeTdxObj.id, assessmentItemId: citeTdxObj.singleAssessmentID.versionUrn, assessmentTitle: specialCharacterDecode(citeTdxObj.title) },
+            this.setState({ assessmentId: citeTdxObj.id, assessmentItemId: citeTdxObj.singleAssessmentID.versionUrn, assessmentTitle: specialCharacterDecode(citeTdxObj.title), assessmentItemTitle: specialCharacterDecode(citeTdxObj.singleAssessmentID.name) },
                 () => {
                     let oldAssessmentId = this.props.model.figuredata.elementdata.assessmentid
                     this.saveAssessment(() => {
@@ -278,7 +283,7 @@ class ElementSingleAssessment extends Component {
     addPufAssessment = (pufObj, cb) => {
         showTocBlocker();
         disableHeader(true);
-        this.setState({ assessmentId: pufObj.id, assessmentItemId: pufObj.itemid, assessmentTitle: pufObj.title },
+        this.setState({ assessmentId: pufObj.id, assessmentItemId: pufObj.itemid, assessmentTitle: pufObj.title, assessmentItemTitle: pufObj.itemTitle },
             () => {
                 let itemData = {
                     itemId: pufObj.itemid,
@@ -448,11 +453,12 @@ class ElementSingleAssessment extends Component {
         /*JSX for the Single Assessment Element */
         assessmentJSX = <div className={`divAssessment ${assessmentKeys && assessmentKeys.divMainClass ? assessmentKeys.divMainClass : ""}`} >
             <figure className={`figureAssessment ${this.state.elementType !== "tdx" ? "figureAssessmentItem" : "figureTdxAssessmentItem"}`}>
-                <header>
-                    <h4 className={this.state.elementType !== "tdx" ? "heading4AssessmentItemNumberLabel" : "heading4TdxAssessmentItemNumberLabel"} id="single_assessment_title">{this.state.assessmentTitle}</h4>
-                </header>
-                <div className="singleAssessmentIdInfo" ><strong>ID: </strong>{this.state.assessmentId ? this.state.assessmentId : (model.figuredata.elementdata ? model.figuredata.elementdata.assessmentid : "")}</div>
-                <div className="singleAssessmentItemIdInfo" ><strong>ITEM ID: </strong>{this.state.assessmentItemId ? this.state.assessmentItemId : (model.figuredata.elementdata ? model.figuredata.elementdata.assessmentitemid : "")}</div>
+                <div className='assessment-metadata-container'>
+                <div className='assessment-metadata title-field'><p className='single-assessment-title title-field'>TITLE: </p><span className='embedded-title'>{this.state.assessmentTitle}</span></div>
+                <div className='assessment-metadata'><p className='single-assessment-title'>ID: </p><span className='embedded-id'>{this.state.assessmentId ? this.state.assessmentId : (model.figuredata.elementdata ? model.figuredata.elementdata.assessmentid : "")}</span></div>
+                <div className='assessment-metadata title-field'><p className='single-assessment-title title-field'>ITEM TITLE: </p><span className='embedded-itemtitle'>{this.state.assessmentItemTitle ? this.state.assessmentItemTitle : (model.figuredata.elementdata ? model.figuredata.elementdata.assessmentitemtitle : "")}</span></div>
+                <div className='assessment-metadata'><p className='single-assessment-title'>ITEM ID: </p><span className='embedded-itemid'>{this.state.assessmentItemId ? this.state.assessmentItemId : (model.figuredata.elementdata ? model.figuredata.elementdata.assessmentitemid : "")}</span></div>
+                </div>
                 <div className="singleAssessment_Dropdown_Container">
                     <div className="single-assessment-usagetype-container">
                         <div className="singleAssessment_Dropdown_SelectLabel">Select usage type<span className="required">*</span></div>

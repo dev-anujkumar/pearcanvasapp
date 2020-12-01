@@ -126,3 +126,14 @@ export const checkElmAssessmentStatus = (assessmentId, props) => {
     }
     return false;
 }
+
+/** This is a function to set Assessment Item Title for Embedded Assessment
+ * * @param model - object containig element data
+*/
+export const setAssessmentItemTitle = (model) => {
+    let itemTitle = "";
+    if (model && model.figuredata && model.figuredata.elementdata && model.figuredata.elementdata.assessmentitemtitle) {
+        itemTitle = model.figuredata.elementdata.assessmentitemtitle
+    }
+    return itemTitle;
+}
