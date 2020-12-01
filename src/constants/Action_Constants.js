@@ -136,3 +136,6 @@ export const VERSIONING_SLATEMANIFEST = "VERSIONING_SLATEMANIFEST"
 
 /* --------------- Selection Constants ------------------------*/
 export const SET_SELECTION = 'SET_SELECTION'
+
+/* --------------- Wiris Alt Text ------------------------*/
+export const WIRIS_ALT_TEXT_POPUP = 'WIRIS_ALT_TEXT_POPUP';
