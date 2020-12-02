@@ -337,12 +337,13 @@ export const assessmentConfirmationPopup = (data) => {
     }
 }
 
-export const saveAutoUpdateData = (oldAssessmentId, newAssessmentId) => {
+export const saveAutoUpdateData = (oldAssessmentId, newAssessmentId, assessmentType) => {
     return {
         type: SAVE_AUTO_UPDATE_ID,
         payload: {
             oldAssessmentId: oldAssessmentId,
-            newAssessmentId: newAssessmentId
+            newAssessmentId: newAssessmentId,
+            type: assessmentType
         }
     }
 }

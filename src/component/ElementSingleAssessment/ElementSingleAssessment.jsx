@@ -229,8 +229,7 @@ class ElementSingleAssessment extends Component {
                     let oldAssessmentId = this.props.model.figuredata.elementdata.assessmentid
                     this.saveAssessment(() => {
                         if (oldAssessmentId && oldAssessmentId !== citeTdxObj.id) {
-                            let data = [oldAssessmentId, citeTdxObj.id]
-                            this.props.checkEntityUrn(data)
+                            this.props.saveAutoUpdateData(oldAssessmentId, citeTdxObj.id, "citetdx")
                         }
                     });
                 })
