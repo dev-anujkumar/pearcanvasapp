@@ -345,7 +345,7 @@ export const collectDataAndPrepareTCMSnapshot = async (params) => {
             figureData: oldFigureData
         }
         if (!config.isCreateGlossary) {
-            tcmSnapshotsForUpdate(elementUpdateData, elementIndex, containerElement, dispatch, assetRemoveidForSnapshot);
+            await tcmSnapshotsForUpdate(elementUpdateData, elementIndex, containerElement, dispatch, assetRemoveidForSnapshot);
         }
         config.isCreateGlossary = false
     }

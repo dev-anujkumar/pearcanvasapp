@@ -1,6 +1,6 @@
 var _ = require("lodash");
 const uuidV4 = require("uuid/v4");
-import { utils, checkforToolbarClick, customEvent, spanHandlers, removeBOM  } from '../../src/js/utils.js';
+import { utils, checkforToolbarClick, customEvent, spanHandlers, removeBOM, getWirisAltText  } from '../../src/js/utils.js';
 import { JSDOM } from 'jsdom'
 global.document = (new JSDOM()).window.Element;
 var globalDiv = null;
@@ -1064,6 +1064,19 @@ describe('Utils file function testing', () => {
         let divTag = htmlDoc.getElementsByTagName("div")[0];
         divTag.innerHTML = removeBOM(divTag.innerHTML);
         expect(divTag.innerHTML).toEqual('<span class="poetryLine"></span>');
+    })
+
+    it('Testing getWirisAltText function', () => {
+        const EXPECTED_RESULT = 'sqaure root of 2';
+        const EVENT = { target : {getAttribute : ()=>{ return EXPECTED_RESULT}}}
+        const RESULT = getWirisAltText(EVENT);
+        expect(RESULT).toEqual(EXPECTED_RESULT);
+    })
+    it('Testing getWirisAltText function for missing Alt Attribute', () => {
+        const EXPECTED_RESULT = 'ALT TEXT NOT FOUND';
+        const EVENT = { target : {getAttribute : ()=>{ return null }}}
+        const RESULT = getWirisAltText(EVENT);
+        expect(RESULT).toEqual(EXPECTED_RESULT);
     })
 
 });
