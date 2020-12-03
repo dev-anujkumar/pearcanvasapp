@@ -48,18 +48,15 @@ export default function assessmentReducer(state = INITIAL_STATE, action = INITIA
                 showConfirmationPopup: action.payload
             }
         }
-        case RESET_ASSESSMENT_STORE:
-            return {}
         case UPDATE_ELM_ITEM_ID:
-            let innerItems = state[action.payload.currentWorkUrn].items && Object.keys(state[action.payload.currentWorkUrn].items)
-            if (innerItems && innerItems.find(oldId => oldId == action.payload.updatedItem.oldItemId)) {
-                state[action.payload.currentWorkUrn].items[action.payload.updatedItem.oldItemId] = action.payload.updatedItem.latestItemId
+            let itemsArray = state[action.payload.currentWorkUrn] && state[action.payload.currentWorkUrn].items ? state[action.payload.currentWorkUrn].items : []
+            const itemIndex = itemsArray ? itemsArray.findIndex(item => item.oldItemId == action.payload.updatedItem.oldItemId) : -1;
+            if (itemIndex != -1) {
+                itemsArray.splice(itemIndex, 1, action.payload.updatedItem)
             }
             else {
-                state[action.payload.currentWorkUrn].items = {
-                    ...state[action.payload.currentWorkUrn].items,
-                    [action.payload.updatedItem.oldItemId]: action.payload.updatedItem.latestItemId
-                }
+                itemsArray.push(action.payload.updatedItem)
+                state[action.payload.currentWorkUrn].items = itemsArray;
             }
             return {
                 ...state,
@@ -72,6 +69,8 @@ export default function assessmentReducer(state = INITIAL_STATE, action = INITIA
                 ...state,
                 saveAutoUpdateData: action.payload
             }
+        case RESET_ASSESSMENT_STORE:
+            return {}
         default:
             return state
     }

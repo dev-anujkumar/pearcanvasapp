@@ -66,7 +66,7 @@ class ElementSingleAssessment extends Component {
         const { assessmentReducer } = this.props;
         const { elementType, assessmentId, assessmentItemId, assessmentTitle } = this.state;
         if (!config.savingInProgress && !config.isSavingElement && elementType == PUF && (assessmentId && assessmentReducer && assessmentReducer[assessmentId] && assessmentReducer[assessmentId].items)) {
-            let latestItemId = assessmentReducer[assessmentId].items && assessmentReducer[assessmentId].items[assessmentItemId]
+            const latestItemId = assessmentReducer[assessmentId].items.find( itemdata => itemdata.oldItemId == assessmentItemId)
             if ((assessmentReducer[assessmentId].showUpdateStatus == false && (latestItemId && assessmentItemId != latestItemId)) || (assessmentTitle != assessmentReducer[assessmentId].assessmentTitle)) {
                 this.updateElmOnSaveEvent(this.props);
             }
@@ -401,10 +401,12 @@ class ElementSingleAssessment extends Component {
         await this.props.checkAssessmentStatus(this.props.assessmentReducer[this.state.assessmentId].latestWorkUrn, 'fromUpdate', this.state.assessmentId, "", itemData)
         const { latestWorkUrn, assessmentTitle, items, prevLatestWorkUrn } = this.props.assessmentReducer[this.state.assessmentId];
         const { latestVersionClean } = this.props.assessmentReducer[latestWorkUrn]
+        const updatedItem = items && items.find(item => item.oldItemId == this.state.assessmentItemId)
         let updatedElmObj = {
             id: latestWorkUrn,
-            itemid: items[this.state.assessmentItemId],
+            itemid: updatedItem.latestItemId,
             title: assessmentTitle,
+            itemtitle: 'updated title',//updatedItem.latestItemTitle,
             usagetype: this.state.activeAsseessmentUsageType
         }
         updatedElmObj.id = latestVersionClean == true ? prevLatestWorkUrn : latestWorkUrn
@@ -424,7 +426,7 @@ class ElementSingleAssessment extends Component {
         showTocBlocker();
         disableHeader(true);
         this.props.saveAutoUpdateData(oldElmAssessmentId, pufObj.id);
-        this.setState({ assessmentId: pufObj.id, assessmentItemId: pufObj.itemid, assessmentTitle: pufObj.title },
+        this.setState({ assessmentId: pufObj.id, assessmentItemId: pufObj.itemid, assessmentTitle: pufObj.title, assessmentItemTitle: pufObj.itemtitle },
             () => {
                 this.saveAssessment();
             })
