@@ -7,7 +7,7 @@
 import React, { Component } from 'react';
 // IMPORT - Components/Dependencies //
 import config from '../../../config/config.js';
-import { sendDataToIframe, apiKeys_LO } from '../../../constants/utility.js';
+import { sendDataToIframe, defaultMathImagePath } from '../../../constants/utility.js';
 import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '../../../js/toggleLoader';
 import { TocToggle } from '../../../constants/IFrameMessageTypes';
 import { releaseSlateLockWithCallback, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
@@ -502,7 +502,14 @@ function CommunicationChannel(WrappedComponent) {
                 this.props.setSlateEntity(config.slateEntityURN);
                 this.props.setSlateParent(message.node.nodeParentLabel);
                 this.props.glossaaryFootnotePopup(false);
-                // let apiKeys = [config.ASSET_POPOVER_ENDPOINT, config.STRUCTURE_APIKEY, config.PRODUCTAPI_ENDPOINT];
+                let apiKeys_LO = {
+                    'loApiUrl': config.LEARNING_OBJECTIVES_ENDPOINT,
+                    'strApiKey': config.STRUCTURE_APIKEY,
+                    'mathmlImagePath': config.S3MathImagePath ? config.S3MathImagePath : defaultMathImagePath,
+                    'productApiUrl': config.PRODUCTAPI_ENDPOINT,
+                    'manifestApiUrl': config.ASSET_POPOVER_ENDPOINT,
+                    'assessmentApiUrl': config.ASSESSMENT_ENDPOINT
+                }
                 if (config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType == "section") {
                     sendDataToIframe({ 'type': 'getSlateLO', 'message': { projectURN: config.projectUrn, slateURN: config.slateManifestURN, apiKeys_LO } })
                 }

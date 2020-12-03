@@ -10,7 +10,7 @@ import {
     OpenLOPopup, ViewLearningObjectiveSlate, ViewLearningObjectiveAssessment, AddLearningObjectiveSlate, AddLearningObjectiveAssessment, AddEditLearningObjective, UnlinkSlate, AddLearningObjectiveAssessmentDropdown
 }
     from '../../constants/IFrameMessageTypes';
-import { sendDataToIframe , hasReviewerRole, apiKeys_LO} from '../../constants/utility.js';
+import { sendDataToIframe , hasReviewerRole, defaultMathImagePath } from '../../constants/utility.js';
 import { connect } from 'react-redux';
 import { ASSESSMENT_ITEM, ASSESSMENT_ITEM_TDX } from '../../constants/Element_Constants';
 import {  FULL_ASSESSMENT_CITE, FULL_ASSESSMENT_TDX, FULL_ASSESSMENT_PUF, LEARNING_APP_TYPE, LEARNOSITY, LEARNING_TEMPLATE, PUF, CITE, TDX } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
@@ -79,7 +79,14 @@ class SlateTagDropdown extends React.Component {
             assessmentType: assessmentTypeLO
         }
         let isLOExist= this.props.isLOExist;
-        //let apiKeys = [config.LEARNING_OBJECTIVES_ENDPOINT, config.ASSET_POPOVER_ENDPOINT, config.STRUCTURE_APIKEY, config.ASSESSMENT_ENDPOINT, config.PRODUCTAPI_ENDPOINT];
+        let apiKeys_LO = {
+            'loApiUrl': config.LEARNING_OBJECTIVES_ENDPOINT,
+            'strApiKey': config.STRUCTURE_APIKEY,
+            'mathmlImagePath': config.S3MathImagePath ? config.S3MathImagePath : defaultMathImagePath,
+            'productApiUrl': config.PRODUCTAPI_ENDPOINT,
+            'manifestApiUrl': config.ASSET_POPOVER_ENDPOINT,
+            'assessmentApiUrl': config.ASSESSMENT_ENDPOINT
+        };
         if (e.target.innerText == ViewLearningObjectiveSlateDropdown && config.slateType !== 'assessment') {
             sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': ViewLearningObjectiveSlate, 'data': currentSlateLOData, 'chapterContainerUrn': config.parentContainerUrn, 'isLOExist': isLOExist, 'editAction': '' } });
         }

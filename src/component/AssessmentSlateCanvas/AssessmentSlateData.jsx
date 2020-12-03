@@ -11,7 +11,7 @@ import RootCiteTdxComponent from './assessmentCiteTdx/RootCiteTdxComponent.jsx';
 /** ----- Import - Dependencies ----- */
 import config from '../../config/config';
 import './../../styles/AssessmentSlateCanvas/AssessmentSlateCanvas.css';
-import { sendDataToIframe, hasReviewerRole, apiKeys_LO } from '../../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, defaultMathImagePath } from '../../constants/utility.js';
 import { TAXONOMIC_ID_LEARNING_SYSTEM, TAXONOMIC_ID_DISCIPLINES } from './learningTool/learningToolUtility.js';
 import { assessmentFormats, CITE, TDX, PUF, LEARNING_TEMPLATE, LEARNOSITY, ELM_UPDATE_MSG, ELM_UPDATE_POPUP_HEAD, ELM_UPDATE_BUTTON } from './AssessmentSlateConstants.js';
 /** ----- Import - Action Creators ----- */
@@ -85,7 +85,14 @@ class AssessmentSlateData extends Component {
     /*** @description - This function is to handle LO Data in AS */
     sendDataAssessment(nextProps) {
         if (config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType == "assessment") {
-            // let apiKeys = [config.ASSET_POPOVER_ENDPOINT, config.STRUCTURE_APIKEY, config.PRODUCTAPI_ENDPOINT];
+            let apiKeys_LO = {
+                'loApiUrl': config.LEARNING_OBJECTIVES_ENDPOINT,
+                'strApiKey': config.STRUCTURE_APIKEY,
+                'mathmlImagePath': config.S3MathImagePath ? config.S3MathImagePath : defaultMathImagePath,
+                'productApiUrl': config.PRODUCTAPI_ENDPOINT,
+                'manifestApiUrl': config.ASSET_POPOVER_ENDPOINT,
+                'assessmentApiUrl': config.ASSESSMENT_ENDPOINT
+            };
             let assessmentId = nextProps && nextProps.model && nextProps.model.elementdata.assessmentid.length > 0 ? nextProps.model.elementdata.assessmentid : '';
             if (assessmentId != "") {
                 sendDataToIframe({ 'type': 'getAssessmentLO', 'message': { projectURN: config.projectUrn, assessmentId, apiKeys_LO } });
