@@ -10,7 +10,7 @@ import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 
 import { SET_SELECTION } from './../../constants/Action_Constants.js';
-import { deleteElement } from './../ElementContainer/ElementContainer_Actions.js';
+import { deleteFromStore } from './../ElementContainer/ElementContainerDelete_helpers.js';
 import tinymce from 'tinymce'
 export const onPasteSuccess = async (params) => {
     const {
@@ -36,7 +36,18 @@ export const onPasteSuccess = async (params) => {
             cutIndex > getState().selectionReducer.selection.sourceElementIndex) {
             cutIndex -= 1;
         }
-        await dispatch(deleteElement(deleteElm.id, deleteElm.type, deleteElm.parentUrn, deleteElm.asideData, deleteElm.contentUrn, deleteElm.index, deleteElm.poetryData, getState().selectionReducer.selection.element, deleteElm.cutCopyParentUrn));
+        const parentData = getState().appStore.slateLevelData;
+        const newParentData = JSON.parse(JSON.stringify(parentData));
+        let deleteParams = {
+            dispatch,
+            elmId: deleteElm.id,
+            parentUrn: deleteElm.parentUrn,
+            asideData: deleteElm.asideData,
+            index: deleteElm.index,
+            poetryData: deleteElm.poetryData,
+            newParentData 
+        }
+        deleteFromStore(deleteParams)
     }
 
     if (operationType === 'copy') {
