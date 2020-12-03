@@ -7,7 +7,7 @@
 import React, { Component } from 'react';
 // IMPORT - Components/Dependencies //
 import config from '../../../config/config.js';
-import { sendDataToIframe } from '../../../constants/utility.js';
+import { sendDataToIframe, apiKeys_LO } from '../../../constants/utility.js';
 import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '../../../js/toggleLoader';
 import { TocToggle } from '../../../constants/IFrameMessageTypes';
 import { releaseSlateLockWithCallback, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
@@ -502,12 +502,12 @@ function CommunicationChannel(WrappedComponent) {
                 this.props.setSlateEntity(config.slateEntityURN);
                 this.props.setSlateParent(message.node.nodeParentLabel);
                 this.props.glossaaryFootnotePopup(false);
-                let apiKeys = [config.ASSET_POPOVER_ENDPOINT, config.STRUCTURE_APIKEY, config.PRODUCTAPI_ENDPOINT];
+                // let apiKeys = [config.ASSET_POPOVER_ENDPOINT, config.STRUCTURE_APIKEY, config.PRODUCTAPI_ENDPOINT];
                 if (config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType == "section") {
-                    sendDataToIframe({ 'type': 'getSlateLO', 'message': { projectURN: config.projectUrn, slateURN: config.slateManifestURN, apiKeys } })
+                    sendDataToIframe({ 'type': 'getSlateLO', 'message': { projectURN: config.projectUrn, slateURN: config.slateManifestURN, apiKeys_LO } })
                 }
                 else if (config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType == "container-introduction") {
-                    sendDataToIframe({ 'type': 'getLOList', 'message': { projectURN: config.projectUrn, chapterURN: config.parentContainerUrn, apiKeys } })
+                    sendDataToIframe({ 'type': 'getLOList', 'message': { projectURN: config.projectUrn, chapterURN: config.parentContainerUrn, apiKeys_LO } })
                 }
             }
             /**

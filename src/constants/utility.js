@@ -455,3 +455,16 @@ export const replaceWirisClassAndAttr = (currentTargetId) => {
         currentTarget.innerHTML = tempFirstContainerHtml
     }
 }
+
+export const defaultMathImagePath = "https://cite-media-stg.pearson.com/legacy_paths/wiris-dev-mathtype-cache-use/cache/";
+/**
+ * This object contains API-endpoints for Content-Enrichment SPA
+ */
+export const apiKeys_LO = {
+    'loApiUrl': config.LEARNING_OBJECTIVES_ENDPOINT,
+    'strApiKey': config.STRUCTURE_APIKEY,
+    'mathmlImagePath': config.S3MathImagePath ? config.S3MathImagePath : defaultMathImagePath,
+    'productApiUrl': config.PRODUCTAPI_ENDPOINT,
+    'manifestApiUrl': config.ASSET_POPOVER_ENDPOINT,
+    'assessmentApiUrl': config.ASSESSMENT_ENDPOINT
+}

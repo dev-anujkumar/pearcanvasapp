@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import TinyMceEditor from "../tinyMceEditor"
-import { sendDataToIframe } from '../../constants/utility.js';
+import { sendDataToIframe, apiKeys_LO } from '../../constants/utility.js';
 import config from '../../config/config';
 import { connect } from 'react-redux';
 import './../../styles/ElementMetaDataAnchor/ElementMetaDataAnchor.css';
@@ -102,8 +102,8 @@ export class ElementMetaDataAnchor extends Component {
       }
       this.props.showBlocker(true);
       let slateManifestURN= config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
-      let apiKeys = [config.ASSET_POPOVER_ENDPOINT, config.STRUCTURE_APIKEY, config.LEARNING_OBJECTIVES_ENDPOINT, config.ASSESSMENT_ENDPOINT];
-      sendDataToIframe({ 'type': 'getLOEditPopup', 'message': { lodata: loData, projectURN: config.projectUrn, slateURN: slateManifestURN, apiKeys, wrapperURL: config.WRAPPER_URL } })
+      //let apiKeys = [config.ASSET_POPOVER_ENDPOINT, config.STRUCTURE_APIKEY, config.LEARNING_OBJECTIVES_ENDPOINT, config.ASSESSMENT_ENDPOINT];
+      sendDataToIframe({ 'type': 'getLOEditPopup', 'message': { lodata: loData, projectURN: config.projectUrn, slateURN: slateManifestURN, apiKeys_LO, wrapperURL: config.WRAPPER_URL } })
     }
   }
 
