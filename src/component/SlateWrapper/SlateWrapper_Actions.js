@@ -16,7 +16,8 @@ import {
     SET_PARENT_NODE,
     ERROR_POPUP,
     GET_TCM_RESOURCES,
-    PAGE_NUMBER_LOADER
+    PAGE_NUMBER_LOADER,
+    WIRIS_ALT_TEXT_POPUP
 
 } from '../../constants/Action_Constants';
 
@@ -708,4 +709,10 @@ export const pasteElement = (params) => async (dispatch, getState) => {
             console.log("Exceptional Error on pasting the element:::", error);
         }
     }
+}
+export const wirisAltTextPopup = (data) => (dispatch) => {
+    return dispatch({
+        type: WIRIS_ALT_TEXT_POPUP,
+        payload: data
+    })
 }

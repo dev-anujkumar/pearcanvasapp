@@ -527,6 +527,14 @@ export const spanHandlers = {
         }
     }
 }
+/**
+ * Returns the alt text of wiris image
+ * @param {Object} targetWirisImage 
+ */
+export const getWirisAltText = ({target}) =>{
+    const WIRIS_ALT_TEXT = target.getAttribute('alt');
+    return WIRIS_ALT_TEXT || 'ALT TEXT NOT FOUND';
+}
 
 /**
  * Removes Byte Order Markup (BOM text) i.e &#65279

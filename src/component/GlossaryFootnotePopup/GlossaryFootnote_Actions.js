@@ -31,7 +31,7 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
         const parentData = store.getState().appStore.slateLevelData;
         let newParentData = JSON.parse(JSON.stringify(parentData));
         let currentSlateData = newParentData[config.slateManifestURN];
-        if(currentSlateData.type==="popup" && currentSlateData.status === "approved" && config.isCreateFootnote){
+        if(currentSlateData.type==="popup" && currentSlateData.status === "approved" && (config.isCreateFootnote || config.isCreateGlossary)){
             return false;
         }
         let newBodymatter = newParentData[slateId].contents.bodymatter;

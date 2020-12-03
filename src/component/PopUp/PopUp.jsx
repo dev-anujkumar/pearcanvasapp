@@ -46,7 +46,7 @@ class PopUp extends React.Component {
     * @param {event} 
     */
     renderButtons = (props) => {
-        if (props.isLockPopup || props.isLockReleasePopup || props.wrongAudio || props.showConfirmation) { //Slate lock popup
+        if (props.isLockPopup || props.isLockReleasePopup || props.wrongAudio || props.showConfirmation || props.altText) { //Slate lock popup
             showBlocker(true); showTocBlocker();
             return (
                 <div className={`dialog-buttons ${props.slateLockClass}`}>
@@ -118,7 +118,7 @@ class PopUp extends React.Component {
     * @param {event} 
     */
     renderInputBox = (props) => {
-        if (props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.tocDelete || props.removeConfirmation || props.wrongAudio || props.lockForTOC || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation) {
+        if (props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.tocDelete || props.removeConfirmation || props.wrongAudio || props.lockForTOC || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText) {
             return null
         }
         else if (props.isLockPopup && props.withInputBox && !props.lockForTOC) {
@@ -145,7 +145,7 @@ class PopUp extends React.Component {
     }
 
     renderCloseSymbol = (props) => {
-        if (props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.tocDelete || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation) {
+        if (props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.tocDelete || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText) {
             return null
         }
         else {
@@ -207,6 +207,14 @@ class PopUp extends React.Component {
                 <>
                     <h2 className='tocDeleteHeader'>{this.props.elmHeaderText}</h2>
                     <div className={`dialog-window ${props.isElmUpdateClass}`} >{props.dialogText}</div>
+                </>
+            )
+        }
+        else if(props.altText) {
+            return (
+                <>
+                    <h2 className='tocDeleteHeader'>{this.props.altHeaderText}</h2>
+                    <div className={`dialog-window delete-element-text ${props.isElmUpdateClass}`} >{props.dialogText}</div>
                 </>
             )
         }
