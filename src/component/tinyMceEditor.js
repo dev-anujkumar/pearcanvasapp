@@ -2882,6 +2882,18 @@ export class TinyMceEditor extends Component {
          */
         let timeoutInstance = setTimeout(() => {
             clearTimeout(timeoutInstance);
+            /**
+             * Remove extra Wiris overlay
+             */
+            let wirisNodes = document.getElementsByClassName('wrs_modal_dialogContainer');
+            let wirisNodeLength = wirisNodes.length;
+            if (wirisNodeLength > 1) {
+                for (let i = 0; i < wirisNodeLength - 1; i++) {
+                    wirisNodes[i].remove();
+                    // document.getElementsByClassName('wrs_modal_overlay').remove();
+                    document.getElementById('wrs_modal_overlay[' + i + ']').remove();
+                }
+            }
             tinymce.init(this.editorConfig).then((d) => {
                 this.setToolbarByElementType();
                 let listLiNodes1 = currentTarget.querySelectorAll('li')
