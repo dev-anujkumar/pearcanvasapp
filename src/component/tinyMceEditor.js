@@ -150,6 +150,17 @@ export class TinyMceEditor extends Component {
                             let innerHtml = this.innerHTML;
                             this.outerHTML = innerHtml;
                         })
+                        tinymce.$('.Wirisformula').each(function () {
+                            let mathformula = this.getAttribute('mathmlformula')
+                            if(mathformula){
+                                let res = mathformula.substr(0, 2);
+                                let res2=mathformula.substr(2, 2);
+                                let s3ImagePath=config.S3MathImagePath?config.S3MathImagePath:"https://cite-media-stg.pearson.com/legacy_paths/wiris-dev-mathtype-cache-use/cache/"
+                                let path=s3ImagePath+res+'/'+res2+'/'+mathformula+'.png'
+                                this.setAttribute('src', path)
+                                this.removeAttribute('mathmlformula')
+                            }
+                        });
                         if (!config.savingInProgress) {
                             if ((this.props.element.type === "popup" || this.props.element.type === "citations") && !this.props.currentElement) {
                                 this.props.createPopupUnit(this.props.popupField, true, this.props.index, this.props.element)
