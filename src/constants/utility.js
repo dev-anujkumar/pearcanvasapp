@@ -455,3 +455,5 @@ export const replaceWirisClassAndAttr = (currentTargetId) => {
         currentTarget.innerHTML = tempFirstContainerHtml
     }
 }
+
+export const defaultMathImagePath = "https://cite-media-stg.pearson.com/legacy_paths/wiris-dev-mathtype-cache-use/cache/";

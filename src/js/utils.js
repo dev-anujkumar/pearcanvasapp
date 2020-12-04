@@ -541,3 +541,5 @@ export const getWirisAltText = ({target}) =>{
  * @param {String} nodeHTML model HTML
  */
 export const removeBOM = (nodeHTML) => nodeHTML.replace(/﻿/g, "");
+export const removeImageCache = (nodeHTML) => nodeHTML.replace(/(?:\.png).*?[\"]/g,'.png?'+(new Date()).getTime()+'"');
+
