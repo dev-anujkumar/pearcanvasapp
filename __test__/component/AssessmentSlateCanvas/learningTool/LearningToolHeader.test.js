@@ -1,18 +1,8 @@
-import React, { useState } from 'react';
-import { mount, shallow } from 'enzyme';
+import React from 'react';
+import { mount } from 'enzyme';
 import LearningToolHeader from '../../../../src/component/AssessmentSlateCanvas/learningTool/Components/LearningToolHeader';
 import { learningSystemList, disciplines } from '../../../../fixtures/learningTool'
 
-jest.mock('../../../../src/component/DropdownMenu', () => {
-    return function () {
-        return (<ul className="dropdown-parent"><li></li></ul>)
-    }
-});
-// jest.mock('../../../../src/component/InputSearch', () => {
-//     return function () {
-//         return (<input className="learningToolSearchBar" id="learningToolSearchBar" value='Test'on/>)
-//     }
-// });
 jest.mock('../../../../src/constants/utility.js', () => ({
     hasReviewerRole: jest.fn()
 }));
@@ -98,7 +88,7 @@ describe('Testing Learning Tool LearningToolHeader component', () => {
             expect(wrapper.find('.learning-tool-header tr.row-2 td input#learningToolSearchBar').at(0)).toHaveLength(1);
         })
     })
-    xdescribe('handleDropdownChange Testing', () => {
+    describe('handleDropdownChange Testing', () => {
         let newProps = {
             searchProps: {
                 showError: true,
@@ -119,22 +109,28 @@ describe('Testing Learning Tool LearningToolHeader component', () => {
             preventDefault: jest.fn(),
             stopPropagation: jest.fn()
         }
-        let wrapper;
+        let nextWrapper;
         beforeEach(() => {
-            wrapper = shallow(<LearningToolHeader {...newProps} />);
+            nextWrapper = mount(<LearningToolHeader {...newProps} />);
         });
 
         afterEach(() => {
             jest.clearAllMocks();
         });
 
-        xit('Test handleDropdownChange', () => {
-            const setOpenAppTypeDropdown = jest.fn();
-            const handleClick = jest.spyOn(React, "useState");
-            handleClick.mockImplementation(openAppTypeDropdown => [openAppTypeDropdown, setOpenAppTypeDropdown]);
-            expect(setOpenAppTypeDropdown).toBeTruthy();
-            wrapper.find('.learning-tool-header tr.row-2 td ul.dropdown-parent li').simulate('change', event);            
-            expect(wrapper.find('.learning-tool-header tr.row-2 td ul.dropdown-parent li').at(0)).toHaveLength(1);
+        it('Test handleDropdownChange - Discipline', () => {
+            nextWrapper.find('.learning-tool-header tr.row-2 td.data-disc').simulate('click', event);
+            expect(nextWrapper.find('.learning-tool-header tr.row-2 td.data-disc ul.dropdown-parent li').at(0)).toHaveLength(1);
+            nextWrapper.find('.learning-tool-header tr.row-2 td.data-disc ul.dropdown-parent li').at(0).simulate('click', event);
+            nextWrapper.find('.learning-tool-header tr.row-2 td.data-disc').simulate('click', event);
+            nextWrapper.find('.learning-tool-header tr.row-2 td.data-disc ul.dropdown-parent li').at(1).simulate('click', event);
+        });
+        it('Test handleDropdownChange -Learning App Type', () => {
+            nextWrapper.find('.learning-tool-header tr.row-2 td.data-apptype').simulate('click', event);
+            nextWrapper.find('.learning-tool-header tr.row-2 td.data-apptype ul.dropdown-parent li').at(0).simulate('click', event);
+            nextWrapper.find('.learning-tool-header tr.row-2 td.data-apptype').simulate('click', event);
+            expect(nextWrapper.find('.learning-tool-header tr.row-2 td.data-apptype ul.dropdown-parent li').at(0)).toHaveLength(1);
+            nextWrapper.find('.learning-tool-header tr.row-2 td.data-apptype ul.dropdown-parent li').at(1).simulate('click', event);
         });
     });
 });

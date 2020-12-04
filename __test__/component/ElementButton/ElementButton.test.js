@@ -146,4 +146,45 @@ describe('Testing Button component with props', () => {
         expect(component.find('rect').exists()).toBe(true);
         expect(component.find('tspan').exists()).toBe(true);
     })
+    it('render Color text Button component  ', () => {
+        const component = mount(<Button type={buttonTypes.COLOR_TEXT} labelText="UL" />);
+        expect(component.find('span.btn-element').hasClass('color-text')).toBe(true);
+        expect(component.find('img').exists()).toBe(true);
+    })
+    it('render BLOCK_TEXT Button component  ', () => {
+        const component = mount(<Button type={buttonTypes.BLOCK_TEXT} />);
+        expect(component.find('span.btn-element').hasClass('block-text-button')).toBe(true);
+        expect(component.find('rect').exists()).toBe(true);
+    })
+    it('render STANZA_ELEMENT Button component  ', () => {
+        const component = mount(<Button type={buttonTypes.STANZA_ELEMENT} />);
+        expect(component.find('span.btn-element').hasClass('stanza-elem')).toBe(true);
+        expect(component.find('rect').exists()).toBe(true);
+    })
+    it('render TABLE_EDITOR Button component  ', () => {
+        const component = mount(<Button type={buttonTypes.TABLE_EDITOR} />);
+        expect(component.find('span.btn-element').hasClass('table-editor-elem')).toBe(true);
+    })
+    it('render MULTI_COLUMN_CONTAINER Button component  ', () => {
+        const component = mount(<Button type={buttonTypes.MULTI_COLUMN_CONTAINER} />);
+        expect(component.find('span.btn-element').hasClass('multi-column-group')).toBe(true);
+        expect(component.find('rect').exists()).toBe(true);
+    })
+    it('render PASTE Button component  ', () => {
+        const component = mount(<Button type={buttonTypes.PASTE} />);
+        expect(component.find('span.btn-element').hasClass('paste-icon')).toBe(true);
+    })
+    it('render ELM_INTERACTIVE_ICON element Button component  ', () => {
+        const component = mount(<Button type={buttonTypes.ELM_INTERACTIVE_ICON} />);
+        expect(component.find('span')).toBeDefined();
+        expect(component.find('svg#elm-interactive-icon').exists()).toBe(true);
+    })
+    it('render EDIT_BUTTON Button component  ', () => {
+        const component = mount(<Button type={buttonTypes.EDIT_BUTTON} />);
+        expect(component.find('span.btn-element').hasClass('edit-button')).toBe(true);
+    })
+    it('render APPROVE_TICK_ICON Button component  ', () => {
+        const component = mount(<Button type={buttonTypes.APPROVE_TICK_ICON} />);
+        expect(component.find('span.btn-element').hasClass('approve-icon')).toBe(true);
+    })
 })
