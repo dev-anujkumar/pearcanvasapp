@@ -80,7 +80,6 @@ class GlossaryFootnoteMenu extends React.Component {
             })
         }
         tinyMCE.$(tempDiv).find('span#_mce_caret').remove();
-
         tinyMCE.$(tempDiv).find('img').removeAttr('data-mce-style');
         tinyMCE.$(tempDiv).find('img').removeAttr('style');
         tinyMCE.$(tempDiv).find('img').removeAttr('data-mce-selected');
@@ -88,7 +87,6 @@ class GlossaryFootnoteMenu extends React.Component {
         tinyMCE.$(tempDiv).find('img').removeAttr('width');
         tinyMCE.$(tempDiv).find('img').removeAttr('draggable');
         tinyMCE.$(tempDiv).find('img.temp_Wirisformula').removeClass('fr-draggable');
-
         tinyMCE.$(tempDiv).find('a').removeAttr('data-mce-href');
         tinyMCE.$(tempDiv).find('a').removeAttr('data-mce-selected');
         return tempDiv.innerHTML;
@@ -143,6 +141,34 @@ class GlossaryFootnoteMenu extends React.Component {
                 let innerHtml = this.innerHTML;
                 this.outerHTML = innerHtml;
             })
+            if(term.getElementsByClassName){
+                let mathAllTermFormula = term.getElementsByClassName('Wirisformula');
+                for (let index = 0; index < mathAllTermFormula.length; index++) {
+                    let mathFormula = mathAllTermFormula[index].getAttribute('mathmlformula')
+                    if (mathFormula) {
+                        let res = mathFormula.substr(0, 2);
+                        let res2 = mathFormula.substr(2, 2);
+                        let s3ImagePath=config.S3MathImagePath?config.S3MathImagePath:"https://cite-media-stg.pearson.com/legacy_paths/wiris-dev-mathtype-cache-use/cache/"
+                        let path = s3ImagePath + res + '/' + res2 + '/' + mathFormula + '.png' + '?' + (new Date()).getTime()
+                        mathAllTermFormula[index].setAttribute('src', path)
+                        mathAllTermFormula[index].removeAttribute('mathmlformula')
+                    }
+                }
+             }
+             if(definition.getElementsByClassName){
+                let mathAllDefinitionFormula = definition.getElementsByClassName('Wirisformula');
+                for (let index = 0; index < mathAllDefinitionFormula.length; index++) {
+                    let mathFormula = mathAllDefinitionFormula[index].getAttribute('mathmlformula')
+                    if (mathFormula) {
+                        let res = mathFormula.substr(0, 2);
+                        let res2 = mathFormula.substr(2, 2);
+                        let s3ImagePath=config.S3MathImagePath?config.S3MathImagePath:"https://cite-media-stg.pearson.com/legacy_paths/wiris-dev-mathtype-cache-use/cache/"
+                        let path = s3ImagePath + res + '/' + res2 + '/' + mathFormula + '.png' + '?' + (new Date()).getTime()
+                        mathAllDefinitionFormula[index].setAttribute('src', path)
+                        mathAllDefinitionFormula[index].removeAttribute('mathmlformula')
+                    }
+                }
+             }
             term = term.innerHTML.match(/<p>/g) ? term.innerHTML.replace(/<br data-mce-bogus="1">/g, "") : `<p>${term.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}</p>`
             definition = definition.innerHTML.match(/<p>/g) ? definition.innerHTML.replace(/<br data-mce-bogus="1">/g, "") : `<p>${definition.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}</p>`
             term = this.replaceUnwantedtags(term)
