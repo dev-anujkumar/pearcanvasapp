@@ -168,7 +168,7 @@ export const getDiscipline = (data) => {
     type: GET_DISCIPLINE, 
     payload: {
       showDisFilterValues: true,
-      apiResponseForDis: data
+      apiResponseForDis: data.options
     }
   }
 }

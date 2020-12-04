@@ -51,7 +51,7 @@ describe('TestS Learning_Tool_ActionS', () => {
             type: GET_DISCIPLINE,
             payload: {
                 showDisFilterValues: true,
-                apiResponseForDis: disciplines
+                apiResponseForDis: disciplines.options
             }
         }
         let result = actions.getDiscipline(disciplines)
