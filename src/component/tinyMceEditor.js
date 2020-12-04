@@ -19,7 +19,7 @@ import {
     tinymceFormulaIcon, tinymceFormulaChemistryIcon, assetPopoverIcon, crossLinkIcon, code, Footnote, bold, Glossary, undo, redo, italic, underline, strikethrough, removeformat, subscript, superscript, charmap, downArrow, orderedList, unorderedList, indent, outdent
 } from '../images/TinyMce/TinyMce.jsx';
 import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
-import { checkforToolbarClick, customEvent, spanHandlers, removeBOM } from '../js/utils';
+import { checkforToolbarClick, customEvent, spanHandlers, removeBOM, getWirisAltText } from '../js/utils';
 import { saveGlossaryAndFootnote, setFormattingToolbar } from "./GlossaryFootnotePopup/GlossaryFootnote_Actions"
 import { ShowLoader, LaunchTOCForCrossLinking } from '../constants/IFrameMessageTypes';
 import { sendDataToIframe, hasReviewerRole, removeBlankTags } from '../constants/utility.js';
@@ -27,6 +27,7 @@ import store from '../appstore/store';
 import { MULTIPLE_LINE_POETRY_ERROR_POPUP } from '../constants/Action_Constants';
 import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER } from '../component/SlateWrapper/SlateWrapperConstants.js';
 import { conversionElement } from './Sidebar/Sidebar_Action';
+import { wirisAltTextPopup } from './SlateWrapper/SlateWrapper_Actions';
 import elementList from './Sidebar/elementTypes';
 import { utils } from 'sortablejs';
 
@@ -53,6 +54,7 @@ export class TinyMceEditor extends Component {
         this.fromtinyInitBlur = false;
         this.notFormatting = true;
         this.gRange = null;
+        this.wirisClick = 0;
         this.editorConfig = {
             plugins: EditorConfig.plugins,
             selector: '#cypress-0',
@@ -152,6 +154,19 @@ export class TinyMceEditor extends Component {
                             let innerHtml = this.innerHTML;
                             this.outerHTML = innerHtml;
                         })
+                        tinymce.$('.Wirisformula').each(function () {
+                            let mathformula = this.getAttribute('mathmlformula')
+                            if(mathformula){
+                                let res = mathformula.substr(0, 2);
+                                let res2=mathformula.substr(2, 2);
+                                let s3ImagePath=config.S3MathImagePath?config.S3MathImagePath:"https://cite-media-stg.pearson.com/legacy_paths/wiris-dev-mathtype-cache-use/cache/"
+                                let path=s3ImagePath+res+'/'+res2+'/'+mathformula+'.png'
+                                this.setAttribute('src', path)
+                                this.removeAttribute('mathmlformula')
+                            }
+                            this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
+                            this.naturalWidth && this.setAttribute('width', this.naturalWidth)
+                        });
                         if (!config.savingInProgress) {
                             if ((this.props.element.type === "popup" || this.props.element.type === "citations") && !this.props.currentElement) {
                                 this.props.createPopupUnit(this.props.popupField, true, this.props.index, this.props.element)
@@ -372,17 +387,7 @@ export class TinyMceEditor extends Component {
                         }
                     }
                     for (let index = 0; index < dfnAttribute.length; index++) {
-                        let dfn = activeElement.querySelector(`dfn[data-uri="${dfnAttribute[index]}"]`);
-                        let emTag = dfn.closest('em');
-                        if (emTag) {
-                            dfn.innerHTML = '<em>' + dfn.innerHTML + '</em>'
-                            if (emTag.textContent === dfn.textContent) {
-                                let innerHTML = emTag.innerHTML;
-                                emTag.outerHTML = innerHTML;
-                            } else {
-                                spanHandlers.splitOnTag(emTag.parentNode, dfn);
-                            }
-                        }
+                        this.handleGlossaryForItalic(activeElement, dfnAttribute[index]);
                     }
                 }
             }
@@ -650,6 +655,21 @@ export class TinyMceEditor extends Component {
      */
     editorClick = (editor) => {
         editor.on('click', (e) => {
+
+            if (e && e.target && e.target.classList.contains('Wirisformula')) {
+                this.wirisClick++;
+                if (!this.wirisClickTimeout) {
+                    this.wirisClickTimeout = setTimeout(() => {
+                        if (this.wirisClick === 1) {
+                            const ALT_TEXT = getWirisAltText(e);
+                            this.props.wirisAltTextPopup({showPopup : true, altText : ALT_TEXT});
+                        }
+                        clearTimeout(this.wirisClickTimeout);
+                        this.wirisClickTimeout = null;
+                        this.wirisClick = 0;
+                    }, 500);
+                }
+            }
             let selectedText = editor.selection.getContent({ format: "text" });
             let elemClassList = editor.targetElm.classList;
             let isFigureElem = elemClassList.contains('figureImage25Text') || elemClassList.contains('figureImage50Text') || elemClassList.contains('heading4Image25TextNumberLabel')
@@ -947,7 +967,7 @@ export class TinyMceEditor extends Component {
                 }
                 const keyPressed = e.keyCode || e.which;
                 if (keyPressed === 37 || keyPressed === 39) {
-                    if (editor.selection.getNode().tagName.toLowerCase() === 'span' || editor.selection.getNode().className.toLowerCase() === 'answerLineContent') {
+                    if (editor.selection.getNode().tagName.toLowerCase() === 'span' && editor.selection.getNode().className.toLowerCase() === 'answerLineContent') {
                         this.handleBlankLineArrowKeys(keyPressed, editor)
                     }
                 }
@@ -1301,7 +1321,7 @@ export class TinyMceEditor extends Component {
      */
     setSpecialCharIcon = editor => {
         editor.ui.registry.addIcon(
-            "specialcharaters",
+            "specialcharacters",
             charmap
         );        
     }
@@ -1311,14 +1331,14 @@ export class TinyMceEditor extends Component {
      */
     addSpecialCharIcon = editor => {
         const self = this;
-        editor.ui.registry.addMenuButton("specialcharaters", {
+        editor.ui.registry.addMenuButton("specialcharacters", {
             text: "",
-            icon: "specialcharaters",
+            icon: "specialcharacters",
             tooltip: "Special Character",
             fetch: function (callback) {
                 var items = [{
                         type: 'menuitem',
-                        text: 'Insert Special Charater',
+                        text: 'Insert Special Character',
                         onAction: function () {
                             tinymce.activeEditor.execCommand('mceShowCharmap');
                         }
@@ -2114,6 +2134,21 @@ export class TinyMceEditor extends Component {
         this.props.learningObjectiveOperations(text);
     }
 
+    // Handle Glossary for Italic
+    handleGlossaryForItalic = (activeElement, dataURIId) => {
+        let dfn = activeElement.querySelector(`dfn[data-uri="${dataURIId}"]`);
+        let emTag = dfn.closest('em');
+        if (emTag) {
+            dfn.innerHTML = '<em>' + dfn.innerHTML + '</em>'
+            if (emTag.textContent === dfn.textContent) {
+                let innerHTML = emTag.innerHTML;
+                emTag.outerHTML = innerHTML;
+            } else {
+                spanHandlers.splitOnTag(emTag.parentNode, dfn);
+            }
+        }
+    }
+
     /**
      * Called when glossary button is clicked. Responsible for adding glossary
      * @param {*} editor  editor instance 
@@ -2123,6 +2158,7 @@ export class TinyMceEditor extends Component {
         let parser = new DOMParser();
         let htmlDoc = parser.parseFromString(sText, 'text/html');
         let spans = htmlDoc.getElementsByClassName("poetryLine");
+        let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
         if (spans && spans.length) {
             store.dispatch({
                 type: MULTIPLE_LINE_POETRY_ERROR_POPUP,
@@ -2147,6 +2183,7 @@ export class TinyMceEditor extends Component {
                 insertionText = `<dfn data-uri= ${res.data.id} class="Pearson-Component GlossaryTerm">${selectedText}</dfn>`
             }
             editor.selection.setContent(insertionText);
+            this.handleGlossaryForItalic(activeElement, res.data.id);
             this.toggleGlossaryandFootnotePopup(true, "Glossary", res.data && res.data.id || null, () => { this.toggleGlossaryandFootnoteIcon(true); });
             this.saveContent()
         })
@@ -2407,7 +2444,6 @@ export class TinyMceEditor extends Component {
                  */
                 let tempFirstContainerHtml = tinyMCE.$("#" + (this.editorRef.current ? this.editorRef.current.id : 'cypress-0')).html()
                 tempFirstContainerHtml = tempFirstContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
-
                 //Test Case Changes
                 if (this.editorRef.current && document.getElementById(this.editorRef.current.id)) {
                     document.getElementById(this.editorRef.current.id).innerHTML = tempFirstContainerHtml;
@@ -2728,7 +2764,6 @@ export class TinyMceEditor extends Component {
                 tempContainerHtml = tinyMCE.$("[data-id='" + previousTargetId + "'] .cypress-editable").html()
                 tempNewContainerHtml = tinyMCE.$("[data-id='" + currentTargetId + "'] .cypress-editable").html()
             }
-
             tempContainerHtml = tempContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
             tempNewContainerHtml = tempNewContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
 
@@ -2760,8 +2795,14 @@ export class TinyMceEditor extends Component {
                 Remove all instaces of wiris on changing element on basis of there data-ids not on id 
                 because on inserting new element id changes
             */
+           if (e && e.target && (e.target.classList.contains('Wirisformula') || e.target.classList.contains('temp_Wirisformula'))) {
+               this.wirisClick++;
+               setTimeout(() => {
+                   this.wirisClick = 0;
+               }, 500)
+           }
             let wirisModalDesktopNode = tinymce.$('.wrs_modal_desktop')
-            wirisModalDesktopNode.remove();
+            wirisModalDesktopNode && wirisModalDesktopNode.remove();
 
             for (let i = tinymce.editors.length - 1; i > -1; i--) {
                 let ed_id = tinymce.editors[i].id;
@@ -2841,6 +2882,18 @@ export class TinyMceEditor extends Component {
          */
         let timeoutInstance = setTimeout(() => {
             clearTimeout(timeoutInstance);
+            /**
+             * Remove extra Wiris overlay
+             */
+            let wirisNodes = document.getElementsByClassName('wrs_modal_dialogContainer');
+            let wirisNodeLength = wirisNodes.length;
+            if (wirisNodeLength > 1) {
+                for (let i = 0; i < wirisNodeLength - 1; i++) {
+                    wirisNodes[i].remove();
+                    // document.getElementsByClassName('wrs_modal_overlay').remove();
+                    document.getElementById('wrs_modal_overlay[' + i + ']').remove();
+                }
+            }
             tinymce.init(this.editorConfig).then((d) => {
                 this.setToolbarByElementType();
                 let listLiNodes1 = currentTarget.querySelectorAll('li')
@@ -2885,7 +2938,7 @@ export class TinyMceEditor extends Component {
         }
         tinyMCE.$('.cypress-editable').css('caret-color', 'black')
     }
-
+    
     /**
      * handleBlur | gets triggered when any editor element is blurred
      * @param {*} e  event object
@@ -3190,5 +3243,5 @@ TinyMceEditor.defaultProps = {
 
 export default connect(
     null,
-    { conversionElement }
+    { conversionElement, wirisAltTextPopup  }
 )(TinyMceEditor);

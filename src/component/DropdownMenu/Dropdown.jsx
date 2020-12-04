@@ -8,24 +8,13 @@ export const Dropdown = (props) => {
 
     const { type, dropdownList, dropdownClass, clickHandlerFn, hasDefaultOption, ulClass, showDropdown } = props;
 
-    const setDisplayValue = (listType, listItem) => {
-        switch (listType) {
-            case TYPE_DISCIPLINE:
-                return listItem.prefLabel;
-            case TYPE_LEARNING_APP:
-                return listItem.label;
-            default:
-                return listItem;
-        }
-    }
-
     const renderDropdown = (listType) => {
         let learningToolData = dropdownList && dropdownList.map((listItem, index) => {
             return <li
                 key={index}
                 className={`dropdown-li-item ${dropdownClass}`}
                 onClick={(e) => !hasReviewerRole() && clickHandlerFn(listItem, e, listType)}>
-                {setDisplayValue(listType, listItem)}
+                {listItem}
             </li>
         })
         return learningToolData;

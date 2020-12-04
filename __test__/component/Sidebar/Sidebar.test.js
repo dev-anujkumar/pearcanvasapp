@@ -278,5 +278,70 @@ describe('Test for Sidebar component', () => {
             const sidebarInstance = sidebar.find('Sidebar').instance();
             sidebarInstance.renderLanguageLabel(tag);
         })
+        it("Checking handleSyntaxHighligtingRemove function ", () => {
+            let nextprops={
+                showCanvasBlocker:jest.fn(),
+                ...props
+            }
+            let sidebar = mount(<Provider store={sidebarWithData}><Sidebar   {...nextprops}/></Provider>);
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            sidebarInstance.setState({
+                syntaxHighlightingToggleValue:true
+            })
+            sidebarInstance.handleSyntaxHighligtingRemove();
+            expect(sidebarInstance.state.syntaxHighlightingToggleValue).toBe(true)
+        })
+        it("Checking handleSyntaxHighlightingToggle function ", () => {
+            let nextprops={
+                showCanvasBlocker:jest.fn(),
+                ...props
+            }
+            let sidebar = mount(<Provider store={sidebarWithData}><Sidebar   {...nextprops}/></Provider>);
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            sidebarInstance.setState({
+                showSyntaxHighlightingPopup:true
+            })
+            sidebarInstance.handleSyntaxHighlightingToggle();
+            expect(sidebarInstance.state.showSyntaxHighlightingPopup).toBe(true);
+        })
+
+        it("handleBceNumber method ", () => {
+            let sidebar = mount(<Provider store={sidebarWithData}><Sidebar   {...props}/></Provider>);
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            const spyhandleFocus = jest.spyOn(sidebarInstance, 'handleBceNumber')
+            let event = {
+                target: {
+                    value: 1
+                }
+            }
+            sidebarInstance.setState({
+                bceNumberStartFrom:1
+            })
+            sidebarInstance.handleBceNumber(event);
+            expect(spyhandleFocus).toHaveBeenCalled();
+            expect(sidebarInstance.state.bceNumberStartFrom).toBe(1);
+        })
+
+        it("handleAttrChange method ", () => {
+            let sidebar = mount(<Provider store={sidebarWithData}><Sidebar   {...props}/></Provider>);
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            let event = {
+                target: {
+                    value: ""
+                }
+            }
+            sidebarInstance.handleAttrChange(event);
+            expect(sidebarInstance.state.attrInput).toEqual('');
+        })
+
+        it("Testing handleBceToggle function ", () => {
+            let sidebar = mount(<Provider store={sidebarWithData}><Sidebar   {...props}/></Provider>);
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            sidebarInstance.setState({
+                bceToggleValue:true
+            })
+            sidebarInstance.handleBceToggle();
+            expect(sidebarInstance.state.bceToggleValue).toBe(true);
+        })
     })
 });

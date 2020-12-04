@@ -533,7 +533,6 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
         case elementTypeConstant.ELEMENT_LIST:
         case elementTypeConstant.POETRY_STANZA:
             const elementTypeObj = findElementType(previousElementData, index)
-            console.log("type:::::", type)
             if (type === 'stanza') { /**Resolve PCAT- 9199 */
                 elementType = 'stanza'
             }    
@@ -564,11 +563,7 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                 inputType : parentElement && (parentElement.type === "popup" || parentElement.type === "citations" || parentElement.type === "showhide" && previousElementData.type === "element-authoredtext" || parentElement.type === "poetry" && previousElementData.type === "element-authoredtext") ? "AUTHORED_TEXT" : inputElementType,
                 inputSubType : parentElement && (parentElement.type == "popup" || parentElement.type === "poetry") ? "NA" : inputElementSubType
             }
-            console.log("dataToReturn: inputType-", dataToReturn.inputType, "inputSubType-:", dataToReturn.inputSubType)
-            console.log("elementType::" , elementType, "primaryOption:::", primaryOption)
-            console.log("CORRECT elementTypeObj.elementType::" , elementTypeObj.elementType, "primaryOption:::", elementTypeObj.primaryOption)
-            console.log("secondaryOption:::", secondaryOption)
-            console.log("CORRECT elementTypeObj.secondaryOption:::", elementTypeObj.secondaryOption)
+            
             if(type==="stanza"){
                 dataToReturn.html.text=`<p>${innerHTML}</p>`
                 delete dataToReturn.poetrylines;

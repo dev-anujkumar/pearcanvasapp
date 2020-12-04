@@ -5,39 +5,46 @@ import { AUTHORING_ELEMENT_CREATED, GET_TCM_RESOURCES } from '../../constants/Ac
 import { HideLoader, ShowLoader, projectPendingTcStatus } from '../../constants/IFrameMessageTypes.js';
 import * as slateWrapperConstants from "./SlateWrapperConstants"
 //Helper methods
-import { sendDataToIframe } from '../../constants/utility.js';
+import { sendDataToIframe, replaceWirisClassAndAttr } from '../../constants/utility.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 
 import { SET_SELECTION } from './../../constants/Action_Constants.js';
 import { deleteElement } from './../ElementContainer/ElementContainer_Actions.js';
-
+import tinymce from 'tinymce'
 export const onPasteSuccess = async (params) => {
     const {
         responseData,
         index,
         dispatch,
         getState
-    } = params
+    } = params    
 
+    const activeEditorId = tinymce && tinymce.activeEditor && tinymce.activeEditor.id
+    replaceWirisClassAndAttr(activeEditorId)
     // Store Update on Paste Element
     let operationType = '';
-    if(Object.keys(getState().selectionReducer.selection).length > 0 && 'operationType' in getState().selectionReducer.selection) {
+    if (Object.keys(getState().selectionReducer.selection).length > 0 && 'operationType' in getState().selectionReducer.selection) {
         operationType = getState().selectionReducer.selection.operationType;
     }
 
+    let cutIndex = index;
     let elmExist = await checkElementExistence(getState().selectionReducer.selection.sourceSlateEntityUrn, getState().selectionReducer.selection.deleteElm.id);
-    if('deleteElm' in getState().selectionReducer.selection && operationType === 'cut' && elmExist) {
+    if ('deleteElm' in getState().selectionReducer.selection && operationType === 'cut' && elmExist) {
         let deleteElm = getState().selectionReducer.selection.deleteElm;
-        dispatch(deleteElement(deleteElm.id, deleteElm.type, deleteElm.parentUrn, deleteElm.asideData, deleteElm.contentUrn, deleteElm.index, deleteElm.poetryData, getState().selectionReducer.selection.element,deleteElm.cutCopyParentUrn));
+        if(getState().selectionReducer.selection.sourceSlateEntityUrn === config.slateEntityURN &&
+            cutIndex > getState().selectionReducer.selection.sourceElementIndex) {
+            cutIndex -= 1;
+        }
+        await dispatch(deleteElement(deleteElm.id, deleteElm.type, deleteElm.parentUrn, deleteElm.asideData, deleteElm.contentUrn, deleteElm.index, deleteElm.poetryData, getState().selectionReducer.selection.element, deleteElm.cutCopyParentUrn));
     }
 
-    if(operationType === 'copy') {
+    if (operationType === 'copy') {
         let selection = Object.assign({}, getState().selectionReducer.selection);
         selection.activeAnimation = false;
         selection.deleteElm = {};
         dispatch({ type: SET_SELECTION, payload: selection });
-    } else if(operationType === 'cut') {
+    } else if (operationType === 'cut') {
         dispatch({ type: SET_SELECTION, payload: {} });
     }
 
@@ -56,10 +63,11 @@ export const onPasteSuccess = async (params) => {
             parentUrn: null,
             type: "TEXT",
             responseData,
-            dispatch
+            dispatch,
+            index
         }
 
-        handleTCMSnapshotsForCreation(snapArgs)
+        await handleTCMSnapshotsForCreation(snapArgs)
     }
     /**---------------------------------------------------------------------------------------------------*/
 
@@ -68,28 +76,28 @@ export const onPasteSuccess = async (params) => {
         sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
         return false;
     }
-    
-    newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, responseData);
-    
+
+    newParentData[config.slateManifestURN].contents.bodymatter.splice(cutIndex, 0, responseData);
 
     if (config.tcmStatus) {
         if (slateWrapperConstants.elementType.indexOf("TEXT") !== -1) {
-            prepareDataForTcmCreate("TEXT", responseData, getState, dispatch);
+            await prepareDataForTcmCreate("TEXT", responseData, getState, dispatch);
         }
     }
-    
+
     dispatch({
         type: AUTHORING_ELEMENT_CREATED,
         payload: {
             slateLevelData: newParentData
         }
     })
+    sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
 }
 
 export const checkElementExistence = async (slateEntityUrn = '', elementEntity = '') => {
     let exist = false;
     let bodymatter = [];
-    if(slateEntityUrn && elementEntity) {
+    if (slateEntityUrn && elementEntity) {
         const axiosObject = axios.create({
             headers: {
                 'Content-Type': 'application/json',
@@ -98,16 +106,16 @@ export const checkElementExistence = async (slateEntityUrn = '', elementEntity =
         });
 
         await axiosObject.get(`${config.REACT_APP_API_URL}v1/slate/${config.projectUrn}/contentHierarchy/${slateEntityUrn}/elementids`)
-        .then(res => {
-            if(res && res.status == 200) {
-                bodymatter = (Object.values(res.data)[0]).contents.bodymatter || [];
-            }
-        })
-        .catch(error => {
-            console.log('Element IDs API error:::', error);
-        });
+            .then(res => {
+                if (res && res.status == 200) {
+                    bodymatter = (Object.values(res.data)[0]).contents.bodymatter || [];
+                }
+            })
+            .catch(error => {
+                console.log('Element IDs API error:::', error);
+            });
 
-        if(bodymatter.length > 0) {
+        if (bodymatter.length > 0) {
             let matches = ((JSON.stringify(bodymatter)).match(new RegExp(`(id(\"|\'|):(\"|\'|)${elementEntity})`, 'g'))) || [];
             if (matches.length > 0) {
                 exist = true;
@@ -127,7 +135,8 @@ export const handleTCMSnapshotsForCreation = async (params) => {
         parentUrn,
         type,
         responseData,
-        dispatch
+        dispatch,
+        index
     } = params
 
     const containerElement = {
@@ -141,10 +150,10 @@ export const handleTCMSnapshotsForCreation = async (params) => {
         response: responseData
     };
     if (currentSlateData.status === 'approved') {
-        await tcmSnapshotsForCreate(slateData, type, containerElement, dispatch);
+        await tcmSnapshotsForCreate(slateData, type, containerElement, dispatch, index);
     }
     else {
-        tcmSnapshotsForCreate(slateData, type, containerElement, dispatch);
+        tcmSnapshotsForCreate(slateData, type, containerElement, dispatch, index);
     }
 }
 
@@ -152,7 +161,7 @@ export function prepareDataForTcmCreate(type, createdElementData, getState, disp
     let elmUrn = [];
     const tcmData = getState().tcmReducer.tcmSnapshot;
 
-    switch(type){
+    switch (type) {
         case slateWrapperConstants.WORKED_EXAMPLE:
         case slateWrapperConstants.CONTAINER:
             createdElementData.elementdata.bodymatter.map((item) => {
@@ -164,7 +173,7 @@ export function prepareDataForTcmCreate(type, createdElementData, getState, disp
                 else {
                     elmUrn.push(item.id)
                 }
-    
+
             })
             break;
         case slateWrapperConstants.SECTION_BREAK:
@@ -180,6 +189,8 @@ export function prepareDataForTcmCreate(type, createdElementData, getState, disp
         case slateWrapperConstants.IMAGE:
         case slateWrapperConstants.VIDEO:
         case slateWrapperConstants.AUDIO:
+        case slateWrapperConstants.FIGURE_MML:
+        case slateWrapperConstants.BLOCKCODE:
             elmUrn.push(createdElementData.id)
             break;
         case slateWrapperConstants.MULTI_COLUMN:
@@ -207,7 +218,7 @@ export function prepareDataForTcmCreate(type, createdElementData, getState, disp
         })
     })
 
-    if(tcmData.length > 0 ){
+    if (tcmData.length > 0) {
         sendDataToIframe({ 'type': projectPendingTcStatus, 'message': 'true' })
     }
 

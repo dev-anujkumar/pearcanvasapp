@@ -72,6 +72,12 @@
 }
 
 .tooltip .tooltiptext.tooltip-left {
+    top: 2px;
+    right: 145%;
+
+}
+
+.dropdown-content .tooltip .tooltiptext.tooltip-left {
     top: 4px;
     right: 115%;
 

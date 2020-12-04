@@ -1165,6 +1165,7 @@ export const createstoreWithFigure = {
             "id": "urn:pearson:manifest:61b991e6-8a64-4214-924c-bb60c34cbe1c",
             "schema": "http://schemas.pearson.com/wip-authoring/manifest/1",
             "type": "manifest",
+            "status": "wip",
             "contents": {
                 "schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest",
                 "title": {

@@ -1,4 +1,4 @@
-import { sendDataToIframe } from '../../constants/utility.js';
+import { sendDataToIframe, replaceWirisClassAndAttr } from '../../constants/utility.js';
 import { 
     prepareTcmSnapshots,
     fetchElementWipData,
@@ -13,6 +13,7 @@ import {
 import { elementTypeTCM, containerType, allowedFigureTypesForTCM } from "./ElementConstants";
 import config from '../../config/config';
 import { ShowLoader, HideLoader, TocRefreshVersioning, SendMessageForVersioning } from '../../constants/IFrameMessageTypes.js';
+import tinymce from 'tinymce'
 
 export const onDeleteSuccess = (params) => {
     const {
@@ -26,23 +27,27 @@ export const onDeleteSuccess = (params) => {
         contentUrn,
         index,
         poetryData,
+        cutCopyParentUrn,
         fetchSlateData
     } = params
 
+    const activeEditorId = tinymce && tinymce.activeEditor && tinymce.activeEditor.id
+    replaceWirisClassAndAttr(activeEditorId)
     sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
     const parentData = getState().appStore.slateLevelData;
     const newParentData = JSON.parse(JSON.stringify(parentData));
-
+    let cutcopyParentData=  cutCopyParentUrn && cutCopyParentUrn.slateLevelData ?  cutCopyParentUrn.slateLevelData : null
     /** [PCAT-8289] -- TCM Snapshot Data handling --*/
     const tcmDeleteArgs = {
-        deleteParentData: newParentData,
+        deleteParentData: cutcopyParentData ? JSON.parse(JSON.stringify(cutCopyParentUrn.slateLevelData)) : newParentData,
         deleteElemData,
         type,
         parentUrn,
         asideData,
         contentUrn,
         index,
-        poetryData
+        poetryData,
+        cutCopyParentUrn
     }
     prepareTCMSnapshotsForDelete(tcmDeleteArgs)
 
@@ -50,7 +55,6 @@ export const onDeleteSuccess = (params) => {
     if (currentSlateData.status === 'approved') {
         return onSlateApproved(currentSlateData, dispatch, fetchSlateData)  
     }
-
     const args = {
         dispatch,
         elmId,
@@ -186,10 +190,11 @@ export const prepareTCMSnapshotsForDelete = (params) => {
         asideData,
         contentUrn,
         index,
-        poetryData
+        poetryData,
+        cutCopyParentUrn
     } = params
 
-    const deleteBodymatter = deleteParentData[config.slateManifestURN].contents.bodymatter;
+    const deleteBodymatter = cutCopyParentUrn && cutCopyParentUrn.slateLevelData ? deleteParentData[cutCopyParentUrn.sourceSlateManifestUrn].contents.bodymatter :deleteParentData[config.slateManifestURN].contents.bodymatter;
     if (elementTypeTCM.indexOf(type) !== -1 || containerType.indexOf(type) !== -1) {
         const wipData = fetchElementWipData(deleteBodymatter, index, type, contentUrn, "delete")
         const containerElement = {
@@ -198,13 +203,14 @@ export const prepareTCMSnapshotsForDelete = (params) => {
             poetryData,
             parentElement: wipData && wipData.type == 'popup' ? wipData : undefined,
             metaDataField: wipData && wipData.type == 'popup' && wipData.popupdata['formatted-title'] ? 'formattedTitle' : undefined,
-            sectionType : wipData && wipData.type == 'popup' ? 'postertextobject' : undefined
+            sectionType : wipData && wipData.type == 'popup' ? 'postertextobject' : undefined,
+            cutCopyParentUrn
         }
         const deleteData = {
             wipData,
             currentParentData: deleteParentData,
             bodymatter: deleteBodymatter,
-            newVersionUrns: deleteElemData.data,
+            newVersionUrns: deleteElemData,
             index
         }
         tcmSnapshotsForDelete(deleteData, type, containerElement)
@@ -220,6 +226,7 @@ export const prepareTCMSnapshotsForDelete = (params) => {
  * @param {Function} dispatch to dispatch tcmSnapshots
 */
 export const tcmSnapshotsForDelete = async (elementDeleteData, type, containerElement) => {
+    let {cutCopyParentUrn} =  containerElement
     if (elementDeleteData.wipData.hasOwnProperty("figuretype") && !allowedFigureTypesForTCM.includes(elementDeleteData.wipData.figuretype)) {
         return false
     }
@@ -230,7 +237,7 @@ export const tcmSnapshotsForDelete = async (elementDeleteData, type, containerEl
     }
     const parentType = ['element-aside', 'citations', 'poetry', 'groupedcontent', 'popup'];
     let versionStatus = {};
-    let currentSlateData = elementDeleteData.currentParentData[config.slateManifestURN] 
+    let currentSlateData = cutCopyParentUrn && cutCopyParentUrn.sourceSlateManifestUrn? elementDeleteData.currentParentData[cutCopyParentUrn.sourceSlateManifestUrn] :elementDeleteData.currentParentData[config.slateManifestURN] 
     if(config.isPopupSlate){
         currentSlateData.popupSlateData = elementDeleteData.currentParentData[config.tempSlateManifestURN]
     }

@@ -16,11 +16,12 @@ import {
     SET_PARENT_NODE,
     ERROR_POPUP,
     GET_TCM_RESOURCES,
-    PAGE_NUMBER_LOADER
+    PAGE_NUMBER_LOADER,
+    WIRIS_ALT_TEXT_POPUP
 
 } from '../../constants/Action_Constants';
 
-import { sendDataToIframe } from '../../constants/utility.js';
+import { sendDataToIframe, replaceWirisClassAndAttr } from '../../constants/utility.js';
 import { HideLoader, ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
@@ -28,6 +29,7 @@ import * as slateWrapperConstants from "./SlateWrapperConstants"
 import { onPasteSuccess, prepareDataForTcmCreate } from "./slateWrapperAction_helper"
 
 import { SET_SELECTION } from './../../constants/Action_Constants.js';
+import tinymce from 'tinymce'
 
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
@@ -163,21 +165,15 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 prepareDataForTcmCreate(type, createdElementData, getState, dispatch);
             }
         }
-        
-
+        const activeEditorId = tinymce && tinymce.activeEditor && tinymce.activeEditor.id
+        replaceWirisClassAndAttr(activeEditorId)
         dispatch({
             type: AUTHORING_ELEMENT_CREATED,
             payload: {
                 slateLevelData: newParentData
             }
         })
-        /*if(type === "SHOW_HIDE"){
-            let showHideRevealElement = document.getElementById(`cypress-${index}-2-0`)
-               if(showHideRevealElement){
-                    showHideRevealElement.focus()
-                    showHideRevealElement.blur()
-               } 
-            }*/
+        
         if (cb) {
             cb();
         }   
@@ -378,8 +374,11 @@ export const handleSplitSlate = (newSlateObj) => (dispatch, getState) => {
             if('deleteElm' in selection && Object.keys(selection.deleteElm).length > 0) {
                 selection.deleteElm.cutCopyParentUrn.contentUrn = newSlateObj.entityUrn;
                 selection.deleteElm.cutCopyParentUrn.manifestUrn = newSlateObj.containerUrn;
+                selection.deleteElm.cutCopyParentUrn.slateLevelData = null;
+                selection.deleteElm.index = (selection.sourceElementIndex - splitIndex);
             }
 
+            selection.sourceElementIndex = (selection.sourceElementIndex - splitIndex);
             dispatch({ type: SET_SELECTION, payload: selection });
         }
 
@@ -669,8 +668,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
             }]
         };
         try {
-
-            return await axios.post(
+            const createdElemData = await axios.post(
                 `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/slate/${config.slateEntityURN}/element/paste`,
                 JSON.stringify(_requestData),
                 {
@@ -679,40 +677,28 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                         "PearsonSSOSession": config.ssoToken
                     }
                 }
-            ).then(async createdElemData => {
-                if (createdElemData && createdElemData.status == '200') {
-                    let responseData = Object.values(createdElemData.data)
-                    const pasteSuccessArgs = {
-                        responseData: responseData[0],
-                        index,
-                        dispatch,
-                        getState
-                    };
-            
-                    onPasteSuccess(pasteSuccessArgs)
-                }
-            }).catch(error => {
-                //     // Element mock creation
-                //     const parentData = getState().appStore.slateLevelData;
-                //     const newParentData = JSON.parse(JSON.stringify(parentData));
-                //     const createdElementData = openerData
-                //     newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
-                //     dispatch({
-                //         type: AUTHORING_ELEMENT_CREATED,
-                //         payload: {
-                //             slateLevelData: newParentData
-                //         }
-                //     })
-                //     sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
-                //     dispatch({type: ERROR_POPUP, payload:{show: true}})
-                    console.log("API Error Response:::", error);
-                    //     if (cb) {
-                    //         cb();
-                    //     }
-            })
+            )
+            if (createdElemData && createdElemData.status == '200') {
+                let responseData = Object.values(createdElemData.data)
+                const pasteSuccessArgs = {
+                    responseData: responseData[0],
+                    index,
+                    dispatch,
+                    getState
+                };
+        
+                onPasteSuccess(pasteSuccessArgs)
+            }
         }
         catch(error) {
+            sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
             console.log("Exceptional Error on pasting the element:::", error);
         }
     }
+}
+export const wirisAltTextPopup = (data) => (dispatch) => {
+    return dispatch({
+        type: WIRIS_ALT_TEXT_POPUP,
+        payload: data
+    })
 }

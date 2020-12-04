@@ -292,6 +292,7 @@ class ElementContainer extends Component {
         tinyMCE.$(tempDiv).find('a').removeAttr('data-mce-href');
         tinyMCE.$(tempDiv).find('a').removeAttr('data-mce-selected');
         tinyMCE.$(tempDiv).find('a').removeAttr('data-custom-editor');
+        tinyMCE.$(tempDiv).find('img.Wirisformula, img.temp_Wirisformula').removeAttr('src');
         tempDiv.innerHTML = removeBlankTags(tempDiv.innerHTML)
         return encodeHTMLInWiris(tempDiv.innerHTML);
     }
@@ -1531,13 +1532,24 @@ class ElementContainer extends Component {
                 contentUrn: config.slateEntityURN
             }
         }
-
+        cutCopyParentUrn.sourceSlateManifestUrn = config.slateManifestURN
+        cutCopyParentUrn.slateLevelData= this.props.slateLevelData
         if('activeElement' in this.props && Object.keys(this.props.activeElement).length > 0 && 'elementType' in this.props.activeElement &&
             'primaryOption' in this.props.activeElement && 'secondaryOption' in this.props.activeElement) {
             let { elementType, primaryOption, secondaryOption } = this.props.activeElement;
             inputType = elementTypes[elementType][primaryOption]['enum'] || '';
             inputSubType = elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'] || '';
         }
+        
+        if(elementDetails.element && elementDetails.element.type === "element-blockfeature" &&
+            'html' in elementDetails.element && 'text' in elementDetails.element.html) {
+            let attribution = (elementDetails.element.html.text).match(new RegExp(`(<p class="blockquoteTextCredit".*?><\/p>)`, 'gi'));
+            
+            if(!attribution && (elementDetails.element && elementDetails.element.elementdata && elementDetails.element.elementdata.type !== "pullquote")) {
+                inputSubType = "MARGINALIA";
+            }
+        }
+
         if (elementDetails.element && elementDetails.element.type === "element-list") {
             elementDetails.element.html.text = elementDetails.element.html.text.replace(/counter-increment:section/g, "counter-increment: section")
         }
@@ -1778,7 +1790,8 @@ const mapStateToProps = (state) => {
         commentSearchScroll: state.commentSearchReducer.scroll,
         commentSearchScrollTop: state.commentSearchReducer.scrollTop,
         currentSlateAncestorData : state.appStore.currentSlateAncestorData,
-        elementSelection: state.selectionReducer.selection
+        elementSelection: state.selectionReducer.selection,
+        slateLevelData: state.appStore.slateLevelData
     }
 }
 
