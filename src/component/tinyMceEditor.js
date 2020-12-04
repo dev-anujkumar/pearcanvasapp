@@ -19,7 +19,7 @@ import {
     tinymceFormulaIcon, tinymceFormulaChemistryIcon, assetPopoverIcon, crossLinkIcon, code, Footnote, bold, Glossary, undo, redo, italic, underline, strikethrough, removeformat, subscript, superscript, charmap, downArrow, orderedList, unorderedList, indent, outdent
 } from '../images/TinyMce/TinyMce.jsx';
 import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
-import { checkforToolbarClick, customEvent, spanHandlers, removeBOM } from '../js/utils';
+import { checkforToolbarClick, customEvent, spanHandlers, removeBOM, removeImageCache } from '../js/utils';
 import { saveGlossaryAndFootnote, setFormattingToolbar } from "./GlossaryFootnotePopup/GlossaryFootnote_Actions"
 import { ShowLoader, LaunchTOCForCrossLinking } from '../constants/IFrameMessageTypes';
 import { sendDataToIframe, hasReviewerRole, removeBlankTags } from '../constants/utility.js';
@@ -2210,6 +2210,10 @@ export class TinyMceEditor extends Component {
      * React's lifecycle method. Called immediately after a component is mounted. Setting state here will trigger re-rendering. 
      */
     componentDidMount() {
+        let currentNode = document.getElementById('cypress-' + this.props.index);
+        if (currentNode.getElementsByTagName("IMG").length) {
+            currentNode.innerHTML = this.getNodeContent();
+        }
         const { slateLockInfo: { isLocked } } = this.props
         const userId = this.props.slateLockInfo && this.props.slateLockInfo.userId.replace(/.*\(|\)/gi, '');
         /**
@@ -2293,6 +2297,68 @@ export class TinyMceEditor extends Component {
                     }
                 })
             }
+        }
+    }
+    getNodeContent = () => {
+        switch (this.props.tagName) {
+            case 'p':
+                let paraModel = this.props.model
+                paraModel = removeBOM(paraModel)
+                paraModel = removeImageCache(paraModel)
+                return paraModel;
+
+            case 'h4':
+                let model = ""
+                if (this.props.element && this.props.element.type === "popup") {
+                    model = this.props.model && this.props.model.replace(/class="paragraphNumeroUno"/g, "")
+                }
+                else {
+                    model = this.props.model;
+                }
+                let tempDiv = document.createElement('div');
+                tempDiv.innerHTML = model;
+                if (tempDiv && tempDiv.children && tempDiv.children.length && tempDiv.children[0].tagName === 'P') {
+                    model = tempDiv.children[0].innerHTML;
+                }
+                model = removeBOM(model)
+                model = removeImageCache(model)
+                return model;
+
+            case 'code':
+                let codeModel = this.props.model
+                codeModel = removeBOM(codeModel)
+                codeModel = removeImageCache(codeModel)
+                return codeModel;
+
+            case 'blockquote':
+                if (this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote")) {
+                    let temDiv = this.processBlockquoteHtml(this.props.model, this.props.element, lockCondition);
+                    return temDiv.innerHTML;
+                } else {
+                    let pqModel = this.props.model && this.props.model.text || '<p class="paragraphNumeroUno"><br/></p>'
+                    pqModel = removeBOM(pqModel)
+                    pqModel = removeImageCache(pqModel)
+                    return pqModel;
+                }
+
+            case 'figureCredit':
+                let figCreditModel = this.props.model
+                figCreditModel = removeBOM(figCreditModel)
+                figCreditModel = removeImageCache(figCreditModel)
+                return figCreditModel;
+
+            case 'element-citation':
+                let ctModel = this.props.model && this.props.model.text || '<p class="paragraphNumeroUnoCitation"><br/></p>'
+                ctModel = removeBOM(ctModel)
+                ctModel = removeImageCache(ctModel)
+                return ctModel;
+
+            default:
+                let defModel = this.props.model && this.props.model.text ? this.props.model.text : (typeof (this.props.model) === 'string' ? this.props.model : '<p class="paragraphNumeroUno"><br/></p>')
+                defModel = removeBOM(defModel)
+                //defModel=defModel.replace(/(?:.png).*?[\"]/g,'.png?'+(new Date()).getTime()+'"');
+                defModel = removeImageCache(defModel)
+                return defModel;
         }
     }
 
@@ -2934,7 +3000,6 @@ export class TinyMceEditor extends Component {
             case 'p':
                 let paraModel = this.props.model
                 paraModel = removeBOM(paraModel)
-
                 return (
                     <p ref={this.editorRef} id={id} onKeyDown={this.normalKeyDownHandler} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: paraModel }}></p>
                 );
@@ -3003,7 +3068,6 @@ export class TinyMceEditor extends Component {
             default:
                 let defModel = this.props.model && this.props.model.text ? this.props.model.text : (typeof (this.props.model) === 'string' ? this.props.model : '<p class="paragraphNumeroUno"><br/></p>')
                 defModel = removeBOM(defModel)
-
                 return (
                     <div ref={this.editorRef} data-id={this.props.currentElement ? this.props.currentElement.id : ''} onKeyDown={this.normalKeyDownHandler} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: defModel }} onChange={this.handlePlaceholder}></div>
                 )
