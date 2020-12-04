@@ -2216,6 +2216,7 @@ export class TinyMceEditor extends Component {
         }
         const { slateLockInfo: { isLocked } } = this.props
         const userId = this.props.slateLockInfo && this.props.slateLockInfo.userId.replace(/.*\(|\)/gi, '');
+
         /**
          * case -  initialize first tinymce instance on very first editor element by default
          */
@@ -2300,6 +2301,8 @@ export class TinyMceEditor extends Component {
         }
     }
     getNodeContent = () => {
+        const { slateLockInfo: { isLocked, userId } } = this.props;
+        let lockCondition = isLocked && config.userId !== userId.replace(/.*\(|\)/gi, '');
         switch (this.props.tagName) {
             case 'p':
                 let paraModel = this.props.model
@@ -2333,7 +2336,8 @@ export class TinyMceEditor extends Component {
             case 'blockquote':
                 if (this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote")) {
                     let temDiv = this.processBlockquoteHtml(this.props.model, this.props.element, lockCondition);
-                    return temDiv.innerHTML;
+                    let bgModel=removeImageCache(temDiv.innerHTML)
+                    return bgModel;
                 } else {
                     let pqModel = this.props.model && this.props.model.text || '<p class="paragraphNumeroUno"><br/></p>'
                     pqModel = removeBOM(pqModel)
