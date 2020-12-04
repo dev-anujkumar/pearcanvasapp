@@ -30,6 +30,11 @@ export const learningSystemList = {
         appType: "economics-sims",
         label: "Economic Sims"
     },
+    "exploring-solutions": {
+        learningSystem: "knowdl",
+        appType: "exploring-solutions",
+        label: "Exploring Solutions"
+    },
     "socialexplorer-explorations": {
         learningSystem: "socialexplorer",
         appType: "socialexplorer-explorations",
