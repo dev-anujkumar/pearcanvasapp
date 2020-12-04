@@ -16,11 +16,12 @@ import {
     SET_PARENT_NODE,
     ERROR_POPUP,
     GET_TCM_RESOURCES,
-    PAGE_NUMBER_LOADER
+    PAGE_NUMBER_LOADER,
+    WIRIS_ALT_TEXT_POPUP
 
 } from '../../constants/Action_Constants';
 
-import { sendDataToIframe } from '../../constants/utility.js';
+import { sendDataToIframe, replaceWirisClassAndAttr } from '../../constants/utility.js';
 import { HideLoader, ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
@@ -28,6 +29,7 @@ import * as slateWrapperConstants from "./SlateWrapperConstants"
 import { onPasteSuccess, prepareDataForTcmCreate } from "./slateWrapperAction_helper"
 
 import { SET_SELECTION } from './../../constants/Action_Constants.js';
+import tinymce from 'tinymce'
 
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
@@ -163,21 +165,15 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 prepareDataForTcmCreate(type, createdElementData, getState, dispatch);
             }
         }
-        
-
+        const activeEditorId = tinymce && tinymce.activeEditor && tinymce.activeEditor.id
+        replaceWirisClassAndAttr(activeEditorId)
         dispatch({
             type: AUTHORING_ELEMENT_CREATED,
             payload: {
                 slateLevelData: newParentData
             }
         })
-        /*if(type === "SHOW_HIDE"){
-            let showHideRevealElement = document.getElementById(`cypress-${index}-2-0`)
-               if(showHideRevealElement){
-                    showHideRevealElement.focus()
-                    showHideRevealElement.blur()
-               } 
-            }*/
+        
         if (cb) {
             cb();
         }   
@@ -699,4 +695,10 @@ export const pasteElement = (params) => async (dispatch, getState) => {
             console.log("Exceptional Error on pasting the element:::", error);
         }
     }
+}
+export const wirisAltTextPopup = (data) => (dispatch) => {
+    return dispatch({
+        type: WIRIS_ALT_TEXT_POPUP,
+        payload: data
+    })
 }

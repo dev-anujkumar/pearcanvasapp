@@ -11,7 +11,8 @@ const mockStore = configureMockStore(middlewares);
 global.document = (new JSDOM()).window.Element;
 jest.mock('../../../src/constants/utility.js', () => ({
     sendDataToIframe: jest.fn(),
-    hasReviewerRole: jest.fn()
+    hasReviewerRole: jest.fn(),
+    replaceWirisClassAndAttr: jest.fn()
 }))
 jest.mock('../../../src/component/TcmSnapshots/TcmSnapshots_Utility.js', () => ({
     tcmSnapshotsForUpdate: jest.fn(),

@@ -49,7 +49,7 @@ export const setSemanticsSnapshots = async (element,actionStatus,index) => {
             footnoteWipList = element.elementdata && element.elementdata.footnotes ? element.elementdata.footnotes : [];
             footnoteSnap = prepareFootnoteSnapshotContent(actionStatus, footnoteWipList,footnoteHtmlList);
             assetPopoverList = element.elementdata && element.elementdata.internallinks ? element.elementdata.internallinks : [];
-            assetPopoverSnap = await prepareAssetPopoverSnapshotContent(assetPopoverList,index,actionStatus)
+            assetPopoverSnap = await prepareAssetPopoverSnapshotContent(assetPopoverList,index,actionStatus,element)
             break;
 
         case ELEMENT_LIST:
@@ -211,32 +211,39 @@ const prepareFootnoteSnapshotContent = (actionStatus, footnoteWipList, footnoteH
  * @param {Array} assetsList - List of Asset Popover entries
  * @returns {Array} All AssetPopover Snapshots for given element 
 */
-export const prepareAssetPopoverSnapshotContent = async (assetsList, indexes, actionStatus) => {
-    let tempIndex = indexes && Array.isArray(indexes) ? indexes : (typeof indexes === "number") ? [indexes.toString()] : indexes.split("-");
-    let assetEleIndex = tempIndex && tempIndex.length > 1 ? tempIndex && tempIndex.join('-') : tempIndex;
+export const prepareAssetPopoverSnapshotContent = async (assetsList, indexes, actionStatus, element=null) => {
     let assetPopoverSnap = [];
-    let elementAP = document.querySelector(`div#cypress-${assetEleIndex}`)
-    if (assetsList && assetsList.length) {
-        await Promise.all(assetsList.map(async (assetsItem, index) => {
-            let assetIdAll = assetsItem && assetsItem.linkid && elementAP && elementAP.querySelectorAll('abbr');
-            let assetId = assetIdAll && assetIdAll[index] && assetIdAll[index].getAttribute('asset-id') ? assetIdAll[index].getAttribute('asset-id') : actionStatus.assetRemoveidForSnapshot ? actionStatus.assetRemoveidForSnapshot: ""
-            let data = {
-                assetid: assetId,
-                type: assetsItem && assetsItem.internallinktype === SLATE ? SLATE_LINK : AP_TYPE
-            }
-            if (assetsItem && assetsItem.internallinktype === SLATE) { /** Slate-Link Snapshot Data */
-                let slateLink = await slateLinkDetails(assetsItem.linkid);
-                data.linkID = slateLink && slateLink.containerUrn ? slateLink.containerUrn : ""
-                data.label = slateLink && slateLink.unformattedTitle && slateLink.unformattedTitle.en ? slateLink.unformattedTitle.en : ""
-            }
-            else {                                                    /** Asset Popover Snapshot Data */
-                await getCurrentlyLinkedImage(assetsItem.linkid, (resCurrentlyLinkedImageData) => {
-                    data.linkID = resCurrentlyLinkedImageData.id ? resCurrentlyLinkedImageData.id : ""
-                    data.label = resCurrentlyLinkedImageData.title ? resCurrentlyLinkedImageData.title : ""
-                })
-            }
-            assetPopoverSnap.push(data)
-        }))
+    if (Array.isArray(assetsList) && assetsList.length > 0) {
+        let tempIndex = indexes && Array.isArray(indexes) ? indexes : (typeof indexes === "number") ? [indexes.toString()] : indexes.split("-");
+        let assetEleIndex = tempIndex && tempIndex.length > 1 ? tempIndex && tempIndex.join('-') : tempIndex;
+        let elementAP = document.querySelector(`div#cypress-${assetEleIndex}`)
+        if (element) {
+            let dom = document.createElement('div');
+            dom.innerHTML = element.html.text;
+            elementAP = dom;
+        }
+        if (assetsList && assetsList.length) {
+            await Promise.all(assetsList.map(async (assetsItem, index) => {
+                let assetIdAll = assetsItem && assetsItem.linkid && elementAP && elementAP.querySelectorAll('abbr');
+                let assetId = assetIdAll && assetIdAll[index] && assetIdAll[index].getAttribute('asset-id') ? assetIdAll[index].getAttribute('asset-id') : actionStatus.assetRemoveidForSnapshot ? actionStatus.assetRemoveidForSnapshot: ""
+                let data = {
+                    assetid: assetId,
+                    type: assetsItem && assetsItem.internallinktype === SLATE ? SLATE_LINK : AP_TYPE
+                }
+                if (assetsItem && assetsItem.internallinktype === SLATE) { /** Slate-Link Snapshot Data */
+                    let slateLink = await slateLinkDetails(assetsItem.linkid);
+                    data.linkID = slateLink && slateLink.containerUrn ? slateLink.containerUrn : ""
+                    data.label = slateLink && slateLink.unformattedTitle && slateLink.unformattedTitle.en ? slateLink.unformattedTitle.en : ""
+                }
+                else {                                                    /** Asset Popover Snapshot Data */
+                    await getCurrentlyLinkedImage(assetsItem.linkid, (resCurrentlyLinkedImageData) => {
+                        data.linkID = resCurrentlyLinkedImageData.id ? resCurrentlyLinkedImageData.id : ""
+                        data.label = resCurrentlyLinkedImageData.title ? resCurrentlyLinkedImageData.title : ""
+                    })
+                }
+                assetPopoverSnap.push(data)
+            }))
+        }
     }
     return assetPopoverSnap
 }
