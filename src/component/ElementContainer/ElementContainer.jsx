@@ -141,7 +141,10 @@ class ElementContainer extends Component {
             divObj = Math.round(divObj);
             if(this.props.searchScrollTop !== divObj) {
                 this.props.setScroll({ 'type': SET_SEARCH_URN, scrollTop: divObj });
-                document.getElementById('slateWrapper').scrollTop = divObj;
+                const slatewrapperNode = document.getElementById('slateWrapper')
+                if(slatewrapperNode) {
+                    slatewrapperNode.scrollTop = divObj;
+                }
             }
         }
 

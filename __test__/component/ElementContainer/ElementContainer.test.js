@@ -10,6 +10,16 @@ const middlewares = [thunk];
 import config from "../../../src/config/config.js"
 import wipData from './wipData';
 import { singleAssessmentElmDefault } from '../../../fixtures/ElementSingleAssessmentTestData'
+
+global.document = (new JSDOM()).window.Element;
+if (!global.Element.prototype.hasOwnProperty("innerText")) {
+    Object.defineProperty(global.Element.prototype, 'innerText', {
+        get() {
+            return this.textContent;
+        },
+    });
+}
+
 jest.mock('./../../../src/component/SlateWrapper/PageNumberElement', () => {
     return (<div>null</div>)
 })
@@ -1602,8 +1612,114 @@ describe('Test-Other Functions', () => {
         spygetElementVersionStatus.mockClear()
     })
     
-    xit("componentDidUpdate", () => {
-        document.querySelector = () => true
+    it("componentDidUpdate", () => {
+        const store1 = mockStore({
+            appStore: {
+                activeElement: {
+                    elementId: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b",
+                    elementType: "element-authoredtext",
+                    elementWipType: "element-authoredtext",
+                    primaryOption: "primary-heading",
+                    secondaryOption: "secondary-heading-1",
+                    index: "1-0",
+                    tag: "H1",
+                    toolbar: ['bold']
+                },
+                permissions: []
+            },
+            slateLockReducer: {
+                slateLockInfo: {
+                    isLocked: false,
+                    timestamp: "",
+                    userId: ""
+                }
+            },
+            commentsPanelReducer: {
+                allComments: comments
+            },
+            toolbarReducer: {
+                elemBorderToggle: "true"
+            },
+            metadataReducer: {
+                currentSlateLOData: ""
+            },
+            learningToolReducer: {
+                shouldHitApi: false,
+                learningToolTypeValue: '',
+                apiResponse: [],
+                showErrorMsg: true, //should be false
+                showLTBody: false,
+                learningTypeSelected: false,
+                showDisFilterValues: false,
+                selectedResultFormApi: '',
+                resultIsSelected: false,
+                toggleLT: false,
+                linkButtonDisable: true,
+                apiResponseForDis: [],
+                learningToolDisValue: '',
+                numberOfRows: 25
+            },
+            glossaryFootnoteReducer:{
+                glossaryFootnoteValue: { "type": "", "popUpStatus": false }
+            },
+            tcmReducer:{
+                tcmSnapshot:[]
+            },
+            elementStatusReducer: {
+                'urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b': "wip",
+                "urn:pearson:work:32e659c2-e0bb-46e8-9605-b8433aa3836c": "wip",
+                "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635": "wip",
+                "urn:pearson:work:ee2b0c11-75eb-4a21-87aa-578750b5301d": "wip",
+        
+            },
+            searchReducer: {
+                searchTerm: "urn:pearson:work:5d489bfe-ef76-4193-b07a-62d9d393fe93",
+                parentId: "urn:pearson:work:5d489bfe-ef76-4193-b07a-62d9d393fe93",
+                deeplink: true,
+                scroll: false,
+                scrollTop: 0
+            },
+            commentSearchReducer: {
+                commentSearchTerm: "",
+                parentId: "",
+                scroll: false,
+                scrollTop: 0
+            },
+            selectionReducer: {
+                selection: {
+                    activeAnimation: true,
+                    deleteElm: {id: "urn:pearson:work:5d489bfe-ef76-4193-b07a-62d9d393fe93", type: "element-authoredtext", parentUrn: undefined, asideData: undefined, contentUrn: "urn:pearson:entity:da9f3f72-2cc7-4567-8fb9-9a887c360979"},
+                    element: {id: "urn:pearson:work:5d489bfe-ef76-4193-b07a-62d9d393fe93", type: "element-authoredtext", schema: "http://schemas.pearson.com/wip-authoring/element/1"},
+                    inputSubType: "NA",
+                    inputType: "AUTHORED_TEXT",
+                    operationType: "cut",
+                    sourceElementIndex: 2,
+                    sourceSlateEntityUrn: "urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1fb",
+                    sourceSlateManifestUrn: "urn:pearson:manifest:e30674d0-f7b1-4974-833f-5f2e19a9fea6"
+                }
+            }
+        });
+        let props = {
+            element: wipData.pullquote,
+            activeElement: {
+                elementId: "urn:pearson:work:5d489bfe-ef76-4193-b07a-62d9d393fe93",
+                elementType: "element-authoredtext",
+                elementWipType: "element-blockfeature",
+                index: 2,
+                primaryOption: "primary-blockquote",
+                secondaryOption: "secondary-pullquote",
+                tag: "BQ",
+                toolbar: ["bold", "underline", "strikethrough", "orderedlist", "unorderedlist", "glossary", "slatetag"]
+            }
+        };
+        let elementContainer = mount(<Provider store={store1}><ElementContainer {...props} /></Provider>);
+        const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+        document.querySelector = () => {
+            return {
+                offsetTop: 2
+            }
+        }
+        document.getElementById["scrollTop"] = 1
         const spycomponentDidUpdate = jest.spyOn(elementContainerInstance, 'componentDidUpdate')
         elementContainerInstance.componentDidUpdate();
         expect(spycomponentDidUpdate).toHaveBeenCalled();
