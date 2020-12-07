@@ -663,13 +663,18 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                 "inputSubType": selection.inputSubType,
                 "schema": selection.element.schema,
                 "html": selection.element.html,
-                "slateVersionUrn": config.slateManifestURN,
+                "slateVersionUrn": selection.element.sourceSlateManifestUrn,
                 "id": selection.element.id,
                 "elementParentEntityUrn": selection.element.sourceSlateEntityUrn,
                 "versionUrn": selection.element.versionUrn,
                 "contentUrn": selection.element.contentUrn,
+                "destinationSlateUrn": config.slateEntityURN
             }]
         };
+
+        if(selection.operationType.toUpperCase() === "COPY") {
+            // _requestData
+        }
 
         if(selection.element.type === "figure") {
             _requestData = {
