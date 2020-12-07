@@ -46,7 +46,8 @@ jest.mock('../../../src/js/utils', () => {
             unsubscribe: jest.fn(),
             removeListenr: jest.fn(),
         },
-        removeBOM: () => { }
+        removeBOM: () => { },
+        removeImageCache: jest.fn()
     }
 
 })
@@ -5126,7 +5127,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                     },
                     setAttribute: () => { },
                     getAttribute: () => { },
-
+                    getElementsByTagName: () => { return {length: 2 } }
                 }
             }
             tinymce.$ = () => {

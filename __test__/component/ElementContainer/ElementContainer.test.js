@@ -10,6 +10,16 @@ const middlewares = [thunk];
 import config from "../../../src/config/config.js"
 import wipData from './wipData';
 import { singleAssessmentElmDefault } from '../../../fixtures/ElementSingleAssessmentTestData'
+
+global.document = (new JSDOM()).window.Element;
+if (!global.Element.prototype.hasOwnProperty("innerText")) {
+    Object.defineProperty(global.Element.prototype, 'innerText', {
+        get() {
+            return this.textContent;
+        },
+    });
+}
+
 jest.mock('./../../../src/component/SlateWrapper/PageNumberElement', () => {
     return (<div>null</div>)
 })
@@ -239,25 +249,38 @@ describe('Test for element container component', () => {
             }; 
             let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
             const elementContainerInstance = elementContainer.find('ElementContainer').instance();
-            // const elementDiv1 = document.createElement('div');
-            // elementDiv1.setAttribute('id', "cypress-2");
-            // elementDiv1.innerHTML='<h3 class="pullQuoteNumeroUno">Hello Test</h3>' ;
-            // elementDiv1.innerText="Hello Test"
-            // document.body.appendChild(elementDiv1)
             expect(elementContainer).toHaveLength(1);
             expect(elementContainerInstance).toBeDefined();
-            // elementContainerInstance.handleBlur();
-            // expect(spyhandleBlur).toHaveBeenCalled()
-            // spyhandleBlur.mockClear()
         })
         it('Render Element Container ----->List Element', () => {
             let props = {
-                element: wipData.list,
+                element: wipData.stanza,
                 permissions: []
             };
             let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
             const elementContainerInstance = elementContainer.find('ElementContainer').instance();
             expect(elementContainer).toHaveLength(1);
+            expect(elementContainerInstance).toBeDefined();
+        })
+        it('Render Element Container ----->Multicolumn container Element', () => {
+            let props = {
+                element: wipData.multicolumn,
+                permissions: []
+            };
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            expect(elementContainer).toHaveLength(1);
+            expect(elementContainerInstance).toBeDefined();
+        })
+        it('Render Element Container ----->Stanza Element', () => {
+            expect(elementContainer).toHaveLength(1);
+            elementContainerInstance.setState({
+                activeColorIndex: 0,
+                isOpener: true
+
+            })
+            elementContainerInstance.forceUpdate();
+            elementContainer.update();
             expect(elementContainerInstance).toBeDefined();
         })
         it('Render Element Container ----->handleBlur', () => {
@@ -278,7 +301,111 @@ describe('Test for element container component', () => {
             expect(spyhandleBlur).toHaveBeenCalled()
             spyhandleBlur.mockClear()
         })
-
+        it('Render Element Container ----->no formatting bar access', () => {
+            const store1 = mockStore({
+                appStore: {
+                    activeElement: {
+                        elementId: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b",
+                        elementType: "element-authoredtext",
+                        elementWipType: "element-authoredtext",
+                        primaryOption: "primary-heading",
+                        secondaryOption: "secondary-heading-1",
+                        index: "1-0",
+                        tag: "H1",
+                        toolbar: ['bold']
+                    },
+                    permissions: []
+                },
+                slateLockReducer: {
+                    slateLockInfo: {
+                        isLocked: false,
+                        timestamp: "",
+                        userId: ""
+                    }
+                },
+                commentsPanelReducer: {
+                    allComments: comments
+                },
+                toolbarReducer: {
+                    elemBorderToggle: "true"
+                },
+                metadataReducer: {
+                    currentSlateLOData: ""
+                },
+                learningToolReducer: {
+                    shouldHitApi: false,
+                    learningToolTypeValue: '',
+                    apiResponse: [],
+                    showErrorMsg: true, //should be false
+                    showLTBody: false,
+                    learningTypeSelected: false,
+                    showDisFilterValues: false,
+                    selectedResultFormApi: '',
+                    resultIsSelected: false,
+                    toggleLT: false,
+                    linkButtonDisable: true,
+                    apiResponseForDis: [],
+                    learningToolDisValue: '',
+                    numberOfRows: 25
+                },
+                glossaryFootnoteReducer:{
+                    glossaryFootnoteValue: { "type": "", "popUpStatus": false }
+                },
+                tcmReducer:{
+                    tcmSnapshot:[]
+                },
+                elementStatusReducer: {
+                    'urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b': "wip",
+                    "urn:pearson:work:32e659c2-e0bb-46e8-9605-b8433aa3836c": "wip",
+                    "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635": "wip",
+                    "urn:pearson:work:ee2b0c11-75eb-4a21-87aa-578750b5301d": "wip",
+            
+                },
+                searchReducer: {
+                    searchTerm: "urn:pearson:work:5d489bfe-ef76-4193-b07a-62d9d393fe93",
+                    parentId: "",
+                    deeplink: true,
+                    scroll: false,
+                    scrollTop: 0
+                },
+                commentSearchReducer: {
+                    commentSearchTerm: "",
+                    parentId: "",
+                    scroll: false,
+                    scrollTop: 0
+                },
+                selectionReducer: {
+                    selection: {
+                        activeAnimation: true,
+                        deleteElm: {id: "urn:pearson:work:5d489bfe-ef76-4193-b07a-62d9d393fe93", type: "element-authoredtext", parentUrn: undefined, asideData: undefined, contentUrn: "urn:pearson:entity:da9f3f72-2cc7-4567-8fb9-9a887c360979"},
+                        element: {id: "urn:pearson:work:5d489bfe-ef76-4193-b07a-62d9d393fe93", type: "element-authoredtext", schema: "http://schemas.pearson.com/wip-authoring/element/1"},
+                        inputSubType: "NA",
+                        inputType: "AUTHORED_TEXT",
+                        operationType: "cut",
+                        sourceElementIndex: 2,
+                        sourceSlateEntityUrn: "urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1fb",
+                        sourceSlateManifestUrn: "urn:pearson:manifest:e30674d0-f7b1-4974-833f-5f2e19a9fea6"
+                    }
+                }
+            });
+            let props = {
+                element: wipData.pullquote,
+                activeElement: {
+                    elementId: "urn:pearson:work:5d489bfe-ef76-4193-b07a-62d9d393fe93",
+                    elementType: "element-authoredtext",
+                    elementWipType: "element-blockfeature",
+                    index: 2,
+                    primaryOption: "primary-blockquote",
+                    secondaryOption: "secondary-pullquote",
+                    tag: "BQ",
+                    toolbar: ["bold", "underline", "strikethrough", "orderedlist", "unorderedlist", "glossary", "slatetag"]
+                }
+            };
+            let elementContainer = mount(<Provider store={store1}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            expect(elementContainer).toHaveLength(1);
+            expect(elementContainerInstance).toBeDefined();
+        })
         it('Render Element Container ----->handleBlur list', () => {
             let props = {
                 element: wipData.list,
@@ -311,6 +438,24 @@ describe('Test for element container component', () => {
             document.body.appendChild(elementDiv);
             const spyhandleBlur  = jest.spyOn(elementContainerInstance, 'handleBlur') 
             elementContainerInstance.handleBlur(true);
+            expect(spyhandleBlur).toHaveBeenCalled()
+            spyhandleBlur.mockClear()
+        })
+        it('Render Element Container ----->handleBlur EmbeddedAssessment element', () => {
+            let props = {
+                element: wipData.assessment,
+                permissions: [],
+                index:1
+            };
+            
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            const elementDiv = document.createElement('div');
+            elementDiv.setAttribute('id', "cypress-1");
+            elementDiv.innerHTML='<h3 class="pullQuoteNumeroUno">Hello Test</h3>'
+            document.body.appendChild(elementDiv);
+            const spyhandleBlur  = jest.spyOn(elementContainerInstance, 'handleBlur') 
+            elementContainerInstance.handleBlur(true, null, null, null, 'fromEmbeddedAssessment');
             expect(spyhandleBlur).toHaveBeenCalled()
             spyhandleBlur.mockClear()
         })
@@ -450,20 +595,6 @@ describe('Test for element container component', () => {
             document.body.appendChild(elementDiv);
             const spyhandleBlur = jest.spyOn(elementContainerInstance, 'handleBlur')
             elementContainerInstance.handleBlur("", "", 1);
-            expect(spyhandleBlur).toHaveBeenCalled()
-            spyhandleBlur.mockClear()
-        })
-        it('Render Element Container ----->handleBlurAside', () => {
-            let props = {
-                element: wipData.figure,
-                permissions: []
-            };
-            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
-            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
-            expect(elementContainer).toHaveLength(1);
-            expect(elementContainerInstance).toBeDefined();
-            const spyhandleBlur  = jest.spyOn(elementContainerInstance, 'handleBlurAside') 
-            elementContainerInstance.handleBlurAside();
             expect(spyhandleBlur).toHaveBeenCalled()
             spyhandleBlur.mockClear()
         })
@@ -1040,7 +1171,7 @@ describe('Test for element container component', () => {
             element: wipData.paragraph,
             permissions: [
                 "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
-                "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
+                "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "split_slate", "full_project_slate_preview", "access_formatting_bar", "elements_add_remove",
                 "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
             ],
             showBlocker: jest.fn(),
@@ -1116,6 +1247,28 @@ describe('Test for element container component', () => {
             spyhandleFocus.mockClear()
         }) 
 
+        it('Test-handleFocus Function- for showhide element', () => {
+            elementContainerInstance.setState({
+                sectionBreak: true
+            })
+           /*  jest.mock('./../../../src/constants/utility.js', () => ({
+                hasReviewerRole: () => true
+            })) */
+            document.querySelector = () => {
+                return {
+                    classList: {
+                        remove: jest.fn(),
+                        add: jest.fn()
+                    }
+                }
+            }
+            const spyhandleFocus  = jest.spyOn(elementContainerInstance, 'handleFocus')
+            elementContainerInstance.handleFocus("",null,event,"");
+            elementContainerInstance.forceUpdate();
+            elementContainer.update()
+            expect(spyhandleFocus).toHaveBeenCalled()
+            spyhandleFocus.mockClear()
+        })
         it('Test-handleTCM Function', () => {
             const spyhandleTCM  = jest.spyOn(elementContainerInstance, 'handleTCM')
             elementContainerInstance.handleTCM(event);
@@ -1421,9 +1574,218 @@ describe('Test-Lifecycle Functions-componentWillReceiveProps', () => {
 })
 describe('Test-Other Functions', () => {
    
+    let props = {
+        element: wipData.poetry,
+        permissions: [
+            "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
+            "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
+            "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
+        ],
+        showBlocker: jest.fn(),
+        isBlockerActive: true,
+        asideData: {},
+        parentUrn:"urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+        index:0,
+        deleteElement: jest.fn(),
+        searchParent : "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464"
+    };
+
+    let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+    const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+
     it('Test-handleFocus Function- for c2mdeia update-opener element', () => {
+        const spyhandleFocus  = jest.spyOn(elementContainerInstance, 'handleFocus')
+        elementContainerInstance.handleFocus(true);
+        elementContainerInstance.forceUpdate();
+        elementContainer.update()
+        expect(spyhandleFocus).toHaveBeenCalled()
+        spyhandleFocus.mockClear()
+    })
+
+    it('Test-getElementVersionStatus Function- poetry with creditsarray', () => {
+        const elementStatus = {}
+        const spygetElementVersionStatus  = jest.spyOn(elementContainerInstance, 'getElementVersionStatus')
+        elementContainerInstance.getElementVersionStatus(props.element, elementStatus);
+        elementContainerInstance.forceUpdate();
+        elementContainer.update()
+        expect(spygetElementVersionStatus).toHaveBeenCalled()
+        spygetElementVersionStatus.mockClear()
+    })
+    
+    it("componentDidUpdate", () => {
+        const store1 = mockStore({
+            appStore: {
+                activeElement: {
+                    elementId: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b",
+                    elementType: "element-authoredtext",
+                    elementWipType: "element-authoredtext",
+                    primaryOption: "primary-heading",
+                    secondaryOption: "secondary-heading-1",
+                    index: "1-0",
+                    tag: "H1",
+                    toolbar: ['bold']
+                },
+                permissions: []
+            },
+            slateLockReducer: {
+                slateLockInfo: {
+                    isLocked: false,
+                    timestamp: "",
+                    userId: ""
+                }
+            },
+            commentsPanelReducer: {
+                allComments: comments
+            },
+            toolbarReducer: {
+                elemBorderToggle: "true"
+            },
+            metadataReducer: {
+                currentSlateLOData: ""
+            },
+            learningToolReducer: {
+                shouldHitApi: false,
+                learningToolTypeValue: '',
+                apiResponse: [],
+                showErrorMsg: true, //should be false
+                showLTBody: false,
+                learningTypeSelected: false,
+                showDisFilterValues: false,
+                selectedResultFormApi: '',
+                resultIsSelected: false,
+                toggleLT: false,
+                linkButtonDisable: true,
+                apiResponseForDis: [],
+                learningToolDisValue: '',
+                numberOfRows: 25
+            },
+            glossaryFootnoteReducer:{
+                glossaryFootnoteValue: { "type": "", "popUpStatus": false }
+            },
+            tcmReducer:{
+                tcmSnapshot:[]
+            },
+            elementStatusReducer: {
+                'urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b': "wip",
+                "urn:pearson:work:32e659c2-e0bb-46e8-9605-b8433aa3836c": "wip",
+                "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635": "wip",
+                "urn:pearson:work:ee2b0c11-75eb-4a21-87aa-578750b5301d": "wip",
+        
+            },
+            searchReducer: {
+                searchTerm: "urn:pearson:work:5d489bfe-ef76-4193-b07a-62d9d393fe93",
+                parentId: "urn:pearson:work:5d489bfe-ef76-4193-b07a-62d9d393fe93",
+                deeplink: true,
+                scroll: false,
+                scrollTop: 0
+            },
+            commentSearchReducer: {
+                commentSearchTerm: "",
+                parentId: "",
+                scroll: false,
+                scrollTop: 0
+            },
+            selectionReducer: {
+                selection: {
+                    activeAnimation: true,
+                    deleteElm: {id: "urn:pearson:work:5d489bfe-ef76-4193-b07a-62d9d393fe93", type: "element-authoredtext", parentUrn: undefined, asideData: undefined, contentUrn: "urn:pearson:entity:da9f3f72-2cc7-4567-8fb9-9a887c360979"},
+                    element: {id: "urn:pearson:work:5d489bfe-ef76-4193-b07a-62d9d393fe93", type: "element-authoredtext", schema: "http://schemas.pearson.com/wip-authoring/element/1"},
+                    inputSubType: "NA",
+                    inputType: "AUTHORED_TEXT",
+                    operationType: "cut",
+                    sourceElementIndex: 2,
+                    sourceSlateEntityUrn: "urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1fb",
+                    sourceSlateManifestUrn: "urn:pearson:manifest:e30674d0-f7b1-4974-833f-5f2e19a9fea6"
+                }
+            }
+        });
         let props = {
-            element: wipData.opener,
+            element: wipData.pullquote,
+            activeElement: {
+                elementId: "urn:pearson:work:5d489bfe-ef76-4193-b07a-62d9d393fe93",
+                elementType: "element-authoredtext",
+                elementWipType: "element-blockfeature",
+                index: 2,
+                primaryOption: "primary-blockquote",
+                secondaryOption: "secondary-pullquote",
+                tag: "BQ",
+                toolbar: ["bold", "underline", "strikethrough", "orderedlist", "unorderedlist", "glossary", "slatetag"]
+            }
+        };
+        let elementContainer = mount(<Provider store={store1}><ElementContainer {...props} /></Provider>);
+        const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+        document.querySelector = () => {
+            return {
+                offsetTop: 2
+            }
+        }
+        document.getElementById["scrollTop"] = 1
+        const spycomponentDidUpdate = jest.spyOn(elementContainerInstance, 'componentDidUpdate')
+        elementContainerInstance.componentDidUpdate();
+        expect(spycomponentDidUpdate).toHaveBeenCalled();
+        spycomponentDidUpdate.mockClear()
+    })
+    it("Test - replaceUnwantedtags - no input", () => {
+        const spyreplaceUnwantedtags = jest.spyOn(elementContainerInstance, 'replaceUnwantedtags')
+        elementContainerInstance.replaceUnwantedtags();
+        expect(spyreplaceUnwantedtags).toHaveBeenCalled();
+        expect(spyreplaceUnwantedtags).toHaveReturnedWith(undefined);
+        spyreplaceUnwantedtags.mockClear()
+    })
+    it("Test - figureDifferenceBlockCode: difference in content", () => {
+        const previousElementData = {
+            html: {
+                preformattedtext: '<p></p>'
+            },
+            figuredata: {
+                startNumber: 2,
+                numbered: false,
+                syntaxhighlighting: false
+            }
+        }
+        document.querySelector = () => {
+            return {
+                getAttribute: (attr) => {
+                    if(attr === "startnumber" || attr === "numbered" || attr === "syntaxhighlighting") return "1"
+                } 
+            }
+        }
+        const spyfigureDifferenceBlockCode = jest.spyOn(elementContainerInstance, 'figureDifferenceBlockCode')
+        elementContainerInstance.figureDifferenceBlockCode(1, previousElementData);
+        expect(spyfigureDifferenceBlockCode).toHaveBeenCalled();
+        expect(spyfigureDifferenceBlockCode).toHaveReturnedWith(true);
+        spyfigureDifferenceBlockCode.mockClear()
+    })
+    it("Test - figureDifferenceInteractive - pdf interactive type: difference in content", () => {
+        const previousElementData = {
+            html: {
+                title: '<p></p>',
+                postertext: "<p>test</p>"
+            },
+            figuredata: {
+                interactivetype: "pdf"
+            }
+        }
+        const spyfigureDifferenceInteractive = jest.spyOn(elementContainerInstance, 'figureDifferenceInteractive')
+        elementContainerInstance.figureDifferenceInteractive(1, previousElementData);
+        expect(spyfigureDifferenceInteractive).toHaveBeenCalled();
+        expect(spyfigureDifferenceInteractive).toHaveReturnedWith(true);
+        spyfigureDifferenceInteractive.mockClear()
+    })
+    it("Test - handleTCM: isSavingElement false", () => {
+        const eventObj = {
+            stopPropagation: jest.fn()
+        }
+        config.isSavingElement = false
+        const spyhandleTCM = jest.spyOn(elementContainerInstance, 'handleTCM')
+        elementContainerInstance.handleTCM(eventObj);
+        expect(spyhandleTCM).toHaveBeenCalled();
+        spyhandleTCM.mockClear()
+    })
+
+    it("handleContentChange for Blockquote", () => {
+        const props1 = {
+            element: wipData.pullquote,
             permissions: [
                 "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
                 "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
@@ -1434,15 +1796,129 @@ describe('Test-Other Functions', () => {
             asideData: {},
             parentUrn:"urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
             index:0,
-            deleteElement: jest.fn()
+            deleteElement: jest.fn(),
+            searchParent : "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464"
         };
-        let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
-        const elementContainerInstance = elementContainer.find('ElementContainer').instance();  
-        const spyhandleFocus  = jest.spyOn(elementContainerInstance, 'handleFocus')
-        elementContainerInstance.handleFocus(true);
-        elementContainerInstance.forceUpdate();
-        elementContainer.update()
-        expect(spyhandleFocus).toHaveBeenCalled()
-        spyhandleFocus.mockClear()
+    
+        const previousElementData = {
+            type: "element-blockfeature",
+            html: {
+                text: "<h2 class='pullquoteNumeroUno'></h2>"
+            }
+        }
+        const elementContainer1 = mount(<Provider store={store}><ElementContainer {...props1} /></Provider>);
+        const elementContainerInstance1 = elementContainer1.find('ElementContainer').instance();
+        document.querySelector = () => {
+            return {
+                innerText: " ",
+                append: jest.fn()
+            }
+        }
+        const spyhandleContentChange = jest.spyOn(elementContainerInstance1, 'handleContentChange')
+        elementContainerInstance1.handleContentChange(null, previousElementData, null, null, null, null, false, { type: "showhide" });
+        expect(spyhandleContentChange).toHaveBeenCalled();
+        spyhandleContentChange.mockClear()
+    })
+
+    it("handleContentChange for Blockquote inside showhide", () => {
+        const props1 = {
+            element: wipData.pullquote,
+            permissions: [
+                "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
+                "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
+                "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
+            ],
+            showBlocker: jest.fn(),
+            isBlockerActive: true,
+            asideData: {},
+            parentUrn:"urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+            index:0,
+            deleteElement: jest.fn(),
+            searchParent : "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464"
+        };
+    
+        const previousElementData = {
+            type: "element-blockfeature",
+            html: {
+                text: "<h2 class='pullquoteNumeroUno'></h2>"
+            }
+        }
+        const elementContainer1 = mount(<Provider store={store}><ElementContainer {...props1} /></Provider>);
+        const elementContainerInstance1 = elementContainer1.find('ElementContainer').instance();
+        document.querySelector = () => {
+            return {
+                innerText: " ",
+                append: jest.fn()
+            }
+        }
+        const spyhandleContentChange = jest.spyOn(elementContainerInstance1, 'handleContentChange')
+        elementContainerInstance1.handleContentChange(null, previousElementData, null, null, null, null, false, { type: "showhide" }, 'postertextobject');
+        expect(spyhandleContentChange).toHaveBeenCalled();
+        spyhandleContentChange.mockClear()
+    })
+
+    it("handleContentChange for stanza", () => {
+        const previousElementData = {
+            type: "stanza",
+            html: {
+                text: "<p>stanza text</p>"
+            }
+        }
+        document.querySelector = () => {
+            return {
+                innerText: " ",
+                append: jest.fn()
+            }
+        }
+        const spyhandleContentChange = jest.spyOn(elementContainerInstance, 'handleContentChange')
+        elementContainerInstance.handleContentChange(null, previousElementData, null, null, null, null, false, {type: "showhide"}, null);
+        expect(spyhandleContentChange).toHaveBeenCalled();
+        spyhandleContentChange.mockClear()
+    })
+
+    it("handleContentChange for MML image", () => {
+        const previousElementData = {
+            type: "figure",
+            html: {
+                text: "<p>stanza text</p>"
+            },
+            figuretype:  "authoredtext",
+            figuredata: {
+                figuretype: "authoredtext"
+            }
+        }
+        config.savingInProgress = false
+        const spyhandleContentChange = jest.spyOn(elementContainerInstance, 'handleContentChange')
+        elementContainerInstance.handleContentChange(null, previousElementData, null, null, null, null, true, null, null);
+        expect(spyhandleContentChange).toHaveBeenCalled();
+        spyhandleContentChange.mockClear()
+    })
+    it("toggleCopyMenu function", () => {
+        const value = {},
+            copyClickedX = 2,
+            copyClickedY = 1;
+
+        const spytoggleCopyMenu = jest.spyOn(elementContainerInstance, 'toggleCopyMenu')
+        elementContainerInstance.toggleCopyMenu(value, copyClickedX, copyClickedY);
+        expect(spytoggleCopyMenu).toHaveBeenCalled();
+        spytoggleCopyMenu.mockClear()
+    })
+    it("setBorderToggle function - active state", () => {
+        const elemBorderToggleFromProp = 'undefined', borderToggleFromState = "active";
+
+        const spysetBorderToggle = jest.spyOn(elementContainerInstance, 'setBorderToggle')
+        elementContainerInstance.setBorderToggle(elemBorderToggleFromProp, borderToggleFromState);
+        expect(spysetBorderToggle).toHaveBeenCalled();
+        expect(spysetBorderToggle).toHaveReturnedWith(borderToggleFromState);
+        spysetBorderToggle.mockClear()
+    })
+    it("setBorderToggle function - not active state", () => {
+        const elemBorderToggleFromProp = 'undefined', borderToggleFromState = "";
+
+        const spysetBorderToggle = jest.spyOn(elementContainerInstance, 'setBorderToggle')
+        elementContainerInstance.setBorderToggle(elemBorderToggleFromProp, borderToggleFromState);
+        expect(spysetBorderToggle).toHaveBeenCalled();
+        expect(spysetBorderToggle).toHaveReturnedWith('hideBorder');
+        spysetBorderToggle.mockClear()
     })
 })
