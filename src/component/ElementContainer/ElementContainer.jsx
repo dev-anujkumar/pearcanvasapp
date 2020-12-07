@@ -141,7 +141,10 @@ class ElementContainer extends Component {
             divObj = Math.round(divObj);
             if(this.props.searchScrollTop !== divObj) {
                 this.props.setScroll({ 'type': SET_SEARCH_URN, scrollTop: divObj });
-                document.getElementById('slateWrapper').scrollTop = divObj;
+                const slatewrapperNode = document.getElementById('slateWrapper')
+                if(slatewrapperNode) {
+                    slatewrapperNode.scrollTop = divObj;
+                }
             }
         }
 
@@ -564,7 +567,7 @@ class ElementContainer extends Component {
                 }
             } 
                 let currentNode = document.getElementById(index)
-                let html = currentNode.innerHTML;
+                let html = currentNode && currentNode.innerHTML;
                 let tempDiv = document.createElement('div');
                 tempDiv.innerHTML = html;
                 //tinyMCE.$(tempDiv).find('.blockquote-hidden').remove();
@@ -796,23 +799,6 @@ class ElementContainer extends Component {
             this.handleContentChange('', dataToSend, ELEMENT_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT + this.props.element.elementdata.assessmentformat)
         }
 
-    }
-
-    /**
-     * Checks mouse event out side of canvas area and handdling element border state
-     */
-    handleBlurAside = () => {
-        if (this.props.elemBorderToggle) {
-            this.setState({
-                borderToggle: 'showBorder',
-                btnClassName: ''
-            })
-        } else {
-            this.setState({
-                borderToggle: 'hideBorder',
-                btnClassName: ''
-            })
-        }
     }
 
     toggleColorPaletteList = () => {
