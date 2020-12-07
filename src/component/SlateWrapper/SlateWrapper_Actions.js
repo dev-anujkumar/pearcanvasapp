@@ -663,7 +663,11 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                 "inputSubType": selection.inputSubType,
                 "schema": selection.element.schema,
                 "html": selection.element.html,
-                "slateVersionUrn": config.slateManifestURN
+                "slateVersionUrn": config.slateManifestURN,
+                "id": selection.element.id,
+                "elementParentEntityUrn": selection.element.sourceSlateEntityUrn,
+                "versionUrn": selection.element.versionUrn,
+                "contentUrn": selection.element.contentUrn,
             }]
         };
 
@@ -677,8 +681,9 @@ export const pasteElement = (params) => async (dispatch, getState) => {
         }
 
         try {
+            let url = `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/slate/${config.slateEntityURN}/element/paste?type=${selection.operationType.toUpperCase()}`
             const createdElemData = await axios.post(
-                `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/slate/${config.slateEntityURN}/element/paste`,
+                url,
                 JSON.stringify(_requestData),
                 {
                     headers: {
