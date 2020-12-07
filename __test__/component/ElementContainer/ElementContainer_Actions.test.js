@@ -8,6 +8,8 @@ import { stub } from 'sinon';
 import { slateLevelData, addNewComment, slateLevelDataWithApproved, blockfeature, defaultSlateDataFigure } from "../../../fixtures/containerActionsTestingData"
 import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_CREATED, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, DELETE_SHOW_HIDE_ELEMENT } from '../../../src/constants/Action_Constants';
 import { JSDOM } from 'jsdom'
+import MockAdapter from 'axios-mock-adapter';
+import axios from "axios"
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
@@ -226,7 +228,7 @@ describe('Tests ElementContainer Actions', () => {
             config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
             let elementId = "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0c",
                 contentUrn = "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
-                type = "element-authoredtext"
+                type = "popup"
             const expectedActions = [{
                 type: AUTHORING_ELEMENT_CREATED,
                 payload: {
@@ -317,6 +319,50 @@ describe('Tests ElementContainer Actions', () => {
             return store.dispatch(actions.updateElement(updatedData, 0, parentUrn, asideData)).then(() => {
                 expect(spyupdateElement).toHaveBeenCalled()
             });
+        })
+        it('testing------- Update Element -----action - Reviewer role', () => {
+            
+            let store = mockStore(() => initialState);
+            const updatedData = {
+                "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                "type": "element-authoredtext",
+                "subtype": "",
+                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                "elementdata": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "html": {
+                    "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                },
+                "comments": false,
+                "tcm": true,
+                "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+                "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+            }
+
+            //Mocking axios put request
+            let mock = new MockAdapter(axios);
+            const data = undefined;
+            mock.onPut(`${config.REACT_APP_API_URL}v1/slate/element`).reply(500, data);
+            
+            let parentUrn = {
+                manifestUrn: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                elementType: "element-authoredtext"
+            }
+           config.tcmStatus= true
+            let asideData = {
+                type: "element-authoredtext",
+                id: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+
+            }
+            jest.mock('../../../src/constants/utility.js', () => ({
+                hasReviewerRole: () => {return true}
+            }))
+            const spyupdateElement = jest.spyOn(actions, 'updateElement')
+            actions.updateElement(updatedData, 0, parentUrn, asideData)(store.dispatch, store.getState)
+            expect(spyupdateElement).toHaveBeenCalled()
         })
     })
 

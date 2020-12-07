@@ -112,7 +112,6 @@ export class ReactEditor extends React.Component {
     let content = e.target.getContent({format: 'text'}),
         contentHTML = e.target.getContent(),
         activeElement = editor.dom.getParent(editor.selection.getStart(), ".definition-editor");
-
     if (activeElement) {
         let isContainsMath = contentHTML.match(/<img/)?(contentHTML.match(/<img/).input.includes('class="Wirisformula')||contentHTML.match(/<img/).input.includes('class="temp_Wirisformula')):false
         if(content.trim().length || contentHTML.match(/<math/g) || isContainsMath){
