@@ -307,8 +307,10 @@ class ElementSingleAssessment extends Component {
     /*** @description - This function is to update ELM Assessment on Save Event from ELM Portal */
     updateElmOnSaveEvent = (props) => {
         const { assessmentReducer } = props;
-        let latestItemId = (assessmentReducer[this.state.assessmentId].items && assessmentReducer[this.state.assessmentId].items[this.state.assessmentItemId])
+        // let latestItemId = (assessmentReducer[this.state.assessmentId].items && assessmentReducer[this.state.assessmentId].items[this.state.assessmentItemId])
         let latestTitle = (assessmentReducer[this.state.assessmentId] && assessmentReducer[this.state.assessmentId].assessmentTitle)
+        const latestItem = assessmentReducer[this.state.assessmentId].items.find( itemdata => itemdata.oldItemId == this.state.assessmentItemId)
+        const latestItemId = latestItem && latestItem.latestItemId
         showTocBlocker();
         disableHeader(true);
         this.setState({ assessmentItemId: latestItemId, assessmentTitle: latestTitle }, () => this.saveAssessment(() => {
