@@ -386,7 +386,7 @@ export const generateAssessmentData = (index, previousElementData, elementType, 
     const assessmentId = assessmentNode.querySelector('span.embedded-id').innerText;
     const assessmentTitle = assessmentNode.querySelector('span.embedded-title').innerText;
     const assessmentItemId = assessmentNode.querySelector('span.embedded-itemid').innerText;
-    const assessmentItemTitle = assessmentNode.querySelector('span.embedded-itemtitle').innerText;
+    const assessmentItemTitle = assessmentNode.querySelector('span.embedded-itemtitle') && assessmentNode.querySelector('span.embedded-itemtitle').innerText;
 
     let dataToSend = {
         ...previousElementData,

@@ -7,7 +7,7 @@ import { LEARNING_TEMPLATE, PUF, ELEMENT_FIGURE, FIGURE_ASSESSMENT, ELEMENT_ASSE
  * * @param model - object containig element data
 */
 export const setAssessmentTitle = (model) => {
-    let assessmentTitle = null;
+    let assessmentTitle = '';
     if (model && model.html && model.html.title) {
         assessmentTitle = model.html.title
     } else if (model && model.title && model.title.text) {
@@ -136,4 +136,17 @@ export const setAssessmentItemTitle = (model) => {
         itemTitle = model.figuredata.elementdata.assessmentitemtitle
     }
     return itemTitle;
+}
+
+/** This is a function to set Assessment Item Title for Embedded Assessment
+ * * @param model - object containig element data
+*/
+export const getAssessmentTitle = (model) => {
+    let title = "";
+    if (model && model.figuredata && model.figuredata.elementdata && model.figuredata.elementdata.assessmenttitle) {
+        title = model.figuredata.elementdata.assessmenttitle
+    }else {
+        title = setAssessmentTitle(model)
+    }
+    return title;
 }
