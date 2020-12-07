@@ -663,9 +663,9 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                 "inputSubType": selection.inputSubType,
                 "schema": selection.element.schema,
                 "html": selection.element.html,
-                "slateVersionUrn": selection.element.sourceSlateManifestUrn,
+                "slateVersionUrn": selection.sourceSlateManifestUrn,
                 "id": selection.element.id,
-                "elementParentEntityUrn": selection.element.sourceSlateEntityUrn,
+                "elementParentEntityUrn": selection.sourceSlateEntityUrn,
                 "versionUrn": selection.element.versionUrn,
                 "contentUrn": selection.element.contentUrn,
                 "destinationSlateUrn": config.slateEntityURN
@@ -673,7 +673,10 @@ export const pasteElement = (params) => async (dispatch, getState) => {
         };
 
         if(selection.operationType.toUpperCase() === "COPY") {
-            // _requestData
+            delete _requestData.content[0].slateVersionUrn;
+            delete _requestData.content[0].id;
+            delete _requestData.content[0].versionUrn;
+            delete _requestData.content[0].contentUrn;
         }
 
         if(selection.element.type === "figure") {
