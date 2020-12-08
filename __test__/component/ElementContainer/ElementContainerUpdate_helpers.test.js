@@ -55,7 +55,13 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 elemURN : "urn:pearson:work:123"
             }]
         },
-        assetPopOverSearch: { assetID: "urn:pearson:work:23454423342" }
+        assetPopOverSearch: { assetID: "urn:pearson:work:23454423342" },
+        assessmentReducer: {
+            saveAutoUpdateData : {
+                newAssessmentId: "urn:pearson:work:23454423342",
+                oldAssessmentId: "urn:pearson:work:23454424325"
+            }
+        }
     };
 
     let initialState2 = {
@@ -263,10 +269,225 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             expect(spyUpdateNewVersionElementInStore).toHaveBeenCalled()
             spyUpdateNewVersionElementInStore.mockClear()
         })
-        it("updateElementInStore - paragraph element ", () => {
+        it("updateElementInStore - paragraph element inside aside", () => {
             let store = mockStore(() => initialState);
             let args = { 
                 updatedData,
+                asideData,
+                parentUrn: null,
+                elementIndex: 0,
+                showHideType: null,
+                parentElement,
+                dispatch: store.dispatch,
+                newslateData: slateLevelData.slateLevelData,
+            }
+            const expectedAction = {
+                type: AUTHORING_ELEMENT_UPDATE,
+                payload: {
+                    slateLevelData: slateLevelData.slateLevelData
+                }
+            }
+            const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
+            updateHelpers.updateElementInStore(args)
+            expect(spyupdateElementInStore).toHaveBeenCalled()
+            expect(spyupdateElementInStore).toHaveReturnedWith(expectedAction);
+            spyupdateElementInStore.mockClear()
+        })
+        it("updateElementInStore - paragraph element in a slate", () => {
+
+            const elementToUpdate = {
+                "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0c",
+                "type": "element-authoredtext",
+                "subtype": "",
+                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                "elementdata": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "html": {
+                    "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                },
+                "comments": false,
+                "tcm": true,
+                "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0c",
+                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+                "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+            }
+            let store = mockStore(() => initialState);
+            let args = { 
+                updatedData: elementToUpdate,
+                asideData: null,
+                parentUrn: null,
+                elementIndex: 2,
+                showHideType: null,
+                parentElement: null,
+                dispatch: store.dispatch,
+                newslateData: slateLevelData.slateLevelData,
+            }
+            const expectedAction = {
+                type: AUTHORING_ELEMENT_UPDATE,
+                payload: {
+                    slateLevelData: slateLevelData.slateLevelData
+                }
+            }
+            const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
+            updateHelpers.updateElementInStore(args)
+            expect(spyupdateElementInStore).toHaveBeenCalled()
+            expect(spyupdateElementInStore).toHaveReturnedWith(expectedAction);
+            spyupdateElementInStore.mockClear()
+        })
+        it("updateElementInStore - opener element in a slate", () => {
+            
+            const elementToUpdate = { 
+                "id": "urn:pearson:work:10061bb1-bf07-4406-ab1e-33545422d117", 
+                "type": "openerelement", 
+                "schema": "http://schemas.pearson.com/wip-authoring/openerelement/1", 
+                "title": { 
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                }, 
+                "versionUrn": "urn:pearson:work:10061bb1-bf07-4406-ab1e-33545422d117", 
+                "contentUrn": "urn:pearson:entity:7b224cc4-7f41-4dfe-ba8a-8ced858e83c7", 
+                "backgroundcolor": "#005A70", 
+                "backgroundimage": { 
+                    "path": "", 
+                    "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+                    "imageid": "" 
+                }, 
+                "status": "wip", 
+                "textcolor": "option1",
+                "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+            }
+            let store = mockStore(() => initialState);
+            let args = { 
+                updatedData: elementToUpdate,
+                asideData: null,
+                parentUrn: null,
+                elementIndex: 2,
+                showHideType: null,
+                parentElement: null,
+                dispatch: store.dispatch,
+                newslateData: slateLevelData.slateLevelData,
+            }
+            const expectedAction = {
+                type: AUTHORING_ELEMENT_UPDATE,
+                payload: {
+                    slateLevelData: slateLevelData.slateLevelData
+                }
+            }
+            const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
+            updateHelpers.updateElementInStore(args)
+            expect(spyupdateElementInStore).toHaveBeenCalled()
+            expect(spyupdateElementInStore).toHaveReturnedWith(expectedAction);
+            spyupdateElementInStore.mockClear()
+        })
+        it("updateElementInStore - paragraph inside aside element ", () => {
+            let store = mockStore(() => initialState);
+            let updatedDataAsideShowhide = {
+                "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0d",
+                "type": "element-authoredtext",
+                "subtype": "",
+                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                "elementdata": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "html": {
+                    "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                },
+                "comments": false,
+                "tcm": true,
+                "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0d",
+                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+                "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+            }
+            let args = { 
+                updatedData: updatedDataAsideShowhide,
+                asideData,
+                parentUrn: null,
+                elementIndex: 0,
+                showHideType: null,
+                parentElement,
+                dispatch: store.dispatch,
+                newslateData: slateLevelData.slateLevelData,
+            }
+            const expectedAction = {
+                type: AUTHORING_ELEMENT_UPDATE,
+                payload: {
+                    slateLevelData: slateLevelData.slateLevelData
+                }
+            }
+            const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
+            updateHelpers.updateElementInStore(args)
+            expect(spyupdateElementInStore).toHaveBeenCalled()
+            expect(spyupdateElementInStore).toHaveReturnedWith(expectedAction);
+            spyupdateElementInStore.mockClear()
+        })
+        it("updateElementInStore - popup formatted title inside aside element ", () => {
+            let store = mockStore(() => initialState);
+            let updatedDataAsideShowhide = {
+                "id": "urn:pearson:work:8a81206d-2fa2-4f62-a012-2b516dcebb75",
+                "type": "element-authoredtext",
+                "subtype": "",
+                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                "elementdata": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "html": {
+                    "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                },
+                "comments": false,
+                "tcm": true,
+                "versionUrn": "urn:pearson:work:8a81206d-2fa2-4f62-a012-2b516dcebb75",
+                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+                "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+            }
+            let args = { 
+                updatedData: updatedDataAsideShowhide,
+                asideData,
+                parentUrn: null,
+                elementIndex: 0,
+                showHideType: null,
+                parentElement,
+                dispatch: store.dispatch,
+                newslateData: slateLevelData.slateLevelData,
+            }
+            const expectedAction = {
+                type: AUTHORING_ELEMENT_UPDATE,
+                payload: {
+                    slateLevelData: slateLevelData.slateLevelData
+                }
+            }
+            const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
+            updateHelpers.updateElementInStore(args)
+            expect(spyupdateElementInStore).toHaveBeenCalled()
+            expect(spyupdateElementInStore).toHaveReturnedWith(expectedAction);
+            spyupdateElementInStore.mockClear()
+        })
+        it("updateElementInStore - popup posterText object inside aside element ", () => {
+            let store = mockStore(() => initialState);
+            let updatedDataAsideShowhide = {
+                "id": "urn:pearson:work:8a81206d-2fa2-4f62-a012-2b516dcebb7512",
+                "type": "element-authoredtext",
+                "subtype": "",
+                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                "elementdata": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "html": {
+                    "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                },
+                "comments": false,
+                "tcm": true,
+                "versionUrn": "urn:pearson:work:01e6b4a6-efb5-4f0b-b0e7-cdb47a84e4eb",
+                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+                "slateUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
+                "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+            }
+            let args = { 
+                updatedData: updatedDataAsideShowhide,
                 asideData,
                 parentUrn: null,
                 elementIndex: 0,
@@ -579,6 +800,145 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             expect(spyupdateElementInStore).toHaveReturnedWith(expectedAction);
             spyupdateElementInStore.mockClear()
         })
+        it("updateElementInStore - paragraph inside Worked example ", () => {
+            let store = mockStore(() => initialState);
+            let updatedDataAsideShowhide = {
+                "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0b",
+                "type": "element-authoredtext",
+                "subtype": "",
+                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                "elementdata": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": "asdfasdfasdf"
+                },
+                "headers": [
+                    {
+                        "charStart": 0,
+                        "charEnd": -1,
+                        "level": 4
+                    }
+                ],
+                "html": {
+                    "text": "<h5 class=\"heading5NummerEins\">Heading 5</h5>"
+                },
+                "comments": true,
+                "tcm": true,
+                "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+                "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+            }
+            let args = { 
+                updatedData: updatedDataAsideShowhide,
+                asideData: { id: "urn:pearson:manifest:c047b586-c963-47b7-bc59-9ec595c2c6ec", type : 'element-aside' },
+                parentUrn: {
+                    manifestUrn: "urn:pearson:manifest:f0c610b8-337d-47b0-9680-83b73481289c"
+                },
+                elementIndex: 0,
+                showHideType: "show",
+                parentElement: null,
+                dispatch: store.dispatch,
+                newslateData: slateLevelData.slateLevelData,
+            }
+            const expectedAction = {
+                type: AUTHORING_ELEMENT_UPDATE,
+                payload: {
+                    slateLevelData: slateLevelData.slateLevelData
+                }
+            }
+            const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
+            updateHelpers.updateElementInStore(args)
+            expect(spyupdateElementInStore).toHaveBeenCalled()
+            expect(spyupdateElementInStore).toHaveReturnedWith(expectedAction);
+            spyupdateElementInStore.mockClear()
+        })
+        it("updateElementInStore - popup postertext inside Worked example ", () => {
+            let store = mockStore(() => initialState);
+            let updatedDataAsideShowhide = {
+                "id": "urn:pearson:work:8a81206d-2fa2-4f62-a012-2b516dcebb79",
+                "type": "element-authoredtext",
+                "subtype": "",
+                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                "elementdata": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "html": {
+                    "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                },
+                "comments": false,
+                "tcm": true,
+                "versionUrn": "urn:pearson:work:8a81206d-2fa2-4f62-a012-2b516dcebb79",
+                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+                "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+            }
+            let args = { 
+                updatedData: updatedDataAsideShowhide,
+                asideData: { id: "urn:pearson:manifest:c047b586-c963-47b7-bc59-9ec595c2c6ec", type : 'element-aside' },
+                parentUrn: {
+                    manifestUrn: "urn:pearson:manifest:f0c610b8-337d-47b0-9680-83b73481289c"
+                },
+                elementIndex: 0,
+                showHideType: "show",
+                parentElement: null,
+                dispatch: store.dispatch,
+                newslateData: slateLevelData.slateLevelData,
+            }
+            const expectedAction = {
+                type: AUTHORING_ELEMENT_UPDATE,
+                payload: {
+                    slateLevelData: slateLevelData.slateLevelData
+                }
+            }
+            const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
+            updateHelpers.updateElementInStore(args)
+            expect(spyupdateElementInStore).toHaveBeenCalled()
+            expect(spyupdateElementInStore).toHaveReturnedWith(expectedAction);
+            spyupdateElementInStore.mockClear()
+        })
+        it("updateElementInStore - popup formatted title inside Worked example ", () => {
+            let store = mockStore(() => initialState);
+            let updatedDataAsideShowhide = {
+                "id": "urn:pearson:work:8a81206d-2fa2-4f62-a012-2b516dcebb75",
+                "type": "element-authoredtext",
+                "subtype": "",
+                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                "elementdata": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "html": {
+                    "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                },
+                "comments": false,
+                "tcm": true,
+                "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+                "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+            }
+            let args = { 
+                updatedData: updatedDataAsideShowhide,
+                asideData: { id: "urn:pearson:manifest:c047b586-c963-47b7-bc59-9ec595c2c6ec", type : 'element-aside' },
+                parentUrn: {
+                    manifestUrn: "urn:pearson:manifest:f0c610b8-337d-47b0-9680-83b73481289c"
+                },
+                elementIndex: 0,
+                showHideType: "show",
+                parentElement: null,
+                dispatch: store.dispatch,
+                newslateData: slateLevelData.slateLevelData,
+            }
+            const expectedAction = {
+                type: AUTHORING_ELEMENT_UPDATE,
+                payload: {
+                    slateLevelData: slateLevelData.slateLevelData
+                }
+            }
+            const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
+            updateHelpers.updateElementInStore(args)
+            expect(spyupdateElementInStore).toHaveBeenCalled()
+            expect(spyupdateElementInStore).toHaveReturnedWith(expectedAction);
+            spyupdateElementInStore.mockClear()
+        })
         it("updateElementInStore - showhide element", () => {
             const store = mockStore(() => initialState);
             const showHidePara = {
@@ -622,6 +982,217 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 elementIndex: 0,
                 showHideType: "show",
                 parentElement: parentShowhide,
+                dispatch: store.dispatch,
+                newslateData: slateLevelData.slateLevelData,
+            }
+            const expectedAction = {
+                type: AUTHORING_ELEMENT_UPDATE,
+                payload: {
+                    slateLevelData: slateLevelData.slateLevelData
+                }
+            }
+            const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
+            updateHelpers.updateElementInStore(args)
+            expect(spyupdateElementInStore).toHaveBeenCalled()
+            expect(spyupdateElementInStore).toHaveReturnedWith(expectedAction);
+            spyupdateElementInStore.mockClear()
+        })
+        it("updateElementInStore - popup formatted-title element in a slate", () => {
+
+            const elementToUpdate = {
+                "id": "urn:pearson:work:8a81206d-2fa2-4f62-a012-2b516dcebb75",
+                "type": "element-authoredtext",
+                "subtype": "",
+                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                "elementdata": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "html": {
+                    "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                },
+                "comments": false,
+                "tcm": true,
+                "versionUrn": "urn:pearson:work:8a81206d-2fa2-4f62-a012-2b516dcebb75",
+                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+                "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+            }
+            let store = mockStore(() => initialState);
+            let args = { 
+                updatedData: elementToUpdate,
+                asideData: null,
+                parentUrn: null,
+                elementIndex: 2,
+                showHideType: null,
+                parentElement: null,
+                dispatch: store.dispatch,
+                newslateData: slateLevelData.slateLevelData,
+            }
+            const expectedAction = {
+                type: AUTHORING_ELEMENT_UPDATE,
+                payload: {
+                    slateLevelData: slateLevelData.slateLevelData
+                }
+            }
+            const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
+            updateHelpers.updateElementInStore(args)
+            expect(spyupdateElementInStore).toHaveBeenCalled()
+            expect(spyupdateElementInStore).toHaveReturnedWith(expectedAction);
+            spyupdateElementInStore.mockClear()
+        })
+        it("updateElementInStore - popup postertext element in a slate", () => {
+            const elementToUpdate = {
+                "id": "urn:pearson:work:8a81206d-2fa2-4f62-a012-2b516dcebb7512",
+                "type": "element-authoredtext",
+                "subtype": "",
+                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                "elementdata": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "html": {
+                    "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                },
+                "comments": false,
+                "tcm": true,
+                "versionUrn": "urn:pearson:work:01e6b4a6-efb5-4f0b-b0e7-cdb47a84e4eb",
+                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+                "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+            }
+            let store = mockStore(() => initialState);
+            let args = { 
+                updatedData: elementToUpdate,
+                asideData: null,
+                parentUrn: null,
+                elementIndex: 2,
+                showHideType: null,
+                parentElement: null,
+                dispatch: store.dispatch,
+                newslateData: slateLevelData.slateLevelData,
+            }
+            const expectedAction = {
+                type: AUTHORING_ELEMENT_UPDATE,
+                payload: {
+                    slateLevelData: slateLevelData.slateLevelData
+                }
+            }
+            const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
+            updateHelpers.updateElementInStore(args)
+            expect(spyupdateElementInStore).toHaveBeenCalled()
+            expect(spyupdateElementInStore).toHaveReturnedWith(expectedAction);
+            spyupdateElementInStore.mockClear()
+        })
+        it("updateElementInStore - poetry formatted title element in a slate", () => {
+            const elementToUpdate = {
+                "id": "urn:pearson:work:e1b59ae0-b04a-4b6e-a1a4-33e21073g5w4",
+                "type": "element-authoredtext",
+                "subtype": "",
+                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                "elementdata": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "html": {
+                    "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                },
+                "comments": false,
+                "tcm": true,
+                "versionUrn": "urn:pearson:work:e1b59ae0-b04a-4b6e-a1a4-33e21073g5w4",
+                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+                "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+            }
+            let store = mockStore(() => initialState);
+            let args = { 
+                updatedData: elementToUpdate,
+                asideData: null,
+                parentUrn: null,
+                elementIndex: 2,
+                showHideType: null,
+                parentElement: null,
+                dispatch: store.dispatch,
+                newslateData: slateLevelData.slateLevelData,
+            }
+            const expectedAction = {
+                type: AUTHORING_ELEMENT_UPDATE,
+                payload: {
+                    slateLevelData: slateLevelData.slateLevelData
+                }
+            }
+            const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
+            updateHelpers.updateElementInStore(args)
+            expect(spyupdateElementInStore).toHaveBeenCalled()
+            expect(spyupdateElementInStore).toHaveReturnedWith(expectedAction);
+            spyupdateElementInStore.mockClear()
+        })
+        it("updateElementInStore - poetry creditsarray element in a slate", () => {
+            const elementToUpdate = {
+                "id": "urn:pearson:work:e1b59ae0-b04a-4b6e-a1a4-33e21073go6t",
+                "type": "element-authoredtext",
+                "subtype": "",
+                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                "elementdata": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "html": {
+                    "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                },
+                "comments": false,
+                "tcm": true,
+                "versionUrn": "urn:pearson:work:e1b59ae0-b04a-4b6e-a1a4-33e21073go6t",
+                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+                "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+            }
+            let store = mockStore(() => initialState);
+            let args = { 
+                updatedData: elementToUpdate,
+                asideData: null,
+                parentUrn: null,
+                elementIndex: 2,
+                showHideType: null,
+                parentElement: null,
+                dispatch: store.dispatch,
+                newslateData: slateLevelData.slateLevelData,
+            }
+            const expectedAction = {
+                type: AUTHORING_ELEMENT_UPDATE,
+                payload: {
+                    slateLevelData: slateLevelData.slateLevelData
+                }
+            }
+            const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
+            updateHelpers.updateElementInStore(args)
+            expect(spyupdateElementInStore).toHaveBeenCalled()
+            expect(spyupdateElementInStore).toHaveReturnedWith(expectedAction);
+            spyupdateElementInStore.mockClear()
+        })
+        it("updateElementInStore - poetry stanza element in a slate", () => {
+            const elementToUpdate = {
+                "id": "urn:pearson:work:e1b59ae0-b04a-4b6e-a1a4-33e21077u97",
+                "type": "element-authoredtext",
+                "subtype": "",
+                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                "elementdata": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "html": {
+                    "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                },
+                "comments": false,
+                "tcm": true,
+                "versionUrn": "urn:pearson:work:e1b59ae0-b04a-4b6e-a1a4-33e21077u97",
+                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+                "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+            }
+            let store = mockStore(() => initialState);
+            let args = { 
+                updatedData: elementToUpdate,
+                asideData: null,
+                parentUrn: null,
+                elementIndex: 2,
+                showHideType: null,
+                parentElement: null,
                 dispatch: store.dispatch,
                 newslateData: slateLevelData.slateLevelData,
             }
@@ -755,7 +1326,7 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             let store = mockStore(() => initialState);
             let args = {
                 getState: store.getState,
-                dispatch: store.dispatch,
+                dispatch: jest.fn(),
                 updatedData,
                 responseData: { ...updatedData, id: "urn:pearson:work:d9023151-3417-4482-8175-fc965466224c" },
                 asideData,
@@ -777,7 +1348,7 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             let store = mockStore(() => initialState);
             let args = {
                 getState: store.getState,
-                dispatch: store.dispatch,
+                dispatch: jest.fn(),
                 updatedData,
                 responseData: updatedData,
                 asideData,

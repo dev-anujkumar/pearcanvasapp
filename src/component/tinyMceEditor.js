@@ -2794,7 +2794,11 @@ export class TinyMceEditor extends Component {
         let currentActiveNode = null
         let activeContainerNode = document.querySelector('div .active')
         let activeShowHideNode = document.querySelector('.show-hide-active .cypress-editable.mce-content-body.mce-edit-focus')
-        if (activeContainerNode) {
+        const editableEditor =  document.querySelector('.cypress-editable.mce-content-body.mce-edit-focus')
+        if (editableEditor && this.props.currentElement) {
+            currentActiveNode = editableEditor
+        } 
+        else if (activeContainerNode) {
             currentActiveNode = activeContainerNode
         }
         else if (activeShowHideNode) {
@@ -3266,7 +3270,7 @@ export class TinyMceEditor extends Component {
                 figCreditModel = removeBOM(figCreditModel)
 
                 return (
-                    <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onKeyDown={this.normalKeyDownHandler} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: figCreditModel }} onChange={this.handlePlaceholder}></div>
+                    <div ref={this.editorRef} data-id={this.props.currentElement ? this.props.currentElement.id : ''} id={id} onBlur={this.handleBlur} onKeyDown={this.normalKeyDownHandler} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: figCreditModel }} onChange={this.handlePlaceholder}></div>
                 )
             case 'element-citation':
                 let ctModel = this.props.model && this.props.model.text || '<p class="paragraphNumeroUnoCitation"><br/></p>'
