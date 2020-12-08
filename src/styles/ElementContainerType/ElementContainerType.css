@@ -51,5 +51,7 @@
 .other-elements-inner{
     margin: 0 0 2px 2px;
 }
-   
-   
+
+ul.other-elements-inner{
+    margin: 0;
+}
