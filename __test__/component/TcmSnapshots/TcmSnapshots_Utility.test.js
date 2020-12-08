@@ -7,6 +7,14 @@ jest.mock('../../../src/component/TcmSnapshots/TcmSnapshot_Actions.js', () => {
         return true
     }}
 })
+
+jest.mock('../../../src/component/TcmSnapshots/ElementSnapshot_Utility.js', () => {
+    return {
+        fetchElementsTag: jest.fn(),
+        generateWipDataForFigure: jest.fn()
+    }
+ })
+
 describe('-----------------------Test TcmSnapshots_Utility Functions-----------------------', () => {
     config.projectUrn="urn:pearson:distributable:ff18cbc0-ab3f-4c7e-9ed0-84eb34f4e126"
     config.slateManifestUrn="urn:pearson:manifest:bca66109-2c69-4b1b-bea9-a057fd073d54"
@@ -102,7 +110,7 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
                 "type": "element-aside",
             }
             let manifest1 = "urn:pearson:manifest:90b59454-2e5d-46f2-968f-fd1d636d0edb"
-             const { slate1 } = tcmTestData
+            const { slate1 } = tcmTestData
             let aside = slate1[manifest1].contents.bodymatter[2].elementdata.bodymatter[2];
              const spyFunction = jest.spyOn(tcmSnapshotUtility, 'prepareTcmSnapshots');
              tcmSnapshotUtility.prepareTcmSnapshots(aside,actionStatus,asideContainer,"SECTION_BREAK","");
@@ -480,6 +488,19 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
             tcmSnapshotUtility.prepareTcmSnapshots(paragraph,actionStatus,"","","");
             expect(spyFunction).toHaveBeenCalledWith(paragraph, actionStatus,"","","");
         })
+        it('prepareTcmSnapshots  - Normal elements in popup - no container', () => {
+            config.isPopupSlate = true;
+            let actionStatus = {
+                action:"create",
+                status:"accepted",
+                fromWhere:"create"
+            }
+            config.popupParentElement = false
+            let { paragraph } = tcmTestData.setSemanticsSnapshotsData
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'prepareTcmSnapshots');
+            tcmSnapshotUtility.prepareTcmSnapshots(paragraph,actionStatus,"","","");
+            expect(spyFunction).toHaveBeenCalledWith(paragraph, actionStatus,"","","");
+        })
         it('prepareTcmSnapshots  - popup element delete', () => {
             config.popupParentElement = {
                 parentElement:{
@@ -519,7 +540,76 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
             tcmSnapshotUtility.prepareTcmSnapshots(multicolumn,actionStatus,"","","");
             expect(spyFunction).toHaveBeenCalledWith(multicolumn, actionStatus,"","","");
         })
-       
-        
+        it('tcmSnapshotsOnDefaultSlate - versioning delete case', () => {
+            config.isPopupSlate = true;
+            const actionStatus = {
+                action:"create",
+                status:"accepted",
+                fromWhere:"create"
+            }
+            const snapshotsData = {
+                wipData: {
+                    id: "urn:pearson:work:3525235-324323-4432sfe31"
+                },
+                slateManifestVersioning : {},
+                popupInContainer: null,
+                actionStatus,
+                tag: 'P',
+                elementId: "urn:pearson:work:3525235-324323-4432sfe31"
+            }
+            
+            config.isPopupSlate=false;
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'tcmSnapshotsOnDefaultSlate');
+            tcmSnapshotUtility.tcmSnapshotsOnDefaultSlate(snapshotsData, null, {}, null, true, {}, 1, false);
+            expect(spyFunction).toHaveBeenCalledWith(snapshotsData, null, {}, null, true, {}, 1, false);
+        })
+        it('tcmSnapshotsInContainerElements - versioning delete case', () => {
+            config.isPopupSlate = true;
+            const actionStatus = {
+                action:"create",
+                status:"accepted",
+                fromWhere:"create"
+            }
+            const snapshotsData = {
+                wipData: {
+                    id: "urn:pearson:work:3525235-324323-4432sfe31"
+                },
+                slateManifestVersioning : {},
+                popupInContainer: null,
+                actionStatus,
+                tag: { childTag: 'P' },
+                elementId: { parentId : "" }
+            }
+            config.isPopupSlate=false;
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'tcmSnapshotsInContainerElements');
+            tcmSnapshotUtility.tcmSnapshotsInContainerElements(snapshotsData, snapshotsData, {}, true, {}, false);
+            expect(spyFunction).toHaveBeenCalledWith(snapshotsData, snapshotsData, {}, true, {}, false);
+        })
+        xit('tcmSnapshotsInPopupElement', () => {
+            config.isPopupSlate = true;
+            const actionStatus = {
+                action:"delete",
+                status:"accepted",
+                fromWhere:"delete"
+            }
+            const snapshotsData = {
+                wipData: {
+                    id: "urn:pearson:work:3525235-324323-4432sfe31"
+                },
+                slateManifestVersioning : {},
+                popupInContainer: null,
+                actionStatus,
+                tag: { childTag: 'P' },
+                elementId: { parentId : "" }
+            }
+            const containerElement = {
+                metaDataField: "formatted-title"
+            }
+            // snapshotsData, defaultKeys, containerElement, type, deleVercase, newVersionUrns,index
+            config.isPopupSlate=false;
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'tcmSnapshotsInPopupElement');
+            tcmSnapshotUtility.tcmSnapshotsInPopupElement(snapshotsData, defaultKeys, {}, true, {}, false);
+            expect(spyFunction).toHaveBeenCalledWith(snapshotsData, defaultKeys, {}, true, {}, false);
+        })
     })
 })
