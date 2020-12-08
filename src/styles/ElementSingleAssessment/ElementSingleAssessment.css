@@ -88,3 +88,28 @@ background-color: #ffffff;
 .singleAssessment_Dropdown_activeDropdown.isElmUpdate{
     margin-right: 25px;
 }
+
+.heading4AssessmentItemNumberLabel,.heading4TdxAssessmentItemNumberLabel{
+    color: #007FA3;
+}
+
+.assessment-metadata {
+    display: flex;
+    line-height: 17px;
+    padding: 9px 0 1px 0;
+    vertical-align: middle;
+}
+
+div.assessment-metadata-container {
+    margin-bottom: 11px;
+}
+
+.title-field {
+    color: #005a70;
+    font-weight: 600;
+}
+
+p.single-assessment-title {
+    font-weight: 600;
+    width: 80px;
+}

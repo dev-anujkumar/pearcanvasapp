@@ -358,6 +358,7 @@ class ElmTableComponent extends Component {
                 obj = {
                     id: this.state.currentAssessmentSelected.assessmentId,
                     itemid: this.state.currentAssessmentSelected.urn,
+                    itemTitle: this.state.currentAssessmentSelected.title,
                     title: this.state.parentTitle,
                     assessmentFormat: assessmentFormat,
                     usagetype: this.props.activeUsageType

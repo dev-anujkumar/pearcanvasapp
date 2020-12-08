@@ -16,6 +16,7 @@ export const onPasteSuccess = async (params) => {
     const {
         responseData,
         index,
+        cutIndex,
         dispatch,
         getState
     } = params    
@@ -28,14 +29,10 @@ export const onPasteSuccess = async (params) => {
         operationType = getState().selectionReducer.selection.operationType;
     }
 
-    let cutIndex = index;
     let elmExist = await checkElementExistence(getState().selectionReducer.selection.sourceSlateEntityUrn, getState().selectionReducer.selection.deleteElm.id);
     if ('deleteElm' in getState().selectionReducer.selection && operationType === 'cut' && elmExist) {
         let deleteElm = getState().selectionReducer.selection.deleteElm;
-        if(getState().selectionReducer.selection.sourceSlateEntityUrn === config.slateEntityURN &&
-            cutIndex > getState().selectionReducer.selection.sourceElementIndex) {
-            cutIndex -= 1;
-        }
+
         const parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
         let deleteParams = {

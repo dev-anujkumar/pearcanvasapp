@@ -6,6 +6,7 @@ import { checkSlateLock } from '../../js/slateLockUtility';
 import { releaseSlateLockWithCallback, getSlateLockStatus } from '../CanvasWrapper/SlateLock_Actions';
 import { handleSlateRefresh } from '../CanvasWrapper/SlateRefresh_Actions';
 import { sendDataToIframe } from '../../constants/utility.js';
+import { updateElmItemData, setItemUpdateEvent } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 /**
  * This module deals with the event handling for the Update of Full and Embedded Elm Assessments
  * for the events triggered from the Elm Assessment Portal
@@ -18,6 +19,13 @@ export const handleElmPortalEvents = (action = 'add') => {
             try {
                 const { data } = event;
                 if (action == 'add' && data && data.source == 'elm') {
+                    if(data.type.includes('item|')){
+                        const itemMetadata = prepareItemMetadata(data.type)
+                        // console.log('store', store.getState().assessmentReducer)
+                        // console.log('itemMetadata', itemMetadata);
+                        store.dispatch(updateElmItemData(store.getState().assessmentReducer.currentEditAssessment, itemMetadata))  
+                        store.dispatch(setItemUpdateEvent(true))
+                                     }
                     if (data.action == 'approve') {
                         window.removeEventListener('message', elmAssessmentUpdate, false);
                     }
@@ -60,4 +68,16 @@ export const handleRefreshSlate = (dispatch) => {
 }
 export const reloadSlate = () => {
     handleRefreshSlate(store.dispatch);
+}
+
+/**
+ * This function prepares item id and title from elm-item event message
+ * @param {String} eventData contains latest item id and item title
+ */
+export const prepareItemMetadata = (eventData) =>{
+    const itemId = eventData.split('|')[1].substring(5);
+    const itemTitle = eventData.slice(eventData.indexOf('title_')+6) ;
+    return {
+        itemId,itemTitle
+    }
 }
