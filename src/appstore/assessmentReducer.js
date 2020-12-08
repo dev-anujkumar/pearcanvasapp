@@ -9,7 +9,9 @@ import {
 } from '../constants/Action_Constants';
 
 const INITIAL_STATE = {
-    usageTypeListData: {}
+    usageTypeListData: {},
+    currentEditAssessment:{},
+    itemUpdateEvent:false
 }
 
 const INITIAL_ACTION = {
@@ -69,8 +71,27 @@ export default function assessmentReducer(state = INITIAL_STATE, action = INITIA
                 ...state,
                 saveAutoUpdateData: action.payload
             }
+        case 'ELM_ASSESSMENT_EDIT_ID':
+            return {
+                ...state,
+                currentEditAssessment: action.payload.currentEditAssessment
+            }
+        case 'ELM_ITEM_EVENT_DATA':
+            return {
+                ...state,
+                latestItemAssessment: action.payload
+            }
+        case 'SET_ITEM_UPDATE_EVENT':
+            return {
+                ...state,
+                itemUpdateEvent: action.payload
+            }
         case RESET_ASSESSMENT_STORE:
-            return {}
+            return {
+                currentEditAssessment: state.currentEditAssessment,
+                latestItemAssessment: state.latestItemAssessment,
+                itemUpdateEvent: state.itemUpdateEvent
+            }
         default:
             return state
     }

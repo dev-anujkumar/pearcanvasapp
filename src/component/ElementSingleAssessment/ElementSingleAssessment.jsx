@@ -307,13 +307,13 @@ class ElementSingleAssessment extends Component {
     /*** @description - This function is to update ELM Assessment on Save Event from ELM Portal */
     updateElmOnSaveEvent = (props) => {
         const { assessmentReducer } = props;
-        // let latestItemId = (assessmentReducer[this.state.assessmentId].items && assessmentReducer[this.state.assessmentId].items[this.state.assessmentItemId])
         let latestTitle = (assessmentReducer[this.state.assessmentId] && assessmentReducer[this.state.assessmentId].assessmentTitle)
         const latestItem = assessmentReducer[this.state.assessmentId].items.find( itemdata => itemdata.oldItemId == this.state.assessmentItemId)
-        const latestItemId = latestItem && latestItem.latestItemId
+        const latestItemId = latestItem && latestItem.latestItemId;
+        const latestItemTitle = latestItem && latestItem.latestItemTitle;
         showTocBlocker();
         disableHeader(true);
-        this.setState({ assessmentItemId: latestItemId, assessmentTitle: latestTitle }, () => this.saveAssessment(() => {
+        this.setState({ assessmentItemId: latestItemId, assessmentTitle: latestTitle, assessmentItemTitle: latestItemTitle }, () => this.saveAssessment(() => {
             disableHeader(false);
             hideTocBlocker(false);
         }))
@@ -402,13 +402,13 @@ class ElementSingleAssessment extends Component {
         }
         await this.props.checkAssessmentStatus(this.props.assessmentReducer[this.state.assessmentId].latestWorkUrn, 'fromUpdate', this.state.assessmentId, "", itemData)
         const { latestWorkUrn, assessmentTitle, items, prevLatestWorkUrn } = this.props.assessmentReducer[this.state.assessmentId];
-        const { latestVersionClean } = this.props.assessmentReducer[latestWorkUrn]
+        const { latestVersionClean } = this.props.assessmentReducer[latestWorkUrn];
         const updatedItem = items && items.find(item => item.oldItemId == this.state.assessmentItemId)
         let updatedElmObj = {
             id: latestWorkUrn,
-            itemid: updatedItem.latestItemId,
+            itemid: updatedItem && updatedItem.latestItemId,
             title: assessmentTitle,
-            itemtitle: 'updated title',//updatedItem.latestItemTitle,
+            itemtitle: updatedItem && updatedItem.latestItemTitle,
             usagetype: this.state.activeAsseessmentUsageType
         }
         updatedElmObj.id = latestVersionClean == true ? prevLatestWorkUrn : latestWorkUrn
