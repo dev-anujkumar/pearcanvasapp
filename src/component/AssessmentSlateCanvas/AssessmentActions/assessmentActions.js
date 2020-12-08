@@ -16,6 +16,7 @@ import {
 } from "../../../constants/Action_Constants";
 import { ELM_PORTAL_ERROR_MSG, AUTO_UPDATE_FAIL_ERROR } from '../AssessmentSlateConstants.js';
 import { handleRefreshSlate } from '../../ElementContainer/AssessmentEventHandling.js';
+import store from '../../../appstore/store.js';
 /**
  * This action creator is used to fetch usage-type based on entityType
  */
@@ -167,7 +168,7 @@ export const getLatestAssessmentVersion = (entityUrn, workUrn, createdDate, prev
             let assessmentLatestWorkURN = res.data[latestIndex].versionUrn //Latest WorkURN
             let newVersions = res.data.filter(assessment => new Date(assessment.createdDate) > new Date(createdDate)) //List of All versions created after current WorkURN
             if (type == 'assessment-item') {
-                dispatchUpdatedItemId(dispatch, previousData, workUrn, assessmentLatestWorkURN);
+                fetchItemLatestVersionData(dispatch, previousData, workUrn, assessmentLatestWorkURN)
             } else if (newVersions && newVersions.length == 1) {   //Show Approved Status
                 dispatch(checkAssessmentStatus(newVersions[0].versionUrn, 'fromNextVersion', workUrn, previousData, itemData))//"elmVersionIsClean": true
             } else if (newVersions && newVersions.length > 1) {    //Show UPDATE button
@@ -213,18 +214,18 @@ const dispatchVersionError = (dispatch, workUrn) => {
     })
 }
 
-const dispatchUpdatedItemId = (dispatch, previousData, workUrn, assessmentLatestWorkURN) => {
-    dispatch({
-        type: UPDATE_ELM_ITEM_ID,
-        payload: {
-            currentWorkUrn: previousData.currentWorkUrn,
-            updatedItem: {
-                oldItemId: workUrn,
-                latestItemId: assessmentLatestWorkURN
-            }
-        }
-    })
-}
+// const dispatchUpdatedItemId = (dispatch, previousData, workUrn, assessmentLatestWorkURN) => {
+//     dispatch({
+//         type: UPDATE_ELM_ITEM_ID,
+//         payload: {
+//             currentWorkUrn: previousData.currentWorkUrn,
+//             updatedItem: {
+//                 oldItemId: workUrn,
+//                 latestItemId: assessmentLatestWorkURN
+//             }
+//         }
+//     })
+// }
 
 const dispatchLatestWorkUrn = (dispatch, previousData, workUrn, assessmentLatestWorkURN, prevLatestWorkUrn = "") => {
     dispatch({
@@ -345,4 +346,90 @@ export const saveAutoUpdateData = (oldAssessmentId, newAssessmentId) => {
             newAssessmentId: newAssessmentId
         }
     }
+}
+
+export const editElmAssessmentId = (elmAssessmentId, elmAssessmentItemId) => {
+    return {
+        type: 'ELM_ASSESSMENT_EDIT_ID',
+        payload: {
+            currentEditAssessment: { elmAssessmentId, elmAssessmentItemId }
+        }
+    }
+}
+
+export const updateElmItemData = (editAssessment, itemData) => {
+    return {
+        type: 'ELM_ITEM_EVENT_DATA',
+        payload: {
+            currentWorkUrn: editAssessment.elmAssessmentId,
+            updatedItem: {
+                oldItemId: editAssessment.elmAssessmentItemId,
+                latestItemId: itemData.itemId,
+                latestItemTitle: itemData.itemTitle
+            }
+        }
+    }
+}
+
+export const  setItemUpdateEvent= (value) => {
+    return {
+        type: 'SET_ITEM_UPDATE_EVENT',
+        payload: value
+    }
+}
+
+
+const fetchItemLatestVersionData = (dispatch, previousData, workUrn, assessmentLatestWorkURN) => {
+    const dataToSend = {
+        currentWorkUrn: previousData.currentWorkUrn,
+        updatedItem: {
+            oldItemId: workUrn,
+            latestItemId: assessmentLatestWorkURN
+        }
+    }
+    const { itemUpdateEvent, latestItemAssessment } = store.getState().assessmentReducer
+    if (itemUpdateEvent) {
+        dispatch(setItemUpdateEvent(false));
+        dispatch({
+            type: UPDATE_ELM_ITEM_ID,
+            payload: {
+                currentWorkUrn: dataToSend.currentWorkUrn,
+                updatedItem: {
+                    ...latestItemAssessment.updatedItem
+                }
+            }
+        });
+    } else {
+        dispatch(checkAssessmentItemStatus(assessmentLatestWorkURN, dataToSend));
+    }
+}
+export const checkAssessmentItemStatus = (workUrn, dataToSend) => (dispatch) => {
+    let url = `${config.ASSESSMENT_ENDPOINT}assessment/v2/${workUrn}`;
+    return axios.get(url, {
+        headers: {
+            "Content-Type": "application/json",
+            "ApiKey": config.STRUCTURE_APIKEY,
+            "PearsonSSOSession": config.ssoToken
+        }
+    }).then(async (res) => {
+        if (res && res.data && res.data.status) {
+            dispatch({
+                type: UPDATE_ELM_ITEM_ID,
+                payload: {
+                    currentWorkUrn: dataToSend.currentWorkUrn,
+                    updatedItem: {
+                        ...dataToSend.updatedItem,
+                        latestItemTitle: res.data.name ? res.data.name : res.data.defaultTitle ? res.data.defaultTitle : ""
+                    }
+                }
+            })
+        }
+    }).catch(() => {
+        dispatch({
+            type: SET_ASSESSMENT_STATUS,
+            payload: {
+                [workUrn]: { assessmentStatus: "" }
+            }
+        })
+    })
 }

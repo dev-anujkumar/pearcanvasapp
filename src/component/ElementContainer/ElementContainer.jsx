@@ -48,7 +48,7 @@ import {handleTCMData} from '../TcmSnapshots/TcmSnapshot_Actions.js';
 import CutCopyDialog from '../CutCopyDialog';
 import { OnCopyContext } from '../CutCopyDialog/copyUtil.js'
 import { setSelection } from '../CutCopyDialog/CopyUrn_Action.js';
-import { openElmAssessmentPortal, checkAssessmentStatus, resetAssessmentStore } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
+import { openElmAssessmentPortal, checkAssessmentStatus, resetAssessmentStore, editElmAssessmentId } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import {handleElmPortalEvents} from '../ElementContainer/AssessmentEventHandling.js';
 import { checkFullElmAssessment, checkEmbeddedElmAssessment } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 import { setScroll } from './../Toolbar/Search/Search_Action.js';
@@ -1636,6 +1636,7 @@ class ElementContainer extends Component {
         }
         handleElmPortalEvents();/** Add Elm-Assessment Update eventListener */
         this.props.openElmAssessmentPortal(dataToSend);
+        embeddedAssessment && this.props.editElmAssessmentId(element.figuredata.elementdata.assessmentid, element.figuredata.elementdata.assessmentitemid);
     }
    
     render = () => {
@@ -1752,6 +1753,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         setSelection: (params) => {
             dispatch(setSelection(params))
+        },
+        editElmAssessmentId: (assessmentId, assessmentItemId) => {
+            dispatch(editElmAssessmentId(assessmentId, assessmentItemId))
         }
     }
 }

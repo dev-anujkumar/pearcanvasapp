@@ -9,7 +9,9 @@ import {
 } from '../constants/Action_Constants';
 
 const INITIAL_STATE = {
-    usageTypeListData: {}
+    usageTypeListData: {},
+    currentEditAssessment:{},
+    itemUpdateEvent:false
 }
 
 const INITIAL_ACTION = {
@@ -48,18 +50,15 @@ export default function assessmentReducer(state = INITIAL_STATE, action = INITIA
                 showConfirmationPopup: action.payload
             }
         }
-        case RESET_ASSESSMENT_STORE:
-            return {}
         case UPDATE_ELM_ITEM_ID:
-            let innerItems = state[action.payload.currentWorkUrn].items && Object.keys(state[action.payload.currentWorkUrn].items)
-            if (innerItems && innerItems.find(oldId => oldId == action.payload.updatedItem.oldItemId)) {
-                state[action.payload.currentWorkUrn].items[action.payload.updatedItem.oldItemId] = action.payload.updatedItem.latestItemId
+            let itemsArray = state[action.payload.currentWorkUrn] && state[action.payload.currentWorkUrn].items ? state[action.payload.currentWorkUrn].items : []
+            const itemIndex = itemsArray ? itemsArray.findIndex(item => item.oldItemId == action.payload.updatedItem.oldItemId) : -1;
+            if (itemIndex != -1) {
+                itemsArray.splice(itemIndex, 1, action.payload.updatedItem)
             }
             else {
-                state[action.payload.currentWorkUrn].items = {
-                    ...state[action.payload.currentWorkUrn].items,
-                    [action.payload.updatedItem.oldItemId]: action.payload.updatedItem.latestItemId
-                }
+                itemsArray.push(action.payload.updatedItem)
+                state[action.payload.currentWorkUrn].items = itemsArray;
             }
             return {
                 ...state,
@@ -71,6 +70,27 @@ export default function assessmentReducer(state = INITIAL_STATE, action = INITIA
             return {
                 ...state,
                 saveAutoUpdateData: action.payload
+            }
+        case 'ELM_ASSESSMENT_EDIT_ID':
+            return {
+                ...state,
+                currentEditAssessment: action.payload.currentEditAssessment
+            }
+        case 'ELM_ITEM_EVENT_DATA':
+            return {
+                ...state,
+                latestItemAssessment: action.payload
+            }
+        case 'SET_ITEM_UPDATE_EVENT':
+            return {
+                ...state,
+                itemUpdateEvent: action.payload
+            }
+        case RESET_ASSESSMENT_STORE:
+            return {
+                currentEditAssessment: state.currentEditAssessment,
+                latestItemAssessment: state.latestItemAssessment,
+                itemUpdateEvent: state.itemUpdateEvent
             }
         default:
             return state

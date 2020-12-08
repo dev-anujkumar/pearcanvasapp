@@ -10,16 +10,15 @@ import { showTocBlocker, disableHeader, hideTocBlocker, hideToc } from '../../js
 import { hasReviewerRole, sendDataToIframe } from '../../constants/utility.js';
 import { UsageTypeDropdown } from '../AssessmentSlateCanvas/UsageTypeDropdown/UsageTypeDropdown.jsx';
 import RootCiteTdxComponent from '../AssessmentSlateCanvas/assessmentCiteTdx/RootCiteTdxComponent.jsx';
-import { CITE, TDX } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import RootSingleAssessmentComponent from '../AssessmentSlateCanvas/singleAssessmentCiteTdx/RootSingleAssessmentComponent.jsx'
 import { setCurrentCiteTdx, setCurrentInnerCiteTdx, assessmentSorting, specialCharacterDecode } from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
 import RootElmComponent from '../AssessmentSlateCanvas/elm/RootElmComponent.jsx';
-import { setAssessmentTitle, setAssessmentUsageType, setAssessmentProperties, checkElmAssessmentStatus } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
+import { setAssessmentUsageType, setAssessmentProperties, checkElmAssessmentStatus, setAssessmentItemTitle, getAssessmentTitle } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 import { resetElmStore } from '../AssessmentSlateCanvas/elm/Actions/ElmActions.js';
 import PopUp from '../PopUp';
 import ElmUpdateButton from '../AssessmentSlateCanvas/ElmUpdateButton.jsx'
 import { DEFAULT_ASSESSMENT_SOURCE } from '../../constants/Element_Constants.js';
-import { PUF, LEARNOSITY, ELM_UPDATE_BUTTON, ELM_UPDATE_POPUP_HEAD, ELM_UPDATE_MSG } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
+import { PUF, LEARNOSITY, ELM_UPDATE_BUTTON, ELM_UPDATE_POPUP_HEAD, ELM_UPDATE_MSG, CITE, TDX } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import { checkAssessmentStatus, updateAssessmentVersion, checkEntityUrn, saveAutoUpdateData } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import config from '../../config/config';
 /*** @description - ElementSingleAssessment is a class based component. It is defined simply to make a skeleton of the assessment-type element .*/
@@ -34,7 +33,7 @@ class ElementSingleAssessment extends Component {
             showAssessmentPopup: false,
             asseessmentUsageTypeDropdown: false,
             activeAsseessmentUsageType:this.props.model &&  setAssessmentUsageType(this.props.model),
-            assessmentTitle: this.props.model && setAssessmentTitle(this.props.model),
+            assessmentTitle: this.props.model && getAssessmentTitle(this.props.model),
             elementType: this.props.model.figuredata.elementdata.assessmentformat || "",
             showElmComponent: false,
             showSinglePopup:false,
@@ -43,7 +42,8 @@ class ElementSingleAssessment extends Component {
             isReset: false,
             searchTitle : '',
             filterUUID : '',
-            openedFrom:''
+            openedFrom:'',
+            assessmentItemTitle: this.props.model && setAssessmentItemTitle(this.props.model)
         };
     }
 
@@ -65,7 +65,8 @@ class ElementSingleAssessment extends Component {
         const { assessmentReducer } = this.props;
         const { elementType, assessmentId, assessmentItemId, assessmentTitle } = this.state;
         if (!config.savingInProgress && !config.isSavingElement && elementType == PUF && (assessmentId && assessmentReducer && assessmentReducer[assessmentId] && assessmentReducer[assessmentId].items)) {
-            let latestItemId = assessmentReducer[assessmentId].items && assessmentReducer[assessmentId].items[assessmentItemId]
+            const latestItem = assessmentReducer[assessmentId].items.find( itemdata => itemdata.oldItemId == assessmentItemId)
+            const latestItemId = latestItem && latestItem.latestItemId
             if ((assessmentReducer[assessmentId].showUpdateStatus == false && (latestItemId && assessmentItemId != latestItemId)) || (assessmentTitle != assessmentReducer[assessmentId].assessmentTitle)) {
                 this.updateElmOnSaveEvent(this.props);
             }
@@ -73,12 +74,14 @@ class ElementSingleAssessment extends Component {
     }
 
     componentDidMount() {
-        let title = this.props.model && setAssessmentTitle(this.props.model) != null ? setAssessmentTitle(this.props.model).replace(/<\/?[^>]+(>|$)/g, "") : null;
+        let title = this.props.model && getAssessmentTitle(this.props.model) != null ? getAssessmentTitle(this.props.model).replace(/<\/?[^>]+(>|$)/g, "") : null;
         this.setState({
             assessmentTitle: title,
             activeAsseessmentUsageType: this.props.model && setAssessmentUsageType(this.props.model),
             assessmentId: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.assessmentid ? this.props.model.figuredata.elementdata.assessmentid : null,
-            assessmentItemId: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.assessmentitemid ? this.props.model.figuredata.elementdata.assessmentitemid : null
+            assessmentItemId: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.assessmentitemid ? this.props.model.figuredata.elementdata.assessmentitemid : null,
+            assessmentItemTitle: this.props.model && setAssessmentItemTitle(this.props.model)
+        
         })
         let newElement = localStorage.getItem('newElement');
         if (newElement) {
@@ -91,12 +94,13 @@ class ElementSingleAssessment extends Component {
 
     static getDerivedStateFromProps(nextProps, prevState) {
         if ('model' in nextProps && 'figuredata' in nextProps.model && 'elementdata' in nextProps.model.figuredata && 'assessmentformat' in nextProps.model.figuredata.elementdata && nextProps.model.figuredata.elementdata.assessmentformat !== prevState.elementType) {
-            let title = setAssessmentTitle(nextProps.model) != null ? setAssessmentTitle(nextProps.model).replace(/<\/?[^>]+(>|$)/g, "") : null;
+            let title = getAssessmentTitle(nextProps.model) != null ? getAssessmentTitle(nextProps.model).replace(/<\/?[^>]+(>|$)/g, "") : null;
             return {
                 assessmentId: nextProps.model.figuredata && nextProps.model.figuredata.elementdata && nextProps.model.figuredata.elementdata.assessmentid ? nextProps.model.figuredata.elementdata.assessmentid : "",
                 assessmentItemId: nextProps.model.figuredata && nextProps.model.figuredata.elementdata && nextProps.model.figuredata.elementdata.assessmentitemid ? nextProps.model.figuredata.elementdata.assessmentitemid : "",
                 assessmentTitle: title,
-                elementType: nextProps.model.figuredata.elementdata.assessmentformat || ""
+                elementType: nextProps.model.figuredata.elementdata.assessmentformat || "",
+                assessmentItemTitle: setAssessmentItemTitle(nextProps.model)
             };
         }
 
@@ -112,12 +116,13 @@ class ElementSingleAssessment extends Component {
         value ? showTocBlocker(value) : hideTocBlocker(value)
         this.props.assessmentSorting("","");
         if (this.state.assessmentId && this.state.assessmentItemId ) {
-            this.props.setCurrentCiteTdx({ 
-                "versionUrn": this.state.assessmentId, 
+            this.props.setCurrentCiteTdx({
+                "versionUrn": this.state.assessmentId,
                 "name": this.state.assessmentTitle,
             });
-            this.props.setCurrentInnerCiteTdx({ 
-                "versionUrn": this.state.assessmentItemId
+            this.props.setCurrentInnerCiteTdx({
+                "versionUrn": this.state.assessmentItemId,
+                "name": this.state.assessmentItemTitle
             });
             this.setState({
                 showSinglePopup: value,
@@ -224,7 +229,7 @@ class ElementSingleAssessment extends Component {
             })
         }
         else{
-            this.setState({ assessmentId: citeTdxObj.id, assessmentItemId: citeTdxObj.singleAssessmentID.versionUrn, assessmentTitle: specialCharacterDecode(citeTdxObj.title) },
+            this.setState({ assessmentId: citeTdxObj.id, assessmentItemId: citeTdxObj.singleAssessmentID.versionUrn, assessmentTitle: specialCharacterDecode(citeTdxObj.title), assessmentItemTitle: specialCharacterDecode(citeTdxObj.singleAssessmentID.name) },
                 () => {
                     let oldAssessmentId = this.props.model.figuredata.elementdata.assessmentid
                     this.saveAssessment(() => {
@@ -278,7 +283,7 @@ class ElementSingleAssessment extends Component {
     addPufAssessment = (pufObj, cb) => {
         showTocBlocker();
         disableHeader(true);
-        this.setState({ assessmentId: pufObj.id, assessmentItemId: pufObj.itemid, assessmentTitle: pufObj.title },
+        this.setState({ assessmentId: pufObj.id, assessmentItemId: pufObj.itemid, assessmentTitle: pufObj.title, assessmentItemTitle: pufObj.itemTitle },
             () => {
                 let itemData = {
                     itemId: pufObj.itemid,
@@ -302,11 +307,13 @@ class ElementSingleAssessment extends Component {
     /*** @description - This function is to update ELM Assessment on Save Event from ELM Portal */
     updateElmOnSaveEvent = (props) => {
         const { assessmentReducer } = props;
-        let latestItemId = (assessmentReducer[this.state.assessmentId].items && assessmentReducer[this.state.assessmentId].items[this.state.assessmentItemId])
         let latestTitle = (assessmentReducer[this.state.assessmentId] && assessmentReducer[this.state.assessmentId].assessmentTitle)
+        const latestItem = assessmentReducer[this.state.assessmentId].items.find( itemdata => itemdata.oldItemId == this.state.assessmentItemId)
+        const latestItemId = latestItem && latestItem.latestItemId;
+        const latestItemTitle = latestItem && latestItem.latestItemTitle;
         showTocBlocker();
         disableHeader(true);
-        this.setState({ assessmentItemId: latestItemId, assessmentTitle: latestTitle }, () => this.saveAssessment(() => {
+        this.setState({ assessmentItemId: latestItemId, assessmentTitle: latestTitle, assessmentItemTitle: latestItemTitle }, () => this.saveAssessment(() => {
             disableHeader(false);
             hideTocBlocker(false);
         }))
@@ -395,11 +402,13 @@ class ElementSingleAssessment extends Component {
         }
         await this.props.checkAssessmentStatus(this.props.assessmentReducer[this.state.assessmentId].latestWorkUrn, 'fromUpdate', this.state.assessmentId, "", itemData)
         const { latestWorkUrn, assessmentTitle, items, prevLatestWorkUrn } = this.props.assessmentReducer[this.state.assessmentId];
-        const { latestVersionClean } = this.props.assessmentReducer[latestWorkUrn]
+        const { latestVersionClean } = this.props.assessmentReducer[latestWorkUrn];
+        const updatedItem = items && items.find(item => item.oldItemId == this.state.assessmentItemId)
         let updatedElmObj = {
             id: latestWorkUrn,
-            itemid: items[this.state.assessmentItemId],
+            itemid: updatedItem && updatedItem.latestItemId,
             title: assessmentTitle,
+            itemtitle: updatedItem && updatedItem.latestItemTitle,
             usagetype: this.state.activeAsseessmentUsageType
         }
         updatedElmObj.id = latestVersionClean == true ? prevLatestWorkUrn : latestWorkUrn
@@ -419,7 +428,7 @@ class ElementSingleAssessment extends Component {
         showTocBlocker();
         disableHeader(true);
         this.props.saveAutoUpdateData(oldElmAssessmentId, pufObj.id);
-        this.setState({ assessmentId: pufObj.id, assessmentItemId: pufObj.itemid, assessmentTitle: pufObj.title },
+        this.setState({ assessmentId: pufObj.id, assessmentItemId: pufObj.itemid, assessmentTitle: pufObj.title, assessmentItemTitle: pufObj.itemtitle },
             () => {
                 this.saveAssessment();
             })
@@ -438,6 +447,18 @@ class ElementSingleAssessment extends Component {
     }
     /** ----------------------------------------------------------------------------------------------------------- */
 
+
+    renderAssessmentHeader = (modelProps) => {
+        const { assessmentTitle, assessmentId, assessmentItemTitle, assessmentItemId } = this.state;
+        const { assessmentid, assessmentitemid, assessmentitemtitle } = modelProps.figuredata.elementdata;
+        const headerJSX = <div className='assessment-metadata-container'>
+            <div className='assessment-metadata title-field'><p className='single-assessment-title title-field'>TITLE: </p><span className='embedded-title'>{assessmentTitle}</span></div>
+            <div className='assessment-metadata'><p className='single-assessment-title'>ID: </p><span className='embedded-id'>{assessmentId ? assessmentId : (assessmentid ? assessmentid : "")}</span></div>
+            <div className='assessment-metadata title-field'><p className='single-assessment-title title-field'>ITEM TITLE: </p><span className='embedded-itemtitle'>{assessmentItemTitle ? assessmentItemTitle : (assessmentitemtitle ? assessmentitemtitle : "")}</span></div>
+            <div className='assessment-metadata'><p className='single-assessment-title'>ITEM ID: </p><span className='embedded-itemid'>{assessmentItemId ? assessmentItemId : (assessmentitemid ? assessmentitemid : "")}</span></div>
+        </div>
+        return headerJSX;
+    }
     /*** @description - This function is for handling the different types of figure-element.
     * @param model object that defined the type of element
     */
@@ -445,19 +466,16 @@ class ElementSingleAssessment extends Component {
         var assessmentJSX;
         let assessmentKeys = setAssessmentProperties(this.state.elementType)
         let isElmStatus = checkElmAssessmentStatus(this.state.assessmentId, this.props);
+        const {assessmentItemId, assessmentId, activeAsseessmentUsageType, elementType } = this.state
         /*JSX for the Single Assessment Element */
         assessmentJSX = <div className={`divAssessment ${assessmentKeys && assessmentKeys.divMainClass ? assessmentKeys.divMainClass : ""}`} >
-            <figure className={`figureAssessment ${this.state.elementType !== "tdx" ? "figureAssessmentItem" : "figureTdxAssessmentItem"}`}>
-                <header>
-                    <h4 className={this.state.elementType !== "tdx" ? "heading4AssessmentItemNumberLabel" : "heading4TdxAssessmentItemNumberLabel"} id="single_assessment_title">{this.state.assessmentTitle}</h4>
-                </header>
-                <div className="singleAssessmentIdInfo" ><strong>ID: </strong>{this.state.assessmentId ? this.state.assessmentId : (model.figuredata.elementdata ? model.figuredata.elementdata.assessmentid : "")}</div>
-                <div className="singleAssessmentItemIdInfo" ><strong>ITEM ID: </strong>{this.state.assessmentItemId ? this.state.assessmentItemId : (model.figuredata.elementdata ? model.figuredata.elementdata.assessmentitemid : "")}</div>
+            <figure className={`figureAssessment ${elementType !== TDX ? "figureAssessmentItem" : "figureTdxAssessmentItem"}`}>
+                {this.state && model.figuredata.elementdata && this.renderAssessmentHeader(model)}
                 <div className="singleAssessment_Dropdown_Container">
                     <div className="single-assessment-usagetype-container">
                         <div className="singleAssessment_Dropdown_SelectLabel">Select usage type<span className="required">*</span></div>
-                        <div className={`singleAssessment_Dropdown_activeDropdown ${this.state.elementType == PUF ? 'isElmUpdate' : ""}`} onClick={!hasReviewerRole() && this.toggleUsageTypeDropdown} >
-                            <span className="singleAssessment_Dropdown_currentLabel">{this.state.activeAsseessmentUsageType ? this.state.activeAsseessmentUsageType : 'Select'}</span>
+                        <div className={`singleAssessment_Dropdown_activeDropdown ${elementType == PUF ? 'isElmUpdate' : ""}`} onClick={!hasReviewerRole() && this.toggleUsageTypeDropdown} >
+                            <span className="singleAssessment_Dropdown_currentLabel">{activeAsseessmentUsageType ? activeAsseessmentUsageType : 'Select'}</span>
                             <span className="singleAssessment_Dropdown_arrow">{dropdownArrow}</span>
                             {
                                 this.state.asseessmentUsageTypeDropdown ? (
@@ -468,18 +486,18 @@ class ElementSingleAssessment extends Component {
                             }
                         </div>
                     </div >
-                    <div className={`single-assessment-elm-update-container ${isElmStatus == true ? "has-update" : ""}`}>{this.state.elementType == PUF && this.showElmVersionStatus()}</div>
+                    <div className={`single-assessment-elm-update-container ${isElmStatus == true ? "has-update" : ""}`}>{elementType == PUF && this.showElmVersionStatus()}</div>
 
                 </div>
 
                 <div className={`pearson-component ${assessmentKeys && assessmentKeys.assessmentItemType ? assessmentKeys.assessmentItemType : ""}`}
                     data-type={assessmentKeys && assessmentKeys.assessmentItemType ? assessmentKeys.assessmentItemType : ""}
-                    data-assessment={this.state.assessmentId ? this.state.assessmentId : (model.figuredata.elementdata ? model.figuredata.elementdata.assessmentid : "")}
-                    data-assessment-item={this.state.assessmentItemId ? this.state.assessmentItemId : (model.figuredata.elementdata ? model.figuredata.elementdata.assessmentitemid : "")}
-                    data-item-type={this.state.elementType !== "tdx" ? "assessmentItem" : "tdxAssessmentItem"}
-                    onClick={(e) => this.state.activeAsseessmentUsageType ? this.addAssessmentResource(e) : null}>
+                    data-assessment={assessmentId ? assessmentId : (model.figuredata.elementdata ? model.figuredata.elementdata.assessmentid : "")}
+                    data-assessment-item={assessmentItemId ? assessmentItemId : (model.figuredata.elementdata ? model.figuredata.elementdata.assessmentitemid : "")}
+                    data-item-type={elementType !== TDX ? "assessmentItem" : "tdxAssessmentItem"}
+                    onClick={(e) => activeAsseessmentUsageType ? this.addAssessmentResource(e) : null}>
                     <img src={DEFAULT_ASSESSMENT_SOURCE} data-src={DEFAULT_ASSESSMENT_SOURCE}
-                        title="View Image" alt="" className={`imageTextWidth lazyloaded imageeee ${this.state.activeAsseessmentUsageType ? "" : "default-img"}`}></img>
+                        title="View Image" alt="" className={`imageTextWidth lazyloaded imageeee ${activeAsseessmentUsageType ? "" : "default-img"}`}></img>
                 </div>
             </figure>
 

@@ -89,7 +89,9 @@
 .container-multi-column-group.wider-50-50 .singleAssessment_Dropdown_Container , .container-multi-column-group.wider-60-40 .singleAssessment_Dropdown_Container {
     height: max-content;
 }
-
+.container-multi-column-group .assessment-metadata-container .assessment-metadata span{
+    overflow-wrap: anywhere;
+}
 /***************************** 50-50 *****************************************/
 /***** C1 & C2 *******/
 /* For single asessment */
@@ -97,7 +99,10 @@
     width: 43%;
     padding-top: 2px;
 }
-
+.container-multi-column-group.wider-50-50 .assessment-metadata-container .assessment-metadata p.single-assessment-title {
+    width: 75px;
+    min-width: 75px;
+}
 /* For single asessment dropdown */
 .container-multi-column-group.wider-50-50 .singleAssessment_Dropdown_activeDropdown, .container-multi-column-group.text-width-50-50 .singleAssessment_Dropdown_activeDropdown {
     width: 54%;
@@ -129,6 +134,11 @@
 .container-multi-column-group.wider-60-40 .singleAssessment_Dropdown_SelectLabel {
     width: 43%;
     padding-top: 2px;
+}
+
+.container-multi-column-group.wider-60-40.column-0 .assessment-metadata-container .assessment-metadata p.single-assessment-title {
+    width: 75px;
+    min-width: 75px;
 }
 
 /* For single asessment dropdown */
@@ -168,6 +178,11 @@
 .container-multi-column-group.wider-60-40.column-1 .singleAssessment_Dropdown_SelectLabel {
     width: 20%;
     margin-bottom: 10px;
+}
+
+.container-multi-column-group.wider-60-40.column-1 .assessment-metadata-container .assessment-metadata p.single-assessment-title {
+    width: 75px;
+    min-width: 75px;
 }
 
 /* For single asessment Elm Status Div */
