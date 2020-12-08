@@ -343,8 +343,6 @@ describe('Testing communication channel', () => {
         const spyonSingleContainerDelete = jest.spyOn(channelInstance, 'onSingleContainerDelete')
         channelInstance.handleIncommingMessages(event);
         expect(channelInstance.onSingleContainerDelete).toHaveBeenCalled()
-        expect(channelInstance.state.toggleTocDelete).toBe(true)
-        expect(channelInstance.state.tocDeleteMessage.messageType).toBe("singleContainerDelete")
         spyonSingleContainerDelete.mockClear()
     })
     test('Test for titleChanging case', () => {
@@ -855,13 +853,6 @@ describe('Testing communication channel', () => {
         channelInstance.handleIncommingMessages(event);
         expect(channelInstance.handlePermissioning).toHaveBeenCalled()
         spyhandlePermissioning.mockClear()
-    })
-    test('Test for modifyState function', () => {
-        const spymodifyState = jest.spyOn(channelInstance, 'modifyState')
-        channelInstance.modifyState(true);
-        expect(channelInstance.modifyState).toHaveBeenCalled()
-        expect(channelInstance.state.toggleTocDelete).toBe(true)
-        spymodifyState.mockClear()
     })
     test('Test for refreshSlate case', () => {
         let event = {
