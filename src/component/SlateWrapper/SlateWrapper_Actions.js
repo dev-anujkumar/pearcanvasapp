@@ -654,11 +654,17 @@ export const pasteElement = (params) => async (dispatch, getState) => {
         } = params
         config.currentInsertedIndex = index;
         localStorage.setItem('newElement', 1);
+
+        let cutIndex = index;
+        if(selection.sourceSlateEntityUrn === config.slateEntityURN &&
+            cutIndex > selection.sourceElementIndex && selection.operationType === 'cut') {
+            cutIndex -= 1;
+        }
         
         let _requestData = {
             "content": [{
                 "type": selection.element.type,
-                "index": index,
+                "index": cutIndex,
                 "inputType": selection.inputType,
                 "inputSubType": selection.inputSubType,
                 "schema": selection.element.schema,
@@ -705,6 +711,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                 const pasteSuccessArgs = {
                     responseData: responseData[0],
                     index,
+                    cutIndex,
                     dispatch,
                     getState
                 };
