@@ -112,7 +112,7 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
  * @param {Boolean} deleVercase - Check for delete versioning action
  * @param {Object} newVersionUrns - Latest  Version Urns for delete case
 */
-const tcmSnapshotsOnDefaultSlate = (snapshotsData, defaultKeys, containerElement, type, deleVercase, newVersionUrns,index, isPopupSlate) => {
+export const tcmSnapshotsOnDefaultSlate = (snapshotsData, defaultKeys, containerElement, type, deleVercase, newVersionUrns,index, isPopupSlate) => {
     const { wipData, elementId, tag, actionStatus, popupInContainer,slateManifestVersioning } = snapshotsData;
     const { poetryData, asideData, parentUrn } = containerElement
     /* For WE creation*/
@@ -210,7 +210,7 @@ const tcmSnapshotsCreateSectionBreak = (containerElement, snapshotsData, default
  * @param {Boolean} deleVercase - Check for delete versioning action
  * @param {Object} newVersionUrns - Latest  Version Urns for delete case
 */
-const tcmSnapshotsInContainerElements = (containerElement, snapshotsData, defaultKeys, deleVercase, newVersionUrns,index, isPopupSlate) => {
+export const tcmSnapshotsInContainerElements = (containerElement, snapshotsData, defaultKeys, deleVercase, newVersionUrns,index, isPopupSlate) => {
     let elementDetails;
     const { wipData, elementId, tag, actionStatus, popupInContainer,slateManifestVersioning } = snapshotsData;
     const { poetryData, asideData, parentUrn } = containerElement
@@ -376,7 +376,7 @@ const tcmSnapshotsPopupCTA = (snapshotsData, defaultKeys, containerElement, dele
  * @param {Boolean} deleVercase - Check for delete versioning action
  * @param {Object} newVersionUrns - Latest  Version Urns for delete case
 */
-const tcmSnapshotsInPopupElement = (snapshotsData, defaultKeys, containerElement, type, deleVercase, newVersionUrns,index) => {
+export const tcmSnapshotsInPopupElement = (snapshotsData, defaultKeys, containerElement, type, deleVercase, newVersionUrns,index) => {
     const { metaDataField, sectionType } = containerElement
     if (defaultKeys.action === 'create' && type == POP_UP) {     /** Create Popup */
         tcmSnapshotsPopupCTA(snapshotsData, defaultKeys, containerElement, deleVercase, newVersionUrns,index);
