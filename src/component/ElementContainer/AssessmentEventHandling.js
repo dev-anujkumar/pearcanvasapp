@@ -21,8 +21,6 @@ export const handleElmPortalEvents = (action = 'add') => {
                 if (action == 'add' && data && data.source == 'elm') {
                     if(data.type.includes('item|')){
                         const itemMetadata = prepareItemMetadata(data.type)
-                        // console.log('store', store.getState().assessmentReducer)
-                        // console.log('itemMetadata', itemMetadata);
                         store.dispatch(updateElmItemData(store.getState().assessmentReducer.currentEditAssessment, itemMetadata))  
                         store.dispatch(setItemUpdateEvent(true))
                                      }

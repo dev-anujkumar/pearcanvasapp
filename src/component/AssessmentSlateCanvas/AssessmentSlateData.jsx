@@ -59,8 +59,9 @@ class AssessmentSlateData extends Component {
         if (this.props.getAssessmentDataPopup !== prevProps.getAssessmentDataPopup) {
             this.sendDataAssessment(this.props);
         }
+        const { activeAssessmentType } = this.state;
         const { assessmentSlateObj, assessmentReducer } = this.props;
-        if (this.state.activeAssessmentType == PUF &&
+        if ((activeAssessmentType == PUF || activeAssessmentType == LEARNOSITY) &&
             ((assessmentSlateObj.title) && (assessmentReducer && (assessmentReducer[assessmentSlateObj.assessmentId] && assessmentReducer[assessmentSlateObj.assessmentId].assessmentTitle)))) {
             let prevPropsTitle = prevProps && prevProps.assessmentReducer && prevProps.assessmentReducer[assessmentSlateObj.assessmentId] && prevProps.assessmentReducer[assessmentSlateObj.assessmentId].assessmentTitle
             if ((assessmentSlateObj.title != (assessmentReducer[assessmentSlateObj.assessmentId].assessmentTitle))
@@ -556,7 +557,7 @@ class AssessmentSlateData extends Component {
                 </div>
             </div>
             {this.setUsageType(assessmentUsageType)}
-            {this.state.activeAssessmentType == PUF && this.showElmVersionStatus()}
+            {(this.state.activeAssessmentType == PUF || this.state.activeAssessmentType == LEARNOSITY) && this.showElmVersionStatus()}
         </div>
         return assessmentSlate;
     }

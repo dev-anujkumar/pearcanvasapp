@@ -29,6 +29,7 @@ import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
 import { ELM_INT } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 import { checkAssessmentStatus , resetAssessmentStore } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
+import { isElmLearnosityAssessment } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 import { getContainerData } from './../Toolbar/Search/Search_Action.js';
 
 export const findElementType = (element, index) => {
@@ -327,7 +328,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
         /** PCAT-8900 - Updating Full Assessments - Elm */
         if (config.slateType == 'assessment' && slateData && slateData.data[newVersionManifestId]) {
             let slateBodymatter = slateData.data[newVersionManifestId].contents.bodymatter
-            if (slateBodymatter[0] && slateBodymatter[0].type == 'element-assessment' && slateBodymatter[0].elementdata.assessmentformat == 'puf' && slateBodymatter[0].elementdata.assessmentid) {
+            if (slateBodymatter[0] && slateBodymatter[0].type == 'element-assessment' && isElmLearnosityAssessment(slateBodymatter[0].elementdata) && slateBodymatter[0].elementdata.assessmentid) {
                 dispatch(checkAssessmentStatus(slateBodymatter[0].elementdata.assessmentid, 'fromAssessmentSlate'));
             }
         }
