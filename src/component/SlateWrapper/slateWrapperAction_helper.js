@@ -6,9 +6,7 @@ import { HideLoader, ShowLoader, projectPendingTcStatus } from '../../constants/
 import * as slateWrapperConstants from "./SlateWrapperConstants"
 //Helper methods
 import { sendDataToIframe, replaceWirisClassAndAttr } from '../../constants/utility.js';
-import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
-
 import { SET_SELECTION } from './../../constants/Action_Constants.js';
 import { deleteElement } from './../ElementContainer/ElementContainer_Actions.js';
 import tinymce from 'tinymce'
