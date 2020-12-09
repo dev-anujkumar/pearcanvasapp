@@ -2793,7 +2793,6 @@ export class TinyMceEditor extends Component {
         }
         let currentActiveNode = null
         let activeContainerNode = document.querySelector('div .active')
-        let activeShowHideNode = document.querySelector('.show-hide-active .cypress-editable.mce-content-body.mce-edit-focus')
         const editableEditor =  document.querySelector('.cypress-editable.mce-content-body.mce-edit-focus')
         if (editableEditor && this.props.currentElement) {
             currentActiveNode = editableEditor
@@ -2801,12 +2800,8 @@ export class TinyMceEditor extends Component {
         else if (activeContainerNode) {
             currentActiveNode = activeContainerNode
         }
-        else if (activeShowHideNode) {
-            currentActiveNode = activeShowHideNode
-        }
-
-        let currentElementId = this.props.currentElement && !(currentTarget && currentTarget.classList.contains('formatted-text')) ? this.props.currentElement.id : this.props.element.id
-
+        
+        let currentElementId = this.props.currentElement && currentTarget && currentTarget.getAttribute('data-id') ? this.props.currentElement.id : this.props.element.id
         if (currentActiveNode && currentActiveNode.getAttribute('data-id') === currentElementId) {
             isSameByElementId = true;
         }
@@ -3235,14 +3230,21 @@ export class TinyMceEditor extends Component {
                     if (!classes.includes('poetryHideLabel')) {
                         classes = classes + ' poetryHideLabel';
                     }
-                    return (
-                        <h4 ref={this.editorRef} id={id} onKeyDown={this.normalKeyDownHandler} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: model }} ></h4>
-                    )
-                } else {
-                    return (
-                        <h4 ref={this.editorRef} id={id} onKeyDown={this.normalKeyDownHandler} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: model }} ></h4>
-                    )
                 }
+                return (
+                    <h4 ref={this.editorRef} 
+                        id={id}
+                        data-id={this.props.currentElement ? this.props.currentElement.id : undefined}
+                        onKeyDown={this.normalKeyDownHandler} 
+                        onBlur={this.handleBlur} 
+                        onClick={this.handleClick} 
+                        className={classes} 
+                        placeholder={this.props.placeholder} 
+                        suppressContentEditableWarning={true} 
+                        contentEditable={!lockCondition} 
+                        dangerouslySetInnerHTML={{ __html: model }} 
+                    ></h4>
+                )
             case 'code':
                 let codeModel = this.props.model
                 codeModel = removeBOM(codeModel)
@@ -3270,7 +3272,7 @@ export class TinyMceEditor extends Component {
                 figCreditModel = removeBOM(figCreditModel)
 
                 return (
-                    <div ref={this.editorRef} data-id={this.props.currentElement ? this.props.currentElement.id : ''} id={id} onBlur={this.handleBlur} onKeyDown={this.normalKeyDownHandler} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: figCreditModel }} onChange={this.handlePlaceholder}></div>
+                    <div ref={this.editorRef} data-id={this.props.currentElement ? this.props.currentElement.id : undefined} id={id} onBlur={this.handleBlur} onKeyDown={this.normalKeyDownHandler} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: figCreditModel }} onChange={this.handlePlaceholder}></div>
                 )
             case 'element-citation':
                 let ctModel = this.props.model && this.props.model.text || '<p class="paragraphNumeroUnoCitation"><br/></p>'
@@ -3283,7 +3285,7 @@ export class TinyMceEditor extends Component {
                 let defModel = this.props.model && this.props.model.text ? this.props.model.text : (typeof (this.props.model) === 'string' ? this.props.model : '<p class="paragraphNumeroUno"><br/></p>')
                 defModel = removeBOM(defModel)
                 return (
-                    <div ref={this.editorRef} data-id={this.props.currentElement ? this.props.currentElement.id : ''} onKeyDown={this.normalKeyDownHandler} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: defModel }} onChange={this.handlePlaceholder}></div>
+                    <div ref={this.editorRef} data-id={this.props.currentElement ? this.props.currentElement.id : undefined} onKeyDown={this.normalKeyDownHandler} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: defModel }} onChange={this.handlePlaceholder}></div>
                 )
         }
     }
