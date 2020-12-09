@@ -19,7 +19,7 @@ export default CutCopyDialog;
 
 export const renderCutCopyOption = (componentProps) => {
     const { inContainer, userRole, element: { type } } = componentProps
-    const acceptedTypes = ["element-authoredtext", "element-blockfeature", "element-learningobjectives", "element-list"],
+    const acceptedTypes = ["element-authoredtext", "element-blockfeature", "element-learningobjectives", "element-list", "figure"],
             allowedRoles = ["admin", "manager", "edit", "default_user"];
             
     if (!inContainer && acceptedTypes.includes(type) && allowedRoles.includes(userRole)) {

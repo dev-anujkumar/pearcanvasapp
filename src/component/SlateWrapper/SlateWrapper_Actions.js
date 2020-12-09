@@ -658,22 +658,50 @@ export const pasteElement = (params) => async (dispatch, getState) => {
         } = params
         config.currentInsertedIndex = index;
         localStorage.setItem('newElement', 1);
+
+        let cutIndex = index;
+        if(selection.sourceSlateEntityUrn === config.slateEntityURN &&
+            cutIndex > selection.sourceElementIndex && selection.operationType === 'cut') {
+            cutIndex -= 1;
+        }
         
-    
         let _requestData = {
             "content": [{
                 "type": selection.element.type,
-                "index": index,
+                "index": cutIndex,
                 "inputType": selection.inputType,
                 "inputSubType": selection.inputSubType,
                 "schema": selection.element.schema,
                 "html": selection.element.html,
-                "slateVersionUrn": config.slateManifestURN
+                "slateVersionUrn": selection.sourceSlateManifestUrn,
+                "id": selection.element.id,
+                "elementParentEntityUrn": selection.sourceSlateEntityUrn,
+                "versionUrn": selection.element.versionUrn,
+                "contentUrn": selection.element.contentUrn,
+                "destinationSlateUrn": config.slateEntityURN
             }]
         };
+
+        if(selection.operationType.toUpperCase() === "COPY") {
+            delete _requestData.content[0].slateVersionUrn;
+            delete _requestData.content[0].id;
+            delete _requestData.content[0].versionUrn;
+            delete _requestData.content[0].contentUrn;
+        }
+
+        if(selection.element.type === "figure") {
+            _requestData = {
+                "content": [{
+                    ..._requestData.content[0],
+                    "figuredata": selection.element.figuredata
+                }]
+            }
+        }
+
         try {
+            let url = `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/slate/${config.slateEntityURN}/element/paste?type=${selection.operationType.toUpperCase()}`
             const createdElemData = await axios.post(
-                `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/slate/${config.slateEntityURN}/element/paste`,
+                url,
                 JSON.stringify(_requestData),
                 {
                     headers: {
@@ -687,6 +715,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                 const pasteSuccessArgs = {
                     responseData: responseData[0],
                     index,
+                    cutIndex,
                     dispatch,
                     getState
                 };

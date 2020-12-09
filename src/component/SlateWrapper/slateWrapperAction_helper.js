@@ -8,12 +8,13 @@ import * as slateWrapperConstants from "./SlateWrapperConstants"
 import { sendDataToIframe, replaceWirisClassAndAttr } from '../../constants/utility.js';
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 import { SET_SELECTION } from './../../constants/Action_Constants.js';
-import { deleteElement } from './../ElementContainer/ElementContainer_Actions.js';
+import { deleteFromStore } from './../ElementContainer/ElementContainerDelete_helpers.js';
 import tinymce from 'tinymce'
 export const onPasteSuccess = async (params) => {
     const {
         responseData,
         index,
+        cutIndex,
         dispatch,
         getState
     } = params    
@@ -26,15 +27,22 @@ export const onPasteSuccess = async (params) => {
         operationType = getState().selectionReducer.selection.operationType;
     }
 
-    let cutIndex = index;
     let elmExist = await checkElementExistence(getState().selectionReducer.selection.sourceSlateEntityUrn, getState().selectionReducer.selection.deleteElm.id);
     if ('deleteElm' in getState().selectionReducer.selection && operationType === 'cut' && elmExist) {
         let deleteElm = getState().selectionReducer.selection.deleteElm;
-        if(getState().selectionReducer.selection.sourceSlateEntityUrn === config.slateEntityURN &&
-            cutIndex > getState().selectionReducer.selection.sourceElementIndex) {
-            cutIndex -= 1;
+
+        const parentData = getState().appStore.slateLevelData;
+        const newParentData = JSON.parse(JSON.stringify(parentData));
+        let deleteParams = {
+            dispatch,
+            elmId: deleteElm.id,
+            parentUrn: deleteElm.parentUrn,
+            asideData: deleteElm.asideData,
+            index: deleteElm.index,
+            poetryData: deleteElm.poetryData,
+            newParentData 
         }
-        await dispatch(deleteElement(deleteElm.id, deleteElm.type, deleteElm.parentUrn, deleteElm.asideData, deleteElm.contentUrn, deleteElm.index, deleteElm.poetryData, getState().selectionReducer.selection.element, deleteElm.cutCopyParentUrn));
+        deleteFromStore(deleteParams)
     }
 
     if (operationType === 'copy') {
