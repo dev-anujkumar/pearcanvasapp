@@ -2957,11 +2957,11 @@ export class TinyMceEditor extends Component {
             /**
              * Remove extra Wiris overlay
              */
-            let wirisNodes = document.getElementsByClassName('wrs_modal_dialogContainer');
-            let wirisNodeLength = wirisNodes.length;
+            let wirisObj = document.getElementsByClassName('wrs_modal_dialogContainer');
+            let wirisObjLength = wirisObj.length;
             if (wirisNodeLength > 1) {
-                for (let i = 0; i < wirisNodeLength - 1; i++) {
-                    wirisNodes[i].remove();
+                for (let i = 0; i < wirisObjLength - 1; i++) {
+                    wirisObj[i].remove();
                     // document.getElementsByClassName('wrs_modal_overlay').remove();
                     document.getElementById('wrs_modal_overlay[' + i + ']').remove();
                 }
