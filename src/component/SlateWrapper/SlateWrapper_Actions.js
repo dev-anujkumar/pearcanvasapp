@@ -660,6 +660,16 @@ export const pasteElement = (params) => async (dispatch, getState) => {
             cutIndex > selection.sourceElementIndex && selection.operationType === 'cut') {
             cutIndex -= 1;
         }
+
+        let elmHtml = ('html' in selection.element) ? selection.element.html : {};
+        let elmType = ['figure'];
+        let elmSubtype = ['assessment'];
+        if(elmType.indexOf(selection.element.type) >= 0 && 
+            'figuretype' in selection.element && elmSubtype.indexOf(selection.element.type) >= 0) {
+            if(!('html' in selection.element)) {
+                elmHtml = { "title": selection.element.title.text || "" }
+            }
+        }
         
         let _requestData = {
             "content": [{
@@ -668,7 +678,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                 "inputType": selection.inputType,
                 "inputSubType": selection.inputSubType,
                 "schema": selection.element.schema,
-                "html": selection.element.html,
+                "html": elmHtml,
                 "slateVersionUrn": selection.sourceSlateManifestUrn,
                 "id": selection.element.id,
                 "elementParentEntityUrn": selection.sourceSlateEntityUrn,
