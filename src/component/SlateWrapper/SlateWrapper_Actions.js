@@ -57,7 +57,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
     else if (type && type === "LO_LIST"){
         const slateType = getSlateType(newParentData[config.slateManifestURN])
         if(slateType && slateType === "partintro"){
-            _requestData.isPart = "Y"
+            _requestData.isPart = true
         }
     }
     else if (parentUrn && parentUrn.elementType === 'group') {
