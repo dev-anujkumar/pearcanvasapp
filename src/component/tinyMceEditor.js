@@ -29,7 +29,6 @@ import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER } from '../compone
 import { conversionElement } from './Sidebar/Sidebar_Action';
 import { wirisAltTextPopup } from './SlateWrapper/SlateWrapper_Actions';
 import elementList from './Sidebar/elementTypes';
-import { utils } from 'sortablejs';
 
 let context = {};
 let clickedX = 0;
