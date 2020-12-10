@@ -29,7 +29,7 @@ import { onPasteSuccess, prepareDataForTcmCreate } from "./slateWrapperAction_he
 
 import { SET_SELECTION } from './../../constants/Action_Constants.js';
 import tinymce from 'tinymce'
-
+import SLATE_CONSTANTS  from '../../component/ElementSaprator/ElementSepratorConstants';
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
 };
@@ -39,26 +39,20 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
     let  popupSlateData = getState().appStore.popupSlateData
     localStorage.setItem('newElement', 1);
     let slateEntityUrn = parentUrn && parentUrn.contentUrn || popupSlateData && popupSlateData.contentUrn || poetryData && poetryData.contentUrn || config.slateEntityURN
-    const parentData = getState().appStore.slateLevelData;
-    const newParentData = JSON.parse(JSON.stringify(parentData));
     let _requestData = {
         "projectUrn": config.projectUrn,
         "slateEntityUrn":slateEntityUrn,
         "index": outerAsideIndex ? outerAsideIndex : index,
         "type": type
     };
-
     if (type == "LO") {
         _requestData.loref = loref ? loref : ""
     } 
     else if (type == 'ELEMENT_CITATION') {
         _requestData.parentType = "citations"
     }
-    else if (type && type === "LO_LIST"){
-        const slateType = getSlateType(newParentData[config.slateManifestURN])
-        if(slateType && slateType === "partintro"){
-            _requestData.isPart = true
-        }
+    else if (type && type === "LO_LIST" && config.parentLabel && config.slateType && config.parentLabel === 'part' && config.slateType === SLATE_CONSTANTS.CONTAINER_INTRO) {
+        _requestData.isPart = true
     }
     else if (parentUrn && parentUrn.elementType === 'group') {
         _requestData["parentType"] = "groupedcontent"
@@ -74,6 +68,8 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
             }
         }
     ).then(async createdElemData => {
+        const parentData = getState().appStore.slateLevelData;
+        const newParentData = JSON.parse(JSON.stringify(parentData));
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         let currentSlateData = newParentData[config.slateManifestURN];
 
