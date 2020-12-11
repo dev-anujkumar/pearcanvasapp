@@ -3278,7 +3278,19 @@ export class TinyMceEditor extends Component {
                 ctModel = removeBOM(ctModel)
 
                 return (
-                    <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onKeyDown={this.normalKeyDownHandler} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: ctModel }} onChange={this.handlePlaceholder}></div>
+                    <div ref={this.editorRef} 
+                        id={id}
+                        data-id={this.props.currentElement ? this.props.currentElement.id : undefined}
+                        onBlur={this.handleBlur} 
+                        onKeyDown={this.normalKeyDownHandler} 
+                        onClick={this.handleClick} 
+                        className={classes} 
+                        placeholder={this.props.placeholder} 
+                        suppressContentEditableWarning={true} 
+                        contentEditable={!lockCondition} 
+                        dangerouslySetInnerHTML={{ __html: ctModel }}
+                        onChange={this.handlePlaceholder}
+                    ></div>
                 )
             default:
                 let defModel = this.props.model && this.props.model.text ? this.props.model.text : (typeof (this.props.model) === 'string' ? this.props.model : '<p class="paragraphNumeroUno"><br/></p>')
