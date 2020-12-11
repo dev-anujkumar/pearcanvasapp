@@ -704,6 +704,15 @@ export const pasteElement = (params) => async (dispatch, getState) => {
             }
         }
 
+        if('manifestationUrn' in selection.element) {
+            _requestData = {
+                "content": [{
+                    ..._requestData.content[0],
+                    "manifestationUrn": selection.element.manifestationUrn
+                }]
+            }
+        }
+
         try {
             let url = `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/slate/${config.slateEntityURN}/element/paste?type=${selection.operationType.toUpperCase()}`
             const createdElemData = await axios.post(
