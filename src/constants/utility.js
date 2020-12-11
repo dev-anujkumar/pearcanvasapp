@@ -452,7 +452,13 @@ export const replaceWirisClassAndAttr = (currentTargetId) => {
     let tempFirstContainerHtml = currentTarget && currentTarget.innerHTML
     if (typeof tempFirstContainerHtml === "string") {
         tempFirstContainerHtml = tempFirstContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
-        currentTarget.innerHTML = tempFirstContainerHtml
+        try {
+            currentTarget.innerHTML = tempFirstContainerHtml
+        }
+        catch {
+            currentTarget.innerHTML = tempFirstContainerHtml
+            console.log("error in setting HTML")
+        }
     }
 }
 
