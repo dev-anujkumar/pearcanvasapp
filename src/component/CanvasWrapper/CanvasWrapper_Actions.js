@@ -28,6 +28,8 @@ import { handleTCMData } from '../TcmSnapshots/TcmSnapshot_Actions.js';
 import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
 import { ELM_INT } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
+import { checkAssessmentStatus , resetAssessmentStore } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
+import { getContainerData } from './../Toolbar/Search/Search_Action.js';
 
 const findElementType = (element, index) => {
     let elementType = {};
@@ -147,6 +149,7 @@ const findElementType = (element, index) => {
                             ...elementDataBank[element.type][element.figuretype][assessmentFormat]
                         }
                         element.figuredata.elementdata.assessmentformat = assessmentFormat 
+                        elementType["usageType"]= element.figuredata.elementdata.usagetype ? element.figuredata.elementdata.usagetype : ""
                         break;
                 }
                 break;
@@ -298,7 +301,8 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
         }
         dispatch(handleTCMData(tcmManifestUrn));
     }
-    const elementCount = getState().appStore.slateLength
+    dispatch(resetAssessmentStore());//reset Assessment Store
+    const elementCount = getState().appStore.slateLength;
     let apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}&elementCount=${elementCount}`
     if (versionPopupReload) {
         apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}&metadata=true&elementCount=${elementCount}`
@@ -314,9 +318,16 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             document.getElementsByClassName("slate-tag-icon")[0].classList.remove("disable");
          }     
         let newVersionManifestId=Object.values(slateData.data)[0].id
-        if(config.slateManifestURN !== newVersionManifestId && slateData.data[newVersionManifestId].type === 'manifest' ){
+        if(config.slateManifestURN !== newVersionManifestId && (slateData.data[newVersionManifestId].type === 'manifest' || slateData.data[newVersionManifestId].type === "chapterintro")){
             config.slateManifestURN = newVersionManifestId
             manifestURN = newVersionManifestId
+        }
+        /** PCAT-8900 - Updating Full Assessments - Elm */
+        if (config.slateType == 'assessment' && slateData && slateData.data[newVersionManifestId]) {
+            let slateBodymatter = slateData.data[newVersionManifestId].contents.bodymatter
+            if (slateBodymatter[0] && slateBodymatter[0].type == 'element-assessment' && slateBodymatter[0].elementdata.assessmentformat == 'puf' && slateBodymatter[0].elementdata.assessmentid) {
+                dispatch(checkAssessmentStatus(slateBodymatter[0].elementdata.assessmentid, 'fromAssessmentSlate'));
+            }
         }
 		if(slateData.data && slateData.data[newVersionManifestId] && slateData.data[newVersionManifestId].type === "popup"){
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
@@ -335,16 +346,17 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                 })
             }
             else if(versioning && versioning.type==="popup"){
-                config.slateManifestURN= Object.values(slateData.data)[0].id
                 let parentData = getState().appStore.slateLevelData;
                 let newslateData = JSON.parse(JSON.stringify(parentData));
+                delete Object.assign(newslateData, {[Object.values(slateData.data)[0].id]: newslateData[config.slateManifestURN] })[config.slateManifestURN];     
+                config.slateManifestURN= Object.values(slateData.data)[0].id
                 newslateData[config.slateManifestURN] = Object.values(slateData.data)[0];
                 return dispatch({
                     type: AUTHORING_ELEMENT_UPDATE,
                     payload: {
                         slateLevelData: newslateData
                     }
-                })
+                })       
             }
 			else {
                 config.slateManifestURN= Object.values(slateData.data)[0].id
@@ -496,6 +508,13 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             entityURN,
             projectURN: config.projectUrn,
         });
+
+        // Read element URN to search from project URL
+        let queryStrings = new URLSearchParams(window.location.search);
+        if(queryStrings.get('searchElement') && getState().searchReducer.deeplink) {
+            let searchTerm = queryStrings.get('searchElement') || '';
+            dispatch(getContainerData(searchTerm));
+        }
     });
 };
 
@@ -586,7 +605,7 @@ const setOldAudioVideoPath = (getState, activeElement, elementIndex, type) => {
         case "audio":
             if (typeof (index) == 'number') {
                 if (newBodymatter[index].versionUrn == activeElement.id) {
-                    oldPath = (bodymatter[index].figuredata.audio && bodymatter[index].figuredata.audio.path) || ""
+                    oldPath = bodymatter[index].figuredata.audioid || ""
                 }
             } else {
                 let indexes = index.split('-');
@@ -594,17 +613,18 @@ const setOldAudioVideoPath = (getState, activeElement, elementIndex, type) => {
                 if (indexesLen == 2) {
                     condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
                     if (condition.versionUrn == activeElement.id) {
-                        oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.audio && bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.audio.path
+                        oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.audio && bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.audioid
                     }
                 } else if (indexesLen == 3 && parentUrn && parentUrn.elementType === "group") {
                     condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
                     if (condition.versionUrn == activeElement.id) {
-                        oldPath = condition.figuredata.audio && condition.figuredata.audio.path || ""
+                        oldPath = condition.figuredata.audioid || ""
                     }
                 } else if (indexesLen == 3) {
                     condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
                     if (condition.versionUrn == activeElement.id) {
-                        oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata.audio && bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata.audio.path
+                        oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata.audioid 
+                        // && bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata.audio.path
                     }
                 }
             }
@@ -612,7 +632,8 @@ const setOldAudioVideoPath = (getState, activeElement, elementIndex, type) => {
         case "video":
             if (typeof (index) == 'number') {
                 if (newBodymatter[index].versionUrn == activeElement.id) {
-                    oldPath = bodymatter[index].figuredata.videos[0].path || ""
+                    oldPath = bodymatter[index].figuredata.videoid || ""
+                    // bodymatter[index].figuredata.videos[0].path || ""
                 }
             } else {
                 let indexes = index.split('-');
@@ -620,17 +641,17 @@ const setOldAudioVideoPath = (getState, activeElement, elementIndex, type) => {
                 if (indexesLen == 2) {
                     condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
                     if (condition.versionUrn == activeElement.id) {
-                        oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.videos[0].path
+                        oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.videoid
                     }
                 } else if (indexesLen == 3 && parentUrn && parentUrn.elementType === "group") {
                     condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
                     if (condition.versionUrn == activeElement.id) {
-                        oldPath = condition.figuredata.videos[0].path || ""
+                        oldPath = condition.figuredata.videoid || ""
                     }
                 } else if (indexesLen == 3) {
                     condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
                     if (condition.versionUrn == activeElement.id) {
-                        oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata.videos[0].path
+                        oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata.videoid
                     }
                 }
             }
@@ -942,13 +963,11 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
                 parentElement: parentElement,
                 asideData: getState().appStore.asideData,
                 parentUrn: getState().appStore.parentUrn,
-                metaDataField: _requestData.metaDataField
+                metaDataField: _requestData.metaDataField,
+                isMetaFieldExist: true
             };
             let slateData = {
-                currentSlateData: {
-                    status: currentSlateData.status,
-                    contentUrn: currentSlateData.contentUrn
-                },
+                currentParentData:newParentData,
                 bodymatter: currentSlateData.contents.bodymatter,
                 response: response.data
             };

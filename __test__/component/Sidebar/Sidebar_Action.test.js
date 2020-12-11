@@ -20,7 +20,8 @@ jest.mock('../../../src/config/config.js', () => ({
     REACT_APP_API_URL: "https://10.11.7.246:8443/cypress-api/",
     ssoToken: "IZaFs6qIbKAo1yX0WaRCz6fagzA.*AAJTSQACMDIAAlNLABw5WUNuT3h6MEN0OHRFRUlEZUxFamxQa1EyNm89AAJTMQACMDE.*",
     conversionInProcess : false,
-    savingnInProcess : false
+    savingnInProcess : false,
+    elementStatus : { "urn:pearson:work:4b70896d-090a-4566-97f1-30c080a708b5" : 'wip'}
 }))
 const initialState = {
     appStore: {
@@ -29,7 +30,7 @@ const initialState = {
     },
     elementStatusReducer:{},
     tcmReducer:{
-        tcmSnapshot:{}
+        tcmSnapshot:[]
     }
 }
 const initialState2 = {
@@ -40,7 +41,7 @@ const initialState2 = {
     },
     elementStatusReducer:{},
     tcmReducer:{
-        tcmSnapshot:{}
+        tcmSnapshot:[]
     }
 }
 const initialState3 = {
@@ -50,7 +51,7 @@ const initialState3 = {
     },
     elementStatusReducer:{},
     tcmReducer:{
-        tcmSnapshot:{}
+        tcmSnapshot:[]
     }
 }
 const initialState4 = {
@@ -60,7 +61,7 @@ const initialState4 = {
     },
     elementStatusReducer:{},
     tcmReducer:{
-        tcmSnapshot:{}
+        tcmSnapshot:[]
     }
 }
 const initialState5 = {
@@ -70,7 +71,7 @@ const initialState5 = {
     },
     elementStatusReducer:{},
     tcmReducer:{
-        tcmSnapshot:{}
+        tcmSnapshot:[]
     }
 }
 const initialState6 = {
@@ -80,7 +81,7 @@ const initialState6 = {
     },
     elementStatusReducer:{},
     tcmReducer:{
-        tcmSnapshot:{}
+        tcmSnapshot:[]
     }
 }
 const initialState7 = {
@@ -90,7 +91,7 @@ const initialState7 = {
     },
     elementStatusReducer:{},
     tcmReducer:{
-        tcmSnapshot:{}
+        tcmSnapshot:[]
     }
 }
 const initialState8 = {
@@ -100,7 +101,7 @@ const initialState8 = {
     },
     elementStatusReducer:{},
     tcmReducer:{
-        tcmSnapshot:{}
+        tcmSnapshot:[]
     }
 }
 const initialState9 = {
@@ -110,7 +111,7 @@ const initialState9 = {
     },
     elementStatusReducer:{},
     tcmReducer:{
-        tcmSnapshot:{}
+        tcmSnapshot:[]
     }
 }
 const initialState10 = {
@@ -120,7 +121,7 @@ const initialState10 = {
     },
     elementStatusReducer:{},
     tcmReducer:{
-        tcmSnapshot:{}
+        tcmSnapshot:[]
     }
 }
 const initialState11 = {
@@ -130,7 +131,7 @@ const initialState11 = {
     },
     elementStatusReducer:{},
     tcmReducer:{
-        tcmSnapshot:{}
+        tcmSnapshot:[]
     }
 }
 const initialState12 = {
@@ -145,7 +146,7 @@ const initialState12 = {
     },
     elementStatusReducer:{},
     tcmReducer:{
-        tcmSnapshot:{}
+        tcmSnapshot:[]
     }
 }
 const initialState13 = {
@@ -160,7 +161,7 @@ const initialState13 = {
     },
     elementStatusReducer:{},
     tcmReducer:{
-        tcmSnapshot:{}
+        tcmSnapshot:[]
     }
 }
 const initialState14 = {
@@ -175,7 +176,7 @@ const initialState14 = {
     },
     elementStatusReducer:{},
     tcmReducer:{
-        tcmSnapshot:{}
+        tcmSnapshot:[]
     }
 }
 const initialState15 = {
@@ -190,7 +191,7 @@ const initialState15 = {
     },
     elementStatusReducer:{},
     tcmReducer:{
-        tcmSnapshot:{}
+        tcmSnapshot:[]
     }
 }
 const initialState16 = {
@@ -201,7 +202,7 @@ const initialState16 = {
     },
     elementStatusReducer:{},
     tcmReducer:{
-        tcmSnapshot:{}
+        tcmSnapshot:[]
     }
 }
 const initialState17 = {
@@ -216,7 +217,7 @@ const initialState17 = {
     },
     elementStatusReducer:{},
     tcmReducer:{
-        tcmSnapshot:{}
+        tcmSnapshot:[]
     }
 }
 const initialState18 = {
@@ -231,7 +232,7 @@ const initialState18 = {
     },
     elementStatusReducer:{},
     tcmReducer:{
-        tcmSnapshot:{}
+        tcmSnapshot:[]
     }
 }
 const initialState19 = {
@@ -242,7 +243,7 @@ const initialState19 = {
     },
     elementStatusReducer:{},
     tcmReducer:{
-        tcmSnapshot:{}
+        tcmSnapshot:[{elemURN : "urn:pearson:work:4b70896d-090a-4566-97f1-30c080a708b5"},{elemURN : "urn:pearson:work:4b70896d-090a-4566-97f1-30c080a708b4"}]
     }
 }
 describe('Test - Sidebar_Actions',()=>{
@@ -800,7 +801,7 @@ describe('Test - Sidebar_Actions',()=>{
     
         });
     });
-    xdescribe('Test convertElement- singleAssessment', () => {
+    describe('Test convertElement- singleAssessment', () => {
         let store = mockStore(() => initialState2);
         it('Test convertElement  -assessment type', () => {
             store = mockStore(() => initialState2);
@@ -980,10 +981,11 @@ describe('Test - Sidebar_Actions',()=>{
                 statusText: "",
                 data: activeElementData.BlockCode_OldData
             }
+            delete expectedRes.data.figuretype;
             axios.post.mockImplementation(() => Promise.resolve(expectedRes));
             let store1 = mockStore(() => initialState19);
             let nextStore = slateData.SlateData4
-            let result = await store1.dispatch(sidebarAction.convertElement(activeElementData.BlockCode_OldData, activeElementData.BlockCode_NewData, activeElementData.BlockCode_OldInfo, nextStore, ["3"]));
+            await store1.dispatch(sidebarAction.convertElement(activeElementData.BlockCode_OldData, activeElementData.BlockCode_NewData, activeElementData.BlockCode_OldInfo, nextStore, ["3"]));
         });
     })
 });
@@ -996,15 +998,15 @@ describe('Test handleElementConversion- ShowHide -Paragraph to List', () => {
             return initialState16;
            }
         const spyconversionElement = jest.spyOn(sidebarAction, 'handleElementConversion')
-        axios.post.mockImplementation(() => Promise.resolve(expectedRes));
-        let result =   await store1.dispatch(sidebarAction.handleElementConversion(activeElementData.Showhide_Para_ElementData,nextStore,activeElementData.SH_ActiveElement,true,activeElementData.showHideObject1));
-        expect(spyconversionElement).toHaveBeenCalled()
-        spyconversionElement.mockClear()
         let expectedRes = {
             status: 200,
             statusText: "",
             data: slateData.SlateData4[config.slateManifestURN].contents.bodymatter[0].interactivedata['show'][0]
-        }       
+        }
+        axios.post.mockImplementation(() => Promise.resolve(expectedRes));
+        await store1.dispatch(sidebarAction.handleElementConversion(activeElementData.Showhide_Para_ElementData,nextStore,activeElementData.SH_ActiveElement,true,activeElementData.showHideObject1));
+        expect(spyconversionElement).toHaveBeenCalled()
+        spyconversionElement.mockClear()      
     });
 });
 describe('Test handleElementConversion- ShowHide in Aside -Paragraph to List', () => {
@@ -1019,7 +1021,7 @@ describe('Test handleElementConversion- ShowHide in Aside -Paragraph to List', (
         }   
         const spyconversionElement = jest.spyOn(sidebarAction, 'handleElementConversion')
         axios.post.mockImplementation(() => Promise.resolve(expectedRes));
-        let result =   await store1.dispatch(sidebarAction.handleElementConversion(activeElementData.SH_Aside_ElementData,nextStore,activeElementData.SH_Aside,true,activeElementData.showHideObject2));
+        await store1.dispatch(sidebarAction.handleElementConversion(activeElementData.SH_Aside_ElementData,nextStore,activeElementData.SH_Aside,true,activeElementData.showHideObject2));
         expect(spyconversionElement).toHaveBeenCalled()
         spyconversionElement.mockClear()
     });
@@ -1036,7 +1038,7 @@ describe('Test handleElementConversion- ShowHide in WE-Paragraph to List', () =>
         }
         axios.post.mockImplementation(() => Promise.resolve(expectedRes));  
         const spyconversionElement = jest.spyOn(sidebarAction, 'handleElementConversion')
-        let result =   await store1.dispatch(sidebarAction.handleElementConversion(activeElementData.SH_WE_ElementData,nextStore,activeElementData.SH_WE_ActiveElement,true,activeElementData.showHideObject3));
+        await store1.dispatch(sidebarAction.handleElementConversion(activeElementData.SH_WE_ElementData,nextStore,activeElementData.SH_WE_ActiveElement,true,activeElementData.showHideObject3));
         expect(spyconversionElement).toHaveBeenCalled()
         spyconversionElement.mockClear()
     });
@@ -1047,7 +1049,7 @@ describe('Test convertElement- Paragraph for snapshot MOCK API CALL', () => {
         let expectedRes = {
             status: 200,
             statusText: "",
-            data: activeElementData.BlockCode_OldData
+            data: { ...activeElementData.BlockCode_OldData, id : "urn:pearson:work:4b70896d-090a-4566-97f1-30c080a708b5"}
         }
         let elementData = {
             elementId: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1a",
@@ -1070,7 +1072,7 @@ describe('Test convertElement- Paragraph for snapshot MOCK API CALL', () => {
             contentUrn: "urn:pearson:entity:6d443d7e-5a0d-48ea-bce9-6d12a717aba2",
             elementdata: { schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", text: "" },
             html: { text: "<p class='paragraphNumeroUno'><br></p>" },
-            id: "urn:pearson:work:4b70896d-090a-4566-97f1-30c080a708b5",
+            id: "urn:pearson:work:4b70896d-090a-4566-97f1-30c080a708b4",
             schema: "http://schemas.pearson.com/wip-authoring/element/1",
             status: "wip",
             type: "element-authoredtext",
@@ -1080,7 +1082,46 @@ describe('Test convertElement- Paragraph for snapshot MOCK API CALL', () => {
         axios.post.mockImplementation(() => Promise.resolve(expectedRes));
         let store1 = mockStore(() => initialState19);
         let nextStore = slateData.SlateData4
-        let result = await store1.dispatch(sidebarAction.convertElement(olddata, elementData, elementinfo, nextStore, ["3"]));
+        await store1.dispatch(sidebarAction.convertElement(olddata, elementData, elementinfo, nextStore, ["3"]));
+    });
+    it('Test convertElement  -we MOCK API CALL else', async () => {
+        let expectedRes = {
+            status: 200,
+            statusText: "",
+            data: { ...activeElementData.BlockCode_OldData, id : "urn:pearson:work:4b70896d-090a-4566-97f1-30c080a708b4"}
+        }
+        let elementData = {
+            elementId: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1a",
+            elementType: "element-authoredtext",
+            labelText: "H1",
+            primaryOption: "primary-heading",
+            secondaryOption: "secondary-heading-1",
+            toolbar: ["bold", "underline", "strikethrough", "orderedlist", "unorderedlist", "increaseindent", "decreaseindent", "glossary", "assetpopover", "slatetag", "redo"]
+        }
+        let elementinfo = {
+            elementId: "urn:pearson:work:4b70896d-090a-4566-97f1-30c080a708b5",
+            elementType: "element-authoredtext",
+            elementWipType: "element-authoredtext",
+            index: 0,
+            primaryOption: "primary-paragraph",
+            secondaryOption: "secondary-paragraph",
+            tag: "P"
+        }
+        let olddata = {
+            contentUrn: "urn:pearson:entity:6d443d7e-5a0d-48ea-bce9-6d12a717aba2",
+            elementdata: { schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", text: "" },
+            html: { text: "<p class='paragraphNumeroUno'><br></p>" },
+            id: "urn:pearson:work:4b70896d-090a-4566-97f1-30c080a708b4",
+            schema: "http://schemas.pearson.com/wip-authoring/element/1",
+            status: "wip",
+            type: "element-authoredtext",
+            versionUrn: "urn:pearson:work:4b70896d-090a-4566-97f1-30c080a708b5"
+        }
+        config.tcmStatus = true
+        axios.post.mockImplementation(() => Promise.resolve(expectedRes));
+        let store1 = mockStore(() => initialState19);
+        let nextStore = slateData.SlateData4
+        await store1.dispatch(sidebarAction.convertElement(olddata, elementData, elementinfo, nextStore, ["3"]));
     });
     
 });

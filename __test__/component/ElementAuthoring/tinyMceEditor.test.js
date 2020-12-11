@@ -62,7 +62,7 @@ jest.mock('../../../src/constants/utility.js', () => {
             return true
         },
         guid: jest.fn(),
-        removeBlankTags:jest.fn()
+        removeBlankTags: jest.fn()
     }
 })
 jest.mock('../../../src/js/glossaryFootnote.js', () => {
@@ -1390,6 +1390,64 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                     checked: true
                 };
             }
+            const getContent = jest.spyOn(event.target, 'getContent');
+            instance.editorBeforeExecCommand(nextEditor);
+            expect(getContent).toHaveBeenCalled()
+        })
+
+        it('Test-8.10-Method--7--editorBeforeExecCommand --CASE_9--MceToggleFormat',()=>{
+            let event = {
+                target: {
+                    getContent: () => {
+                        return "Test"
+                    },
+                    targetElm: {
+                        nodeName: "SUP"
+                    }
+                },
+                value: "superscript",
+                command: 'mceToggleFormat',
+                preventDefault: () => { },
+                stopPropagation: () => { }
+            } 
+
+            let nextEditor = {
+                on: (temp, cb) => { cb(event) },
+                targetElm: {
+                    findChildren: () => {
+                        return {
+                            length: 0
+                        };
+                    },
+                    childNodes: [{ classList: ["blockquoteMarginalia"] }],
+                    dispatchEvent: () => { }
+                },
+                selection: {
+                    getNode : ()=>{ return {tagName: 'sup', getElementsByTagName : ()=>{return []} , parentNode : {tagName : 'SUP'} } },
+                    getStart : ()=>{}
+                },
+                dom: {
+                    getParent: () => {
+                        return {
+                            innerHTML: '<p class="paragraphNumeroUno place-holder"><sup><a>*</a></sup>hello<ol></ol><ul></ul></p>',
+                            children: [
+                                {
+                                    tagName: 'A'
+                                }
+                            ],
+                            nodeName: "SUP",
+                            innerText: "hello",
+                            tagName: 'sup',
+                            querySelectorAll: jest.fn(),
+                            classList: {
+                                remove: jest.fn()
+                            }
+                        }
+                    }
+                },
+                setContent: () => { },
+            }
+
             const getContent = jest.spyOn(event.target, 'getContent');
             instance.editorBeforeExecCommand(nextEditor);
             expect(getContent).toHaveBeenCalled()
@@ -4947,6 +5005,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                 },
                 ...editor2
             }
+            tinymce.remove = jest.fn()
             component.setProps({
                 ...props,
                 permissions: ["login", "logout"],

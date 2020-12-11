@@ -99,3 +99,5 @@ export const disabledPrimaryOption = [
     "primary-element-citation",
     "primary-multicolumn"
 ];
+
+export const allowedFigureTypesForTCM = ['image', 'table', 'mathImage', 'audio', 'video']

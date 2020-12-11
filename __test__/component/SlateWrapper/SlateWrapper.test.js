@@ -13,7 +13,10 @@ const store = mockStore({
     appStore: { slateTitleUpdated: {}, slateLevelData : {}, activeElement: {} },
     toolbarReducer: { elemBorderToggle: true },
     metadataReducer: { currentSlateLOData: {} },
-    audioReducer: {openRemovePopUp: false}
+    audioReducer: {openRemovePopUp: false},
+    searchReducer: {searchTerm: '', parentId: '', deeplink: false},
+    commentSearchReducer: {commentSearchTerm: '', parentId: ''},
+    assessmentReducer:{showConfirmationPopup:false}
 })
 import config from '../../../src/config/config';
 import { showTocBlocker } from "../../../src/js/toggleLoader";
@@ -63,7 +66,9 @@ describe('Testing <SlateWrapper> Component', () => {
         toggleTocDelete: true,
         openRemovePopUp : true,
         loadMorePages:jest.fn(),
-        showSlateLockPopupValue:true
+        showSlateLockPopupValue:true,
+        showConfirmationPopup:true,
+        showBlocker:jest.fn()
     };
     test('renders without crashing', () => {
         const div = document.createElement('div');
@@ -173,7 +178,10 @@ describe('Testing <SlateWrapper> Component', () => {
                 appStore: { slateTitleUpdated: {}, slateLevelData : {}, activeElement: {} },
                 toolbarReducer: { elemBorderToggle: true },
                 metadataReducer: { currentSlateLOData: {} },
-                audioReducer: {openRemovePopUp: false}
+                audioReducer: {openRemovePopUp: false},
+                searchReducer: {searchTerm: '', parentId: '', deeplink: false},
+                commentSearchReducer: {commentSearchTerm: '', parentId: ''},
+                assessmentReducer:{showConfirmationPopup:false}
             })
             const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props} /> </Provider>)
             let slateWrapperInstance = slateWrapper.find("SlateWrapper").instance()
@@ -192,7 +200,10 @@ describe('Testing <SlateWrapper> Component', () => {
                 appStore: { slateTitleUpdated: {}, slateLevelData : {}, activeElement: {} },
                 toolbarReducer: { elemBorderToggle: true },
                 metadataReducer: { currentSlateLOData: {} },
-                audioReducer: {openRemovePopUp: false}
+                audioReducer: {openRemovePopUp: false},
+                searchReducer: {searchTerm: '', parentId: '', deeplink: false},
+                commentSearchReducer: {commentSearchTerm: '', parentId: ''},
+                assessmentReducer:{showConfirmationPopup:false}
             })
             const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props} /> </Provider>)
             let slateWrapperInstance = slateWrapper.find("SlateWrapper").instance()
@@ -211,7 +222,10 @@ describe('Testing <SlateWrapper> Component', () => {
                 appStore: { slateTitleUpdated: {}, slateLevelData : {}, activeElement: {} },
                 toolbarReducer: { elemBorderToggle: true },
                 metadataReducer: { currentSlateLOData: {} },
-                audioReducer: {openRemovePopUp: false}
+                audioReducer: {openRemovePopUp: false},
+                searchReducer: {searchTerm: '', parentId: '', deeplink: false},
+                commentSearchReducer: {commentSearchTerm: '', parentId: ''},
+                assessmentReducer:{showConfirmationPopup:false}
             })
             //config.savingInProgress=true
             const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props} /> </Provider>)
@@ -249,7 +263,10 @@ describe('Testing <SlateWrapper> Component', () => {
                 appStore: { slateTitleUpdated: {}, slateLevelData : {}, activeElement: {} },
                 toolbarReducer: { elemBorderToggle: true },
                 metadataReducer: { currentSlateLOData: {} },
-                audioReducer: {openRemovePopUp: false}
+                audioReducer: {openRemovePopUp: false},
+                searchReducer: {searchTerm: '', parentId: '', deeplink: false},
+                commentSearchReducer: {commentSearchTerm: '', parentId: ''},
+                assessmentReducer:{showConfirmationPopup:false}
             })
             const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props } tocDeleteMessage = {{ messageType : 'test' }} /> </Provider>)
             let slateWrapperInstance = slateWrapper.find("SlateWrapper").instance()
@@ -319,7 +336,7 @@ describe('Testing <SlateWrapper> Component', () => {
             const spyhandleScroll = jest.spyOn(slateWrapperInstance, 'handleScroll')
             slateWrapperInstance.handleScroll(event)
             expect(spyhandleScroll).toHaveBeenCalledWith(event);
-        }),
+        })
         it("processRemoveConfirmation method - openRemovePopUp", () => {
             const localStore = mockStore({
                 slateLockReducer: { 
@@ -333,7 +350,10 @@ describe('Testing <SlateWrapper> Component', () => {
                 metadataReducer: { currentSlateLOData: {} },
                 audioReducer: {openRemovePopUp: true},
                 openRemovePopUp : true,
-                showAudioRemovePopup : jest.fn()
+                showAudioRemovePopup : jest.fn(),
+                searchReducer: {searchTerm: '', parentId: '', deeplink: false},
+                commentSearchReducer: {commentSearchTerm: '', parentId: ''},
+                assessmentReducer:{showConfirmationPopup:false}
             })
             const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props } /> </Provider>)
             let slateWrapperInstance = slateWrapper.find("SlateWrapper").instance()
@@ -352,7 +372,10 @@ describe('Testing <SlateWrapper> Component', () => {
                 appStore: { slateTitleUpdated: {}, slateLevelData : {}, activeElement: {} },
                 toolbarReducer: { elemBorderToggle: true },
                 metadataReducer: { currentSlateLOData: {} },
-                audioReducer: {openSplitPopUp: true}
+                audioReducer: {openSplitPopUp: true},
+                searchReducer: {searchTerm: '', parentId: '', deeplink: false},
+                commentSearchReducer: {commentSearchTerm: '', parentId: ''},
+                assessmentReducer:{showConfirmationPopup:false}
             })
             const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props } /> </Provider>)
             let slateWrapperInstance = slateWrapper.find("SlateWrapper").instance()
@@ -380,7 +403,10 @@ describe('Testing <SlateWrapper> Component', () => {
                 toolbarReducer: { elemBorderToggle: true },
                 metadataReducer: { currentSlateLOData: {} },
                 audioReducer: {openRemovePopUp: false},
-                withinLockPeriod: true
+                withinLockPeriod: true,
+                searchReducer: {searchTerm: '', parentId: '', deeplink: false},
+                commentSearchReducer: {commentSearchTerm: '', parentId: ''},
+                assessmentReducer:{showConfirmationPopup:false}
             })
             const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props } /> </Provider>)
             let slateWrapperInstance = slateWrapper.find("SlateWrapper").instance()
@@ -411,7 +437,10 @@ describe('Testing <SlateWrapper> Component', () => {
                 toolbarReducer: { elemBorderToggle: true },
                 metadataReducer: { currentSlateLOData: {} },
                 audioReducer: {openRemovePopUp: false},
-                withinLockPeriod: true
+                withinLockPeriod: true,
+                searchReducer: {searchTerm: '', parentId: '', deeplink: false},
+                commentSearchReducer: {commentSearchTerm: '', parentId: ''},
+                assessmentReducer:{showConfirmationPopup:false}
             })
             const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props } accesDeniedPopup = {true} /> </Provider>)
             let slateWrapperInstance = slateWrapper.find("SlateWrapper").instance()
@@ -444,7 +473,10 @@ describe('Testing <SlateWrapper> Component', () => {
                 appStore: { slateTitleUpdated: {}, slateLevelData : {}, activeElement: {} },
                 toolbarReducer: { elemBorderToggle: true },
                 metadataReducer: { currentSlateLOData: {} },
-                audioReducer: {openRemovePopUp: true}
+                audioReducer: {openRemovePopUp: true},
+                searchReducer: {searchTerm: '', parentId: '', deeplink: false},
+                commentSearchReducer: {commentSearchTerm: '', parentId: ''},
+                assessmentReducer:{showConfirmationPopup:false}
             })
             const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props} /> </Provider>)
             let slateWrapperInstance = slateWrapper.find("SlateWrapper").instance()
@@ -478,7 +510,10 @@ describe('Testing <SlateWrapper> Component', () => {
                 appStore: { slateTitleUpdated: {}, slateLevelData : {}, activeElement: {} },
                 toolbarReducer: { elemBorderToggle: true },
                 metadataReducer: { currentSlateLOData: {} },
-                audioReducer: {openRemovePopUp: false, openSplitPopUp: true}
+                audioReducer: {openRemovePopUp: false, openSplitPopUp: true},
+                searchReducer: {searchTerm: '', parentId: '', deeplink: false},
+                commentSearchReducer: {commentSearchTerm: '', parentId: ''},
+                assessmentReducer:{showConfirmationPopup:false}
             })
             const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props} /> </Provider>)
             let slateWrapperInstance = slateWrapper.find("SlateWrapper").instance()
@@ -512,7 +547,10 @@ describe('Testing <SlateWrapper> Component', () => {
                 appStore: { slateTitleUpdated: {}, slateLevelData : {}, activeElement: {}, accesDeniedPopup: true },
                 toolbarReducer: { elemBorderToggle: true },
                 metadataReducer: { currentSlateLOData: {} },
-                audioReducer: {openRemovePopUp: false, openSplitPopUp: true}
+                audioReducer: {openRemovePopUp: false, openSplitPopUp: true},
+                searchReducer: {searchTerm: '', parentId: '', deeplink: false},
+                commentSearchReducer: {commentSearchTerm: '', parentId: ''},
+                assessmentReducer:{showConfirmationPopup:false}
             })
             const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props} /> </Provider>)
             let slateWrapperInstance = slateWrapper.find("SlateWrapper").instance()
@@ -546,7 +584,10 @@ describe('Testing <SlateWrapper> Component', () => {
                 appStore: { slateTitleUpdated: {}, slateLevelData : {}, activeElement: {}, accesDeniedPopup: false },
                 toolbarReducer: { elemBorderToggle: true },
                 metadataReducer: { currentSlateLOData: {} },
-                audioReducer: {openRemovePopUp: false, openSplitPopUp: true}
+                audioReducer: {openRemovePopUp: false, openSplitPopUp: true},
+                searchReducer: {searchTerm: '', parentId: '', deeplink: false},
+                commentSearchReducer: {commentSearchTerm: '', parentId: ''},
+                assessmentReducer:{showConfirmationPopup:false}
             })
             const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props} /> </Provider>)
             let slateWrapperInstance = slateWrapper.find("SlateWrapper").instance()
@@ -602,6 +643,7 @@ describe('splihandler function', () => {
         },
         permissions : [],
         openRemovePopUp : true,
+        showBlocker:jest.fn()
     };
     const localStore = mockStore({
         slateLockReducer: { 
@@ -613,7 +655,10 @@ describe('splihandler function', () => {
         appStore: { slateTitleUpdated: {}, slateLevelData : {}, activeElement: {} },
         toolbarReducer: { elemBorderToggle: true },
         metadataReducer: { currentSlateLOData: {} },
-        audioReducer: {openRemovePopUp: false}
+        audioReducer: {openRemovePopUp: false},
+        searchReducer: {searchTerm: '', parentId: '', deeplink: false},
+        commentSearchReducer: {commentSearchTerm: '', parentId: ''},
+        assessmentReducer:{showConfirmationPopup:false}
     })
     //config.savingInProgress=true
     const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props} /> </Provider>)
@@ -694,8 +739,10 @@ describe('splihandler function', () => {
             appStore: { slateTitleUpdated: {}, slateLevelData : {}, activeElement: {} },
             toolbarReducer: { elemBorderToggle: true },
             metadataReducer: { currentSlateLOData: {} },
-            audioReducer: {openRemovePopUp: false,openWrongAudioPopup : true,
-                openSplitPopUp:false}
+            audioReducer: {openRemovePopUp: false, openWrongAudioPopup : true, openSplitPopUp:false},
+            searchReducer: {searchTerm: '', parentId: '', deeplink: false},
+            commentSearchReducer: {commentSearchTerm: '', parentId: ''},
+            assessmentReducer:{showConfirmationPopup:false}
         })
         //config.savingInProgress=true
         const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props} /> </Provider>)
@@ -730,8 +777,10 @@ describe('splihandler function', () => {
             appStore: { slateTitleUpdated: {}, slateLevelData : {}, activeElement: {} },
             toolbarReducer: { elemBorderToggle: true },
             metadataReducer: { currentSlateLOData: {} },
-            audioReducer: {openRemovePopUp: false,openWrongAudioPopup : true,
-                openSplitPopUp:false}
+            audioReducer: {openRemovePopUp: false, openWrongAudioPopup : true, openSplitPopUp:false},
+            searchReducer: {searchTerm: '', parentId: '', deeplink: false},
+            commentSearchReducer: {commentSearchTerm: '', parentId: ''},
+            assessmentReducer:{showConfirmationPopup:false}
         })
         
         //config.savingInProgress=true
@@ -741,6 +790,11 @@ describe('splihandler function', () => {
         slateWrapperInstance.state.showReleasePopup = true;
         slateWrapperInstance.showLockReleasePopup()
         slateWrapperInstance.showAudioRemoveConfirmationPopup()
+    })
+    it('showLockReleasePopup', () => {
+        slateWrapperInstance.showAssessmentConfirmationPopup()
+        slateWrapperInstance.toggleAssessmentPopup()
+
     })
 
 })

@@ -14,6 +14,8 @@ import {
     ERROR_POPUP
 } from '../../constants/Action_Constants';
 
+import { getCommentElements } from './../Toolbar/Search/Search_Action';
+
 
 /**
  * 
@@ -49,6 +51,8 @@ export const fetchComments = (contentUrn, title) => dispatch => {
                     index: 0
                 }
             })
+
+            dispatch(getCommentElements(currentWorkId));
             //Replaces to the original URL to prevent multiple panel toggle
             window.history.replaceState(null, null, `/toc-wrapper/index.html?projectUrn=${config.projectUrn}&entityUrn=${config.projectEntityUrn}`);
         }
@@ -209,7 +213,7 @@ export const updateComment = (commentUrn, updateCommentParams, elementId) => dis
 
 export const getProjectUsers = () => dispatch => {
     let ENTITY_URN = config.projectEntityUrn
-    let url = `${config.JAVA_API_URL}v2/dashboard/ProjectUserInfo/${ENTITY_URN}`
+    let url = `${config.JAVA_API_URL}v2/dashboard/projectUserInfo/${ENTITY_URN}`
     return axios.get(url,
         {
             headers: {

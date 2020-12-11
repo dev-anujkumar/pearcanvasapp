@@ -524,4 +524,6 @@ export const spanHandlers = {
  * Removes Byte Order Markup (BOM text) i.e &#65279
  * @param {String} nodeHTML model HTML
  */
-export const removeBOM = (nodeHTML) => nodeHTML.replace("﻿", "");
+export const removeBOM = (nodeHTML) => nodeHTML.replace(/﻿/g, "");
+export const removeImageCache = (nodeHTML) => nodeHTML.replace(/(?:\.png).*?[\"]/g,'.png?'+(new Date()).getTime()+'"');
+

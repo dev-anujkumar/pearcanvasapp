@@ -14,11 +14,6 @@ jest.mock('./../../../src/component/SlateWrapper/PageNumberElement', () => {
 jest.mock('./../../../src/component/ElementSaprator', () => {
     return (<div>null</div>)
 })
-jest.mock('./../../../src/js/c2_assessment_module', () => {
-    return function (){
-        return (<div>null</div>)
-    }
-})
 jest.mock('./../../../src/js/c2_media_module', () => {
     return function (){
         return (<div>null</div>)
@@ -31,7 +26,8 @@ jest.mock('./../../../src/constants/utility.js', () => ({
     encodeHTMLInWiris: jest.fn(),
     matchHTMLwithRegex:jest.fn(),
     createTitleSubtitleModel:jest.fn(),
-    removeBlankTags: jest.fn()
+    removeBlankTags: jest.fn(),
+    removeUnoClass: jest.fn()
 }))
 jest.mock('./../../../src/config/config.js', () => ({
     colors : ["#000000", "#003057", "#505759", "#005A70", "#006128"],
@@ -139,6 +135,9 @@ const store = mockStore({
         "urn:pearson:work:ee2b0c11-75eb-4a21-87aa-578750b5301d": "wip",
 
     },
+    searchReducer: {
+        searchTerm: ""
+    }
 });
 
 config["elementStatus"] = {}
@@ -278,7 +277,7 @@ describe('Test for element container component', () => {
             expect(spyhandleBlur).toHaveBeenCalled()
             spyhandleBlur.mockClear()
         })
-        it('Render Element Container ----->handleBlur popup', () => {
+        xit('Render Element Container ----->handleBlur popup', () => {
             let props = {
                 element: wipData.popup,
                 permissions: [],

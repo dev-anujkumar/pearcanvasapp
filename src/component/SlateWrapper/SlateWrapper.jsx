@@ -11,7 +11,7 @@ import ElementSaprator from '../ElementSaprator';
 import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
 import { SlateFooter } from './SlateFooter.jsx';
 import { createElement, swapElement, setSplittedElementIndex, updatePageNumber, accessDenied } from './SlateWrapper_Actions';
-import { sendDataToIframe } from '../../constants/utility.js';
+import { sendDataToIframe, getSlateType } from '../../constants/utility.js';
 import { ShowLoader, SplitCurrentSlate } from '../../constants/IFrameMessageTypes.js';
 import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
 import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
@@ -25,6 +25,7 @@ import PageNumberElement from './PageNumberElement.jsx';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
 import PopUp from '../PopUp';
+import Toast from '../Toast';
 import { hideBlocker, showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';
 import { guid } from '../../constants/utility.js';
 import { fetchAudioNarrationForContainer, deleteAudioNarrationForContainer, showAudioRemovePopup, showAudioSplitPopup , showWrongAudioPopup } from '../AudioNarration/AudioNarration_Actions'
@@ -36,7 +37,11 @@ import { handleTCMData } from '../TcmSnapshots/TcmSnapshot_Actions.js'
 import {
     fetchSlateData
 } from '../CanvasWrapper/CanvasWrapper_Actions';
+import { assessmentConfirmationPopup } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions';
+import { reloadSlate } from '../../component/ElementContainer/AssessmentEventHandling';
 import LazyLoad, {forceCheck} from "react-lazyload";
+
+import { getCommentElements } from './../Toolbar/Search/Search_Action.js';
 
 let random = guid();
 
@@ -67,6 +72,26 @@ class SlateWrapper extends Component {
         // binds handleClickOutside to document mousedown //
         document.addEventListener("mousedown", this.handleClickOutside);
         window.addEventListener('scroll',this.handleScroll)
+    }
+
+    componentDidUpdate() {
+        let divObj = 0;
+        if(this.props.searchParent !== '' && document.querySelector(`div[data-id="${this.props.searchParent}"]`)) {
+            divObj = document.querySelector(`div[data-id="${this.props.searchParent}"]`).offsetTop;
+            if(this.props.searchNode !== '' && document.querySelector(`div[data-id="${this.props.searchNode}"]`) && this.props.searchNode !== this.props.searchParent) {
+                divObj += document.querySelector(`div[data-id="${this.props.searchNode}"]`).offsetTop;
+            }
+            document.getElementById('slateWrapper').scrollTop = divObj;
+        }
+
+        if(this.props.commentSearchParent !== '' && document.querySelector(`div[data-id="${this.props.commentSearchParent}"]`)) {
+            divObj = document.querySelector(`div[data-id="${this.props.commentSearchParent}"]`).offsetTop;
+            if(this.props.commentSearchNode !== '' && document.querySelector(`div[data-id="${this.props.commentSearchNode}"]`) && this.props.commentSearchNode !== this.props.commentSearchParent) {
+                divObj += document.querySelector(`div[data-id="${this.props.commentSearchNode}"]`).offsetTop;
+            }
+            document.getElementById('slateWrapper').scrollTop = divObj;
+            this.props.getCommentElements('');
+        }
     }
 
     handleScroll = (e) => {
@@ -911,7 +936,7 @@ class SlateWrapper extends Component {
                            <React.Fragment key={element.id}>
                                <LazyLoad 
                                     once={true}
-                                    placeholder={<div>Loading...</div>}
+                                    placeholder={<div data-id={element.id}>Loading...</div>}
                                 >
                                     {
                                         index === 0 && _slateType !== 'assessment' && config.isCO === false ?
@@ -1031,7 +1056,18 @@ class SlateWrapper extends Component {
         this.props.showWrongAudioPopup(false)
         }
     }
-
+    /**
+    * @description - toggleAssessmentPopup function responsible for showing popup for latest version.
+    */
+    toggleAssessmentPopup = () => {
+        this.props.showBlocker(false)
+        hideTocBlocker()
+        hideBlocker()
+        if(this.props.showConfirmationPopup){
+            reloadSlate();
+            this.props.assessmentConfirmationPopup(false)
+        }
+    }
     /**
     * @description - processRemoveConfirmation function responsible for opening confirmation popup for removing the narrative audio.
     */
@@ -1085,6 +1121,28 @@ class SlateWrapper extends Component {
         }
     }
 
+    /**
+    * @description - showAssessmentConfirmationPopup function responsible for opening confirmation popup for updating embeded assessments .
+    */
+    showAssessmentConfirmationPopup = () => {
+        if (this.props.showConfirmationPopup) {
+            this.props.showBlocker(true)
+            showTocBlocker();
+            const dialogText = ` All other Assessment Items in this project will now be updated to the new version of this Assessment`
+            return (
+                <PopUp dialogText={dialogText}
+                    active={true}
+                    saveButtonText='OK'
+                    showConfirmation={true}
+                    assessmentClass="lock-message"
+                    togglePopup={this.toggleAssessmentPopup}
+                />
+            )
+        }
+        else {
+            return null
+        }
+    }
     showLockReleasePopup = () => {
         if (this.state.showReleasePopup) {
             this.props.showBlocker(true)
@@ -1169,6 +1227,7 @@ class SlateWrapper extends Component {
                 </div>
             )
         }
+        const slateType = getSlateType(this.props.slateData[config.slateManifestURN])
         return (
             <React.Fragment>
                 <div className='title-head-wrapper'>
@@ -1178,12 +1237,13 @@ class SlateWrapper extends Component {
                           :this.renderSlateHeader(this.props)
                     } 
                 </div>
-                <div id="slateWrapper" className='slate-wrapper' onScroll={this.handleScroll}>
+                <div id="slateWrapper" className={`slate-wrapper ${slateType === "popup" ? "popup-slate": ""}`} onScroll={this.handleScroll}>
                     {
                         this.renderSlate(this.props)
                     }
                 </div>
                 <div id="link-notification"></div>
+                {this.props.showToast  && <Toast active={true}/>}
                 <ListButtonDropPortal slateData={this.props.slateData}>
                     {
                         (selectedType, startValue, inputRef) => (
@@ -1204,6 +1264,7 @@ class SlateWrapper extends Component {
                 {/* ***************Audio Narration remove Popup **************** */}
                 {this.showAudioRemoveConfirmationPopup()}
                 {this.showLockReleasePopup()}
+                {this.showAssessmentConfirmationPopup()}
             </React.Fragment>
         );
     }
@@ -1238,7 +1299,13 @@ const mapStateToProps = state => {
         openAudio: state.audioReducer.openAudio,
         indexSplit : state.audioReducer.indexSplit,
         accesDeniedPopup : state.appStore.accesDeniedPopup,
-        showSlateLockPopupValue: state.metadataReducer.showSlateLockPopup
+        showSlateLockPopupValue: state.metadataReducer.showSlateLockPopup,
+        searchParent: state.searchReducer.parentId,
+        searchNode: state.searchReducer.searchTerm,
+        commentSearchParent: state.commentSearchReducer.parentId,
+        commentSearchNode: state.commentSearchReducer.commentSearchTerm,
+        showToast: state.appStore.showToast,
+        showConfirmationPopup: state.assessmentReducer.showConfirmationPopup,
     };
 };
 
@@ -1264,7 +1331,8 @@ export default connect(
         openPopupSlate,
         showSlateLockPopup,
         handleTCMData,
-        fetchSlateData
-
+        fetchSlateData,
+        getCommentElements,
+        assessmentConfirmationPopup,
     }
 )(SlateWrapper);

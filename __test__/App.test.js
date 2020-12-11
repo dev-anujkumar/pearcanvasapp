@@ -7,10 +7,54 @@ import moxios from 'moxios';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 const middlewares = [thunk];
+import config from './../src/config/config.js'
 import { mount } from 'enzyme';
 
+config.slateManifestURN = 'urn:pearson:manifest:a2438bed-1188-4f30-8ce7-b535e25598ee';
+const slateData = {
+    'urn:pearson:manifest:a2438bed-1188-4f30-8ce7-b535e25598ee': {
+        "id":"urn:pearson:manifest:a2438bed-1188-4f30-8ce7-b535e25598ee",
+        "type":"manifest",
+        "schema":"http://schemas.pearson.com/wip-authoring/manifest/1",
+        "versionUrn":"urn:pearson:manifest:a2438bed-1188-4f30-8ce7-b535e25598ee",
+        "contentUrn":"urn:pearson:entity:2139e052-2813-4cbe-9441-48e01e51d34a",
+        "contents":{
+            "bodymatter":[
+                {
+                    "id":"urn:pearson:work:e09f9098-bc7a-410b-9619-c372102cd5b9",
+                    "type":"element-authoredtext",
+                    "contentUrn":"urn:pearson:entity:2e1a0320-b129-4fb9-920c-e8ce5f4bbc3c"
+                },
+                {
+                    "id":"urn:pearson:work:7af88fe2-0f49-4b28-8f2d-87134201fd9b",
+                    "type":"element-authoredtext",
+                    "contentUrn":"urn:pearson:entity:2e1a0320-b129-4fb9-920c-e8ce5f4bbc3c"
+                },
+            ]
+        }
+    }
+};
+
 const mockStore = configureMockStore(middlewares);
-const store = mockStore({});
+const store = mockStore({
+    appStore: {
+        slateLevelData: slateData,
+        permissions: []
+    },
+    searchReducer: {
+        searchTerm: ""
+    }
+});
+
+
+
+let getState = () => {
+    return {
+        appStore: {
+            slateLevelData: slateData
+        }
+    };
+}
 
 jest.mock('../src/auth/openam.js', () => {
     return function () {
@@ -42,7 +86,7 @@ describe('App component', () => {
         expect(typeof(ReactDOM.unmountComponentAtNode)).toEqual('function');
     });
 
-    xit('Call Env config', async () => {
+    it('Call Env config', async () => {
         jest.mock('../src/config/cypressConfig', () => ({
             prodUrl: "https://dev-structuredauthoring.pearson.com",
             sitePointing: "dev",

@@ -8,7 +8,7 @@ import CiteLoader from './../CiteLoader/CiteLoader.jsx';
 import moment from 'moment'
 import { elmSortDown, elmSortUp } from './../../../../../images/ElementButtons/ElementButtons.jsx';
 import { getCiteTdxData, assessmentSorting, setCurrentCiteTdx, specialCharacterDecode } from './../../Actions/CiteTdxActions.js'
-
+import { CITE, TDX , MMI} from '../../../AssessmentSlateConstants.js';
 class CiteTdxTable extends Component {
     constructor(props) {
         super(props);
@@ -82,7 +82,7 @@ class CiteTdxTable extends Component {
 
     render() {
         const { citeApiData, tdxApiData, mmiApiData, isLoading, assessmenterrFlag } = this.props;
-        const apiData = (this.props.assessmentType === "Full Assessment CITE") ? citeApiData : (this.props.assessmentType === "Full Assessment TDX") ? tdxApiData : mmiApiData;
+        const apiData = (this.props.assessmentType === CITE) ? citeApiData : (this.props.assessmentType === TDX) ? tdxApiData : mmiApiData;
         return (
             <div>
                 <div className='cite-wrapper main-div'>
@@ -90,14 +90,16 @@ class CiteTdxTable extends Component {
                     { (isLoading == false) && (assessmenterrFlag == false) && apiData && apiData.assessments && apiData.assessments.length > 0 &&
                         <table className='assessment-table-class'>
                             <thead>
+                                <tr>
                                 {this.tableHeaders.map(item => (
-                                    <th className={`assessment-row-class ${item.toLowerCase()}`}>{item}
+                                    <th key={`assessment-${item}`} className={`assessment-row-class ${item.toLowerCase()}`}>{item}
                                     {(item === "Title" || item === "Date Modified")  && this.state.sortBy[item] &&
                                     <div className={`sort-icon ${this.state.sortBy[item].className} ${apiData.assessments.length > 1 ? '':'disabled'}`} onClick={() => this.setSort(item)}>{this.state.sortBy[item].sortIcon}</div>
                                     }
                                     </th>
 
                                 ))}
+                                </tr>
                             </thead>
                             <tbody>
                                 {apiData.assessments.map((item, index) => {
@@ -109,7 +111,7 @@ class CiteTdxTable extends Component {
                                                     <span className="elmAssessmentItem-icon">{elmAssessmentItem}</span>
                                                     <span className="assessment-titles" title={specialCharacterDecode(item.name)}>{specialCharacterDecode(item.name)}</span>
                                                 </td>
-                                                <td><span className="assessment-type">{this.props.assessmentType === "Full Assessment CITE" ? "CITE" : this.props.assessmentType === "Full Assessment TDX"? "TDX" : "MMI"}</span></td>
+                                                <td><span className="assessment-type">{this.props.assessmentType === CITE ? CITE.toUpperCase() : this.props.assessmentType === TDX? TDX.toUpperCase() : MMI.toUpperCase()}</span></td>
                                                 <td><span className="modifiedby-date" title={item.modifiedDate ? moment(item.modifiedDate).format('DD MMM YYYY, hh:mmA') : ""}>{item.modifiedDate ? moment(item.modifiedDate).format('DD MMM YYYY, hh:mmA') : 'NA'}</span></td>
                                                 <td><span className="modifiedby-data" title={item.modifiedBy ? item.modifiedBy : ""}>{item.modifiedBy ? item.modifiedBy : 'NA'}</span></td>
                                                 <td><span className="assessment-uuid" title={item.versionUrn.slice(17)}>{item.versionUrn.slice(17)}</span></td>

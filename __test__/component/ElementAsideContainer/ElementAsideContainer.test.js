@@ -63,6 +63,9 @@ let initialState = {
     elementStatusReducer: {
         "urn:pearson:work:ee2b0c11-75eb-4a21-87aa-578750b5301d": "wip"       
     },
+    searchReducer: {
+        searchTerm: ""
+    }
 };
 jest.mock('../../../src/component/ElementContainer/ElementContainer_Actions.js', () => {
     return {
@@ -116,7 +119,7 @@ describe('Testing ElementAside component with props', () => {
 
         it('should render  sectionBreak function correctly', () => {
             let sectionBreak = instance.sectionBreak(section)
-            expect(sectionBreak.props.className).toEqual('aside-section-break');
+            expect((sectionBreak.props.className).trim()).toEqual('aside-section-break');
         })
 
         it('should render  renderElement function correctly', () => {

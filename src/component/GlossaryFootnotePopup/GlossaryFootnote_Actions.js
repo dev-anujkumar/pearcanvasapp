@@ -7,9 +7,9 @@ import { tcmSnapshotsForUpdate, fetchParentData, fetchElementWipData } from '../
 const {
     REACT_APP_API_URL
 } = config
-
+import { allowedFigureTypesForTCM } from "../ElementContainer/ElementConstants";
 import { OPEN_GLOSSARY_FOOTNOTE, UPDATE_FOOTNOTEGLOSSARY, ERROR_POPUP, GET_TCM_RESOURCES } from "./../../constants/Action_Constants";
-let elementTypeData = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza'];
+const elementTypeData = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza', 'figure'];
 
 export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, typeWithPopup, poetryField) => async (dispatch) => {
     
@@ -30,6 +30,10 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
         const slateId = config.slateManifestURN;
         const parentData = store.getState().appStore.slateLevelData;
         let newParentData = JSON.parse(JSON.stringify(parentData));
+        let currentSlateData = newParentData[config.slateManifestURN];
+        if(currentSlateData.type==="popup" && currentSlateData.status === "approved" && config.isCreateFootnote){
+            return false;
+        }
         let newBodymatter = newParentData[slateId].contents.bodymatter;
         var footnoteContentText, glossaryFootElem = {}, glossaryContentText, tempGlossaryContentText;
         let tempIndex = index && typeof (index) !== 'number' && index.split('-');
@@ -107,7 +111,7 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                     }
                 }
 
-            }
+            }       
         }
 
         switch (semanticType) {
@@ -343,7 +347,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                 parentElement: data.metaDataField ? fetchElementWipData(tcmMainBodymatter,index,'popup') : undefined,
                 metaDataField: data.metaDataField ? data.metaDataField : undefined
             };
-            if (currentSlateData.status === 'approved') {
+            if (currentSlateData && currentSlateData.status === 'approved') {
                 await tcmSnapshotsForUpdate(elementUpdateData, index, containerElement, store.dispatch, "");
             }
             else {
@@ -486,7 +490,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         //tcm update code  for glossary/footnote 
         if (config.tcmStatus) {
             if (elementTypeData.indexOf(elementType) !== -1) {
-                prepareDataForUpdateTcm(elementWorkId, res.data.id);
+                prepareDataForUpdateTcm(elementWorkId, res.data.id, res.data);
             }
         }
 
@@ -499,15 +503,20 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         
         sendDataToIframe({'type': HideLoader,'message': { status: false }});  
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
+        config.isGlossarySaving = false;
     }).catch(err => {
         store.dispatch({type: ERROR_POPUP, payload:{show: true}})
         console.log("save glossary footnote API error : ", err);
+        config.isGlossarySaving = false;
         sendDataToIframe({'type': HideLoader,'message': { status: false }});
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
     })
 }
 //TCM Update
-function prepareDataForUpdateTcm(updatedDataID,versionedData) {
+function prepareDataForUpdateTcm(updatedDataID,versionedData, resData) {
+    if (resData.hasOwnProperty("figuretype") && !allowedFigureTypesForTCM.includes(resData.figuretype)) {
+        return false
+    }
     const tcmData = store.getState().tcmReducer.tcmSnapshot;
     let indexes = []
     tcmData.filter(function (element, index) {

@@ -185,4 +185,7 @@
     cursor: default;
 }
 
-
+.editor.searched > div > .btn-element.element-label,
+.editor.searched > div > .btn-element.add-comment {
+    background-color: #ff9b19;
+}

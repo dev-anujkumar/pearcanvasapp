@@ -36,6 +36,7 @@ import { fetchUsageTypeData } from '../AssessmentSlateCanvas/AssessmentActions/a
 import { toggleElemBordersAction, togglePageNumberAction } from '../Toolbar/Toolbar_Actions.js';
 import { prevIcon, nextIcon } from '../../../src/images/ElementButtons/ElementButtons.jsx';
 import { assetIdForSnapshot } from '../../component/AssetPopover/AssetPopover_Actions.js';
+
 export class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
@@ -166,7 +167,13 @@ export class CanvasWrapper extends Component {
     }
     render() {
         let slateData = this.props.slateLevelData
-        let isReviewerRoleClass = hasReviewerRole() ? " reviewer-role" : ""
+        let isReviewerRoleClass = hasReviewerRole() ? " reviewer-role" : "";
+        // Filter search icon for popup
+        let popupFilter = '';
+        if(config.isPopupSlate) {
+            popupFilter = 'popup';
+        }
+        
         return (
             <div className='content-composer'>
                 {this.props.showBlocker ? <div className="canvas-blocker" ></div> : '' }
@@ -178,9 +185,10 @@ export class CanvasWrapper extends Component {
                     togglePopup={this.ReleaseErrorPopup}
                     isLockReleasePopup={true}
                     isInputDisabled={true}
+                    isElmApiError={this.props.ErrorPopup.isElmApiError}
                 />}
                 {/** Ends of custom error popup */}
-                <div id="editor-toolbar" className="editor-toolbar">
+                <div id="editor-toolbar" className={`editor-toolbar ${popupFilter}`}>
                     {/* editor tool goes here */}
                     <Toolbar />
                     {/* custom list editor component */}
@@ -189,7 +197,7 @@ export class CanvasWrapper extends Component {
                 <div className='workspace'>               
                     <div id='canvas' className={'canvas'+ isReviewerRoleClass}>
                         <div id='artboard-containers'>
-                            <div class="artboard-parent">
+                            <div className="artboard-parent">
                                 {/*Prev Button */}
                                 {slateData[config.slateManifestURN] && slateData[config.slateManifestURN].type !== 'popup' && <div className={`navigation-container prev-btn ${config.disablePrev ? 'disabled':""}`}>
                                     <div className='navigation-content'>

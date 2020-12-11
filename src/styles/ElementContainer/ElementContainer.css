@@ -8,8 +8,13 @@
     /* padding: 15px; */
     flex-grow: 1;
     max-width: 93.1%;
+    background-color: #fff;
     padding: 1px 8px !important; 
     /* border: 1.5px solid #aaa; */
+}
+
+.editor.searched > .element-container {
+    background-color: rgba(255, 226, 164, 0.3);
 }
 
 .element-container.active:not(.ct) {
@@ -50,6 +55,11 @@
 
 .showBorder {
     border: 1px solid #737373;
+}
+
+.editor.searched > .showBorder {
+    border: 1px solid #ff9b19;
+    box-shadow: 0 0 4px 0 #ff9b19;
 }
 
 .copyUrn {

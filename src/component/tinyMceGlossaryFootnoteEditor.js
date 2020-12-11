@@ -112,7 +112,6 @@ export class ReactEditor extends React.Component {
     let content = e.target.getContent({format: 'text'}),
         contentHTML = e.target.getContent(),
         activeElement = editor.dom.getParent(editor.selection.getStart(), ".definition-editor");
-
     if (activeElement) {
         let isContainsMath = contentHTML.match(/<img/)?(contentHTML.match(/<img/).input.includes('class="Wirisformula')||contentHTML.match(/<img/).input.includes('class="temp_Wirisformula')):false
         if(content.trim().length || contentHTML.match(/<math/g) || isContainsMath){
@@ -317,7 +316,9 @@ export class ReactEditor extends React.Component {
     }
     setFormattingToolbar('disableTinymceToolbar')
     if (!_isEditorPlaced) {
-      this.editorRef.current.focus();
+      setTimeout(()=>{
+        this.editorRef.current.focus();
+      },0)
       this.editorConfig.selector = '#' + this.editorRef.current.id;
       let glossaryNode = document.getElementById('glossary-0')
       let footnoteNode = document.getElementById('footnote-0')

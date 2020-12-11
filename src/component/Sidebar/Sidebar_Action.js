@@ -11,10 +11,10 @@ import elementTypes from './../Sidebar/elementTypes';
 import figureDataBank from '../../js/figure_data_bank';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
-import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
+import { POD_DEFAULT_VALUE, allowedFigureTypesForTCM } from '../../constants/Element_Constants'
 import { prepareTcmSnapshots,checkContainerElementVersion,fetchManifestStatus,fetchParentData } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 let imageSource = ['image','table','mathImage'],imageDestination = ['primary-image-figure','primary-image-table','primary-image-equation']
-let elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza'];
+const elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza', 'figure'];
 
 export const convertElement = (oldElementData, newElementData, oldElementInfo, store, indexes, fromToolbar,showHideObj) => (dispatch,getState) => {
     let { appStore } =  getState();
@@ -351,7 +351,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         //tcm conversion code   
         if (config.tcmStatus) {
             if (elementType.indexOf(oldElementData.type) !== -1) {
-                prepareDataForConversionTcm(oldElementData.id, getState, dispatch,res.data.id);
+                prepareDataForConversionTcm(oldElementData.id, getState, dispatch,res.data.id, res.data);
             }
         }   
         dispatch({
@@ -375,7 +375,10 @@ catch (error) {
     dispatch({type: ERROR_POPUP, payload:{show: true}})
 }
 }
-function prepareDataForConversionTcm(updatedDataID, getState, dispatch,versionid) {
+function prepareDataForConversionTcm(updatedDataID, getState, dispatch,versionid, resData) {
+    if (resData.hasOwnProperty("figuretype") && !allowedFigureTypesForTCM.includes(resData.figuretype)) {
+        return false
+    }
     const tcmData = getState().tcmReducer.tcmSnapshot;
     let indexes = []
     tcmData && tcmData.filter(function (element, index) {
@@ -419,12 +422,15 @@ function prepareDataForConversionTcm(updatedDataID, getState, dispatch,versionid
  * @param {Function} dispatch to dispatch tcmSnapshots
 */
 export const tcmSnapshotsForConversion = async (elementConversionData,indexes,appStore,dispatch) => {
+    const { oldElementData, response, currentSlateData } = elementConversionData
+    if (response.hasOwnProperty("figuretype") && !allowedFigureTypesForTCM.includes(response.figuretype)) {
+        return false
+    }
     let actionStatus = {
         action:"update",
         status:"",
         fromWhere:"conversion"
     }
-    const {oldElementData,response,currentSlateData}=elementConversionData
     let convertAppStore = JSON.parse(JSON.stringify(appStore.slateLevelData));
     let convertSlate = convertAppStore[config.slateManifestURN];
     let convertBodymatter = convertSlate.contents.bodymatter;

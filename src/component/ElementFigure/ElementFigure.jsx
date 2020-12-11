@@ -234,7 +234,10 @@ class ElementFigure extends Component {
             slateEntityUrn: config.slateEntityURN,
             parentEntityUrn: this.props.parentEntityUrn
         }
-         sendDataToIframe({ 'type': 'launchTableSPA', 'message': {}, "id": this.props.elementId, editable ,slateData});
+        let configAPIKey = {
+            S3MathImagePath : config.S3MathImagePath?config.S3MathImagePath:"https://cite-media-stg.pearson.com/legacy_paths/wiris-dev-mathtype-cache-use/cache/"
+        }
+         sendDataToIframe({ 'type': 'launchTableSPA', 'message': {}, "id": this.props.elementId, editable ,slateData, configAPIKey});
     }
     /**
      * @description function will be called on image src add and fetch resources based on figuretype

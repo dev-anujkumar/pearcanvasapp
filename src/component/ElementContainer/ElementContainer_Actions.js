@@ -5,12 +5,11 @@ import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import {
     fetchSlateData
 } from '../CanvasWrapper/CanvasWrapper_Actions';
-import { AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP, OPEN_GLOSSARY_FOOTNOTE,DELETE_SHOW_HIDE_ELEMENT, GET_TCM_RESOURCES} from "./../../constants/Action_Constants";
+import { AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP, OPEN_GLOSSARY_FOOTNOTE,DELETE_SHOW_HIDE_ELEMENT, GET_TCM_RESOURCES, STORE_OLD_ASSET_FOR_TCM} from "./../../constants/Action_Constants";
 import { customEvent } from '../../js/utils';
 import { prepareTcmSnapshots,tcmSnapshotsForUpdate,fetchElementWipData,checkContainerElementVersion,fetchManifestStatus } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 import { fetchPOPupSlateData} from '../../component/TcmSnapshots/TcmSnapshot_Actions.js'
-let elementTypeTCM = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza',  'popup'];
-let containerType = ['element-aside', 'manifest', 'citations', 'poetry', 'groupedcontent','popup'];
+import { elementTypeTCM, containerType, allowedFigureTypesForTCM } from "./ElementConstants";
 
 export const addComment = (commentString, elementId) => (dispatch) => {
     let url = `${config.STRUCTURE_API_URL}narrative-api/v2/${elementId}/comment/`
@@ -105,7 +104,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
             let deleteSlate = deleteParentData[config.slateManifestURN];
             let deleteBodymatter = deleteParentData[config.slateManifestURN].contents.bodymatter;
             if (elementTypeTCM.indexOf(type) !== -1 || containerType.indexOf(type) !== -1) {
-                let wipData = fetchElementWipData(deleteBodymatter, index, type, contentUrn)
+                let wipData = fetchElementWipData(deleteBodymatter, index, type, contentUrn, "delete")
                 let containerElement = {
                     asideData: asideData,
                     parentUrn: parentUrn,
@@ -116,10 +115,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
                 }
                 let deleteData = {
                     wipData: wipData,
-                    currentSlateData: {
-                        status: deleteSlate.status,
-                        contentUrn: deleteSlate.contentUrn
-                    },
+                    currentParentData: deleteParentData,
                     bodymatter: deleteBodymatter,
                     newVersionUrns: deleteElemData.data,
                     index:index
@@ -256,6 +252,9 @@ function contentEditableFalse (updatedData){
  * @param {Function} dispatch to dispatch tcmSnapshots
 */
 export const tcmSnapshotsForDelete = async (elementDeleteData, type, containerElement) => {
+    if (elementDeleteData.wipData.hasOwnProperty("figuretype") && !allowedFigureTypesForTCM.includes(elementDeleteData.wipData.figuretype)) {
+        return false
+    }
     let actionStatus = {
         action:"delete",
         status:"pending",
@@ -263,10 +262,14 @@ export const tcmSnapshotsForDelete = async (elementDeleteData, type, containerEl
     }
     let parentType = ['element-aside', 'citations', 'poetry', 'groupedcontent', 'popup'];
     let versionStatus = {};
+    let currentSlateData = elementDeleteData.currentParentData[config.slateManifestURN] 
+    if(config.isPopupSlate){
+        currentSlateData.popupSlateData = elementDeleteData.currentParentData[config.tempSlateManifestURN]
+    }
     if ((parentType.indexOf(type) === -1)) {
         versionStatus = fetchManifestStatus(elementDeleteData.bodymatter, containerElement, type);
     }
-    containerElement = await checkContainerElementVersion(containerElement, versionStatus, elementDeleteData.currentSlateData);
+    containerElement = await checkContainerElementVersion(containerElement, versionStatus, currentSlateData);
     prepareTcmSnapshots(elementDeleteData.wipData, actionStatus, containerElement, type,elementDeleteData.newVersionUrns,elementDeleteData.index);
 }
 
@@ -329,6 +332,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         let assetRemoveidForSnapshot =  getState().assetPopOverSearch.assetID;
         let isPopupElement = parentElement && parentElement.type == 'popup' && (updatedData.metaDataField !== undefined || updatedData.sectionType !== undefined) ? true : false;
         let noAdditionalFields = (updatedData.metaDataField == undefined && updatedData.sectionType == undefined) ? true : false
+        let oldFigureData = getState().appStore.oldFiguredata
         if (elementTypeTCM.indexOf(response.data.type) !== -1 && showHideType == undefined && (isPopupElement || noAdditionalFields)) {
             let containerElement = {
                 asideData: asideData,
@@ -339,13 +343,14 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
                 sectionType : parentElement && parentElement.type == 'popup' && updatedData.sectionType ? updatedData.sectionType : undefined,
                 CurrentSlateStatus: currentSlateData.status
             },
-            elementUpdateData ={
+            elementUpdateData = {
                 currentParentData: currentParentData,
                 updateBodymatter:updateBodymatter,
                 response:response.data,
                 updatedId:updatedData.id,
                 slateManifestUrn:config.slateManifestURN,
-                CurrentSlateStatus: currentSlateData.status
+                CurrentSlateStatus: currentSlateData.status,
+                figureData: oldFigureData
             }
             if(!config.isCreateGlossary){  
                 if (currentSlateData && currentSlateData.status === 'approved') {
@@ -386,7 +391,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
                     if(currentSlateData.type==="popup"){
                         if (config.tcmStatus) {
                             if (elementTypeTCM.indexOf(updatedData.type) !== -1 && showHideType == undefined) {
-                                prepareDataForUpdateTcm(updatedData.id, getState, dispatch, response.data);
+                                prepareDataForUpdateTcm(updatedData.id, getState, dispatch, response.data, updatedData);
                             }
                         }
                         sendDataToIframe({ 'type': "tocRefreshVersioning", 'message' :true });
@@ -421,7 +426,6 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         config.savingInProgress = false
         config.popupCreationCallInProgress = false
         console.log("updateElement Api fail", error);
-        document.getElementById('link-notification').innerText = "";
         config.isSavingElement = false
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
     })
@@ -457,7 +461,7 @@ export function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, 
     let noAdditionalFields = (updatedData.metaDataField == undefined && updatedData.sectionType == undefined) ? true : false   
     if (config.tcmStatus) {
         if (elementTypeTCM.indexOf(updatedData.type) !== -1 && showHideType == undefined && (isPopupElement || noAdditionalFields)) {
-            prepareDataForUpdateTcm(updatedData.id, getState, dispatch, versionedData);
+            prepareDataForUpdateTcm(updatedData.id, getState, dispatch, versionedData, updatedData);
         }
     }
     if(versionedData){
@@ -736,7 +740,10 @@ export function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, 
     
 }
 //TCM Update
-function prepareDataForUpdateTcm(updatedDataID, getState, dispatch,versionedData) {
+function prepareDataForUpdateTcm(updatedDataID, getState, dispatch,versionedData,updatedData) {
+    if (updatedData.hasOwnProperty("figuretype") && !allowedFigureTypesForTCM.includes(updatedData.figuretype)) {
+        return false
+    }
     const tcmData = getState().tcmReducer.tcmSnapshot;
     let indexes = []
     tcmData && tcmData.filter(function (element, index) {
@@ -777,13 +784,15 @@ export const updateFigureData = (figureData, elementIndex, elementId, cb) => (di
         index = elementIndex;
     const newParentData = JSON.parse(JSON.stringify(parentData));
     let newBodymatter = newParentData[config.slateManifestURN].contents.bodymatter;
-    // let bodymatter = parentData[config.slateManifestURN].contents.bodymatter;
+    let dataToSend;
     if (typeof (index) == 'number') {
         if (newBodymatter[index].versionUrn == elementId) {
             if (newBodymatter[index].figuretype === "assessment") {
+                dataToSend =  newBodymatter[index].figuredata['elementdata']
                 newBodymatter[index].figuredata['elementdata'] = figureData
                 //element = newBodymatter[index]
             } else {
+                dataToSend = newBodymatter[index].figuredata
                 newBodymatter[index].figuredata = figureData
                 //element = newBodymatter[index]
             }
@@ -795,9 +804,11 @@ export const updateFigureData = (figureData, elementIndex, elementId, cb) => (di
             condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
             if (condition.versionUrn == elementId) {
                 if (newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuretype === "assessment") {
+                    dataToSend = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata['elementdata']
                     newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata['elementdata'] = figureData
                     //element = newBodymatter[index]
                 } else {
+                    dataToSend =  newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata
                     newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata = figureData
                     //element = condition
                 }
@@ -806,15 +817,18 @@ export const updateFigureData = (figureData, elementIndex, elementId, cb) => (di
             if (newBodymatter[indexes[0]].type === "groupedcontent") {              //For Multi-column container
                 condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
                 if (condition.versionUrn == elementId) {
+                    dataToSend = condition.figuredata
                     condition.figuredata = figureData
                 }
             } else {
                 condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
                 if (condition.versionUrn == elementId) {
                     if (newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuretype === "assessment") {
+                        dataToSend = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata['elementdata']
                         newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata['elementdata'] = figureData
                         //element = condition
                     } else {
+                        dataToSend = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata
                         newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata = figureData
                         //element = condition
                     }
@@ -823,6 +837,7 @@ export const updateFigureData = (figureData, elementIndex, elementId, cb) => (di
             }
         }
     }
+    dispatch(storeOldAssetForTCM(dataToSend))
     dispatch({
         type: AUTHORING_ELEMENT_UPDATE,
         payload: {
@@ -1071,6 +1086,15 @@ export const clearElementStatus = () => {
         type: "SET_ELEMENT_STATUS",
         payload: {
             clearEntries: true
+        }
+    }
+}
+
+export const storeOldAssetForTCM = (value) => {
+    return {
+        type: STORE_OLD_ASSET_FOR_TCM,
+        payload: {
+            oldFiguredata: value
         }
     }
 }
