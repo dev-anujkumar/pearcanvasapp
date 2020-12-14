@@ -1789,5 +1789,58 @@ export default {
             }
             ]
         }
+    },
+    "blockCode": {
+        captions: {
+            schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+            text: "",
+            textsemantics: [],
+            mathml: []
+        },
+        comments: false,
+        contentUrn: "urn:pearson:entity:8d4147c6-216a-4e58-b478-41b3b8ec3e84",
+        credits: {
+            schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+            text: "",
+            textsemantics: [],
+            mathml: []
+        },
+        feedback: false,
+        figuredata: {
+            numbered: true,
+            preformattedtext: [],
+            programlanguage: "C++",
+            schema: "http://schemas.pearson.com/wip-authoring/preformatted/1#/definitions/preformatted",
+            startNumber: "1",
+            syntaxhighlighting: true,
+
+        },
+        figuretype: "codelisting",
+        html: {
+            title: "<p><br></p>",
+            subtitle: "<p><br></p>",
+            postertext: "",
+            preformattedtext: "<p></p>",
+            captions: "<p><br></p>",
+            credits: "<p><br></p>"
+        },
+        id: "urn:pearson:work:3ab338ed-ae5a-45aa-a4a3-d8131814459d",
+        schema: "http://schemas.pearson.com/wip-authoring/figure/1",
+        status: "wip",
+        subtitle: {
+            schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+            text: "",
+            textsemantics: [],
+            mathml: []
+        },
+        subtype: "codelisting",
+        title: {
+            schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+            text: "",
+            textsemantics: [],
+            mathml: []
+        },
+        type: "figure",
+        versionUrn: "urn:pearson:work:3ab338ed-ae5a-45aa-a4a3-d8131814459d"
     }
 }
