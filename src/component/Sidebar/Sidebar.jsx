@@ -8,14 +8,15 @@ import { dropdownArrow } from './../../images/ElementButtons/ElementButtons.jsx'
 import { updateElement } from '../ElementContainer/ElementContainer_Actions';
 import { setCurrentModule } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import './../../styles/Sidebar/Sidebar.css';
-import { hasReviewerRole } from '../../constants/utility.js'
+import { hasReviewerRole, getSlateType } from '../../constants/utility.js'
 import config from '../../../src/config/config.js';
 import PopUp from '../PopUp/index.js';
 import { SYNTAX_HIGHLIGHTING } from '../SlateWrapper/SlateWrapperConstants.js';
 import { showBlocker,hideBlocker } from '../../js/toggleLoader';
 import { customEvent } from '../../js/utils.js';
 import { disabledPrimaryOption } from '../../constants/Element_Constants.js';
-import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
+import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants';
+
 
 class Sidebar extends Component {
     constructor(props) {
@@ -441,6 +442,7 @@ class Sidebar extends Component {
 
     
     showModuleName = (e) => {
+        const slateType = getSlateType(this.props.slateLevelData[config.slateManifestURN])
        if(this.props.activeElement.elementId){
         this.props.setCurrentModule(e.currentTarget.checked);
         let els = document.getElementsByClassName('moduleContainer');
@@ -467,7 +469,7 @@ class Sidebar extends Component {
         }
         let data = {
             "elementdata": {
-                level: "chapter",
+                level: slateType === "partintro" ? "part" : "chapter",
                 groupby: groupby
             },
             "metaDataAnchorID": [this.props.activeElement.elementId],
@@ -593,7 +595,8 @@ const mapStateToProps = state => {
         activeElement: state.appStore.activeElement,
         showModule:state.metadataReducer.showModule,
         permissions : state.appStore.permissions,
-        showHideObj:state.appStore.showHideObj
+        showHideObj:state.appStore.showHideObj,
+        slateLevelData: state.appStore.slateLevelData
     };
 };
 

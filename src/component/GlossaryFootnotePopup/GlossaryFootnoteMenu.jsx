@@ -77,7 +77,10 @@ class GlossaryFootnoteMenu extends React.Component {
             tinyMCE.$(tempDiv).find('span#_mce_caret').each(function () {
                 let innerHtml = this.innerHTML;
                 this.outerHTML = innerHtml;
-            })
+            });
+            if(tinyMCE.$(tempDiv).find('span#_mce_caret').length === 0) {
+                break;
+            }
         }
         tinyMCE.$(tempDiv).find('span#_mce_caret').remove();
         tinyMCE.$(tempDiv).find('img').removeAttr('data-mce-style');
