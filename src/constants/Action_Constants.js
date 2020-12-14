@@ -124,18 +124,20 @@ export const SET_SLATE_LENGTH = 'SET_SLATE_LENGTH'
 
 /*--------------- Assessments ----------------*/
 export const GET_USAGE_TYPE = "GET_USAGE_TYPE"
-export const SET_ASSESSMENT_STATUS = "SET_ASSESSMENT_STATUS"
-export const GET_ASSESSMENT_METADATA = "GET_ASSESSMENT_METADATA"
-export const GET_ASSESSMENT_VERSIONS = "GET_ASSESSMENT_VERSIONS"
+export const SET_ASSESSMENT_METADATA = "SET_ASSESSMENT_METADATA"
 export const RESET_ASSESSMENT_STORE = "RESET_ASSESSMENT_STORE"
 export const ELM_PORTAL_API_ERROR = "ELM_PORTAL_ERROR"
 export const ASSESSMENT_CONFIRMATION_POPUP = "ASSESSMENT_CONFIRMATION_POPUP"
 export const UPDATE_ELM_ITEM_ID = "UPDATE_ELM_ITEM_ID"
 export const SAVE_AUTO_UPDATE_ID = 'SAVE_AUTO_UPDATE_ID'
-export const VERSIONING_SLATEMANIFEST = "VERSIONING_SLATEMANIFEST"
-
+export const ELM_ASSESSMENT_EDIT_ID = "ELM_ASSESSMENT_EDIT_ID"
+export const SET_ITEM_UPDATE_EVENT = 'SET_ITEM_UPDATE_EVENT'
+export const ELM_ITEM_EVENT_DATA = 'ELM_ITEM_EVENT_DATA'
 /* --------------- Selection Constants ------------------------*/
 export const SET_SELECTION = 'SET_SELECTION'
 
 /* --------------- Wiris Alt Text ------------------------*/
 export const WIRIS_ALT_TEXT_POPUP = 'WIRIS_ALT_TEXT_POPUP';
+
+/* --------------- TCM Versioning ------------------------*/
+export const VERSIONING_SLATEMANIFEST = "VERSIONING_SLATEMANIFEST"

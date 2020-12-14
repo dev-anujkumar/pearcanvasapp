@@ -19,7 +19,7 @@ import PopUp from '../PopUp';
 import ElmUpdateButton from '../AssessmentSlateCanvas/ElmUpdateButton.jsx'
 import { DEFAULT_ASSESSMENT_SOURCE } from '../../constants/Element_Constants.js';
 import { PUF, LEARNOSITY, ELM_UPDATE_BUTTON, ELM_UPDATE_POPUP_HEAD, ELM_UPDATE_MSG, CITE, TDX } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
-import { checkAssessmentStatus, updateAssessmentVersion, checkEntityUrn, saveAutoUpdateData } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
+import { fetchAssessmentMetadata, updateAssessmentVersion, checkEntityUrn, saveAutoUpdateData, fetchAssessmentVersions } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import config from '../../config/config';
 /*** @description - ElementSingleAssessment is a class based component. It is defined simply to make a skeleton of the assessment-type element .*/
 
@@ -64,8 +64,8 @@ class ElementSingleAssessment extends Component {
     componentDidUpdate() {
         const { assessmentReducer } = this.props;
         const { elementType, assessmentId, assessmentItemId, assessmentTitle } = this.state;
-        if (!config.savingInProgress && !config.isSavingElement && elementType == PUF && (assessmentId && assessmentReducer && assessmentReducer[assessmentId] && assessmentReducer[assessmentId].items)) {
-            const latestItem = assessmentReducer[assessmentId].items.find( itemdata => itemdata.oldItemId == assessmentItemId)
+        if (!config.savingInProgress && !config.isSavingElement && (elementType == PUF || elementType == LEARNOSITY) && (assessmentId && assessmentReducer && assessmentReducer[assessmentId] && assessmentReducer[assessmentId].items)) {
+            const latestItem = assessmentReducer[assessmentId].items.find(itemdata => itemdata.oldItemId == assessmentItemId)
             const latestItemId = latestItem && latestItem.latestItemId
             if ((assessmentReducer[assessmentId].showUpdateStatus == false && (latestItemId && assessmentItemId != latestItemId)) || (assessmentTitle != assessmentReducer[assessmentId].assessmentTitle)) {
                 this.updateElmOnSaveEvent(this.props);
@@ -284,12 +284,13 @@ class ElementSingleAssessment extends Component {
         disableHeader(true);
         this.setState({ assessmentId: pufObj.id, assessmentItemId: pufObj.itemid, assessmentTitle: pufObj.title, assessmentItemTitle: pufObj.itemTitle },
             () => {
-                let itemData = {
+                const itemData = {
                     itemId: pufObj.itemid,
                     parentId: pufObj.id,
-                    type: 'assessment-item'
+                    targetItemid: this.state.assessmentItemId
                 }
-                this.props.checkAssessmentStatus(pufObj.id, 'fromAddElm',"","",itemData);
+                const elmData = { targetId: pufObj.id }
+                this.props.fetchAssessmentMetadata('assessmentItem', 'fromAddElm', elmData, itemData);
                 let oldAssessmentId = this.props.model.figuredata.elementdata.assessmentid;
                 this.saveAssessment(() => {
                     if (oldAssessmentId && oldAssessmentId !== pufObj.id) {
@@ -397,22 +398,21 @@ class ElementSingleAssessment extends Component {
         let itemData = {
             itemId: this.state.assessmentItemId,
             parentId: this.state.assessmentId,
-            type: 'assessment-item'
+            targetItemid: this.state.assessmentItemId
         }
-        await this.props.checkAssessmentStatus(this.props.assessmentReducer[this.state.assessmentId].latestWorkUrn, 'fromUpdate', this.state.assessmentId, "", itemData)
-        const { latestWorkUrn, assessmentTitle, items, prevLatestWorkUrn } = this.props.assessmentReducer[this.state.assessmentId];
-        const { latestVersionClean } = this.props.assessmentReducer[latestWorkUrn];
+        let oldReducerData = this.props.assessmentReducer[this.state.assessmentId];
+        oldReducerData.targetId = this.state.assessmentId;
+        await this.props.fetchAssessmentLatestVersion(oldReducerData.assessmentEntityUrn, 'assessmentUpdate', oldReducerData.createdDate, oldReducerData, itemData);
+        const latestReducerData = this.props.assessmentReducer[this.state.assessmentId]
+        const { latestVersion, secondLatestVersion, items } = latestReducerData;
+        const newVersion = (latestVersion && (latestVersion.status !== 'wip' || latestVersion.latestCleanVersion == false)) ? latestVersion : secondLatestVersion;
         const updatedItem = items && items.find(item => item.oldItemId == this.state.assessmentItemId)
         let updatedElmObj = {
-            id: latestWorkUrn,
+            id: newVersion.id,
             itemid: updatedItem && updatedItem.latestItemId,
-            title: assessmentTitle,
+            title: latestVersion.title,
             itemtitle: updatedItem && updatedItem.latestItemTitle,
             usagetype: this.state.activeAsseessmentUsageType
-        }
-        updatedElmObj.id = latestVersionClean == true ? prevLatestWorkUrn : latestWorkUrn
-        if (latestWorkUrn != this.state.assessmentId) {
-            updatedElmObj.title = this.props.assessmentReducer[latestWorkUrn].assessmentTitle
         }
         this.updatePufAssessment(updatedElmObj, oldWorkUrn);
         disableHeader(false);
@@ -485,7 +485,7 @@ class ElementSingleAssessment extends Component {
                             }
                         </div>
                     </div >
-                    <div className={`single-assessment-elm-update-container ${isElmStatus == true ? "has-update" : ""}`}>{elementType == PUF && this.showElmVersionStatus()}</div>
+                    <div className={`single-assessment-elm-update-container ${isElmStatus == true ? "has-update" : ""}`}>{(elementType == PUF || elementType == LEARNOSITY) && this.showElmVersionStatus()}</div>
 
                 </div>
 
@@ -555,9 +555,10 @@ const mapActionToProps = {
     assessmentSorting: assessmentSorting,
     resetElmStore: resetElmStore,
     checkEntityUrn:checkEntityUrn,
-    checkAssessmentStatus: checkAssessmentStatus,
+    fetchAssessmentMetadata: fetchAssessmentMetadata,
     updateAssessmentVersion: updateAssessmentVersion,
-    saveAutoUpdateData: saveAutoUpdateData
+    saveAutoUpdateData: saveAutoUpdateData,
+    fetchAssessmentVersions: fetchAssessmentVersions
 }
 
 export default connect(

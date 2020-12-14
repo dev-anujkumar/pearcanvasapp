@@ -1,7 +1,9 @@
 import {
     GET_USAGE_TYPE,
-    SET_ASSESSMENT_STATUS,
-    GET_ASSESSMENT_VERSIONS,
+    ELM_ITEM_EVENT_DATA,
+    SET_ITEM_UPDATE_EVENT,
+    ELM_ASSESSMENT_EDIT_ID,
+    SET_ASSESSMENT_METADATA,
     RESET_ASSESSMENT_STORE,
     ASSESSMENT_CONFIRMATION_POPUP,
     UPDATE_ELM_ITEM_ID,
@@ -26,23 +28,13 @@ export default function assessmentReducer(state = INITIAL_STATE, action = INITIA
                 ...state,
                 usageTypeListData: action.payload
             }
-        case SET_ASSESSMENT_STATUS:
+        case SET_ASSESSMENT_METADATA:
             return {
                 ...state,
                 [action.payload.currentWorkUrn]: {
                     ...state[action.payload.currentWorkUrn],
                     ...action.payload.dataForUpdate
                 }
-            }
-        case GET_ASSESSMENT_VERSIONS:
-            return {
-                ...state,
-                [action.payload.currentWorkUrn]: {
-                    ...state[action.payload.currentWorkUrn],
-                    latestWorkUrn: action.payload.latestWorkUrn,
-                    showUpdateStatus: action.payload.showUpdateStatus,
-                    prevLatestWorkUrn: action.payload.prevLatestWorkUrn
-                },
             }
         case ASSESSMENT_CONFIRMATION_POPUP: {
             return {
@@ -71,17 +63,17 @@ export default function assessmentReducer(state = INITIAL_STATE, action = INITIA
                 ...state,
                 saveAutoUpdateData: action.payload
             }
-        case 'ELM_ASSESSMENT_EDIT_ID':
+        case ELM_ASSESSMENT_EDIT_ID:
             return {
                 ...state,
                 currentEditAssessment: action.payload.currentEditAssessment
             }
-        case 'ELM_ITEM_EVENT_DATA':
+        case ELM_ITEM_EVENT_DATA:
             return {
                 ...state,
                 latestItemAssessment: action.payload
             }
-        case 'SET_ITEM_UPDATE_EVENT':
+        case SET_ITEM_UPDATE_EVENT:
             return {
                 ...state,
                 itemUpdateEvent: action.payload
