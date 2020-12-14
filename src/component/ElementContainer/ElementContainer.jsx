@@ -1431,6 +1431,11 @@ class ElementContainer extends Component {
             }
         }
 
+        let noTCM = ['TE', 'ELM', 'Qu', 'Quad', 'SL'];
+        if(noTCM.indexOf(labelText) >= 0) {
+            tcm = false;
+        }
+
         const inContainer = this.props.parentUrn ? true : false
         return (
             <div className={`editor ${searched} ${selection}`} data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>

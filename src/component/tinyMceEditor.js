@@ -828,16 +828,11 @@ export class TinyMceEditor extends Component {
             this.isctrlPlusV = false;
             let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
             let isMediaElement = tinymce.$(tinymce.activeEditor.selection.getStart()).parents('.figureElement,.interactive-element').length;
-            let isContainsMath = false;
-            let isContainsBlankLine = false;
+            let isContainsMath = (activeElement && activeElement.innerHTML.match(/<img/)) ? (activeElement.innerHTML.match(/<img/).input.includes('class="Wirisformula') || activeElement.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula')) : false;
+            let isContainsBlankLine = (activeElement && activeElement.innerHTML.match(/<span/)) ? activeElement.innerHTML.match(/<span/).input.includes('class="answerLineContent') : false;
             if(this.props.element && this.props.element.type==="element-blockfeature" && e.target &&  e.target.className==="blockquoteTextCredit"){
                 setFormattingToolbar('disableTinymceToolbar')
             }
-            if (activeElement) {
-                isContainsMath = activeElement.innerHTML.match(/<img/) ? (activeElement.innerHTML.match(/<img/).input.includes('class="Wirisformula') || activeElement.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula')) : false;
-                isContainsBlankLine = activeElement.innerHTML.match(/<span/) ? activeElement.innerHTML.match(/<span/).input.includes('class="answerLineContent') : false;
-            }
-
             if (activeElement) {
                 let lastCont = this.lastContent;
                 this.lastContent = activeElement.innerHTML;
@@ -865,9 +860,7 @@ export class TinyMceEditor extends Component {
                 else if (activeElement.innerText.trim().length || activeElement.querySelectorAll('ol').length || activeElement.querySelectorAll('ul').length || isContainsMath || isContainsBlankLine) {
                     activeElement.classList.remove('place-holder')
                 }
-                else if(isContainsBlankLine) {
-                    activeElement.classList.remove('place-holder')
-                } else {
+                else {
                     activeElement.classList.add('place-holder')
                 }
                 this.lastContent = activeElement.innerHTML;
@@ -3278,7 +3271,19 @@ export class TinyMceEditor extends Component {
                 ctModel = removeBOM(ctModel)
 
                 return (
-                    <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onKeyDown={this.normalKeyDownHandler} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: ctModel }} onChange={this.handlePlaceholder}></div>
+                    <div ref={this.editorRef} 
+                        id={id}
+                        data-id={this.props.currentElement ? this.props.currentElement.id : undefined}
+                        onBlur={this.handleBlur} 
+                        onKeyDown={this.normalKeyDownHandler} 
+                        onClick={this.handleClick} 
+                        className={classes} 
+                        placeholder={this.props.placeholder} 
+                        suppressContentEditableWarning={true} 
+                        contentEditable={!lockCondition} 
+                        dangerouslySetInnerHTML={{ __html: ctModel }}
+                        onChange={this.handlePlaceholder}
+                    ></div>
                 )
             default:
                 let defModel = this.props.model && this.props.model.text ? this.props.model.text : (typeof (this.props.model) === 'string' ? this.props.model : '<p class="paragraphNumeroUno"><br/></p>')
