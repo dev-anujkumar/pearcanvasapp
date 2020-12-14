@@ -15,13 +15,12 @@ import {
     FETCH_SLATE_DATA,
     SET_PARENT_NODE,
     ERROR_POPUP,
-    GET_TCM_RESOURCES,
     PAGE_NUMBER_LOADER,
     WIRIS_ALT_TEXT_POPUP
 
 } from '../../constants/Action_Constants';
 
-import { sendDataToIframe, replaceWirisClassAndAttr } from '../../constants/utility.js';
+import { sendDataToIframe, replaceWirisClassAndAttr, getSlateType } from '../../constants/utility.js';
 import { HideLoader, ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
@@ -30,7 +29,7 @@ import { onPasteSuccess, prepareDataForTcmCreate } from "./slateWrapperAction_he
 
 import { SET_SELECTION } from './../../constants/Action_Constants.js';
 import tinymce from 'tinymce'
-
+import SLATE_CONSTANTS  from '../../component/ElementSaprator/ElementSepratorConstants';
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
 };
@@ -40,19 +39,20 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
     let  popupSlateData = getState().appStore.popupSlateData
     localStorage.setItem('newElement', 1);
     let slateEntityUrn = parentUrn && parentUrn.contentUrn || popupSlateData && popupSlateData.contentUrn || poetryData && poetryData.contentUrn || config.slateEntityURN
-
     let _requestData = {
         "projectUrn": config.projectUrn,
         "slateEntityUrn":slateEntityUrn,
         "index": outerAsideIndex ? outerAsideIndex : index,
         "type": type
     };
-
     if (type == "LO") {
         _requestData.loref = loref ? loref : ""
     } 
     else if (type == 'ELEMENT_CITATION') {
         _requestData.parentType = "citations"
+    }
+    else if (type && type === "LO_LIST" && config.parentLabel && config.slateType && config.parentLabel === 'part' && config.slateType === SLATE_CONSTANTS.CONTAINER_INTRO) {
+        _requestData.isPart = true
     }
     else if (parentUrn && parentUrn.elementType === 'group') {
         _requestData["parentType"] = "groupedcontent"
@@ -68,9 +68,9 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
             }
         }
     ).then(async createdElemData => {
-        sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         const parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
+        sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         let currentSlateData = newParentData[config.slateManifestURN];
 
         /** [PCAT-8289] ---------------------------- TCM Snapshot Data handling ------------------------------*/
@@ -654,22 +654,69 @@ export const pasteElement = (params) => async (dispatch, getState) => {
         } = params
         config.currentInsertedIndex = index;
         localStorage.setItem('newElement', 1);
+
+        let cutIndex = index;
+        if(selection.sourceSlateEntityUrn === config.slateEntityURN &&
+            cutIndex > selection.sourceElementIndex && selection.operationType === 'cut') {
+            cutIndex -= 1;
+        }
+
+        let elmHtml = ('html' in selection.element) ? selection.element.html : {};
+        let elmType = ['figure'];
+        let elmSubtype = ['assessment'];
+        if(elmType.indexOf(selection.element.type) >= 0 && 
+            'figuretype' in selection.element && elmSubtype.indexOf(selection.element.type) >= 0) {
+            if(!('html' in selection.element)) {
+                elmHtml = { "title": selection.element.title.text || "" }
+            }
+        }
         
-    
         let _requestData = {
             "content": [{
                 "type": selection.element.type,
-                "index": index,
+                "index": cutIndex,
                 "inputType": selection.inputType,
                 "inputSubType": selection.inputSubType,
                 "schema": selection.element.schema,
-                "html": selection.element.html,
-                "slateVersionUrn": config.slateManifestURN
+                "html": elmHtml,
+                "slateVersionUrn": selection.sourceSlateManifestUrn,
+                "id": selection.element.id,
+                "elementParentEntityUrn": selection.sourceSlateEntityUrn,
+                "versionUrn": selection.element.versionUrn,
+                "contentUrn": selection.element.contentUrn,
+                "destinationSlateUrn": config.slateEntityURN
             }]
         };
+
+        if(selection.operationType.toUpperCase() === "COPY") {
+            delete _requestData.content[0].slateVersionUrn;
+            delete _requestData.content[0].id;
+            delete _requestData.content[0].versionUrn;
+            delete _requestData.content[0].contentUrn;
+        }
+
+        if(selection.element.type === "figure") {
+            _requestData = {
+                "content": [{
+                    ..._requestData.content[0],
+                    "figuredata": selection.element.figuredata
+                }]
+            }
+        }
+
+        if('manifestationUrn' in selection.element) {
+            _requestData = {
+                "content": [{
+                    ..._requestData.content[0],
+                    "manifestationUrn": selection.element.manifestationUrn
+                }]
+            }
+        }
+
         try {
+            let url = `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/slate/${config.slateEntityURN}/element/paste?type=${selection.operationType.toUpperCase()}`
             const createdElemData = await axios.post(
-                `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/slate/${config.slateEntityURN}/element/paste`,
+                url,
                 JSON.stringify(_requestData),
                 {
                     headers: {
@@ -683,6 +730,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                 const pasteSuccessArgs = {
                     responseData: responseData[0],
                     index,
+                    cutIndex,
                     dispatch,
                     getState
                 };

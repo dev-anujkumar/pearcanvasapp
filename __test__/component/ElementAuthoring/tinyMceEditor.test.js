@@ -4444,7 +4444,8 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                     classList: {
                         contains: () => { },
                         remove: () => { }
-                    }
+                    },
+                    getAttribute: () => "urn:pearson:work:232hk232-213123fsdf"
                 },
                 type: 'click',
                 target: {
@@ -4594,7 +4595,8 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                     classList: {
                         contains: () => { },
                         remove: () => { }
-                    }
+                    },
+                    getAttribute: () => "urn:pearson:work:232hk232-213123fsdf"
                 },
                 type: 'click',
                 target: {
@@ -4747,7 +4749,8 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                     classList: {
                         contains: () => { },
                         remove: () => { }
-                    }
+                    },
+                    getAttribute: () => "urn:pearson:work:232hk232-213123fsdf"
                 },
                 type: 'click',
                 target: {
@@ -4903,7 +4906,8 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                     classList: {
                         contains: () => { },
                         remove: () => { }
-                    }
+                    },
+                    getAttribute: () => "urn:pearson:work:232hk232-213123fsdf"
                 },
                 type: 'click',
                 target: {
