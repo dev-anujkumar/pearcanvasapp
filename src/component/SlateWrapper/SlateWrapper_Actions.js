@@ -647,6 +647,14 @@ export const pageData = (pageNumberData) => (dispatch, getState) => {
 
 export const pasteElement = (params) => async (dispatch, getState) => {
     let selection = getState().selectionReducer.selection || {};
+    let slateData = getState().appStore.slateLevelData || {};
+    let status = "";
+
+    if('status' in selection.element) {
+        status = selection.element.status;
+    } else if(Object.values(slateData).length > 0 && 'status' in Object.values(slateData)[0]) {
+        status = Object.values(slateData)[0].status;
+    }
 
     if(Object.keys(selection).length > 0 && 'element' in selection) {
         const {
@@ -712,6 +720,15 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                 }]
             }
         }
+
+        if(status !== "") {
+            _requestData = {
+                "content": [{
+                    ..._requestData.content[0],
+                    "status": status
+                }]
+            }
+        } 
 
         try {
             let url = `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/slate/${config.slateEntityURN}/element/paste?type=${selection.operationType.toUpperCase()}`
