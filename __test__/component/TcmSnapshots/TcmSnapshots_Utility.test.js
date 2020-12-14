@@ -594,7 +594,18 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
             }
             const snapshotsData = {
                 wipData: {
-                    id: "urn:pearson:work:3525235-324323-4432sfe31"
+                    id: "urn:pearson:work:3525235-324323-4432sfe31",
+                    popupdata: {
+                        "formatted-title": {
+                            "id": "urn:pearson:work:123"
+                        },
+                        bodymatter: [
+                            {
+                                id: "urn:pearson:work:123",
+                                type: "element-authoredtext"
+                            }
+                        ]
+                    }
                 },
                 slateManifestVersioning : {},
                 popupInContainer: null,
@@ -644,5 +655,120 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
             tcmSnapshotUtility.tcmSnapshotsInPopupElement(snapshotsData, {}, containerElement, 'formattedTitle', false, {});
             expect(spyFunction).toHaveBeenCalledWith(snapshotsData, {}, containerElement, 'formattedTitle', false, {});
         })
+        it('tcmSnapshotsInPopupElement - posterText element', () => {
+            config.isPopupSlate = true;
+            const actionStatus = {}
+            const snapshotsData = {
+                wipData: {
+                    id: "urn:pearson:work:3525235-324323-4432sfe31",
+                    popupdata: {
+                        "formatted-title": {
+                            "id": "urn:pearson:work:123"
+                        },
+                        bodymatter: [
+                            {
+                                id: "urn:pearson:work:123",
+                                type: "element-authoredtext"
+                            }
+                        ]
+                    }
+                },
+                slateManifestVersioning : {},
+                popupInContainer: null,
+                actionStatus,
+                tag: { childTag: 'P' },
+                elementId: { parentId : "" }
+            }
+            const containerElement = {
+                // metaDataField: "formattedTitle",
+                parentElement: {
+                    id: "urn:pearson:work:112231-sf3412412-141fwf3412e2"
+                },
+                sectionType: "postertextobject"
+            }
+            config.isPopupSlate=false;
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'tcmSnapshotsInPopupElement');
+            tcmSnapshotUtility.tcmSnapshotsInPopupElement(snapshotsData, actionStatus, containerElement, 'popup', false, {});
+            expect(spyFunction).toHaveBeenCalledWith(snapshotsData, actionStatus, containerElement, 'popup', false, {});
+        })
+         
+        it('tcmSnapshotsElementsInPopupInContainer', async () => {
+            config.isPopupSlate = true;
+            const actionStatus = {
+                action:"delete",
+                status:"accepted",
+                fromWhere:"delete"
+            }
+            const snapshotsData = {
+                wipData: {
+                    id: "urn:pearson:work:3525235-324323-4432sfe31",
+                    popupdata: {
+                        "formatted-title": {
+                            "id": "urn:pearson:work:123"
+                        },
+                        bodymatter: [
+                            {
+                                id: "urn:pearson:work:123",
+                                type: "element-authoredtext"
+                            }
+                        ]
+                    }
+                },
+                slateManifestVersioning : {},
+                popupInContainer: null,
+                actionStatus,
+                tag: { childTag: 'P' },
+                elementId: { parentId : "" }
+            }
+            const containerElement = {
+                parentElement: {
+                    id: "urn:pearson:work:112231-sf3412412-141fwf3412e2"
+                },
+                sectionType: "postertextobject"
+            }
+            config.isPopupSlate=false;
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'tcmSnapshotsElementsInPopupInContainer');
+            tcmSnapshotUtility.tcmSnapshotsElementsInPopupInContainer(snapshotsData, actionStatus, containerElement, 'popup', false, {});
+            expect(spyFunction).toHaveBeenCalledWith(snapshotsData, actionStatus, containerElement, 'popup', false, {});
+        })
+        it('prepareAndSendTcmData', () => {
+            config.isPopupSlate = true;
+            const defaultKeys = {
+                action:"create",
+                status:"accepted",
+                fromWhere:"delete"
+            }
+            const wipData = {
+                id: "urn:pearson:work:3525235-324323-4432sfe31",
+                popupdata: {
+                    "formatted-title": {
+                        "id": "urn:pearson:work:123"
+                    },
+                    bodymatter: [
+                        {
+                            id: "urn:pearson:work:123",
+                            type: "element-authoredtext"
+                        }
+                    ]
+                }
+            }
+            const elementDetails = {
+                elementType: "LB",
+                elementUrn: "",
+                actionStatus: defaultKeys,
+            }
+            /* const containerElement = {
+                parentElement: {
+                    id: "urn:pearson:work:112231-sf3412412-141fwf3412e2"
+                },
+                sectionType: "postertextobject"
+            } */
+            config.isPopupSlate=false;
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'prepareAndSendTcmData');
+            
+            tcmSnapshotUtility.prepareAndSendTcmData(elementDetails, wipData, defaultKeys, defaultKeys, 0, "wip");
+            expect(spyFunction).toHaveBeenCalledWith(elementDetails, wipData, defaultKeys, defaultKeys, 0, "wip");
+        })
+         
     })
 })
