@@ -287,10 +287,10 @@ class ElementSingleAssessment extends Component {
                 const itemData = {
                     itemId: pufObj.itemid,
                     parentId: pufObj.id,
-                    targetItemid: this.state.assessmentItemId
+                    targetItemid: pufObj.itemid
                 }
                 const elmData = { targetId: pufObj.id }
-                this.props.fetchAssessmentMetadata('assessmentItem', 'fromAddElm', elmData, itemData);
+                this.props.fetchAssessmentMetadata('assessment', 'fromAddElm', elmData, itemData);
                 let oldAssessmentId = this.props.model.figuredata.elementdata.assessmentid;
                 this.saveAssessment(() => {
                     if (oldAssessmentId && oldAssessmentId !== pufObj.id) {

@@ -21,6 +21,7 @@ const {
     assessmentErrorHandler,
     assessmentVersionHandler,
     assessmentMetadataHandler,
+    assessmentEntityUrnHandler,
     assessmentItemVersionHandler,
     assessmentItemMetadataHandler,
     assessmentVersionUpdateHandler
@@ -46,7 +47,7 @@ export const fetchUsageTypeData = (entityType) => (dispatch) => {
  * This action creator is used to fetch the assessment metadata including status
  */
 export const fetchAssessmentMetadata = (type, calledFrom, assessmentData, assessmentItemData) => (dispatch) => {
-    const workUrn = type == 'assessment' ? assessmentData.targetId : assessmentItemData.targetItemid;
+    const workUrn = (type == 'assessment' || type == 'assessmentArray') ? assessmentData.targetId : assessmentItemData.targetItemid;
     const url = `${config.ASSESSMENT_ENDPOINT}assessment/v2/${workUrn}`;
     return axios.get(url, {
         headers: {
@@ -63,13 +64,16 @@ export const fetchAssessmentMetadata = (type, calledFrom, assessmentData, assess
                 case 'assessmentItem':
                     assessmentItemMetadataHandler(res.data, calledFrom, assessmentData, assessmentItemData, dispatch);
                     break;
+                case 'assessmentArray':
+                    return assessmentEntityUrnHandler(res.data);
                 default:
                     assessmentErrorHandler(type,':Invalid Type of Assessment for Metadata');
                     break;
             }
         }
     }).catch((error) => {
-        assessmentErrorHandler(`${type}: Assessment-Metadata API Error:${error}`);
+        const errorMsg = type == 'assessmentArray' ? assessmentData.errorMessage : `${type}: Assessment-Metadata API Error:`
+        assessmentErrorHandler(`${errorMsg}:${error}`);
     })
 }
 /**
@@ -174,25 +178,18 @@ export const resetAssessmentStore = () => {
     }
 }
 
+/**
+ * This Function is used to call updateAssessmentVersion in case of same assessment being updated 
+ * @param assessmentID array of old & new AssessmentIds
+ */
 export const checkEntityUrn = (assessmentID) => async (dispatch) => {
     let workIds = []
-    await Promise.all(assessmentID && assessmentID.map((item) => {
-        let url = `${config.ASSESSMENT_ENDPOINT}assessment/v2/${item}`;
-        return axios.get(url, {
-            headers: {
-                "Content-Type": "application/json",
-                "ApiKey": config.STRUCTURE_APIKEY,
-                "PearsonSSOSession": config.ssoToken
-            }
-        }).then((res) => {
-            if (res && res.data && res.data.status) {
-                workIds.push(res.data.entityUrn)
-            }
-        }).catch(() => {
-            console.error("error in finding entityurn")
-        })
+    await Promise.all(assessmentID && assessmentID.map(async (item) => {
+        const errorMsg = "error in finding entityurn";
+        let entityUrn = await dispatch(fetchAssessmentMetadata('assessmentArray', 'fromCheckEntityUrn', { targetId: item, errorMessage: errorMsg }, {}))
+        entityUrn && workIds.push(entityUrn);
     }))
-    if (workIds && workIds.length > 0 && workIds[0] === workIds[1]) {
+    if (workIds.length > 0 && workIds[0] === workIds[1]) {
         dispatch(updateAssessmentVersion(assessmentID[0], assessmentID[1]))
     }
 }

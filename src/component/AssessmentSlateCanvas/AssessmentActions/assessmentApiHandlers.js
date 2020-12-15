@@ -168,7 +168,7 @@ const AssessmentAPIHandlers = {
     /** @description This function handles assessment-versions API response for Assessment-Item */
     assessmentItemVersionHandler: (responseData, args, dispatch) => {
         const {
-            assessmentItemData
+            assessmentData, assessmentItemData
         } = args;
         const latestIndex = AssessmentAPIHandlers.getLatestIndex(responseData, 'createdDate');
         const latestWorkURN = responseData[latestIndex].versionUrn; /* Latest WorkURN */
@@ -192,7 +192,7 @@ const AssessmentAPIHandlers = {
             AssessmentAPIHandlers.dispatchUpdatedItemId(dataToSend.currentWorkUrn, dataToSend.updatedItem, dispatch)
         }
         else {
-            dispatch(fetchAssessmentMetadata('assessmentItem', 'fromItemUpdate', {}, dataToSend));
+            dispatch(fetchAssessmentMetadata('assessmentItem', 'fromItemUpdate', assessmentData, dataToSend));
         }
     },
     /** @description This function handles assessment-metadata API response for Assessment-Item */
@@ -203,7 +203,7 @@ const AssessmentAPIHandlers = {
                 ...assessmentItemData.updatedItem,
                 latestItemTitle: itemTitle
             }
-            AssessmentAPIHandlers.dispatchUpdatedItemId(assessmentData.currentWorkUrn, updatedItem, dispatch)
+            AssessmentAPIHandlers.dispatchUpdatedItemId(assessmentItemData.currentWorkUrn, updatedItem, dispatch)
         } else {
             const itemData = {
                 oldItemId: assessmentItemData.itemId,
@@ -247,6 +247,12 @@ const AssessmentAPIHandlers = {
             latestVersion: latestVersion
         }
         AssessmentAPIHandlers.dispatchAssessmentMetadata(assessmentData.activeWorkUrn, dataToDispatch, dispatch);
+    },
+    /** @description This function handles assessment-entity-urn for Auto-update */
+    assessmentEntityUrnHandler: (responseData) => {
+        if (responseData && responseData.status) {
+            return responseData.entityUrn;
+        }
     },
     /** @description This function dispatches latest metadata for Assessment to store */
     dispatchAssessmentMetadata: (currentWorkUrn, dataForUpdate, dispatch) => {
