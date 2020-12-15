@@ -2,7 +2,7 @@
 import { customEvent } from '../../js/utils';
 import { tcmSnapshotsForUpdate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 import { sendDataToIframe } from '../../constants/utility.js';
-import { updateAssessmentVersion, checkEntityUrn } from '../../component/AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
+import { updateAssessmentVersion } from '../../component/AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 //Constants
 import {
     AUTHORING_ELEMENT_UPDATE,
@@ -374,7 +374,6 @@ export const processAndStoreUpdatedResponse = async (params) => {
     const currentSlateData = currentParentData[config.slateManifestURN];
     let { glossaryFootnoteValue, glossaryFootNoteCurrentValue, elementIndex: elementIndexFootnote } = getState().glossaryFootnoteReducer
     const { saveAutoUpdateData } = getState().assessmentReducer;
-    
     if (saveAutoUpdateData && saveAutoUpdateData.oldAssessmentId && saveAutoUpdateData.newAssessmentId) {
         dispatch(updateAssessmentVersion(saveAutoUpdateData.oldAssessmentId, saveAutoUpdateData.newAssessmentId));
     }
