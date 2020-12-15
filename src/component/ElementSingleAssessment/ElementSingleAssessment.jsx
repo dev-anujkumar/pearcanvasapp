@@ -473,7 +473,7 @@ class ElementSingleAssessment extends Component {
                 <div className="singleAssessment_Dropdown_Container">
                     <div className="single-assessment-usagetype-container">
                         <div className="singleAssessment_Dropdown_SelectLabel">Select usage type<span className="required">*</span></div>
-                        <div className={`singleAssessment_Dropdown_activeDropdown ${elementType == PUF ? 'isElmUpdate' : ""}`} onClick={!hasReviewerRole() && this.toggleUsageTypeDropdown} >
+                        <div className={`singleAssessment_Dropdown_activeDropdown ${(elementType == PUF || elementType == LEARNOSITY) ? 'isElmUpdate' : ""}`} onClick={!hasReviewerRole() && this.toggleUsageTypeDropdown} >
                             <span className="singleAssessment_Dropdown_currentLabel">{activeAsseessmentUsageType ? activeAsseessmentUsageType : 'Select'}</span>
                             <span className="singleAssessment_Dropdown_arrow">{dropdownArrow}</span>
                             {

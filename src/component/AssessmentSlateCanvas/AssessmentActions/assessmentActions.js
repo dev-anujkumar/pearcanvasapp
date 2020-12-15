@@ -59,7 +59,7 @@ export const fetchAssessmentMetadata = (type, calledFrom, assessmentData, assess
         if (res && res.data && res.data.status) {
             switch (type) {
                 case 'assessment':
-                    assessmentMetadataHandler(res.data, calledFrom, assessmentData, assessmentItemData, dispatch);
+                    await assessmentMetadataHandler(res.data, calledFrom, assessmentData, assessmentItemData, dispatch);
                     break;
                 case 'assessmentItem':
                     assessmentItemMetadataHandler(res.data, calledFrom, assessmentData, assessmentItemData, dispatch);

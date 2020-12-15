@@ -136,7 +136,7 @@ const AssessmentAPIHandlers = {
             AssessmentAPIHandlers.dispatchAssessmentMetadata(responseData.versionUrn, dataForUpdate, dispatch);
         }
         else if (assessmentStatus == 'final') { /* APPROVED | UPDATE */
-            dispatch(fetchAssessmentVersions(responseData.entityUrn, 'assessment', responseData.dateCreated, dataForUpdate, {}))
+            await dispatch(fetchAssessmentVersions(responseData.entityUrn, 'assessment', responseData.dateCreated, dataForUpdate, {}))
         }
         if (assessmentItemData && assessmentItemData.targetItemid) { //dispatch item metadata api
             await dispatch(fetchAssessmentMetadata('assessmentItem', 'fromGetItem', dataForUpdate, assessmentItemData))
