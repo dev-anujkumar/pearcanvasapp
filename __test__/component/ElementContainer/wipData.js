@@ -1712,9 +1712,29 @@ text: "mathml text"
         "type": "popup",
         "versionUrn": "urn:pearson:manifest:5d84b194-a509-4993-bd33-303fb3790de4"
     },
+    "popup2":{
+        "contentUrn": "urn:pearson:entity:2c5baa8a-e6c9-4669-8206-7ff30ce20878",
+        "id": "urn:pearson:manifest:5d84b194-a509-4993-bd33-303fb3790de4",
+        "index": 0,
+        "popupdata": {
+            "bodymatter": []
+        },
+        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/popup",
+        "type": "popup",
+        "versionUrn": "urn:pearson:manifest:5d84b194-a509-4993-bd33-303fb3790de4"
+    },
     "citationgroup": {
         "contentUrn": "urn:pearson:entity:d1b0bca1-154c-44e1-bd6f-2e4013bc6a47",
         "contents": { "bodymatter": [], "formatted-title": [] },
+        "id": "urn:pearson:manifest:ccb65434-81a6-4658-a224-e109939119d0",
+        "schema": "http://schemas.pearson.com/wip-authoring/citations/1",
+        "type": "citations",
+        "versionUrn": "urn:pearson:manifest:ccb65434-81a6-4658-a224-e109939119d0"
+
+    },
+    "citationgroup2": {
+        "contentUrn": "urn:pearson:entity:d1b0bca1-154c-44e1-bd6f-2e4013bc6a47",
+        "contents": { "bodymatter": [] },
         "id": "urn:pearson:manifest:ccb65434-81a6-4658-a224-e109939119d0",
         "schema": "http://schemas.pearson.com/wip-authoring/citations/1",
         "type": "citations",

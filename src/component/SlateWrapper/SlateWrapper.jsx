@@ -26,7 +26,7 @@ import PageNumberElement from './PageNumberElement.jsx';
 import '../../styles/SlateWrapper/style.css';
 import PopUp from '../PopUp';
 import Toast from '../Toast';
-import { hideBlocker, showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';
+import { hideBlocker, showTocBlocker, hideTocBlocker } from '../../js/toggleLoader';
 import { guid } from '../../constants/utility.js';
 import { fetchAudioNarrationForContainer, deleteAudioNarrationForContainer, showAudioRemovePopup, showAudioSplitPopup , showWrongAudioPopup } from '../AudioNarration/AudioNarration_Actions'
 import { setSlateLock, releaseSlateLock, setLockPeriodFlag, getSlateLockStatus } from '../CanvasWrapper/SlateLock_Actions'

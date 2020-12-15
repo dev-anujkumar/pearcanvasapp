@@ -20,7 +20,7 @@ import {
 
 } from '../../constants/Action_Constants';
 
-import { sendDataToIframe, replaceWirisClassAndAttr, getSlateType } from '../../constants/utility.js';
+import { sendDataToIframe, replaceWirisClassAndAttr } from '../../constants/utility.js';
 import { HideLoader, ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
