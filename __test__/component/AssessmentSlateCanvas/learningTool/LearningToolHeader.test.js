@@ -19,7 +19,7 @@ describe('Testing Learning Tool LearningToolHeader component', () => {
                 setlearningAppType: jest.fn(),
                 learningSystems: learningSystemList,
                 setlearningToolDiscipline: jest.fn(),
-                apiResponseForDis: disciplines,
+                apiResponseForDis: disciplines.options,
                 showDisFilterValues: true
             },
             learningToolSearchAction: jest.fn()
@@ -62,7 +62,7 @@ describe('Testing Learning Tool LearningToolHeader component', () => {
                 setlearningAppType: jest.fn(),
                 learningSystems: learningSystemList,
                 setlearningToolDiscipline: jest.fn(),
-                apiResponseForDis: disciplines,
+                apiResponseForDis: disciplines.options,
                 showDisFilterValues: true
             },
             learningToolSearchAction: jest.fn()
@@ -100,7 +100,7 @@ describe('Testing Learning Tool LearningToolHeader component', () => {
                 setlearningAppType: jest.fn(),
                 learningSystems: learningSystemList,
                 setlearningToolDiscipline: jest.fn(),
-                apiResponseForDis: disciplines,
+                apiResponseForDis: disciplines.options,
                 showDisFilterValues: true
             },
             learningToolSearchAction: jest.fn()

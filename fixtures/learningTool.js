@@ -339,3 +339,7 @@ export const learningSystemList = {
         label: "Writing Solutions"
     }
 }
+
+export const learningSystemMenu = ["Accounting Sims", "Criminal Justice Sims", "Digital Interactives", "Economic Sims", "HelpDesk", "Hospitality Sims", "Information Technology Sims", "Personal Finance", "Political Science Sims", "Qualitative Business Sims", "Sound Bytes", "Business Media", "Video Library", "MyVirtualChild", "MyVirtualLife", "Surveys and Inventories", "Adaptive Pathways", "Guided Data Explorations", "Shared Media", "Media Quiz", "Writing Solutions"]
+
+export const disciplinesList = ["art", "biologyandmicrobiology", "mathematics", "psychology", "anatomyandphysiology", "anthropology", "business", "businessstatistics", "chemistry", "communication-film-theatre", "communicationsciencesanddisorders", "computerscience", "counseling", "criminaljustice", "culinary-hospitality-travel-and-tourism", "deaf-studies-and-deaf-education", "economics", "education", "ems-and-fire-science-(brady)", "engineering", "english", "environmentalscience", "fashion-and-interior-design", "geographyandatmosphericsciences", "geologyandoceanography", "health-professions", "healthandkinesiology", "history", "informationtechnology", "interdisciplinarystudies", "legal-studies-and-paralegal", "music", "nursing", "nutrition", "philosophy", "physicsandastronomy", "politicalscience", "religion", "socialwork-familytherapy-humanservices", "sociology", "statistics", "student-success-and-career-development", "trades-and-technology", "worldlanguages"]
