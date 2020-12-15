@@ -71,6 +71,9 @@ export class ElementMetaDataAnchor extends Component {
     let jsx;
     if (loData && loData != "" && loData.label && loData.label.en) {
       jsx = loData.label.en;
+      const regex = /<math.*?data-src=\'(.*?)\'.*?<\/math>/g;
+      jsx = jsx.replace(regex, "<img src='$1'></img>")
+      console.log("jsx>>>>", jsx)
       if (document.getElementsByClassName('learningObjectiveinnerText').length > 0 && (loData.id != "" || loData.loUrn != "")) {
         let element = document.getElementsByClassName('learningObjectiveinnerText');
         element = Array.from(element);
