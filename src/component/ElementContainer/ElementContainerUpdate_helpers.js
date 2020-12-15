@@ -375,11 +375,7 @@ export const processAndStoreUpdatedResponse = async (params) => {
     let { glossaryFootnoteValue, glossaryFootNoteCurrentValue, elementIndex: elementIndexFootnote } = getState().glossaryFootnoteReducer
     const { saveAutoUpdateData } = getState().assessmentReducer;
     
-    if (saveAutoUpdateData && saveAutoUpdateData.oldAssessmentId && saveAutoUpdateData.newAssessmentId && saveAutoUpdateData.type=== "citetdx") {
-    let data = [saveAutoUpdateData.oldAssessmentId, saveAutoUpdateData.newAssessmentId]
-    dispatch(checkEntityUrn(data))
-    }
-    else if (saveAutoUpdateData && saveAutoUpdateData.oldAssessmentId && saveAutoUpdateData.newAssessmentId) {
+    if (saveAutoUpdateData && saveAutoUpdateData.oldAssessmentId && saveAutoUpdateData.newAssessmentId) {
         dispatch(updateAssessmentVersion(saveAutoUpdateData.oldAssessmentId, saveAutoUpdateData.newAssessmentId));
     }
     if(responseData.id !== updatedData.id){

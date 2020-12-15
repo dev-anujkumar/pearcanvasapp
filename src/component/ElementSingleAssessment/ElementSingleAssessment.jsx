@@ -228,18 +228,18 @@ class ElementSingleAssessment extends Component {
                 parentPageNo
             })
         }
-        else{
+        else {
             this.setState({ assessmentId: citeTdxObj.id, assessmentItemId: citeTdxObj.singleAssessmentID.versionUrn, assessmentTitle: specialCharacterDecode(citeTdxObj.title), assessmentItemTitle: specialCharacterDecode(citeTdxObj.singleAssessmentID.name) },
                 () => {
                     let oldAssessmentId = this.props.model.figuredata.elementdata.assessmentid
                     this.saveAssessment(() => {
                         if (oldAssessmentId && oldAssessmentId !== citeTdxObj.id) {
-                            this.props.saveAutoUpdateData(oldAssessmentId, citeTdxObj.id, "citetdx")
+                            let data = [oldAssessmentId, citeTdxObj.id]
+                            this.props.checkEntityUrn(data)
                         }
                     });
                 })
         }
-       
     }
 
     /***
