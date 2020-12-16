@@ -24,8 +24,10 @@ export const onPasteSuccess = async (params) => {
     replaceWirisClassAndAttr(activeEditorId)
     // Store Update on Paste Element
     let operationType = '';
+    let elmSelection = {};
     if (Object.keys(getState().selectionReducer.selection).length > 0 && 'operationType' in getState().selectionReducer.selection) {
-        operationType = getState().selectionReducer.selection.operationType;
+        elmSelection = getState().selectionReducer.selection;
+        operationType = elmSelection.operationType;
     }
 
     // let elmExist = await checkElementExistence(getState().selectionReducer.selection.sourceSlateEntityUrn, getState().selectionReducer.selection.deleteElm.id);
@@ -81,7 +83,7 @@ export const onPasteSuccess = async (params) => {
     const currentSlateData = newParentData[config.slateManifestURN];
 
     /** [PCAT-8289] ---------------------------- TCM Snapshot Data handling ------------------------------*/
-    if (slateWrapperConstants.elementType.indexOf("TEXT") !== -1 && getState().selectionReducer.selection.sourceSlateEntityUrn !== config.slateEntityURN) {
+    if (slateWrapperConstants.elementType.indexOf("TEXT") !== -1 && 'sourceSlateEntityUrn' in elmSelection && elmSelection.sourceSlateEntityUrn !== config.slateEntityURN) {
         const snapArgs = {
             newParentData,
             currentSlateData,
@@ -107,7 +109,7 @@ export const onPasteSuccess = async (params) => {
     newParentData[config.slateManifestURN].contents.bodymatter.splice(cutIndex, 0, responseData);
 
     if (config.tcmStatus) {
-        if (slateWrapperConstants.elementType.indexOf("TEXT") !== -1 && getState().selectionReducer.selection.sourceSlateEntityUrn !== config.slateEntityURN) {
+        if (slateWrapperConstants.elementType.indexOf("TEXT") !== -1 && 'sourceSlateEntityUrn' in elmSelection && elmSelection.sourceSlateEntityUrn !== config.slateEntityURN) {
             await prepareDataForTcmCreate("TEXT", responseData, getState, dispatch);
         }
     }
