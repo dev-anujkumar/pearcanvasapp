@@ -8,8 +8,9 @@ import * as slateWrapperConstants from "./SlateWrapperConstants"
 import { sendDataToIframe, replaceWirisClassAndAttr } from '../../constants/utility.js';
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 import { SET_SELECTION } from './../../constants/Action_Constants.js';
-import { deleteFromStore } from './../ElementContainer/ElementContainerDelete_helpers.js';
+import { deleteFromStore, prepareTCMSnapshotsForDelete } from './../ElementContainer/ElementContainerDelete_helpers.js';
 import tinymce from 'tinymce'
+
 export const onPasteSuccess = async (params) => {
     const {
         responseData,
@@ -27,12 +28,32 @@ export const onPasteSuccess = async (params) => {
         operationType = getState().selectionReducer.selection.operationType;
     }
 
-    let elmExist = await checkElementExistence(getState().selectionReducer.selection.sourceSlateEntityUrn, getState().selectionReducer.selection.deleteElm.id);
-    if ('deleteElm' in getState().selectionReducer.selection && operationType === 'cut' && elmExist) {
+    // let elmExist = await checkElementExistence(getState().selectionReducer.selection.sourceSlateEntityUrn, getState().selectionReducer.selection.deleteElm.id);
+    if ('deleteElm' in getState().selectionReducer.selection && operationType === 'cut') {// && elmExist
         let deleteElm = getState().selectionReducer.selection.deleteElm;
 
         const parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
+        let cutcopyParentData =  null;
+        if('cutCopyParentUrn' in deleteElm && 'slateLevelData' in deleteElm.cutCopyParentUrn) {
+            cutcopyParentData = deleteElm.cutCopyParentUrn.slateLevelData;
+        }
+
+        if(getState().selectionReducer.selection.sourceSlateEntityUrn !== config.slateEntityURN) {
+            const tcmDeleteArgs = {
+                deleteParentData: cutcopyParentData ? JSON.parse(JSON.stringify(cutcopyParentData)) : newParentData,
+                deleteElemData: { [deleteElm.id]: deleteElm.id },
+                type: deleteElm.type,
+                parentUrn: deleteElm.parentUrn,
+                asideData: deleteElm.asideData,
+                contentUrn: deleteElm.contentUrn,
+                index: deleteElm.index,
+                poetryData: deleteElm.poetryData,
+                cutCopyParentUrn: deleteElm.cutCopyParentUrn
+            }
+            await prepareTCMSnapshotsForDelete(tcmDeleteArgs);
+        }
+
         let deleteParams = {
             dispatch,
             elmId: deleteElm.id,
@@ -60,7 +81,7 @@ export const onPasteSuccess = async (params) => {
     const currentSlateData = newParentData[config.slateManifestURN];
 
     /** [PCAT-8289] ---------------------------- TCM Snapshot Data handling ------------------------------*/
-    if (slateWrapperConstants.elementType.indexOf("TEXT") !== -1) {
+    if (slateWrapperConstants.elementType.indexOf("TEXT") !== -1 && getState().selectionReducer.selection.sourceSlateEntityUrn !== config.slateEntityURN) {
         const snapArgs = {
             newParentData,
             currentSlateData,
@@ -86,7 +107,7 @@ export const onPasteSuccess = async (params) => {
     newParentData[config.slateManifestURN].contents.bodymatter.splice(cutIndex, 0, responseData);
 
     if (config.tcmStatus) {
-        if (slateWrapperConstants.elementType.indexOf("TEXT") !== -1) {
+        if (slateWrapperConstants.elementType.indexOf("TEXT") !== -1 && getState().selectionReducer.selection.sourceSlateEntityUrn !== config.slateEntityURN) {
             await prepareDataForTcmCreate("TEXT", responseData, getState, dispatch);
         }
     }
