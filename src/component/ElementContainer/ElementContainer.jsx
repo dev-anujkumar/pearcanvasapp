@@ -48,7 +48,7 @@ import {handleTCMData} from '../TcmSnapshots/TcmSnapshot_Actions.js';
 import CutCopyDialog from '../CutCopyDialog';
 import { OnCopyContext } from '../CutCopyDialog/copyUtil.js'
 import { setSelection } from '../CutCopyDialog/CopyUrn_Action.js';
-import { openElmAssessmentPortal, checkAssessmentStatus, resetAssessmentStore, editElmAssessmentId } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
+import { openElmAssessmentPortal, fetchAssessmentMetadata, resetAssessmentStore, editElmAssessmentId } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import {handleElmPortalEvents} from '../ElementContainer/AssessmentEventHandling.js';
 import { checkFullElmAssessment, checkEmbeddedElmAssessment } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 import { setScroll } from './../Toolbar/Search/Search_Action.js';
@@ -112,7 +112,7 @@ class ElementContainer extends Component {
             btnClassName: '',
             isOpener: this.props.element.type === elementTypeConstant.OPENER
         })
-        /** PCAT-8907 - Updating Embedded Assessments - Elm */
+        /** Updating Embedded Assessments - Elm(PCAT-8907) & Learnosity(PCAT-9590) */
         let { element } = this.props
         let embeddedAssessment = checkEmbeddedElmAssessment(element);
         if (this.props.element && embeddedAssessment === true) {
@@ -121,9 +121,9 @@ class ElementContainer extends Component {
             const itemData = {
                 itemId: assessmentItemID,
                 parentId: assessmentID,
-                type: 'assessment-item'
+                targetItemid: assessmentItemID
             }
-            this.props.checkAssessmentStatus(assessmentID, 'fromElementContainer', "", "", itemData)
+            this.props.fetchAssessmentMetadata('assessment', 'fromElementContainer', { targetId: assessmentID }, itemData);
         }
         document.addEventListener('click',()=>{
             this.setState({showCopyPopup : false})
@@ -1747,8 +1747,8 @@ const mapDispatchToProps = (dispatch) => {
         openElmAssessmentPortal: (dataToSend) => {
             dispatch(openElmAssessmentPortal(dataToSend))
         },
-        checkAssessmentStatus: (workUrn, calledFrom, currentWorkUrn, currentWorkData, parentURN) => {
-            dispatch(checkAssessmentStatus(workUrn, calledFrom, currentWorkUrn, currentWorkData, parentURN))
+        fetchAssessmentMetadata: (type, calledFrom, assessmentData, assessmentItemData) => {
+            dispatch(fetchAssessmentMetadata(type, calledFrom, assessmentData, assessmentItemData))
         },
         resetAssessmentStore: () => {
             dispatch(resetAssessmentStore())

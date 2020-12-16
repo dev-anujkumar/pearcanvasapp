@@ -160,3 +160,25 @@ export const TYPE_LEARNING_APP = 'Learning App Type';
 export const capitalizeString = (label) => {
     return label.replace(/-/gi, ' ').toLowerCase().split(' ').map(s => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');
 }
+
+/** @discription This function prepares the list for diusciplines
+ * @param newProps props
+ */
+export const prepareDisciplineList = (newProps) => {
+    let disciplineMenu = [];
+    if (newProps && newProps.dropdownProps && newProps.dropdownProps.apiResponseForDis) {
+        disciplineMenu = (newProps.dropdownProps.apiResponseForDis.map(discipline => discipline.prefLabel));
+    }
+    return disciplineMenu;
+}
+
+/** @discription This function prepares the list for learning systems
+ * @param newProps props
+ */
+export const prepareAppTypeList = (newProps) => {
+    let appTypeMenu = [];
+    if (newProps && newProps.dropdownProps && newProps.dropdownProps.learningSystems) {
+        appTypeMenu = (Object.values(newProps.dropdownProps.learningSystems).map(system => system.label))
+    }
+    return appTypeMenu;
+}

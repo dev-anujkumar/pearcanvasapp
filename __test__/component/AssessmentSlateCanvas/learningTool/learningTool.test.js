@@ -14,7 +14,7 @@ const store = mockStore({
         showLTBody: true,
         learningSystems: learningSystemList,
         linkButtonDisable: true,
-        apiResponseForDis: disciplines,
+        apiResponseForDis: disciplines.options,
         showDisFilterValues: true,
         selectedResultFormApi: selectedResult
     }
