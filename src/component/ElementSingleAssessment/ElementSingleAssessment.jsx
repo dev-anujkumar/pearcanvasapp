@@ -402,7 +402,7 @@ class ElementSingleAssessment extends Component {
         }
         let oldReducerData = this.props.assessmentReducer[this.state.assessmentId];
         oldReducerData.targetId = this.state.assessmentId;
-        await this.props.fetchAssessmentLatestVersion(oldReducerData.assessmentEntityUrn, 'assessmentUpdate', oldReducerData.createdDate, oldReducerData, itemData);
+        await this.props.fetchAssessmentVersions(oldReducerData.assessmentEntityUrn, 'assessmentUpdate', oldReducerData.createdDate, oldReducerData, itemData);
         const latestReducerData = this.props.assessmentReducer[this.state.assessmentId]
         const { latestVersion, secondLatestVersion, items } = latestReducerData;
         const newVersion = (latestVersion && (latestVersion.status !== 'wip' || latestVersion.latestCleanVersion == false)) ? latestVersion : secondLatestVersion;

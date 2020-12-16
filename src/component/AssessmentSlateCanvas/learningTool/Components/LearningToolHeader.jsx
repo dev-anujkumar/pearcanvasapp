@@ -2,13 +2,18 @@
 * Search Bar Component of Learning Tool/Learning App Assessment
 */
 import React, { useState } from 'react';
-import { searchHeaders, TYPE_LEARNING_APP, TYPE_DISCIPLINE, DEFAULT_OPTION, PLACEHOLDER_TITLE, PLACEHOLDER_KEYWORD, BUTTON_TEXT_SEARCH } from '../learningToolUtility.js';
+import { prepareAppTypeList, prepareDisciplineList, searchHeaders, TYPE_LEARNING_APP, TYPE_DISCIPLINE, DEFAULT_OPTION, PLACEHOLDER_TITLE, PLACEHOLDER_KEYWORD, BUTTON_TEXT_SEARCH } from '../learningToolUtility.js';
 import '../../../../styles/DropdownMenu/style.css';
 import error_icon from '../../../../images/AssessmentSlateCanvas/error_icon.svg'
 import { hasReviewerRole } from '../../../../constants/utility.js';
 import Dropdown from '../../../DropdownMenu';
 import InputSearch from '../../../InputSearch';
 const LearningToolHeader = (props) => {
+
+    const {
+        searchProps: { showError, searchTextCondition, validateSearch, searchLoading },
+        dropdownProps: { selectedTypeValue, setlearningAppType, learningSystems, setlearningToolDiscipline, showDisFilterValues }
+    } = props;
 
     const [searchKeyword, setSearchKeyword] = useState('');
     const [searchTitle, setSearchTitle] = useState('');
@@ -17,10 +22,8 @@ const LearningToolHeader = (props) => {
     const [openAppTypeDropdown, setOpenAppTypeDropdown] = useState(false);
     const [openDisciplineDropdown, setOpenDisciplineDropdown] = useState(false);
 
-    const {
-        searchProps: { showError, searchTextCondition, validateSearch, searchLoading },
-        dropdownProps: { selectedTypeValue, setlearningAppType, learningSystems, setlearningToolDiscipline, apiResponseForDis, showDisFilterValues }
-    } = props;
+    const disciplineMenu = prepareDisciplineList(props)
+    const appTypeMenu = prepareAppTypeList(props)
 
     /*** @description - This function is to call search function for the search term 
      * @param e - event triggered
@@ -89,7 +92,7 @@ const LearningToolHeader = (props) => {
                             <span className="dropdown-menu-arrow"></span>
                         </div>
                         {openAppTypeDropdown &&
-                            <Dropdown showDropdown={true} ulClass={'learningAppType'} type={TYPE_LEARNING_APP} dropdownList={Object.values(learningSystems).map(system=> system.label)} dropdownClass={'learning-tool-dropdown'} clickHandlerFn={handleDropdownChange} hasDefaultOption={true} />}
+                            <Dropdown showDropdown={true} ulClass={'learningAppType'} type={TYPE_LEARNING_APP} dropdownList={appTypeMenu} dropdownClass={'learning-tool-dropdown'} clickHandlerFn={handleDropdownChange} hasDefaultOption={true} />}
                     </td>
                     <td className='data-disc' onClick={!hasReviewerRole() && toggleDisciplineDropdown}>{/* Discipline Dropdown */}
                         <div className="learningAppType" title={selectedDiscipline ? selectedDiscipline : DEFAULT_OPTION}>
@@ -97,7 +100,7 @@ const LearningToolHeader = (props) => {
                             <span className="dropdown-menu-arrow"></span>
                         </div>
                         {showDisFilterValues ? openDisciplineDropdown &&
-                            <Dropdown showDropdown={showDisFilterValues} ulClass={`learningAppType ${showDisFilterValues == false ? "dis-api-fail" : ""}`} type={TYPE_DISCIPLINE} dropdownList={apiResponseForDis.options.map(discipline => discipline.prefLabel)} dropdownClass={'learning-tool-dropdown'} clickHandlerFn={handleDropdownChange} hasDefaultOption={true} /> : null}
+                            <Dropdown showDropdown={showDisFilterValues} ulClass={`learningAppType ${showDisFilterValues == false ? "dis-api-fail" : ""}`} type={TYPE_DISCIPLINE} dropdownList={disciplineMenu} dropdownClass={'learning-tool-dropdown'} clickHandlerFn={handleDropdownChange} hasDefaultOption={true} /> : null}
                     </td>
                     <td>{/* Search Keyword */}
                         <InputSearch searchId={"learningToolSearchBar"} searchClass={`learningToolSearchBar ${showError ? "error" : ""}`} maxInputLimit={100} placeholderText={PLACEHOLDER_KEYWORD} searchValueHandler={handleKeywordChange} />
