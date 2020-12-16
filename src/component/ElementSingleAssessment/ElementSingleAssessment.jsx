@@ -176,7 +176,7 @@ class ElementSingleAssessment extends Component {
     }
     /*** @description - This function will be called to save the assessment data */
     saveAssessment = (cb) => {
-        if (this.state.elementType == PUF) {
+        if ((this.state.elementType == PUF || this.state.elementType == LEARNOSITY)) {
             this.props.handleBlur("", "", this.props.index, "", "fromEmbeddedAssessment");
         } else {
             this.props.handleBlur("", "", this.props.index);
