@@ -1553,6 +1553,13 @@ class ElementContainer extends Component {
             inputSubType
             //type: enum type to be included
         }
+
+        if('operationType' in detailsToSet && detailsToSet.operationType === 'cut') {
+            let elmComment = (this.props.allComments).filter(({ commentOnEntity }) => {
+                return commentOnEntity === detailsToSet.element.id;
+            });
+            detailsToSet['elmComment'] = elmComment;
+        }
         console.log("Element Details action to be dispatched from here", detailsToSet)
 
         /** Dispatch details to the store */

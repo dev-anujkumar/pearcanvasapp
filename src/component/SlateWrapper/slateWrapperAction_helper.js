@@ -1,7 +1,7 @@
 // Constants
 import axios from 'axios';
 import config from '../../config/config';
-import { AUTHORING_ELEMENT_CREATED, GET_TCM_RESOURCES } from '../../constants/Action_Constants';
+import { AUTHORING_ELEMENT_CREATED, GET_TCM_RESOURCES, FETCH_COMMENTS } from '../../constants/Action_Constants';
 import { HideLoader, ShowLoader, projectPendingTcStatus } from '../../constants/IFrameMessageTypes.js';
 import * as slateWrapperConstants from "./SlateWrapperConstants"
 //Helper methods
@@ -31,9 +31,8 @@ export const onPasteSuccess = async (params) => {
     }
 
     // let elmExist = await checkElementExistence(getState().selectionReducer.selection.sourceSlateEntityUrn, getState().selectionReducer.selection.deleteElm.id);
-    if ('deleteElm' in getState().selectionReducer.selection && operationType === 'cut') {// && elmExist
+    if ('deleteElm' in getState().selectionReducer.selection && operationType === 'cut') {
         let deleteElm = getState().selectionReducer.selection.deleteElm;
-
         const parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
         let cutcopyParentData =  null;
@@ -74,6 +73,15 @@ export const onPasteSuccess = async (params) => {
         selection.deleteElm = {};
         dispatch({ type: SET_SELECTION, payload: selection });
     } else if (operationType === 'cut') {
+        if('elmComment' in elmSelection && 'sourceSlateEntityUrn' in elmSelection && elmSelection.sourceSlateEntityUrn !== config.slateEntityURN) {
+            const allComments = getState().commentsPanelReducer.allComments || {};
+            allComments.push(...elmSelection.elmComment);
+
+            dispatch({
+                type: FETCH_COMMENTS,
+                payload: { comments: allComments, title: getState().commentsPanelReducer.slateTitle || '' }
+            })
+        }
         dispatch({ type: SET_SELECTION, payload: {} });
     }
 
