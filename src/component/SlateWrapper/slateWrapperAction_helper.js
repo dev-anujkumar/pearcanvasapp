@@ -94,7 +94,7 @@ export const onPasteSuccess = async (params) => {
             if('elmFeedback' in elmSelection && (elmSelection.elmFeedback).length > 0) {
                 const tcmFeedback = getState().tcmReducer.tcmData || [];
                 tcmFeedback.push(...elmSelection.elmFeedback);
-                feedback = (elmSelection.elmFeedback)[0].feedback || "";
+                feedback = (elmSelection.elmFeedback)[0].feedback || null;
 
                 dispatch({
                     type: GET_TCM_RESOURCES,
