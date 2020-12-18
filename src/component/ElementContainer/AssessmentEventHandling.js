@@ -19,18 +19,16 @@ export const handleElmPortalEvents = (action = 'add') => {
             try {
                 const { data } = event;
                 if (action == 'add' && data && data.source == 'elm') {
-                    console.log('Event From ELM Portal>>>', data)//to be removed after post-msg issue is resolved
+                    //console.log('Event From ELM Portal>>>', data)
                     if(data.type.includes('item|')){
                         const itemMetadata = prepareItemMetadata(data.type)
                         store.dispatch(updateElmItemData(store.getState().assessmentReducer.currentEditAssessment, itemMetadata))
                         store.dispatch(setItemUpdateEvent(true))
-                        console.log('itemMetadata', itemMetadata)//to be removed after post-msg issue is resolved
                     }
                     if (data.action == 'approve') {
                         window.removeEventListener('message', elmAssessmentUpdate, false);
                     }
                     if (data.type == 'assessment') {
-                        console.log('Refresh Slate after navigation from Elm Portal');//to be removed after post-msg issue is resolved
                         handleRefreshSlate(store.dispatch);
                     }
                 }
