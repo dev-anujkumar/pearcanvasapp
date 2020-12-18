@@ -90,8 +90,14 @@ export const onPasteSuccess = async (params) => {
     const newParentData = JSON.parse(JSON.stringify(parentData));
     const currentSlateData = newParentData[config.slateManifestURN];
 
+    /** Create Snapshot for cut action on different slate */
+    let cutSnap = true;
+    if(operationType === 'cut' && 'sourceSlateEntityUrn' in elmSelection && elmSelection.sourceSlateEntityUrn === config.slateEntityURN) {
+        cutSnap = false;
+    }
+
     /** [PCAT-8289] ---------------------------- TCM Snapshot Data handling ------------------------------*/
-    if (slateWrapperConstants.elementType.indexOf("TEXT") !== -1 && 'sourceSlateEntityUrn' in elmSelection && elmSelection.sourceSlateEntityUrn !== config.slateEntityURN) {
+    if (slateWrapperConstants.elementType.indexOf("TEXT") !== -1 && cutSnap) {
         const snapArgs = {
             newParentData,
             currentSlateData,
@@ -117,7 +123,7 @@ export const onPasteSuccess = async (params) => {
     newParentData[config.slateManifestURN].contents.bodymatter.splice(cutIndex, 0, responseData);
 
     if (config.tcmStatus) {
-        if (slateWrapperConstants.elementType.indexOf("TEXT") !== -1 && 'sourceSlateEntityUrn' in elmSelection && elmSelection.sourceSlateEntityUrn !== config.slateEntityURN) {
+        if (slateWrapperConstants.elementType.indexOf("TEXT") !== -1 && cutSnap) {
             await prepareDataForTcmCreate("TEXT", responseData, getState, dispatch);
         }
     }
