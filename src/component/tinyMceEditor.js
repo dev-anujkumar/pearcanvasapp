@@ -2946,7 +2946,7 @@ export class TinyMceEditor extends Component {
              */
             let wirisObj = document.getElementsByClassName('wrs_modal_dialogContainer');
             let wirisObjLength = wirisObj.length;
-            if (wirisNodeLength > 1) {
+            if (wirisObjLength > 1) {
                 for (let i = 0; i < wirisObjLength - 1; i++) {
                     wirisObj[i].remove();
                     // document.getElementsByClassName('wrs_modal_overlay').remove();
