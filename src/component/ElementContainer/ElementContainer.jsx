@@ -1558,7 +1558,12 @@ class ElementContainer extends Component {
             let elmComment = (this.props.allComments).filter(({ commentOnEntity }) => {
                 return commentOnEntity === detailsToSet.element.id;
             });
-            detailsToSet['elmComment'] = elmComment;
+            detailsToSet['elmComment'] = elmComment || [];
+
+            let elmFeedback = (this.props.tcmData).filter(({ elemURN }) => {
+                return elemURN === detailsToSet.element.id
+            });
+            detailsToSet['elmFeedback'] = elmFeedback || [];
         }
         console.log("Element Details action to be dispatched from here", detailsToSet)
 

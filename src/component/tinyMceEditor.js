@@ -2663,7 +2663,10 @@ export class TinyMceEditor extends Component {
 
     setInstanceToolbar = () => {
         let toolbar = [];
-        if (this.props.placeholder === "Enter Label..." || this.props.placeholder === 'Enter call to action...' || (this.props.element && this.props.element.subtype == 'mathml' && this.props.placeholder === "Type something...")) {
+        if (this.props.element.type === 'popup' && this.props.placeholder === 'Enter call to action...') {
+            toolbar = config.popupCallToActionToolbar
+        }
+        else if (this.props.placeholder === "Enter Label..." || this.props.placeholder === 'Enter call to action...' || (this.props.element && this.props.element.subtype == 'mathml' && this.props.placeholder === "Type something...")) {
             toolbar = (this.props.element && (this.props.element.type === 'poetry' || this.props.element.type === 'popup' || this.props.placeholder === 'Enter call to action...')) ? config.poetryLabelToolbar : config.labelToolbar;
         }
         else if (this.props.placeholder === "Enter Caption..." || this.props.placeholder === "Enter Credit...") {
@@ -2946,7 +2949,7 @@ export class TinyMceEditor extends Component {
              */
             let wirisObj = document.getElementsByClassName('wrs_modal_dialogContainer');
             let wirisObjLength = wirisObj.length;
-            if (wirisNodeLength > 1) {
+            if (wirisObjLength > 1) {
                 for (let i = 0; i < wirisObjLength - 1; i++) {
                     wirisObj[i].remove();
                     // document.getElementsByClassName('wrs_modal_overlay').remove();

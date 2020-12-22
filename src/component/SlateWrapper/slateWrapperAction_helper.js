@@ -30,6 +30,12 @@ export const onPasteSuccess = async (params) => {
         operationType = elmSelection.operationType;
     }
 
+    /** Create Snapshot for cut action on different slate */
+    let cutSnap = true;
+    if(operationType === 'cut' && 'sourceSlateEntityUrn' in elmSelection && elmSelection.sourceSlateEntityUrn === config.slateEntityURN) {
+        cutSnap = false;
+    }
+
     // let elmExist = await checkElementExistence(getState().selectionReducer.selection.sourceSlateEntityUrn, getState().selectionReducer.selection.deleteElm.id);
     if ('deleteElm' in getState().selectionReducer.selection && operationType === 'cut') {
         let deleteElm = getState().selectionReducer.selection.deleteElm;
@@ -67,20 +73,36 @@ export const onPasteSuccess = async (params) => {
         deleteFromStore(deleteParams)
     }
 
+    let feedback = null;
     if (operationType === 'copy') {
         let selection = Object.assign({}, getState().selectionReducer.selection);
         selection.activeAnimation = false;
         selection.deleteElm = {};
         dispatch({ type: SET_SELECTION, payload: selection });
     } else if (operationType === 'cut') {
-        if('elmComment' in elmSelection && 'sourceSlateEntityUrn' in elmSelection && elmSelection.sourceSlateEntityUrn !== config.slateEntityURN) {
-            const allComments = getState().commentsPanelReducer.allComments || {};
-            allComments.push(...elmSelection.elmComment);
+        if('sourceSlateEntityUrn' in elmSelection && elmSelection.sourceSlateEntityUrn !== config.slateEntityURN) {
+            if('elmComment' in elmSelection && (elmSelection.elmComment).length > 0) {
+                const allComments = getState().commentsPanelReducer.allComments || [];
+                allComments.push(...elmSelection.elmComment);
 
-            dispatch({
-                type: FETCH_COMMENTS,
-                payload: { comments: allComments, title: getState().commentsPanelReducer.slateTitle || '' }
-            })
+                dispatch({
+                    type: FETCH_COMMENTS,
+                    payload: { comments: allComments, title: getState().commentsPanelReducer.slateTitle || '' }
+                })
+            }
+
+            if('elmFeedback' in elmSelection && (elmSelection.elmFeedback).length > 0) {
+                const tcmFeedback = getState().tcmReducer.tcmData || [];
+                tcmFeedback.push(...elmSelection.elmFeedback);
+                feedback = (elmSelection.elmFeedback)[0].feedback || null;
+
+                dispatch({
+                    type: GET_TCM_RESOURCES,
+                    payload: {
+                        data: tcmFeedback
+                    }
+                })
+            }
         }
         dispatch({ type: SET_SELECTION, payload: {} });
     }
@@ -89,12 +111,6 @@ export const onPasteSuccess = async (params) => {
     const parentData = getState().appStore.slateLevelData;
     const newParentData = JSON.parse(JSON.stringify(parentData));
     const currentSlateData = newParentData[config.slateManifestURN];
-
-    /** Create Snapshot for cut action on different slate */
-    let cutSnap = true;
-    if(operationType === 'cut' && 'sourceSlateEntityUrn' in elmSelection && elmSelection.sourceSlateEntityUrn === config.slateEntityURN) {
-        cutSnap = false;
-    }
 
     /** [PCAT-8289] ---------------------------- TCM Snapshot Data handling ------------------------------*/
     if (slateWrapperConstants.elementType.indexOf("TEXT") !== -1 && cutSnap) {
@@ -107,14 +123,15 @@ export const onPasteSuccess = async (params) => {
             type: "TEXT",
             responseData,
             dispatch,
-            index
+            index,
+            elmFeedback: feedback
         }
 
-        await handleTCMSnapshotsForCreation(snapArgs)
+        await handleTCMSnapshotsForCreation(snapArgs, operationType)
     }
     /**---------------------------------------------------------------------------------------------------*/
 
-    if (currentSlateData.status === 'approved' && operationType === 'copy') {
+    if (currentSlateData.status === 'approved') {
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
         sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
         return false;
@@ -169,7 +186,7 @@ export const checkElementExistence = async (slateEntityUrn = '', elementEntity =
     return exist;
 }
 
-export const handleTCMSnapshotsForCreation = async (params) => {
+export const handleTCMSnapshotsForCreation = async (params, operationType = null) => {
     const {
         newParentData,
         currentSlateData,
@@ -179,7 +196,8 @@ export const handleTCMSnapshotsForCreation = async (params) => {
         type,
         responseData,
         dispatch,
-        index
+        index,
+        elmFeedback
     } = params
 
     const containerElement = {
@@ -193,10 +211,10 @@ export const handleTCMSnapshotsForCreation = async (params) => {
         response: responseData
     };
     if (currentSlateData.status === 'approved') {
-        await tcmSnapshotsForCreate(slateData, type, containerElement, dispatch, index);
+        await tcmSnapshotsForCreate(slateData, type, containerElement, dispatch, index, operationType, elmFeedback);
     }
     else {
-        tcmSnapshotsForCreate(slateData, type, containerElement, dispatch, index);
+        tcmSnapshotsForCreate(slateData, type, containerElement, dispatch, index, operationType, elmFeedback);
     }
 }
 
