@@ -116,6 +116,113 @@ export const learningSystemList = {
         label: "Business Media"
     },*/
 }
+export const apiList = [
+    {
+        type: "accounting-sims",
+        label: "Accounting Sims",
+        system: "knowdl"
+    },
+    {
+        type: "socialexplorer-pathways",
+        label: "Adaptive Pathways",
+        system: "socialexplorer"
+    },
+    {
+        type: "criminal-justice-sims",
+        label: "Criminal Justice Sims",
+        system: "knowdl"
+    },
+    {
+        type: "digital-interactives",
+        label: "Digital Interactives",
+        system: "knowdl"
+    },
+    {
+        type: "economics-sims",
+        label: "Economic Sims",
+        system: "knowdl"
+    },
+    {
+        type: "exploring-solutions",
+        label: "Exploring Solutions",
+        system: "knowdl"
+    },
+    {
+        type: "socialexplorer-explorations",
+        label: "Guided Data Explorations",
+        system: "socialexplorer"
+    },
+    {
+        type: "helpdesk",
+        label: "HelpDesk",
+        system: "knowdl"
+    },
+    {
+        type: "hospitality-sims",
+        label: "Hospitality Sims",
+        system: "knowdl"
+    },
+    {
+        type: "information-technology-sims",
+        label: "Information Technology Sims",
+        system: "knowdl"
+    },
+    {
+        type: "video-quiz",
+        label: "Media Quiz",
+        system: "mediashare"
+    },
+    {
+        type: "myvirtual-child",
+        label: "My Virtual Child",
+        system: "myvirtual-x"
+    },
+    {
+        type: "myvirtual-life",
+        label: "My Virtual Life",
+        system: "myvirtual-x"
+    },
+    {
+        type: "personal-finance-experience",
+        label: "Personal Finance",
+        system: "knowdl"
+    },
+    {
+        type: "political-science-sims",
+        label: "Political Science Sims",
+        system: "knowdl"
+    },
+    {
+        type: "qual-sims",
+        label: "Qualitative Business Sims",
+        system: "knowdl"
+    },
+    {
+        type: "video-submission",
+        label: "Shared Media",
+        system: "mediashare"
+    },
+    {
+        type: "soundbytes",
+        label: "Sound Bytes",
+        system: "knowdl"
+    },
+    {
+        type: "socialexplorer-surveys",
+        label: "Surveys and Inventories",
+        system: "socialexplorer"
+    },
+    {
+        type: "video-library",
+        label: "Video Library",
+        system: "knowdl"
+    },
+    {
+        type: "writingsolutions",
+        label: "Writing Solutions",
+        system: "writingsolutions"
+    }
+]
 /** @discription This Array consists of list of  learning Tool Table Headers */
 export const learningToolTableHeaders = [
     'Learning App Type',
@@ -179,6 +286,7 @@ export const prepareAppTypeList = (newProps) => {
     let appTypeMenu = [];
     if (newProps && newProps.dropdownProps && newProps.dropdownProps.learningSystems) {
         appTypeMenu = (Object.values(newProps.dropdownProps.learningSystems).map(system => system.label))
+        // appTypeMenu = newProps.dropdownProps.learningSystems.map(item => item.label)
     }
     return appTypeMenu;
 }
