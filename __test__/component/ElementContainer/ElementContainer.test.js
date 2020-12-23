@@ -1508,7 +1508,8 @@ describe('Test for element container component', () => {
             ],
             updateElement: jest.fn(),
             elemBorderToggle: false,
-            openElmAssessmentPortal: jest.fn()
+            openElmAssessmentPortal: jest.fn(),
+            fetchAssessmentMetadata: jest.fn()
         };
         let event = {
             stopPropagation: jest.fn(),

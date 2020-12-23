@@ -19,13 +19,12 @@ export const handleElmPortalEvents = (action = 'add') => {
             try {
                 const { data } = event;
                 if (action == 'add' && data && data.source == 'elm') {
+                    //console.log('Event From ELM Portal>>>', data)
                     if(data.type.includes('item|')){
                         const itemMetadata = prepareItemMetadata(data.type)
-                        // console.log('store', store.getState().assessmentReducer)
-                        // console.log('itemMetadata', itemMetadata);
-                        store.dispatch(updateElmItemData(store.getState().assessmentReducer.currentEditAssessment, itemMetadata))  
+                        store.dispatch(updateElmItemData(store.getState().assessmentReducer.currentEditAssessment, itemMetadata))
                         store.dispatch(setItemUpdateEvent(true))
-                                     }
+                    }
                     if (data.action == 'approve') {
                         window.removeEventListener('message', elmAssessmentUpdate, false);
                     }

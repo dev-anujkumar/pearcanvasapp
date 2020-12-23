@@ -224,7 +224,7 @@ export const prepareAssetPopoverSnapshotContent = async (assetsList, indexes, ac
         }
         if (assetsList && assetsList.length) {
             await Promise.all(assetsList.map(async (assetsItem, index) => {
-                let assetIdAll = assetsItem && assetsItem.linkid && elementAP && elementAP.querySelectorAll('abbr');
+                let assetIdAll = assetsItem && assetsItem.linkid && elementAP && elementAP.querySelectorAll('abbr[data-uri="' + assetsItem.linkid + '"]');
                 let assetId = assetIdAll && assetIdAll[index] && assetIdAll[index].getAttribute('asset-id') ? assetIdAll[index].getAttribute('asset-id') : actionStatus.assetRemoveidForSnapshot ? actionStatus.assetRemoveidForSnapshot: ""
                 let data = {
                     assetid: assetId,

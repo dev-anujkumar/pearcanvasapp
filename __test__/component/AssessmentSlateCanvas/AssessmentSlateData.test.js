@@ -412,7 +412,8 @@ describe('Testing Assessment Slate Data component', () => {
                     assessmentStatus: 'final',
                     assessmentTitle: 'Quiz: 7.4 Developing Relationships',
                     assessmentEntityUrn: 'urn:pearson:entity:c785c0f6-6fc7-4f51-855c-0677738a9d86',
-                    latestWorkUrn: 'urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec565'
+                    latestWorkUrn: 'urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec565',
+                    "targetId": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464"
                 }
             }
             jest.spyOn(assessmentSlateInstance6, 'updateElmAssessment')
@@ -432,7 +433,8 @@ describe('Testing Assessment Slate Data component', () => {
                     assessmentStatus: 'final',
                     assessmentTitle: 'Quiz: 7.4 Developing Relationships',
                     assessmentEntityUrn: 'urn:pearson:entity:c785c0f6-6fc7-4f51-855c-0677738a9d86',
-                    latestWorkUrn: 'urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec565'
+                    latestWorkUrn: 'urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec565',
+                    "targetId": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464"
                 }
             }
             jest.spyOn(assessmentSlateInstance6, 'showElmVersionStatus')

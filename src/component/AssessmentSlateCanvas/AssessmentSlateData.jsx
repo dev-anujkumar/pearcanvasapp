@@ -17,7 +17,7 @@ import { assessmentFormats, CITE, TDX, PUF, LEARNING_TEMPLATE, LEARNOSITY, ELM_U
 /** ----- Import - Action Creators ----- */
 import { setCurrentCiteTdx, assessmentSorting } from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
 import { closeLtAction, openLtAction, openLTFunction } from './learningTool/learningToolActions';
-import { checkAssessmentStatus, updateAssessmentVersion } from './AssessmentActions/assessmentActions.js';
+import { fetchAssessmentMetadata, updateAssessmentVersion, fetchAssessmentVersions } from './AssessmentActions/assessmentActions.js';
 /**
 * Module | AssessmentSlateData
 * description | This is the child Component of Assessment Slate
@@ -59,12 +59,13 @@ class AssessmentSlateData extends Component {
         if (this.props.getAssessmentDataPopup !== prevProps.getAssessmentDataPopup) {
             this.sendDataAssessment(this.props);
         }
+        const { activeAssessmentType } = this.state;
         const { assessmentSlateObj, assessmentReducer } = this.props;
-        if (this.state.activeAssessmentType == PUF &&
+        if ((activeAssessmentType == PUF || activeAssessmentType == LEARNOSITY) &&
             ((assessmentSlateObj.title) && (assessmentReducer && (assessmentReducer[assessmentSlateObj.assessmentId] && assessmentReducer[assessmentSlateObj.assessmentId].assessmentTitle)))) {
-            let prevPropsTitle = prevProps && prevProps.assessmentReducer && prevProps.assessmentReducer[assessmentSlateObj.assessmentId] && prevProps.assessmentReducer[assessmentSlateObj.assessmentId].assessmentTitle
-            if ((assessmentSlateObj.title != (assessmentReducer[assessmentSlateObj.assessmentId].assessmentTitle))
-                && (prevPropsTitle != assessmentReducer[assessmentSlateObj.assessmentId].assessmentTitle)) {
+            const prevPropsTitle = prevProps && prevProps.assessmentReducer && prevProps.assessmentReducer[assessmentSlateObj.assessmentId] && prevProps.assessmentReducer[assessmentSlateObj.assessmentId].assessmentTitle
+            const newPropsTitle = assessmentReducer[assessmentSlateObj.assessmentId].assessmentTitle
+            if ((assessmentSlateObj.title != newPropsTitle) && (prevPropsTitle != newPropsTitle)) {
                 this.updateElmOnSaveEvent(this.props);
             }
         }
@@ -164,8 +165,9 @@ class AssessmentSlateData extends Component {
     * @param pufObj - The object contains data about Elm/Learnosity Assessment 
     */
     addPufAssessment = (pufObj) => {
-        this.props.addPufAssessment(pufObj, this.state.activeAssessmentType,'insert');
-        this.props.checkElmAssessmentStatus(pufObj.id,'fromAddElm');
+        this.props.addPufAssessment(pufObj, this.state.activeAssessmentType, 'insert');
+        const elmData = { targetId: pufObj.id }
+        this.props.checkElmAssessmentStatus('assessment', 'fromAddElm', elmData, {});
     }
 
     /*** @description This function is used to open Version update Popup */
@@ -203,20 +205,26 @@ class AssessmentSlateData extends Component {
         this.toggleUpdatePopup(false, event);
         this.showCanvasBlocker(false);
         let oldWorkUrn = this.props.assessmentSlateObj.assessmentId
-        await this.props.checkElmAssessmentStatus(this.props.assessmentReducer[this.props.assessmentSlateObj.assessmentId].latestWorkUrn, 'fromUpdate', this.props.assessmentSlateObj.assessmentId);
-        const { latestWorkUrn, assessmentTitle, prevLatestWorkUrn } = this.props.assessmentReducer[this.props.assessmentSlateObj.assessmentId]
-        const { latestVersionClean } = this.props.assessmentReducer[latestWorkUrn]
+        let oldReducerData = this.props.assessmentReducer[this.props.assessmentSlateObj.assessmentId]
+        oldReducerData.targetId = this.props.assessmentSlateObj.assessmentId;
+        await this.props.fetchAssessmentLatestVersion(oldReducerData.assessmentEntityUrn, 'assessmentUpdate', oldReducerData.createdDate, oldReducerData, {})
+        const latestReducerData = this.props.assessmentReducer[this.props.assessmentSlateObj.assessmentId]
+        const { latestVersion, secondLatestVersion } = latestReducerData;
+        const newVersion = (latestVersion && (latestVersion.status !== 'wip' || latestVersion.latestCleanVersion == false)) ? latestVersion : secondLatestVersion;
         let updatedElmObj = {
-            title: assessmentTitle,
+            id: this.props.assessmentSlateObj.assessmentId,
+            title: this.props.assessmentSlateObj.title,
             usagetype: this.state.activeAssessmentUsageType
         }
-        const updatedAssessmentID = latestVersionClean == true ? prevLatestWorkUrn : latestWorkUrn;
-        updatedElmObj.id = updatedAssessmentID
-        if (latestWorkUrn != this.props.assessmentSlateObj.assessmentId) {
-            updatedElmObj.title = this.props.assessmentReducer[latestWorkUrn].assessmentTitle
+        if (newVersion) {
+            updatedElmObj = {
+                id: newVersion.id,
+                title: latestVersion.title,
+                usagetype: this.state.activeAssessmentUsageType
+            }
         }
         this.props.addPufAssessment(updatedElmObj, this.state.activeAssessmentType, 'insert', () => {
-            this.props.updateAssessmentVersion(oldWorkUrn, updatedAssessmentID);
+            this.props.updateAssessmentVersion(oldWorkUrn, updatedElmObj.id);
         });
         this.props.handleCanvasBlocker.disableHeader(false);
         this.props.handleCanvasBlocker.hideTocBlocker(false);
@@ -556,7 +564,7 @@ class AssessmentSlateData extends Component {
                 </div>
             </div>
             {this.setUsageType(assessmentUsageType)}
-            {this.state.activeAssessmentType == PUF && this.showElmVersionStatus()}
+            {(this.state.activeAssessmentType == PUF || this.state.activeAssessmentType == LEARNOSITY) && this.showElmVersionStatus()}
         </div>
         return assessmentSlate;
     }
@@ -590,8 +598,9 @@ const mapActionToProps = {
     openLtAction: openLtAction,
     closeLtAction: closeLtAction,
     openLTFunction: openLTFunction,
-    checkElmAssessmentStatus : checkAssessmentStatus,
-    updateAssessmentVersion: updateAssessmentVersion
+    checkElmAssessmentStatus : fetchAssessmentMetadata,
+    updateAssessmentVersion: updateAssessmentVersion,
+    fetchAssessmentLatestVersion:fetchAssessmentVersions
 }
 
 export default connect(
