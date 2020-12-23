@@ -173,6 +173,7 @@ export class TinyMceEditor extends Component {
                                 let showHideType = this.props.showHideType || null
                                 showHideType = showHideType === "revel" ? "postertextobject" : showHideType
                                 this.props.handleBlur(null, this.props.currentElement, this.props.index, showHideType)
+                            
                             }
                         }
                         editor.selection.placeCaretAt(clickedX, clickedY);
@@ -267,7 +268,7 @@ export class TinyMceEditor extends Component {
             }
         }
         tinyMCE.$('.Wirisformula').each(function () {
-            this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
+            this.naturalHeight && this.setAttribute('height', this.naturalHeight)
             this.naturalWidth && this.setAttribute('width', this.naturalWidth)
         });
 
@@ -347,6 +348,7 @@ export class TinyMceEditor extends Component {
                 }
             }
             switch (e.command) {
+                
                 case "indent":
                     this.handleIndent(e, editor, content, this.props.element.type, node)
                     break;
@@ -3098,7 +3100,7 @@ export class TinyMceEditor extends Component {
         }
 
         tinyMCE.$('.Wirisformula').each(function () {
-            this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
+            this.naturalHeight && this.setAttribute('height', this.naturalHeight)
             this.naturalWidth && this.setAttribute('width', this.naturalWidth)
         })
         let showHideType = this.props.showHideType || null
