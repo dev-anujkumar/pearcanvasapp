@@ -159,6 +159,10 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         }
         else {
             newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
+            let elmLimit = (config.page + 1) * config.pageLimit;
+            if(newParentData[config.slateManifestURN].type !== "popup" && elmLimit > 0 && newParentData[config.slateManifestURN].contents.bodymatter.length > elmLimit) {
+                newParentData[config.slateManifestURN].contents.bodymatter.splice(elmLimit);
+            }
         }
         if (config.tcmStatus) {
             if (slateWrapperConstants.elementType.indexOf(type) !== -1) {

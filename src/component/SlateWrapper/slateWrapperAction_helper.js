@@ -138,6 +138,10 @@ export const onPasteSuccess = async (params) => {
     }
 
     newParentData[config.slateManifestURN].contents.bodymatter.splice(cutIndex, 0, responseData);
+    let elmLimit = (config.page + 1) * config.pageLimit;
+    if(newParentData[config.slateManifestURN].type != "popup" && elmLimit > 0 && newParentData[config.slateManifestURN].contents.bodymatter.length > elmLimit) {
+        newParentData[config.slateManifestURN].contents.bodymatter.splice(elmLimit);
+    }
 
     if (config.tcmStatus) {
         if (slateWrapperConstants.elementType.indexOf("TEXT") !== -1 && cutSnap) {
