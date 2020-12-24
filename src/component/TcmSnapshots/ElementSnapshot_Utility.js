@@ -26,7 +26,8 @@ const {
     ASIDE,
     WORKED_EXAMPLE,
     FIGURE,
-    MULTI_COLUMN
+    MULTI_COLUMN,
+    interactiveSubtypeConstants
 }
     = TcmConstants;
 
@@ -279,7 +280,18 @@ export const fetchElementsTag = (element,metadataField) => {
             break;
     }
     
-    eleTag = eleSubType && eleSubType.trim() !== "" && setElementTag[eleType] ? setElementTag[eleType].subtype[eleSubType] : setElementTag[eleType]
+    if (eleSubType === "interactive") {
+        if (element.figuredata.interactivetype !== "fpo") {
+            eleTag = setElementTag[eleType].subtype[eleSubType].subtype[element.figuredata.interactivetype]
+        }
+        else {
+            eleTag = setElementTag[eleType].subtype[eleSubType].subtype[element.figuredata.interactiveformat]
+        }
+        
+    }
+    else {
+        eleTag = eleSubType && eleSubType.trim() !== "" && setElementTag[eleType] ? setElementTag[eleType].subtype[eleSubType] : setElementTag[eleType]
+    }
     labelText = eleTag ? `${eleTag.parentTag}${eleTag.childTag ? '+' + eleTag.childTag : ""}`:"P"
 
     return labelText;
@@ -447,6 +459,32 @@ const setElementTag = {
             },
             "authoredtext":{
                 parentTag: "MML" 
+            },
+            "interactive": {
+                subtype: {
+                    [interactiveSubtypeConstants.THIRD_PARTY] : { 
+                        parentTag: "SL"
+                    },
+                    [interactiveSubtypeConstants.EXTERNAL_WEBSITE_LINK] : { 
+                        parentTag: "SL"
+                    },
+                    [interactiveSubtypeConstants.PDF] : { 
+                        parentTag: "SL"
+                    },
+                    [interactiveSubtypeConstants.LEGACY_WEB_LINK] : { 
+                        parentTag: "SL"
+                    },
+                    [interactiveSubtypeConstants.TABLE] : { 
+                        parentTag: "SL"
+                    },
+                    [interactiveSubtypeConstants.QUAD] : { 
+                        parentTag: "Quad"
+                    },
+                    [interactiveSubtypeConstants.ELM] : {
+                        parentTag: "ELM"
+                    },
+                    
+                }
             }
         }
     }
@@ -504,4 +542,56 @@ export const generateWipDataForFigure = (bodymatter, index) => {
             break;
     }
     return wipData
+}
+
+/**
+ * @function getInteractiveSubtypeData
+ * @description- This function is to prepare metadata, itemID for interactive.
+ * @param {Object} figuredata Figuredata object
+ * @param {Object} html HTML object
+ */
+export const getInteractiveSubtypeData = (figuredata, html) => {
+
+    //SL-3rd party and Table- itemid: asset ID, metadata: 3rd Party
+    //SL-Pdf , external and legacy Web link- itemid: asset ID, itembuttonlabel: Action button label, metadata: PDF/external/legacy
+    //Quad-mmi - itemid: asset ID
+    //Elm-mmi - itemid: asset ID, itemtitle: interactive title
+
+    let interactiveDataToReturn = {
+        itemID: `<p>${figuredata.interactiveid}</p>`
+    }
+    switch (figuredata.interactivetype) {
+        case interactiveSubtypeConstants.THIRD_PARTY:
+        case interactiveSubtypeConstants.TABLE:
+            interactiveDataToReturn = {
+                ...interactiveDataToReturn,
+                metadata: figuredata.interactivetype
+            }
+            break;
+        case interactiveSubtypeConstants.EXTERNAL_WEBSITE_LINK:  
+        case interactiveSubtypeConstants.PDF:
+        case interactiveSubtypeConstants.LEGACY_WEB_LINK:
+            interactiveDataToReturn = {
+                ...interactiveDataToReturn,
+                itemButtonLabel: html.postertext || `<p></p>`,
+                metadata: figuredata.interactivetype
+            }
+            break;
+             
+        default:
+            switch (figuredata.interactiveformat) {
+                case interactiveSubtypeConstants.QUAD:
+                    interactiveDataToReturn = {
+                        ...interactiveDataToReturn
+                    }
+                    break;
+                case interactiveSubtypeConstants.ELM:
+                    interactiveDataToReturn = {
+                        ...interactiveDataToReturn,
+                        itemTitle: figuredata.interactivetitle || "<p></p>"
+                    }
+                    break;
+            }
+    }
+    return interactiveDataToReturn
 }
