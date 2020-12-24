@@ -636,7 +636,7 @@ export const setSlateType = (wipData, containerElement, type) => {
 */
 export const prepareFigureElementSnapshots = async (element, actionStatus, index) => {
     let elementSnapshot = {};
-    let semanticSnapshots = (actionStatus.fromWhere !== "create" && element.type !== CITATION_ELEMENT) ? await setSemanticsSnapshots(element, actionStatus, index) : {};
+    let semanticSnapshots = element.type !== CITATION_ELEMENT ? await setSemanticsSnapshots(element, actionStatus, index) : {};
     elementSnapshot = {
         ...element ? setFigureElementContentSnapshot(element,actionStatus) : "",
         glossorySnapshot: JSON.stringify([]),
