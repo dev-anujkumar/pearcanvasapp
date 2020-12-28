@@ -113,14 +113,14 @@ export const onPasteSuccess = async (params) => {
     const currentSlateData = newParentData[config.slateManifestURN];
 
     /** [PCAT-8289] ---------------------------- TCM Snapshot Data handling ------------------------------*/
-    if (slateWrapperConstants.elementType.indexOf("TEXT") !== -1 && cutSnap) {
+    if (slateWrapperConstants.elementType.indexOf(slateWrapperConstants.checkTCM(responseData)) !== -1 && cutSnap) {
         const snapArgs = {
             newParentData,
             currentSlateData,
             asideData: null,
             poetryData: null,
             parentUrn: null,
-            type: "TEXT",
+            type: slateWrapperConstants.checkTCM(responseData),
             responseData,
             dispatch,
             index,
@@ -140,8 +140,8 @@ export const onPasteSuccess = async (params) => {
     newParentData[config.slateManifestURN].contents.bodymatter.splice(cutIndex, 0, responseData);
 
     if (config.tcmStatus) {
-        if (slateWrapperConstants.elementType.indexOf("TEXT") !== -1 && cutSnap) {
-            await prepareDataForTcmCreate("TEXT", responseData, getState, dispatch);
+        if (slateWrapperConstants.elementType.indexOf(slateWrapperConstants.checkTCM(responseData)) !== -1 && cutSnap) {
+            await prepareDataForTcmCreate(slateWrapperConstants.checkTCM(responseData), responseData, getState, dispatch);
         }
     }
 
