@@ -481,7 +481,7 @@ const setElementTag = {
                         parentTag: "Quad"
                     },
                     [interactiveSubtypeConstants.ELM] : {
-                        parentTag: "ELM"
+                        parentTag: "Elm"
                     },
                     
                 }
@@ -580,17 +580,17 @@ export const getInteractiveSubtypeData = (figuredata, html) => {
              
         default:
             switch (figuredata.interactiveformat) {
-                case interactiveSubtypeConstants.QUAD:
-                    interactiveDataToReturn = {
-                        ...interactiveDataToReturn
-                    }
-                    break;
                 case interactiveSubtypeConstants.ELM:
                     interactiveDataToReturn = {
                         ...interactiveDataToReturn,
                         itemTitle: figuredata.interactivetitle || "<p></p>"
                     }
                     break;
+                case interactiveSubtypeConstants.QUAD:
+                default:
+                    interactiveDataToReturn = {
+                        ...interactiveDataToReturn
+                    }
             }
     }
     return interactiveDataToReturn
