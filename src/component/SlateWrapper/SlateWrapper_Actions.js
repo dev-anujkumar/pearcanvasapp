@@ -656,10 +656,10 @@ export const pasteElement = (params) => async (dispatch, getState) => {
         localStorage.setItem('newElement', 1);
 
         let cutIndex = index;
-        const elmExist = await checkElementExistence(config.slateEntityURN, selection.element.id);
         if(selection.sourceSlateEntityUrn === config.slateEntityURN &&
-            cutIndex > selection.sourceElementIndex && selection.operationType === 'cut' && elmExist) {
-            cutIndex -= 1;
+            cutIndex > selection.sourceElementIndex && selection.operationType === 'cut') {
+            const elmExist = await checkElementExistence(config.slateEntityURN, selection.element.id);
+            cutIndex -= elmExist ? 1 : 0;
         }
 
         let elmHtml = ('html' in selection.element) ? selection.element.html : {};
