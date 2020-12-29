@@ -25,7 +25,7 @@ import { HideLoader, ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 import * as slateWrapperConstants from "./SlateWrapperConstants"
-import { onPasteSuccess, prepareDataForTcmCreate } from "./slateWrapperAction_helper"
+import { onPasteSuccess, checkElementExistence, prepareDataForTcmCreate } from "./slateWrapperAction_helper"
 
 import { SET_SELECTION } from './../../constants/Action_Constants.js';
 import tinymce from 'tinymce'
@@ -656,8 +656,9 @@ export const pasteElement = (params) => async (dispatch, getState) => {
         localStorage.setItem('newElement', 1);
 
         let cutIndex = index;
+        const elmExist = await checkElementExistence(config.slateEntityURN, selection.element.id);
         if(selection.sourceSlateEntityUrn === config.slateEntityURN &&
-            cutIndex > selection.sourceElementIndex && selection.operationType === 'cut') {
+            cutIndex > selection.sourceElementIndex && selection.operationType === 'cut' && elmExist) {
             cutIndex -= 1;
         }
 
