@@ -17,7 +17,8 @@ export const onPasteSuccess = async (params) => {
         index,
         cutIndex,
         dispatch,
-        getState
+        getState,
+        elmExist
     } = params    
 
     const activeEditorId = tinymce && tinymce.activeEditor && tinymce.activeEditor.id
@@ -32,7 +33,7 @@ export const onPasteSuccess = async (params) => {
 
     /** Create Snapshot for cut action on different slate */
     let cutSnap = true;
-    if(operationType === 'cut' && 'sourceSlateEntityUrn' in elmSelection && elmSelection.sourceSlateEntityUrn === config.slateEntityURN) {
+    if(operationType === 'cut' && 'sourceSlateEntityUrn' in elmSelection && elmSelection.sourceSlateEntityUrn === config.slateEntityURN && elmExist) {
         cutSnap = false;
     }
 

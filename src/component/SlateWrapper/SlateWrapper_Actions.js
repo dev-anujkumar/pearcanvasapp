@@ -656,9 +656,10 @@ export const pasteElement = (params) => async (dispatch, getState) => {
         localStorage.setItem('newElement', 1);
 
         let cutIndex = index;
+        let elmExist = false;
         if(selection.sourceSlateEntityUrn === config.slateEntityURN &&
             cutIndex > selection.sourceElementIndex && selection.operationType === 'cut') {
-            const elmExist = await checkElementExistence(config.slateEntityURN, selection.element.id);
+            elmExist = await checkElementExistence(config.slateEntityURN, selection.element.id);
             cutIndex -= elmExist ? 1 : 0;
         }
 
@@ -677,7 +678,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
             htmlText = htmlText.replace(/(\"page-link-[0-9]{1,2}-[0-9]{2,4}\")/gi, () => `"page-link-${Math.floor(Math.random() * 100)}-${Math.floor(Math.random() * 10000)}"`);
             selection.element.html.text = htmlText;
         }
-        
+
         let _requestData = {
             "content": [{
                 "type": selection.element.type,
@@ -739,7 +740,8 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                     index,
                     cutIndex,
                     dispatch,
-                    getState
+                    getState,
+                    elmExist
                 };
         
                 onPasteSuccess(pasteSuccessArgs)
