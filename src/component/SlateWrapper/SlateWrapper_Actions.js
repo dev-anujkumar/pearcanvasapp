@@ -672,6 +672,12 @@ export const pasteElement = (params) => async (dispatch, getState) => {
             }
         }
         
+        if(selection.operationType === 'copy' && 'html' in selection.element && 'text' in  selection.element.html) {
+            let htmlText = (selection.element.html.text);
+            htmlText = htmlText.replace(/(\"page-link-[0-9]{1,2}-[0-9]{2,4}\")/gi, () => `"page-link-${Math.floor(Math.random() * 100)}-${Math.floor(Math.random() * 10000)}"`);
+            selection.element.html.text = htmlText;
+        }
+        
         let _requestData = {
             "content": [{
                 "type": selection.element.type,
