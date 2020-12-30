@@ -60,8 +60,8 @@ export const checkTCM = element => {
             switch(element.figuretype) {
                 case 'tableasmarkup': return TABLE_EDITOR;
                 case 'assessment': return ASSESSMENT;
+                default: return TEXT;
             }
-            break;
 
         case 'element-assessment': return ELEMENT_ASSESSMENT;
 

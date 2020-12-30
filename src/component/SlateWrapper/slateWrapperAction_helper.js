@@ -37,7 +37,6 @@ export const onPasteSuccess = async (params) => {
         cutSnap = false;
     }
 
-    // let elmExist = await checkElementExistence(getState().selectionReducer.selection.sourceSlateEntityUrn, getState().selectionReducer.selection.deleteElm.id);
     if ('deleteElm' in getState().selectionReducer.selection && operationType === 'cut') {
         let deleteElm = getState().selectionReducer.selection.deleteElm;
         const parentData = getState().appStore.slateLevelData;
