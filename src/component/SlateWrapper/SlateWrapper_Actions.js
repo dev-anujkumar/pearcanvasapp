@@ -657,10 +657,11 @@ export const pasteElement = (params) => async (dispatch, getState) => {
 
         let cutIndex = index;
         let elmExist = false;
-        if(selection.sourceSlateEntityUrn === config.slateEntityURN &&
-            cutIndex > selection.sourceElementIndex && selection.operationType === 'cut') {
+        if(selection.sourceSlateEntityUrn === config.slateEntityURN && selection.operationType === 'cut') {
             elmExist = await checkElementExistence(config.slateEntityURN, selection.element.id);
-            cutIndex -= elmExist ? 1 : 0;
+            if(cutIndex > selection.sourceElementIndex) {
+                cutIndex -= elmExist ? 1 : 0;
+            }
         }
 
         let elmHtml = ('html' in selection.element) ? selection.element.html : {};
