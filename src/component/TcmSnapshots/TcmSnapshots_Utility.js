@@ -114,7 +114,7 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
 */
 export const tcmSnapshotsOnDefaultSlate = (snapshotsData, defaultKeys, containerElement, type, deleVercase, newVersionUrns,index, isPopupSlate) => {
     const { wipData, elementId, tag, actionStatus, popupInContainer,slateManifestVersioning } = snapshotsData;
-    const { poetryData, asideData, parentUrn } = containerElement
+    const { poetryData, asideData, parentUrn, showHideObj } = containerElement
     /* For WE creation*/
     if (wipData.type === ELEMENT_ASIDE && type != SECTION_BREAK) {
         tcmSnapshotsCreateAsideWE(snapshotsData, defaultKeys, deleVercase, newVersionUrns,index, isPopupSlate);
@@ -124,7 +124,7 @@ export const tcmSnapshotsOnDefaultSlate = (snapshotsData, defaultKeys, container
         tcmSnapshotsCreateSectionBreak(containerElement, snapshotsData, defaultKeys, deleVercase, newVersionUrns,index, isPopupSlate)
     }
     /* action on element in WE/PE/CG/2C */
-    else if (poetryData || asideData || parentUrn) {
+    else if (poetryData || asideData || parentUrn || showHideObj) {
         tcmSnapshotsInContainerElements(containerElement, snapshotsData, defaultKeys, deleVercase, newVersionUrns,index, isPopupSlate)
     }
     /* action on PE and CG */

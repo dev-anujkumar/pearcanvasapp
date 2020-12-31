@@ -27,6 +27,7 @@ const {
     WORKED_EXAMPLE,
     FIGURE,
     MULTI_COLUMN,
+    SHOWHIDE,
     interactiveSubtypeConstants
 }
     = TcmConstants;
@@ -275,6 +276,9 @@ export const fetchElementsTag = (element,metadataField) => {
         case FIGURE:
             eleSubType = element.figuretype
             break;
+        case SHOWHIDE:
+            eleSubType = element.type
+            break;
         default:
             eleSubType = ""
             break;
@@ -485,6 +489,18 @@ const setElementTag = {
                     },
                     
                 }
+            }
+        }
+    },
+    [SHOWHIDE] : {
+        subtype: {
+            'show': {
+                parentTag: "SH",
+                childTag: "show"
+            },
+            'hide': {
+                parentTag: "SH",
+                childTag: "hide"
             }
         }
     }

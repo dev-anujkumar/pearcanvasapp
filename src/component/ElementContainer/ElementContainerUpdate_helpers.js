@@ -322,17 +322,19 @@ export const collectDataAndPrepareTCMSnapshot = async (params) => {
     } = params
 
     const assetRemoveidForSnapshot = getState().assetPopOverSearch.assetID;
-    const isPopupElement = parentElement && parentElement.type === 'popup' && (updatedData.metaDataField !== undefined || updatedData.sectionType !== undefined) ? true : false;
+    const { showHideObj } = getState().appStore.showHideObj;
+    const isPopupOrShowhideElement = parentElement && (parentElement.type === 'popup' || parentElement.type === 'showhide') && (updatedData.metaDataField !== undefined || updatedData.sectionType !== undefined) ? true : false;
     const noAdditionalFields = (updatedData.metaDataField == undefined && updatedData.sectionType == undefined) ? true : false
     const oldFigureData = getState().appStore.oldFiguredata
-    if (elementTypeTCM.indexOf(responseData.type) !== -1 && (!showHideType || showHideType === '') && (isPopupElement || noAdditionalFields)) {
+    if (elementTypeTCM.indexOf(responseData.type) !== -1 && (isPopupOrShowhideElement || noAdditionalFields)) {
         const containerElement = {
             asideData,
             parentUrn,
             poetryData,
-            parentElement: parentElement && parentElement.type === 'popup' ? parentElement : undefined,
+            showHideObj,
+            parentElement: parentElement && (parentElement.type === 'popup' || parentElement.type === 'showhide') ? parentElement : undefined,
             metaDataField: parentElement && parentElement.type === 'popup' && updatedData.metaDataField ? updatedData.metaDataField : undefined,
-            sectionType : parentElement && parentElement.type === 'popup' && updatedData.sectionType ? updatedData.sectionType : undefined,
+            sectionType : parentElement && (parentElement.type === 'popup' || parentElement.type === 'showhide') && updatedData.sectionType ? updatedData.sectionType : undefined,
             CurrentSlateStatus: currentSlateData.status
         },
         elementUpdateData = {
@@ -344,6 +346,7 @@ export const collectDataAndPrepareTCMSnapshot = async (params) => {
             CurrentSlateStatus: currentSlateData.status,
             figureData: oldFigureData
         }
+
         if (!config.isCreateGlossary) {
             await tcmSnapshotsForUpdate(elementUpdateData, elementIndex, containerElement, dispatch, assetRemoveidForSnapshot);
         }
@@ -529,10 +532,10 @@ export const updateStoreInCanvas = (params) => {
     const newslateData = JSON.parse(JSON.stringify(parentData));
    
     //tcm update code
-    const isPopupElement = parentElement && parentElement.type == 'popup' && (updatedData.metaDataField !== undefined || updatedData.sectionType !== undefined) ? true : false;
+    const isPopupOrShowhideElement = parentElement && (parentElement.type === 'popup' || parentElement.type === 'showhide') && (updatedData.metaDataField !== undefined || updatedData.sectionType !== undefined) ? true : false;
     const noAdditionalFields = (updatedData.metaDataField == undefined && updatedData.sectionType == undefined) ? true : false   
     if (config.tcmStatus) {
-        if (elementTypeTCM.indexOf(updatedData.type) !== -1 && (!showHideType || showHideType === '') && (isPopupElement || noAdditionalFields)) {
+        if (elementTypeTCM.indexOf(updatedData.type) !== -1 && (isPopupOrShowhideElement || noAdditionalFields)) {
             const tcmDataArgs = {
                 updatedDataID: updatedData.id, getState, dispatch, versionedData, updatedData
             }
