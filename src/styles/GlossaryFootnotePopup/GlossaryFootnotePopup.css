@@ -22,7 +22,7 @@
 }
 
 .glossary-toolbar-wrapper .glossary-body{
-    margin: 0 12px;
+    margin: 42px 12px;
 }
 .glossary-toolbar-wrapper #glossary-toolbar{
     background-color: #eee; 
@@ -36,6 +36,7 @@
     z-index: 10000;
 }
 .glossary-word-header{
+    border-top: 1px solid #ccc;
     background-color: #eee;
 }
 .glossary-toolbar-wrapper .glossary-word-title{
@@ -127,7 +128,7 @@
 #toolbarGlossaryFootnote{
     margin: 11px 11px 11px !important;
     padding-bottom: 4%;
-    border-bottom: solid 1px #e0e0e0;
+    /* border-bottom: solid 1px #e0e0e0; */
 }
 
 #toolbarGlossaryFootnote .tox .tox-toolbar__group{
@@ -156,4 +157,16 @@
 .definition-editor .temp_Wirisformula {
     vertical-align: middle !important;
     padding-bottom: 4px !important;
+}
+
+.audio-wrapper{
+    margin: -20px 17px; 
+    border: 1px solid #ccc;
+    align-items: center;
+    background: 0 0;
+    display: flex;
+    font-weight: 400;
+    height: 34px;
+    justify-content: center;
+    width: 15%; 
 }
