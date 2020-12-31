@@ -565,7 +565,7 @@ export const getInteractiveSubtypeData = (figuredata, html) => {
         case interactiveSubtypeConstants.TABLE:
             interactiveDataToReturn = {
                 ...interactiveDataToReturn,
-                metadata: figuredata.interactivetype
+                metadata: `<p>${figuredata.interactivetype}</p>` 
             }
             break;
         case interactiveSubtypeConstants.EXTERNAL_WEBSITE_LINK:  
@@ -573,8 +573,8 @@ export const getInteractiveSubtypeData = (figuredata, html) => {
         case interactiveSubtypeConstants.LEGACY_WEB_LINK:
             interactiveDataToReturn = {
                 ...interactiveDataToReturn,
-                itemButtonLabel: html.postertext || `<p></p>`,
-                metadata: figuredata.interactivetype
+                itemButtonLabel:  html.postertext ? html.postertext.match(/<p>/g) ? html.postertext : `<p>${html.postertext}</p>` : "<p></p>",
+                metadata: `<p>${figuredata.interactivetype}</p>` 
             }
             break;
              
@@ -583,7 +583,7 @@ export const getInteractiveSubtypeData = (figuredata, html) => {
                 case interactiveSubtypeConstants.ELM:
                     interactiveDataToReturn = {
                         ...interactiveDataToReturn,
-                        itemTitle: figuredata.interactivetitle || "<p></p>"
+                        itemTitle: `<p>${figuredata.interactivetitle}</p>` || "<p></p>"
                     }
                     break;
                 case interactiveSubtypeConstants.QUAD:
