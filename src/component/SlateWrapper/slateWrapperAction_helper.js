@@ -252,6 +252,9 @@ export function prepareDataForTcmCreate(type, createdElementData, getState, disp
         case slateWrapperConstants.AUDIO:
         case slateWrapperConstants.FIGURE_MML:
         case slateWrapperConstants.BLOCKCODE:
+        case slateWrapperConstants.SMARTLINK:
+        case slateWrapperConstants.MMI_ELM:
+        case slateWrapperConstants.INTERACTIVE:
             elmUrn.push(createdElementData.id)
             break;
         case slateWrapperConstants.MULTI_COLUMN:
