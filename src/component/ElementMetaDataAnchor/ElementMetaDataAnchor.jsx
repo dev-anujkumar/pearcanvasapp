@@ -5,6 +5,7 @@ import { sendDataToIframe, defaultMathImagePath } from '../../constants/utility.
 import config from '../../config/config';
 import { connect } from 'react-redux';
 import './../../styles/ElementMetaDataAnchor/ElementMetaDataAnchor.css';
+import { removeImageCache } from '../../js/utils';
 export class ElementMetaDataAnchor extends Component {
   constructor(props) {
     super(props);
@@ -73,6 +74,8 @@ export class ElementMetaDataAnchor extends Component {
       jsx = loData.label.en;
       const regex = /<math.*?data-src=\'(.*?)\'.*?<\/math>/g;
       jsx = jsx.replace(regex, "<img src='$1'></img>")
+      jsx=jsx.replace(/'/g, '"');
+      jsx = removeImageCache(jsx)
       if (document.getElementsByClassName('learningObjectiveinnerText').length > 0 && (loData.id != "" || loData.loUrn != "")) {
         let element = document.getElementsByClassName('learningObjectiveinnerText');
         element = Array.from(element);
