@@ -276,9 +276,6 @@ export const fetchElementsTag = (element,metadataField) => {
         case FIGURE:
             eleSubType = element.figuretype
             break;
-        case SHOWHIDE:
-            eleSubType = element.type
-            break;
         default:
             eleSubType = ""
             break;
@@ -493,16 +490,7 @@ const setElementTag = {
         }
     },
     [SHOWHIDE] : {
-        subtype: {
-            'show': {
-                parentTag: "SH",
-                childTag: "show"
-            },
-            'hide': {
-                parentTag: "SH",
-                childTag: "hide"
-            }
-        }
+        parentTag: "SH"
     }
 }
 
@@ -512,6 +500,11 @@ const setMetadataType = {
         'formattedTitle': 'popup_label',
         'formattedSubtitle': 'popup_label',
         'formattedTitleOnly': 'popup_label'
+    },
+    "showhide": {
+        "show": "show",
+        "hide": "hide",
+        "revel": "revel"
     }
 }
 

@@ -41,7 +41,8 @@ const {
     bqAttrHtmlFalse,
     bqHiddenText,
     FIGURE,
-    allowedFigureTypesForTCM
+    allowedFigureTypesForTCM,
+    SHOWHIDE
 }
     = TcmConstants;
 
@@ -213,9 +214,11 @@ const tcmSnapshotsCreateSectionBreak = (containerElement, snapshotsData, default
 export const tcmSnapshotsInContainerElements = (containerElement, snapshotsData, defaultKeys, deleVercase, newVersionUrns,index, isPopupSlate) => {
     let elementDetails;
     const { wipData, elementId, tag, actionStatus, popupInContainer,slateManifestVersioning } = snapshotsData;
-    const { poetryData, asideData, parentUrn } = containerElement
+    const { poetryData, asideData, parentUrn, showHideObj } = containerElement
     let parentElement = asideData ? asideData : poetryData ? poetryData : parentUrn;
+    parentElement = showHideObj ? showHideObj : parentElement
     elementId.parentId = parentElement && parentElement.id ? parentElement.id : parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "";
+    elementId.parentId = parentElement && parentElement.element && parentElement.element.type === SHOWHIDE ? parentElement.element.id : elementId.parentId
     elementId.childId = deleVercase ? newVersionUrns[wipData.id] : wipData.id;
     elementId.columnId = parentUrn && parentUrn.elementType === MULTI_COLUMN_GROUP && parentUrn.manifestUrn ? parentUrn.manifestUrn : "";
     // deleVercase ? parentUrn && newVersionUrns[parentUrn.manifestUrn] : parentUrn && parentUrn.manifestUrn;
@@ -223,10 +226,10 @@ export const tcmSnapshotsInContainerElements = (containerElement, snapshotsData,
         wipData.id = newVersionUrns[wipData.id]
         wipData.versionUrn = newVersionUrns[wipData.id]
     }
-    tag.parentTag = fetchElementsTag(parentElement);
+    tag.parentTag = showHideObj ? fetchElementsTag(parentElement.element) : fetchElementsTag(parentElement);
     tag.childTag = fetchElementsTag(wipData);
     let isHead = asideData && asideData.type === ELEMENT_ASIDE && asideData.subtype === WORKED_EXAMPLE ? parentUrn.manifestUrn == asideData.id ? "HEAD" : "BODY" : "";
-    elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "", parentUrn ? parentUrn.columnIndex : -1, popupInContainer, slateManifestVersioning, isPopupSlate);
+    elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "", parentUrn ? parentUrn.columnIndex : -1, popupInContainer, slateManifestVersioning, isPopupSlate, parentElement);
     prepareAndSendTcmData(elementDetails, wipData, defaultKeys, actionStatus,index);
 }
 
@@ -544,7 +547,7 @@ export const prepareAndSendTcmData = async (elementDetails, wipData, defaultKeys
  * @param {String} sectionId - Urn for section break
  * @returns {Object} Object that contains the element tag and elementUrn for snapshot 
 */
-const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,popupInContainer,slateManifestVersioning, popupSlate) => {
+const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,popupInContainer,slateManifestVersioning, popupSlate, parentElement) => {
     let elementData = {};
     let elementTag = `${tag.parentTag}${isHead ? ":" + isHead : ""}${tag.childTag ? ":" + tag.childTag : ""}`;
     let elementId = `${eleId.parentId}${sectionId && isHead === "BODY" ? "+" + sectionId : ""}${eleId.childId ? "+" + eleId.childId : ""}`
@@ -564,9 +567,12 @@ const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,popupInCo
         elementTag = `POP:BODY:${elementTag}`;
         elementId = `${slateManifestVersioning?slateManifestVersioning:config.slateManifestURN}+${elementId}`;
     }
-    else if ( popupSlate) {                //POP:BODY:WE:BODY:P
+    else if (popupSlate) {                //POP:BODY:WE:BODY:P
         elementTag = `POP:BODY:${elementTag}`;
         elementId = `${eleId.popID}+${elementId}`;
+    }
+    else if (parentElement && parentElement.element && parentElement.element.type === SHOWHIDE) {    //showhide
+        elementTag = `${tag.parentTag}${parentElement.showHideType ? ":" + parentElement.showHideType : ""}${tag.childTag ? ":" + tag.childTag : ""}`;
     }
     elementData = {
         elementUrn: elementId,

@@ -322,7 +322,7 @@ export const collectDataAndPrepareTCMSnapshot = async (params) => {
     } = params
 
     const assetRemoveidForSnapshot = getState().assetPopOverSearch.assetID;
-    const { showHideObj } = getState().appStore.showHideObj;
+    const { showHideObj } = getState().appStore;
     const isPopupOrShowhideElement = parentElement && (parentElement.type === 'popup' || parentElement.type === 'showhide') && (updatedData.metaDataField !== undefined || updatedData.sectionType !== undefined) ? true : false;
     const noAdditionalFields = (updatedData.metaDataField == undefined && updatedData.sectionType == undefined) ? true : false
     const oldFigureData = getState().appStore.oldFiguredata

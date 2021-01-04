@@ -9,7 +9,7 @@ import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ER
 import { fetchPOPupSlateData} from '../../component/TcmSnapshots/TcmSnapshot_Actions.js'
 import { processAndStoreUpdatedResponse, updateStoreInCanvas } from "./ElementContainerUpdate_helpers";
 import { onDeleteSuccess } from "./ElementContainerDelete_helpers";
-
+// import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 export const addComment = (commentString, elementId) => (dispatch) => {
     let url = `${config.STRUCTURE_API_URL}narrative-api/v2/${elementId}/comment/`
     let newComment = {
@@ -359,6 +359,26 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
         const parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
         let currentSlateData = newParentData[config.slateManifestURN];
+
+        /** [PCAT-8699] ---------------------------- TCM Snapshot Data handling ------------------------------*/
+        /* let containerElement = {
+            asideData: asideData,
+            parentUrn: parentUrn,
+            poetryData: poetryData
+        };
+        let slateData = {
+            currentParentData: newParentData,
+            bodymatter: currentSlateData.contents.bodymatter,
+            response: createdElemData.data
+        };
+        if (currentSlateData.status === 'approved') {
+            await tcmSnapshotsForCreate(slateData, "TEXT", containerElement, dispatch);
+        }
+        else {
+            tcmSnapshotsForCreate(slateData, "TEXT", containerElement, dispatch);
+        } */
+        
+
         if (currentSlateData.status === 'approved') {
             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
             sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
