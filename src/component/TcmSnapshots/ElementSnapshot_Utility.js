@@ -256,6 +256,7 @@ export const prepareAssetPopoverSnapshotContent = async (assetsList, indexes, ac
  * @returns {String} Element Tags for elementType key in Snapshots
 */
 export const fetchElementsTag = (element,metadataField) => {
+    const interactiveArray = ["3rd-party","pdf","web-link","pop-up-web-link","table"];
     let labelText, eleTag, eleType, eleSubType;
     eleType = element && element.type ? element.type :  element.elementType;
     eleType = metadataField ? setMetadataType[element.type][metadataField] : eleType;
@@ -281,13 +282,12 @@ export const fetchElementsTag = (element,metadataField) => {
     }
     
     if (eleSubType === "interactive") {
-        if (element.figuredata.interactivetype !== "fpo") {
+        if (element.figuredata.interactivetype !== "fpo" && interactiveArray.includes(element.figuredata.interactivetype) ) {
             eleTag = setElementTag[eleType].subtype[eleSubType].subtype[element.figuredata.interactivetype]
         }
         else {
             eleTag = setElementTag[eleType].subtype[eleSubType].subtype[element.figuredata.interactiveformat]
-        }
-        
+        }  
     }
     else {
         eleTag = eleSubType && eleSubType.trim() !== "" && setElementTag[eleType] ? setElementTag[eleType].subtype[eleSubType] : setElementTag[eleType]
@@ -583,7 +583,7 @@ export const getInteractiveSubtypeData = (figuredata, html) => {
                 case interactiveSubtypeConstants.ELM:
                     interactiveDataToReturn = {
                         ...interactiveDataToReturn,
-                        itemTitle: `<p>${figuredata.interactivetitle}</p>` || "<p></p>"
+                        itemTitle: figuredata.interactivetitle ? `<p>${figuredata.interactivetitle}</p>` : "<p></p>"
                     }
                     break;
                 case interactiveSubtypeConstants.QUAD:
