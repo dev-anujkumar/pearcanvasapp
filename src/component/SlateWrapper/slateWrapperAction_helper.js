@@ -17,7 +17,8 @@ export const onPasteSuccess = async (params) => {
         index,
         cutIndex,
         dispatch,
-        getState
+        getState,
+        elmExist
     } = params    
 
     const activeEditorId = tinymce && tinymce.activeEditor && tinymce.activeEditor.id
@@ -32,11 +33,10 @@ export const onPasteSuccess = async (params) => {
 
     /** Create Snapshot for cut action on different slate */
     let cutSnap = true;
-    if(operationType === 'cut' && 'sourceSlateEntityUrn' in elmSelection && elmSelection.sourceSlateEntityUrn === config.slateEntityURN) {
+    if(operationType === 'cut' && 'sourceSlateEntityUrn' in elmSelection && elmSelection.sourceSlateEntityUrn === config.slateEntityURN && elmExist) {
         cutSnap = false;
     }
 
-    // let elmExist = await checkElementExistence(getState().selectionReducer.selection.sourceSlateEntityUrn, getState().selectionReducer.selection.deleteElm.id);
     if ('deleteElm' in getState().selectionReducer.selection && operationType === 'cut') {
         let deleteElm = getState().selectionReducer.selection.deleteElm;
         const parentData = getState().appStore.slateLevelData;
@@ -113,14 +113,14 @@ export const onPasteSuccess = async (params) => {
     const currentSlateData = newParentData[config.slateManifestURN];
 
     /** [PCAT-8289] ---------------------------- TCM Snapshot Data handling ------------------------------*/
-    if (slateWrapperConstants.elementType.indexOf("TEXT") !== -1 && cutSnap) {
+    if (slateWrapperConstants.elementType.indexOf(slateWrapperConstants.checkTCM(responseData)) !== -1 && cutSnap) {
         const snapArgs = {
             newParentData,
             currentSlateData,
             asideData: null,
             poetryData: null,
             parentUrn: null,
-            type: "TEXT",
+            type: slateWrapperConstants.checkTCM(responseData),
             responseData,
             dispatch,
             index,
@@ -140,8 +140,8 @@ export const onPasteSuccess = async (params) => {
     newParentData[config.slateManifestURN].contents.bodymatter.splice(cutIndex, 0, responseData);
 
     if (config.tcmStatus) {
-        if (slateWrapperConstants.elementType.indexOf("TEXT") !== -1 && cutSnap) {
-            await prepareDataForTcmCreate("TEXT", responseData, getState, dispatch);
+        if (slateWrapperConstants.elementType.indexOf(slateWrapperConstants.checkTCM(responseData)) !== -1 && cutSnap) {
+            await prepareDataForTcmCreate(slateWrapperConstants.checkTCM(responseData), responseData, getState, dispatch);
         }
     }
 
@@ -252,6 +252,9 @@ export function prepareDataForTcmCreate(type, createdElementData, getState, disp
         case slateWrapperConstants.AUDIO:
         case slateWrapperConstants.FIGURE_MML:
         case slateWrapperConstants.BLOCKCODE:
+        case slateWrapperConstants.SMARTLINK:
+        case slateWrapperConstants.MMI_ELM:
+        case slateWrapperConstants.INTERACTIVE:
             elmUrn.push(createdElementData.id)
             break;
         case slateWrapperConstants.MULTI_COLUMN:
