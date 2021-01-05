@@ -58,6 +58,7 @@ class OpenAudioBook extends React.Component {
     }
 
     render = () => {
+        let isGlossary = this.props.isGlossary;
         const { audioData } = this.props;
         var mediaSrc = "";
         var mediaTitle = "";
@@ -67,7 +68,7 @@ class OpenAudioBook extends React.Component {
         }
 
         return (
-            <div className="audiodropdown" ref={node => this.node = node} onBlur={() => this.handleClick(this)}>
+            <div className={!isGlossary ?'audiodropdown':'glossary-audiodropdown'} ref={node => this.node = node} onBlur={() => this.handleClick(this)}>
                 <div className="audio-close">
                     <h2 className="audio-book-text">Audio Book</h2>
                     <span className="close-icon-audio" onClick={() => this.props.closeAudioBookDialog()}>{audioNarrationCloseIcon}</span>

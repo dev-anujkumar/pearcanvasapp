@@ -585,5 +585,13 @@ export const setFormattingToolbar = (action) => {
             isSuperscriptButton && isSuperscriptButton.classList.remove('tox-tbtn--enabled')
             isSuperscriptButton && isSuperscriptButton.classList.add('tox-tbtn--select')
             break;
+        case 'disableGlossaryAudio':
+            let isAudioButton = document.getElementById('glossary-audio')? document.getElementById('glossary-audio'):''
+            isAudioButton && isAudioButton.classList.add('disable-audio');
+            break;
+        case 'removeDisableGlossaryAudio':
+            let isAudioDisbaledButton = document.getElementById('glossary-audio')? document.getElementById('glossary-audio'):''
+            isAudioDisbaledButton && isAudioDisbaledButton.classList.remove('disable-audio');
+            break;
     }
 }

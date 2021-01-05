@@ -10,6 +10,8 @@ import ElementContainer from '../ElementContainer';
 import ElementSaprator from '../ElementSaprator';
 import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
 import { SlateFooter } from './SlateFooter.jsx';
+import OpenAudioBook from '../AudioNarration/OpenAudioBook.jsx';
+
 /** pasteElement function location to be changed */
 import { createElement, swapElement, setSplittedElementIndex, updatePageNumber, accessDenied, pasteElement, wirisAltTextPopup } from './SlateWrapper_Actions';
 import { sendDataToIframe, getSlateType } from '../../constants/utility.js';
@@ -28,7 +30,7 @@ import PopUp from '../PopUp';
 import Toast from '../Toast';
 import { hideBlocker, showTocBlocker, hideTocBlocker } from '../../js/toggleLoader';
 import { guid } from '../../constants/utility.js';
-import { fetchAudioNarrationForContainer, deleteAudioNarrationForContainer, showAudioRemovePopup, showAudioSplitPopup , showWrongAudioPopup } from '../AudioNarration/AudioNarration_Actions'
+import { fetchAudioNarrationForContainer, deleteAudioNarrationForContainer, showAudioRemovePopup, showAudioSplitPopup , showWrongAudioPopup, audioGlossaryPopup} from '../AudioNarration/AudioNarration_Actions'
 import { setSlateLock, releaseSlateLock, setLockPeriodFlag, getSlateLockStatus } from '../CanvasWrapper/SlateLock_Actions'
 import { setActiveElement,openPopupSlate } from '../CanvasWrapper/CanvasWrapper_Actions';
 // import { OPEN_AM } from '../../js/auth_module';
@@ -538,6 +540,10 @@ class SlateWrapper extends Component {
         this.prohibitPropagation(event)
     }
 
+    closeAudioBookDialog =()=>{
+        this.props.audioGlossaryPopup(false);
+ 
+    }
     /**
      * Toggles popup
      */
@@ -1213,6 +1219,7 @@ class SlateWrapper extends Component {
                         )
                     }
                 </ListButtonDropPortal>
+                {this.props.openAudioGlossaryPopup && <OpenAudioBook closeAudioBookDialog={this.closeAudioBookDialog} isGlossary ={true}/>}
                 {this.showLockPopup()}
                 {this.showCustomPopup()}
                 {this.showSplitSlatePopup()}
@@ -1251,6 +1258,7 @@ const mapStateToProps = state => {
         openRemovePopUp: state.audioReducer.openRemovePopUp,
         openSplitPopUp: state.audioReducer.openSplitPopUp,
         openWrongAudioPopup: state.audioReducer.openWrongAudioPopup,
+        openAudioGlossaryPopup:state.audioReducer.openAudioGlossaryPopup,
         withinLockPeriod: state.slateLockReducer.withinLockPeriod,
         openAudio: state.audioReducer.openAudio,
         indexSplit : state.audioReducer.indexSplit,
@@ -1296,6 +1304,7 @@ export default connect(
         assessmentConfirmationPopup,
         getCommentElements,
         pasteElement,
-        wirisAltTextPopup
+        wirisAltTextPopup,
+        audioGlossaryPopup
     }
 )(SlateWrapper);

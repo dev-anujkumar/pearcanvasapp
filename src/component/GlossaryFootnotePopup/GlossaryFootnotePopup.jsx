@@ -3,6 +3,7 @@
 */
 
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import Button from '../ElementButtons/ElementButton.jsx';
 import '../../styles/GlossaryFootnotePopup/GlossaryFootnotePopup.css';
 import ReactEditor from "../tinyMceGlossaryFootnoteEditor"
@@ -11,7 +12,7 @@ import { hasReviewerRole } from '../../constants/utility.js'
 import { setFormattingToolbar } from './GlossaryFootnote_Actions.js';
 import AudioTinyMceGlossary from '../AudioTinyMceGlossary';
 import AddAudioBook from '../AudioNarration/AddAudioBook.jsx';
-import OpenAudioBook from '../AudioNarration/OpenAudioBook.jsx';
+import { audioGlossaryPopup } from '../AudioNarration/AudioNarration_Actions'
 
 class GlossaryFootnotePopup extends Component {
     constructor() {
@@ -32,7 +33,11 @@ class GlossaryFootnotePopup extends Component {
             audioToggle:false
         })
     }
-    
+
+    handleAudioOpenToggle =()=>{
+      this.props.audioGlossaryPopup(true);
+    }
+  
     toolbarHandling = (e, action = "") => {
         let relatedTargets = (e && e.relatedTarget && e.relatedTarget.classList) ? e.relatedTarget.classList : [];
         if (e && checkforToolbarClick(relatedTargets)) {
@@ -43,13 +48,17 @@ class GlossaryFootnotePopup extends Component {
             /** to disable both toolbars on glossary editor blur */
             setFormattingToolbar('disableTinymceToolbar')
             setFormattingToolbar('disableGlossaryFootnoteToolbar')
+            // setFormattingToolbar('disableGlossaryAudio');
+
         }
         if (document.querySelector('div#toolbarGlossaryFootnote .tox-toolbar')) {
             if (action === "add") {
+                // setFormattingToolbar('disableGlossaryAudio');
                 setFormattingToolbar('disableGlossaryFootnoteToolbar')
             } else if (action === "remove") {
                 setFormattingToolbar('disableTinymceToolbar')
                 setFormattingToolbar('enableGlossaryFootnoteToolbar')
+                // setFormattingToolbar('removeDisableGlossaryAudio')
             }
         }
     }
@@ -72,12 +81,11 @@ class GlossaryFootnotePopup extends Component {
                 </div>
                 <div id="toolbarGlossaryFootnote"></div>
                 {
-                    (glossaryFootnote === 'Glossary')&&<div className = {'audio-wrapper'+ accessToolbar}><AudioTinyMceGlossary handleAudioToggle={this.handleAudioToggle}/></div>
-
+                    glossaryFootnote === 'Glossary'&&<div className = {'audio-wrapper'+ accessToolbar} id='glossary-audio'><AudioTinyMceGlossary handleAudioToggle={this.handleAudioToggle} handleAudioOpenToggle={this.handleAudioOpenToggle}/></div>
                 }
 
-                {this.state.audioToggle && <AddAudioBook closeAddAudioBook={this.closeAddAudioBook}/>}
-                
+                {this.state.audioToggle && <AddAudioBook isGlossary={true} closeAddAudioBook={this.closeAddAudioBook}/>}
+
                 <div className="glossary-body">
                     <div id="glossary-toolbar"></div>
                     {
@@ -122,5 +130,12 @@ class GlossaryFootnotePopup extends Component {
         }
     }
 }
+const mapStateToProps = (state) => {
+    return {}
+}
 
-export default GlossaryFootnotePopup;
+const mapActionToProps = {
+    audioGlossaryPopup
+}
+
+export default connect(mapStateToProps, mapActionToProps)(GlossaryFootnotePopup);

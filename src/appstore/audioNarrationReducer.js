@@ -1,7 +1,7 @@
 import {
   OPEN_AUDIO_NARRATION,
   SHOW_REMOVE_POPUP,
-  SPLIT_REMOVE_POPUP , CURRENT_SLATE_AUDIO_NARRATION , ADD_AUDIO_NARRATION , WRONG_AUDIO_REMOVE_POPUP
+  SPLIT_REMOVE_POPUP , CURRENT_SLATE_AUDIO_NARRATION , ADD_AUDIO_NARRATION , WRONG_AUDIO_REMOVE_POPUP,OPEN_AUDIO_GLOSSARY_POPUP
 } from '../constants/Action_Constants'
 
 
@@ -13,7 +13,8 @@ const INITIAL_STATE = {
   openPopUp: false,
   openSplitPopUp : false,
   openWrongAudioPopup: false,
-  indexSplit:0
+  indexSplit:0,
+  audioGlossaryPopup:false
 }
 
 const INITIAL_ACTION = {
@@ -65,6 +66,12 @@ export default function audioNarrationReducer (state = INITIAL_STATE, action = I
       return {
         ...state,
         openWrongAudioPopup: action.payload
+      }
+    }
+    case OPEN_AUDIO_GLOSSARY_POPUP:{
+      return {
+        ...state,
+        openAudioGlossaryPopup:action.payload
       }
     }
    

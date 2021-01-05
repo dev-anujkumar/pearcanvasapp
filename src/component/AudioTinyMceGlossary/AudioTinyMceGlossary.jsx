@@ -1,15 +1,40 @@
 import React from 'react';
-import { audioNarration } from '../../images/TinyMce/TinyMce.jsx'
+import { connect } from 'react-redux';
+import { audioNarration, audioNarrationEnable } from '../../images/TinyMce/TinyMce.jsx'
 import '../../styles/AudioTinyMceGlossary/AudioTinyMceGlossary.css';
 
 const AudioTinyMceGlossary = (props) => {
     return (
-        <div className="">
-            <div className='audio-icon' title="Audio Tag" onClick={() =>props.handleAudioToggle()}>
-                {audioNarration}
-            </div>
-        </div>
+        <>
+            {
+                (props.addAudio) &&
+                <div className="">
+                    <div className='audio-icon'  title="Audio Tag" onClick={() => props.handleAudioToggle()}>
+                        {audioNarration}
+                    </div>
+                </div>
+            }
+
+            {
+                 (props.openAudio) &&
+                 <div className="">
+                     <div className='audio-icon' title="Audio Tag" onClick={() => props.handleAudioOpenToggle()}>
+                         {audioNarrationEnable}
+                     </div>
+                 </div>
+            }
+
+        </>
     );
 }
 
-export default AudioTinyMceGlossary;
+const mapStateToProps = (state) => {
+    return {
+        addAudio: state.audioReducer.addAudio,
+        openAudio: state.audioReducer.openAudio
+    }
+}
+
+const mapActionToProps = {}
+
+export default connect(mapStateToProps, mapActionToProps)(AudioTinyMceGlossary);

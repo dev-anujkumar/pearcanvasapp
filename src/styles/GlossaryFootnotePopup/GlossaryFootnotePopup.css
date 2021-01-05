@@ -170,3 +170,9 @@
     justify-content: center;
     width: 15%; 
 }
+
+.disable-audio{
+    pointer-events: none;
+    opacity: 0.4;
+    cursor: not-allowed !important;
+}
