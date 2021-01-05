@@ -73,4 +73,4 @@ export const LABELS = {
 
 export const elementTypeTCM = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza',  'popup', 'figure'];
 export const containerType = ['element-aside', 'manifest', 'citations', 'poetry', 'groupedcontent','popup'];
-export const allowedFigureTypesForTCM = ['image', 'table', 'mathImage', 'audio', 'video', 'codelisting', 'authoredtext']
+export const allowedFigureTypesForTCM = ['image', 'table', 'mathImage', 'audio', 'video', 'codelisting', 'authoredtext', "interactive"]

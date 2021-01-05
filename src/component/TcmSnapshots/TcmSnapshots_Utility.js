@@ -6,7 +6,7 @@
 /**************************Import Modules**************************/
 import config from '../../config/config.js';
 import { sendElementTcmSnapshot, getLatestVersion } from './TcmSnapshot_Actions.js';
-import { setSemanticsSnapshots, fetchElementsTag, generateWipDataForFigure } from './ElementSnapshot_Utility.js';
+import { setSemanticsSnapshots, fetchElementsTag, generateWipDataForFigure, getInteractiveSubtypeData } from './ElementSnapshot_Utility.js';
 /*************************Import Constants*************************/
 import TcmConstants from './TcmConstants.js';
 import { storeOldAssetForTCM } from '../ElementContainer/ElementContainer_Actions'
@@ -694,6 +694,12 @@ export const setFigureElementContentSnapshot = (element, actionStatus) => {
             break;
         case "authoredtext":            // for MML
             snapshotData["metadata"] = element.html.text ? `${handleBlankLineDom(element.html.text, 'BlankLine')}` : "<p><br></p>"
+            break;
+        case "interactive":
+            snapshotData = {
+                ...snapshotData,
+                ...getInteractiveSubtypeData(element.figuredata, element.html)
+            }
             break;
         case "image":
         case "table":
