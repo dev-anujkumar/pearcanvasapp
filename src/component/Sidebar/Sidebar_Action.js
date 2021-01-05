@@ -31,7 +31,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
 
     let inputSubTypeEnum = inputSubType['enum'],
     inputPrimaryOptionEnum = inputPrimaryOptionType['enum']
-    
+
     // Output Element
     const outputPrimaryOptionsList = elementTypes[newElementData['elementType']],
         outputPrimaryOptionType = outputPrimaryOptionsList[newElementData['primaryOption']]
@@ -47,6 +47,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                 oldElementData.figuredata.srctype=outputSubType['wipValue']
             }
             if (oldElementData.figuredata.interactivetype) {
+                oldElementFigureData = JSON.parse(JSON.stringify(oldElementData.figuredata));
                 oldElementData.figuredata = {...figureDataBank[newElementData['secondaryOption']]}
                 oldElementData.html.postertext = ""; /** [BG-2676] - Remove postertext on Conversion */
                 if (oldElementData.figuredata && oldElementData.figuredata.postertext && oldElementData.figuredata.postertext.text) {
@@ -216,7 +217,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         let currentSlateData = currentParentData[config.slateManifestURN];
         /** [PCAT-8289] -------------------------------- TCM Snapshot Data handling ----------------------------------*/
         if (elementType.indexOf(oldElementData.type) !== -1 && (showHideObj == undefined || showHideObj == "")) {
-            if(oldElementData && oldElementData.figuretype == "codelisting"){
+            if(oldElementData && (oldElementData.figuretype == "codelisting" || oldElementData.figuretype == "interactive")){
                 oldElementData.figuredata = oldElementFigureData
             }           
             let elementConversionData ={
