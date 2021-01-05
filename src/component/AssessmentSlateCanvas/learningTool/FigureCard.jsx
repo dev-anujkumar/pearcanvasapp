@@ -18,7 +18,8 @@ class FigureCard extends React.Component {
     }
 
     render() {
-        const { forInputKey, apiResultObject, selectedResult } = this.props
+        const { forInputKey, apiResultObject, selectedResult, learningSystems } = this.props
+        // const appTypeValue = learningSystems.find(value => value.type == apiResultObject.type).label;
         return (
             <tr className={(selectedResult && (selectedResult.learningtemplateUrn == apiResultObject.learningtemplateUrn)) ? "modalCard highlightSelectedRow" : "modalCard"} >
                 <td className="tableRowData">
@@ -32,7 +33,7 @@ class FigureCard extends React.Component {
                         id={forInputKey}
                         key={apiResultObject.learningtemplateUrn}
                     />
-                    <p className="tableRow">{learningSystemList[apiResultObject.type].label}</p>
+                    <p className="tableRow">{learningSystemList[apiResultObject.type].label}</p>{/** change here */}
                 </td>
                 <td className="tableRowData">
                     <p className="tableRow" htmlFor={forInputKey}>{apiResultObject.disciplines.en.join(", ")}</p>

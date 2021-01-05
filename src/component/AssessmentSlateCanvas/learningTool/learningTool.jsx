@@ -62,6 +62,7 @@ class LearningTool extends React.Component {
     learningToolSearchClick(searchTitle, searchKeyword) {
         const { selectedLearningAppType, showError } = this.state
         const learningSystem = this.props.learningToolReducer.learningSystems[selectedLearningAppType].learningSystem;
+        //const learningSystem = this.props.learningToolReducer.learningSystems.find(val=> val.type == selectedLearningAppType).system
         const keywordForSearch = showError ? "" : searchKeyword;
         this.props.learningToolSearchAction(learningSystem, selectedLearningAppType, searchTitle, keywordForSearch);
     }
@@ -129,7 +130,7 @@ class LearningTool extends React.Component {
                     </div>
                     <hr />
                     {/* Body of the popup table */}
-                    {<LearningToolBody searchLoading={searchLoading} showLTBody={showLTBody} errorFlag={errorFlag} apiResponse={apiResponse} selectedResultData={selectedResultFormApi} learningToolPageLimit={learningToolPages} selectedFigure={this.selectedFigure} learningToolTableHeaders={learningToolTableHeaders} capitalizeString={capitalizeString} />}
+                    {<LearningToolBody searchLoading={searchLoading} showLTBody={showLTBody} errorFlag={errorFlag} apiResponse={apiResponse} selectedResultData={selectedResultFormApi} learningToolPageLimit={learningToolPages} selectedFigure={this.selectedFigure} learningToolTableHeaders={learningToolTableHeaders} learningSystems={learningSystems} />}
                     {/* Footer for the popUp */}
                     <div className="learningToolFooter">
                         <button disabled={this.props.learningToolReducer.linkButtonDisable == false ? linkButtonDisable : true} className="learning-tool-button" onClick={this.linkLearningApp}>{BUTTON_TEXT_LINK}</button>
