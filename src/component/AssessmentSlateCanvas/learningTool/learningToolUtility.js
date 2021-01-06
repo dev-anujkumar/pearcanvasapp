@@ -288,5 +288,5 @@ export const prepareAppTypeList = (newProps) => {
         // appTypeMenu = (Object.values(newProps.dropdownProps.learningSystems).map(system => system.label))
         appTypeMenu = newProps.dropdownProps.learningSystems.map(item => item.label)
     }
-    return appTypeMenu;
+    return appTypeMenu.sort();
 }
