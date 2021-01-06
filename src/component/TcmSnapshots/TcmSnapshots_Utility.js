@@ -572,7 +572,7 @@ const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,popupInCo
         elementId = `${eleId.popID}+${elementId}`;
     }
     else if (parentElement && parentElement.element && parentElement.element.type === SHOWHIDE) {    //showhide
-        elementTag = `${tag.parentTag}${parentElement.showHideType ? ":" + parentElement.showHideType : ""}${tag.childTag ? ":" + tag.childTag : ""}`;
+        elementTag = `${tag.parentTag}${parentElement.showHideType ? ":" + parentElement.showHideType : ""}`; //${tag.childTag ? ":" + tag.childTag : ""}
     }
     elementData = {
         elementUrn: elementId,
@@ -1045,7 +1045,7 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn, operatio
  * @param {String/Number} indexes - index of element converted
  * @returns {Object} ParentData fo given element
 */
-export const fetchParentData = (bodymatter, indexes) => {
+export const fetchParentData = (bodymatter, indexes, showHideObj) => {
     let parentData = {};
     let tempIndex = Array.isArray(indexes) ? indexes : (typeof indexes === "number") ? indexes.toString() : indexes.split("-");
     let isChildElement = elementType.indexOf(bodymatter[tempIndex[0]].type) === -1 ? true : false
@@ -1053,23 +1053,28 @@ export const fetchParentData = (bodymatter, indexes) => {
         isChildElement = false /** Formatted-title in Popup */
     }
     if (isChildElement == true) {
-        parentData.asideData = {
-            contentUrn: bodymatter[tempIndex[0]].contentUrn,
-            id: bodymatter[tempIndex[0]].id,
-            subtype: bodymatter[tempIndex[0]].subtype,
-            type: bodymatter[tempIndex[0]].type,
-            element: bodymatter[tempIndex[0]]
+        if (showHideObj) {
+            parentData.showHideObj = {...showHideObj}
         }
-        const { parentElement, multiColumnData } = setParentUrn(bodymatter, tempIndex);
-        parentData.parentUrn = {
-            manifestUrn: parentElement.id,
-            contentUrn: parentElement.contentUrn,
-            elementType: parentElement.type
-        }
-        if (multiColumnData) {
-            parentData.parentUrn.columnName = multiColumnData.columnName;
-            parentData.parentUrn.columnIndex = multiColumnData.columnIndex;
-        }
+        else {
+            parentData.asideData = {
+                contentUrn: bodymatter[tempIndex[0]].contentUrn,
+                id: bodymatter[tempIndex[0]].id,
+                subtype: bodymatter[tempIndex[0]].subtype,
+                type: bodymatter[tempIndex[0]].type,
+                element: bodymatter[tempIndex[0]]
+            }
+            const { parentElement, multiColumnData } = setParentUrn(bodymatter, tempIndex);
+            parentData.parentUrn = {
+                manifestUrn: parentElement.id,
+                contentUrn: parentElement.contentUrn,
+                elementType: parentElement.type
+            }
+            if (multiColumnData) {
+                parentData.parentUrn.columnName = multiColumnData.columnName;
+                parentData.parentUrn.columnIndex = multiColumnData.columnIndex;
+            }
+        }  
     }
     return parentData;
 }
