@@ -1,7 +1,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import LearningToolBody from '../../../../src/component/AssessmentSlateCanvas/learningTool/Components/LearningToolBody';
-import { tempFiguresForResults, selectedResult } from '../../../../fixtures/learningTool'
+import { tempFiguresForResults, selectedResult, apiList } from '../../../../fixtures/learningTool'
 
 jest.mock('../../../../src/constants/utility.js', () => ({
     hasReviewerRole: jest.fn()
@@ -23,7 +23,8 @@ describe('Testing Learning Tool LearningToolBody component', () => {
             ],
             searchLoading: false,
             showLTBody:true,
-            errorFlag:false
+            errorFlag:false,
+            learningSystems: apiList
         }
         let event = {
             preventDefault: jest.fn()
@@ -65,7 +66,8 @@ describe('Testing Learning Tool LearningToolBody component', () => {
                 'Date Modified',
                 'Keyword(s)',
                 'Template ID'
-            ]
+            ],
+            learningSystems: apiList
         }
         let wrapper;
 

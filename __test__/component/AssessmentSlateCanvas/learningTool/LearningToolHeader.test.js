@@ -1,7 +1,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import LearningToolHeader from '../../../../src/component/AssessmentSlateCanvas/learningTool/Components/LearningToolHeader';
-import { learningSystemList, disciplines } from '../../../../fixtures/learningTool'
+import { apiList, disciplines } from '../../../../fixtures/learningTool'
 
 jest.mock('../../../../src/constants/utility.js', () => ({
     hasReviewerRole: jest.fn()
@@ -17,7 +17,7 @@ describe('Testing Learning Tool LearningToolHeader component', () => {
             dropdownProps: {
                 selectedTypeValue: "helpdesk",
                 setlearningAppType: jest.fn(),
-                learningSystems: learningSystemList,
+                learningSystems: apiList,
                 setlearningToolDiscipline: jest.fn(),
                 apiResponseForDis: disciplines.options,
                 showDisFilterValues: true
@@ -60,7 +60,7 @@ describe('Testing Learning Tool LearningToolHeader component', () => {
             dropdownProps: {
                 selectedTypeValue: "helpdesk",
                 setlearningAppType: jest.fn(),
-                learningSystems: learningSystemList,
+                learningSystems: apiList,
                 setlearningToolDiscipline: jest.fn(),
                 apiResponseForDis: disciplines.options,
                 showDisFilterValues: true
@@ -98,10 +98,11 @@ describe('Testing Learning Tool LearningToolHeader component', () => {
             dropdownProps: {
                 selectedTypeValue: "accounting-sims",
                 setlearningAppType: jest.fn(),
-                learningSystems: learningSystemList,
+                learningSystems: apiList,
                 setlearningToolDiscipline: jest.fn(),
                 apiResponseForDis: disciplines.options,
-                showDisFilterValues: true
+                showDisFilterValues: true,
+                showAppTypeValues: true
             },
             learningToolSearchAction: jest.fn()
         }

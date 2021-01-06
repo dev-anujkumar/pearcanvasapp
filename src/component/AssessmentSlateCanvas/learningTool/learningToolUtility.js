@@ -285,8 +285,8 @@ export const prepareDisciplineList = (newProps) => {
 export const prepareAppTypeList = (newProps) => {
     let appTypeMenu = [];
     if (newProps && newProps.dropdownProps && newProps.dropdownProps.learningSystems) {
-        appTypeMenu = (Object.values(newProps.dropdownProps.learningSystems).map(system => system.label))
-        // appTypeMenu = newProps.dropdownProps.learningSystems.map(item => item.label)
+        // appTypeMenu = (Object.values(newProps.dropdownProps.learningSystems).map(system => system.label))
+        appTypeMenu = newProps.dropdownProps.learningSystems.map(item => item.label)
     }
     return appTypeMenu;
 }

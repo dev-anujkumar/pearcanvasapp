@@ -12,7 +12,7 @@ import {
     LINK_BUTTON_DISABLE,
     GET_LEARNING_SYSTEMS
 } from '../../../../src/constants/Action_Constants';
-import { tempFiguresForResults, disciplines, selectedResult, learningSystemList } from '../../../../fixtures/learningTool'
+import { tempFiguresForResults, disciplines, selectedResult, apiList } from '../../../../fixtures/learningTool'
 jest.mock('axios');
 jest.mock('../../../../src/constants/utility.js', () => ({
     sendDataToIframe: jest.fn()
@@ -23,10 +23,11 @@ describe('TestS Learning_Tool_ActionS', () => {
         let expectedResult = {
             type: GET_LEARNING_SYSTEMS,
             payload: {
-                learningSystems: learningSystemList
+                learningSystems: apiList,
+                showAppTypeValues: true
             }
         }
-        let result = actions.fetchLearningSystems(learningSystemList)
+        let result = actions.fetchLearningSystems(apiList)
         expect(result).toEqual(expectedResult);
         expect(expectedResult.type).toBe(GET_LEARNING_SYSTEMS);
     });
@@ -128,7 +129,7 @@ describe('TestS Learning_Tool_ActionS', () => {
             expect(spyFunction).toHaveBeenCalledWith('disciplines');
             spyFunction.mockClear();
         });
-        it('Testing------- TAXONOMIC_ID_LEARNING_SYSTEM', () => {
+        xit('Testing------- TAXONOMIC_ID_LEARNING_SYSTEM', () => {
             let dispatch = (obj) => {
                 if (obj && obj.type === GET_LEARNING_SYSTEMS) {
                     expect(obj.type).toEqual(GET_LEARNING_SYSTEMS);
@@ -139,15 +140,15 @@ describe('TestS Learning_Tool_ActionS', () => {
             expect(spyFunction).toHaveBeenCalledWith('learningsystem');
             spyFunction.mockClear();
         });
-        it('Testing------- TAXONOMIC_ID_LEARNING_SYSTEM', () => {
+        it('Testing------- TAXONOMIC_ID_DISCIPLINES', () => {
             let dispatch = (obj) => {
                 if (obj && obj.type === LT_API_RESULT_FAIL) {
-                    expect(obj.payload.learningSystems).toEqual(learningSystemList);
+                    expect(obj.payload.showDisFilterValues).toEqual(false);
                 }
             }
             axios.get = jest.fn(() => Promise.reject({}));
             const spyFunction = jest.spyOn(actions, 'openLTFunction');
-            actions.openLTFunction('learningsystem')(dispatch);
+            actions.openLTFunction('disciplines')(dispatch);
             spyFunction.mockClear();
         });
     })
@@ -169,6 +170,40 @@ describe('TestS Learning_Tool_ActionS', () => {
             axios.get = jest.fn(() => Promise.resolve(responseData));
             actions.learningToolSearchAction(learningSystem, learningAppType, searchLabel, searchKeyword)(dispatch);
             expect(spyFunction).toHaveBeenCalledWith(learningSystem, learningAppType, searchLabel, searchKeyword);
+            spyFunction.mockClear();
+        });
+    });
+    describe('Testing------- fetchLearningTemplates', () => {
+        it('Testing------- fetchLearningTemplates-Then', async () => {
+            let responseData = apiList
+            let dispatch = (obj) => {
+                if (obj && obj.type === GET_LEARNING_SYSTEMS) {
+                    expect(obj.payload.showAppTypeValues).toEqual(true);
+                    expect(obj.payload.learningSystems).toEqual(apiList);
+                }
+            }
+            const spyFunction = jest.spyOn(actions, 'fetchLearningTemplates');
+            axios.get = await jest.fn(() => Promise.resolve(responseData));
+            actions.fetchLearningTemplates()(dispatch);
+            axios.get.mockImplementation(() => Promise.resolve(responseData));
+            global.fetch = jest.fn().mockImplementationOnce(() => {
+                return new Promise((resolve, reject) => {
+                    resolve(responseData);
+                });
+            });
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        });
+        it('Testing------- fetchLearningTemplates-Catch', () => {
+            let dispatch = (obj) => {
+                if (obj && obj.type === LT_API_RESULT_FAIL) {
+                    expect(obj.payload.showAppTypeValues).toEqual(false);
+                }
+            }
+            const spyFunction = jest.spyOn(actions, 'fetchLearningTemplates');
+            axios.get = jest.fn(() => Promise.reject({}));
+            actions.fetchLearningTemplates()(dispatch);
+            expect(spyFunction).toHaveBeenCalled();
             spyFunction.mockClear();
         });
     });
