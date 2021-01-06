@@ -216,7 +216,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         let currentParentData = JSON.parse(JSON.stringify(parentData));
         let currentSlateData = currentParentData[config.slateManifestURN];
         /** [PCAT-8289] -------------------------------- TCM Snapshot Data handling ----------------------------------*/
-        if (elementType.indexOf(oldElementData.type) !== -1 && (showHideObj == undefined || showHideObj == "")) {
+        if (elementType.indexOf(oldElementData.type) !== -1) {
             if(oldElementData && (oldElementData.figuretype == "codelisting" || oldElementData.figuretype == "interactive")){
                 oldElementData.figuredata = oldElementFigureData
             }           
@@ -446,7 +446,7 @@ export const tcmSnapshotsForConversion = async (elementConversionData,indexes,ap
     let convertAppStore = JSON.parse(JSON.stringify(appStore.slateLevelData));
     let convertSlate = convertAppStore[config.slateManifestURN];
     let convertBodymatter = convertSlate.contents.bodymatter;
-    let convertParentData = fetchParentData(convertBodymatter,indexes);
+    let convertParentData = fetchParentData(convertBodymatter,indexes, appStore.showHideObj);
     let versionStatus = fetchManifestStatus(convertBodymatter, convertParentData,response.type);
     /** latest version for WE/CE/PE/AS/2C*/
     convertParentData = await checkContainerElementVersion(convertParentData, versionStatus, currentSlateData)
