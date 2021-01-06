@@ -24,7 +24,7 @@ const LearningToolHeader = (props) => {
 
     const disciplineMenu = prepareDisciplineList(props)
     const appTypeMenu = prepareAppTypeList(props)
-    
+
     /*** @description - This function is to call search function for the search term 
      * @param e - event triggered
     */
@@ -67,7 +67,6 @@ const LearningToolHeader = (props) => {
             setlearningToolDiscipline(newValue == "" ? newValue : listItem);
         }
         else {
-            // const appType = newValue == "" ? newValue : Object.values(learningSystems).find(value => value.label == listItem).appType;
             const appType = newValue == "" ? newValue :learningSystems.find(item => item.label == listItem).type;
             setAppType(newValue == "" ? DEFAULT_OPTION : listItem)
             setlearningAppType(appType);

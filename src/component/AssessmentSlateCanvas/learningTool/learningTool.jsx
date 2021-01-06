@@ -61,7 +61,6 @@ class LearningTool extends React.Component {
     */
     learningToolSearchClick(searchTitle, searchKeyword) {
         const { selectedLearningAppType, showError } = this.state
-        // const learningSystem = this.props.learningToolReducer.learningSystems[selectedLearningAppType].learningSystem;
         const learningSystem = this.props.learningToolReducer.learningSystems.find(val=> val.type == selectedLearningAppType).system
         const keywordForSearch = showError ? "" : searchKeyword;
         this.props.learningToolSearchAction(learningSystem, selectedLearningAppType, searchTitle, keywordForSearch);
