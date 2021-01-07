@@ -1,7 +1,7 @@
 import axios from 'axios';
 import config from '../../config/config';
 import store from '../../appstore/store.js'
-import { sendDataToIframe, createTitleSubtitleModel } from '../../constants/utility.js';
+import { sendDataToIframe, createTitleSubtitleModel, matchHTMLwithRegex } from '../../constants/utility.js';
 import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 import { tcmSnapshotsForUpdate, fetchParentData, fetchElementWipData } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 const {
@@ -31,7 +31,7 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
         const parentData = store.getState().appStore.slateLevelData;
         let newParentData = JSON.parse(JSON.stringify(parentData));
         let currentSlateData = newParentData[config.slateManifestURN];
-        if(currentSlateData.type==="popup" && currentSlateData.status === "approved" && config.isCreateFootnote){
+        if(currentSlateData.type==="popup" && currentSlateData.status === "approved" && (config.isCreateFootnote || config.isCreateGlossary)){
             return false;
         }
         let newBodymatter = newParentData[slateId].contents.bodymatter;
@@ -204,13 +204,13 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         }
        
         figureDataObj = {
-            "title": label.match(/<p>/g) ? label : `<p>${label}</p>`,
-            "subtitle": title.match(/<p>/g) ? title : `<p>${title}</p>`,
+            "title": matchHTMLwithRegex(label) ? label : `<p>${label}</p>`,
+            "subtitle": matchHTMLwithRegex(title) ? title : `<p>${title}</p>`,
             "text": text ? text : "",
             "postertext": (hasCtaText.indexOf(currentElement.secondaryOption) !== -1) ? postertext  ? postertext.match(/<p>/g) ? postertext : `<p>${postertext}</p>` : "<p></p>" : "",
             "tableasHTML": tableAsHTML ? tableAsHTML : '',
-            "captions": captions ? captions.match(/<p>/g) ? captions : `<p>${captions}</p>` : "<p></p>",
-            "credits": credits ? credits.match(/<p>/g) ? credits : `<p>${credits}</p>` : "<p></p>"
+            "captions": matchHTMLwithRegex(captions) ? captions : `<p>${captions}</p>`,
+            "credits": matchHTMLwithRegex(credits)  ? credits : `<p>${credits}</p>`
         }
         if(preformattedtext) {
             preformattedtext = '<p>'+preformattedtext+'</p>';
@@ -533,10 +533,12 @@ function prepareDataForUpdateTcm(updatedDataID,versionedData, resData) {
         })
     }
     else {
-        tcmData[indexes]["elemURN"] = updatedDataID
-        tcmData[indexes]["txCnt"] = tcmData[indexes]["txCnt"] !== 0 ? tcmData[indexes]["txCnt"] : 1
-        tcmData[indexes]["feedback"] = tcmData[indexes]["feedback"] !== null ? tcmData[indexes]["feedback"] : null
-        tcmData[indexes]["isPrevAcceptedTxAvailable"] = tcmData[indexes]["isPrevAcceptedTxAvailable"] ? tcmData[indexes]["isPrevAcceptedTxAvailable"] : false
+        if(tcmData && tcmData[indexes] && indexes.length > 0 && updatedDataID){
+            tcmData[indexes]["elemURN"] = updatedDataID
+            tcmData[indexes]["txCnt"] = tcmData[indexes]["txCnt"] !== 0 ? tcmData[indexes]["txCnt"] : 1
+            tcmData[indexes]["feedback"] = tcmData[indexes]["feedback"] !== null ? tcmData[indexes]["feedback"] : null
+            tcmData[indexes]["isPrevAcceptedTxAvailable"] = tcmData[indexes]["isPrevAcceptedTxAvailable"] ? tcmData[indexes]["isPrevAcceptedTxAvailable"] : false
+        }
     }
   
 if (tcmData.length > 0) {

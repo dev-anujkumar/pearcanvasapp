@@ -17,7 +17,7 @@ import { FULL_ASSESSMENT_PUF, PUF, LEARNOSITY, ELM_INT } from '../../../Assessme
 import { elmSortUp, elmSortDown, elmNavigateBack } from './../../../../../images/ElementButtons/ElementButtons.jsx';
 import { openAssessmentSearchBar, setSearchTerm,setElmLoading } from '../../Actions/ElmActions.js';
 import { setStatus, searchAndFilterAssessmentData, setParentUrn, tableDataSorting, setInteractiveType } from '../../UtilityFunctions/ElmLearnosityUtility.js';
-
+import {specialCharacterDecode} from '../../../assessmentCiteTdx/Actions/CiteTdxActions.js';
 /*** @description - ElmTableComponent is a class based component to store ELM assessments in tabular form*/
 class ElmTableComponent extends Component {
     constructor(props) {
@@ -212,7 +212,7 @@ class ElmTableComponent extends Component {
                         }
                         if(assessments && assessments.type && (assessments.type == activeElementType)){
                             let elmInteractiveType = assessments.type == 'interactive' ? setInteractiveType(assessments) : {};
-                            this.preparedData.push({ "type": assessments.type? assessments.type:"assessment", "title": title, "urn": assessments.urn, "parentUrn": parentUrn, "previousUrn": data.versionUrn, "interactiveType" : elmInteractiveType });
+                            this.preparedData.push({ "type": assessments.type? assessments.type:"assessment", "title": specialCharacterDecode(title), "urn": assessments.urn, "parentUrn": parentUrn, "previousUrn": data.versionUrn, "interactiveType" : elmInteractiveType });
                         }
                     })
                 }
@@ -246,7 +246,7 @@ class ElmTableComponent extends Component {
     getAssessmentItemsData = (itemsData, assessmentId, assessmentTitle) => {
         if (itemsData && itemsData.length) {
             itemsData.forEach((item) => {
-                this.preparedData.push({ "type": "assessmentItem", "title": item.name ? item.name : "", "urn": item.versionUrn, "assessmentId": assessmentId })
+                this.preparedData.push({ "type": "assessmentItem", "title": item.name ? specialCharacterDecode(item.name) : "", "urn": item.versionUrn, "assessmentId": assessmentId })
             })
             this.preparedData = tableDataSorting(true, this.preparedData, 'asc')
             return this.setState({ tableValue: this.preparedData, parentTitle: assessmentTitle, sortIcon: elmSortUp })
@@ -358,6 +358,7 @@ class ElmTableComponent extends Component {
                 obj = {
                     id: this.state.currentAssessmentSelected.assessmentId,
                     itemid: this.state.currentAssessmentSelected.urn,
+                    itemTitle: this.state.currentAssessmentSelected.title,
                     title: this.state.parentTitle,
                     assessmentFormat: assessmentFormat,
                     usagetype: this.props.activeUsageType

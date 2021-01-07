@@ -16,7 +16,7 @@ import {
   GET_LEARNING_SYSTEMS,
   SET_LT_LA_SEARCH_LOADING
 } from '../../../constants/Action_Constants';
-import { learningSystemList, TAXONOMIC_ID_DISCIPLINES, TAXONOMIC_ID_LEARNING_SYSTEM, LT_LA_API_ERROR } from './learningToolUtility';
+import { LT_LA_API_ERROR } from './learningToolUtility';
 import { specialCharacterEncode } from '../assessmentCiteTdx/Actions/CiteTdxActions.js';
 /**
   * @discription - This action is dispatched when search of leaning template
@@ -45,7 +45,8 @@ export const learningToolSearchAction = (learningSystem, learningAppType, search
           showDisFilterValues: true,
           showLTBody: true,
           errorFlag: false,
-          searchLoading: false
+          searchLoading: false,
+          showAppTypeValues:true
         }
       })
     },
@@ -68,33 +69,23 @@ export const learningToolSearchAction = (learningSystem, learningAppType, search
   * @param {String} taxonomyId taxonomy ID
   */
 export const openLTFunction = (taxonomyId) => dispatch => {
-
-  if (taxonomyId === TAXONOMIC_ID_LEARNING_SYSTEM) {
-    dispatch(fetchLearningSystems(learningSystemList))
-  } else {
-    let url = `${config.ASSESSMENT_ENDPOINT}learningtemplate/v2/taxonomy/${taxonomyId}?locale=en`;
-    return axios.get(url,
-      {
-        headers: {
-          'X-Roles': 'ContentPlanningAdmin',
-          'Content-Type': 'application/json',
-          'apikey': config.STRUCTURE_APIKEY,
-          'pearsonssosession': config.ssoToken
-        }
+  let url = `${config.ASSESSMENT_ENDPOINT}learningtemplate/v2/taxonomy/${taxonomyId}?locale=en`;
+  return axios.get(url,
+    {
+      headers: {
+        'X-Roles': 'ContentPlanningAdmin',
+        'Content-Type': 'application/json',
+        'apikey': config.STRUCTURE_APIKEY,
+        'pearsonssosession': config.ssoToken
       }
-    ).then(res => {
-      if (taxonomyId === TAXONOMIC_ID_DISCIPLINES) {
-        dispatch(getDiscipline(res.data))
-      }
-      /* else {
-         dispatch(fetchLearningSystems(res.data)) --------> To be used when the API is integrated 
-      }*/
-    },
-      err => showError(err, dispatch)
-    ).catch(error => {
-      showError(error, dispatch)
-    })
-  }
+    }
+  ).then(res => {
+      dispatch(getDiscipline(res.data));
+  },
+    err => showError(err, 'showDisFilterValues', dispatch)
+  ).catch(error => {
+    showError(error, 'showDisFilterValues', dispatch)
+  })
 };
 
 /**
@@ -168,7 +159,7 @@ export const getDiscipline = (data) => {
     type: GET_DISCIPLINE, 
     payload: {
       showDisFilterValues: true,
-      apiResponseForDis: data
+      apiResponseForDis: data.options
     }
   }
 }
@@ -192,12 +183,34 @@ export const linkDisable = () => {
 }
 
 /**
+  * @discription This action is dispached to fetch dropdown values for Learning Systems 
+  */
+export const fetchLearningTemplates = () => async dispatch => {
+  // let url = 'https://10.11.7.24:8081/cypress-api/v1/content/assessment/learningobjectivetemplate';  
+  let url = `${config.REACT_APP_API_URL}v1/content/assessment/learningobjectivetemplate`;
+  const resp = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'PearsonSSOSession': config.ssoToken
+    }
+  })
+  try {
+    const res = await resp.json();
+    res && res.length > 0 && dispatch(fetchLearningSystems(res));
+  } catch (error) {
+    showError(error, 'showAppTypeValues', dispatch);
+  }
+};
+
+/**
 * @discription - This action is dispatched to get the all the learning systems to show in dropdown
 */
 export const fetchLearningSystems = (learningSystems) => {
   return {
     type: GET_LEARNING_SYSTEMS,
     payload: {
+      showAppTypeValues: true,
       learningSystems: learningSystems
     }
   }
@@ -206,12 +219,12 @@ export const fetchLearningSystems = (learningSystems) => {
 /**
 * @discription - This function is to handle Error when LT-LA API fails
 */
-const showError = (error, dispatch) => {
+const showError = (error, errKey, dispatch) => {
   dispatch({
     type: LT_API_RESULT_FAIL,
     payload: {
       error: error,
-      showDisFilterValues: false
+      [errKey]: false
     }
   })
   console.error(LT_LA_API_ERROR, error)

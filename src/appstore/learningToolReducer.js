@@ -5,7 +5,6 @@ import {LT_API_RESULT,
     TOGGLE_LT_POPUP,
     GET_DISCIPLINE,
     REMOVE_SELECTED_DATA,
-    GET_DISCIPLINE_FAIL,
     LT_TYPE_FILTER_SELECTED,
     GET_LEARNING_SYSTEMS,
     SET_LT_LA_SEARCH_LOADING
@@ -24,7 +23,8 @@ const INITIAL_STATE = {
     learningSystems:[],
     showTypeFilterValues: false,
     learningToolDisValue:"",
-    errorFlag: false
+    errorFlag: false,
+    showAppTypeValues: false
 };
 
 const INITIAL_ACTION = {
@@ -56,7 +56,8 @@ export default function learningToolReducer (state = INITIAL_STATE, action = INI
                 showLTBody : action.payload.showLTBody,
                 linkButtonDisable : true,
                 errorFlag: action.payload.errorFlag,
-                searchLoading : action.payload.searchLoading
+                searchLoading : action.payload.searchLoading,
+                showAppTypeValues: action.payload.showAppTypeValues
         }
         case LT_API_RESULT_FAIL :
             return {
@@ -96,13 +97,6 @@ export default function learningToolReducer (state = INITIAL_STATE, action = INI
                 apiResponseForDis : action.payload.apiResponseForDis
             }
         }
-        case GET_DISCIPLINE_FAIL: {                
-            return {
-                ...state,
-                showDisFilterValues : action.payload.showDisFilterValues,
-
-            }
-        }
         case REMOVE_SELECTED_DATA: {
             return {
                 ...state,
@@ -113,7 +107,8 @@ export default function learningToolReducer (state = INITIAL_STATE, action = INI
         case GET_LEARNING_SYSTEMS: {                
             return {
                 ...state,
-                learningSystems : action.payload.learningSystems
+                learningSystems : action.payload.learningSystems,
+                showAppTypeValues: action.payload.showAppTypeValues
             }
         }
         case SET_LT_LA_SEARCH_LOADING: {

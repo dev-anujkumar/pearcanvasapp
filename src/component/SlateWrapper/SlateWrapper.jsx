@@ -11,7 +11,7 @@ import ElementSaprator from '../ElementSaprator';
 import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
 import { SlateFooter } from './SlateFooter.jsx';
 /** pasteElement function location to be changed */
-import { createElement, swapElement, setSplittedElementIndex, updatePageNumber, accessDenied, pasteElement } from './SlateWrapper_Actions';
+import { createElement, swapElement, setSplittedElementIndex, updatePageNumber, accessDenied, pasteElement, wirisAltTextPopup } from './SlateWrapper_Actions';
 import { sendDataToIframe, getSlateType } from '../../constants/utility.js';
 import { ShowLoader, SplitCurrentSlate } from '../../constants/IFrameMessageTypes.js';
 import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
@@ -20,14 +20,13 @@ import config from '../../config/config';
 import { TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER, WORKED_EXAMPLE, SECTION_BREAK, METADATA_ANCHOR, LO_LIST, ELEMENT_ASSESSMENT, OPENER,
     ALREADY_USED_SLATE , REMOVE_LINKED_AUDIO, NOT_AUDIO_ASSET, SPLIT_SLATE_WITH_ADDED_AUDIO , ACCESS_DENIED_CONTACT_ADMIN, IN_USE_BY, LOCK_DURATION, SHOW_HIDE,POP_UP ,
     CITATION, ELEMENT_CITATION,SMARTLINK,POETRY ,STANZA, BLOCKCODE, TABLE_EDITOR, FIGURE_MML, MULTI_COLUMN, MMI_ELM,
-    SINGLE_CONTAINER_DELETE, WITH_PENDING_TRACK, SLATE_UNLINKING, DELETE_DIALOG_TEXT, WITH_PENDING_TRACK_NOTE_MESSAGE, TYPE_SINGLE_CONTAINER_DELETE, TYPE_WITH_PENDING_TRACK, TYPE_UNLINK
 } from './SlateWrapperConstants';
 import PageNumberElement from './PageNumberElement.jsx';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
 import PopUp from '../PopUp';
 import Toast from '../Toast';
-import { hideBlocker, showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';
+import { hideBlocker, showTocBlocker, hideTocBlocker } from '../../js/toggleLoader';
 import { guid } from '../../constants/utility.js';
 import { fetchAudioNarrationForContainer, deleteAudioNarrationForContainer, showAudioRemovePopup, showAudioSplitPopup , showWrongAudioPopup } from '../AudioNarration/AudioNarration_Actions'
 import { setSlateLock, releaseSlateLock, setLockPeriodFlag, getSlateLockStatus } from '../CanvasWrapper/SlateLock_Actions'
@@ -797,91 +796,6 @@ class SlateWrapper extends Component {
         this.props.setSplittedElementIndex(this.state.splittedSlateIndex)
     }
 
-    deleteAccepted = () => {
-        if(this.props.tocDeleteMessage.messageType !== 'singleContainerDelete'){
-            sendDataToIframe({ 'type': 'deleteAccepted', 'message': this.props.tocDeleteMessage })
-        }
-        this.deleteRejected()
-    }
-
-    unlinkAccepted = () => {
-        this.props.updatePageLink(this.props.tocDeleteMessage);
-        hideBlocker();
-        hideTocBlocker();
-        disableHeader(true);
-        this.props.modifyState(false)
-    }
-
-    deleteRejected = () => {
-        hideBlocker();
-        hideTocBlocker();
-        disableHeader(true);
-        this.props.modifyState(false)
-        sendDataToIframe({ 'type': 'deleteRejected', 'message': {} });
-    }
-
-    showTocDeletePopup = () => {
-        /**
-         * Need to refactor these all condition and minimize them
-         */        
-        if (this.props.toggleTocDelete) {
-            let containerName = null;
-            if (this.props.tocDeleteMessage && this.props.tocDeleteMessage.changedValue && this.props.tocDeleteMessage.changedValue.labelText) {
-                containerName = this.props.tocDeleteMessage.changedValue.labelText;
-            }
-            if(this.props.tocDeleteMessage&& this.props.tocDeleteMessage.messageType === TYPE_SINGLE_CONTAINER_DELETE){ 
-                return (
-                    <PopUp
-                        togglePopup={this.deleteRejected}
-                        active={true}
-                        saveContent={this.deleteAccepted}
-                        saveButtonText='OK'
-                        dialogText={SINGLE_CONTAINER_DELETE}
-                        tocDelete={true}
-                        itemName = {containerName}
-                        tocDeleteClass='tocDeleteClass'
-                        deleteContainer = {false}
-                    />                   
-                   
-                )
-            }
-            else if(this.props.tocDeleteMessage && (this.props.tocDeleteMessage.messageType === TYPE_WITH_PENDING_TRACK || this.props.tocDeleteMessage.link === TYPE_UNLINK)){
-                let dialogText = (this.props.tocDeleteMessage.messageType === TYPE_WITH_PENDING_TRACK) ? WITH_PENDING_TRACK : SLATE_UNLINKING
-                let note = (this.props.tocDeleteMessage.messageType === TYPE_WITH_PENDING_TRACK) ? WITH_PENDING_TRACK_NOTE_MESSAGE : ''
-                return (
-                    <PopUp
-                        togglePopup={this.deleteRejected}
-                        active={true}
-                        saveContent={(this.props.tocDeleteMessage.messageType === TYPE_WITH_PENDING_TRACK) ? this.deleteAccepted : this.unlinkAccepted}
-                        saveButtonText='Yes'
-                        dialogText={dialogText}
-                        note={note}
-                        tocDelete={true}
-                        itemName = {containerName}
-                        tocDeleteClass='tocDeleteClass'
-                        deleteContainer = {false}
-                    />
-    
-                )
-            }
-            else{
-                return (
-                    <PopUp
-                        togglePopup={this.deleteRejected}
-                        active={true}
-                        saveContent={this.deleteAccepted}
-                        saveButtonText='Yes'
-                        dialogText={DELETE_DIALOG_TEXT}
-                        tocDelete={true}
-                        itemName = {containerName}
-                        tocDeleteClass='tocDeleteClass'
-                        deleteContainer = {true}
-                    />
-    
-                )
-            }
-        }
-    }
 
     /**
      * @description - hide opener elment and disable MA option once created in IS
@@ -1229,6 +1143,30 @@ class SlateWrapper extends Component {
             }
         },0);
     }
+    wirisAltTextPopup = () => {
+        if(this.props.wirisAltText && this.props.wirisAltText.showPopup){
+            this.props.showBlocker(true)
+            showTocBlocker();
+            return (
+                <PopUp dialogText={this.props.wirisAltText.altText}
+                    active={true}
+                    altHeaderText={`Alt Text`}
+                    togglePopup={this.closeWirisAltTextPopup}
+                    altText={true}
+                    isInputDisabled={true}
+                    splitSlateClass="split-slate"
+                />
+            )
+        }
+        else {
+            return null
+        }
+    }
+    closeWirisAltTextPopup = () => {
+        this.props.wirisAltTextPopup({showPopup : false, altText : ''})
+        this.props.showBlocker(false)
+        hideBlocker()
+    }
 
     /**
      * render | renders title and slate wrapper
@@ -1278,11 +1216,11 @@ class SlateWrapper extends Component {
                 {this.showLockPopup()}
                 {this.showCustomPopup()}
                 {this.showSplitSlatePopup()}
-                {this.showTocDeletePopup()}
                 {/* ***************Audio Narration remove Popup **************** */}
                 {this.showAudioRemoveConfirmationPopup()}
                 {this.showLockReleasePopup()}
                 {this.showAssessmentConfirmationPopup()}
+                {this.wirisAltTextPopup()}
             </React.Fragment>
         );
     }
@@ -1327,7 +1265,8 @@ const mapStateToProps = state => {
         commentSearchScrollTop: state.commentSearchReducer.scrollTop,
         showToast: state.appStore.showToast,
         showConfirmationPopup: state.assessmentReducer.showConfirmationPopup,
-        userRole: state.appStore.roleId
+        userRole: state.appStore.roleId,
+        wirisAltText: state.appStore.wirisAltText
     };
 };
 
@@ -1356,6 +1295,7 @@ export default connect(
         fetchSlateData,
         assessmentConfirmationPopup,
         getCommentElements,
-        pasteElement
+        pasteElement,
+        wirisAltTextPopup
     }
 )(SlateWrapper);

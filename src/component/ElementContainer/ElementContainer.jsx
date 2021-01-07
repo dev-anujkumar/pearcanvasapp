@@ -48,7 +48,7 @@ import {handleTCMData} from '../TcmSnapshots/TcmSnapshot_Actions.js';
 import CutCopyDialog from '../CutCopyDialog';
 import { OnCopyContext } from '../CutCopyDialog/copyUtil.js'
 import { setSelection } from '../CutCopyDialog/CopyUrn_Action.js';
-import { openElmAssessmentPortal, checkAssessmentStatus, resetAssessmentStore } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
+import { openElmAssessmentPortal, fetchAssessmentMetadata, resetAssessmentStore, editElmAssessmentId } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import {handleElmPortalEvents} from '../ElementContainer/AssessmentEventHandling.js';
 import { checkFullElmAssessment, checkEmbeddedElmAssessment } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 import { setScroll } from './../Toolbar/Search/Search_Action.js';
@@ -112,7 +112,7 @@ class ElementContainer extends Component {
             btnClassName: '',
             isOpener: this.props.element.type === elementTypeConstant.OPENER
         })
-        /** PCAT-8907 - Updating Embedded Assessments - Elm */
+        /** Updating Embedded Assessments - Elm(PCAT-8907) & Learnosity(PCAT-9590) */
         let { element } = this.props
         let embeddedAssessment = checkEmbeddedElmAssessment(element);
         if (this.props.element && embeddedAssessment === true) {
@@ -121,9 +121,9 @@ class ElementContainer extends Component {
             const itemData = {
                 itemId: assessmentItemID,
                 parentId: assessmentID,
-                type: 'assessment-item'
+                targetItemid: assessmentItemID
             }
-            this.props.checkAssessmentStatus(assessmentID, 'fromElementContainer', "", "", itemData)
+            this.props.fetchAssessmentMetadata('assessment', 'fromElementContainer', { targetId: assessmentID }, itemData);
         }
         document.addEventListener('click',()=>{
             this.setState({showCopyPopup : false})
@@ -141,7 +141,10 @@ class ElementContainer extends Component {
             divObj = Math.round(divObj);
             if(this.props.searchScrollTop !== divObj) {
                 this.props.setScroll({ 'type': SET_SEARCH_URN, scrollTop: divObj });
-                document.getElementById('slateWrapper').scrollTop = divObj;
+                const slatewrapperNode = document.getElementById('slateWrapper')
+                if(slatewrapperNode) {
+                    slatewrapperNode.scrollTop = divObj;
+                }
             }
         }
 
@@ -564,7 +567,7 @@ class ElementContainer extends Component {
                 }
             } 
                 let currentNode = document.getElementById(index)
-                let html = currentNode.innerHTML;
+                let html = currentNode && currentNode.innerHTML;
                 let tempDiv = document.createElement('div');
                 tempDiv.innerHTML = html;
                 //tinyMCE.$(tempDiv).find('.blockquote-hidden').remove();
@@ -796,23 +799,6 @@ class ElementContainer extends Component {
             this.handleContentChange('', dataToSend, ELEMENT_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT + this.props.element.elementdata.assessmentformat)
         }
 
-    }
-
-    /**
-     * Checks mouse event out side of canvas area and handdling element border state
-     */
-    handleBlurAside = () => {
-        if (this.props.elemBorderToggle) {
-            this.setState({
-                borderToggle: 'showBorder',
-                btnClassName: ''
-            })
-        } else {
-            this.setState({
-                borderToggle: 'hideBorder',
-                btnClassName: ''
-            })
-        }
     }
 
     toggleColorPaletteList = () => {
@@ -1445,6 +1431,11 @@ class ElementContainer extends Component {
             }
         }
 
+        let noTCM = ['TE', 'Qu'];
+        if(noTCM.indexOf(labelText) >= 0) {
+            tcm = false;
+        }
+
         const inContainer = this.props.parentUrn ? true : false
         return (
             <div className={`editor ${searched} ${selection}`} data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
@@ -1562,6 +1553,18 @@ class ElementContainer extends Component {
             inputSubType
             //type: enum type to be included
         }
+
+        if('operationType' in detailsToSet && detailsToSet.operationType === 'cut') {
+            let elmComment = (this.props.allComments).filter(({ commentOnEntity }) => {
+                return commentOnEntity === detailsToSet.element.id;
+            });
+            detailsToSet['elmComment'] = elmComment || [];
+
+            let elmFeedback = (this.props.tcmData).filter(({ elemURN }) => {
+                return elemURN === detailsToSet.element.id
+            });
+            detailsToSet['elmFeedback'] = elmFeedback || [];
+        }
         console.log("Element Details action to be dispatched from here", detailsToSet)
 
         /** Dispatch details to the store */
@@ -1650,6 +1653,7 @@ class ElementContainer extends Component {
         }
         handleElmPortalEvents();/** Add Elm-Assessment Update eventListener */
         this.props.openElmAssessmentPortal(dataToSend);
+        embeddedAssessment && this.props.editElmAssessmentId(element.figuredata.elementdata.assessmentid, element.figuredata.elementdata.assessmentitemid);
     }
    
     render = () => {
@@ -1755,8 +1759,8 @@ const mapDispatchToProps = (dispatch) => {
         openElmAssessmentPortal: (dataToSend) => {
             dispatch(openElmAssessmentPortal(dataToSend))
         },
-        checkAssessmentStatus: (workUrn, calledFrom, currentWorkUrn, currentWorkData, parentURN) => {
-            dispatch(checkAssessmentStatus(workUrn, calledFrom, currentWorkUrn, currentWorkData, parentURN))
+        fetchAssessmentMetadata: (type, calledFrom, assessmentData, assessmentItemData) => {
+            dispatch(fetchAssessmentMetadata(type, calledFrom, assessmentData, assessmentItemData))
         },
         resetAssessmentStore: () => {
             dispatch(resetAssessmentStore())
@@ -1766,6 +1770,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         setSelection: (params) => {
             dispatch(setSelection(params))
+        },
+        editElmAssessmentId: (assessmentId, assessmentItemId) => {
+            dispatch(editElmAssessmentId(assessmentId, assessmentItemId))
         }
     }
 }

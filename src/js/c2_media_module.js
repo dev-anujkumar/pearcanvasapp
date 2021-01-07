@@ -2,6 +2,7 @@
 import { showTocBlocker, hideTocBlocker, disableHeader } from './toggleLoader'
 import { sendDataToIframe } from '../constants/utility.js'
 import config_object1 from '../config/config';
+import { showCustomAlert } from './utils.js';
 const configOBJ = require('./../config/config');
 let config_object = configOBJ.default;
 const authModule = { GET_SSO_TOKEN: function () { return config_object.ssoToken } };
@@ -198,10 +199,10 @@ export const c2MediaModule = {
         } catch (ex1) {
 
             //console.log("error: " + ex1.message);
-            alert(ex1.message);
+            //alert(ex1.message);
             hideTocBlocker();
             disableHeader(false);
-
+            showCustomAlert(ex1.message);
         }
 
     },

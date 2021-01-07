@@ -6,7 +6,7 @@
 /**************************Import Modules**************************/
 import config from '../../config/config.js';
 import { sendElementTcmSnapshot, getLatestVersion } from './TcmSnapshot_Actions.js';
-import { setSemanticsSnapshots, fetchElementsTag, generateWipDataForFigure } from './ElementSnapshot_Utility.js';
+import { setSemanticsSnapshots, fetchElementsTag, generateWipDataForFigure, getInteractiveSubtypeData } from './ElementSnapshot_Utility.js';
 /*************************Import Constants*************************/
 import TcmConstants from './TcmConstants.js';
 import { storeOldAssetForTCM } from '../ElementContainer/ElementContainer_Actions'
@@ -53,11 +53,11 @@ const {
  * @param {Object} containerElement - Element Parent Data
  * @param {String} type - type of element
 */
-export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, type,index) => {
+export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, type, index, elmFeedback = null) => {
     const { parentElement, slateManifest,popupslateManifest,cutCopyParentUrn } = containerElement
     /** isContainer : used to set SlateType  */
     let isContainer = setSlateType(wipData,containerElement,type);
-    let defaultKeys = config.isPopupSlate ? setDefaultKeys(actionStatus, true, true, popupslateManifest, cutCopyParentUrn) : setDefaultKeys(actionStatus, isContainer,"",slateManifest,cutCopyParentUrn);
+    let defaultKeys = config.isPopupSlate ? setDefaultKeys(actionStatus, true, true, popupslateManifest, cutCopyParentUrn, elmFeedback) : setDefaultKeys(actionStatus, isContainer,"",slateManifest,cutCopyParentUrn, elmFeedback);
     /* Tag of elements*/
     let tag = {
         parentTag: fetchElementsTag(wipData)
@@ -108,7 +108,7 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
  * @param {Object} containerElement - Element Parent Data
  * @param {String} type - type of element
 */
-const tcmSnapshotsOnDefaultSlate = (snapshotsData, defaultKeys, containerElement, type,index, isPopupSlate) => {
+export const tcmSnapshotsOnDefaultSlate = (snapshotsData, defaultKeys, containerElement, type,index, isPopupSlate) => {
     const { wipData, elementId, tag, actionStatus, popupInContainer,slateManifestVersioning } = snapshotsData;
     const { poetryData, asideData, parentUrn } = containerElement
     /* For WE creation*/
@@ -196,7 +196,7 @@ const tcmSnapshotsCreateSectionBreak = (containerElement, snapshotsData, default
  * @param {Object} containerElement - Element Parent Data
  * @param {String} defaultKeys - default keys of tcm snapshot
 */
-const tcmSnapshotsInContainerElements = (containerElement, snapshotsData, defaultKeys,index, isPopupSlate) => {
+export const tcmSnapshotsInContainerElements = (containerElement, snapshotsData, defaultKeys,index, isPopupSlate) => {
     let elementDetails;
     const { wipData, elementId, tag, actionStatus, popupInContainer,slateManifestVersioning } = snapshotsData;
     const { poetryData, asideData, parentUrn } = containerElement
@@ -296,7 +296,7 @@ const tcmSnapshotsDeletePopup = (snapshotsData, defaultKeys,index, containerElem
  * @param {Object} parentElement - Popup Element data
  * @param {String} defaultKeys - default keys of tcm snapshot
 */
-const tcmSnapshotsMetadataField = (snapshotsData, defaultKeys, containerElement,type,index, calledFrom) => {
+export const tcmSnapshotsMetadataField = (snapshotsData, defaultKeys, containerElement,type,index, calledFrom) => {
     let elementDetails;
     const { parentElement, metaDataField, CurrentSlateStatus, isMetaFieldExist } = containerElement
     const { wipData, elementId, tag, actionStatus, popupInContainer, slateManifestVersioning } = snapshotsData;
@@ -341,7 +341,7 @@ const tcmSnapshotsPopupCTA = (snapshotsData, defaultKeys, containerElement,index
  * @param {Object} containerElement - Element Parent Data
  * @param {String} type - type of element
 */
-const tcmSnapshotsInPopupElement = (snapshotsData, defaultKeys, containerElement, type,index) => {
+export const tcmSnapshotsInPopupElement = (snapshotsData, defaultKeys, containerElement, type,index) => {
     const { metaDataField, sectionType } = containerElement
     if (defaultKeys.action === 'create' && type == POP_UP) {     /** Create Popup */
         tcmSnapshotsPopupCTA(snapshotsData, defaultKeys, containerElement,index);
@@ -400,7 +400,7 @@ const tcmSnapshotsPopupInContainer = (snapshotsData, defaultKeys, containerEleme
  * @param {Object} containerElement - Element Parent Data
  * @param {String} type - type of element
 */
-const tcmSnapshotsElementsInPopupInContainer = async (snapshotsData, defaultKeys, containerElement, type,index) => {
+export const tcmSnapshotsElementsInPopupInContainer = async (snapshotsData, defaultKeys, containerElement, type,index) => {
     const { wipData, elementId, tag, actionStatus, slateManifestVersioning } = snapshotsData;
     let popupContainerData = config.popupParentElement
     await checkContainerPopupVersion(popupContainerData)
@@ -474,7 +474,7 @@ const checkParentData = (containerElement) => {
  * @param {Object} defaultKeys - default tcm_snapshot keys  
  * @param {Function} dispatch - dispatch function  
 */
-const prepareAndSendTcmData = async (elementDetails, wipData, defaultKeys, actionStatus,index, CurrentSlateStatus) => {
+export const prepareAndSendTcmData = async (elementDetails, wipData, defaultKeys, actionStatus,index, CurrentSlateStatus) => {
     let res = Object.assign({}, wipData);
     delete res["html"];
     let currentSnapshot = {
@@ -543,7 +543,7 @@ const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,popupInCo
  * @param {Object} action - type of action performed
  * @returns {Object} Default keys for the snapshot
 */
-export const setDefaultKeys = (actionStatus, isContainer, inPopupSlate, slatePopupManifestUrn, cutCopyParentUrn) => {
+export const setDefaultKeys = (actionStatus, isContainer, inPopupSlate, slatePopupManifestUrn, cutCopyParentUrn, elmFeedback = null) => {
     const {action,status} = actionStatus
     let tcmKeys = {}
    
@@ -553,6 +553,7 @@ export const setDefaultKeys = (actionStatus, isContainer, inPopupSlate, slatePop
         projectUrn: config.projectUrn,
         index: 0,
         action: action,
+        feedback: elmFeedback,
         status:  (action == 'delete') ? "pending" : (config.tcmStatus && config.tcmStatus == true && status === "") ? "pending" : "accepted",
         slateType: isContainer === true ? CONTAINER_INTRO : SLATE,/** set based on condition */
     }
@@ -597,7 +598,7 @@ export const setSlateType = (wipData, containerElement, type) => {
 */
 export const prepareFigureElementSnapshots = async (element, actionStatus, index) => {
     let elementSnapshot = {};
-    let semanticSnapshots = (actionStatus.fromWhere !== "create" && element.type !== CITATION_ELEMENT) ? await setSemanticsSnapshots(element, actionStatus, index) : {};
+    let semanticSnapshots = element.type !== CITATION_ELEMENT ? await setSemanticsSnapshots(element, actionStatus, index) : {};
     elementSnapshot = {
         ...element ? setFigureElementContentSnapshot(element,actionStatus) : "",
         glossorySnapshot: JSON.stringify([]),
@@ -655,6 +656,12 @@ export const setFigureElementContentSnapshot = (element, actionStatus) => {
             break;
         case "authoredtext":            // for MML
             snapshotData["metadata"] = element.html.text ? `${handleBlankLineDom(element.html.text, 'BlankLine')}` : "<p><br></p>"
+            break;
+        case "interactive":
+            snapshotData = {
+                ...snapshotData,
+                ...getInteractiveSubtypeData(element.figuredata, element.html)
+            }
             break;
         case "image":
         case "table":
@@ -795,15 +802,17 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
  * @param {Object} containerElement - Element Parent Data
  * @param {Function} dispatch to dispatch tcmSnapshots
 */
-export const tcmSnapshotsForCreate = async (elementCreateData, type, containerElement, dispatch, index) => {
+export const tcmSnapshotsForCreate = async (elementCreateData, type, containerElement, dispatch, index, operationType = null, elmFeedback = null) => {
     if (elementCreateData.response.hasOwnProperty("figuretype") && !allowedFigureTypesForTCM.includes(elementCreateData.response.figuretype)) {
         return false
     }
+
     const actionStatus = {
-        action:"create",
+        action: operationType === 'cut' ? "update" : "create",
         status:"",
         fromWhere:"create"
     }
+
     let currentSlateData = elementCreateData.currentParentData[config.slateManifestURN] 
     if(config.isPopupSlate){
         currentSlateData.popupSlateData = elementCreateData.currentParentData[config.tempSlateManifestURN]
@@ -814,7 +823,7 @@ export const tcmSnapshotsForCreate = async (elementCreateData, type, containerEl
         versionStatus = fetchManifestStatus(elementCreateData.bodymatter, containerElement, type);
     }
     containerElement = await checkContainerElementVersion(containerElement, versionStatus, currentSlateData);
-    prepareTcmSnapshots(elementCreateData.response, actionStatus, containerElement, type, index);
+    prepareTcmSnapshots(elementCreateData.response, actionStatus, containerElement, type, index, elmFeedback);
 }
 
 /**
@@ -912,8 +921,10 @@ export const checkContainerElementVersion = async (containerElement, versionStat
     /** latest version for slate*/
     if (currentSlateData && currentSlateData.status && currentSlateData.status === 'approved') {
         let newSlateManifest = await getLatestVersion(currentSlateData.contentUrn);
-        // config.tcmslatemanifest = newSlateManifest;
-        containerElement.slateManifest = newSlateManifest ? newSlateManifest : config.slateManifestURN    
+        containerElement.slateManifest = newSlateManifest ? newSlateManifest : config.slateManifestURN  
+        if (!currentSlateData.popupSlateData) {
+            config.tcmslatemanifest = newSlateManifest;
+        }  
     }
     if (currentSlateData && currentSlateData.popupSlateData && currentSlateData.popupSlateData.status === 'approved') {
         let newPopupSlateManifest = await getLatestVersion(currentSlateData.popupSlateData.contentUrn);

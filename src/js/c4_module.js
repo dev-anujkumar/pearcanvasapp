@@ -6,6 +6,7 @@ let IF_MATCH = "";
 import store from '../appstore/store';
 import config_object from '../config/config';
 import { sendToDataLayer } from '../constants/ga';
+import { showCustomAlert } from './utils.js';
 ajax.x = function () {
     if ('withCredentials' in new XMLHttpRequest()) {
         return new XMLHttpRequest();
@@ -108,7 +109,8 @@ export function publishTitleDelay(project, section, cite, callBack, isPreview) {
         window.open(previewURL, '_blank');
         if (callBack) { callBack(); }
     } else {
-        alert("Title Preview failed to load.");
+        //alert("Title Preview failed to load.");
+        showCustomAlert("Title Preview failed to load.");
         return false
     }
 }
@@ -149,7 +151,9 @@ export const c4PublishObj = {
             }, 1100);
 
         } else {
-            alert("Slate Preview failed to load");
+            //alert("Slate Preview failed to load");
+            showCustomAlert("Slate Preview failed to load");
+            return false;
         }
         //}
     },

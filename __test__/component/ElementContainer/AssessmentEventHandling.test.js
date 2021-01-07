@@ -1,5 +1,5 @@
 import config from '../../../src/config/config.js';
-import { handleElmPortalEvents } from '../../../src/component/ElementContainer/AssessmentEventHandling.js';
+import { handleElmPortalEvents, prepareItemMetadata } from '../../../src/component/ElementContainer/AssessmentEventHandling.js';
 
 jest.mock('../../../src/js/slateLockUtility', () => ({
     checkSlateLock: () => {
@@ -56,7 +56,7 @@ config.pageLimit = 0;
 config.fromTOC = false;
 config.isSlateLockChecked = true;
 describe('Testing AssessmentEventHandling function', () => {
-    test('Test-1-handleElmPortalEvents', () => {
+    it('Test-1-handleElmPortalEvents', () => {
         handleElmPortalEvents('add');
         let event = new CustomEvent("message", {
             data: {
@@ -72,5 +72,10 @@ describe('Testing AssessmentEventHandling function', () => {
         obj.spyEvent();
         handleElmPortalEvents('remove');
         expect(obj.spyEvent).toHaveBeenCalled()
+    })
+    it('Test-2-prepareItemMetadata', () => {
+        const result = prepareItemMetadata("item|wUrn_urn:pearson:work:2117f871-fd1a-4120-945a-7f8f3abc0ca3|title_Quiz 16.3 Who Defines Deviance?!!!!!");
+        expect(result.itemId).toBe('urn:pearson:work:2117f871-fd1a-4120-945a-7f8f3abc0ca3');
+        expect(result.itemTitle).toBe('Quiz 16.3 Who Defines Deviance?!!!!!');
     })
 });

@@ -527,9 +527,21 @@ export const spanHandlers = {
         }
     }
 }
+/**
+ * Returns the alt text of wiris image
+ * @param {Object} targetWirisImage 
+ */
+export const getWirisAltText = ({target}) =>{
+    const WIRIS_ALT_TEXT = target.getAttribute('alt');
+    return WIRIS_ALT_TEXT || 'ALT TEXT NOT FOUND';
+}
 
 /**
  * Removes Byte Order Markup (BOM text) i.e &#65279
  * @param {String} nodeHTML model HTML
  */
-export const removeBOM = (nodeHTML) => nodeHTML.replace(/﻿/g, "");
+export const removeBOM = (nodeHTML) => nodeHTML && nodeHTML.replace(/﻿/g, "");
+export const removeImageCache = (nodeHTML) => nodeHTML && nodeHTML.replace(/(?:\.png).*?[\"]/g,'.png?'+(new Date()).getTime()+'"');
+
+export const showCustomAlert = (msg) => alert(msg);
+

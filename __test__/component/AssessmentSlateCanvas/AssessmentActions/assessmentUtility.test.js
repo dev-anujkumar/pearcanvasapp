@@ -246,4 +246,71 @@ describe('Test---Assessment Utility Functions', () => {
         expect(spyFunction).toHaveReturnedWith(true)
         spyFunction.mockClear();
     });
+    it('Test 10---getAssessmentTitle- IF', () => {
+        let model = {
+            type: "figure",
+            figuredata: {
+                elementdata: {
+                    assessmenttitle: 'main title'
+                }
+            }
+        }
+        const spyFunction = jest.spyOn(assessment_UtiltyFn, 'getAssessmentTitle');
+        assessment_UtiltyFn.getAssessmentTitle(model);
+        expect(spyFunction).toHaveReturnedWith('main title');
+        spyFunction.mockClear();
+    });
+    it('Test 11---setAssessmentItemTitle- IF', () => {
+        let model = {
+            type: "figure",
+            figuredata: {
+                elementdata: {
+                    assessmentitemtitle: "item's title"
+                }
+            }
+        }
+        const spyFunction = jest.spyOn(assessment_UtiltyFn, 'setAssessmentItemTitle');
+        assessment_UtiltyFn.setAssessmentItemTitle(model);
+        expect(spyFunction).toHaveReturnedWith("item's title");
+        spyFunction.mockClear();
+    });
+    it('Test 12---setAssessmentElement -ELSE', () => {
+        let model = {
+        }
+        const spyFunction = jest.spyOn(assessment_UtiltyFn, 'setAssessmentElement');
+        assessment_UtiltyFn.setAssessmentElement(model);
+        expect(spyFunction).toHaveReturnedWith({})
+        spyFunction.mockClear();
+    });
+    it('Test 13---setAssessmentElement - has assessmentitemid', () => {
+        let model = {
+            elementdata: {
+                assessmentid: "urn:pearson:work:b47ee1a3-e652-4b2b-bfc5-563d40a8373d",
+                assessmentitemid: "test"
+            }
+        }
+        const spyFunction = jest.spyOn(assessment_UtiltyFn, 'setAssessmentElement');
+        assessment_UtiltyFn.setAssessmentElement(model);
+        expect(spyFunction).toHaveReturnedWith({ "assessmentId": "urn:pearson:work:b47ee1a3-e652-4b2b-bfc5-563d40a8373d", "itemId": "test", "title": "" })
+        spyFunction.mockClear();
+    });
+    it('Test 14---setAssessmentElement - LT/LA', () => {
+        let model = {
+            elementdata: {
+                "schema": "http://schemas.pearson.com/wip-authoring/assessment/1#/definitions/assessment",
+                "assessmentid": "urn:pearson:learningtemplate:6edbc20b-83f7-496a-af5a-a0b07c7bc0e8",
+                "assessmentformat": "learningtemplate",
+                "usagetype": "Diagnostic",
+                "learningsystem": "knowdl",
+                "templateid": "43208",
+                "templatetype": "exploring-solutions",
+                "templatelabel": "9001 - myvirtual-x/myvirtual-child",
+                "assessmentitemid": ""
+            }
+        }
+        const spyFunction = jest.spyOn(assessment_UtiltyFn, 'setAssessmentElement');
+        assessment_UtiltyFn.setAssessmentElement(model);
+        expect(spyFunction).toHaveReturnedWith({ "assessmentId": "43208", "itemId": "", "title": "9001 - myvirtual-x/myvirtual-child" })
+        spyFunction.mockClear();
+    });
 });
