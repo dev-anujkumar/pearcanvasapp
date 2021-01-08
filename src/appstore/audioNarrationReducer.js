@@ -19,8 +19,6 @@ const INITIAL_STATE = {
   openAudioGlossaryPopup:false,
   addAudioGlossaryPopup:false,
   currentAudioGlossaryData:{},
-  audioIdGlossary:'',
-  audioPathGlossary:'',
   audioGlossaryData:{}
 }
 
