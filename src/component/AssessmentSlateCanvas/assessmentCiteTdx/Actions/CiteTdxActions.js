@@ -227,3 +227,13 @@ var stringToHTML = function (str) {
 	var doc = parser.parseFromString(str, 'text/html');
 	return doc.body.innerHTML;
 };  
+
+export const setAssessmentFilterParams = (title, uuid) => {
+    return {
+        type: 'SET_SEARCH_PARAMS',
+        payload: {
+            searchTitle: title,
+            searchUUID: uuid
+        }
+    }
+}
