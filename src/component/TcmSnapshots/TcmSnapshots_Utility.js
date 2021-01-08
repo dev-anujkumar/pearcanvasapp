@@ -120,6 +120,10 @@ export const tcmSnapshotsOnDefaultSlate = (snapshotsData, defaultKeys, container
     if (wipData.type === ELEMENT_ASIDE && type != SECTION_BREAK) {
         tcmSnapshotsCreateAsideWE(snapshotsData, defaultKeys, deleVercase, newVersionUrns,index, isPopupSlate);
     }
+    /* For SH creation*/
+    if (wipData.type === SHOWHIDE) {
+        tcmSnapshotsCreateShowHide(snapshotsData, defaultKeys, deleVercase, newVersionUrns, index, isPopupSlate);
+    }
     /* action on Section break in WE*/
     else if (type === SECTION_BREAK || wipData.type === WE_MANIFEST) {
         tcmSnapshotsCreateSectionBreak(containerElement, snapshotsData, defaultKeys, deleVercase, newVersionUrns,index, isPopupSlate)
@@ -175,6 +179,34 @@ const tcmSnapshotsCreateAsideWE = (snapshotsData, defaultKeys, deleVercase, newV
             prepareAndSendTcmData(elementDetails, item, defaultKeys, actionStatus,index);
         }
     })
+}
+
+/**
+ * @function tcmSnapshotsCreateShowHide
+ * @description This is the function to prepare the data for TCM Snapshots for Action = Create & Elements = showhide
+ * @param {Object} snapshotsData - Initial Snapshots data
+ * @param {String} defaultKeys - default keys of tcm snapshot
+ * @param {Boolean} deleVercase - Check for delete versioning action
+ * @param {Object} newVersionUrns - Latest  Version Urns for delete case
+*/
+
+const tcmSnapshotsCreateShowHide = (snapshotsData, defaultKeys, deleVercase, newVersionUrns, index, isPopupSlate) => {
+    let elementDetails;
+    const array = ['show', 'postertextobject', 'hide']
+    const { wipData, elementId, tag, actionStatus, popupInContainer, slateManifestVersioning } = snapshotsData;
+    for (let i = 0; i <= array.length; i++) {
+        const showhidetag = array[i] !== 'postertextobject' ? array[i] : 'revel'
+        wipData.interactivedata && wipData.interactivedata[array[i]].map((item) => {
+            const showhide = {
+                element: wipData,
+                showHideType: showhidetag
+            }
+            elementId.childId = deleVercase ? newVersionUrns[item.id] : item.id;
+            tag.childTag = fetchElementsTag(item);
+            elementDetails = setElementTypeAndUrn(elementId, tag, "", item.id, undefined, popupInContainer, slateManifestVersioning, isPopupSlate,showhide);
+            prepareAndSendTcmData(elementDetails, item, defaultKeys, actionStatus, index);
+        })
+    }
 }
 
 /**
