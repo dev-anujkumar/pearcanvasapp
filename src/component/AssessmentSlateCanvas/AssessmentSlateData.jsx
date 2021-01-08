@@ -75,6 +75,8 @@ class AssessmentSlateData extends Component {
 
     componentWillUnmount() {
        document.removeEventListener("mousedown", this.handleClickOutside);
+       this.props.setCurrentCiteTdx({});
+       this.props.setAssessmentFilterParams("", "");
     }
 
     /*** @description - Close Dropdown on body click
