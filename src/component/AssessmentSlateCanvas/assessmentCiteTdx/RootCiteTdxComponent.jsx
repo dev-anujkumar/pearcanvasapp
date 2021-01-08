@@ -19,10 +19,17 @@ class RootCiteTdxComponent extends Component {
   }
   componentDidMount() {
     const { currentPageNo } = this.state;
-    const { searchTitle, filterUUID, citeTdxReducer: { searchTitleVal, searchUuidVal } } = this.props;
-
-    const titleToSearch = searchTitle ? searchTitle : searchTitleVal
-    const uuidToSearch = filterUUID ? filterUUID : searchUuidVal;
+    const { searchTitle, filterUUID, citeTdxReducer } = this.props;
+    let titleToSearch = "",
+      uuidToSearch = "";
+    if (this.props.citeTdxReducer && this.props.openedFrom == 'slateAssessment') {
+      const { searchTitleVal, searchUuidVal } = citeTdxReducer;
+      titleToSearch = searchTitle ? searchTitle : searchTitleVal;
+      uuidToSearch = filterUUID ? filterUUID : searchUuidVal;
+    } else {
+      titleToSearch = searchTitle;
+      uuidToSearch = filterUUID;
+    }
     if ((titleToSearch != '' || uuidToSearch != '')) {
       if (this.props.openedFrom !== 'slateAssessment') {
         this.props.setCurrentCiteTdx({});
@@ -64,7 +71,7 @@ class RootCiteTdxComponent extends Component {
         <div className="root-container">
           <CiteComponentError>
             <CiteTdxHeader headerProps={this.headerProps} resetPage={this.props.resetPage} />
-            <FilterAssessmentData assessmentType={this.props.assessmentType} resetPage={this.props.resetPage} currentPageNo={this.state.currentPageNo}  searchTitle={titleToSearch} filterUUID={uuidToSearch}/>
+            <FilterAssessmentData assessmentType={this.props.assessmentType} AssessmentSearchTitle={this.props.AssessmentSearchTitle} resetPage={this.props.resetPage} currentPageNo={this.state.currentPageNo}  searchTitle={titleToSearch} filterUUID={uuidToSearch} openedFrom = {this.props.openedFrom}/>
             <CiteTdxTable assessmentType={this.props.assessmentType} searchAssessment={this.searchAssessment} currentPageNo={this.state.currentPageNo} searchTitle={this.props.searchTitle} filterUUID={this.props.filterUUID}/>
             <CiteTdxFooter closeWindowAssessment={this.headerProps.closeWindowAssessment} addCiteTdxFunction={this.props.addCiteTdxFunction} usageTypeMetadata={this.props.usageTypeMetadata} searchTitle={this.props.searchTitle} filterUUID={this.state.filterUUID} assessmentType={this.props.assessmentType} isReset={this.props.isReset} resetPage={this.props.resetPage} getCurrentPageNo={this.getCurrentPageNo} openedFrom = {this.props.openedFrom} currentPageNo={this.state.currentPageNo} setCiteTdxFilterData={this.props.setCiteTdxFilterData} assessmentSlateObj={assessmentSlateObj}/>
           </CiteComponentError>

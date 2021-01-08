@@ -25,7 +25,9 @@ class FilterAssessmentData extends Component {
         e.preventDefault();
         this.props.setCurrentCiteTdx({});
         this.props.setCurrentInnerCiteTdx({});
-        this.props.setAssessmentFilterParams(this.state.searchAssessment, this.state.filterUUID);
+        if (this.props.openedFrom == 'slateAssessment') {
+            this.props.setAssessmentFilterParams(this.state.searchAssessment, this.state.filterUUID);
+        }
         this.props.resetPage(true, true);
         if (this.state.filterUUID !== undefined && this.state.filterUUID != '') {
             this.props.filterCiteTdxData(this.props.assessmentType, this.state.searchAssessment, this.state.filterUUID);
