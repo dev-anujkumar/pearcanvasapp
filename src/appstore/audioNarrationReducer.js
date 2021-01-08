@@ -1,7 +1,9 @@
 import {
+  CURRENT_GLOSSARY_AUDIO_NARRATION,
   OPEN_AUDIO_NARRATION,
   SHOW_REMOVE_POPUP,
-  SPLIT_REMOVE_POPUP , CURRENT_SLATE_AUDIO_NARRATION , ADD_AUDIO_NARRATION , WRONG_AUDIO_REMOVE_POPUP,OPEN_AUDIO_GLOSSARY_POPUP
+  HANDLE_GLOSSARY_AUDIO_DATA,
+  SPLIT_REMOVE_POPUP , CURRENT_SLATE_AUDIO_NARRATION , ADD_AUDIO_NARRATION , WRONG_AUDIO_REMOVE_POPUP,OPEN_AUDIO_GLOSSARY_POPUP,ADD_AUDIO_GLOSSARY_POPUP
 } from '../constants/Action_Constants'
 
 
@@ -14,7 +16,12 @@ const INITIAL_STATE = {
   openSplitPopUp : false,
   openWrongAudioPopup: false,
   indexSplit:0,
-  audioGlossaryPopup:false
+  openAudioGlossaryPopup:false,
+  addAudioGlossaryPopup:false,
+  currentAudioGlossaryData:{},
+  audioIdGlossary:'',
+  audioPathGlossary:'',
+  audioGlossaryData:{}
 }
 
 const INITIAL_ACTION = {
@@ -72,6 +79,24 @@ export default function audioNarrationReducer (state = INITIAL_STATE, action = I
       return {
         ...state,
         openAudioGlossaryPopup:action.payload
+      }
+    }
+    case ADD_AUDIO_GLOSSARY_POPUP:{
+      return{
+        ...state,
+        addAudioGlossaryPopup :action.payload
+      }
+    }
+    case CURRENT_GLOSSARY_AUDIO_NARRATION: {
+      return {
+        ...state,
+        currentAudioGlossaryData: action.payload
+      }
+    }
+    case HANDLE_GLOSSARY_AUDIO_DATA:{
+      return{
+        ...state,
+        audioGlossaryData:action.payload
       }
     }
    

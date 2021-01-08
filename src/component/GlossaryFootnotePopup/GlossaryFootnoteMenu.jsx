@@ -23,9 +23,9 @@ class GlossaryFootnoteMenu extends React.Component {
     handleClickOutside = (event) => {
         if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
             /** Case - event target is not even wiris modal */
-            if (!(document.querySelector('.wrs_modal_dialogContainer:not(.wrs_closed)') && document.querySelector('.wrs_modal_dialogContainer:not(.wrs_closed)').contains(event.target))) {
+            if (!(document.querySelector('.wrs_modal_dialogContainer:not(.wrs_closed)') && document.querySelector('.wrs_modal_dialogContainer:not(.wrs_closed)').contains(event.target)) && !document.getElementById('openAudioBook') && !document.getElementById('ext_AddAnAsset')) {
                 this.saveContent()
-            }
+            } 
         }
     }
 
@@ -129,7 +129,7 @@ class GlossaryFootnoteMenu extends React.Component {
     */
     saveContent = () => {
         if (!hasReviewerRole()) {
-            const { glossaryFootnoteValue } = this.props;
+            const { glossaryFootnoteValue,audioGlossaryData } = this.props;
             let { elementWorkId, elementType, glossaryfootnoteid, type, elementSubType, typeWithPopup, poetryField} = glossaryFootnoteValue;
             let term = null;
             let definition = null;
@@ -179,7 +179,7 @@ class GlossaryFootnoteMenu extends React.Component {
             if(this.glossaryFootnoteDifference(term, definition, this.props.glossaryFootNoteCurrentValue.glossaryContentText, this.props.glossaryFootNoteCurrentValue.footnoteContentText, glossaryFootnoteValue.type.toLowerCase())){
                 config.isGlossarySaving = true;
                 sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType, typeWithPopup, poetryField)
+                saveGlossaryAndFootnote(audioGlossaryData, elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType, typeWithPopup, poetryField)
             }
         }
         this.props.showGlossaaryFootnote(false);

@@ -7,7 +7,7 @@ const AudioTinyMceGlossary = (props) => {
     return (
         <>
             {
-                (props.addAudio) &&
+                (props.glossaryFootnoteValue) &&(!props.addAudioGlossaryPopup)&&
                 <div className="">
                     <div className='audio-icon'  title="Audio Tag" onClick={() => props.handleAudioToggle()}>
                         {audioNarration}
@@ -16,7 +16,7 @@ const AudioTinyMceGlossary = (props) => {
             }
 
             {
-                 (props.openAudio) &&
+                 (props.addAudioGlossaryPopup) &&
                  <div className="">
                      <div className='audio-icon' title="Audio Tag" onClick={() => props.handleAudioOpenToggle()}>
                          {audioNarrationEnable}
@@ -30,8 +30,9 @@ const AudioTinyMceGlossary = (props) => {
 
 const mapStateToProps = (state) => {
     return {
-        addAudio: state.audioReducer.addAudio,
-        openAudio: state.audioReducer.openAudio
+        glossaryFootnoteValue:state.glossaryFootnoteReducer.glossaryFootnoteValue.popUpStatus,
+        openAudioGlossaryPopup:state.audioReducer.openAudioGlossaryPopup,
+        addAudioGlossaryPopup:state.audioReducer.addAudioGlossaryPopup
     }
 }
 

@@ -542,7 +542,6 @@ class SlateWrapper extends Component {
 
     closeAudioBookDialog =()=>{
         this.props.audioGlossaryPopup(false);
- 
     }
     /**
      * Toggles popup

@@ -58,17 +58,23 @@ class OpenAudioBook extends React.Component {
     }
 
     render = () => {
-        let isGlossary = this.props.isGlossary;
-        const { audioData } = this.props;
+        const { audioData, currentAudioGlossaryData, isGlossary } = this.props;
         var mediaSrc = "";
         var mediaTitle = "";
-        if (audioData && audioData.data && audioData.data.length > 0) {
+
+        if(isGlossary){
+            if(currentAudioGlossaryData && currentAudioGlossaryData.data && currentAudioGlossaryData.data.length > 0){
+                mediaSrc = currentAudioGlossaryData.data[0].location;
+                mediaTitle = currentAudioGlossaryData.data[0].title.en;
+            }
+        }
+        else if(audioData && audioData.data && audioData.data.length > 0) {
             mediaSrc = audioData.data[0].location;
             mediaTitle = audioData.data[0].title.en;
         }
 
         return (
-            <div className={!isGlossary ?'audiodropdown':'glossary-audiodropdown'} ref={node => this.node = node} onBlur={() => this.handleClick(this)}>
+            <div className={!isGlossary ?'audiodropdown':'glossary-audiodropdown'} id='openAudioBook' ref={node => this.node = node} onBlur={() => this.handleClick(this)}>
                 <div className="audio-close">
                     <h2 className="audio-book-text">Audio Book</h2>
                     <span className="close-icon-audio" onClick={() => this.props.closeAudioBookDialog()}>{audioNarrationCloseIcon}</span>
@@ -97,6 +103,7 @@ class OpenAudioBook extends React.Component {
 const mapStateToProps = (state) => {
     return {
         audioData: state.audioReducer.audioData,
+        currentAudioGlossaryData:state.audioReducer.currentAudioGlossaryData
     }
 }
 

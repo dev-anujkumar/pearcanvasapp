@@ -2,6 +2,9 @@ import axios from 'axios'
 import config from '../../config/config.js'
 import store from '../../appstore/store.js'
 import {
+    HANDLE_GLOSSARY_AUDIO_DATA,
+    CURRENT_GLOSSARY_AUDIO_NARRATION,
+    ADD_AUDIO_GLOSSARY_POPUP,
     OPEN_AUDIO_GLOSSARY_POPUP,
     OPEN_AUDIO_NARRATION,
     SHOW_REMOVE_POPUP,
@@ -26,6 +29,7 @@ export const audioGlossaryPopup =(value) => (dispatch,getState)=>{
         payload:value
     })
 }
+
 export const showAudioSplitPopup = (value,index) => (dispatch, getState) => {
     dispatch({
         type: SPLIT_REMOVE_POPUP,
@@ -46,10 +50,11 @@ export const showWrongAudioPopup = (value) => (dispatch, getState) => {
  * Method to get audio narration for container / state 
  * @param {object} slateData 
  */
-export const fetchAudioNarrationForContainer = (slateData,isGlossary) => async(dispatch, getState) => {
+export const fetchAudioNarrationForContainer = (slateData,isGlossary ='') => async(dispatch, getState) => {
 
     if(isGlossary){
-        let glossaryAudioData = {
+
+        let currentAudioGlossaryData = {
             "containerUrn": "urn:pearson:manifest:63814786-9e04-4748-9ba5-e7b339cf95db",
             "projectUrn": "urn:pearson:distributable:c9aad0a6-a4ca-4328-9dec-84ee60b4f803",
             "containerEntityUrn": "urn:pearson:entity:ba3b174a-1300-43dd-abac-efe9686658fb",
@@ -66,10 +71,13 @@ export const fetchAudioNarrationForContainer = (slateData,isGlossary) => async(d
             "createdDate": "2020-12-30T09:31:34.263Z",
             "updatedDate": "2021-01-04T11:57:53.030Z"
         }
-        dispatch({ type: CURRENT_SLATE_AUDIO_NARRATION, payload: glossaryAudioData });
-        dispatch({ type: OPEN_AUDIO_NARRATION, payload: true })
-        dispatch({ type: ADD_AUDIO_NARRATION, payload: false })
-
+        if (currentAudioGlossaryData) {
+            dispatch({ type: CURRENT_GLOSSARY_AUDIO_NARRATION, payload: currentAudioGlossaryData });
+            dispatch({ type: OPEN_AUDIO_GLOSSARY_POPUP, payload: true })
+            dispatch({ type: ADD_AUDIO_GLOSSARY_POPUP, payload: false })
+        }
+        dispatch({ type: ADD_AUDIO_GLOSSARY_POPUP, payload: true })
+        dispatch({ type: OPEN_AUDIO_GLOSSARY_POPUP, payload: false })
     }
     else{
         let url = `${config.AUDIO_NARRATION_URL}context/v3/${slateData.currentProjectId}/container/${slateData.slateEntityUrn}/narrativeAudio`;
@@ -140,7 +148,7 @@ export const deleteAudioNarrationForContainer = (slateObject) => async(dispatch,
 
 }
 
-export const addAudioNarrationForContainer = (audioData, isGlossary) => async(dispatch, getState) => {
+export const addAudioNarrationForContainer = (audioData, isGlossary='') => async(dispatch, getState) => {
         let slateData = {
             currentProjectId: config.projectUrn,
             slateEntityUrn: config.slateEntityURN
@@ -170,10 +178,13 @@ export const addAudioNarrationForContainer = (audioData, isGlossary) => async(di
        // document.getElementsByClassName('.audio-block').style.pointerEvents = "auto"
         console.log("Error while getting mp3 location from smartLink URL", e);
     }
+
     if(isGlossary){
-        dispatch({ type: OPEN_AUDIO_NARRATION, payload: true })
-        dispatch({ type: ADD_AUDIO_NARRATION, payload: false })
-        store.dispatch(fetchAudioNarrationForContainer(slateData,isGlossary));
+        dispatch({ type: OPEN_AUDIO_GLOSSARY_POPUP, payload: false })
+        dispatch({ type: ADD_AUDIO_GLOSSARY_POPUP, payload: true })
+        dispatch({type:HANDLE_GLOSSARY_AUDIO_DATA,payload:audioData})
+        store.dispatch(fetchAudioNarrationForContainer(audioData,isGlossary));
+
 
     }else{
         let url = `${config.AUDIO_NARRATION_URL}context/v2/${slateData.currentProjectId}/container/${slateData.slateEntityUrn}/narrativeAudio`;
