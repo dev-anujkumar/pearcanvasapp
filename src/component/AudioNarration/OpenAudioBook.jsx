@@ -58,21 +58,20 @@ class OpenAudioBook extends React.Component {
     }
 
     render = () => {
-        const { audioData, currentAudioGlossaryData, isGlossary } = this.props;
+        const { audioData, audioGlossaryData, isGlossary } = this.props;
         var mediaSrc = "";
         var mediaTitle = "";
 
         if(isGlossary){
-            if(currentAudioGlossaryData && currentAudioGlossaryData.data && currentAudioGlossaryData.data.length > 0){
-                mediaSrc = currentAudioGlossaryData.data[0].location;
-                mediaTitle = currentAudioGlossaryData.data[0].title.en;
+            if(audioGlossaryData && Object.keys(audioGlossaryData).length > 0){
+                mediaSrc = audioGlossaryData.location;
+                mediaTitle = audioGlossaryData.title.en;
             }
         }
         else if(audioData && audioData.data && audioData.data.length > 0) {
             mediaSrc = audioData.data[0].location;
             mediaTitle = audioData.data[0].title.en;
         }
-
         return (
             <div className={!isGlossary ?'audiodropdown':'glossary-audiodropdown'} id='openAudioBook' ref={node => this.node = node} onBlur={() => this.handleClick(this)}>
                 <div className="audio-close">
@@ -103,7 +102,7 @@ class OpenAudioBook extends React.Component {
 const mapStateToProps = (state) => {
     return {
         audioData: state.audioReducer.audioData,
-        currentAudioGlossaryData:state.audioReducer.currentAudioGlossaryData
+        audioGlossaryData:state.audioReducer.audioGlossaryData
     }
 }
 

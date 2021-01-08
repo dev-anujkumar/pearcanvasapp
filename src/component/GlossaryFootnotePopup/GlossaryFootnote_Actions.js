@@ -144,7 +144,7 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
  * @param {*} glossaryfootnoteid, glosary/footnote's work id
  * @param {*} type, type whether glossary or footnote
  */
-export const saveGlossaryAndFootnote = (audioGlossaryData,elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType, typeWithPopup,poetryField) => {
+export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType, typeWithPopup,poetryField,audioGlossaryData) => {
     if(!glossaryfootnoteid) return false
 
     let glossaryEntry = Object.create({})

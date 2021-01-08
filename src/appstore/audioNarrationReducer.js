@@ -1,5 +1,4 @@
 import {
-  CURRENT_GLOSSARY_AUDIO_NARRATION,
   OPEN_AUDIO_NARRATION,
   SHOW_REMOVE_POPUP,
   HANDLE_GLOSSARY_AUDIO_DATA,
@@ -85,12 +84,7 @@ export default function audioNarrationReducer (state = INITIAL_STATE, action = I
         addAudioGlossaryPopup :action.payload
       }
     }
-    case CURRENT_GLOSSARY_AUDIO_NARRATION: {
-      return {
-        ...state,
-        currentAudioGlossaryData: action.payload
-      }
-    }
+    
     case HANDLE_GLOSSARY_AUDIO_DATA:{
       return{
         ...state,

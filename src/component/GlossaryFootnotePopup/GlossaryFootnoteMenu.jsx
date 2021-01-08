@@ -19,7 +19,7 @@ class GlossaryFootnoteMenu extends React.Component {
         //context=this;
         this.wrapperRef = null;
     }
-
+    
     handleClickOutside = (event) => {
         if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
             /** Case - event target is not even wiris modal */
@@ -179,7 +179,7 @@ class GlossaryFootnoteMenu extends React.Component {
             if(this.glossaryFootnoteDifference(term, definition, this.props.glossaryFootNoteCurrentValue.glossaryContentText, this.props.glossaryFootNoteCurrentValue.footnoteContentText, glossaryFootnoteValue.type.toLowerCase())){
                 config.isGlossarySaving = true;
                 sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                saveGlossaryAndFootnote(audioGlossaryData, elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType, typeWithPopup, poetryField)
+                saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType, typeWithPopup, poetryField,audioGlossaryData)
             }
         }
         this.props.showGlossaaryFootnote(false);

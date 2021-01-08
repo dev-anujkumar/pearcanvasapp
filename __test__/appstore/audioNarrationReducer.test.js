@@ -13,7 +13,10 @@ const INITIAL_STATE = {
     openPopUp: false,
     openSplitPopUp: false,
     openWrongAudioPopup: false,
-    indexSplit: 0
+    indexSplit: 0,
+    openAudioGlossaryPopup:false,
+    addAudioGlossaryPopup:false,
+    audioGlossaryData:{}
 };
 
 
@@ -66,4 +69,17 @@ describe('testing audioNarration reducer cases --', () => {
             }]
         })).toEqual(mockData);
     })
+    it('OPEN_AUDIO_GLOSSARY_POPUP',()=>{
+        expect(reducer(INITIAL_STATE,{
+            type:types.OPEN_AUDIO_GLOSSARY_POPUP,
+            payload:true
+        })).toEqual(openGlossaryAudio_FINAL_STATE)
+    })
+    it('ADD_AUDIO_GLOSSARY_POPUP',()=>{
+        expect(reducer(INITIAL_STATE,{
+            type:types.ADD_AUDIO_GLOSSARY_POPUP,
+            payload:true
+        })).toEqual(addGlossaryAudio_FINAL_STATE)
+    })
+    it('')
 });

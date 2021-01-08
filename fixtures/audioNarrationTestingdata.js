@@ -6,12 +6,24 @@ export const mockData = {
     openSplitPopUp : false,
     openWrongAudioPopup: false,
     indexSplit:0,
+    openAudioGlossaryPopup:false,
+    addAudioGlossaryPopup:false,
+     audioGlossaryData:
+        {
+            "narrativeAudioUrn": "2ddad41f-a05e-4f99-b44c-4a9306bd2a36",
+            "location": "https://cite-media-stg.pearson.com/legacy_paths/2ddad41f-a05e-4f99-b44c-4a9306bd2a36/Progressive%20Audio%20sample%20Midsummer_Sky.mp3",
+            "title": {
+              "en": "Progressive Audio sample Midsummer_Sky.mp3"
+            },
+            "format": "audio/mpeg"
+     },
      audioData :[{
         "narrativeAudioUrn":"135222a8-0dc2-4375-9488-2790133ce794",
         "location":"https://cite-media-stg.pearson.com/legacy_paths/135222a8-0dc2-4375-9488-2790133ce794/Automation_Audio_3.mp3",
         "title":{"en":"Automation_Audio_3.mp3"},
         "format":"audio/mpeg"
-     }]
+     }],
+
     }
 
 export const mockDatadelete = {
@@ -89,3 +101,31 @@ export const addAudio_FINAL_STATE = {
     openWrongAudioPopup: false,
     indexSplit:0
 };
+
+export const openGlossaryAudio_FINAL_STATE = { 
+    addAudio: false,
+    openAudio: false,
+    audioData: {},
+    openAlfresco: false,
+    openPopUp: false,
+    openSplitPopUp : false,
+    openWrongAudioPopup: false,
+    indexSplit:0,
+    openAudioGlossaryPopup:true,
+    addAudioGlossaryPopup:false,
+    audioGlossaryData:{}
+};
+
+export const addGlossaryAudio_FINAL_STATE ={
+    addAudio: false,
+    openAudio: false,
+    audioData: {},
+    openAlfresco: false,
+    openPopUp: false,
+    openSplitPopUp : false,
+    openWrongAudioPopup: false,
+    indexSplit:0,
+    openAudioGlossaryPopup:false,
+    addAudioGlossaryPopup:true,
+    audioGlossaryData:{}
+}

@@ -2,8 +2,7 @@ import axios from 'axios'
 import config from '../../config/config.js'
 import store from '../../appstore/store.js'
 import {
-    HANDLE_GLOSSARY_AUDIO_DATA,
-    CURRENT_GLOSSARY_AUDIO_NARRATION,
+     HANDLE_GLOSSARY_AUDIO_DATA,
     ADD_AUDIO_GLOSSARY_POPUP,
     OPEN_AUDIO_GLOSSARY_POPUP,
     OPEN_AUDIO_NARRATION,
@@ -53,26 +52,8 @@ export const showWrongAudioPopup = (value) => (dispatch, getState) => {
 export const fetchAudioNarrationForContainer = (slateData,isGlossary ='') => async(dispatch, getState) => {
 
     if(isGlossary){
-
-        let currentAudioGlossaryData = {
-            "containerUrn": "urn:pearson:manifest:63814786-9e04-4748-9ba5-e7b339cf95db",
-            "projectUrn": "urn:pearson:distributable:c9aad0a6-a4ca-4328-9dec-84ee60b4f803",
-            "containerEntityUrn": "urn:pearson:entity:ba3b174a-1300-43dd-abac-efe9686658fb",
-            "data": [
-              {
-                "narrativeAudioUrn": "f8433cd3-04cd-4479-852c-dde4ab410a9f",
-                "location": "https://cite-media-stg.pearson.com/legacy_paths/f8433cd3-04cd-4479-852c-dde4ab410a9f/nse_aud_11_u43_l1_m1_02.mp3",
-                "title": {
-                  "en": "nse_aud_11_u43_l1_m1_02.mp3"
-                },
-                "format": "audio/mpeg"
-              }
-            ],
-            "createdDate": "2020-12-30T09:31:34.263Z",
-            "updatedDate": "2021-01-04T11:57:53.030Z"
-        }
-        if (currentAudioGlossaryData) {
-            dispatch({ type: CURRENT_GLOSSARY_AUDIO_NARRATION, payload: currentAudioGlossaryData });
+        if (slateData) {
+            dispatch({ type: HANDLE_GLOSSARY_AUDIO_DATA, payload: slateData });
             dispatch({ type: OPEN_AUDIO_GLOSSARY_POPUP, payload: true })
             dispatch({ type: ADD_AUDIO_GLOSSARY_POPUP, payload: false })
         }
@@ -182,7 +163,7 @@ export const addAudioNarrationForContainer = (audioData, isGlossary='') => async
     if(isGlossary){
         dispatch({ type: OPEN_AUDIO_GLOSSARY_POPUP, payload: false })
         dispatch({ type: ADD_AUDIO_GLOSSARY_POPUP, payload: true })
-        dispatch({type:HANDLE_GLOSSARY_AUDIO_DATA,payload:audioData})
+         dispatch({type:HANDLE_GLOSSARY_AUDIO_DATA,payload:audioData})
         store.dispatch(fetchAudioNarrationForContainer(audioData,isGlossary));
 
 
