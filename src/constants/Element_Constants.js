@@ -100,4 +100,4 @@ export const disabledPrimaryOption = [
     "primary-multicolumn"
 ];
 
-export const allowedFigureTypesForTCM = ['image', 'table', 'mathImage', 'audio', 'video', 'codelisting', 'authoredtext']
+export const allowedFigureTypesForTCM = ['image', 'table', 'mathImage', 'audio', 'video', 'codelisting', 'authoredtext', "interactive"]

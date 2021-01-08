@@ -9,6 +9,7 @@ import {
     UPDATE_ELM_ITEM_ID,
     SET_ASSESSMENT_METADATA
 } from "../../../constants/Action_Constants";
+import { specialCharacterDecode } from '../assessmentCiteTdx/Actions/CiteTdxActions.js';
 import { fetchAssessmentMetadata, fetchAssessmentVersions, setItemUpdateEvent } from './assessmentActions.js';
 const AssessmentAPIHandlers = {
     /** @description This function prepares list of Assessment UsageTypes from api-response */
@@ -123,7 +124,7 @@ const AssessmentAPIHandlers = {
     /** @description This function handles assessment-metadata API response for Assessment */
     assessmentMetadataHandler: async (responseData, calledFrom, assessmentData, assessmentItemData, dispatch) => {
         const assessmentStatus = AssessmentAPIHandlers.setAssessmentStatus(responseData.status);
-        const assessmentTitle = responseData.name ? responseData.name : responseData.defaultTitle ? responseData.defaultTitle : 'Elm assessment';
+        const assessmentTitle = responseData.name ? specialCharacterDecode(responseData.name) : responseData.defaultTitle ? specialCharacterDecode(responseData.defaultTitle) : 'Elm assessment';
         let dataForUpdate = AssessmentAPIHandlers.prepareUnapprovedData(responseData, assessmentTitle, assessmentStatus, assessmentData);
         if (calledFrom == 'fromNextVersion') {  /* APPROVED | UPDATE */
             dataForUpdate = AssessmentAPIHandlers.prepareApprovedData(assessmentData, responseData, assessmentTitle);
@@ -197,7 +198,7 @@ const AssessmentAPIHandlers = {
     },
     /** @description This function handles assessment-metadata API response for Assessment-Item */
     assessmentItemMetadataHandler: (responseData, calledFrom, assessmentData, assessmentItemData, dispatch) => {
-        const itemTitle = responseData.name ? responseData.name : responseData.defaultTitle ? responseData.defaultTitle : "";
+        const itemTitle = responseData.name ? specialCharacterDecode(responseData.name) : responseData.defaultTitle ? specialCharacterDecode(responseData.defaultTitle) : "";
         if (calledFrom == 'fromItemUpdate') {
             const updatedItem = {
                 ...assessmentItemData.updatedItem,
@@ -238,7 +239,7 @@ const AssessmentAPIHandlers = {
     assessmentMetadataUpdateHandler: (responseData, assessmentData, assessmentItemData, dispatch) => {
         const latestVersion = {
             id: responseData.versionUrn,
-            title: responseData.name ? responseData.name : responseData.defaultTitle ? responseData.defaultTitle : 'Elm assessment',
+            title: responseData.name ? specialCharacterDecode(responseData.name) : responseData.defaultTitle ? specialCharacterDecode(responseData.defaultTitle) : 'Elm assessment',
             latestCleanVersion: AssessmentAPIHandlers.checkElmVersionIsClean(responseData),
             status: AssessmentAPIHandlers.setAssessmentStatus(responseData.status)
         }

@@ -12,11 +12,11 @@ import RootCiteTdxComponent from './assessmentCiteTdx/RootCiteTdxComponent.jsx';
 import config from '../../config/config';
 import './../../styles/AssessmentSlateCanvas/AssessmentSlateCanvas.css';
 import { sendDataToIframe, hasReviewerRole, defaultMathImagePath } from '../../constants/utility.js';
-import { TAXONOMIC_ID_LEARNING_SYSTEM, TAXONOMIC_ID_DISCIPLINES } from './learningTool/learningToolUtility.js';
+import { TAXONOMIC_ID_DISCIPLINES } from './learningTool/learningToolUtility.js';
 import { assessmentFormats, CITE, TDX, PUF, LEARNING_TEMPLATE, LEARNOSITY, ELM_UPDATE_MSG, ELM_UPDATE_POPUP_HEAD, ELM_UPDATE_BUTTON } from './AssessmentSlateConstants.js';
 /** ----- Import - Action Creators ----- */
 import { setCurrentCiteTdx, assessmentSorting } from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
-import { closeLtAction, openLtAction, openLTFunction } from './learningTool/learningToolActions';
+import { closeLtAction, openLtAction, openLTFunction, fetchLearningTemplates } from './learningTool/learningToolActions';
 import { fetchAssessmentMetadata, updateAssessmentVersion, fetchAssessmentVersions } from './AssessmentActions/assessmentActions.js';
 /**
 * Module | AssessmentSlateData
@@ -277,7 +277,7 @@ class AssessmentSlateData extends Component {
 
     /*** @description - This function is to change the learning system */
     changeLearningApp() {
-        this.props.openLTFunction(TAXONOMIC_ID_LEARNING_SYSTEM);
+        this.props.fetchLearningTemplates();
         this.props.openLTFunction(TAXONOMIC_ID_DISCIPLINES);
         this.props.openLtAction();
         this.setState({
@@ -600,7 +600,8 @@ const mapActionToProps = {
     openLTFunction: openLTFunction,
     checkElmAssessmentStatus : fetchAssessmentMetadata,
     updateAssessmentVersion: updateAssessmentVersion,
-    fetchAssessmentLatestVersion:fetchAssessmentVersions
+    fetchAssessmentLatestVersion:fetchAssessmentVersions,
+    fetchLearningTemplates:fetchLearningTemplates
 }
 
 export default connect(

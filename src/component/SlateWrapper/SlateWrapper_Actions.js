@@ -25,7 +25,7 @@ import { HideLoader, ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 import * as slateWrapperConstants from "./SlateWrapperConstants"
-import { onPasteSuccess, prepareDataForTcmCreate } from "./slateWrapperAction_helper"
+import { onPasteSuccess, checkElementExistence, prepareDataForTcmCreate } from "./slateWrapperAction_helper"
 
 import { SET_SELECTION } from './../../constants/Action_Constants.js';
 import tinymce from 'tinymce'
@@ -656,9 +656,12 @@ export const pasteElement = (params) => async (dispatch, getState) => {
         localStorage.setItem('newElement', 1);
 
         let cutIndex = index;
-        if(selection.sourceSlateEntityUrn === config.slateEntityURN &&
-            cutIndex > selection.sourceElementIndex && selection.operationType === 'cut') {
-            cutIndex -= 1;
+        let elmExist = false;
+        if(selection.sourceSlateEntityUrn === config.slateEntityURN && selection.operationType === 'cut') {
+            elmExist = await checkElementExistence(config.slateEntityURN, selection.element.id);
+            if(cutIndex > selection.sourceElementIndex) {
+                cutIndex -= elmExist ? 1 : 0;
+            }
         }
 
         let elmHtml = ('html' in selection.element) ? selection.element.html : {};
@@ -671,6 +674,12 @@ export const pasteElement = (params) => async (dispatch, getState) => {
             }
         }
         
+        if(selection.operationType === 'copy' && 'html' in selection.element && 'text' in  selection.element.html) {
+            let htmlText = (selection.element.html.text);
+            htmlText = htmlText.replace(/(\"page-link-[0-9]{1,2}-[0-9]{2,4}\")/gi, () => `"page-link-${Math.floor(Math.random() * 100)}-${Math.floor(Math.random() * 10000)}"`);
+            selection.element.html.text = htmlText;
+        }
+
         let _requestData = {
             "content": [{
                 "type": selection.element.type,
@@ -732,7 +741,8 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                     index,
                     cutIndex,
                     dispatch,
-                    getState
+                    getState,
+                    elmExist
                 };
         
                 onPasteSuccess(pasteSuccessArgs)
