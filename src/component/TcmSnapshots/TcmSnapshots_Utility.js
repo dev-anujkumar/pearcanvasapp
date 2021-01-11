@@ -192,11 +192,11 @@ const tcmSnapshotsCreateAsideWE = (snapshotsData, defaultKeys, deleVercase, newV
 
 const tcmSnapshotsCreateShowHide = (snapshotsData, defaultKeys, deleVercase, newVersionUrns, index, isPopupSlate) => {
     let elementDetails;
-    const array = ['show', 'postertextobject', 'hide']
+    const typeArray = ['show', 'postertextobject', 'hide']
     const { wipData, elementId, tag, actionStatus, popupInContainer, slateManifestVersioning } = snapshotsData;
-    for (let i = 0; i <= array.length; i++) {
-        const showhidetag = array[i] !== 'postertextobject' ? array[i] : 'revel'
-        wipData.interactivedata && wipData.interactivedata[array[i]].map((item) => {
+    for (const SHType of typeArray) {
+        const showhidetag = SHType !== 'postertextobject' ? SHType : 'revel'
+        wipData.interactivedata[SHType]?.map((item) => {
             const showhide = {
                 element: wipData,
                 showHideType: showhidetag
@@ -560,7 +560,7 @@ export const prepareAndSendTcmData = async (elementDetails, wipData, defaultKeys
         ...defaultKeys
     };
 
-    if(currentSnapshot && (currentSnapshot.elementType.includes("CTA") || currentSnapshot.elementType.includes("LB")) && currentSnapshot.action == 'create'){
+    if(currentSnapshot && ((currentSnapshot.elementType.includes("CTA") && !currentSnapshot.elementType.includes("SH")) || currentSnapshot.elementType.includes("LB")) && currentSnapshot.action == 'create'){
         currentSnapshot.status = 'accepted'  
         if(currentSnapshot.elementType.includes("LB") && CurrentSlateStatus != 'approved'){
             res.elementdata.text = ''
