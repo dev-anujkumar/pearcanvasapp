@@ -12,7 +12,7 @@ const LearningToolHeader = (props) => {
 
     const {
         searchProps: { showError, searchTextCondition, validateSearch, searchLoading },
-        dropdownProps: { selectedTypeValue, setlearningAppType, learningSystems, setlearningToolDiscipline, showDisFilterValues }
+        dropdownProps: { selectedTypeValue, setlearningAppType, learningSystems, setlearningToolDiscipline, showDisFilterValues, showAppTypeValues }
     } = props;
 
     const [searchKeyword, setSearchKeyword] = useState('');
@@ -67,7 +67,7 @@ const LearningToolHeader = (props) => {
             setlearningToolDiscipline(newValue == "" ? newValue : listItem);
         }
         else {
-            const appType = newValue == "" ? newValue : Object.values(learningSystems).find(value => value.label == listItem).appType;
+            const appType = newValue == "" ? newValue :learningSystems.find(item => item.label == listItem).type;
             setAppType(newValue == "" ? DEFAULT_OPTION : listItem)
             setlearningAppType(appType);
         }
@@ -91,8 +91,8 @@ const LearningToolHeader = (props) => {
                             <span className="selected-learning-tool">{selectedAppType ? selectedAppType : DEFAULT_OPTION}</span>
                             <span className="dropdown-menu-arrow"></span>
                         </div>
-                        {openAppTypeDropdown &&
-                            <Dropdown showDropdown={true} ulClass={'learningAppType'} type={TYPE_LEARNING_APP} dropdownList={appTypeMenu} dropdownClass={'learning-tool-dropdown'} clickHandlerFn={handleDropdownChange} hasDefaultOption={true} />}
+                        {showAppTypeValues ? openAppTypeDropdown &&
+                            <Dropdown showDropdown={showAppTypeValues} ulClass={`learningAppType ${showAppTypeValues == false ? "dis-api-fail" : ""}`} type={TYPE_LEARNING_APP} dropdownList={appTypeMenu} dropdownClass={'learning-tool-dropdown'} clickHandlerFn={handleDropdownChange} hasDefaultOption={true} /> : null}
                     </td>
                     <td className='data-disc' onClick={!hasReviewerRole() && toggleDisciplineDropdown}>{/* Discipline Dropdown */}
                         <div className="learningAppType" title={selectedDiscipline ? selectedDiscipline : DEFAULT_OPTION}>

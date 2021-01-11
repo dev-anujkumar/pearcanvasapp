@@ -1,14 +1,15 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import FigureCard from '../../../../src/component/AssessmentSlateCanvas/learningTool/FigureCard';
-import {apiResultObject,selectedResult} from '../../../../fixtures/learningTool'
+import {apiResultObject, selectedResult, apiList} from '../../../../fixtures/learningTool'
 
 describe('Testing Learning Tool FigureCard component', () => {
     let props = {
         forInputKey: 2,
         apiResultObject: apiResultObject,
         selectedResult: selectedResult,
-        selectedFigure: jest.fn()
+        selectedFigure: jest.fn(),
+        learningSystems: apiList
     }
     let wrapper = mount(< FigureCard {...props} />)
     const instance = wrapper.find('FigureCard').instance();

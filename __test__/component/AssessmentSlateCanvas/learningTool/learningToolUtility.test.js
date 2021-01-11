@@ -1,9 +1,9 @@
 import * as utilityFunctions from '../../../../src/component/AssessmentSlateCanvas/learningTool/learningToolUtility.js';
-import { learningSystemList, disciplines, learningSystemMenu, disciplinesList } from '../../../../fixtures/learningTool'
+import { apiList, disciplines, learningSystemMenu, disciplinesList } from '../../../../fixtures/learningTool'
 describe('Test Learning Tool Utility Functions', () => {
     let props = {
         dropdownProps: {
-            learningSystems: learningSystemList,
+            learningSystems: apiList,
             apiResponseForDis: disciplines.options
         }
     }
@@ -16,7 +16,7 @@ describe('Test Learning Tool Utility Functions', () => {
     it('Test-prepareAppTypeList -IF', () => {
         const spyFunction = jest.spyOn(utilityFunctions, 'prepareAppTypeList');
         utilityFunctions.prepareAppTypeList(props)
-        expect(spyFunction).toHaveReturnedWith(learningSystemMenu)
+        expect(spyFunction).toHaveReturnedWith(["Accounting Sims", "Adaptive Pathways", "Criminal Justice Sims", "Digital Interactives", "Economic Sims", "Exploring Solutions", "Guided Data Explorations", "HelpDesk", "Hospitality Sims", "Information Technology Sims", "Media Quiz", "My Virtual Child", "My Virtual Life", "Personal Finance", "Political Science Sims", "Qualitative Business Sims", "Shared Media", "Sound Bytes", "Surveys and Inventories", "Video Library", "Writing Solutions"])
     })
 
     it('Test-prepareAppTypeList -ELSE', () => {

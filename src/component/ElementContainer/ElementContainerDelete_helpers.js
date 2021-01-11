@@ -184,7 +184,6 @@ export const onSlateApproved = (currentSlateData, dispatch, fetchSlateData) => {
 export const prepareTCMSnapshotsForDelete = (params) => {
     const {
         deleteParentData,
-        deleteElemData,
         type,
         parentUrn,
         asideData,
@@ -210,7 +209,6 @@ export const prepareTCMSnapshotsForDelete = (params) => {
             wipData,
             currentParentData: deleteParentData,
             bodymatter: deleteBodymatter,
-            newVersionUrns: deleteElemData,
             index
         }
         tcmSnapshotsForDelete(deleteData, type, containerElement)
@@ -226,7 +224,7 @@ export const prepareTCMSnapshotsForDelete = (params) => {
  * @param {Function} dispatch to dispatch tcmSnapshots
 */
 export const tcmSnapshotsForDelete = async (elementDeleteData, type, containerElement) => {
-    let {cutCopyParentUrn} =  containerElement
+    let {cutCopyParentUrn,parentUrn} =  containerElement
     if (elementDeleteData.wipData.hasOwnProperty("figuretype") && !allowedFigureTypesForTCM.includes(elementDeleteData.wipData.figuretype)) {
         return false
     }
@@ -241,9 +239,9 @@ export const tcmSnapshotsForDelete = async (elementDeleteData, type, containerEl
     if(config.isPopupSlate){
         currentSlateData.popupSlateData = elementDeleteData.currentParentData[config.tempSlateManifestURN]
     }
-    if ((parentType.indexOf(type) === -1)) {
+    if ((parentType.indexOf(type) === -1) || (type === "element-aside" && parentUrn && elementDeleteData.wipData.type === "manifest") ) {
         versionStatus = fetchManifestStatus(elementDeleteData.bodymatter, containerElement, type);
     }
     containerElement = await checkContainerElementVersion(containerElement, versionStatus, currentSlateData);
-    prepareTcmSnapshots(elementDeleteData.wipData, actionStatus, containerElement, type,elementDeleteData.newVersionUrns,elementDeleteData.index);
+    prepareTcmSnapshots(elementDeleteData.wipData, actionStatus, containerElement, type,elementDeleteData.index);
 }

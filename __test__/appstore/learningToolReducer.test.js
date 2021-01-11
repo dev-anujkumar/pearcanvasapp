@@ -7,9 +7,9 @@ import {
     TOGGLE_LT_POPUP,
     GET_DISCIPLINE,
     REMOVE_SELECTED_DATA,
-    GET_DISCIPLINE_FAIL,
     LT_TYPE_FILTER_SELECTED,
-    GET_LEARNING_SYSTEMS
+    GET_LEARNING_SYSTEMS,
+    SET_LT_LA_SEARCH_LOADING
 } from '../../src/constants/Action_Constants';
 import { learningSystemList } from '../../fixtures/learningTool';
 const INITIAL_STATE = {
@@ -25,7 +25,8 @@ const INITIAL_STATE = {
     learningToolDisValue: '',
     learningSystems: [],
     showTypeFilterValues: false,
-    errorFlag:false
+    errorFlag:false,
+    showAppTypeValues: false
 };
 const INITIAL_STATE2 = {
     shouldHitApi: false,
@@ -41,7 +42,8 @@ const INITIAL_STATE2 = {
     linkButtonDisable: true,
     apiResponseForDis: [],
     learningToolDisValue: "mathematics",
-    numberOfRows: 25
+    numberOfRows: 25,
+    showAppTypeValues: false
 };
 const INITIAL_STATE3 = {
     shouldHitApi: false,
@@ -57,7 +59,8 @@ const INITIAL_STATE3 = {
     linkButtonDisable: true,
     apiResponseForDis: [],
     learningToolDisValue: "art",
-    numberOfRows: 25
+    numberOfRows: 25,
+    showAppTypeValues: false
 };
 const mock_GET_DISCIPLINE = {
     "taxonomyType": "disciplines",
@@ -372,7 +375,8 @@ describe('Testing Learning Tool Reducer cases -->', () => {
                 linkButtonDisable: true,
                 selectedResultFormApi: '',
                 errorFlag:false,
-                searchLoading:false
+                searchLoading:false,
+                showAppTypeValues: true
             }
         })).toEqual({
             ...INITIAL_STATE,
@@ -382,7 +386,8 @@ describe('Testing Learning Tool Reducer cases -->', () => {
             linkButtonDisable: true,
             selectedResultFormApi: '',
             errorFlag:false,
-            searchLoading:false
+            searchLoading:false,
+            showAppTypeValues: true
         })
     })
     it('Test 3- LT_API_RESULT_FAIL', () => {
@@ -392,14 +397,16 @@ describe('Testing Learning Tool Reducer cases -->', () => {
                 showDisFilterValues: false,
                 errorFlag:true,
                 searchLoading:false,
-                showLTBody: true
+                showLTBody: true,
+                showAppTypeValues: false
             }
         })).toEqual({
             ...INITIAL_STATE,
             showDisFilterValues: false,
             errorFlag:true,
             searchLoading:false,
-            showLTBody: true
+            showLTBody: true,
+            showAppTypeValues: false
         })
     })
     it('Test 4- TOGGLE_LT_POPUP', () => {
@@ -461,18 +468,7 @@ describe('Testing Learning Tool Reducer cases -->', () => {
             learningToolDisValue: "art"
         })
     })
-    it('Test 8- GET_DISCIPLINE_FAIL', () => {
-        expect(reducer(INITIAL_STATE, {
-            type: GET_DISCIPLINE_FAIL,
-            payload: {
-                showDisFilterValues: false
-            }
-        })).toEqual({
-            ...INITIAL_STATE,
-            showDisFilterValues: false
-        })
-    })
-    it('Test 9- REMOVE_SELECTED_DATA', () => {
+    it('Test 8- REMOVE_SELECTED_DATA', () => {
         expect(reducer(INITIAL_STATE, {
             type: REMOVE_SELECTED_DATA,
             payload: {
@@ -483,7 +479,7 @@ describe('Testing Learning Tool Reducer cases -->', () => {
             selectedResultFormApi: ""
         })
     })
-    it('Test 10- LT_API_RESULT for if-case', () => {
+    it('Test 9- LT_API_RESULT for if-case', () => {
         expect(reducer(INITIAL_STATE2, {
             type: LT_API_RESULT,
             payload: {
@@ -491,7 +487,8 @@ describe('Testing Learning Tool Reducer cases -->', () => {
                 showLTBody: true,
                 apiResponse: mock_LT_API_RESULT,
                 linkButtonDisable: true,
-                selectedResultFormApi: ''
+                selectedResultFormApi: '',
+                showAppTypeValues: true
             }
         })).toEqual({
             ...INITIAL_STATE2,
@@ -499,10 +496,11 @@ describe('Testing Learning Tool Reducer cases -->', () => {
             showLTBody: true,
             apiResponse: [],
             linkButtonDisable: true,
-            selectedResultFormApi: ''
+            selectedResultFormApi: '',
+            showAppTypeValues: true
         })
     })
-    it('Test 11- LT_API_RESULT for if-else-case', () => {
+    it('Test 10- LT_API_RESULT for if-else-case', () => {
         expect(reducer(INITIAL_STATE3, {
             type: LT_API_RESULT,
             payload: {
@@ -510,7 +508,8 @@ describe('Testing Learning Tool Reducer cases -->', () => {
                 showLTBody: true,
                 apiResponse: mock_LT_API_RESULT,
                 linkButtonDisable: true,
-                selectedResultFormApi: ''
+                selectedResultFormApi: '',
+                showAppTypeValues: true
             }
         })).toEqual({
             ...INITIAL_STATE3,
@@ -518,18 +517,34 @@ describe('Testing Learning Tool Reducer cases -->', () => {
             showLTBody: true,
             apiResponse: mock_LT_API_RESULT,
             linkButtonDisable: true,
-            selectedResultFormApi: ''
+            selectedResultFormApi: '',
+            showAppTypeValues: true
         })
     })
-    it('Test 12- GET_LEARNING_SYSTEMS', () => {
+    it('Test 11- GET_LEARNING_SYSTEMS', () => {
         expect(reducer(INITIAL_STATE, {
             type: GET_LEARNING_SYSTEMS,
             payload: {
-                learningSystems: learningSystemList
+                learningSystems: learningSystemList,
+                showAppTypeValues: true
             }
         })).toEqual({
             ...INITIAL_STATE,
-            learningSystems: learningSystemList
+            learningSystems: learningSystemList,
+            showAppTypeValues: true
+        });
+    })
+    it('Test 12- SET_LT_LA_SEARCH_LOADING', () => {
+        expect(reducer(INITIAL_STATE, {
+            type: SET_LT_LA_SEARCH_LOADING,
+            payload: {
+                showLTBody: true,
+                searchLoading : false
+            }
+        })).toEqual({
+            ...INITIAL_STATE,
+            showLTBody: true,
+            searchLoading : false
         });
     })
 });
