@@ -271,6 +271,11 @@ export function prepareDataForTcmCreate(type, createdElementData, getState, disp
             elmUrn.push(createdElementData.popupdata.postertextobject[0].id)
             elmUrn.push(createdElementData.popupdata.bodymatter[0].id)
             break;
+        case slateWrapperConstants.SHOW_HIDE:
+            elmUrn.push(createdElementData.interactivedata.hide[0].id)
+            elmUrn.push(createdElementData.interactivedata.postertextobject[0].id)
+            elmUrn.push(createdElementData.interactivedata.show[0].id)
+            break;
     }
 
     elmUrn.map((item) => {

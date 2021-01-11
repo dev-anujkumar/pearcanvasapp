@@ -10,6 +10,7 @@ import { fetchPOPupSlateData} from '../../component/TcmSnapshots/TcmSnapshot_Act
 import { processAndStoreUpdatedResponse, updateStoreInCanvas } from "./ElementContainerUpdate_helpers";
 import { onDeleteSuccess } from "./ElementContainerDelete_helpers";
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
+import {prepareTCMSnapshotsForDelete} from './ElementContainerDelete_helpers.js'
 export const addComment = (commentString, elementId) => (dispatch) => {
     let url = `${config.STRUCTURE_API_URL}narrative-api/v2/${elementId}/comment/`
     let newComment = {
@@ -431,6 +432,7 @@ export const deleteShowHideUnit = (elementId, type, parentUrn, index,eleIndex, p
         sectionType: type
         // slateEntity : config.slateEntityURN
     }
+    const { asideData ,showHideObj } = getState().appStore
     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
     return axios.post(`${config.REACT_APP_API_URL}v1/slate/deleteElement`,
         JSON.stringify(_requestData),
@@ -440,13 +442,39 @@ export const deleteShowHideUnit = (elementId, type, parentUrn, index,eleIndex, p
                 "PearsonSSOSession": config.ssoToken
             }
         }
-    ).then((response)=>{
+    ).then(async (response)=>{
         let newIndex = eleIndex.split("-")
         // let newShowhideIndex = parseInt(newIndex[newIndex.length-1])+1
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         const parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
         let currentSlateData = newParentData[config.slateManifestURN];
+
+     /** [PCAT-8699] ---------------------------- TCM Snapshot Data handling ------------------------------*/
+    // let slateData = {
+    //     currentParentData: newParentData,
+    //     bodymatter: currentSlateData.contents.bodymatter,
+    //     response: response.data
+    // };
+
+     const deleteData = {
+         deleteElemData:response.data,
+           deleteParentData:newParentData,
+           index:showHideObj.index,
+           showHideObj,
+           type:"element-authoredtext",
+           parentUrn,
+           asideData,
+           contentUrn:showHideObj.currentElement.contentUrn
+        
+     }
+     if (currentSlateData.status === 'approved') {
+         await prepareTCMSnapshotsForDelete(deleteData);
+     }
+     else {
+         prepareTCMSnapshotsForDelete(deleteData);
+     } 
+
         if (currentSlateData.status === 'approved') {
             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
             sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });

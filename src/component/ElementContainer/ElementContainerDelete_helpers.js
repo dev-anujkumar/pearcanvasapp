@@ -190,7 +190,8 @@ export const prepareTCMSnapshotsForDelete = (params) => {
         contentUrn,
         index,
         poetryData,
-        cutCopyParentUrn
+        cutCopyParentUrn,
+        showHideObj
     } = params
 
     const deleteBodymatter = cutCopyParentUrn && cutCopyParentUrn.slateLevelData ? deleteParentData[cutCopyParentUrn.sourceSlateManifestUrn].contents.bodymatter :deleteParentData[config.slateManifestURN].contents.bodymatter;
@@ -203,7 +204,8 @@ export const prepareTCMSnapshotsForDelete = (params) => {
             parentElement: wipData && wipData.type == 'popup' ? wipData : undefined,
             metaDataField: wipData && wipData.type == 'popup' && wipData.popupdata['formatted-title'] ? 'formattedTitle' : undefined,
             sectionType : wipData && wipData.type == 'popup' ? 'postertextobject' : undefined,
-            cutCopyParentUrn
+            cutCopyParentUrn,
+            showHideObj
         }
         const deleteData = {
             wipData,
