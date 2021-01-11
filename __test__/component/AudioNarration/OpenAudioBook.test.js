@@ -1,6 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { mount , shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
@@ -26,6 +25,11 @@ const initialState = {
                 "title": { "en": "Automation_Audio_3.mp3" }, "format": "audio/mpeg"
             }
             ]
+        },
+        audioGlossaryData: {
+            "narrativeAudioUrn": "135222a8-0dc2-4375-9488-2790133ce894",
+            "location": "https://cite-media-stg.pearson.com/legacy_paths/135222a8-0dc2-4375-9488-2790133ce794/Automation_Audio_3.mp3",
+            "title": { "en": "Automation_Audio_3.mp3" }, "format": "audio/mpeg"
         }
     }
 };
@@ -51,8 +55,9 @@ describe('Testing OpenAudioBook component', () => {
         },
         closeAudioBookDialog: jest.fn(),
         deleteAudioNarrationForContainer:  jest.fn(),
-        showAudioRemovePopup : jest.fn(),
-        
+        showAudioRemovePopup : jest.fn(), 
+        isGlossary :false,
+        audioGlossaryData: {}
     }
     const e = {
         target: {
@@ -69,9 +74,8 @@ describe('Testing OpenAudioBook component', () => {
     let narrativeAudioInstance = narrativeAudio.find('OpenAudioBook').instance();
     const spyProcessConfirmation = jest.spyOn(narrativeAudioInstance, 'processConfirmation')
     const spyHandleClick = jest.spyOn(narrativeAudioInstance, 'handleClick')
-
-
     const spyopenConfirmationBox = jest.spyOn(narrativeAudioInstance, 'openConfirmationBox')
+
     test('renders without crashing', () => {
         expect(narrativeAudio).toHaveLength(1);
         let instance = narrativeAudio.instance(); 
@@ -100,5 +104,45 @@ describe('Testing OpenAudioBook component', () => {
         narrativeAudio.update();
         expect(spyopenConfirmationBox).toHaveBeenCalled()
         spyopenConfirmationBox.mockClear()
+    })
+})
+
+describe('when audio is selected from glossary',()=>{
+    let props = {
+        closeAudioBookDialog : jest.fn(),
+        audioData:  {},
+        closeAudioBookDialog: jest.fn(),
+        deleteAudioNarrationForContainer:  jest.fn(),
+        showAudioRemovePopup : jest.fn(), 
+        isGlossary :true,
+        audioGlossaryData:   {
+            "narrativeAudioUrn": "135222a8-0dc2-4375-9488-2790133ce894",
+            "location": "https://cite-media-stg.pearson.com/legacy_paths/135222a8-0dc2-4375-9488-2790133ce794/Automation_Audio_3.mp3",
+            "title": { "en": "Automation_Audio_3.mp3" }, "format": "audio/mpeg"
+        }
+    }
+    const e = {
+        target: {
+            tagName: "p"
+        },
+        stopPropagation() { }
+    }
+    mockAxios.post = jest.fn().mockResolvedValueOnce('');
+
+    const narrativeAudio = mount(<Provider store={store}><OpenAudioBook {...props} /></Provider>);
+
+    let narrativeAudioInstance = narrativeAudio.find('OpenAudioBook').instance();
+    narrativeAudio.find('.close-icon-audio').simulate('click');
+    const spyHandleClick = jest.spyOn(narrativeAudioInstance, 'handleClick')
+
+    test('renders without crashing', () => {
+        expect(narrativeAudio).toHaveLength(1);
+        let instance = narrativeAudio.instance(); 
+        expect(instance).toBeDefined();
+    })
+    it('Blur Dropdown', () => {
+        narrativeAudio.find('.glossary-audiodropdown').simulate('blur');
+        expect(spyHandleClick).toHaveBeenCalled();
+        spyHandleClick.mockClear();   
     })
 })

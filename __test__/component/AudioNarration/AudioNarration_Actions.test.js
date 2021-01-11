@@ -81,6 +81,21 @@ describe('actions', () => {
         expect(type).toBe(types.WRONG_AUDIO_REMOVE_POPUP);
         expect(store.getActions()).toEqual(expectedActions);
     })
+
+    it('testing------- audioGlossaryPopup  action', () => {
+        store = mockStore(() => initialState);
+        let value = true;
+        const expectedActions = [{
+            type: types.OPEN_AUDIO_GLOSSARY_POPUP,
+            payload: value
+
+        }];
+
+        store.dispatch(actions.audioGlossaryPopup(value))
+        const { type, payload } = store.getActions()[0];
+        expect(type).toBe(types.OPEN_AUDIO_GLOSSARY_POPUP);
+        expect(store.getActions()).toEqual(expectedActions);
+    })
     describe('fetchAudioNarrationForContainer', () => {
         beforeEach(function () {
             moxios.install()

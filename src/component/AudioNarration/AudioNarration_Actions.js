@@ -57,8 +57,10 @@ export const fetchAudioNarrationForContainer = (slateData,isGlossary ='') => asy
             dispatch({ type: OPEN_AUDIO_GLOSSARY_POPUP, payload: true })
             dispatch({ type: ADD_AUDIO_GLOSSARY_POPUP, payload: false })
         }
-        dispatch({ type: ADD_AUDIO_GLOSSARY_POPUP, payload: true })
-        dispatch({ type: OPEN_AUDIO_GLOSSARY_POPUP, payload: false })
+        else{
+            dispatch({ type: ADD_AUDIO_GLOSSARY_POPUP, payload: true })
+            dispatch({ type: OPEN_AUDIO_GLOSSARY_POPUP, payload: false })
+        }
     }
     else{
         let url = `${config.AUDIO_NARRATION_URL}context/v3/${slateData.currentProjectId}/container/${slateData.slateEntityUrn}/narrativeAudio`;
