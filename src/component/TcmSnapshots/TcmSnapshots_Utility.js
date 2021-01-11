@@ -572,7 +572,8 @@ const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,popupInCo
         elementId = `${eleId.popID}+${elementId}`;
     }
     else if (parentElement && parentElement.element && parentElement.element.type === SHOWHIDE) {    //showhide
-        elementTag = `${tag.parentTag}${parentElement.showHideType ? ":" + parentElement.showHideType : ""}`; //${tag.childTag ? ":" + tag.childTag : ""}
+        let showHideSection = getShowHideTag(parentElement.showHideType)
+        elementTag = `${tag.parentTag}:${showHideSection}`; //${tag.childTag ? ":" + tag.childTag : ""}
     }
     elementData = {
         elementUrn: elementId,
@@ -580,6 +581,22 @@ const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,popupInCo
     }
     return elementData
 }
+
+/**
+ * Sets tags for showhide sections
+ * @param {String} showHideType Section type in showhide
+ */
+export const getShowHideTag = (showHideType) => {
+    switch (showHideType) {
+        case "show":
+            return "Show"
+        case "hide":
+            return "Hide"
+        default:
+            return "CTA"
+    }
+}
+
 
 /**
  * @function setDefaultKeys

@@ -136,6 +136,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
         return ;
     }
+    const { showHideObj } = getState().appStore
     updatedData.projectUrn = config.projectUrn;
     updatedData = (updatedData.type == "element-blockfeature") ? contentEditableFalse(updatedData): updatedData;
     /** updateBodymatter | Used for TCM Snapshots */
@@ -188,7 +189,8 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
             poetryData,
             updateBodymatter,
             fetchSlateData,
-            responseData : response.data
+            responseData : response.data,
+            showHideObj
         }
         processAndStoreUpdatedResponse(updateArgs)
     }

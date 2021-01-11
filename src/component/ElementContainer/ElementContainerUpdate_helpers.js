@@ -317,12 +317,11 @@ export const collectDataAndPrepareTCMSnapshot = async (params) => {
         elementIndex,
         poetryData,
         updateBodymatter,
-        showHideType,
-        currentParentData
+        currentParentData,
+        showHideObj
     } = params
 
     const assetRemoveidForSnapshot = getState().assetPopOverSearch.assetID;
-    const { showHideObj } = getState().appStore;
     const isPopupOrShowhideElement = parentElement && (parentElement.type === 'popup' || parentElement.type === 'showhide') && (updatedData.metaDataField !== undefined || updatedData.sectionType !== undefined) ? true : false;
     const noAdditionalFields = (updatedData.metaDataField == undefined && updatedData.sectionType == undefined) ? true : false
     const oldFigureData = getState().appStore.oldFiguredata
@@ -369,7 +368,8 @@ export const processAndStoreUpdatedResponse = async (params) => {
         poetryData,
         updateBodymatter,
         responseData,
-        fetchSlateData
+        fetchSlateData,
+        showHideObj
     } = params
 
     const parentData = getState().appStore.slateLevelData;
@@ -399,8 +399,8 @@ export const processAndStoreUpdatedResponse = async (params) => {
         ...commonArgs,
         poetryData,
         updateBodymatter,
-        showHideType,
-        currentParentData
+        currentParentData,
+        showHideObj
     }
     if (currentSlateData && currentSlateData.status === 'approved') {
         await collectDataAndPrepareTCMSnapshot(snapshotArgs)
