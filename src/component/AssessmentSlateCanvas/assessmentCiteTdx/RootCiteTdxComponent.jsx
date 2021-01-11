@@ -40,6 +40,8 @@ class RootCiteTdxComponent extends Component {
         this.props.filterCiteTdxData(this.props.assessmentType, titleToSearch, uuidToSearch);
       } else if ((titleToSearch !== undefined && titleToSearch !== '')) {
         this.props.getCiteTdxData(this.props.assessmentType, titleToSearch, uuidToSearch, currentPageNo);
+      } else {
+        this.props.getCiteTdxData(this.props.assessmentType, null, null, currentPageNo);
       }
     }
     else {
