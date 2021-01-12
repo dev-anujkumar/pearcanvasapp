@@ -51,16 +51,14 @@ export const showWrongAudioPopup = (value) => (dispatch, getState) => {
  */
 export const fetchAudioNarrationForContainer = (slateData,isGlossary ='') => async(dispatch, getState) => {
 
-    if(isGlossary){
+    if (isGlossary) {
         if (slateData) {
             dispatch({ type: HANDLE_GLOSSARY_AUDIO_DATA, payload: slateData });
             dispatch({ type: OPEN_AUDIO_GLOSSARY_POPUP, payload: true })
             dispatch({ type: ADD_AUDIO_GLOSSARY_POPUP, payload: false })
         }
-        else{
-            dispatch({ type: ADD_AUDIO_GLOSSARY_POPUP, payload: true })
-            dispatch({ type: OPEN_AUDIO_GLOSSARY_POPUP, payload: false })
-        }
+        dispatch({ type: ADD_AUDIO_GLOSSARY_POPUP, payload: true })
+        dispatch({ type: OPEN_AUDIO_GLOSSARY_POPUP, payload: false })
     }
     else{
         let url = `${config.AUDIO_NARRATION_URL}context/v3/${slateData.currentProjectId}/container/${slateData.slateEntityUrn}/narrativeAudio`;
