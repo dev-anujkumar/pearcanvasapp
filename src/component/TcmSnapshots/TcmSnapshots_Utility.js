@@ -584,7 +584,7 @@ export const getShowHideTag = (showHideType) => {
         case "hide":
             return "Hide"
         default:
-            return "CTA"
+            return "Action Button Label"
     }
 }
 
