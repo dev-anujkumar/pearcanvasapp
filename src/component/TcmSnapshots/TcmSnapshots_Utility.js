@@ -118,7 +118,7 @@ export const tcmSnapshotsOnDefaultSlate = (snapshotsData, defaultKeys, container
     }
     /* For SH creation*/
     if (wipData.type === SHOWHIDE) {
-        tcmSnapshotsCreateShowHide(snapshotsData, defaultKeys, deleVercase, newVersionUrns, index, isPopupSlate);
+        tcmSnapshotsCreateShowHide(snapshotsData, defaultKeys, index, isPopupSlate);
     }
     /* action on Section break in WE*/
     else if (type === SECTION_BREAK || wipData.type === WE_MANIFEST) {
@@ -176,11 +176,9 @@ const tcmSnapshotsCreateAsideWE = (snapshotsData, defaultKeys,index, isPopupSlat
  * @description This is the function to prepare the data for TCM Snapshots for Action = Create & Elements = showhide
  * @param {Object} snapshotsData - Initial Snapshots data
  * @param {String} defaultKeys - default keys of tcm snapshot
- * @param {Boolean} deleVercase - Check for delete versioning action
- * @param {Object} newVersionUrns - Latest  Version Urns for delete case
 */
 
-const tcmSnapshotsCreateShowHide = (snapshotsData, defaultKeys, deleVercase, newVersionUrns, index, isPopupSlate) => {
+const tcmSnapshotsCreateShowHide = (snapshotsData, defaultKeys, index, isPopupSlate) => {
     let elementDetails;
     const typeArray = ['show', 'postertextobject', 'hide']
     const { wipData, elementId, tag, actionStatus, popupInContainer, slateManifestVersioning } = snapshotsData;
@@ -191,9 +189,9 @@ const tcmSnapshotsCreateShowHide = (snapshotsData, defaultKeys, deleVercase, new
                 element: wipData,
                 showHideType: showhidetag
             }
-            elementId.childId = deleVercase ? newVersionUrns[item.id] : item.id;
+            elementId.childId = item.id;
             tag.childTag = fetchElementsTag(item);
-            elementDetails = setElementTypeAndUrn(elementId, tag, "", item.id, undefined, popupInContainer, slateManifestVersioning, isPopupSlate,showhide);
+            elementDetails = setElementTypeAndUrn(elementId, tag, "", item.id, undefined, popupInContainer, slateManifestVersioning, isPopupSlate, showhide);
             prepareAndSendTcmData(elementDetails, item, defaultKeys, actionStatus, index);
         })
     }
@@ -239,11 +237,6 @@ export const tcmSnapshotsInContainerElements = (containerElement, snapshotsData,
     elementId.parentId = parentElement && parentElement.element && parentElement.element.type === SHOWHIDE ? parentElement.element.id : elementId.parentId;
     elementId.childId = wipData.id;
     elementId.columnId = parentUrn && parentUrn.elementType === MULTI_COLUMN_GROUP && parentUrn.manifestUrn ? parentUrn.manifestUrn : "";
-    // deleVercase ? parentUrn && newVersionUrns[parentUrn.manifestUrn] : parentUrn && parentUrn.manifestUrn;
-    if (deleVercase) {
-        wipData.id = newVersionUrns[wipData.id]
-        wipData.versionUrn = newVersionUrns[wipData.id]
-    }
     tag.parentTag = showHideObj ? fetchElementsTag(parentElement.element) : fetchElementsTag(parentElement);
     tag.childTag = fetchElementsTag(wipData);
     let isHead = asideData && asideData.type === ELEMENT_ASIDE && asideData.subtype === WORKED_EXAMPLE ? parentUrn.manifestUrn == asideData.id ? "HEAD" : "BODY" : "";
