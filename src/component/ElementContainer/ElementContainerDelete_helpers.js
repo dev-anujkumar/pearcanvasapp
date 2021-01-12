@@ -196,7 +196,7 @@ export const prepareTCMSnapshotsForDelete = (params) => {
 
     const deleteBodymatter = cutCopyParentUrn && cutCopyParentUrn.slateLevelData ? deleteParentData[cutCopyParentUrn.sourceSlateManifestUrn].contents.bodymatter :deleteParentData[config.slateManifestURN].contents.bodymatter;
     if (elementTypeTCM.indexOf(type) !== -1 || containerType.indexOf(type) !== -1) {
-        const wipData = fetchElementWipData(deleteBodymatter, index, type, contentUrn, "delete")
+        const wipData = showHideObj ? showHideObj.currentElement : fetchElementWipData(deleteBodymatter, index, type, contentUrn, "delete")
         const containerElement = {
             asideData,
             parentUrn,

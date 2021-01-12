@@ -450,30 +450,24 @@ export const deleteShowHideUnit = (elementId, type, parentUrn, index,eleIndex, p
         const newParentData = JSON.parse(JSON.stringify(parentData));
         let currentSlateData = newParentData[config.slateManifestURN];
 
-     /** [PCAT-8699] ---------------------------- TCM Snapshot Data handling ------------------------------*/
-    // let slateData = {
-    //     currentParentData: newParentData,
-    //     bodymatter: currentSlateData.contents.bodymatter,
-    //     response: response.data
-    // };
+        /** [PCAT-8699] ---------------------------- TCM Snapshot Data handling ------------------------------*/
 
-     const deleteData = {
-         deleteElemData:response.data,
-           deleteParentData:newParentData,
-           index:showHideObj.index,
-           showHideObj,
-           type:"element-authoredtext",
-           parentUrn,
-           asideData,
-           contentUrn:showHideObj.currentElement.contentUrn
-        
-     }
-     if (currentSlateData.status === 'approved') {
-         await prepareTCMSnapshotsForDelete(deleteData);
-     }
-     else {
-         prepareTCMSnapshotsForDelete(deleteData);
-     } 
+        const deleteData = {
+            deleteElemData: response.data,
+            deleteParentData: newParentData,
+            index: showHideObj.index,
+            showHideObj,
+            type: showHideObj.currentElement.type,
+            parentUrn,
+            asideData,
+            contentUrn: showHideObj.currentElement.contentUrn
+        }
+        if (currentSlateData.status === 'approved') {
+            await prepareTCMSnapshotsForDelete(deleteData);
+        }
+        else {
+            prepareTCMSnapshotsForDelete(deleteData);
+        } 
 
         if (currentSlateData.status === 'approved') {
             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
