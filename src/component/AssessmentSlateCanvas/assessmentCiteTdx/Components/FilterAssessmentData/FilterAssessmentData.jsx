@@ -71,6 +71,7 @@ class FilterAssessmentData extends Component {
     }
 
     render() {
+        const { isLoading } = this.props
         return (
             <React.Fragment>
                 <div className={`filter-container ${this.props.openedFrom === "singleSlateAssessmentInner" ? 'inner-assessment':''}`}>
@@ -102,7 +103,7 @@ class FilterAssessmentData extends Component {
                                 </div>
                             </div>
                             <div className="search-block">
-                                <button className="search noSelect" onClick={this.handleSearch} >search</button>
+                                <button className={`search noSelect ${isLoading ? "disable-button" : ""}`} onClick={this.handleSearch} >search</button>
                             </div>
                             </React.Fragment>
                         }
@@ -126,5 +127,9 @@ const mapActionToProps = {
     setCurrentInnerCiteTdx: setCurrentInnerCiteTdx,
     setAssessmentFilterParams:setAssessmentFilterParams
 }
-
-export default connect(null, mapActionToProps)(FilterAssessmentData);
+const mapStateToProps = state => {
+    return {
+        isLoading: state.citeTdxReducer.isLoading
+    };
+  };
+export default connect(mapStateToProps, mapActionToProps)(FilterAssessmentData);
