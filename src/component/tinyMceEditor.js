@@ -16,7 +16,7 @@ import config from '../config/config';
 import { insertListButton, bindKeyDownEvent, insertUoListButton, preventRemoveAllFormatting, removeTinyDefaultAttribute, removeListHighliting, highlightListIcon } from './ListElement/eventBinding.js';
 import { authorAssetPopOver } from './AssetPopover/openApoFunction.js';
 import {
-    tinymceFormulaIcon, tinymceFormulaChemistryIcon, assetPopoverIcon, crossLinkIcon, code, Footnote, bold, Glossary, undo, redo, italic, underline, strikethrough, removeformat, subscript, superscript, charmap, downArrow, orderedList, unorderedList, indent, outdent
+    tinymceFormulaIcon, tinymceFormulaChemistryIcon, assetPopoverIcon, crossLinkIcon, code, Footnote, bold, Glossary, undo, redo, italic, underline, strikethrough, removeformat, subscript, superscript, charmap, downArrow, orderedList, unorderedList, indent, outdent, addImage
 } from '../images/TinyMce/TinyMce.jsx';
 import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
 import { checkforToolbarClick, customEvent, spanHandlers, removeBOM, getWirisAltText, removeImageCache } from '../js/utils';
@@ -29,7 +29,7 @@ import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER } from '../compone
 import { conversionElement } from './Sidebar/Sidebar_Action';
 import { wirisAltTextPopup } from './SlateWrapper/SlateWrapper_Actions';
 import elementList from './Sidebar/elementTypes';
-
+import { handleC2MediaClick }  from '../constants/TinyMceUtility.js';
 let context = {};
 let clickedX = 0;
 let clickedY = 0;
@@ -87,6 +87,7 @@ export class TinyMceEditor extends Component {
                 this.setAssetPopoverIcon(editor);
                 this.addAssetPopoverIcon(editor);
                 this.handleSpecialCharIcon(editor);
+                this.handleAddMediaIcon(editor);
                 this.setFootnoteIcon(editor);
                 this.addFootnoteIcon(editor);
                 this.setGlossaryIcon(editor);
@@ -1377,7 +1378,62 @@ export class TinyMceEditor extends Component {
             crossLinkIcon
         );
     }
+    handleAddMediaIcon = editor => {
+        this.setAddMediaIcon(editor);
+        this.addAddMediaIcon(editor);
+    }
+    /**
+     * Adds Image icon to the toolbar.
+     * @param {*} editor  editor instance
+     */
+    setAddMediaIcon = editor => {
+        editor.ui.registry.addIcon(
+            "InsertMedia",
+            addImage
+        );
+    }
 
+    addAddMediaIcon = editor => {
+        const self = this;
+        editor.ui.registry.addMenuButton('addMedia', {
+            text: 'Insert',
+            tooltip: 'addMedia',
+            onSetup: function () {
+                document.querySelector('button[title="addMedia"]').setAttribute('title', '');
+                let newSpan = document.createElement('span');
+                newSpan.className = "tooltip-text"
+                newSpan.innerText = 'Insert';
+                const tooltipLabel = document.querySelector('button[aria-label="addMedia"] .tox-tbtn__select-label')
+                if (tooltipLabel) {
+                    tooltipLabel.after(newSpan)
+                }
+            },
+            fetch: (callback) => {
+                const items = [{
+                    type: 'menuitem',
+                    text: 'Image',
+                    onAction: () => {
+                       let newImg =  handleC2MediaClick(self.props.permissions);
+                       console.log(newImg)
+                       let nextImg= `<img src=https://cite-media-stg.pearson.com/legacy_paths/1b6f30c1-4751-4992-a779-453694a7a621/WorldMap.jpg imageid="urn:pearson:alfresco:1b6f30c1-4751-4992-a779-453694a7a621" title="" className={'imageAssetContent'} height=159 width=317 />`
+                            editor.selection.setContent(nextImg);
+                            if(self.props.element && self.props.element.type === "element-list"){
+                                const listLiText = document.querySelector('#' + tinymce.activeEditor.id + ' li') ? document.querySelector('#' + tinymce.activeEditor.id + ' li').innerText : "";
+                                if (!listLiText.trim()) {
+                                    const blankLine = document.querySelector('#' + tinymce.activeEditor.id + ' img.imageAssetContent');
+                                    tinyMCE.$('#' + tinymce.activeEditor.id + ' li').find('br').remove();
+                                    document.querySelector('#' + tinymce.activeEditor.id + ' li').append(blankLine);
+                                    blankLine.innerHTML = nextImg;
+                                    tinyMCE.$('#' + tinymce.activeEditor.id)[0].innerHTML = removeBOM(tinyMCE.$('#' + tinymce.activeEditor.id)[0].innerHTML);
+                                }
+                            }
+                         editor.targetElm.classList.remove('place-holder');
+                    }
+                }]
+               callback(items);
+            }
+        });
+    }
     /**
      * Adds Asset popover icon to the toolbar.
      * @param {*} editor  editor instance

@@ -23,9 +23,9 @@ export const EditorConfig = {
             { selector: 'span', remove: 'empty', split: false }
           ]
     },
-    toolbar: 'undo redo | formatSelector | bold italic underline strikethrough removeformat subscript superscript specialcharacters | crossLinkingIcon Glossary Footnote tinyMcewirisformulaEditor tinyMcewirisformulaEditorChemistry code | customListButton customUoListButton indent outdent | slateTag ',
+    toolbar: 'undo redo | formatSelector | bold italic underline strikethrough removeformat subscript superscript specialcharacters | crossLinkingIcon Glossary Footnote tinyMcewirisformulaEditor tinyMcewirisformulaEditorChemistry code | customListButton customUoListButton indent outdent | slateTag | addMedia',
     contentStyle: CONTENT_STYLE,
-    plugins: "lists advlist placeholder charmap paste tiny_mce_wiris"
+    plugins: "lists advlist placeholder charmap paste tiny_mce_wiris media imagetools image"
 }
 
 export const GlossaryFootnoteEditorConfig = {
@@ -92,6 +92,21 @@ export const FormatSelectors = function(callback){
     });
 }
 
+const imageSelectorType = [
+    {
+        text: 'Image',
+        value: 'Image',
+    }
+]
+
+export const mediaSelectors = function(callback){
+
+    return imageSelectorType.map((obj)=>{
+        obj.type = 'menuitem';
+        obj.onAction = function(){callback(obj.value)}
+        return obj;
+    });
+}
 export const elementTypeOptions = Object.freeze({
     'P' : {
         primaryOption : 'primary-paragraph',
