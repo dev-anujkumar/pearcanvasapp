@@ -747,7 +747,10 @@ const setContentSnapshot = (element, elementDetails, actionStatus, CurrentSlateS
         snapshotData = '<p></p>'          
     } else if(element.type === ELEMENT_LIST && element.html && element.html.text){
         snapshotData = element.html.text.replace(/<br>/g,"")
-    } else {
+    } else if (elementDetails.elementType?.includes?.("Action Button Label")) { //Reveal answer section in Showhide
+        snapshotData = element.html.text.replace?.(/Reveal Answer:/, "<span class='showhide-metadata'>Reveal Answer:</span>")
+    } 
+    else {
         snapshotData = element.html && element.html.text ? element.html.text : "";
     }
     snapshotData = handleBlankLineDom(snapshotData,'BlankLine');
