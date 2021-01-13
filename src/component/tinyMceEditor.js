@@ -63,7 +63,6 @@ export class TinyMceEditor extends Component {
             statusbar: false,
             valid_elements: '*[*]',
             extended_valid_elements: '*[*]',
-            object_resizing: false,
             fixed_toolbar_container: '#tinymceToolbar',
             content_style: EditorConfig.contentStyle,
             toolbar: EditorConfig.toolbar,
@@ -72,6 +71,8 @@ export class TinyMceEditor extends Component {
             force_br_newlines: true,
             forced_root_block: '',
             remove_linebreaks: false,
+            object_resizing : 'img',
+            resize_img_proportional: false,
             paste_preprocess: this.pastePreProcess,
             paste_postprocess: this.pastePostProcess,
             force_p_newlines: false,
@@ -128,6 +129,11 @@ export class TinyMceEditor extends Component {
                         }
                     }
                 }
+                tinymce.activeEditor.on('ObjectResizeStart', function (e) {
+                    if (e.target && e.target.nodeName == 'IMG' && (e.target.classList.length > 0 && (e.target.classList.includes('Wirisformula') || e.target.classList.includes('temp_Wirisformula')))) {
+                        e.preventDefault();//prevent resize
+                    }
+                });
 
                 editor.on('Change', (e) => {
                     /*
