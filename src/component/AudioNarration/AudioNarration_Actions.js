@@ -15,10 +15,13 @@ import {
  * @param {*} value 
  */
 
-export const showAudioRemovePopup = (value) => (dispatch, getState) => {
+export const showAudioRemovePopup = (value,isGlossary) => (dispatch, getState) => {
     dispatch({
         type: SHOW_REMOVE_POPUP,
-        payload: value
+        payload:{
+            value:value,
+            isGlossary:isGlossary
+        } 
     })
 }
 
@@ -93,40 +96,48 @@ export const fetchAudioNarrationForContainer = (slateData,isGlossary ='') => asy
  * Method to Delete audio narration for container / state 
  * @param {object} slateObject 
  */
-export const deleteAudioNarrationForContainer = (slateObject) => async(dispatch, getState) => {
-    var storeData = store.getState();
+export const deleteAudioNarrationForContainer = (isGlossary) => async(dispatch, getState) => {
+    
+    if(isGlossary){
+        dispatch({ type: HANDLE_GLOSSARY_AUDIO_DATA, payload: {} });
+        dispatch({ type: ADD_AUDIO_GLOSSARY_POPUP, payload: false })
+        dispatch({ type: OPEN_AUDIO_GLOSSARY_POPUP, payload: false })
+    }
+    else{
+        var storeData = store.getState();
         let slateData = {
             currentProjectId: config.projectUrn,
             slateEntityUrn: config.slateEntityURN
         }
-    var narrativeAudioUrn = storeData.audioReducer.audioData.data[0].narrativeAudioUrn
-    let url = `${config.AUDIO_NARRATION_URL}context/v2/${slateData.currentProjectId}/container/${slateData.slateEntityUrn}/narrativeAudio/${narrativeAudioUrn}`;
+        var narrativeAudioUrn = storeData.audioReducer.audioData.data[0].narrativeAudioUrn
+        let url = `${config.AUDIO_NARRATION_URL}context/v2/${slateData.currentProjectId}/container/${slateData.slateEntityUrn}/narrativeAudio/${narrativeAudioUrn}`;
 
-    try {
-        let audioDataResponse = await axios.delete(url,{
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'ApiKey': config.AUDIO_API_KEY,
-                'PearsonSSOSession': config.ssoToken,
+        try {
+            let audioDataResponse = await axios.delete(url, {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'ApiKey': config.AUDIO_API_KEY,
+                    'PearsonSSOSession': config.ssoToken,
+                }
+            });
+            if (audioDataResponse && audioDataResponse.status == 200) {
+                fetchAudioNarrationForContainer(slateData)
+                dispatch({ type: OPEN_AUDIO_NARRATION, payload: false })
+                dispatch({ type: ADD_AUDIO_NARRATION, payload: true })
             }
-        });
-        if(audioDataResponse && audioDataResponse.status == 200){
-            fetchAudioNarrationForContainer(slateData)
-            dispatch({ type: OPEN_AUDIO_NARRATION, payload: false })
-            dispatch({ type: ADD_AUDIO_NARRATION, payload: true })
-        }
-        else {
+            else {
+                dispatch({ type: ADD_AUDIO_NARRATION, payload: false })
+                dispatch({ type: OPEN_AUDIO_NARRATION, payload: true })
+            }
+
+        } catch (e) {
             dispatch({ type: ADD_AUDIO_NARRATION, payload: false })
             dispatch({ type: OPEN_AUDIO_NARRATION, payload: true })
+            dispatch({ type: ERROR_POPUP, payload: { show: true } })
         }
 
-    } catch (e){
-        dispatch({ type: ADD_AUDIO_NARRATION, payload: false })
-        dispatch({ type: OPEN_AUDIO_NARRATION, payload: true })
-        dispatch({type: ERROR_POPUP, payload:{show: true}})
     }
-
 }
 
 export const addAudioNarrationForContainer = (audioData, isGlossary='') => async(dispatch, getState) => {

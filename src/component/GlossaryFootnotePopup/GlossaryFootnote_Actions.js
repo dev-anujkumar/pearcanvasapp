@@ -8,7 +8,7 @@ const {
     REACT_APP_API_URL
 } = config
 import { allowedFigureTypesForTCM } from "../ElementContainer/ElementConstants";
-import { OPEN_GLOSSARY_FOOTNOTE, UPDATE_FOOTNOTEGLOSSARY, ERROR_POPUP, GET_TCM_RESOURCES } from "./../../constants/Action_Constants";
+import {ADD_AUDIO_GLOSSARY_POPUP ,OPEN_GLOSSARY_FOOTNOTE, UPDATE_FOOTNOTEGLOSSARY, ERROR_POPUP, GET_TCM_RESOURCES ,HANDLE_GLOSSARY_AUDIO_DATA} from "./../../constants/Action_Constants";
 const elementTypeData = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza', 'figure'];
 
 export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, typeWithPopup, poetryField) => async (dispatch) => {
@@ -123,6 +123,18 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                 footnoteContentText = tempGlossaryContentText && JSON.parse(tempGlossaryContentText).definition
                 glossaryContentText = tempGlossaryContentText && JSON.parse(tempGlossaryContentText).term || glossaryTermText
         }
+    }
+    if(glossaryContentText && glossaryContentText.includes('audio-id')){
+        let audioId = glossaryContentText.slice(glossaryContentText.indexOf('audio-id')).split("\"")[1];
+        let audioPath =glossaryContentText.slice(glossaryContentText.indexOf('audio-id')).split("\"")[3]
+        let data = {
+            'title':{
+                'en':audioId
+            },
+            'location':audioPath
+        }
+        dispatch({ type: ADD_AUDIO_GLOSSARY_POPUP, payload: true })
+        dispatch({ type: HANDLE_GLOSSARY_AUDIO_DATA, payload: data });
     }
     return await dispatch({
         type: OPEN_GLOSSARY_FOOTNOTE,

@@ -955,7 +955,7 @@ class SlateWrapper extends Component {
         hideTocBlocker()
         if (this.props.openRemovePopUp) {
             this.props.showAudioRemovePopup(false)
-            this.props.deleteAudioNarrationForContainer();
+            this.props.deleteAudioNarrationForContainer(this.props.isGlossary);
         }
         else if (this.props.openSplitPopUp) {
             this.props.showAudioSplitPopup(false)
@@ -1022,7 +1022,6 @@ class SlateWrapper extends Component {
             dialogText = NOT_AUDIO_ASSET
             audioRemoveClass = 'audioRemoveClass'
         }
-
         if (this.props.openRemovePopUp || this.props.openSplitPopUp) {
             this.props.showBlocker(true)
             showTocBlocker()
@@ -1255,6 +1254,7 @@ const mapStateToProps = state => {
         permissions: state.appStore.permissions,
         currentSlateLOData: state.metadataReducer.currentSlateLOData,
         openRemovePopUp: state.audioReducer.openRemovePopUp,
+        isGlossary: state.audioReducer.isGlossary,
         openSplitPopUp: state.audioReducer.openSplitPopUp,
         openWrongAudioPopup: state.audioReducer.openWrongAudioPopup,
         openAudioGlossaryPopup:state.audioReducer.openAudioGlossaryPopup,

@@ -17,7 +17,6 @@ const INITIAL_STATE = {
   indexSplit:0,
   openAudioGlossaryPopup:false,
   addAudioGlossaryPopup:false,
-  currentAudioGlossaryData:{},
   audioGlossaryData:{}
 }
 
@@ -56,7 +55,8 @@ export default function audioNarrationReducer (state = INITIAL_STATE, action = I
     case SHOW_REMOVE_POPUP : {
       return {
         ...state,
-        openRemovePopUp: action.payload
+        openRemovePopUp: action.payload.value,
+        isGlossary:action.payload.isGlossary
       }
     }
     case SPLIT_REMOVE_POPUP : {

@@ -28,8 +28,8 @@ class OpenAudioBook extends React.Component {
     /**
     * @description - openConfirmationBox function responsible for opening confirmation popupfor removing the narrative audio.
     */
-    openConfirmationBox = (e) => {
-        this.props.showAudioRemovePopup(true)
+    openConfirmationBox = (isGlossary) => {
+        this.props.showAudioRemovePopup(true,isGlossary)
     }
 
 
@@ -90,7 +90,7 @@ class OpenAudioBook extends React.Component {
                 </figure>
                 <div className="remove-button">
                     { !hasReviewerRole() &&
-                        <button className="remove-text" onClick={() => this.openConfirmationBox()} className="audioRemoveButton audioRemoveRound">Remove</button>
+                        <button className="remove-text" onClick={() => this.openConfirmationBox(isGlossary)} className="audioRemoveButton audioRemoveRound">Remove</button>
                     }
                 </div>
             </div>
