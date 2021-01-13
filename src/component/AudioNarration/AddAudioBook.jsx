@@ -8,15 +8,6 @@ import config from '../../config/config';
 import { hasReviewerRole } from '../../constants/utility.js'
 import axios from 'axios';
 
-let sampleData ={
-    uniqueID:'916f295a-6627-49d3-80f6-fda7f6790f20',
-    smartLinkURl:"https://mediaplayer.pearsoncmg.com/assets/_pmd.true/audio-myhistorylab-brands_0134567757-brands4_ch9mod2sec3?mimeType=mp3&bitrate=600",
-    displayName:'Audio For Accessibility Testing',
-    mimetype:null,
-    desc:'{"smartLinkType":"Audio"}'|| '',
-    assetType:'audio',
-    figureType:'audio'
-}
 /**
 * @description - AddAudioBook is a class based component. It is defined simply for adding audio Narration.
 */
@@ -43,8 +34,7 @@ class AddAudioBook extends React.Component {
     dataFromAlfresco = (data) => {
         hideTocBlocker();
         disableHeader(false);
-       // let imageData = data;
-        let imageData = sampleData;
+        let imageData = data;
         let figureType = imageData['assetType'] ? imageData['assetType'] : "";
         let smartLinkType = data && data.desc && data.desc.smartLinkType
         let smartLinkAssetType = (typeof (data.desc) == "string") ? data.desc.includes('smartLinkType') ? JSON.parse(data.desc).smartLinkType : "" : "";
