@@ -4,7 +4,7 @@ import config from '../config/config';
      * @description data after selecting an asset from alfresco c2 module
      * @param {*} data selected asset data
      */
-const dataFromAlfresco = (data) => {
+const dataFromAlfresco = (data, editor) => {
     console.log('dataFromAlfresco')
     let imageData = data;
     let epsURL = imageData['EpsUrl'] ? imageData['EpsUrl'] : "";
@@ -18,10 +18,24 @@ const dataFromAlfresco = (data) => {
             title=""
             alt=${altText}
             className={'lazyload'}
-            height=${height}
-            width=${width}
+            height="150"
+            width="112"
             />`
     console.log('imgData', imgData)
+    let nextImg=imgData
+        //let nextImg= `<img src=https://cite-media-stg.pearson.com/legacy_paths/1b6f30c1-4751-4992-a779-453694a7a621/WorldMap.jpg imageid="urn:pearson:alfresco:1b6f30c1-4751-4992-a779-453694a7a621" title="" className={'imageAssetContent'} height=159 width=317 />`
+                            editor.selection.setContent(nextImg);
+                            //if(self.props.element && self.props.element.type === "element-list"){
+                                const listLiText = document.querySelector('#' + tinymce.activeEditor.id + ' li') ? document.querySelector('#' + tinymce.activeEditor.id + ' li').innerText : "";
+                                if (!listLiText.trim()) {
+                                    const blankLine = document.querySelector('#' + tinymce.activeEditor.id + ' img.imageAssetContent');
+                                    tinyMCE.$('#' + tinymce.activeEditor.id + ' li').find('br').remove();
+                                    document.querySelector('#' + tinymce.activeEditor.id + ' li').append(blankLine);
+                                    blankLine.innerHTML = nextImg;
+                                    tinyMCE.$('#' + tinymce.activeEditor.id)[0].innerHTML = removeBOM(tinyMCE.$('#' + tinymce.activeEditor.id)[0].innerHTML);
+                                }
+                            //}
+                         editor.targetElm.classList.remove('place-holder');
     return imgData
 
 }
@@ -29,14 +43,14 @@ const dataFromAlfresco = (data) => {
      * @description Open C2 module with predefined Alfresco location
      * @param {*} locationData alfresco locationData
      */
-    const handleC2ExtendedClick = async (locationData) => {
+    const handleC2ExtendedClick = (locationData,editor) => {
         let data_1 = locationData;
         console.log('inside  await handleC2ExtendedClick')
-        await c2MediaModule.productLinkOnsaveCallBack(data_1, async (data_2) => {
+        c2MediaModule.productLinkOnsaveCallBack(data_1, (data_2) => {
         console.log('inside  await productLinkOnsaveCallBack')
-        await c2MediaModule.AddanAssetCallBack(data_2, async (data) => {
-                console.log('inside  await AddanAssetCallBack')
-                await dataFromAlfresco(data);
+        c2MediaModule.AddanAssetCallBack(data_2, (data) => {
+                console.log('inside  await AddanAssetCallBack',editor)
+                dataFromAlfresco(data, editor);
             })
         })
 
@@ -44,9 +58,9 @@ const dataFromAlfresco = (data) => {
     /**
      * @description function will be called on image src add and fetch resources from Alfresco
      */
-    export const handleC2MediaClick = (permissions) => {
+    export const handleC2MediaClick = (permissions,editor) => {
 
-console.log('inside handleC2MediaClick')
+        console.log('inside handleC2MediaClick')
         const currentAsset =  null;
         let alfrescoPath = config.alfrescoMetaData;
         var data_1 = false;
@@ -71,7 +85,7 @@ console.log('inside handleC2MediaClick')
                 data_1['repoInstance'] = data_1['repositoryUrl'] ? data_1['repositoryUrl'] : data_1['repoInstance']
                 data_1['siteVisibility'] = data_1['visibility'] ? data_1['visibility'] : data_1['siteVisibility']
                 console.log('before await handleC2ExtendedClick')
-                handleC2ExtendedClick(data_1)
+                handleC2ExtendedClick(data_1, editor)
             }
 
         }} else {
@@ -104,7 +118,7 @@ console.log('inside handleC2MediaClick')
                     request.alfresco['repositoryUrl'] = data_1['repoInstance'];
                     request.alfresco['visibility'] = data_1['siteVisibility'];
 
-                    handleC2ExtendedClick(data_1)
+                    handleC2ExtendedClick(data_1,editor)
                     /*
                         API to set alfresco location on dashboard
                     */
