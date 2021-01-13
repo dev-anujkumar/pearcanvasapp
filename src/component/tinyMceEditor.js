@@ -1413,24 +1413,11 @@ export class TinyMceEditor extends Component {
                     type: 'menuitem',
                     text: 'Image',
                     onAction: () => {
-                       let newImg =  handleC2MediaClick(self.props.permissions,editor);
-                       console.log("res newImg",newImg)
-                    //    let nextImg= `<img src=https://cite-media-stg.pearson.com/legacy_paths/1b6f30c1-4751-4992-a779-453694a7a621/WorldMap.jpg imageid="urn:pearson:alfresco:1b6f30c1-4751-4992-a779-453694a7a621" title="" className={'imageAssetContent'} height=159 width=317 />`
-                    //         editor.selection.setContent(nextImg);
-                    //         if(self.props.element && self.props.element.type === "element-list"){
-                    //             const listLiText = document.querySelector('#' + tinymce.activeEditor.id + ' li') ? document.querySelector('#' + tinymce.activeEditor.id + ' li').innerText : "";
-                    //             if (!listLiText.trim()) {
-                    //                 const blankLine = document.querySelector('#' + tinymce.activeEditor.id + ' img.imageAssetContent');
-                    //                 tinyMCE.$('#' + tinymce.activeEditor.id + ' li').find('br').remove();
-                    //                 document.querySelector('#' + tinymce.activeEditor.id + ' li').append(blankLine);
-                    //                 blankLine.innerHTML = nextImg;
-                    //                 tinyMCE.$('#' + tinymce.activeEditor.id)[0].innerHTML = removeBOM(tinyMCE.$('#' + tinymce.activeEditor.id)[0].innerHTML);
-                    //             }
-                    //         }
-                    //      editor.targetElm.classList.remove('place-holder');
+                        if (self.props.element && self.props.element.type === "element-list") {
+                            const newImg = handleC2MediaClick(self.props.permissions, editor);
+                        }
                     }
                 }]
-                console.log("items>>>>",items)
                callback(items);
             }
         });
