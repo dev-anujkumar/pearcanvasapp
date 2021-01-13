@@ -146,7 +146,6 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
  */
 export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType, typeWithPopup,poetryField,audioGlossaryData) => {
     if(!glossaryfootnoteid) return false
-
     let glossaryEntry = Object.create({})
     let footnoteEntry = Object.create({})
     let semanticType = type.toUpperCase()
@@ -163,12 +162,6 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
     let elementNodeData = document.querySelector(`[data-id='${elementWorkId}']`)?document.querySelector(`[data-id='${elementWorkId}']`).outerHTML.includes('feedback'):false
     let tcmFeedback =  elementNodeData;
 
-    if (audioGlossaryData && Object.keys(audioGlossaryData).length > 0) {
-
-        let addAttributeInDfn = document.querySelector('dfn');
-        addAttributeInDfn.setAttribute('audio-id', audioGlossaryData.narrativeAudioUrn)
-        addAttributeInDfn.setAttribute('audio-path', audioGlossaryData.location)
-    }
     //Get updated innerHtml of element for API request 
     if (elementType == 'figure') {
         let label, title, captions, credits, elementIndex, text, postertext;
