@@ -118,7 +118,7 @@ export const tcmSnapshotsOnDefaultSlate = (snapshotsData, defaultKeys, container
     }
     /* For SH creation*/
     if (wipData.type === SHOWHIDE) {
-        tcmSnapshotsCreateShowHide(snapshotsData, defaultKeys, index, isPopupSlate);
+        tcmSnapshotsCreateShowHide(snapshotsData, defaultKeys, index, isPopupSlate, containerElement);
     }
     /* action on Section break in WE*/
     else if (type === SECTION_BREAK || wipData.type === WE_MANIFEST) {
@@ -178,7 +178,7 @@ const tcmSnapshotsCreateAsideWE = (snapshotsData, defaultKeys,index, isPopupSlat
  * @param {String} defaultKeys - default keys of tcm snapshot
 */
 
-const tcmSnapshotsCreateShowHide = (snapshotsData, defaultKeys, index, isPopupSlate) => {
+const tcmSnapshotsCreateShowHide = (snapshotsData, defaultKeys, index, isPopupSlate, { asideData, parentUrn }) => {
     let elementDetails;
     const typeArray = ['show', 'postertextobject', 'hide']
     const { wipData, elementId, tag, actionStatus, popupInContainer, slateManifestVersioning } = snapshotsData;
@@ -191,7 +191,8 @@ const tcmSnapshotsCreateShowHide = (snapshotsData, defaultKeys, index, isPopupSl
             }
             elementId.childId = item.id;
             tag.childTag = fetchElementsTag(item);
-            elementDetails = setElementTypeAndUrn(elementId, tag, "", item.id, undefined, popupInContainer, slateManifestVersioning, isPopupSlate, showhide);
+            let isHead = asideData?.type === ELEMENT_ASIDE && asideData?.subtype === WORKED_EXAMPLE ? parentUrn.manifestUrn == asideData.id ? "HEAD" : "BODY" : "";
+            elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn?.manifestUrn ? parentUrn.manifestUrn : "", null, popupInContainer, slateManifestVersioning, isPopupSlate, showhide, { asideData, parentUrn });
             prepareAndSendTcmData(elementDetails, item, defaultKeys, actionStatus, index);
         })
     }
@@ -240,7 +241,7 @@ export const tcmSnapshotsInContainerElements = (containerElement, snapshotsData,
     tag.parentTag = showHideObj ? fetchElementsTag(parentElement.element) : fetchElementsTag(parentElement);
     tag.childTag = fetchElementsTag(wipData);
     let isHead = asideData && asideData.type === ELEMENT_ASIDE && asideData.subtype === WORKED_EXAMPLE ? parentUrn.manifestUrn == asideData.id ? "HEAD" : "BODY" : "";
-    elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "", parentUrn ? parentUrn.columnIndex : -1, popupInContainer, slateManifestVersioning, isPopupSlate, parentElement);
+    elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "", parentUrn ? parentUrn.columnIndex : -1, popupInContainer, slateManifestVersioning, isPopupSlate, parentElement, { asideData, parentUrn });
     prepareAndSendTcmData(elementDetails, wipData, defaultKeys, actionStatus,index);
 }
 
@@ -538,7 +539,8 @@ export const prepareAndSendTcmData = async (elementDetails, wipData, defaultKeys
  * @param {String} sectionId - Urn for section break
  * @returns {Object} Object that contains the element tag and elementUrn for snapshot 
 */
-const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,popupInContainer,slateManifestVersioning, popupSlate, parentElement) => {
+const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,popupInContainer,slateManifestVersioning, popupSlate, parentElement, containerElement = {}) => {
+    const { asideData } = containerElement
     let elementData = {};
     let elementTag = `${tag.parentTag}${isHead ? ":" + isHead : ""}${tag.childTag ? ":" + tag.childTag : ""}`;
     let elementId = `${eleId.parentId}${sectionId && isHead === "BODY" ? "+" + sectionId : ""}${eleId.childId ? "+" + eleId.childId : ""}`
@@ -562,9 +564,17 @@ const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,popupInCo
         elementTag = `POP:BODY:${elementTag}`;
         elementId = `${eleId.popID}+${elementId}`;
     }
-    else if (parentElement && parentElement.element && parentElement.element.type === SHOWHIDE) {    //showhide
+    else if (parentElement?.element?.type === SHOWHIDE) {    //showhide
         let showHideSection = getShowHideTag(parentElement.showHideType)
         elementTag = `${tag.parentTag}:${showHideSection}`; //${tag.childTag ? ":" + tag.childTag : ""}
+        if (asideData?.type === ELEMENT_ASIDE && asideData?.subtype !== WORKED_EXAMPLE) { //SH inside Aside
+            elementTag = `AS:${elementTag}`
+            elementId = `${asideData.id}+${eleId.parentId}+${eleId.childId}`
+        }
+        else if (asideData?.type === ELEMENT_ASIDE && asideData?.subtype === WORKED_EXAMPLE) { //SH inside WE - head/body
+            elementTag = `WE:${isHead ? `${isHead}:` : ""}${elementTag}`
+            elementId = `${asideData.id}+${sectionId && isHead === "BODY" ? `${sectionId}+` : ""}${eleId.parentId}+${eleId.childId}`
+        }
     }
     elementData = {
         elementUrn: elementId,
@@ -1024,6 +1034,7 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn, operatio
             case BLOCKFEATURE:
             case AUTHORED_TEXT:
             case LEARNING_OBJECTIVE:
+            case SHOWHIDE:
                 if (eleIndex.length == 2) {          /** Inside WE-HEAD | Aside */
                     wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]];
                 } else if (eleIndex.length == 3 && bodymatter[eleIndex[0]].type !== MULTI_COLUMN) {   /** Inside WE-BODY */

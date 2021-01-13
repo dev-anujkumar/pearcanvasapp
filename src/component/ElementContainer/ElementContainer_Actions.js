@@ -80,7 +80,8 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
     }
     if(type === 'popup'){
         dispatch(fetchPOPupSlateData(elmId, contentUrn, 0 , element, index)) 
-     }
+    }
+    const { showHideObj } = getState().appStore
     let elementParentEntityUrn = cutCopyParentUrn ? cutCopyParentUrn.contentUrn : parentUrn && parentUrn.contentUrn || config.slateEntityURN
     let _requestData = prepareDeleteRequestData(type)
     let indexToBeSent = index || "0"
@@ -108,7 +109,8 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
             index,
             poetryData,
             cutCopyParentUrn,
-            fetchSlateData
+            fetchSlateData,
+            showHideObj
         }
         onDeleteSuccess(deleteArgs)
     } 
@@ -433,6 +435,7 @@ export const deleteShowHideUnit = (elementId, type, parentUrn, index,eleIndex, p
         // slateEntity : config.slateEntityURN
     }
     const { asideData ,showHideObj } = getState().appStore
+    const parentElementUrn = getState().appStore.parentUrn
     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
     return axios.post(`${config.REACT_APP_API_URL}v1/slate/deleteElement`,
         JSON.stringify(_requestData),
@@ -458,7 +461,7 @@ export const deleteShowHideUnit = (elementId, type, parentUrn, index,eleIndex, p
             index: showHideObj.index,
             showHideObj,
             type: showHideObj.currentElement.type,
-            parentUrn,
+            parentUrn: parentElementUrn,
             asideData,
             contentUrn: showHideObj.currentElement.contentUrn
         }

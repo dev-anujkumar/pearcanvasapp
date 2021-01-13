@@ -28,7 +28,8 @@ export const onDeleteSuccess = (params) => {
         index,
         poetryData,
         cutCopyParentUrn,
-        fetchSlateData
+        fetchSlateData,
+        showHideObj
     } = params
 
     const activeEditorId = tinymce && tinymce.activeEditor && tinymce.activeEditor.id
@@ -47,7 +48,8 @@ export const onDeleteSuccess = (params) => {
         contentUrn,
         index,
         poetryData,
-        cutCopyParentUrn
+        cutCopyParentUrn,
+        showHideObj
     }
     prepareTCMSnapshotsForDelete(tcmDeleteArgs)
 
@@ -196,7 +198,7 @@ export const prepareTCMSnapshotsForDelete = (params) => {
 
     const deleteBodymatter = cutCopyParentUrn && cutCopyParentUrn.slateLevelData ? deleteParentData[cutCopyParentUrn.sourceSlateManifestUrn].contents.bodymatter :deleteParentData[config.slateManifestURN].contents.bodymatter;
     if (elementTypeTCM.indexOf(type) !== -1 || containerType.indexOf(type) !== -1) {
-        const wipData = showHideObj ? showHideObj.currentElement : fetchElementWipData(deleteBodymatter, index, type, contentUrn, "delete")
+        const wipData = showHideObj?.currentElement && type !== "showhide" ? showHideObj.currentElement : fetchElementWipData(deleteBodymatter, index, type, contentUrn, "delete")
         const containerElement = {
             asideData,
             parentUrn,
