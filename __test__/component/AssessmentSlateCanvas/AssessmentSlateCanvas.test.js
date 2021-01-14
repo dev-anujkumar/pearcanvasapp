@@ -153,7 +153,7 @@ describe('Testing Assessment Slate Canvas component', () => {
                 },
             }));
         })
-        it('Test 6- addCiteTdxAssessment', () => {
+        xit('Test 6- addCiteTdxAssessment', () => {
             let tdxObj = {
                 id: "urn:pearson:work:133dd9fd-a5be-45e5-8d83-891283abb9a1",
                 title: "TDX Assessment",
