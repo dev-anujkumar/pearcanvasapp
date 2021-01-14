@@ -117,7 +117,7 @@ export const tcmSnapshotsOnDefaultSlate = (snapshotsData, defaultKeys, container
         tcmSnapshotsCreateAsideWE(snapshotsData, defaultKeys,index, isPopupSlate);
     }
     /* For SH creation*/
-    if (wipData.type === SHOWHIDE) {
+    else if (wipData.type === SHOWHIDE) {
         tcmSnapshotsCreateShowHide(snapshotsData, defaultKeys, index, isPopupSlate, containerElement);
     }
     /* action on Section break in WE*/
@@ -192,7 +192,7 @@ const tcmSnapshotsCreateShowHide = (snapshotsData, defaultKeys, index, isPopupSl
             elementId.childId = item.id;
             tag.childTag = fetchElementsTag(item);
             let isHead = asideData?.type === ELEMENT_ASIDE && asideData?.subtype === WORKED_EXAMPLE ? parentUrn.manifestUrn == asideData.id ? "HEAD" : "BODY" : "";
-            elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn?.manifestUrn ? parentUrn.manifestUrn : "", null, popupInContainer, slateManifestVersioning, isPopupSlate, showhide, { asideData, parentUrn });
+            elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn?.manifestUrn ? parentUrn.manifestUrn : "", undefined, popupInContainer, slateManifestVersioning, isPopupSlate, showhide, { asideData, parentUrn });
             prepareAndSendTcmData(elementDetails, item, defaultKeys, actionStatus, index);
         })
     }
@@ -548,7 +548,27 @@ const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,popupInCo
         elementTag = `${tag.parentTag}${(eleIndex == 0) ? ':C1' : ':C2'}${tag.childTag ? ":" + tag.childTag : ""}`   ; 
         elementId =  `${eleId.parentId}${eleId.columnId ? "+" + eleId.columnId : ""}${eleId.childId ? "+" + eleId.childId : ""}`
     }
-    if ((popupInContainer && config.isPopupSlate) || (popupInContainer && popupSlate)) {  //WE:BODY:POP:BODY:WE:BODY:P
+    else if (parentElement?.element?.type === SHOWHIDE) {    //showhide
+        let showHideSection = getShowHideTag(parentElement.showHideType)
+        elementTag = `${tag.parentTag}:${showHideSection}`; //${tag.childTag ? ":" + tag.childTag : ""}
+        if (asideData?.type === ELEMENT_ASIDE && asideData?.subtype !== WORKED_EXAMPLE) { //SH inside Aside
+            elementTag = `AS:${elementTag}`
+            elementId = `${asideData.id}+${eleId.parentId}+${eleId.childId}`
+        }
+        else if (asideData?.type === ELEMENT_ASIDE && asideData?.subtype === WORKED_EXAMPLE) { //SH inside WE - head/body
+            elementTag = `WE:${isHead ? `${isHead}:` : ""}${elementTag}`
+            elementId = `${asideData.id}+${sectionId && isHead === "BODY" ? `${sectionId}+` : ""}${eleId.parentId}+${eleId.childId}`
+        }
+        if ((popupInContainer && config.isPopupSlate) || (popupInContainer && popupSlate)) {  //WE:BODY:POP:BODY:WE:BODY:P
+            elementTag = `${tag.popupParentTag ? tag.popupParentTag + ":" : ""}POP:BODY:${elementTag}`;
+            elementId = `${eleId.popupParentId ? eleId.popupParentId + "+" : ""}${eleId.popID ? eleId.popID : slateManifestVersioning ? slateManifestVersioning:config.slateManifestURN}+${elementId}`;
+        }
+        else if (config.isPopupSlate) {                //POP:BODY:WE:BODY:P
+            elementTag = `POP:BODY:${elementTag}`;
+            elementId = `${slateManifestVersioning?slateManifestVersioning:config.slateManifestURN}+${elementId}`;
+        }
+    }
+    else if ((popupInContainer && config.isPopupSlate) || (popupInContainer && popupSlate)) {  //WE:BODY:POP:BODY:WE:BODY:P
         elementTag = `${tag.popupParentTag ? tag.popupParentTag + ":" : ""}POP:BODY:${elementTag}`;
         elementId = `${eleId.popupParentId ? eleId.popupParentId + "+" : ""}${eleId.popID ? eleId.popID : slateManifestVersioning ? slateManifestVersioning:config.slateManifestURN}+${elementId}`;
     }
@@ -564,18 +584,7 @@ const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,popupInCo
         elementTag = `POP:BODY:${elementTag}`;
         elementId = `${eleId.popID}+${elementId}`;
     }
-    else if (parentElement?.element?.type === SHOWHIDE) {    //showhide
-        let showHideSection = getShowHideTag(parentElement.showHideType)
-        elementTag = `${tag.parentTag}:${showHideSection}`; //${tag.childTag ? ":" + tag.childTag : ""}
-        if (asideData?.type === ELEMENT_ASIDE && asideData?.subtype !== WORKED_EXAMPLE) { //SH inside Aside
-            elementTag = `AS:${elementTag}`
-            elementId = `${asideData.id}+${eleId.parentId}+${eleId.childId}`
-        }
-        else if (asideData?.type === ELEMENT_ASIDE && asideData?.subtype === WORKED_EXAMPLE) { //SH inside WE - head/body
-            elementTag = `WE:${isHead ? `${isHead}:` : ""}${elementTag}`
-            elementId = `${asideData.id}+${sectionId && isHead === "BODY" ? `${sectionId}+` : ""}${eleId.parentId}+${eleId.childId}`
-        }
-    }
+    
     elementData = {
         elementUrn: elementId,
         elementType: elementTag
