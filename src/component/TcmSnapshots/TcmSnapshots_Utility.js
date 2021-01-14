@@ -1100,15 +1100,14 @@ export const fetchParentData = (bodymatter, indexes, showHideObj) => {
     if (isChildElement == true) {
         if (showHideObj) {
             parentData.showHideObj = {...showHideObj}
+            const { parentElement } = setParentUrn(bodymatter, tempIndex);
+            parentData.parentUrn = {
+                manifestUrn: parentElement.id,
+                contentUrn: parentElement.contentUrn,
+                elementType: parentElement.type
+            }
         }
         else {
-            parentData.asideData = {
-                contentUrn: bodymatter[tempIndex[0]].contentUrn,
-                id: bodymatter[tempIndex[0]].id,
-                subtype: bodymatter[tempIndex[0]].subtype,
-                type: bodymatter[tempIndex[0]].type,
-                element: bodymatter[tempIndex[0]]
-            }
             const { parentElement, multiColumnData } = setParentUrn(bodymatter, tempIndex);
             parentData.parentUrn = {
                 manifestUrn: parentElement.id,
@@ -1119,6 +1118,13 @@ export const fetchParentData = (bodymatter, indexes, showHideObj) => {
                 parentData.parentUrn.columnName = multiColumnData.columnName;
                 parentData.parentUrn.columnIndex = multiColumnData.columnIndex;
             }
+        }
+        parentData.asideData = {
+            contentUrn: bodymatter[tempIndex[0]].contentUrn,
+            id: bodymatter[tempIndex[0]].id,
+            subtype: bodymatter[tempIndex[0]].subtype,
+            type: bodymatter[tempIndex[0]].type,
+            element: bodymatter[tempIndex[0]]
         }  
     }
     return parentData;
@@ -1162,9 +1168,18 @@ const setParentUrn = (bodymatter, tempIndex) => {
                 columnName: tempIndex[1] == '0' ? 'C1' : 'C2'
             }
         }
+        /**Showhide inside WE head or in Aside */
+        else if (bodymatter[tempIndex[0]].type === ELEMENT_ASIDE) {
+            parentElement = bodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]]
+            parentElement = parentElement.type === SHOWHIDE ? bodymatter[tempIndex[0]] : parentElement;
+        }
         else {
             parentElement = bodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]]
         }
+    }
+    /**Showhide inside WE body/manifest */
+    else if (tempIndex.length === 5) {
+        parentElement = bodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]]
     }
     return {
         parentElement,
