@@ -811,11 +811,15 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
     if(config.isPopupSlate){
         currentSlateData.popupSlateData = currentParentData[config.tempSlateManifestURN]
     }
-    const { metaDataField, sectionType, parentElement} = containerElement;
+    const { metaDataField, sectionType, parentElement, showHideObj } = containerElement;
     let wipData = {};
     if ((metaDataField || sectionType) && parentElement && parentElement.type == POPUP_ELEMENT) {
         wipData = metaDataField && parentElement.popupdata && parentElement.popupdata[FORMATTED_TITLE] ? parentElement.popupdata[FORMATTED_TITLE] : parentElement.popupdata && parentElement.popupdata.postertextobject[0] ? parentElement.popupdata.postertextobject[0] : wipData;
-    } else {
+    }
+    else if (showHideObj?.currentElement) { //showhide
+        wipData = showHideObj.currentElement
+    } 
+    else {
         wipData = fetchElementWipData(updateBodymatter, elementIndex, response.type, "", actionStatus.action)
     }
     

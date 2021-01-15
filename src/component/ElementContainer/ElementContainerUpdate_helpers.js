@@ -479,7 +479,7 @@ export const updateStore = (paramObj) => {
         } else if (currentSlateData.status === 'approved') {
             if (currentSlateData.type === "popup") {
                 if (config.tcmStatus) {
-                    if (elementTypeTCM.indexOf(updatedData.type) !== -1 && (showHideType === undefined || showHideType === '')) {
+                    if (elementTypeTCM.indexOf(updatedData.type) !== -1) {
                         const tcmDataArgs = {
                             updatedDataID: updatedData.id, getState, dispatch, versionedData: responseData, updatedData
                         }
