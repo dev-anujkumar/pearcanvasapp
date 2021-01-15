@@ -8,6 +8,7 @@ import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { swapElement } from '../SlateWrapper/SlateWrapper_Actions'
 import Sortable from 'react-sortablejs';
 import { guid } from '../../constants/utility.js';
+import { POETRY_SOURCE } from '../../constants/Element_Constants.js';
 
 let random = guid();
 
@@ -126,6 +127,9 @@ class ElementPoetry extends Component {
                     sectionBreak= {false}
                     permissions={_props.permissions}
                     onClickCapture={_props.onClickCapture}
+                    userRole={this.props.userRole}
+                    pasteElement={this.props.pasteElement}
+                    source={POETRY_SOURCE}
                 />
             </>
         )
@@ -155,12 +159,16 @@ class ElementPoetry extends Component {
                         <React.Fragment key={element.id}>                                   
                             {index === 0 && <ElementSaprator
                                 index={index}
+                                firstOne={index === 0}
                                 esProps={this.props.elementSepratorProps(0, true, parentUrn, "", parentIndex, poetryData)}
                                 elementType="poetry"
                                 poetryData={poetryData}
                                 sectionBreak= {false}
                                 permissions={this.props.permissions}
                                 onClickCapture={this.props.onClickCapture}
+                                userRole={this.props.userRole}
+                                pasteElement={this.props.pasteElement}
+                                source={POETRY_SOURCE}
                             />}
                             <ElementContainer
                                 element={element}
@@ -174,15 +182,20 @@ class ElementPoetry extends Component {
                                 onClickCapture={this.props.onClickCapture}
                                 showDeleteElemPopup={this.props.showDeleteElemPopup}
                                 parentElement = {this.props.element}
-                                onListSelect={this.props.onListSelect}>
+                                onListSelect={this.props.onListSelect}
+                                userRole={this.props.userRole}>
                             </ElementContainer>
                             <ElementSaprator
                                 index={index}
                                 esProps={this.props.elementSepratorProps(index, false, parentUrn, "", parentIndex, poetryData)}
                                 elementType="poetry"
+                                poetryData={poetryData}
                                 sectionBreak= {false}
                                 permissions={this.props.permissions}
                                 onClickCapture={this.props.onClickCapture}
+                                userRole={this.props.userRole}
+                                pasteElement={this.props.pasteElement}
+                                source={POETRY_SOURCE}
                             />
                         </React.Fragment>
                     )

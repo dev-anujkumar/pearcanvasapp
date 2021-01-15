@@ -1,6 +1,6 @@
 let config = {
     NODE_ENV : process.env.NODE_ENV || "development",
-    REACT_APP_API_URL :"https://10.11.7.24:8443/cypress-api/",
+    REACT_APP_API_URL :"https://10.11.7.24:8081/cypress-api/",
     STRUCTURE_API_URL :"https://contentapis-staging.pearsoncms.net/",
     LEARNING_OBJECTIVES_ENDPOINT:"https://contentapis-staging.pearsoncms.net/lo-api/",
     ASSET_POPOVER_ENDPOINT: "https://contentapis-staging.pearsoncms.net/manifest-api/",
