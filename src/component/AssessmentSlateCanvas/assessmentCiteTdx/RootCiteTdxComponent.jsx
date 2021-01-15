@@ -53,6 +53,11 @@ class RootCiteTdxComponent extends Component {
     return true;
   }
 
+  componentWillUnmount() {
+    if (this.props.openedFrom != 'slateAssessment') {
+      this.props.setAssessmentFilterParams("", "");
+    }
+  }
   getCurrentPageNo = (currentPageNo) => {
     this.setState({currentPageNo})
   }
