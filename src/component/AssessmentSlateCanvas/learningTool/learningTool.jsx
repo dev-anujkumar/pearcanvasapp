@@ -61,7 +61,7 @@ class LearningTool extends React.Component {
     */
     learningToolSearchClick(searchTitle, searchKeyword) {
         const { selectedLearningAppType, showError } = this.state
-        const learningSystem = this.props.learningToolReducer.learningSystems[selectedLearningAppType].learningSystem;
+        const learningSystem = this.props.learningToolReducer.learningSystems.find(val=> val.type == selectedLearningAppType).system
         const keywordForSearch = showError ? "" : searchKeyword;
         this.props.learningToolSearchAction(learningSystem, selectedLearningAppType, searchTitle, keywordForSearch);
     }
@@ -95,7 +95,7 @@ class LearningTool extends React.Component {
     }
 
     render() {
-        const { searchLoading, errorFlag, showLTBody, apiResponse, learningSystems, linkButtonDisable, apiResponseForDis, showDisFilterValues, selectedResultFormApi } = this.props.learningToolReducer
+        const { searchLoading, errorFlag, showLTBody, apiResponse, learningSystems, linkButtonDisable, apiResponseForDis, showDisFilterValues, selectedResultFormApi, showAppTypeValues } = this.props.learningToolReducer
         const searchProps = {
             showError: this.state.showError,
             searchTextCondition: LT_LA_SEARCH_TEXT,
@@ -108,7 +108,8 @@ class LearningTool extends React.Component {
             apiResponseForDis: apiResponseForDis,
             setlearningAppType: this.setlearningAppType,
             showDisFilterValues: showDisFilterValues,
-            setlearningToolDiscipline: this.setlearningToolDiscipline
+            setlearningToolDiscipline: this.setlearningToolDiscipline,
+            showAppTypeValues: showAppTypeValues
         }
         return (
             <>
@@ -129,7 +130,7 @@ class LearningTool extends React.Component {
                     </div>
                     <hr />
                     {/* Body of the popup table */}
-                    {<LearningToolBody searchLoading={searchLoading} showLTBody={showLTBody} errorFlag={errorFlag} apiResponse={apiResponse} selectedResultData={selectedResultFormApi} learningToolPageLimit={learningToolPages} selectedFigure={this.selectedFigure} learningToolTableHeaders={learningToolTableHeaders} capitalizeString={capitalizeString} />}
+                    {<LearningToolBody searchLoading={searchLoading} showLTBody={showLTBody} errorFlag={errorFlag} apiResponse={apiResponse} selectedResultData={selectedResultFormApi} learningToolPageLimit={learningToolPages} selectedFigure={this.selectedFigure} learningToolTableHeaders={learningToolTableHeaders} learningSystems={learningSystems} />}
                     {/* Footer for the popUp */}
                     <div className="learningToolFooter">
                         <button disabled={this.props.learningToolReducer.linkButtonDisable == false ? linkButtonDisable : true} className="learning-tool-button" onClick={this.linkLearningApp}>{BUTTON_TEXT_LINK}</button>

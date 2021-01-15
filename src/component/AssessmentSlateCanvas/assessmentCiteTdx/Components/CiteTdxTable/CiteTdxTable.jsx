@@ -73,7 +73,7 @@ class CiteTdxTable extends Component {
                 sortBy: sortingData
             })
         this.props.assessmentSorting(sortByParameter,sortOrder);
-        this.props.getCiteTdxData(this.props.assessmentType, this.props.searchTitle, this.props.filterUUID,this.props.currentPageNo);
+        this.props.getCiteTdxData(this.props.assessmentType, this.props.searchTitle, this.props.searchUuidVal,this.props.currentPageNo);
         }
         
     }

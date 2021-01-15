@@ -89,6 +89,7 @@ const LearningToolBody = (props) => {
                                     selectedResult={selectedResult}
                                     selectedFigure={selectedFigure}
                                     apiResponseData={apiResponseLearningTemp}
+                                    learningSystems={props.learningSystems}
                                 />
                                     : <ErrorComp errorMsg={ERROR_MESSAGE_LEARNOSITY} />}
                             </tbody>}

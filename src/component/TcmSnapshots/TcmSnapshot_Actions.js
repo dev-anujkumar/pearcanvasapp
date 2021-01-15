@@ -139,7 +139,7 @@ export const fetchPOPupSlateData = (manifestURN, entityURN, page, element , inde
             eleIndex =  index.split("-");
             if (eleIndex.length == 2) {          /** Inside WE-HEAD | Aside */
                 parentData[config.slateManifestURN].contents.bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]] = element
-            } else if (eleIndex.length == 3 && bodymatter[eleIndex[0]].type !== MULTI_COLUMN ) {   /** Inside WE-BODY */
+            } else if (eleIndex.length == 3 && element.popupdata.bodymatter[eleIndex[0]].type !== MULTI_COLUMN ) {   /** Inside WE-BODY */
                 parentData[config.slateManifestURN].contents.bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]].contents.bodymatter[eleIndex[2]]= element
             }
             
