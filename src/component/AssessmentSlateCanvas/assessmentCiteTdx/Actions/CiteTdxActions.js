@@ -1,7 +1,7 @@
 import config from '../../../../config/config';
 import { CITE, TDX , MMI} from '../../AssessmentSlateConstants';
 import axios from 'axios';
-import { axiosGetAPI } from '../../AssessmentActions/apiRequestHandlers.js';
+import { axiosGetAPI } from '../../../../js/apiCancelRequestHandlers.js';
 
 /**
  * This action creator is used to fetch ELM resources added to the project
