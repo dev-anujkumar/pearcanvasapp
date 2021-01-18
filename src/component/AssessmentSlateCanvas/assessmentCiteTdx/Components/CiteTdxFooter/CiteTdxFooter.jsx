@@ -68,13 +68,13 @@ class CiteTdxFooter extends Component {
 
     render() {
         const { currentPage } = this.state;
-        const { filterUUID } = this.props;
+        const { filterUUID, searchUuidVal } = this.props;
         const { citeApiData, tdxApiData, mmiApiData, isLoading } = this.props;
         const apiData = (this.props.assessmentType === CITE) ? citeApiData : (this.props.assessmentType === TDX) ? tdxApiData : mmiApiData;
         let hideNavigationPrevious = (currentPage <= 1) ? 'hideNavigation' : '';
         let hideNavigationNext = ((apiData && apiData.assessments && apiData.assessments.length == 0) || (apiData && apiData.assessments && apiData.assessments.length < 25)) ? 'hideNavigation' : '';
         let disableClick = (isLoading) ? 'disableClick' : '';
-        let rmNavOnFilter = (filterUUID == undefined || filterUUID == '') ? '' : 'hideNavigation';
+        let rmNavOnFilter = (filterUUID == undefined || filterUUID == '') || (searchUuidVal == undefined || searchUuidVal == '')? '' : 'hideNavigation';
         let addClass;
         if((this.props.openedFrom === "slateAssessment" || this.props.openedFrom === "singleSlateAssessment" ) && Object.keys(this.props.currentAssessmentSelected).length > 0 ){
             addClass="add-button-enabled";
