@@ -9,7 +9,12 @@ import {
     OPEN_GLOSSARY_FOOTNOTE,
     GET_TCM_RESOURCES, 
 } from "../../constants/Action_Constants";
-import { elementTypeTCM, allowedFigureTypesForTCM } from "./ElementConstants";
+import { 
+    elementTypeTCM,
+    allowedFigureTypesForTCM,
+    allowedParentType
+} from "./ElementConstants";
+
 import config from '../../config/config';
 
 export const updateNewVersionElementInStore = (paramObj) => {
@@ -322,7 +327,7 @@ export const collectDataAndPrepareTCMSnapshot = async (params) => {
     } = params
 
     const assetRemoveidForSnapshot = getState().assetPopOverSearch.assetID;
-    const isPopupOrShowhideElement = parentElement && (parentElement.type === 'popup' || parentElement.type === 'showhide') && (updatedData.metaDataField !== undefined || updatedData.sectionType !== undefined) ? true : false;
+    const isPopupOrShowhideElement = allowedParentType.includes(parentElement?.type) && (updatedData.metaDataField !== undefined || updatedData.sectionType !== undefined) ? true : false;
     const noAdditionalFields = (updatedData.metaDataField == undefined && updatedData.sectionType == undefined) ? true : false
     const oldFigureData = getState().appStore.oldFiguredata
     if (elementTypeTCM.indexOf(responseData.type) !== -1 && (isPopupOrShowhideElement || noAdditionalFields)) {
@@ -331,9 +336,9 @@ export const collectDataAndPrepareTCMSnapshot = async (params) => {
             parentUrn,
             poetryData,
             showHideObj,
-            parentElement: parentElement && (parentElement.type === 'popup' || parentElement.type === 'showhide') ? parentElement : undefined,
+            parentElement: allowedParentType.includes(parentElement?.type) ? parentElement : undefined,
             metaDataField: parentElement && parentElement.type === 'popup' && updatedData.metaDataField ? updatedData.metaDataField : undefined,
-            sectionType : parentElement && (parentElement.type === 'popup' || parentElement.type === 'showhide') && updatedData.sectionType ? updatedData.sectionType : undefined,
+            sectionType : allowedParentType.includes(parentElement?.type) && updatedData.sectionType ? updatedData.sectionType : undefined,
             CurrentSlateStatus: currentSlateData.status
         },
         elementUpdateData = {
