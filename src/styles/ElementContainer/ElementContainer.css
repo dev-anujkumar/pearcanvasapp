@@ -22,10 +22,16 @@
     padding: 1px 7px;
 }
 
+.element-container.ct.active {
+    border: 1.5px solid #005a70 !important;
+}
+
 .editor.cut .element-container.active,
 .editor.copy .element-container.active,
+.editor.cut .element-container.ct.active,
+.editor.copy .element-container.ct.active
 .editor.cut .showBorder, .editor.copy .showBorder {
-    border: none;
+    border: none !important;
     background: linear-gradient(90deg, #005a70 50%, transparent 50%), linear-gradient(90deg, #005a70 50%, transparent 50%), linear-gradient(0deg, #005a70 50%, transparent 50%), linear-gradient(0deg, #005a70 50%, transparent 50%);
     background-repeat: repeat-x, repeat-x, repeat-y, repeat-y;
     background-size: 15px 2px, 15px 2px, 2px 16px, 2px 16px;
@@ -41,10 +47,6 @@
     100% {
       background-position: left 15px top, right 15px bottom 0.5px, left bottom 15px , right 1.5px top 15px;
     }
-}
-
-.element-container.ct.active {
-    border: 1.5px solid #005a70 !important;
 }
 
 .element-container.hideBorder:not(.as):not(.we):not(.cg):not(.pe):not(.multi-column) *, .element-container.showBorder:not(.as):not(.we):not(.cg):not(.pe):not(.multi-column) * {

@@ -12,6 +12,8 @@ import elementTypeConstant, { containerTypeArray } from './ElementSepratorConsta
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import '../../styles/ElementSaprator/ElementSaprator.css'
 import ElementContainerType from '../ElementContainerType/ElementContainerType.jsx'
+import { getPasteValidated } from '../../constants/Element_Constants.js';
+
 const { TEXT, 
     IMAGE, 
     AUDIO, 
@@ -125,7 +127,10 @@ export function ElementSaprator(props) {
 
     const renderPasteButton = (separatorProps, type) => {
         const allowedRoles = ["admin", "manager", "edit", "default_user"];
-        if (!(props.asideData || props.parentUrn || config.isPopupSlate) && allowedRoles.includes(props.userRole)) {
+        let sourceComp = 'source' in props ? props.source : '';
+        let inputType = 'inputType' in props.elementSelection ? props.elementSelection.inputType : '';
+        let pasteValidation = getPasteValidated(sourceComp, inputType);
+        if (!config.isPopupSlate && allowedRoles.includes(props.userRole) && pasteValidation) {
             return (
                 <div className={`elemDiv-expand paste-button-wrapper ${(type == 'cut' && !pasteIcon) ? 'disabled' : ''}`} onClickCapture={(e) => props.onClickCapture(e)}>
                     <Tooltip direction='left' tooltipText='Paste element'>
@@ -356,7 +361,10 @@ export const pasteElement = (separatorProps, togglePaste, type) => {
     const firstOne = separatorProps.firstOne || false;
     const insertionIndex = firstOne ? index : index + 1
     const pasteFnArgs = {
-        index: insertionIndex
+        index: insertionIndex,
+        parentUrn: 'parentUrn' in separatorProps ? separatorProps.parentUrn : null,
+        asideData: 'asideData' in separatorProps ? separatorProps.asideData : null,
+        poetryData: 'poetryData' in separatorProps ? separatorProps.poetryData : null
     }
     separatorProps.pasteElement(pasteFnArgs)
 }

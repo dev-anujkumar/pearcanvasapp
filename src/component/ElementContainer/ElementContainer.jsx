@@ -1261,6 +1261,8 @@ class ElementContainer extends Component {
                         glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
                         onListSelect={this.props.onListSelect}
                         splithandlerfunction={splithandlerfunction}
+                        pasteElement={this.props.pasteElement}
+                        userRole={this.props.userRole}
                     />;
                     break;
                 case elementTypeConstant.METADATA_ANCHOR:
@@ -1311,7 +1313,7 @@ class ElementContainer extends Component {
                         openAssetPopoverPopUp: this.openAssetPopoverPopUp,
                         openGlossaryFootnotePopUp: this.openGlossaryFootnotePopUp,
                         getElementStatus: this.props.getElementStatus
-                    }}><ElementShowHide />
+                    }}><ElementShowHide userRole={this.props.userRole} />
                     </ElementContainerContext.Provider >;
                     labelText = 'SH'
                     break;
@@ -1333,7 +1335,7 @@ class ElementContainer extends Component {
                         handleFocus: this.handleFocus,
                         handleBlur: this.handleBlur,
                         deleteElement: this.deleteElement
-                    }}><CitationGroup />
+                    }}><CitationGroup userRole={this.props.userRole} pasteElement={this.props.pasteElement} />
                     </CitationGroupContext.Provider >;
                     labelText = 'CG'
                     break;
@@ -1382,7 +1384,9 @@ class ElementContainer extends Component {
                     onClickCapture={this.props.onClickCapture}
                     onListSelect={this.props.onListSelect} 
                     glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
-                    elementSepratorProps={elementSepratorProps} />
+                    elementSepratorProps={elementSepratorProps}
+                    pasteElement={this.props.pasteElement}
+                    userRole={this.props.userRole} />
                     labelText = 'PE'
                     break;
                 case elementTypeConstant.POETRY_STANZA:
@@ -1430,7 +1434,7 @@ class ElementContainer extends Component {
                         handleBlur: this.handleBlur,
                         deleteElement: this.deleteElement,
                         splithandlerfunction: this.props.splithandlerfunction,
-                    }}><MultiColumnContainer />
+                    }}><MultiColumnContainer userRole={this.props.userRole} pasteElement={this.props.pasteElement} />
                     </MultiColumnContext.Provider>;
                     labelText = '2C'
                     break;
@@ -1558,7 +1562,7 @@ class ElementContainer extends Component {
         let index = this.props.index;
         let inputType = '';
         let inputSubType = '';
-        let cutCopyParentUrn ='';
+        let cutCopyParentUrn = {};
         if(!parentUrn) {
             cutCopyParentUrn = {
                 manifestUrn: config.slateManifestURN,
@@ -1590,6 +1594,7 @@ class ElementContainer extends Component {
             ...elementDetails,
             sourceSlateManifestUrn: config.slateManifestURN,
             sourceSlateEntityUrn: config.slateEntityURN,
+            sourceEntityUrn: (parentUrn && 'contentUrn' in parentUrn) ? parentUrn.contentUrn : config.slateEntityURN,
             deleteElm: { id, type, parentUrn, asideData, contentUrn, index, poetryData, cutCopyParentUrn},
             inputType,
             inputSubType
