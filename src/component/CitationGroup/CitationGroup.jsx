@@ -13,6 +13,8 @@ import { createPopupUnit } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { checkSlateLock } from '../../js/slateLockUtility.js'
+import { CITATION_SOURCE } from '../../constants/Element_Constants.js';
+
 let random = guid();
 export class CitationGroup extends Component {
 
@@ -33,8 +35,13 @@ export class CitationGroup extends Component {
                     esProps={_context.elementSeparatorProps(index, true, parentUrn, asideData, parentIndex)}
                     elementType="citations"
                     sectionBreak={true}
+                    parentUrn={parentUrn}
+                    asideData={asideData}
                     permissions={_context.permissions}
-                    onClickCapture={_context.onClickCapture}     
+                    onClickCapture={_context.onClickCapture}
+                    userRole={this.props.userRole}
+                    pasteElement={this.props.pasteElement}
+                    source={CITATION_SOURCE}   
                 />
             </> 
         )
@@ -67,8 +74,13 @@ export class CitationGroup extends Component {
                                         esProps={this.context.elementSeparatorProps(index, true, parentUrn, asideData, parentIndex)}
                                         elementType="citations"
                                         sectionBreak={true}
+                                        parentUrn={parentUrn}
+                                        asideData={asideData}
                                         permissions={this.context.permissions}
-                                        onClickCapture={this.context.onClickCapture}     
+                                        onClickCapture={this.context.onClickCapture}
+                                        userRole={this.props.userRole}
+                                        pasteElement={this.props.pasteElement}
+                                        source={CITATION_SOURCE} 
                                     />}
                                 <ElementContainer
                                     element={element}
@@ -80,6 +92,7 @@ export class CitationGroup extends Component {
                                     isBlockerActive={this.context.isBlockerActive}
                                     onClickCapture={this.context.onClickCapture}
                                     parentElement = {this.context.element}
+                                    userRole={this.props.userRole}
                                 >
                                 </ElementContainer>
                                 {
@@ -88,8 +101,13 @@ export class CitationGroup extends Component {
                                         esProps={this.context.elementSeparatorProps(index, false, parentUrn, asideData, parentIndex)}
                                         elementType="citations"
                                         sectionBreak={true}
+                                        parentUrn={parentUrn}
+                                        asideData={asideData}
                                         permissions={this.context.permissions}
-                                        onClickCapture={this.context.onClickCapture}                                       
+                                        onClickCapture={this.context.onClickCapture}
+                                        userRole={this.props.userRole}
+                                        pasteElement={this.props.pasteElement}
+                                        source={CITATION_SOURCE}                                      
                                     />
                                 }
                               
