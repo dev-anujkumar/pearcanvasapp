@@ -174,8 +174,8 @@ export const addAudioNarrationForContainer = (audioData, isGlossary='') => async
     if(isGlossary){
         dispatch({ type: OPEN_AUDIO_GLOSSARY_POPUP, payload: false })
         dispatch({ type: ADD_AUDIO_GLOSSARY_POPUP, payload: true })
-         dispatch({type:HANDLE_GLOSSARY_AUDIO_DATA,payload:audioData})
-        store.dispatch(fetchAudioNarrationForContainer(audioData,isGlossary));
+        dispatch({type:HANDLE_GLOSSARY_AUDIO_DATA,payload:audioData})
+        dispatch(fetchAudioNarrationForContainer(audioData,isGlossary));
 
 
     }else{

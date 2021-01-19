@@ -6,6 +6,7 @@ export const mockData = {
     openSplitPopUp: false,
     openWrongAudioPopup: false,
     indexSplit: 0,
+    isGlossary:false,
     openAudioGlossaryPopup: false,
     addAudioGlossaryPopup: false,
     audioGlossaryData:{},
@@ -28,6 +29,7 @@ export const mockGlossaryData ={
     openAudioGlossaryPopup: false,
     addAudioGlossaryPopup: false,
     audioData:{},
+    isGlossary:false,
     audioGlossaryData: {
         "narrativeAudioUrn": "2ddad41f-a05e-4f99-b44c-4a9306bd2a36",
         "location": "https://cite-media-stg.pearson.com/legacy_paths/2ddad41f-a05e-4f99-b44c-4a9306bd2a36/Progressive%20Audio%20sample%20Midsummer_Sky.mp3",
@@ -55,6 +57,14 @@ export const mockDatadelete = {
             "title": { "en": "Automation_Audio_3.mp3" }, "format": "audio/mpeg"
         }
         ]
+    },
+    'audioGlossaryData': {
+        "narrativeAudioUrn": "2ddad41f-a05e-4f99-b44c-4a9306bd2a36",
+        "location": "https://cite-media-stg.pearson.com/legacy_paths/2ddad41f-a05e-4f99-b44c-4a9306bd2a36/Progressive%20Audio%20sample%20Midsummer_Sky.mp3",
+        "title": {
+            "en": "Progressive Audio sample Midsummer_Sky.mp3"
+        },
+        "format": "audio/mpeg"
     }
 }
 
@@ -69,7 +79,8 @@ export const mockDatadelete = {
     indexSplit:0,
     openAudioGlossaryPopup:false,
     addAudioGlossaryPopup:false,
-    audioGlossaryData:{}
+    audioGlossaryData:{},
+    isGlossary:false
 };
 
 export const WrongAudio_FINAL_STATE = { 
@@ -83,10 +94,12 @@ export const WrongAudio_FINAL_STATE = {
     indexSplit:0,
     openAudioGlossaryPopup:false,
     addAudioGlossaryPopup:false,
-    audioGlossaryData:{}
+    audioGlossaryData:{},
+    isGlossary:false
 };
 
 export const remove_FINAL_STATE = { 
+    isGlossary:false,
     addAudio: false,
     openAudio: false,
     audioData: {},
@@ -98,10 +111,12 @@ export const remove_FINAL_STATE = {
     openRemovePopUp : true,
     openAudioGlossaryPopup:false,
     addAudioGlossaryPopup:false,
-    audioGlossaryData:{}
+    audioGlossaryData:{},
+    isGlossary:true
 };
 
 export const split_FINAL_STATE = { 
+    isGlossary:false,
     addAudio: false,
     openAudio: false,
     audioData: {},
@@ -116,6 +131,7 @@ export const split_FINAL_STATE = {
 };
 
 export const addAudio_FINAL_STATE = { 
+    isGlossary:false,
     addAudio: true,
     openAudio: false,
     audioData: {},
@@ -140,7 +156,8 @@ export const openGlossaryAudio_FINAL_STATE = {
     indexSplit:0,
     openAudioGlossaryPopup:true,
     addAudioGlossaryPopup:false,
-    audioGlossaryData:{}
+    audioGlossaryData:{},
+    isGlossary:false
 };
 
 export const addGlossaryAudio_FINAL_STATE ={
@@ -154,5 +171,6 @@ export const addGlossaryAudio_FINAL_STATE ={
     indexSplit:0,
     openAudioGlossaryPopup:false,
     addAudioGlossaryPopup:true,
-    audioGlossaryData:{}
+    audioGlossaryData:{},
+    isGlossary:false
 }

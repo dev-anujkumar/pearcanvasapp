@@ -15,7 +15,7 @@ const AudioTinyMceGlossary = (props) => {
 
             {
                 props.addAudioGlossaryPopup &&
-                <div className='audio-icon' title="Audio Tag" id='audioNarrationEnable' onClick={() => props.handleAudioOpenToggle()}>
+                <div className='audio-icon' title="Audio Tag" id='audioNarrationEnable'>
                     {audioNarrationEnable}
                 </div>
             }

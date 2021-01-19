@@ -48,17 +48,13 @@ class GlossaryFootnotePopup extends Component {
             /** to disable both toolbars on glossary editor blur */
             setFormattingToolbar('disableTinymceToolbar')
             setFormattingToolbar('disableGlossaryFootnoteToolbar')
-            // setFormattingToolbar('disableGlossaryAudio');
-
         }
         if (document.querySelector('div#toolbarGlossaryFootnote .tox-toolbar')) {
             if (action === "add") {
-                // setFormattingToolbar('disableGlossaryAudio');
                 setFormattingToolbar('disableGlossaryFootnoteToolbar')
             } else if (action === "remove") {
                 setFormattingToolbar('disableTinymceToolbar')
                 setFormattingToolbar('enableGlossaryFootnoteToolbar')
-                // setFormattingToolbar('removeDisableGlossaryAudio')
             }
         }
     }

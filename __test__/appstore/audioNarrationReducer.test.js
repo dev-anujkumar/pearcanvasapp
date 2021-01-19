@@ -16,7 +16,8 @@ const INITIAL_STATE = {
     indexSplit: 0,
     openAudioGlossaryPopup:false,
     addAudioGlossaryPopup:false,
-    audioGlossaryData:{}
+    audioGlossaryData:{},
+    isGlossary:false
 };
 
 
@@ -40,7 +41,10 @@ describe('testing audioNarration reducer cases --', () => {
     it('SHOW_REMOVE_POPUP', () => {
         expect(reducer(INITIAL_STATE, {
             type: types.SHOW_REMOVE_POPUP,
-            payload: true
+            payload: {
+                value:true,
+                isGlossary:true
+            }
         })).toEqual(remove_FINAL_STATE);
     })
     it('SPLIT_REMOVE_POPUP', () => {

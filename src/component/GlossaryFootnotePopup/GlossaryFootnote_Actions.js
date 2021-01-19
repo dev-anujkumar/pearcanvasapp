@@ -8,11 +8,11 @@ const {
     REACT_APP_API_URL
 } = config
 import { allowedFigureTypesForTCM } from "../ElementContainer/ElementConstants";
-import {ADD_AUDIO_GLOSSARY_POPUP ,OPEN_GLOSSARY_FOOTNOTE, UPDATE_FOOTNOTEGLOSSARY, ERROR_POPUP, GET_TCM_RESOURCES ,HANDLE_GLOSSARY_AUDIO_DATA} from "./../../constants/Action_Constants";
+import {ADD_AUDIO_GLOSSARY_POPUP,OPEN_GLOSSARY_FOOTNOTE, UPDATE_FOOTNOTEGLOSSARY, ERROR_POPUP, GET_TCM_RESOURCES,HANDLE_GLOSSARY_AUDIO_DATA} from "./../../constants/Action_Constants";
 const elementTypeData = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza', 'figure'];
 
 export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, typeWithPopup, poetryField) => async (dispatch) => {
-    
+
     let glossaaryFootnoteValue = {
         "type": glossaaryFootnote,
         "popUpStatus": status,
@@ -65,7 +65,7 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                 case 4:
                     glossaryFootElem = newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]].popupdata["formatted-title"];
                     break;
-            }   
+            }
         }
         else if (typeWithPopup && typeWithPopup === 'poetry') {
             // let tempIndex = index.split('-');
@@ -84,11 +84,11 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                 }
             }
         }
-         else {
-            if (typeof (index) == 'number') { 
+        else {
+            if (typeof (index) == 'number') {
                 if (newBodymatter[index].versionUrn == elementWorkId) {
                     glossaryFootElem = newBodymatter[index]
-                } 
+                }
             } else {
                 let indexes = index.split('-');
                 let indexesLen = indexes.length, condition;
@@ -111,7 +111,7 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                     }
                 }
 
-            }       
+            }
         }
 
         switch (semanticType) {
@@ -127,14 +127,21 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
     if(glossaryContentText && glossaryContentText.includes('audio-id')){
         let audioId = glossaryContentText.slice(glossaryContentText.indexOf('audio-id')).split("\"")[1];
         let audioPath =glossaryContentText.slice(glossaryContentText.indexOf('audio-id')).split("\"")[3]
+        let title = audioPath.split("/").pop();
         let data = {
             'title':{
-                'en':audioId
+                'en':title
             },
+            'narrativeAudioUrn': audioId,
             'location':audioPath
         }
+
         dispatch({ type: ADD_AUDIO_GLOSSARY_POPUP, payload: true })
         dispatch({ type: HANDLE_GLOSSARY_AUDIO_DATA, payload: data });
+    }
+    else {
+        dispatch({ type: ADD_AUDIO_GLOSSARY_POPUP, payload: false })
+        dispatch({ type: HANDLE_GLOSSARY_AUDIO_DATA, payload: {} });
     }
     return await dispatch({
         type: OPEN_GLOSSARY_FOOTNOTE,
@@ -188,7 +195,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         }else{
             elementIndex = tempIndex[0]
         }
-        
+
         label = document.getElementById('cypress-' + elementIndex + '-0').innerHTML //cypress-1-0
         title = document.getElementById('cypress-' + elementIndex + '-1').innerHTML //cypress-1-1
 
@@ -209,11 +216,11 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                 preformattedtext = document.getElementById('cypress-' + elementIndex + '-2').innerHTML ;
             } else if (elementSubType === 'authoredtext') {
                 text = document.getElementById('cypress-' + elementIndex + '-2').innerHTML ;
-            }else if(elementSubType === 'interactive' && hasCtaText.indexOf(currentElement.secondaryOption) !==-1){ 
+            }else if(elementSubType === 'interactive' && hasCtaText.indexOf(currentElement.secondaryOption) !==-1){
                 postertext = hasData; //BG-2628 Fixes
             }
         }
-       
+
         figureDataObj = {
             "title": matchHTMLwithRegex(label) ? label : `<p>${label}</p>`,
             "subtitle": matchHTMLwithRegex(title) ? title : `<p>${title}</p>`,
@@ -229,9 +236,8 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         }
     } else {
         workEditor = document.getElementById('cypress-' + index)
-        workContainer = workEditor.innerHTML;      
+        workContainer = workEditor.innerHTML;
         workContainer = workContainer.replace(/data-mce-href="#"/g,'').replace(/ reset/g,'')
-        // console.log("workContainer",workContainer)
         figureDataObj = {
             "text": workContainer
         }
@@ -242,6 +248,21 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             figureDataObj.text = `<p class="paragraphNumeroUno">${figureDataObj.text}</p>`
         }
     }
+
+    if (audioGlossaryData && Object.keys(audioGlossaryData).length > 0) {
+
+        let addAttributeInDfn = workEditor.getElementsByTagName('dfn');
+        for (let i = 0; i < addAttributeInDfn.length; i++) {
+            let currentAddAttributeInDfn = addAttributeInDfn[i];
+            let currentData = addAttributeInDfn[i].outerHTML
+            let currentDataUri = currentData.slice(currentData.indexOf('data-uri')).split("\"")[1];
+            if (currentDataUri === glossaryfootnoteid) {
+                currentAddAttributeInDfn.setAttribute('audio-id', audioGlossaryData.narrativeAudioUrn)
+                currentAddAttributeInDfn.setAttribute('audio-path', audioGlossaryData.location)
+            }
+        }
+    }
+
     let parentEntityUrn,
         appStore = store.getState().appStore
 
@@ -252,11 +273,11 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             case 2:
                 parentEntityUrn = newBodymatter[elemIndex[0]].contentUrn
                 break;
-    
+
             case 3:
                 parentEntityUrn = newBodymatter[elemIndex[0]].elementdata.bodymatter[elemIndex[1]].contentUrn
                 break;
-    
+
             case 4:
                 parentEntityUrn = newBodymatter[elemIndex[0]].elementdata.bodymatter[elemIndex[1]].contents.bodymatter[elemIndex[2]].contentUrn
                 break;
@@ -268,7 +289,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
     else { // elements in a slate
         parentEntityUrn = config.slateEntityURN
     }
-    
+
     switch (semanticType) {
         case "FOOTNOTE":
             footnoteEntry[glossaryfootnoteid] = definition
@@ -313,7 +334,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             }
             break;
     }
-   
+
     if (typeWithPopup === 'popup') {
         data.metaDataField = "formattedTitle"
     } else if (typeWithPopup === 'poetry') {
@@ -327,11 +348,11 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
 
     let tcmParentData,tcmMainBodymatter,tcmBodymatter;
     if (elementTypeData.indexOf(elementType) !== -1 && store.getState().appStore.showHideType == undefined) {
-    /** For TCM snapshots */
-    let mainSlateId = config.isPopupSlate ? config.tempSlateManifestURN : config.slateManifestURN;
-     tcmBodymatter = store.getState().appStore.slateLevelData[config.slateManifestURN].contents.bodymatter;
-     tcmParentData = fetchParentData(tcmBodymatter, index);
-     tcmMainBodymatter = store.getState().appStore.slateLevelData[mainSlateId].contents.bodymatter;
+        /** For TCM snapshots */
+        let mainSlateId = config.isPopupSlate ? config.tempSlateManifestURN : config.slateManifestURN;
+        tcmBodymatter = store.getState().appStore.slateLevelData[config.slateManifestURN].contents.bodymatter;
+        tcmParentData = fetchParentData(tcmBodymatter, index);
+        tcmMainBodymatter = store.getState().appStore.slateLevelData[mainSlateId].contents.bodymatter;
     }
     /** ----------------- */
     let url = `${config.REACT_APP_API_URL}v1/slate/element?type=${type.toUpperCase()}&id=${glossaryfootnoteid}`
@@ -352,12 +373,12 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                 response: res.data,
                 updatedId:elementWorkId
             },
-            containerElement = {
-                asideData:tcmParentData.asideData,
-                parentUrn:tcmParentData.parentUrn,
-                parentElement: data.metaDataField ? fetchElementWipData(tcmMainBodymatter,index,'popup') : undefined,
-                metaDataField: data.metaDataField ? data.metaDataField : undefined
-            };
+                containerElement = {
+                    asideData:tcmParentData.asideData,
+                    parentUrn:tcmParentData.parentUrn,
+                    parentElement: data.metaDataField ? fetchElementWipData(tcmMainBodymatter,index,'popup') : undefined,
+                    metaDataField: data.metaDataField ? data.metaDataField : undefined
+                };
             if (currentSlateData && currentSlateData.status === 'approved') {
                 await tcmSnapshotsForUpdate(elementUpdateData, index, containerElement, store.dispatch, "");
             }
@@ -379,13 +400,13 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         } else if (elementType === "figure") {
             let updatedIndex = index.split('-')[0];
             newBodymatter[updatedIndex] = res.data;
-        } 
+        }
         else if (typeWithPopup && typeWithPopup === "popup"){
             // let tempIndex = index.split('-');
             let indexesLen = tempIndex.length
             let responseElement = {...res.data}
             responseElement.html.text = responseElement.html.text.replace(/<p>|<\/p>/g, "")
-            
+
             switch (indexesLen){
                 case 2: {
                     let titleDOM = document.getElementById(`cypress-${tempIndex[0]}-0`)
@@ -416,7 +437,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                     responseElement.html.text = createTitleSubtitleModel(titleHTML, responseElement.html.text)
                     newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]].popupdata["formatted-title"] = responseElement;
                     break;
-                }    
+                }
             }
         }
         else if (typeWithPopup && typeWithPopup === 'poetry') {
@@ -434,7 +455,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                         // else{
                         //     labelHTML = ""
                         // }
-                       
+
                         // let parser = new DOMParser();
                         // let htmlDoc = parser.parseFromString(res.data.html.text, 'text/html');
                         // let removeP_Tag = htmlDoc.getElementsByTagName("p");
@@ -443,8 +464,8 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                         //     responseElement.html.text = createTitleSubtitleModel("", removeP_Tag[0].innerHTML) 
                         // }
                         // else {
-                            res.data.html.text = res.data.html.text.replace(/<p>|<\/p>/g, "")
-                            responseElement.html.text = createTitleSubtitleModel("", res.data.html.text)
+                        res.data.html.text = res.data.html.text.replace(/<p>|<\/p>/g, "")
+                        responseElement.html.text = createTitleSubtitleModel("", res.data.html.text)
                         // }
                         newBodymatter[tempIndex[0]].contents['formatted-title'] = responseElement;
                         break;
@@ -493,7 +514,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                         else {
                             newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]] = res.data
                         }
-                        
+
                     }
                 }
             }
@@ -511,8 +532,8 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                 slateLevelData: newParentData
             }
         })
-        
-        sendDataToIframe({'type': HideLoader,'message': { status: false }});  
+
+        sendDataToIframe({'type': HideLoader,'message': { status: false }});
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
         config.isGlossarySaving = false;
     }).catch(err => {
@@ -531,7 +552,7 @@ function prepareDataForUpdateTcm(updatedDataID,versionedData, resData) {
     const tcmData = store.getState().tcmReducer.tcmSnapshot;
     let indexes = []
     tcmData.filter(function (element, index) {
-    if (element.elemURN.indexOf(updatedDataID) !== -1 && element.elemURN.includes('urn:pearson:work')) {
+        if (element.elemURN.indexOf(updatedDataID) !== -1 && element.elemURN.includes('urn:pearson:work')) {
             indexes.push(index)
         }
     });
@@ -551,16 +572,16 @@ function prepareDataForUpdateTcm(updatedDataID,versionedData, resData) {
             tcmData[indexes]["isPrevAcceptedTxAvailable"] = tcmData[indexes]["isPrevAcceptedTxAvailable"] ? tcmData[indexes]["isPrevAcceptedTxAvailable"] : false
         }
     }
-  
-if (tcmData.length > 0) {
-    sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });
-}
-store.dispatch({
-    type: GET_TCM_RESOURCES,
-    payload: {
-        data: tcmData
+
+    if (tcmData.length > 0) {
+        sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });
     }
-})
+    store.dispatch({
+        type: GET_TCM_RESOURCES,
+        payload: {
+            data: tcmData
+        }
+    })
 }
 
 /**
@@ -595,14 +616,6 @@ export const setFormattingToolbar = (action) => {
             isSuperscriptButton && isSuperscriptButton.removeAttribute('aria-pressed')
             isSuperscriptButton && isSuperscriptButton.classList.remove('tox-tbtn--enabled')
             isSuperscriptButton && isSuperscriptButton.classList.add('tox-tbtn--select')
-            break;
-        case 'disableGlossaryAudio':
-            let isAudioButton = document.getElementById('glossary-audio')? document.getElementById('glossary-audio'):''
-            isAudioButton && isAudioButton.classList.add('disable-audio');
-            break;
-        case 'removeDisableGlossaryAudio':
-            let isAudioDisbaledButton = document.getElementById('glossary-audio')? document.getElementById('glossary-audio'):''
-            isAudioDisbaledButton && isAudioDisbaledButton.classList.remove('disable-audio');
             break;
     }
 }

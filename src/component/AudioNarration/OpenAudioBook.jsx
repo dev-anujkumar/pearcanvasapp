@@ -5,7 +5,7 @@ import { hideTocBlocker } from '../../js/toggleLoader';
 import { audioNarrationCloseIcon } from '../../images/TinyMce/TinyMce.jsx'
 import '../../styles/AudioNarration/AudioNarration.css'
 import { hasReviewerRole } from '../../constants/utility.js'
-
+import AddAudioBook from './AddAudioBook.jsx'
 /**
 * @description - OpenAudioBook is a class based component. It is defined simply for opening the already Narrative audio popup.
 */
@@ -13,6 +13,9 @@ class OpenAudioBook extends React.Component {
 
     constructor(props) {
         super(props);
+        this.state ={
+            replaceToggle:false
+        }
     }
 
     /**
@@ -57,6 +60,18 @@ class OpenAudioBook extends React.Component {
         }
     }
 
+    handleReplaceButton =()=>{
+        this.setState({
+            replaceToggle:!this.state.replaceToggle
+        })
+    }
+
+    closeAddAudioBook=()=>{
+        this.setState({
+            replaceToggle:false
+        })
+    }
+
     render = () => {
         const { audioData, audioGlossaryData, isGlossary } = this.props;
         var mediaSrc = "";
@@ -88,9 +103,16 @@ class OpenAudioBook extends React.Component {
                         <code>audio</code> element.
                     </audio>
                 </figure>
+
+                {this.state.replaceToggle && <AddAudioBook isGlossary={true} closeAddAudioBook={this.closeAddAudioBook} />}
+
                 <div className="remove-button">
+                    
                     { !hasReviewerRole() &&
                         <button className="remove-text" onClick={() => this.openConfirmationBox(isGlossary)} className="audioRemoveButton audioRemoveRound">Remove</button>
+                    }
+                    {
+                        isGlossary && <button className="remove-text" onClick={() => this.handleReplaceButton()} className="audioRemoveButton audioRemoveRound">Replace</button>
                     }
                 </div>
             </div>

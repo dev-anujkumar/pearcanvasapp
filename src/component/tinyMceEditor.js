@@ -20,7 +20,8 @@ import {
 } from '../images/TinyMce/TinyMce.jsx';
 import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
 import { checkforToolbarClick, customEvent, spanHandlers, removeBOM, getWirisAltText, removeImageCache } from '../js/utils';
-import { saveGlossaryAndFootnote, setFormattingToolbar } from "./GlossaryFootnotePopup/GlossaryFootnote_Actions"
+import { saveGlossaryAndFootnote, setFormattingToolbar } from "./GlossaryFootnotePopup/GlossaryFootnote_Actions";
+import { audioGlossaryPopup } from './AudioNarration/AudioNarration_Actions';
 import { ShowLoader, LaunchTOCForCrossLinking } from '../constants/IFrameMessageTypes';
 import { sendDataToIframe, hasReviewerRole, removeBlankTags } from '../constants/utility.js';
 import store from '../appstore/store';
@@ -721,6 +722,9 @@ export class TinyMceEditor extends Component {
          */
         else if (e.target.nodeName == "DFN" || e.target.closest("dfn")) {
             let uri = e.target.dataset.uri;
+            let audioNode = e.target.closest("dfn");
+            let isAudioExists = audioNode.hasAttribute('audio-id');
+            
             if (e.target.nodeName == "DFN") {
                 uri = e.target.dataset.uri;
             } else {
@@ -737,6 +741,9 @@ export class TinyMceEditor extends Component {
             }
             else {
                 this.toggleGlossaryandFootnotePopup(true, "Glossary", uri, () => { this.toggleGlossaryandFootnoteIcon(true); });
+            }
+            if(isAudioExists){
+                this.props.audioGlossaryPopup(true);
             }
         }
         /**
@@ -3324,5 +3331,5 @@ TinyMceEditor.defaultProps = {
 
 export default connect(
     null,
-    { conversionElement, wirisAltTextPopup  }
+    { conversionElement, wirisAltTextPopup, audioGlossaryPopup }
 )(TinyMceEditor);

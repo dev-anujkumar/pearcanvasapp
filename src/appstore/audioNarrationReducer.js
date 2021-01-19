@@ -17,7 +17,8 @@ const INITIAL_STATE = {
   indexSplit:0,
   openAudioGlossaryPopup:false,
   addAudioGlossaryPopup:false,
-  audioGlossaryData:{}
+  audioGlossaryData:{},
+  isGlossary:false
 }
 
 const INITIAL_ACTION = {
