@@ -50,7 +50,7 @@ export const DELETE_DIALOG_TEXT = 'Are you sure you want to delete, This action 
 export const TYPE_SINGLE_CONTAINER_DELETE = 'singleContainerDelete'
 export const TYPE_WITH_PENDING_TRACK = 'withPendingTrack'
 export const TYPE_UNLINK = 'unlink'
-export const elementType = ['WORKED_EXAMPLE', 'CONTAINER', 'SECTION_BREAK', 'TEXT', 'CITATION', 'ELEMENT_CITATION', 'POETRY', 'STANZA' , 'MULTI_COLUMN','POP_UP', "IMAGE", "VIDEO", "AUDIO", "MATH_ML_CHEM_EDITOR", "BLOCK_CODE_EDITOR", "INTERACTIVE", "MMI_ELM", "SMART_LINK"];
+export const elementType = ['WORKED_EXAMPLE', 'CONTAINER', 'SECTION_BREAK', 'TEXT', 'CITATION', 'ELEMENT_CITATION', 'POETRY', 'STANZA' , 'MULTI_COLUMN','POP_UP', "IMAGE", "VIDEO", "AUDIO", "MATH_ML_CHEM_EDITOR", "BLOCK_CODE_EDITOR", "INTERACTIVE", "MMI_ELM", "SMART_LINK", "SHOW_HIDE"];
 
 export const checkTCM = element => {
     switch(element.type) {

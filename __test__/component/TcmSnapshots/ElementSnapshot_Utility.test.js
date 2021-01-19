@@ -53,7 +53,7 @@ describe('-----------------------Test ElementSnapshot_Utility Functions---------
         })
     });
     describe('Test-2-Function--2--fetchElementsTag', () => {
-        const { paragraph, heading, list, blockquote, aside, workedexample, stanza, figure } = tcmTestData.fetchElementTagData
+        const { paragraph, heading, list, blockquote, aside, workedexample, stanza, figure, interactive } = tcmTestData.fetchElementTagData
         it('Test-2.1-Function--2--fetchElementsTag - Paragraph', () => {
             const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'fetchElementsTag');
             elementSnapshotUtilityFn.fetchElementsTag(paragraph)
@@ -93,6 +93,11 @@ describe('-----------------------Test ElementSnapshot_Utility Functions---------
             const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'fetchElementsTag');
             elementSnapshotUtilityFn.fetchElementsTag(figure)
             expect(spyFunction).toHaveReturnedWith('Fg')
+        })
+        it('Test-2.8-Function--3--fetchElementsTag - interactive', () => {
+            const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'fetchElementsTag');
+            elementSnapshotUtilityFn.fetchElementsTag(interactive)
+            expect(spyFunction).toHaveReturnedWith('SL')
         })
     });
     describe('Test-3-Function--3--generateWipDataForFigure', () => {
@@ -135,5 +140,175 @@ describe('-----------------------Test ElementSnapshot_Utility Functions---------
             elementSnapshotUtilityFn.generateWipDataForFigure(bodymatter, "3-0-0-1")
             expect(spyFunction).toHaveReturnedWith(bodymatter[3].groupeddata.bodymatter[0].groupdata.bodymatter[0])
         })
+    })
+
+    describe('Test-4-function--4 getInteractiveSubtypeData', () => {
+        it('Test-4.1--getInteractiveSubtypeData - Interactive Elm', () => {
+            let responsedata={
+                itemID:'<p></p>',
+                itemTitle:"<p></p>"
+            }
+            let figuredata= {
+                interactiveformat: "mmi-elm",
+                interactiveid: "",
+                interactivetype: "fpo",
+                schema: "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+            }
+            const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'getInteractiveSubtypeData');
+            elementSnapshotUtilityFn.getInteractiveSubtypeData(figuredata, {})
+            expect(spyFunction).toHaveReturnedWith(responsedata)
+        })
+        it('Test-4.2--getInteractiveSubtypeData - Interactive Elm with interactivetitle', () => {
+            let responsedata={
+                itemID:'<p></p>',
+                itemTitle:"<p>test</p>"
+            }
+            let figuredata= {
+                interactiveformat: "mmi-elm",
+                interactiveid: "",
+                interactivetype: "fpo",
+                schema: "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+                interactivetitle:"test"
+            }
+            const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'getInteractiveSubtypeData');
+            elementSnapshotUtilityFn.getInteractiveSubtypeData(figuredata, "<p></p>")
+            expect(spyFunction).toHaveReturnedWith(responsedata)
+        })
+        it('Test-4.3--getInteractiveSubtypeData - Interactive Quad', () => {
+            let responsedata={
+                itemID:'<p></p>'
+            }
+            let figuredata= {
+                interactiveformat: "mmi",
+                interactiveid: "",
+                interactivetype: "fpo",
+                schema: "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive"
+            }
+            const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'getInteractiveSubtypeData');
+            elementSnapshotUtilityFn.getInteractiveSubtypeData(figuredata, {})
+            expect(spyFunction).toHaveReturnedWith(responsedata)
+        })
+        it('Test-4.4--getInteractiveSubtypeData - Interactive  table', () => {
+            let responsedata={
+                itemID:'<p></p>',
+                metadata:'<p>table</p>'
+            }
+            let figuredata= {
+                interactiveformat: "external-link",
+                interactiveid: "",
+                interactivetype: "table",
+                schema: "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive"
+            }
+            const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'getInteractiveSubtypeData');
+            elementSnapshotUtilityFn.getInteractiveSubtypeData(figuredata, {})
+            expect(spyFunction).toHaveReturnedWith(responsedata)
+        })
+        it('Test-4.5--getInteractiveSubtypeData - Interactive 3rd-party', () => {
+            let responsedata={
+                itemID:'<p></p>',
+                metadata:'<p>3rd-party</p>'
+            }  
+            let figuredata= {
+                interactiveformat: "external-link",
+                interactiveid: "",
+                interactivetype: "3rd-party",
+                schema: "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive"
+            }
+            const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'getInteractiveSubtypeData');
+            elementSnapshotUtilityFn.getInteractiveSubtypeData(figuredata, {})
+            expect(spyFunction).toHaveReturnedWith(responsedata)
+        })
+        it('Test-4.6--getInteractiveSubtypeData - Interactive web-link', () => {
+            let responsedata={
+                itemID:'<p></p>',
+                metadata:'<p>web-link</p>',
+                itemButtonLabel:'<p></p>'
+            } 
+            let figuredata= {
+                interactiveformat: "external-link",
+                interactiveid: "",
+                interactivetype: "web-link",
+                schema: "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+                postertext:{
+                mathml: [],
+                schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                text: "",
+                textsemantics: []
+                }
+            }
+            const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'getInteractiveSubtypeData');
+            elementSnapshotUtilityFn.getInteractiveSubtypeData(figuredata, {})
+            expect(spyFunction).toHaveReturnedWith(responsedata)
+        })
+        it('Test-4.7--getInteractiveSubtypeData - Interactive pop-up-web-link', () => {
+            let responsedata={
+                itemID:'<p></p>',
+                metadata:'<p>pop-up-web-link</p>',
+                itemButtonLabel:'<p></p>'
+            } 
+            let figuredata= {
+                interactiveformat: "external-link",
+                interactiveid: "",
+                interactivetype: "pop-up-web-link",
+                schema: "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+                postertext:{
+                mathml: [],
+                schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                text: "",
+                textsemantics: []
+                }
+            }
+            const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'getInteractiveSubtypeData');
+            elementSnapshotUtilityFn.getInteractiveSubtypeData(figuredata, {})
+            expect(spyFunction).toHaveReturnedWith(responsedata)
+        })
+        it('Test-4.8--getInteractiveSubtypeData - Interactive pdf', () => {
+            let responsedata={
+                itemID:'<p></p>',
+                metadata:'<p>pdf</p>',
+                itemButtonLabel:'<p></p>'
+            }
+            let figuredata= {
+                interactiveformat: "external-link",
+                interactiveid: "",
+                interactivetype: "pdf",
+                posterimage: {path: "https://cite-media-stg.pearson.com/legacy_paths/32…4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"},
+                schema: "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+                postertext:{
+                mathml: [],
+                schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                text: "",
+                textsemantics: []
+                }
+            }
+            const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'getInteractiveSubtypeData');
+            elementSnapshotUtilityFn.getInteractiveSubtypeData(figuredata, {})
+            expect(spyFunction).toHaveReturnedWith(responsedata)
+        })
+        it('Test-4.9--getInteractiveSubtypeData - Interactive pdf with postertext', () => {
+            let responsedata={
+                itemID:'<p></p>',
+                metadata:'<p>pdf</p>',
+                itemButtonLabel:'<p>test</p>'
+            }  
+            let figuredata= {
+                interactiveformat: "external-link",
+                interactiveid: "",
+                interactivetype: "pdf",
+                posterimage: {path: "https://cite-media-stg.pearson.com/legacy_paths/32…4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"},
+                schema: "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+                postertext:{
+                mathml: [],
+                schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                text: "test",
+                textsemantics: [],
+                postertext:"test"
+                }
+            }
+            const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'getInteractiveSubtypeData');
+            elementSnapshotUtilityFn.getInteractiveSubtypeData(figuredata, {postertext:"<p>test</p>"})
+            expect(spyFunction).toHaveReturnedWith(responsedata)
+        })
+      
     })
 });
