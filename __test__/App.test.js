@@ -90,7 +90,7 @@ describe('App component', () => {
         jest.mock('../src/config/cypressConfig', () => ({
             prodUrl: "https://dev-structuredauthoring.pearson.com",
             sitePointing: "dev",
-            getENVConfig: "https://10.11.7.246:8443/cypress-api/"
+            getENVConfig: "https://10.11.7.246:8081/cypress-api/"
         }));
 
         moxios.wait(() => {
