@@ -547,7 +547,7 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
         elementTag = `${tag.parentTag}${(eleIndex == 0) ? ':C1' : ':C2'}${tag.childTag ? ":" + tag.childTag : ""}`   ; 
         elementId =  `${eleId.parentId}${eleId.columnId ? "+" + eleId.columnId : ""}${eleId.childId ? "+" + eleId.childId : ""}`
     }
-    else if (parentElement?.element?.type === SHOWHIDE) {    //showhide
+    if (parentElement?.element?.type === SHOWHIDE) {    //showhide
         let showHideSection = getShowHideTag(parentElement.showHideType)
         elementTag = `${tag.parentTag}:${showHideSection}`; //${tag.childTag ? ":" + tag.childTag : ""}
         if (asideData?.type === ELEMENT_ASIDE && asideData?.subtype !== WORKED_EXAMPLE) { //SH inside Aside
