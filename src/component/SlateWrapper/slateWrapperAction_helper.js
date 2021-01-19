@@ -5,7 +5,7 @@ import { AUTHORING_ELEMENT_CREATED, GET_TCM_RESOURCES, FETCH_COMMENTS } from '..
 import { HideLoader, ShowLoader, projectPendingTcStatus } from '../../constants/IFrameMessageTypes.js';
 import * as slateWrapperConstants from "./SlateWrapperConstants"
 //Helper methods
-import { sendDataToIframe, replaceWirisClassAndAttr } from '../../constants/utility.js';
+import { sendDataToIframe, replaceWirisClassAndAttr, getShowhideChildUrns } from '../../constants/utility.js';
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 import { SET_SELECTION } from './../../constants/Action_Constants.js';
 import { deleteFromStore, prepareTCMSnapshotsForDelete } from './../ElementContainer/ElementContainerDelete_helpers.js';
@@ -312,6 +312,9 @@ export function prepareDataForTcmCreate(type, createdElementData, getState, disp
         case slateWrapperConstants.POP_UP:
             elmUrn.push(createdElementData.popupdata.postertextobject[0].id)
             elmUrn.push(createdElementData.popupdata.bodymatter[0].id)
+            break;
+        case slateWrapperConstants.SHOW_HIDE:
+            elmUrn = getShowhideChildUrns(createdElementData)
             break;
     }
 

@@ -463,3 +463,25 @@ export const replaceWirisClassAndAttr = (currentTargetId) => {
 }
 
 export const defaultMathImagePath = "https://cite-media-stg.pearson.com/legacy_paths/wiris-dev-mathtype-cache-use/cache/";
+
+/**
+ * Returns all id of elements present inside the showhide container
+ * @param {Object} element Showhide element data
+ */
+export const getShowhideChildUrns = (element) => {
+    
+    try {
+        const extractIdCallback = ({ id }) => id
+        const interactivedataObj = element.interactivedata
+        if (interactivedataObj) {
+            return [
+                ...interactivedataObj.show?.map?.(extractIdCallback) || [],
+                ...interactivedataObj.hide?.map?.(extractIdCallback) || [],
+                ...interactivedataObj.postertextobject?.map?.(extractIdCallback) || []
+            ]
+        }
+    } catch (error) {
+        console.error("Error in getting getShowhideChildUrns- returning fallback value", error)
+        return []
+    }
+}

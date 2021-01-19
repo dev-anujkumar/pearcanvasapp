@@ -22,6 +22,7 @@ export default {
     MULTI_COLUMN_GROUP:"group",
     POP_UP:'POP_UP',
     POPUP_ELEMENT:'popup',
+    SHOWHIDE: "showhide",
     /****************Citation elment************************/
     CITATION_GROUP: "citations",
     CITATION_ELEMENT: "element-citation",
