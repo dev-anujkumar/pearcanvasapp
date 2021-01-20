@@ -39,7 +39,8 @@ const { TEXT,
     MULTI_COLUMN,
     SINGLE_COLUMN,
     BLOCK_TEXT_BUTTON,
-    TABLE_EDITOR
+    TABLE_EDITOR,
+    TOC_PARENT_TYPES
  } = elementTypeConstant
 
 export function ElementSaprator(props) {
@@ -223,7 +224,7 @@ function renderConditionalButtons(esProps,sectionBreak,elementType){
 export function renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown, propsData) {
     let {data,setData,showInteractiveOption,setshowInteractiveOption,props} =propsData
     let updatedEsProps, buttonType;
-    if (config.parentEntityUrn == FRONT_MATTER || config.parentEntityUrn == BACK_MATTER) {
+    if (config.parentEntityUrn == FRONT_MATTER || config.parentEntityUrn == BACK_MATTER || TOC_PARENT_TYPES.includes(config.parentOfParentItem)) {
         if (elementType == ELEMENT_ASIDE || elementType == POETRY || elementType == CITATION_GROUP_ELEMENT || elementType == SINGLE_COLUMN) {
             esProps = renderConditionalButtons(esProps, sectionBreak,elementType);
                 updatedEsProps = esProps.filter((btnObj) => {
