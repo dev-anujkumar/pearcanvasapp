@@ -18,7 +18,8 @@ const INITIAL_STATE = {
   openAudioGlossaryPopup:false,
   addAudioGlossaryPopup:false,
   audioGlossaryData:{},
-  isGlossary:false
+  isGlossary:false,
+  positions:null
 }
 
 const INITIAL_ACTION = {
@@ -76,7 +77,8 @@ export default function audioNarrationReducer (state = INITIAL_STATE, action = I
     case OPEN_AUDIO_GLOSSARY_POPUP:{
       return {
         ...state,
-        openAudioGlossaryPopup:action.payload
+        openAudioGlossaryPopup:action.payload.value,
+        positions:action.payload.positions
       }
     }
     case ADD_AUDIO_GLOSSARY_POPUP:{

@@ -160,15 +160,14 @@
 }
 
 .audio-wrapper{
-    margin: -20px 17px; 
+    margin: -20px 15px; 
     border: 1px solid #ccc;
     align-items: center;
-    background: 0 0;
     display: flex;
     font-weight: 400;
     height: 34px;
     justify-content: center;
-    width: 15%; 
+    width: 16%; 
 }
 
 .disable-audio{

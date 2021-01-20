@@ -238,28 +238,46 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         workEditor = document.getElementById('cypress-' + index)
         workContainer = workEditor.innerHTML;
         workContainer = workContainer.replace(/data-mce-href="#"/g,'').replace(/ reset/g,'')
+
+        let addAttributeInDfn = workEditor.getElementsByTagName('dfn');
+
+        if (audioGlossaryData && Object.keys(audioGlossaryData).length > 0) {
+
+            for (let i = 0; i < addAttributeInDfn.length; i++) {
+                let currentAddAttributeInDfn = addAttributeInDfn[i];
+                let currentData = addAttributeInDfn[i].outerHTML
+                let currentDataUri = currentData.slice(currentData.indexOf('data-uri')).split("\"")[1];
+                if (currentDataUri === glossaryfootnoteid) {
+                    currentAddAttributeInDfn.setAttribute('audio-id', audioGlossaryData.narrativeAudioUrn)
+                    currentAddAttributeInDfn.setAttribute('audio-path', audioGlossaryData.location)
+                }
+                workContainer = workEditor.innerHTML;
+                workContainer = workContainer.replace(/data-mce-href="#"/g,'').replace(/ reset/g,'')
+            }
+        }else {
+            for (let i = 0; i < addAttributeInDfn.length; i++) {
+                let currentAddAttributeInDfn = addAttributeInDfn[i];
+                let currentData = addAttributeInDfn[i].outerHTML
+                let currentDataUri = currentData.slice(currentData.indexOf('data-uri')).split("\"")[1];
+                if (currentDataUri === glossaryfootnoteid) {
+                    currentAddAttributeInDfn.removeAttribute('audio-id')
+                    currentAddAttributeInDfn.removeAttribute('audio-path')
+                }
+                workContainer = workEditor.innerHTML;
+                workContainer = workContainer.replace(/data-mce-href="#"/g,'').replace(/ reset/g,'')
+            }
+
+        }
+
         figureDataObj = {
             "text": workContainer
         }
+        
         if(elementType == 'stanza' || (typeWithPopup === "poetry" && poetryField === 'formatted-subtitle' || typeWithPopup === "popup")){
             figureDataObj.text = `<p>${figureDataObj.text}</p>`
         }
         else if (typeWithPopup === "popup" && elementType === "element-authoredtext") {
             figureDataObj.text = `<p class="paragraphNumeroUno">${figureDataObj.text}</p>`
-        }
-    }
-
-    if (audioGlossaryData && Object.keys(audioGlossaryData).length > 0) {
-
-        let addAttributeInDfn = workEditor.getElementsByTagName('dfn');
-        for (let i = 0; i < addAttributeInDfn.length; i++) {
-            let currentAddAttributeInDfn = addAttributeInDfn[i];
-            let currentData = addAttributeInDfn[i].outerHTML
-            let currentDataUri = currentData.slice(currentData.indexOf('data-uri')).split("\"")[1];
-            if (currentDataUri === glossaryfootnoteid) {
-                currentAddAttributeInDfn.setAttribute('audio-id', audioGlossaryData.narrativeAudioUrn)
-                currentAddAttributeInDfn.setAttribute('audio-path', audioGlossaryData.location)
-            }
         }
     }
 

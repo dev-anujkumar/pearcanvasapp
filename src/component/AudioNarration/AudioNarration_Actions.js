@@ -25,10 +25,13 @@ export const showAudioRemovePopup = (value,isGlossary) => (dispatch, getState) =
     })
 }
 
-export const audioGlossaryPopup =(value) => (dispatch,getState)=>{
+export const audioGlossaryPopup =(value,positions) => (dispatch,getState)=>{
     dispatch({
         type : OPEN_AUDIO_GLOSSARY_POPUP,
-        payload:value
+        payload:{
+            value:value,
+            positions:positions
+        }
     })
 }
 
@@ -57,11 +60,9 @@ export const fetchAudioNarrationForContainer = (slateData,isGlossary ='') => asy
     if (isGlossary) {
         if (slateData) {
             dispatch({ type: HANDLE_GLOSSARY_AUDIO_DATA, payload: slateData });
-            dispatch({ type: OPEN_AUDIO_GLOSSARY_POPUP, payload: true })
             dispatch({ type: ADD_AUDIO_GLOSSARY_POPUP, payload: false })
         }
         dispatch({ type: ADD_AUDIO_GLOSSARY_POPUP, payload: true })
-        dispatch({ type: OPEN_AUDIO_GLOSSARY_POPUP, payload: false })
     }
     else{
         let url = `${config.AUDIO_NARRATION_URL}context/v3/${slateData.currentProjectId}/container/${slateData.slateEntityUrn}/narrativeAudio`;
@@ -96,12 +97,12 @@ export const fetchAudioNarrationForContainer = (slateData,isGlossary ='') => asy
  * Method to Delete audio narration for container / state 
  * @param {object} slateObject 
  */
-export const deleteAudioNarrationForContainer = (isGlossary) => async(dispatch, getState) => {
+export const deleteAudioNarrationForContainer = (isGlossary = null) => async(dispatch, getState) => {
     
     if(isGlossary){
         dispatch({ type: HANDLE_GLOSSARY_AUDIO_DATA, payload: {} });
         dispatch({ type: ADD_AUDIO_GLOSSARY_POPUP, payload: false })
-        dispatch({ type: OPEN_AUDIO_GLOSSARY_POPUP, payload: false })
+        dispatch({ type: OPEN_AUDIO_GLOSSARY_POPUP, payload: {openAudioGlossaryPopup:false} })
     }
     else{
         var storeData = store.getState();
@@ -172,7 +173,6 @@ export const addAudioNarrationForContainer = (audioData, isGlossary='') => async
     }
 
     if(isGlossary){
-        dispatch({ type: OPEN_AUDIO_GLOSSARY_POPUP, payload: false })
         dispatch({ type: ADD_AUDIO_GLOSSARY_POPUP, payload: true })
         dispatch({type:HANDLE_GLOSSARY_AUDIO_DATA,payload:audioData})
         dispatch(fetchAudioNarrationForContainer(audioData,isGlossary));

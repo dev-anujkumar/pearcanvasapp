@@ -3,7 +3,6 @@
 */
 
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import Button from '../ElementButtons/ElementButton.jsx';
 import '../../styles/GlossaryFootnotePopup/GlossaryFootnotePopup.css';
 import ReactEditor from "../tinyMceGlossaryFootnoteEditor"
@@ -12,7 +11,6 @@ import { hasReviewerRole } from '../../constants/utility.js'
 import { setFormattingToolbar } from './GlossaryFootnote_Actions.js';
 import AudioTinyMceGlossary from '../AudioTinyMceGlossary';
 import AddAudioBook from '../AudioNarration/AddAudioBook.jsx';
-import { audioGlossaryPopup } from '../AudioNarration/AudioNarration_Actions'
 
 class GlossaryFootnotePopup extends Component {
     constructor() {
@@ -34,10 +32,6 @@ class GlossaryFootnotePopup extends Component {
         })
     }
 
-    handleAudioOpenToggle =()=>{
-      this.props.audioGlossaryPopup(true);
-    }
-  
     toolbarHandling = (e, action = "") => {
         let relatedTargets = (e && e.relatedTarget && e.relatedTarget.classList) ? e.relatedTarget.classList : [];
         if (e && checkforToolbarClick(relatedTargets)) {
@@ -77,7 +71,7 @@ class GlossaryFootnotePopup extends Component {
                 </div>
                 <div id="toolbarGlossaryFootnote"></div>
                 {
-                    glossaryFootnote === 'Glossary'&&<div className = {'audio-wrapper'+ accessToolbar} id='glossary-audio'><AudioTinyMceGlossary handleAudioToggle={this.handleAudioToggle} handleAudioOpenToggle={this.handleAudioOpenToggle}/></div>
+                    glossaryFootnote === 'Glossary'&&<div className = {'audio-wrapper'+ accessToolbar} id='glossary-audio'><AudioTinyMceGlossary handleAudioToggle={this.handleAudioToggle} /></div>
                 }
 
                 {this.state.audioToggle && <AddAudioBook isGlossary={true} closeAddAudioBook={this.closeAddAudioBook}/>}
@@ -126,12 +120,5 @@ class GlossaryFootnotePopup extends Component {
         }
     }
 }
-const mapStateToProps = (state) => {
-    return {}
-}
 
-const mapActionToProps = {
-    audioGlossaryPopup
-}
-
-export default connect(mapStateToProps, mapActionToProps)(GlossaryFootnotePopup);
+export default GlossaryFootnotePopup;

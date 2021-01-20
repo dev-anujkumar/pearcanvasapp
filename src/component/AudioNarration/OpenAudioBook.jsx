@@ -71,6 +71,10 @@ class OpenAudioBook extends React.Component {
             replaceToggle:false
         })
     }
+    hideAudioOuterClick = (e) => {
+        this.props.closeAudioBookDialog()
+        e.stopPropagation();
+    }
 
     render = () => {
         const { audioData, audioGlossaryData, isGlossary } = this.props;
@@ -88,7 +92,7 @@ class OpenAudioBook extends React.Component {
             mediaTitle = audioData.data[0].title.en;
         }
         return (
-            <div className={!isGlossary ?'audiodropdown':'glossary-audiodropdown'} id='openAudioBook' ref={node => this.node = node} onBlur={() => this.handleClick(this)}>
+            <div className={!isGlossary ?'audiodropdown':'glossary-audiodropdown'} style={isGlossary ? this.props.positions :null}  id='openAudioBook' ref={node => this.node = node} onBlur={() => this.handleClick(this)}>
                 <div className="audio-close">
                     <h2 className="audio-book-text">Audio Book</h2>
                     <span className="close-icon-audio" onClick={() => this.props.closeAudioBookDialog()}>{audioNarrationCloseIcon}</span>
@@ -112,9 +116,13 @@ class OpenAudioBook extends React.Component {
                         <button className="remove-text" onClick={() => this.openConfirmationBox(isGlossary)} className="audioRemoveButton audioRemoveRound">Remove</button>
                     }
                     {
-                        isGlossary && <button className="remove-text" onClick={() => this.handleReplaceButton()} className="audioRemoveButton audioRemoveRound">Replace</button>
+                        isGlossary && <button className="remove-text" onClick={() => this.handleReplaceButton()} className="audioReplaceeButton audioRemoveRound">Replace</button>
                     }
                 </div>
+                {
+                    isGlossary&&
+                    <div className='blockerBgDiv' tabIndex="0" onClick={(e) => this.hideAudioOuterClick(e) }></div>
+                }
             </div>
         )
     }
@@ -123,6 +131,7 @@ class OpenAudioBook extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
+        positions:state.audioReducer.positions,
         audioData: state.audioReducer.audioData,
         audioGlossaryData:state.audioReducer.audioGlossaryData
     }
