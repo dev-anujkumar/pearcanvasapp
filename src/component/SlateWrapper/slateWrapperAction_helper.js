@@ -21,7 +21,8 @@ export const onPasteSuccess = async (params) => {
         elmExist,
         parentUrn,
         asideData,
-        poetryData
+        poetryData,
+        slateEntityUrn
     } = params    
 
     const activeEditorId = tinymce && tinymce.activeEditor && tinymce.activeEditor.id
@@ -36,8 +37,12 @@ export const onPasteSuccess = async (params) => {
 
     /** Create Snapshot for cut action on different slate */
     let cutSnap = true;
-    if(operationType === 'cut' && 'sourceSlateEntityUrn' in elmSelection && elmSelection.sourceSlateEntityUrn === config.slateEntityURN && elmExist) {
-        cutSnap = false;
+    if(operationType === 'cut' && elmExist) {
+        if('sourceSlateEntityUrn' in elmSelection && 'sourceEntityUrn' in elmSelection &&
+        ((elmSelection.sourceSlateEntityUrn === elmSelection.sourceEntityUrn && elmSelection.sourceSlateEntityUrn === config.slateEntityURN) ||
+        (elmSelection.sourceSlateEntityUrn !== elmSelection.sourceEntityUrn && elmSelection.sourceEntityUrn === slateEntityUrn))) {           
+            cutSnap = false;
+        }
     }
 
     if ('deleteElm' in getState().selectionReducer.selection && operationType === 'cut') {

@@ -764,7 +764,8 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                     elmExist,
                     parentUrn,
                     asideData,
-                    poetryData
+                    poetryData,
+                    slateEntityUrn
                 };
         
                 onPasteSuccess(pasteSuccessArgs)

@@ -379,7 +379,7 @@ class ElementAsideContainer extends Component {
                                     <ElementSaprator
                                     index= {0}
                                     upperOne={true}
-                                    firstOne={0}
+                                    firstOne={true}
                                     parentUrn={parentUrn}
                                     asideData={asideData}
                                     parentIndex={parentIndex}
