@@ -59,7 +59,7 @@ export const setSemanticsSnapshots = async (element,actionStatus,index) => {
             let listData = element.type === ELEMENT_LIST ? element.elementdata.listitems: element.poetrylines
             glossarySnap =  await setSnapshotsInListAndPoetry(actionStatus, listData, GLOSSARY, glossaryHtmlList,index);
             footnoteSnap =  await setSnapshotsInListAndPoetry(actionStatus, listData, FOOTNOTE, footnoteHtmlList,index);
-            assetPopoverSnap =  await setSnapshotsInListAndPoetry(actionStatus, listData, ASSET_POPOVER,undefined,index);
+            assetPopoverSnap =  await setSnapshotsInListAndPoetry(actionStatus, listData, ASSET_POPOVER,undefined,index,element);
             break;
 
         case BLOCKFEATURE:
@@ -121,7 +121,7 @@ const prepareFigureFootnoteSnapshotContent = (actionStatus, footnoteWipList, foo
  * @param {Array} elementList - List of Glossary/Footnote/Asset_Popover entries in a List/Poetry element
  * @returns {Array} All snapshots for given semantic - Glossary/Footnote/Asset_Popover for List and Poetry element  
 */
-const setSnapshotsInListAndPoetry = async (actionStatus, elementList, semanticType,glossaryFootnoteHtmlList,index) => {
+const setSnapshotsInListAndPoetry = async (actionStatus, elementList, semanticType,glossaryFootnoteHtmlList,index,element) => {
     let snapshotsList = []
     await Promise.all(elementList.map( async item => {
         if ((item.type == PARAGRAPH || item.type == POETRY_LINE) && item.authoredtext) {
@@ -133,11 +133,11 @@ const setSnapshotsInListAndPoetry = async (actionStatus, elementList, semanticTy
                 snapshotsList = snapshotsList.concat(prepareFootnoteSnapshotContent(actionStatus, footnoteArray,glossaryFootnoteHtmlList));
             } else if (semanticType === ASSET_POPOVER) {
                 let assetLists = item.authoredtext.internallinks ? item.authoredtext.internallinks : [];
-                let assetSnapList = assetLists.length != 0 ? await prepareAssetPopoverSnapshotContent(assetLists,index,actionStatus) : [];
+                let assetSnapList = assetLists.length != 0 ? await prepareAssetPopoverSnapshotContent(assetLists,index,actionStatus,element) : [];
                 snapshotsList = snapshotsList.concat(assetSnapList);
             }
         } else if (item.listitems && item.listitems.length > 0) { // for nested lists
-            snapshotsList = snapshotsList.concat(await setSnapshotsInListAndPoetry(actionStatus, item.listitems, semanticType,glossaryFootnoteHtmlList,index));
+            snapshotsList = snapshotsList.concat(await setSnapshotsInListAndPoetry(actionStatus, item.listitems, semanticType,glossaryFootnoteHtmlList,index,element));
         }
     }))
     return snapshotsList
