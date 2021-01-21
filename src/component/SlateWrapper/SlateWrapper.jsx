@@ -44,6 +44,7 @@ import { reloadSlate } from '../../component/ElementContainer/AssessmentEventHan
 import LazyLoad, {forceCheck} from "react-lazyload";
 
 import { getCommentElements } from './../Toolbar/Search/Search_Action.js';
+import { TEXT_SOURCE } from '../../constants/Element_Constants.js';
 
 let random = guid();
 
@@ -838,6 +839,7 @@ class SlateWrapper extends Component {
                     onClickCapture={this.checkSlateLockStatus}
                     splithandlerfunction={this.splithandlerfunction}
                     pasteElement={this.props.pasteElement}
+                    source={TEXT_SOURCE}
                 />
             </>
         )
@@ -883,6 +885,7 @@ class SlateWrapper extends Component {
                                                 onClickCapture={this.checkSlateLockStatus}
                                                 splithandlerfunction={this.splithandlerfunction}
                                                 pasteElement={this.props.pasteElement}
+                                                source={TEXT_SOURCE}
                                             />
                                             : index === 0 && config.isCO === true ? <div className="noSeparatorContainer"></div> : null
                                     }
@@ -900,6 +903,7 @@ class SlateWrapper extends Component {
                                         onClickCapture={this.checkSlateLockStatus}
                                         isLOExist={this.props.isLOExist}
                                         splithandlerfunction={this.splithandlerfunction}
+                                        pasteElement={this.props.pasteElement}
                                     >
                                         {
                                             (isHovered, isPageNumberEnabled, activeElement, permissions) => (
@@ -927,6 +931,7 @@ class SlateWrapper extends Component {
                                             onClickCapture={this.checkSlateLockStatus}
                                             splithandlerfunction={this.splithandlerfunction}
                                             pasteElement={this.props.pasteElement}
+                                            source={TEXT_SOURCE}
                                         />
                                         : null
                                     }

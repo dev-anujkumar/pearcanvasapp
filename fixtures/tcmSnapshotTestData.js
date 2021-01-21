@@ -35,6 +35,13 @@ export default {
         'figure': {
             type: "figure",
             figuretype: "image"
+        },
+        'interactive': {
+            type: "figure",
+            figuretype: "interactive",
+            figuredata: {
+                interactivetype: "table"
+            }
         }
     },
     slate1: {
@@ -1323,6 +1330,48 @@ export default {
             "type": "groupedcontent",
             "versionUrn": "urn:pearson:manifest:bfde7bcc-b460-4235-8335-37c20ea9c158",
             "width": "wider"
-        }
+        },
+        "interactive": {
+            "id":"urn:pearson:work:0042c483-1913-41cc-8b5b-2f987dde971e",
+            "type":"figure",
+            "figuretype":"interactive",
+            "subtype":"mathml",
+            "schema":"http://schemas.pearson.com/wip-authoring/figure/1",
+            "title":{
+                "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                "text":""
+            },
+            "subtitle":{
+                "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                "text":""
+            },
+            "captions":{
+                "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                "text":""
+            },
+            "credits":{
+                "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                "text":""
+            },
+            "figuredata":{
+                "schema":"http://schemas.pearson.com/wip-authoring/element/1",
+                "type":"interactive",
+                "elementdata":{
+                    "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text":""
+                }
+            },
+            "html":{
+                "title":"<p><br></p>",
+                "subtitle":"<p><br></p>",
+                "text":"",
+                "postertext":"",
+                "captions":"<p><br></p>",
+                "credits":"<p><br></p>"
+            },
+            "versionUrn":"urn:pearson:work:0042c483-1913-41cc-8b5b-2f987dde971e",
+            "contentUrn":"urn:pearson:entity:876a2304-0d84-47e0-9428-f5d4cc988f84",
+            "status":"wip"
+        },
     }
 }

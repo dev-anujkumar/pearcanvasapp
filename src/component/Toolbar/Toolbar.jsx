@@ -118,7 +118,7 @@ const _Toolbar = props => {
             <div className='toolbar-container'>
                 <div className={"header" + accessToolbar} id="tinymceToolbar"></div>
                 {/* ***********************Slate Tag in toolbar******************************************** */}
-                {config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && props.slateType !== "container-introduction" &&
+                {config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && props.slateType !== "container-introduction" && !config.parentOfParentItem && 
                     <div className="leaningobjective-block">
                         <div className="learningobjectiveicon">
                             <div className="learningobjectiveicon slate-tag-icon" title="Slate Tag" onClick={_handleLODropdown}>

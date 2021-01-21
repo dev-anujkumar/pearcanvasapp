@@ -486,6 +486,7 @@ function CommunicationChannel(WrappedComponent) {
                 config.fromTOC = true;
                 config.tcmslatemanifest= null;
                 config.parentLabel = message.node.nodeParentLabel;
+                config.parentOfParentItem = message.node.parentOfParentItem
                 this.props.getSlateLockStatus(config.projectUrn, config.slateManifestURN)
                 let slateData = {
                     currentProjectId: config.projectUrn,

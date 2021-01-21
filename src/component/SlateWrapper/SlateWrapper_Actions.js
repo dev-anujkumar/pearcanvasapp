@@ -650,20 +650,39 @@ export const pasteElement = (params) => async (dispatch, getState) => {
 
     if(Object.keys(selection).length > 0 && 'element' in selection) {
         const {
-            index
+            index,
+            parentUrn,
+            asideData,
+            poetryData
         } = params
         config.currentInsertedIndex = index;
         localStorage.setItem('newElement', 1);
 
+        let slateEntityUrn = config.slateEntityURN;
+        if(parentUrn && 'contentUrn' in parentUrn) {
+            slateEntityUrn = parentUrn.contentUrn;
+        } else if(poetryData && 'contentUrn' in poetryData) {
+            slateEntityUrn = poetryData.contentUrn;
+        }
+
         let cutIndex = index;
         let elmExist = false;
-        if(selection.sourceSlateEntityUrn === config.slateEntityURN && selection.operationType === 'cut') {
+        if(slateEntityUrn === config.slateEntityURN && selection.sourceSlateEntityUrn === config.slateEntityURN && selection.operationType === 'cut') {
             elmExist = await checkElementExistence(config.slateEntityURN, selection.element.id);
             if(cutIndex > selection.sourceElementIndex) {
                 cutIndex -= elmExist ? 1 : 0;
             }
         }
 
+        if(slateEntityUrn !== config.slateEntityURN && selection.sourceEntityUrn === slateEntityUrn && selection.operationType === 'cut') {
+            elmExist = await checkElementExistence(config.slateEntityURN, selection.element.id);
+            let elmIndexes = selection.sourceElementIndex.split('-');
+            let sourceElementIndex = elmIndexes[elmIndexes.length -1];
+            if(cutIndex > sourceElementIndex) {
+                cutIndex -= elmExist ? 1 : 0;
+            }
+        }
+        
         let elmHtml = ('html' in selection.element) ? selection.element.html : {};
         let elmType = ['figure'];
         let elmSubtype = ['assessment'];
@@ -690,10 +709,10 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                 "html": elmHtml,
                 "slateVersionUrn": selection.sourceSlateManifestUrn,
                 "id": selection.element.id,
-                "elementParentEntityUrn": selection.sourceSlateEntityUrn,
+                "elementParentEntityUrn": selection.sourceEntityUrn,// selection.sourceSlateEntityUrn,
                 "versionUrn": selection.element.versionUrn,
                 "contentUrn": selection.element.contentUrn,
-                "destinationSlateUrn": config.slateEntityURN
+                "destinationSlateUrn": slateEntityUrn
             }]
         };
 
@@ -723,7 +742,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
         }
 
         try {
-            let url = `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/slate/${config.slateEntityURN}/element/paste?type=${selection.operationType.toUpperCase()}`
+            let url = `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/slate/${slateEntityUrn}/element/paste?type=${selection.operationType.toUpperCase()}`
             const createdElemData = await axios.post(
                 url,
                 JSON.stringify(_requestData),
@@ -742,7 +761,11 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                     cutIndex,
                     dispatch,
                     getState,
-                    elmExist
+                    elmExist,
+                    parentUrn,
+                    asideData,
+                    poetryData,
+                    slateEntityUrn
                 };
         
                 onPasteSuccess(pasteSuccessArgs)

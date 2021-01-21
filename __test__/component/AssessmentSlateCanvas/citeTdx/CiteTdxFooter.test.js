@@ -34,7 +34,8 @@ describe('Testing CITE/TDX Footer component', () => {
             "name":"mmoi"
         },
         "openedFrom":"slateAssessment",
-        "isInnerComponent": true
+        "isInnerComponent": true,
+        setCiteTdxFilterData: jest.fn()
 
     }
     let store = mockStore(initialState);
@@ -79,7 +80,8 @@ describe('Testing CITE/TDX Footer component', () => {
                 "versionUrn":"dfer",
                 "name":"mmoi"
             },
-            "openedFrom":"singleSlateAssessmentInner"
+            "openedFrom":"singleSlateAssessmentInner",
+            setCiteTdxFilterData: jest.fn()
     
         }
         const component = mount(<Provider store={store}><CiteTdxFooter {...props}/></Provider>);
@@ -91,4 +93,3 @@ describe('Testing CITE/TDX Footer component', () => {
     })
 
 });
-

@@ -17,7 +17,7 @@ jest.mock('../../../src/config/config.js', () => ({
     slateEntityURN: "urn:pearson:entity:2b03e70f-8730-451b-9f9a-b496b6d91c9e",
     projectUrn: "urn:pearson:distributable:977c95a8-e16a-413c-bfd0-788fd2a3698d",
     projectEntityUrn: "urn:pearson:entity:3d9363f1-36bb-47ea-8842-9b142027692c",
-    REACT_APP_API_URL: "https://10.11.7.246:8443/cypress-api/",
+    REACT_APP_API_URL: "https://10.11.7.246:8081/cypress-api/",
     ssoToken: "IZaFs6qIbKAo1yX0WaRCz6fagzA.*AAJTSQACMDIAAlNLABw5WUNuT3h6MEN0OHRFRUlEZUxFamxQa1EyNm89AAJTMQACMDE.*",
     conversionInProcess : false,
     savingnInProcess : false,

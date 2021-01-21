@@ -104,3 +104,34 @@ export const allowedFigureTypesForTCM = ['image', 'table', 'mathImage', 'audio',
 
 /*******************************GlossaryfootnotePopup ***************************/
 export const GLOSSARY = 'Glossary'
+/** Component source for element saprator */
+
+export const CITATION_SOURCE = 'CITATION';
+export const ASIDE_SOURCE = 'ASIDE';
+export const POETRY_SOURCE = 'POETRY';
+export const MULTICOLUMN_SOURCE = 'MULTICOLUMN';
+export const TEXT_SOURCE = 'TEXT';
+export const SOURCE_MAP = {
+    [CITATION_SOURCE]: { 'support': ['ELEMENT_CITATION'], 'notSupport': [] },
+    [ASIDE_SOURCE]: { 'support': [], 'notSupport': ['POETRY', 'STANZA', 'ASIDE', 'WORKED_EXAMPLE', 'CITATION', 'ELEMENT_CITATION'] },
+    [POETRY_SOURCE]: { 'support': ['STANZA'], 'notSupport': [] },
+    [MULTICOLUMN_SOURCE]: { 'support': [], 'notSupport': ['POETRY', 'STANZA', 'ASIDE', 'WORKED_EXAMPLE', 'CITATION', 'ELEMENT_CITATION'] },
+    [TEXT_SOURCE]: { 'support': [], 'notSupport': ['STANZA', 'ELEMENT_CITATION'] }
+};
+
+export const getPasteValidated = (sourceType, selectionType) => {
+    let validation = true;
+    if(sourceType in SOURCE_MAP) { 
+        if(SOURCE_MAP[sourceType].support.length > 0) {
+            if((SOURCE_MAP[sourceType].support).indexOf(selectionType) < 0) {
+                validation = false;
+            }
+        } else if(SOURCE_MAP[sourceType].notSupport.length > 0) {
+            if((SOURCE_MAP[sourceType].notSupport).indexOf(selectionType) >= 0) {
+                validation = false;
+            }
+        }
+        
+        return validation;
+    }
+}

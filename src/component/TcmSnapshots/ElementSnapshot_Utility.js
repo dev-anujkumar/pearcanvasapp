@@ -27,6 +27,7 @@ const {
     WORKED_EXAMPLE,
     FIGURE,
     MULTI_COLUMN,
+    SHOWHIDE,
     interactiveSubtypeConstants
 }
     = TcmConstants;
@@ -487,6 +488,9 @@ const setElementTag = {
                 }
             }
         }
+    },
+    [SHOWHIDE] : {
+        parentTag: "SH"
     }
 }
 
@@ -496,6 +500,11 @@ const setMetadataType = {
         'formattedTitle': 'popup_label',
         'formattedSubtitle': 'popup_label',
         'formattedTitleOnly': 'popup_label'
+    },
+    "showhide": {
+        "show": "show",
+        "hide": "hide",
+        "revel": "revel"
     }
 }
 

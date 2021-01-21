@@ -5,7 +5,7 @@ import { AUTHORING_ELEMENT_CREATED, GET_TCM_RESOURCES, FETCH_COMMENTS } from '..
 import { HideLoader, ShowLoader, projectPendingTcStatus } from '../../constants/IFrameMessageTypes.js';
 import * as slateWrapperConstants from "./SlateWrapperConstants"
 //Helper methods
-import { sendDataToIframe, replaceWirisClassAndAttr } from '../../constants/utility.js';
+import { sendDataToIframe, replaceWirisClassAndAttr, getShowhideChildUrns } from '../../constants/utility.js';
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 import { SET_SELECTION } from './../../constants/Action_Constants.js';
 import { deleteFromStore, prepareTCMSnapshotsForDelete } from './../ElementContainer/ElementContainerDelete_helpers.js';
@@ -18,7 +18,11 @@ export const onPasteSuccess = async (params) => {
         cutIndex,
         dispatch,
         getState,
-        elmExist
+        elmExist,
+        parentUrn,
+        asideData,
+        poetryData,
+        slateEntityUrn
     } = params    
 
     const activeEditorId = tinymce && tinymce.activeEditor && tinymce.activeEditor.id
@@ -33,8 +37,12 @@ export const onPasteSuccess = async (params) => {
 
     /** Create Snapshot for cut action on different slate */
     let cutSnap = true;
-    if(operationType === 'cut' && 'sourceSlateEntityUrn' in elmSelection && elmSelection.sourceSlateEntityUrn === config.slateEntityURN && elmExist) {
-        cutSnap = false;
+    if(operationType === 'cut' && elmExist) {
+        if('sourceSlateEntityUrn' in elmSelection && 'sourceEntityUrn' in elmSelection &&
+        ((elmSelection.sourceSlateEntityUrn === elmSelection.sourceEntityUrn && elmSelection.sourceSlateEntityUrn === config.slateEntityURN) ||
+        (elmSelection.sourceSlateEntityUrn !== elmSelection.sourceEntityUrn && elmSelection.sourceEntityUrn === slateEntityUrn))) {           
+            cutSnap = false;
+        }
     }
 
     if ('deleteElm' in getState().selectionReducer.selection && operationType === 'cut') {
@@ -137,7 +145,46 @@ export const onPasteSuccess = async (params) => {
         return false;
     }
 
-    newParentData[config.slateManifestURN].contents.bodymatter.splice(cutIndex, 0, responseData);
+    if (asideData && asideData.type == 'element-aside') {
+        newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
+            if (item.id == parentUrn.manifestUrn) {
+                item.elementdata.bodymatter.splice(cutIndex, 0, responseData)
+            } else if (item.type == "element-aside" && item.id == asideData.id) {
+                item.elementdata.bodymatter && item.elementdata.bodymatter.map((ele) => {
+                    if (ele.id === parentUrn.manifestUrn) {
+                        ele.contents.bodymatter.splice(cutIndex, 0, responseData)
+                    }
+                })
+            }
+        })
+    } else if(asideData && asideData.type == 'citations'){
+        newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
+            if (item.id == parentUrn.manifestUrn) {
+                item.contents.bodymatter.splice(cutIndex, 0, responseData)
+            }
+        })
+    } else if (poetryData && poetryData.type == "poetry"){
+        newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
+            if (item.id == poetryData.parentUrn) {
+                item.contents.bodymatter.splice(cutIndex, 0, responseData)
+            } 
+            else if (item.type == "poetry" && item.id == poetryData.id) {
+                item.contents.bodymatter && item.contents.bodymatter.map((ele) => {
+                    if (ele.id === poetryData.parentUrn) {
+                        ele.contents.bodymatter.splice(cutIndex, 0, responseData)
+                    }
+                })
+            }
+        })  
+    } else if (asideData && asideData.type === 'groupedcontent') {
+        newParentData[config.slateManifestURN].contents.bodymatter.map((item, i) => {
+            if (item.id === asideData.id) {
+                item.groupeddata.bodymatter[parentUrn.columnIndex].groupdata.bodymatter.splice(cutIndex, 0, responseData)
+            }
+        })
+    } else {
+        newParentData[config.slateManifestURN].contents.bodymatter.splice(cutIndex, 0, responseData);
+    }
 
     if (config.tcmStatus) {
         if (slateWrapperConstants.elementType.indexOf(slateWrapperConstants.checkTCM(responseData)) !== -1 && cutSnap) {
@@ -270,6 +317,9 @@ export function prepareDataForTcmCreate(type, createdElementData, getState, disp
         case slateWrapperConstants.POP_UP:
             elmUrn.push(createdElementData.popupdata.postertextobject[0].id)
             elmUrn.push(createdElementData.popupdata.bodymatter[0].id)
+            break;
+        case slateWrapperConstants.SHOW_HIDE:
+            elmUrn = getShowhideChildUrns(createdElementData)
             break;
     }
 

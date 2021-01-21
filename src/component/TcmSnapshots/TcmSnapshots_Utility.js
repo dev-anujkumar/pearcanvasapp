@@ -41,7 +41,8 @@ const {
     bqAttrHtmlFalse,
     bqHiddenText,
     FIGURE,
-    allowedFigureTypesForTCM
+    allowedFigureTypesForTCM,
+    SHOWHIDE
 }
     = TcmConstants;
 
@@ -110,17 +111,21 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
 */
 export const tcmSnapshotsOnDefaultSlate = (snapshotsData, defaultKeys, containerElement, type,index, isPopupSlate) => {
     const { wipData, elementId, tag, actionStatus, popupInContainer,slateManifestVersioning } = snapshotsData;
-    const { poetryData, asideData, parentUrn } = containerElement
+    const { poetryData, asideData, parentUrn, showHideObj } = containerElement
     /* For WE creation*/
     if (wipData.type === ELEMENT_ASIDE && type != SECTION_BREAK) {
         tcmSnapshotsCreateAsideWE(snapshotsData, defaultKeys,index, isPopupSlate);
+    }
+    /* For SH creation*/
+    else if (wipData.type === SHOWHIDE) {
+        tcmSnapshotsCreateShowHide(snapshotsData, defaultKeys, index, isPopupSlate, containerElement);
     }
     /* action on Section break in WE*/
     else if (type === SECTION_BREAK || wipData.type === WE_MANIFEST) {
         tcmSnapshotsCreateSectionBreak(containerElement, snapshotsData, defaultKeys,index, isPopupSlate)
     }
     /* action on element in WE/PE/CG/2C */
-    else if (poetryData || asideData || parentUrn) {
+    else if (poetryData || asideData || parentUrn || showHideObj) {
         tcmSnapshotsInContainerElements(containerElement, snapshotsData, defaultKeys,index, isPopupSlate)
     }
     /* action on PE and CG */
@@ -167,6 +172,33 @@ const tcmSnapshotsCreateAsideWE = (snapshotsData, defaultKeys,index, isPopupSlat
 }
 
 /**
+ * @function tcmSnapshotsCreateShowHide
+ * @description This is the function to prepare the data for TCM Snapshots for Action = Create & Elements = showhide
+ * @param {Object} snapshotsData - Initial Snapshots data
+ * @param {String} defaultKeys - default keys of tcm snapshot
+*/
+
+const tcmSnapshotsCreateShowHide = (snapshotsData, defaultKeys, index, isPopupSlate, { asideData, parentUrn }) => {
+    let elementDetails;
+    const typeArray = ['show', 'postertextobject', 'hide']
+    const { wipData, elementId, tag, actionStatus, popupInContainer, slateManifestVersioning } = snapshotsData;
+    for (const SHType of typeArray) {
+        const showhidetag = SHType !== 'postertextobject' ? SHType : 'revel'
+        wipData.interactivedata[SHType]?.map((item) => {
+            const showhide = {
+                element: wipData,
+                showHideType: showhidetag
+            }
+            elementId.childId = item.id;
+            tag.childTag = fetchElementsTag(item);
+            let isHead = asideData?.type === ELEMENT_ASIDE && asideData?.subtype === WORKED_EXAMPLE ? parentUrn.manifestUrn == asideData.id ? "HEAD" : "BODY" : "";
+            elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn?.manifestUrn ? parentUrn.manifestUrn : "", undefined, popupInContainer, slateManifestVersioning, isPopupSlate, showhide, { asideData, parentUrn });
+            prepareAndSendTcmData(elementDetails, item, defaultKeys, actionStatus, index);
+        })
+    }
+}
+
+/**
  * @function tcmSnapshotsCreateSectionBreak
  * @description This is the function to prepare the data for TCM Snapshots for Action = Create & Elements = Section-Break
  * @param {Object} snapshotsData - Initial Snapshots data
@@ -199,15 +231,17 @@ const tcmSnapshotsCreateSectionBreak = (containerElement, snapshotsData, default
 export const tcmSnapshotsInContainerElements = (containerElement, snapshotsData, defaultKeys,index, isPopupSlate) => {
     let elementDetails;
     const { wipData, elementId, tag, actionStatus, popupInContainer,slateManifestVersioning } = snapshotsData;
-    const { poetryData, asideData, parentUrn } = containerElement
+    const { poetryData, asideData, parentUrn, showHideObj } = containerElement
     let parentElement = asideData ? asideData : poetryData ? poetryData : parentUrn;
+    parentElement = showHideObj ? showHideObj : parentElement
     elementId.parentId = parentElement && parentElement.id ? parentElement.id : parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "";
+    elementId.parentId = parentElement && parentElement.element && parentElement.element.type === SHOWHIDE ? parentElement.element.id : elementId.parentId;
     elementId.childId = wipData.id;
     elementId.columnId = parentUrn && parentUrn.elementType === MULTI_COLUMN_GROUP && parentUrn.manifestUrn ? parentUrn.manifestUrn : "";
-    tag.parentTag = fetchElementsTag(parentElement);
+    tag.parentTag = showHideObj ? fetchElementsTag(parentElement.element) : fetchElementsTag(parentElement);
     tag.childTag = fetchElementsTag(wipData);
     let isHead = asideData && asideData.type === ELEMENT_ASIDE && asideData.subtype === WORKED_EXAMPLE ? parentUrn.manifestUrn == asideData.id ? "HEAD" : "BODY" : "";
-    elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "", parentUrn ? parentUrn.columnIndex : -1, popupInContainer, slateManifestVersioning, isPopupSlate);
+    elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "", parentUrn ? parentUrn.columnIndex : -1, popupInContainer, slateManifestVersioning, isPopupSlate, parentElement, { asideData, parentUrn });
     prepareAndSendTcmData(elementDetails, wipData, defaultKeys, actionStatus,index);
 }
 
@@ -485,8 +519,7 @@ export const prepareAndSendTcmData = async (elementDetails, wipData, defaultKeys
         elementSnapshot: wipData.type === FIGURE ? JSON.stringify(await prepareFigureElementSnapshots(wipData, actionStatus, index)) : JSON.stringify(await prepareElementSnapshots(wipData, actionStatus, index, elementDetails, CurrentSlateStatus)),
         ...defaultKeys
     };
-
-    if(currentSnapshot && (currentSnapshot.elementType.includes("CTA") || currentSnapshot.elementType.includes("LB")) && currentSnapshot.action == 'create'){
+    if(currentSnapshot && ((currentSnapshot.elementType.includes("CTA") && !currentSnapshot.elementType.includes("SH")) || currentSnapshot.elementType.includes("LB")) && currentSnapshot.action == 'create'){
         currentSnapshot.status = 'accepted'  
         if(currentSnapshot.elementType.includes("LB") && CurrentSlateStatus != 'approved'){
             res.elementdata.text = ''
@@ -505,7 +538,8 @@ export const prepareAndSendTcmData = async (elementDetails, wipData, defaultKeys
  * @param {String} sectionId - Urn for section break
  * @returns {Object} Object that contains the element tag and elementUrn for snapshot 
 */
-const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,popupInContainer,slateManifestVersioning, popupSlate) => {
+export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,popupInContainer,slateManifestVersioning, popupSlate, parentElement, containerElement = {}) => {
+    const { asideData } = containerElement
     let elementData = {};
     let elementTag = `${tag.parentTag}${isHead ? ":" + isHead : ""}${tag.childTag ? ":" + tag.childTag : ""}`;
     let elementId = `${eleId.parentId}${sectionId && isHead === "BODY" ? "+" + sectionId : ""}${eleId.childId ? "+" + eleId.childId : ""}`
@@ -513,7 +547,27 @@ const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,popupInCo
         elementTag = `${tag.parentTag}${(eleIndex == 0) ? ':C1' : ':C2'}${tag.childTag ? ":" + tag.childTag : ""}`   ; 
         elementId =  `${eleId.parentId}${eleId.columnId ? "+" + eleId.columnId : ""}${eleId.childId ? "+" + eleId.childId : ""}`
     }
-    if ((popupInContainer && config.isPopupSlate) || (popupInContainer && popupSlate)) {  //WE:BODY:POP:BODY:WE:BODY:P
+    if (parentElement?.element?.type === SHOWHIDE) {    //showhide
+        let showHideSection = getShowHideTag(parentElement.showHideType)
+        elementTag = `${tag.parentTag}:${showHideSection}`; //${tag.childTag ? ":" + tag.childTag : ""}
+        if (asideData?.type === ELEMENT_ASIDE && asideData?.subtype !== WORKED_EXAMPLE) { //SH inside Aside
+            elementTag = `AS:${elementTag}`
+            elementId = `${asideData.id}+${eleId.parentId}+${eleId.childId}`
+        }
+        else if (asideData?.type === ELEMENT_ASIDE && asideData?.subtype === WORKED_EXAMPLE) { //SH inside WE - head/body
+            elementTag = `WE:${isHead ? `${isHead}:` : ""}${elementTag}`
+            elementId = `${asideData.id}+${sectionId && isHead === "BODY" ? `${sectionId}+` : ""}${eleId.parentId}+${eleId.childId}`
+        }
+        if ((popupInContainer && config.isPopupSlate) || (popupInContainer && popupSlate)) {  //WE:BODY:POP:BODY:WE:BODY:P
+            elementTag = `${tag.popupParentTag ? tag.popupParentTag + ":" : ""}POP:BODY:${elementTag}`;
+            elementId = `${eleId.popupParentId ? eleId.popupParentId + "+" : ""}${eleId.popID ? eleId.popID : slateManifestVersioning ? slateManifestVersioning:config.slateManifestURN}+${elementId}`;
+        }
+        else if (config.isPopupSlate) {                //POP:BODY:WE:BODY:P
+            elementTag = `POP:BODY:${elementTag}`;
+            elementId = `${slateManifestVersioning?slateManifestVersioning:config.slateManifestURN}+${elementId}`;
+        }
+    }
+    else if ((popupInContainer && config.isPopupSlate) || (popupInContainer && popupSlate)) {  //WE:BODY:POP:BODY:WE:BODY:P
         elementTag = `${tag.popupParentTag ? tag.popupParentTag + ":" : ""}POP:BODY:${elementTag}`;
         elementId = `${eleId.popupParentId ? eleId.popupParentId + "+" : ""}${eleId.popID ? eleId.popID : slateManifestVersioning ? slateManifestVersioning:config.slateManifestURN}+${elementId}`;
     }
@@ -525,17 +579,33 @@ const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,popupInCo
         elementTag = `POP:BODY:${elementTag}`;
         elementId = `${slateManifestVersioning?slateManifestVersioning:config.slateManifestURN}+${elementId}`;
     }
-    else if ( popupSlate) {                //POP:BODY:WE:BODY:P
+    else if (popupSlate) {                //POP:BODY:WE:BODY:P
         elementTag = `POP:BODY:${elementTag}`;
         elementId = `${eleId.popID}+${elementId}`;
     }
-   
+    
     elementData = {
         elementUrn: elementId,
         elementType: elementTag
     }
     return elementData
 }
+
+/**
+ * Sets tags for showhide sections
+ * @param {String} showHideType Section type in showhide
+ */
+export const getShowHideTag = (showHideType) => {
+    switch (showHideType) {
+        case "show":
+            return "Show"
+        case "hide":
+            return "Hide"
+        default:
+            return "Action Button Label"
+    }
+}
+
 
 /**
  * @function setDefaultKeys
@@ -684,7 +754,7 @@ const prepareMetablock = (element, actionStatus) => {
 }
 
 
-const setContentSnapshot = (element, elementDetails, actionStatus, CurrentSlateStatus) => {
+export const setContentSnapshot = (element, elementDetails, actionStatus, CurrentSlateStatus) => {
     let snapshotData = "";
     if (element.type === MULTI_COLUMN_GROUP && (element.groupdata && element.groupdata.bodymatter && element.groupdata.bodymatter[0].html.text)) {
         snapshotData = element.groupdata.bodymatter[0].html.text
@@ -695,7 +765,10 @@ const setContentSnapshot = (element, elementDetails, actionStatus, CurrentSlateS
         snapshotData = '<p></p>'          
     } else if(element.type === ELEMENT_LIST && element.html && element.html.text){
         snapshotData = element.html.text.replace(/<br>/g,"")
-    } else {
+    } else if (elementDetails.elementType?.includes?.("Action Button Label")) { //Reveal answer section in Showhide
+        snapshotData = element.html.text.replace?.(/Reveal Answer:/, "<span class='showhide-metadata'>Reveal Answer:</span>")
+    } 
+    else {
         snapshotData = element.html && element.html.text ? element.html.text : "";
     }
     snapshotData = handleBlankLineDom(snapshotData,'BlankLine');
@@ -737,11 +810,15 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
     if(config.isPopupSlate){
         currentSlateData.popupSlateData = currentParentData[config.tempSlateManifestURN]
     }
-    const { metaDataField, sectionType, parentElement} = containerElement;
+    const { metaDataField, sectionType, parentElement, showHideObj } = containerElement;
     let wipData = {};
     if ((metaDataField || sectionType) && parentElement && parentElement.type == POPUP_ELEMENT) {
         wipData = metaDataField && parentElement.popupdata && parentElement.popupdata[FORMATTED_TITLE] ? parentElement.popupdata[FORMATTED_TITLE] : parentElement.popupdata && parentElement.popupdata.postertextobject[0] ? parentElement.popupdata.postertextobject[0] : wipData;
-    } else {
+    }
+    else if (showHideObj?.currentElement) { //showhide
+        wipData = showHideObj.currentElement
+    } 
+    else {
         wipData = fetchElementWipData(updateBodymatter, elementIndex, response.type, "", actionStatus.action)
     }
     
@@ -969,6 +1046,7 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn, operatio
             case BLOCKFEATURE:
             case AUTHORED_TEXT:
             case LEARNING_OBJECTIVE:
+            case SHOWHIDE:
                 if (eleIndex.length == 2) {          /** Inside WE-HEAD | Aside */
                     wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]];
                 } else if (eleIndex.length == 3 && bodymatter[eleIndex[0]].type !== MULTI_COLUMN) {   /** Inside WE-BODY */
@@ -1015,7 +1093,7 @@ export const popupWipData = (bodymatter, eleIndex,operationType,wipData) => {
  * @param {String/Number} indexes - index of element converted
  * @returns {Object} ParentData fo given element
 */
-export const fetchParentData = (bodymatter, indexes) => {
+export const fetchParentData = (bodymatter, indexes, showHideObj) => {
     let parentData = {};
     let tempIndex = Array.isArray(indexes) ? indexes : (typeof indexes === "number") ? indexes.toString() : indexes.split("-");
     let isChildElement = elementType.indexOf(bodymatter[tempIndex[0]].type) === -1 ? true : false
@@ -1023,23 +1101,34 @@ export const fetchParentData = (bodymatter, indexes) => {
         isChildElement = false /** Formatted-title in Popup */
     }
     if (isChildElement == true) {
+        if (showHideObj) {
+            parentData.showHideObj = {...showHideObj}
+            const { parentElement } = setParentUrn(bodymatter, tempIndex);
+            parentData.parentUrn = {
+                manifestUrn: parentElement.id,
+                contentUrn: parentElement.contentUrn,
+                elementType: parentElement.type
+            }
+        }
+        else {
+            const { parentElement, multiColumnData } = setParentUrn(bodymatter, tempIndex);
+            parentData.parentUrn = {
+                manifestUrn: parentElement.id,
+                contentUrn: parentElement.contentUrn,
+                elementType: parentElement.type
+            }
+            if (multiColumnData) {
+                parentData.parentUrn.columnName = multiColumnData.columnName;
+                parentData.parentUrn.columnIndex = multiColumnData.columnIndex;
+            }
+        }
         parentData.asideData = {
             contentUrn: bodymatter[tempIndex[0]].contentUrn,
             id: bodymatter[tempIndex[0]].id,
             subtype: bodymatter[tempIndex[0]].subtype,
             type: bodymatter[tempIndex[0]].type,
             element: bodymatter[tempIndex[0]]
-        }
-        const { parentElement, multiColumnData } = setParentUrn(bodymatter, tempIndex);
-        parentData.parentUrn = {
-            manifestUrn: parentElement.id,
-            contentUrn: parentElement.contentUrn,
-            elementType: parentElement.type
-        }
-        if (multiColumnData) {
-            parentData.parentUrn.columnName = multiColumnData.columnName;
-            parentData.parentUrn.columnIndex = multiColumnData.columnIndex;
-        }
+        }  
     }
     return parentData;
 }
@@ -1082,9 +1171,18 @@ const setParentUrn = (bodymatter, tempIndex) => {
                 columnName: tempIndex[1] == '0' ? 'C1' : 'C2'
             }
         }
+        /**Showhide inside WE head or in Aside */
+        else if (bodymatter[tempIndex[0]].type === ELEMENT_ASIDE) {
+            parentElement = bodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]]
+            parentElement = parentElement.type === SHOWHIDE ? bodymatter[tempIndex[0]] : parentElement;
+        }
         else {
             parentElement = bodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]]
         }
+    }
+    /**Showhide inside WE body/manifest */
+    else if (tempIndex.length === 5) {
+        parentElement = bodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]]
     }
     return {
         parentElement,

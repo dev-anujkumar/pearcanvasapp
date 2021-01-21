@@ -21,7 +21,7 @@ import elementTypeConstant from './ElementConstants'
 import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } from './../CanvasWrapper/CanvasWrapper_Actions';
 import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
-import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass } from '../../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
@@ -1051,6 +1051,44 @@ class ElementContainer extends Component {
         }
         return popupChildUrns
     }
+
+    /**
+     * Gives TCM and feedback status for showhide element
+     * @param {Array} tcmData tcm data for elements on the slate
+     * @param {Object} element active element id
+     * @param {String} defaultWorkUrn work urn test string
+     * @param {String} defaultManifestUrn manifest urn test string
+     */
+    getShowHideTCMStatus = (tcmData, element, defaultWorkUrn, defaultManifestUrn) => {
+        let tcmStatus = {};
+        const showHideChildren = getShowhideChildUrns(element);
+        let showHideTcmCount = 0;
+        let status = {
+            tcm: false,
+            feedback: false
+        };
+        tcmStatus = this.checkTCMStatus(tcmData, element.id, defaultManifestUrn)
+        if (tcmStatus.tcm || tcmStatus.feedback) {
+            return tcmStatus;
+        } else {
+            tcmStatus.tcm = false;
+            tcmStatus.feedback = false;
+            for (const child of showHideChildren) {
+                if (showHideTcmCount < 1) {
+                    status = this.checkTCMStatus(tcmData, child, defaultWorkUrn)
+                    if (status && (status.tcm || status.feedback)) {
+                        showHideTcmCount++;
+                    }
+                } else {
+                    break;
+                }
+            }
+        }
+        tcmStatus.tcm = status.tcm
+        tcmStatus.feedback = status.feedback
+        return tcmStatus
+    }
+
     /**
     * @description - checkTCMStatus is responsible for setting the tcm status for the element
     * @param {*} tcmData tcm data for elements on the slate
@@ -1107,7 +1145,11 @@ class ElementContainer extends Component {
             }
             tcmStatus.tcm = status.tcm
             tcmStatus.feedback = status.feedback
-        } else {
+        }
+        else if (element.type === 'showhide') {
+            tcmStatus = this.getShowHideTCMStatus(tcmData, element, defaultWorkUrn, defaultManifestUrn)
+        } 
+        else {
             tcmStatus = this.checkTCMStatus(tcmData, element.id, defaultWorkUrn)
         }
         return tcmStatus;
@@ -1219,6 +1261,8 @@ class ElementContainer extends Component {
                         glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
                         onListSelect={this.props.onListSelect}
                         splithandlerfunction={splithandlerfunction}
+                        pasteElement={this.props.pasteElement}
+                        userRole={this.props.userRole}
                     />;
                     break;
                 case elementTypeConstant.METADATA_ANCHOR:
@@ -1269,7 +1313,7 @@ class ElementContainer extends Component {
                         openAssetPopoverPopUp: this.openAssetPopoverPopUp,
                         openGlossaryFootnotePopUp: this.openGlossaryFootnotePopUp,
                         getElementStatus: this.props.getElementStatus
-                    }}><ElementShowHide />
+                    }}><ElementShowHide userRole={this.props.userRole} />
                     </ElementContainerContext.Provider >;
                     labelText = 'SH'
                     break;
@@ -1291,7 +1335,7 @@ class ElementContainer extends Component {
                         handleFocus: this.handleFocus,
                         handleBlur: this.handleBlur,
                         deleteElement: this.deleteElement
-                    }}><CitationGroup />
+                    }}><CitationGroup userRole={this.props.userRole} pasteElement={this.props.pasteElement} />
                     </CitationGroupContext.Provider >;
                     labelText = 'CG'
                     break;
@@ -1340,7 +1384,9 @@ class ElementContainer extends Component {
                     onClickCapture={this.props.onClickCapture}
                     onListSelect={this.props.onListSelect} 
                     glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
-                    elementSepratorProps={elementSepratorProps} />
+                    elementSepratorProps={elementSepratorProps}
+                    pasteElement={this.props.pasteElement}
+                    userRole={this.props.userRole} />
                     labelText = 'PE'
                     break;
                 case elementTypeConstant.POETRY_STANZA:
@@ -1388,7 +1434,7 @@ class ElementContainer extends Component {
                         handleBlur: this.handleBlur,
                         deleteElement: this.deleteElement,
                         splithandlerfunction: this.props.splithandlerfunction,
-                    }}><MultiColumnContainer />
+                    }}><MultiColumnContainer userRole={this.props.userRole} pasteElement={this.props.pasteElement} />
                     </MultiColumnContext.Provider>;
                     labelText = '2C'
                     break;
@@ -1516,7 +1562,7 @@ class ElementContainer extends Component {
         let index = this.props.index;
         let inputType = '';
         let inputSubType = '';
-        let cutCopyParentUrn ='';
+        let cutCopyParentUrn = {};
         if(!parentUrn) {
             cutCopyParentUrn = {
                 manifestUrn: config.slateManifestURN,
@@ -1548,6 +1594,7 @@ class ElementContainer extends Component {
             ...elementDetails,
             sourceSlateManifestUrn: config.slateManifestURN,
             sourceSlateEntityUrn: config.slateEntityURN,
+            sourceEntityUrn: (parentUrn && 'contentUrn' in parentUrn) ? parentUrn.contentUrn : config.slateEntityURN,
             deleteElm: { id, type, parentUrn, asideData, contentUrn, index, poetryData, cutCopyParentUrn},
             inputType,
             inputSubType
