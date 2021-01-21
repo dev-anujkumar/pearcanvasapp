@@ -25,7 +25,7 @@ import { handleSplitSlate,setUpdatedSlateTitle, setSlateType, setSlateEntity, se
 import { currentSlateLO,isLOExist, currentSlateLOMath } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import { handleUserRole } from './UserRole_Actions'
 import { handleSlateRefresh } from '../CanvasWrapper/SlateRefresh_Actions'
-import { fetchAudioNarrationForContainer } from '../AudioNarration/AudioNarration_Actions'
+import { fetchAudioNarrationForContainer ,audioGlossaryPopup} from '../AudioNarration/AudioNarration_Actions'
 import { glossaaryFootnotePopup } from '../GlossaryFootnotePopup/GlossaryFootnote_Actions';
 import RootContext from './PageNumberContext.js';
 import {publishContent,logout} from '../../js/header'
@@ -313,6 +313,7 @@ export default connect(
         toggleElemBordersAction,
         togglePageNumberAction,
         tcmCosConversionSnapshot,
-        assetIdForSnapshot
+        assetIdForSnapshot,
+        audioGlossaryPopup
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

@@ -76,7 +76,13 @@ describe('testing audioNarration reducer cases --', () => {
     it('OPEN_AUDIO_GLOSSARY_POPUP',()=>{
         expect(reducer(INITIAL_STATE,{
             type:types.OPEN_AUDIO_GLOSSARY_POPUP,
-            payload:true
+            payload:{
+                value:true,
+                positions:{
+                    left:'20px',
+                    top:'10px'
+                }
+            }
         })).toEqual(openGlossaryAudio_FINAL_STATE)
     })
     it('ADD_AUDIO_GLOSSARY_POPUP',()=>{

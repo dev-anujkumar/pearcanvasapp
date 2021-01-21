@@ -80,7 +80,7 @@ export const mockDatadelete = {
     openAudioGlossaryPopup:false,
     addAudioGlossaryPopup:false,
     audioGlossaryData:{},
-    isGlossary:false
+    isGlossary:false,
 };
 
 export const WrongAudio_FINAL_STATE = { 
@@ -157,7 +157,11 @@ export const openGlossaryAudio_FINAL_STATE = {
     openAudioGlossaryPopup:true,
     addAudioGlossaryPopup:false,
     audioGlossaryData:{},
-    isGlossary:false
+    isGlossary:false,
+    positions:{
+        left:'20px',
+        top:'10px'
+    }
 };
 
 export const addGlossaryAudio_FINAL_STATE ={

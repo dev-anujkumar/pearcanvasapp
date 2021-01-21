@@ -101,3 +101,6 @@ export const disabledPrimaryOption = [
 ];
 
 export const allowedFigureTypesForTCM = ['image', 'table', 'mathImage', 'audio', 'video', 'codelisting', 'authoredtext', "interactive"]
+
+/*******************************GlossaryfootnotePopup ***************************/
+export const GLOSSARY = 'Glossary'

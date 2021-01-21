@@ -98,8 +98,4 @@ describe('Testing GlossaryFootnote component with props', () => {
         expect(GlossaryFootnotePopupInstance.state.audioToggle).toBe(false)
     })
 
-    it('testcase for handleAudioOpenToggle',()=>{
-        GlossaryFootnotePopupInstance.handleAudioOpenToggle();
-    })
-
 })

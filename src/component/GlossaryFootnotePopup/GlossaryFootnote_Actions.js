@@ -125,10 +125,10 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
         }
     }
     if(glossaryContentText && glossaryContentText.includes('audio-id')){
-        let audioId = glossaryContentText.slice(glossaryContentText.indexOf('audio-id')).split("\"")[1];
-        let audioPath =glossaryContentText.slice(glossaryContentText.indexOf('audio-id')).split("\"")[3]
-        let title = audioPath.split("/").pop();
-        let data = {
+        const audioId = glossaryContentText.slice(glossaryContentText.indexOf('audio-id')).split("\"")[1];
+        const audioPath =glossaryContentText.slice(glossaryContentText.indexOf('audio-id')).split("\"")[3]
+        const title = audioPath.split("/").pop();
+        const data = {
             'title':{
                 'en':title
             },
@@ -237,7 +237,6 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
     } else {
         workEditor = document.getElementById('cypress-' + index)
         workContainer = workEditor.innerHTML;
-        workContainer = workContainer.replace(/data-mce-href="#"/g,'').replace(/ reset/g,'')
 
         let addAttributeInDfn = workEditor.getElementsByTagName('dfn');
 
@@ -252,7 +251,6 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                     currentAddAttributeInDfn.setAttribute('audio-path', audioGlossaryData.location)
                 }
                 workContainer = workEditor.innerHTML;
-                workContainer = workContainer.replace(/data-mce-href="#"/g,'').replace(/ reset/g,'')
             }
         }else {
             for (let i = 0; i < addAttributeInDfn.length; i++) {
@@ -264,10 +262,10 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                     currentAddAttributeInDfn.removeAttribute('audio-path')
                 }
                 workContainer = workEditor.innerHTML;
-                workContainer = workContainer.replace(/data-mce-href="#"/g,'').replace(/ reset/g,'')
             }
-
         }
+
+        workContainer = workContainer.replace(/data-mce-href="#"/g,'').replace(/ reset/g,'')
 
         figureDataObj = {
             "text": workContainer

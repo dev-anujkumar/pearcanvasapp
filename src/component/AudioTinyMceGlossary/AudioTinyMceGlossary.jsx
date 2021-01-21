@@ -30,6 +30,4 @@ const mapStateToProps = (state) => {
     }
 }
 
-const mapActionToProps = {}
-
-export default connect(mapStateToProps, mapActionToProps)(AudioTinyMceGlossary);
+export default connect(mapStateToProps)(AudioTinyMceGlossary);

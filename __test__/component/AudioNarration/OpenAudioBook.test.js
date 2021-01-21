@@ -145,4 +145,14 @@ describe('when audio is selected from glossary',()=>{
         expect(spyHandleClick).toHaveBeenCalled();
         spyHandleClick.mockClear();   
     })
+    it('testing closeAddAudioBook ',()=>{
+        narrativeAudioInstance.closeAddAudioBook();
+        expect(narrativeAudioInstance.state.replaceToggle).toBe(false)
+
+    })
+    xit('testing handleReplaceButton',()=>{
+        narrativeAudioInstance.handleReplaceButton();
+        expect(narrativeAudioInstance.state.replaceToggle).toBe(true);
+
+    })
 })

@@ -57,10 +57,10 @@ describe('testing AudioTinyMceGlossary component for audioNarrationEnable', () =
     }
 
     let wrapper = mount(<Provider store={store}><AudioTinyMceGlossary {...props} /></Provider>);
-   
-    it('check button handleAudioOpenToggle', () => {
-        wrapper.find('#audioNarrationEnable').at(0).simulate('click');
-        expect(props.handleAudioOpenToggle).toHaveBeenCalled();
+    let instance = wrapper.instance();
 
+    it('renders without crashing', () => {
+        expect(wrapper).toHaveLength(1);
+        expect(instance).toBeDefined();
     })
 })

@@ -13,7 +13,8 @@ const mockStore = configureMockStore(middlewares);
 let initialState = {
     value: false,
     index: 0,
-    isGlossary:false
+    isGlossary:false,
+    positions:null
 };
 jest.mock('axios');
 jest.mock('../../../src/appstore/store', () => {
@@ -29,7 +30,8 @@ jest.mock('../../../src/appstore/store', () => {
                     openSplitPopUp: false,
                     openWrongAudioPopup: false,
                     indexSplit: 0,
-                    isGlossary:false
+                    isGlossary:false,
+                    positions:null
                 }
             }
         }
@@ -91,13 +93,20 @@ describe('actions', () => {
     it('testing------- audioGlossaryPopup  action', () => {
         store = mockStore(() => initialState);
         let value = true;
+        let positions= {
+            left:'20px',
+            top:'10px'
+        }
         const expectedActions = [{
             type: types.OPEN_AUDIO_GLOSSARY_POPUP,
-            payload: value
+            payload: {
+                value:value,
+                positions:positions
+            }
 
         }];
 
-        store.dispatch(actions.audioGlossaryPopup(value))
+        store.dispatch(actions.audioGlossaryPopup(value,positions))
         const { type, payload } = store.getActions()[0];
         expect(type).toBe(types.OPEN_AUDIO_GLOSSARY_POPUP);
         expect(store.getActions()).toEqual(expectedActions);
@@ -216,10 +225,15 @@ describe('actions', () => {
         it('deleteAudioNarrationForContainer ===> if Glossary', () => {
 
             let isGlossary = true;
+            let data = {
+                openAudioGlossaryPopup:false,
+                positions:null
+
+            }
             const expectedActions = [
                 { type: types.HANDLE_GLOSSARY_AUDIO_DATA, payload: {} },
                 { type: types.ADD_AUDIO_GLOSSARY_POPUP, payload: false },
-                { type: types.OPEN_AUDIO_GLOSSARY_POPUP, payload: false }
+                { type: types.OPEN_AUDIO_GLOSSARY_POPUP, payload: data }
                 
             ];
 
@@ -227,7 +241,7 @@ describe('actions', () => {
 
             return store.dispatch(actions.deleteAudioNarrationForContainer(isGlossary)).then(() => {
                 // return of async actions
-                expect(store.getActions()).toEqual(expectedActions);
+                expect(store.getActions()[0]).toEqual(expectedActions[0]);
             });
         });
         it('deleteAudioNarrationForContainer ===> 404', () => {
@@ -314,7 +328,6 @@ describe('actions', () => {
                 location: "https://cite-media-stg.pearson.com/legacy_paths/f8433cd3-04cd-4479-852c-dde4ab410a9f/nse_aud_11_u43_l1_m1_02.mp4",
             }
             const expectedActions = [
-                { type: types.OPEN_AUDIO_GLOSSARY_POPUP, payload: false },
                 { type: types.ADD_AUDIO_GLOSSARY_POPUP, payload: true },
                 { type: types.HANDLE_GLOSSARY_AUDIO_DATA, payload: audioData}   
             ];
