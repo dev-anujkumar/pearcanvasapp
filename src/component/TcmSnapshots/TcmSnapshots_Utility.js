@@ -519,7 +519,6 @@ export const prepareAndSendTcmData = async (elementDetails, wipData, defaultKeys
         elementSnapshot: wipData.type === FIGURE ? JSON.stringify(await prepareFigureElementSnapshots(wipData, actionStatus, index)) : JSON.stringify(await prepareElementSnapshots(wipData, actionStatus, index, elementDetails, CurrentSlateStatus)),
         ...defaultKeys
     };
-
     if(currentSnapshot && ((currentSnapshot.elementType.includes("CTA") && !currentSnapshot.elementType.includes("SH")) || currentSnapshot.elementType.includes("LB")) && currentSnapshot.action == 'create'){
         currentSnapshot.status = 'accepted'  
         if(currentSnapshot.elementType.includes("LB") && CurrentSlateStatus != 'approved'){
@@ -539,7 +538,7 @@ export const prepareAndSendTcmData = async (elementDetails, wipData, defaultKeys
  * @param {String} sectionId - Urn for section break
  * @returns {Object} Object that contains the element tag and elementUrn for snapshot 
 */
-const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,popupInContainer,slateManifestVersioning, popupSlate, parentElement, containerElement = {}) => {
+export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,popupInContainer,slateManifestVersioning, popupSlate, parentElement, containerElement = {}) => {
     const { asideData } = containerElement
     let elementData = {};
     let elementTag = `${tag.parentTag}${isHead ? ":" + isHead : ""}${tag.childTag ? ":" + tag.childTag : ""}`;
@@ -548,7 +547,7 @@ const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,popupInCo
         elementTag = `${tag.parentTag}${(eleIndex == 0) ? ':C1' : ':C2'}${tag.childTag ? ":" + tag.childTag : ""}`   ; 
         elementId =  `${eleId.parentId}${eleId.columnId ? "+" + eleId.columnId : ""}${eleId.childId ? "+" + eleId.childId : ""}`
     }
-    else if (parentElement?.element?.type === SHOWHIDE) {    //showhide
+    if (parentElement?.element?.type === SHOWHIDE) {    //showhide
         let showHideSection = getShowHideTag(parentElement.showHideType)
         elementTag = `${tag.parentTag}:${showHideSection}`; //${tag.childTag ? ":" + tag.childTag : ""}
         if (asideData?.type === ELEMENT_ASIDE && asideData?.subtype !== WORKED_EXAMPLE) { //SH inside Aside
@@ -755,7 +754,7 @@ const prepareMetablock = (element, actionStatus) => {
 }
 
 
-const setContentSnapshot = (element, elementDetails, actionStatus, CurrentSlateStatus) => {
+export const setContentSnapshot = (element, elementDetails, actionStatus, CurrentSlateStatus) => {
     let snapshotData = "";
     if (element.type === MULTI_COLUMN_GROUP && (element.groupdata && element.groupdata.bodymatter && element.groupdata.bodymatter[0].html.text)) {
         snapshotData = element.groupdata.bodymatter[0].html.text

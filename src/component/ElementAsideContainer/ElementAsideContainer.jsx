@@ -14,6 +14,7 @@ import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import './../../styles/ElementAsideContainer/ElementAsideContainer.css';
 import SectionSeperator from './SectionSeperator.jsx';
 import { checkSlateLock } from "../../js/slateLockUtility.js"
+import { ASIDE_SOURCE } from '../../constants/Element_Constants.js';
 // IMPORT - Assets //
 
 let random = guid();
@@ -288,6 +289,7 @@ class ElementAsideContainer extends Component {
                     element={_element}
                     showDeleteElemPopup={this.props.showDeleteElemPopup}
                     permissions={this.props.permissions}
+                    userRole={this.props.userRole}
                 />
                 <Sortable
                     options={{
@@ -362,6 +364,9 @@ class ElementAsideContainer extends Component {
                             permissions={this.props.permissions}
                             onClickCapture={this.props.onClickCapture}
                             splithandlerfunction={this.props.splithandlerfunction}
+                            userRole={this.props.userRole}
+                            pasteElement={this.props.pasteElement}
+                            source={ASIDE_SOURCE}
                         />
                     )
                 } else {
@@ -374,7 +379,7 @@ class ElementAsideContainer extends Component {
                                     <ElementSaprator
                                     index= {0}
                                     upperOne={true}
-                                    firstOne={0}
+                                    firstOne={true}
                                     parentUrn={parentUrn}
                                     asideData={asideData}
                                     parentIndex={parentIndex}
@@ -384,6 +389,9 @@ class ElementAsideContainer extends Component {
                                     permissions={this.props.permissions}
                                     onClickCapture={this.props.onClickCapture}
                                     splithandlerfunction={this.props.splithandlerfunction}
+                                    userRole={this.props.userRole}
+                                    pasteElement={this.props.pasteElement}
+                                    source={ASIDE_SOURCE}
                                 />
                                 {this.section(element, index)}
                                 </>
@@ -412,6 +420,9 @@ class ElementAsideContainer extends Component {
                                         permissions={this.props.permissions}
                                         onClickCapture={this.props.onClickCapture}
                                         splithandlerfunction={this.props.splithandlerfunction}
+                                        userRole={this.props.userRole}
+                                        pasteElement={this.props.pasteElement}
+                                        source={ASIDE_SOURCE}
                                     />
                                     }
                                     <ElementContainer
@@ -426,6 +437,7 @@ class ElementAsideContainer extends Component {
                                         onClickCapture={this.props.onClickCapture}
                                         parentElement = {this.props.element}
                                         onListSelect={this.props.onListSelect}
+                                        userRole={this.props.userRole}
                                     >
                                     </ElementContainer>
                                     <ElementSaprator
@@ -439,6 +451,9 @@ class ElementAsideContainer extends Component {
                                         sectionBreak={this.props.element.subtype == "workedexample" ? showSectionBreak : false}
                                         permissions={this.props.permissions}
                                         onClickCapture={this.props.onClickCapture}
+                                        userRole={this.props.userRole}
+                                        pasteElement={this.props.pasteElement}
+                                        source={ASIDE_SOURCE}
                                     />
                                 </React.Fragment>
                             )

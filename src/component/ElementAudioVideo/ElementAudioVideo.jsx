@@ -141,7 +141,7 @@ class ElementAudioVideo extends Component {
                 srctype: this.props.model.figuredata.srctype,
                 figureType: figureType || smartLinkAssetType,
             }
-            if('navXML' in audioDes){
+            if (audioDes && audioDes.navXML) {
                 figureData.markupurl = audioDes.navXML;
             }
             if (!uniqID) {

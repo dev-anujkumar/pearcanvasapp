@@ -67,7 +67,7 @@ class SectionSeperator extends Component {
             className={
                 (elemBorderToggle !== 'undefined' && elemBorderToggle) || borderToggle == 'active'? showBorder:""} >
 
-                {this.state.showCopyPopup && <CutCopyDialog inContainer={true} element={this.props.element} toggleCopyMenu={this.toggleCopyMenu} copyClickedX={this.copyClickedX} copyClickedY={this.copyClickedY} />}
+                {this.state.showCopyPopup && <CutCopyDialog inContainer={true} element={this.props.element} toggleCopyMenu={this.toggleCopyMenu} copyClickedX={this.copyClickedX} copyClickedY={this.copyClickedY} userRole={this.props.userRole} />}
                 {(elemBorderToggle !== 'undefined' && elemBorderToggle) || borderToggle == 'active' ?
                     <div> 
                         <Button copyContext={(e)=>{OnCopyContext(e,this.toggleCopyMenu,true)}} btnClassName={btnClassName} type="element-label" labelText="SB" />
