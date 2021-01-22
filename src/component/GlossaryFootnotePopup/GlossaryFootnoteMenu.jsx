@@ -172,10 +172,10 @@ class GlossaryFootnoteMenu extends React.Component {
                     }
                 }
              }
-             let isAudioDataPresent = audioGlossaryData && Object.keys(audioGlossaryData).length > 0;
+            let isAudioDataPresent = audioGlossaryData && Object.keys(audioGlossaryData).length > 0;
+            const audioTerm = `<p audio-id=${audioGlossaryData.narrativeAudioUrn} audio-path=${audioGlossaryData.location}>${term.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}</p>`;
             term = term.innerHTML.match(/<p>/g) ? term.innerHTML.replace(/<br data-mce-bogus="1">/g, "")
-             : isAudioDataPresent ? `<p audio-id=${audioGlossaryData.narrativeAudioUrn} audio-path=${audioGlossaryData.location}>${term.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}</p>` :
-             `<p>${term.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}</p>`
+                : isAudioDataPresent ? audioTerm : `<p>${term.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}</p>`
             definition = definition.innerHTML.match(/<p>/g) ? definition.innerHTML.replace(/<br data-mce-bogus="1">/g, "") : `<p>${definition.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}</p>`
             term = this.replaceUnwantedtags(term)
             definition = this.replaceUnwantedtags(definition)

@@ -25,7 +25,7 @@ export const showAudioRemovePopup = (value,isGlossary) => (dispatch, getState) =
     })
 }
 
-export const audioGlossaryPopup =(value,positions) => (dispatch,getState)=>{
+export const audioGlossaryPopup =(value,positions) => (dispatch)=>{
     dispatch({
         type : OPEN_AUDIO_GLOSSARY_POPUP,
         payload:{
@@ -51,6 +51,21 @@ export const showWrongAudioPopup = (value) => (dispatch, getState) => {
     })
 }
 
+function handleAudioActions(audioDatatype, audioData) {
+    return dispatch => {
+        dispatch({ type: ADD_AUDIO_GLOSSARY_POPUP, payload: audioDatatype })
+        dispatch({ type: HANDLE_GLOSSARY_AUDIO_DATA, payload: audioData });
+    }
+}
+
+function removeAudioActions(glossaryAudioData,addAudioPopup,openAudioPopup){
+    return dispatch =>{
+        dispatch({ type: HANDLE_GLOSSARY_AUDIO_DATA, payload: glossaryAudioData });
+        dispatch({ type: ADD_AUDIO_GLOSSARY_POPUP, payload: addAudioPopup })
+        dispatch({ type: OPEN_AUDIO_GLOSSARY_POPUP, payload: {openAudioGlossaryPopup:openAudioPopup} })
+    }
+}
+
 /**
  * Method to get audio narration for container / state 
  * @param {object} slateData 
@@ -59,8 +74,7 @@ export const fetchAudioNarrationForContainer = (slateData,isGlossary ='') => asy
 
     if (isGlossary) {
         if (slateData) {
-            dispatch({ type: HANDLE_GLOSSARY_AUDIO_DATA, payload: slateData });
-            dispatch({ type: ADD_AUDIO_GLOSSARY_POPUP, payload: false })
+            store.dispatch( handleAudioActions(false, slateData))
         }
         dispatch({ type: ADD_AUDIO_GLOSSARY_POPUP, payload: true })
     }
@@ -100,9 +114,7 @@ export const fetchAudioNarrationForContainer = (slateData,isGlossary ='') => asy
 export const deleteAudioNarrationForContainer = (isGlossary = null) => async(dispatch, getState) => {
     
     if(isGlossary){
-        dispatch({ type: HANDLE_GLOSSARY_AUDIO_DATA, payload: {} });
-        dispatch({ type: ADD_AUDIO_GLOSSARY_POPUP, payload: false })
-        dispatch({ type: OPEN_AUDIO_GLOSSARY_POPUP, payload: {openAudioGlossaryPopup:false} })
+        store.dispatch(removeAudioActions({},false,false))
     }
     else{
         var storeData = store.getState();
@@ -173,9 +185,8 @@ export const addAudioNarrationForContainer = (audioData, isGlossary='') => async
     }
 
     if(isGlossary){
-        dispatch({ type: ADD_AUDIO_GLOSSARY_POPUP, payload: true })
-        dispatch({type:HANDLE_GLOSSARY_AUDIO_DATA,payload:audioData})
-        dispatch(fetchAudioNarrationForContainer(audioData,isGlossary));
+       store.dispatch(handleAudioActions(true, audioData))
+       dispatch(fetchAudioNarrationForContainer(audioData,isGlossary));
 
 
     }else{

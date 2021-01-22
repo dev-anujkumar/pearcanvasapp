@@ -135,13 +135,11 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
             'narrativeAudioUrn': audioId,
             'location':audioPath
         }
-
-        dispatch({ type: ADD_AUDIO_GLOSSARY_POPUP, payload: true })
-        dispatch({ type: HANDLE_GLOSSARY_AUDIO_DATA, payload: data });
+       store.dispatch(handleGlossaryActions(true,data));
     }
     else {
-        dispatch({ type: ADD_AUDIO_GLOSSARY_POPUP, payload: false })
-        dispatch({ type: HANDLE_GLOSSARY_AUDIO_DATA, payload: {} });
+       store.dispatch( handleGlossaryActions(false,{}))
+
     }
     return await dispatch({
         type: OPEN_GLOSSARY_FOOTNOTE,
@@ -154,6 +152,33 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
             elementIndex: index
         }
     });
+}
+
+function handleGlossaryActions(addAudioData, GlossaryAudioData) {
+    return dispatch => {
+        dispatch({ type: ADD_AUDIO_GLOSSARY_POPUP, payload: addAudioData })
+        dispatch({ type: HANDLE_GLOSSARY_AUDIO_DATA, payload: GlossaryAudioData });
+    }
+}
+
+function alterAttr(type, audioGlossaryData, addAttributeInDfn, glossaryfootnoteid, workEditor, workContainer) {
+
+    for (let i = 0; i < addAttributeInDfn.length; i++) {
+        let currentAddAttributeInDfn = addAttributeInDfn[i];
+        let currentData = addAttributeInDfn[i].outerHTML
+        let currentDataUri = currentData.slice(currentData.indexOf('data-uri')).split("\"")[1];
+        if (currentDataUri === glossaryfootnoteid) {
+            if (type == 'add') {
+                currentAddAttributeInDfn.setAttribute('audio-id', audioGlossaryData.narrativeAudioUrn)
+                currentAddAttributeInDfn.setAttribute('audio-path', audioGlossaryData.location)
+            } else if (type == 'remove') {
+                currentAddAttributeInDfn.removeAttribute('audio-id')
+                currentAddAttributeInDfn.removeAttribute('audio-path')
+            }
+        }
+        workContainer = workEditor.innerHTML;
+    }
+    return workContainer;
 }
 
 /**
@@ -236,33 +261,14 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         }
     } else {
         workEditor = document.getElementById('cypress-' + index)
-        workContainer = workEditor.innerHTML;
+         workContainer = workEditor.innerHTML;
 
         let addAttributeInDfn = workEditor.getElementsByTagName('dfn');
 
         if (audioGlossaryData && Object.keys(audioGlossaryData).length > 0) {
-
-            for (let i = 0; i < addAttributeInDfn.length; i++) {
-                let currentAddAttributeInDfn = addAttributeInDfn[i];
-                let currentData = addAttributeInDfn[i].outerHTML
-                let currentDataUri = currentData.slice(currentData.indexOf('data-uri')).split("\"")[1];
-                if (currentDataUri === glossaryfootnoteid) {
-                    currentAddAttributeInDfn.setAttribute('audio-id', audioGlossaryData.narrativeAudioUrn)
-                    currentAddAttributeInDfn.setAttribute('audio-path', audioGlossaryData.location)
-                }
-                workContainer = workEditor.innerHTML;
-            }
-        }else {
-            for (let i = 0; i < addAttributeInDfn.length; i++) {
-                let currentAddAttributeInDfn = addAttributeInDfn[i];
-                let currentData = addAttributeInDfn[i].outerHTML
-                let currentDataUri = currentData.slice(currentData.indexOf('data-uri')).split("\"")[1];
-                if (currentDataUri === glossaryfootnoteid) {
-                    currentAddAttributeInDfn.removeAttribute('audio-id')
-                    currentAddAttributeInDfn.removeAttribute('audio-path')
-                }
-                workContainer = workEditor.innerHTML;
-            }
+            workContainer = alterAttr('add',audioGlossaryData, addAttributeInDfn, glossaryfootnoteid, workEditor,workContainer);
+        }else{
+            workContainer= alterAttr('remove',audioGlossaryData, addAttributeInDfn, glossaryfootnoteid, workEditor,workContainer);
         }
 
         workContainer = workContainer.replace(/data-mce-href="#"/g,'').replace(/ reset/g,'')
