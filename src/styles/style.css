@@ -302,8 +302,7 @@ dfn[audio-id]:not(.sup):not(.sub)::after,
 dfn[audio-id] sub::after,
 dfn[audio-id] sup::after {
     content: url('./../images/GlossaryAudio/audioEnable.svg');
-    height: 10px;
-    top: 4px;
+    top: 3px;
     right: 0;
     left: 0;
     bottom: 1px;
