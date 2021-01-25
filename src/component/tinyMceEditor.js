@@ -10,6 +10,7 @@ import "tinymce/skins/content/default/content.css";
 import "tinymce/plugins/lists";
 import "tinymce/plugins/advlist";
 import "tinymce/plugins/paste";
+import 'tinymce/plugins/imagetools'
 // IMPORT - Components & Dependencies //
 import { EditorConfig, FormatSelectors, elementTypeOptions } from '../config/EditorConfig';
 import config from '../config/config';
@@ -72,7 +73,10 @@ export class TinyMceEditor extends Component {
             forced_root_block: '',
             remove_linebreaks: false,
             object_resizing : 'img',
+            imagetools_cors_hosts: ['*://*pearson.com',"localhost:*"],
+            imagetools_credentials_hosts:['pearson.com'],
             resize_img_proportional: false,
+            imagetools_toolbar: 'rotateleft rotateright | flipv fliph',
             paste_preprocess: this.pastePreProcess,
             paste_postprocess: this.pastePostProcess,
             force_p_newlines: false,
@@ -364,6 +368,9 @@ export class TinyMceEditor extends Component {
                     break;
                 case "updateFormula":
                     editor.selection.bookmarkManager.moveToBookmark(this.currentCursorBookmark);
+                    break;
+                case "mceImageRotateRight":
+                    console.log('roatate right')
                     break;
             }
             if (this.props && this.props.element && this.props.element.type && this.props.element.type === 'stanza' && e.command === 'mceToggleFormat') {
@@ -675,6 +682,10 @@ export class TinyMceEditor extends Component {
                         this.wirisClick = 0;
                     }, 500);
                 }
+            }
+            if(e && e.detail && e.detail == 2){
+                console.log('e.target',e.target)
+                editor.selection.editor.editorCommands.commands.exec.mceimagerotateleft();
             }
             let selectedText = editor.selection.getContent({ format: "text" });
             let elemClassList = editor.targetElm.classList;

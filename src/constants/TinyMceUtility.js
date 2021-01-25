@@ -12,7 +12,7 @@ const dataFromAlfresco = (data, editor) => {
     let altText = imageData['alt-text'] ? imageData['alt-text'] : "";
     let uniqID = imageData['uniqueID'] ? imageData['uniqueID'] : "";
     let longDesc = imageData['longDescription'] ? imageData['longDescription'] : "";
-    let imgData = `<img src=${epsURL} imageid="urn:pearson:alfresco:${uniqID}" title="" alt="${altText}" className="imageAssetContent" height="150" width="112" />`
+    let imgData = `<img src=${epsURL} imageid="urn:pearson:alfresco:${uniqID}" id="imageAssetContent:${uniqID}" alt="${altText}" className="imageAssetContent" height="150" width="112" />`
     console.log('imgData>>>', imgData)
     editor.selection.setContent(imgData);
 
