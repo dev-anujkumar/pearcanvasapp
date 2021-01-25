@@ -5,6 +5,7 @@
 // IMPORT - Plugins //
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { get } from "lodash";
 // IMPORT - Components //
 import ElmError from '../ElmError';
 import ElmFooter from '../ElmFooter';
@@ -64,6 +65,51 @@ class ElmTableComponent extends Component {
             // }
         }
     }
+
+    /* update on getting message form elm portal */
+    handlePostMsgOnAddAssess = (action = "add") => {
+      const getMsgafterAddAssessment = async (event) => {
+        try {
+          const { data = {} } = event;
+          console.log("-----------------------------------------");
+          console.log("data = ", data);
+          console.log("-----------------------------------------");
+
+          if (get(data, "source") === "elm") {
+            const items = get(data, "type", "").split("|");
+
+            if (get(items, "[0]") === "assessment") {
+              //handleRefreshSlate(store.dispatch);
+              if (items.length === 3) {
+                const temp = {
+                  id: items[1].split("_")[1],
+                  title: items[2].split("_")[1],
+                  usagetype: get(items, "[0]"),
+                };
+                console.log("temp = ", temp);
+                this.props.addPufFunction(temp);
+                /* */
+                window.removeEventListener(
+                  "message",
+                  getMsgafterAddAssessment,
+                  false
+                );
+              }
+            }
+          }
+          if (action === "remove") {
+            window.removeEventListener(
+              "message",
+              getMsgafterAddAssessment,
+              false
+            );
+          }
+        } catch (err) {
+          console.error("catch with err", err);
+        }
+      };
+      window.addEventListener("message", getMsgafterAddAssessment, false);
+    };
 
     /*** @description - This function is to fetch project title*/
     getProjectTitle = () => {
@@ -512,7 +558,14 @@ class ElmTableComponent extends Component {
                             }
                         </div>
                         {/** ELM Picker Footer */}
-                        <ElmFooter elmFooterProps={this.elmFooterProps} addFlag={addFlag} hideSearch={hideSearch} />
+                        <ElmFooter
+                            elmFooterProps={this.elmFooterProps}
+                            addFlag={addFlag}
+                            hideSearch={hideSearch}
+                            activeAssessmentType={get(this.props, "activeAssessmentType")}
+                            openItemTable={get(this.state, "openItemTable", false)}
+                            handlePostMsgOnAddAssess={this.handlePostMsgOnAddAssess}
+                        />
                     </>
                 );
             }

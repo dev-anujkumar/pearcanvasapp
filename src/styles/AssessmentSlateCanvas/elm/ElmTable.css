@@ -362,3 +362,19 @@ width: 50%;
   background-image: none !important;
   color: -internal-light-dark-color(black, white) !important;
 }
+
+.td-class .cls-1,
+.create-button .cls-1 {
+  fill: rgb(100%, 100%, 100%);
+  fill-opacity: 1;
+}
+.td-class .cls-2,
+.create-button .cls-2 {
+  fill: rgb(44.705882%, 20.392157%, 71.372549%);
+  fill-opacity: 1;
+}
+.td-class .cls-3,
+.create-button .cls-3 {
+  fill: rgb(0%, 0%, 0%);
+  fill-opacity: 1;
+}
