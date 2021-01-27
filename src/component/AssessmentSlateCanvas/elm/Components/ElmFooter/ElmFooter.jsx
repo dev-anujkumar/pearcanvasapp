@@ -37,19 +37,19 @@ const ElmFooter = (props) => {
     /* Open ELM portal for Add new Assessment */
     if (openedFrom === "slateAssessment") {
       tempUrl = //config.ELM_ASSESSMENT.ADD_NEW_ASSESSMENT;
-        "https://assessmentauthoring-dev.pearson.com/launch/editor/assessment/createInPlace";
+        `${config.ELM_PORTAL_URL}/launch/editor/assessment/createInPlace`;
     }
 
     /* Open ELM portal for Add new Item in Existing Assessment */
     if (openedFrom === "singleAssessment") {
       const assessmentWUrn = get(currentAssessmentSelected, "urn");
       if (assessmentWUrn && openItemTable) {
-        tempUrl = `https://assessmentauthoring-dev.pearson.com/launch/editor/assessment/${assessmentWUrn}/item/createInPlace`
+        tempUrl = `${config.ELM_PORTAL_URL}/launch/editor/assessment/${assessmentWUrn}/item/createInPlace`
       }
       /* Open Elm portal for Add new Assessment */
       if (!openItemTable) {
         tempUrl =
-          "https://assessmentauthoring-dev.pearson.com/launch/editor/assessment/New/item/createInPlace";
+          `${config.ELM_PORTAL_URL}/launch/editor/assessment/New/item/createInPlace`;
       }
     }
 
