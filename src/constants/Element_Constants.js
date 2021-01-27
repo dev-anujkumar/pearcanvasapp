@@ -102,6 +102,8 @@ export const disabledPrimaryOption = [
 
 export const allowedFigureTypesForTCM = ['image', 'table', 'mathImage', 'audio', 'video', 'codelisting', 'authoredtext', "interactive"]
 
+/*******************************GlossaryfootnotePopup ***************************/
+export const GLOSSARY = 'Glossary'
 /** Component source for element saprator */
 
 export const CITATION_SOURCE = 'CITATION';

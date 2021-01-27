@@ -25,7 +25,7 @@ import { handleSplitSlate,setUpdatedSlateTitle, setSlateType, setSlateEntity, se
 import { currentSlateLO,isLOExist, currentSlateLOMath } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import { handleUserRole } from './UserRole_Actions'
 import { handleSlateRefresh } from '../CanvasWrapper/SlateRefresh_Actions'
-import { fetchAudioNarrationForContainer } from '../AudioNarration/AudioNarration_Actions'
+import { fetchAudioNarrationForContainer ,audioGlossaryPopup} from '../AudioNarration/AudioNarration_Actions'
 import { glossaaryFootnotePopup } from '../GlossaryFootnotePopup/GlossaryFootnote_Actions';
 import RootContext from './PageNumberContext.js';
 import {publishContent,logout} from '../../js/header'
@@ -240,7 +240,7 @@ export class CanvasWrapper extends Component {
                                 {
                                     () => {
                                         if (this.props.glossaryFootnoteValue.popUpStatus) {
-                                            return (<GlossaryFootnoteMenu permissions={this.props.permissions} glossaryFootnoteValue={this.props.glossaryFootnoteValue} showGlossaaryFootnote={this.props.glossaaryFootnotePopup} glossaryFootNoteCurrentValue = {this.props.glossaryFootNoteCurrentValue}/>)
+                                            return (<GlossaryFootnoteMenu permissions={this.props.permissions} glossaryFootnoteValue={this.props.glossaryFootnoteValue} showGlossaaryFootnote={this.props.glossaaryFootnotePopup} glossaryFootNoteCurrentValue = {this.props.glossaryFootNoteCurrentValue} audioGlossaryData={this.props.audioGlossaryData}/>)
                                         }
                                         else {
                                             return (<Sidebar showCanvasBlocker= {this.props.showCanvasBlocker} showPopUp={this.showPopUp} />)
@@ -271,7 +271,8 @@ const mapStateToProps = state => {
         logout,
         withinLockPeriod: state.slateLockReducer.withinLockPeriod,
         ErrorPopup: state.errorPopup,
-        pageNumberToggle: state.toolbarReducer.pageNumberToggle
+        pageNumberToggle: state.toolbarReducer.pageNumberToggle,
+        audioGlossaryData:state.audioReducer.audioGlossaryData
     };
 };
 
@@ -312,6 +313,7 @@ export default connect(
         toggleElemBordersAction,
         togglePageNumberAction,
         tcmCosConversionSnapshot,
-        assetIdForSnapshot
+        assetIdForSnapshot,
+        audioGlossaryPopup
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

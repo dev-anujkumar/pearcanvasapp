@@ -5,14 +5,16 @@ import axios from 'axios';
 import * as actions from '../../../src/component/AudioNarration/AudioNarration_Actions'
 import * as types from '../../../src/constants/Action_Constants'
 import config from '../../../src/config/config'
-import { mockData , mockDatadelete
+import { mockData , mockDatadelete,mockGlossaryData
 } from '../../../fixtures/audioNarrationTestingdata'
 import { async } from 'q';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 let initialState = {
     value: false,
-    index: 0
+    index: 0,
+    isGlossary:false,
+    positions:null
 };
 jest.mock('axios');
 jest.mock('../../../src/appstore/store', () => {
@@ -27,7 +29,9 @@ jest.mock('../../../src/appstore/store', () => {
                     openPopUp: false,
                     openSplitPopUp: false,
                     openWrongAudioPopup: false,
-                    indexSplit: 0
+                    indexSplit: 0,
+                    isGlossary:false,
+                    positions:null
                 }
             }
         }
@@ -38,14 +42,18 @@ describe('actions', () => {
 
     it('testing------- showAudioRemovePopup  action', () => {
         store = mockStore(() => initialState);
-        let value = true;
+        let value=true;
+        let isGlossary=true
         const expectedActions = [{
             type: types.SHOW_REMOVE_POPUP,
-            payload: value
+            payload: {
+                value:value,
+                isGlossary:isGlossary
+            }
 
         }];
 
-        store.dispatch(actions.showAudioRemovePopup(value))
+        store.dispatch(actions.showAudioRemovePopup(value,isGlossary))
         const { type, payload } = store.getActions()[0];
         expect(type).toBe(types.SHOW_REMOVE_POPUP);
         expect(store.getActions()).toEqual(expectedActions);
@@ -79,6 +87,28 @@ describe('actions', () => {
         store.dispatch(actions.showWrongAudioPopup(value))
         const { type, payload } = store.getActions()[0];
         expect(type).toBe(types.WRONG_AUDIO_REMOVE_POPUP);
+        expect(store.getActions()).toEqual(expectedActions);
+    })
+
+    it('testing------- audioGlossaryPopup  action', () => {
+        store = mockStore(() => initialState);
+        let value = true;
+        let positions= {
+            left:'20px',
+            top:'10px'
+        }
+        const expectedActions = [{
+            type: types.OPEN_AUDIO_GLOSSARY_POPUP,
+            payload: {
+                value:value,
+                positions:positions
+            }
+
+        }];
+
+        store.dispatch(actions.audioGlossaryPopup(value,positions))
+        const { type, payload } = store.getActions()[0];
+        expect(type).toBe(types.OPEN_AUDIO_GLOSSARY_POPUP);
         expect(store.getActions()).toEqual(expectedActions);
     })
     describe('fetchAudioNarrationForContainer', () => {
@@ -192,6 +222,28 @@ describe('actions', () => {
             moxios.uninstall()
         });
 
+        it('deleteAudioNarrationForContainer ===> if Glossary', () => {
+
+            let isGlossary = true;
+            let data = {
+                openAudioGlossaryPopup:false,
+                positions:null
+
+            }
+            const expectedActions = [
+                { type: types.HANDLE_GLOSSARY_AUDIO_DATA, payload: {} },
+                { type: types.ADD_AUDIO_GLOSSARY_POPUP, payload: false },
+                { type: types.OPEN_AUDIO_GLOSSARY_POPUP, payload: data }
+                
+            ];
+
+            const store = mockStore( {audioReducer : mockDatadelete.audioGlossaryData} )
+
+            return store.dispatch(actions.deleteAudioNarrationForContainer(isGlossary)).then(() => {
+                // return of async actions
+                expect(store.getActions()[0]).toEqual(expectedActions[0]);
+            });
+        });
         it('deleteAudioNarrationForContainer ===> 404', () => {
             moxios.wait(() => {
                 const request = moxios.requests.mostRecent();
@@ -200,10 +252,7 @@ describe('actions', () => {
                    response: mockData.audioData,
                 });
             });
-            let slateData = {
-                currentProjectId: config.projectUrn,
-                slateEntityUrn: config.slateEntityURN
-            }
+            let isGlossary = false;
 
             const expectedActions = [
                 { type: types.ADD_AUDIO_NARRATION, payload: false },
@@ -211,26 +260,28 @@ describe('actions', () => {
                 
             ];
 
-            const store = mockStore( {audioReducer : mockDatadelete} )
+            const store = mockStore( {audioReducer : mockDatadelete.audioData} )
 
-            return store.dispatch(actions.deleteAudioNarrationForContainer(slateData)).then(() => {
+            return store.dispatch(actions.deleteAudioNarrationForContainer(isGlossary)).then(() => {
                 // return of async actions
                 expect(store.getActions()).toEqual(expectedActions);
             });
         });
+        
         it('deleteAudioNarrationForContainer ===> success', async() => {
             let resp ={
                         status: 200,
                        response: mockData.audioData,
                     };
-            axios.put.mockImplementation(() => Promise.resolve(resp));
+            axios.delete.mockImplementation(() => Promise.resolve(resp));
             let slateData = {
                 currentProjectId: config.projectUrn,
                 slateEntityUrn: config.slateEntityURN
             }
+            let isGlossary = false;
            let openAudioFlag = '';
            let addAudioNarrationFlag = '';
-            const store = mockStore( {audioReducer : mockDatadelete} );
+            const store = mockStore( {audioReducer : mockDatadelete.audioData} );
             let dispatch = (obj) => {
                 if(obj.type=== 'OPEN_AUDIO_NARRATION'){
                   expect(obj.payload).toEqual(true);
@@ -241,40 +292,57 @@ describe('actions', () => {
                     addAudioNarrationFlag = false;
                 }
             }
-            await actions.deleteAudioNarrationForContainer(slateData)(dispatch);
+            await actions.deleteAudioNarrationForContainer(isGlossary)(dispatch);
             actions.fetchAudioNarrationForContainer(slateData)
             setTimeout(() => {
                 expect(openAudioFlag).toEqual(true)
                 expect(addAudioNarrationFlag).toEqual(false)
             },1000);
         });
-        it('deleteAudioNarrationForContainer ===> else', () => {
+        // xit('deleteAudioNarrationForContainer ===> else', () => {
 
-            moxios.wait(() => {
-                const request = moxios.requests.mostRecent();
-                request.respondWith({
-                    status: 203,
-                   response: mockData.audioData,
-                });
-            });
-            let slateData = {
-                currentProjectId: config.projectUrn,
-                slateEntityUrn: config.slateEntityURN
-            }
+        //     moxios.wait(() => {
+        //         const request = moxios.requests.mostRecent();
+        //         request.respondWith({
+        //             status: 203,
+        //            response: mockData.audioData,
+        //         });
+        //     });
 
-            const expectedActions = [
-                { type: types.ADD_AUDIO_NARRATION, payload: false },
-                { type: types.OPEN_AUDIO_NARRATION, payload: true }
+        //     const expectedActions = [
+        //         { type: types.ADD_AUDIO_NARRATION, payload: false },
+        //         { type: types.OPEN_AUDIO_NARRATION, payload: true }
                 
+        //     ];
+        //     let isGlossary = false;
+        //     const store = mockStore( {audioReducer : mockDatadelete.audioData} )
+
+        //     return store.dispatch(actions.deleteAudioNarrationForContainer(isGlossary)).then(() => {
+        //         // return of async actions
+        //         expect(store.getActions()).toEqual(expectedActions);
+        //     });
+        // });
+        it('addAudioNarrationForContainer ===> if Glossary', async() => {
+            let isGlossary = true;
+            let audioData = {
+                location: "https://cite-media-stg.pearson.com/legacy_paths/f8433cd3-04cd-4479-852c-dde4ab410a9f/nse_aud_11_u43_l1_m1_02.mp4",
+            }
+            const expectedActions = [
+                { type: types.ADD_AUDIO_GLOSSARY_POPUP, payload: true },
+                { type: types.HANDLE_GLOSSARY_AUDIO_DATA, payload: audioData}   
             ];
+           
+            const store = mockStore( {audioReducer : mockGlossaryData.audioGlossaryData} )
 
-            const store = mockStore( {audioReducer : mockDatadelete} )
+            return store.dispatch(actions.addAudioNarrationForContainer(audioData,isGlossary)).then(() => {
+                actions.fetchAudioNarrationForContainer(audioData,isGlossary)
 
-            return store.dispatch(actions.deleteAudioNarrationForContainer(slateData)).then(() => {
                 // return of async actions
-                expect(store.getActions()).toEqual(expectedActions);
+                expect(store.getActions()[0]).toEqual(expectedActions[0]);
+                expect(store.getActions()[1]).toEqual(expectedActions[1]);
             });
         });
+
         it('addAudioNarrationForContainer  ===> 404', async() => {
             let resp ={
                         status: 400,

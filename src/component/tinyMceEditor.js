@@ -20,7 +20,8 @@ import {
 } from '../images/TinyMce/TinyMce.jsx';
 import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
 import { checkforToolbarClick, customEvent, spanHandlers, removeBOM, getWirisAltText, removeImageCache } from '../js/utils';
-import { saveGlossaryAndFootnote, setFormattingToolbar } from "./GlossaryFootnotePopup/GlossaryFootnote_Actions"
+import { saveGlossaryAndFootnote, setFormattingToolbar } from "./GlossaryFootnotePopup/GlossaryFootnote_Actions";
+import { audioGlossaryPopup} from './AudioNarration/AudioNarration_Actions';
 import { ShowLoader, LaunchTOCForCrossLinking } from '../constants/IFrameMessageTypes';
 import { sendDataToIframe, hasReviewerRole, removeBlankTags } from '../constants/utility.js';
 import store from '../appstore/store';
@@ -721,6 +722,9 @@ export class TinyMceEditor extends Component {
          */
         else if (e.target.nodeName == "DFN" || e.target.closest("dfn")) {
             let uri = e.target.dataset.uri;
+            let audioNode = e.target.closest("dfn");
+            let isAudioExists = audioNode.hasAttribute('audio-id');
+
             if (e.target.nodeName == "DFN") {
                 uri = e.target.dataset.uri;
             } else {
@@ -737,6 +741,13 @@ export class TinyMceEditor extends Component {
             }
             else {
                 this.toggleGlossaryandFootnotePopup(true, "Glossary", uri, () => { this.toggleGlossaryandFootnoteIcon(true); });
+            }
+            if (isAudioExists) {
+                let audioPopupPosition = {
+                    left: `${(e.clientX - 317)}px`,
+                    top: `${(e.clientY - 40) }px`
+                }
+                this.props.audioGlossaryPopup(true, audioPopupPosition);
             }
         }
         /**
@@ -3297,6 +3308,7 @@ export class TinyMceEditor extends Component {
                     <div ref={this.editorRef} data-id={this.props.currentElement ? this.props.currentElement.id : undefined} onKeyDown={this.normalKeyDownHandler} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: defModel }} onChange={this.handlePlaceholder}></div>
                 )
         }
+        
     }
     normalKeyDownHandler = (e) => {
         if (this.props.permissions && !(this.props.permissions.includes('access_formatting_bar') || this.props.permissions.includes('elements_add_remove'))) {        // when user doesn't have edit permission
@@ -3324,5 +3336,5 @@ TinyMceEditor.defaultProps = {
 
 export default connect(
     null,
-    { conversionElement, wirisAltTextPopup  }
+    { conversionElement, wirisAltTextPopup, audioGlossaryPopup }
 )(TinyMceEditor);

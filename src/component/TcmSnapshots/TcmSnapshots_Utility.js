@@ -765,9 +765,7 @@ export const setContentSnapshot = (element, elementDetails, actionStatus, Curren
         snapshotData = '<p></p>'          
     } else if(element.type === ELEMENT_LIST && element.html && element.html.text){
         snapshotData = element.html.text.replace(/<br>/g,"")
-    } else if (elementDetails.elementType?.includes?.("Action Button Label")) { //Reveal answer section in Showhide
-        snapshotData = element.html.text.replace?.(/Reveal Answer:/, "<span class='showhide-metadata'>Reveal Answer:</span>")
-    } 
+    }
     else {
         snapshotData = element.html && element.html.text ? element.html.text : "";
     }
@@ -913,13 +911,14 @@ export const tcmSnapshotsForCreate = async (elementCreateData, type, containerEl
 */
 export const fetchManifestStatus = (bodymatter, containerElement, type, indexes) => {
     let parentData = {}
-    const { asideData, parentUrn, poetryData, parentElement } = containerElement;
-    if ((asideData || parentUrn || poetryData || parentElement) && bodymatter.length !== 0) {
+    const { asideData, parentUrn, poetryData, parentElement, showHideObj } = containerElement;
+    if ((asideData || parentUrn || poetryData || parentElement || showHideObj) && bodymatter.length !== 0) {
         let parentElem = asideData ? asideData : poetryData ? poetryData : parentUrn;
         let parentId = parentElem && parentElem.id ? parentElem.id : parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "";
         let element = bodymatter.find(item => item.id == parentId);
         let eleType = type === SECTION_BREAK ? SECTION_BREAK : parentUrn && parentUrn.elementType ?parentUrn.elementType: "";
         let popupElem = parentElement && parentElement.type === POPUP_ELEMENT ? parentElement : undefined
+        let showHideElem = showHideObj && showHideObj.element && showHideObj.element.type === SHOWHIDE ? showHideObj.element : undefined;
         switch (eleType) {
             case MULTI_COLUMN_GROUP:                         /** In Multi-Column */
                 parentData.parentStatus = element && element.status ? element.status : undefined;
@@ -946,6 +945,7 @@ export const fetchManifestStatus = (bodymatter, containerElement, type, indexes)
             default:
                 parentData.parentStatus = element && element.status ? element.status : undefined;
                 parentData.popupStatus = popupElem && popupElem.status ? popupElem.status : undefined; /** Check Popup Status */
+                parentData.showHideStatus = showHideElem && showHideElem.status ? showHideElem.status : undefined;
                 break;
         }
     }
@@ -993,6 +993,18 @@ export const checkContainerElementVersion = async (containerElement, versionStat
             let newPopupManifestUrn = await getLatestVersion(updatedPopupUrn);
             containerElement.parentElement.id = newPopupManifestUrn;
             containerElement.parentElement.versionUrn = newPopupManifestUrn;
+        }
+    }
+    if (versionStatus && versionStatus.showHideStatus && versionStatus.showHideStatus === "approved") {
+        let updatedPopupUrn = containerElement && containerElement.showHideObj && containerElement.showHideObj.element && containerElement.showHideObj.element.type == SHOWHIDE && containerElement.showHideObj.element.contentUrn ? containerElement.showHideObj.element.contentUrn : "";
+        if (updatedPopupUrn) {
+            let newPopupManifestUrn = await getLatestVersion(updatedPopupUrn);
+            if(containerElement.parentElement && containerElement.parentElement.type == SHOWHIDE){
+                containerElement.parentElement.id = newPopupManifestUrn;
+                containerElement.parentElement.versionUrn = newPopupManifestUrn;
+            }
+            containerElement.showHideObj.element.id = newPopupManifestUrn;
+            containerElement.showHideObj.element.versionUrn = newPopupManifestUrn;
         }
     }
     /** latest version for slate*/

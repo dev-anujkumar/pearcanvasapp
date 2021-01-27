@@ -48,7 +48,7 @@ class AddAudioBook extends React.Component {
                     },
                     "format": data.mimetype
                 }
-                this.props.addAudioNarrationForContainer(audioData);
+                this.props.addAudioNarrationForContainer(audioData,this.props.isGlossary);
                 hideTocBlocker();
                 return false;
 

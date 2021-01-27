@@ -1,5 +1,7 @@
 .audio-close{
-    padding: 15px
+    padding: 15px;
+    z-index: 1500;
+    position: relative;
 }
 .audio-book-text{
     float: left;
@@ -17,8 +19,14 @@
 .remove-button{
     background-color: #F1F1F1;
     display: flow-root;
+    z-index: 1500;
+    position: relative;
 }
 .remove-text{
     float: right;
     margin: 10px;
+}
+figure> audio {
+    z-index: 1500 ;
+    position: relative;
 }

@@ -19,13 +19,13 @@ class GlossaryFootnoteMenu extends React.Component {
         //context=this;
         this.wrapperRef = null;
     }
-
+    
     handleClickOutside = (event) => {
         if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
             /** Case - event target is not even wiris modal */
-            if (!(document.querySelector('.wrs_modal_dialogContainer:not(.wrs_closed)') && document.querySelector('.wrs_modal_dialogContainer:not(.wrs_closed)').contains(event.target))) {
+            if (!(document.querySelector('.wrs_modal_dialogContainer:not(.wrs_closed)') && document.querySelector('.wrs_modal_dialogContainer:not(.wrs_closed)').contains(event.target)) && !document.getElementById('openAudioBook') && !document.getElementById('ext_AddAnAsset') && !document.getElementById('ext_ProductLink')) {
                 this.saveContent()
-            }
+            } 
         }
     }
 
@@ -129,7 +129,7 @@ class GlossaryFootnoteMenu extends React.Component {
     */
     saveContent = () => {
         if (!hasReviewerRole()) {
-            const { glossaryFootnoteValue } = this.props;
+            const { glossaryFootnoteValue,audioGlossaryData } = this.props;
             let { elementWorkId, elementType, glossaryfootnoteid, type, elementSubType, typeWithPopup, poetryField} = glossaryFootnoteValue;
             let term = null;
             let definition = null;
@@ -172,14 +172,17 @@ class GlossaryFootnoteMenu extends React.Component {
                     }
                 }
              }
-            term = term.innerHTML.match(/<p>/g) ? term.innerHTML.replace(/<br data-mce-bogus="1">/g, "") : `<p>${term.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}</p>`
+            let isAudioDataPresent = audioGlossaryData && Object.keys(audioGlossaryData).length > 0;
+            const audioTerm = `<p audio-id=${audioGlossaryData.narrativeAudioUrn} audio-path=${audioGlossaryData.location}>${term.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}</p>`;
+            term = term.innerHTML.match(/<p>/g) ? term.innerHTML.replace(/<br data-mce-bogus="1">/g, "")
+                : isAudioDataPresent ? audioTerm : `<p>${term.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}</p>`
             definition = definition.innerHTML.match(/<p>/g) ? definition.innerHTML.replace(/<br data-mce-bogus="1">/g, "") : `<p>${definition.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}</p>`
             term = this.replaceUnwantedtags(term)
             definition = this.replaceUnwantedtags(definition)
             if(this.glossaryFootnoteDifference(term, definition, this.props.glossaryFootNoteCurrentValue.glossaryContentText, this.props.glossaryFootNoteCurrentValue.footnoteContentText, glossaryFootnoteValue.type.toLowerCase())){
                 config.isGlossarySaving = true;
                 sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType, typeWithPopup, poetryField)
+                saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType, typeWithPopup, poetryField,audioGlossaryData)
             }
         }
         this.props.showGlossaaryFootnote(false);
