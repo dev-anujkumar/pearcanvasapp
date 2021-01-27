@@ -5,7 +5,7 @@
 // IMPORT - Plugins //
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { get } from "lodash";
+import { get, isEmpty } from "lodash";
 // IMPORT - Components //
 import ElmError from '../ElmError';
 import ElmFooter from '../ElmFooter';
@@ -100,8 +100,8 @@ class ElmTableComponent extends Component {
                   itemid: items[1].split("_")[1],
                   itemTitle: items[2].split("_")[1],
                   usagetype: get(items, "[0]"),
-                  id: this.state.currentAssessmentSelected.assessmentId,
-                  title: this.state.parentTitle,
+                  id: get(this.state,'currentAssessmentSelected.assessmentId'),
+                  title: get(this.state,'parentTitle'),
                   //assessmentFormat: assessmentFormat,
                 };
                 console.log("item temp = ", temp);
@@ -577,6 +577,7 @@ class ElmTableComponent extends Component {
                             openItemTable={get(this.state, "openItemTable", false)}
                             handlePostMsgOnAddAssess={this.handlePostMsgOnAddAssess}
                             activeUsageType={get(this.props,'activeUsageType')}
+                            isAssessmentSeleted={!isEmpty(get(this.state,'currentAssessmentSelected'))}
                         />
                     </>
                 );

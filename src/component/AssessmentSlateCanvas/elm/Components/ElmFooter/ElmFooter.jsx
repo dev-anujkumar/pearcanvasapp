@@ -13,6 +13,7 @@ const ElmFooter = (props) => {
     const { buttonText, sendPufAssessment, closeElmWindow, openAssessmentSearchBar } = props.elmFooterProps;
     const { addFlag, hideSearch, openItemTable, handlePostMsgOnAddAssess, activeAssessmentType,
               activeUsageType,
+              isAssessmentSeleted,
               } = props;
 
      /* render on change in openItemTable */
@@ -27,7 +28,6 @@ const ElmFooter = (props) => {
      }
 
     function openElmPortal() {
-      console.log("config = ", config)
       let tempUrl = "";
       if (openItemTable) {
         /* Open portal for Add new Item in Assessment */
@@ -56,6 +56,7 @@ const ElmFooter = (props) => {
                 <button
                   className="puf-button create-button"
                   onClick={openElmPortal}
+                  disabled={isAssessmentSeleted}
                 >
                   <span>
                     {openItemTable && singleAssessmentItemIcon}
