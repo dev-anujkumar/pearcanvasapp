@@ -174,7 +174,8 @@ let props = {
     error: null,
     glossaryFootnotePopup: jest.fn(),
     glossaryFootnoteValue: glossaryFootnoteObject,
-    togglePopup: jest.fn()
+    togglePopup: jest.fn(),
+    audioGlossaryPopup :jest.fn()
 }
 let selectionEditor = {
     bookmarkManager: {
@@ -4292,7 +4293,7 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
                     id: "",
                     dataset: { uri: "uri" },
                     nodeName: "DFN",
-                    closest: () => { return false; }
+                    closest: () => { return { hasAttribute(){return}}; }
                 },
                 type: "click",
                 clipboardData: {
@@ -4320,7 +4321,12 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
                     id: "",
                     dataset: { uri: "uri" },
                     nodeName: "DFNN",
-                    closest: () => { return { getAttribute(){return}} }
+                    closest: () => {
+                        return {
+                            getAttribute() { return },
+                            hasAttribute() { return true}
+                        }
+                    }
                 },
                 type: "click",
                 clipboardData: {
