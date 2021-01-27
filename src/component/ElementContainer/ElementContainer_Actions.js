@@ -8,9 +8,9 @@ import {
 import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP,DELETE_SHOW_HIDE_ELEMENT, STORE_OLD_ASSET_FOR_TCM } from "./../../constants/Action_Constants";
 import { fetchPOPupSlateData} from '../../component/TcmSnapshots/TcmSnapshot_Actions.js'
 import { processAndStoreUpdatedResponse, updateStoreInCanvas } from "./ElementContainerUpdate_helpers";
-import { onDeleteSuccess } from "./ElementContainerDelete_helpers";
+import { onDeleteSuccess, prepareTCMSnapshotsForDelete } from "./ElementContainerDelete_helpers";
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
-import {prepareTCMSnapshotsForDelete} from './ElementContainerDelete_helpers.js'
+
 export const addComment = (commentString, elementId) => (dispatch) => {
     let url = `${config.STRUCTURE_API_URL}narrative-api/v2/${elementId}/comment/`
     let newComment = {
@@ -409,6 +409,12 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
             }
         }
         if(parentElement.status && parentElement.status === "approved") cascadeElement(parentElement, dispatch, parentElementIndex)
+
+        if (config.tcmStatus) {
+            const { prepareDataForTcmCreate } = (await import("../SlateWrapper/slateWrapperAction_helper.js"))
+            prepareDataForTcmCreate("TEXT", createdElemData.data, getState, dispatch);
+        }
+
         dispatch({
             type: CREATE_SHOW_HIDE_ELEMENT,
             payload: {
@@ -497,6 +503,12 @@ export const deleteShowHideUnit = (elementId, type, parentUrn, index,eleIndex, p
             }
         }
         if(parentElement.status && parentElement.status === "approved") cascadeElement(parentElement, dispatch, parentElementIndex)
+
+        if (config.tcmStatus) {
+            const { prepareTCMforDelete } = (await import("./ElementContainerDelete_helpers.js"))
+            prepareTCMforDelete(elementId, dispatch, getState);
+        }
+
         if(cb){
             cb("delete",eleIndex);
         } 
