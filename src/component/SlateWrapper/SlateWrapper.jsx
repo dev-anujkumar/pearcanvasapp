@@ -331,7 +331,6 @@ class SlateWrapper extends Component {
                                 </Sortable>
                             </div>
                             <SlateFooter elements={_slateBodyMatter} />
-                            {this.props.openAudioGlossaryPopup && <OpenAudioBook closeAudioBookDialog={this.closeAudioBookDialog} isGlossary ={true}/>}
                         </div>
                     )
                 }
@@ -1223,6 +1222,7 @@ class SlateWrapper extends Component {
                         )
                     }
                 </ListButtonDropPortal>
+                {this.props.openAudioGlossaryPopup && <OpenAudioBook closeAudioBookDialog={this.closeAudioBookDialog} isGlossary ={true}/>}
                 {this.showLockPopup()}
                 {this.showCustomPopup()}
                 {this.showSplitSlatePopup()}

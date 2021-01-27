@@ -71,7 +71,10 @@ class OpenAudioBook extends React.Component {
             replaceToggle:false
         })
     }
-
+    hideAudioOuterClick = (e) => {
+        this.props.closeAudioBookDialog()
+        e.stopPropagation();
+    }
     render = () => {
         const { audioData, audioGlossaryData, isGlossary } = this.props;
         var mediaSrc = "";
@@ -113,6 +116,10 @@ class OpenAudioBook extends React.Component {
                     }
                     {
                         isGlossary && <button className="remove-text" onClick={() => this.handleReplaceButton()} className="audioReplaceeButton audioRemoveRound">Replace</button>
+                    }
+                    {
+                        isGlossary &&
+                        <div className='blockerBgDiv' tabIndex="0" onClick={(e) => this.hideAudioOuterClick(e)}></div>
                     }
                 </div>
             </div>
