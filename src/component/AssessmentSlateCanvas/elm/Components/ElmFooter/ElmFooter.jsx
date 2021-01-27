@@ -8,67 +8,83 @@ import {
   singleAssessmentItemIcon,
 } from "../../../../../images/ElementButtons/ElementButtons.jsx";
 import config from "../../../../../config/config";
+import { get, isEmpty } from 'lodash';
 
 const ElmFooter = (props) => {
-    const { buttonText, sendPufAssessment, closeElmWindow, openAssessmentSearchBar } = props.elmFooterProps;
-    const { addFlag, hideSearch, openItemTable, handlePostMsgOnAddAssess, activeAssessmentType,
-              activeUsageType,
-              isAssessmentSeleted,
-              } = props;
+  const { buttonText, sendPufAssessment, closeElmWindow, openAssessmentSearchBar } = props.elmFooterProps;
+  const { addFlag, hideSearch, openItemTable, handlePostMsgOnAddAssess, activeAssessmentType,
+    activeUsageType,
+    currentAssessmentSelected,
+    openedFrom,
+    addPufFunction,
+  } = props;
 
-     /* render on change in openItemTable */
-    useEffect(() => {}, [openItemTable]);
+  /* render on change in openItemTable */
+  useEffect(() => { }, [openItemTable]);
 
-    const openSearchBar = (e) => {
-        e.preventDefault();
-        openAssessmentSearchBar(true,true)
+  const openSearchBar = (e) => {
+    e.preventDefault();
+    openAssessmentSearchBar(true, true)
+  }
+  const handleFocus = (event) => {
+    event.stopPropagation();
+  }
+
+  function openElmPortal() {
+
+    let tempUrl = "";
+
+    /* Open ELM portal for Add new Assessment */
+    if (openedFrom === "slateAssessment") {
+      tempUrl = //config.ELM_ASSESSMENT.ADD_NEW_ASSESSMENT;
+        "https://assessmentauthoring-dev.pearson.com/launch/editor/assessment/createInPlace";
     }
-    const handleFocus = (event) => {
-        event.stopPropagation();
-     }
 
-    function openElmPortal() {
-      let tempUrl = "";
-      if (openItemTable) {
-        /* Open portal for Add new Item in Assessment */
+    /* Open ELM portal for Add new Item in Existing Assessment */
+    if (openedFrom === "singleAssessment") {
+      const assessmentWUrn = get(currentAssessmentSelected, "urn");
+      if (assessmentWUrn && openItemTable) {
+        tempUrl = `https://assessmentauthoring-dev.pearson.com/launch/editor/assessment/${assessmentWUrn}/item/createInPlace`
+      }
+      /* Open Elm portal for Add new Assessment */
+      if (!openItemTable) {
         tempUrl =
           "https://assessmentauthoring-dev.pearson.com/launch/editor/assessment/New/item/createInPlace";
-      } else {
-        /* Open portal for Add new Assessment */
-        tempUrl = //config.ELM_ASSESSMENT.ADD_NEW_ASSESSMENT;
-          "https://assessmentauthoring-dev.pearson.com/launch/editor/assessment/createInPlace";
       }
-      const url =
-        tempUrl +
+    }
+
+    if (tempUrl) {
+      const url = tempUrl +
         "?containerUrn=" + config.slateManifestURN +
         "&projectUrn=" + config.projectUrn +
         "&usageType=" + activeUsageType;
-  
+
       window.open(url);
-      handlePostMsgOnAddAssess();
-      //handleElmPortalEvents();
+      handlePostMsgOnAddAssess(addPufFunction, currentAssessmentSelected)
       closeElmWindow();
     }
 
-    return (
-        <div className="puf-footer">
-            {activeAssessmentType === "puf" && (
-                <button
-                  className="puf-button create-button"
-                  onClick={openElmPortal}
-                  disabled={isAssessmentSeleted}
-                >
-                  <span>
-                    {openItemTable && singleAssessmentItemIcon}
-                    {!openItemTable && elmAssessmentItem}
-                  </span>
-                  <span>&nbsp;NEW</span>
-                </button>
-              )}
-            <button className={`puf-button add-button ${addFlag ? 'add-button-enabled' : ''}`} disabled={!addFlag} onClick={sendPufAssessment} onFocus={handleFocus}>{buttonText}</button>
-            <button className="puf-button cancel" onClick={closeElmWindow} onFocus={handleFocus}>CANCEL</button>
-            <button className={`puf-button search-button ${hideSearch ? "puf-assessment" : ""}`} onClick={openSearchBar}>SEARCH</button>
-        </div>
-    );
+  }
+
+  return (
+    <div className="puf-footer">
+      {activeAssessmentType === "puf" && (
+        <button
+          className="puf-button create-button"
+          onClick={openElmPortal}
+          disabled={openItemTable ? false : !isEmpty(currentAssessmentSelected)}
+        >
+          <span>
+            {openItemTable && singleAssessmentItemIcon}
+            {!openItemTable && elmAssessmentItem}
+          </span>
+          <span>&nbsp;NEW</span>
+        </button>
+      )}
+      <button className={`puf-button add-button ${addFlag ? 'add-button-enabled' : ''}`} disabled={!addFlag} onClick={sendPufAssessment} onFocus={handleFocus}>{buttonText}</button>
+      <button className="puf-button cancel" onClick={closeElmWindow} onFocus={handleFocus}>CANCEL</button>
+      <button className={`puf-button search-button ${hideSearch ? "puf-assessment" : ""}`} onClick={openSearchBar}>SEARCH</button>
+    </div>
+  );
 }
 export default ElmFooter;
