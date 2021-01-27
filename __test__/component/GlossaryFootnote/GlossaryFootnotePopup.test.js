@@ -1,6 +1,12 @@
 import React from 'react';
 import { mount } from 'enzyme';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+import { Provider } from 'react-redux';
 import GlossaryFootnotePopup from '../../../src/component/GlossaryFootnotePopup/GlossaryFootnotePopup';
+const middlewares = [thunk];
+const mockStore = configureMockStore(middlewares);
+
 jest.mock('../../../src/js/utils',()=>{
 return {
     checkforToolbarClick: ()=>{
@@ -8,6 +14,26 @@ return {
     }
 }
 })
+jest.mock('../../../src/component/GlossaryFootnotePopup/GlossaryFootnote_Actions', () => {
+    return {
+        setFormattingToolbar: () => { return; }
+    }
+})
+
+jest.mock('../../../src/component/AudioTinyMceGlossary/AudioTinyMceGlossary', () => {
+    return function () {
+        return (<div>null</div>)
+    }
+})
+jest.mock('../../../src/component/AudioNarration/AddAudioBook', () => {
+    return function () {
+        return (<div>null</div>)
+    }
+})
+
+const initialState ={}
+let store = mockStore(initialState);
+
 describe('Testing GlossaryFootnote component with props', () => {
     let props={
         permissions:[],
@@ -17,26 +43,29 @@ describe('Testing GlossaryFootnote component with props', () => {
         closePopup:jest.fn(),
         saveContent:jest.fn(),
         glossaryFootNoteCurrentValue:{},
+        audioGlossaryPopup:jest.fn()
 
     }
+    let wrapper = mount(<Provider store={store}>< GlossaryFootnotePopup {...props} /></Provider>);
+    let GlossaryFootnotePopupInstance = wrapper.find('GlossaryFootnotePopup').instance();
+
 
     it('render Glossary Footnote component -Footnote', () => {
-        let wrapper = mount(< GlossaryFootnotePopup {...props} />)
-        let GlossaryFootnotePopupInstance = wrapper.find('GlossaryFootnotePopup').instance();
         expect(wrapper).toHaveLength(1);
         expect(GlossaryFootnotePopupInstance).toBeDefined();
     })
+
     it('render Glossary Footnote component -Glossary', () => {
         let glossaryValue = {
             "type": "Glossary", "popUpStatus": false
         }
-        let wrapper = mount(< GlossaryFootnotePopup {...props} glossaryFootnoteValue={glossaryValue} />)
+        let wrapper = mount(<Provider store={store}>< GlossaryFootnotePopup {...props} glossaryFootnoteValue={glossaryValue} /></Provider>)
         let GlossaryFootnotePopupInstance = wrapper.find('GlossaryFootnotePopup').instance();
         expect(wrapper).toHaveLength(1);
         expect(GlossaryFootnotePopupInstance).toBeDefined();
     })
     it('Test-toolbarHandling function -case2', () => {
-        let wrapper = mount(< GlossaryFootnotePopup {...props} />, { attachTo: document.body })
+        let wrapper = mount(<Provider store={store}>< GlossaryFootnotePopup {...props} /></Provider>, { attachTo: document.body })
         let GlossaryFootnotePopupInstance = wrapper.find('GlossaryFootnotePopup').instance();
         let event={
             relatedTarget:{
@@ -53,12 +82,20 @@ describe('Testing GlossaryFootnote component with props', () => {
     })
     
     it('Test-componentWillUnmount', () => {
-        let wrapper = mount(< GlossaryFootnotePopup {...props} />)
-        let GlossaryFootnotePopupInstance = wrapper.find('GlossaryFootnotePopup').instance();
         const spycomponentWillUnmount = jest.spyOn(GlossaryFootnotePopupInstance, 'componentWillUnmount')
         GlossaryFootnotePopupInstance.componentWillUnmount()
         expect(spycomponentWillUnmount).toHaveBeenCalled() 
         spycomponentWillUnmount.mockClear()
+    })
+
+    it('testcase for handleAudioToggle',()=>{
+        GlossaryFootnotePopupInstance.handleAudioToggle();
+        expect(GlossaryFootnotePopupInstance.state.audioToggle).toBe(true)
+    })
+
+    it('testcase for closeAddAudioBook',()=>{
+        GlossaryFootnotePopupInstance.closeAddAudioBook();
+        expect(GlossaryFootnotePopupInstance.state.audioToggle).toBe(false)
     })
 
 })
