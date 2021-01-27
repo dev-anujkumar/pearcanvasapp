@@ -63,6 +63,11 @@ let config = {
         CITE_NODE_REF: "ebaaf975-a68b-4ca6-9604-3d37111b847a",
         CITE_REPO_INSTANCC:"https://staging.api.pearson.com/content/cmis/uswip-aws",
         CITE_REPO_NAME:"AWS US"
+    },
+    ELM_ASSESSMENT:{
+        ADD_NEW_ASSESSMENT:"https://assessmentauthoring-dev.pearson.com/launch/editor/assessment/createInPlace",
+        NEW_ASSESSMENT_ADD_NEW_ITEM:"",
+        EXISTING_ASSESSMENT_ADD_NEW_ITEM:"",
     }
 };
 

@@ -11,7 +11,9 @@ import config from "../../../../../config/config";
 
 const ElmFooter = (props) => {
     const { buttonText, sendPufAssessment, closeElmWindow, openAssessmentSearchBar } = props.elmFooterProps;
-    const { addFlag, hideSearch, openItemTable, handlePostMsgOnAddAssess, activeAssessmentType  } = props;
+    const { addFlag, hideSearch, openItemTable, handlePostMsgOnAddAssess, activeAssessmentType,
+              activeUsageType,
+              } = props;
 
      /* render on change in openItemTable */
     useEffect(() => {}, [openItemTable]);
@@ -25,6 +27,7 @@ const ElmFooter = (props) => {
      }
 
     function openElmPortal() {
+      console.log("config = ", config)
       let tempUrl = "";
       if (openItemTable) {
         /* Open portal for Add new Item in Assessment */
@@ -32,16 +35,14 @@ const ElmFooter = (props) => {
           "https://assessmentauthoring-dev.pearson.com/launch/editor/assessment/New/item/createInPlace";
       } else {
         /* Open portal for Add new Assessment */
-        tempUrl =
+        tempUrl = //config.ELM_ASSESSMENT.ADD_NEW_ASSESSMENT;
           "https://assessmentauthoring-dev.pearson.com/launch/editor/assessment/createInPlace";
       }
       const url =
         tempUrl +
-        "?containerUrn=" +
-        config.slateManifestURN +
-        "&projectUrn=" +
-        config.projectUrn +
-        "&usageType=test"; //+
+        "?containerUrn=" + config.slateManifestURN +
+        "&projectUrn=" + config.projectUrn +
+        "&usageType=" + activeUsageType;
   
       window.open(url);
       handlePostMsgOnAddAssess();
@@ -54,7 +55,6 @@ const ElmFooter = (props) => {
             {activeAssessmentType === "puf" && (
                 <button
                   className="puf-button create-button"
-                  style={{ marginLeft: "10px", display: "inline-flex" }}
                   onClick={openElmPortal}
                 >
                   <span>

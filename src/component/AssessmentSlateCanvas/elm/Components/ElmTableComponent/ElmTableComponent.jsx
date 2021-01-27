@@ -76,19 +76,37 @@ class ElmTableComponent extends Component {
           console.log("-----------------------------------------");
 
           if (get(data, "source") === "elm") {
-            const items = get(data, "type", "").split("|");
-
-            if (get(items, "[0]") === "assessment") {
-              //handleRefreshSlate(store.dispatch);
-              if (items.length === 3) {
+            const items = get(data, "type", "").split("|") || [];
+            if (items.length === 3) {
+              /* Update newly added assessment */
+              if (get(items, "[0]") === "assessment") {
                 const temp = {
                   id: items[1].split("_")[1],
                   title: items[2].split("_")[1],
                   usagetype: get(items, "[0]"),
                 };
-                console.log("temp = ", temp);
+                console.log("assessment temp = ", temp);
+                this.props.addPufFunction(temp); 
+                /* Remove */
+                window.removeEventListener(
+                  "message",
+                  getMsgafterAddAssessment,
+                  false
+                );  
+              }  
+              /* Update newly added Item */          
+              else if (get(items, "[0]") === "item") {
+                const temp = {
+                  itemid: items[1].split("_")[1],
+                  itemTitle: items[2].split("_")[1],
+                  usagetype: get(items, "[0]"),
+                  id: this.state.currentAssessmentSelected.assessmentId,
+                  title: this.state.parentTitle,
+                  //assessmentFormat: assessmentFormat,
+                };
+                console.log("item temp = ", temp);
                 this.props.addPufFunction(temp);
-                /* */
+                /* Remove */
                 window.removeEventListener(
                   "message",
                   getMsgafterAddAssessment,
@@ -96,13 +114,6 @@ class ElmTableComponent extends Component {
                 );
               }
             }
-          }
-          if (action === "remove") {
-            window.removeEventListener(
-              "message",
-              getMsgafterAddAssessment,
-              false
-            );
           }
         } catch (err) {
           console.error("catch with err", err);
@@ -565,6 +576,7 @@ class ElmTableComponent extends Component {
                             activeAssessmentType={get(this.props, "activeAssessmentType")}
                             openItemTable={get(this.state, "openItemTable", false)}
                             handlePostMsgOnAddAssess={this.handlePostMsgOnAddAssess}
+                            activeUsageType={get(this.props,'activeUsageType')}
                         />
                     </>
                 );
