@@ -9,10 +9,11 @@ import {
 } from "../../../../../images/ElementButtons/ElementButtons.jsx";
 import config from "../../../../../config/config";
 import { get, isEmpty } from 'lodash';
+import { handlePostMsgOnAddAssess } from '../../../../ElementContainer/AssessmentEventHandling';
 
 const ElmFooter = (props) => {
   const { buttonText, sendPufAssessment, closeElmWindow, openAssessmentSearchBar } = props.elmFooterProps;
-  const { addFlag, hideSearch, openItemTable, handlePostMsgOnAddAssess, activeAssessmentType,
+  const { addFlag, hideSearch, openItemTable, activeAssessmentType,
     activeUsageType,
     currentAssessmentSelected,
     openedFrom,
@@ -60,7 +61,7 @@ const ElmFooter = (props) => {
         "&usageType=" + activeUsageType;
 
       window.open(url);
-      handlePostMsgOnAddAssess(addPufFunction, currentAssessmentSelected)
+      handlePostMsgOnAddAssess(addPufFunction, currentAssessmentSelected);
       closeElmWindow();
     }
 

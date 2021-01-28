@@ -83,55 +83,58 @@ export const prepareItemMetadata = (eventData) =>{
 
 /* update on getting message form elm portal */
 export const handlePostMsgOnAddAssess = (addPufFunction, cas) => {
-    const getMsgafterAddAssessment = async (event) => {
-        try {
-            const { data = {} } = event;
-            // console.log("-----------------------------------------");
-            // console.log("data = ", data);
-            // console.log("-----------------------------------------");
+    let slateLockInfo = store.getState().slateLockReducer.slateLockInfo;
+    if (!checkSlateLock(slateLockInfo)) {
+        const getMsgafterAddAssessment = async (event) => {
+            try {
+                const { data = {} } = event;
+                // console.log("-----------------------------------------");
+                // console.log("data = ", data);
+                // console.log("-----------------------------------------");
 
-            if (get(data, "source") === "elm") {
-                const items = get(data, "type", "").split("|") || [];
-                if (items.length === 3) {
-                    /* Update newly added assessment */
-                    if (get(items, "[0]") === "assessment") {
-                        const temp = {
-                            id: items[1].split("_")[1],
-                            title: items[2].split("_")[1],
-                            usagetype: get(items, "[0]"),
-                        };
-                        // console.log("assessment temp = ", temp);
-                        addPufFunction(temp);
-                        /* Remove */
-                        window.removeEventListener(
-                            "message",
-                            getMsgafterAddAssessment,
-                            false
-                        );
-                    }
-                    /* Update newly added Item */
-                    else if (get(items, "[0]") === "item") {
-                        const temp = {
-                            itemid: items[1].split("_")[1],
-                            itemTitle: items[2].split("_")[1],
-                            usagetype: get(items, "[0]"),
-                            id: get(cas, 'assessmentId'),
-                            title: get(cas, 'title'),
-                        };
-                        //console.log("item temp = ", temp);
-                        addPufFunction(temp);
-                        /* Remove */
-                        window.removeEventListener(
-                            "message",
-                            getMsgafterAddAssessment,
-                            false
-                        );
+                if (get(data, "source") === "elm") {
+                    const items = get(data, "type", "").split("|") || [];
+                    if (items.length === 3) {
+                        /* Update newly added assessment */
+                        if (get(items, "[0]") === "assessment") {
+                            const temp = {
+                                id: items[1].split("_")[1],
+                                title: items[2].split("_")[1],
+                                usagetype: get(items, "[0]"),
+                            };
+                            // console.log("assessment temp = ", temp);
+                            addPufFunction(temp);
+                            /* Remove */
+                            window.removeEventListener(
+                                "message",
+                                getMsgafterAddAssessment,
+                                false
+                            );
+                        }
+                        /* Update newly added Item */
+                        else if (get(items, "[0]") === "item") {
+                            const temp = {
+                                itemid: items[1].split("_")[1],
+                                itemTitle: items[2].split("_")[1],
+                                usagetype: get(items, "[0]"),
+                                id: get(cas, 'assessmentId'),
+                                title: get(cas, 'title'),
+                            };
+                            //console.log("item temp = ", temp);
+                            addPufFunction(temp);
+                            /* Remove */
+                            window.removeEventListener(
+                                "message",
+                                getMsgafterAddAssessment,
+                                false
+                            );
+                        }
                     }
                 }
+            } catch (err) {
+                console.error("catch with err", err);
             }
-        } catch (err) {
-            console.error("catch with err", err);
-        }
-    };
-    window.addEventListener("message", getMsgafterAddAssessment, false);
+        };
+        window.addEventListener("message", getMsgafterAddAssessment, false);
+    }
 };
