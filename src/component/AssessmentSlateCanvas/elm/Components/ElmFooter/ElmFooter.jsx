@@ -32,7 +32,6 @@ const ElmFooter = (props) => {
   }
 
   function openElmPortal() {
-
     let tempUrl = "";
 
     /* Open ELM portal for Add new Assessment */
@@ -40,7 +39,6 @@ const ElmFooter = (props) => {
       tempUrl = //config.ELM_ASSESSMENT.ADD_NEW_ASSESSMENT;
         `${config.ELM_PORTAL_URL}/launch/editor/assessment/createInPlace`;
     }
-
     /* Open ELM portal for Add new Item in Existing Assessment */
     if (openedFrom === "singleAssessment") {
       const assessmentWUrn = get(currentAssessmentSelected, "urn");
@@ -64,7 +62,13 @@ const ElmFooter = (props) => {
       handlePostMsgOnAddAssess(addPufFunction, currentAssessmentSelected);
       closeElmWindow();
     }
+  }
 
+  function shouldNewDisable() {
+    const flag = openItemTable ?
+      get(currentAssessmentSelected, 'type') === "assessmentItem" :
+      get(currentAssessmentSelected, 'type') === "assessment"
+    return flag;
   }
 
   return (
@@ -73,7 +77,7 @@ const ElmFooter = (props) => {
         <button
           className="puf-button create-button"
           onClick={openElmPortal}
-          disabled={openItemTable ? false : !isEmpty(currentAssessmentSelected)}
+          disabled={shouldNewDisable()}
         >
           <span>
             {openItemTable && singleAssessmentItemIcon}

@@ -7,6 +7,7 @@ import { releaseSlateLockWithCallback, getSlateLockStatus } from '../CanvasWrapp
 import { handleSlateRefresh } from '../CanvasWrapper/SlateRefresh_Actions';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { updateElmItemData, setItemUpdateEvent } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
+import { get } from 'lodash';
 /**
  * This module deals with the event handling for the Update of Full and Embedded Elm Assessments
  * for the events triggered from the Elm Assessment Portal
@@ -102,7 +103,7 @@ export const handlePostMsgOnAddAssess = (addPufFunction, cas) => {
                                 title: items[2].split("_")[1],
                                 usagetype: get(items, "[0]"),
                             };
-                            // console.log("assessment temp = ", temp);
+                            //console.log("assessment temp = ", temp);
                             addPufFunction(temp);
                             /* Remove */
                             window.removeEventListener(
