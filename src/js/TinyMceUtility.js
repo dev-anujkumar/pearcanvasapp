@@ -1,18 +1,29 @@
-import { c2MediaModule } from '../js/c2_media_module';
+import { c2MediaModule } from './c2_media_module';
 import config from '../config/config';
+
 /**
   * @description data after selecting an asset from alfresco c2 module
   * @param {*} data selected asset data
+  * @param {*} editor tinymce editor
   */
 const dataFromAlfresco = (data, editor) => {
     let imageData = data;
     let epsURL = imageData['EpsUrl'] ? imageData['EpsUrl'] : "";
-    let width = imageData['width'] ? imageData['width'] : "";
-    let height = imageData['height'] ? imageData['height'] : "";
+    //let width = imageData['width'] ? imageData['width'] : "";
+    //let height = imageData['height'] ? imageData['height'] : "";
     let altText = imageData['alt-text'] ? imageData['alt-text'] : "";
     let uniqID = imageData['uniqueID'] ? imageData['uniqueID'] : "";
     let longDesc = imageData['longDescription'] ? imageData['longDescription'] : "";
-    let imgData = `<img src=${epsURL} imageid="urn:pearson:alfresco:${uniqID}" id="imageAssetContent:${uniqID}" alt="${altText}" className="imageAssetContent" height="150" width="112" />`
+    let imgData = `<img 
+    src=${epsURL} 
+    id="imageAssetContent:${uniqID}" 
+    className="imageAssetContent" 
+    width="112" 
+    height="150" 
+    imageid="urn:pearson:alfresco:${uniqID}"   
+    alt="${altText}" 
+    longdescriptio"${longDesc}"
+    />`
     console.log('imgData>>>', imgData)
     editor.selection.setContent(imgData);
 

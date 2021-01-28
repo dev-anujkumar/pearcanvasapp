@@ -31,7 +31,7 @@ import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER } from '../compone
 import { conversionElement } from './Sidebar/Sidebar_Action';
 import { wirisAltTextPopup } from './SlateWrapper/SlateWrapper_Actions';
 import elementList from './Sidebar/elementTypes';
-import { handleC2MediaClick }  from '../constants/TinyMceUtility.js';
+import { handleC2MediaClick }  from '../js/TinyMceUtility.js';
 let context = {};
 let clickedX = 0;
 let clickedY = 0;
