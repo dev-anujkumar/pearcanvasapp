@@ -54,7 +54,8 @@ export const onPasteSuccess = async (params) => {
             cutcopyParentData = deleteElm.cutCopyParentUrn.slateLevelData;
         }
 
-        if(getState().selectionReducer.selection.sourceSlateEntityUrn !== config.slateEntityURN) {
+        // if(getState().selectionReducer.selection.sourceSlateEntityUrn !== config.slateEntityURN) {
+        if(cutSnap) {
             const tcmDeleteArgs = {
                 deleteParentData: cutcopyParentData ? JSON.parse(JSON.stringify(cutcopyParentData)) : newParentData,
                 deleteElemData: { [deleteElm.id]: deleteElm.id },
@@ -64,7 +65,10 @@ export const onPasteSuccess = async (params) => {
                 contentUrn: deleteElm.contentUrn,
                 index: deleteElm.index,
                 poetryData: deleteElm.poetryData,
-                cutCopyParentUrn: deleteElm.cutCopyParentUrn
+                cutCopyParentUrn: {
+                    ...deleteElm.cutCopyParentUrn,
+                    manifestUrn: deleteElm.cutCopyParentUrn.sourceSlateManifestUrn
+                }
             }
             await prepareTCMSnapshotsForDelete(tcmDeleteArgs);
         }
@@ -125,9 +129,9 @@ export const onPasteSuccess = async (params) => {
         const snapArgs = {
             newParentData,
             currentSlateData,
-            asideData: null,
-            poetryData: null,
-            parentUrn: null,
+            asideData: asideData || null,
+            poetryData: poetryData || null,
+            parentUrn: parentUrn || null,
             type: slateWrapperConstants.checkTCM(responseData),
             responseData,
             dispatch,

@@ -29,7 +29,7 @@
 .editor.cut .element-container.active,
 .editor.copy .element-container.active,
 .editor.cut .element-container.ct.active,
-.editor.copy .element-container.ct.active
+.editor.copy .element-container.ct.active,
 .editor.cut .showBorder, .editor.copy .showBorder {
     border: none !important;
     background: linear-gradient(90deg, #005a70 50%, transparent 50%), linear-gradient(90deg, #005a70 50%, transparent 50%), linear-gradient(0deg, #005a70 50%, transparent 50%), linear-gradient(0deg, #005a70 50%, transparent 50%);
