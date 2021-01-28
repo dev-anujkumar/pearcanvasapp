@@ -471,7 +471,7 @@ export const updateStore = (paramObj) => {
         }
     } else if (responseData.id !== updatedData.id) {
         if (currentSlateData.status === 'wip') {
-            const argObjForWip = { updatedData, getState, dispatch, asideData, parentUrn, elementIndex, showHideType: null, parentElement, versionedData: responseData, fetchSlateData }
+            const argObjForWip = { updatedData, getState, dispatch, asideData, parentUrn, elementIndex, showHideType, parentElement, versionedData: responseData, fetchSlateData }
             updateStoreInCanvas(argObjForWip);
             dispatch({
                 type: "SET_ELEMENT_STATUS",
@@ -506,7 +506,7 @@ export const updateStore = (paramObj) => {
             updatedData: { ...updatedData, ...responseData },
             asideData,
             parentUrn,
-            versionedData: responseData,
+            versionedData: null,
             elementIndex,
             showHideType,
             parentElement,
