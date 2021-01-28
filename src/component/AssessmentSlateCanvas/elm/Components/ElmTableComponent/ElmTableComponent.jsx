@@ -460,14 +460,30 @@ class ElmTableComponent extends Component {
         {
             if (errFlag == true) {
                 /** ELM Picker Error Div */
-                return <ElmError
-                    errFlag={errFlag}
-                    itemErrorFlag={itemErrorFlag}
-                    itemApiStatus={itemApiStatus}
-                    filterResults={filterResults}
-                    errorStatus={showErrorStatus}
-                    activeAssessmentType={assessmentFormat}
-                />
+                return (
+                    <div>
+                        <ElmError
+                            errFlag={errFlag}
+                            itemErrorFlag={itemErrorFlag}
+                            itemApiStatus={itemApiStatus}
+                            filterResults={filterResults}
+                            errorStatus={showErrorStatus}
+                            activeAssessmentType={assessmentFormat}
+                        />
+                        {/* <ElmFooter
+                                elmFooterProps={this.elmFooterProps}
+                                addFlag={addFlag}
+                                hideSearch={hideSearch}
+                                activeAssessmentType={get(this.props, "activeAssessmentType")}
+                                openItemTable={get(this.state, "openItemTable", false)}
+                                handlePostMsgOnAddAssess={this.handlePostMsgOnAddAssess}
+                                activeUsageType={get(this.props, 'activeUsageType')}
+                                openedFrom={get(this.state, 'openedFrom')}
+                                currentAssessmentSelected={get(this.state, 'currentAssessmentSelected')}
+                                addPufFunction={this.props.addPufFunction}
+                            /> */}
+                    </div>
+                )
             } else {
                 return (
                     <>
@@ -524,6 +540,7 @@ class ElmTableComponent extends Component {
                             openedFrom={get(this.state, 'openedFrom')}
                             currentAssessmentSelected={get(this.state, 'currentAssessmentSelected')}
                             addPufFunction={this.props.addPufFunction}
+                            containerUrn={get(this.props, 'currentSlateAncestorData.ancestor.containerUrn')}
                         />
                     </>
                 );

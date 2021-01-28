@@ -199,6 +199,9 @@
   float: left;
   display: inline-flex;
  }
+ .margin-right-5px{
+   margin-right:5px;
+ }
 
  .elmAssessmentItem-icon{
   margin-right : 8px;

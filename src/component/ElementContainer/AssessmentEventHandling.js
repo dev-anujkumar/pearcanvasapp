@@ -83,7 +83,7 @@ export const prepareItemMetadata = (eventData) =>{
 }
 
 /* update on getting message form elm portal */
-export const handlePostMsgOnAddAssess = (addPufFunction, cas) => {
+export const handlePostMsgOnAddAssess = (addPufFunction, currentAssessmentSelected, usagetype) => {
     let slateLockInfo = store.getState().slateLockReducer.slateLockInfo;
     if (!checkSlateLock(slateLockInfo)) {
         const getMsgafterAddAssessment = async (event) => {
@@ -101,34 +101,34 @@ export const handlePostMsgOnAddAssess = (addPufFunction, cas) => {
                             const temp = {
                                 id: items[1].split("_")[1],
                                 title: items[2].split("_")[1],
-                                usagetype: get(items, "[0]"),
+                                usagetype: usagetype, //get(items, "[0]"),
                             };
                             //console.log("assessment temp = ", temp);
                             addPufFunction(temp);
                             /* Remove */
-                            window.removeEventListener(
-                                "message",
-                                getMsgafterAddAssessment,
-                                false
-                            );
+                            // window.removeEventListener(
+                            //     "message",
+                            //     getMsgafterAddAssessment,
+                            //     false
+                            // );
                         }
                         /* Update newly added Item */
                         else if (get(items, "[0]") === "item") {
                             const temp = {
                                 itemid: items[1].split("_")[1],
                                 itemTitle: items[2].split("_")[1],
-                                usagetype: get(items, "[0]"),
-                                id: get(cas, 'assessmentId'),
-                                title: get(cas, 'title'),
+                                usagetype: usagetype, //get(items, "[0]"),
+                                // id: get(currentAssessmentSelected, 'assessmentId'),
+                                // title: get(currentAssessmentSelected, 'title'),
                             };
                             //console.log("item temp = ", temp);
                             addPufFunction(temp);
                             /* Remove */
-                            window.removeEventListener(
-                                "message",
-                                getMsgafterAddAssessment,
-                                false
-                            );
+                            // window.removeEventListener(
+                            //     "message",
+                            //     getMsgafterAddAssessment,
+                            //     false
+                            // );
                         }
                     }
                 }

@@ -8,8 +8,9 @@ import {
   singleAssessmentItemIcon,
 } from "../../../../../images/ElementButtons/ElementButtons.jsx";
 import config from "../../../../../config/config";
-import { get, isEmpty } from 'lodash';
+import { get } from 'lodash';
 import { handlePostMsgOnAddAssess } from '../../../../ElementContainer/AssessmentEventHandling';
+import { PUF } from '../../../AssessmentSlateConstants.js';
 
 const ElmFooter = (props) => {
   const { buttonText, sendPufAssessment, closeElmWindow, openAssessmentSearchBar } = props.elmFooterProps;
@@ -18,6 +19,7 @@ const ElmFooter = (props) => {
     currentAssessmentSelected,
     openedFrom,
     addPufFunction,
+    containerUrn,
   } = props;
 
   /* render on change in openItemTable */
@@ -48,18 +50,18 @@ const ElmFooter = (props) => {
       /* Open Elm portal for Add new Assessment */
       if (!openItemTable) {
         tempUrl =
-          `${config.ELM_PORTAL_URL}/launch/editor/assessment/New/item/createInPlace`;
+          `${config.ELM_PORTAL_URL}/launch/editor/assessment/new/item/createInPlace`;
       }
     }
 
     if (tempUrl) {
       const url = tempUrl +
-        "?containerUrn=" + config.slateManifestURN +
+        "?containerUrn=" + containerUrn +
         "&projectUrn=" + config.projectUrn +
         "&usageType=" + activeUsageType;
 
       window.open(url);
-      handlePostMsgOnAddAssess(addPufFunction, currentAssessmentSelected);
+      handlePostMsgOnAddAssess(addPufFunction, currentAssessmentSelected, activeUsageType);
       closeElmWindow();
     }
   }
@@ -67,23 +69,22 @@ const ElmFooter = (props) => {
   function shouldNewDisable() {
     const flag = openItemTable ?
       get(currentAssessmentSelected, 'type') === "assessmentItem" :
-      get(currentAssessmentSelected, 'type') === "assessment"
+      get(currentAssessmentSelected, 'type') === "assessment";
     return flag;
   }
 
   return (
     <div className="puf-footer">
-      {activeAssessmentType === "puf" && (
+      {activeAssessmentType === PUF && (
         <button
           className="puf-button create-button"
           onClick={openElmPortal}
           disabled={shouldNewDisable()}
         >
-          <span>
-            {openItemTable && singleAssessmentItemIcon}
-            {!openItemTable && elmAssessmentItem}
+          <span className="margin-right-5px">
+            {openItemTable ? singleAssessmentItemIcon : elmAssessmentItem}
           </span>
-          <span>&nbsp;NEW</span>
+          <span>NEW</span>
         </button>
       )}
       <button className={`puf-button add-button ${addFlag ? 'add-button-enabled' : ''}`} disabled={!addFlag} onClick={sendPufAssessment} onFocus={handleFocus}>{buttonText}</button>
