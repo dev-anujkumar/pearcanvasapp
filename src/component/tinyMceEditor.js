@@ -10,13 +10,14 @@ import "tinymce/skins/content/default/content.css";
 import "tinymce/plugins/lists";
 import "tinymce/plugins/advlist";
 import "tinymce/plugins/paste";
+import 'tinymce/plugins/imagetools'
 // IMPORT - Components & Dependencies //
 import { EditorConfig, FormatSelectors, elementTypeOptions } from '../config/EditorConfig';
 import config from '../config/config';
 import { insertListButton, bindKeyDownEvent, insertUoListButton, preventRemoveAllFormatting, removeTinyDefaultAttribute, removeListHighliting, highlightListIcon } from './ListElement/eventBinding.js';
 import { authorAssetPopOver } from './AssetPopover/openApoFunction.js';
 import {
-    tinymceFormulaIcon, tinymceFormulaChemistryIcon, assetPopoverIcon, crossLinkIcon, code, Footnote, bold, Glossary, undo, redo, italic, underline, strikethrough, removeformat, subscript, superscript, charmap, downArrow, orderedList, unorderedList, indent, outdent
+    tinymceFormulaIcon, tinymceFormulaChemistryIcon, assetPopoverIcon, crossLinkIcon, code, Footnote, bold, Glossary, undo, redo, italic, underline, strikethrough, removeformat, subscript, superscript, charmap, downArrow, orderedList, unorderedList, indent, outdent, addImage
 } from '../images/TinyMce/TinyMce.jsx';
 import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
 import { checkforToolbarClick, customEvent, spanHandlers, removeBOM, getWirisAltText, removeImageCache } from '../js/utils';
@@ -30,7 +31,7 @@ import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER } from '../compone
 import { conversionElement } from './Sidebar/Sidebar_Action';
 import { wirisAltTextPopup } from './SlateWrapper/SlateWrapper_Actions';
 import elementList from './Sidebar/elementTypes';
-
+import { handleC2MediaClick }  from '../constants/TinyMceUtility.js';
 let context = {};
 let clickedX = 0;
 let clickedY = 0;
@@ -64,7 +65,6 @@ export class TinyMceEditor extends Component {
             statusbar: false,
             valid_elements: '*[*]',
             extended_valid_elements: '*[*]',
-            object_resizing: false,
             fixed_toolbar_container: '#tinymceToolbar',
             content_style: EditorConfig.contentStyle,
             toolbar: EditorConfig.toolbar,
@@ -73,6 +73,11 @@ export class TinyMceEditor extends Component {
             force_br_newlines: true,
             forced_root_block: '',
             remove_linebreaks: false,
+            object_resizing : 'img',
+            imagetools_cors_hosts: ['*://*pearson.com',"localhost:*"],
+            imagetools_credentials_hosts:['pearson.com'],
+            resize_img_proportional: false,
+            imagetools_toolbar: 'rotateleft rotateright | flipv fliph',
             paste_preprocess: this.pastePreProcess,
             paste_postprocess: this.pastePostProcess,
             force_p_newlines: false,
@@ -88,6 +93,7 @@ export class TinyMceEditor extends Component {
                 this.setAssetPopoverIcon(editor);
                 this.addAssetPopoverIcon(editor);
                 this.handleSpecialCharIcon(editor);
+                this.handleAddMediaIcon(editor);
                 this.setFootnoteIcon(editor);
                 this.addFootnoteIcon(editor);
                 this.setGlossaryIcon(editor);
@@ -128,6 +134,11 @@ export class TinyMceEditor extends Component {
                         }
                     }
                 }
+                tinymce.activeEditor.on('ObjectResizeStart', function (e) {
+                    if (e.target && e.target.nodeName == 'IMG' && (e.target.classList.length > 0 && (e.target.classList.includes('Wirisformula') || e.target.classList.includes('temp_Wirisformula')))) {
+                        e.preventDefault();//prevent resize
+                    }
+                });
 
                 editor.on('Change', (e) => {
                     /*
@@ -358,6 +369,9 @@ export class TinyMceEditor extends Component {
                     break;
                 case "updateFormula":
                     editor.selection.bookmarkManager.moveToBookmark(this.currentCursorBookmark);
+                    break;
+                case "mceImageRotateRight":
+                    console.log('roatate right')
                     break;
             }
             if (this.props && this.props.element && this.props.element.type && this.props.element.type === 'stanza' && e.command === 'mceToggleFormat') {
@@ -669,6 +683,10 @@ export class TinyMceEditor extends Component {
                         this.wirisClick = 0;
                     }, 500);
                 }
+            }
+            if(e && e.detail && e.detail == 2){
+                console.log('e.target',e.target)
+                editor.selection.editor.editorCommands.commands.exec.mceimagerotateleft();
             }
             let selectedText = editor.selection.getContent({ format: "text" });
             let elemClassList = editor.targetElm.classList;
@@ -1388,7 +1406,50 @@ export class TinyMceEditor extends Component {
             crossLinkIcon
         );
     }
+    handleAddMediaIcon = editor => {
+        this.setAddMediaIcon(editor);
+        this.addAddMediaIcon(editor);
+    }
+    /**
+     * Adds Image icon to the toolbar.
+     * @param {*} editor  editor instance
+     */
+    setAddMediaIcon = editor => {
+        editor.ui.registry.addIcon(
+            "InsertMedia",
+            addImage
+        );
+    }
 
+    addAddMediaIcon = editor => {
+        const self = this;
+        editor.ui.registry.addMenuButton('addMedia', {
+            text: 'Insert',
+            tooltip: 'addMedia',
+            onSetup: function () {
+                document.querySelector('button[title="addMedia"]').setAttribute('title', '');
+                let newSpan = document.createElement('span');
+                newSpan.className = "tooltip-text"
+                newSpan.innerText = 'Insert';
+                const tooltipLabel = document.querySelector('button[aria-label="addMedia"] .tox-tbtn__select-label')
+                if (tooltipLabel) {
+                    tooltipLabel.after(newSpan)
+                }
+            },
+            fetch: (callback) => {
+                const items = [{
+                    type: 'menuitem',
+                    text: 'Image',
+                    onAction: () => {
+                        if (self.props.element && self.props.element.type === "element-list") {
+                            const newImg = handleC2MediaClick(self.props.permissions, editor);
+                        }
+                    }
+                }]
+               callback(items);
+            }
+        });
+    }
     /**
      * Adds Asset popover icon to the toolbar.
      * @param {*} editor  editor instance
