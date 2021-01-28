@@ -65,8 +65,9 @@ export const sendElementTcmSnapshot = async (snapshotData) => {
 }
 
 const callSnapshotAPI = async(snapshotData) => {
-    //  let url = 'http://localhost:4000/tctxsnapshot'
-     let url = `/cypress/trackchanges-srvr/tctxsnapshot`;
+    let url = 'http://localhost:5000/tctxsnapshot'
+    console.log("config",config.TCM_SNAPSHOT_URL)
+     //let url = `/cypress/trackchanges-srvr/tctxsnapshot`;
         return axios.post(url, snapshotData, {
         headers: {
             PearsonSSOSession: config.ssoToken
