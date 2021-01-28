@@ -1423,15 +1423,15 @@ export class TinyMceEditor extends Component {
 
     addAddMediaIcon = editor => {
         const self = this;
-        editor.ui.registry.addMenuButton('addMedia', {
+        editor.ui.registry.addMenuButton('insertMedia', {
             text: 'Insert',
-            tooltip: 'addMedia',
+            tooltip: 'insertMedia',
             onSetup: function () {
-                document.querySelector('button[title="addMedia"]').setAttribute('title', '');
+                document.querySelector('button[title="insertMedia"]').setAttribute('title', '');
                 let newSpan = document.createElement('span');
                 newSpan.className = "tooltip-text"
                 newSpan.innerText = 'Insert';
-                const tooltipLabel = document.querySelector('button[aria-label="addMedia"] .tox-tbtn__select-label')
+                const tooltipLabel = document.querySelector('button[aria-label="insertMedia"] .tox-tbtn__select-label')
                 if (tooltipLabel) {
                     tooltipLabel.after(newSpan)
                 }
