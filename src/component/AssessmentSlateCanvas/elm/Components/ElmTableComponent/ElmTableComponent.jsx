@@ -57,8 +57,6 @@ class ElmTableComponent extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        console.log("activeUsageType = ", this.props.activeUsageType);
-        console.log("this.state.currentAssessmentSelected = ", this.state.currentAssessmentSelected);
         if ((prevProps.elmReducer.elmItemData != this.props.elmReducer.elmItemData) ||
             (prevProps.elmReducer.elmData != this.props.elmReducer.elmData)) {
             let _self = this;

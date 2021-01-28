@@ -58,8 +58,6 @@ class AssessmentSlateData extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        console.log("-------------- = ---------------------------------------");
-        console.log("activeAssessmentUsageType = ", this.state.activeAssessmentUsageType);
         if (this.props.getAssessmentDataPopup !== prevProps.getAssessmentDataPopup) {
             this.sendDataAssessment(this.props);
         }

@@ -131,7 +131,6 @@ class ElementContainer extends Component {
     }
 
     componentDidUpdate() {
-       // console.log("this.props.element = ", this.props.element)
         let divObj = 0;
         if(this.props.searchParent !== '' && document.querySelector(`div[data-id="${this.props.searchParent}"]`)) {
             divObj = document.querySelector(`div[data-id="${this.props.searchParent}"]`).offsetTop;
