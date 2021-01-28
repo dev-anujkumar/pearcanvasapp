@@ -64,18 +64,15 @@ export const sendElementTcmSnapshot = async (snapshotData) => {
         timerID = setTimeout(async () => { let snapshots = allSnapshotData; allSnapshotData = []; await callSnapshotAPI(snapshots) }, 500);        
 }
 
-const callSnapshotAPI = async(snapshotData) => {
-    let url = 'http://localhost:5000/tctxsnapshot'
-    console.log("config",config.TCM_SNAPSHOT_URL)
-     //let url = `/cypress/trackchanges-srvr/tctxsnapshot`;
-        return axios.post(url, snapshotData, {
+const callSnapshotAPI = async (snapshotData) => {
+    return axios.post(config.TCM_SNAPSHOT_URL, snapshotData, {
         headers: {
             PearsonSSOSession: config.ssoToken
         }
     }).then((res) => {
         console.log("Successs !!!")
     }).catch((error) => {
-        console.log("Error in sending TCM Snapshots>>>>",error)
+        console.log("Error in sending TCM Snapshots>>>>", error)
     })
 }
 
