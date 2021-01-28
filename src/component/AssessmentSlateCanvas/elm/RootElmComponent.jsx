@@ -22,6 +22,8 @@ const RootElmComponent = (props) => {
         props.openAssessmentSearchBar(props.activeAssessmentType, false)
         props.closeElmWindow();
     }
+
+    console.log("props.activeUsageType = ", props.activeUsageType);
     return (
         <div className="vex-overlay elm-wrapper">
             <div className={`root-container ${props.activeAssessmentType == ELM_INT ? 'elm-interactive' : ''}`}>

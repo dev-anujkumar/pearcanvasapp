@@ -67,13 +67,20 @@ const ElmFooter = (props) => {
 
   }
 
+  function shouldNewDisable() {
+    const flag = openItemTable ?
+      get(currentAssessmentSelected, 'type') === "assessmentItem" :
+      get(currentAssessmentSelected, 'type') === "assessment"
+    return flag;
+  }
+
   return (
     <div className="puf-footer">
       {activeAssessmentType === "puf" && (
         <button
           className="puf-button create-button"
           onClick={openElmPortal}
-          disabled={openItemTable ? false : !isEmpty(currentAssessmentSelected)}
+          disabled={shouldNewDisable()}
         >
           <span>
             {openItemTable && singleAssessmentItemIcon}

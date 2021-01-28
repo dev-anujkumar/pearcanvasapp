@@ -120,6 +120,7 @@ class AssessmentSlateCanvas extends Component {
     }
 
     render() {
+        console.log("model = ", this.props.model)
         const { type, model, permissions, isLOExist, showBlocker } = this.props;
         const { getAssessmentDataPopup, getAssessmentData, assessmentSlateObj } = this.state;
         let handleCanvasBlocker = {
