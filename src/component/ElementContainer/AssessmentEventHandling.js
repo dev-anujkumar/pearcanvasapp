@@ -6,8 +6,7 @@ import { checkSlateLock } from '../../js/slateLockUtility';
 import { releaseSlateLockWithCallback, getSlateLockStatus } from '../CanvasWrapper/SlateLock_Actions';
 import { handleSlateRefresh } from '../CanvasWrapper/SlateRefresh_Actions';
 import { sendDataToIframe } from '../../constants/utility.js';
-import { updateElmItemData, setItemUpdateEvent } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
-import { get } from 'lodash';
+import { updateElmItemData, setItemUpdateEvent, setNewItemFromElm } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 /**
  * This module deals with the event handling for the Update of Full and Embedded Elm Assessments
  * for the events triggered from the Elm Assessment Portal
@@ -84,53 +83,51 @@ export const prepareItemMetadata = (eventData) =>{
 
 /* update on getting message form elm portal */
 export const handlePostMsgOnAddAssess = (addPufFunction, currentAssessmentSelected, usagetype) => {
-    let slateLockInfo = store.getState().slateLockReducer.slateLockInfo;
+    let slateLockInfo = store.getState()?.slateLockReducer?.slateLockInfo;
     if (!checkSlateLock(slateLockInfo)) {
         const getMsgafterAddAssessment = async (event) => {
             try {
                 const { data = {} } = event;
-                // console.log("-----------------------------------------");
-                // console.log("data = ", data);
-                // console.log("-----------------------------------------");
+                console.log("-----------------------------------------");
+                console.log("data = ", data);
+                console.log("-----------------------------------------");
 
-                if (get(data, "source") === "elm") {
-                    const items = get(data, "type", "").split("|") || [];
-                    if (items.length === 3) {
+                /* Get the data from store */
+                const itemData = store.getState().assessmentReducer?.item ?? {};
+
+                if (data.source === "elm") {                  
+                    const items = data.type?.split("|") ?? []; 
+                    if(items.length >= 3){                  
                         /* Update newly added assessment */
-                        if (get(items, "[0]") === "assessment") {
-                            const temp = {
-                                id: items[1].split("_")[1],
-                                title: items[2].split("_")[1],
-                                usagetype: usagetype, //get(items, "[0]"),
+                        if (items[0] === "assessment") {
+                            let temp = {
+                                id: items[1]?.split("_")[1],
+                                title: items[2]?.split("_")[1],
+                                usagetype: usagetype, 
                             };
-                            //console.log("assessment temp = ", temp);
+                            
+                            if(itemData?.itemid && itemData?.itemTitle && itemData?.usagetype){
+                                temp = { ...temp, ...itemData }
+                            }
+                            /**@function to update data display in slate */
                             addPufFunction(temp);
-                            /* Remove */
-                            // window.removeEventListener(
-                            //     "message",
-                            //     getMsgafterAddAssessment,
-                            //     false
-                            // );
-                        }
+                            /* Remove EventListener */
+                            //window.removeEventListener(
+                            //    "message",
+                            //    getMsgafterAddAssessment,
+                            //    false
+                            //);
+                        }                  
                         /* Update newly added Item */
-                        else if (get(items, "[0]") === "item") {
+                        else if (items[0] === "item") {
                             const temp = {
-                                itemid: items[1].split("_")[1],
-                                itemTitle: items[2].split("_")[1],
-                                usagetype: usagetype, //get(items, "[0]"),
-                                // id: get(currentAssessmentSelected, 'assessmentId'),
-                                // title: get(currentAssessmentSelected, 'title'),
+                                itemid: items[1]?.split("_")[1],
+                                itemTitle: items[2]?.split("_")[1],
+                                usagetype: usagetype,                               
                             };
-                            //console.log("item temp = ", temp);
-                            addPufFunction(temp);
-                            /* Remove */
-                            // window.removeEventListener(
-                            //     "message",
-                            //     getMsgafterAddAssessment,
-                            //     false
-                            // );
-                        }
-                    }
+                            store.dispatch(setNewItemFromElm(temp));
+                        }  
+                    }                
                 }
             } catch (err) {
                 console.error("catch with err", err);
