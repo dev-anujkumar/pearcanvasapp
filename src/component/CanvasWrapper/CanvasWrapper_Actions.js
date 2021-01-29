@@ -276,6 +276,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
 
     if (config.cachedActiveElement && config.cachedActiveElement.element && config.cachedActiveElement.element.type == "popup") {
         config.popupParentElement = {
+            ...config.popupParentElement,
             parentElement: config.cachedActiveElement.element
         }
         if(calledFrom!== "containerVersioning"){
