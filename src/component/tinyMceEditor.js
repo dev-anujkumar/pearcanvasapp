@@ -136,7 +136,7 @@ export class TinyMceEditor extends Component {
                     }
                 }
                 tinymce.activeEditor.on('ObjectResizeStart', function (e) {
-                    if (e?.target?.nodeName == 'IMG' && e.target.classList.length > 0 && (e.target.classList.includes('Wirisformula') || e.target.classList.includes('temp_Wirisformula'))) {
+                    if (e?.target?.nodeName == 'IMG' && e.target.classList.length > 0 && (e.target.classList.contains('Wirisformula') || e.target.classList.contains('temp_Wirisformula'))) {
                         e.preventDefault();//prevent resize
                     }
                 });
@@ -685,45 +685,19 @@ export class TinyMceEditor extends Component {
                     }, 500);
                 }
             }
-            if(e?.target?.nodeName == 'IMG' && e.target.classList.contains('imageAssetContent')){
-                console.log('e.target',e)
-                let coordinates = Object.freeze({
-                   xx:e.target.x,yy:e.target.y,id: e.target.id
-                })
-                this.inlineImageClick++;
-                if (!this.inlineImageClickTimeout) {
-                    this.inlineImageClickTimeout = setTimeout(() => {
-                        if (this.inlineImageClick == 2) {
-                            editor.selection.placeCaretAt(e.target.x, e.target.x);
-                            // let imgData= `<img src=https://cite-media-stg.pearson.com/legacy_paths/28154019-35d4-4b5b-9da6-fdc6335e1595/1addNew.png id="imageAssetContent:28154019-35d4-4b5b-9da6-fdc6335e1595" class="imageAssetContent" width="112" height="150" imageid="urn:pearson:alfresco:28154019-35d4-4b5b-9da6-fdc6335e1595" alt="Alfresco script Scale image update for UDB release" longdescription="Alfresco scale image long desc for UDb chanages."/>`
-                            // editor.selection.setContent(imgData);
-                            handleC2MediaClick(this.props.permissions, editor,coordinates);
+            /** Open Alfresco Picker to update inline image in list */
+            if (e?.target?.nodeName == 'IMG' && e.target.classList.contains('imageAssetContent')) {
+                if (e?.detail == 2) {
+                    if (this?.props?.element?.type == 'element-list') {
+                        const imageArgs = {
+                            xCoord: e.target.x,
+                            yCoord: e.target.y,
+                            id: e.target?.dataset?.id
                         }
-                        clearTimeout(this.inlineImageClickTimeout);
-                        this.inlineImageClickTimeout = null;
-                        this.inlineImageClick = 0;
-                    }, 500);
+                        handleC2MediaClick(this.props.permissions, editor, imageArgs);
+                    }
                 }
             }
-            // if(e?.detail == 2){
-            //     console.log('e.target',e)
-            //     // e.target.addClass('active-inline-media');
-            //     let activeId = e.target.id// let currentImage = document.getElementsByClassName('img.active-inline-media')
-            //     console.log('currentImage',editor.selection.getBoundingClientRect())
-            //     console.log('getContent',editor.selection.getNode())
-            //     const coordinates = Object.freeze({
-            //        xx:e.target.x,yy:e.target.y,id:activeId
-            //     })
-            //     editor.selection.placeCaretAt(e.target.x, e.target.x);
-            //     console.log('positionElement',coordinates.xx, coordinates.yy)
-            //     // editor.selection.placeCaretAt(coordinates.x, coordinates.y);
-            //     console.log('getContent',editor.selection.getContent())
-            //     //editor.selection.setContent('<em>DATA</em>');
-            //     //editor.selection.placeCaretAt(coordinates.xx, coordinates.yy);
-            //     // let imgData= `<img src=https://cite-media-stg.pearson.com/legacy_paths/28154019-35d4-4b5b-9da6-fdc6335e1595/1addNew.png id="imageAssetContent:28154019-35d4-4b5b-9da6-fdc6335e1595" class="imageAssetContent" width="112" height="150" imageid="urn:pearson:alfresco:28154019-35d4-4b5b-9da6-fdc6335e1595" alt="Alfresco script Scale image update for UDB release" longdescription="Alfresco scale image long desc for UDb chanages."/>`
-            //     // editor.selection.setContent(imgData);
-            //     handleC2MediaClick(this.props.permissions, editor,coordinates);
-            // }
             let selectedText = editor.selection.getContent({ format: "text" });
             let elemClassList = editor.targetElm.classList;
             let isFigureElem = elemClassList.contains('figureImage25Text') || elemClassList.contains('figureImage50Text') || elemClassList.contains('heading4Image25TextNumberLabel')
