@@ -17,7 +17,6 @@ const ElmFooter = (props) => {
     activeAssessmentType,
     addPufFunction,
     containerUrn,
-    handlePostMsgOnAddAssess,
     activeUsageType } = props.elmFooterProps;
 
   const { addFlag, hideSearch, openItemTable,
