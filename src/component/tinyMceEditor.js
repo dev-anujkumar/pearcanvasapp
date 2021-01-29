@@ -12,7 +12,7 @@ import "tinymce/plugins/advlist";
 import "tinymce/plugins/paste";
 import 'tinymce/plugins/imagetools'
 // IMPORT - Components & Dependencies //
-import { EditorConfig, FormatSelectors, elementTypeOptions } from '../config/EditorConfig';
+import { EditorConfig, FormatSelectors, elementTypeOptions, insertMediaSelectors } from '../config/EditorConfig';
 import config from '../config/config';
 import { insertListButton, bindKeyDownEvent, insertUoListButton, preventRemoveAllFormatting, removeTinyDefaultAttribute, removeListHighliting, highlightListIcon } from './ListElement/eventBinding.js';
 import { authorAssetPopOver } from './AssetPopover/openApoFunction.js';
@@ -56,6 +56,7 @@ export class TinyMceEditor extends Component {
         this.notFormatting = true;
         this.gRange = null;
         this.wirisClick = 0;
+        this.inlineImageClick = 0;
         this.editorConfig = {
             plugins: EditorConfig.plugins,
             selector: '#cypress-0',
@@ -93,7 +94,7 @@ export class TinyMceEditor extends Component {
                 this.setAssetPopoverIcon(editor);
                 this.addAssetPopoverIcon(editor);
                 this.handleSpecialCharIcon(editor);
-                this.handleAddMediaIcon(editor);
+                this.addInsertMediaButton(editor);
                 this.setFootnoteIcon(editor);
                 this.addFootnoteIcon(editor);
                 this.setGlossaryIcon(editor);
@@ -135,7 +136,7 @@ export class TinyMceEditor extends Component {
                     }
                 }
                 tinymce.activeEditor.on('ObjectResizeStart', function (e) {
-                    if (e.target && e.target.nodeName == 'IMG' && (e.target.classList.length > 0 && (e.target.classList.includes('Wirisformula') || e.target.classList.includes('temp_Wirisformula')))) {
+                    if (e?.target?.nodeName == 'IMG' && e.target.classList.length > 0 && (e.target.classList.includes('Wirisformula') || e.target.classList.includes('temp_Wirisformula'))) {
                         e.preventDefault();//prevent resize
                     }
                 });
@@ -684,10 +685,45 @@ export class TinyMceEditor extends Component {
                     }, 500);
                 }
             }
-            if(e && e.detail && e.detail == 2){
-                console.log('e.target',e.target)
-                editor.selection.editor.editorCommands.commands.exec.mceimagerotateleft();
+            if(e?.target?.nodeName == 'IMG' && e.target.classList.contains('imageAssetContent')){
+                console.log('e.target',e)
+                let coordinates = Object.freeze({
+                   xx:e.target.x,yy:e.target.y,id: e.target.id
+                })
+                this.inlineImageClick++;
+                if (!this.inlineImageClickTimeout) {
+                    this.inlineImageClickTimeout = setTimeout(() => {
+                        if (this.inlineImageClick == 2) {
+                            editor.selection.placeCaretAt(e.target.x, e.target.x);
+                            // let imgData= `<img src=https://cite-media-stg.pearson.com/legacy_paths/28154019-35d4-4b5b-9da6-fdc6335e1595/1addNew.png id="imageAssetContent:28154019-35d4-4b5b-9da6-fdc6335e1595" class="imageAssetContent" width="112" height="150" imageid="urn:pearson:alfresco:28154019-35d4-4b5b-9da6-fdc6335e1595" alt="Alfresco script Scale image update for UDB release" longdescription="Alfresco scale image long desc for UDb chanages."/>`
+                            // editor.selection.setContent(imgData);
+                            handleC2MediaClick(this.props.permissions, editor,coordinates);
+                        }
+                        clearTimeout(this.inlineImageClickTimeout);
+                        this.inlineImageClickTimeout = null;
+                        this.inlineImageClick = 0;
+                    }, 500);
+                }
             }
+            // if(e?.detail == 2){
+            //     console.log('e.target',e)
+            //     // e.target.addClass('active-inline-media');
+            //     let activeId = e.target.id// let currentImage = document.getElementsByClassName('img.active-inline-media')
+            //     console.log('currentImage',editor.selection.getBoundingClientRect())
+            //     console.log('getContent',editor.selection.getNode())
+            //     const coordinates = Object.freeze({
+            //        xx:e.target.x,yy:e.target.y,id:activeId
+            //     })
+            //     editor.selection.placeCaretAt(e.target.x, e.target.x);
+            //     console.log('positionElement',coordinates.xx, coordinates.yy)
+            //     // editor.selection.placeCaretAt(coordinates.x, coordinates.y);
+            //     console.log('getContent',editor.selection.getContent())
+            //     //editor.selection.setContent('<em>DATA</em>');
+            //     //editor.selection.placeCaretAt(coordinates.xx, coordinates.yy);
+            //     // let imgData= `<img src=https://cite-media-stg.pearson.com/legacy_paths/28154019-35d4-4b5b-9da6-fdc6335e1595/1addNew.png id="imageAssetContent:28154019-35d4-4b5b-9da6-fdc6335e1595" class="imageAssetContent" width="112" height="150" imageid="urn:pearson:alfresco:28154019-35d4-4b5b-9da6-fdc6335e1595" alt="Alfresco script Scale image update for UDB release" longdescription="Alfresco scale image long desc for UDb chanages."/>`
+            //     // editor.selection.setContent(imgData);
+            //     handleC2MediaClick(this.props.permissions, editor,coordinates);
+            // }
             let selectedText = editor.selection.getContent({ format: "text" });
             let elemClassList = editor.targetElm.classList;
             let isFigureElem = elemClassList.contains('figureImage25Text') || elemClassList.contains('figureImage50Text') || elemClassList.contains('heading4Image25TextNumberLabel')
@@ -1406,28 +1442,14 @@ export class TinyMceEditor extends Component {
             crossLinkIcon
         );
     }
-    handleAddMediaIcon = editor => {
-        this.setAddMediaIcon(editor);
-        this.addAddMediaIcon(editor);
-    }
-    /**
-     * Adds Image icon to the toolbar.
-     * @param {*} editor  editor instance
-     */
-    setAddMediaIcon = editor => {
-        editor.ui.registry.addIcon(
-            "InsertMedia",
-            addImage
-        );
-    }
 
-    addAddMediaIcon = editor => {
+    addInsertMediaButton = editor => {
         const self = this;
         editor.ui.registry.addMenuButton('insertMedia', {
             text: 'Insert',
             tooltip: 'insertMedia',
             onSetup: function () {
-                document.querySelector('button[title="insertMedia"]').setAttribute('title', '');
+                document.querySelector('button[title="insertMedia"]').setAttribute('title', 'Insert Media');
                 let newSpan = document.createElement('span');
                 newSpan.className = "tooltip-text"
                 newSpan.innerText = 'Insert';
@@ -1437,16 +1459,13 @@ export class TinyMceEditor extends Component {
                 }
             },
             fetch: (callback) => {
-                const items = [{
-                    type: 'menuitem',
-                    text: 'Image',
-                    onAction: () => {
-                        if (self.props.element && self.props.element.type === "element-list") {
-                            const newImg = handleC2MediaClick(self.props.permissions, editor);
-                        }
-                    }
-                }]
-               callback(items);
+                let params = {
+                    element: self.props.element,
+                    permissions: self.props.permissions,
+                    editor: editor
+                }
+                const items = insertMediaSelectors(params);
+                callback(items);
             }
         });
     }
@@ -2937,6 +2956,12 @@ export class TinyMceEditor extends Component {
                    this.wirisClick = 0;
                }, 500)
            }
+            if (e?.target?.classList.contains('imageAssetContent')) {
+                this.inlineImageClick++;
+                setTimeout(() => {
+                    this.inlineImageClick = 0;
+                }, 500)
+            }
             let wirisModalDesktopNode = tinymce.$('.wrs_modal_desktop')
             wirisModalDesktopNode && wirisModalDesktopNode.remove();
 

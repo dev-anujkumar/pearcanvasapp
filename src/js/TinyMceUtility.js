@@ -6,7 +6,7 @@ import config from '../config/config';
   * @param {*} data selected asset data
   * @param {*} editor tinymce editor
   */
-const dataFromAlfresco = (data, editor) => {
+const dataFromAlfresco = (data, editor,coordinates) => {
     let imageData = data;
     let epsURL = imageData['EpsUrl'] ? imageData['EpsUrl'] : "";
     //let width = imageData['width'] ? imageData['width'] : "";
@@ -14,26 +14,40 @@ const dataFromAlfresco = (data, editor) => {
     let altText = imageData['alt-text'] ? imageData['alt-text'] : "";
     let uniqID = imageData['uniqueID'] ? imageData['uniqueID'] : "";
     let longDesc = imageData['longDescription'] ? imageData['longDescription'] : "";
-    let imgData = `<img 
-    src=${epsURL} 
-    id="imageAssetContent:${uniqID}" 
-    className="imageAssetContent" 
-    width="112" 
-    height="150" 
-    imageid="urn:pearson:alfresco:${uniqID}"   
-    alt="${altText}" 
-    longdescriptio"${longDesc}"
-    />`
+    let imgData = `<img src=${epsURL} id="imageAssetContent:${uniqID}" class="imageAssetContent" width="112" height="150" imageid="urn:pearson:alfresco:${uniqID}" alt="${altText}" longdescription="${longDesc}"/>`
     console.log('imgData>>>', imgData)
-    editor.selection.setContent(imgData);
+    if(coordinates){
+        let positionElement = document.getElementById(coordinates.id);
+        if (positionElement) {
+            console.log('positionElement',coordinates.xx, coordinates.yy)
+            editor.selection.placeCaretAt(coordinates.xx, coordinates.yy);
+            editor.selection.setContent(imgData);
+            //editor.selection.setCursorLocation(positionElement, 0);
+            positionElement.remove();
+            // editor.selection.placeCaretAt(coordinates.xx, coordinates.yy);
+        }
+    }
 
+
+    console.log('editor selector',editor.selection.getContent())
+    if(coordinates){
+        editor.selection.placeCaretAt(coordinates.xx, coordinates.yy);
+        editor.selection.setContent('<em>TEST</em>');
+    }
+    else{
+        editor.selection.setContent(imgData);
+    }
+    //console.log('currentImage3',editor.selection.getBoundingClientRect())
+   // editor.selection.setContent('<em>DATA</em>');
+//    editor.selection.placeCaretAt(coordinates.xx, coordinates.yy);
+    //editor.selection.setContent('<em>TEST</em>');
     const listLiText = document.querySelector('#' + tinymce.activeEditor.id + ' li') ? document.querySelector('#' + tinymce.activeEditor.id + ' li').innerText : "";
 
     if (!listLiText.trim()) {
-        const blankLine = document.querySelector('#' + tinymce.activeEditor.id + ' img.imageAssetContent');
+        const imageContent = document.querySelector('#' + tinymce.activeEditor.id + ' img.imageAssetContent');
         tinyMCE.$('#' + tinymce.activeEditor.id + ' li').find('br').remove();
-        document.querySelector('#' + tinymce.activeEditor.id + ' li').append(blankLine);
-        blankLine.innerHTML = imgData;
+        document.querySelector('#' + tinymce.activeEditor.id + ' li').append(imageContent);
+        imageContent.innerHTML = imgData;
         tinyMCE.$('#' + tinymce.activeEditor.id)[0].innerHTML = removeBOM(tinyMCE.$('#' + tinymce.activeEditor.id)[0].innerHTML);
     }
     editor.targetElm.classList.remove('place-holder');
@@ -43,11 +57,11 @@ const dataFromAlfresco = (data, editor) => {
  * @description Open C2 module with predefined Alfresco location
  * @param {*} locationData alfresco locationData
  */
-const handleC2ExtendedClick = (locationData, editor) => {
+const handleC2ExtendedClick = (locationData, editor,coordinates) => {
     let data_1 = locationData;
     c2MediaModule.productLinkOnsaveCallBack(data_1, (data_2) => {
         c2MediaModule.AddanAssetCallBack(data_2, (data) => {
-            dataFromAlfresco(data, editor);
+            dataFromAlfresco(data, editor,coordinates);
         })
     })
 
@@ -55,7 +69,7 @@ const handleC2ExtendedClick = (locationData, editor) => {
 /**
  * @description function will be called on image src add and fetch resources from Alfresco
  */
-export const handleC2MediaClick = (permissions, editor) => {
+export const handleC2MediaClick = (permissions, editor,coordinates) => {
     const currentAsset = null;
     let alfrescoPath = config.alfrescoMetaData;
     var data_1 = false;
@@ -79,7 +93,7 @@ export const handleC2MediaClick = (permissions, editor) => {
                 data_1['name'] = data_1['repositoryFolder'] ? data_1['repositoryFolder'] : data_1['name']
                 data_1['repoInstance'] = data_1['repositoryUrl'] ? data_1['repositoryUrl'] : data_1['repoInstance']
                 data_1['siteVisibility'] = data_1['visibility'] ? data_1['visibility'] : data_1['siteVisibility']
-                handleC2ExtendedClick(data_1, editor)
+                handleC2ExtendedClick(data_1, editor,coordinates)
             }
 
         }
@@ -113,7 +127,7 @@ export const handleC2MediaClick = (permissions, editor) => {
                 request.alfresco['repositoryUrl'] = data_1['repoInstance'];
                 request.alfresco['visibility'] = data_1['siteVisibility'];
 
-                handleC2ExtendedClick(data_1, editor)
+                handleC2ExtendedClick(data_1, editor,coordinates)
                 /*
                     API to set alfresco location on dashboard
                 */

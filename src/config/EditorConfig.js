@@ -1,5 +1,6 @@
 import { CONTENT_STYLE } from './TinymceDefaultCss';
 import 'tinymce/plugins/charmap';
+import { handleC2MediaClick } from '../js/TinyMceUtility.js';
 export const EditorConfig = {
     
     formats: {
@@ -93,21 +94,6 @@ export const FormatSelectors = function(callback){
     });
 }
 
-const imageSelectorType = [
-    {
-        text: 'Image',
-        value: 'Image',
-    }
-]
-
-export const mediaSelectors = function(callback){
-
-    return imageSelectorType.map((obj)=>{
-        obj.type = 'menuitem';
-        obj.onAction = function(){callback(obj.value)}
-        return obj;
-    });
-}
 export const elementTypeOptions = Object.freeze({
     'P' : {
         primaryOption : 'primary-paragraph',
@@ -161,3 +147,21 @@ export const elementTypeOptions = Object.freeze({
     },
 })
 
+/** -------------------------------- Insert-Media Toolbar Handling -------------------------------- */
+/** Insert Image handler - calls Image Alfresco Picker */
+const insertImageHandler = (params) => {
+    let { element, permissions, editor } = params;
+    if (element?.type === "element-list") {
+        handleC2MediaClick(permissions, editor);
+    }
+}
+/** Insert Media-Selector Dropdown Handler */
+export const insertMediaSelectors = (params) => {
+    return [
+        {   type: 'menuitem',
+            text: 'Image',
+            onAction: () => insertImageHandler(params)
+        }
+    ]
+}
+/** ---------------------------------------------------------------------------------------------- */
