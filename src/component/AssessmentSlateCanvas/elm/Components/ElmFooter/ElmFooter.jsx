@@ -20,6 +20,7 @@ const ElmFooter = (props) => {
     openedFrom,
     addPufFunction,
     containerUrn,
+    error,
   } = props;
 
   /* render on change in openItemTable */
@@ -33,21 +34,22 @@ const ElmFooter = (props) => {
     event.stopPropagation();
   }
 
+/* open elm portal */
   function openElmPortal() {
     let tempUrl = "";
 
-    /* Open ELM portal for Add new Assessment */
+  /* Open ELM portal for Add new Assessment in Assessment slate */
     if (openedFrom === "slateAssessment") {
-      tempUrl = //config.ELM_ASSESSMENT.ADD_NEW_ASSESSMENT;
-        `${config.ELM_PORTAL_URL}/launch/editor/assessment/createInPlace`;
+      tempUrl = `${config.ELM_PORTAL_URL}/launch/editor/assessment/createInPlace`;
     }
     /* Open ELM portal for Add new Item in Existing Assessment */
     if (openedFrom === "singleAssessment") {
       const assessmentWUrn = get(currentAssessmentSelected, "urn");
       if (assessmentWUrn && openItemTable) {
-        tempUrl = `${config.ELM_PORTAL_URL}/launch/editor/assessment/${assessmentWUrn}/item/createInPlace`
+        tempUrl =
+          `${config.ELM_PORTAL_URL}/launch/editor/assessment/${assessmentWUrn}/item/createInPlace`
       }
-      /* Open Elm portal for Add new Assessment */
+    /* Open Elm portal for Add new Assessment in single assessment */
       if (!openItemTable) {
         tempUrl =
           `${config.ELM_PORTAL_URL}/launch/editor/assessment/new/item/createInPlace`;
@@ -60,12 +62,15 @@ const ElmFooter = (props) => {
         "&projectUrn=" + config.projectUrn +
         "&usageType=" + activeUsageType;
 
+    /* open elm portal */
       window.open(url);
+    /**@function call for add listeners to get data from elm portal */
       handlePostMsgOnAddAssess(addPufFunction, currentAssessmentSelected, activeUsageType);
       closeElmWindow();
     }
   }
 
+/** @function to disable new button */
   function shouldNewDisable() {
     const flag = openItemTable ?
       get(currentAssessmentSelected, 'type') === "assessmentItem" :
@@ -75,6 +80,7 @@ const ElmFooter = (props) => {
 
   return (
     <div className="puf-footer">
+      {/* Create new Assessment/Item only for PUF */}
       {activeAssessmentType === PUF && (
         <button
           className="puf-button create-button"
@@ -87,9 +93,12 @@ const ElmFooter = (props) => {
           <span>NEW</span>
         </button>
       )}
-      <button className={`puf-button add-button ${addFlag ? 'add-button-enabled' : ''}`} disabled={!addFlag} onClick={sendPufAssessment} onFocus={handleFocus}>{buttonText}</button>
-      <button className="puf-button cancel" onClick={closeElmWindow} onFocus={handleFocus}>CANCEL</button>
-      <button className={`puf-button search-button ${hideSearch ? "puf-assessment" : ""}`} onClick={openSearchBar}>SEARCH</button>
+      {/* hide following when project has no Elm assessments */}
+      { !error && (<>
+          <button className={`puf-button add-button ${addFlag ? 'add-button-enabled' : ''}`} disabled={!addFlag} onClick={sendPufAssessment} onFocus={handleFocus}>{buttonText}</button>
+          <button className="puf-button cancel" onClick={closeElmWindow} onFocus={handleFocus}>CANCEL</button>
+          <button className={`puf-button search-button ${hideSearch ? "puf-assessment" : ""}`} onClick={openSearchBar}>SEARCH</button>
+      </>)}
     </div>
   );
 }

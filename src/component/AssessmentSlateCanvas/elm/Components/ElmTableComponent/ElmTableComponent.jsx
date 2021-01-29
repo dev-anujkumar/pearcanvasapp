@@ -5,7 +5,7 @@
 // IMPORT - Plugins //
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { get, isEmpty } from "lodash";
+import { get } from "lodash";
 // IMPORT - Components //
 import ElmError from '../ElmError';
 import ElmFooter from '../ElmFooter';
@@ -457,6 +457,8 @@ class ElmTableComponent extends Component {
         let showTable = tableValue.length ? true:false
         /** Condition to show loader before Items Table */
         let showItemLoader = showLoader == true && isLoading == true && openSearch == true && openItemTable== true  ? true : false;
+        /** get error when project has no Elm assessments to display create button */
+        const errorNoElmItem = (get(this, 'props.activeAssessmentType') === PUF) && errFlag;
         {
             if (errFlag == true) {
                 /** ELM Picker Error Div */
@@ -470,7 +472,9 @@ class ElmTableComponent extends Component {
                             errorStatus={showErrorStatus}
                             activeAssessmentType={assessmentFormat}
                         />
-                        {/* <ElmFooter
+                        {/* when project has no Elm assessments, display new button to add */}
+                        { errorNoElmItem &&
+                            <ElmFooter
                                 elmFooterProps={this.elmFooterProps}
                                 addFlag={addFlag}
                                 hideSearch={hideSearch}
@@ -481,7 +485,9 @@ class ElmTableComponent extends Component {
                                 openedFrom={get(this.state, 'openedFrom')}
                                 currentAssessmentSelected={get(this.state, 'currentAssessmentSelected')}
                                 addPufFunction={this.props.addPufFunction}
-                            /> */}
+                                error={errorNoElmItem}
+                            />
+                        }
                     </div>
                 )
             } else {
