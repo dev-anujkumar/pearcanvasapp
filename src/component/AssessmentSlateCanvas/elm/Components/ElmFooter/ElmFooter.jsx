@@ -8,6 +8,7 @@ import {
   singleAssessmentItemIcon,
 } from "../../../../../images/ElementButtons/ElementButtons.jsx";
 import config from "../../../../../config/config";
+import { get } from 'lodash';
 import { handlePostMsgOnAddAssess } from '../../../../ElementContainer/AssessmentEventHandling';
 import { PUF } from '../../../AssessmentSlateConstants.js';
 
@@ -45,7 +46,7 @@ const ElmFooter = (props) => {
     }
     /* Open ELM portal for Add new Item in Existing Assessment */
     if (openedFrom === "singleAssessment") {
-      const assessmentWUrn = currentAssessmentSelected?.urn;
+      const assessmentWUrn = get(currentAssessmentSelected, "urn");
       if (assessmentWUrn && openItemTable) {
         tempUrl =
           `${config.ELM_PORTAL_URL}/launch/editor/assessment/${assessmentWUrn}/item/createInPlace`
@@ -53,21 +54,20 @@ const ElmFooter = (props) => {
     /* Open Elm portal for Add new Assessment in single assessment */
       if (!openItemTable) {
         tempUrl =
-          `${config.ELM_PORTAL_URL}/launch/editor/assessment/New/item/createInPlace`;
+          `${config.ELM_PORTAL_URL}/launch/editor/assessment/new/item/createInPlace`;
       }
     }
 
     if (tempUrl) {
-      const usageType = activeUsageType ? activeUsageType.replace(" ", "").toLowerCase() : "";
       const url = tempUrl +
         "?containerUrn=" + containerUrn +
         "&projectUrn=" + config.projectUrn +
-        "&usageType=" + usageType;
+        "&usageType=" + activeUsageType;
 
     /* open elm portal */
       window.open(url);
     /**@function call for add listeners to get data from elm portal */
-      handlePostMsgOnAddAssess(addPufFunction, activeUsageType);
+      handlePostMsgOnAddAssess(addPufFunction, currentAssessmentSelected, activeUsageType);
       closeElmWindow();
     }
   }
@@ -75,8 +75,8 @@ const ElmFooter = (props) => {
 /** @function to disable new button */
   function shouldNewDisable() {
     const flag = openItemTable ?
-      currentAssessmentSelected?.type === "assessmentItem" :
-      currentAssessmentSelected?.type === "assessment";
+      get(currentAssessmentSelected, 'type') === "assessmentItem" :
+      get(currentAssessmentSelected, 'type') === "assessment";
     return flag;
   }
 

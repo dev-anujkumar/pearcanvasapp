@@ -82,12 +82,16 @@ export const prepareItemMetadata = (eventData) =>{
 }
 
 /* update on getting message form elm portal */
-export const handlePostMsgOnAddAssess = (addPufFunction, usagetype) => {
+export const handlePostMsgOnAddAssess = (addPufFunction, currentAssessmentSelected, usagetype) => {
     let slateLockInfo = store.getState()?.slateLockReducer?.slateLockInfo;
     if (!checkSlateLock(slateLockInfo)) {
         const getMsgafterAddAssessment = async (event) => {
             try {
                 const { data = {} } = event;
+                console.log("-----------------------------------------");
+                console.log("data = ", data);
+                console.log("-----------------------------------------");
+
                 /* Get the data from store */
                 const itemData = store.getState().assessmentReducer?.item ?? {};
 
@@ -102,17 +106,17 @@ export const handlePostMsgOnAddAssess = (addPufFunction, usagetype) => {
                                 usagetype: usagetype, 
                             };
                             
-                            if(itemData?.itemid && itemData.itemTitle && itemData.usagetype){
+                            if(itemData?.itemid && itemData?.itemTitle && itemData?.usagetype){
                                 temp = { ...temp, ...itemData }
                             }
                             /**@function to update data display in slate */
                             addPufFunction(temp);
                             /* Remove EventListener */
-                            window.removeEventListener(
-                                "message",
-                                getMsgafterAddAssessment,
-                                false
-                            );
+                            //window.removeEventListener(
+                            //    "message",
+                            //    getMsgafterAddAssessment,
+                            //    false
+                            //);
                         }                  
                         /* Update newly added Item */
                         else if (items[0] === "item") {
