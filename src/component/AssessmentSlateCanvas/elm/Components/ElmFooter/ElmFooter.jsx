@@ -13,13 +13,16 @@ import { handlePostMsgOnAddAssess } from '../../../../ElementContainer/Assessmen
 import { PUF } from '../../../AssessmentSlateConstants.js';
 
 const ElmFooter = (props) => {
-  const { buttonText, sendPufAssessment, closeElmWindow, openAssessmentSearchBar } = props.elmFooterProps;
-  const { addFlag, hideSearch, openItemTable, activeAssessmentType,
-    activeUsageType,
-    currentAssessmentSelected,
-    openedFrom,
+  const { buttonText, sendPufAssessment, closeElmWindow, openAssessmentSearchBar,
+    activeAssessmentType,
     addPufFunction,
     containerUrn,
+    handlePostMsgOnAddAssess,
+    activeUsageType } = props.elmFooterProps;
+
+  const { addFlag, hideSearch, openItemTable,
+    currentAssessmentSelected,
+    openedFrom,
     error,
   } = props;
 

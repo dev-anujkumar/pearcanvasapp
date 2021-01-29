@@ -432,7 +432,11 @@ class ElmTableComponent extends Component {
         closeElmWindow: this.props.closeElmWindow,
         sendPufAssessment: this.sendPufAssessment,
         buttonText: this.props.activeAssessmentType === ELM_INT ? "SELECT" : (this.props.activeAssessmentType === FULL_ASSESSMENT_PUF || this.props.activeAssessmentType === PUF) ? "ADD" : "OK",
-        openAssessmentSearchBar:this.openAssessmentSearchBar
+        openAssessmentSearchBar: this.openAssessmentSearchBar,
+        activeAssessmentType: get(this.props, "activeAssessmentType"),
+        addPufFunction: this.props.addPufFunction,
+        containerUrn: get(this.props, 'currentSlateAncestorData.ancestor.containerUrn'),
+        activeUsageType: get(this.props, 'activeUsageType'),
     };
 
     render() {
@@ -478,13 +482,9 @@ class ElmTableComponent extends Component {
                                 elmFooterProps={this.elmFooterProps}
                                 addFlag={addFlag}
                                 hideSearch={hideSearch}
-                                activeAssessmentType={get(this.props, "activeAssessmentType")}
                                 openItemTable={get(this.state, "openItemTable", false)}
-                                handlePostMsgOnAddAssess={this.handlePostMsgOnAddAssess}
-                                activeUsageType={get(this.props, 'activeUsageType')}
                                 openedFrom={get(this.state, 'openedFrom')}
                                 currentAssessmentSelected={get(this.state, 'currentAssessmentSelected')}
-                                addPufFunction={this.props.addPufFunction}
                                 error={errorNoElmItem}
                             />
                         }
@@ -539,14 +539,9 @@ class ElmTableComponent extends Component {
                             elmFooterProps={this.elmFooterProps}
                             addFlag={addFlag}
                             hideSearch={hideSearch}
-                            activeAssessmentType={get(this.props, "activeAssessmentType")}
                             openItemTable={get(this.state, "openItemTable", false)}
-                            handlePostMsgOnAddAssess={this.handlePostMsgOnAddAssess}
-                            activeUsageType={get(this.props, 'activeUsageType')}
                             openedFrom={get(this.state, 'openedFrom')}
                             currentAssessmentSelected={get(this.state, 'currentAssessmentSelected')}
-                            addPufFunction={this.props.addPufFunction}
-                            containerUrn={get(this.props, 'currentSlateAncestorData.ancestor.containerUrn')}
                         />
                     </>
                 );
