@@ -5,7 +5,6 @@
 // IMPORT - Plugins //
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { get } from "lodash";
 // IMPORT - Components //
 import ElmError from '../ElmError';
 import ElmFooter from '../ElmFooter';
@@ -433,10 +432,10 @@ class ElmTableComponent extends Component {
         sendPufAssessment: this.sendPufAssessment,
         buttonText: this.props.activeAssessmentType === ELM_INT ? "SELECT" : (this.props.activeAssessmentType === FULL_ASSESSMENT_PUF || this.props.activeAssessmentType === PUF) ? "ADD" : "OK",
         openAssessmentSearchBar: this.openAssessmentSearchBar,
-        activeAssessmentType: get(this.props, "activeAssessmentType"),
+        activeAssessmentType: this.props.activeAssessmentType,
         addPufFunction: this.props.addPufFunction,
-        containerUrn: get(this.props, 'currentSlateAncestorData.ancestor.containerUrn'),
-        activeUsageType: get(this.props, 'activeUsageType'),
+        containerUrn: this.props?.currentSlateAncestorData?.ancestor?.containerUrn,
+        activeUsageType: this.props.activeUsageType,
     };
 
     render() {
@@ -462,7 +461,7 @@ class ElmTableComponent extends Component {
         /** Condition to show loader before Items Table */
         let showItemLoader = showLoader == true && isLoading == true && openSearch == true && openItemTable== true  ? true : false;
         /** get error when project has no Elm assessments to display create button */
-        const errorNoElmItem = (get(this, 'props.activeAssessmentType') === PUF) && errFlag;
+        const errorNoElmItem = (this.props.activeAssessmentType === PUF) && errFlag;
         {
             if (errFlag == true) {
                 /** ELM Picker Error Div */
@@ -482,9 +481,9 @@ class ElmTableComponent extends Component {
                                 elmFooterProps={this.elmFooterProps}
                                 addFlag={addFlag}
                                 hideSearch={hideSearch}
-                                openItemTable={get(this.state, "openItemTable", false)}
-                                openedFrom={get(this.state, 'openedFrom')}
-                                currentAssessmentSelected={get(this.state, 'currentAssessmentSelected')}
+                                openItemTable={openItemTable}
+                                openedFrom={openedFrom}
+                                currentAssessmentSelected={this.state?.currentAssessmentSelected}
                                 error={errorNoElmItem}
                             />
                         }
@@ -539,9 +538,9 @@ class ElmTableComponent extends Component {
                             elmFooterProps={this.elmFooterProps}
                             addFlag={addFlag}
                             hideSearch={hideSearch}
-                            openItemTable={get(this.state, "openItemTable", false)}
-                            openedFrom={get(this.state, 'openedFrom')}
-                            currentAssessmentSelected={get(this.state, 'currentAssessmentSelected')}
+                            openItemTable={openItemTable}
+                            openedFrom={openedFrom}
+                            currentAssessmentSelected={this.state?.currentAssessmentSelected}
                         />
                     </>
                 );
