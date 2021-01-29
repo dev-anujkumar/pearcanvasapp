@@ -792,7 +792,7 @@ class SlateWrapper extends Component {
     handleSplitSlate = () => {
         this.toggleSplitSlatePopup(false)
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-        sendDataToIframe({ 'type': SplitCurrentSlate, 'message': {} });
+        sendDataToIframe({ 'type': SplitCurrentSlate, 'message': { type:`${ config.slateType }`} });
         this.props.setSplittedElementIndex(this.state.splittedSlateIndex)
     }
 
