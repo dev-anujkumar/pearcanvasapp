@@ -916,7 +916,7 @@ export const slateTestData = {
             index: 2,
             elementWipType: 'citations',
             toolbar:
-                [   'formatSelector',
+                [   'insertMedia','formatSelector',
                     'footnote',
                     'increaseindent',
                     'decreaseindent',
@@ -938,7 +938,7 @@ export const slateTestData = {
             index: 3,
             elementWipType: 'figure',
             toolbar:
-                [   'formatSelector',
+                [   'insertMedia','formatSelector',
                     'crossLinkingIcon',
                     'assetpopover',
                     'glossary',
@@ -953,7 +953,7 @@ export const slateTestData = {
             elementId: 'urn:pearson:work:155a564b-9f3b-4f8c-a5aa-3e32e6c2a5c5',
             index: 4,
             elementWipType: 'figure',
-            toolbar: ['formatSelector','crossLinkingIcon','assetpopover', 'glossary'],
+            toolbar: ['insertMedia','formatSelector','crossLinkingIcon','assetpopover', 'glossary'],
             tag: 'VID'
         },
         audioElement: {
@@ -963,7 +963,7 @@ export const slateTestData = {
             elementId: 'urn:pearson:work:37a4aa89-8133-4829-8f8e-2b10afa1a95f',
             index: 5,
             elementWipType: 'figure',
-            toolbar: ['formatSelector','crossLinkingIcon','assetpopover', 'glossary'],
+            toolbar: ['insertMedia','formatSelector','crossLinkingIcon','assetpopover', 'glossary'],
             tag: 'AUD'
         },
         interactiveElement: {
@@ -975,7 +975,7 @@ export const slateTestData = {
             primaryOption: "primary-mmi",
             secondaryOption: "secondary-interactive-mmi",
             tag: "QUAD",
-            toolbar: ['formatSelector','crossLinkingIcon','assetpopover', 'glossary'],
+            toolbar: ['insertMedia','formatSelector','crossLinkingIcon','assetpopover', 'glossary'],
             longDesc: ""
         },
         figureInMultiColumn: {
@@ -989,7 +989,7 @@ export const slateTestData = {
             index: '7-0-0',
             elementWipType: 'figure',
             toolbar:
-                ['formatSelector','crossLinkingIcon','assetpopover','glossary','decreaseindent'],
+                ['insertMedia','formatSelector','crossLinkingIcon','assetpopover','glossary','decreaseindent'],
             tag: 'Fg'
         },
         audioInMultiColumn: {
@@ -999,7 +999,7 @@ export const slateTestData = {
             elementId: 'urn:pearson:work:00eafb5a-6ce7-47fe-b2e6-fd5353c50bc8',
             index: '7-0-1',
             elementWipType: 'figure',
-            toolbar: ['formatSelector', 'crossLinkingIcon','assetpopover', 'glossary'],
+            toolbar: ['insertMedia','formatSelector', 'crossLinkingIcon','assetpopover', 'glossary'],
             tag: 'AUD'
         },
         videoInMultiColumn: {
@@ -1009,7 +1009,7 @@ export const slateTestData = {
             elementId: 'urn:pearson:work:3bf55984-7e1e-48d9-8f8e-240ea4707c23',
             index: '7-1-0',
             elementWipType: 'figure',
-            toolbar: ['formatSelector','crossLinkingIcon','assetpopover', 'glossary'],
+            toolbar: ['insertMedia','formatSelector','crossLinkingIcon','assetpopover', 'glossary'],
             tag: 'VID'
         },
         interactiveInMultiColumn: {
@@ -1021,7 +1021,7 @@ export const slateTestData = {
             primaryOption: "primary-mmi",
             secondaryOption: "secondary-interactive-mmi",
             tag: "QUAD",
-            toolbar: ['formatSelector','crossLinkingIcon','assetpopover', 'glossary'],
+            toolbar: ['insertMedia','formatSelector','crossLinkingIcon','assetpopover', 'glossary'],
             longDesc:""
         },
         figureInAside: {
@@ -1035,7 +1035,7 @@ export const slateTestData = {
             index: '8-0',
             elementWipType: 'figure',
             toolbar:
-                ['formatSelector','crossLinkingIcon','assetpopover','glossary','decreaseindent'],
+                ['insertMedia','formatSelector','crossLinkingIcon','assetpopover','glossary','decreaseindent'],
             tag: 'Fg'
         },
         audioInAside: {
@@ -1045,7 +1045,7 @@ export const slateTestData = {
             elementId: 'urn:pearson:work:ceb5724e-18ba-4f60-b70e-e152abecbac6',
             index: '8-2',
             elementWipType: 'figure',
-            toolbar: ['formatSelector', 'crossLinkingIcon','assetpopover', 'glossary'],
+            toolbar: ['insertMedia','formatSelector', 'crossLinkingIcon','assetpopover', 'glossary'],
             tag: 'AUD'
         },
         videoInAside: {
@@ -1055,7 +1055,7 @@ export const slateTestData = {
             elementId: 'urn:pearson:work:554a3610-9e26-4e84-afdf-7071657a6c9d',
             index: '8-1',
             elementWipType: 'figure',
-            toolbar: ['formatSelector','crossLinkingIcon','assetpopover', 'glossary'],
+            toolbar: ['insertMedia','formatSelector','crossLinkingIcon','assetpopover', 'glossary'],
             tag: 'VID'
         },
         interactiveInAside: {
@@ -1067,7 +1067,7 @@ export const slateTestData = {
             primaryOption: "primary-mmi",
             secondaryOption: "secondary-interactive-mmi",
             tag: "QUAD",
-            toolbar: ['formatSelector','crossLinkingIcon','assetpopover', 'glossary'],
+            toolbar: ['insertMedia','formatSelector','crossLinkingIcon','assetpopover', 'glossary'],
             longDesc:""
         },
         figureInWE: {
@@ -1081,7 +1081,7 @@ export const slateTestData = {
             index: '9-1-0',
             elementWipType: 'figure',
             toolbar:
-                ['formatSelector','crossLinkingIcon','assetpopover','glossary','decreaseindent'],
+                ['insertMedia','formatSelector','crossLinkingIcon','assetpopover','glossary','decreaseindent'],
             tag: 'Fg'
         },
         audioInWE: {
@@ -1091,7 +1091,7 @@ export const slateTestData = {
             elementId: 'urn:pearson:work:7ab86ee0-60b6-4874-a1c4-d03173cc385d',
             index: '9-1-1',
             elementWipType: 'figure',
-            toolbar: ['formatSelector', 'crossLinkingIcon','assetpopover', 'glossary'],
+            toolbar: ['insertMedia','formatSelector', 'crossLinkingIcon','assetpopover', 'glossary'],
             tag: 'AUD'
         },
         videoInWE: {
@@ -1101,7 +1101,7 @@ export const slateTestData = {
             elementId: 'urn:pearson:work:b90bc099-31d6-434d-9a4c-f0589b234b27',
             index: '9-1-2',
             elementWipType: 'figure',
-            toolbar: ['formatSelector','crossLinkingIcon','assetpopover', 'glossary'],
+            toolbar: ['insertMedia','formatSelector','crossLinkingIcon','assetpopover', 'glossary'],
             tag: 'VID'
         },
         interactiveInWE: {
@@ -1113,7 +1113,7 @@ export const slateTestData = {
             primaryOption: "primary-mmi",
             secondaryOption: "secondary-interactive-mmi",
             tag: "QUAD",
-            toolbar: ['formatSelector','crossLinkingIcon','assetpopover', 'glossary'],
+            toolbar: ['insertMedia','formatSelector','crossLinkingIcon','assetpopover', 'glossary'],
             longDesc:""
         },
     },

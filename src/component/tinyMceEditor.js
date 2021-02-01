@@ -11,7 +11,7 @@ import "tinymce/plugins/lists";
 import "tinymce/plugins/advlist";
 import "tinymce/plugins/paste";
 // IMPORT - Components & Dependencies //
-import { EditorConfig, FormatSelectors, elementTypeOptions } from '../config/EditorConfig';
+import { EditorConfig, FormatSelectors, elementTypeOptions, insertMediaSelectors } from '../config/EditorConfig';
 import config from '../config/config';
 import { insertListButton, bindKeyDownEvent, insertUoListButton, preventRemoveAllFormatting, removeTinyDefaultAttribute, removeListHighliting, highlightListIcon } from './ListElement/eventBinding.js';
 import { authorAssetPopOver } from './AssetPopover/openApoFunction.js';
@@ -30,7 +30,7 @@ import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER } from '../compone
 import { conversionElement } from './Sidebar/Sidebar_Action';
 import { wirisAltTextPopup } from './SlateWrapper/SlateWrapper_Actions';
 import elementList from './Sidebar/elementTypes';
-
+import { handleC2MediaClick }  from '../js/TinyMceUtility.js';
 let context = {};
 let clickedX = 0;
 let clickedY = 0;
@@ -64,7 +64,6 @@ export class TinyMceEditor extends Component {
             statusbar: false,
             valid_elements: '*[*]',
             extended_valid_elements: '*[*]',
-            object_resizing: false,
             fixed_toolbar_container: '#tinymceToolbar',
             content_style: EditorConfig.contentStyle,
             toolbar: EditorConfig.toolbar,
@@ -73,6 +72,8 @@ export class TinyMceEditor extends Component {
             force_br_newlines: true,
             forced_root_block: '',
             remove_linebreaks: false,
+            object_resizing : 'img',
+            resize_img_proportional: false,
             paste_preprocess: this.pastePreProcess,
             paste_postprocess: this.pastePostProcess,
             force_p_newlines: false,
@@ -88,6 +89,7 @@ export class TinyMceEditor extends Component {
                 this.setAssetPopoverIcon(editor);
                 this.addAssetPopoverIcon(editor);
                 this.handleSpecialCharIcon(editor);
+                this.addInsertMediaButton(editor);
                 this.setFootnoteIcon(editor);
                 this.addFootnoteIcon(editor);
                 this.setGlossaryIcon(editor);
@@ -128,6 +130,11 @@ export class TinyMceEditor extends Component {
                         }
                     }
                 }
+                tinymce.activeEditor.on('ObjectResizeStart', function (e) {
+                    if (e?.target?.nodeName == 'IMG' && e.target.classList.length > 0 && (e.target.classList.contains('Wirisformula') || e.target.classList.contains('temp_Wirisformula'))) {
+                        e.preventDefault();/** Prevent IMG resize for MathML images */
+                    }
+                });
 
                 editor.on('Change', (e) => {
                     /*
@@ -669,6 +676,15 @@ export class TinyMceEditor extends Component {
                         this.wirisClick = 0;
                     }, 500);
                 }
+            }
+            /** Open Alfresco Picker to update inline image in list on double-click*/
+            if (e?.target?.nodeName == 'IMG' && e.target.classList.contains('imageAssetContent') && (e?.detail == 2) && (this?.props?.element?.type == 'element-list')) {
+                const imageArgs = {
+                    xCoord: e.target?.x,
+                    yCoord: e.target?.y,
+                    id: e.target?.dataset?.id
+                }
+                handleC2MediaClick(this.props.permissions, editor, imageArgs);
             }
             let selectedText = editor.selection.getContent({ format: "text" });
             let elemClassList = editor.targetElm.classList;
@@ -1389,6 +1405,36 @@ export class TinyMceEditor extends Component {
         );
     }
 
+    /**
+     * Adds Insert button to the toolbar for adding Media like Images.
+     * @param {*} editor  editor instance
+     */
+    addInsertMediaButton = editor => {
+        const self = this;
+        editor.ui.registry.addMenuButton('insertMedia', {
+            text: 'Insert',
+            tooltip: 'insertMedia',
+            onSetup: function () {
+                document.querySelector('button[title="insertMedia"]').setAttribute('title', 'Insert Media');
+                let newSpan = document.createElement('span');
+                newSpan.className = "tooltip-text"
+                newSpan.innerText = 'Insert';
+                const tooltipLabel = document.querySelector('button[aria-label="insertMedia"] .tox-tbtn__select-label')
+                if (tooltipLabel) {
+                    tooltipLabel.after(newSpan)
+                }
+            },
+            fetch: (callback) => {
+                let params = {
+                    element: self.props.element,
+                    permissions: self.props.permissions,
+                    editor: editor
+                }
+                const items = insertMediaSelectors(params);
+                callback(items);
+            }
+        });
+    }
     /**
      * Adds Asset popover icon to the toolbar.
      * @param {*} editor  editor instance

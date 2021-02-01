@@ -75,6 +75,11 @@ jest.mock('../../../src/js/glossaryFootnote.js', () => {
         }
     }
 })
+jest.mock('../../../src/js/TinyMceUtility.js', () => {
+    return {
+        handleC2MediaClick:()=>{}
+    }
+})
 jest.mock('../../../src/component/ListElement/eventBinding', () => {
     return {
         preventRemoveAllFormatting: () => {
@@ -2880,6 +2885,62 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
             expect(spyeditorPaste).toHaveBeenCalled()
             expect(setDisabled).toHaveBeenCalled();
         });
+        it('Test-27.2-Method--25--editorClick--Inline image in List double click', () => {
+            instance.props = {
+                ...props,
+                permissions: ["login", "logout"],
+                tagName: "SPAN",
+                elementId: "work:urn",
+                element: { type: "element-list", elementdata : {listtype : 'ordered'} },
+                currentElement: { type: "element-list", elementdata : {listtype : 'ordered'} }
+            }
+            let imgData = `<img src=https://cite-media-stg.pearson.com/legacy_paths/28154019-35d4-4b5b-9da6-fdc6335e1595/1addNew.png data-id="imageAssetContent:28154019-35d4-4b5b-9da6-fdc6335e1595" class="imageAssetContent" width="112" height="150" imageid="urn:pearson:alfresco:28154019-35d4-4b5b-9da6-fdc6335e1595" alt="Alfresco script Scale image update for UDB release" longdescription="Alfresco scale image long desc for UDb chanages."/>`;
+            let event = {
+                detail :2,
+                preventDefault: jest.fn(),
+                stopPropagation: jest.fn(),
+                target: {
+                    id: "",
+                    nodeName: 'IMG',
+                    classList : {
+                        contains : ()=>{ return true; }
+                    },
+                    dataset:{
+                        id:'imageAssetContent:28154019-35d4-4b5b-9da6-fdc6335e1595'
+                    }
+                },
+                type: "click",
+                clipboardData: {
+                    getData: () => { return; }
+                }
+            }
+            let nextEditor = {
+                on: (temp, cb) => { cb(event) },
+                selection: {
+                    getContent: () => { return ""; }
+                },
+                setContent: () => { },
+                insertContent: () => {
+                    return imgData
+                },
+                targetElm: {
+                    classList: {
+                        contains: () => {
+                            return true;
+                        }
+                    }
+                },
+                dom: domObj
+            }
+            instance.assetPopoverButtonState = {
+                setDisabled: () => { }
+            }
+            const spyeditorPaste = jest.spyOn(instance, 'editorClick')
+            const setDisabled = jest.spyOn(instance.assetPopoverButtonState, 'setDisabled');
+            instance.editorClick(nextEditor);
+            expect(spyeditorPaste).toHaveBeenCalled()
+            expect(setDisabled).toHaveBeenCalled();
+        });
     });
     describe('Test-28-Method--26--editorKeyup', () => {
         it('Test-28.1-Method--26--editorKeyup-Other Elements', () => {
@@ -4218,7 +4279,8 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
             element: { type: "citation", status: "wip" },
             model: {},
             placeholder: "",
-            activeElement: false
+            activeElement: false,
+            audioGlossaryPopup:jest.fn()
         })
         component.update();
         it('Test-30.1.1-Method--28--editorOnClick--nodeName:SUP & alreadyExist:FALSE', () => {
@@ -4292,7 +4354,7 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
                     id: "",
                     dataset: { uri: "uri" },
                     nodeName: "DFN",
-                    closest: () => { return false; }
+                    closest: () => { return { hasAttribute:()=>{return false}}; }
                 },
                 type: "click",
                 clipboardData: {
@@ -4312,6 +4374,7 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
             expect(setDisabled).toHaveBeenCalled()
         });
         it('Test-30.2.2-Method--28--editorOnClick--nodeName:DFN & alreadyExist:TRUE', () => {
+            instance.props.audioGlossaryPopup = jest.fn();
             document.querySelector = () => { return false; }
             let event = {
                 preventDefault: jest.fn(),
@@ -4320,7 +4383,7 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
                     id: "",
                     dataset: { uri: "uri" },
                     nodeName: "DFNN",
-                    closest: () => { return { getAttribute(){return}} }
+                    closest: () => { return { hasAttribute:()=>{return true}, getAttribute:()=>{return true}}; }
                 },
                 type: "click",
                 clipboardData: {
