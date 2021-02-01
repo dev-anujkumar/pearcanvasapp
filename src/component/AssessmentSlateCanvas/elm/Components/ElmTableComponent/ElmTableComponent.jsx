@@ -483,7 +483,7 @@ class ElmTableComponent extends Component {
                                 hideSearch={hideSearch}
                                 openItemTable={openItemTable}
                                 openedFrom={openedFrom}
-                                currentAssessmentSelected={this.state?.currentAssessmentSelected}
+                                assessmentWUrn={this.state?.currentAssessmentSelected?.urn}
                                 error={errorNoElmItem}
                             />
                         }
