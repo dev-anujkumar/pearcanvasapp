@@ -96,17 +96,17 @@ export const handlePostMsgOnAddAssess = (addPufFunction, usagetype) => {
                     if(items.length >= 3){                  
                         /* Update newly added assessment */
                         if (items[0] === "assessment") {
-                            let temp = {
+                            let assessmentDataMsg = {
                                 id: items[1]?.split("_")[1],
                                 title: items[2]?.split("_")[1],
                                 usagetype: usagetype, 
                             };
                             
                             if(itemData?.itemid && itemData.itemTitle && itemData.usagetype){
-                                temp = { ...temp, ...itemData }
+                                assessmentDataMsg = { ...assessmentDataMsg, ...itemData }
                             }
                             /**@function to update data display in slate */
-                            addPufFunction(temp);
+                            addPufFunction(assessmentDataMsg);
                             /* Remove EventListener */
                             window.removeEventListener(
                                 "message",
@@ -116,13 +116,13 @@ export const handlePostMsgOnAddAssess = (addPufFunction, usagetype) => {
                         }                  
                         /* Update newly added Item */
                         else if (items[0] === "item") {
-                            const temp = {
+                            const itemDataFromMsg = {
                                 itemid: items[1]?.split("_")[1],
                                 itemTitle: items[2]?.split("_")[1],
                                 usagetype: usagetype,                               
                             };
                             /* save item data into store */
-                            store.dispatch(setNewItemFromElm(temp));
+                            store.dispatch(setNewItemFromElm(itemDataFromMsg));
                         }  
                     }                
                 }

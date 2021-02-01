@@ -103,7 +103,9 @@
 .elm-wrapper .root-container .main-div.elm-error-div{
   min-height: 296px;
 }
-
+.elm-wrapper .root-container .main-div.no-elm-data-error-div{
+  min-height: 330px;
+}
 @media only screen and (max-width:1200px) {
   .elm-wrapper .root-container {
     min-height: 400px;
