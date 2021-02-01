@@ -8,7 +8,7 @@ import {
     ASSESSMENT_CONFIRMATION_POPUP,
     UPDATE_ELM_ITEM_ID,
     SAVE_AUTO_UPDATE_ID,
-    ELM_NEW_ITEM_DATA,
+    ELM_NEW_ITEM_DATA
 } from '../constants/Action_Constants';
 
 const INITIAL_STATE = {

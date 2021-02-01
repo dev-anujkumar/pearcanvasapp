@@ -21,7 +21,7 @@ const ElmFooter = (props) => {
   const { addFlag, hideSearch, openItemTable,
     currentAssessmentSelected,
     openedFrom,
-    error,
+    error
   } = props;
 
   /* render on change in openItemTable */
