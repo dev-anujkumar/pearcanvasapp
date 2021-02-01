@@ -11,6 +11,7 @@ import {
 } from "../../../constants/Action_Constants";
 import { specialCharacterDecode } from '../assessmentCiteTdx/Actions/CiteTdxActions.js';
 import { fetchAssessmentMetadata, fetchAssessmentVersions, setItemUpdateEvent } from './assessmentActions.js';
+import { disableHeader, hideTocBlocker} from '../../../js/toggleLoader';
 const AssessmentAPIHandlers = {
     /** @description This function prepares list of Assessment UsageTypes from api-response */
     prepareUsageTypeData: (res) => {
@@ -277,6 +278,8 @@ const AssessmentAPIHandlers = {
     },
     /** @description This function for Assessment Error Message Handling */
     assessmentErrorHandler: (errorMessage) => {
+        disableHeader(false);
+        hideTocBlocker(false);
         console.error('Error in Assessment handling>>>>', errorMessage)
     }
 }
