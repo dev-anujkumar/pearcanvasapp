@@ -388,7 +388,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         let currentParentData = JSON.parse(JSON.stringify(parentData1));
         let currentSlateData = currentParentData[config.slateManifestURN];
         /** [PCAT-8289] ----------------------------------- TCM Snapshot Data handling ---------------------------------*/
-        if (elementTypeData.indexOf(elementType) !== -1 && store.getState().appStore.showHideType == undefined) {
+        if (elementTypeData.indexOf(elementType) !== -1 && typeWithPopup !== "poetry") {
             let elementUpdateData ={
                 currentParentData: currentParentData,
                 updateBodymatter:tcmBodymatter,

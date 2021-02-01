@@ -160,6 +160,7 @@
 }
 
 .audio-wrapper{
+    cursor: pointer;
     margin: 0 15px;
     border: 1px solid #ccc;
     align-items: center;
