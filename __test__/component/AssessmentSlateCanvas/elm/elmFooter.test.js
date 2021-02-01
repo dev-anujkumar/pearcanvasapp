@@ -3,7 +3,10 @@ import { mount } from 'enzyme';
 import ElmFooter from ' ../../../src/component/AssessmentSlateCanvas/elm/Components/ElmFooter';
 
 describe('Testing ELM Footer component', () => {
-
+     const event = {
+        preventDefault: jest.fn(),
+        stopPropagation: jest.fn()
+    }
     it('Test- renders without crashing', () => {
         let props = {
             elmFooterProps: {
@@ -16,18 +19,82 @@ describe('Testing ELM Footer component', () => {
         expect(component).toHaveLength(1);
 
     })
-    it('Test- ELM type assessment', () => {
+    it('Test- ELM type slate assessment', () => {
         let props = {
             elmFooterProps: {
                 closeElmWindow: jest.fn(),
                 sendPufAssessment: jest.fn(),
                 openAssessmentSearchBar:jest.fn(),
+                addPufFunction: jest.fn(),
+                activeAssessmentType: "puf",
+                containerUrn: "",
+                activeUsageType: "",
                 buttonText: "ADD"
-            }
+            },
+            openItemTable: false,
+            assessmentWUrn: "urn:pearson:work:4737f0d9-fb9d-4673-9f0f-1b5dcaed59c7",
+            openedFrom: "slateAssessment",
+            error: false,
+            activeRadioIndex: null
         }
         const component = mount(<ElmFooter {...props} />)
         expect(component).toHaveLength(1);
 
+    })
+    describe('Testing create new Assessment/Item button in ELM Footer component', () => {
+        let props = {
+                elmFooterProps: {
+                    closeElmWindow: jest.fn(),
+                    sendPufAssessment: jest.fn(),
+                    openAssessmentSearchBar:jest.fn(),
+                    addPufFunction: jest.fn(),
+                    activeAssessmentType: "puf",
+                    containerUrn: "",
+                    activeUsageType: "",
+                    buttonText: "ADD"
+                },
+                openItemTable: false,
+                assessmentWUrn: "urn:pearson:work:4737f0d9-fb9d-4673-9f0f-1b5dcaed59c7",
+                openedFrom: "singleAssessment",
+                error: false,
+                activeRadioIndex: null
+            }
+
+        const wrapper = (propObj)=>{
+            return mount(<ElmFooter {...propObj} />)
+        }
+
+        it('Test- ELM, mounting of elmFooter component', () => {     
+            const component = wrapper(props);     
+            expect(component).toHaveLength(1);
+        })
+        it('Test- ELM, show new button and Click event', () => {
+            const component = wrapper(props);  
+            const button =  component.find('button.create-button');
+            expect(button).toHaveLength(1);  
+            button.simulate('click', event);
+        })
+        it('Test- ELM, hide new button', () => {
+            props.elmFooterProps.activeAssessmentType = "";
+            const component = wrapper(props);  
+            const button =  component.find('button.create-button');
+            expect(button).toHaveLength(0);  
+        })
+
+        describe('Testing- Hide Add, Search buttons in ELM Footer component when no no elm data', () => {
+            props.error = true;
+            const component = wrapper(props); 
+
+            it('Test- ELM, hide Add button', () => {
+                const button =  component.find('button.add-button');
+                expect(button).toHaveLength(0);  
+            })
+            it('Test- ELM, hide Search button', () => {
+                const button =  component.find('button.search-button');
+                expect(button).toHaveLength(0);  
+            })
+        })
+        
     })
     it('Test- Learnosity type assessment', () => {
         let props = {
