@@ -8,7 +8,8 @@ import {
     SET_ITEM_UPDATE_EVENT,
     RESET_ASSESSMENT_STORE,
     ELM_ASSESSMENT_EDIT_ID,
-    ASSESSMENT_CONFIRMATION_POPUP
+    ASSESSMENT_CONFIRMATION_POPUP,
+    ELM_NEW_ITEM_DATA
 } from "../../../constants/Action_Constants";
 import { ELM_PORTAL_ERROR_MSG, AUTO_UPDATE_FAIL_ERROR } from '../AssessmentSlateConstants.js';
 /**Import -other dependencies */
@@ -237,6 +238,13 @@ export const updateElmItemData = (editAssessment, itemData) => {
 export const  setItemUpdateEvent= (value) => {
     return {
         type: SET_ITEM_UPDATE_EVENT,
+        payload: value
+    }
+}
+
+export const setNewItemFromElm = (value) =>{
+ return {
+        type: ELM_NEW_ITEM_DATA,
         payload: value
     }
 }

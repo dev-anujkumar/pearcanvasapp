@@ -25,7 +25,7 @@ const ElmError = (props) => {
     }
 
     return (
-        <div className="main-div elm-error-div">
+        <div className={`main-div elm-error-div ${(props?.activeAssessmentType == PUF) && props?.errFlag ? "no-elm-data-error-div" : ""}`}>
             <p className="elm-error-line">
                 {props.errorStatus && <i>{getErrorMessage()}</i>}
             </p>

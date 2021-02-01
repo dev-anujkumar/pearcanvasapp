@@ -6,7 +6,7 @@ import { checkSlateLock } from '../../js/slateLockUtility';
 import { releaseSlateLockWithCallback, getSlateLockStatus } from '../CanvasWrapper/SlateLock_Actions';
 import { handleSlateRefresh } from '../CanvasWrapper/SlateRefresh_Actions';
 import { sendDataToIframe } from '../../constants/utility.js';
-import { updateElmItemData, setItemUpdateEvent } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
+import { updateElmItemData, setItemUpdateEvent, setNewItemFromElm } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 /**
  * This module deals with the event handling for the Update of Full and Embedded Elm Assessments
  * for the events triggered from the Elm Assessment Portal
@@ -80,3 +80,56 @@ export const prepareItemMetadata = (eventData) =>{
         itemId,itemTitle
     }
 }
+
+/* update on getting message form elm portal */
+export const handlePostMsgOnAddAssess = (addPufFunction, usagetype) => {
+    let slateLockInfo = store.getState()?.slateLockReducer?.slateLockInfo;
+    if (!checkSlateLock(slateLockInfo)) {
+        const getMsgafterAddAssessment = async (event) => {
+            try {
+                const { data = {} } = event;
+                /* Get the data from store */
+                const itemData = store.getState().assessmentReducer?.item ?? {};
+
+                if (data.source === "elm") {                  
+                    const items = data.type?.split("|") ?? []; 
+                    if(items.length >= 3){                  
+                        /* Update newly added assessment */
+                        if (items[0] === "assessment") {
+                            let assessmentDataMsg = {
+                                id: items[1]?.split("_")[1],
+                                title: items[2]?.split("_")[1],
+                                usagetype: usagetype, 
+                            };
+                            
+                            if(itemData?.itemid && itemData.itemTitle && itemData.usagetype){
+                                assessmentDataMsg = { ...assessmentDataMsg, ...itemData }
+                            }
+                            /**@function to update data display in slate */
+                            addPufFunction(assessmentDataMsg);
+                            /* Remove EventListener */
+                            window.removeEventListener(
+                                "message",
+                                getMsgafterAddAssessment,
+                                false
+                            );
+                        }                  
+                        /* Update newly added Item */
+                        else if (items[0] === "item") {
+                            const itemDataFromMsg = {
+                                itemid: items[1]?.split("_")[1],
+                                itemTitle: items[2]?.split("_")[1],
+                                usagetype: usagetype,                               
+                            };
+                            /* save item data into store */
+                            store.dispatch(setNewItemFromElm(itemDataFromMsg));
+                        }  
+                    }                
+                }
+            } catch (err) {
+                console.error("catch with err", err);
+            }
+        };
+        window.addEventListener("message", getMsgafterAddAssessment, false);
+    }
+};

@@ -7,7 +7,8 @@ import {
     RESET_ASSESSMENT_STORE,
     ASSESSMENT_CONFIRMATION_POPUP,
     UPDATE_ELM_ITEM_ID,
-    SAVE_AUTO_UPDATE_ID
+    SAVE_AUTO_UPDATE_ID,
+    ELM_NEW_ITEM_DATA
 } from '../constants/Action_Constants';
 
 const INITIAL_STATE = {
@@ -83,6 +84,11 @@ export default function assessmentReducer(state = INITIAL_STATE, action = INITIA
                 currentEditAssessment: state.currentEditAssessment,
                 latestItemAssessment: state.latestItemAssessment,
                 itemUpdateEvent: state.itemUpdateEvent
+            }
+        case ELM_NEW_ITEM_DATA:
+            return {
+                ...state,
+                item: action.payload
             }
         default:
             return state
