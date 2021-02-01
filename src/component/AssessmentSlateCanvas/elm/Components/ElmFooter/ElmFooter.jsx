@@ -19,13 +19,11 @@ const ElmFooter = (props) => {
     activeUsageType } = props.elmFooterProps;
 
   const { addFlag, hideSearch, openItemTable,
-    currentAssessmentSelected,
+    assessmentWUrn,
     openedFrom,
-    error
+    error,
+    activeRadioIndex
   } = props;
-
-  /* render on change in openItemTable */
-  useEffect(() => { }, [openItemTable]);
 
   const openSearchBar = (e) => {
     e.preventDefault();
@@ -45,7 +43,6 @@ const ElmFooter = (props) => {
     }
     /* Open ELM portal for Add new Item in Existing Assessment */
     if (openedFrom === "singleAssessment") {
-      const assessmentWUrn = currentAssessmentSelected?.urn;
       if (assessmentWUrn && openItemTable) {
         tempUrl =
           `${config.ELM_PORTAL_URL}/launch/editor/assessment/${assessmentWUrn}/item/createInPlace`
@@ -72,14 +69,6 @@ const ElmFooter = (props) => {
     }
   }
 
-/** @function to disable new button */
-  function shouldNewDisable() {
-    const flag = openItemTable ?
-      currentAssessmentSelected?.type === "assessmentItem" :
-      currentAssessmentSelected?.type === "assessment";
-    return flag;
-  }
-
   return (
     <div className="puf-footer">
       {/* Create new Assessment/Item only for PUF */}
@@ -87,7 +76,7 @@ const ElmFooter = (props) => {
         <button
           className="puf-button create-button"
           onClick={openElmPortal}
-          disabled={shouldNewDisable()}
+          disabled={activeRadioIndex !== null}
         >
           <span className="margin-right-5px">
             {openItemTable ? singleAssessmentItemIcon : elmAssessmentItem}
