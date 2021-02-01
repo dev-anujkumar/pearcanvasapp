@@ -22,7 +22,7 @@ const ElmFooter = (props) => {
     assessmentWUrn,
     openedFrom,
     error,
-    activeRadioIndex
+    activeRadioIndex = null
   } = props;
 
   const openSearchBar = (e) => {
