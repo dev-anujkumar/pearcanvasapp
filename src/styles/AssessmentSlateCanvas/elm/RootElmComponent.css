@@ -104,7 +104,7 @@
   min-height: 296px;
 }
 .elm-wrapper .root-container .main-div.no-elm-data-error-div{
-  min-height: 330px;
+  min-height: 330px !important;
 }
 @media only screen and (max-width:1200px) {
   .elm-wrapper .root-container {
@@ -117,6 +117,9 @@
   }
   .elm-wrapper .root-container .main-div.elm-error-div{
     min-height: 225px;
+  }
+  .elm-wrapper .root-container .main-div.no-elm-data-error-div{
+    min-height: 260px !important;
   }
   .elm-wrapper .root-container .main-div.has-search {
     min-height: 185px;
@@ -140,6 +143,9 @@
   }
   .elm-wrapper .root-container .main-div.elm-error-div{
     min-height: 175px;
+  }
+  .elm-wrapper .root-container .main-div.no-elm-data-error-div{
+    min-height: 210px !important;
   }
   .elm-wrapper .root-container .main-div.has-search {
     min-height: 135px;
