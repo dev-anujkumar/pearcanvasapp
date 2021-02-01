@@ -1,6 +1,7 @@
 import { CONTENT_STYLE } from './TinymceDefaultCss';
 import 'tinymce/plugins/charmap';
 import { handleC2MediaClick } from '../js/TinyMceUtility.js';
+import ElementConstants from '../component/ElementContainer/ElementConstants.js';
 export const EditorConfig = {
     
     formats: {
@@ -26,8 +27,7 @@ export const EditorConfig = {
     },
     toolbar: 'undo redo | insertMedia | formatSelector | bold italic underline strikethrough removeformat subscript superscript specialcharacters | crossLinkingIcon Glossary Footnote tinyMcewirisformulaEditor tinyMcewirisformulaEditorChemistry code | customListButton customUoListButton indent outdent | slateTag ',
     contentStyle: CONTENT_STYLE,
-    plugins: "lists advlist placeholder charmap paste tiny_mce_wiris image imagetools",
-    imagetools_toolbar: 'rotateleft rotateright | flipv fliph'
+    plugins: "lists advlist placeholder charmap paste tiny_mce_wiris image",
 }
 
 export const GlossaryFootnoteEditorConfig = {
@@ -151,7 +151,7 @@ export const elementTypeOptions = Object.freeze({
 /** Insert Image handler - calls Image Alfresco Picker */
 const insertImageHandler = (params) => {
     let { element, permissions, editor } = params;
-    if (element?.type === "element-list") {
+    if (element?.type === ElementConstants.ELEMENT_LIST) {
         handleC2MediaClick(permissions, editor);
     }
 }

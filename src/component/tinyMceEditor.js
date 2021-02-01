@@ -10,14 +10,13 @@ import "tinymce/skins/content/default/content.css";
 import "tinymce/plugins/lists";
 import "tinymce/plugins/advlist";
 import "tinymce/plugins/paste";
-import 'tinymce/plugins/imagetools'
 // IMPORT - Components & Dependencies //
 import { EditorConfig, FormatSelectors, elementTypeOptions, insertMediaSelectors } from '../config/EditorConfig';
 import config from '../config/config';
 import { insertListButton, bindKeyDownEvent, insertUoListButton, preventRemoveAllFormatting, removeTinyDefaultAttribute, removeListHighliting, highlightListIcon } from './ListElement/eventBinding.js';
 import { authorAssetPopOver } from './AssetPopover/openApoFunction.js';
 import {
-    tinymceFormulaIcon, tinymceFormulaChemistryIcon, assetPopoverIcon, crossLinkIcon, code, Footnote, bold, Glossary, undo, redo, italic, underline, strikethrough, removeformat, subscript, superscript, charmap, downArrow, orderedList, unorderedList, indent, outdent, addImage
+    tinymceFormulaIcon, tinymceFormulaChemistryIcon, assetPopoverIcon, crossLinkIcon, code, Footnote, bold, Glossary, undo, redo, italic, underline, strikethrough, removeformat, subscript, superscript, charmap, downArrow, orderedList, unorderedList, indent, outdent
 } from '../images/TinyMce/TinyMce.jsx';
 import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
 import { checkforToolbarClick, customEvent, spanHandlers, removeBOM, getWirisAltText, removeImageCache } from '../js/utils';
@@ -56,7 +55,6 @@ export class TinyMceEditor extends Component {
         this.notFormatting = true;
         this.gRange = null;
         this.wirisClick = 0;
-        this.inlineImageClick = 0;
         this.editorConfig = {
             plugins: EditorConfig.plugins,
             selector: '#cypress-0',
@@ -75,10 +73,7 @@ export class TinyMceEditor extends Component {
             forced_root_block: '',
             remove_linebreaks: false,
             object_resizing : 'img',
-            imagetools_cors_hosts: ['*://*pearson.com',"localhost:*"],
-            imagetools_credentials_hosts:['pearson.com'],
             resize_img_proportional: false,
-            imagetools_toolbar: 'rotateleft rotateright | flipv fliph',
             paste_preprocess: this.pastePreProcess,
             paste_postprocess: this.pastePostProcess,
             force_p_newlines: false,
@@ -137,7 +132,7 @@ export class TinyMceEditor extends Component {
                 }
                 tinymce.activeEditor.on('ObjectResizeStart', function (e) {
                     if (e?.target?.nodeName == 'IMG' && e.target.classList.length > 0 && (e.target.classList.contains('Wirisformula') || e.target.classList.contains('temp_Wirisformula'))) {
-                        e.preventDefault();//prevent resize
+                        e.preventDefault();/** Prevent IMG resize for MathML images */
                     }
                 });
 
@@ -370,9 +365,6 @@ export class TinyMceEditor extends Component {
                     break;
                 case "updateFormula":
                     editor.selection.bookmarkManager.moveToBookmark(this.currentCursorBookmark);
-                    break;
-                case "mceImageRotateRight":
-                    console.log('roatate right')
                     break;
             }
             if (this.props && this.props.element && this.props.element.type && this.props.element.type === 'stanza' && e.command === 'mceToggleFormat') {
@@ -685,18 +677,14 @@ export class TinyMceEditor extends Component {
                     }, 500);
                 }
             }
-            /** Open Alfresco Picker to update inline image in list */
-            if (e?.target?.nodeName == 'IMG' && e.target.classList.contains('imageAssetContent')) {
-                if (e?.detail == 2) {
-                    if (this?.props?.element?.type == 'element-list') {
-                        const imageArgs = {
-                            xCoord: e.target.x,
-                            yCoord: e.target.y,
-                            id: e.target?.dataset?.id
-                        }
-                        handleC2MediaClick(this.props.permissions, editor, imageArgs);
-                    }
+            /** Open Alfresco Picker to update inline image in list on double-click*/
+            if (e?.target?.nodeName == 'IMG' && e.target.classList.contains('imageAssetContent') && (e?.detail == 2) && (this?.props?.element?.type == 'element-list')) {
+                const imageArgs = {
+                    xCoord: e.target?.x,
+                    yCoord: e.target?.y,
+                    id: e.target?.dataset?.id
                 }
+                handleC2MediaClick(this.props.permissions, editor, imageArgs);
             }
             let selectedText = editor.selection.getContent({ format: "text" });
             let elemClassList = editor.targetElm.classList;
@@ -2930,12 +2918,6 @@ export class TinyMceEditor extends Component {
                    this.wirisClick = 0;
                }, 500)
            }
-            if (e?.target?.classList.contains('imageAssetContent')) {
-                this.inlineImageClick++;
-                setTimeout(() => {
-                    this.inlineImageClick = 0;
-                }, 500)
-            }
             let wirisModalDesktopNode = tinymce.$('.wrs_modal_desktop')
             wirisModalDesktopNode && wirisModalDesktopNode.remove();
 

@@ -461,7 +461,7 @@ export default {
     'element-aside': {
         'primary-aside-aside': {
             text: 'Aside',
-            toolbar:['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','crossLinkingIcon','assetpopover','slatetag'],
+            toolbar:['insertMedia','bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','crossLinkingIcon','assetpopover','slatetag'],
             enum: 'ASIDE',
             subtype: {
                 'secondary-aside-sb1': {
@@ -493,7 +493,7 @@ export default {
         },
         'primary-aside-feature': {
             text: 'Feature',
-            toolbar:['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','crossLinkingIcon','assetpopover','slatetag'],
+            toolbar:['insertMedia','bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','crossLinkingIcon','assetpopover','slatetag'],
             enum: 'FEATURE',
             subtype: {
                 'secondary-aside-feature': {
@@ -505,7 +505,7 @@ export default {
         },
         'primary-aside-activity': {
             text: 'Activity',
-            toolbar:['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','crossLinkingIcon','assetpopover','slatetag'],
+            toolbar:['insertMedia','bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','crossLinkingIcon','assetpopover','slatetag'],
             enum: 'ACTIVITY',
             subtype: {
                 'secondary-aside-activity': {
@@ -517,7 +517,7 @@ export default {
         },
         'primary-aside-tactic': {
             text: 'Tactic Box',
-            toolbar:['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','crossLinkingIcon','assetpopover','slatetag'],
+            toolbar:['insertMedia','bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','crossLinkingIcon','assetpopover','slatetag'],
             enum: 'TACTIC_BOX',
             subtype: {
                 'secondary-aside-tactic': {
@@ -529,7 +529,7 @@ export default {
         },
         'primary-aside-lol': {
             text: 'Learning Objective List',
-            toolbar:['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','crossLinkingIcon','assetpopover','slatetag'],
+            toolbar:['insertMedia','bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','crossLinkingIcon','assetpopover','slatetag'],
             enum: 'LEARNING_OBJECTIVE_LIST',
             subtype: {
                 'secondary-aside-lol': {
