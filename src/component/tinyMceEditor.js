@@ -1405,6 +1405,10 @@ export class TinyMceEditor extends Component {
         );
     }
 
+    /**
+     * Adds Insert button to the toolbar for adding Media like Images.
+     * @param {*} editor  editor instance
+     */
     addInsertMediaButton = editor => {
         const self = this;
         editor.ui.registry.addMenuButton('insertMedia', {
