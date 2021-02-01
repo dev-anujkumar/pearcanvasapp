@@ -11,7 +11,7 @@ import {
 } from "../../../constants/Action_Constants";
 import { specialCharacterDecode } from '../assessmentCiteTdx/Actions/CiteTdxActions.js';
 import { fetchAssessmentMetadata, fetchAssessmentVersions, setItemUpdateEvent } from './assessmentActions.js';
-import { disableHeader, hideTocBlocker} from '../../../js/toggleLoader';
+import { hideBlocker} from '../../../js/toggleLoader';
 const AssessmentAPIHandlers = {
     /** @description This function prepares list of Assessment UsageTypes from api-response */
     prepareUsageTypeData: (res) => {
@@ -258,6 +258,7 @@ const AssessmentAPIHandlers = {
     },
     /** @description This function dispatches latest metadata for Assessment to store */
     dispatchAssessmentMetadata: (currentWorkUrn, dataForUpdate, dispatch) => {
+        hideBlocker();
         dispatch({
             type: SET_ASSESSMENT_METADATA,
             payload: {
@@ -268,6 +269,7 @@ const AssessmentAPIHandlers = {
     },
     /** @description This function dispatches latest metadata for Assessment-Item to store */
     dispatchUpdatedItemId: (currentWorkUrn, dataForUpdate, dispatch) => {
+        hideBlocker();
         dispatch({
             type: UPDATE_ELM_ITEM_ID,
             payload: {
@@ -278,8 +280,7 @@ const AssessmentAPIHandlers = {
     },
     /** @description This function for Assessment Error Message Handling */
     assessmentErrorHandler: (errorMessage) => {
-        disableHeader(false);
-        hideTocBlocker(false);
+        hideBlocker();
         console.error('Error in Assessment handling>>>>', errorMessage)
     }
 }

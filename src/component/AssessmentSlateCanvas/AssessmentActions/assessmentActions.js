@@ -16,6 +16,7 @@ import { ELM_PORTAL_ERROR_MSG, AUTO_UPDATE_FAIL_ERROR } from '../AssessmentSlate
 import config from '../../../config/config';
 import assessmentApiHandlers from './assessmentApiHandlers.js';
 import { handleRefreshSlate } from '../../ElementContainer/AssessmentEventHandling.js';
+import { hideBlocker} from '../../../js/toggleLoader';
 const {
     prepareUsageTypeData,
     dispatchUsageTypeData,
@@ -167,6 +168,7 @@ export const updateAssessmentVersion = (oldWorkUrn, updatedWorkUrn) => dispatch 
                 isElmApiError: 'elm-api-error'
             }
         })
+        hideBlocker();
         handleRefreshSlate(dispatch);
         console.error("Unable to update the latest workUrn for >>>>", oldWorkUrn)
     })
