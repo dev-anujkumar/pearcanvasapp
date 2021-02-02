@@ -8,8 +8,12 @@ import Button from './../../../../ElementButtons';
 class CiteTdxHeader extends Component {
     
     handleClose = () => {
+        const { openedFrom, assessmentType, assessmentSlateObj, setCiteTdxFilterData } = this.props.headerProps;
         this.props.headerProps.closeWindowAssessment();
         this.props.resetPage(true);
+        if (openedFrom == 'slateAssessment') {
+            setCiteTdxFilterData(assessmentType, assessmentSlateObj);
+        }
     }
     
     render() {

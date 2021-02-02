@@ -66,7 +66,11 @@ class RootCiteTdxComponent extends Component {
 */
   headerProps = {
     title: 'Pearson Assessments',
-    closeWindowAssessment: this.props.closeWindowAssessment
+    closeWindowAssessment: this.props.closeWindowAssessment,
+    openedFrom: this.props.openedFrom,
+    assessmentType: this.props.assessmentType,
+    assessmentSlateObj: this.props.assessmentSlateObj,
+    setCiteTdxFilterData:this.props.setCiteTdxFilterData
   };
 
   render() {
