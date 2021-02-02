@@ -19,7 +19,7 @@ const ElmFooter = (props) => {
     activeUsageType } = props.elmFooterProps;
 
   const { addFlag, hideSearch, openItemTable,
-    assessmentWUrn,
+    currentAssessmentSelected,
     openedFrom,
     error,
     activeRadioIndex = null
@@ -35,38 +35,49 @@ const ElmFooter = (props) => {
 
 /* open elm portal */
   function openElmPortal() {
-    let tempUrl = "";
+    try {
+        let tempUrl = "";
 
-  /* Open ELM portal for Add new Assessment in Assessment slate */
-    if (openedFrom === "slateAssessment") {
-      tempUrl = `${config.ELM_PORTAL_URL}/launch/editor/assessment/createInPlace`;
-    }
-    /* Open ELM portal for Add new Item in Existing Assessment */
-    if (openedFrom === "singleAssessment") {
-      if (assessmentWUrn && openItemTable) {
-        tempUrl =
-          `${config.ELM_PORTAL_URL}/launch/editor/assessment/${assessmentWUrn}/item/createInPlace`
+        /* Open ELM portal for Add new Assessment in Assessment slate */
+        if (openedFrom === "slateAssessment") {
+          tempUrl = `${config.ELM_PORTAL_URL}/launch/editor/assessment/createInPlace`;
+        }
+        /* Open ELM portal for Add new Item in "Existing Assessment" */
+        if (openedFrom === "singleAssessment") {
+          let assessmentWUrn = "";
+          const type = currentAssessmentSelected?.type;
+          if(type === "assessmentItem"){
+              assessmentWUrn = currentAssessmentSelected?.assessmentId
+          }else if(type === "assessment"){
+              assessmentWUrn = currentAssessmentSelected?.urn
+          }
+          if (openItemTable && assessmentWUrn) {
+            tempUrl =
+              `${config.ELM_PORTAL_URL}/launch/editor/assessment/${assessmentWUrn}/item/createInPlace`
+          }
+          /* Open Elm portal for Add new Assessment in single assessment */ 
+          if (!openItemTable) {
+            tempUrl =
+              `${config.ELM_PORTAL_URL}/launch/editor/assessment/New/item/createInPlace`;
+          }
+        }
+
+        if (tempUrl) {
+          const usageType = activeUsageType ? activeUsageType.replace(" ", "").toLowerCase() : "";
+          const url = tempUrl +
+            "?containerUrn=" + containerUrn +
+            "&projectUrn=" + config.projectUrn +
+            "&usageType=" + usageType;
+
+        /* open elm portal */
+          window.open(url);
+        /**@function call for add listeners to get data from elm portal */
+          handlePostMsgOnAddAssess(addPufFunction, activeUsageType);
+          closeElmWindow();
+        }
+    } catch (err) {
+          console.error("catch with err", err);
       }
-    /* Open Elm portal for Add new Assessment in single assessment */
-      if (!openItemTable) {
-        tempUrl =
-          `${config.ELM_PORTAL_URL}/launch/editor/assessment/New/item/createInPlace`;
-      }
-    }
-
-    if (tempUrl) {
-      const usageType = activeUsageType ? activeUsageType.replace(" ", "").toLowerCase() : "";
-      const url = tempUrl +
-        "?containerUrn=" + containerUrn +
-        "&projectUrn=" + config.projectUrn +
-        "&usageType=" + usageType;
-
-    /* open elm portal */
-      window.open(url);
-    /**@function call for add listeners to get data from elm portal */
-      handlePostMsgOnAddAssess(addPufFunction, activeUsageType);
-      closeElmWindow();
-    }
   }
 
   return (
