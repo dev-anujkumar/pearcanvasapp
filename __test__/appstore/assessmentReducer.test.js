@@ -9,7 +9,8 @@ import {
     ELM_ITEM_EVENT_DATA,
     SET_ITEM_UPDATE_EVENT,
     ELM_ASSESSMENT_EDIT_ID,
-    ASSESSMENT_CONFIRMATION_POPUP
+    ASSESSMENT_CONFIRMATION_POPUP,
+    ELM_NEW_ITEM_DATA
 } from '../../src/constants/Action_Constants';
 
 const INITIAL_STATE = {
@@ -285,6 +286,23 @@ describe('Test AssessmentReducer', () => {
             ...INITIAL_STATE, saveAutoUpdateData: {
                 oldAssessmentId: 'oldId',
                 newAssessmentId: 'newId'
+            }
+        })
+    })
+    it('ELM_NEW_ITEM_DATA', () => {
+        expect(reducer(INITIAL_STATE, {
+            type: ELM_NEW_ITEM_DATA,
+            payload: {
+                source:"elm",
+                type:"item",
+                timeStamp:"3847238923"
+            }
+        }
+        )).toEqual({
+            ...INITIAL_STATE, item: {
+                    source:"elm",
+                    type:"item",
+                    timeStamp:"3847238923"
             }
         })
     })

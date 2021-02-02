@@ -954,4 +954,19 @@ describe('-----------------Testing Assessment Actions-----------------', () => {
             spyFunction.mockClear();
         });
     })
+    describe('Test-8, Elm - Action', () => {
+        it('Test-8.1, Test action for saving item data to reducer', () => {
+            const spyFunction = jest.spyOn(assessment_Actions, 'setNewItemFromElm');
+            const data = {
+                source:"elm",
+                type:"item",
+                timeStamp:"3847238923"
+            };
+            let result = assessment_Actions.setNewItemFromElm(data);
+            expect(result.type).toEqual('ELM_NEW_ITEM_DATA');
+            expect(result.payload).toEqual(data);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        });
+    })
 })
