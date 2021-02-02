@@ -902,7 +902,7 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
             CurrentSlateStatus = "wip"
             
             const spyFunction = jest.spyOn(tcmSnapshotUtility, 'setContentSnapshot');
-            const expectedText = "<p><span class='showhide-metadata'>Reveal Answer:</span> This test</p>"
+            const expectedText = "<p>Reveal Answer: This test</p>"
             tcmSnapshotUtility.setContentSnapshot(element, elementDetails, actionStatus, CurrentSlateStatus);
             expect(spyFunction).toHaveReturnedWith(expectedText);
         })
