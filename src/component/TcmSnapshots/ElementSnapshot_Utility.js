@@ -28,7 +28,8 @@ const {
     FIGURE,
     MULTI_COLUMN,
     SHOWHIDE,
-    interactiveSubtypeConstants
+    interactiveSubtypeConstants,
+    SMARTLINK_LABELS
 }
     = TcmConstants;
 
@@ -574,7 +575,7 @@ export const getInteractiveSubtypeData = (figuredata, html) => {
         case interactiveSubtypeConstants.TABLE:
             interactiveDataToReturn = {
                 ...interactiveDataToReturn,
-                metadata: `<p>${figuredata.interactivetype}</p>` 
+                metadata: `<p>${SMARTLINK_LABELS[figuredata.interactivetype]}</p>` 
             }
             break;
         case interactiveSubtypeConstants.EXTERNAL_WEBSITE_LINK:  
@@ -583,7 +584,7 @@ export const getInteractiveSubtypeData = (figuredata, html) => {
             interactiveDataToReturn = {
                 ...interactiveDataToReturn,
                 itemButtonLabel:  html.postertext ? html.postertext.match(/<p>/g) ? html.postertext : `<p>${html.postertext}</p>` : "<p></p>",
-                metadata: `<p>${figuredata.interactivetype}</p>` 
+                metadata: `<p>${SMARTLINK_LABELS[figuredata.interactivetype]}</p>` 
             }
             break;
              

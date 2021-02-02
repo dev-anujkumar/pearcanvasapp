@@ -46,6 +46,14 @@ export default {
         QUAD: "mmi",
         ELM: "mmi-elm"
     },
+    /***************** Smart-link Labels -  Metadata Value *******************/
+    SMARTLINK_LABELS : {
+        "3rd-party": "3rd Party",
+        "web-link": "External Website Link",
+        "pdf": "PDF",
+        "pop-up-web-link": "Legacy Web Link",
+        "table": "Table"
+    },
     /*****************Element Type Arrays*******************/
     elementType: ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza', 'figure'],
     containerType : ['element-aside', 'manifest', 'citations', 'poetry', 'WORKED_EXAMPLE', 'CONTAINER', 'SECTION_BREAK', 'CITATION', 'POETRY', 'groupedcontent'],
