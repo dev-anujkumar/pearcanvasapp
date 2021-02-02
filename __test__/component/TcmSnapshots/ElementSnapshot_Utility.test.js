@@ -191,7 +191,7 @@ describe('-----------------------Test ElementSnapshot_Utility Functions---------
         it('Test-4.4--getInteractiveSubtypeData - Interactive  table', () => {
             let responsedata={
                 itemID:'<p></p>',
-                metadata:'<p>table</p>'
+                metadata:'<p>Table</p>'
             }
             let figuredata= {
                 interactiveformat: "external-link",
@@ -206,7 +206,7 @@ describe('-----------------------Test ElementSnapshot_Utility Functions---------
         it('Test-4.5--getInteractiveSubtypeData - Interactive 3rd-party', () => {
             let responsedata={
                 itemID:'<p></p>',
-                metadata:'<p>3rd-party</p>'
+                metadata:'<p>3rd Party</p>'
             }  
             let figuredata= {
                 interactiveformat: "external-link",
@@ -221,7 +221,7 @@ describe('-----------------------Test ElementSnapshot_Utility Functions---------
         it('Test-4.6--getInteractiveSubtypeData - Interactive web-link', () => {
             let responsedata={
                 itemID:'<p></p>',
-                metadata:'<p>web-link</p>',
+                metadata:'<p>External Website Link</p>',
                 itemButtonLabel:'<p></p>'
             } 
             let figuredata= {
@@ -243,7 +243,7 @@ describe('-----------------------Test ElementSnapshot_Utility Functions---------
         it('Test-4.7--getInteractiveSubtypeData - Interactive pop-up-web-link', () => {
             let responsedata={
                 itemID:'<p></p>',
-                metadata:'<p>pop-up-web-link</p>',
+                metadata:'<p>Legacy Web Link</p>',
                 itemButtonLabel:'<p></p>'
             } 
             let figuredata= {
@@ -265,7 +265,7 @@ describe('-----------------------Test ElementSnapshot_Utility Functions---------
         it('Test-4.8--getInteractiveSubtypeData - Interactive pdf', () => {
             let responsedata={
                 itemID:'<p></p>',
-                metadata:'<p>pdf</p>',
+                metadata:'<p>PDF</p>',
                 itemButtonLabel:'<p></p>'
             }
             let figuredata= {
@@ -288,7 +288,7 @@ describe('-----------------------Test ElementSnapshot_Utility Functions---------
         it('Test-4.9--getInteractiveSubtypeData - Interactive pdf with postertext', () => {
             let responsedata={
                 itemID:'<p></p>',
-                metadata:'<p>pdf</p>',
+                metadata:'<p>PDF</p>',
                 itemButtonLabel:'<p>test</p>'
             }  
             let figuredata= {
