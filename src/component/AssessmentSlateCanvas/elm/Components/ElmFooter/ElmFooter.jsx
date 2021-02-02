@@ -1,7 +1,7 @@
 /**
 * Footer Component of ELM Assessment
 */
-import React, { useEffect } from 'react';
+import React from 'react';
 import '../../../../../styles/AssessmentSlateCanvas/elm/ElmTable.css';
 import {
   elmAssessmentItem,
