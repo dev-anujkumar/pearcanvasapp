@@ -27,8 +27,8 @@ describe('Testing ELM Footer component', () => {
                 openAssessmentSearchBar:jest.fn(),
                 addPufFunction: jest.fn(),
                 activeAssessmentType: "puf",
-                containerUrn: "",
-                activeUsageType: "",
+                containerUrn: "urn:pearson:distributable:5d29ca95-fcea-4920-a9d7-5555771e68fc",
+                activeUsageType: "Practice",
                 buttonText: "ADD"
             },
             openItemTable: false,
@@ -49,8 +49,8 @@ describe('Testing ELM Footer component', () => {
                     openAssessmentSearchBar:jest.fn(),
                     addPufFunction: jest.fn(),
                     activeAssessmentType: "puf",
-                    containerUrn: "",
-                    activeUsageType: "",
+                    containerUrn: "urn:pearson:distributable:5d29ca95-fcea-4920-a9d7-5555771e68fc",
+                    activeUsageType: "Practice",
                     buttonText: "ADD"
                 },
                 openItemTable: false,
@@ -70,9 +70,9 @@ describe('Testing ELM Footer component', () => {
         })
         it('Test- ELM, show new button and Click event', () => {
             const component = wrapper(props);  
-            const button =  component.find('button.create-button');
-            expect(button).toHaveLength(1);  
+            const button =  component.find('button.create-button');  
             button.simulate('click', event);
+            expect(button).toHaveLength(1);
         })
         it('Test- ELM, hide new button', () => {
             props.elmFooterProps.activeAssessmentType = "";
