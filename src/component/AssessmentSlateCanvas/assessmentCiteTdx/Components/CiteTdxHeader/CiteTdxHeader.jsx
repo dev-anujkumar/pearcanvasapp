@@ -4,14 +4,14 @@
 import React, { Component } from 'react';
 import '../../../../../styles/AssessmentSlateCanvas/assessmentCiteTdx/RootCiteTdxComponent.css';
 import Button from './../../../../ElementButtons';
-
+import { ASSESSMENT_PICKER_OPENERS } from '../../../AssessmentSlateConstants.js';
 class CiteTdxHeader extends Component {
     
     handleClose = () => {
         const { openedFrom, assessmentType, assessmentSlateObj, setCiteTdxFilterData } = this.props.headerProps;
         this.props.headerProps.closeWindowAssessment();
         this.props.resetPage(true);
-        if (openedFrom == 'slateAssessment') {
+        if (openedFrom == ASSESSMENT_PICKER_OPENERS.FULL_ASSESSMENT) {
             setCiteTdxFilterData(assessmentType, assessmentSlateObj);
         }
     }
