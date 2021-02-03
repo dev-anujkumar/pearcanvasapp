@@ -171,8 +171,14 @@ export const setCurrentSlateAncestorData = (allSlateData) => dispatch => {
             matterTypeData = allSlateData && allSlateData.backmatter ? allSlateData.backmatter : [];
             break;
         default:
-            matterType = 'BodyMatter';
-            matterTypeData = allSlateData && allSlateData.bodymatter ? allSlateData.bodymatter : [];
+            if (config.parentOfParentItem.trim() == "" && (config.parentLabel && (config.parentLabel == "frontmatter" || config.parentLabel == "backmatter"))) {
+                matterType = config.parentLabel == "frontmatter" ? 'FrontMatter' : 'BackMatter'
+                matterTypeData = allSlateData && allSlateData[config.parentLabel] ? allSlateData[config.parentLabel] : [];
+            } else {
+                matterType = 'BodyMatter';
+                matterTypeData = allSlateData && allSlateData.bodymatter ? allSlateData.bodymatter : [];
+            }
+            break;
     }
 
     currentSlateData = setCurrentSlateAncestorDataDetails(matterTypeData, ancestor, matterType)
