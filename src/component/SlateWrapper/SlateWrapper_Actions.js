@@ -353,6 +353,21 @@ export const handleSplitSlate = (newSlateObj) => (dispatch, getState) => {
     let oldSlateBodymatterLocal = slateLevelData.contents.bodymatter;
     oldSlateBodymatterLocal.splice(splitIndex)
     slateLevelData.contents.bodymatter = oldSlateBodymatterLocal;
+    axios.create({
+        method: 'patch',
+        baseURL: '/cypress/trackchanges-srvr/splitslatetcm',
+        timeout: 1000,
+        headers: { "Content-Type": "application/json", "PearsonSSOSession": config.ssoToken },
+        data: {
+            "splitSlateDurn": config.projectUrn, "splitSlateEurn": newSlateObj.entityUrn
+        }
+    })
+        .then(res => {
+            console.log("TCM split slate API success : ", res)
+        })
+        .catch(err => {
+            console.log("TCM split slate API error : ", err)
+        })
 
     return axios.put(
         `${config.REACT_APP_API_URL}v1/slate/split/${config.projectUrn}/${config.slateEntityURN}/${splitIndex}`,
