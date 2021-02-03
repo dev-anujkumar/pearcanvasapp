@@ -1,7 +1,7 @@
 import { sendDataToIframe } from '../constants/utility'
 import config from '../config/config';
 import { GET_ALL_SLATES_DATA, SET_CURRENT_SLATE_DATA } from '../constants/Action_Constants';
-let containerType = ['project', 'part', 'chapter', 'module']
+let containerType = ['project', 'part', 'chapter', 'module','appendix']
 
 /**
  * @function fetchAllSlatesData
@@ -85,31 +85,36 @@ const prepareContents = (data) => {
 export const prepareAllSlateData = (allSlatesData) => dispatch => {
     let parentData = allSlatesData && allSlatesData['parentData'] ? allSlatesData['parentData'] : {},
         childrenData = allSlatesData && allSlatesData['childrenData'] ? allSlatesData['childrenData'] :{};
-    let allProjectData = {},
-        allBodyMatterData = []
+    let allProjectData = {};
 
     if (parentData) {
         for (let matterType in parentData) {
             allProjectData[matterType] = prepareContainerData(parentData[matterType], matterType)
         }
     }
-    allBodyMatterData = allProjectData['bodymatter']
+    allProjectData['bodymatter'] = setAllMatterContent(allProjectData['bodymatter'], childrenData);
+    allProjectData['frontmatter'] = setAllMatterContent(allProjectData['frontmatter'], childrenData);
+    allProjectData['backmatter'] = setAllMatterContent(allProjectData['backmatter'], childrenData);
+    dispatch({
+        type: GET_ALL_SLATES_DATA,
+        payload: { allSlateData: allProjectData }
+    })
 
-    if (allProjectData['bodymatter'] != [] && childrenData !={}) {
+}
 
-        allBodyMatterData.forEach((container) => {
+const setAllMatterContent = (processedData, childrenData) => {
+    if (processedData != [] && childrenData != {}) {
+        processedData.forEach((container) => {
             container = setChildContents(container, childrenData)
         })
-
-        allBodyMatterData.forEach((container) => {
+        processedData.forEach((container) => {
             if (container.contents) {
                 container.contents.forEach((data) => {
                     data = setChildContents(data, childrenData)
                 })
             }
         })
-
-        allBodyMatterData.forEach((container) => {
+        processedData.forEach((container) => {
             if (container.contents) {
                 container.contents.forEach((item) => {
                     if (item.contents) {
@@ -121,13 +126,7 @@ export const prepareAllSlateData = (allSlatesData) => dispatch => {
             }
         })
     }
-
-    allProjectData['bodymatter'] = allBodyMatterData
-    dispatch({
-        type: GET_ALL_SLATES_DATA,
-        payload: { allSlateData: allProjectData }
-    })
-
+    return processedData;
 }
 
 /**
@@ -162,13 +161,12 @@ export const setCurrentSlateAncestorData = (allSlateData) => dispatch => {
         currentSlateData = {},
         matterType = "",
         matterTypeData = [];
-
-    switch (config.parentEntityUrn) {
-        case 'Front Matter':
+    switch (config.parentOfParentItem) {
+        case 'frontmatter':
             matterType = 'FrontMatter';
             matterTypeData = allSlateData && allSlateData.frontmatter ? allSlateData.frontmatter : [];
             break;
-        case 'Back Matter':
+        case 'backmatter':
             matterType = 'BackMatter';
             matterTypeData = allSlateData && allSlateData.backmatter ? allSlateData.backmatter : [];
             break;

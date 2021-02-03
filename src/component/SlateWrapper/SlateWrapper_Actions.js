@@ -364,21 +364,21 @@ export const handleSplitSlate = (newSlateObj) => (dispatch, getState) => {
         }
     ).then(res => {
         // Perform TCM splitSlate
-        axios.create({
+        axios({
             method: 'patch',
-            baseURL: '/cypress/trackchanges-srvr/splitslatetcm',
+            url: '/cypress/trackchanges-srvr/splitslatetcm',
             timeout: 1000,
             headers: { "Content-Type": "application/json", "PearsonSSOSession": config.ssoToken },
             data: {
                 "splitSlateDurn": config.projectUrn, "splitSlateEurn": newSlateObj.entityUrn
             }
         })
-            .then(response => {
-                console.log("TCM split slate API success : ", response)
-            })
-            .catch(error => {
-                console.log("TCM split slate API error : ", error)
-            })
+        .then(response => {
+            console.log("TCM split slate API success : ", response)
+        })
+        .catch(error => {
+            console.log("TCM split slate API error : ", error)
+        })
         // Update selection store data after split
         let selection = getState().selectionReducer.selection || {};
         if(Object.keys(selection).length > 0 && selection.sourceSlateEntityUrn === config.slateEntityURN && selection.sourceElementIndex >= splitIndex) {
