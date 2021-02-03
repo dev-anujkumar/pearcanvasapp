@@ -191,6 +191,24 @@ export const setCurrentSlateAncestorData = (allSlateData) => dispatch => {
     })
 }
 
+const checkCurrentSlateUrn = (allSlatesData) => {
+    const slateUrns = [config.slateManifestURN, config.slateEntityURN, config.tempSlateManifestURN, config.tempSlateEntityURN]
+    for (let index in slateUrns) {
+        if (allSlatesData.includes(slateUrns[index])) {
+            return true;
+        }
+    }
+    return false;
+}
+
+const compareCurrentSlateUrn = (containerUrn, entityUrn) => {
+    const slateUrns = [config.slateManifestURN, config.slateEntityURN, config.tempSlateManifestURN, config.tempSlateEntityURN]
+    if (slateUrns.includes(containerUrn) || slateUrns.includes(entityUrn)) {
+        return true;
+    }
+    return false;
+}
+
 /**
  * @function setCurrentSlateAncestorDataDetails
  * @description-This is a recursive function to prepare structured data for the current Slate based and set its ancestors
@@ -200,10 +218,9 @@ export const setCurrentSlateAncestorData = (allSlateData) => dispatch => {
  * @returns {Object}
 */
 const setCurrentSlateAncestorDataDetails = (matterTypeData, ancestor, matterType) => {
-    if (matterTypeData && matterTypeData.length > 0 && (JSON.stringify(matterTypeData).includes(config.slateManifestURN) ||
-        JSON.stringify(matterTypeData).includes(config.slateEntityURN))) {
+    if (matterTypeData && matterTypeData.length > 0 && (checkCurrentSlateUrn(JSON.stringify(matterTypeData)))) {
         for (let key in matterTypeData) {
-            if (matterTypeData[key].containerUrn == config.slateManifestURN || matterTypeData[key].entityUrn == config.slateEntityURN) {
+            if (compareCurrentSlateUrn(matterTypeData[key].containerUrn, matterTypeData[key].entityUrn)) {
                 ancestor = Object.assign({},
                     setItemDetails(matterTypeData[key]),
                     {
@@ -212,8 +229,7 @@ const setCurrentSlateAncestorDataDetails = (matterTypeData, ancestor, matterType
                     })
                 return ancestor;
             }
-            else if (matterTypeData[key].contents && (JSON.stringify(matterTypeData[key].contents).includes(config.slateManifestURN) ||
-                JSON.stringify(matterTypeData[key].contents).includes(config.slateEntityURN))) {
+            else if (matterTypeData[key].contents && (checkCurrentSlateUrn(JSON.stringify(matterTypeData[key].contents)))) {
                 ancestor = Object.assign({},
                     setItemDetails(matterTypeData[key]),
                     {
