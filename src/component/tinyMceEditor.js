@@ -21,7 +21,6 @@ import {
 import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
 import { checkforToolbarClick, customEvent, spanHandlers, removeBOM, getWirisAltText, removeImageCache } from '../js/utils';
 import { saveGlossaryAndFootnote, setFormattingToolbar } from "./GlossaryFootnotePopup/GlossaryFootnote_Actions";
-import { audioGlossaryPopup} from './AudioNarration/AudioNarration_Actions';
 import { ShowLoader, LaunchTOCForCrossLinking } from '../constants/IFrameMessageTypes';
 import { sendDataToIframe, hasReviewerRole, removeBlankTags } from '../constants/utility.js';
 import store from '../appstore/store';
@@ -30,6 +29,7 @@ import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER } from '../compone
 import { conversionElement } from './Sidebar/Sidebar_Action';
 import { wirisAltTextPopup } from './SlateWrapper/SlateWrapper_Actions';
 import elementList from './Sidebar/elementTypes';
+import { getParentPosition} from './CutCopyDialog/copyUtil';
 
 let context = {};
 let clickedX = 0;
@@ -743,11 +743,21 @@ export class TinyMceEditor extends Component {
                 this.toggleGlossaryandFootnotePopup(true, "Glossary", uri, () => { this.toggleGlossaryandFootnoteIcon(true); });
             }
             if (isAudioExists) {
-                let audioPopupPosition = {
-                    left: `${(e.clientX - 317)}px`,
-                    top: `${(e.clientY - 40) }px`
+                if (e.currentTarget.classList.contains('mce-edit-focus')) {
+                    const parentPosition = getParentPosition(e.currentTarget);
+                    const slateWrapperNode = document.getElementById('slateWrapper')
+                    const scrollTop = slateWrapperNode && slateWrapperNode.scrollTop || 0;
+
+                    const xOffSet = 0;
+                    const yOffSet = 10
+                    const copyClickedX = e.clientX - parentPosition.x + xOffSet;
+                    const copyClickedY = e.clientY - parentPosition.y + scrollTop + yOffSet;
+                    const audioPopupPosition = {
+                        left: `${(copyClickedX)}px`,
+                        top: `${(copyClickedY)}px`
+                    }
+                    this.props.handleAudioPopupLocation(true, audioPopupPosition);
                 }
-                this.props.audioGlossaryPopup(true, audioPopupPosition);
             }
         }
         /**
@@ -3336,5 +3346,5 @@ TinyMceEditor.defaultProps = {
 
 export default connect(
     null,
-    { conversionElement, wirisAltTextPopup, audioGlossaryPopup }
+    { conversionElement, wirisAltTextPopup }
 )(TinyMceEditor);

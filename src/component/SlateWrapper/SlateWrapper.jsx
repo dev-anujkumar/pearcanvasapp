@@ -10,7 +10,6 @@ import ElementContainer from '../ElementContainer';
 import ElementSaprator from '../ElementSaprator';
 import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
 import { SlateFooter } from './SlateFooter.jsx';
-import OpenAudioBook from '../AudioNarration/OpenAudioBook.jsx';
 
 /** pasteElement function location to be changed */
 import { createElement, swapElement, setSplittedElementIndex, updatePageNumber, accessDenied, pasteElement, wirisAltTextPopup } from './SlateWrapper_Actions';
@@ -1222,7 +1221,6 @@ class SlateWrapper extends Component {
                         )
                     }
                 </ListButtonDropPortal>
-                {this.props.openAudioGlossaryPopup && <OpenAudioBook closeAudioBookDialog={this.closeAudioBookDialog} isGlossary ={true}/>}
                 {this.showLockPopup()}
                 {this.showCustomPopup()}
                 {this.showSplitSlatePopup()}
@@ -1262,7 +1260,6 @@ const mapStateToProps = state => {
         isGlossary: state.audioReducer.isGlossary,
         openSplitPopUp: state.audioReducer.openSplitPopUp,
         openWrongAudioPopup: state.audioReducer.openWrongAudioPopup,
-        openAudioGlossaryPopup:state.audioReducer.openAudioGlossaryPopup,
         withinLockPeriod: state.slateLockReducer.withinLockPeriod,
         openAudio: state.audioReducer.openAudio,
         indexSplit : state.audioReducer.indexSplit,
