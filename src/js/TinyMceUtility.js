@@ -24,19 +24,11 @@ const dataFromAlfresco = (data, editor, imageArgs) => {
     if (imageArgs) {
         let getImgNode = document.querySelector(`img[data-id="${imageArgs.id}"]`);
         getImgNode.outerHTML = imgData;
+        imageArgs.handleBlur(null,true);
     }
     else {
         editor.selection.setContent(imgData);
     }
-    const listLiText = document.querySelector('#' + tinymce.activeEditor.id + ' li') ? document.querySelector('#' + tinymce.activeEditor.id + ' li').innerText : "";
-
-    if (!listLiText.trim()) {
-        const imageContent = document.querySelector('#' + tinymce.activeEditor.id + ' img.imageAssetContent');
-        tinyMCE.$('#' + tinymce.activeEditor.id + ' li').find('br').remove();
-        document.querySelector('#' + tinymce.activeEditor.id + ' li').append(imageContent);
-        imageContent.innerHTML = imgData;
-    }
-    editor.targetElm.classList.remove('place-holder');
     return imgData;
 }
 /**

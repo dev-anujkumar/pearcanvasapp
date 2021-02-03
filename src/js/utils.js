@@ -545,3 +545,24 @@ export const removeImageCache = (nodeHTML) => nodeHTML && nodeHTML.replace(/(?:\
 
 export const showCustomAlert = (msg) => alert(msg);
 
+/**
+ * This function handles the img-src for Wiris content
+ * @param {*} dataHTML html content
+ */
+export const removeMathmlImageCache = (dataHTML) => {
+    let hiddenDiv = document.createElement('div');
+    hiddenDiv.innerHTML = dataHTML;
+    hiddenDiv.style.visibility = 'hidden';
+    document.body.appendChild(hiddenDiv);
+    let mathMlImages = hiddenDiv.getElementsByClassName('Wirisformula');
+    for (let index = 0; index < mathMlImages.length; index++) {
+        let imgSrc = mathMlImages[index].getAttribute('src');
+        if (imgSrc) {
+            imgSrc = imgSrc.replace(/(?:\.png).*?[\"]/g, '.png?' + (new Date()).getTime() + '"');
+            mathMlImages[index].setAttribute('src', imgSrc);
+        }
+    }
+    let finalDataHTML = hiddenDiv.innerHTML;
+    document.body.removeChild(hiddenDiv);
+    return finalDataHTML;
+}

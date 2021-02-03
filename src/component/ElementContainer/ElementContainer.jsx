@@ -296,6 +296,7 @@ class ElementContainer extends Component {
         tinyMCE.$(tempDiv).find('a').removeAttr('data-mce-selected');
         tinyMCE.$(tempDiv).find('a').removeAttr('data-custom-editor');
         tinyMCE.$(tempDiv).find('img.Wirisformula, img.temp_Wirisformula').removeAttr('src');
+        tinyMCE.$(tempDiv).find('img.imageAssetContent').removeAttr('data-mce-src');
         tempDiv.innerHTML = removeBlankTags(tempDiv.innerHTML)
         return encodeHTMLInWiris(tempDiv.innerHTML);
     }

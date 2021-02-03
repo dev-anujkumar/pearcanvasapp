@@ -19,7 +19,7 @@ import {
     tinymceFormulaIcon, tinymceFormulaChemistryIcon, assetPopoverIcon, crossLinkIcon, code, Footnote, bold, Glossary, undo, redo, italic, underline, strikethrough, removeformat, subscript, superscript, charmap, downArrow, orderedList, unorderedList, indent, outdent
 } from '../images/TinyMce/TinyMce.jsx';
 import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
-import { checkforToolbarClick, customEvent, spanHandlers, removeBOM, getWirisAltText, removeImageCache } from '../js/utils';
+import { checkforToolbarClick, customEvent, spanHandlers, removeBOM, getWirisAltText, removeImageCache, removeMathmlImageCache } from '../js/utils';
 import { saveGlossaryAndFootnote, setFormattingToolbar } from "./GlossaryFootnotePopup/GlossaryFootnote_Actions";
 import { audioGlossaryPopup} from './AudioNarration/AudioNarration_Actions';
 import { ShowLoader, LaunchTOCForCrossLinking } from '../constants/IFrameMessageTypes';
@@ -680,9 +680,8 @@ export class TinyMceEditor extends Component {
             /** Open Alfresco Picker to update inline image in list on double-click*/
             if (e?.target?.nodeName == 'IMG' && e.target.classList.contains('imageAssetContent') && (e?.detail == 2) && (this?.props?.element?.type == 'element-list')) {
                 const imageArgs = {
-                    xCoord: e.target?.x,
-                    yCoord: e.target?.y,
-                    id: e.target?.dataset?.id
+                    id: e.target?.dataset?.id,
+                    handleBlur:this.handleBlur
                 }
                 handleC2MediaClick(this.props.permissions, editor, imageArgs);
             }
@@ -2592,7 +2591,7 @@ export class TinyMceEditor extends Component {
                 let defModel = this.props.model && this.props.model.text ? this.props.model.text : (typeof (this.props.model) === 'string' ? this.props.model : '<p class="paragraphNumeroUno"><br/></p>')
                 defModel = removeBOM(defModel)
                 //defModel=defModel.replace(/(?:.png).*?[\"]/g,'.png?'+(new Date()).getTime()+'"');
-                defModel = removeImageCache(defModel)
+                defModel = removeMathmlImageCache(defModel)
                 return defModel;
         }
     }

@@ -49,7 +49,8 @@ jest.mock('../../../src/js/utils', () => {
             removeListenr: jest.fn(),
         },
         removeBOM: () => { },
-        removeImageCache: jest.fn()
+        removeImageCache: jest.fn(),
+        removeMathmlImageCache: jest.fn()
     }
 
 })
