@@ -12,7 +12,8 @@ let mockEditor = {
 },
     permissions = ['alfresco_crud_access', 'add_multimedia_via_alfresco'],
     mockImageArgs = {
-        id: "imageId"
+        id: "imageId",
+        handleBlur: jest.fn()
     },
     mockImgData = {
         'assetType': "image",
