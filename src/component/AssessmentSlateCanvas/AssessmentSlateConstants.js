@@ -35,7 +35,7 @@ export const ERROR_MESSAGE_ELM_INTERACTIVES = "No Results Found"
 /*--------------- Elm Component Constants -------------------*/
 export const FolderLabelList = {
     'C':['chapter'],
-    'M':['module'],
+    'M':['module','appendix'],
     'P':['part'],
     'S':['section'],
     'AS':['assessment'],
