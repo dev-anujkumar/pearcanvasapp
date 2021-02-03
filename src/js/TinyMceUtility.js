@@ -27,7 +27,7 @@ const dataFromAlfresco = (data, editor, imageArgs) => {
         imageArgs.handleBlur(null,true);
     }
     else {
-        editor.selection.setContent(imgData);
+        editor.insertContent(`${imgData}<br>`);
     }
     return imgData;
 }
