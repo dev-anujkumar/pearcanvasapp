@@ -22,9 +22,13 @@ const dataFromAlfresco = (data, editor, imageArgs) => {
     const imageID = `imageAssetContent:${uniqID}:${Math.floor(1000 + Math.random() * 9000)}`
     const imgData = `<img src=${epsURL} data-id="${imageID}" class="imageAssetContent" width="112" height="150" imageid="urn:pearson:alfresco:${uniqID}" alt="${altText}" longdescription="${longDesc}"/>`;
     if (imageArgs) {
-        let getImgNode = document.querySelector(`img[data-id="${imageArgs.id}"]`);
-        getImgNode.outerHTML = imgData;
-        imageArgs.handleBlur(null,true);
+        if (imageArgs.id && editor?.targetElm) {
+            let getImgNode = editor.targetElm.querySelector(`img[data-id="${imageArgs.id}"]`);
+            if (getImgNode) {
+                getImgNode.outerHTML = imgData;
+                imageArgs.handleBlur(null, true);
+            }
+        }
     }
     else {
         editor.insertContent(`${imgData}<br>`);
