@@ -7,7 +7,8 @@ import store from '../../../appstore/store.js';
 import {
     GET_USAGE_TYPE,
     UPDATE_ELM_ITEM_ID,
-    SET_ASSESSMENT_METADATA
+    SET_ASSESSMENT_METADATA,
+    SET_USAGE_TYPE
 } from "../../../constants/Action_Constants";
 import { specialCharacterDecode } from '../assessmentCiteTdx/Actions/CiteTdxActions.js';
 import { fetchAssessmentMetadata, fetchAssessmentVersions, setItemUpdateEvent } from './assessmentActions.js';
@@ -22,6 +23,23 @@ const AssessmentAPIHandlers = {
             })
         }
         return usageTypeList
+    },
+    /** @description This function dispatches list of Assessment UsageTypes to store */
+    dispatchUsageTypeList: (entityType, res, apiStatus, dispatch) => {
+        let usageTypeData = [];
+        if (res?.data?.length) {
+            res.data.filter(usageType => {
+                usageTypeData.push({ usagetype: usageType.usagetype, label: usageType.label.en })
+            })
+        }
+        dispatch({
+            type: SET_USAGE_TYPE,
+            payload: {
+                entityType: entityType,
+                usageTypeList: usageTypeData,
+                apiStatus: apiStatus,
+            }
+        })
     },
     /** @description This function dispatches list of Assessment UsageTypes to store */
     dispatchUsageTypeData: (entityType, usageTypeList, apiStatus, dispatch) => {

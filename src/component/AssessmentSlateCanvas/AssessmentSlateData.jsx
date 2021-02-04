@@ -182,14 +182,16 @@ class AssessmentSlateData extends Component {
     * @param pufObj - The object contains data about Elm/Learnosity Assessment 
     */
     addPufAssessment = (pufObj) => {
+        let usageTypeList = this.props?.assessmentReducer?.usageTypeListData;
+        if (pufObj?.calledFrom == 'createElm' && pufObj.usagetype) {
+            const updatedUsageType = usageTypeList && usageTypeList.find((type) => type.usagetype == pufObj.usagetype)
+            this.setState({
+                activeAssessmentUsageType: updatedUsageType ? updatedUsageType.label : activeAssessmentUsageType
+            });
+        }
         this.props.addPufAssessment(pufObj, this.state.activeAssessmentType, 'insert');
         const elmData = { targetId: pufObj.id }
         this.props.checkElmAssessmentStatus('assessment', 'fromAddElm', elmData, {});
-        if (pufObj?.calledFrom == 'createElm' && pufObj.usagetype) {
-            this.setState({
-                activeAssessmentUsageType: pufObj.usagetype
-            });
-        }
     }
 
     /*** @description This function is used to open Version update Popup */

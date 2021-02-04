@@ -18,6 +18,7 @@ import assessmentApiHandlers from './assessmentApiHandlers.js';
 import { handleRefreshSlate } from '../../ElementContainer/AssessmentEventHandling.js';
 import { hideBlocker} from '../../../js/toggleLoader';
 const {
+    dispatchUsageTypeList,
     prepareUsageTypeData,
     dispatchUsageTypeData,
     assessmentErrorHandler,
@@ -39,6 +40,7 @@ export const fetchUsageTypeData = (entityType) => (dispatch) => {
             PearsonSSOSession: config.ssoToken
         }
     }).then((res) => {
+        dispatchUsageTypeList(entityType, res, 200, dispatch);
         dispatchUsageTypeData(entityType, prepareUsageTypeData(res), 200, dispatch);
     }).catch((error) => {
         dispatchUsageTypeData(entityType, [], 404, dispatch);

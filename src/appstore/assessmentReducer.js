@@ -1,5 +1,5 @@
 import {
-    GET_USAGE_TYPE,
+    SET_USAGE_TYPE,
     ELM_ITEM_EVENT_DATA,
     SET_ITEM_UPDATE_EVENT,
     ELM_ASSESSMENT_EDIT_ID,
@@ -24,10 +24,10 @@ const INITIAL_ACTION = {
 
 export default function assessmentReducer(state = INITIAL_STATE, action = INITIAL_ACTION) {
     switch (action.type) {
-        case GET_USAGE_TYPE:
+        case SET_USAGE_TYPE:
             return {
                 ...state,
-                usageTypeListData: action.payload
+                usageTypeListData: action.payload.usageTypeList
             }
         case SET_ASSESSMENT_METADATA:
             return {
