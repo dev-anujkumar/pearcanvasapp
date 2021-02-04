@@ -99,11 +99,11 @@ export const handlePostMsgOnAddAssess = (addPufFunction, usagetype) => {
                             let assessmentDataMsg = {
                                 id: items[1]?.split("_")[1],
                                 title: items[2]?.split("_")[1],
-                                usagetype: usagetype, 
+                                usagetype: items[3]?.split("_")[1] || usagetype, 
                                 calledFrom:'createElm'
                             };
                             
-                            if(itemData?.itemid && itemData.itemTitle && itemData.usagetype){
+                            if(itemData?.itemid && itemData.itemTitle){
                                 assessmentDataMsg = { ...assessmentDataMsg, ...itemData }
                             }
                             /**@function to update data display in slate */
@@ -120,7 +120,7 @@ export const handlePostMsgOnAddAssess = (addPufFunction, usagetype) => {
                             const itemDataFromMsg = {
                                 itemid: items[1]?.split("_")[1],
                                 itemTitle: items[2]?.split("_")[1],
-                                usagetype: usagetype,                               
+                                calledFrom:'createElm'                               
                             };
                             /* save item data into store */
                             store.dispatch(setNewItemFromElm(itemDataFromMsg));

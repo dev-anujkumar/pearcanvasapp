@@ -30,6 +30,7 @@ const dataFromAlfresco = (data, editor, imageArgs) => {
     }
     else {
         editor.insertContent(imgData);
+        setTimeout(() => editor.targetElm?.classList.remove?.("place-holder"), 100)
     }
     return imgData;
 }
