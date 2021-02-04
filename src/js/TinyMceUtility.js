@@ -29,7 +29,7 @@ const dataFromAlfresco = (data, editor, imageArgs) => {
         }
     }
     else {
-        editor.insertContent(`${imgData}<br>`);
+        editor.insertContent(imgData);
     }
     return imgData;
 }
