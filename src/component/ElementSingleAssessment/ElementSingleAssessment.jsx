@@ -286,7 +286,7 @@ class ElementSingleAssessment extends Component {
         if (pufObj?.calledFrom == 'createElm' && pufObj.usagetype) {
             const updatedUsageType = usageTypeList && usageTypeList.find((type) => type.usagetype == pufObj.usagetype)
             this.setState({
-                activeAssessmentUsageType: updatedUsageType ? updatedUsageType.label : activeAssessmentUsageType
+                activeAssessmentUsageType: updatedUsageType ? updatedUsageType.label : this.state.activeAssessmentUsageType
             });
         }
         this.setState({ assessmentId: pufObj.id, assessmentItemId: pufObj.itemid, assessmentTitle: pufObj.title, assessmentItemTitle: pufObj.itemTitle },

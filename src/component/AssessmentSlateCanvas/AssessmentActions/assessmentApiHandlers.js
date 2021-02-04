@@ -28,7 +28,7 @@ const AssessmentAPIHandlers = {
     dispatchUsageTypeList: (entityType, res, apiStatus, dispatch) => {
         let usageTypeData = [];
         if (res?.data?.length) {
-            res.data.filter(usageType => {
+            res.data.forEach(usageType => {
                 usageTypeData.push({ usagetype: usageType.usagetype, label: usageType.label.en })
             })
         }
