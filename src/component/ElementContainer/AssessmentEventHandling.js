@@ -100,6 +100,7 @@ export const handlePostMsgOnAddAssess = (addPufFunction, usagetype) => {
                                 id: items[1]?.split("_")[1],
                                 title: items[2]?.split("_")[1],
                                 usagetype: usagetype, 
+                                calledFrom:'createElm'
                             };
                             
                             if(itemData?.itemid && itemData.itemTitle && itemData.usagetype){

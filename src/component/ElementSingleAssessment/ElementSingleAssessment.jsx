@@ -282,6 +282,11 @@ class ElementSingleAssessment extends Component {
     addPufAssessment = (pufObj, cb) => {
         showTocBlocker();
         disableHeader(true);
+        if (pufObj?.calledFrom == 'createElm' && pufObj.usagetype) {
+            this.setState({
+                activeAsseessmentUsageType: pufObj.usagetype
+            });
+        }
         this.setState({ assessmentId: pufObj.id, assessmentItemId: pufObj.itemid, assessmentTitle: pufObj.title, assessmentItemTitle: pufObj.itemTitle },
             () => {
                 const itemData = {

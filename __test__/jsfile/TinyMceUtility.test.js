@@ -4,11 +4,23 @@ import config from '../../src/config/config';
 import tinymce from 'tinymce/tinymce';
 import axios from 'axios';
 /**************************Declare Common Variables**************************/
+let mockQuerySelector = (selector) => {
+    switch (selector) {
+        case 'img[data-id="imageId"]':
+            return { outerHTML: "" };
+        case '#imageId li':
+            return { innerText: "", append: () => { } };
+        case '#imageId li img.imageAssetContent':
+        default:
+            return { innerHTML: "test" };
+    }
+}
 let mockEditor = {
     selection: {
         setContent: () => { }
     },
-    targetElm: { classList: { remove: () => { } } }
+    insertContent: () => { },
+    targetElm: { classList: { remove: () => { } }, querySelector:mockQuerySelector }
 },
     permissions = ['alfresco_crud_access', 'add_multimedia_via_alfresco'],
     mockImageArgs = {
@@ -57,7 +69,7 @@ let tinyMceEditor = {
     selection: {
         setContent: () => { }
     },
-    targetElm: { classList: { remove: () => { } } },
+    targetElm: { classList: { remove: () => { } },     insertContent: () => { }, },
     shortcuts: {
         add: () => { }
     },
@@ -82,17 +94,8 @@ config.alfrescoMetaData = {
     }
 }
 config.userId= 'c5test01';
-document.querySelector = (selector) => {
-    switch (selector) {
-        case 'img[data-id="imageId"]':
-            return { outerHTML: "" };
-        case '#imageId li':
-            return { innerText: "", append: () => { } };
-        case '#imageId li img.imageAssetContent':
-        default:
-            return { innerHTML: "test" };
-    }
-}
+
+document.querySelector = mockQuerySelector
 /**************************Mock Helper Functions**************************/
 jest.mock('axios');
 jest.mock('../../src/js/utils.js', () => ({
@@ -239,6 +242,48 @@ describe('Testing TinyMceUtility', () => {
         }
         const spyFunc = jest.spyOn(tinyMceFn, 'handleC2MediaClick');
         tinyMceFn.handleC2MediaClick(permissions, mockEditor, mockImageArgs);
+        expect(spyFunc).toHaveBeenCalled();
+        spyFunc.mockClear();
+    });
+})
+describe('Testing TinyMceUtility', () => {
+
+    jest.mock('../../src/js/c2_media_module.js', () => {
+        return {
+            c2MediaModule: {
+                productLinkOnsaveCallBack: (data, cb) => {
+                    cb(data, mockEditor, mockImageArgs);
+                },
+                AddanAssetCallBack: (data, cb) => {
+                    cb(mockImgData, mockEditor, mockImageArgs);
+                },
+                onLaunchAddAnAsset: (cb) => {
+                    cb()
+                }
+            }
+        }
+    });
+    config.alfrescoMetaData = {
+        alfresco: {
+            'path': 'test',
+            'nodeRef': {},
+            'assetType': "image",
+            'uniqueID': "imageId",
+            'EpsUrl': "url",
+            'alt-text': "Alt Text",
+            'longDescription': "long Description"
+        }
+    }
+    it('Test - handleC2MediaClick - no getImgNode', () => {
+        let mockEditor2 = {
+            selection: {
+                setContent: () => { }
+            },
+            insertContent: () => { },
+            targetElm: { classList: { remove: () => { } }, querySelector:()=>{return undefined} }
+        }
+        const spyFunc = jest.spyOn(tinyMceFn, 'handleC2MediaClick');
+        tinyMceFn.handleC2MediaClick(permissions, mockEditor2, mockImageArgs);
         expect(spyFunc).toHaveBeenCalled();
         spyFunc.mockClear();
     });

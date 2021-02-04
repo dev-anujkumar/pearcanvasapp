@@ -185,6 +185,11 @@ class AssessmentSlateData extends Component {
         this.props.addPufAssessment(pufObj, this.state.activeAssessmentType, 'insert');
         const elmData = { targetId: pufObj.id }
         this.props.checkElmAssessmentStatus('assessment', 'fromAddElm', elmData, {});
+        if (pufObj?.calledFrom == 'createElm' && pufObj.usagetype) {
+            this.setState({
+                activeAssessmentUsageType: pufObj.usagetype
+            });
+        }
     }
 
     /*** @description This function is used to open Version update Popup */

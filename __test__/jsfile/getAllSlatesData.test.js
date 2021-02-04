@@ -37,7 +37,7 @@ it('Test Function----->setCurrentSlateAncestorDataAncestorData - Slate in Bodyma
     config.projectUrn='urn:pearson:distributable:977c95a8-e16a-413c-bfd0-788fd2a3698d'
     config.projectEntityUrn='urn:pearson:entity:3d9363f1-36bb-47ea-8842-9b142027692c'
     config.book_title='Test Data'
-    
+    config.parentOfParentItem=''
     const spyFunction = jest.spyOn(actions,'setCurrentSlateAncestorData');
     let dispatch = (obj) => {
         expect(obj.type).toBe('SET_CURRENT_SLATE_DATA')
@@ -51,7 +51,7 @@ it('Test Function----->setCurrentSlateAncestorData - Slate in Frontmatter',()=>{
     config.projectUrn='urn:pearson:distributable:977c95a8-e16a-413c-bfd0-788fd2a3698d'
     config.projectEntityUrn='urn:pearson:entity:3d9363f1-36bb-47ea-8842-9b142027692c'
     config.book_title='Test Data'
-    
+    config.parentOfParentItem='frontmatter'
     const spyFunction = jest.spyOn(actions,'setCurrentSlateAncestorData');
     let dispatch = (obj) => {
         expect(obj.type).toBe('SET_CURRENT_SLATE_DATA')
@@ -65,7 +65,7 @@ it('Test Function----->setCurrentSlateAncestorData - Slate in Backmatter',()=>{
     config.projectUrn='urn:pearson:distributable:977c95a8-e16a-413c-bfd0-788fd2a3698d'
     config.projectEntityUrn='urn:pearson:entity:3d9363f1-36bb-47ea-8842-9b142027692c'
     config.book_title='Test Data'
-    
+    config.parentOfParentItem='backmatter'
     const spyFunction = jest.spyOn(actions,'setCurrentSlateAncestorData');
     let dispatch = (obj) => {
         expect(obj.type).toBe('SET_CURRENT_SLATE_DATA')
