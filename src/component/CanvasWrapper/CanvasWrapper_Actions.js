@@ -322,7 +322,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             document.getElementsByClassName("slate-tag-icon")[0].classList.remove("disable");
          }     
         let newVersionManifestId=Object.values(slateData.data)[0].id
-        if(config.slateManifestURN !== newVersionManifestId && (slateData.data[newVersionManifestId].type === 'manifest' || slateData.data[newVersionManifestId].type === "chapterintro")){
+        if(config.slateManifestURN !== newVersionManifestId && (slateData.data[newVersionManifestId].type === 'manifest' || slateData.data[newVersionManifestId].type === "chapterintro" || slateData.data[newVersionManifestId].type === "titlepage")){
             config.slateManifestURN = newVersionManifestId
             manifestURN = newVersionManifestId
         }
