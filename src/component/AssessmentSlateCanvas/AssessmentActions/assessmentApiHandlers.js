@@ -7,10 +7,12 @@ import store from '../../../appstore/store.js';
 import {
     GET_USAGE_TYPE,
     UPDATE_ELM_ITEM_ID,
-    SET_ASSESSMENT_METADATA
+    SET_ASSESSMENT_METADATA,
+    SET_USAGE_TYPE
 } from "../../../constants/Action_Constants";
 import { specialCharacterDecode } from '../assessmentCiteTdx/Actions/CiteTdxActions.js';
 import { fetchAssessmentMetadata, fetchAssessmentVersions, setItemUpdateEvent } from './assessmentActions.js';
+import { hideBlocker} from '../../../js/toggleLoader';
 const AssessmentAPIHandlers = {
     /** @description This function prepares list of Assessment UsageTypes from api-response */
     prepareUsageTypeData: (res) => {
@@ -21,6 +23,23 @@ const AssessmentAPIHandlers = {
             })
         }
         return usageTypeList
+    },
+    /** @description This function dispatches list of Assessment UsageTypes to store */
+    dispatchUsageTypeList: (entityType, res, apiStatus, dispatch) => {
+        let usageTypeData = [];
+        if (res?.data?.length) {
+            res.data.forEach(usageType => {
+                usageTypeData.push({ usagetype: usageType.usagetype, label: usageType.label.en })
+            })
+        }
+        dispatch({
+            type: SET_USAGE_TYPE,
+            payload: {
+                entityType: entityType,
+                usageTypeList: usageTypeData,
+                apiStatus: apiStatus,
+            }
+        })
     },
     /** @description This function dispatches list of Assessment UsageTypes to store */
     dispatchUsageTypeData: (entityType, usageTypeList, apiStatus, dispatch) => {
@@ -257,6 +276,7 @@ const AssessmentAPIHandlers = {
     },
     /** @description This function dispatches latest metadata for Assessment to store */
     dispatchAssessmentMetadata: (currentWorkUrn, dataForUpdate, dispatch) => {
+        hideBlocker();
         dispatch({
             type: SET_ASSESSMENT_METADATA,
             payload: {
@@ -267,6 +287,7 @@ const AssessmentAPIHandlers = {
     },
     /** @description This function dispatches latest metadata for Assessment-Item to store */
     dispatchUpdatedItemId: (currentWorkUrn, dataForUpdate, dispatch) => {
+        hideBlocker();
         dispatch({
             type: UPDATE_ELM_ITEM_ID,
             payload: {
@@ -277,6 +298,7 @@ const AssessmentAPIHandlers = {
     },
     /** @description This function for Assessment Error Message Handling */
     assessmentErrorHandler: (errorMessage) => {
+        hideBlocker();
         console.error('Error in Assessment handling>>>>', errorMessage)
     }
 }

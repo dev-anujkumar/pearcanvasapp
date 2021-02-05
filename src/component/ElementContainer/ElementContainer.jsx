@@ -289,8 +289,8 @@ class ElementContainer extends Component {
         tinyMCE.$(tempDiv).find('blockquote').removeAttr('data-mce-selected');
         tinyMCE.$(tempDiv).find('code').removeAttr('data-mce-selected');
         tinyMCE.$(tempDiv).find('img').removeAttr('data-mce-selected');
-        tinyMCE.$(tempDiv).find('img').removeAttr('height');
-        tinyMCE.$(tempDiv).find('img').removeAttr('width');
+        tinyMCE.$(tempDiv).find('img.Wirisformula, img.temp_Wirisformula').removeAttr('height');
+        tinyMCE.$(tempDiv).find('img.Wirisformula, img.temp_Wirisformula').removeAttr('width');
         tinyMCE.$(tempDiv).find('.blockquoteMarginalia').removeAttr('contenteditable');
         tinyMCE.$(tempDiv).find('.paragraphNummerEins').removeAttr('contenteditable');
         tinyMCE.$(tempDiv).find('img').removeAttr('draggable');
@@ -299,6 +299,7 @@ class ElementContainer extends Component {
         tinyMCE.$(tempDiv).find('a').removeAttr('data-mce-selected');
         tinyMCE.$(tempDiv).find('a').removeAttr('data-custom-editor');
         tinyMCE.$(tempDiv).find('img.Wirisformula, img.temp_Wirisformula').removeAttr('src');
+        tinyMCE.$(tempDiv).find('img.imageAssetContent').removeAttr('data-mce-src');
         tempDiv.innerHTML = removeBlankTags(tempDiv.innerHTML)
         return encodeHTMLInWiris(tempDiv.innerHTML);
     }

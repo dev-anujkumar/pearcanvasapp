@@ -1,5 +1,5 @@
 import config from '../../../src/config/config.js';
-import { handleElmPortalEvents, prepareItemMetadata } from '../../../src/component/ElementContainer/AssessmentEventHandling.js';
+import { handleElmPortalEvents, prepareItemMetadata, handlePostMsgOnAddAssess } from '../../../src/component/ElementContainer/AssessmentEventHandling.js';
 
 jest.mock('../../../src/js/slateLockUtility', () => ({
     checkSlateLock: () => {
@@ -79,3 +79,25 @@ describe('Testing AssessmentEventHandling function', () => {
         expect(result.itemTitle).toBe('Quiz 16.3 Who Defines Deviance?!!!!!');
     })
 });
+
+describe('Testing, Elm - AssessmentEventHandling function', () => {
+    it('Test- handlePostMsgOnAddAssess', () => {
+        handlePostMsgOnAddAssess(jest.fn(), "practice");
+        const event = new CustomEvent("message", {
+            data: {
+                    action: "assessment_save_success",
+                    source: "elm",
+                    timestamp: 1611237428538,
+                    type: "assessment|wUrn_urn:pearson:work:4979a9fd-6a9e-45eb-877e-eae3d23b8e27|title_Quiz 9.2: Pointer Variables-test|usagetype_practice"
+                },        
+            origin: "https://assessmentauthoring-dev.pearson.com",
+        });
+
+        let obj = { spyEvent: () => { return 'TestEvent' } };
+        jest.spyOn(obj, 'spyEvent')
+        window.dispatchEvent(event);
+        obj.spyEvent();
+        expect(obj.spyEvent).toHaveBeenCalled()
+    })
+});
+

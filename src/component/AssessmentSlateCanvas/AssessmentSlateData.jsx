@@ -182,7 +182,16 @@ class AssessmentSlateData extends Component {
     * @param pufObj - The object contains data about Elm/Learnosity Assessment 
     */
     addPufAssessment = (pufObj) => {
-        this.props.addPufAssessment(pufObj, this.state.activeAssessmentType, 'insert');
+        let usageTypeList = this.props?.assessmentReducer?.usageTypeListData;
+        let dataToSend = pufObj;
+        if (pufObj?.calledFrom == 'createElm' && pufObj.usagetype) {
+            const updatedUsageType = usageTypeList && usageTypeList.find((type) => type.usagetype == pufObj.usagetype)
+            this.setState({
+                activeAssessmentUsageType: updatedUsageType ? updatedUsageType.label : this.state.activeAssessmentUsageType
+            });
+            dataToSend = { ...pufObj, usagetype: updatedUsageType ? updatedUsageType.label : this.state.activeAssessmentUsageType }
+        }
+        this.props.addPufAssessment(dataToSend, this.state.activeAssessmentType, 'insert');
         const elmData = { targetId: pufObj.id }
         this.props.checkElmAssessmentStatus('assessment', 'fromAddElm', elmData, {});
     }

@@ -5,6 +5,7 @@ import { matchHTMLwithRegex, removeBlankTags } from '../../constants/utility.js'
 import store from '../../appstore/store'
 import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
 import { findElementType } from "../CanvasWrapper/CanvasWrapper_Actions";
+import { storeOldAssetForTCM } from './ElementContainer_Actions'
 const indivisualData = {
     schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
     textsemantics: [ ],
@@ -115,6 +116,7 @@ const podHtmlmatchWithRegex = (html) => {
  * @param {*} secondaryOption 
  */
 export const generateCommonFigureDataInteractive = (index, previousElementData, elementType, primaryOption, secondaryOption) => {
+    const oldFigureData = Object.assign({},previousElementData.figuredata);
     let titleDOM = document.getElementById(`cypress-${index}-0`),
         subtitleDOM = document.getElementById(`cypress-${index}-1`),
         captionDOM = document.getElementById(`cypress-${index}-3`),
@@ -182,6 +184,8 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
 
     if (previousElementData.figuredata.interactivetype === "pdf" || previousElementData.figuredata.interactivetype === "pop-up-web-link" ||
         previousElementData.figuredata.interactivetype === "web-link") {
+        const oldPostertextObj = previousElementData?.figuredata?.postertext ? Object.freeze(previousElementData.figuredata.postertext) : { text: "" };
+        const oldPostertext = previousElementData?.figuredata?.postertext?.text || "";
         let pdfPosterTextDOM = document.getElementById(`cypress-${index}-2`)
         let posterTextHTML = pdfPosterTextDOM ? pdfPosterTextDOM.innerHTML : ""
         let posterText = pdfPosterTextDOM ? pdfPosterTextDOM.innerText : ""
@@ -191,6 +195,9 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
             schema : "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
             text : posterText,
             textsemantics : [ ]
+        }
+        if(posterText != oldPostertext){
+            store.dispatch(storeOldAssetForTCM({ ...oldFigureData, postertext: oldPostertextObj }));
         }
     }
     return data

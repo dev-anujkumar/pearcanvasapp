@@ -135,6 +135,8 @@ export const SAVE_AUTO_UPDATE_ID = 'SAVE_AUTO_UPDATE_ID'
 export const ELM_ASSESSMENT_EDIT_ID = "ELM_ASSESSMENT_EDIT_ID"
 export const SET_ITEM_UPDATE_EVENT = 'SET_ITEM_UPDATE_EVENT'
 export const ELM_ITEM_EVENT_DATA = 'ELM_ITEM_EVENT_DATA'
+export const ELM_NEW_ITEM_DATA = "ELM_NEW_ITEM_DATA"
+export const SET_USAGE_TYPE = "SET_USAGE_TYPE"
 /* --------------- Selection Constants ------------------------*/
 export const SET_SELECTION = 'SET_SELECTION'
 
