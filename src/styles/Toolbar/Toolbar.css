@@ -540,6 +540,7 @@ margin-left:6px;
 .glossary-audiodropdown{
   left:0;
   top:0;
+  width: 325px; 
   color: black;
   position: absolute;
   background-color: white;
@@ -550,4 +551,8 @@ margin-left:6px;
   margin-top: 5px;
   cursor: default;
   padding: 10px !important;
+}
+
+.glossary-audiodropdown audio{
+  width:100% !important
 }
