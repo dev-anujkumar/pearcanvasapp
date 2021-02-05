@@ -1092,15 +1092,11 @@ class ElementContainer extends Component {
         return tcmStatus
     }
 
-    handleAudioPopStatus =(status,position)=>{
+    handleAudioPopupLocation =(status,position)=>{
         this.setState({
             audioPopupStatus:status,
             position:position
         })
-    }
-
-    handleAudioPopupLocation =(status,position)=>{
-        this.handleAudioPopStatus(status,position);   
     }
     /**
     * @description - checkTCMStatus is responsible for setting the tcm status for the element
@@ -1514,7 +1510,7 @@ class ElementContainer extends Component {
                     : ''}
                 <div className={`element-container ${labelText.toLowerCase()=="2c"? "multi-column":labelText.toLowerCase()} ${borderToggle}`} data-id={element.id} onFocus={() => this.toolbarHandling('remove')} onBlur={() => this.toolbarHandling('add')} onClick = {(e)=>this.handleFocus("","",e,labelText)}>
                     {selectionOverlay}{elementOverlay}{bceOverlay}{editor}
-                {this.state.audioPopupStatus && <OpenAudioBook closeAudioBookDialog={()=>this.handleAudioPopStatus(false)} isGlossary ={true} position = {this.state.position}/>}
+                {this.state.audioPopupStatus && <OpenAudioBook closeAudioBookDialog={()=>this.handleAudioPopupLocation(false)} isGlossary ={true} position = {this.state.position}/>}
                 </div>
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                     {permissions && permissions.includes('notes_adding') && <Button type="add-comment" btnClassName={btnClassName} onClick={(e) => this.handleCommentPopup(true, e)} />}

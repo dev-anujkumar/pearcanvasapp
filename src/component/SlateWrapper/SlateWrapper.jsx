@@ -1013,7 +1013,7 @@ class SlateWrapper extends Component {
     */
 
     showAudioRemoveConfirmationPopup = () => {
-
+        
         let dialogText;
         let audioRemoveClass;
         if (this.props.openRemovePopUp) {
@@ -1038,6 +1038,7 @@ class SlateWrapper extends Component {
                     saveButtonText='OK'
                     saveContent={this.processRemoveConfirmation}
                     togglePopup={this.toggleAudioPopup}
+                    isGlossary ={this.props.isGlossary}
                 />
             )
         }

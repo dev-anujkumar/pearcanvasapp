@@ -750,8 +750,11 @@ export class TinyMceEditor extends Component {
 
                     const xOffSet = 0;
                     const yOffSet = 10
-                    const copyClickedX = e.clientX - parentPosition.x + xOffSet;
+                    let copyClickedX = e.clientX - parentPosition.x + xOffSet;
                     const copyClickedY = e.clientY - parentPosition.y + scrollTop + yOffSet;
+                    if(copyClickedX > 380){
+                        copyClickedX = 400
+                    }
                     const audioPopupPosition = {
                         left: `${(copyClickedX)}px`,
                         top: `${(copyClickedY)}px`
