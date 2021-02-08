@@ -136,22 +136,3 @@ export const getPasteValidated = (sourceType, selectionType) => {
         return validation;
     }
 }
-
-
-export const AllSlateConstants = {
-    FRONT_MATTER: 'frontmatter',
-    BODY_MATTER: 'bodymatter',
-    BACK_MATTER: 'backmatter',
-    CONTAINER_TYPE_LABELS: {
-        PROJECT: 'project',
-        PART: 'part',
-        CHAPTER: 'chapter',
-        MODULE: 'module',
-        APPENDIX: 'appendix'
-    },
-    MATTER_LABELS: {
-        FM_LABEL: 'FrontMatter',
-        BM_LABEL: 'BackMatter',
-        BODY_MATTER_LABEL: 'BackMatter'
-    }
-};
