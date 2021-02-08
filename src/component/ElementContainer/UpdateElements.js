@@ -185,7 +185,7 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
     if (previousElementData.figuredata.interactivetype === "pdf" || previousElementData.figuredata.interactivetype === "pop-up-web-link" ||
         previousElementData.figuredata.interactivetype === "web-link") {
         const oldPostertextObj = previousElementData?.figuredata?.postertext ? Object.assign({},previousElementData.figuredata.postertext) : { text: "" };
-        const oldPostertext = previousElementData?.figuredata?.postertext?.text || "";
+        const oldPostertext = previousElementData?.figuredata?.postertext?.text ?? "";
         let pdfPosterTextDOM = document.getElementById(`cypress-${index}-2`)
         let posterTextHTML = pdfPosterTextDOM ? pdfPosterTextDOM.innerHTML : ""
         let posterText = pdfPosterTextDOM ? pdfPosterTextDOM.innerText : ""
