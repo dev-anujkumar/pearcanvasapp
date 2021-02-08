@@ -1324,7 +1324,7 @@ class ElementContainer extends Component {
                         elementStatus: config.elementStatus,
                         openAssetPopoverPopUp: this.openAssetPopoverPopUp,
                         openGlossaryFootnotePopUp: this.openGlossaryFootnotePopUp,
-                        getElementStatus: this.props.getElementStatus,
+                        getElementStatus: this.props.getElementStatus
                     }}><ElementShowHide userRole={this.props.userRole} />
                     </ElementContainerContext.Provider >;
                     labelText = 'SH'
