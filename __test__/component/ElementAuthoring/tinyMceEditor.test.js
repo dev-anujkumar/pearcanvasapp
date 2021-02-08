@@ -181,7 +181,7 @@ let props = {
     glossaryFootnotePopup: jest.fn(),
     glossaryFootnoteValue: glossaryFootnoteObject,
     togglePopup: jest.fn(),
-    audioGlossaryPopup :jest.fn()
+    handleAudioPopupLocation :jest.fn()
 }
 let selectionEditor = {
     bookmarkManager: {
@@ -4376,10 +4376,11 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
             expect(setDisabled).toHaveBeenCalled()
         });
         it('Test-30.2.2-Method--28--editorOnClick--nodeName:DFN & alreadyExist:TRUE', () => {
+            instance.props.handleAudioPopupLocation = jest.fn();
             document.querySelector = () => { return false; }
             let event = {
                 currentTarget:{
-                    classList: { contains: jest.fn()}
+                    classList: { contains:()=> { return 'mce-edit-focus' }}
                 },
                 preventDefault: jest.fn(),
                 stopPropagation: jest.fn(),
