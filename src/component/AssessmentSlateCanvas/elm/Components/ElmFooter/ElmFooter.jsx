@@ -69,14 +69,18 @@ const ElmFooter = (props) => {
         }
        
         if (tempUrl) {
-          //const usageType = activeUsageType ? activeUsageType.replace(" ", "").toLowerCase() : "";
-          const url = tempUrl +
+          let url = tempUrl +
             "?containerUrn=" + containerUrn +
-            "&projectUrn=" + config.projectUrn //+
-            //"&usageType=" + usageType;
-        /* open elm portal */
+            "&projectUrn=" + config.projectUrn;
+
+          /* if NOT Interactive elm than append usageType param */
+          if(activeAssessmentType === PUF){
+            const usageType = activeUsageType ? activeUsageType.replace(" ", "").toLowerCase() : "";
+            url = `${url}&usageType=${usageType}`;
+          }
+          /* open elm portal */
           window.open(url);
-        /**@function call for add listeners to get data from elm portal */
+          /**@function call for add listeners to get data from elm portal */
           handlePostMsgOnAddAssess(addPufFunction, activeUsageType);
           closeElmWindow();
         }
