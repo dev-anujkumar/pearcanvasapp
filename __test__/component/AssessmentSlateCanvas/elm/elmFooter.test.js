@@ -103,9 +103,6 @@ describe('Testing ELM Footer component', () => {
         })
         
     })
-    describe('Testing create new Interactive elm button in ELM Footer component', () => {
-    
-    })
     it('Test- Learnosity type assessment', () => {
         let props = {
             elmFooterProps: {
