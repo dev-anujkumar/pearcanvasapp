@@ -180,7 +180,8 @@ let props = {
     error: null,
     glossaryFootnotePopup: jest.fn(),
     glossaryFootnoteValue: glossaryFootnoteObject,
-    togglePopup: jest.fn()
+    togglePopup: jest.fn(),
+    audioGlossaryPopup :jest.fn()
 }
 let selectionEditor = {
     bookmarkManager: {
@@ -4384,7 +4385,12 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
                     id: "",
                     dataset: { uri: "uri" },
                     nodeName: "DFNN",
-                    closest: () => { return { hasAttribute:()=>{return true}, getAttribute:()=>{return true}}; }
+                    closest: () => {
+                        return {
+                            getAttribute() { return },
+                            hasAttribute() { return true}
+                        }
+                    }
                 },
                 type: "click",
                 clipboardData: {
