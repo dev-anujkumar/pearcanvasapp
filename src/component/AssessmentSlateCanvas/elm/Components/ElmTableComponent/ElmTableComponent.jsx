@@ -463,7 +463,7 @@ class ElmTableComponent extends Component {
         /** Condition to show loader before Items Table */
         let showItemLoader = showLoader == true && isLoading == true && openSearch == true && openItemTable== true  ? true : false;
         /** get error when project has no Elm assessments to display create button */
-        const errorNoElmItem = (this.props.activeAssessmentType === PUF) && errFlag;
+        const errorNoElmItem = (this.props.activeAssessmentType === PUF || this.props.activeAssessmentType === ELM_INT) && errFlag;
         {
             if (errFlag == true) {
                 /** ELM Picker Error Div */

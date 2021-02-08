@@ -6,10 +6,11 @@ import '../../../../../styles/AssessmentSlateCanvas/elm/ElmTable.css';
 import {
   elmAssessmentItem,
   singleAssessmentItemIcon,
+  elmInteractiveIcon
 } from "../../../../../images/ElementButtons/ElementButtons.jsx";
 import config from "../../../../../config/config";
 import { handlePostMsgOnAddAssess } from '../../../../ElementContainer/AssessmentEventHandling';
-import { PUF } from '../../../AssessmentSlateConstants.js';
+import { PUF, ELM_INT } from '../../../AssessmentSlateConstants.js';
 
 const ElmFooter = (props) => {
   const { buttonText, sendPufAssessment, closeElmWindow, openAssessmentSearchBar,
@@ -60,15 +61,19 @@ const ElmFooter = (props) => {
             tempUrl =
               `${config.ELM_PORTAL_URL}/launch/editor/assessment/New/item/createInPlace`;
           }
+          /* Open Elm portal for Add new -- interactive -- in single assessment */ 
+          if (!openItemTable && activeAssessmentType === ELM_INT) {
+            tempUrl =
+              `${config.ELM_PORTAL_URL}/launch/editor/interactive/createInPlace`;
+          }
         }
-
+       
         if (tempUrl) {
-          const usageType = activeUsageType ? activeUsageType.replace(" ", "").toLowerCase() : "";
+          //const usageType = activeUsageType ? activeUsageType.replace(" ", "").toLowerCase() : "";
           const url = tempUrl +
             "?containerUrn=" + containerUrn +
-            "&projectUrn=" + config.projectUrn +
-            "&usageType=" + usageType;
-
+            "&projectUrn=" + config.projectUrn //+
+            //"&usageType=" + usageType;
         /* open elm portal */
           window.open(url);
         /**@function call for add listeners to get data from elm portal */
@@ -83,14 +88,15 @@ const ElmFooter = (props) => {
   return (
     <div className="puf-footer">
       {/* Create new Assessment/Item only for PUF */}
-      {activeAssessmentType === PUF && (
+      {(activeAssessmentType === PUF || activeAssessmentType === ELM_INT) && (
         <button
           className="puf-button create-button"
           onClick={openElmPortal}
           disabled={activeRadioIndex !== null}
         >
           <span className="margin-right-5px">
-            {openItemTable ? singleAssessmentItemIcon : elmAssessmentItem}
+            {openItemTable ? singleAssessmentItemIcon : 
+              (activeAssessmentType === ELM_INT) ? elmInteractiveIcon : elmAssessmentItem }
           </span>
           <span>NEW</span>
         </button>
