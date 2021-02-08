@@ -67,7 +67,6 @@ const ElmFooter = (props) => {
               `${config.ELM_PORTAL_URL}/launch/editor/interactive/createInPlace`;
           }
         }
-       
         if (tempUrl) {
           let url = tempUrl +
             "?containerUrn=" + containerUrn +
@@ -78,9 +77,9 @@ const ElmFooter = (props) => {
             const usageType = activeUsageType ? activeUsageType.replace(" ", "").toLowerCase() : "";
             url = `${url}&usageType=${usageType}`;
           }
-          /* open elm portal */
+        /* open elm portal */
           window.open(url);
-          /**@function call for add listeners to get data from elm portal */
+        /**@function call for add listeners to get data from elm portal */
           handlePostMsgOnAddAssess(addPufFunction, activeUsageType);
           closeElmWindow();
         }
