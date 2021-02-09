@@ -34,7 +34,16 @@ let  initialState = {
 };
 
 
-
+jest.mock('./../../../src/constants/utility.js', () => ({
+    sendDataToIframe: jest.fn(),
+    hasReviewerRole: jest.fn(),
+    guid: jest.fn(),
+    encodeHTMLInWiris: jest.fn(),
+    matchHTMLwithRegex: jest.fn(),
+    createTitleSubtitleModel: jest.fn(),
+    removeBlankTags: jest.fn(),
+    removeUnoClass: jest.fn()
+}))
 jest.mock('../../../src/config/config.js', () => ({
     slateManifestURN: "urn:pearson:manifest:e652706d-b04b-4111-a083-557ae121ag0i",
     ASSET_POPOVER_ENDPOINT:"https://contentapis-staging.pearsoncms.net/manifest-api/",
