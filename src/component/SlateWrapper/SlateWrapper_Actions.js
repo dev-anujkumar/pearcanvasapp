@@ -841,42 +841,40 @@ export const cloneContainer = (insertionIndex, manifestUrn) => async (dispatch) 
                     manifestUrn: newContainerData?.id,
                     containerEntityUrn: newContainerData?.entityUrn
                 }
-                dispatch(pasteElement(pasteArgs))
+                return dispatch(pasteElement(pasteArgs))
             }
-            else {
-                try {
-                    const getStatusApiUrl = `${config.AUDIO_NARRATION_URL}container/request/${requestId}`
-                    statusAPICallInProgress = true
-                    const statusResponse = await axios.get(
-                        getStatusApiUrl,
-                        {
-                            headers: {
-                                "ApiKey": config.STRUCTURE_APIKEY,
-                                "Accept": "application/json",
-                                "Content-Type": "application/json",
-                                "PearsonSSOSession": config.ssoToken
-                            }
+            try {
+                const getStatusApiUrl = `${config.AUDIO_NARRATION_URL}container/request/${requestId}`
+                statusAPICallInProgress = true
+                const statusResponse = await axios.get(
+                    getStatusApiUrl,
+                    {
+                        headers: {
+                            "ApiKey": config.STRUCTURE_APIKEY,
+                            "Accept": "application/json",
+                            "Content-Type": "application/json",
+                            "PearsonSSOSession": config.ssoToken
                         }
-                    )
-                    statusAPICallInProgress = false
-                    console.log("statusResponse.datastatusResponse.datastatusResponse.data", statusResponse.data)
-                    const statusResponseData = statusResponse.data
-                    if (statusResponseData.auditResponse?.status === "SUCCESS") {
-                        isCloneSucceed = true
-                        newContainerData = statusResponseData.baseContainer
-                        clearInterval(statusCheckInterval)
-                        const pasteArgs = {
-                            index: insertionIndex,
-                            manifestUrn: newContainerData?.id,
-                            containerEntityUrn: newContainerData?.entityUrn
-                        }
-                        return dispatch(pasteElement(pasteArgs))
                     }
+                )
+                statusAPICallInProgress = false
+                console.log("statusResponse.datastatusResponse.datastatusResponse.data", statusResponse.data)
+                const statusResponseData = statusResponse.data
+                if (statusResponseData.auditResponse?.status === "SUCCESS") {
+                    isCloneSucceed = true
+                    newContainerData = statusResponseData.baseContainer
+                    clearInterval(statusCheckInterval)
+                    const pasteArgs = {
+                        index: insertionIndex,
+                        manifestUrn: newContainerData?.id,
+                        containerEntityUrn: newContainerData?.entityUrn
+                    }
+                    return dispatch(pasteElement(pasteArgs))
                 }
-                catch (error) {
-                    sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
-                    console.error("Error in getting the clone status of container:::", error);
-                }
+            }
+            catch (error) {
+                sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
+                console.error("Error in getting the clone status of container:::", error);
             }
         }, slateWrapperConstants.CLONE_STATUS_INTERVAL);
     }
