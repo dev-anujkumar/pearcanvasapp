@@ -347,3 +347,35 @@ export function prepareDataForTcmCreate(type, createdElementData, getState, disp
         }
     })
 }
+
+export const setPayloadForContainerCopyPaste = (params) => {
+    const {
+        cutIndex,
+        selection,
+        manifestUrn,
+        containerEntityUrn
+    } = params
+
+    if (selection.element.type === "element-aside") {
+        if (selection.operationType === "cut") {
+            return {
+                "content": [{
+                    "type": selection.element.type,
+                    "index": cutIndex,
+                    "id": selection.element.id,
+                    "elementParentEntityUrn": selection.sourceEntityUrn,// selection.sourceSlateEntityUrn,
+                    "contentUrn": selection.element.contentUrn
+                }]
+            }
+        }
+        return {
+            "content": [{
+                "type": selection.element.type,
+                "index": cutIndex,
+                "id": manifestUrn,
+                // "elementParentEntityUrn": selection.sourceEntityUrn,// selection.sourceSlateEntityUrn,
+                "contentUrn": containerEntityUrn
+            }]
+        }
+    }
+}
