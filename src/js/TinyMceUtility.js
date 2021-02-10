@@ -19,18 +19,22 @@ const dataFromAlfresco = (data, editor, imageArgs) => {
     let altText = imageData['alt-text'] ? imageData['alt-text'] : "";
     let uniqID = imageData['uniqueID'] ? imageData['uniqueID'] : "";
     let longDesc = imageData['longDescription'] ? imageData['longDescription'] : "";
+    let figureType = imageData['assetType'] ? imageData['assetType'] : "";
     const imageID = `imageAssetContent:${uniqID}:${Math.floor(1000 + Math.random() * 9000)}`
     const imgData = `<img src=${epsURL} data-id="${imageID}" class="imageAssetContent" width="112" height="150" imageid="urn:pearson:alfresco:${uniqID}" alt="${altText}" longdescription="${longDesc}"/>`;
-    if (imageArgs?.id && editor?.targetElm) {
-        let getImgNode = editor.targetElm.querySelector(`img[data-id="${imageArgs.id}"]`);
-        if (getImgNode) {
-            getImgNode.outerHTML = imgData;
-            imageArgs.handleBlur(null, true);
+    const imageTypes = ["image", "table", "mathImage", "authoredtext"];
+    if (imageTypes.indexOf(figureType) > -1) {
+        if (imageArgs?.id && editor?.targetElm) {
+            let getImgNode = editor.targetElm.querySelector(`img[data-id="${imageArgs.id}"]`);
+            if (getImgNode) {
+                getImgNode.outerHTML = imgData;
+                imageArgs.handleBlur(null, true);
+            }
         }
-    }
-    else {
-        editor.insertContent(imgData);
-        setTimeout(() => editor.targetElm?.classList.remove?.("place-holder"), 100)
+        else {
+            editor.insertContent(imgData);
+            setTimeout(() => editor.targetElm?.classList.remove?.("place-holder"), 100)
+        }
     }
     return imgData;
 }

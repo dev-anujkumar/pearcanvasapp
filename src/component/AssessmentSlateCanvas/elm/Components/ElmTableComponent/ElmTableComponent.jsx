@@ -220,7 +220,7 @@ class ElmTableComponent extends Component {
         }
 
         if (data.contents && Object.keys(data.contents).length) {
-            const containerData = Object.values(data.contents)?.flat();
+            const containerData = Object.values(data.contents)?.flat?.();
             containerData?.length && containerData.forEach((item) => {
                 if (item && ((item.alignments && item.alignments != null) || (item.contents && item.contents != null))) {
                     this.preparedData.push({ "type": item.type, "urn": item.versionUrn, "title": item.unformattedTitle ? item.unformattedTitle.en : "", "label": item.label ? item.label : "" })

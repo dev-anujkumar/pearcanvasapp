@@ -21,6 +21,7 @@ export const DEFAULT_VIDEO_POSTER_IMAGE = "https://cite-media-stg.pearson.com/le
 /*---------------Element Interactive ----------------------*/ 
 export const INTERACTIVE_FPO = "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
 export const INTERACTIVE_SCHEMA = "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive"
+export const AUTHORED_TEXT_SCHEMA = "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext"
 /*---------------Element Single Assessment ----------------------*/ 
 export const ESA_DIALOG_TEXT='PLEASE ENTER A PRODUCT UUID'
 export const ESA_POPUP_PLACEHOLDER='UUID'
