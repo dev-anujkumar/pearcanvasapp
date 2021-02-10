@@ -746,6 +746,19 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                 }]
             }
         }
+        if(selection.operationType.toUpperCase() === "CUT") {
+          if(selection.element.type === "element-aside" && selection.element.subtype=== "sidebar"){
+              _requestData = {
+                  "content": [{
+                    "type": selection.element.type,
+                    "index": cutIndex,
+                    "id": selection.element.id,
+                    "elementParentEntityUrn": selection.sourceEntityUrn,// selection.sourceSlateEntityUrn,
+                    "contentUrn": selection.element.contentUrn
+                   }]
+                }
+            }
+        }
 
         if('manifestationUrn' in selection.element) {
             _requestData = {
