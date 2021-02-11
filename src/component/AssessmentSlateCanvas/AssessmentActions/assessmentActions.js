@@ -119,10 +119,12 @@ export const fetchAssessmentVersions = (entityUrn, type, createdDate, assessment
  * This action creator is used to launch Elm Assessment Portal from Cypress
  */
 export const openElmAssessmentPortal = (assessmentData) => (dispatch) => {
-    let { assessmentWorkUrn, projDURN, containerURN, assessmentItemWorkUrn } = assessmentData
+    let { assessmentWorkUrn, projDURN, containerURN, assessmentItemWorkUrn, interactiveId } = assessmentData
     let url = `${config.ELM_PORTAL_URL}/launch/editor/assessment/${assessmentWorkUrn}/editInPlace?containerUrn=${containerURN}&projectUrn=${projDURN}`;
     if (assessmentItemWorkUrn.trim() != "") {
         url = `${config.ELM_PORTAL_URL}/launch/editor/assessment/${assessmentWorkUrn}/item/${assessmentItemWorkUrn}/editInPlace?containerUrn=${containerURN}&projectUrn=${projDURN}`;
+    } else if(interactiveId){
+        url = `${config.ELM_PORTAL_URL}/launch/editor/interactive/${interactiveId}/editInPlace?containerUrn=${containerURN}&projectUrn=${projDURN}`;
     }
     try {
         let elmWindow = window.open(url);

@@ -11,7 +11,7 @@ import { updateElmItemData, setItemUpdateEvent, setNewItemFromElm } from '../Ass
  * This module deals with the event handling for the Update of Full and Embedded Elm Assessments
  * for the events triggered from the Elm Assessment Portal
 */
-export const handleElmPortalEvents = (action = 'add') => {
+export const handleElmPortalEvents = (updateInteractive, action = 'add') => {
     let slateLockInfo = store.getState().slateLockReducer.slateLockInfo;
     if (!checkSlateLock(slateLockInfo)) {
 
@@ -31,6 +31,9 @@ export const handleElmPortalEvents = (action = 'add') => {
                     if (data.type == 'assessment') {
                         handleRefreshSlate(store.dispatch);
                     }
+                } else {
+                    /* To edit interactive using edit button */
+                    getInteractivePostMsg(data, updateInteractive)
                 }
                 if (action == 'remove') {
                     window.removeEventListener('message', elmAssessmentUpdate, false);
@@ -82,7 +85,7 @@ export const prepareItemMetadata = (eventData) =>{
 }
 
 /* update on getting message form elm portal */
-export const handlePostMsgOnAddAssess = (addPufFunction, usagetype) => {
+export const handlePostMsgOnAddAssess = (addPufFunction, usagetype, action) => {
     let slateLockInfo = store.getState()?.slateLockReducer?.slateLockInfo;
     if (!checkSlateLock(slateLockInfo)) {
         const getMsgafterAddAssessment = async (event) => {
@@ -128,16 +131,10 @@ export const handlePostMsgOnAddAssess = (addPufFunction, usagetype) => {
                     }                
                 } else {
                     /* Get Interactive data from Post message */
-                    const interactives = data?.split("|") ?? [];
-                    if (interactives?.length === 5 && interactives[0] === "interactive") {
-                        const interactiveFromMsg = {
-                            id: interactives[1]?.split("_")[1],
-                            title: interactives[2]?.split("_")[1],
-                            //calledFrom:'createElm',
-                            interactiveType: interactives[3]?.split("_")[1]                               
-                        };
-                        /**@function to update data display in interactive  */
-                        addPufFunction(interactiveFromMsg);
+                    getInteractivePostMsg(data, addPufFunction);
+                    if(action === "remove"){
+                        /* Remove EventListener */
+                        window.removeEventListener("message", getMsgafterAddAssessment, false);
                     }
                 }  
             } catch (err) {
@@ -147,3 +144,18 @@ export const handlePostMsgOnAddAssess = (addPufFunction, usagetype) => {
         window.addEventListener("message", getMsgafterAddAssessment, false);
     }
 };
+
+function getInteractivePostMsg(data, cbMethod){
+    /* get data from post message */
+    const interactives = data?.split("|") ?? [];
+    if (interactives?.length === 5 && interactives[0] === "interactive") {
+        const interactiveFromMsg = {
+            id: interactives[1]?.split("_")[1],
+            title: interactives[2]?.split("_")[1],
+            //calledFrom:'createElm',
+            interactiveType: interactives[3]?.split("_")[1]                               
+        };
+        /**@function to update data display in interactive  */
+        cbMethod(interactiveFromMsg);
+    }
+}

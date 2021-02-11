@@ -49,7 +49,7 @@ import CutCopyDialog from '../CutCopyDialog';
 import { OnCopyContext } from '../CutCopyDialog/copyUtil.js'
 import { setSelection } from '../CutCopyDialog/CopyUrn_Action.js';
 import { openElmAssessmentPortal, fetchAssessmentMetadata, resetAssessmentStore, editElmAssessmentId } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
-import {handleElmPortalEvents} from '../ElementContainer/AssessmentEventHandling.js';
+import {handleElmPortalEvents, handlePostMsgOnAddAssess } from '../ElementContainer/AssessmentEventHandling.js';
 import { checkFullElmAssessment, checkEmbeddedElmAssessment, checkInteractive } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 import { setScroll } from './../Toolbar/Search/Search_Action.js';
 import { SET_SEARCH_URN, SET_COMMENT_SEARCH_URN } from './../../constants/Search_Constants.js';
@@ -170,7 +170,8 @@ class ElementContainer extends Component {
             this.props.releaseSlateLock(config.projectUrn, config.slateManifestURN)
             config.releaseCallCount += 1
         }
-        handleElmPortalEvents('remove');/** Remove Elm-Assessment Update eventListener */
+        handleElmPortalEvents("", 'remove');/** Remove Elm-Assessment Update eventListener */
+        handlePostMsgOnAddAssess("", "", "remove")
     }
 
     componentWillReceiveProps(newProps) {
@@ -1708,15 +1709,24 @@ class ElementContainer extends Component {
         let { element } = this.props;
         let fullAssessment = checkFullElmAssessment(element);
         let embeddedAssessment = checkEmbeddedElmAssessment(element);
+        const isInteractive = checkInteractive(element);
         let dataToSend = {
             assessmentWorkUrn: fullAssessment ? element.elementdata.assessmentid : embeddedAssessment ? element.figuredata.elementdata.assessmentid : "",
             projDURN: config.projectUrn,
             containerURN: config.slateManifestURN,
-            assessmentItemWorkUrn: embeddedAssessment ? element.figuredata.elementdata.assessmentitemid : ""
+            assessmentItemWorkUrn: embeddedAssessment ? element.figuredata.elementdata.assessmentitemid : "",
+            interactiveId: isInteractive ? element.figuredata.interactiveid : ""
         }
-        handleElmPortalEvents();/** Add Elm-Assessment Update eventListener */
+        handleElmPortalEvents(this.updateInteractive);/** Add Elm-Assessment Update eventListener */
         this.props.openElmAssessmentPortal(dataToSend);
         embeddedAssessment && this.props.editElmAssessmentId(element.figuredata.elementdata.assessmentid, element.figuredata.elementdata.assessmentitemid);
+    }
+    /* Update the data from post message of elm portal */
+    updateInteractive = (figureData) => {
+        //this.props.updateFigureData(figureData, this.props?.index, this.props?.element?.id, () => {
+        //    this.handleFocus("updateFromC2");
+        //    this.handleBlur();
+        //})
     }
    
     render = () => {
