@@ -124,9 +124,22 @@ export const handlePostMsgOnAddAssess = (addPufFunction, usagetype) => {
                             };
                             /* save item data into store */
                             store.dispatch(setNewItemFromElm(itemDataFromMsg));
-                        }  
+                        }
                     }                
-                }
+                } else {
+                    /* Get Interactive data from Post message */
+                    const interactives = data?.split("|") ?? [];
+                    if (interactives?.length === 5 && interactives[0] === "interactive") {
+                        const interactiveFromMsg = {
+                            id: interactives[1]?.split("_")[1],
+                            title: interactives[2]?.split("_")[1],
+                            //calledFrom:'createElm',
+                            interactiveType: interactives[3]?.split("_")[1]                               
+                        };
+                        /**@function to update data display in interactive  */
+                        addPufFunction(interactiveFromMsg);
+                    }
+                }  
             } catch (err) {
                 console.error("catch with err", err);
             }
