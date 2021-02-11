@@ -379,3 +379,61 @@ export const setPayloadForContainerCopyPaste = (params) => {
         }
     }
 }
+
+export const fetchStatusAndPaste = async (params) => {
+    const {
+        insertionIndex,
+        requestId,
+        dispatch,
+        pasteElement
+    } = params
+
+    let isCloneSucceed = false,
+        newContainerData = null,
+        statusAPICallInProgress = false;
+
+    let statusCheckInterval = setInterval(async () => {
+        if (statusAPICallInProgress) return false
+        if (isCloneSucceed) {
+            clearInterval(statusCheckInterval)
+            return prepareAndPasteElement(newContainerData, insertionIndex, pasteElement, dispatch)
+        }
+        try {
+            const getStatusApiUrl = `${config.AUDIO_NARRATION_URL}container/request/${requestId}`
+            statusAPICallInProgress = true
+            const statusResponse = await axios.get(
+                getStatusApiUrl,
+                {
+                    headers: {
+                        "ApiKey": config.STRUCTURE_APIKEY,
+                        "Accept": "application/json",
+                        "Content-Type": "application/json",
+                        "PearsonSSOSession": config.ssoToken
+                    }
+                }
+            )
+            statusAPICallInProgress = false
+            console.log("statusResponse.datastatusResponse.datastatusResponse.data", statusResponse.data)
+            const statusResponseData = statusResponse.data
+            if (statusResponseData.auditResponse?.status === "SUCCESS") {
+                isCloneSucceed = true
+                newContainerData = statusResponseData.baseContainer
+                clearInterval(statusCheckInterval)
+                return prepareAndPasteElement(newContainerData, insertionIndex, pasteElement, dispatch)
+            }
+        }
+        catch (error) {
+            sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
+            console.error("Error in getting the clone status of container:::", error);
+        }
+    }, slateWrapperConstants.CLONE_STATUS_INTERVAL);
+}
+
+export const prepareAndPasteElement = (newContainerData, insertionIndex, pasteElement, dispatch) => {
+    const pasteArgs = {
+        index: insertionIndex,
+        manifestUrn: newContainerData?.id,
+        containerEntityUrn: newContainerData?.entityUrn
+    }
+    return dispatch(pasteElement(pasteArgs))
+}

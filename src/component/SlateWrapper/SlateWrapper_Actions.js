@@ -767,7 +767,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
         }
 
         try {
-            let url = `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/slate/${slateEntityUrn}/element/paste?type=${selection.operationType.toUpperCase()}`
+            let url = `${config.REACT_APP_API_URL}v1/projects/${config.projectUrn}/containers/${slateEntityUrn}/element/paste?type=${selection.operationType.toUpperCase()}`
             const createdElemData = await axios.post(
                 url,
                 JSON.stringify(_requestData),
@@ -827,56 +827,15 @@ export const cloneContainer = (insertionIndex, manifestUrn) => async (dispatch) 
             }
         )
         const requestId = cloneResponse.data.message.split(",")[1].replace(" request id:","")
-        //Fetch Status
-        let isCloneSucceed = false,
-            newContainerData = null,
-            statusAPICallInProgress = false;
 
-        let statusCheckInterval = setInterval(async () => {
-            if (statusAPICallInProgress) return false
-            if (isCloneSucceed) {
-                clearInterval(statusCheckInterval)
-                const pasteArgs = {
-                    index: insertionIndex,
-                    manifestUrn: newContainerData?.id,
-                    containerEntityUrn: newContainerData?.entityUrn
-                }
-                return dispatch(pasteElement(pasteArgs))
-            }
-            try {
-                const getStatusApiUrl = `${config.AUDIO_NARRATION_URL}container/request/${requestId}`
-                statusAPICallInProgress = true
-                const statusResponse = await axios.get(
-                    getStatusApiUrl,
-                    {
-                        headers: {
-                            "ApiKey": config.STRUCTURE_APIKEY,
-                            "Accept": "application/json",
-                            "Content-Type": "application/json",
-                            "PearsonSSOSession": config.ssoToken
-                        }
-                    }
-                )
-                statusAPICallInProgress = false
-                console.log("statusResponse.datastatusResponse.datastatusResponse.data", statusResponse.data)
-                const statusResponseData = statusResponse.data
-                if (statusResponseData.auditResponse?.status === "SUCCESS") {
-                    isCloneSucceed = true
-                    newContainerData = statusResponseData.baseContainer
-                    clearInterval(statusCheckInterval)
-                    const pasteArgs = {
-                        index: insertionIndex,
-                        manifestUrn: newContainerData?.id,
-                        containerEntityUrn: newContainerData?.entityUrn
-                    }
-                    return dispatch(pasteElement(pasteArgs))
-                }
-            }
-            catch (error) {
-                sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
-                console.error("Error in getting the clone status of container:::", error);
-            }
-        }, slateWrapperConstants.CLONE_STATUS_INTERVAL);
+        //Fetch Status
+        const fetchAndPasteArgs = {
+            insertionIndex,
+            requestId,
+            dispatch,
+            pasteElement
+        }
+        await (await import("./slateWrapperAction_helper.js")).fetchStatusAndPaste(fetchAndPasteArgs)  
     }
     catch(error) {
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
