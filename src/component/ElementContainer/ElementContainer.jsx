@@ -50,7 +50,7 @@ import { OnCopyContext } from '../CutCopyDialog/copyUtil.js'
 import { setSelection } from '../CutCopyDialog/CopyUrn_Action.js';
 import { openElmAssessmentPortal, fetchAssessmentMetadata, resetAssessmentStore, editElmAssessmentId } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import {handleElmPortalEvents} from '../ElementContainer/AssessmentEventHandling.js';
-import { checkFullElmAssessment, checkEmbeddedElmAssessment } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
+import { checkFullElmAssessment, checkEmbeddedElmAssessment, checkInteractive } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 import { setScroll } from './../Toolbar/Search/Search_Action.js';
 import { SET_SEARCH_URN, SET_COMMENT_SEARCH_URN } from './../../constants/Search_Constants.js';
 import { ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, SECONDARY_SINGLE_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
@@ -1462,7 +1462,7 @@ class ElementContainer extends Component {
         let btnClassName = this.state.btnClassName;
         let bceOverlay = "";
         let elementOverlay = '';
-        let showEditButton = checkFullElmAssessment(element) || checkEmbeddedElmAssessment(element)
+        let showEditButton = checkFullElmAssessment(element) || checkEmbeddedElmAssessment(element) || checkInteractive(element);
         if (!hasReviewerRole() && this.props.permissions && !(this.props.permissions.includes('access_formatting_bar')||this.props.permissions.includes('elements_add_remove')) ) {
             elementOverlay = <div className="element-Overlay disabled" onClick={() => this.handleFocus()}></div>
         }
