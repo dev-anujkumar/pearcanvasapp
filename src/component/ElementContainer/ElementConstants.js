@@ -22,6 +22,7 @@ export default {
     INTERACTIVE_EXTERNAL_LINK : "external-link",
     INTERACTIVE_SHOW_HIDE : "showhide",
     INTERACTIVE_NARRATIVE_LINK : "narrative-link",
+    SMARTLINK_ALFRESCO_TYPES : ["website", "pdf", "3rd party interactive", "metrodigi interactive", "table", "mdpopup"],
 /****************Container Element************************ */  
     ELEMENT_WORKEDEXAMPLE: "workedexample",
     ELEMENT_ASIDE: "element-aside",

@@ -186,7 +186,7 @@ describe('Test AssessmentReducer', () => {
             type: GET_USAGE_TYPE,
             payload: expectedState3
         })).toEqual({
-            usageTypeListData: expectedState3,
+            usageTypeListData: {},
             currentEditAssessment: {},
             itemUpdateEvent: false
         })

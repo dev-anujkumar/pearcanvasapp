@@ -34,7 +34,16 @@ let  initialState = {
 };
 
 
-
+jest.mock('./../../../src/constants/utility.js', () => ({
+    sendDataToIframe: jest.fn(),
+    hasReviewerRole: jest.fn(),
+    guid: jest.fn(),
+    encodeHTMLInWiris: jest.fn(),
+    matchHTMLwithRegex: jest.fn(),
+    createTitleSubtitleModel: jest.fn(),
+    removeBlankTags: jest.fn(),
+    removeUnoClass: jest.fn()
+}))
 jest.mock('../../../src/config/config.js', () => ({
     slateManifestURN: "urn:pearson:manifest:e652706d-b04b-4111-a083-557ae121ag0i",
     ASSET_POPOVER_ENDPOINT:"https://contentapis-staging.pearsoncms.net/manifest-api/",
@@ -193,10 +202,46 @@ describe('Tests commentsPanel action', () => {
        it('testing new func ===> ?????', () => {
         document.querySelector = () => { return false; }
         document.getElementById = ()=>{
-                        return {innerHTML:'tests'}
+                        return {
+                        innerHTML:'tests',
+                        getElementsByTagName: () => {
+                            return {
+                                tagName: 'dfn',
+                                textContent: () => { return { slice: () => { return "" } } }
+                            }
+                        }
                     }
-        actions.saveGlossaryAndFootnote('urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','interactive','dsusiudfd','GLOSSARY','apple','fruit','image'); 
+                    }
+                
+        actions.saveGlossaryAndFootnote('urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','interactive','dsusiudfd','GLOSSARY','apple','fruit','image',''); 
        });
+       xit('testing if there is an audio in glossary', () => {
+           document.querySelector = () => { return false; }
+           document.getElementById = () => {
+               return {
+                   innerHTML: 'tests',
+                   getElementsByTagName: () => {
+                       return {
+                           innerHTML: "testing",
+                           outerHTML: '<dfn class="Pearson-Component GlossaryTerm" data-uri="urn:pearson:work:fb1d04b4-14f8-4eef-8224-8345a7e75487" audio-id="c5a24ac0-af3d-4d80-983b-bc96e26605d8" audio-path="https://cite-media-stg.pearson.com/legacy_paths/c5a24ac0-af3d-4d80-983b-bc96e26605d8/nse_aud_11_u43_l1_m1_01.mp3">testing</dfn>'
+                       }
+                   }
+               }
+           }
+           let audioGlossaryData = {
+               "narrativeAudioUrn": "2ddad41f-a05e-4f99-b44c-4a9306bd2a36",
+               "location": "https://cite-media-stg.pearson.com/legacy_paths/2ddad41f-a05e-4f99-b44c-4a9306bd2a36/Progressive%20Audio%20sample%20Midsummer_Sky.mp3",
+               "title": {
+                   "en": "Progressive Audio sample Midsummer_Sky.mp3"
+               },
+               "format": "audio/mpeg"
+           }
+           let term = '<p audio-id="c5a24ac0-af3d-4d80-983b-bc96e26605d8" audio-path="https://cite-media-stg.pearson.com/legacy_paths/c5a24ac0-af3d-4d80-983b-bc96e26605d8/nse_aud_11_u43_l1_m1_01.mp3">testing</p>'
+
+           actions.saveGlossaryAndFootnote('urn:pearson:work:f954d8b8-ce9e-4fbd-8e60-a16d9deea238', 'element-authoredtext', 'urn:pearson:work:fb1d04b4-14f8-4eef-8224-8345a7e75487', 'Glossary', term, '<p></p>', 'undefined', 'element-authoredtext', audioGlossaryData);
+           expect({ 'narrativeAudioUrn': '2ddad41f-a05e-4f99-b44c-4a9306bd2a36' }).toMatchObject({ 'narrativeAudioUrn': '2ddad41f-a05e-4f99-b44c-4a9306bd2a36' }); 
+       });
+
        it('testing new func ===> tableasmarkup', () => {
         document.querySelector = () => { return false; }
         document.getElementById = ()=>{
@@ -248,38 +293,79 @@ describe('Tests commentsPanel action', () => {
        });
        it('testing new func ===> authoredtext', () => {
         document.querySelector = () => { return false; }
-        document.getElementById = ()=>{
-                        return {innerHTML:'tests'}
+           document.getElementById = () => {
+               return {
+                   innerHTML: 'tests',
+                   getElementsByTagName: () => {
+                    return {
+                        tagName: 'dfn',
+                        textContent: () => { return { slice: () => { return "" } } }
                     }
-        actions.saveGlossaryAndFootnote('urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','figure','dsusiudfd','FOOTNOTE','apple','fruit','authoredtext', 'popup', 'popup'); 
+                }
+               };
+           }
+        
+        actions.saveGlossaryAndFootnote('urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','figure','dsusiudfd','FOOTNOTE','apple','fruit','authoredtext', 'popup', 'popup',''); 
+       });
+       it('testing new func ===> authoredtext', () => {
+        document.querySelector = () => { return false; }
+           document.getElementById = () => {
+               return {
+                   innerHTML: 'tests',
+                   getElementsByTagName: () => {
+                    return {
+                        tagName: 'dfn',
+                        textContent: () => { return { slice: () => { return "" } } }
+                    }
+                }
+               }
+           }
+        actions.saveGlossaryAndFootnote('urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','stanza','dsusiudfd','FOOTNOTE','apple','fruit','authoredtext', 'popup', 'formatted-subtitle',''); 
        });
        it('testing new func ===> authoredtext', () => {
         document.querySelector = () => { return false; }
         document.getElementById = ()=>{
-                        return {innerHTML:'tests'}
+                        return {
+                            innerHTML:'tests',
+                            getElementsByTagName: () => {
+                                return {
+                                    tagName: 'dfn',
+                                    textContent: () => { return { slice: () => { return "" } } }
+                                }
+                            }
+                        }
                     }
-        actions.saveGlossaryAndFootnote('urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','stanza','dsusiudfd','FOOTNOTE','apple','fruit','authoredtext', 'popup', 'formatted-subtitle'); 
+        actions.saveGlossaryAndFootnote('urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','element-authoredtext','dsusiudfd','FOOTNOTE','apple','fruit','authoredtext', 'poetry', 'creditsarray',''); 
        });
        it('testing new func ===> authoredtext', () => {
         document.querySelector = () => { return false; }
         document.getElementById = ()=>{
-                        return {innerHTML:'tests'}
+                        return {
+                            innerHTML:'tests',
+                            getElementsByTagName: () => {
+                                return {
+                                    tagName: 'dfn',
+                                    textContent: () => { return { slice: () => { return "" } } }
+                                }
+                            }
+                        }
                     }
-        actions.saveGlossaryAndFootnote('urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','element-authoredtext','dsusiudfd','FOOTNOTE','apple','fruit','authoredtext', 'poetry', 'creditsarray'); 
+        actions.saveGlossaryAndFootnote('urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','element-authoredtext','dsusiudfd','FOOTNOTE','apple','fruit','authoredtext', 'poetry', 'formatted-subtitle',''); 
        });
        it('testing new func ===> authoredtext', () => {
         document.querySelector = () => { return false; }
-        document.getElementById = ()=>{
-                        return {innerHTML:'tests'}
+           document.getElementById = () => {
+               return {
+                   innerHTML: 'tests',
+                getElementsByTagName: () => {
+                    return {
+                        tagName: 'dfn',
+                        textContent: () => { return { slice: () => { return "" } } }
                     }
-        actions.saveGlossaryAndFootnote('urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','element-authoredtext','dsusiudfd','FOOTNOTE','apple','fruit','authoredtext', 'poetry', 'formatted-subtitle'); 
-       });
-       it('testing new func ===> authoredtext', () => {
-        document.querySelector = () => { return false; }
-        document.getElementById = ()=>{
-                        return {innerHTML:'tests'}
-                    }
-        actions.saveGlossaryAndFootnote('urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','interactive','dsusiudfd','FOOTNOTE','apple','fruit','authoredtext', 'poetry', 'formatted-subtitle'); 
+                }
+               }
+           }
+        actions.saveGlossaryAndFootnote('urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','interactive','dsusiudfd','FOOTNOTE','apple','fruit','authoredtext', 'poetry', 'formatted-subtitle',''); 
        });
        it('glossaryfootnoteid undefined', () => {
         actions.saveGlossaryAndFootnote('urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','figure',undefined,'FOOTNOTE','apple','fruit','image'); 

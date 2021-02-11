@@ -55,6 +55,7 @@ import { setScroll } from './../Toolbar/Search/Search_Action.js';
 import { SET_SEARCH_URN, SET_COMMENT_SEARCH_URN } from './../../constants/Search_Constants.js';
 import { ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, SECONDARY_SINGLE_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import elementTypes from './../Sidebar/elementTypes.js';
+import OpenAudioBook from '../AudioNarration/OpenAudioBook.jsx';
 
 class ElementContainer extends Component {
     constructor(props) {
@@ -72,7 +73,9 @@ class ElementContainer extends Component {
             activeTextColorIndex: this.props.element.textcolor ? config.textcolors.indexOf(this.props.element.textcolor) : 0,
             isHovered: false,
             hasError: false,
-            sectionBreak: null
+            sectionBreak: null,
+            audioPopupStatus:false,
+            position:{}
         };
 
 
@@ -1090,6 +1093,12 @@ class ElementContainer extends Component {
         return tcmStatus
     }
 
+    handleAudioPopupLocation =(status,position)=>{
+        this.setState({
+            audioPopupStatus:status,
+            position:position
+        })
+    }
     /**
     * @description - checkTCMStatus is responsible for setting the tcm status for the element
     * @param {*} tcmData tcm data for elements on the slate
@@ -1195,10 +1204,10 @@ class ElementContainer extends Component {
                     labelText = 'OE'
                     break;
                 case elementTypeConstant.AUTHORED_TEXT:
-                    editor = <ElementAuthoring permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onListSelect={this.props.onListSelect} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} />;
+                    editor = <ElementAuthoring permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onListSelect={this.props.onListSelect} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} handleAudioPopupLocation = {this.handleAudioPopupLocation}/>;
                     break;
                 case elementTypeConstant.BLOCKFEATURE:
-                    editor = <ElementAuthoring tagName="blockquote" permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onListSelect={this.props.onListSelect} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} />;
+                    editor = <ElementAuthoring tagName="blockquote" permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onListSelect={this.props.onListSelect} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}  handleAudioPopupLocation = {this.handleAudioPopupLocation} />;
                     break;
                 case elementTypeConstant.LEARNING_OBJECTIVE_ITEM:
                     editor = <ElementLearningObjectiveItem permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onListSelect={this.props.onListSelect} />;
@@ -1211,12 +1220,12 @@ class ElementContainer extends Component {
                         case elementTypeConstant.FIGURE_AUTHORED_TEXT:
                         case elementTypeConstant.FIGURE_CODELISTING:
                         case elementTypeConstant.FIGURE_TABLE_EDITOR:
-                            editor = <ElementFigure accessDenied={this.props.accessDenied} updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} elementId={element.id} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}  parentEntityUrn={this.props.parentUrn}  />;
+                            editor = <ElementFigure accessDenied={this.props.accessDenied} updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} elementId={element.id} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}  parentEntityUrn={this.props.parentUrn} />;
                             //labelText = LABELS[element.figuretype];
                             break;
                         case elementTypeConstant.FIGURE_AUDIO:
                         case elementTypeConstant.FIGURE_VIDEO:
-                            editor = <ElementAudioVideo accessDenied={this.props.accessDenied} updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} elementId={element.id} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} />;
+                            editor = <ElementAudioVideo accessDenied={this.props.accessDenied} updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} elementId={element.id} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}/>;
                             //labelText = LABELS[element.figuretype];
                             break;
                         case elementTypeConstant.FIGURE_ASSESSMENT:
@@ -1224,14 +1233,14 @@ class ElementContainer extends Component {
                             labelText = 'Qu';
                             break;
                         case elementTypeConstant.INTERACTIVE:
-                            editor = <ElementInteractive accessDenied={this.props.accessDenied} showBlocker={this.props.showBlocker} updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} />;
+                            editor = <ElementInteractive accessDenied={this.props.accessDenied} showBlocker={this.props.showBlocker} updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} handleAudioPopupLocation = {this.handleAudioPopupLocation}/>;
                             labelText = LABELS[element.figuredata.interactiveformat];
                             isQuadInteractive = labelText === "Quad" ? "quad-interactive" : "";
                             break;
                     }
                     break;
                 case elementTypeConstant.ELEMENT_LIST:
-                    editor = <ListElement showBlocker={this.props.showBlocker} permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onListSelect={this.props.onListSelect} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} />;
+                    editor = <ListElement showBlocker={this.props.showBlocker} permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onListSelect={this.props.onListSelect} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}  handleAudioPopupLocation = {this.handleAudioPopupLocation} />;
                     labelText = 'OL'
                     if ((element.subtype || element.elementdata.subtype) === 'disc')
                         labelText = 'UL'
@@ -1264,6 +1273,7 @@ class ElementContainer extends Component {
                         splithandlerfunction={splithandlerfunction}
                         pasteElement={this.props.pasteElement}
                         userRole={this.props.userRole}
+                        handleAudioPopupLocation = {this.handleAudioPopupLocation}
                     />;
                     break;
                 case elementTypeConstant.METADATA_ANCHOR:
@@ -1290,6 +1300,7 @@ class ElementContainer extends Component {
                         glossaryFootnoteValue={this.props.glossaryFootnoteValue}
                         glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
                         activeElement={this.props.activeElement}
+                        handleAudioPopupLocation = {this.handleAudioPopupLocation}
                     />;
                     labelText = 'Pop'
                     break;
@@ -1387,7 +1398,8 @@ class ElementContainer extends Component {
                     glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
                     elementSepratorProps={elementSepratorProps}
                     pasteElement={this.props.pasteElement}
-                    userRole={this.props.userRole} />
+                    userRole={this.props.userRole}
+                   />
                     labelText = 'PE'
                     break;
                 case elementTypeConstant.POETRY_STANZA:
@@ -1413,7 +1425,9 @@ class ElementContainer extends Component {
                     slateLockInfo={slateLockInfo} 
                     onListSelect={this.props.onListSelect} 
                     glossaryFootnoteValue={this.props.glossaryFootnoteValue} 
-                    glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}/>
+                    glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
+                    handleAudioPopupLocation = {this.handleAudioPopupLocation}
+                    />
                     labelText = 'ST'
                     break;
                 
@@ -1497,6 +1511,7 @@ class ElementContainer extends Component {
                     : ''}
                 <div className={`element-container ${labelText.toLowerCase()=="2c"? "multi-column":labelText.toLowerCase()} ${borderToggle}`} data-id={element.id} onFocus={() => this.toolbarHandling('remove')} onBlur={() => this.toolbarHandling('add')} onClick = {(e)=>this.handleFocus("","",e,labelText)}>
                     {selectionOverlay}{elementOverlay}{bceOverlay}{editor}
+                {this.state.audioPopupStatus && <OpenAudioBook closeAudioBookDialog={()=>this.handleAudioPopupLocation(false)} isGlossary ={true} position = {this.state.position}/>}
                 </div>
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                     {permissions && permissions.includes('notes_adding') && <Button type="add-comment" btnClassName={btnClassName} onClick={(e) => this.handleCommentPopup(true, e)} />}
