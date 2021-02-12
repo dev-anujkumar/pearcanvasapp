@@ -8,6 +8,7 @@ import config from '../config/config';
 import cypressConfig from '../config/cypressConfig';
 import store from '../appstore/store'
 import { handleBlankLineDom } from '../component/ElementContainer/UpdateElements';
+import axios from 'axios';
 
 // DECLARATION - const or variables 
 const WRAPPER_URL = config.WRAPPER_URL; // TO BE IMPORTED
@@ -457,3 +458,23 @@ export const replaceWirisClassAndAttr = (currentTargetId) => {
 }
 
 export const defaultMathImagePath = "https://cite-media-stg.pearson.com/legacy_paths/wiris-dev-mathtype-cache-use/cache/";
+
+export const handleAlfrescoSiteUrl = (elementId) => {
+    const data = config.alfrescoMetaData && config.alfrescoMetaData.alfresco;
+    let url = `${config.STRUCTURE_API_URL}narrative-api/v2/${elementId}/platformMetadata/alfresco`
+    let req = {
+        ...data,
+        currentAsset:{}
+    };
+
+    axios.put(url, req, {
+        headers: {
+            "Content-Type": "application/json",
+            PearsonSSOSession: config.ssoToken
+        }
+    }).then(response => {
+        console.log('response', response)
+    }).catch(error => {
+        //console.log("error", error);
+    })
+}

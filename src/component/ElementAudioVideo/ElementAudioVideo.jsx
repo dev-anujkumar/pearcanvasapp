@@ -11,7 +11,7 @@ import axios from 'axios';
 import './../../styles/ElementAudioVideo/ElementAudioVideo.css';
 import {AUDIO,VIDEO,DEFAULT_ASSET,DEFAULT_VIDEO_POSTER_IMAGE} from './../../constants/Element_Constants';
 import { hideTocBlocker, disableHeader } from '../../js/toggleLoader'
-import { hasReviewerRole } from '../../constants/utility.js'
+import { hasReviewerRole, handleAlfrescoSiteUrl } from '../../constants/utility.js'
 
 
 /*** @description - ElementAudioVideo is a class based component. It is defined simply to make a skeleton of the audio-video-type element ***/
@@ -24,6 +24,7 @@ class ElementAudioVideo extends Component {
             assetData: null,
             elementType: this.props.model.figuretype || "",
             projectMetadata: false,
+            alfrescoSite: ''
         }
     }
     /**
@@ -197,8 +198,45 @@ class ElementAudioVideo extends Component {
                 this.props.handleFocus("updateFromC2")
                 this.props.handleBlur(true)
             })
+            handleAlfrescoSiteUrl(this.props.elementId)
+            this.updateAlfrescoSiteUrl()
         }
     }
+
+    updateAlfrescoSiteUrl = () => {
+        this.setState({
+            alfrescoSite: config.alfrescoMetaData.alfresco.repositoryFolder
+        })
+    }
+    
+    componentDidMount() {
+        this.getAlfrescoSiteResponse(this.props.elementId)
+    }
+
+    /**
+     * @description Alfrescosite url response data api
+     */
+
+    getAlfrescoSiteResponse = (elementId) => {
+        let url = `${config.STRUCTURE_API_URL}narrative-api/v2/${elementId}/platformMetadata/alfresco`
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+                'Accept': 'application/json',
+                "PearsonSSOSession": config.ssoToken,
+                'Cache-Control': 'no-cache'
+            }
+        }).then(response => response.json())
+          .then(response => {
+                this.setState({
+                    alfrescoSite: response.repositoryFolder
+                })
+            }).catch(error => {
+                //console.log("error", error);
+            })
+    }
+    
     /**
      * @description Open C2 module with predefined Alfresco location
      * @param {*} locationData alfresco locationData
@@ -377,6 +415,7 @@ class ElementAudioVideo extends Component {
 
                         </header>
                         <div className="assetDiv"><strong>Asset: </strong>{this.state.assetData?this.state.assetData : assetPath}</div>
+                        <div className="assetDiv"><strong>Alfresco Site: </strong>{ model.figuredata && model.figuredata.posterimage ? this.state.alfrescoSite : "" }</div>
                         <div className="pearson-component audio" data-type="audio" onClick={this.handleC2MediaClick}>
                             <audio controls="none" preload="none" className="audio" >
                                 <source src={this.state.imgSrc?this.state.imgSrc :""} type="audio/mpeg" />
@@ -414,6 +453,7 @@ class ElementAudioVideo extends Component {
                             <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={`${index}-1`} placeholder="Enter Title..." tagName={'h4'} className="heading4VideoTitle figureTitle" model={model.html.subtitle} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} />
                         </header>
                         <div className="assetDiv"><strong>Asset: </strong>{this.state.assetData?this.state.assetData : (assetPath !== "" ? assetPath : DEFAULT_ASSET)}</div>
+                        <div className="assetDiv"><strong>Alfresco Site: </strong>{ model.figuredata && model.figuredata.posterimage ? this.state.alfrescoSite : "" }</div>
                         <div className="pearson-component video" data-type="video" >
                             <video className="video" width="640" height="360" controls="none" preload="none" onClick={this.handleC2MediaClick}
                               poster={this.state.imgSrc?this.state.imgSrc : posterImage}
