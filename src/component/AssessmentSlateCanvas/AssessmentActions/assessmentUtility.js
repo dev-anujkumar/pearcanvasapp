@@ -2,12 +2,12 @@
  * Module - assessmentUtility
  * Description - This file contains utility functions related to assessments (full and embedded)
  */
-import { LEARNING_TEMPLATE, PUF, ELEMENT_FIGURE, FIGURE_ASSESSMENT, ELEMENT_ASSESSMENT } from '../AssessmentSlateConstants.js';
+import { LEARNING_TEMPLATE, PUF, ELEMENT_FIGURE, FIGURE_ASSESSMENT, ELEMENT_ASSESSMENT, LEARNOSITY } from '../AssessmentSlateConstants.js';
 /** This is a function to set Assessment Title for Embedded Assessment
  * * @param model - object containig element data
 */
 export const setAssessmentTitle = (model) => {
-    let assessmentTitle = null;
+    let assessmentTitle = '';
     if (model && model.html && model.html.title) {
         assessmentTitle = model.html.title
     } else if (model && model.title && model.title.text) {
@@ -21,9 +21,9 @@ export const setAssessmentTitle = (model) => {
 */
 export const setAssessmentUsageType = (model) => {
     let usagetype = "";
-    if (model && model.type && model.type === "element-assessment" && model.elementdata && model.elementdata.usagetype) {
+    if (model && model.type && model.type === ELEMENT_ASSESSMENT && model.elementdata && model.elementdata.usagetype) {
         usagetype = model.elementdata.usagetype
-    } else if (model && model.figuretype && model.figuretype === "assessment" && model.figuredata && model.figuredata.elementdata && model.figuredata.elementdata.usagetype) {
+    } else if (model && model.figuretype && model.figuretype === FIGURE_ASSESSMENT && model.figuredata && model.figuredata.elementdata && model.figuredata.elementdata.usagetype) {
         usagetype = model.figuredata.elementdata.usagetype
     }
     return usagetype;
@@ -102,7 +102,7 @@ export const hasAssessmentID = (model) => {
 * @param element - element's details
 */
 export const checkFullElmAssessment = (element) => {
-    if (element && element.type == ELEMENT_ASSESSMENT && element.elementdata && element.elementdata.assessmentformat == PUF && element.elementdata.assessmentid) {
+    if (element && element.type == ELEMENT_ASSESSMENT && element.elementdata && isElmLearnosityAssessment(element.elementdata) && element.elementdata.assessmentid) {
         return true;
     }
     return false;
@@ -113,7 +113,7 @@ export const checkFullElmAssessment = (element) => {
 * @param element - element's details
 */
 export const checkEmbeddedElmAssessment = (element) => {
-    if (element && element.type == ELEMENT_FIGURE && element.figuretype == FIGURE_ASSESSMENT && element.figuredata && element.figuredata.elementdata && element.figuredata.elementdata.assessmentformat == PUF && element.figuredata.elementdata.assessmentid) {
+    if (element && element.type == ELEMENT_FIGURE && element.figuretype == FIGURE_ASSESSMENT && element.figuredata && element.figuredata.elementdata && isElmLearnosityAssessment(element.figuredata.elementdata) && element.figuredata.elementdata.assessmentid) {
         return true;
     }
     return false;
@@ -122,6 +122,38 @@ export const checkEmbeddedElmAssessment = (element) => {
 /*** @description - This is the function to check if an elm embedded assessment has update available */
 export const checkElmAssessmentStatus = (assessmentId, props) => {
     if (assessmentId && props && props.assessmentReducer && props.assessmentReducer[assessmentId] && props.assessmentReducer[assessmentId].showUpdateStatus == true) {
+        return true;
+    }
+    return false;
+}
+
+/** This is a function to set Assessment Item Title for Embedded Assessment
+ * * @param model - object containig element data
+*/
+export const setAssessmentItemTitle = (model) => {
+    let itemTitle = "";
+    if (model && model.figuredata && model.figuredata.elementdata && model.figuredata.elementdata.assessmentitemtitle) {
+        itemTitle = model.figuredata.elementdata.assessmentitemtitle
+    }
+    return itemTitle;
+}
+
+/** This is a function to set Assessment Item Title for Embedded Assessment
+ * * @param model - object containig element data
+*/
+export const getAssessmentTitle = (model) => {
+    let title = "";
+    if (model && model.figuredata && model.figuredata.elementdata && model.figuredata.elementdata.assessmenttitle) {
+        title = model.figuredata.elementdata.assessmenttitle
+    }else {
+        title = setAssessmentTitle(model)
+    }
+    return title;
+}
+
+/** This is a function to check if an assessment is of Elm/Learnosity type*/
+export const isElmLearnosityAssessment = (elementdata) => {
+    if (elementdata && (elementdata.assessmentformat == PUF || elementdata.assessmentformat == LEARNOSITY)) {
         return true;
     }
     return false;

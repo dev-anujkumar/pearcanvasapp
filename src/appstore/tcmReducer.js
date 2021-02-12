@@ -12,7 +12,7 @@ const INITIAL_ACTION = {
     payload: {}
 }
 
-export default function reducer(state = INITIAL_STATE, action = INITIAL_ACTION) {
+export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
     switch (action.type) {
         case GET_TCM_RESOURCES:
             return {

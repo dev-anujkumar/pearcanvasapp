@@ -7,16 +7,64 @@ import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
+const userPermissions = [
+    "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
+    "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
+    "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
+]
 let assessmentRed = {
     "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464": {
         activeWorkUrn: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
         assessmentStatus: "final",
         assessmentTitle: "Quiz: 7.4 Developing Relationships",
         assessmentEntityUrn: "urn:pearson:entity:c785c0f6-6fc7-4f51-855c-0677738a9d86",
-        latestWorkUrn: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec565",
-        items: {
-            "urn:pearson:work:fb9bcb66-3073-45e6-ab8a-b595a35bf93b": "urn:pearson:work:eb9bcb66-3073-45e6-ab8a-b595a35bf93b"
+        latestVersion: {
+            id: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec565",
+            title: "latestTitle",
+            status: 'wip',
+            latestCleanVersion: false
+
         },
+        secondLatestVersion:{
+            id:"urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec569",
+            title:"latestTitle"
+        },
+        latestWorkUrn: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec565",
+        items: [
+            {
+                oldItemId: "urn:pearson:work:eb9bcb66-3073-45e6-ab8a-b595a35bf93b",
+                latestItemId: "urn:pearson:work:eb9bcb66-3073-45e6-ab8a-b595a35bf93b",
+                latestItemTitle:"item-title"
+            }
+        ],
+        showUpdateStatus: false
+    }
+}
+let assessmentRed2 = {
+    "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464": {
+        activeWorkUrn: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+        assessmentStatus: "final",
+        assessmentTitle: "Quiz: 7.4 Developing Relationships",
+        assessmentEntityUrn: "urn:pearson:entity:c785c0f6-6fc7-4f51-855c-0677738a9d86",
+        latestVersion: {
+            id: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec565",
+            title: "latestTitle",
+            status: 'wip',
+            latestCleanVersion: true
+
+        },
+        secondLatestVersion: {
+            id: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec569",
+            title: "latestTitle"
+        },
+        latestWorkUrn: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec565",
+        items: [
+            {
+                oldItemId: "urn:pearson:work:eb9bcb66-3073-45e6-ab8a-b595a35bf93b",
+                latestItemId: "urn:pearson:work:eb9bcb66-3073-45e6-ab8a-b595a35bf93b",
+                latestItemTitle: "item-title"
+            }
+        ],
         showUpdateStatus: false
     }
 }
@@ -88,11 +136,7 @@ describe('Testing Element Single Assessment component', () => {
         handleBlur: function () { },
         showBlocker: jest.fn(),
         openCustomPopup: jest.fn(),
-        permissions: [
-            "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
-            "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
-            "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
-        ],
+        permissions: userPermissions,
     };
 
     let singleAssessment = mount(<Provider store={store}><ElementSingleAssessment {...props} /></Provider>);
@@ -243,11 +287,7 @@ describe('Testing Element Single Assessment component', () => {
             handleBlur: function () { },
             showBlocker: jest.fn(),
             openCustomPopup: jest.fn(),
-            permissions: [
-                "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
-                "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
-                "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
-            ],
+            permissions: userPermissions,
         };
 
         let singleAssessment2 = mount(<Provider store={store}><ElementSingleAssessment {...nextProps} /></Provider>);
@@ -267,14 +307,11 @@ describe('Testing Element Single Assessment component', () => {
             handleBlur: jest.fn(),
             showBlocker: jest.fn(),
             openCustomPopup: jest.fn(),
-            permissions: [
-                "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
-                "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
-                "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
-            ],
+            permissions: userPermissions,
             checkEntityUrn: jest.fn(),
-            checkAssessmentStatus: jest.fn(),
-            updateAssessmentVersion: jest.fn()
+            fetchAssessmentMetadata: jest.fn(),
+            updateAssessmentVersion: jest.fn(),
+            fetchAssessmentLatestVersion: jest.fn()
         };
         let cb = jest.fn();
         let event = {
@@ -315,7 +352,7 @@ describe('Testing Element Single Assessment component', () => {
             elmAssessmentInstance.updateElmOnSaveEvent(pufProps);
             expect(elmAssessmentInstance.state.elementType).toBe('puf')
             expect(elmAssessmentInstance.state.assessmentId).toBe(pufObj.id)
-            expect(elmAssessmentInstance.props.assessmentReducer[elmAssessmentInstance.state.assessmentId].items["urn:pearson:work:fb9bcb66-3073-45e6-ab8a-b595a35bf93b"]).toBe(pufObj.itemid)
+            expect(elmAssessmentInstance.props.assessmentReducer[elmAssessmentInstance.state.assessmentId].items[0].latestItemId).toBe(pufObj.itemid)
             expect(spyaddPuffAssessment).toHaveBeenCalled()
             spyaddPuffAssessment.mockClear()
         });
@@ -380,5 +417,60 @@ describe('Testing Element Single Assessment component', () => {
             expect(spycloseELMWindow).toHaveBeenCalled();
             spycloseELMWindow.mockClear();
         });
+        it('Test-9-toggleUpdatePopup function', () => {
+            const spyaddPuffAssessment = jest.spyOn(elmAssessmentInstance, 'toggleUpdatePopup')
+            elmAssessmentInstance.toggleUpdatePopup(false);
+            expect(elmAssessmentInstance.state.elementType).toBe('puf');
+            expect(elmAssessmentInstance.state.showElmUpdatePopup).toBe(false);
+            expect(spyaddPuffAssessment).toHaveBeenCalled();
+            spyaddPuffAssessment.mockClear();
+        });
+        it('Test-10-showCustomPopup-else function', () => {
+            elmAssessmentInstance.setState({
+                showUpdatePopup: false
+            })
+            elmAssessment.update();
+            elmAssessmentInstance.forceUpdate();
+            jest.spyOn(elmAssessmentInstance, 'showCustomPopup')
+            elmAssessmentInstance.showCustomPopup();
+            expect(elmAssessmentInstance.state.showElmUpdatePopup).toBe(false)
+        })
+        it('Test-6-updateElmAssessment', () => {
+            let nextProps = {
+                model: singleAssessmentElmDefault,
+                index: "1",
+                usagetype: "Practice",
+                handleFocus: jest.fn(),
+                onClick: jest.fn(),
+                handleBlur: jest.fn(),
+                showBlocker: jest.fn(),
+                openCustomPopup: jest.fn(),
+                permissions: userPermissions,
+                checkEntityUrn: jest.fn(),
+                fetchAssessmentMetadata: jest.fn(),
+                updateAssessmentVersion: jest.fn(),
+                fetchAssessmentLatestVersion: jest.fn()
+            };
+            let newStore = mockStore({...initialState,
+                assessmentReducer:assessmentRed2
+            });
+            let learnosityAssessment = mount(<Provider store={newStore}><ElementSingleAssessment {...nextProps} /></Provider>);
+            const learnosityAssessmentInstance = learnosityAssessment.find('ElementSingleAssessment').instance();
+            
+            let pufObj = {
+                id: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+                itemid: "urn:pearson:work:eb9bcb66-3073-45e6-ab8a-b595a35bf93b",
+                title: "ELM Assessment"
+            }
+            learnosityAssessmentInstance.setState({
+                assessmentId: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+                assessmentItemId: "urn:pearson:work:eb9bcb66-3073-45e6-ab8a-b595a35bf93b"
+            })
+            learnosityAssessment.update();
+            learnosityAssessmentInstance.forceUpdate();
+            jest.spyOn(learnosityAssessmentInstance, 'updateElmAssessment')
+            learnosityAssessmentInstance.updateElmAssessment(event);
+            expect(learnosityAssessmentInstance.state.assessmentId).toBe(pufObj.id)
+        })
     });
 });

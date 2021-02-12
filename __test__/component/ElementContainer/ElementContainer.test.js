@@ -95,6 +95,14 @@ if (!global.Element.prototype.hasOwnProperty("innerText")) {
     });
 
 }
+
+beforeEach(() => {
+    // Avoid `attachTo: document.body` Warning
+    const tempElm = document.createElement('div');
+    tempElm.setAttribute('id', 'slateWrapper');
+    document.body.appendChild(tempElm);
+});
+
 const mockStore = configureMockStore(middlewares);
 const store = mockStore({
     appStore: {
@@ -709,9 +717,23 @@ describe('Test for element container component', () => {
             expect(elementContainer).toHaveLength(1);
             expect(elementContainerInstance).toBeDefined();
         })
-        it('Render Element Container ----->AudioVideo Element', () => {
+        it('Render Element Container ----->Video Element', () => {
             let props = {
                 element: wipData.video,
+                permissions: []
+            };
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            expect(elementContainer).toHaveLength(1);
+            expect(elementContainerInstance).toBeDefined();
+            const spyhandleBlur  = jest.spyOn(elementContainerInstance, 'handleBlur') 
+            elementContainerInstance.handleBlur();
+            expect(spyhandleBlur).toHaveBeenCalled()
+            spyhandleBlur.mockClear()
+        })
+        it('Render Element Container ----->Audio Element', () => {
+            let props = {
+                element: wipData.audio,
                 permissions: []
             };
             let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
@@ -1362,6 +1384,13 @@ describe('Test for element container component', () => {
             expect(spycomponentWillUnmount).toHaveBeenCalled()
             spycomponentWillUnmount.mockClear()
         })
+        it('Test-componentWillUnmount Function- for paragraph element if release count not zero', () => {
+            config.releaseCallCount = 1;
+            const spycomponentWillUnmount  = jest.spyOn(elementContainerInstance, 'componentWillUnmount')
+            elementContainerInstance.componentWillUnmount();
+            expect(spycomponentWillUnmount).toHaveBeenCalled()
+            spycomponentWillUnmount.mockClear()
+        })
         it('Test-componentWillReceiveProps Function- for paragraph element', () => {
             let newProps = {
                 element: wipData.paragraphUpdate,
@@ -1479,7 +1508,8 @@ describe('Test for element container component', () => {
             ],
             updateElement: jest.fn(),
             elemBorderToggle: false,
-            openElmAssessmentPortal: jest.fn()
+            openElmAssessmentPortal: jest.fn(),
+            fetchAssessmentMetadata: jest.fn()
         };
         let event = {
             stopPropagation: jest.fn(),
@@ -1570,6 +1600,36 @@ describe('Test-Lifecycle Functions-componentWillReceiveProps', () => {
         elementContainerInstance.componentWillReceiveProps(nextProps);
         expect(elementContainerInstance.state.borderToggle).toBe("active")
         expect(elementContainerInstance.state.ElementId).toBe("urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y")
+    }) 
+    it('Test-componentWillReceiveProps Function- for citation negative', () => {
+        config.citationFlag = false;
+        let nextProps = {
+            element: {
+                type:'element-citation'
+            },
+            permissions: [
+                "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
+                "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "split_slate", "full_project_slate_preview",
+                "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
+            ],
+            showBlocker: jest.fn(),
+            index:0,
+            deleteElement: jest.fn(),
+            activeElement: {
+                elementId: "urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y",
+            },
+            elemBorderToggle: 'showBorder'
+         };
+         elementContainerInstance.setState({
+            ElementId:"urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y",
+            activeColorIndex: 0,
+            isOpener: true
+         })
+         elementContainerInstance.forceUpdate()
+         elementContainer.update()
+        elementContainerInstance.componentWillReceiveProps(nextProps);
+        expect(elementContainerInstance.state.borderToggle).toBe("active")
+        expect(elementContainerInstance.state.ElementId).toBe("urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y")
     })  
 })
 describe('Test-Other Functions', () => {
@@ -1606,6 +1666,26 @@ describe('Test-Other Functions', () => {
         const elementStatus = {}
         const spygetElementVersionStatus  = jest.spyOn(elementContainerInstance, 'getElementVersionStatus')
         elementContainerInstance.getElementVersionStatus(props.element, elementStatus);
+        elementContainerInstance.forceUpdate();
+        elementContainer.update()
+        expect(spygetElementVersionStatus).toHaveBeenCalled()
+        spygetElementVersionStatus.mockClear()
+    })
+
+    it('Test-getElementVersionStatus Function- citationgroup', () => {
+        const elementStatus = {}
+        const spygetElementVersionStatus  = jest.spyOn(elementContainerInstance, 'getElementVersionStatus')
+        elementContainerInstance.getElementVersionStatus(wipData.citationgroup2, elementStatus);
+        elementContainerInstance.forceUpdate();
+        elementContainer.update()
+        expect(spygetElementVersionStatus).toHaveBeenCalled()
+        spygetElementVersionStatus.mockClear()
+    })
+
+    it('Test-getElementVersionStatus Function- popup', () => {
+        const elementStatus = {}
+        const spygetElementVersionStatus  = jest.spyOn(elementContainerInstance, 'getElementVersionStatus')
+        elementContainerInstance.getElementVersionStatus(wipData.popup2, elementStatus);
         elementContainerInstance.forceUpdate();
         elementContainer.update()
         expect(spygetElementVersionStatus).toHaveBeenCalled()
@@ -1674,16 +1754,131 @@ describe('Test-Other Functions', () => {
             },
             searchReducer: {
                 searchTerm: "urn:pearson:work:5d489bfe-ef76-4193-b07a-62d9d393fe93",
-                parentId: "urn:pearson:work:5d489bfe-ef76-4193-b07a-62d9d393fe93",
+                parentId: "urn:pearson:work:5d489bfe-ef76-4193-b07a-62d9d393fe94",
                 deeplink: true,
                 scroll: false,
                 scrollTop: 0
             },
             commentSearchReducer: {
-                commentSearchTerm: "",
-                parentId: "",
+                commentSearchTerm: "urn:pearson:work:5d489bfe-ef76-4193-b07a-62d9d393fe93",
+                parentId: "urn:pearson:work:5d489bfe-ef76-4193-b07a-62d9d393fe94",
                 scroll: false,
                 scrollTop: 0
+            },
+            selectionReducer: {
+                selection: {
+                    activeAnimation: true,
+                    deleteElm: {id: "urn:pearson:work:5d489bfe-ef76-4193-b07a-62d9d393fe93", type: "element-authoredtext", parentUrn: undefined, asideData: undefined, contentUrn: "urn:pearson:entity:da9f3f72-2cc7-4567-8fb9-9a887c360979"},
+                    element: {id: "urn:pearson:work:5d489bfe-ef76-4193-b07a-62d9d393fe93", type: "element-authoredtext", schema: "http://schemas.pearson.com/wip-authoring/element/1"},
+                    inputSubType: "NA",
+                    inputType: "AUTHORED_TEXT",
+                    operationType: "cut",
+                    sourceElementIndex: 2,
+                    sourceSlateEntityUrn: "urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1fb",
+                    sourceSlateManifestUrn: "urn:pearson:manifest:e30674d0-f7b1-4974-833f-5f2e19a9fea6"
+                }
+            }
+        });
+        let props = {
+            element: wipData.pullquote,
+            activeElement: {
+                elementId: "urn:pearson:work:5d489bfe-ef76-4193-b07a-62d9d393fe93",
+                elementType: "element-authoredtext",
+                elementWipType: "element-blockfeature",
+                index: 2,
+                primaryOption: "primary-blockquote",
+                secondaryOption: "secondary-pullquote",
+                tag: "BQ",
+                toolbar: ["bold", "underline", "strikethrough", "orderedlist", "unorderedlist", "glossary", "slatetag"]
+            }
+        };
+
+        let elementContainer = mount(<Provider store={store1}><ElementContainer {...props} /></Provider>);
+        const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+        document.querySelector = () => {
+            return {
+                offsetTop: 2
+            }
+        }
+
+        document.getElementById["scrollTop"] = 1
+        const spycomponentDidUpdate = jest.spyOn(elementContainerInstance, 'componentDidUpdate')
+        elementContainerInstance.componentDidUpdate();
+        expect(spycomponentDidUpdate).toHaveBeenCalled();
+        spycomponentDidUpdate.mockClear()
+    })
+    it("componentDidUpdate - negative case", () => {
+        const store1 = mockStore({
+            appStore: {
+                activeElement: {
+                    elementId: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b",
+                    elementType: "element-authoredtext",
+                    elementWipType: "element-authoredtext",
+                    primaryOption: "primary-heading",
+                    secondaryOption: "secondary-heading-1",
+                    index: "1-0",
+                    tag: "H1",
+                    toolbar: ['bold']
+                },
+                permissions: []
+            },
+            slateLockReducer: {
+                slateLockInfo: {
+                    isLocked: false,
+                    timestamp: "",
+                    userId: ""
+                }
+            },
+            commentsPanelReducer: {
+                allComments: comments
+            },
+            toolbarReducer: {
+                elemBorderToggle: "true"
+            },
+            metadataReducer: {
+                currentSlateLOData: ""
+            },
+            learningToolReducer: {
+                shouldHitApi: false,
+                learningToolTypeValue: '',
+                apiResponse: [],
+                showErrorMsg: true, //should be false
+                showLTBody: false,
+                learningTypeSelected: false,
+                showDisFilterValues: false,
+                selectedResultFormApi: '',
+                resultIsSelected: false,
+                toggleLT: false,
+                linkButtonDisable: true,
+                apiResponseForDis: [],
+                learningToolDisValue: '',
+                numberOfRows: 25
+            },
+            glossaryFootnoteReducer:{
+                glossaryFootnoteValue: { "type": "", "popUpStatus": false }
+            },
+            tcmReducer:{
+                tcmSnapshot:[]
+            },
+            elementStatusReducer: {
+                'urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b': "wip",
+                "urn:pearson:work:32e659c2-e0bb-46e8-9605-b8433aa3836c": "wip",
+                "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635": "wip",
+                "urn:pearson:work:ee2b0c11-75eb-4a21-87aa-578750b5301d": "wip",
+        
+            },
+            searchReducer: {
+                searchTerm: "urn:pearson:work:5d489bfe-ef76-4193-b07a-62d9d393fe93",
+                parentId: "urn:pearson:work:5d489bfe-ef76-4193-b07a-62d9d393fe93",
+                deeplink: true,
+                scroll: false,
+                scrollTop: 1
+            },
+            commentSearchReducer: {
+                commentSearchTerm: "urn:pearson:work:5d489bfe-ef76-4193-b07a-62d9d393fe93",
+                parentId: "urn:pearson:work:5d489bfe-ef76-4193-b07a-62d9d393fe93",
+                scroll: false,
+                scrollTop: 1
             },
             selectionReducer: {
                 selection: {
@@ -1738,8 +1933,8 @@ describe('Test-Other Functions', () => {
                 preformattedtext: '<p></p>'
             },
             figuredata: {
-                startNumber: 2,
-                numbered: false,
+                startNumber: 1,
+                numbered: 1,
                 syntaxhighlighting: false
             }
         }

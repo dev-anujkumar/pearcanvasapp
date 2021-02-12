@@ -8,7 +8,8 @@ import {
 import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP,DELETE_SHOW_HIDE_ELEMENT, STORE_OLD_ASSET_FOR_TCM } from "./../../constants/Action_Constants";
 import { fetchPOPupSlateData} from '../../component/TcmSnapshots/TcmSnapshot_Actions.js'
 import { processAndStoreUpdatedResponse, updateStoreInCanvas } from "./ElementContainerUpdate_helpers";
-import { onDeleteSuccess } from "./ElementContainerDelete_helpers";
+import { onDeleteSuccess, prepareTCMSnapshotsForDelete } from "./ElementContainerDelete_helpers";
+import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 
 export const addComment = (commentString, elementId) => (dispatch) => {
     let url = `${config.STRUCTURE_API_URL}narrative-api/v2/${elementId}/comment/`
@@ -79,7 +80,8 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
     }
     if(type === 'popup'){
         dispatch(fetchPOPupSlateData(elmId, contentUrn, 0 , element, index)) 
-     }
+    }
+    const { showHideObj } = getState().appStore
     let elementParentEntityUrn = cutCopyParentUrn ? cutCopyParentUrn.contentUrn : parentUrn && parentUrn.contentUrn || config.slateEntityURN
     let _requestData = prepareDeleteRequestData(type)
     let indexToBeSent = index || "0"
@@ -107,7 +109,8 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
             index,
             poetryData,
             cutCopyParentUrn,
-            fetchSlateData
+            fetchSlateData,
+            showHideObj
         }
         onDeleteSuccess(deleteArgs)
     } 
@@ -136,6 +139,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
         return ;
     }
+    const { showHideObj } = getState().appStore
     updatedData.projectUrn = config.projectUrn;
     updatedData = (updatedData.type == "element-blockfeature") ? contentEditableFalse(updatedData): updatedData;
     /** updateBodymatter | Used for TCM Snapshots */
@@ -188,7 +192,8 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
             poetryData,
             updateBodymatter,
             fetchSlateData,
-            responseData : response.data
+            responseData : response.data,
+            showHideObj
         }
         processAndStoreUpdatedResponse(updateArgs)
     }
@@ -337,6 +342,7 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
     let newIndex = index.split("-")
     let newShowhideIndex = parseInt(newIndex[newIndex.length-1])+1
+    const { asideData, parentUrn ,showHideObj } = getState().appStore
     let _requestData = {
         "projectUrn": config.projectUrn,
         "slateEntityUrn": parentContentUrn,
@@ -354,11 +360,31 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
                 "PearsonSSOSession": config.ssoToken
             }
         }
-    ).then(createdElemData => {
+    ).then( async (createdElemData) => {
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         const parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
         let currentSlateData = newParentData[config.slateManifestURN];
+
+        /** [PCAT-8699] ---------------------------- TCM Snapshot Data handling ------------------------------*/
+         let containerElement = {
+            asideData,
+            parentUrn,
+            showHideObj
+        };
+        let slateData = {
+            currentParentData: newParentData,
+            bodymatter: currentSlateData.contents.bodymatter,
+            response: createdElemData.data
+        };
+        if (currentSlateData.status === 'approved') {
+            await tcmSnapshotsForCreate(slateData, "TEXT", containerElement, dispatch);
+        }
+        else {
+            tcmSnapshotsForCreate(slateData, "TEXT", containerElement, dispatch);
+        } 
+        
+
         if (currentSlateData.status === 'approved') {
             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
             sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
@@ -383,6 +409,12 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
             }
         }
         if(parentElement.status && parentElement.status === "approved") cascadeElement(parentElement, dispatch, parentElementIndex)
+
+        if (config.tcmStatus) {
+            const { prepareDataForTcmCreate } = (await import("../SlateWrapper/slateWrapperAction_helper.js"))
+            prepareDataForTcmCreate("TEXT", createdElemData.data, getState, dispatch);
+        }
+
         dispatch({
             type: CREATE_SHOW_HIDE_ELEMENT,
             payload: {
@@ -408,6 +440,8 @@ export const deleteShowHideUnit = (elementId, type, parentUrn, index,eleIndex, p
         sectionType: type
         // slateEntity : config.slateEntityURN
     }
+    const { asideData ,showHideObj } = getState().appStore
+    const parentElementUrn = getState().appStore.parentUrn
     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
     return axios.post(`${config.REACT_APP_API_URL}v1/slate/deleteElement`,
         JSON.stringify(_requestData),
@@ -417,13 +451,33 @@ export const deleteShowHideUnit = (elementId, type, parentUrn, index,eleIndex, p
                 "PearsonSSOSession": config.ssoToken
             }
         }
-    ).then((response)=>{
+    ).then(async (response)=>{
         let newIndex = eleIndex.split("-")
         // let newShowhideIndex = parseInt(newIndex[newIndex.length-1])+1
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         const parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
         let currentSlateData = newParentData[config.slateManifestURN];
+
+        /** [PCAT-8699] ---------------------------- TCM Snapshot Data handling ------------------------------*/
+
+        const deleteData = {
+            deleteElemData: response.data,
+            deleteParentData: newParentData,
+            index: showHideObj.index,
+            showHideObj,
+            type: showHideObj.currentElement.type,
+            parentUrn: parentElementUrn,
+            asideData,
+            contentUrn: showHideObj.currentElement.contentUrn
+        }
+        if (currentSlateData.status === 'approved') {
+            await prepareTCMSnapshotsForDelete(deleteData);
+        }
+        else {
+            prepareTCMSnapshotsForDelete(deleteData);
+        } 
+
         if (currentSlateData.status === 'approved') {
             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
             sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
@@ -449,6 +503,12 @@ export const deleteShowHideUnit = (elementId, type, parentUrn, index,eleIndex, p
             }
         }
         if(parentElement.status && parentElement.status === "approved") cascadeElement(parentElement, dispatch, parentElementIndex)
+
+        if (config.tcmStatus) {
+            const { prepareTCMforDelete } = (await import("./ElementContainerDelete_helpers.js"))
+            prepareTCMforDelete(elementId, dispatch, getState);
+        }
+
         if(cb){
             cb("delete",eleIndex);
         } 

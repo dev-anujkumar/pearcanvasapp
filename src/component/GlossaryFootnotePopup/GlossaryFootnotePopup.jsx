@@ -5,15 +5,32 @@
 import React, { Component } from 'react';
 import Button from '../ElementButtons/ElementButton.jsx';
 import '../../styles/GlossaryFootnotePopup/GlossaryFootnotePopup.css';
+import { GLOSSARY } from './../../constants/Element_Constants';
 import ReactEditor from "../tinyMceGlossaryFootnoteEditor"
 import { checkforToolbarClick } from '../../js/utils'
 import { hasReviewerRole } from '../../constants/utility.js'
 import { setFormattingToolbar } from './GlossaryFootnote_Actions.js';
+import AudioTinyMceGlossary from '../AudioTinyMceGlossary';
+import AddAudioBook from '../AudioNarration/AddAudioBook.jsx';
+
 class GlossaryFootnotePopup extends Component {
     constructor() {
         super();
-        this.state = {}
+        this.state = {
+            audioToggle:false
+        }
 
+    }
+
+    handleAudioToggle =() =>{
+        this.setState({
+            audioToggle:!this.state.audioToggle
+        })
+    }
+    closeAddAudioBook=()=>{
+        this.setState({
+            audioToggle:false
+        })
     }
 
     toolbarHandling = (e, action = "") => {
@@ -36,11 +53,13 @@ class GlossaryFootnotePopup extends Component {
             }
         }
     }
+    
 
     render() {
-        const { glossaryFootnoteValue, closePopup, saveContent } = this.props;
+        const { glossaryFootnoteValue, closePopup, saveContent,permissions } = this.props;
         const glossaryFootnote = glossaryFootnoteValue.type;
-        let id = glossaryFootnote === 'Glossary' ? 'glossary-1' : 'footnote-0';
+        let id = glossaryFootnote === GLOSSARY ? 'glossary-1' : 'footnote-0';
+        let accessToolbar = (permissions && permissions.includes('access_formatting_bar')) ? "" : " disableToolbar"
 
         return (
             <div ref={this.props.setWrapperRef} className="glossary-toolbar-wrapper">
@@ -52,10 +71,16 @@ class GlossaryFootnotePopup extends Component {
                     </div>
                 </div>
                 <div id="toolbarGlossaryFootnote"></div>
+                {
+                    glossaryFootnote === GLOSSARY &&<div className = {'audio-wrapper'+ accessToolbar} id='glossary-audio'><AudioTinyMceGlossary handleAudioToggle={this.handleAudioToggle} /></div>
+                }
+
+                {this.state.audioToggle && <AddAudioBook isGlossary={true} closeAddAudioBook={this.closeAddAudioBook}/>}
+
                 <div className="glossary-body">
                     <div id="glossary-toolbar"></div>
                     {
-                        (glossaryFootnote === 'Glossary') &&
+                        (glossaryFootnote === GLOSSARY) &&
                         <div className="glossary-word-header">
                             <div className="glossary-word-title">Term:</div>
                             <div className="glossary-word-name glossary-word-description" id='glossary-editor' onFocus={() => this.toolbarHandling(null, 'remove')} onBlur={(e) => this.toolbarHandling(e, 'add')}>
@@ -64,7 +89,7 @@ class GlossaryFootnotePopup extends Component {
                         </div>
                     }
                     <div className="glossary-definition-header">
-                        <div className="glossary-definition-label">{(glossaryFootnote === 'Glossary') ? 'Definition:' : 'Note:'}</div>
+                        <div className="glossary-definition-label">{(glossaryFootnote === GLOSSARY) ? 'Definition:' : 'Note:'}</div>
                         <div className="glossary-editor glossary-definition-description" id="glossary-editor-attacher" onFocus={() => this.toolbarHandling(null, 'remove')} onBlur={(e) => this.toolbarHandling(e, 'add')}>
                             <ReactEditor permissions={this.props.permissions} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaryFootNoteCurrentValue = {this.props.glossaryFootNoteCurrentValue.footnoteContentText} className='definition-editor place-holder' placeholder="Type Something" id={id} />
                         </div>

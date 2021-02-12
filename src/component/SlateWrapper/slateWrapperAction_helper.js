@@ -1,50 +1,121 @@
 // Constants
 import axios from 'axios';
 import config from '../../config/config';
-import { AUTHORING_ELEMENT_CREATED, GET_TCM_RESOURCES } from '../../constants/Action_Constants';
+import { AUTHORING_ELEMENT_CREATED, GET_TCM_RESOURCES, FETCH_COMMENTS } from '../../constants/Action_Constants';
 import { HideLoader, ShowLoader, projectPendingTcStatus } from '../../constants/IFrameMessageTypes.js';
 import * as slateWrapperConstants from "./SlateWrapperConstants"
 //Helper methods
-import { sendDataToIframe, replaceWirisClassAndAttr } from '../../constants/utility.js';
-import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
+import { sendDataToIframe, replaceWirisClassAndAttr, getShowhideChildUrns } from '../../constants/utility.js';
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
-
 import { SET_SELECTION } from './../../constants/Action_Constants.js';
-import { deleteElement } from './../ElementContainer/ElementContainer_Actions.js';
+import { deleteFromStore, prepareTCMSnapshotsForDelete } from './../ElementContainer/ElementContainerDelete_helpers.js';
 import tinymce from 'tinymce'
+
 export const onPasteSuccess = async (params) => {
     const {
         responseData,
         index,
+        cutIndex,
         dispatch,
-        getState
+        getState,
+        elmExist,
+        parentUrn,
+        asideData,
+        poetryData,
+        slateEntityUrn
     } = params    
 
     const activeEditorId = tinymce && tinymce.activeEditor && tinymce.activeEditor.id
     replaceWirisClassAndAttr(activeEditorId)
     // Store Update on Paste Element
     let operationType = '';
+    let elmSelection = {};
     if (Object.keys(getState().selectionReducer.selection).length > 0 && 'operationType' in getState().selectionReducer.selection) {
-        operationType = getState().selectionReducer.selection.operationType;
+        elmSelection = getState().selectionReducer.selection;
+        operationType = elmSelection.operationType;
     }
 
-    let cutIndex = index;
-    let elmExist = await checkElementExistence(getState().selectionReducer.selection.sourceSlateEntityUrn, getState().selectionReducer.selection.deleteElm.id);
-    if ('deleteElm' in getState().selectionReducer.selection && operationType === 'cut' && elmExist) {
-        let deleteElm = getState().selectionReducer.selection.deleteElm;
-        if(getState().selectionReducer.selection.sourceSlateEntityUrn === config.slateEntityURN &&
-            cutIndex > getState().selectionReducer.selection.sourceElementIndex) {
-            cutIndex -= 1;
+    /** Create Snapshot for cut action on different slate */
+    let cutSnap = true;
+    if(operationType === 'cut' && elmExist) {
+        if('sourceSlateEntityUrn' in elmSelection && 'sourceEntityUrn' in elmSelection &&
+        ((elmSelection.sourceSlateEntityUrn === elmSelection.sourceEntityUrn && elmSelection.sourceSlateEntityUrn === config.slateEntityURN) ||
+        (elmSelection.sourceSlateEntityUrn !== elmSelection.sourceEntityUrn && elmSelection.sourceEntityUrn === slateEntityUrn))) {           
+            cutSnap = false;
         }
-        await dispatch(deleteElement(deleteElm.id, deleteElm.type, deleteElm.parentUrn, deleteElm.asideData, deleteElm.contentUrn, deleteElm.index, deleteElm.poetryData, getState().selectionReducer.selection.element, deleteElm.cutCopyParentUrn));
     }
 
+    if ('deleteElm' in getState().selectionReducer.selection && operationType === 'cut') {
+        let deleteElm = getState().selectionReducer.selection.deleteElm;
+        const parentData = getState().appStore.slateLevelData;
+        const newParentData = JSON.parse(JSON.stringify(parentData));
+        let cutcopyParentData =  null;
+        if('cutCopyParentUrn' in deleteElm && 'slateLevelData' in deleteElm.cutCopyParentUrn) {
+            cutcopyParentData = deleteElm.cutCopyParentUrn.slateLevelData;
+        }
+
+        // if(getState().selectionReducer.selection.sourceSlateEntityUrn !== config.slateEntityURN) {
+        if(cutSnap) {
+            const tcmDeleteArgs = {
+                deleteParentData: cutcopyParentData ? JSON.parse(JSON.stringify(cutcopyParentData)) : newParentData,
+                deleteElemData: { [deleteElm.id]: deleteElm.id },
+                type: deleteElm.type,
+                parentUrn: deleteElm.parentUrn,
+                asideData: deleteElm.asideData,
+                contentUrn: deleteElm.contentUrn,
+                index: deleteElm.index,
+                poetryData: deleteElm.poetryData,
+                cutCopyParentUrn: {
+                    ...deleteElm.cutCopyParentUrn,
+                    manifestUrn: deleteElm.cutCopyParentUrn.sourceSlateManifestUrn
+                }
+            }
+            await prepareTCMSnapshotsForDelete(tcmDeleteArgs);
+        }
+
+        let deleteParams = {
+            dispatch,
+            elmId: deleteElm.id,
+            parentUrn: deleteElm.parentUrn,
+            asideData: deleteElm.asideData,
+            index: deleteElm.index,
+            poetryData: deleteElm.poetryData,
+            newParentData 
+        }
+        deleteFromStore(deleteParams)
+    }
+
+    let feedback = null;
     if (operationType === 'copy') {
         let selection = Object.assign({}, getState().selectionReducer.selection);
         selection.activeAnimation = false;
         selection.deleteElm = {};
         dispatch({ type: SET_SELECTION, payload: selection });
     } else if (operationType === 'cut') {
+        if('sourceSlateEntityUrn' in elmSelection && elmSelection.sourceSlateEntityUrn !== config.slateEntityURN) {
+            if('elmComment' in elmSelection && (elmSelection.elmComment).length > 0) {
+                const allComments = getState().commentsPanelReducer.allComments || [];
+                allComments.push(...elmSelection.elmComment);
+
+                dispatch({
+                    type: FETCH_COMMENTS,
+                    payload: { comments: allComments, title: getState().commentsPanelReducer.slateTitle || '' }
+                })
+            }
+
+            if('elmFeedback' in elmSelection && (elmSelection.elmFeedback).length > 0) {
+                const tcmFeedback = getState().tcmReducer.tcmData || [];
+                tcmFeedback.push(...elmSelection.elmFeedback);
+                feedback = (elmSelection.elmFeedback)[0].feedback || null;
+
+                dispatch({
+                    type: GET_TCM_RESOURCES,
+                    payload: {
+                        data: tcmFeedback
+                    }
+                })
+            }
+        }
         dispatch({ type: SET_SELECTION, payload: {} });
     }
 
@@ -54,34 +125,74 @@ export const onPasteSuccess = async (params) => {
     const currentSlateData = newParentData[config.slateManifestURN];
 
     /** [PCAT-8289] ---------------------------- TCM Snapshot Data handling ------------------------------*/
-    if (slateWrapperConstants.elementType.indexOf("TEXT") !== -1) {
+    if (slateWrapperConstants.elementType.indexOf(slateWrapperConstants.checkTCM(responseData)) !== -1 && cutSnap) {
         const snapArgs = {
             newParentData,
             currentSlateData,
-            asideData: null,
-            poetryData: null,
-            parentUrn: null,
-            type: "TEXT",
+            asideData: asideData || null,
+            poetryData: poetryData || null,
+            parentUrn: parentUrn || null,
+            type: slateWrapperConstants.checkTCM(responseData),
             responseData,
             dispatch,
-            index
+            index,
+            elmFeedback: feedback
         }
 
-        await handleTCMSnapshotsForCreation(snapArgs)
+        await handleTCMSnapshotsForCreation(snapArgs, operationType)
     }
     /**---------------------------------------------------------------------------------------------------*/
 
-    if (currentSlateData.status === 'approved' && operationType === 'copy') {
+    if (currentSlateData.status === 'approved') {
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
         sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
         return false;
     }
 
-    newParentData[config.slateManifestURN].contents.bodymatter.splice(cutIndex, 0, responseData);
+    if (asideData && asideData.type == 'element-aside') {
+        newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
+            if (item.id == parentUrn.manifestUrn) {
+                item.elementdata.bodymatter.splice(cutIndex, 0, responseData)
+            } else if (item.type == "element-aside" && item.id == asideData.id) {
+                item.elementdata.bodymatter && item.elementdata.bodymatter.map((ele) => {
+                    if (ele.id === parentUrn.manifestUrn) {
+                        ele.contents.bodymatter.splice(cutIndex, 0, responseData)
+                    }
+                })
+            }
+        })
+    } else if(asideData && asideData.type == 'citations'){
+        newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
+            if (item.id == parentUrn.manifestUrn) {
+                item.contents.bodymatter.splice(cutIndex, 0, responseData)
+            }
+        })
+    } else if (poetryData && poetryData.type == "poetry"){
+        newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
+            if (item.id == poetryData.parentUrn) {
+                item.contents.bodymatter.splice(cutIndex, 0, responseData)
+            } 
+            else if (item.type == "poetry" && item.id == poetryData.id) {
+                item.contents.bodymatter && item.contents.bodymatter.map((ele) => {
+                    if (ele.id === poetryData.parentUrn) {
+                        ele.contents.bodymatter.splice(cutIndex, 0, responseData)
+                    }
+                })
+            }
+        })  
+    } else if (asideData && asideData.type === 'groupedcontent') {
+        newParentData[config.slateManifestURN].contents.bodymatter.map((item, i) => {
+            if (item.id === asideData.id) {
+                item.groupeddata.bodymatter[parentUrn.columnIndex].groupdata.bodymatter.splice(cutIndex, 0, responseData)
+            }
+        })
+    } else {
+        newParentData[config.slateManifestURN].contents.bodymatter.splice(cutIndex, 0, responseData);
+    }
 
     if (config.tcmStatus) {
-        if (slateWrapperConstants.elementType.indexOf("TEXT") !== -1) {
-            await prepareDataForTcmCreate("TEXT", responseData, getState, dispatch);
+        if (slateWrapperConstants.elementType.indexOf(slateWrapperConstants.checkTCM(responseData)) !== -1 && cutSnap) {
+            await prepareDataForTcmCreate(slateWrapperConstants.checkTCM(responseData), responseData, getState, dispatch);
         }
     }
 
@@ -126,7 +237,7 @@ export const checkElementExistence = async (slateEntityUrn = '', elementEntity =
     return exist;
 }
 
-export const handleTCMSnapshotsForCreation = async (params) => {
+export const handleTCMSnapshotsForCreation = async (params, operationType = null) => {
     const {
         newParentData,
         currentSlateData,
@@ -136,7 +247,8 @@ export const handleTCMSnapshotsForCreation = async (params) => {
         type,
         responseData,
         dispatch,
-        index
+        index,
+        elmFeedback
     } = params
 
     const containerElement = {
@@ -150,10 +262,10 @@ export const handleTCMSnapshotsForCreation = async (params) => {
         response: responseData
     };
     if (currentSlateData.status === 'approved') {
-        await tcmSnapshotsForCreate(slateData, type, containerElement, dispatch, index);
+        await tcmSnapshotsForCreate(slateData, type, containerElement, dispatch, index, operationType, elmFeedback);
     }
     else {
-        tcmSnapshotsForCreate(slateData, type, containerElement, dispatch, index);
+        tcmSnapshotsForCreate(slateData, type, containerElement, dispatch, index, operationType, elmFeedback);
     }
 }
 
@@ -191,6 +303,9 @@ export function prepareDataForTcmCreate(type, createdElementData, getState, disp
         case slateWrapperConstants.AUDIO:
         case slateWrapperConstants.FIGURE_MML:
         case slateWrapperConstants.BLOCKCODE:
+        case slateWrapperConstants.SMARTLINK:
+        case slateWrapperConstants.MMI_ELM:
+        case slateWrapperConstants.INTERACTIVE:
             elmUrn.push(createdElementData.id)
             break;
         case slateWrapperConstants.MULTI_COLUMN:
@@ -206,6 +321,9 @@ export function prepareDataForTcmCreate(type, createdElementData, getState, disp
         case slateWrapperConstants.POP_UP:
             elmUrn.push(createdElementData.popupdata.postertextobject[0].id)
             elmUrn.push(createdElementData.popupdata.bodymatter[0].id)
+            break;
+        case slateWrapperConstants.SHOW_HIDE:
+            elmUrn = getShowhideChildUrns(createdElementData)
             break;
     }
 

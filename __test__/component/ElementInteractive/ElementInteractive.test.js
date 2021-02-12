@@ -4,6 +4,8 @@ import Interactive from '../../../src/component/ElementInteractive';
 import config from '../../../src/config/config';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
+import axios from 'axios';
+import  { getMCQGuidedData}  from '../../../src/component/AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
 import { Interactivefpo , InteractiveFlashcards, Interactive3party, Interactivepdf, InteractiveWeblink,
     InteractivePopupWeblink, InteractiveTable,InteractiveShowHide,InteractivePopWindow,Interactivegraph
     ,Interactivesimulation,Interactivesurvey,Interactivetimeline,Interactivehotspot,Interactiveaccountingtable,
@@ -26,8 +28,9 @@ jest.mock('../../../src/js/toggleLoader', () => ({
     disableHeader: jest.fn(),
     showTocBlocker: jest.fn()
 }))
+
 describe('Testing Interactive element component', () => {
-    xit('renders without crashing', () => {
+    it('renders without crashing', () => {
         const props = {
             slateLockInfo: {
                 isLocked: false,
@@ -537,6 +540,7 @@ describe('Testing Interactive element component', () => {
             expect(spyhandleC2MediaClick).toHaveBeenCalledWith({ target: { tagName: 'b' } })
             spyhandleC2MediaClick.mockClear()
         })
+       
         describe('Test-Alfresco Data Handling', () => {
             const elementInteractive = mount(<Provider store={store}><Interactive type={type} model={Interactivefpo} index="1" {...props} /></Provider>);
             let elementInteractiveInstance = elementInteractive.find('Interactive').instance();
@@ -547,6 +551,28 @@ describe('Testing Interactive element component', () => {
                     'EpsUrl': "",
                     'width': "",
                     'height': "",
+                    'req': {
+                        url: "https://staging.api.pearson.com/content/cmis/uswip-aws/alfresco-proxy/api/-default-/public/cmis/versions/1.1/browser?cmisselector=query&q=SELECT s.avs:url,s.avs:jsonString FROM cmis:document AS d JOIN avs:smartLink AS s ON d.cmis:objectId = s.cmis:objectId where s.cmis:objectId = '7bffceb3-33fc-40cc-a70c-50b6f32665c9'"
+                    },
+                    desc: '{"smartLinkType":"3rd Party Interactive"}'
+                }
+                elementInteractiveInstance.dataFromAlfresco(data)
+                elementInteractiveInstance.forceUpdate();
+                elementInteractive.update();
+                expect(spydataFromAlfresco).toHaveBeenCalled()
+                expect(elementInteractiveInstance.state.itemID).toBe("urn:pearson:alfresco:7bffceb3-33fc-40cc-a70c-50b6f32665c9")
+                expect(elementInteractiveInstance.state.posterImage).toBe("https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png")
+                spydataFromAlfresco.mockClear()
+            })
+            it('Test- if case workflow -smartLinkType-3rd Party Interactive(method checking)', () => {
+                let data = {
+                    'assetType': "image",
+                    'EpsUrl': 'https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png',
+                    'width': "500",
+                    'height': "500",
+                    'smartLinkPath':'',
+                    'altText':'test image',
+                    'longDescription':'this is a test image',
                     'req': {
                         url: "https://staging.api.pearson.com/content/cmis/uswip-aws/alfresco-proxy/api/-default-/public/cmis/versions/1.1/browser?cmisselector=query&q=SELECT s.avs:url,s.avs:jsonString FROM cmis:document AS d JOIN avs:smartLink AS s ON d.cmis:objectId = s.cmis:objectId where s.cmis:objectId = '7bffceb3-33fc-40cc-a70c-50b6f32665c9'"
                     },
@@ -968,13 +994,25 @@ describe("Testing methods", () => {
         expect(elementInteractiveInstance.state.showSinglePopup).toBe(false)
     })
     it("assessmentNavigateBack ", () => {
-        const spyassessmentNavigateBack = jest.spyOn(elementInteractiveInstance, 'assessmentNavigateBack')
+        let tempProps = {
+            model:Interactivevideomcq,
+            showBlocker: function () { },
+            updateFigureData : function() {},
+            setCurrentCiteTdx:jest.fn()
+        };
+        let tempComponent = mount(<Provider store={store}><Interactive {...tempProps} /></Provider>);
+       
+        let elementInteractiveInstance = component.find('Interactive').instance();
+        elementInteractiveInstance.setState({
+            openedFrom:'singleAssessment'
+        })
+        tempComponent.update();
+        elementInteractiveInstance.forceUpdate();
         elementInteractiveInstance.assessmentNavigateBack()
-        expect(spyassessmentNavigateBack).toHaveBeenCalled()
         expect(elementInteractiveInstance.state.showAssessmentPopup).toBe(true)
         expect(elementInteractiveInstance.state.showSinglePopup).toBe(false)
     })
-    xit("addCiteTdxAssessment if - block ", () => {
+    it("addCiteTdxAssessment if - block ", () => {
         let citeTdxObj = {
             slateType : "singleSlateAssessment",
             singleAssessmentID : ""
@@ -993,7 +1031,68 @@ describe("Testing methods", () => {
         }
         const spyaddCiteTdxAssessment = jest.spyOn(elementInteractiveInstance, 'addCiteTdxAssessment')
         elementInteractiveInstance.addCiteTdxAssessment(citeTdxObj, 1)
-        expect(spyaddCiteTdxAssessment).toHaveBeenCalled()
+         expect(spyaddCiteTdxAssessment).toHaveBeenCalled()
+    })
+
+    it("testing handleClickElement",()=>{
+        let e = {
+            stopPropagation :jest.fn()
+        }
+        elementInteractiveInstance.handleClickElement(e);
+    })
+    it('testing togglePopup',()=>{
+        let tempProps = {
+            slateLockInfo: {
+                isLocked: false,
+                userId: 'c5Test01'
+            },
+            index: 1,
+            handleFocus: function () { },
+            permissions:['add_multimedia_via_alfresco'],
+            model: {
+                figuredata:{
+                    interactiveformat :"mmi",
+                    interactiveparentid:'urn:pearson:work:98e2b84c-132e-44f0-a9ae-1871c16ab6e8',
+                    interactiveid:'urn:pearson:work:baf20494-42b2-4bb8-9d3d-07b5fb7f24ec'
+                }
+            },
+            showBlocker: function () { },
+            updateFigureData : function() {}
+        };
+        let tempComponent = mount(<Provider store={store}><Interactive {...tempProps} /></Provider>);
+        let elementInteractiveInstance = tempComponent.find('Interactive').instance();
+        let e ={
+            stopPropagation :jest.fn()
+        }
+        let value ={}
+        elementInteractiveInstance.togglePopup(e,value)
+    })
+    it('testing togglePopup else case',()=>{
+        let tempProps = {
+            slateLockInfo: {
+                isLocked: false,
+                userId: 'c5Test01'
+            },
+            index: 1,
+            handleFocus: function () { },
+            permissions:['add_multimedia_via_alfresco'],
+            model: {
+                figuredata:{
+                    interactiveformat :"mmi",
+                    interactiveparentid:'',
+                    interactiveid:''
+                }
+            },
+            showBlocker: function () { },
+            updateFigureData : function() {}
+        };
+        let tempComponent = mount(<Provider store={store}><Interactive {...tempProps} /></Provider>);
+        let elementInteractiveInstance = tempComponent.find('Interactive').instance();
+        let e ={
+            stopPropagation :jest.fn()
+        }
+        let value ={}
+        elementInteractiveInstance.togglePopup(e,value)
     })
      
 })
@@ -1008,7 +1107,7 @@ describe("Interactive Element: Testing Elm Picker Integration Methods", () => {
         permissions:['add_multimedia_via_alfresco'],
         model: interactiveElm,
         showBlocker: function () { },
-        updateFigureData : function() {}
+        updateFigureData: jest.fn(),
     };
     let component = mount(<Provider store={store}><Interactive {...props} /></Provider>);
     let elementInteractiveInstance = component.find('Interactive').instance();

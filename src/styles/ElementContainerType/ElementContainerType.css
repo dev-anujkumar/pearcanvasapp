@@ -10,6 +10,7 @@
     z-index: 2;
     transition: opacity 1s;
     right: 115%;
+    margin-right: 7px;
     box-shadow: 0 2px 2px rgba(0,0,0,0.3);
     border: 1px solid #ddd;
     background-color: #ffffff;
@@ -51,5 +52,7 @@
 .other-elements-inner{
     margin: 0 0 2px 2px;
 }
-   
-   
+
+ul.other-elements-inner{
+    margin: 0;
+}

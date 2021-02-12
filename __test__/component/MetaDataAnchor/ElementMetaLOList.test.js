@@ -10,6 +10,12 @@ jest.mock('../../../src/config/config.js', () => ({
     editorRefID: ""
 }))
 
+jest.mock('../../../src/component/tinyMceEditor.js',()=>{
+    return function () {
+        return (<div>null</div>)
+    }
+});
+
 const mockStore = configureMockStore(middlewares);
 let store = mockStore({
     metadataReducer:{

@@ -1,47 +1,52 @@
 import config from '../../../../config/config';
 import { CITE, TDX , MMI} from '../../AssessmentSlateConstants';
 import axios from 'axios';
+import { axiosGetAPI } from '../../../../js/apiCancelRequestHandlers.js';
 
 /**
  * This action creator is used to fetch ELM resources added to the project
  */
-export const getCiteTdxData = (assessmentType, assessmentTitle, filterUUID, pageNo=1) => (dispatch,getState) => {
+export const getCiteTdxData = (assessmentType, assessmentTitle, filterUUID, pageNo=1) => async(dispatch,getState) => {
+
+    dispatch({ type: 'SET_LOADING_TRUE', payload: { isLoading: true } });
     let sortBy = getState().citeTdxReducer.sortBy ? getState().citeTdxReducer.sortBy : '';
     let sortOrder = (getState().citeTdxReducer.sortOrder === 0 || getState().citeTdxReducer.sortOrder === 1) ? getState().citeTdxReducer.sortOrder : '';
     let startPage = --pageNo;
-    dispatch({ type: 'SET_LOADING_TRUE', payload: { isLoading: true } });
-
     let searchTitle = (assessmentTitle == undefined || assessmentTitle == '') ? '' : assessmentTitle;
     searchTitle= specialCharacterEncode(searchTitle)
     var assessmentDispatchType = (assessmentType === CITE)? 'GET_CITE_RESOURCES': (assessmentType === TDX)?'GET_TDX_RESOURCES': 'GET_MMI_RESOURCES';
     let pageSize=25;
+    const taxonomicTypes = assessmentType === CITE ? CITE.toUpperCase() : assessmentType === TDX ? TDX.toUpperCase() : MMI.toUpperCase();
 
-    let url = `${config.ASSESSMENT_ENDPOINT}assessments/v3/search?taxonomicTypes=${assessmentType === CITE ? CITE.toUpperCase() : assessmentType === TDX? TDX.toUpperCase() :MMI.toUpperCase()}&status=approved&name=${searchTitle}&page=${startPage}&pageSize=${pageSize}&sortAttribute=${sortBy}&sortOrder=${sortOrder}&collation.caseSensitivity=false&groupByEntity=true`;
+    let url = `${config.ASSESSMENT_ENDPOINT}assessments/v3/search?taxonomicTypes=${taxonomicTypes}&status=approved&name=${searchTitle}&page=${startPage}&pageSize=${pageSize}&sortAttribute=${sortBy}&sortOrder=${sortOrder}&collation.caseSensitivity=false&groupByEntity=true`;
 
-    return axios.get(url, {
-        headers: {
-            PearsonSSOSession: config.ssoToken
-        }
-    }).then((res) => {
-            dispatch({
-                type: assessmentDispatchType,
-                payload: {
-                    data: res.data,
-                    errFlag: false,
-                    isLoading: false
-                }
-            })
-    }).catch((error) => {
+    try {
+        const res = await axiosGetAPI(url);
         dispatch({
             type: assessmentDispatchType,
             payload: {
-                data: { assessments: [] },
-                errFlag: true,
+                data: res.data,
+                errFlag: false,
                 isLoading: false
             }
         })
-    })
+    } catch (err) {
+        if (axios.isCancel(err)) {
+            console.log('The Assessment Search API has been cancelled!!!')
+        } else {
+            dispatch({
+                type: assessmentDispatchType,
+                payload: {
+                    data: { assessments: [] },
+                    errFlag: true,
+                    isLoading: false
+                }
+            })
+            console.log("Unable to fetch API results>>>",err)
+        }
+    }
 }
+
 export const setCurrentCiteTdx = (currentAssessmentSelected, openedFrom) => (dispatch, getState) => {
      dispatch({
             type: 'CURRENT_SELECTED_ASSESSMENT',
@@ -85,7 +90,7 @@ export const getSingleAssessmentData = (currentAssessmentSelected) => (dispatch,
 /**
  * Filter UUID based on data responsefor the Assessment items
  */
-export const filterCiteTdxData = (assessmentType, assessmentTitle, filterUUID) => (dispatch) => {
+export const filterCiteTdxData = (assessmentType, assessmentTitle, filterUUID) => async (dispatch) => {
     dispatch({ type: 'SET_LOADING_TRUE', payload: { isLoading: true } });
     
     let url = `${config.ASSESSMENT_ENDPOINT}assessment/v2/urn:pearson:work:${filterUUID}`;
@@ -95,11 +100,8 @@ export const filterCiteTdxData = (assessmentType, assessmentTitle, filterUUID) =
 
     var typeAssessment = (assessmentType === CITE)? CITE.toUpperCase() : (assessmentType === TDX)? TDX.toUpperCase(): MMI.toUpperCase();
 
-    return axios.get(url, {
-        headers: {
-            PearsonSSOSession: config.ssoToken
-        }
-    }).then((res) => {
+    try {
+        const res = await axiosGetAPI(url);
         let taxonomyType = (res.data.taxonomicTypes.length > 0) ? res.data.taxonomicTypes : [];
         let responseName = (res.data.name !== undefined) ? res.data.name : '';
         responseName=specialCharacterEncode(responseName);
@@ -121,16 +123,21 @@ export const filterCiteTdxData = (assessmentType, assessmentTitle, filterUUID) =
                 isLoading: false
             }
         })
-    }).catch((error) => {
-        dispatch({
-            type: assessmentDispatchtype,
-            payload: {
-                data: filterData,
-                errFlag: false,
-                isLoading: false
-            }
-        })
-    })
+    } catch (err) {
+        if (axios.isCancel(err)) {
+            console.log('The Assessment Search API has been cancelled!!!')
+        } else {
+            dispatch({
+                type: assessmentDispatchtype,
+                payload: {
+                    data: filterData,
+                    errFlag: false,
+                    isLoading: false
+                }
+            })
+            console.log("Unable to fetch API results>>>",err)
+        }
+    }
 }
 
 export function getMCQGuidedData(workUrn) {
@@ -227,3 +234,13 @@ var stringToHTML = function (str) {
 	var doc = parser.parseFromString(str, 'text/html');
 	return doc.body.innerHTML;
 };  
+
+export const setAssessmentFilterParams = (title, uuid) => {
+    return {
+        type: 'SET_SEARCH_PARAMS',
+        payload: {
+            searchTitle: title,
+            searchUUID: uuid
+        }
+    }
+}

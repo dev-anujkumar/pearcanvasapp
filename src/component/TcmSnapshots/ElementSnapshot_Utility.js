@@ -26,7 +26,10 @@ const {
     ASIDE,
     WORKED_EXAMPLE,
     FIGURE,
-    MULTI_COLUMN
+    MULTI_COLUMN,
+    SHOWHIDE,
+    interactiveSubtypeConstants,
+    SMARTLINK_LABELS
 }
     = TcmConstants;
 
@@ -57,7 +60,7 @@ export const setSemanticsSnapshots = async (element,actionStatus,index) => {
             let listData = element.type === ELEMENT_LIST ? element.elementdata.listitems: element.poetrylines
             glossarySnap =  await setSnapshotsInListAndPoetry(actionStatus, listData, GLOSSARY, glossaryHtmlList,index);
             footnoteSnap =  await setSnapshotsInListAndPoetry(actionStatus, listData, FOOTNOTE, footnoteHtmlList,index);
-            assetPopoverSnap =  await setSnapshotsInListAndPoetry(actionStatus, listData, ASSET_POPOVER,undefined,index);
+            assetPopoverSnap =  await setSnapshotsInListAndPoetry(actionStatus, listData, ASSET_POPOVER,undefined,index,element);
             break;
 
         case BLOCKFEATURE:
@@ -119,7 +122,7 @@ const prepareFigureFootnoteSnapshotContent = (actionStatus, footnoteWipList, foo
  * @param {Array} elementList - List of Glossary/Footnote/Asset_Popover entries in a List/Poetry element
  * @returns {Array} All snapshots for given semantic - Glossary/Footnote/Asset_Popover for List and Poetry element  
 */
-const setSnapshotsInListAndPoetry = async (actionStatus, elementList, semanticType,glossaryFootnoteHtmlList,index) => {
+const setSnapshotsInListAndPoetry = async (actionStatus, elementList, semanticType,glossaryFootnoteHtmlList,index,element) => {
     let snapshotsList = []
     await Promise.all(elementList.map( async item => {
         if ((item.type == PARAGRAPH || item.type == POETRY_LINE) && item.authoredtext) {
@@ -131,11 +134,11 @@ const setSnapshotsInListAndPoetry = async (actionStatus, elementList, semanticTy
                 snapshotsList = snapshotsList.concat(prepareFootnoteSnapshotContent(actionStatus, footnoteArray,glossaryFootnoteHtmlList));
             } else if (semanticType === ASSET_POPOVER) {
                 let assetLists = item.authoredtext.internallinks ? item.authoredtext.internallinks : [];
-                let assetSnapList = assetLists.length != 0 ? await prepareAssetPopoverSnapshotContent(assetLists,index,actionStatus) : [];
+                let assetSnapList = assetLists.length != 0 ? await prepareAssetPopoverSnapshotContent(assetLists,index,actionStatus,element) : [];
                 snapshotsList = snapshotsList.concat(assetSnapList);
             }
         } else if (item.listitems && item.listitems.length > 0) { // for nested lists
-            snapshotsList = snapshotsList.concat(await setSnapshotsInListAndPoetry(actionStatus, item.listitems, semanticType,glossaryFootnoteHtmlList,index));
+            snapshotsList = snapshotsList.concat(await setSnapshotsInListAndPoetry(actionStatus, item.listitems, semanticType,glossaryFootnoteHtmlList,index,element));
         }
     }))
     return snapshotsList
@@ -224,8 +227,8 @@ export const prepareAssetPopoverSnapshotContent = async (assetsList, indexes, ac
         }
         if (assetsList && assetsList.length) {
             await Promise.all(assetsList.map(async (assetsItem, index) => {
-                let assetIdAll = assetsItem && assetsItem.linkid && elementAP && elementAP.querySelectorAll('abbr');
-                let assetId = assetIdAll && assetIdAll[index] && assetIdAll[index].getAttribute('asset-id') ? assetIdAll[index].getAttribute('asset-id') : actionStatus.assetRemoveidForSnapshot ? actionStatus.assetRemoveidForSnapshot: ""
+                let assetIdAll = assetsItem && assetsItem.linkid && elementAP && elementAP.querySelectorAll('abbr[data-uri="' + assetsItem.linkid + '"]');
+                let assetId = assetIdAll && assetIdAll[0] && assetIdAll[0].getAttribute('asset-id') ? assetIdAll[0].getAttribute('asset-id') : actionStatus.assetRemoveidForSnapshot ? actionStatus.assetRemoveidForSnapshot: ""
                 let data = {
                     assetid: assetId,
                     type: assetsItem && assetsItem.internallinktype === SLATE ? SLATE_LINK : AP_TYPE
@@ -255,6 +258,7 @@ export const prepareAssetPopoverSnapshotContent = async (assetsList, indexes, ac
  * @returns {String} Element Tags for elementType key in Snapshots
 */
 export const fetchElementsTag = (element,metadataField) => {
+    const interactiveArray = ["3rd-party","pdf","web-link","pop-up-web-link","table"];
     let labelText, eleTag, eleType, eleSubType;
     eleType = element && element.type ? element.type :  element.elementType;
     eleType = metadataField ? setMetadataType[element.type][metadataField] : eleType;
@@ -279,7 +283,17 @@ export const fetchElementsTag = (element,metadataField) => {
             break;
     }
     
-    eleTag = eleSubType && eleSubType.trim() !== "" && setElementTag[eleType] ? setElementTag[eleType].subtype[eleSubType] : setElementTag[eleType]
+    if (eleSubType === "interactive") {
+        if (element.figuredata.interactivetype !== "fpo" && interactiveArray.includes(element.figuredata.interactivetype) ) {
+            eleTag = setElementTag[eleType].subtype[eleSubType].subtype[element.figuredata.interactivetype]
+        }
+        else {
+            eleTag = setElementTag[eleType].subtype[eleSubType].subtype[element.figuredata.interactiveformat]
+        }  
+    }
+    else {
+        eleTag = eleSubType && eleSubType.trim() !== "" && setElementTag[eleType] ? setElementTag[eleType].subtype[eleSubType] : setElementTag[eleType]
+    }
     labelText = eleTag ? `${eleTag.parentTag}${eleTag.childTag ? '+' + eleTag.childTag : ""}`:"P"
 
     return labelText;
@@ -447,8 +461,37 @@ const setElementTag = {
             },
             "authoredtext":{
                 parentTag: "MML" 
+            },
+            "interactive": {
+                subtype: {
+                    [interactiveSubtypeConstants.THIRD_PARTY] : { 
+                        parentTag: "SL"
+                    },
+                    [interactiveSubtypeConstants.EXTERNAL_WEBSITE_LINK] : { 
+                        parentTag: "SL"
+                    },
+                    [interactiveSubtypeConstants.PDF] : { 
+                        parentTag: "SL"
+                    },
+                    [interactiveSubtypeConstants.LEGACY_WEB_LINK] : { 
+                        parentTag: "SL"
+                    },
+                    [interactiveSubtypeConstants.TABLE] : { 
+                        parentTag: "SL"
+                    },
+                    [interactiveSubtypeConstants.QUAD] : { 
+                        parentTag: "Quad"
+                    },
+                    [interactiveSubtypeConstants.ELM] : {
+                        parentTag: "Elm"
+                    },
+                    
+                }
             }
         }
+    },
+    [SHOWHIDE] : {
+        parentTag: "SH"
     }
 }
 
@@ -458,6 +501,11 @@ const setMetadataType = {
         'formattedTitle': 'popup_label',
         'formattedSubtitle': 'popup_label',
         'formattedTitleOnly': 'popup_label'
+    },
+    "showhide": {
+        "show": "show",
+        "hide": "hide",
+        "revel": "revel"
     }
 }
 
@@ -504,4 +552,56 @@ export const generateWipDataForFigure = (bodymatter, index) => {
             break;
     }
     return wipData
+}
+
+/**
+ * @function getInteractiveSubtypeData
+ * @description- This function is to prepare metadata, itemID for interactive.
+ * @param {Object} figuredata Figuredata object
+ * @param {Object} html HTML object
+ */
+export const getInteractiveSubtypeData = (figuredata, html) => {
+
+    //SL-3rd party and Table- itemid: asset ID, metadata: 3rd Party
+    //SL-Pdf , external and legacy Web link- itemid: asset ID, itembuttonlabel: Action button label, metadata: PDF/external/legacy
+    //Quad-mmi - itemid: asset ID
+    //Elm-mmi - itemid: asset ID, itemtitle: interactive title
+
+    let interactiveDataToReturn = {
+        itemID: `<p>${figuredata.interactiveid}</p>`
+    }
+    switch (figuredata.interactivetype) {
+        case interactiveSubtypeConstants.THIRD_PARTY:
+        case interactiveSubtypeConstants.TABLE:
+            interactiveDataToReturn = {
+                ...interactiveDataToReturn,
+                metadata: `<p>${SMARTLINK_LABELS[figuredata.interactivetype]}</p>` 
+            }
+            break;
+        case interactiveSubtypeConstants.EXTERNAL_WEBSITE_LINK:  
+        case interactiveSubtypeConstants.PDF:
+        case interactiveSubtypeConstants.LEGACY_WEB_LINK:
+            interactiveDataToReturn = {
+                ...interactiveDataToReturn,
+                itemButtonLabel:  html.postertext ? html.postertext.match(/<p>/g) ? html.postertext : `<p>${html.postertext}</p>` : "<p></p>",
+                metadata: `<p>${SMARTLINK_LABELS[figuredata.interactivetype]}</p>` 
+            }
+            break;
+             
+        default:
+            switch (figuredata.interactiveformat) {
+                case interactiveSubtypeConstants.ELM:
+                    interactiveDataToReturn = {
+                        ...interactiveDataToReturn,
+                        itemTitle: figuredata.interactivetitle ? `<p>${figuredata.interactivetitle}</p>` : "<p></p>"
+                    }
+                    break;
+                case interactiveSubtypeConstants.QUAD:
+                default:
+                    interactiveDataToReturn = {
+                        ...interactiveDataToReturn
+                    }
+            }
+    }
+    return interactiveDataToReturn
 }

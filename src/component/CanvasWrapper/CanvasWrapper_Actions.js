@@ -26,9 +26,10 @@ import figureData from '../ElementFigure/figureTypes.js';
 import { fetchAllSlatesData, setCurrentSlateAncestorData } from '../../js/getAllSlatesData.js';
 import { handleTCMData } from '../TcmSnapshots/TcmSnapshot_Actions.js';
 import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
-import { ELM_INT } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
+import { ELM_INT, FIGURE_ASSESSMENT, ELEMENT_ASSESSMENT } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
-import { checkAssessmentStatus , resetAssessmentStore } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
+import { fetchAssessmentMetadata , resetAssessmentStore } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
+import { isElmLearnosityAssessment } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 import { getContainerData } from './../Toolbar/Search/Search_Action.js';
 
 export const findElementType = (element, index) => {
@@ -275,6 +276,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
 
     if (config.cachedActiveElement && config.cachedActiveElement.element && config.cachedActiveElement.element.type == "popup") {
         config.popupParentElement = {
+            ...config.popupParentElement,
             parentElement: config.cachedActiveElement.element
         }
         if(calledFrom!== "containerVersioning"){
@@ -320,15 +322,16 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             document.getElementsByClassName("slate-tag-icon")[0].classList.remove("disable");
          }     
         let newVersionManifestId=Object.values(slateData.data)[0].id
-        if(config.slateManifestURN !== newVersionManifestId && (slateData.data[newVersionManifestId].type === 'manifest' || slateData.data[newVersionManifestId].type === "chapterintro")){
+        if(config.slateManifestURN !== newVersionManifestId && (slateData.data[newVersionManifestId].type === 'manifest' || slateData.data[newVersionManifestId].type === "chapterintro" || slateData.data[newVersionManifestId].type === "titlepage")){
             config.slateManifestURN = newVersionManifestId
             manifestURN = newVersionManifestId
         }
         /** PCAT-8900 - Updating Full Assessments - Elm */
-        if (config.slateType == 'assessment' && slateData && slateData.data[newVersionManifestId]) {
+        if (config.slateType == FIGURE_ASSESSMENT && slateData && slateData.data[newVersionManifestId]) {
             let slateBodymatter = slateData.data[newVersionManifestId].contents.bodymatter
-            if (slateBodymatter[0] && slateBodymatter[0].type == 'element-assessment' && slateBodymatter[0].elementdata.assessmentformat == 'puf' && slateBodymatter[0].elementdata.assessmentid) {
-                dispatch(checkAssessmentStatus(slateBodymatter[0].elementdata.assessmentid, 'fromAssessmentSlate'));
+            if (slateBodymatter[0] && slateBodymatter[0].type == ELEMENT_ASSESSMENT && isElmLearnosityAssessment(slateBodymatter[0].elementdata) && slateBodymatter[0].elementdata.assessmentid) {
+                const assessmentData = { targetId: slateBodymatter[0].elementdata.assessmentid }
+                dispatch(fetchAssessmentMetadata(FIGURE_ASSESSMENT, 'fromFetchSlate', assessmentData, {}));
             }
         }
 		if(slateData.data && slateData.data[newVersionManifestId] && slateData.data[newVersionManifestId].type === "popup"){

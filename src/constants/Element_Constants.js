@@ -21,6 +21,7 @@ export const DEFAULT_VIDEO_POSTER_IMAGE = "https://cite-media-stg.pearson.com/le
 /*---------------Element Interactive ----------------------*/ 
 export const INTERACTIVE_FPO = "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
 export const INTERACTIVE_SCHEMA = "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive"
+export const AUTHORED_TEXT_SCHEMA = "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext"
 /*---------------Element Single Assessment ----------------------*/ 
 export const ESA_DIALOG_TEXT='PLEASE ENTER A PRODUCT UUID'
 export const ESA_POPUP_PLACEHOLDER='UUID'
@@ -100,4 +101,38 @@ export const disabledPrimaryOption = [
     "primary-multicolumn"
 ];
 
-export const allowedFigureTypesForTCM = ['image', 'table', 'mathImage', 'audio', 'video', 'codelisting', 'authoredtext']
+export const allowedFigureTypesForTCM = ['image', 'table', 'mathImage', 'audio', 'video', 'codelisting', 'authoredtext', "interactive"]
+
+/*******************************GlossaryfootnotePopup ***************************/
+export const GLOSSARY = 'Glossary'
+/** Component source for element saprator */
+
+export const CITATION_SOURCE = 'CITATION';
+export const ASIDE_SOURCE = 'ASIDE';
+export const POETRY_SOURCE = 'POETRY';
+export const MULTICOLUMN_SOURCE = 'MULTICOLUMN';
+export const TEXT_SOURCE = 'TEXT';
+export const SOURCE_MAP = {
+    [CITATION_SOURCE]: { 'support': ['ELEMENT_CITATION'], 'notSupport': [] },
+    [ASIDE_SOURCE]: { 'support': [], 'notSupport': ['POETRY', 'STANZA', 'ASIDE', 'WORKED_EXAMPLE', 'CITATION', 'ELEMENT_CITATION'] },
+    [POETRY_SOURCE]: { 'support': ['STANZA'], 'notSupport': [] },
+    [MULTICOLUMN_SOURCE]: { 'support': [], 'notSupport': ['POETRY', 'STANZA', 'ASIDE', 'WORKED_EXAMPLE', 'CITATION', 'ELEMENT_CITATION'] },
+    [TEXT_SOURCE]: { 'support': [], 'notSupport': ['STANZA', 'ELEMENT_CITATION'] }
+};
+
+export const getPasteValidated = (sourceType, selectionType) => {
+    let validation = true;
+    if(sourceType in SOURCE_MAP) { 
+        if(SOURCE_MAP[sourceType].support.length > 0) {
+            if((SOURCE_MAP[sourceType].support).indexOf(selectionType) < 0) {
+                validation = false;
+            }
+        } else if(SOURCE_MAP[sourceType].notSupport.length > 0) {
+            if((SOURCE_MAP[sourceType].notSupport).indexOf(selectionType) >= 0) {
+                validation = false;
+            }
+        }
+        
+        return validation;
+    }
+}

@@ -2,7 +2,7 @@
 * Search and Filter Assessments Component of Learnosity Assessment
 */
 import React from 'react'
-import { TYPE_DISCIPLINE, TYPE_LEARNING_APP, DEFAULT_OPTION } from './DropdownConstants.js';
+import { DEFAULT_OPTION } from './DropdownConstants.js';
 import { hasReviewerRole } from '../../constants/utility.js';
 export const Dropdown = (props) => {
 

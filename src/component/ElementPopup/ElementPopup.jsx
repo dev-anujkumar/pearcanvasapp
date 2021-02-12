@@ -45,7 +45,7 @@ class ElementPopup extends React.Component {
     
     renderSlate =()=>{
         const { element, index, slateLevelData } = this.props
-        const sUrn = findKey(slateLevelData, (slate) => (slate.type === "manifest" || slate.type === "chapterintro"))
+        const sUrn = findKey(slateLevelData, (slate) => (slate.type === "manifest" || slate.type === "chapterintro" ||  slate.type ==="titlepage"))
         const eUrn = slateLevelData[sUrn] && slateLevelData[sUrn].contentUrn
         config.tempSlateManifestURN = sUrn
         config.tempSlateEntityURN = eUrn
@@ -111,6 +111,7 @@ class ElementPopup extends React.Component {
                             elementId = {this.props.elementId}
                             popupField = "formatted-title"
                             createPopupUnit = {this.createPopupUnit}
+                            handleAudioPopupLocation = {this.props.handleAudioPopupLocation}
                         />
                         <TinyMceEditor permissions = {this.props.permissions} 
                             openGlossaryFootnotePopUp = {this.props.openGlossaryFootnotePopUp} 
@@ -130,6 +131,7 @@ class ElementPopup extends React.Component {
                             elementId = {this.props.elementId} 
                             popupField = "formatted-subtitle" 
                             createPopupUnit = {this.createPopupUnit}
+                            handleAudioPopupLocation = {this.props.handleAudioPopupLocation}
                         />
                     </header>
                     <div className="pearson-component pu"  data-uri="" data-type="pu" data-width="600" data-height="399" ref={this.popupBorderRef}>
@@ -150,6 +152,7 @@ class ElementPopup extends React.Component {
                                     elementId = {this.props.elementId}
                                     popupField = "postertextobject" 
                                     createPopupUnit = {this.createPopupUnit}
+                                    handleAudioPopupLocation = {this.props.handleAudioPopupLocation}
                                 />
                             </a>
                         }

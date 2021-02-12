@@ -35,6 +35,9 @@
     color: #000000 !important;
 }
 
+div.mce-resizehandle{
+    z-index: 0 !important;
+}
 .element-container p.paragraphNumeroUno{
     margin-top: 0.5em !important;
     margin-bottom: 0.5em !important;

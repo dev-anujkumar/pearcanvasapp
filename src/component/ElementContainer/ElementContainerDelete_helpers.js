@@ -28,7 +28,8 @@ export const onDeleteSuccess = (params) => {
         index,
         poetryData,
         cutCopyParentUrn,
-        fetchSlateData
+        fetchSlateData,
+        showHideObj
     } = params
 
     const activeEditorId = tinymce && tinymce.activeEditor && tinymce.activeEditor.id
@@ -47,7 +48,8 @@ export const onDeleteSuccess = (params) => {
         contentUrn,
         index,
         poetryData,
-        cutCopyParentUrn
+        cutCopyParentUrn,
+        showHideObj
     }
     prepareTCMSnapshotsForDelete(tcmDeleteArgs)
 
@@ -184,19 +186,20 @@ export const onSlateApproved = (currentSlateData, dispatch, fetchSlateData) => {
 export const prepareTCMSnapshotsForDelete = (params) => {
     const {
         deleteParentData,
-        deleteElemData,
         type,
         parentUrn,
         asideData,
         contentUrn,
         index,
         poetryData,
-        cutCopyParentUrn
+        cutCopyParentUrn,
+        showHideObj
     } = params
 
     const deleteBodymatter = cutCopyParentUrn && cutCopyParentUrn.slateLevelData ? deleteParentData[cutCopyParentUrn.sourceSlateManifestUrn].contents.bodymatter :deleteParentData[config.slateManifestURN].contents.bodymatter;
     if (elementTypeTCM.indexOf(type) !== -1 || containerType.indexOf(type) !== -1) {
-        const wipData = fetchElementWipData(deleteBodymatter, index, type, contentUrn, "delete")
+        const showHideCondition = showHideObj?.currentElement?.contentUrn === contentUrn && type !== "showhide"
+        const wipData = showHideCondition ? showHideObj.currentElement : fetchElementWipData(deleteBodymatter, index, type, contentUrn, "delete")
         const containerElement = {
             asideData,
             parentUrn,
@@ -204,13 +207,13 @@ export const prepareTCMSnapshotsForDelete = (params) => {
             parentElement: wipData && wipData.type == 'popup' ? wipData : undefined,
             metaDataField: wipData && wipData.type == 'popup' && wipData.popupdata['formatted-title'] ? 'formattedTitle' : undefined,
             sectionType : wipData && wipData.type == 'popup' ? 'postertextobject' : undefined,
-            cutCopyParentUrn
+            cutCopyParentUrn,
+            showHideObj: showHideCondition ? showHideObj : null
         }
         const deleteData = {
             wipData,
             currentParentData: deleteParentData,
             bodymatter: deleteBodymatter,
-            newVersionUrns: deleteElemData,
             index
         }
         tcmSnapshotsForDelete(deleteData, type, containerElement)
@@ -226,7 +229,7 @@ export const prepareTCMSnapshotsForDelete = (params) => {
  * @param {Function} dispatch to dispatch tcmSnapshots
 */
 export const tcmSnapshotsForDelete = async (elementDeleteData, type, containerElement) => {
-    let {cutCopyParentUrn} =  containerElement
+    let {cutCopyParentUrn,parentUrn} =  containerElement
     if (elementDeleteData.wipData.hasOwnProperty("figuretype") && !allowedFigureTypesForTCM.includes(elementDeleteData.wipData.figuretype)) {
         return false
     }
@@ -241,9 +244,9 @@ export const tcmSnapshotsForDelete = async (elementDeleteData, type, containerEl
     if(config.isPopupSlate){
         currentSlateData.popupSlateData = elementDeleteData.currentParentData[config.tempSlateManifestURN]
     }
-    if ((parentType.indexOf(type) === -1)) {
+    if ((parentType.indexOf(type) === -1) || (type === "element-aside" && parentUrn && elementDeleteData.wipData.type === "manifest") ) {
         versionStatus = fetchManifestStatus(elementDeleteData.bodymatter, containerElement, type);
     }
     containerElement = await checkContainerElementVersion(containerElement, versionStatus, currentSlateData);
-    prepareTcmSnapshots(elementDeleteData.wipData, actionStatus, containerElement, type,elementDeleteData.newVersionUrns,elementDeleteData.index);
+    prepareTcmSnapshots(elementDeleteData.wipData, actionStatus, containerElement, type,elementDeleteData.index);
 }

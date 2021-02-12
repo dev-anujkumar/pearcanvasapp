@@ -5,7 +5,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import '../../../../../styles/AssessmentSlateCanvas/assessmentCiteTdx/RootCiteTdxComponent.css';
 import './CiteTdxPagination.css';
-import { getCiteTdxData } from '../../Actions/CiteTdxActions'
+import { getCiteTdxData,setAssessmentFilterParams } from '../../Actions/CiteTdxActions'
 import { CITE,TDX } from '../../../AssessmentSlateConstants.js'
 class CiteTdxFooter extends Component {
 
@@ -26,9 +26,8 @@ class CiteTdxFooter extends Component {
         }
         let parentPageNo = this.state.currentPage
         this.props.addCiteTdxFunction(obj, parentPageNo);
-        if(this.props.openedFrom !== "singleSlateAssessment"){
-            this.props.closeWindowAssessment();
-            this.props.resetPage(true);
+        if (this.props.openedFrom !== "singleSlateAssessment") {
+            this.handleClose('save', { assessmentId: obj.id, title: obj.title });
         }
         if(this.props.isInnerComponent){
             console.count("singleSlateAssessment")
@@ -55,9 +54,13 @@ class CiteTdxFooter extends Component {
         }     
     }
 
-    handleClose = () => {
+    handleClose = (action, citeTdxObj = {}) => {
         this.props.resetPage(true);
         this.props.closeWindowAssessment();
+        if (this.props.openedFrom == 'slateAssessment') {
+            const dataToSend = action === 'save' ? citeTdxObj : this.props.assessmentSlateObj;
+            this.props.setCiteTdxFilterData(this.props.assessmentType, dataToSend);
+        }
     }
     handleFocus = (event) => {
        event.stopPropagation();
@@ -65,13 +68,13 @@ class CiteTdxFooter extends Component {
 
     render() {
         const { currentPage } = this.state;
-        const { filterUUID } = this.props;
+        const { filterUUID, searchUuidVal } = this.props;
         const { citeApiData, tdxApiData, mmiApiData, isLoading } = this.props;
         const apiData = (this.props.assessmentType === CITE) ? citeApiData : (this.props.assessmentType === TDX) ? tdxApiData : mmiApiData;
         let hideNavigationPrevious = (currentPage <= 1) ? 'hideNavigation' : '';
         let hideNavigationNext = ((apiData && apiData.assessments && apiData.assessments.length == 0) || (apiData && apiData.assessments && apiData.assessments.length < 25)) ? 'hideNavigation' : '';
         let disableClick = (isLoading) ? 'disableClick' : '';
-        let rmNavOnFilter = (filterUUID == undefined || filterUUID == '') ? '' : 'hideNavigation';
+        let rmNavOnFilter = (filterUUID == undefined || filterUUID == '') || (searchUuidVal == undefined || searchUuidVal == '')? '' : 'hideNavigation';
         let addClass;
         if((this.props.openedFrom === "slateAssessment" || this.props.openedFrom === "singleSlateAssessment" ) && Object.keys(this.props.currentAssessmentSelected).length > 0 ){
             addClass="add-button-enabled";
@@ -92,7 +95,7 @@ class CiteTdxFooter extends Component {
                 </div>}
                 {/** @description Footer right Section code starts here ---- */}
                 <div className="assesmentfooter-inner">
-                    <button className="assessmentpopup cancel-assessment noSelect" onClick={this.handleClose} onFocus={this.handleFocus}>CANCEL</button>
+                    <button className="assessmentpopup cancel-assessment noSelect" onClick={()=>this.handleClose('close')} onFocus={this.handleFocus}>CANCEL</button>
                     <button className={`assessmentpopup add-assessment noSelect ${addClass}`} onClick={this.sendCiteTdxAssessment} onFocus={this.handleFocus}>SELECT</button>
                 </div>
             </div>
@@ -114,6 +117,7 @@ const mapStateToProps = (state) => {
 
 const mapActionToProps = {
     getCiteTdxData: getCiteTdxData,
+    setAssessmentFilterParams:setAssessmentFilterParams
 }
 
 export default connect(

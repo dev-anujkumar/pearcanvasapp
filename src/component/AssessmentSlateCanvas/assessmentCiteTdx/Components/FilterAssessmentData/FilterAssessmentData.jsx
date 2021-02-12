@@ -4,7 +4,7 @@
 import React, { Component } from 'react';
 import '../../../../../styles/AssessmentSlateCanvas/assessmentCiteTdx/RootCiteTdxComponent.css';
 import { elmNavigateBack } from './../../../../../images/ElementButtons/ElementButtons.jsx';
-import { filterCiteTdxData, getCiteTdxData, setCurrentCiteTdx, setCurrentInnerCiteTdx, specialCharacterDecode } from './../../Actions/CiteTdxActions.js'
+import { filterCiteTdxData, getCiteTdxData, setCurrentCiteTdx, setCurrentInnerCiteTdx, specialCharacterDecode, setAssessmentFilterParams } from './../../Actions/CiteTdxActions.js'
 import { connect } from 'react-redux';
 
 class FilterAssessmentData extends Component {
@@ -25,7 +25,7 @@ class FilterAssessmentData extends Component {
         e.preventDefault();
         this.props.setCurrentCiteTdx({});
         this.props.setCurrentInnerCiteTdx({});
-        this.props.AssessmentSearchTitle(this.state.searchAssessment, this.state.filterUUID);
+        this.props.setAssessmentFilterParams(this.state.searchAssessment, this.state.filterUUID);
         this.props.resetPage(true, true);
         if (this.state.filterUUID !== undefined && this.state.filterUUID != '') {
             this.props.filterCiteTdxData(this.props.assessmentType, this.state.searchAssessment, this.state.filterUUID);
@@ -121,7 +121,8 @@ const mapActionToProps = {
     filterCiteTdxData: filterCiteTdxData,
     getCiteTdxData: getCiteTdxData,
     setCurrentCiteTdx: setCurrentCiteTdx,
-    setCurrentInnerCiteTdx: setCurrentInnerCiteTdx
+    setCurrentInnerCiteTdx: setCurrentInnerCiteTdx,
+    setAssessmentFilterParams:setAssessmentFilterParams
 }
 
 export default connect(null, mapActionToProps)(FilterAssessmentData);

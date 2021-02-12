@@ -16,7 +16,8 @@ jest.mock('../../../src/constants/utility.js', () => ({
 }))
 jest.mock('../../../src/component/TcmSnapshots/TcmSnapshots_Utility.js', () => ({
     tcmSnapshotsForUpdate: jest.fn(),
-    checkContainerElementVersion: jest.fn()
+    checkContainerElementVersion: jest.fn(),
+    fetchElementWipData: jest.fn()
 }))
 let cb = new stub();
 jest.setTimeout(10000);
@@ -314,5 +315,24 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             expect(spyonSlateApproved).toHaveReturnedWith(false)
             spyonSlateApproved.mockClear()
         })
+        it("prepareTCMSnapshotsForDelete", () => {
+            const args = {
+                deleteParentData : slateLevelData.slateLevelData,
+                type : "element-authoredtext",
+                parentUrn : null,
+                asideData : null,
+                contentUrn : 'urn:pearson:work:11',
+                index : 0,
+                poetryData : null,
+                cutCopyParentUrn : null,
+                showHideObj : {}
+            }
+           
+            const spyprepareTCMSnapshotsForDelete = jest.spyOn(deleteHelpers, "prepareTCMSnapshotsForDelete")
+            deleteHelpers.prepareTCMSnapshotsForDelete(args)
+            expect(spyprepareTCMSnapshotsForDelete).toHaveBeenCalled()
+            expect(spyprepareTCMSnapshotsForDelete).toHaveReturnedWith(undefined)
+            spyprepareTCMSnapshotsForDelete.mockClear()
+        })  
     })
 })

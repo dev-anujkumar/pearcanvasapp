@@ -35,7 +35,7 @@ export const ERROR_MESSAGE_ELM_INTERACTIVES = "No Results Found"
 /*--------------- Elm Component Constants -------------------*/
 export const FolderLabelList = {
     'C':['chapter'],
-    'M':['module'],
+    'M':['module','appendix'],
     'P':['part'],
     'S':['section'],
     'AS':['assessment'],
@@ -57,3 +57,10 @@ export const PRIMARY_SINGLE_ASSESSMENT = 'primary-single-assessment'
 export const SECONDARY_SINGLE_ASSESSMENT = 'secondary-single-assessment-'
 export const PRIMARY_SLATE_ASSESSMENT = 'primary-assessment-slate'
 export const SECONDARY_SLATE_ASSESSMENT = 'secondary-assessment-'
+
+export const ASSESSMENT_PICKER_OPENERS = Object.freeze({
+    FULL_ASSESSMENT:'slateAssessment',
+    SINGLE_ASSESSMENT: 'singleAssessment',
+    SINGLE_ASSESSMENT_OUTER:'singleSlateAssessment',
+    SINGLE_ASSESSMENT_INNER:'singleSlateAssessmentInner'
+})

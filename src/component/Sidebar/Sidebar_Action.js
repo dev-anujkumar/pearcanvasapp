@@ -14,7 +14,7 @@ import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { POD_DEFAULT_VALUE, allowedFigureTypesForTCM } from '../../constants/Element_Constants'
 import { prepareTcmSnapshots,checkContainerElementVersion,fetchManifestStatus,fetchParentData } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 let imageSource = ['image','table','mathImage'],imageDestination = ['primary-image-figure','primary-image-table','primary-image-equation']
-const elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza', 'figure'];
+const elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza', 'figure', "interactive"];
 
 export const convertElement = (oldElementData, newElementData, oldElementInfo, store, indexes, fromToolbar,showHideObj) => (dispatch,getState) => {
     let { appStore } =  getState();
@@ -31,7 +31,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
 
     let inputSubTypeEnum = inputSubType['enum'],
     inputPrimaryOptionEnum = inputPrimaryOptionType['enum']
-    
+
     // Output Element
     const outputPrimaryOptionsList = elementTypes[newElementData['elementType']],
         outputPrimaryOptionType = outputPrimaryOptionsList[newElementData['primaryOption']]
@@ -47,6 +47,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                 oldElementData.figuredata.srctype=outputSubType['wipValue']
             }
             if (oldElementData.figuredata.interactivetype) {
+                oldElementFigureData = JSON.parse(JSON.stringify(oldElementData.figuredata));
                 oldElementData.figuredata = {...figureDataBank[newElementData['secondaryOption']]}
                 oldElementData.html.postertext = ""; /** [BG-2676] - Remove postertext on Conversion */
                 if (oldElementData.figuredata && oldElementData.figuredata.postertext && oldElementData.figuredata.postertext.text) {
@@ -215,8 +216,8 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         let currentParentData = JSON.parse(JSON.stringify(parentData));
         let currentSlateData = currentParentData[config.slateManifestURN];
         /** [PCAT-8289] -------------------------------- TCM Snapshot Data handling ----------------------------------*/
-        if (elementType.indexOf(oldElementData.type) !== -1 && (showHideObj == undefined || showHideObj == "")) {
-            if(oldElementData && oldElementData.figuretype == "codelisting"){
+        if (elementType.indexOf(oldElementData.type) !== -1) {
+            if(oldElementData && (oldElementData.figuretype == "codelisting" || oldElementData.figuretype == "interactive")){
                 oldElementData.figuredata = oldElementFigureData
             }           
             let elementConversionData ={
@@ -406,7 +407,7 @@ function prepareDataForConversionTcm(updatedDataID, getState, dispatch,versionid
         })
     }
     else {
-        if(tcmData && indexes.length > 0 && updatedDataID){
+        if(tcmData && tcmData[indexes] && indexes.length > 0 && updatedDataID){
         tcmData[indexes]["elemURN"] = updatedDataID
         tcmData[indexes]["txCnt"] = tcmData[indexes]["txCnt"] !== 0 ? tcmData[indexes]["txCnt"] : 1
         tcmData[indexes]["feedback"] = tcmData[indexes]["feedback"] !== null ? tcmData[indexes]["feedback"] : null
@@ -445,7 +446,7 @@ export const tcmSnapshotsForConversion = async (elementConversionData,indexes,ap
     let convertAppStore = JSON.parse(JSON.stringify(appStore.slateLevelData));
     let convertSlate = convertAppStore[config.slateManifestURN];
     let convertBodymatter = convertSlate.contents.bodymatter;
-    let convertParentData = fetchParentData(convertBodymatter,indexes);
+    let convertParentData = fetchParentData(convertBodymatter,indexes, appStore.showHideObj);
     let versionStatus = fetchManifestStatus(convertBodymatter, convertParentData,response.type);
     /** latest version for WE/CE/PE/AS/2C*/
     convertParentData = await checkContainerElementVersion(convertParentData, versionStatus, currentSlateData)
@@ -455,9 +456,9 @@ export const tcmSnapshotsForConversion = async (elementConversionData,indexes,ap
         let actionStatusVersioning = Object.assign({}, actionStatus);
         actionStatusVersioning.action="create"
         actionStatusVersioning.status ="accepted"
-        prepareTcmSnapshots(oldElementData, actionStatusVersioning, convertParentData, "","",indexes);
+        prepareTcmSnapshots(oldElementData, actionStatusVersioning, convertParentData, "",indexes);
     }
-    prepareTcmSnapshots(response,actionStatus, convertParentData,"","",indexes);
+    prepareTcmSnapshots(response,actionStatus, convertParentData,"",indexes);
 }
 
 const prepareAssessmentDataForConversion = (oldElementData, format) => {
@@ -470,6 +471,8 @@ const prepareAssessmentDataForConversion = (oldElementData, format) => {
         usagetype : usageType,
         assessmentid : "",
         assessmentitemid : "",
+        assessmenttitle: "",
+        assessmentitemtitle: "",
         assessmentformat : assessmentFormat,
         assessmentitemtype : assessmentItemType,
         schema: "http://schemas.pearson.com/wip-authoring/assessment/1#/definitions/assessment"

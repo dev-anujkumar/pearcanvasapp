@@ -5,16 +5,16 @@ import thunk from 'redux-thunk';
 const middlewares = [thunk];
 import { Provider } from 'react-redux';
 import LearningTool from '../../../../src/component/AssessmentSlateCanvas/learningTool/learningTool';
-import { tempFiguresForResults, disciplines, selectedResult, learningSystemList } from '../../../../fixtures/learningTool'
+import { tempFiguresForResults, disciplines, selectedResult, apiList } from '../../../../fixtures/learningTool'
 
 const mockStore = configureMockStore(middlewares);
 const store = mockStore({
     learningToolReducer: {
         apiResponse: tempFiguresForResults,
         showLTBody: true,
-        learningSystems: learningSystemList,
+        learningSystems: apiList,
         linkButtonDisable: true,
-        apiResponseForDis: disciplines,
+        apiResponseForDis: disciplines.options,
         showDisFilterValues: true,
         selectedResultFormApi: selectedResult
     }

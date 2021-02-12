@@ -22,6 +22,7 @@ export default {
     INTERACTIVE_EXTERNAL_LINK : "external-link",
     INTERACTIVE_SHOW_HIDE : "showhide",
     INTERACTIVE_NARRATIVE_LINK : "narrative-link",
+    SMARTLINK_ALFRESCO_TYPES : ["website", "pdf", "3rd party interactive", "metrodigi interactive", "table", "mdpopup"],
 /****************Container Element************************ */  
     ELEMENT_WORKEDEXAMPLE: "workedexample",
     ELEMENT_ASIDE: "element-aside",
@@ -71,6 +72,7 @@ export const LABELS = {
     "mmi-elm":"ELM"
 }
 
-export const elementTypeTCM = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza',  'popup', 'figure'];
-export const containerType = ['element-aside', 'manifest', 'citations', 'poetry', 'groupedcontent','popup'];
-export const allowedFigureTypesForTCM = ['image', 'table', 'mathImage', 'audio', 'video', 'codelisting', 'authoredtext']
+export const elementTypeTCM = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza',  'popup', 'figure','showhide'];
+export const containerType = ['element-aside', 'manifest', 'citations', 'poetry', 'groupedcontent','popup', 'showhide'];
+export const allowedFigureTypesForTCM = ['image', 'table', 'mathImage', 'audio', 'video', 'codelisting', 'authoredtext', "interactive"]
+export const allowedParentType = ['popup', 'showhide']

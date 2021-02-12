@@ -12,12 +12,12 @@ import RootCiteTdxComponent from './assessmentCiteTdx/RootCiteTdxComponent.jsx';
 import config from '../../config/config';
 import './../../styles/AssessmentSlateCanvas/AssessmentSlateCanvas.css';
 import { sendDataToIframe, hasReviewerRole, defaultMathImagePath } from '../../constants/utility.js';
-import { TAXONOMIC_ID_LEARNING_SYSTEM, TAXONOMIC_ID_DISCIPLINES } from './learningTool/learningToolUtility.js';
+import { TAXONOMIC_ID_DISCIPLINES } from './learningTool/learningToolUtility.js';
 import { assessmentFormats, CITE, TDX, PUF, LEARNING_TEMPLATE, LEARNOSITY, ELM_UPDATE_MSG, ELM_UPDATE_POPUP_HEAD, ELM_UPDATE_BUTTON } from './AssessmentSlateConstants.js';
 /** ----- Import - Action Creators ----- */
-import { setCurrentCiteTdx, assessmentSorting } from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
-import { closeLtAction, openLtAction, openLTFunction } from './learningTool/learningToolActions';
-import { checkAssessmentStatus, updateAssessmentVersion } from './AssessmentActions/assessmentActions.js';
+import { setCurrentCiteTdx, assessmentSorting, setAssessmentFilterParams } from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
+import { closeLtAction, openLtAction, openLTFunction, fetchLearningTemplates } from './learningTool/learningToolActions';
+import { fetchAssessmentMetadata, updateAssessmentVersion, fetchAssessmentVersions } from './AssessmentActions/assessmentActions.js';
 /**
 * Module | AssessmentSlateData
 * description | This is the child Component of Assessment Slate
@@ -48,9 +48,11 @@ class AssessmentSlateData extends Component {
         this.props.isLOExist(newMessage);
         if (this.props.model && this.props.model.elementdata && this.props.model.elementdata.assessmentid) {
             this.sendDataAssessment(this.props);
+            const assessmentFormat = this.props.model && this.props.setAssessmentFormat(this.props.model)
             this.setState({
-                activeAssessmentType: this.props.model && this.props.setAssessmentFormat(this.props.model),
-            })
+                activeAssessmentType: assessmentFormat
+            });
+           this.setCiteTdxFilterData(assessmentFormat,this.props.assessmentSlateObj);
         }
         document.addEventListener("mousedown", this.handleClickOutside);
     }
@@ -59,12 +61,13 @@ class AssessmentSlateData extends Component {
         if (this.props.getAssessmentDataPopup !== prevProps.getAssessmentDataPopup) {
             this.sendDataAssessment(this.props);
         }
+        const { activeAssessmentType } = this.state;
         const { assessmentSlateObj, assessmentReducer } = this.props;
-        if (this.state.activeAssessmentType == PUF &&
+        if ((activeAssessmentType == PUF || activeAssessmentType == LEARNOSITY) &&
             ((assessmentSlateObj.title) && (assessmentReducer && (assessmentReducer[assessmentSlateObj.assessmentId] && assessmentReducer[assessmentSlateObj.assessmentId].assessmentTitle)))) {
-            let prevPropsTitle = prevProps && prevProps.assessmentReducer && prevProps.assessmentReducer[assessmentSlateObj.assessmentId] && prevProps.assessmentReducer[assessmentSlateObj.assessmentId].assessmentTitle
-            if ((assessmentSlateObj.title != (assessmentReducer[assessmentSlateObj.assessmentId].assessmentTitle))
-                && (prevPropsTitle != assessmentReducer[assessmentSlateObj.assessmentId].assessmentTitle)) {
+            const prevPropsTitle = prevProps && prevProps.assessmentReducer && prevProps.assessmentReducer[assessmentSlateObj.assessmentId] && prevProps.assessmentReducer[assessmentSlateObj.assessmentId].assessmentTitle
+            const newPropsTitle = assessmentReducer[assessmentSlateObj.assessmentId].assessmentTitle
+            if ((assessmentSlateObj.title != newPropsTitle) && (prevPropsTitle != newPropsTitle)) {
                 this.updateElmOnSaveEvent(this.props);
             }
         }
@@ -72,6 +75,8 @@ class AssessmentSlateData extends Component {
 
     componentWillUnmount() {
        document.removeEventListener("mousedown", this.handleClickOutside);
+       this.props.setCurrentCiteTdx({});
+       this.props.setAssessmentFilterParams("", "");
     }
 
     /*** @description - Close Dropdown on body click
@@ -135,6 +140,19 @@ class AssessmentSlateData extends Component {
         this.setState({ searchTitle, filterUUID });
     }
 
+    setCiteTdxFilterData = (assessmentFormat, assessmentData) => {
+        if (assessmentFormat === CITE || assessmentFormat === TDX) {
+            const searchUUID = assessmentData.assessmentId.split(':')[3];
+            const selectedAssessment = {
+                name: assessmentData.title,
+                versionUrn: assessmentData.assessmentId
+            }
+            this.props.setCurrentCiteTdx(selectedAssessment);
+            this.AssessmentSearchTitle(assessmentData.title, searchUUID);
+            this.props.setAssessmentFilterParams(assessmentData.title, searchUUID);
+        }        
+    }
+
     /*** @description - This is the function to add CITE/TDX Asset to Assessment Slate 
     * @param citeTdxObj - The object contains data about CITE/TDX Assessment 
     */
@@ -144,7 +162,7 @@ class AssessmentSlateData extends Component {
 
     /*** @description - This function is to close CITE/TDX PopUp */
     closeWindowAssessment = () => {
-        this.props.setCurrentCiteTdx({});
+        // this.props.setCurrentCiteTdx({});
         this.setState({
             showCiteTdxComponent: false
         });
@@ -164,8 +182,18 @@ class AssessmentSlateData extends Component {
     * @param pufObj - The object contains data about Elm/Learnosity Assessment 
     */
     addPufAssessment = (pufObj) => {
-        this.props.addPufAssessment(pufObj, this.state.activeAssessmentType,'insert');
-        this.props.checkElmAssessmentStatus(pufObj.id,'fromAddElm');
+        let usageTypeList = this.props?.assessmentReducer?.usageTypeListData;
+        let dataToSend = pufObj;
+        if (pufObj?.calledFrom == 'createElm' && pufObj.usagetype) {
+            const updatedUsageType = usageTypeList && usageTypeList.find((type) => type.usagetype == pufObj.usagetype)
+            this.setState({
+                activeAssessmentUsageType: updatedUsageType ? updatedUsageType.label : this.state.activeAssessmentUsageType
+            });
+            dataToSend = { ...pufObj, usagetype: updatedUsageType ? updatedUsageType.label : this.state.activeAssessmentUsageType }
+        }
+        this.props.addPufAssessment(dataToSend, this.state.activeAssessmentType, 'insert');
+        const elmData = { targetId: pufObj.id }
+        this.props.checkElmAssessmentStatus('assessment', 'fromAddElm', elmData, {});
     }
 
     /*** @description This function is used to open Version update Popup */
@@ -203,20 +231,26 @@ class AssessmentSlateData extends Component {
         this.toggleUpdatePopup(false, event);
         this.showCanvasBlocker(false);
         let oldWorkUrn = this.props.assessmentSlateObj.assessmentId
-        await this.props.checkElmAssessmentStatus(this.props.assessmentReducer[this.props.assessmentSlateObj.assessmentId].latestWorkUrn, 'fromUpdate', this.props.assessmentSlateObj.assessmentId);
-        const { latestWorkUrn, assessmentTitle, prevLatestWorkUrn } = this.props.assessmentReducer[this.props.assessmentSlateObj.assessmentId]
-        const { latestVersionClean } = this.props.assessmentReducer[latestWorkUrn]
+        let oldReducerData = this.props.assessmentReducer[this.props.assessmentSlateObj.assessmentId]
+        oldReducerData.targetId = this.props.assessmentSlateObj.assessmentId;
+        await this.props.fetchAssessmentLatestVersion(oldReducerData.assessmentEntityUrn, 'assessmentUpdate', oldReducerData.createdDate, oldReducerData, {})
+        const latestReducerData = this.props.assessmentReducer[this.props.assessmentSlateObj.assessmentId]
+        const { latestVersion, secondLatestVersion } = latestReducerData;
+        const newVersion = (latestVersion && (latestVersion.status !== 'wip' || latestVersion.latestCleanVersion == false)) ? latestVersion : secondLatestVersion;
         let updatedElmObj = {
-            title: assessmentTitle,
+            id: this.props.assessmentSlateObj.assessmentId,
+            title: this.props.assessmentSlateObj.title,
             usagetype: this.state.activeAssessmentUsageType
         }
-        const updatedAssessmentID = latestVersionClean == true ? prevLatestWorkUrn : latestWorkUrn;
-        updatedElmObj.id = updatedAssessmentID
-        if (latestWorkUrn != this.props.assessmentSlateObj.assessmentId) {
-            updatedElmObj.title = this.props.assessmentReducer[latestWorkUrn].assessmentTitle
+        if (newVersion) {
+            updatedElmObj = {
+                id: newVersion.id,
+                title: latestVersion.title,
+                usagetype: this.state.activeAssessmentUsageType
+            }
         }
         this.props.addPufAssessment(updatedElmObj, this.state.activeAssessmentType, 'insert', () => {
-            this.props.updateAssessmentVersion(oldWorkUrn, updatedAssessmentID);
+            this.props.updateAssessmentVersion(oldWorkUrn, updatedElmObj.id);
         });
         this.props.handleCanvasBlocker.disableHeader(false);
         this.props.handleCanvasBlocker.hideTocBlocker(false);
@@ -269,7 +303,7 @@ class AssessmentSlateData extends Component {
 
     /*** @description - This function is to change the learning system */
     changeLearningApp() {
-        this.props.openLTFunction(TAXONOMIC_ID_LEARNING_SYSTEM);
+        this.props.fetchLearningTemplates();
         this.props.openLTFunction(TAXONOMIC_ID_DISCIPLINES);
         this.props.openLtAction();
         this.setState({
@@ -448,7 +482,7 @@ class AssessmentSlateData extends Component {
         if ((activeAssessmentType === PUF || activeAssessmentType === LEARNOSITY) && showElmComponent === true) {
             return <RootElmComponent activeAssessmentType={activeAssessmentType} closeElmWindow={() => this.closeElmWindow()} activeUsageType={activeAssessmentUsageType} elementType={'assessment'} addPufFunction={this.addPufAssessment}/>
         } else if ((activeAssessmentType === CITE || activeAssessmentType === TDX) && showCiteTdxComponent === true) {
-            return <RootCiteTdxComponent activeAssessmentType={activeAssessmentType} openedFrom={'slateAssessment'} closeWindowAssessment={() => this.closeWindowAssessment()} assessmentType={activeAssessmentType} addCiteTdxFunction={this.addCiteTdxAssessment} usageTypeMetadata={activeAssessmentUsageType} parentPageNo={this.state.parentPageNo} isReset={this.state.isReset} resetPage={this.resetPage} AssessmentSearchTitle={this.AssessmentSearchTitle} searchTitle={this.state.searchTitle} filterUUID={this.state.filterUUID} />
+            return <RootCiteTdxComponent openedFrom={'slateAssessment'} closeWindowAssessment={() => this.closeWindowAssessment()} assessmentType={activeAssessmentType} addCiteTdxFunction={this.addCiteTdxAssessment} usageTypeMetadata={activeAssessmentUsageType} parentPageNo={this.state.parentPageNo} isReset={this.state.isReset} resetPage={this.resetPage} searchTitle={this.state.searchTitle} filterUUID={this.state.filterUUID} setCiteTdxFilterData={this.setCiteTdxFilterData} assessmentSlateObj={assessmentSlateObj}/>
         } else if (changeLearningData && activeAssessmentType === LEARNING_TEMPLATE) {
             return <LearningTool closePopUp={this.closeLTLAPopUp} linkLearningApp={this.linkLearningApp} closelearningPopup={this.closelearningPopup} />
         } else if (getAssessmentData && getAssessmentDataPopup === false && changeLearningData === false) {
@@ -556,7 +590,7 @@ class AssessmentSlateData extends Component {
                 </div>
             </div>
             {this.setUsageType(assessmentUsageType)}
-            {this.state.activeAssessmentType == PUF && this.showElmVersionStatus()}
+            {(this.state.activeAssessmentType == PUF || this.state.activeAssessmentType == LEARNOSITY) && this.showElmVersionStatus()}
         </div>
         return assessmentSlate;
     }
@@ -590,8 +624,11 @@ const mapActionToProps = {
     openLtAction: openLtAction,
     closeLtAction: closeLtAction,
     openLTFunction: openLTFunction,
-    checkElmAssessmentStatus : checkAssessmentStatus,
-    updateAssessmentVersion: updateAssessmentVersion
+    checkElmAssessmentStatus : fetchAssessmentMetadata,
+    updateAssessmentVersion: updateAssessmentVersion,
+    fetchAssessmentLatestVersion:fetchAssessmentVersions,
+    fetchLearningTemplates:fetchLearningTemplates,
+    setAssessmentFilterParams:setAssessmentFilterParams
 }
 
 export default connect(

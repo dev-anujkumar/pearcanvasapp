@@ -15,7 +15,6 @@ import {
     FETCH_SLATE_DATA,
     SET_PARENT_NODE,
     ERROR_POPUP,
-    GET_TCM_RESOURCES,
     PAGE_NUMBER_LOADER,
     WIRIS_ALT_TEXT_POPUP
 
@@ -26,11 +25,11 @@ import { HideLoader, ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 import * as slateWrapperConstants from "./SlateWrapperConstants"
-import { onPasteSuccess, prepareDataForTcmCreate } from "./slateWrapperAction_helper"
+import { onPasteSuccess, checkElementExistence, prepareDataForTcmCreate } from "./slateWrapperAction_helper"
 
 import { SET_SELECTION } from './../../constants/Action_Constants.js';
 import tinymce from 'tinymce'
-
+import SLATE_CONSTANTS  from '../../component/ElementSaprator/ElementSepratorConstants';
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
 };
@@ -40,19 +39,20 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
     let  popupSlateData = getState().appStore.popupSlateData
     localStorage.setItem('newElement', 1);
     let slateEntityUrn = parentUrn && parentUrn.contentUrn || popupSlateData && popupSlateData.contentUrn || poetryData && poetryData.contentUrn || config.slateEntityURN
-
     let _requestData = {
         "projectUrn": config.projectUrn,
         "slateEntityUrn":slateEntityUrn,
         "index": outerAsideIndex ? outerAsideIndex : index,
         "type": type
     };
-
     if (type == "LO") {
         _requestData.loref = loref ? loref : ""
     } 
     else if (type == 'ELEMENT_CITATION') {
         _requestData.parentType = "citations"
+    }
+    else if (type && type === "LO_LIST" && config.parentLabel && config.slateType && config.parentLabel === 'part' && config.slateType === SLATE_CONSTANTS.CONTAINER_INTRO) {
+        _requestData.isPart = true
     }
     else if (parentUrn && parentUrn.elementType === 'group') {
         _requestData["parentType"] = "groupedcontent"
@@ -68,9 +68,9 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
             }
         }
     ).then(async createdElemData => {
-        sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         const parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
+        sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         let currentSlateData = newParentData[config.slateManifestURN];
 
         /** [PCAT-8289] ---------------------------- TCM Snapshot Data handling ------------------------------*/
@@ -353,7 +353,6 @@ export const handleSplitSlate = (newSlateObj) => (dispatch, getState) => {
     let oldSlateBodymatterLocal = slateLevelData.contents.bodymatter;
     oldSlateBodymatterLocal.splice(splitIndex)
     slateLevelData.contents.bodymatter = oldSlateBodymatterLocal;
-
     return axios.put(
         `${config.REACT_APP_API_URL}v1/slate/split/${config.projectUrn}/${config.slateEntityURN}/${splitIndex}`,
         JSON.stringify({ slateDataList }),
@@ -364,6 +363,22 @@ export const handleSplitSlate = (newSlateObj) => (dispatch, getState) => {
             }
         }
     ).then(res => {
+        // Perform TCM splitSlate
+        axios({
+            method: 'patch',
+            url: '/cypress/trackchanges-srvr/splitslatetcm',
+            timeout: 1000,
+            headers: { "Content-Type": "application/json", "PearsonSSOSession": config.ssoToken },
+            data: {
+                "splitSlateDurn": config.projectUrn, "splitSlateEurn": newSlateObj.entityUrn
+            }
+        })
+        .then(response => {
+            console.log("TCM split slate API success : ", response)
+        })
+        .catch(error => {
+            console.log("TCM split slate API error : ", error)
+        })
         // Update selection store data after split
         let selection = getState().selectionReducer.selection || {};
         if(Object.keys(selection).length > 0 && selection.sourceSlateEntityUrn === config.slateEntityURN && selection.sourceElementIndex >= splitIndex) {
@@ -650,26 +665,101 @@ export const pasteElement = (params) => async (dispatch, getState) => {
 
     if(Object.keys(selection).length > 0 && 'element' in selection) {
         const {
-            index
+            index,
+            parentUrn,
+            asideData,
+            poetryData
         } = params
         config.currentInsertedIndex = index;
         localStorage.setItem('newElement', 1);
+
+        let slateEntityUrn = config.slateEntityURN;
+        if(parentUrn && 'contentUrn' in parentUrn) {
+            slateEntityUrn = parentUrn.contentUrn;
+        } else if(poetryData && 'contentUrn' in poetryData) {
+            slateEntityUrn = poetryData.contentUrn;
+        }
+
+        let cutIndex = index;
+        let elmExist = false;
+        if(slateEntityUrn === config.slateEntityURN && selection.sourceSlateEntityUrn === config.slateEntityURN && selection.operationType === 'cut') {
+            elmExist = await checkElementExistence(config.slateEntityURN, selection.element.id);
+            if(cutIndex > selection.sourceElementIndex) {
+                cutIndex -= elmExist ? 1 : 0;
+            }
+        }
+
+        if(slateEntityUrn !== config.slateEntityURN && selection.sourceEntityUrn === slateEntityUrn && selection.operationType === 'cut') {
+            elmExist = await checkElementExistence(config.slateEntityURN, selection.element.id);
+            let elmIndexes = selection.sourceElementIndex.split('-');
+            let sourceElementIndex = elmIndexes[elmIndexes.length -1];
+            if(cutIndex > sourceElementIndex) {
+                cutIndex -= elmExist ? 1 : 0;
+            }
+        }
         
-    
+        let elmHtml = ('html' in selection.element) ? selection.element.html : {};
+        let elmType = ['figure'];
+        let elmSubtype = ['assessment'];
+        if(elmType.indexOf(selection.element.type) >= 0 && 
+            'figuretype' in selection.element && elmSubtype.indexOf(selection.element.type) >= 0) {
+            if(!('html' in selection.element)) {
+                elmHtml = { "title": selection.element.title.text || "" }
+            }
+        }
+        
+        if(selection.operationType === 'copy' && 'html' in selection.element && 'text' in  selection.element.html) {
+            let htmlText = (selection.element.html.text);
+            htmlText = htmlText.replace(/(\"page-link-[0-9]{1,2}-[0-9]{2,4}\")/gi, () => `"page-link-${Math.floor(Math.random() * 100)}-${Math.floor(Math.random() * 10000)}"`);
+            selection.element.html.text = htmlText;
+        }
+
         let _requestData = {
             "content": [{
                 "type": selection.element.type,
-                "index": index,
+                "index": cutIndex,
                 "inputType": selection.inputType,
                 "inputSubType": selection.inputSubType,
                 "schema": selection.element.schema,
-                "html": selection.element.html,
-                "slateVersionUrn": config.slateManifestURN
+                "html": elmHtml,
+                "slateVersionUrn": selection.sourceSlateManifestUrn,
+                "id": selection.element.id,
+                "elementParentEntityUrn": selection.sourceEntityUrn,// selection.sourceSlateEntityUrn,
+                "versionUrn": selection.element.versionUrn,
+                "contentUrn": selection.element.contentUrn,
+                "destinationSlateUrn": slateEntityUrn
             }]
         };
+
+        if(selection.operationType.toUpperCase() === "COPY") {
+            delete _requestData.content[0].slateVersionUrn;
+            delete _requestData.content[0].id;
+            delete _requestData.content[0].versionUrn;
+            delete _requestData.content[0].contentUrn;
+        }
+
+        if(selection.element.type === "figure") {
+            _requestData = {
+                "content": [{
+                    ..._requestData.content[0],
+                    "figuredata": selection.element.figuredata
+                }]
+            }
+        }
+
+        if('manifestationUrn' in selection.element) {
+            _requestData = {
+                "content": [{
+                    ..._requestData.content[0],
+                    "manifestationUrn": selection.element.manifestationUrn
+                }]
+            }
+        }
+
         try {
+            let url = `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/slate/${slateEntityUrn}/element/paste?type=${selection.operationType.toUpperCase()}`
             const createdElemData = await axios.post(
-                `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/slate/${config.slateEntityURN}/element/paste`,
+                url,
                 JSON.stringify(_requestData),
                 {
                     headers: {
@@ -683,8 +773,14 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                 const pasteSuccessArgs = {
                     responseData: responseData[0],
                     index,
+                    cutIndex,
                     dispatch,
-                    getState
+                    getState,
+                    elmExist,
+                    parentUrn,
+                    asideData,
+                    poetryData,
+                    slateEntityUrn
                 };
         
                 onPasteSuccess(pasteSuccessArgs)

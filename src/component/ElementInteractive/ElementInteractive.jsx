@@ -19,9 +19,11 @@ import  {setCurrentCiteTdx, setCurrentInnerCiteTdx, getMCQGuidedData, assessment
 import {resetElmStore} from '../AssessmentSlateCanvas/elm/Actions/ElmActions.js';
 import { connect } from 'react-redux';
 import { sendDataToIframe } from './../../constants/utility.js';
-import { INTERACTIVE_FPO, INTERACTIVE_SCHEMA } from '../../constants/Element_Constants.js';
+import { INTERACTIVE_FPO, INTERACTIVE_SCHEMA, AUTHORED_TEXT_SCHEMA } from '../../constants/Element_Constants.js';
 import interactiveTypeData from './interactiveTypes.js';
 import { ELM_INT } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
+import elementTypeConstant from '../ElementContainer/ElementConstants.js';
+import TcmConstants from '../TcmSnapshots/TcmConstants.js';
 /**
 * @description - Interactive is a class based component. It is defined simply
 * to make a skeleton of the Interactive Element.
@@ -106,9 +108,9 @@ class Interactive extends React.Component {
                 <figure className={figureImage} resource="">
                     <header>
                             <TinyMceEditor element={this.props.model} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-0`} className={heading4Label + ' figureLabel'} id={this.props.id} placeholder="Enter Label..." tagName={'h4'} model={element.html.title}
-                              handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} />
+                              handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} handleAudioPopupLocation = {this.props.handleAudioPopupLocation}/>
                             <TinyMceEditor element={this.props.model} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-1`} className={heading4Title + ' figureTitle'} id={this.props.id} placeholder="Enter Title..." tagName={'h4'} model={element.html.subtitle}
-                             handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} />
+                             handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} handleAudioPopupLocation = {this.props.handleAudioPopupLocation} />
                     </header>
                     <div className={id} onClick={()=> this.handleClickElement()}><strong>{path ? path : 'ITEM ID: '} </strong>{this.state.itemID?this.state.itemID : itemId}</div>
                     <div className={"pearson-component " + dataType} data-uri={this.state.itemID?this.state.itemID : itemId} data-type={dataType} data-width="600" data-height="399" onClick={(e)=>{this.togglePopup(e,true)}} >
@@ -118,12 +120,12 @@ class Interactive extends React.Component {
                     </div>
                     <figcaption>
                         <TinyMceEditor element={this.props.model} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-3`} className={figcaptionClass + " figureCaption"} id={this.props.id} placeholder="Enter caption..." tagName={'p'} 
-                         model={element.html.captions} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} />
+                         model={element.html.captions} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} handleAudioPopupLocation = {this.props.handleAudioPopupLocation}/>
                     </figcaption>
                 </figure>
                 <div>
                     <TinyMceEditor element={this.props.model} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-4`} className={paragraphCredit + " figureCredit"} id={this.props.id} placeholder="Enter credit..." tagName={'p'}
-                     model={element.html.credits} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} />
+                     model={element.html.credits} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} handleAudioPopupLocation = {this.props.handleAudioPopupLocation}/>
                 </div>
             </div>
         }
@@ -132,9 +134,9 @@ class Interactive extends React.Component {
                 <figure className={figureImage} resource="">
                     <header>
                         <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} index={`${index}-0`} className={heading4Label + ' figureLabel'} id={this.props.id} placeholder="Enter Label..." tagName={'h4'} model={element.html.title}
-                            handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} />
+                            handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} handleAudioPopupLocation = {this.props.handleAudioPopupLocation}/>
                         <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} index={`${index}-1`} className={heading4Title + ' figureTitle'} id={this.props.id} placeholder="Enter Title..." tagName={'h4'} model={element.html.subtitle}
-                            handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} />
+                            handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} handleAudioPopupLocation = {this.props.handleAudioPopupLocation}/>
                     </header>
                     <div className={id} onClick={(event) => this.handleClickElement(event)}><strong>{path ? path : 'ITEM ID: '} </strong>{this.state.itemID ? this.state.itemID : itemId}</div>
                     {element.figuredata.interactiveformat === ELM_INT && <div className={id+' interactive-title'} onClick={(event) => this.handleClickElement(event)}><strong>{path ? path : 'INTERACTIVE TITLE: '} </strong>{this.state.interactiveTitle ? this.state.interactiveTitle : ""}</div>}
@@ -150,18 +152,18 @@ class Interactive extends React.Component {
                                 : 
                                  <a className={hyperlinkClass} href="javascript:void(0)">
                                     <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-2`} placeholder="Enter call to action..." className={"actionPU"} tagName={'p'} 
-                                    model={element.html.postertext? element.html.postertext:""} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} elementId={this.props.elementId} element={this.props.model}/>
+                                    model={element.html.postertext? element.html.postertext:""} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} elementId={this.props.elementId} element={this.props.model} handleAudioPopupLocation = {this.props.handleAudioPopupLocation}/>
                                  </a>
                         }
                     </div>
                     <figcaption>
                         <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} index={`${index}-3`} className={figcaptionClass + " figureCaption"} id={this.props.id} placeholder="Enter caption..." tagName={'p'} 
-                         model={element.html.captions} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} />
+                         model={element.html.captions} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} handleAudioPopupLocation = {this.props.handleAudioPopupLocation} />
                     </figcaption>
                 </figure>
                 <div>
                     <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} index={`${index}-4`} className={paragraphCredit + " figureCredit"} id={this.props.id} placeholder="Enter credit..." tagName={'p'}
-                     model={element.html.credits} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} />
+                     model={element.html.credits} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} handleAudioPopupLocation = {this.props.handleAudioPopupLocation} />
                 </div>
             </div>
         }
@@ -305,23 +307,26 @@ class Interactive extends React.Component {
                 uniqueIDInteractive = "urn:pearson:alfresco:" + uniqInter
             }
 
-            if (smartLinkType.toLowerCase() === "website" || smartLinkType.toLowerCase() === "pdf" || smartLinkType.toLowerCase() === "3rd party interactive" || smartLinkType.toLowerCase() === "metrodigi interactive" || smartLinkType.toLowerCase() === "table"|| smartLinkType.toLowerCase() === "mdpopup" ) {
-                let interactivetype="3rd-party"
-                switch(smartLinkType.toLowerCase()){
-                    case "website":
-                        interactivetype="web-link"
+            if (elementTypeConstant.SMARTLINK_ALFRESCO_TYPES.indexOf(smartLinkType.toLowerCase()) > -1) {
+                const { SMARTLINK_ALFRESCO_TYPES, INTERACTIVE_EXTERNAL_LINK } = elementTypeConstant;
+                const { interactiveSubtypeConstants: { THIRD_PARTY, EXTERNAL_WEBSITE_LINK, PDF, TABLE, LEGACY_WEB_LINK } } = TcmConstants;
+                const ctaSmartLinks = [PDF, EXTERNAL_WEBSITE_LINK, LEGACY_WEB_LINK]
+                let interactivetype = THIRD_PARTY;
+                switch (smartLinkType.toLowerCase()) {
+                    case SMARTLINK_ALFRESCO_TYPES[0]:
+                        interactivetype = EXTERNAL_WEBSITE_LINK;
                         break;
-                    case "pdf":
-                        interactivetype="pdf"
+                    case SMARTLINK_ALFRESCO_TYPES[1]:
+                        interactivetype = PDF;
                         break;
-                    case "3rd party interactive":
-                        interactivetype="3rd-party"
+                    case SMARTLINK_ALFRESCO_TYPES[2]:
+                        interactivetype = THIRD_PARTY;
                         break;
-                    case "table":
-                        interactivetype="table"
+                    case SMARTLINK_ALFRESCO_TYPES[4]:
+                        interactivetype = TABLE;
                         break;
-                    case "mdpopup":
-                        interactivetype="pop-up-web-link"
+                    case SMARTLINK_ALFRESCO_TYPES[5]:
+                        interactivetype = LEGACY_WEB_LINK;
                         break;
                 }
                 // let posterURL = imageData['posterImageUrl'] || 'https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png';
@@ -339,7 +344,7 @@ class Interactive extends React.Component {
                     schema: INTERACTIVE_SCHEMA,
                     interactiveid: uniqueIDInteractive,
                     interactivetype: interactivetype,
-                    interactiveformat: "external-link",
+                    interactiveformat: INTERACTIVE_EXTERNAL_LINK,
                     vendor: vendorName,
                     posterimage: {
                         "imageid": uniqueIDInteractive,
@@ -347,11 +352,20 @@ class Interactive extends React.Component {
                     },
                     "path": smartLinkPath[0]
                 }
-                if(interactivetype === "3rd-party"){
-                    figuredata.alttext= altText
+                if (interactivetype === THIRD_PARTY) {
+                    figuredata.alttext = altText
                 }
-                if(interactivetype === "3rd-party" ||interactivetype === "web-link"){
-                    figuredata.longdescription= longDescription
+                if (interactivetype === THIRD_PARTY || interactivetype === EXTERNAL_WEBSITE_LINK) {
+                    figuredata.longdescription = longDescription
+                }
+                if (ctaSmartLinks.indexOf(interactivetype) > -1) {
+                    let pdfPosterTextDOM = document.getElementById(`cypress-${this.props.index}-2`);
+                    let posterText = pdfPosterTextDOM ? pdfPosterTextDOM.innerText : ""
+                    figuredata.postertext = {
+                        schema: AUTHORED_TEXT_SCHEMA,
+                        text: posterText,
+                        textsemantics: []
+                    }
                 }
                 this.props.updateFigureData(figuredata, this.props.index, this.props.elementId,()=>{
                     this.props.handleFocus("updateFromC2")

@@ -22,7 +22,6 @@ function CommunicationChannel(WrappedComponent) {
                 project_urn: "",
                 isTableLaunched: false,
                 showBlocker: false,
-                toggleTocDelete: false,
                 tocDeleteMessage: null,
                 showLockPopup: false,
                 lockOwner: "",
@@ -282,7 +281,7 @@ function CommunicationChannel(WrappedComponent) {
                         }
                     }
                 });
-            } else if ('link' in linkData && (linkData.link == "cancel" || linkData.link == "unlink") &&
+            } else if ('link' in linkData && (linkData.link == "cancel" || linkData.link == "unlink" || linkData.link == "unlinkToc") &&
                 'elementId' in linkData && 'linkId' in linkData) {
                 let elementContainer = document.querySelector('.element-container[data-id="' + linkData.elementId + '"]');
                 activeElement = elementContainer.querySelectorAll('.cypress-editable');
@@ -296,7 +295,7 @@ function CommunicationChannel(WrappedComponent) {
                                 linkNode = item.querySelector(`[asset-id="${linkData.linkId}"]`) ? item.querySelector(`[asset-id="${linkData.linkId}"]`) : item.querySelector('#' + linkData.linkId);
                                 linkHTML = linkNode.innerHTML || '';
                                 linkNode.outerHTML = linkHTML;
-                                if (linkData.link == "unlink") {
+                                if (linkData.link == "unlink" || linkData.link == "unlinkToc") {
                                     this.props.assetIdForSnapshot(linkData.linkId)
                                     linkNotification = "Link removed.";
                                 }
@@ -487,6 +486,7 @@ function CommunicationChannel(WrappedComponent) {
                 config.fromTOC = true;
                 config.tcmslatemanifest= null;
                 config.parentLabel = message.node.nodeParentLabel;
+                config.parentOfParentItem = message.node.parentOfParentItem
                 this.props.getSlateLockStatus(config.projectUrn, config.slateManifestURN)
                 let slateData = {
                     currentProjectId: config.projectUrn,
@@ -502,6 +502,7 @@ function CommunicationChannel(WrappedComponent) {
                 this.props.setSlateEntity(config.slateEntityURN);
                 this.props.setSlateParent(message.node.nodeParentLabel);
                 this.props.glossaaryFootnotePopup(false);
+                this.props.audioGlossaryPopup(false);
                 let apiKeys_LO = {
                     'loApiUrl': config.LEARNING_OBJECTIVES_ENDPOINT,
                     'strApiKey': config.STRUCTURE_APIKEY,
@@ -535,18 +536,9 @@ function CommunicationChannel(WrappedComponent) {
             showTocBlocker();
             disableHeader(true);
 
-            this.setState({
-                toggleTocDelete: true,
-                tocDeleteMessage: message
-            })
+            sendDataToIframe({type : 'showTOCDeletePopup', message : message})
         }
 
-        //Toggle Delete Popup
-        modifyState = (args) => {
-            this.setState({
-                toggleTocDelete: args,
-            })
-        }
         deleteTocItemWithPendingTrack = (message) => {
             let newMessage = {
                 ...message,
@@ -620,10 +612,7 @@ function CommunicationChannel(WrappedComponent) {
             showTocBlocker();
             disableHeader(true);
 
-            this.setState({
-                toggleTocDelete: true,
-                tocDeleteMessage: newMessage
-            })
+            sendDataToIframe({type : 'showTOCDeletePopup', message : newMessage})
         }
         updateTitleSlate = (messageObj) => {
             /**
@@ -686,7 +675,7 @@ function CommunicationChannel(WrappedComponent) {
         render() {
             return (
                 <React.Fragment>
-                    <WrappedComponent {...this.props} showBlocker={this.state.showBlocker} showCanvasBlocker={this.showCanvasBlocker} toggleTocDelete={this.state.toggleTocDelete} tocDeleteMessage={this.state.tocDeleteMessage} modifyState={this.modifyState} updatePageLink={this.updatePageLink}/>
+                    <WrappedComponent {...this.props} showBlocker={this.state.showBlocker} showCanvasBlocker={this.showCanvasBlocker} tocDeleteMessage={this.state.tocDeleteMessage} updatePageLink={this.updatePageLink}/>
                     {this.showLockPopup()}
                 </React.Fragment>
             )

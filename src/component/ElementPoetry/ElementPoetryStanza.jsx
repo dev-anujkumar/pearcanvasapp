@@ -40,6 +40,7 @@ class ElementPoetryStanza extends Component {
         elemBorderToggle={this.props.elemBorderToggle}
         glossaryFootnoteValue={glossaryFootnoteValue}
         glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
+        handleAudioPopupLocation = {this.props.handleAudioPopupLocation}
       />
     )
   }

@@ -452,8 +452,36 @@ export const replaceWirisClassAndAttr = (currentTargetId) => {
     let tempFirstContainerHtml = currentTarget && currentTarget.innerHTML
     if (typeof tempFirstContainerHtml === "string") {
         tempFirstContainerHtml = tempFirstContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
-        currentTarget.innerHTML = tempFirstContainerHtml
+        try {
+            currentTarget.innerHTML = tempFirstContainerHtml
+        }
+        catch {
+            currentTarget.innerHTML = tempFirstContainerHtml
+            console.log("error in setting HTML")
+        }
     }
 }
 
 export const defaultMathImagePath = "https://cite-media-stg.pearson.com/legacy_paths/wiris-dev-mathtype-cache-use/cache/";
+
+/**
+ * Returns all id of elements present inside the showhide container
+ * @param {Object} element Showhide element data
+ */
+export const getShowhideChildUrns = (element) => {
+    
+    try {
+        const extractIdCallback = ({ id }) => id
+        const interactivedataObj = element.interactivedata
+        if (interactivedataObj) {
+            return [
+                ...interactivedataObj.show?.map?.(extractIdCallback) || [],
+                ...interactivedataObj.hide?.map?.(extractIdCallback) || [],
+                ...interactivedataObj.postertextobject?.map?.(extractIdCallback) || []
+            ]
+        }
+    } catch (error) {
+        console.error("Error in getting getShowhideChildUrns- returning fallback value", error)
+        return []
+    }
+}

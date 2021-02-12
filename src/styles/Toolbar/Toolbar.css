@@ -230,6 +230,18 @@
   border-radius: 4px;
   float: right;
 }
+.audioReplaceeButton{
+  background-color: #3298B5; 
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin: 4px 8px;
+  cursor: pointer
+}
 
 .disableToolbar{
   visibility: hidden;
@@ -303,7 +315,7 @@ div[title="Ordered List"] span.tox-split-button__chevron svg:active {
   box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 4px 5px 0 rgba(0, 0, 0, 0.14);
   border: 0;
 }
-button[aria-label="formatSelector"] span.tox-tbtn__select-label{
+button[aria-label="formatSelector"] span.tox-tbtn__select-label,button[aria-label="insertMedia"] span.tox-tbtn__select-label{
   min-width : 126px!important;
   cursor:pointer!important;
   overflow-wrap: normal;
@@ -313,8 +325,15 @@ button[aria-label="formatSelector"] span.tox-tbtn__select-label{
   text-overflow: clip;
   font-family: 'Open Sans',sans-serif;
 }
+button[aria-label="insertMedia"] span.tox-tbtn__select-label{
+  min-width : 70px!important;
+}
 button[aria-label="formatSelector"].tox-tbtn--select{
   max-width : 162px!important;
+  border-radius:0; 
+}
+button[aria-label="insertMedia"].tox-tbtn--select{
+  max-width : 100px!important;
   border-radius:0; 
 }
 .tox .tox-collection--list .tox-collection__group{
@@ -324,7 +343,7 @@ button[aria-label="formatSelector"].tox-tbtn--select{
   font-family: 'Open Sans',sans-serif;
   margin-left: 0!important ;
 }
-.tox button[aria-label="formatSelector"].tox-tbtn:hover:not(.tox-tbtn--disabled){
+.tox button[aria-label="formatSelector"].tox-tbtn:hover:not(.tox-tbtn--disabled),.tox button[aria-label="insertMedia"].tox-tbtn:hover:not(.tox-tbtn--disabled){
   background-color: #f3f7f8!important;
 }
 .side-icons{
@@ -394,7 +413,7 @@ button[aria-label="formatSelector"].tox-tbtn--select{
   line-height: 15px;
   background-color: rgba(0, 0, 0, 0.75);
 }
-button[aria-label="formatSelector"].tox-tbtn--select:hover .tooltip-text,.navigation-content:hover .tooltip-text{
+button[aria-label="formatSelector"].tox-tbtn--select:hover .tooltip-text,.navigation-content:hover .tooltip-text,button[aria-label="insertMedia"].tox-tbtn--select:hover .tooltip-text{
   display:block;
 }
 .navigation-content .tooltip-text{
@@ -523,4 +542,24 @@ margin-left:6px;
 .search-wrapper .search-element .actions .action-item.disabled {
   opacity: 0.45;
   pointer-events: none;
+}
+
+.glossary-audiodropdown{
+  left:0;
+  top:0;
+  width: 325px; 
+  color: black;
+  position: absolute;
+  background-color: white;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 2;
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: 5px;
+  cursor: default;
+  padding: 10px !important;
+}
+
+.glossary-audiodropdown audio{
+  width:100% !important
 }

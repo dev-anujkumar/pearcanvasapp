@@ -25,7 +25,7 @@ import { handleSplitSlate,setUpdatedSlateTitle, setSlateType, setSlateEntity, se
 import { currentSlateLO,isLOExist, currentSlateLOMath } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import { handleUserRole } from './UserRole_Actions'
 import { handleSlateRefresh } from '../CanvasWrapper/SlateRefresh_Actions'
-import { fetchAudioNarrationForContainer } from '../AudioNarration/AudioNarration_Actions'
+import { fetchAudioNarrationForContainer ,audioGlossaryPopup} from '../AudioNarration/AudioNarration_Actions'
 import { glossaaryFootnotePopup } from '../GlossaryFootnotePopup/GlossaryFootnote_Actions';
 import RootContext from './PageNumberContext.js';
 import {publishContent,logout} from '../../js/header'
@@ -212,7 +212,7 @@ export class CanvasWrapper extends Component {
                                     {this.props.showApoSearch ? <AssetPopoverSearch /> : ''}
                                     {/* slate wrapper component combines slate content & slate title */}
                                     <RootContext.Provider value={{ isPageNumberEnabled: this.props.pageNumberToggle }}>
-                                        <SlateWrapper loadMorePages={this.loadMorePages} handleCommentspanel={this.handleCommentspanel} slateData={slateData} navigate={this.navigate} showBlocker={this.props.showCanvasBlocker} convertToListElement={this.props.convertToListElement} toggleTocDelete={this.props.toggleTocDelete} tocDeleteMessage={this.props.tocDeleteMessage} modifyState={this.props.modifyState} updateTimer={this.updateTimer} isBlockerActive={this.props.showBlocker} isLOExist={this.props.isLOExist} updatePageLink={this.props.updatePageLink}/>
+                                        <SlateWrapper loadMorePages={this.loadMorePages} handleCommentspanel={this.handleCommentspanel} slateData={slateData} navigate={this.navigate} showBlocker={this.props.showCanvasBlocker} convertToListElement={this.props.convertToListElement} tocDeleteMessage={this.props.tocDeleteMessage} updateTimer={this.updateTimer} isBlockerActive={this.props.showBlocker} isLOExist={this.props.isLOExist} updatePageLink={this.props.updatePageLink}/>
                                     </RootContext.Provider>
                                 </div>
                                  {/*Next Button */}
@@ -240,7 +240,7 @@ export class CanvasWrapper extends Component {
                                 {
                                     () => {
                                         if (this.props.glossaryFootnoteValue.popUpStatus) {
-                                            return (<GlossaryFootnoteMenu permissions={this.props.permissions} glossaryFootnoteValue={this.props.glossaryFootnoteValue} showGlossaaryFootnote={this.props.glossaaryFootnotePopup} glossaryFootNoteCurrentValue = {this.props.glossaryFootNoteCurrentValue}/>)
+                                            return (<GlossaryFootnoteMenu permissions={this.props.permissions} glossaryFootnoteValue={this.props.glossaryFootnoteValue} showGlossaaryFootnote={this.props.glossaaryFootnotePopup} glossaryFootNoteCurrentValue = {this.props.glossaryFootNoteCurrentValue} audioGlossaryData={this.props.audioGlossaryData}/>)
                                         }
                                         else {
                                             return (<Sidebar showCanvasBlocker= {this.props.showCanvasBlocker} showPopUp={this.showPopUp} />)
@@ -271,7 +271,8 @@ const mapStateToProps = state => {
         logout,
         withinLockPeriod: state.slateLockReducer.withinLockPeriod,
         ErrorPopup: state.errorPopup,
-        pageNumberToggle: state.toolbarReducer.pageNumberToggle
+        pageNumberToggle: state.toolbarReducer.pageNumberToggle,
+        audioGlossaryData:state.audioReducer.audioGlossaryData
     };
 };
 
@@ -312,6 +313,7 @@ export default connect(
         toggleElemBordersAction,
         togglePageNumberAction,
         tcmCosConversionSnapshot,
-        assetIdForSnapshot
+        assetIdForSnapshot,
+        audioGlossaryPopup
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

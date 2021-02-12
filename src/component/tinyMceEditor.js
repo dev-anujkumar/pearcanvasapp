@@ -11,7 +11,7 @@ import "tinymce/plugins/lists";
 import "tinymce/plugins/advlist";
 import "tinymce/plugins/paste";
 // IMPORT - Components & Dependencies //
-import { EditorConfig, FormatSelectors, elementTypeOptions } from '../config/EditorConfig';
+import { EditorConfig, FormatSelectors, elementTypeOptions, insertMediaSelectors } from '../config/EditorConfig';
 import config from '../config/config';
 import { insertListButton, bindKeyDownEvent, insertUoListButton, preventRemoveAllFormatting, removeTinyDefaultAttribute, removeListHighliting, highlightListIcon } from './ListElement/eventBinding.js';
 import { authorAssetPopOver } from './AssetPopover/openApoFunction.js';
@@ -19,8 +19,8 @@ import {
     tinymceFormulaIcon, tinymceFormulaChemistryIcon, assetPopoverIcon, crossLinkIcon, code, Footnote, bold, Glossary, undo, redo, italic, underline, strikethrough, removeformat, subscript, superscript, charmap, downArrow, orderedList, unorderedList, indent, outdent
 } from '../images/TinyMce/TinyMce.jsx';
 import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
-import { checkforToolbarClick, customEvent, spanHandlers, removeBOM, getWirisAltText, removeImageCache } from '../js/utils';
-import { saveGlossaryAndFootnote, setFormattingToolbar } from "./GlossaryFootnotePopup/GlossaryFootnote_Actions"
+import { checkforToolbarClick, customEvent, spanHandlers, removeBOM, getWirisAltText, removeImageCache, removeMathmlImageCache } from '../js/utils';
+import { saveGlossaryAndFootnote, setFormattingToolbar } from "./GlossaryFootnotePopup/GlossaryFootnote_Actions";
 import { ShowLoader, LaunchTOCForCrossLinking } from '../constants/IFrameMessageTypes';
 import { sendDataToIframe, hasReviewerRole, removeBlankTags } from '../constants/utility.js';
 import store from '../appstore/store';
@@ -29,8 +29,9 @@ import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER } from '../compone
 import { conversionElement } from './Sidebar/Sidebar_Action';
 import { wirisAltTextPopup } from './SlateWrapper/SlateWrapper_Actions';
 import elementList from './Sidebar/elementTypes';
-import { utils } from 'sortablejs';
+import { getParentPosition} from './CutCopyDialog/copyUtil';
 
+import { handleC2MediaClick }  from '../js/TinyMceUtility.js';
 let context = {};
 let clickedX = 0;
 let clickedY = 0;
@@ -64,7 +65,6 @@ export class TinyMceEditor extends Component {
             statusbar: false,
             valid_elements: '*[*]',
             extended_valid_elements: '*[*]',
-            object_resizing: false,
             fixed_toolbar_container: '#tinymceToolbar',
             content_style: EditorConfig.contentStyle,
             toolbar: EditorConfig.toolbar,
@@ -73,6 +73,8 @@ export class TinyMceEditor extends Component {
             force_br_newlines: true,
             forced_root_block: '',
             remove_linebreaks: false,
+            object_resizing : 'img',
+            resize_img_proportional: false,
             paste_preprocess: this.pastePreProcess,
             paste_postprocess: this.pastePostProcess,
             force_p_newlines: false,
@@ -88,6 +90,7 @@ export class TinyMceEditor extends Component {
                 this.setAssetPopoverIcon(editor);
                 this.addAssetPopoverIcon(editor);
                 this.handleSpecialCharIcon(editor);
+                this.addInsertMediaButton(editor);
                 this.setFootnoteIcon(editor);
                 this.addFootnoteIcon(editor);
                 this.setGlossaryIcon(editor);
@@ -128,6 +131,11 @@ export class TinyMceEditor extends Component {
                         }
                     }
                 }
+                tinymce.activeEditor.on('ObjectResizeStart', function (e) {
+                    if (e?.target?.nodeName == 'IMG' && e.target.classList.length > 0 && (e.target.classList.contains('Wirisformula') || e.target.classList.contains('temp_Wirisformula'))) {
+                        e.preventDefault();/** Prevent IMG resize for MathML images */
+                    }
+                });
 
                 editor.on('Change', (e) => {
                     /*
@@ -174,6 +182,7 @@ export class TinyMceEditor extends Component {
                                 let showHideType = this.props.showHideType || null
                                 showHideType = showHideType === "revel" ? "postertextobject" : showHideType
                                 this.props.handleBlur(null, this.props.currentElement, this.props.index, showHideType)
+                            
                             }
                         }
                         editor.selection.placeCaretAt(clickedX, clickedY);
@@ -268,7 +277,7 @@ export class TinyMceEditor extends Component {
             }
         }
         tinyMCE.$('.Wirisformula').each(function () {
-            this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
+            this.naturalHeight && this.setAttribute('height', this.naturalHeight)
             this.naturalWidth && this.setAttribute('width', this.naturalWidth)
         });
 
@@ -348,6 +357,7 @@ export class TinyMceEditor extends Component {
                 }
             }
             switch (e.command) {
+                
                 case "indent":
                     this.handleIndent(e, editor, content, this.props.element.type, node)
                     break;
@@ -668,6 +678,14 @@ export class TinyMceEditor extends Component {
                     }, 500);
                 }
             }
+            /** Open Alfresco Picker to update inline image in list on double-click*/
+            if (e?.target?.nodeName == 'IMG' && e.target.classList.contains('imageAssetContent') && (e?.detail == 2) && (this?.props?.element?.type == 'element-list')) {
+                const imageArgs = {
+                    id: e.target?.dataset?.id,
+                    handleBlur:this.handleBlur
+                }
+                handleC2MediaClick(this.props.permissions, editor, imageArgs);
+            }
             let selectedText = editor.selection.getContent({ format: "text" });
             let elemClassList = editor.targetElm.classList;
             let isFigureElem = elemClassList.contains('figureImage25Text') || elemClassList.contains('figureImage50Text') || elemClassList.contains('heading4Image25TextNumberLabel')
@@ -720,6 +738,9 @@ export class TinyMceEditor extends Component {
          */
         else if (e.target.nodeName == "DFN" || e.target.closest("dfn")) {
             let uri = e.target.dataset.uri;
+            let audioNode = e.target.closest("dfn");
+            let isAudioExists = audioNode.hasAttribute('audio-id');
+
             if (e.target.nodeName == "DFN") {
                 uri = e.target.dataset.uri;
             } else {
@@ -736,6 +757,29 @@ export class TinyMceEditor extends Component {
             }
             else {
                 this.toggleGlossaryandFootnotePopup(true, "Glossary", uri, () => { this.toggleGlossaryandFootnoteIcon(true); });
+            }
+            if (isAudioExists) {
+                if (e.currentTarget.classList.contains('mce-edit-focus')) {
+                    const parentPosition = getParentPosition(e.currentTarget);
+                    const slateWrapperNode = document.getElementById('slateWrapper')
+                    const scrollTop = slateWrapperNode && slateWrapperNode.scrollTop || 0;
+
+                    const xOffSet = 0;
+                    const yOffSet = 10
+                    let copyClickedX = e.clientX - parentPosition.x + xOffSet;
+                    const copyClickedY = e.clientY - parentPosition.y + scrollTop + yOffSet;
+                    if(copyClickedX > 350){
+                        copyClickedX = 380
+                    }
+                    let audioPopupPosition = {
+                        left: `${(copyClickedX)}px`,
+                        top: `${(copyClickedY)}px`
+                    }
+                    if(parentPosition.x +325 >800){
+                        audioPopupPosition.left = '0'
+                    }
+                    this.props.handleAudioPopupLocation(true, audioPopupPosition);
+                }
             }
         }
         /**
@@ -829,16 +873,11 @@ export class TinyMceEditor extends Component {
             this.isctrlPlusV = false;
             let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
             let isMediaElement = tinymce.$(tinymce.activeEditor.selection.getStart()).parents('.figureElement,.interactive-element').length;
-            let isContainsMath = false;
-            let isContainsBlankLine = false;
+            let isContainsMath = (activeElement && activeElement.innerHTML.match(/<img/)) ? (activeElement.innerHTML.match(/<img/).input.includes('class="Wirisformula') || activeElement.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula')) : false;
+            let isContainsBlankLine = (activeElement && activeElement.innerHTML.match(/<span/)) ? activeElement.innerHTML.match(/<span/).input.includes('class="answerLineContent') : false;
             if(this.props.element && this.props.element.type==="element-blockfeature" && e.target &&  e.target.className==="blockquoteTextCredit"){
                 setFormattingToolbar('disableTinymceToolbar')
             }
-            if (activeElement) {
-                isContainsMath = activeElement.innerHTML.match(/<img/) ? (activeElement.innerHTML.match(/<img/).input.includes('class="Wirisformula') || activeElement.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula')) : false;
-                isContainsBlankLine = activeElement.innerHTML.match(/<span/) ? activeElement.innerHTML.match(/<span/).input.includes('class="answerLineContent') : false;
-            }
-
             if (activeElement) {
                 let lastCont = this.lastContent;
                 this.lastContent = activeElement.innerHTML;
@@ -866,9 +905,7 @@ export class TinyMceEditor extends Component {
                 else if (activeElement.innerText.trim().length || activeElement.querySelectorAll('ol').length || activeElement.querySelectorAll('ul').length || isContainsMath || isContainsBlankLine) {
                     activeElement.classList.remove('place-holder')
                 }
-                else if(isContainsBlankLine) {
-                    activeElement.classList.remove('place-holder')
-                } else {
+                else {
                     activeElement.classList.add('place-holder')
                 }
                 this.lastContent = activeElement.innerHTML;
@@ -1384,6 +1421,36 @@ export class TinyMceEditor extends Component {
         );
     }
 
+    /**
+     * Adds Insert button to the toolbar for adding Media like Images.
+     * @param {*} editor  editor instance
+     */
+    addInsertMediaButton = editor => {
+        const self = this;
+        editor.ui.registry.addMenuButton('insertMedia', {
+            text: 'Insert',
+            tooltip: 'insertMedia',
+            onSetup: function () {
+                document.querySelector('button[title="insertMedia"]').setAttribute('title', 'Insert Media');
+                let newSpan = document.createElement('span');
+                newSpan.className = "tooltip-text"
+                newSpan.innerText = 'Insert';
+                const tooltipLabel = document.querySelector('button[aria-label="insertMedia"] .tox-tbtn__select-label')
+                if (tooltipLabel) {
+                    tooltipLabel.after(newSpan)
+                }
+            },
+            fetch: (callback) => {
+                let params = {
+                    element: self.props.element,
+                    permissions: self.props.permissions,
+                    editor: editor
+                }
+                const items = insertMediaSelectors(params);
+                callback(items);
+            }
+        });
+    }
     /**
      * Adds Asset popover icon to the toolbar.
      * @param {*} editor  editor instance
@@ -2541,7 +2608,7 @@ export class TinyMceEditor extends Component {
                 let defModel = this.props.model && this.props.model.text ? this.props.model.text : (typeof (this.props.model) === 'string' ? this.props.model : '<p class="paragraphNumeroUno"><br/></p>')
                 defModel = removeBOM(defModel)
                 //defModel=defModel.replace(/(?:.png).*?[\"]/g,'.png?'+(new Date()).getTime()+'"');
-                defModel = removeImageCache(defModel)
+                defModel = removeMathmlImageCache(defModel)
                 return defModel;
         }
     }
@@ -2671,7 +2738,10 @@ export class TinyMceEditor extends Component {
 
     setInstanceToolbar = () => {
         let toolbar = [];
-        if (this.props.placeholder === "Enter Label..." || this.props.placeholder === 'Enter call to action...' || (this.props.element && this.props.element.subtype == 'mathml' && this.props.placeholder === "Type something...")) {
+        if (this.props.element.type === 'popup' && this.props.placeholder === 'Enter call to action...') {
+            toolbar = config.popupCallToActionToolbar
+        }
+        else if (this.props.placeholder === "Enter Label..." || this.props.placeholder === 'Enter call to action...' || (this.props.element && this.props.element.subtype == 'mathml' && this.props.placeholder === "Type something...")) {
             toolbar = (this.props.element && (this.props.element.type === 'poetry' || this.props.element.type === 'popup' || this.props.placeholder === 'Enter call to action...')) ? config.poetryLabelToolbar : config.labelToolbar;
         }
         else if (this.props.placeholder === "Enter Caption..." || this.props.placeholder === "Enter Credit...") {
@@ -2793,16 +2863,15 @@ export class TinyMceEditor extends Component {
         }
         let currentActiveNode = null
         let activeContainerNode = document.querySelector('div .active')
-        let activeShowHideNode = document.querySelector('.show-hide-active .cypress-editable.mce-content-body.mce-edit-focus')
-        if (activeContainerNode) {
+        const editableEditor =  document.querySelector('.cypress-editable.mce-content-body.mce-edit-focus')
+        if (editableEditor && this.props.currentElement) {
+            currentActiveNode = editableEditor
+        } 
+        else if (activeContainerNode) {
             currentActiveNode = activeContainerNode
         }
-        else if (activeShowHideNode) {
-            currentActiveNode = activeShowHideNode
-        }
-
-        let currentElementId = this.props.currentElement && !(currentTarget && currentTarget.classList.contains('formatted-text')) ? this.props.currentElement.id : this.props.element.id
-
+        
+        let currentElementId = this.props.currentElement && currentTarget && currentTarget.getAttribute('data-id') ? this.props.currentElement.id : this.props.element.id
         if (currentActiveNode && currentActiveNode.getAttribute('data-id') === currentElementId) {
             isSameByElementId = true;
         }
@@ -2953,11 +3022,11 @@ export class TinyMceEditor extends Component {
             /**
              * Remove extra Wiris overlay
              */
-            let wirisNodes = document.getElementsByClassName('wrs_modal_dialogContainer');
-            let wirisNodeLength = wirisNodes.length;
-            if (wirisNodeLength > 1) {
-                for (let i = 0; i < wirisNodeLength - 1; i++) {
-                    wirisNodes[i].remove();
+            let wirisObj = document.getElementsByClassName('wrs_modal_dialogContainer');
+            let wirisObjLength = wirisObj.length;
+            if (wirisObjLength > 1) {
+                for (let i = 0; i < wirisObjLength - 1; i++) {
+                    wirisObj[i].remove();
                     // document.getElementsByClassName('wrs_modal_overlay').remove();
                     document.getElementById('wrs_modal_overlay[' + i + ']').remove();
                 }
@@ -3107,7 +3176,7 @@ export class TinyMceEditor extends Component {
         }
 
         tinyMCE.$('.Wirisformula').each(function () {
-            this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
+            this.naturalHeight && this.setAttribute('height', this.naturalHeight)
             this.naturalWidth && this.setAttribute('width', this.naturalWidth)
         })
         let showHideType = this.props.showHideType || null
@@ -3231,14 +3300,21 @@ export class TinyMceEditor extends Component {
                     if (!classes.includes('poetryHideLabel')) {
                         classes = classes + ' poetryHideLabel';
                     }
-                    return (
-                        <h4 ref={this.editorRef} id={id} onKeyDown={this.normalKeyDownHandler} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: model }} ></h4>
-                    )
-                } else {
-                    return (
-                        <h4 ref={this.editorRef} id={id} onKeyDown={this.normalKeyDownHandler} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: model }} ></h4>
-                    )
                 }
+                return (
+                    <h4 ref={this.editorRef} 
+                        id={id}
+                        data-id={this.props.currentElement ? this.props.currentElement.id : undefined}
+                        onKeyDown={this.normalKeyDownHandler} 
+                        onBlur={this.handleBlur} 
+                        onClick={this.handleClick} 
+                        className={classes} 
+                        placeholder={this.props.placeholder} 
+                        suppressContentEditableWarning={true} 
+                        contentEditable={!lockCondition} 
+                        dangerouslySetInnerHTML={{ __html: model }} 
+                    ></h4>
+                )
             case 'code':
                 let codeModel = this.props.model
                 codeModel = removeBOM(codeModel)
@@ -3266,22 +3342,35 @@ export class TinyMceEditor extends Component {
                 figCreditModel = removeBOM(figCreditModel)
 
                 return (
-                    <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onKeyDown={this.normalKeyDownHandler} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: figCreditModel }} onChange={this.handlePlaceholder}></div>
+                    <div ref={this.editorRef} data-id={this.props.currentElement ? this.props.currentElement.id : undefined} id={id} onBlur={this.handleBlur} onKeyDown={this.normalKeyDownHandler} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: figCreditModel }} onChange={this.handlePlaceholder}></div>
                 )
             case 'element-citation':
                 let ctModel = this.props.model && this.props.model.text || '<p class="paragraphNumeroUnoCitation"><br/></p>'
                 ctModel = removeBOM(ctModel)
 
                 return (
-                    <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onKeyDown={this.normalKeyDownHandler} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: ctModel }} onChange={this.handlePlaceholder}></div>
+                    <div ref={this.editorRef} 
+                        id={id}
+                        data-id={this.props.currentElement ? this.props.currentElement.id : undefined}
+                        onBlur={this.handleBlur} 
+                        onKeyDown={this.normalKeyDownHandler} 
+                        onClick={this.handleClick} 
+                        className={classes} 
+                        placeholder={this.props.placeholder} 
+                        suppressContentEditableWarning={true} 
+                        contentEditable={!lockCondition} 
+                        dangerouslySetInnerHTML={{ __html: ctModel }}
+                        onChange={this.handlePlaceholder}
+                    ></div>
                 )
             default:
                 let defModel = this.props.model && this.props.model.text ? this.props.model.text : (typeof (this.props.model) === 'string' ? this.props.model : '<p class="paragraphNumeroUno"><br/></p>')
                 defModel = removeBOM(defModel)
                 return (
-                    <div ref={this.editorRef} data-id={this.props.currentElement ? this.props.currentElement.id : ''} onKeyDown={this.normalKeyDownHandler} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: defModel }} onChange={this.handlePlaceholder}></div>
+                    <div ref={this.editorRef} data-id={this.props.currentElement ? this.props.currentElement.id : undefined} onKeyDown={this.normalKeyDownHandler} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: defModel }} onChange={this.handlePlaceholder}></div>
                 )
         }
+        
     }
     normalKeyDownHandler = (e) => {
         if (this.props.permissions && !(this.props.permissions.includes('access_formatting_bar') || this.props.permissions.includes('elements_add_remove'))) {        // when user doesn't have edit permission
@@ -3309,5 +3398,5 @@ TinyMceEditor.defaultProps = {
 
 export default connect(
     null,
-    { conversionElement, wirisAltTextPopup  }
+    { conversionElement, wirisAltTextPopup }
 )(TinyMceEditor);
