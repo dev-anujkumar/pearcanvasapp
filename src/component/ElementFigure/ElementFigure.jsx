@@ -12,9 +12,10 @@ import {
 } from '../../constants/Element_Constants';
 import config from '../../config/config';
 import axios from 'axios';
-import { sendDataToIframe, hasReviewerRole, handleAlfrescoSiteUrl } from '../../constants/utility';
+import { sendDataToIframe, hasReviewerRole } from '../../constants/utility';
 import { hideTocBlocker, disableHeader } from '../../js/toggleLoader'
 import figureData from './figureTypes';
+import { handleAlfrescoSiteUrl } from './AlfrescoSiteUrl_helper.js'
 
 /*** @description - ElementFigure is a class based component. It is defined simply
 * to make a skeleton of the figure-type element .*/

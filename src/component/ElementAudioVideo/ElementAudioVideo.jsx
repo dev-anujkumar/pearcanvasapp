@@ -11,7 +11,8 @@ import axios from 'axios';
 import './../../styles/ElementAudioVideo/ElementAudioVideo.css';
 import {AUDIO,VIDEO,DEFAULT_ASSET,DEFAULT_VIDEO_POSTER_IMAGE} from './../../constants/Element_Constants';
 import { hideTocBlocker, disableHeader } from '../../js/toggleLoader'
-import { hasReviewerRole, handleAlfrescoSiteUrl } from '../../constants/utility.js'
+import { hasReviewerRole } from '../../constants/utility.js'
+import { handleAlfrescoSiteUrl } from '../ElementFigure/AlfrescoSiteUrl_helper.js'
 
 
 /*** @description - ElementAudioVideo is a class based component. It is defined simply to make a skeleton of the audio-video-type element ***/
