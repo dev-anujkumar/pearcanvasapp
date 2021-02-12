@@ -170,7 +170,7 @@ class ElementContainer extends Component {
             this.props.releaseSlateLock(config.projectUrn, config.slateManifestURN)
             config.releaseCallCount += 1
         }
-        handleElmPortalEvents("", 'remove');/** Remove Elm-Assessment Update eventListener */
+        handleElmPortalEvents('remove');/** Remove Elm-Assessment Update eventListener */
         handlePostMsgOnAddAssess("", "", "remove")
     }
 
@@ -1717,16 +1717,9 @@ class ElementContainer extends Component {
             assessmentItemWorkUrn: embeddedAssessment ? element.figuredata.elementdata.assessmentitemid : "",
             interactiveId: isInteractive ? element.figuredata.interactiveid : ""
         }
-        handleElmPortalEvents(this.updateInteractive);/** Add Elm-Assessment Update eventListener */
+        handleElmPortalEvents();/** Add Elm-Assessment Update eventListener */
         this.props.openElmAssessmentPortal(dataToSend);
         embeddedAssessment && this.props.editElmAssessmentId(element.figuredata.elementdata.assessmentid, element.figuredata.elementdata.assessmentitemid);
-    }
-    /* Update the data from post message of elm portal */
-    updateInteractive = (figureData) => {
-        //this.props.updateFigureData(figureData, this.props?.index, this.props?.element?.id, () => {
-        //    this.handleFocus("updateFromC2");
-        //    this.handleBlur();
-        //})
     }
    
     render = () => {

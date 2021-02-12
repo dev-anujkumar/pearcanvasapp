@@ -24,6 +24,7 @@ import interactiveTypeData from './interactiveTypes.js';
 import { ELM_INT } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import elementTypeConstant from '../ElementContainer/ElementConstants.js';
 import TcmConstants from '../TcmSnapshots/TcmConstants.js';
+import { setNewItemFromElm } from "../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js"
 /**
 * @description - Interactive is a class based component. It is defined simply
 * to make a skeleton of the Interactive Element.
@@ -78,6 +79,14 @@ class Interactive extends React.Component {
         }
 
         return null;
+    }
+
+    componentDidUpdate() {
+        const interct = this.props.interactivePostMsg;
+        if( interct?.id && interct.title && interct.interactiveType ) {
+            this.addElmInteractive(interct);
+            this.props.setNewItemFromElm({});
+        }
     }
 
     /**
@@ -644,10 +653,17 @@ const mapActionToProps = {
     setCurrentCiteTdx: setCurrentCiteTdx,
     setCurrentInnerCiteTdx: setCurrentInnerCiteTdx,
     assessmentSorting:assessmentSorting,
-    resetElmStore:resetElmStore
+    resetElmStore:resetElmStore,
+    setNewItemFromElm: setNewItemFromElm
+}
+
+const mapStateToProps = (state) => {
+    return {
+        interactivePostMsg: state.assessmentReducer?.item,
+    }
 }
 
 export default connect(
-    null,
+    mapStateToProps,
     mapActionToProps
 )(Interactive);

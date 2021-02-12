@@ -11,7 +11,7 @@ import { updateElmItemData, setItemUpdateEvent, setNewItemFromElm } from '../Ass
  * This module deals with the event handling for the Update of Full and Embedded Elm Assessments
  * for the events triggered from the Elm Assessment Portal
 */
-export const handleElmPortalEvents = (updateInteractive, action = 'add') => {
+export const handleElmPortalEvents = (action = 'add') => {
     let slateLockInfo = store.getState().slateLockReducer.slateLockInfo;
     if (!checkSlateLock(slateLockInfo)) {
 
@@ -33,7 +33,11 @@ export const handleElmPortalEvents = (updateInteractive, action = 'add') => {
                     }
                 } else {
                     /* To edit interactive using edit button */
-                    getInteractivePostMsg(data, updateInteractive)
+                    const intObj = getInteractivePostMsg(data)
+                    if(intObj?.id && intObj.title && intObj.interactiveType) {
+                        /* save item data into store */
+                        store.dispatch(setNewItemFromElm(intObj));
+                    }
                 }
                 if (action == 'remove') {
                     window.removeEventListener('message', elmAssessmentUpdate, false);
@@ -107,7 +111,9 @@ export const handlePostMsgOnAddAssess = (addPufFunction, usagetype, action) => {
                             };
                             
                             if(itemData?.itemid && itemData.itemTitle){
-                                assessmentDataMsg = { ...assessmentDataMsg, ...itemData }
+                                assessmentDataMsg = { ...assessmentDataMsg, ...itemData };
+                                /* empty store after item data updated */
+                                //store.dispatch(setNewItemFromElm({}));
                             }
                             /**@function to update data display in slate */
                             addPufFunction(assessmentDataMsg);
@@ -131,12 +137,16 @@ export const handlePostMsgOnAddAssess = (addPufFunction, usagetype, action) => {
                     }                
                 } else {
                     /* Get Interactive data from Post message */
-                    getInteractivePostMsg(data, addPufFunction);
-                    if(action === "remove"){
-                        /* Remove EventListener */
-                        window.removeEventListener("message", getMsgafterAddAssessment, false);
+                    const intObj = getInteractivePostMsg(data);
+                    if(intObj?.id && intObj.title && intObj.interactiveType){
+                        /**@function to update data display in interactive  */
+                        addPufFunction(intObj);
                     }
                 }  
+                if(action === "remove"){
+                    /* Remove EventListener */
+                    window.removeEventListener("message", getMsgafterAddAssessment, false);
+                }
             } catch (err) {
                 console.error("catch with err", err);
             }
@@ -145,7 +155,7 @@ export const handlePostMsgOnAddAssess = (addPufFunction, usagetype, action) => {
     }
 };
 
-function getInteractivePostMsg(data, cbMethod){
+function getInteractivePostMsg(data){
     /* get data from post message */
     const interactives = data?.split("|") ?? [];
     if (interactives?.length === 5 && interactives[0] === "interactive") {
@@ -155,7 +165,6 @@ function getInteractivePostMsg(data, cbMethod){
             //calledFrom:'createElm',
             interactiveType: interactives[3]?.split("_")[1]                               
         };
-        /**@function to update data display in interactive  */
-        cbMethod(interactiveFromMsg);
+        return interactiveFromMsg;
     }
 }
