@@ -27,7 +27,9 @@ const {
     assessmentEntityUrnHandler,
     assessmentItemVersionHandler,
     assessmentItemMetadataHandler,
-    assessmentVersionUpdateHandler
+    assessmentVersionUpdateHandler,
+    interactiveMetadataHandler,
+    interactiveVersionHandler
 } = assessmentApiHandlers;
 
 /**
@@ -51,7 +53,7 @@ export const fetchUsageTypeData = (entityType) => (dispatch) => {
  * This action creator is used to fetch the assessment metadata including status
  */
 export const fetchAssessmentMetadata = (type, calledFrom, assessmentData, assessmentItemData) => (dispatch) => {
-    const workUrn = (type == 'assessment' || type == 'assessmentArray') ? assessmentData.targetId : assessmentItemData.targetItemid;
+    const workUrn = (type == 'assessment' || type == 'assessmentArray' || type == 'interactive') ? assessmentData.targetId : assessmentItemData.targetItemid;
     const url = `${config.ASSESSMENT_ENDPOINT}assessment/v2/${workUrn}`;
     return axios.get(url, {
         headers: {
@@ -70,6 +72,8 @@ export const fetchAssessmentMetadata = (type, calledFrom, assessmentData, assess
                     break;
                 case 'assessmentArray':
                     return assessmentEntityUrnHandler(res.data);
+                case 'interactive': 
+                    return interactiveMetadataHandler(res.data, calledFrom, assessmentData, dispatch);
                 default:
                     assessmentErrorHandler(type,':Invalid Type of Assessment for Metadata');
                     break;
@@ -105,6 +109,9 @@ export const fetchAssessmentVersions = (entityUrn, type, createdDate, assessment
                     break;
                 case 'assessmentUpdate':
                     await assessmentVersionUpdateHandler(res.data, args,dispatch);
+                    break;
+                case 'interactive':
+                    interactiveVersionHandler(res.data, args, dispatch);
                     break;
                 default:
                     assessmentErrorHandler(type,':Invalid Type of Assessment for List of Versions');

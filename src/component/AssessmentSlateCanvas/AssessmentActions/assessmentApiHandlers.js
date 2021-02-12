@@ -8,7 +8,8 @@ import {
     GET_USAGE_TYPE,
     UPDATE_ELM_ITEM_ID,
     SET_ASSESSMENT_METADATA,
-    SET_USAGE_TYPE
+    SET_USAGE_TYPE,
+    SET_INTERACTIVE_METADATA
 } from "../../../constants/Action_Constants";
 import { specialCharacterDecode } from '../assessmentCiteTdx/Actions/CiteTdxActions.js';
 import { fetchAssessmentMetadata, fetchAssessmentVersions, setItemUpdateEvent } from './assessmentActions.js';
@@ -162,6 +163,45 @@ const AssessmentAPIHandlers = {
             await dispatch(fetchAssessmentMetadata('assessmentItem', 'fromGetItem', dataForUpdate, assessmentItemData))
         }
     },
+     /** @description This function handles interactive-metadata API response for Assessment */
+    interactiveMetadataHandler: async (responseData, calledFrom, assessmentData, dispatch) => {
+        const assessmentStatus = AssessmentAPIHandlers.setAssessmentStatus(responseData.status);
+        const assessmentTitle = responseData.name ? specialCharacterDecode(responseData.name) : "";
+        let dataForUpdate = AssessmentAPIHandlers.prepareUnapprovedData(responseData, assessmentTitle, assessmentStatus, assessmentData);
+        
+        if (calledFrom == 'fromNextVersion') {  /** Save on Update */
+           dataForUpdate = AssessmentAPIHandlers.prepareApprovedData(assessmentData, responseData, assessmentTitle);
+            AssessmentAPIHandlers.dispatchInteractiveMetadata(assessmentData.activeWorkUrn, dataForUpdate, dispatch);
+        }
+        else if (assessmentStatus == 'wip') {   /* UNAPPROVED */
+            AssessmentAPIHandlers.dispatchInteractiveMetadata(responseData.versionUrn, dataForUpdate, dispatch);
+        }
+        else if (assessmentStatus == 'final') { /* APPROVED | UPDATE */
+            await dispatch(fetchAssessmentVersions(responseData.entityUrn, 'interactive', responseData.dateCreated, dataForUpdate, {}))
+        }
+    },
+    /** @description This function handles interactive-versions API response for interactive */
+    interactiveVersionHandler: (responseData, args, dispatch) => {
+        const {
+            newVersions, assessmentData, assessmentItemData
+        } = args;
+        const latestIndex = AssessmentAPIHandlers.getLatestIndex(responseData, 'createdDate');
+        const latestWorkURN = responseData[latestIndex].versionUrn; /* Latest WorkURN */
+        switch (newVersions.length) {
+            case 0:  /* Show APPROVED Status */
+                AssessmentAPIHandlers.dispatchInteractiveMetadata(assessmentData.activeWorkUrn, assessmentData, dispatch);
+                break;
+            case 1:  /* APPROVED | UPDATE */
+                const updatedAssessmentData = { ...assessmentData, targetId: newVersions[0].versionUrn }
+                dispatch(fetchAssessmentMetadata('interactive', 'fromNextVersion', updatedAssessmentData, assessmentItemData))
+                break;
+            default: /* Show UPDATE Button */
+                const prevLatestWorkUrn = responseData[AssessmentAPIHandlers.getSecondLatestIndex(responseData, latestIndex)].versionUrn;
+                const updatedData = AssessmentAPIHandlers.prepareDataBeforeUpdate(assessmentData, assessmentData.activeWorkUrn, latestWorkURN, prevLatestWorkUrn);
+                AssessmentAPIHandlers.dispatchInteractiveMetadata(assessmentData.activeWorkUrn, updatedData, dispatch);
+                break;
+        }
+    },
     /** @description This function handles assessment-versions API response for Assessment */
     assessmentVersionHandler: (responseData, args, dispatch) => {
         const {
@@ -282,6 +322,17 @@ const AssessmentAPIHandlers = {
             payload: {
                 currentWorkUrn: currentWorkUrn,
                 dataForUpdate: dataForUpdate
+            }
+        })
+    },
+    /** @description This function dispatches latest metadata for interactive to store */
+    dispatchInteractiveMetadata: (currentWorkUrn, dataForUpdate, dispatch) => {
+        hideBlocker();
+        dispatch({
+            type: SET_INTERACTIVE_METADATA,
+            payload: {
+                currentWorkUrn: currentWorkUrn,
+                dataToUpdate: dataForUpdate
             }
         })
     },

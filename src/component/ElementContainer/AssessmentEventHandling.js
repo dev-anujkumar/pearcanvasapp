@@ -113,7 +113,7 @@ export const handlePostMsgOnAddAssess = (addPufFunction, usagetype, action) => {
                             if(itemData?.itemid && itemData.itemTitle){
                                 assessmentDataMsg = { ...assessmentDataMsg, ...itemData };
                                 /* empty store after item data updated */
-                                //store.dispatch(setNewItemFromElm({}));
+                                store.dispatch(setNewItemFromElm({}));
                             }
                             /**@function to update data display in slate */
                             addPufFunction(assessmentDataMsg);
@@ -157,14 +157,16 @@ export const handlePostMsgOnAddAssess = (addPufFunction, usagetype, action) => {
 
 function getInteractivePostMsg(data){
     /* get data from post message */
-    const interactives = data?.split("|") ?? [];
-    if (interactives?.length === 5 && interactives[0] === "interactive") {
-        const interactiveFromMsg = {
-            id: interactives[1]?.split("_")[1],
-            title: interactives[2]?.split("_")[1],
-            //calledFrom:'createElm',
-            interactiveType: interactives[3]?.split("_")[1]                               
-        };
-        return interactiveFromMsg;
-    }
+    if (typeof data === "string") {
+        const interactives = data?.split("|") ?? [];
+        if (interactives?.length === 5 && interactives[0] === "interactive") {
+            const interactiveFromMsg = {
+                id: interactives[1]?.split("_")[1],
+                title: interactives[2]?.split("_")[1],
+                //calledFrom:'createElm',
+                interactiveType: interactives[3]?.split("_")[1]                               
+            };
+            return interactiveFromMsg;
+        }
+    }  
 }
