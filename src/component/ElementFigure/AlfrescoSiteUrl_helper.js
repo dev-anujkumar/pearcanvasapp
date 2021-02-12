@@ -18,6 +18,6 @@ export const handleAlfrescoSiteUrl = (elementId) => {
     }).then(response => {
         console.log('response', response)
     }).catch(error => {
-        //console.log("error", error);
+        console.log("error", error);
     })
 }
