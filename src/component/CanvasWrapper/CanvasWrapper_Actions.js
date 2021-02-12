@@ -145,11 +145,10 @@ export const findElementType = (element, index) => {
                         }
                         break;
                     case "assessment":
-                        console.log("element in assessment>>>>",element)
                         if(!element.html){
-                            console.log("inside",element.figuredata.elementdata.assessmenttitle)
+                            let assessmentTitle=element.figuredata.elementdata.assessmenttitle?element.figuredata.elementdata.assessmenttitle:""
                             element.html={
-                                "title":`<p>${element.figuredata.elementdata.assessmenttitle}</p>`
+                                "title":`<p>${assessmentTitle}</p>`
                             }
                         }
                         let assessmentFormat = element.figuredata.elementdata.assessmentformat.toLowerCase()
