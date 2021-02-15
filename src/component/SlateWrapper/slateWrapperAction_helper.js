@@ -380,6 +380,10 @@ export const setPayloadForContainerCopyPaste = (params) => {
     }
 }
 
+/**
+ * Checks the clone container status and take actions accordingly
+ * @param {*} params contains clone request Id, index of insertion, dispatch and paste method
+ */
 export const fetchStatusAndPaste = async (params) => {
     const {
         insertionIndex,
@@ -413,7 +417,6 @@ export const fetchStatusAndPaste = async (params) => {
                 }
             )
             statusAPICallInProgress = false
-            console.log("statusResponse.datastatusResponse.datastatusResponse.data", statusResponse.data)
             const statusResponseData = statusResponse.data
             if (statusResponseData.auditResponse?.status === "SUCCESS") {
                 isCloneSucceed = true
@@ -429,6 +432,13 @@ export const fetchStatusAndPaste = async (params) => {
     }, slateWrapperConstants.CLONE_STATUS_INTERVAL);
 }
 
+/**
+ * Dispatches paste element action
+ * @param {*} newContainerData clone container details
+ * @param {*} insertionIndex index of insertion
+ * @param {*} pasteElement paste action
+ * @param {*} dispatch dispatch action method
+ */
 export const prepareAndPasteElement = (newContainerData, insertionIndex, pasteElement, dispatch) => {
     const pasteArgs = {
         index: insertionIndex,

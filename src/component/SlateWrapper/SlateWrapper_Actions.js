@@ -809,6 +809,11 @@ export const wirisAltTextPopup = (data) => (dispatch) => {
     })
 }
 
+/**
+ * Calls the clone API to get the request ID
+ * @param {*} insertionIndex index of insertion
+ * @param {*} manifestUrn container urn
+ */
 export const cloneContainer = (insertionIndex, manifestUrn) => async (dispatch) => {
 
     try {
@@ -841,5 +846,4 @@ export const cloneContainer = (insertionIndex, manifestUrn) => async (dispatch) 
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         console.error("Error in cloning the container:::", error);
     }
-
 }

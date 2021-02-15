@@ -68,6 +68,8 @@ export const checkTCM = element => {
 
         case 'showhide': return SHOW_HIDE;
 
+        case "element-aside": return CONTAINER;
+
         default: return TEXT;
     }
 }
