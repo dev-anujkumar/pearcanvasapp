@@ -28,6 +28,7 @@ import { setNewItemFromElm, fetchAssessmentMetadata, fetchAssessmentVersions, up
 import ElmUpdateButton from '../AssessmentSlateCanvas/ElmUpdateButton.jsx';
 import { ELM_UPDATE_BUTTON, ELM_UPDATE_POPUP_HEAD, ELM_UPDATE_MSG } from "../AssessmentSlateCanvas/AssessmentSlateConstants.js"
 import PopUp from '../PopUp';
+import { reloadSlate } from '../ElementContainer/AssessmentEventHandling';
 /**
 * @description - Interactive is a class based component. It is defined simply
 * to make a skeleton of the Interactive Element.
@@ -208,6 +209,7 @@ class Interactive extends React.Component {
         this.props.updateFigureData(figureData, this.props.index, this.props.elementId, () => {
             this.props.handleFocus("updateFromC2");
             this.props.handleBlur();
+            reloadSlate();
         })
         disableHeader(false);
         hideTocBlocker(false);
