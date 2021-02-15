@@ -142,6 +142,7 @@ export const handlePostMsgOnAddAssess = (addPufFunction, usagetype, action) => {
                     if(intObj?.id && intObj.title && intObj.interactiveType){
                         /**@function to update data display in interactive  */
                         addPufFunction(intObj);
+                        handleRefreshSlate(store.dispatch);
                     }
                 }  
                 if(action === "remove"){
