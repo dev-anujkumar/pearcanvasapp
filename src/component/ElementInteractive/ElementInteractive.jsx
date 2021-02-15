@@ -67,7 +67,9 @@ class Interactive extends React.Component {
                 interactiveTitle: this.props.model.figuredata.interactivetitle? this.props.model.figuredata.interactivetitle : "",
             
             })
-            this.props.fetchAssessmentMetadata('interactive', '', { targetId: this.props.model.figuredata.interactiveid });
+            this.props.fetchAssessmentMetadata('interactive', '', 
+                { targetId: this.props.model.figuredata.interactiveid }
+            );
         }
     }
 
@@ -87,11 +89,17 @@ class Interactive extends React.Component {
     }
 
     componentDidUpdate() {
-        const interct = this.props?.assessmentReducer?.item;
-        if( interct?.id && interct.title && interct.interactiveType ) {
-            this.addElmInteractive(interct);
-            this.props.setNewItemFromElm({});
-        }
+        if(this.props?.editInteractiveId === this.props?.model?.figuredata?.interactiveid){
+            const interct = this.props?.assessmentReducer?.item;
+            if( interct?.id && interct.title && interct.interactiveType ) {
+                this.addElmInteractive(interct);
+                this.props.setNewItemFromElm({});
+                //this.props.fetchAssessmentMetadata('interactive', '', 
+                //    { targetId: this.props.model.figuredata.interactiveid }
+                //);
+                //handleRefreshSlate(this.props.dispatch);
+            }
+        }      
     }
 
      /*** @description This function is to show Approved/Unapproved Status on interative */
