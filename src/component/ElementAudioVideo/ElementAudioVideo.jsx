@@ -12,7 +12,7 @@ import './../../styles/ElementAudioVideo/ElementAudioVideo.css';
 import {AUDIO,VIDEO,DEFAULT_ASSET,DEFAULT_VIDEO_POSTER_IMAGE} from './../../constants/Element_Constants';
 import { hideTocBlocker, disableHeader } from '../../js/toggleLoader'
 import { hasReviewerRole } from '../../constants/utility.js'
-import { handleAlfrescoSiteUrl } from '../ElementFigure/AlfrescoSiteUrl_helper.js'
+import { handleAlfrescoSiteUrl, getAlfrescositeResponse } from '../ElementFigure/AlfrescoSiteUrl_helper.js'
 
 
 /*** @description - ElementAudioVideo is a class based component. It is defined simply to make a skeleton of the audio-video-type element ***/
@@ -214,31 +214,11 @@ class ElementAudioVideo extends Component {
     }
     
     componentDidMount() {
-        this.getAlfrescoSiteResponse(this.props.elementId)
-    }
-
-    /**
-     * @description Alfrescosite url response data api
-     */
-
-    getAlfrescoSiteResponse = (elementId) => {
-        let url = `${config.STRUCTURE_API_URL}narrative-api/v2/${elementId}/platformMetadata/alfresco`
-        fetch(url, {
-            method: 'GET',
-            headers: {
-                "Content-Type": "application/json",
-                'Accept': 'application/json',
-                "PearsonSSOSession": config.ssoToken,
-                'Cache-Control': 'no-cache'
-            }
-        }).then(response => response.json())
-          .then(response => {
-                this.setState({
-                    alfrescoSite: response.repositoryFolder
-                })
-            }).catch(error => {
-                //console.log("error", error);
+        getAlfrescositeResponse(this.props.elementId, (response) => {
+            this.setState({
+                alfrescoSite: response.repositoryFolder
             })
+        }) 
     }
     
     /**

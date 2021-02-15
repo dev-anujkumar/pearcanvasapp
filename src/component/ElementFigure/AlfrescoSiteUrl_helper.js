@@ -16,8 +16,25 @@ export const handleAlfrescoSiteUrl = (elementId) => {
             PearsonSSOSession: config.ssoToken
         }
     }).then(response => {
-        console.log('response', response)
     }).catch(error => {
-        console.log("error", error);
+        console.error("error", error);
     })
+}
+
+export const getAlfrescositeResponse = (elementId, callback) => {
+    let url = `${config.STRUCTURE_API_URL}narrative-api/v2/${elementId}/platformMetadata/alfresco`
+    fetch(url, {
+        method: 'GET',
+        headers: {
+            "Content-Type": "application/json",
+            'Accept': 'application/json',
+            "PearsonSSOSession": config.ssoToken,
+            'Cache-Control': 'no-cache'
+        }
+    }).then(response => response.json())
+        .then(response => {
+            callback(response);
+        }).catch(error => {
+            //console.log("error", error);
+        })
 }

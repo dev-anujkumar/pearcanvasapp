@@ -15,7 +15,7 @@ import axios from 'axios';
 import { sendDataToIframe, hasReviewerRole } from '../../constants/utility';
 import { hideTocBlocker, disableHeader } from '../../js/toggleLoader'
 import figureData from './figureTypes';
-import { handleAlfrescoSiteUrl } from './AlfrescoSiteUrl_helper.js'
+import { handleAlfrescoSiteUrl, getAlfrescositeResponse } from './AlfrescoSiteUrl_helper.js'
 
 /*** @description - ElementFigure is a class based component. It is defined simply
 * to make a skeleton of the figure-type element .*/
@@ -39,31 +39,11 @@ class ElementFigure extends Component {
     }
 
     componentDidMount() {
-        this.getAlfrescositeResponse(this.props.elementId)
-    }
-
-     /**
-     * @description Alfrescosite url response data api
-     */
-
-    getAlfrescositeResponse = (elementId) => {
-        let url = `${config.STRUCTURE_API_URL}narrative-api/v2/${elementId}/platformMetadata/alfresco`
-        fetch(url, {
-            method: 'GET',
-            headers: {
-                "Content-Type": "application/json",
-                'Accept': 'application/json',
-                "PearsonSSOSession": config.ssoToken,
-                'Cache-Control': 'no-cache'
-            }
-        }).then(response => response.json())
-            .then(response => {
-                this.setState({
-                    alfrescoSite: response.repositoryFolder
-                })
-            }).catch(error => {
-                //console.log("error", error);
+        getAlfrescositeResponse(this.props.elementId, (response) => {
+            this.setState({
+                alfrescoSite: response.repositoryFolder
             })
+        }) 
     }
 
     updateAlfrescoSiteUrl = () => {
