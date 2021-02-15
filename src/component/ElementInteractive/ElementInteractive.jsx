@@ -24,7 +24,7 @@ import interactiveTypeData from './interactiveTypes.js';
 import { ELM_INT } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import elementTypeConstant from '../ElementContainer/ElementConstants.js';
 import TcmConstants from '../TcmSnapshots/TcmConstants.js';
-import { setNewItemFromElm, fetchAssessmentMetadata } from "../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js"
+import { setNewItemFromElm, fetchAssessmentMetadata, fetchAssessmentVersions, updateAssessmentVersion } from "../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js"
 import ElmUpdateButton from '../AssessmentSlateCanvas/ElmUpdateButton.jsx';
 import { ELM_UPDATE_BUTTON, ELM_UPDATE_POPUP_HEAD, ELM_UPDATE_MSG } from "../AssessmentSlateCanvas/AssessmentSlateConstants.js"
 import PopUp from '../PopUp';
@@ -92,12 +92,11 @@ class Interactive extends React.Component {
         if(this.props?.editInteractiveId === this.props?.model?.figuredata?.interactiveid){
             const interct = this.props?.assessmentReducer?.item;
             if( interct?.id && interct.title && interct.interactiveType ) {
-                this.addElmInteractive(interct);
+                this.addElmInteractive(interct, () => {
+                    hideTocBlocker();
+                    disableHeader(false);
+                });
                 this.props.setNewItemFromElm({});
-                //this.props.fetchAssessmentMetadata('interactive', '', 
-                //    { targetId: this.props.model.figuredata.interactiveid }
-                //);
-                //handleRefreshSlate(this.props.dispatch);
             }
         }      
     }
@@ -180,6 +179,38 @@ class Interactive extends React.Component {
     }
     updateElmAssessment = async (event) => {
         this.toggleUpdatePopup(false, event);
+        this.showCanvasBlocker(false);
+        let oldWorkUrn = this.props?.model?.figuredata?.interactiveid
+        let oldReducerData = this.props.assessmentReducer[oldWorkUrn];
+        oldReducerData.targetId = oldWorkUrn;
+        await this.props.fetchAssessmentVersions(oldReducerData.assessmentEntityUrn, 'interactiveUpdate', oldReducerData.createdDate, oldReducerData, {})
+        const latestReducerData = this.props.assessmentReducer[this.props?.model?.figuredata?.interactiveid]
+        const { latestVersion, secondLatestVersion } = latestReducerData;
+        const newVersion = (latestVersion && (latestVersion.status !== 'wip' || latestVersion.latestCleanVersion == false)) ? latestVersion : secondLatestVersion;
+        const { interactiveid, interactivetype, interactivetitle } = this.props?.model?.figuredata;
+
+        let figureData = {
+            schema: INTERACTIVE_SCHEMA,
+            interactiveid: interactiveid,
+            interactivetype: interactivetype,
+            interactivetitle: interactivetitle,
+            interactiveformat: ELM_INT
+        }
+        this.setState({
+            itemID: interactiveid,
+            interactiveTitle: interactivetitle,
+            elementType: interactivetype
+        })
+        if (newVersion) {
+            figureData.interactiveid = newVersion.id;
+            figureData.interactivetitle = latestVersion.title;
+        }
+        this.props.updateFigureData(figureData, this.props.index, this.props.elementId, () => {
+            this.props.handleFocus("updateFromC2");
+            this.props.handleBlur();
+        })
+        disableHeader(false);
+        hideTocBlocker(false);
     }
 
     /**
@@ -360,7 +391,7 @@ class Interactive extends React.Component {
      * @description This function is to add Elm Interactive Asset ot Interactive Element 
      * @param {Object} pufObj Objeact containing elmInteractive Asset details
     */
-    addElmInteractive = (pufObj) => {
+    addElmInteractive = (pufObj, cb) => {
         showTocBlocker();
         disableHeader(true);
 
@@ -380,6 +411,9 @@ class Interactive extends React.Component {
             this.props.handleFocus("updateFromC2");
             this.props.handleBlur();
         })
+        if (cb) {
+            cb();
+        }
     }
     /**------------------------------------------------------------------------------------------*/
     
@@ -750,7 +784,9 @@ const mapActionToProps = {
     assessmentSorting:assessmentSorting,
     resetElmStore:resetElmStore,
     setNewItemFromElm: setNewItemFromElm,
-    fetchAssessmentMetadata: fetchAssessmentMetadata
+    fetchAssessmentMetadata: fetchAssessmentMetadata,
+    fetchAssessmentVersions: fetchAssessmentVersions,
+    updateAssessmentVersion: updateAssessmentVersion,
 }
 
 const mapStateToProps = (state) => {

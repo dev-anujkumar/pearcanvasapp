@@ -29,7 +29,8 @@ const {
     assessmentItemMetadataHandler,
     assessmentVersionUpdateHandler,
     interactiveMetadataHandler,
-    interactiveVersionHandler
+    interactiveVersionHandler,
+    interactiveVersionUpdateHandler
 } = assessmentApiHandlers;
 
 /**
@@ -112,6 +113,9 @@ export const fetchAssessmentVersions = (entityUrn, type, createdDate, assessment
                     break;
                 case 'interactive':
                     interactiveVersionHandler(res.data, args, dispatch);
+                    break;
+                case 'interactiveUpdate':
+                    interactiveVersionUpdateHandler(res.data, args, dispatch);
                     break;
                 default:
                     assessmentErrorHandler(type,':Invalid Type of Assessment for List of Versions');

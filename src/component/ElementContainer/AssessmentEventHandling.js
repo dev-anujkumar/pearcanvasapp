@@ -37,6 +37,7 @@ export const handleElmPortalEvents = (action = 'add') => {
                     if(intObj?.id && intObj.title && intObj.interactiveType) {
                         /* save item data into store */
                         store.dispatch(setNewItemFromElm(intObj));
+                        handleRefreshSlate(store.dispatch);
                     }
                 }
                 if (action == 'remove') {
