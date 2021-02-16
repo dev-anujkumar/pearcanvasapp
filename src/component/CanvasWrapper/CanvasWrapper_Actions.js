@@ -145,6 +145,12 @@ export const findElementType = (element, index) => {
                         }
                         break;
                     case "assessment":
+                        if(!element.html){
+                            let assessmentTitle=element.figuredata.elementdata.assessmenttitle?element.figuredata.elementdata.assessmenttitle:""
+                            element.html={
+                                "title":`<p>${assessmentTitle}</p>`
+                            }
+                        }
                         let assessmentFormat = element.figuredata.elementdata.assessmentformat.toLowerCase()
                         elementType = {
                             elementType: elementDataBank[element.type][element.figuretype]["elementType"],

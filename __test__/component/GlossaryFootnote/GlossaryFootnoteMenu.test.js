@@ -8,7 +8,7 @@ const middlewares = [thunk];
 import { Provider } from 'react-redux';
 
 const mockStore = configureMockStore(middlewares);
-
+let store = mockStore({});
 let props = {
     glossaryFootnoteValue : {type: "Glossary"},
     glossaryFootNoteCurrentValue: {"glossaryContentText": ""},
@@ -16,8 +16,13 @@ let props = {
     return;
     }
 };
+jest.mock('../../../src/component/AudioTinyMceGlossary', () => {
+    return function () {
+        return (<div>null</div>)
+    }
+})
 describe('Testing GlossaryFootnote menu component with props', () => {
-    let wrapper = mount(< GlossaryFootnoteMenu {...props} />)
+    let wrapper = mount(<GlossaryFootnoteMenu {...props} />)
     const instance = wrapper.find('GlossaryFootnoteMenu').instance();
     it('componentWillMount Event', () => {
         instance.componentWillMount()

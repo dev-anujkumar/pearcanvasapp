@@ -15,6 +15,7 @@ import axios from 'axios';
 import { sendDataToIframe, hasReviewerRole } from '../../constants/utility';
 import { hideTocBlocker, disableHeader } from '../../js/toggleLoader'
 import figureData from './figureTypes';
+import { handleAlfrescoSiteUrl, getAlfrescositeResponse } from './AlfrescoSiteUrl_helper.js'
 
 /*** @description - ElementFigure is a class based component. It is defined simply
 * to make a skeleton of the figure-type element .*/
@@ -25,6 +26,7 @@ class ElementFigure extends Component {
         this.state = {
             imgSrc: null,
             projectMetadata: false,
+            alfrescoSite: ''
         }
     }
 
@@ -34,6 +36,20 @@ class ElementFigure extends Component {
                 imgSrc: null
             })
         }
+    }
+
+    componentDidMount() {
+        getAlfrescositeResponse(this.props.elementId, (response) => {
+            this.setState({
+                alfrescoSite: response.repositoryFolder
+            })
+        }) 
+    }
+
+    updateAlfrescoSiteUrl = () => {
+        this.setState({
+            alfrescoSite: config.alfrescoMetaData.alfresco.repositoryFolder
+        })
     }
 
     /**
@@ -86,6 +102,8 @@ class ElementFigure extends Component {
                 this.props.handleFocus("updateFromC2")
                 this.props.handleBlur()
             })
+            handleAlfrescoSiteUrl(this.props.elementId)
+            this.updateAlfrescoSiteUrl()
         }
     }
     /**
@@ -157,7 +175,7 @@ class ElementFigure extends Component {
         }} else {
             if (this.props.permissions.includes('alfresco_crud_access')) {
                 c2MediaModule.onLaunchAddAnAsset(function (alfrescoData) {
-                    data_1 = { 
+                    data_1 = {
                         ...alfrescoData,
                         currentAsset: currentAsset,
                     };
@@ -216,8 +234,6 @@ class ElementFigure extends Component {
         }
 
     }
-
-
 
     /**
      * @description function will be called to launch Table Editor SPA
@@ -367,11 +383,12 @@ class ElementFigure extends Component {
 
                     </header>{
                         model && model.figuretype !== 'tableasmarkup' && <div className="figure-wrapper">
-                        <div className='image-figure'><p className='image-text'>Image ID: </p> <span className='image-info'> {  model.figuredata && model.figuredata.imageid  ? model.figuredata.imageid :"" } </span> </div>
-                        <div className='image-figure-path'><p className='image-text'>Image Path: </p> <span className='image-info'> {this.state.imgSrc  ? this.state.imgSrc :(model.figuredata.path && model.figuredata.path !== DEFAULT_IMAGE_SOURCE ? model.figuredata.path : "") }</span> </div>
-                    </div>
+                            <div className='image-figure'><p className='image-text'>Image ID: </p> <span className='image-info'> {model.figuredata && model.figuredata.imageid ? model.figuredata.imageid : ""} </span> </div>
+                            <div className='image-figure-path'><p className='image-text'>Image Path: </p> <span className='image-info'> {this.state.imgSrc ? this.state.imgSrc : (model.figuredata.path && model.figuredata.path !== DEFAULT_IMAGE_SOURCE ? model.figuredata.path : "")}</span> </div>
+                            <div className='image-figure-path'><p className='image-text'>Alfresco Site: </p> <span className='image-info'>{model.figuredata && model.figuredata.path && model.figuredata.path !== DEFAULT_IMAGE_SOURCE ? this.state.alfrescoSite : ""} </span> </div>
+                        </div>
                     }
-                    
+
                     <div className={`pearson-component image figureData ${this.props.model.figuredata.tableasHTML !== "" ? 'table-figure-data' : ""}`} data-type={dataType} onClick={this.addFigureResource} >
                         {this.props.model.figuretype === "tableasmarkup" && (this.props.model.figuredata.tableasHTML && (this.props.model.figuredata.tableasHTML !== "" || this.props.model.figuredata.tableasHTML !== undefined)) ?
                             <div id={`${index}-tableData`} className={imageDimension} dangerouslySetInnerHTML={{ __html: this.props.model.figuredata.tableasHTML }} ></div>

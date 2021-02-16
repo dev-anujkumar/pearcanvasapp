@@ -404,16 +404,30 @@ describe('Tests ElementContainer Actions', () => {
                 },
                 parentElementIndex = "0"
 
-            moxios.wait(() => {
-                const request = moxios.requests.mostRecent();
-                request.respondWith({
-                    status: 200,
-                    response: {}
-                });
-            });
-            return store.dispatch(actions.createShowHideElement(elementId, type, index, parentContentUrn, cb, parentElement, parentElementIndex)).then(() => {
-                expect(store.getActions()[0].type).toEqual('CREATE_SHOW_HIDE_ELEMENT');
-            });
+            const mock = new MockAdapter(axios);
+            const data = {
+                "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                "type": "element-authoredtext",
+                "subtype": "",
+                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                "elementdata": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "html": {
+                    "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                },
+                "comments": false,
+                "tcm": true,
+                "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+                "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+            }
+            mock.onPost(`${config.REACT_APP_API_URL}v1/slate/element`).reply(200, data);
+
+            const spyAction = jest.spyOn(actions, "createShowHideElement")
+            actions.createShowHideElement(elementId, type, index, parentContentUrn, cb, parentElement, parentElementIndex)(jest.fn, store.getState)
+            expect(spyAction).toHaveBeenCalled()
         })
         it('testing------- Create Show/Hide Element with approved state------action', () => {
             let initialStateApproved = {
@@ -477,36 +491,30 @@ describe('Tests ElementContainer Actions', () => {
                 },
                 parentElementIndex = "0"
 
-            moxios.wait(() => {
-                const request = moxios.requests.mostRecent();
-                request.respondWith({
-                    status: 200,
-                    response: {
-                        "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-                        "type": "element-authoredtext",
-                        "subtype": "",
-                        "schema": "http://schemas.pearson.com/wip-authoring/element/1",
-                        "elementdata": {
-                            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                            "text": ""
-                        },
-                        "html": {
-                            "text": "<p class=\"paragraphNumeroUno\"><br></p>"
-                        },
-                        "comments": false,
-                        "tcm": true,
-                        "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-                        "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
-                    }
-                });
-            });
-            const expectedActions = [{
-                type: CREATE_SHOW_HIDE_ELEMENT,
-                payload: slateLevelData
-            }];
-            return store.dispatch(actions.createShowHideElement(elementId, type, index, parentContentUrn, cb, parentElement, parentElementIndex)).then(() => {
-                expect(store.getActions()).toEqual([]);
-            });
+            const mock = new MockAdapter(axios);
+            const data = {
+                "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                "type": "element-authoredtext",
+                "subtype": "",
+                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                "elementdata": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "html": {
+                    "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                },
+                "comments": false,
+                "tcm": true,
+                "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+                "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+            }
+            mock.onPost(`${config.REACT_APP_API_URL}v1/slate/element`).reply(200, data);
+
+            const spyAction = jest.spyOn(actions, "createShowHideElement")
+            actions.createShowHideElement(elementId, type, index, parentContentUrn, cb, parentElement, parentElementIndex)(jest.fn, store.getState)
+            expect(spyAction).toHaveBeenCalled()
         })
 
         it('testing------- Create Show/Hide Element parentelement approved------action', () => {
@@ -547,17 +555,30 @@ describe('Tests ElementContainer Actions', () => {
                 },
                 parentElementIndex = "0"
 
-            moxios.wait(() => {
-                const request = moxios.requests.mostRecent();
-                request.respondWith({
-                    status: 200,
-                    response: {}
-                });
-            });
+            const mock = new MockAdapter(axios);
+            const data = {
+                "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                "type": "element-authoredtext",
+                "subtype": "",
+                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                "elementdata": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "html": {
+                    "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                },
+                "comments": false,
+                "tcm": true,
+                "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+                "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+            }
+            mock.onPost(`${config.REACT_APP_API_URL}v1/slate/element`).reply(200, data);
 
-            return store.dispatch(actions.createShowHideElement(elementId, type, index, parentContentUrn, cb, parentElement, parentElementIndex)).then(() => {
-                expect(store.getActions()[0].type).toEqual('GET_PAGE_NUMBER');
-            });
+            const spyAction = jest.spyOn(actions, "createShowHideElement")
+            actions.createShowHideElement(elementId, type, index, parentContentUrn, cb, parentElement, parentElementIndex)(jest.fn, store.getState)
+            expect(spyAction).toHaveBeenCalled()
         })
         it('testing------- Create Show/Hide Element inside aside------action', () => {
             let store = mockStore(() => initialState);
@@ -596,17 +617,30 @@ describe('Tests ElementContainer Actions', () => {
                 },
                 parentElementIndex = "0"
 
-            moxios.wait(() => {
-                const request = moxios.requests.mostRecent();
-                request.respondWith({
-                    status: 200,
-                    response: {}
-                });
-            });
-            
-            return store.dispatch(actions.createShowHideElement(elementId, type, index, parentContentUrn, cb, parentElement, parentElementIndex)).then(() => {
-                expect(store.getActions()[0].type).toEqual('CREATE_SHOW_HIDE_ELEMENT');
-            });
+            const mock = new MockAdapter(axios);
+            const data = {
+                "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                "type": "element-authoredtext",
+                "subtype": "",
+                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                "elementdata": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "html": {
+                    "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                },
+                "comments": false,
+                "tcm": true,
+                "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+                "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+            }
+            mock.onPost(`${config.REACT_APP_API_URL}v1/slate/element`).reply(200, data);
+
+            const spyAction = jest.spyOn(actions, "createShowHideElement")
+            actions.createShowHideElement(elementId, type, index, parentContentUrn, cb, parentElement, parentElementIndex)(jest.fn, store.getState)
+            expect(spyAction).toHaveBeenCalled()
         })
         it('testing------- Create Show/Hide Element inside WE------action', () => {
             let store = mockStore(() => initialState);
@@ -645,17 +679,30 @@ describe('Tests ElementContainer Actions', () => {
                 },
                 parentElementIndex = "0"
 
-            moxios.wait(() => {
-                const request = moxios.requests.mostRecent();
-                request.respondWith({
-                    status: 200,
-                    response: {}
-                });
-            });
-            
-            return store.dispatch(actions.createShowHideElement(elementId, type, index, parentContentUrn, cb, parentElement, parentElementIndex)).then(() => {
-                expect(store.getActions()[0].type).toEqual('CREATE_SHOW_HIDE_ELEMENT');
-            });
+            const mock = new MockAdapter(axios);
+            const data = {
+                "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                "type": "element-authoredtext",
+                "subtype": "",
+                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                "elementdata": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "html": {
+                    "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                },
+                "comments": false,
+                "tcm": true,
+                "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+                "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+            }
+            mock.onPost(`${config.REACT_APP_API_URL}v1/slate/element`).reply(200, data);
+
+            const spyAction = jest.spyOn(actions, "createShowHideElement")
+            actions.createShowHideElement(elementId, type, index, parentContentUrn, cb, parentElement, parentElementIndex)(jest.fn, store.getState)
+            expect(spyAction).toHaveBeenCalled()
         })
     })
     describe('testing------- Delete SHOW HIDE ELEMENT ------action', () => {
@@ -672,25 +719,14 @@ describe('Tests ElementContainer Actions', () => {
             let eleIndex = "0-1-1";
             let parentId = "urn:pearson:manifest:2e052ddf-392f-4e7a-8f2a-01239fa42f43"
             let cb = jest.fn();
-            moxios.wait(() => {
-                const request = moxios.requests.mostRecent();
-                request.respondWith({
-                    status: 200,
-                    response: {}
-                });
-            });
 
-            const expectedActions = [{
-                type: DELETE_SHOW_HIDE_ELEMENT,
-                payload: slateLevelData
-            }];
+            const mock = new MockAdapter(axios);
+            
+            mock.onPost(`${config.REACT_APP_API_URL}v1/slate/deleteElement`).reply(200, {});
 
-
-            return store.dispatch(actions.deleteShowHideUnit(elementId, type, parentUrn, index, eleIndex, parentId, cb, parentElement, parentElementIndex)).then(() => {
-                expect(cb).toBeCalled();
-                expect(store.getActions()[0].type).toEqual('GET_PAGE_NUMBER');
-            });
-
+            const spyAction = jest.spyOn(actions, "deleteShowHideUnit")
+            actions.deleteShowHideUnit(elementId, type, parentUrn, index, eleIndex, parentId, cb, parentElement, parentElementIndex)(jest.fn, store.getState)
+            expect(spyAction).toHaveBeenCalled()
         })
 
         it('testing------- Delete SHOW HIDE ELEMENT inside aside------action', () => {
@@ -733,19 +769,13 @@ describe('Tests ElementContainer Actions', () => {
                 parentElementIndex = "0",
                 cb = jest.fn();
 
-            moxios.wait(() => {
-                const request = moxios.requests.mostRecent();
-                request.respondWith({
-                    status: 200,
-                    response: {}
-                });
-            });
+            const mock = new MockAdapter(axios);
+        
+            mock.onPost(`${config.REACT_APP_API_URL}v1/slate/deleteElement`).reply(200, {});
 
-            return store.dispatch(actions.deleteShowHideUnit(elementId, type, parentUrn, index, eleIndex, parentId, cb, parentElement, parentElementIndex)).then(() => {
-                expect(cb).toBeCalled();
-                expect(store.getActions()[0].type).toEqual(DELETE_SHOW_HIDE_ELEMENT);
-            });
-
+            const spyAction = jest.spyOn(actions, "deleteShowHideUnit")
+            actions.deleteShowHideUnit(elementId, type, parentUrn, index, eleIndex, parentId, cb, parentElement, parentElementIndex)(jest.fn, store.getState)
+            expect(spyAction).toHaveBeenCalled()
         })
         it('testing------- Delete Show/Hide Element inside WE------action', () => {
             let store = mockStore(() => initialState);

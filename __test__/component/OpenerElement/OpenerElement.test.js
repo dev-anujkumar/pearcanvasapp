@@ -407,4 +407,44 @@ describe('Testing Opener component with props', () => {
         expect(OpenerInstance.handleOpenerClick(props.slateLockInfo,event)).toEqual(false)
         spyhandleBlur.mockClear()
     })
+    it("Test-handleToolbarOpener ", () => {
+        const props = {
+            slateLockInfo: {
+                isLocked: true,
+                userId: 'c5Test01'
+            },
+            element : openerElementData,
+            onClick : ()=>{},
+            permissions: []
+        }
+        const event = {
+            stopPropagation() { },
+            preventDefault() { }
+        }
+        document.getElementById["tinymceToolbar"] = true
+        const openerComponent = mount(<Provider store={store}><OpenerElement {...props} /></Provider>)
+        const OpenerInstance = openerComponent.find('OpenerElement').instance()
+        const spyhandleBlur = jest.spyOn(OpenerInstance, 'handleToolbarOpener')
+        OpenerInstance.handleToolbarOpener(event)
+    })
+    describe('testing componentWillUnmount',()=>{
+      it('Test-componentWillUnmount Function', () => {
+        const openerComponent = mount(<Provider store={store}><OpenerElement {...props} /></Provider>)
+        const OpenerInstance = openerComponent.find('OpenerElement').instance()
+        const spycomponentWillUnmount  = jest.spyOn(OpenerInstance, 'componentWillUnmount')
+        OpenerInstance.componentWillUnmount();
+        expect(spycomponentWillUnmount).toHaveBeenCalled()
+        spycomponentWillUnmount.mockClear()
+      })
+    })
+    describe('testing componentDidMount',()=>{
+        it('Test-componentDidMount Function', () => {
+          const openerComponent = mount(<Provider store={store}><OpenerElement {...props} /></Provider>)
+          const OpenerInstance = openerComponent.find('OpenerElement').instance()
+          const componentDidMount  = jest.spyOn(OpenerInstance, 'componentDidMount')
+          OpenerInstance.componentDidMount();
+          expect(componentDidMount).toHaveBeenCalled()
+        })
+      })
+
 })
