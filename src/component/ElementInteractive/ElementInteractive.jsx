@@ -89,19 +89,20 @@ class Interactive extends React.Component {
         return null;
     }
 
-    componentDidUpdate() {
-        if(this.props?.editInteractiveId === this.props?.model?.figuredata?.interactiveid){
-            const interct = this.props?.assessmentReducer?.item;
-            if( interct?.id && interct.title && interct.interactiveType ) {
-                this.addElmInteractive(interct, () => {
-                    hideTocBlocker();
-                    disableHeader(false);
-                });
-                this.props.setNewItemFromElm({});
+   componentDidUpdate() { 
+        if ((!config.savingInProgress && !config.isSavingElement) && (this.props.model.figuredata.interactiveformat === ELM_INT)) { 
+            if(this.props?.editInteractiveId === this.props?.model?.figuredata?.interactiveid){
+                const interct = this.props?.assessmentReducer?.item;
+                if( interct?.id && interct.title && interct.interactiveType ) {
+                    this.addElmInteractive(interct, () => {
+                        hideTocBlocker();
+                        disableHeader(false);
+                    });
+                    this.props.setNewItemFromElm({});
+                }
             }
-        }      
-    }
-
+        }
+   }
      /*** @description This function is to show Approved/Unapproved Status on interative */
     showElmVersionStatus = () => {
         let elmInt =  this.props?.assessmentReducer[this.state.itemID];
@@ -181,35 +182,33 @@ class Interactive extends React.Component {
     updateElmAssessment = async (event) => {
         this.toggleUpdatePopup(false, event);
         this.showCanvasBlocker(false);
-        let oldWorkUrn = this.props?.model?.figuredata?.interactiveid
-        let oldReducerData = this.props.assessmentReducer[oldWorkUrn];
+        let oldWorkUrn = this.props?.model?.figuredata?.interactiveid;
+        let oldReducerData = this.props.assessmentReducer[oldWorkUrn]??{};
         oldReducerData.targetId = oldWorkUrn;
         await this.props.fetchAssessmentVersions(oldReducerData.assessmentEntityUrn, 'interactiveUpdate', oldReducerData.createdDate, oldReducerData, {})
         const latestReducerData = this.props.assessmentReducer[this.props?.model?.figuredata?.interactiveid]
         const { latestVersion, secondLatestVersion } = latestReducerData;
         const newVersion = (latestVersion && (latestVersion.status !== 'wip' || latestVersion.latestCleanVersion == false)) ? latestVersion : secondLatestVersion;
         const { interactiveid, interactivetype, interactivetitle } = this.props?.model?.figuredata;
-
         let figureData = {
             schema: INTERACTIVE_SCHEMA,
             interactiveid: interactiveid,
             interactivetype: interactivetype,
-            interactivetitle: interactivetitle,
+            interactivetitle: interactivetitle || latestReducerData?.assessmentTitle,
             interactiveformat: ELM_INT
         }
-        this.setState({
-            itemID: interactiveid,
-            interactiveTitle: interactivetitle,
-            elementType: interactivetype
-        })
         if (newVersion) {
             figureData.interactiveid = newVersion.id;
             figureData.interactivetitle = latestVersion.title;
         }
+        this.setState({
+            itemID: figureData.interactiveid,
+            interactiveTitle: figureData.interactivetitle,
+            elementType: interactivetype
+        })
         this.props.updateFigureData(figureData, this.props.index, this.props.elementId, () => {
             this.props.handleFocus("updateFromC2");
             this.props.handleBlur();
-            //reloadSlate();
         })
         disableHeader(false);
         hideTocBlocker(false);

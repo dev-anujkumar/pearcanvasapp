@@ -168,7 +168,6 @@ const AssessmentAPIHandlers = {
         const assessmentStatus = AssessmentAPIHandlers.setAssessmentStatus(responseData.status);
         const assessmentTitle = responseData.name ? specialCharacterDecode(responseData.name) : "";
         let dataForUpdate = AssessmentAPIHandlers.prepareUnapprovedData(responseData, assessmentTitle, assessmentStatus, assessmentData);
-        
         if (calledFrom == 'fromNextVersion') {  /** Save on Update */
             dataForUpdate = AssessmentAPIHandlers.prepareApprovedData(assessmentData, responseData, assessmentTitle);
             AssessmentAPIHandlers.dispatchInteractiveMetadata(assessmentData.activeWorkUrn, dataForUpdate, dispatch);
@@ -210,7 +209,6 @@ const AssessmentAPIHandlers = {
         const {
             newVersions, assessmentData, assessmentItemData
         } = args;
-        // console.log('newVersions.length', newVersions.length)
         const latestIndex = AssessmentAPIHandlers.getLatestIndex(responseData, 'createdDate');
         const latestWorkURN = responseData[latestIndex].versionUrn; /* Latest WorkURN */
         switch (newVersions.length) {
@@ -316,10 +314,9 @@ const AssessmentAPIHandlers = {
             }
         }
         const updatedData = AssessmentAPIHandlers.prepareDataOnUpdate(assessmentData, assessmentData.activeWorkUrn, latestVersion, secondLatestVersion);
-        console.log("2. - interactiveVersionUpdateHandler updatedData - ",updatedData)
         await dispatch(fetchAssessmentMetadata('interactive', 'fromUpdate', updatedData));
     },
-    /** @description This function handles assessment-metadata API response for Assessment after Update Button Click */
+    /** @description This function handles interactive-metadata API response for Assessment after Update Button Click */
     interactiveMetadataUpdateHandler: (responseData, assessmentData, dispatch) => {
         const latestVersion = {
             id: responseData.versionUrn,
@@ -331,8 +328,6 @@ const AssessmentAPIHandlers = {
             ...assessmentData,
             latestVersion: latestVersion
         }
-        console.log("4. - interactiveMetadataUpdateHandler  - dataToDispatch",dataToDispatch)
-
         AssessmentAPIHandlers.dispatchInteractiveMetadata(assessmentData.activeWorkUrn, dataToDispatch, dispatch);
     },
     /** @description This function handles assessment-metadata API response for Assessment after Update Button Click */
