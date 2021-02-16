@@ -9,6 +9,11 @@ jest.mock('../../../src/component/tinyMceEditor.js',()=>{
         return (<div>null</div>)
     }
 })
+global.fetch = jest.fn().mockImplementation(() => {
+    return new Promise((resolve, reject) => {
+      resolve({json:jest.fn(),id:'urn:pearson134'});
+   });
+ });
 describe('Testing Element Audio-Video component', () => {
 
     it('renders without crashing', () => {
@@ -302,7 +307,37 @@ describe('Testing Element Audio-Video component', () => {
         })
     })
     describe('Testing dataFromAlfresco function', () => {
-
+        let alfrescoPath={
+            alfresco:{
+                nodeRef: "ebaaf975-a68b-4ca6-9604-3d37111b847a",
+            repositoryFolder: "001_C5 Media POC - AWS US ",
+            repositoryName: "AWS US",
+            repositoryUrl: "https://staging.api.pearson.com/content/cmis/uswip-aws",
+            visibility: "MODERATED",
+            },
+            associatedArt: "https://cite-media-stg.pearson.com/legacy_paths/634a3489-083f-4539-8d47-0a8827246857/cover_thumbnail.jpg",
+            authorName: "Krajewski",
+            citeUrn: "urn:pearson:manifestation:191e7b6c-53a3-420f-badd-a90786613ae5",
+            containerUrn: "urn:pearson:manifest:fd254701-5063-43aa-bd24-a2c2175be2b2",
+            currentOrigin: "local",
+            dateApproved: null,
+            dateCreated: "2019-02-28T19:14:32.948Z",
+            eTag: "Vy8xNTc0Mjc4NDkxMDYz",
+            entityUrn: "urn:pearson:entity:f2f656da-c167-4a5f-ab8c-e3dbbd349095",
+            gridId: [],
+            hasVersions: false,
+            id: "urn:pearson:distributable:cd9daf2a-981d-493f-bfae-71fd76109d8f",
+            name: "ELMTEST_StgEnv_Krajewski Test",
+            roleId: "admin",
+            ssoToken: "qcOerhRD_CT-ocYsh-y2fujsZ0o.*AAJTSQACMDIAAlNLABxnalBuS2VJQi9RUTFMdHVBZDZBMUxyakpUTGM9AAJTMQACMDE.*",
+            status: "wip",
+            tcm: {timeUpdated: 1553707971031, userIp: "10.50.11.104", user: "c5test01", activated: true},
+            url: null,
+            userApprover: null,
+            userApproverFullName: null,
+            userCount: 0,
+            'x-prsn-user-id': " ",
+        }
         let props = {
             slateLockInfo: {
                 isLocked: false,
@@ -342,6 +377,7 @@ describe('Testing Element Audio-Video component', () => {
                     'alt-text': "ält-text",
                     'longDescription':"longDescription",
                  }
+                config.alfrescoMetaData = alfrescoPath
                 elementAudioVideoInstance.dataFromAlfresco(data)
                 elementAudioVideoInstance.forceUpdate();
                 elementAudioVideo.update();
