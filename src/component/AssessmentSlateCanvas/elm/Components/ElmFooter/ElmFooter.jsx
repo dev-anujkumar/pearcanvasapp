@@ -97,7 +97,7 @@ const ElmFooter = (props) => {
           onClick={openElmPortal}
           disabled={activeRadioIndex !== null}
         >
-          <span className="margin-right-5px">
+          <span className="elm-create-button-icons">
             {openItemTable ? singleAssessmentItemIcon : 
               (activeAssessmentType === ELM_INT) ? elmInteractiveIcon : elmAssessmentItem }
           </span>

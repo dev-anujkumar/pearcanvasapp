@@ -209,6 +209,7 @@ const AssessmentAPIHandlers = {
         const {
             newVersions, assessmentData, assessmentItemData
         } = args;
+        // console.log('newVersions.length', newVersions.length)
         const latestIndex = AssessmentAPIHandlers.getLatestIndex(responseData, 'createdDate');
         const latestWorkURN = responseData[latestIndex].versionUrn; /* Latest WorkURN */
         switch (newVersions.length) {
