@@ -409,7 +409,9 @@ class Interactive extends React.Component {
             interactiveTitle: pufObj.title,
             elementType: pufObj.interactiveType
         }, () => {
-            this.props.fetchAssessmentMetadata("interactive", "", pufObj.id);
+            this.props.fetchAssessmentMetadata("interactive", "",
+                 { targetId: this.props?.model?.figuredata?.interactiveid }
+            );
         })
         this.props.updateFigureData(figureData, this.props.index, this.props.elementId, () => {
             this.props.handleFocus("updateFromC2");
