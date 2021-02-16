@@ -369,7 +369,7 @@ const AssessmentAPIHandlers = {
             type: SET_INTERACTIVE_METADATA,
             payload: {
                 currentWorkUrn: currentWorkUrn,
-                dataToUpdate: dataForUpdate
+                dataForUpdate: dataForUpdate
             }
         })
     },

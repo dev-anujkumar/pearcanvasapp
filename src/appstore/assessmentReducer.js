@@ -31,6 +31,7 @@ export default function assessmentReducer(state = INITIAL_STATE, action = INITIA
                 usageTypeListData: action.payload.usageTypeList
             }
         case SET_ASSESSMENT_METADATA:
+        case SET_INTERACTIVE_METADATA:
             return {
                 ...state,
                 [action.payload.currentWorkUrn]: {
@@ -90,14 +91,6 @@ export default function assessmentReducer(state = INITIAL_STATE, action = INITIA
             return {
                 ...state,
                 item: action.payload
-            }
-        case SET_INTERACTIVE_METADATA:
-            return {
-                ...state,
-                [action.payload.currentWorkUrn]: {
-                    ...state[action.payload.currentWorkUrn],
-                    ...action.payload.dataToUpdate
-                }
             }
         default:
             return state
