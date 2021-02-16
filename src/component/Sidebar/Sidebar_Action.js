@@ -370,6 +370,11 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             type: SET_ACTIVE_ELEMENT,
             payload: activeElementObject
         });
+        if (activeElementObject.tag === "BQ") {
+            const node1 = document.querySelector(`[data-id="${activeElementObject.elementId}"]`)
+            const node2 = node1?.querySelector(`.paragraphNummerEins`)
+            node2?.focus()
+        }
     })
     
     .catch(err =>{
