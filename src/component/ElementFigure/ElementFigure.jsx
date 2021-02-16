@@ -251,7 +251,8 @@ class ElementFigure extends Component {
             parentEntityUrn: this.props.parentEntityUrn
         }
         let configAPIKey = {
-            S3MathImagePath : config.S3MathImagePath?config.S3MathImagePath:"https://cite-media-stg.pearson.com/legacy_paths/wiris-dev-mathtype-cache-use/cache/"
+            S3MathImagePath : config.S3MathImagePath?config.S3MathImagePath:"https://cite-media-stg.pearson.com/legacy_paths/wiris-dev-mathtype-cache-use/cache/",
+            alfrescoMetaData: config?.alfrescoMetaData ?? {}
         }
          sendDataToIframe({ 'type': 'launchTableSPA', 'message': {}, "id": this.props.elementId, editable ,slateData, configAPIKey});
     }
