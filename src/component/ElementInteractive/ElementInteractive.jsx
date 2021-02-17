@@ -53,7 +53,7 @@ class Interactive extends React.Component {
             openedFrom:'',
             interactiveTitle: this.props.model.figuredata && this.props.model.figuredata.interactivetitle? this.props.model.figuredata.interactivetitle : "",
             showElmComponent:false,
-            showUpdatePopup:false,
+            showUpdatePopup:false
            };
 
     }
@@ -159,24 +159,19 @@ class Interactive extends React.Component {
     }
       /*** @description This function is used to render Version update Popup */
     showCustomPopup = () => {
-        if (this.state.showUpdatePopup) {
-            this.showCanvasBlocker(true);
-            return (
-                <PopUp
-                    dialogText={ELM_UPDATE_MSG}
-                    active={true}
-                    togglePopup={this.toggleUpdatePopup}
-                    isElmUpdatePopup={true}
-                    updateElmAssessment={this.updateElmAssessment}
-                    isInputDisabled={true}
-                    isElmUpdateClass="elm-update"
-                    elmHeaderText={ELM_UPDATE_POPUP_HEAD}
-                />
-            )
-        }
-        else {
-            return null
-        }
+        this.showCanvasBlocker(true);
+        return (
+            <PopUp
+                dialogText={ELM_UPDATE_MSG}
+                active={true}
+                togglePopup={this.toggleUpdatePopup}
+                isElmUpdatePopup={true}
+                updateElmAssessment={this.updateElmAssessment}
+                isInputDisabled={true}
+                isElmUpdateClass="elm-update"
+                elmHeaderText={ELM_UPDATE_POPUP_HEAD}
+            />
+        )
     }
     updateElmAssessment = async (event) => {
         this.toggleUpdatePopup(false, event);
@@ -795,7 +790,7 @@ const mapActionToProps = {
     setNewItemFromElm: setNewItemFromElm,
     fetchAssessmentMetadata: fetchAssessmentMetadata,
     fetchAssessmentVersions: fetchAssessmentVersions,
-    updateAssessmentVersion: updateAssessmentVersion,
+    updateAssessmentVersion: updateAssessmentVersion
 }
 
 const mapStateToProps = (state) => {
