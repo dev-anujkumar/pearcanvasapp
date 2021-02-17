@@ -251,8 +251,22 @@ class ElementFigure extends Component {
             parentEntityUrn: this.props.parentEntityUrn
         }
         let configAPIKey = {
-            S3MathImagePath : config.S3MathImagePath?config.S3MathImagePath:"https://cite-media-stg.pearson.com/legacy_paths/wiris-dev-mathtype-cache-use/cache/",
-            alfrescoMetaData: config?.alfrescoMetaData ?? {}
+            S3MathImagePath: config.S3MathImagePath ? config.S3MathImagePath : "https://cite-media-stg.pearson.com/legacy_paths/wiris-dev-mathtype-cache-use/cache/",
+            alfrescoMetaData: config?.alfrescoMetaData ?? {},
+            CMDS_APIKEY: config?.CMDS_APIKEY ?? '5x8gLqCCfkOfgPkFd9YNotcAykeldvVd',
+            CMDS_DATA_ENDPOINT: config?.CMDS_DATA_ENDPOINT ?? 'https://staging.data.pearson.com',
+            CMDS_SCHEMA_ENDPOINT: config?.CMDS_SCHEMA_ENDPOINT ?? 'https://staging.schema.pearson.com',
+            CMDS_DATABASE: config?.CMDS_DATABASE ?? '?db=qa2',
+            CMIS_REPO: config?.CMIS_REPO ?? [{ repo: "https://staging.api.pearson.com/content/cmis/ukwip", repoName: "UK" }, { repo: "https://staging.api.pearson.com/content/cmis/uswip-aws", "repoName": "AWS US" }, { "repo": "https://staging.api.pearson.com/content/cmis/uswip", "repoName": "US" }],
+            CMDS_AUTHORIZATION: config?.CMDS_AUTHORIZATION ?? 'Basic Ymx1ZWJlcnJ5OmVAQkhSTUF2M2V5S2xiT1VjS0tAWl56Q0ZhMDRtYw==',
+            EPS_API: config?.EPS_API ?? 'https://us-school-stg.pearsoned.com/school',
+            PATTERNS: {
+                PATTERN_VENDOR: config.PATTERNS?.PATTERN_VENDOR,
+                PATTERN_SEARCH_SELECT: config.PATTERNS?.PATTERN_SEARCH_SELECT,
+                PATTERN_ADD_ASSET: config.PATTERNS?.PATTERN_ADD_ASSET,
+                PATTERN_BROKER: config.PATTERNS?.PATTERN_BROKER,
+                PATTERN_PRODUCT_LINK: config.PATTERNS?.PATTERN_PRODUCT_LINK
+            }
         }
          sendDataToIframe({ 'type': 'launchTableSPA', 'message': {}, "id": this.props.elementId, editable ,slateData, configAPIKey});
     }
