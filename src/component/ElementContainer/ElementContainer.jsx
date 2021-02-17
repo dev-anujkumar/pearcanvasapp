@@ -49,8 +49,8 @@ import CutCopyDialog from '../CutCopyDialog';
 import { OnCopyContext } from '../CutCopyDialog/copyUtil.js'
 import { setSelection } from '../CutCopyDialog/CopyUrn_Action.js';
 import { openElmAssessmentPortal, fetchAssessmentMetadata, resetAssessmentStore, editElmAssessmentId } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
-import {handleElmPortalEvents} from '../ElementContainer/AssessmentEventHandling.js';
-import { checkFullElmAssessment, checkEmbeddedElmAssessment } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
+import {handleElmPortalEvents, handlePostMsgOnAddAssess } from '../ElementContainer/AssessmentEventHandling.js';
+import { checkFullElmAssessment, checkEmbeddedElmAssessment, checkInteractive } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 import { setScroll } from './../Toolbar/Search/Search_Action.js';
 import { SET_SEARCH_URN, SET_COMMENT_SEARCH_URN } from './../../constants/Search_Constants.js';
 import { ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, SECONDARY_SINGLE_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
@@ -75,7 +75,8 @@ class ElementContainer extends Component {
             hasError: false,
             sectionBreak: null,
             audioPopupStatus:false,
-            position:{}
+            position:{},
+            editInteractiveId:""
         };
 
 
@@ -171,6 +172,7 @@ class ElementContainer extends Component {
             config.releaseCallCount += 1
         }
         handleElmPortalEvents('remove');/** Remove Elm-Assessment Update eventListener */
+        handlePostMsgOnAddAssess("", "", "remove")
     }
 
     componentWillReceiveProps(newProps) {
@@ -1233,7 +1235,7 @@ class ElementContainer extends Component {
                             labelText = 'Qu';
                             break;
                         case elementTypeConstant.INTERACTIVE:
-                            editor = <ElementInteractive accessDenied={this.props.accessDenied} showBlocker={this.props.showBlocker} updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} handleAudioPopupLocation = {this.handleAudioPopupLocation}/>;
+                            editor = <ElementInteractive accessDenied={this.props.accessDenied} showBlocker={this.props.showBlocker} updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} handleAudioPopupLocation = {this.handleAudioPopupLocation} editInteractiveId = {this.state.editInteractiveId} />;
                             labelText = LABELS[element.figuredata.interactiveformat];
                             isQuadInteractive = labelText === "Quad" ? "quad-interactive" : "";
                             break;
@@ -1462,7 +1464,7 @@ class ElementContainer extends Component {
         let btnClassName = this.state.btnClassName;
         let bceOverlay = "";
         let elementOverlay = '';
-        let showEditButton = checkFullElmAssessment(element) || checkEmbeddedElmAssessment(element)
+        let showEditButton = checkFullElmAssessment(element) || checkEmbeddedElmAssessment(element) || checkInteractive(element);
         if (!hasReviewerRole() && this.props.permissions && !(this.props.permissions.includes('access_formatting_bar')||this.props.permissions.includes('elements_add_remove')) ) {
             elementOverlay = <div className="element-Overlay disabled" onClick={() => this.handleFocus()}></div>
         }
@@ -1708,15 +1710,18 @@ class ElementContainer extends Component {
         let { element } = this.props;
         let fullAssessment = checkFullElmAssessment(element);
         let embeddedAssessment = checkEmbeddedElmAssessment(element);
+        const isInteractive = checkInteractive(element);
         let dataToSend = {
             assessmentWorkUrn: fullAssessment ? element.elementdata.assessmentid : embeddedAssessment ? element.figuredata.elementdata.assessmentid : "",
             projDURN: config.projectUrn,
             containerURN: config.slateManifestURN,
-            assessmentItemWorkUrn: embeddedAssessment ? element.figuredata.elementdata.assessmentitemid : ""
+            assessmentItemWorkUrn: embeddedAssessment ? element.figuredata.elementdata.assessmentitemid : "",
+            interactiveId: isInteractive ? element.figuredata.interactiveid : ""
         }
         handleElmPortalEvents();/** Add Elm-Assessment Update eventListener */
         this.props.openElmAssessmentPortal(dataToSend);
         embeddedAssessment && this.props.editElmAssessmentId(element.figuredata.elementdata.assessmentid, element.figuredata.elementdata.assessmentitemid);
+        isInteractive && this.setState({ editInteractiveId: element.figuredata.interactiveid });
     }
    
     render = () => {

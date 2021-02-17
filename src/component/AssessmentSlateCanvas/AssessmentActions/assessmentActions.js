@@ -27,7 +27,10 @@ const {
     assessmentEntityUrnHandler,
     assessmentItemVersionHandler,
     assessmentItemMetadataHandler,
-    assessmentVersionUpdateHandler
+    assessmentVersionUpdateHandler,
+    interactiveMetadataHandler,
+    interactiveVersionHandler,
+    interactiveVersionUpdateHandler
 } = assessmentApiHandlers;
 
 /**
@@ -51,7 +54,7 @@ export const fetchUsageTypeData = (entityType) => (dispatch) => {
  * This action creator is used to fetch the assessment metadata including status
  */
 export const fetchAssessmentMetadata = (type, calledFrom, assessmentData, assessmentItemData) => (dispatch) => {
-    const workUrn = (type == 'assessment' || type == 'assessmentArray') ? assessmentData.targetId : assessmentItemData.targetItemid;
+    const workUrn = (type == 'assessment' || type == 'assessmentArray' || type == 'interactive') ? assessmentData.targetId : assessmentItemData.targetItemid;
     const url = `${config.ASSESSMENT_ENDPOINT}assessment/v2/${workUrn}`;
     return axios.get(url, {
         headers: {
@@ -70,6 +73,8 @@ export const fetchAssessmentMetadata = (type, calledFrom, assessmentData, assess
                     break;
                 case 'assessmentArray':
                     return assessmentEntityUrnHandler(res.data);
+                case 'interactive': 
+                    return interactiveMetadataHandler(res.data, calledFrom, assessmentData, dispatch);
                 default:
                     assessmentErrorHandler(type,':Invalid Type of Assessment for Metadata');
                     break;
@@ -106,6 +111,12 @@ export const fetchAssessmentVersions = (entityUrn, type, createdDate, assessment
                 case 'assessmentUpdate':
                     await assessmentVersionUpdateHandler(res.data, args,dispatch);
                     break;
+                case 'interactive':
+                    interactiveVersionHandler(res.data, args, dispatch);
+                    break;
+                case 'interactiveUpdate':
+                    interactiveVersionUpdateHandler(res.data, args, dispatch);
+                    break;
                 default:
                     assessmentErrorHandler(type,':Invalid Type of Assessment for List of Versions');
                     break;
@@ -119,10 +130,12 @@ export const fetchAssessmentVersions = (entityUrn, type, createdDate, assessment
  * This action creator is used to launch Elm Assessment Portal from Cypress
  */
 export const openElmAssessmentPortal = (assessmentData) => (dispatch) => {
-    let { assessmentWorkUrn, projDURN, containerURN, assessmentItemWorkUrn } = assessmentData
+    let { assessmentWorkUrn, projDURN, containerURN, assessmentItemWorkUrn, interactiveId } = assessmentData
     let url = `${config.ELM_PORTAL_URL}/launch/editor/assessment/${assessmentWorkUrn}/editInPlace?containerUrn=${containerURN}&projectUrn=${projDURN}`;
     if (assessmentItemWorkUrn.trim() != "") {
         url = `${config.ELM_PORTAL_URL}/launch/editor/assessment/${assessmentWorkUrn}/item/${assessmentItemWorkUrn}/editInPlace?containerUrn=${containerURN}&projectUrn=${projDURN}`;
+    } else if(interactiveId){
+        url = `${config.ELM_PORTAL_URL}/launch/editor/interactive/${interactiveId}/editInPlace?containerUrn=${containerURN}&projectUrn=${projDURN}`;
     }
     try {
         let elmWindow = window.open(url);

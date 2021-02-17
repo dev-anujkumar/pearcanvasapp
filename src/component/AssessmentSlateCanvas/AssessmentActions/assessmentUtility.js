@@ -2,7 +2,7 @@
  * Module - assessmentUtility
  * Description - This file contains utility functions related to assessments (full and embedded)
  */
-import { LEARNING_TEMPLATE, PUF, ELEMENT_FIGURE, FIGURE_ASSESSMENT, ELEMENT_ASSESSMENT, LEARNOSITY } from '../AssessmentSlateConstants.js';
+import { LEARNING_TEMPLATE, PUF, ELEMENT_FIGURE, FIGURE_ASSESSMENT, ELEMENT_ASSESSMENT, LEARNOSITY, ELM_INT, FIGURE_INTERACTIVE } from '../AssessmentSlateConstants.js';
 /** This is a function to set Assessment Title for Embedded Assessment
  * * @param model - object containig element data
 */
@@ -114,6 +114,18 @@ export const checkFullElmAssessment = (element) => {
 */
 export const checkEmbeddedElmAssessment = (element) => {
     if (element && element.type == ELEMENT_FIGURE && element.figuretype == FIGURE_ASSESSMENT && element.figuredata && element.figuredata.elementdata && isElmLearnosityAssessment(element.figuredata.elementdata) && element.figuredata.elementdata.assessmentid) {
+        return true;
+    }
+    return false;
+}
+
+/***
+* @description - This is the function to check if an interactive is elm interactive
+* @param element - element's details
+*/
+export const checkInteractive = (element) => {
+    if (element?.type === ELEMENT_FIGURE && element.figuretype === FIGURE_INTERACTIVE &&
+         element.figuredata?.interactiveformat === ELM_INT && element.figuredata?.interactiveid) {
         return true;
     }
     return false;

@@ -57,6 +57,7 @@ export const PRIMARY_SINGLE_ASSESSMENT = 'primary-single-assessment'
 export const SECONDARY_SINGLE_ASSESSMENT = 'secondary-single-assessment-'
 export const PRIMARY_SLATE_ASSESSMENT = 'primary-assessment-slate'
 export const SECONDARY_SLATE_ASSESSMENT = 'secondary-assessment-'
+export const FIGURE_INTERACTIVE = "interactive"
 
 export const ASSESSMENT_PICKER_OPENERS = Object.freeze({
     FULL_ASSESSMENT:'slateAssessment',
