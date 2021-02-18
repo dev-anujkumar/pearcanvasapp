@@ -328,6 +328,15 @@ span.approved-button.enable svg path#path2 {
   display: flex;
   margin: 30px 0 20px 142px;
 }
+.cls-display-flex{
+  display: flex;
+}
+.elm-int-status-alignment {
+  margin: 0px 0px 20px 0px !important;
+}
+.eml-int-status-text-tm {
+  margin:7px 5px 0px 5px;
+}
 
 .show-update#link-notification{
   display: block;
