@@ -39,7 +39,7 @@ class ElementFigure extends Component {
     }
 
     componentDidMount() {
-        if(this.props.model.figuretype === 'image'){
+        if(this.props && this.props.model && this.props.model.figuretype === 'image'){
           getAlfrescositeResponse(this.props.elementId, (response) => {
             this.setState({
                 alfrescoSite: response.repositoryFolder
