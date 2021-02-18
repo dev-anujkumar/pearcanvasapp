@@ -793,7 +793,14 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                     slateEntityUrn
                 };
         
-                onPasteSuccess(pasteSuccessArgs)
+                await onPasteSuccess(pasteSuccessArgs)
+                if (responseData[0].elementdata?.type === "blockquote") {  
+                    setTimeout(() => {
+                        const node1 = document.querySelector(`[data-id="${responseData[0].id}"]`)
+                        const node2 = node1?.querySelector(`.paragraphNummerEins`)
+                        node2?.focus()
+                    }, 200)
+                }
             }
         }
         catch(error) {

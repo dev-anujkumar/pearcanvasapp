@@ -16,7 +16,7 @@ jest.mock("../../../src/component/TcmSnapshots/TcmSnapshot_Actions.js", () => {
 
 describe('-----------------------Test ElementSnapshot_Utility Functions-----------------------', () => {
     describe('Test-1-Function--1--setSemanticsSnapshots', () => {
-        const { stanza, paragraph, blockquote, figure } = tcmTestData.setSemanticsSnapshotsData
+        const { stanza, paragraph, blockquote, figure,list } = tcmTestData.setSemanticsSnapshotsData
         let actionStatus = {
             action:"create",
             status:"accepted",
@@ -51,9 +51,14 @@ describe('-----------------------Test ElementSnapshot_Utility Functions---------
             expect(spyFunction).toHaveBeenCalledWith(figure, actionStatus);
 
         })
+        it('Test-1.6-Function--1--setSemanticsSnapshots - element-list', () => {
+            const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'setSemanticsSnapshots');
+            elementSnapshotUtilityFn.setSemanticsSnapshots(list, actionStatus );
+            expect(spyFunction).toHaveBeenCalledWith(list, actionStatus);
+        })
     });
     describe('Test-2-Function--2--fetchElementsTag', () => {
-        const { paragraph, heading, list, blockquote, aside, workedexample, stanza, figure, interactive } = tcmTestData.fetchElementTagData
+        const { paragraph, heading, list, blockquote, aside, workedexample, stanza, figure, interactive, list1 } = tcmTestData.fetchElementTagData
         it('Test-2.1-Function--2--fetchElementsTag - Paragraph', () => {
             const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'fetchElementsTag');
             elementSnapshotUtilityFn.fetchElementsTag(paragraph)
@@ -98,6 +103,11 @@ describe('-----------------------Test ElementSnapshot_Utility Functions---------
             const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'fetchElementsTag');
             elementSnapshotUtilityFn.fetchElementsTag(interactive)
             expect(spyFunction).toHaveReturnedWith('SL')
+        })
+        it('Test-2.9-Function--2--fetchElementsTag - List1', () => {
+            const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'fetchElementsTag');
+            elementSnapshotUtilityFn.fetchElementsTag(list1)
+            expect(spyFunction).toHaveReturnedWith('UL+disc')
         })
     });
     describe('Test-3-Function--3--generateWipDataForFigure', () => {

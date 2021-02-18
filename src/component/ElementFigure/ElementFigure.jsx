@@ -251,7 +251,22 @@ class ElementFigure extends Component {
             parentEntityUrn: this.props.parentEntityUrn
         }
         let configAPIKey = {
-            S3MathImagePath : config.S3MathImagePath?config.S3MathImagePath:"https://cite-media-stg.pearson.com/legacy_paths/wiris-dev-mathtype-cache-use/cache/"
+            S3MathImagePath: config.S3MathImagePath ? config.S3MathImagePath : "https://cite-media-stg.pearson.com/legacy_paths/wiris-dev-mathtype-cache-use/cache/",
+            alfrescoMetaData: config?.alfrescoMetaData ?? {},
+            CMDS_APIKEY: config.CMDS_APIKEY,
+            CMDS_DATA_ENDPOINT: config.CMDS_DATA_ENDPOINT,
+            CMDS_SCHEMA_ENDPOINT: config.CMDS_SCHEMA_ENDPOINT,
+            CMDS_DATABASE: config.CMDS_DATABASE,
+            CMIS_REPO: config.CMIS_REPO,
+            CMDS_AUTHORIZATION: config.CMDS_AUTHORIZATION,
+            EPS_API: config.EPS_API,
+            PATTERNS: {
+                PATTERN_VENDOR: config.PATTERNS.PATTERN_VENDOR,
+                PATTERN_SEARCH_SELECT: config.PATTERNS.PATTERN_SEARCH_SELECT,
+                PATTERN_ADD_ASSET: config.PATTERNS.PATTERN_ADD_ASSET,
+                PATTERN_BROKER: config.PATTERNS.PATTERN_BROKER,
+                PATTERN_PRODUCT_LINK: config.PATTERNS.PATTERN_PRODUCT_LINK
+            }
         }
          sendDataToIframe({ 'type': 'launchTableSPA', 'message': {}, "id": this.props.elementId, editable ,slateData, configAPIKey});
     }
