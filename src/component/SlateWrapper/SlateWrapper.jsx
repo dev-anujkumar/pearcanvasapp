@@ -60,7 +60,8 @@ class SlateWrapper extends Component {
             showSplitSlatePopup: false,
             splittedSlateIndex: 0,
             hasError: false,
-            showReleasePopup: false
+            showReleasePopup: false,
+            isWordPastePopup:false
         }
         this.isDefaultElementInProgress = false;
     }
@@ -556,6 +557,12 @@ class SlateWrapper extends Component {
         this.prohibitPropagation(event)
     }
 
+    handleCopyPastePopup = ()=>{
+      this.setState({
+          isWordPastePopup: !this.state.isWordPastePopup,
+      })
+  }
+
     splithandlerfunction = (type, index, firstOne, parentUrn, asideData, outerAsideIndex ,poetryData) => {
         if (this.checkLockStatus()) {
             this.togglePopup(true)
@@ -819,6 +826,25 @@ class SlateWrapper extends Component {
 
     }
 
+    showWordPastePopup = () => {
+        if (this.state.isWordPastePopup) {
+            const dialogText = `Press Ctrl/Cmd + V/v in the text below to paste your copied content.`
+            this.props.showBlocker(true)
+            showTocBlocker();
+            return (
+                <PopUp dialogText={dialogText}
+                    active={true}
+                    isWordPastePopup={true}
+                    confirmCallback={this.handleCopyPastePopup()}
+                    wordPasteClass="word-paste"
+                />
+            )
+        }
+        else {
+            return null
+        }
+    }
+
     /**
      * Renders blank slate with one element picker (Separator)
      * @param {object} _props Slatewrapper props
@@ -839,6 +865,7 @@ class SlateWrapper extends Component {
                     splithandlerfunction={this.splithandlerfunction}
                     pasteElement={this.props.pasteElement}
                     source={TEXT_SOURCE}
+                    handleCopyPastePopup={this.handleCopyPastePopup()}
                 />
             </>
         )
@@ -885,7 +912,8 @@ class SlateWrapper extends Component {
                                                 splithandlerfunction={this.splithandlerfunction}
                                                 pasteElement={this.props.pasteElement}
                                                 source={TEXT_SOURCE}
-                                            />
+                                                handleCopyPastePopup={this.handleCopyPastePopup()}
+                                                />
                                             : index === 0 && config.isCO === true ? <div className="noSeparatorContainer"></div> : null
                                     }
                                     <ElementContainer
@@ -930,6 +958,7 @@ class SlateWrapper extends Component {
                                             onClickCapture={this.checkSlateLockStatus}
                                             splithandlerfunction={this.splithandlerfunction}
                                             pasteElement={this.props.pasteElement}
+                                            handleCopyPastePopup={this.handleCopyPastePopup()}
                                             source={TEXT_SOURCE}
                                         />
                                         : null
@@ -1230,6 +1259,8 @@ class SlateWrapper extends Component {
                 {this.showLockReleasePopup()}
                 {this.showAssessmentConfirmationPopup()}
                 {this.wirisAltTextPopup()}
+                {/* **************** Word Paste Popup ************ */}
+                {this.showWordPastePopup()}
             </React.Fragment>
         );
     }

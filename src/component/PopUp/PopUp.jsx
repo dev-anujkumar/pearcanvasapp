@@ -201,6 +201,14 @@ class PopUp extends React.Component {
                 </>
             )
         }
+        else if(props.isWordPastePopup){
+          return(
+              <>
+              <h2 className='wordPastePopuptxt'>Paste from Word</h2>
+            <div className={`dialog-window ${props.wordPasteClass}`} >{props.dialogText}</div>            
+          </>
+          )
+        }
         else {
             return (
                 <div className={`dialog-window  ${props.isAddComment ? 'add-comment' : ""} ${props.assessmentClass}`} >{props.dialogText}</div>
