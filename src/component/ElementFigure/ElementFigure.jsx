@@ -39,7 +39,8 @@ class ElementFigure extends Component {
     }
 
     componentDidMount() {
-        if(this.props?.model?.figuretype === 'image'){
+        const figureImageTypes = ["image", "mathImage", "table"]
+        if(figureImageTypes.includes(this.props?.model?.figuretype)){
           getAlfrescositeResponse(this.props.elementId, (response) => {
             this.setState({
                 alfrescoSite: response.repositoryFolder
