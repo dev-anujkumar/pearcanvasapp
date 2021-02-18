@@ -7,7 +7,7 @@ import PropTypes from 'prop-types'
 import './../../styles/ElementInteractive/ElementInteractive.css';
 import TinyMceEditor from "../tinyMceEditor";
 import { c2MediaModule } from './../../js/c2_media_module';
-import { showTocBlocker,hideTocBlocker, disableHeader } from '../../js/toggleLoader'
+import { showTocBlocker,hideTocBlocker, disableHeader, showBlocker, hideToc } from '../../js/toggleLoader'
 import config from '../../config/config';
 import { utils } from '../../js/utils';
 import axios from 'axios';
@@ -24,6 +24,10 @@ import interactiveTypeData from './interactiveTypes.js';
 import { ELM_INT } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import elementTypeConstant from '../ElementContainer/ElementConstants.js';
 import TcmConstants from '../TcmSnapshots/TcmConstants.js';
+import { setNewItemFromElm, fetchAssessmentMetadata, fetchAssessmentVersions, updateAssessmentVersion } from "../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js"
+import ElmUpdateButton from '../AssessmentSlateCanvas/ElmUpdateButton.jsx';
+import { ELM_UPDATE_BUTTON, ELM_UPDATE_POPUP_HEAD, ELM_UPDATE_MSG } from "../AssessmentSlateCanvas/AssessmentSlateConstants.js"
+import PopUp from '../PopUp';
 /**
 * @description - Interactive is a class based component. It is defined simply
 * to make a skeleton of the Interactive Element.
@@ -48,7 +52,8 @@ class Interactive extends React.Component {
             itemParentID: this.props.model.figuredata && this.props.model.figuredata.interactiveparentid ? this.props.model.figuredata.interactiveparentid : "",
             openedFrom:'',
             interactiveTitle: this.props.model.figuredata && this.props.model.figuredata.interactivetitle? this.props.model.figuredata.interactivetitle : "",
-            showElmComponent:false
+            showElmComponent:false,
+            showUpdatePopup:false
            };
 
     }
@@ -62,6 +67,9 @@ class Interactive extends React.Component {
                 interactiveTitle: this.props.model.figuredata.interactivetitle? this.props.model.figuredata.interactivetitle : "",
             
             })
+            this.props.fetchAssessmentMetadata('interactive', '', 
+                { targetId: this.props.model.figuredata.interactiveid }
+            );
         }
     }
 
@@ -78,6 +86,130 @@ class Interactive extends React.Component {
         }
 
         return null;
+    }
+
+   componentDidUpdate() { 
+        if ((!config.savingInProgress && !config.isSavingElement) && (this.props.model.figuredata.interactiveformat === ELM_INT)) { 
+            if(this.props?.editInteractiveId === this.props?.model?.figuredata?.interactiveid){
+                const interct = this.props?.assessmentReducer?.item;
+                if( interct?.id && interct.title && interct.interactiveType ) {
+                    this.addElmInteractive(interct, () => {
+                        hideTocBlocker();
+                        disableHeader(false);
+                    });
+                    this.props.setNewItemFromElm({});
+                }
+            }
+        }
+   }
+     /*** @description This function is to show Approved/Unapproved Status on interative */
+    showElmVersionStatus = () => {
+        let elmInt =  this.props?.assessmentReducer[this.state.itemID];
+        if (elmInt) {
+            return (<ElmUpdateButton
+                elmAssessment={elmInt}
+                updateElmVersion={this.updateElm}
+                buttonText={ELM_UPDATE_BUTTON}
+            />)
+        }
+    }
+    /*** @description This function is used to open Version update Popup */
+    updateElm = (event) => {
+        this.prohibitPropagation(event);
+        if (hasReviewerRole() || !(this.props.permissions && this.props.permissions.includes('elements_add_remove'))) {
+            return true;
+        }
+        this.toggleUpdatePopup(true, event);
+    }
+    /**
+     * Prevents event propagation and default behaviour
+     * @param {*} event event object
+     */
+    prohibitPropagation = (event) => {
+        if (event) {
+            event.preventDefault()
+            event.stopPropagation()
+        }
+        return false
+    }
+      /**
+     * @description This function is used to toggle update elm popup
+     * @param {*} toggleValue Boolean value
+     * @param {*} event event object
+     */
+    toggleUpdatePopup = (toggleValue, event) => {
+        if (event) {
+            event.preventDefault();
+        }
+        this.setState({
+            showUpdatePopup: toggleValue
+        })
+        this.showCanvasBlocker(toggleValue);
+    }
+    /*** @description - This function is to disable all components when update Popups are open in window */
+    showCanvasBlocker = (value) => {
+        if (value === true) {
+            showTocBlocker();
+            hideToc();
+        } else {
+            hideTocBlocker(value);
+        }
+        disableHeader(value);
+        showBlocker(value);
+    }
+      /*** @description This function is used to render Version update Popup */
+    showCustomPopup = () => {
+        this.showCanvasBlocker(true);
+        return (
+            <PopUp
+                dialogText={ELM_UPDATE_MSG}
+                active={true}
+                togglePopup={this.toggleUpdatePopup}
+                isElmUpdatePopup={true}
+                updateElmAssessment={this.updateElmAssessment}
+                isInputDisabled={true}
+                isElmUpdateClass="elm-update"
+                elmHeaderText={ELM_UPDATE_POPUP_HEAD}
+            />
+        )
+    }
+    updateElmAssessment = async (event) => {
+        this.toggleUpdatePopup(false, event);
+        this.showCanvasBlocker(false);
+        let oldWorkUrn = this.props?.model?.figuredata?.interactiveid;
+        let oldReducerData = this.props.assessmentReducer[oldWorkUrn]??{};
+        oldReducerData.targetId = oldWorkUrn;
+        await this.props.fetchAssessmentVersions(oldReducerData.assessmentEntityUrn, 'interactiveUpdate', oldReducerData.createdDate, oldReducerData, {})
+        const latestReducerData = this.props.assessmentReducer[this.props?.model?.figuredata?.interactiveid]
+        const { latestVersion, secondLatestVersion } = latestReducerData;
+        const newVersion = (latestVersion && (latestVersion.status !== 'wip' || latestVersion.latestCleanVersion == false)) ? latestVersion : secondLatestVersion;
+        const { interactiveid, interactivetype, interactivetitle } = this.props?.model?.figuredata;
+        let figureData = {
+            schema: INTERACTIVE_SCHEMA,
+            interactiveid: interactiveid,
+            interactivetype: interactivetype,
+            interactivetitle: interactivetitle || latestReducerData?.assessmentTitle,
+            interactiveformat: ELM_INT
+        }
+        if (newVersion) {
+            figureData.interactiveid = newVersion.id;
+            figureData.interactivetitle = latestVersion.title;
+        }
+        this.setState({
+            itemID: figureData.interactiveid,
+            interactiveTitle: figureData.interactivetitle,
+            elementType: interactivetype
+        }, () => {
+            this.props.fetchAssessmentMetadata("interactive", "",
+                 { targetId: figureData.interactiveid }
+            );
+        })     
+        this.props.updateFigureData(figureData, this.props.index, this.props.elementId, () => {
+            this.props.handleFocus("updateFromC2");
+            this.props.handleBlur();
+        })
+        disableHeader(false);
+        hideTocBlocker(false);
     }
 
     /**
@@ -140,6 +272,8 @@ class Interactive extends React.Component {
                     </header>
                     <div className={id} onClick={(event) => this.handleClickElement(event)}><strong>{path ? path : 'ITEM ID: '} </strong>{this.state.itemID ? this.state.itemID : itemId}</div>
                     {element.figuredata.interactiveformat === ELM_INT && <div className={id+' interactive-title'} onClick={(event) => this.handleClickElement(event)}><strong>{path ? path : 'INTERACTIVE TITLE: '} </strong>{this.state.interactiveTitle ? this.state.interactiveTitle : ""}</div>}
+                    {/*{(element.figuredata.interactiveformat === ELM_INT ) && this.showElmVersionStatus()}*/}
+                     {(element.figuredata.interactiveformat === ELM_INT ) && <div className={id+' interactive-title'}><strong>{ 'CURRENT VERSION: '} </strong>{ this.showElmVersionStatus() }</div> }
                     <div className={"pearson-component " + dataType} data-uri="" data-type={dataType} data-width="600" data-height="399" onClick={(e) => { this.togglePopup(e, true) }} >
                         {
                             imageDimension !== '' ?
@@ -257,7 +391,7 @@ class Interactive extends React.Component {
      * @description This function is to add Elm Interactive Asset ot Interactive Element 
      * @param {Object} pufObj Objeact containing elmInteractive Asset details
     */
-    addElmInteractive = (pufObj) => {
+    addElmInteractive = (pufObj, cb) => {
         showTocBlocker();
         disableHeader(true);
 
@@ -272,11 +406,18 @@ class Interactive extends React.Component {
             itemID: pufObj.id,
             interactiveTitle: pufObj.title,
             elementType: pufObj.interactiveType
+        }, () => {
+            this.props.fetchAssessmentMetadata("interactive", "",
+                 { targetId: pufObj.id }
+            );
         })
         this.props.updateFigureData(figureData, this.props.index, this.props.elementId, () => {
             this.props.handleFocus("updateFromC2");
             this.props.handleBlur();
         })
+        if (cb) {
+            cb();
+        }
     }
     /**------------------------------------------------------------------------------------------*/
     
@@ -603,14 +744,15 @@ class Interactive extends React.Component {
         const { model, itemId, index, slateLockInfo } = this.props;
         try {
             return (
-               
-                    <div className="interactive-element" onClick = {this.handleClickElement}>
-                        {this.renderInteractiveType(model, itemId, index, slateLockInfo)}
-                        {this.state.showAssessmentPopup? <RootCiteTdxComponent openedFrom = {'singleSlateAssessment'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.elementType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAsseessmentUsageType} parentPageNo={this.state.parentPageNo} resetPage={this.resetPage} isReset={this.state.isReset} AssessmentSearchTitle={this.AssessmentSearchTitle} searchTitle={this.state.searchTitle} filterUUID={this.state.filterUUID} />:""}
-                        {this.state.showSinglePopup ? <RootSingleAssessmentComponent setCurrentAssessment ={this.state.setCurrentAssessment} activeAssessmentType={this.state.activeAssessmentType} openedFrom = {'singleSlateAssessmentInner'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.activeAssessmentType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAssessmentUsageType} assessmentNavigateBack = {this.assessmentNavigateBack} resetPage={this.resetPage}/>:""}
-                        {this.state.showElmComponent? <RootElmComponent activeAssessmentType={model.figuredata.interactiveformat} closeElmWindow={() => this.closeElmWindow()} addPufFunction={this.addElmInteractive} elementType={model.figuretype}/> : ''}
-                    </div>
-                
+                    <>
+                        <div className="interactive-element" onClick = {this.handleClickElement}>
+                            {this.renderInteractiveType(model, itemId, index, slateLockInfo)}
+                            {this.state.showAssessmentPopup? <RootCiteTdxComponent openedFrom = {'singleSlateAssessment'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.elementType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAsseessmentUsageType} parentPageNo={this.state.parentPageNo} resetPage={this.resetPage} isReset={this.state.isReset} AssessmentSearchTitle={this.AssessmentSearchTitle} searchTitle={this.state.searchTitle} filterUUID={this.state.filterUUID} />:""}
+                            {this.state.showSinglePopup ? <RootSingleAssessmentComponent setCurrentAssessment ={this.state.setCurrentAssessment} activeAssessmentType={this.state.activeAssessmentType} openedFrom = {'singleSlateAssessmentInner'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.activeAssessmentType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAssessmentUsageType} assessmentNavigateBack = {this.assessmentNavigateBack} resetPage={this.resetPage}/>:""}
+                            {this.state.showElmComponent? <RootElmComponent activeAssessmentType={model.figuredata.interactiveformat} closeElmWindow={() => this.closeElmWindow()} addPufFunction={this.addElmInteractive} elementType={model.figuretype}/> : ''}
+                        </div>
+                        {this.state.showUpdatePopup && this.showCustomPopup()}
+                    </>
             )
         } catch (error) {
             return (
@@ -644,10 +786,20 @@ const mapActionToProps = {
     setCurrentCiteTdx: setCurrentCiteTdx,
     setCurrentInnerCiteTdx: setCurrentInnerCiteTdx,
     assessmentSorting:assessmentSorting,
-    resetElmStore:resetElmStore
+    resetElmStore:resetElmStore,
+    setNewItemFromElm: setNewItemFromElm,
+    fetchAssessmentMetadata: fetchAssessmentMetadata,
+    fetchAssessmentVersions: fetchAssessmentVersions,
+    updateAssessmentVersion: updateAssessmentVersion
+}
+
+const mapStateToProps = (state) => {
+    return {
+        assessmentReducer: state.assessmentReducer,
+    }
 }
 
 export default connect(
-    null,
+    mapStateToProps,
     mapActionToProps
 )(Interactive);

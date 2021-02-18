@@ -8,7 +8,8 @@ import {
     ASSESSMENT_CONFIRMATION_POPUP,
     UPDATE_ELM_ITEM_ID,
     SAVE_AUTO_UPDATE_ID,
-    ELM_NEW_ITEM_DATA
+    ELM_NEW_ITEM_DATA,
+    SET_INTERACTIVE_METADATA
 } from '../constants/Action_Constants';
 
 const INITIAL_STATE = {
@@ -30,6 +31,7 @@ export default function assessmentReducer(state = INITIAL_STATE, action = INITIA
                 usageTypeListData: action.payload.usageTypeList
             }
         case SET_ASSESSMENT_METADATA:
+        case SET_INTERACTIVE_METADATA:
             return {
                 ...state,
                 [action.payload.currentWorkUrn]: {
