@@ -39,11 +39,14 @@ class ElementFigure extends Component {
     }
 
     componentDidMount() {
-        getAlfrescositeResponse(this.props.elementId, (response) => {
+        const figureImageTypes = ["image", "mathImage", "table"]
+        if(figureImageTypes.includes(this.props?.model?.figuretype)){
+          getAlfrescositeResponse(this.props.elementId, (response) => {
             this.setState({
                 alfrescoSite: response.repositoryFolder
             })
-        }) 
+          })
+        } 
     }
 
     updateAlfrescoSiteUrl = () => {
