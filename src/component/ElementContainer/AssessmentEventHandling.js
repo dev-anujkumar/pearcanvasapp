@@ -7,6 +7,7 @@ import { releaseSlateLockWithCallback, getSlateLockStatus } from '../CanvasWrapp
 import { handleSlateRefresh } from '../CanvasWrapper/SlateRefresh_Actions';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { updateElmItemData, setItemUpdateEvent, setNewItemFromElm } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
+import { disableHeader, hideTocBlocker } from '../../js/toggleLoader';
 /**
  * This module deals with the event handling for the Update of Full and Embedded Elm Assessments
  * for the events triggered from the Elm Assessment Portal
@@ -141,8 +142,10 @@ export const handlePostMsgOnAddAssess = (addPufFunction, usagetype, action) => {
                     const intObj = getInteractivePostMsg(data);
                     if(intObj?.id && intObj.title && intObj.interactiveType){
                         /**@function to update data display in interactive  */
-                        addPufFunction(intObj);
-                        handleRefreshSlate(store.dispatch);
+                        addPufFunction(intObj, () => {
+                            hideTocBlocker();
+                            disableHeader(false);
+                        });
                     }
                 }  
                 if(action === "remove"){
