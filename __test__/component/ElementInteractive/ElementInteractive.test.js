@@ -13,10 +13,36 @@ import { Interactivefpo , InteractiveFlashcards, Interactive3party, Interactivep
 import thunk from 'redux-thunk';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
+
+const interactReducer = {
+    "urn:pearson:work:baf20494-42b2-4bb8-9d3d-07b5fb7f24ec": {
+        activeWorkUrn: "urn:pearson:work:baf20494-42b2-4bb8-9d3d-07b5fb7f24ec",
+        assessmentEntityUrn: "urn:pearson:entity:7b882a51-ee22-481e-9f70-73f53ca7fbdf",
+        assessmentStatus: "wip",
+        assessmentTitle: "item",
+        createdDate: "2021-02-17T07:08:10.422Z",
+        showUpdateStatus: false,
+        targetId: "urn:pearson:work:baf20494-42b2-4bb8-9d3d-07b5fb7f24ec",
+        latestVersion: {
+            id: "urn:pearson:work:1c237eef-66cc-4375-8387-3f0d69da5fb7",
+            title: "item1"
+        },
+        secondLatestVersion: {
+            id: "urn:pearson:work:1c237eef-66cc-4375-8387-3f0d69da5fb7",
+                title: "item2"
+        }
+    },
+    item : {
+        interactiveType: "simulation",
+        id: "urn:pearson:work:baf20494-42b2-4bb8-9d3d-07b5fb7f24ec",
+        title: "Interactive",
+    }
+}
 const store = mockStore({
     citeTdxReducer : { currentAssessmentSelected : {} },
     elmReducer: {},
-    appStore:{currentSlateAncestorData:{}}
+    appStore:{currentSlateAncestorData:{}},
+    assessmentReducer: interactReducer
 });
 jest.mock('../../../src/component/tinyMceEditor.js', () => {
     return function () {
@@ -26,8 +52,20 @@ jest.mock('../../../src/component/tinyMceEditor.js', () => {
 jest.mock('../../../src/js/toggleLoader', () => ({
     hideTocBlocker: jest.fn(),
     disableHeader: jest.fn(),
-    showTocBlocker: jest.fn()
+    showTocBlocker: jest.fn(),
+    showBlocker: jest.fn(),
+    hideToc: jest.fn(),
 }))
+let event = {
+    stopPropagation: jest.fn(),
+    preventDefault: jest.fn()
+}
+const interactiveInstance = (props) => {
+    let component = mount(<Provider store={store}>
+        <Interactive { ...props } /></Provider>
+    );
+    return component.find('Interactive').instance();
+}
 
 describe('Testing Interactive element component', () => {
     it('renders without crashing', () => {
@@ -1111,6 +1149,7 @@ describe("Interactive Element: Testing Elm Picker Integration Methods", () => {
     };
     let component = mount(<Provider store={store}><Interactive {...props} /></Provider>);
     let elementInteractiveInstance = component.find('Interactive').instance();
+    const cb = jest.fn();
 
     it("Test - closeElmWindow", () => {
         elementInteractiveInstance.setState({
@@ -1129,7 +1168,7 @@ describe("Interactive Element: Testing Elm Picker Integration Methods", () => {
             title: "Interative 2 -UCA"
         }
         const spyaddElmInteractive = jest.spyOn(elementInteractiveInstance, 'addElmInteractive')
-        elementInteractiveInstance.addElmInteractive(pufObj)
+        elementInteractiveInstance.addElmInteractive(pufObj, cb)
         expect(spyaddElmInteractive).toHaveBeenCalled()
         expect(elementInteractiveInstance.state.itemID).toBe(pufObj.id)
         expect(elementInteractiveInstance.state.interactiveTitle).toBe(pufObj.title)
@@ -1150,5 +1189,86 @@ describe("Interactive Element: Testing Elm Picker Integration Methods", () => {
         expect(spytogglePopup).toHaveBeenCalledWith(e, true)
         expect(elementInteractiveInstance.state.showElmComponent).toBe(true)
         spytogglePopup.mockClear()
-    })    
+    })
+    it('Test - 4 - toggleUpdatePopup function', () => {
+        const intInstance = interactiveInstance(props);
+        const func = jest.spyOn(intInstance, 'toggleUpdatePopup')
+        intInstance.toggleUpdatePopup(false);
+        expect(intInstance.state.showUpdatePopup).toBe(false);
+        expect(func).toHaveBeenCalled();
+        func.mockClear();
+    });
+    it('Test - 5 - updateElmAssessment', () => {
+        props = {
+            fetchAssessmentVersions: jest.fn(),
+            fetchAssessmentMetadata: jest.fn(),
+            updateFigureData: jest.fn(),
+            handleFocus: jest.fn(),
+            handleBlur: jest.fn(),
+            ...props
+        }
+        const intInstance = interactiveInstance(props);
+        const { interactiveid, interactivetype, interactivetitle } = props?.model?.figuredata;
+        intInstance.setState({
+            itemID: interactiveid,
+            interactiveTitle: interactivetitle,
+            elementType: interactivetype
+        })
+        
+        mount(<Provider store={store}>
+            <Interactive { ...props } /></Provider>
+        ).update();
+        intInstance.forceUpdate();
+        jest.spyOn(intInstance, 'updateElmAssessment')
+        intInstance.updateElmAssessment(event);
+        //expect(spyupdateElmInteractive).toHaveBeenCalled(); 
+        expect(intInstance.state.itemID).toBe(interactiveid);
+        expect(intInstance.state.interactiveTitle).toBe(interactivetitle);
+        expect(intInstance.state.elementType).toBe(interactivetype);
+    })
+    //it('Test - 5 - componentDidUpdate', () => {
+    //    props = {
+    //        editInteractiveId: "urn:pearson:work:baf20494-42b2-4bb8-9d3d-07b5fb7f24ec",
+    //        setNewItemFromElm: jest.fn(),
+    //        ...props
+    //    }
+    //    const intInstance = interactiveInstance(props);
+    //    const compDidUpdate = jest.spyOn(intInstance, 'componentDidUpdate');
+    //    intInstance.componentDidUpdate();
+    //    expect(compDidUpdate).toHaveBeenCalled();
+    //})
+    it('Test - 6 - updateElm', () => {
+        props = {
+            permissions: ['elements_add_remove'],
+            setNewItemFromElm: jest.fn(),
+            ...props
+        }
+        const intInstance = interactiveInstance(props);
+        const func = jest.spyOn(intInstance, 'updateElm');
+        intInstance.updateElm();
+        expect(func).toHaveBeenCalled();
+    })
+    it('Test - 7 - showElmVersionStatus', () => {
+        const intInstance = interactiveInstance(props);
+        intInstance.setState({
+            itemID: "urn:pearson:work:baf20494-42b2-4bb8-9d3d-07b5fb7f24ec"
+        })
+        const func = jest.spyOn(intInstance, 'showElmVersionStatus');
+        intInstance.showElmVersionStatus();
+        expect(func).toHaveBeenCalled();
+    })
+    describe("Test - 8 - Function showCanvasBlocker", () => {
+        const intInstance = interactiveInstance(props);
+        const func = jest.spyOn(intInstance, 'showCanvasBlocker');
+        it('Test - 8.1 - showCanvasBlocker if condition', () => {
+            intInstance.showCanvasBlocker(false);
+            expect(func).toHaveBeenCalled();
+        })
+        it('Test - 8.2 - showCanvasBlocker else condition', () => {
+            intInstance.showCanvasBlocker(true);
+            expect(func).toHaveBeenCalled();
+        })     
+    })
+            
 })
+ 
