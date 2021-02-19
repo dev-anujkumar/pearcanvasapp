@@ -143,6 +143,23 @@ export function ElementSaprator(props) {
         return null  
     }
 
+    const renderWordPasteButton = (separatorProps, type) => {
+        const allowedRoles = ["admin", "manager", "edit", "default_user"];
+        // let sourceComp = 'source' in props ? props.source : '';
+        // let inputType = 'inputType' in props.elementSelection ? props.elementSelection.inputType : '';
+        // let pasteValidation = getPasteValidated(sourceComp, inputType);
+        if (!config.isPopupSlate && allowedRoles.includes(props.userRole) && pasteValidation) {
+            return (
+                <div className={`elemDiv-expand paste-button-wrapper ${(type == 'cut' && !pasteIcon) ? 'disabled' : ''}`} onClickCapture={(e) => props.onClickCapture(e)}>
+                    <Tooltip direction='left' tooltipText='Paste from word'>
+                        <Button type="paste" onClick={() => separatorProps.handleCopyPastePopup()} />
+                    </Tooltip>
+                </div>
+            )
+        }
+        return null  
+    }
+    
     let pasteRender = false;
     let operationType = '';
     if(props.elementSelection && Object.keys(props.elementSelection).length > 0) {
@@ -159,6 +176,7 @@ export function ElementSaprator(props) {
             <div className='elemDiv-hr'>
                 <hr className='horizontalLine' />
             </div>
+            {pasteRender ? renderWordPasteButton(props,operationType):''}
             {pasteRender ? renderPasteButton(props, operationType) : ''}
             <div className='elemDiv-expand'>
                 <div className="dropdown" ref={buttonRef}>
