@@ -835,7 +835,7 @@ class SlateWrapper extends Component {
                 <PopUp dialogText={dialogText}
                     active={true}
                     isWordPastePopup={true}
-                    confirmCallback={this.handleCopyPastePopup()}
+                    confirmCallback={this.handleCopyPastePopup}
                     wordPasteClass="word-paste"
                 />
             )
@@ -865,7 +865,7 @@ class SlateWrapper extends Component {
                     splithandlerfunction={this.splithandlerfunction}
                     pasteElement={this.props.pasteElement}
                     source={TEXT_SOURCE}
-                    handleCopyPastePopup={this.handleCopyPastePopup()}
+                    handleCopyPastePopup={this.handleCopyPastePopup}
                 />
             </>
         )
@@ -912,7 +912,7 @@ class SlateWrapper extends Component {
                                                 splithandlerfunction={this.splithandlerfunction}
                                                 pasteElement={this.props.pasteElement}
                                                 source={TEXT_SOURCE}
-                                                handleCopyPastePopup={this.handleCopyPastePopup()}
+                                                handleCopyPastePopup={this.handleCopyPastePopup}
                                                 />
                                             : index === 0 && config.isCO === true ? <div className="noSeparatorContainer"></div> : null
                                     }
@@ -958,7 +958,7 @@ class SlateWrapper extends Component {
                                             onClickCapture={this.checkSlateLockStatus}
                                             splithandlerfunction={this.splithandlerfunction}
                                             pasteElement={this.props.pasteElement}
-                                            handleCopyPastePopup={this.handleCopyPastePopup()}
+                                            handleCopyPastePopup={this.handleCopyPastePopup}
                                             source={TEXT_SOURCE}
                                         />
                                         : null

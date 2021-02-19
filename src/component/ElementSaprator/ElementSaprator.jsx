@@ -145,9 +145,9 @@ export function ElementSaprator(props) {
 
     const renderWordPasteButton = (separatorProps, type) => {
         const allowedRoles = ["admin", "manager", "edit", "default_user"];
-        let sourceComp = 'source' in props ? props.source : '';
-        let inputType = 'inputType' in props.elementSelection ? props.elementSelection.inputType : '';
-        let pasteValidation = getPasteValidated(sourceComp, inputType);
+        // let sourceComp = 'source' in props ? props.source : '';
+        // let inputType = 'inputType' in props.elementSelection ? props.elementSelection.inputType : '';
+        // let pasteValidation = getPasteValidated(sourceComp, inputType);
         if (!config.isPopupSlate && allowedRoles.includes(props.userRole) && pasteValidation) {
             return (
                 <div className={`elemDiv-expand paste-button-wrapper ${(type == 'cut' && !pasteIcon) ? 'disabled' : ''}`} onClickCapture={(e) => props.onClickCapture(e)}>
