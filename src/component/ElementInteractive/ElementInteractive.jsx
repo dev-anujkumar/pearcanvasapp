@@ -252,7 +252,7 @@ class Interactive extends React.Component {
                     </header>
                     <div className={id} onClick={()=> this.handleClickElement()}><strong>{path ? path : 'ITEM ID: '} </strong>{this.state.itemID?this.state.itemID : itemId}</div>
                     {element.figuredata.interactiveformat === ELM_INT && <div className={id+' interactive-title'} onClick={(event) => this.handleClickElement(event)}><strong>{path ? path : 'INTERACTIVE TITLE: '} </strong>{this.state.interactiveTitle ? this.state.interactiveTitle : ""}</div>}
-                    {(element.figuredata.interactiveformat === ELM_INT ) && <div className={id+' interactive-title'}><strong>{ 'CURRENT VERSION: '} </strong>{ this.showElmVersionStatus() }</div> }
+                    {(element.figuredata.interactiveformat === ELM_INT ) && <div className={id+' cls-display-flex eml-int-status-top-padding'}><strong className="eml-int-status-label-tm">{ 'CURRENT VERSION: '} </strong>{ this.showElmVersionStatus() }</div> }
                     <div className={"pearson-component " + dataType} data-uri={this.state.itemID?this.state.itemID : itemId} data-type={dataType} data-width="600" data-height="399" onClick={(e)=>{this.togglePopup(e,true)}} >
 
                         <img src={this.state.imagePath ? this.state.imagePath : INTERACTIVE_FPO} title="View Image" alt="" className={imageDimension + " lazyload"} />
