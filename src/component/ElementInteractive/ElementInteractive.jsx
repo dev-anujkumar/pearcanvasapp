@@ -84,6 +84,10 @@ class Interactive extends React.Component {
                 interactiveTitle: nextProps.model.figuredata && nextProps.model.figuredata.interactivetitle? nextProps.model.figuredata.interactivetitle : "",
             };
         }
+        const data = nextProps?.assessmentReducer[nextProps?.model?.figuredata?.interactiveid]
+        if(data?.assessmentTitle !== prevState?.interactiveTitle){
+            return { interactiveTitle: data?.assessmentTitle }
+        }
 
         return null;
     }
@@ -247,6 +251,8 @@ class Interactive extends React.Component {
                              handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} handleAudioPopupLocation = {this.props.handleAudioPopupLocation} />
                     </header>
                     <div className={id} onClick={()=> this.handleClickElement()}><strong>{path ? path : 'ITEM ID: '} </strong>{this.state.itemID?this.state.itemID : itemId}</div>
+                    {element.figuredata.interactiveformat === ELM_INT && <div className={id+' interactive-title'} onClick={(event) => this.handleClickElement(event)}><strong>{path ? path : 'INTERACTIVE TITLE: '} </strong>{this.state.interactiveTitle ? this.state.interactiveTitle : ""}</div>}
+                    {(element.figuredata.interactiveformat === ELM_INT ) && <div className={id+' interactive-title'}><strong>{ 'CURRENT VERSION: '} </strong>{ this.showElmVersionStatus() }</div> }
                     <div className={"pearson-component " + dataType} data-uri={this.state.itemID?this.state.itemID : itemId} data-type={dataType} data-width="600" data-height="399" onClick={(e)=>{this.togglePopup(e,true)}} >
 
                         <img src={this.state.imagePath ? this.state.imagePath : INTERACTIVE_FPO} title="View Image" alt="" className={imageDimension + " lazyload"} />
@@ -416,6 +422,10 @@ class Interactive extends React.Component {
             this.props.handleFocus("updateFromC2");
             this.props.handleBlur();
         })
+        if(pufObj.callFrom === "fromEventHandling"){
+            hideTocBlocker();
+            disableHeader(false);
+        }
         if (cb) {
             cb();
         }
