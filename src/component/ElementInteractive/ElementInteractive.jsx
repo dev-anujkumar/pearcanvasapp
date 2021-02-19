@@ -84,6 +84,10 @@ class Interactive extends React.Component {
                 interactiveTitle: nextProps.model.figuredata && nextProps.model.figuredata.interactivetitle? nextProps.model.figuredata.interactivetitle : "",
             };
         }
+        const data = nextProps?.assessmentReducer[nextProps?.model?.figuredata?.interactiveid]
+        if(data?.assessmentTitle !== prevState?.interactiveTitle){
+            return { interactiveTitle: data?.assessmentTitle }
+        }
 
         return null;
     }
@@ -418,6 +422,10 @@ class Interactive extends React.Component {
             this.props.handleFocus("updateFromC2");
             this.props.handleBlur();
         })
+        if(pufObj.callFrom === "fromEventHandling"){
+            hideTocBlocker();
+            disableHeader(false);
+        }
         if (cb) {
             cb();
         }
