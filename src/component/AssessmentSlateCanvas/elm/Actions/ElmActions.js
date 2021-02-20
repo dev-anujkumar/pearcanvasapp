@@ -150,10 +150,12 @@ const filterApiAlignments = (data, type) => {
             return resource.resources.length > 0;
         });
     }
-    if (data.contents && data.contents.bodyMatter && data.contents.bodyMatter.length) {
-        for (let item of data.contents.bodyMatter) {
-            if (item && ((item.alignments && item.alignments != null) || (item.contents && item.contents != null))) {
-                filterApiAlignments(item, type);
+    if (data?.contents && Object.keys(data.contents).length) {
+        for (let key in data.contents) {
+            for (let item of data.contents[key]) {
+                if (item && ((item.alignments && item.alignments != null) || (item.contents && item.contents != null))) {
+                    filterApiAlignments(item, type);
+                }
             }
         }
     }
@@ -162,22 +164,28 @@ const filterApiAlignments = (data, type) => {
 /*** @description This is function to filter containers which are empty
     * @param data API data
   */
-const filterApiContainers = (data) => {
-    if (data.contents && data.contents.bodyMatter && data.contents.bodyMatter.length) {
-        data.contents.bodyMatter = data.contents.bodyMatter.filter(container1 => {
-            if (container1 && (container1.contents && container1.contents != null)) {
-                container1.contents.bodyMatter = container1.contents.bodyMatter.filter(container2 => {
-                    if (container2 && (container2.contents && container2.contents != null)) {
-                        container2.contents.bodyMatter = container2.contents.bodyMatter.filter(container3 => {
-                            return !setCondition(container3).noBodyMatter || !setCondition(container3).noAlignments;
-                        });
+const filterApiContainers = (apiData) => {
+    let data = Object.assign({}, apiData);
+    if (data.contents && Object.keys(data.contents).length) {
+        for (let key in data.contents) {
+            data.contents[key] = data.contents[key].filter(container1 => {
+                if (container1?.contents && Object.keys(container1.contents).length) {
+                    container1.contents = {
+                        bodyMatter: Object.values(container1.contents)?.flat()?.filter(container2 => {
+                            if (container2 && (container2.contents && Object.keys(container2.contents).length)) {
+                                container2.contents = {
+                                    bodyMatter: Object.values(container2.contents)?.flat()?.filter(container3 => {
+                                        return checkEmptyContainers(container3);
+                                    })
+                                }
+                            }
+                            return checkEmptyContainers(container2);
+                        })
                     }
-                    return !setCondition(container2).noBodyMatter || !setCondition(container2).noAlignments;
-                });
-            }
-            return !setCondition(container1).noBodyMatter || !setCondition(container1).noAlignments;
-
-        });
+                }
+                return checkEmptyContainers(container1);
+            });
+        }
     }
     if (setCondition(data).noAlignments && setCondition(data).noBodyMatter) {
         data = {};
@@ -190,8 +198,19 @@ const filterApiContainers = (data) => {
   */
 const setCondition = (item) => {
     let condition = {};
-    condition.noBodyMatter = item && (!item.contents || (item.contents && item.contents.bodyMatter.length == 0))
+    condition.noBodyMatter = item && (!item.contents || (item.contents && Object.values(item.contents)?.flat()?.length == 0))
     condition.noAlignments = item && (!item.alignments || item.alignments.resourceCollections.length == 0)
-
     return condition;
+}
+
+/*** @description This is function to check if bodymatter is empty and check if aligments are present
+    * @param item current container
+  */
+const checkEmptyContainers = (container) => {
+    const containerTypes = ['project', 'part', 'chapter', 'module', 'appendix'];
+    const condition = setCondition(container);
+    if (container && containerTypes.indexOf(container.label) > -1 && (!condition.noBodyMatter || !condition.noAlignments)) {
+        return true;
+    }
+    return false;
 }
