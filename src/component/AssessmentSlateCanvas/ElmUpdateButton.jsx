@@ -19,7 +19,7 @@ const ElmUpdateButton = (props) => {
         const approveIconClass = assessmentStatus == 'final' ? "enable" : "disable"
 
         if (showUpdateStatus === true) {  
-            updateDiv = <div className="cls-display-flex">
+            updateDiv = <div className="eml-int-status-block">
                 {(elementType === ELM_INT) && <div className={`elm-status-div ${embeddedElmClass}`}>
                         <p className="eml-int-status-text-tm">{approveText}</p>
                         <span className={"approved-button " + approveIconClass}>{approvedIcon}</span>
