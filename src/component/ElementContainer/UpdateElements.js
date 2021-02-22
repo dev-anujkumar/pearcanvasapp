@@ -203,7 +203,7 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
     if (previousElementData.figuredata.interactiveformat == "mmi-elm") {
         const oldInteractiveTitle = previousElementData?.figuredata?.interactivetitle ?? "";
         const interactiveNodeSelector = document.querySelector(`div[data-id='${previousElementData.id}'] div.interactive-element`);
-        const interactiveTitleDom = interactiveNodeSelector.querySelector(`div.interactive-title.elm-int-title span`);
+        const interactiveTitleDom = interactiveNodeSelector && interactiveNodeSelector.querySelector(`div.interactive-title.elm-int-title span`);
         const interactiveTitleText = interactiveTitleDom ? interactiveTitleDom.innerText : "";
         data.figuredata.interactivetitle = interactiveTitleText;
         if (interactiveTitleText != oldInteractiveTitle) {
