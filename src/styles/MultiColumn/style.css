@@ -297,11 +297,11 @@
 }
 /* For elm interactive multi column */
 .container-multi-column-group.wider-60-40 .interactive-title>.eml-int-status-block,
-.container-multi-column-group.wider-60-40 .interactive-title.cls-display-flex,
+.container-multi-column-group.wider-60-40.column-1 .interactive-title.cls-display-flex,
 .container-multi-column-group.wider-50-50 .interactive-title>.eml-int-status-block,
 .container-multi-column-group.text-width-50-50 .interactive-title>.eml-int-status-block,
 .container-multi-column-group.text-width-60-40 .interactive-title>.eml-int-status-block,
-.container-multi-column-group.text-width-60-40 .interactive-title.cls-display-flex {
+.container-multi-column-group.text-width-60-40.column-1 .interactive-title.cls-display-flex {
     display: inline-table !important;
 }
 .container-multi-column-group.wider-60-40.column-1 .interactive-title .elm-update-button-text,
