@@ -295,3 +295,50 @@
     right: 10%;
     width: 8px;
 }
+/* For elm interactive multi column */
+.container-multi-column-group.wider-60-40 .interactive-status>.eml-int-status-block,
+.container-multi-column-group.wider-60-40.column-1 .interactive-status.cls-display-flex,
+.container-multi-column-group.wider-50-50 .interactive-status>.eml-int-status-block,
+.container-multi-column-group.text-width-50-50 .interactive-status>.eml-int-status-block,
+.container-multi-column-group.text-width-60-40 .interactive-status>.eml-int-status-block,
+.container-multi-column-group.text-width-60-40.column-1 .interactive-status.cls-display-flex {
+    display: inline-table !important;
+}
+.container-multi-column-group.wider-60-40.column-1 .interactive-status .elm-update-button-text,
+.container-multi-column-group.text-width-60-40.column-1 .interactive-status .elm-update-button-text {
+   font-size: 12px;
+}
+.container-multi-column-group.wider-60-40.column-1 .interactive-status .elm-update-button,
+.container-multi-column-group.text-width-60-40.column-1 .interactive-status .elm-update-button{
+    width: 190px;
+    margin: 5px 0px 5px 0px !important;
+}
+.container-multi-column-group.wider-60-40.column-1 .interactive-status .eml-int-status-text-tm,
+.container-multi-column-group.text-width-60-40.column-1 .interactive-status .eml-int-status-text-tm{
+    margin: 7px 5px 0px 2px;
+}
+.container-multi-column-group.text-width-60-40.column-0 .interactive-status .elm-update-button,
+.container-multi-column-group.wider-60-40.column-0 .interactive-status .elm-update-button {
+    margin: 5px 5px 5px -45px !important;
+}
+
+.container-multi-column-group.text-width-50-50 .interactive-status .elm-update-button,
+.container-multi-column-group.wider-50-50 .interactive-status .elm-update-button {
+    margin: 5px 5px 5px -85px !important;
+}
+
+.container-multi-column-group.wider-60-40 .interactive-title strong,
+.container-multi-column-group.wider-50-50 .interactive-title strong,
+.container-multi-column-group.text-width-50-50 .interactive-title strong,
+.container-multi-column-group.text-width-60-40 .interactive-title strong,
+.container-multi-column-group.wider-60-40 .interactive-id strong,
+.container-multi-column-group.wider-50-50 .interactive-id strong,
+.container-multi-column-group.text-width-50-50 .interactive-id strong,
+.container-multi-column-group.text-width-60-40 .interactive-id strong,
+.container-multi-column-group.wider-60-40 .interactive-status strong,
+.container-multi-column-group.wider-50-50 .interactive-status strong,
+.container-multi-column-group.text-width-50-50 .interactive-status strong,
+.container-multi-column-group.text-width-60-40 .interactive-status strong  {
+    width: 115px;
+    min-width: 115px;
+}

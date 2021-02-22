@@ -39,11 +39,14 @@ class ElementFigure extends Component {
     }
 
     componentDidMount() {
-        getAlfrescositeResponse(this.props.elementId, (response) => {
+        const figureImageTypes = ["image", "mathImage", "table"]
+        if(figureImageTypes.includes(this.props?.model?.figuretype)){
+          getAlfrescositeResponse(this.props.elementId, (response) => {
             this.setState({
                 alfrescoSite: response.repositoryFolder
             })
-        }) 
+          })
+        } 
     }
 
     updateAlfrescoSiteUrl = () => {
@@ -266,7 +269,9 @@ class ElementFigure extends Component {
                 PATTERN_ADD_ASSET: config.PATTERNS.PATTERN_ADD_ASSET,
                 PATTERN_BROKER: config.PATTERNS.PATTERN_BROKER,
                 PATTERN_PRODUCT_LINK: config.PATTERNS.PATTERN_PRODUCT_LINK
-            }
+            },
+            PROJECTAPI_ENDPOINT: config.PROJECTAPI_ENDPOINT,
+            STRUCTURE_APIKEY:config.STRUCTURE_APIKEY
         }
          sendDataToIframe({ 'type': 'launchTableSPA', 'message': {}, "id": this.props.elementId, editable ,slateData, configAPIKey});
     }

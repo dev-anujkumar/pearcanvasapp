@@ -6,7 +6,7 @@ import axios from 'axios';
 import config from '../../../../src/config/config';
 import * as assessment_Actions from '../../../../src/component/AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 /*************************Import Constants*************************/
-import { GET_USAGE_TYPE, ELM_PORTAL_API_ERROR, SET_ASSESSMENT_METADATA, UPDATE_ELM_ITEM_ID } from "../../../../src/constants/Action_Constants";
+import { GET_USAGE_TYPE, ELM_PORTAL_API_ERROR, SET_ASSESSMENT_METADATA, UPDATE_ELM_ITEM_ID, SET_INTERACTIVE_METADATA } from "../../../../src/constants/Action_Constants";
 import { usageTypeAPI_Data, MockUsageTypeList_Data } from '../../../../fixtures/AssessmentSlateCanvasTestingData.js';
 jest.mock('axios');
 jest.mock('../../../../src/component/ElementContainer/AssessmentEventHandling.js', () => ({
@@ -345,6 +345,18 @@ describe('-----------------Testing Assessment Actions-----------------', () => {
             axios.get = jest.fn(() => Promise.reject({}));
             assessment_Actions.fetchAssessmentMetadata('assessmentArray', 'fromAssessmentSlate', { targetId: workUrn, "errorMessage": "error" }, {})(dispatch);
             expect(spyFunction).toHaveBeenCalledWith('assessmentArray', 'fromAssessmentSlate', { targetId: workUrn, "errorMessage": "error" }, {});
+            spyFunction.mockClear();
+        });
+        it('Test-2.13---fetchAssessmentMetadata-Then-Switch interactive', () => {
+            let workUrn = "urn:pearson:work:a5cdf7e1-d65c-4be0-9827-1f396e631beb";
+            let dispatch = () => { };
+            let responseData = {
+                data: expectedResponse
+            }
+            const spyFunction = jest.spyOn(assessment_Actions, 'fetchAssessmentMetadata');
+            axios.get = jest.fn(() => Promise.resolve(responseData));
+            assessment_Actions.fetchAssessmentMetadata('interactive', '', { targetId: workUrn, "errorMessage": "error" }, {})(dispatch);
+            expect(spyFunction).toHaveBeenCalled();
             spyFunction.mockClear();
         });
     });
@@ -729,6 +741,118 @@ describe('-----------------Testing Assessment Actions-----------------', () => {
             expect(spyFunction).toHaveBeenCalled();
             spyFunction.mockClear();
         });
+        describe('Test-3.12---fetchAssessmentVersions-Then - type = interactive - ', () => {
+            let entityUrn = "urn:pearson:entity:c785c0f6-6fc7-4f51-855c-0677738a9d86";
+            let responseData = {
+                data: [{
+                    "versionUrn": "urn:pearson:work:8fb703b9-4e21-4dac-968e-baf9323467af",
+                    "createdDate": "2020-08-18T11:05:27.169Z"
+                }]
+            }
+            let oldReducerData = {
+                createdDate: "2020-10-05T09:40:11.769Z",
+                activeWorkUrn: "urn:pearson:work:8fb703b9-4e21-4dac-968e-baf9323467af",
+                assessmentTitle: "title1",
+                showUpdateStatus: false,
+                assessmentStatus: "final",
+                assessmentEntityUrn: entityUrn,
+                targetId: "urn:pearson:work:8fb703b9-4e21-4dac-968e-baf9323467af",
+            }
+            const dispatch = () => {};
+            const spyFunction = jest.spyOn(assessment_Actions, 'fetchAssessmentVersions');
+            it('Test-3.12.1---fetchAssessmentVersions-Then - type = interactive - newVersions.length = 0', () => {
+                axios.get = jest.fn(() => Promise.resolve(responseData));
+                assessment_Actions.fetchAssessmentVersions(entityUrn, 'interactive', "2020-10-05T09:40:11.769Z", oldReducerData, {})(dispatch)
+                expect(spyFunction).toHaveBeenCalled();
+                spyFunction.mockClear();
+            });
+            it('Test-3.12.2---fetchAssessmentVersions-Then - type = interactive - newVersions.length = 1', () => {
+                 responseData.data = [{
+                    "versionUrn": "urn:pearson:work:8fb703b9-4e21-4dac-968e-baf9323467af",
+                    "createdDate": "2020-08-18T11:05:27.169Z"
+                }, {
+                    "versionUrn": "urn:pearson:work:ce9b7d24-fa62-4b1c-9e3f-d08a9dd5b8a6",
+                    "createdDate": "2020-11-05T09:40:11.769Z"
+                }]
+                axios.get = jest.fn(() => Promise.resolve(responseData));
+                assessment_Actions.fetchAssessmentVersions(entityUrn, 'interactive', "2020-10-05T09:40:11.769Z", oldReducerData, {})(dispatch)
+                expect(spyFunction).toHaveBeenCalled();
+                spyFunction.mockClear();
+            });
+            it('Test-3.12.3---fetchAssessmentVersions-Then - type = interactive - newVersions.length > 1', () => {
+                responseData.data = [{
+                    "versionUrn": "urn:pearson:work:8fb703b9-4e21-4dac-968e-baf9323467af",
+                    "createdDate": "2020-08-18T11:05:27.169Z"
+                }, {
+                    "versionUrn": "urn:pearson:work:ce9b7d24-fa62-4b1c-9e3f-d08a9dd5b8a6",
+                    "createdDate": "2020-11-05T09:40:11.769Z"
+                },
+                {
+                    "versionUrn": "urn:pearson:work:ae9b7d24-fa62-4b1c-9e3f-d08a9dd5b8a2",
+                    "createdDate": "2020-10-05T09:50:11.769Z"
+                }]
+                axios.get = jest.fn(() => Promise.resolve(responseData));
+                assessment_Actions.fetchAssessmentVersions(entityUrn, 'interactive', "2020-10-05T09:40:11.769Z", oldReducerData, {})(dispatch)
+                expect(spyFunction).toHaveBeenCalled();
+                spyFunction.mockClear();
+            });
+        });
+        describe('Test-3.13---fetchAssessmentVersions-Then - type = interactiveUpdate -', () => {
+            let entityUrn = "urn:pearson:entity:c785c0f6-6fc7-4f51-855c-0677738a9d86";
+            let responseData = {
+                data: [{
+                    "versionUrn": "urn:pearson:work:8fb703b9-4e21-4dac-968e-baf9323467af",
+                    "createdDate": "2020-08-18T11:05:27.169Z"
+                }]
+            }
+            let oldReducerData = {
+                createdDate: "2020-10-05T09:40:11.769Z",
+                activeWorkUrn: "urn:pearson:work:8fb703b9-4e21-4dac-968e-baf9323467af",
+                assessmentTitle: "title1",
+                showUpdateStatus: false,
+                assessmentStatus: "final",
+                assessmentEntityUrn: entityUrn,
+                targetId: "urn:pearson:work:8fb703b9-4e21-4dac-968e-baf9323467af",
+            }
+            const dispatch = () => {};
+            const spyFunction = jest.spyOn(assessment_Actions, 'fetchAssessmentVersions');
+            it('Test-3.12.1---fetchAssessmentVersions-Then - type = interactiveUpdate - newVersions.length = 0', () => {
+                axios.get = jest.fn(() => Promise.resolve(responseData));
+                assessment_Actions.fetchAssessmentVersions(entityUrn, 'interactiveUpdate', "2020-10-05T09:40:11.769Z", oldReducerData, {})(dispatch)
+                expect(spyFunction).toHaveBeenCalled();
+                spyFunction.mockClear();
+            });
+            it('Test-3.12.2---fetchAssessmentVersions-Then - type = interactiveUpdate - newVersions.length = 1', () => {
+                 responseData.data = [{
+                    "versionUrn": "urn:pearson:work:8fb703b9-4e21-4dac-968e-baf9323467af",
+                    "createdDate": "2020-08-18T11:05:27.169Z"
+                }, {
+                    "versionUrn": "urn:pearson:work:ce9b7d24-fa62-4b1c-9e3f-d08a9dd5b8a6",
+                    "createdDate": "2020-11-05T09:40:11.769Z"
+                }]
+                axios.get = jest.fn(() => Promise.resolve(responseData));
+                assessment_Actions.fetchAssessmentVersions(entityUrn, 'interactiveUpdate', "2020-10-05T09:40:11.769Z", oldReducerData, {})(dispatch)
+                expect(spyFunction).toHaveBeenCalled();
+                spyFunction.mockClear();
+            });
+            it('Test-3.12.3---fetchAssessmentVersions-Then - type = interactiveUpdate - newVersions.length > 1', () => {
+                responseData.data = [{
+                    "versionUrn": "urn:pearson:work:8fb703b9-4e21-4dac-968e-baf9323467af",
+                    "createdDate": "2020-08-18T11:05:27.169Z"
+                }, {
+                    "versionUrn": "urn:pearson:work:ce9b7d24-fa62-4b1c-9e3f-d08a9dd5b8a6",
+                    "createdDate": "2020-11-05T09:40:11.769Z"
+                },
+                {
+                    "versionUrn": "urn:pearson:work:ae9b7d24-fa62-4b1c-9e3f-d08a9dd5b8a2",
+                    "createdDate": "2020-10-05T09:50:11.769Z"
+                }]
+                axios.get = jest.fn(() => Promise.resolve(responseData));
+                assessment_Actions.fetchAssessmentVersions(entityUrn, 'interactiveUpdate', "2020-10-05T09:40:11.769Z", oldReducerData, {})(dispatch)
+                expect(spyFunction).toHaveBeenCalled();
+                spyFunction.mockClear();
+            });
+        });
     });
     describe('Test-4----------------- openElmAssessmentPortal-----------------', () => {
         it('Test-4.1---openElmAssessmentPortal-Then IF', () => {
@@ -793,6 +917,32 @@ describe('-----------------Testing Assessment Actions-----------------', () => {
             const spyFunction = jest.spyOn(assessment_Actions, 'openElmAssessmentPortal');
             axios.post = await jest.fn().mockImplementationOnce(() => Promise.reject({}));
             assessment_Actions.openElmAssessmentPortal(assessmentData)(dispatch);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        });
+        it('Test-4.4 ---openElmAssessmentPortal- elm - interctive', () => {
+            const spyFunction = jest.spyOn(assessment_Actions, 'openElmAssessmentPortal');
+            const mockedOpen = () => {
+                return {
+                    closed: true
+                }
+            };
+            const originalWindow = { ...window };
+            const windowSpy = jest.spyOn(global, "window", "get");
+            windowSpy.mockImplementation(() => ({
+                ...originalWindow,
+                open: mockedOpen,
+                closed: true
+            }));
+            let dispatch = jest.fn();
+            assessment_Actions.openElmAssessmentPortal({
+                assessmentWorkUrn:"",
+                interactiveId : "urn:pearson:work:8fb703b9-4e21-4dac-968e-baf9323467af",
+                projDURN: "urn:pearson:distributable:8f1ceb41-da2c-4fc1-896d-fc4d2566fa0b",
+                containerURN: "urn:pearson:manifest:bd47b002-d949-4a60-948d-e9c652c297e0",
+                assessmentItemWorkUrn: ""
+            })(dispatch);
+            windowSpy.mockRestore();
             expect(spyFunction).toHaveBeenCalled();
             spyFunction.mockClear();
         });
