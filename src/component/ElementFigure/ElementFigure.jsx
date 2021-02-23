@@ -250,7 +250,7 @@ class ElementFigure extends Component {
             slateEntityUrn: config.slateEntityURN,
             parentEntityUrn: this.props.parentEntityUrn
         }
-        let configAPIKey = {
+        let tableConfig = {
             S3MathImagePath: config.S3MathImagePath ? config.S3MathImagePath : "https://cite-media-stg.pearson.com/legacy_paths/wiris-dev-mathtype-cache-use/cache/",
             alfrescoMetaData: config?.alfrescoMetaData ?? {},
             CMDS_APIKEY: config.CMDS_APIKEY,
@@ -270,6 +270,7 @@ class ElementFigure extends Component {
             PROJECTAPI_ENDPOINT: config.PROJECTAPI_ENDPOINT,
             STRUCTURE_APIKEY:config.STRUCTURE_APIKEY
         }
+        const configAPIKey = JSON.parse(JSON.stringify(tableConfig));
          sendDataToIframe({ 'type': 'launchTableSPA', 'message': {}, "id": this.props.elementId, editable ,slateData, configAPIKey});
     }
     /**
