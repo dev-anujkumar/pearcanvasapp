@@ -201,6 +201,147 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
     })
 }
 
+export const createPowerPasteElements = (type, powerPasteData, index) => (dispatch, getState) => {
+    let indexToInsert = index === 0 ? 0 : index + 1
+    let data = []
+    let slateEntityUrn = config.slateEntityURN
+    // let indexToInsert = index + 1;
+    sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+    const parentData = getState().appStore.slateLevelData;
+    const newParentData = JSON.parse(JSON.stringify(parentData));
+    let newElement;
+    let _requestData = {
+        "content":data
+    };
+    powerPasteData.forEach(pastedElement => {
+        if (pastedElement.tagName === 'P') {
+            newElement = {
+                "html" : {
+                    text: pastedElement.html
+                },
+                "inputType": "AUTHORED_TEXT",
+                "inputSubType": "NA",
+                "type": "TEXT"
+            }
+            data.push(newElement)
+        } else if (pastedElement.tagName === 'UL') {
+            newElement = createUListData(pastedElement.html);
+            data.push(newElement)
+        } else if (pastedElement.tagName === 'OL') {
+            newElement = createOListData(pastedElement.html);
+            data.push(newElement)
+        } else if (pastedElement.tagName === 'H1' || pastedElement.tagName === 'H2' || pastedElement.tagName === 'H3' ||
+            pastedElement.tagName === 'H4' || pastedElement.tagName === 'H5' || pastedElement.tagName === 'H6') {
+                newElement = {
+                    "html": {
+                      text: pastedElement.html,
+                    },
+                    "inputType": "HEADERS",
+                    "inputSubType": pastedElement.tagName,
+                    "type": "TEXT"
+                }
+            data.push(newElement)
+        }
+        /* else if (pastedElement.tagName === 'IMG') {
+            newElement = createImageData(pastedElement.html);
+            data.push(newElement)
+        } */
+
+    });
+
+    let url = `${config.REACT_APP_API_URL}v1/content/project/${config.projectUrn}/container/${slateEntityUrn}/powerpaste?index=${indexToInsert}`
+    axios.post(url, JSON.stringify(_requestData), {
+           headers: {
+               "Content-Type": "application/json",
+               "PearsonSSOSession": config.ssoToken
+           }
+       }
+   ).then(response => {
+        if (response) {
+            newParentData[config.slateManifestURN].contents.bodymatter.splice(indexToInsert, 0, ...response.data); 
+        }
+    dispatch({
+        type: AUTHORING_ELEMENT_CREATED,
+        payload: {
+            slateLevelData: newParentData
+        }
+    });
+    sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
+
+   }).catch(error => {
+       console.error("error", error);
+   })
+    
+}
+
+const createUListData = (htmlElement) => {
+    return {
+        html : {
+            text: htmlElement
+        },
+        "inputType": "LIST",
+        "inputSubType": "DISC",
+        "type": "ELEMENT_LIST"
+    }
+}
+
+const createOListData = (htmlElement) => {
+    return {
+        html : {
+            text: htmlElement
+        },
+        "inputType": "LIST",
+        "inputSubType": "DECIMAL",
+        "type": "ELEMENT_LIST"
+    }
+}
+
+/* const createImageData = (imageSource) => {
+    return {
+            id:`urn:pearson:work:${createDummyUuid()}`,
+            type: "figure",
+            figuretype: "image",
+            subtype: "imageTextWidth",
+            schema: "http://schemas.pearson.com/wip-authoring/figure/1",
+            alignment: "text-width",
+            figuredata: {
+                "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+                "imageid": "",
+                "path": imageSource,
+                "height": "422",
+                "width": "680"
+            },
+            html: {
+                title: "<p><br></p>",
+                subtitle: "<p><br></p>",
+                text: "",
+                postertext: "",
+                captions: "<p><br></p>",
+                credits: "<p><br></p>"
+            },
+            versionUrn:  `urn:pearson:work:${createDummyUuid()}`,
+            contentUrn: `urn:pearson:entity:${createDummyUuid()}`,
+            status: "wip",
+            title: {
+                schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                text: ""
+            },
+            subtitle: {
+                schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                text: ""
+            },
+            captions: {
+                schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                text: ""
+            },
+            credits: {
+                schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                text: ""
+            }
+        }
+}
+*/
+
 export const swapElement = (dataObj, cb) => (dispatch, getState) => {
     const { oldIndex, newIndex, currentSlateEntityUrn, swappedElementData, containerTypeElem, asideId, poetryId} = dataObj;
     const slateId = config.slateManifestURN;

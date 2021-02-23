@@ -7,6 +7,7 @@ import '../../styles/PopUp/PopUp.css';
 import PropTypes from 'prop-types'
 import { SECTION_BREAK_DELETE_TEXT } from '../../constants/Element_Constants'
 import { showTocBlocker, showBlocker, hideBlocker } from '../../js/toggleLoader';
+import PowerPasteElement from "../PowerPasteElement/PowerPasteElement.jsx";
 /**
 * @description - PopUp is a class based component. It is defined simply
 * to make a skeleton of PopUps.
@@ -86,6 +87,14 @@ class PopUp extends React.Component {
                 </div>
             )
         }
+        if(props.WordPastePopup) {
+            return (
+                <div className={`dialog-buttons ${props.isElmUpdateClass}`}>
+                    <span className={`save-button ${props.isElmUpdateClass}`} onClick={() => props.handlePowerPaste()}>Proceed</span>
+                    <span className={`cancel-button ${props.isElmUpdateClass}`} id='close-container' onClick={() => props.handleCopyPastePopup(false)}>Cancel</span>
+                </div>
+            )
+        }
         else {
             return (
                 <div className={`dialog-buttons ${props.assessmentClass}`}>
@@ -114,6 +123,13 @@ class PopUp extends React.Component {
                 <input id="inputUUID" autoFocus className={`dialog-input-textarea ${props.assessmentAndInteractive}`} type="text"
                     placeholder={"UUID"} />
             )
+        } else if(props.WordPastePopup){
+            return(
+                <PowerPasteElement 
+                index={props.index} 
+                onPowerPaste={props.onPowerPaste} 
+              />
+            )
         }
         else {
             return (
@@ -128,7 +144,7 @@ class PopUp extends React.Component {
     }
 
     renderCloseSymbol = (props) => {
-        if (props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText) {
+        if (props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup) {
             return null
         }
         else {
@@ -201,14 +217,14 @@ class PopUp extends React.Component {
                 </>
             )
         }
-        // else if(props.isWordPastePopup){
-        //   return(
-        //       <>
-        //       <h2 className='wordPastePopuptxt'>Paste from Word</h2>
-        //     <div className={`dialog-window ${props.wordPasteClass}`} >{props.dialogText}</div>            
-        //   </>
-        //   )
-        // }
+        else if(props.WordPastePopup){
+          return(
+              <>
+              <h2 className='wordPastePopuptxt'>Paste from Word</h2>
+            <div className={`${props.wordPasteClass}`} >{props.dialogText}</div>            
+          </>
+          )
+        }
         else {
             return (
                 <div className={`dialog-window  ${props.isAddComment ? 'add-comment' : ""} ${props.assessmentClass}`} >{props.dialogText}</div>
@@ -223,7 +239,7 @@ class PopUp extends React.Component {
                 {
                     active ?
                         <div tabIndex="0" className={`model-popup ${assessmentClass}`} ref={this.modelRef}>
-                            <div className={`modal-content ${assessmentClass}`} id = {isGlossary ? 'popup': ''}>
+                            <div className={this.props.isWordPastePopup ? 'wordPasteClass' : `modal-content ${assessmentClass}` } id = {isGlossary ? 'popup': ''}>
                                 {this.renderCloseSymbol(this.props)}
                                 {this.renderDialogText(this.props)}
                                 <div className={`dialog-input ${assessmentClass}`}>

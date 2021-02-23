@@ -143,21 +143,19 @@ export function ElementSaprator(props) {
         return null  
     }
 
-    const renderWordPasteButton = (separatorProps, type) => {
-        const allowedRoles = ["admin", "manager", "edit", "default_user"];
-        // let sourceComp = 'source' in props ? props.source : '';
-        // let inputType = 'inputType' in props.elementSelection ? props.elementSelection.inputType : '';
-        // let pasteValidation = getPasteValidated(sourceComp, inputType);
-        if (!config.isPopupSlate && allowedRoles.includes(props.userRole) && pasteValidation) {
+    const renderWordPasteButton = (elementType,index) => {
+        const inContainer = [POETRY, ELEMENT_ASIDE, MULTI_COLUMN, CITATION_GROUP_ELEMENT, SINGLE_COLUMN]
+        if(inContainer.includes(elementType)){
+            return null;
+        }else {
             return (
-                <div className={`elemDiv-expand paste-button-wrapper ${(type == 'cut' && !pasteIcon) ? 'disabled' : ''}`} onClickCapture={(e) => props.onClickCapture(e)}>
-                    <Tooltip direction='left' tooltipText='Paste from word'>
-                        <Button type="paste" onClick={() => separatorProps.handleCopyPastePopup()} />
+                <div className={`elemDiv-expand paste-button-wrapper}`} >
+                    <Tooltip direction='left' tooltipText='Paste from Word'>
+                        <Button type="paste" onClick={() => props.handleCopyPastePopup(true,index)} />
                     </Tooltip>
                 </div>
             )
         }
-        return null  
     }
     
     let pasteRender = false;
@@ -176,7 +174,7 @@ export function ElementSaprator(props) {
             <div className='elemDiv-hr'>
                 <hr className='horizontalLine' />
             </div>
-            {pasteRender ? renderWordPasteButton(props,operationType):''}
+            {renderWordPasteButton(elementType,props.index)}
             {pasteRender ? renderPasteButton(props, operationType) : ''}
             <div className='elemDiv-expand'>
                 <div className="dropdown" ref={buttonRef}>

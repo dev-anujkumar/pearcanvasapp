@@ -41,6 +41,7 @@ import {
 import { assessmentConfirmationPopup } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions';
 import { reloadSlate } from '../../component/ElementContainer/AssessmentEventHandling';
 import LazyLoad, {forceCheck} from "react-lazyload";
+import { createPowerPasteElements } from './SlateWrapper_Actions.js';
 
 import { getCommentElements } from './../Toolbar/Search/Search_Action.js';
 import { TEXT_SOURCE } from '../../constants/Element_Constants.js';
@@ -61,7 +62,11 @@ class SlateWrapper extends Component {
             splittedSlateIndex: 0,
             hasError: false,
             showReleasePopup: false,
-            isWordPastePopup:false
+            isWordPastePopup:false,
+            showpocpopup:false,
+            pastedindex:null,
+            powerPasteData:"",
+            updatedindex:''
         }
         this.isDefaultElementInProgress = false;
     }
@@ -557,9 +562,10 @@ class SlateWrapper extends Component {
         this.prohibitPropagation(event)
     }
 
-    handleCopyPastePopup = ()=>{
+    handleCopyPastePopup = (WordPastePopup,index)=>{
       this.setState({
-          isWordPastePopup: !this.state.isWordPastePopup,
+          isWordPastePopup: WordPastePopup,
+          pastedindex:index
       })
   }
 
@@ -826,17 +832,34 @@ class SlateWrapper extends Component {
 
     }
 
+    onPowerPaste = (powerPasteData, index) => {
+        this.setState({
+            powerPasteData:powerPasteData,
+            updatedindex:index
+        })
+    }
+
+    handlePowerPaste = () => {
+        this.props.createPowerPasteElements(TEXT, this.state.powerPasteData, this.state.updatedindex);
+        this.handleCopyPastePopup(false)
+        this.setState({
+            powerPasteData:[]
+        })
+    }
+
     showWordPastePopup = () => {
         if (this.state.isWordPastePopup) {
             const dialogText = `Press Ctrl/Cmd + V/v in the text below to paste your copied content.`
-            this.props.showBlocker(true)
-            showTocBlocker();
             return (
                 <PopUp dialogText={dialogText}
                     active={true}
-                    isWordPastePopup={true}
-                    confirmCallback={this.handleCopyPastePopup}
+                    WordPastePopup={true}
+                    onPowerPaste = {this.onPowerPaste}
+                    handleCopyPastePopup={this.handleCopyPastePopup}
                     wordPasteClass="word-paste"
+                    index={this.state.pastedindex}
+                    handlePowerPaste = {this.handlePowerPaste}
+                    isWordPastePopup = {this.state.isWordPastePopup}
                 />
             )
         }
@@ -1338,6 +1361,7 @@ export default connect(
         getCommentElements,
         pasteElement,
         wirisAltTextPopup,
-        audioGlossaryPopup
+        audioGlossaryPopup,
+        createPowerPasteElements
     }
 )(SlateWrapper);
