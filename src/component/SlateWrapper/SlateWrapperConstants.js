@@ -52,6 +52,7 @@ export const TYPE_WITH_PENDING_TRACK = 'withPendingTrack'
 export const TYPE_UNLINK = 'unlink'
 export const elementType = ['WORKED_EXAMPLE', 'CONTAINER', 'SECTION_BREAK', 'TEXT', 'CITATION', 'ELEMENT_CITATION', 'POETRY', 'STANZA' , 'MULTI_COLUMN','POP_UP', "IMAGE", "VIDEO", "AUDIO", "MATH_ML_CHEM_EDITOR", "BLOCK_CODE_EDITOR", "INTERACTIVE", "MMI_ELM", "SMART_LINK", "SHOW_HIDE"];
 
+export const CLONE_STATUS_INTERVAL = 2000
 export const checkTCM = element => {
     switch(element.type) {
         case 'openerelement': return OPENER;
@@ -66,6 +67,8 @@ export const checkTCM = element => {
         case 'element-assessment': return ELEMENT_ASSESSMENT;
 
         case 'showhide': return SHOW_HIDE;
+
+        case "element-aside": return CONTAINER;
 
         default: return TEXT;
     }
