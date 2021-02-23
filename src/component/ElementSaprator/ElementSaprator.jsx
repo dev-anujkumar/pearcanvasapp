@@ -186,13 +186,6 @@ ElementSaprator.propTypes = {
 }
 
 /**
- * @description: OnClick handler for add Element button
- */
-export function addMediaClickHandler() {
-    console.log('add media button clicked')
-}
-
-/**
  * @description: Rendering the element picker dropdown based on type of Container Element
  */
 

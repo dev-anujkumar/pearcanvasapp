@@ -168,6 +168,24 @@ const tcmSnapshotsCreateAsideWE = (snapshotsData, defaultKeys,index, isPopupSlat
             elementDetails = setElementTypeAndUrn(elementId, tag, wipData.subtype === WORKED_EXAMPLE ? "HEAD" : "", "",undefined,popupInContainer,slateManifestVersioning, isPopupSlate);
             prepareAndSendTcmData(elementDetails, item, defaultKeys, actionStatus,index);
         }
+        else if (item.type === SHOWHIDE) {
+            const containerElement = {
+                asideData: {
+                    contentUrn: wipData.contentUrn,
+                    element: wipData,
+                    id: wipData.id,
+                    subtype: wipData.subtype,
+                    type: wipData.type
+                },
+                parentUrn: {
+                    contentUrn: wipData.contentUrn,
+                    elementType: wipData.type,
+                    manifestUrn: wipData.id
+                }
+            }
+            const shActionStatus = {...actionStatus, status: ""}
+            prepareTcmSnapshots(item, shActionStatus, containerElement, "", index, "");
+        }
     })
 }
 
@@ -616,7 +634,7 @@ export const getShowHideTag = (showHideType) => {
 export const setDefaultKeys = (actionStatus, isContainer, inPopupSlate, slatePopupManifestUrn, cutCopyParentUrn, elmFeedback = null) => {
     const {action,status} = actionStatus
     let tcmKeys = {}
-    
+
     tcmKeys = {
         slateID:  slatePopupManifestUrn ?  slatePopupManifestUrn : inPopupSlate ? config.tempSlateManifestURN: cutCopyParentUrn && cutCopyParentUrn.manifestUrn ? cutCopyParentUrn.manifestUrn :config.slateManifestURN,
         slateUrn:   slatePopupManifestUrn ?  slatePopupManifestUrn : inPopupSlate ? config.tempSlateManifestURN: cutCopyParentUrn && cutCopyParentUrn.manifestUrn ? cutCopyParentUrn.manifestUrn :config.slateManifestURN,
