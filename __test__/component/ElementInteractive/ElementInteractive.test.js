@@ -32,6 +32,23 @@ const interactReducer = {
                 title: "item2"
         }
     },
+    "urn:pearson:work:1c237eef-66cc-4375-8387-3f0d69da5fb7": {
+        activeWorkUrn: "urn:pearson:work:1c237eef-66cc-4375-8387-3f0d69da5fb7",
+        assessmentEntityUrn: "urn:pearson:entity:7b882a51-ee22-481e-9f70-73f53ca7fbdf",
+        assessmentStatus: "wip",
+        assessmentTitle: "Interative 3 - UCA",
+        createdDate: "2021-03-17T07:08:10.422Z",
+        showUpdateStatus: false,
+        targetId: "urn:pearson:work:baf20494-42b2-4bb8-9d3d-07b5fb7f24ec",
+        latestVersion: {
+            id: "urn:pearson:work:cb08bf6b-0de0-4229-a854-d2e70cd82c15",
+            title: "item3"
+        },
+        secondLatestVersion: {
+            id: "urn:pearson:work:79d5517a-b34c-46a1-a0ba-f02a0d6955f4",
+                title: "item4"
+        }
+    },
     item : {
         interactiveType: "simulation",
         id: "urn:pearson:work:baf20494-42b2-4bb8-9d3d-07b5fb7f24ec",
@@ -56,6 +73,21 @@ jest.mock('../../../src/js/toggleLoader', () => ({
     showBlocker: jest.fn(),
     hideToc: jest.fn(),
 }))
+jest.mock("../../../src/js/c2_media_module", () => {
+    return {
+        c2MediaModule: {
+            productLinkOnsaveCallBack: (data, cb) => {
+                cb(data);
+            },
+            AddanAssetCallBack: (data, cb) => {
+                cb(data);
+            },
+            onLaunchAddAnAsset: (cb) => {
+                cb()
+            }
+        }
+    }
+});
 let event = {
     stopPropagation: jest.fn(),
     preventDefault: jest.fn()
@@ -65,6 +97,38 @@ const interactiveInstance = (props) => {
         <Interactive { ...props } /></Provider>
     );
     return component.find('Interactive').instance();
+}
+
+let alfrescoPath = {
+    alfresco: {
+        nodeRef: "ebaaf975-a68b-4ca6-9604-3d37111b847a",
+        repositoryFolder: "001_C5 Media POC - AWS US ",
+        repositoryName: "AWS US",
+        repositoryUrl: "https://staging.api.pearson.com/content/cmis/uswip-aws",
+        visibility: "MODERATED",
+    },
+    associatedArt: "https://cite-media-stg.pearson.com/legacy_paths/634a3489-083f-4539-8d47-0a8827246857/cover_thumbnail.jpg",
+    authorName: "Krajewski",
+    citeUrn: "urn:pearson:manifestation:191e7b6c-53a3-420f-badd-a90786613ae5",
+    containerUrn: "urn:pearson:manifest:fd254701-5063-43aa-bd24-a2c2175be2b2",
+    currentOrigin: "local",
+    dateApproved: null,
+    dateCreated: "2019-02-28T19:14:32.948Z",
+    eTag: "Vy8xNTc0Mjc4NDkxMDYz",
+    entityUrn: "urn:pearson:entity:f2f656da-c167-4a5f-ab8c-e3dbbd349095",
+    gridId: [],
+    hasVersions: false,
+    id: "urn:pearson:distributable:cd9daf2a-981d-493f-bfae-71fd76109d8f",
+    name: "ELMTEST_StgEnv_Krajewski Test",
+    roleId: "admin",
+    ssoToken: "qcOerhRD_CT-ocYsh-y2fujsZ0o.*AAJTSQACMDIAAlNLABxnalBuS2VJQi9RUTFMdHVBZDZBMUxyakpUTGM9AAJTMQACMDE.*",
+    status: "wip",
+    tcm: { timeUpdated: 1553707971031, userIp: "10.50.11.104", user: "c5test01", activated: true },
+    url: null,
+    userApprover: null,
+    userApproverFullName: null,
+    userCount: 0,
+    'x-prsn-user-id': " ",
 }
 
 describe('Testing Interactive element component', () => {
@@ -540,6 +604,7 @@ describe('Testing Interactive element component', () => {
                 },
                 stopPropagation() { }
             }
+            config.alfrescoMetaData = alfrescoPath
             const spyhandleC2MediaClick = jest.spyOn(elementInteractiveInstance, 'handleC2MediaClick')
             elementInteractiveInstance.handleC2MediaClick(e);
             elementInteractiveInstance.forceUpdate();
@@ -741,37 +806,6 @@ describe('Testing Interactive element component', () => {
             accessDenied: jest.fn(),
             showBlocker: jest.fn()
         };
-        let alfrescoPath = {
-            alfresco: {
-                nodeRef: "ebaaf975-a68b-4ca6-9604-3d37111b847a",
-                repositoryFolder: "001_C5 Media POC - AWS US ",
-                repositoryName: "AWS US",
-                repositoryUrl: "https://staging.api.pearson.com/content/cmis/uswip-aws",
-                visibility: "MODERATED",
-            },
-            associatedArt: "https://cite-media-stg.pearson.com/legacy_paths/634a3489-083f-4539-8d47-0a8827246857/cover_thumbnail.jpg",
-            authorName: "Krajewski",
-            citeUrn: "urn:pearson:manifestation:191e7b6c-53a3-420f-badd-a90786613ae5",
-            containerUrn: "urn:pearson:manifest:fd254701-5063-43aa-bd24-a2c2175be2b2",
-            currentOrigin: "local",
-            dateApproved: null,
-            dateCreated: "2019-02-28T19:14:32.948Z",
-            eTag: "Vy8xNTc0Mjc4NDkxMDYz",
-            entityUrn: "urn:pearson:entity:f2f656da-c167-4a5f-ab8c-e3dbbd349095",
-            gridId: [],
-            hasVersions: false,
-            id: "urn:pearson:distributable:cd9daf2a-981d-493f-bfae-71fd76109d8f",
-            name: "ELMTEST_StgEnv_Krajewski Test",
-            roleId: "admin",
-            ssoToken: "qcOerhRD_CT-ocYsh-y2fujsZ0o.*AAJTSQACMDIAAlNLABxnalBuS2VJQi9RUTFMdHVBZDZBMUxyakpUTGM9AAJTMQACMDE.*",
-            status: "wip",
-            tcm: { timeUpdated: 1553707971031, userIp: "10.50.11.104", user: "c5test01", activated: true },
-            url: null,
-            userApprover: null,
-            userApproverFullName: null,
-            userCount: 0,
-            'x-prsn-user-id': " ",
-        }
         const elementInteractive = mount(<Provider store={store}><Interactive type={type} model={Interactivefpo} index="1" {...props} /></Provider>);
         let elementInteractiveInstance = elementInteractive.find('Interactive').instance();
 
@@ -1208,7 +1242,6 @@ describe("Interactive Element: Testing Elm Picker Integration Methods", () => {
             handleBlur: jest.fn(),
             ...props
         }
-        //config.ssoToken = "nUHwE07xlwjY2b0_S3c1Oj9fRyY.*AAJTSQACMDIAAlNLABw5eTdXMC9TVWRzUEVMM0ZZa1NnSld0d3NRTjA9AAR0eXBlAANDVFMAAlMxAAIwNQ..*"
         const intInstance = interactiveInstance(props);
         const { interactiveid, interactivetype, interactivetitle } = props?.model?.figuredata;
         intInstance.setState({
@@ -1286,7 +1319,11 @@ describe("Interactive Element: Testing Elm Picker Integration Methods", () => {
         intInstance.showCustomPopup();
         expect(func).toHaveBeenCalled();
     })
-    
-            
+    it('Test - 10 - prohibitPropagation', () => {
+        const intInstance = interactiveInstance(props); 
+        const func = jest.spyOn(intInstance, 'prohibitPropagation');
+        intInstance.prohibitPropagation(event);
+        expect(func).toHaveBeenCalled();
+    })     
 })
  
