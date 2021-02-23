@@ -55,35 +55,37 @@ export const fetchUsageTypeData = (entityType) => (dispatch) => {
  */
 export const fetchAssessmentMetadata = (type, calledFrom, assessmentData, assessmentItemData) => (dispatch) => {
     const workUrn = (type == 'assessment' || type == 'assessmentArray' || type == 'interactive') ? assessmentData.targetId : assessmentItemData.targetItemid;
-    const url = `${config.ASSESSMENT_ENDPOINT}assessment/v2/${workUrn}`;
-    return axios.get(url, {
-        headers: {
-            "Content-Type": "application/json",
-            "ApiKey": config.STRUCTURE_APIKEY,
-            "PearsonSSOSession": config.ssoToken
-        }
-    }).then(async (res) => {
-        if (res && res.data && res.data.status) {
-            switch (type) {
-                case 'assessment':
-                    await assessmentMetadataHandler(res.data, calledFrom, assessmentData, assessmentItemData, dispatch);
-                    break;
-                case 'assessmentItem':
-                    assessmentItemMetadataHandler(res.data, calledFrom, assessmentData, assessmentItemData, dispatch);
-                    break;
-                case 'assessmentArray':
-                    return assessmentEntityUrnHandler(res.data);
-                case 'interactive': 
-                    return interactiveMetadataHandler(res.data, calledFrom, assessmentData, dispatch);
-                default:
-                    assessmentErrorHandler(type,':Invalid Type of Assessment for Metadata');
-                    break;
+    if(workUrn){
+        const url = `${config.ASSESSMENT_ENDPOINT}assessment/v2/${workUrn}`;
+        return axios.get(url, {
+            headers: {
+                "Content-Type": "application/json",
+                "ApiKey": config.STRUCTURE_APIKEY,
+                "PearsonSSOSession": config.ssoToken
             }
-        }
-    }).catch((error) => {
-        const errorMsg = type == 'assessmentArray' ? assessmentData.errorMessage : `${type}: Assessment-Metadata API Error:`
-        assessmentErrorHandler(`${errorMsg}:${error}`);
-    })
+        }).then(async (res) => {
+            if (res && res.data && res.data.status) {
+                switch (type) {
+                    case 'assessment':
+                        await assessmentMetadataHandler(res.data, calledFrom, assessmentData, assessmentItemData, dispatch);
+                        break;
+                    case 'assessmentItem':
+                        assessmentItemMetadataHandler(res.data, calledFrom, assessmentData, assessmentItemData, dispatch);
+                        break;
+                    case 'assessmentArray':
+                        return assessmentEntityUrnHandler(res.data);
+                    case 'interactive': 
+                        return interactiveMetadataHandler(res.data, calledFrom, assessmentData, dispatch);
+                    default:
+                        assessmentErrorHandler(type,':Invalid Type of Assessment for Metadata');
+                        break;
+                }
+            }
+        }).catch((error) => {
+            const errorMsg = type == 'assessmentArray' ? assessmentData.errorMessage : `${type}: Assessment-Metadata API Error:`
+            assessmentErrorHandler(`${errorMsg}:${error}`);
+        })
+    }
 }
 /**
  * This action creator is used to fetch all the versions of the assessment/assessment-item

@@ -14,6 +14,12 @@
  .id-info {
     padding: 5px 0 10px;
 } 
+.eml-int-status-padding{
+    padding: 0px !important;
+}
+.eml-int-status-label-tm{
+    margin-top: 5px;
+}
 
 .interactive-title{
     overflow-wrap: anywhere;

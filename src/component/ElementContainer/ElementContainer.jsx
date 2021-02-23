@@ -129,6 +129,13 @@ class ElementContainer extends Component {
             }
             this.props.fetchAssessmentMetadata('assessment', 'fromElementContainer', { targetId: assessmentID }, itemData);
         }
+        const elmInteractiveElem = checkInteractive(element)
+        if (element && elmInteractiveElem === true) {
+            const interactiveData = {
+                targetId: element?.figuredata?.interactiveid
+            }
+            this.props.fetchAssessmentMetadata('interactive', 'fromElementContainer', interactiveData);
+        }
         document.addEventListener('click',()=>{
             this.setState({showCopyPopup : false})
         });

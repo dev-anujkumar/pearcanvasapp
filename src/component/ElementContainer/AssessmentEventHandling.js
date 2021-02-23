@@ -36,7 +36,7 @@ export const handleElmPortalEvents = (action = 'add') => {
                     const intObj = getInteractivePostMsg(data)
                     if(intObj?.id && intObj.title && intObj.interactiveType) {
                         /* save item data into store */
-                        store.dispatch(setNewItemFromElm(intObj));
+                        //store.dispatch(setNewItemFromElm(intObj));
                         handleRefreshSlate(store.dispatch);
                     }
                 }
@@ -141,8 +141,8 @@ export const handlePostMsgOnAddAssess = (addPufFunction, usagetype, action) => {
                     const intObj = getInteractivePostMsg(data);
                     if(intObj?.id && intObj.title && intObj.interactiveType){
                         /**@function to update data display in interactive  */
+                        intObj.callFrom = "fromEventHandling";
                         addPufFunction(intObj);
-                        handleRefreshSlate(store.dispatch);
                     }
                 }  
                 if(action === "remove"){

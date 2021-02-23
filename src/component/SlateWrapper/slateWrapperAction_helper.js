@@ -347,3 +347,103 @@ export function prepareDataForTcmCreate(type, createdElementData, getState, disp
         }
     })
 }
+
+export const setPayloadForContainerCopyPaste = (params) => {
+    const {
+        cutIndex,
+        selection,
+        manifestUrn,
+        containerEntityUrn
+    } = params
+
+    if (selection.element.type === "element-aside") {
+        if (selection.operationType === "cut") {
+            return {
+                "content": [{
+                    "type": selection.element.type,
+                    "index": cutIndex,
+                    "id": selection.element.id,
+                    "elementParentEntityUrn": selection.sourceEntityUrn,// selection.sourceSlateEntityUrn,
+                    "contentUrn": selection.element.contentUrn
+                }]
+            }
+        }
+        return {
+            "content": [{
+                "type": selection.element.type,
+                "index": cutIndex,
+                "id": manifestUrn,
+                // "elementParentEntityUrn": selection.sourceEntityUrn,// selection.sourceSlateEntityUrn,
+                "contentUrn": containerEntityUrn
+            }]
+        }
+    }
+}
+
+/**
+ * Checks the clone container status and take actions accordingly
+ * @param {*} params contains clone request Id, index of insertion, dispatch and paste method
+ */
+export const fetchStatusAndPaste = async (params) => {
+    const {
+        insertionIndex,
+        requestId,
+        dispatch,
+        pasteElement
+    } = params
+
+    let isCloneSucceed = false,
+        newContainerData = null,
+        statusAPICallInProgress = false;
+
+    let statusCheckInterval = setInterval(async () => {
+        if (statusAPICallInProgress) return false
+        if (isCloneSucceed) {
+            clearInterval(statusCheckInterval)
+            return prepareAndPasteElement(newContainerData, insertionIndex, pasteElement, dispatch)
+        }
+        try {
+            const getStatusApiUrl = `${config.AUDIO_NARRATION_URL}container/request/${requestId}`
+            statusAPICallInProgress = true
+            const statusResponse = await axios.get(
+                getStatusApiUrl,
+                {
+                    headers: {
+                        "ApiKey": config.STRUCTURE_APIKEY,
+                        "Accept": "application/json",
+                        "Content-Type": "application/json",
+                        "PearsonSSOSession": config.ssoToken
+                    }
+                }
+            )
+            statusAPICallInProgress = false
+            const statusResponseData = statusResponse.data
+            if (statusResponseData.auditResponse?.status === "SUCCESS") {
+                isCloneSucceed = true
+                newContainerData = statusResponseData.baseContainer
+                clearInterval(statusCheckInterval)
+                return prepareAndPasteElement(newContainerData, insertionIndex, pasteElement, dispatch)
+            }
+        }
+        catch (error) {
+            sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
+            console.error("Error in getting the clone status of container:::", error);
+        }
+    }, slateWrapperConstants.CLONE_STATUS_INTERVAL);
+}
+
+/**
+ * Dispatches paste element action
+ * @param {*} newContainerData clone container details
+ * @param {*} insertionIndex index of insertion
+ * @param {*} pasteElement paste action
+ * @param {*} dispatch dispatch action method
+ */
+export const prepareAndPasteElement = (newContainerData, insertionIndex, pasteElement, dispatch) => {
+    const pasteArgs = {
+        index: insertionIndex,
+        manifestUrn: newContainerData?.id,
+        containerEntityUrn: newContainerData?.entityUrn
+    }
+    return dispatch(pasteElement(pasteArgs))
+}
