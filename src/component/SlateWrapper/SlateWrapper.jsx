@@ -65,7 +65,7 @@ class SlateWrapper extends Component {
             isWordPastePopup:false,
             showpocpopup:false,
             pastedindex:null,
-            powerPasteData:"",
+            powerPasteData: [],
             updatedindex:''
         }
         this.isDefaultElementInProgress = false;
@@ -562,10 +562,10 @@ class SlateWrapper extends Component {
         this.prohibitPropagation(event)
     }
 
-    handleCopyPastePopup = (WordPastePopup,index)=>{
+    handleCopyPastePopup = (wordPastePopup,index)=>{
       this.setState({
-          isWordPastePopup: WordPastePopup,
-          pastedindex:index
+        isWordPastePopup: wordPastePopup,
+        pastedindex: index
       })
   }
 
@@ -834,19 +834,26 @@ class SlateWrapper extends Component {
 
     onPowerPaste = (powerPasteData, index) => {
         this.setState({
-            powerPasteData:powerPasteData,
-            updatedindex:index
+            powerPasteData: powerPasteData,
+            updatedindex: index
         })
     }
 
+    /**
+     * Calls Powerpaste API when user clicks Proceed button
+     */
     handlePowerPaste = () => {
-        this.props.createPowerPasteElements(TEXT, this.state.powerPasteData, this.state.updatedindex);
+        const { powerPasteData, updatedindex } = this.state
+        powerPasteData.length && this.props.createPowerPasteElements(powerPasteData, updatedindex);
         this.handleCopyPastePopup(false)
         this.setState({
             powerPasteData:[]
         })
     }
 
+    /**
+     * Displays power paste popup
+     */
     showWordPastePopup = () => {
         if (this.state.isWordPastePopup) {
             const dialogText = `Press Ctrl/Cmd + V/v in the text below to paste your copied content.`
@@ -863,9 +870,8 @@ class SlateWrapper extends Component {
                 />
             )
         }
-        else {
-            return null
-        }
+    
+        return null 
     }
 
     /**

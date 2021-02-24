@@ -123,8 +123,8 @@ class PopUp extends React.Component {
                 <input id="inputUUID" autoFocus className={`dialog-input-textarea ${props.assessmentAndInteractive}`} type="text"
                     placeholder={"UUID"} />
             )
-        } else if(props.WordPastePopup){
-            return(
+        } else if (props.WordPastePopup) {
+            return (
                 <PowerPasteElement 
                 index={props.index} 
                 onPowerPaste={props.onPowerPaste} 

@@ -201,76 +201,85 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
     })
 }
 
-export const createPowerPasteElements = (type, powerPasteData, index) => (dispatch, getState) => {
-    let indexToInsert = index === 0 ? 0 : index + 1
+/**
+ * Calls Powerpaste API and appends elements to the slate
+ * @param {Array} powerPasteData Elements to be pasted
+ * @param {Number} index index of insertion
+ */
+export const createPowerPasteElements = (powerPasteData, index) => async (dispatch, getState) => {
     let data = []
     let slateEntityUrn = config.slateEntityURN
-    // let indexToInsert = index + 1;
     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
     const parentData = getState().appStore.slateLevelData;
     const newParentData = JSON.parse(JSON.stringify(parentData));
-    let newElement;
+    const currentSlateData = newParentData[config.slateManifestURN]
     let _requestData = {
         "content":data
     };
     powerPasteData.forEach(pastedElement => {
-        if (pastedElement.tagName === 'P') {
-            newElement = {
-                "html" : {
-                    text: pastedElement.html
-                },
-                "inputType": "AUTHORED_TEXT",
-                "inputSubType": "NA",
-                "type": "TEXT"
+        const newElement = {
+            "html" : {
+                text: pastedElement.html
+            },
+            ...slateWrapperConstants.elementDataByTag[pastedElement.tagName]  
+        }
+        data.push(newElement)
+    });
+
+    try {
+        const url = `${config.REACT_APP_API_URL}v1/content/project/${config.projectUrn}/container/${slateEntityUrn}/powerpaste?index=${index}`
+        const response = await axios.post(url, JSON.stringify(_requestData), {
+            headers: {
+                "Content-Type": "application/json",
+                "PearsonSSOSession": config.ssoToken
             }
-            data.push(newElement)
-        } else if (pastedElement.tagName === 'UL') {
-            newElement = createUListData(pastedElement.html);
-            data.push(newElement)
-        } else if (pastedElement.tagName === 'OL') {
-            newElement = createOListData(pastedElement.html);
-            data.push(newElement)
-        } else if (pastedElement.tagName === 'H1' || pastedElement.tagName === 'H2' || pastedElement.tagName === 'H3' ||
-            pastedElement.tagName === 'H4' || pastedElement.tagName === 'H5' || pastedElement.tagName === 'H6') {
-                newElement = {
-                    "html": {
-                      text: pastedElement.html,
-                    },
-                    "inputType": "HEADERS",
-                    "inputSubType": pastedElement.tagName,
-                    "type": "TEXT"
+        })
+
+        /** -------------------------- TCM Snapshot Data handling ------------------------------*/
+        let indexOfElement = 0
+        while (indexOfElement < response.data.length) {
+            if (slateWrapperConstants.elementType.indexOf("TEXT") !== -1) {
+                const containerElement = {
+                    asideData: null,
+                    parentUrn: null,
+                    poetryData: null
+                };
+                const slateData = {
+                    currentParentData: newParentData,
+                    bodymatter: currentSlateData.contents.bodymatter,
+                    response: response.data[indexOfElement]
+                };
+                if (currentSlateData.status === 'approved') {
+                    await tcmSnapshotsForCreate(slateData, "TEXT", containerElement, dispatch);
                 }
-            data.push(newElement)
-        }
-        /* else if (pastedElement.tagName === 'IMG') {
-            newElement = createImageData(pastedElement.html);
-            data.push(newElement)
-        } */
+                else {
+                    tcmSnapshotsForCreate(slateData, "TEXT", containerElement, dispatch);
+                }
 
-    });
-
-    let url = `${config.REACT_APP_API_URL}v1/content/project/${config.projectUrn}/container/${slateEntityUrn}/powerpaste?index=${indexToInsert}`
-    axios.post(url, JSON.stringify(_requestData), {
-           headers: {
-               "Content-Type": "application/json",
-               "PearsonSSOSession": config.ssoToken
-           }
-       }
-   ).then(response => {
-        if (response) {
-            newParentData[config.slateManifestURN].contents.bodymatter.splice(indexToInsert, 0, ...response.data); 
+                config.tcmStatus && prepareDataForTcmCreate("TEXT", response.data[indexOfElement], getState, dispatch);
+            }
+            indexOfElement++
         }
-    dispatch({
-        type: AUTHORING_ELEMENT_CREATED,
-        payload: {
-            slateLevelData: newParentData
-        }
-    });
-    sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
 
-   }).catch(error => {
-       console.error("error", error);
-   })
+        if (currentSlateData.status === 'approved') {
+            sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
+            sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+            return false;
+        }
+
+        newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, ...response.data); 
+        
+        dispatch({
+            type: AUTHORING_ELEMENT_CREATED,
+            payload: {
+                slateLevelData: newParentData
+            }
+        });
+        sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
+    } catch (error) {
+        console.error("Error in Powerpaste", error)
+        sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
+    }
     
 }
 
@@ -295,52 +304,6 @@ const createOListData = (htmlElement) => {
         "type": "ELEMENT_LIST"
     }
 }
-
-/* const createImageData = (imageSource) => {
-    return {
-            id:`urn:pearson:work:${createDummyUuid()}`,
-            type: "figure",
-            figuretype: "image",
-            subtype: "imageTextWidth",
-            schema: "http://schemas.pearson.com/wip-authoring/figure/1",
-            alignment: "text-width",
-            figuredata: {
-                "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
-                "imageid": "",
-                "path": imageSource,
-                "height": "422",
-                "width": "680"
-            },
-            html: {
-                title: "<p><br></p>",
-                subtitle: "<p><br></p>",
-                text: "",
-                postertext: "",
-                captions: "<p><br></p>",
-                credits: "<p><br></p>"
-            },
-            versionUrn:  `urn:pearson:work:${createDummyUuid()}`,
-            contentUrn: `urn:pearson:entity:${createDummyUuid()}`,
-            status: "wip",
-            title: {
-                schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                text: ""
-            },
-            subtitle: {
-                schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                text: ""
-            },
-            captions: {
-                schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                text: ""
-            },
-            credits: {
-                schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                text: ""
-            }
-        }
-}
-*/
 
 export const swapElement = (dataObj, cb) => (dispatch, getState) => {
     const { oldIndex, newIndex, currentSlateEntityUrn, swappedElementData, containerTypeElem, asideId, poetryId} = dataObj;

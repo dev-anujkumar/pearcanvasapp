@@ -73,3 +73,51 @@ export const checkTCM = element => {
         default: return TEXT;
     }
 }
+
+export const elementDataByTag = {
+    'P': {
+        "inputType": "AUTHORED_TEXT",
+        "inputSubType": "NA",
+        "type": "TEXT"
+    },
+    'UL': {
+        "inputType": "LIST",
+        "inputSubType": "DISC",
+        "type": "ELEMENT_LIST"
+    },
+    'OL': {
+        "inputType": "LIST",
+        "inputSubType": "DECIMAL",
+        "type": "ELEMENT_LIST"
+    },
+    'H1': {
+        "inputType": "HEADERS",
+        "inputSubType": "H1",
+        "type": "TEXT"
+    },
+    'H2': {
+        "inputType": "HEADERS",
+        "inputSubType": "H2",
+        "type": "TEXT"
+    },
+    'H3': {
+        "inputType": "HEADERS",
+        "inputSubType": "H3",
+        "type": "TEXT"
+    },
+    'H4': {
+        "inputType": "HEADERS",
+        "inputSubType": "H4",
+        "type": "TEXT"
+    },
+    'H5': {
+        "inputType": "HEADERS",
+        "inputSubType": "H5",
+        "type": "TEXT"
+    },
+    'H6': {
+        "inputType": "HEADERS",
+        "inputSubType": "H6",
+        "type": "TEXT"
+    }
+}

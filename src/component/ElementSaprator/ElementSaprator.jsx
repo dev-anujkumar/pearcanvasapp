@@ -144,19 +144,20 @@ export function ElementSaprator(props) {
         return null  
     }
 
-    const renderWordPasteButton = (elementType,index) => {
+    const renderWordPasteButton = (parentElementType, { firstOne, index }) => {
         const inContainer = [POETRY, ELEMENT_ASIDE, MULTI_COLUMN, CITATION_GROUP_ELEMENT, SINGLE_COLUMN]
-        if(inContainer.includes(elementType)){
+        if(inContainer.includes(parentElementType)){
             return null;
-        }else {
-            return (
-                <div className={`elemDiv-expand paste-button-wrapper}`} >
-                    <Tooltip direction='left' tooltipText='Paste from Word'>
-                        <Button type="paste" onClick={() => props.handleCopyPastePopup(true,index)} />
-                    </Tooltip>
-                </div>
-            )
         }
+
+        const insertionIndex = firstOne ? index : index + 1
+        return (
+            <div className={`elemDiv-expand paste-button-wrapper}`} >
+                <Tooltip direction='left' tooltipText='Paste from Word'>
+                    <Button type="paste" onClick={() => props.handleCopyPastePopup(true, insertionIndex)} />
+                </Tooltip>
+            </div>
+        )
     }
     
     let pasteRender = false;
@@ -175,7 +176,7 @@ export function ElementSaprator(props) {
             <div className='elemDiv-hr'>
                 <hr className='horizontalLine' />
             </div>
-            {renderWordPasteButton(elementType,props.index)}
+            {renderWordPasteButton(elementType, props)}
             {pasteRender ? renderPasteButton(props, operationType) : ''}
             <div className='elemDiv-expand'>
                 <div className="dropdown" ref={buttonRef}>
