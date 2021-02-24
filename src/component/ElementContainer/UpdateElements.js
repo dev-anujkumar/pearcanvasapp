@@ -200,6 +200,16 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
             store.dispatch(storeOldAssetForTCM({ ...oldFigureData, postertext: oldPostertextObj }));
         }
     }
+    if (previousElementData.figuredata.interactiveformat == "mmi-elm") {
+        const oldInteractiveTitle = previousElementData?.figuredata?.interactivetitle ?? "";
+        const interactiveNodeSelector = document.querySelector(`div[data-id='${previousElementData.id}'] div.interactive-element`);
+        const interactiveTitleDom = interactiveNodeSelector && interactiveNodeSelector.querySelector(`div.interactive-title.elm-int-title span`);
+        const interactiveTitleText = interactiveTitleDom ? interactiveTitleDom.innerText : "";
+        data.figuredata.interactivetitle = interactiveTitleText;
+        if (interactiveTitleText != oldInteractiveTitle) {
+            store.dispatch(storeOldAssetForTCM({ ...oldFigureData, interactivetitle: oldInteractiveTitle }));
+        }
+    }
     return data
 }
 

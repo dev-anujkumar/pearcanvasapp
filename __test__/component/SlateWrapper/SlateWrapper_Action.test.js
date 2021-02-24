@@ -7,6 +7,7 @@ import { SlatetDataOpenerDefault, SlatetDataOpenerElement, createstoreWithFigure
 import { SET_SLATE_TYPE, SET_SLATE_ENTITY, ACCESS_DENIED_POPUP, SET_PARENT_NODE,SWAP_ELEMENT, SET_UPDATED_SLATE_TITLE, AUTHORING_ELEMENT_CREATED,SET_SPLIT_INDEX, GET_PAGE_NUMBER, ERROR_POPUP } from '../../../src/constants/Action_Constants';
 import config from '../../../src/config/config';
 import { elementAside,slateLevelData1, slateLevelData2, asideDataType1, asideDataType2 } from '../../../fixtures/elementAsideData';
+import MockAdapter from 'axios-mock-adapter';
 
 jest.mock('../../../src/component/TcmSnapshots/TcmSnapshots_Utility.js',()=>({
     tcmSnapshotsForCreate: jest.fn()
@@ -926,6 +927,19 @@ describe('Tests Slate Wrapper Actions', () => {
         return await store.dispatch(actions.pasteElement({index: 1})).then(() => {
             expect(spypasteElement).toHaveBeenCalled();
         });
-        
     })
+
+    it("cloneContainer action - fail", async () => {
+        const insertionIndex = 2, manifestUrn = "urn:pearson:manifest:325dssd-23523rccdfdsf3-3223ewaasa"
+        const mock = new MockAdapter(axios);
+        const failResponse = {
+           message: "failed"
+        };
+        mock.onPost(`${config.AUDIO_NARRATION_URL}container/${manifestUrn}/clone`).reply(500, failResponse);
+        
+        const spycloneContainer = jest.spyOn(actions, "cloneContainer")
+        actions.cloneContainer(insertionIndex, manifestUrn)(jest.fn)
+        expect(spycloneContainer).toHaveBeenCalled();
+    })
+     
 });

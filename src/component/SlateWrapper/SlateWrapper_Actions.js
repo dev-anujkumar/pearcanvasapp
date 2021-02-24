@@ -887,6 +887,16 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                 }]
             }
         }
+        
+        if(selection.element.type === "element-aside" && selection.element.subtype=== "sidebar") {
+            const payloadParams = {
+                ...params,
+                cutIndex,
+                selection
+            }
+            const { setPayloadForContainerCopyPaste } = (await import("./slateWrapperAction_helper.js"))
+            _requestData = setPayloadForContainerCopyPaste(payloadParams)
+        }
 
         if('manifestationUrn' in selection.element) {
             _requestData = {
@@ -898,7 +908,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
         }
 
         try {
-            let url = `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/slate/${slateEntityUrn}/element/paste?type=${selection.operationType.toUpperCase()}`
+            let url = `${config.REACT_APP_API_URL}v1/projects/${config.projectUrn}/containers/${slateEntityUrn}/element/paste?type=${selection.operationType.toUpperCase()}`
             const createdElemData = await axios.post(
                 url,
                 JSON.stringify(_requestData),
@@ -936,7 +946,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
         }
         catch(error) {
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
-            console.log("Exceptional Error on pasting the element:::", error);
+            console.error("Exceptional Error on pasting the element:::", error);
         }
     }
 }
@@ -945,4 +955,43 @@ export const wirisAltTextPopup = (data) => (dispatch) => {
         type: WIRIS_ALT_TEXT_POPUP,
         payload: data
     })
+}
+
+/**
+ * Calls the clone API to get the request ID
+ * @param {*} insertionIndex index of insertion
+ * @param {*} manifestUrn container urn
+ */
+export const cloneContainer = (insertionIndex, manifestUrn) => async (dispatch) => {
+
+    try {
+        //Clone container
+        const cloneApiUrl = `${config.AUDIO_NARRATION_URL}container/${manifestUrn}/clone`
+        const cloneResponse = await axios.post(
+            cloneApiUrl,
+            null,
+            {
+                headers: {
+                    "ApiKey": config.STRUCTURE_APIKEY,
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "PearsonSSOSession": config.ssoToken
+                }
+            }
+        )
+        const requestId = cloneResponse.data.message.split(",")[1].replace(" request id:","")
+
+        //Fetch Status
+        const fetchAndPasteArgs = {
+            insertionIndex,
+            requestId,
+            dispatch,
+            pasteElement
+        }
+        await (await import("./slateWrapperAction_helper.js")).fetchStatusAndPaste(fetchAndPasteArgs)  
+    }
+    catch(error) {
+        sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
+        console.error("Error in cloning the container:::", error);
+    }
 }

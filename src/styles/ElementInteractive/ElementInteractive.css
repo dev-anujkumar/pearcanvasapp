@@ -14,8 +14,8 @@
  .id-info {
     padding: 5px 0 10px;
 } 
-.eml-int-status-top-padding{
-    padding-top: 0px !important;
+.eml-int-status-padding{
+    padding: 0px !important;
 }
 .eml-int-status-label-tm{
     margin-top: 5px;

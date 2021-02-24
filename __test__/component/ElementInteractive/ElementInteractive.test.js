@@ -19,7 +19,7 @@ const interactReducer = {
         activeWorkUrn: "urn:pearson:work:baf20494-42b2-4bb8-9d3d-07b5fb7f24ec",
         assessmentEntityUrn: "urn:pearson:entity:7b882a51-ee22-481e-9f70-73f53ca7fbdf",
         assessmentStatus: "wip",
-        assessmentTitle: "item",
+        assessmentTitle: "Interative 2 -UCA",
         createdDate: "2021-02-17T07:08:10.422Z",
         showUpdateStatus: false,
         targetId: "urn:pearson:work:baf20494-42b2-4bb8-9d3d-07b5fb7f24ec",
@@ -1165,7 +1165,8 @@ describe("Interactive Element: Testing Elm Picker Integration Methods", () => {
         let pufObj = {
             id: "urn:pearson:work:baf20494-42b2-4bb8-9d3d-07b5fb7f24ec",
             interactiveType: "simulation",
-            title: "Interative 2 -UCA"
+            title: "Interative 2 -UCA",
+            callFrom: "fromEventHandling"
         }
         const spyaddElmInteractive = jest.spyOn(elementInteractiveInstance, 'addElmInteractive')
         elementInteractiveInstance.addElmInteractive(pufObj, cb)
@@ -1207,6 +1208,7 @@ describe("Interactive Element: Testing Elm Picker Integration Methods", () => {
             handleBlur: jest.fn(),
             ...props
         }
+        //config.ssoToken = "nUHwE07xlwjY2b0_S3c1Oj9fRyY.*AAJTSQACMDIAAlNLABw5eTdXMC9TVWRzUEVMM0ZZa1NnSld0d3NRTjA9AAR0eXBlAANDVFMAAlMxAAIwNQ..*"
         const intInstance = interactiveInstance(props);
         const { interactiveid, interactivetype, interactivetitle } = props?.model?.figuredata;
         intInstance.setState({
@@ -1226,17 +1228,16 @@ describe("Interactive Element: Testing Elm Picker Integration Methods", () => {
         expect(intInstance.state.interactiveTitle).toBe(interactivetitle);
         expect(intInstance.state.elementType).toBe(interactivetype);
     })
-    //it('Test - 5 - componentDidUpdate', () => {
-    //    props = {
-    //        editInteractiveId: "urn:pearson:work:baf20494-42b2-4bb8-9d3d-07b5fb7f24ec",
-    //        setNewItemFromElm: jest.fn(),
-    //        ...props
-    //    }
-    //    const intInstance = interactiveInstance(props);
-    //    const compDidUpdate = jest.spyOn(intInstance, 'componentDidUpdate');
-    //    intInstance.componentDidUpdate();
-    //    expect(compDidUpdate).toHaveBeenCalled();
-    //})
+    it('Test - componentDidUpdate', () => {
+        const intInstance = interactiveInstance(props);
+         intInstance.setState({
+            itemID: "urn:pearson:work:baf20494-42b2-4bb8-9d3d-07b5fb7f24ec",
+            interactiveTitle : "title"
+        })
+        const compDidUpdate = jest.spyOn(intInstance, 'componentDidUpdate');
+        intInstance.componentDidUpdate();
+        expect(compDidUpdate).toHaveBeenCalled();
+    })
     it('Test - 6 - updateElm', () => {
         props = {
             permissions: ['elements_add_remove'],
@@ -1269,6 +1270,23 @@ describe("Interactive Element: Testing Elm Picker Integration Methods", () => {
             expect(func).toHaveBeenCalled();
         })     
     })
+    it('Test - 8 - updateElmOnSaveEvent', () => {
+        const intInstance = interactiveInstance(props);
+        intInstance.setState({
+            itemID: "urn:pearson:work:baf20494-42b2-4bb8-9d3d-07b5fb7f24ec",
+            elementType: "elm-int"
+        })
+        const func = jest.spyOn(intInstance, 'updateElmOnSaveEvent');
+        intInstance.updateElmOnSaveEvent({assessmentReducer : interactReducer});
+        expect(func).toHaveBeenCalled();
+    })
+    it('Test - 9 - showCustomPopup', () => {
+        const intInstance = interactiveInstance(props); 
+        const func = jest.spyOn(intInstance, 'showCustomPopup');
+        intInstance.showCustomPopup();
+        expect(func).toHaveBeenCalled();
+    })
+    
             
 })
  

@@ -410,4 +410,105 @@ describe('Tests Slate Wrapper Action helper methods', () => {
         expect(spycheckElementExistence).toHaveBeenCalled();
     });
 
+    it('testing------- setPayloadForContainerCopyPaste - cut-aside ------', () => {
+        const params = {
+          cutIndex: 1,
+          selection: {
+            element: {
+              type: "element-aside",
+              id: "urn:pearson:manifest:12adasd3-123sad334-214dsszefs3",
+              contentUrn: "1122"
+            },
+            operationType: "cut",
+            sourceEntityUrn: "123",
+          },
+          manifestUrn: "urn:pearson:manifest:12adasd3-123sad334-214dssze44",
+          containerEntityUrn:
+            "urn:pearson:entity:12adasd3-123sad334-214dssze44",
+        };
+
+        const expectedValue = {
+            "content": [{
+                "type": params.selection.element.type,
+                "index": params.cutIndex,
+                "id": params.selection.element.id,
+                "elementParentEntityUrn": params.selection.sourceEntityUrn,
+                "contentUrn": params.selection.element.contentUrn
+            }]
+        }
+        const spysetPayloadForContainerCopyPaste = jest.spyOn(helperMethods, 'setPayloadForContainerCopyPaste');
+        helperMethods.setPayloadForContainerCopyPaste(params);
+        expect(spysetPayloadForContainerCopyPaste).toHaveReturnedWith(expectedValue);
+    });
+     
+    it('testing------- setPayloadForContainerCopyPaste - copy-aside ------', () => {
+        const params = {
+          cutIndex: 1,
+          selection: {
+            element: {
+              type: "element-aside",
+              id: "urn:pearson:manifest:12adasd3-123sad334-214dsszefs3",
+              contentUrn: "1122"
+            },
+            operationType: "copy",
+            sourceEntityUrn: "123",
+          },
+          manifestUrn: "urn:pearson:manifest:12adasd3-123sad334-214dssze44",
+          containerEntityUrn: "urn:pearson:entity:12adasd3-123sad334-214dssze44",
+        };
+
+        const expectedValue = {
+            "content": [{
+                "type": params.selection.element.type,
+                "index": params.cutIndex,
+                "id": params.manifestUrn,
+                "contentUrn": params.containerEntityUrn
+            }]
+        }
+        const spysetPayloadForContainerCopyPaste = jest.spyOn(helperMethods, 'setPayloadForContainerCopyPaste');
+        helperMethods.setPayloadForContainerCopyPaste(params);
+        expect(spysetPayloadForContainerCopyPaste).toHaveReturnedWith(expectedValue);
+    });
+
+    it('testing------- fetchStatusAndPaste - copy-aside - success ------', async () => {
+        jest.useFakeTimers();
+        const params = {
+            insertionIndex: 2,
+            requestId: "uez4537hskjaz",
+            dispatch: jest.fn(),
+            pasteElement: jest.fn()
+        };
+
+        const mock = new MockAdapter(axios);
+        const successResponse = {
+          status: 200,
+        auditResponse: { status: "SUCCESS", baseContainer: {} },
+        };
+        mock.onGet(`${config.AUDIO_NARRATION_URL}container/request/${params.requestId}`).reply(200, successResponse);
+        const spyfetchStatusAndPaste = jest.spyOn(helperMethods, 'fetchStatusAndPaste');
+        helperMethods.fetchStatusAndPaste(params);
+        jest.advanceTimersByTime(3000); //Mock code inside setInterval
+        expect(spyfetchStatusAndPaste).toHaveBeenCalled();
+    });
+     
+    it('testing------- fetchStatusAndPaste - copy-aside - API fail ------', async () => {
+        jest.useFakeTimers();
+        const params = {
+            insertionIndex: 2,
+            requestId: "uez4537hskjaz",
+            dispatch: jest.fn(),
+            pasteElement: jest.fn()
+        };
+
+        const mock = new MockAdapter(axios);
+        const failResponse = {
+          status: 500,
+          data: {"message": "Internal server error"}
+        };
+        mock.onGet(`${config.AUDIO_NARRATION_URL}container/request/${params.requestId}`).reply(500, failResponse);
+        const spyfetchStatusAndPaste = jest.spyOn(helperMethods, 'fetchStatusAndPaste');
+        helperMethods.fetchStatusAndPaste(params);
+        jest.advanceTimersByTime(3000); //Mock code inside setInterval
+        expect(spyfetchStatusAndPaste).toHaveBeenCalled();
+    });
 })

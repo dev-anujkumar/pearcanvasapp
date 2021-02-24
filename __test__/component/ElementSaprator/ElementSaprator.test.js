@@ -1,7 +1,7 @@
 import React from 'react'
 import Button from '../../../src/component/ElementButtons/ElementButton.jsx'
 import ElementSaprator from '../../../src/component/ElementSaprator/'
-import {renderDropdownButtons, addMediaClickHandler} from '../../../src/component/ElementSaprator/ElementSaprator.jsx'
+import * as separatorFunctions from '../../../src/component/ElementSaprator/ElementSaprator.jsx'
 import config from '../../../src/config/config.js';
 import { mount} from 'enzyme';
 import { Provider } from 'react-redux';
@@ -130,7 +130,7 @@ describe('Testing functions', () => {
         config.slateType = 'container-introduction';
         config.isCO = false;
         config.isLOL = false;
-        let newData = renderDropdownButtons(esProps, 'citations', sectionBreak, closeDropDown, propsData)
+        let newData = separatorFunctions.renderDropdownButtons(esProps, 'citations', sectionBreak, closeDropDown, propsData)
     })
     it('Testing renderDropdownButtons function ELEMENT_ASIDE else condition',() => {
         let sectionBreak = false
@@ -138,13 +138,10 @@ describe('Testing functions', () => {
         config.slateType = 'container-introduction';
         config.isCO = false;
         config.isLOL = false;
-        renderDropdownButtons(esProps, 'element-aside', sectionBreak, closeDropDown, propsData)
+        separatorFunctions.renderDropdownButtons(esProps, 'element-aside', sectionBreak, closeDropDown, propsData)
     })
 });
 describe('Testing functions', () => {
-    it('addMediaClickHandler testing', () => {
-        addMediaClickHandler();
-    })
 
     it('splitSlateClickHandler  testing', () => {
         let tempWrapper;
@@ -245,7 +242,7 @@ describe('Testing functions', () => {
         samplediv2.setAttribute('class', METADATA_ANCHOR );
         document.body.appendChild(samplediv2);
 
-        renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown, propsData)
+        separatorFunctions.renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown, propsData)
     })
 
     it('Testing renderDropdownButtons function isCO else condition',() => {
@@ -260,7 +257,7 @@ describe('Testing functions', () => {
         samplediv2.setAttribute('class', METADATA_ANCHOR );
         document.body.appendChild(samplediv2);
 
-        renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown, propsData)
+        separatorFunctions.renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown, propsData)
     })
 
     
@@ -275,7 +272,7 @@ describe('Testing functions', () => {
         config.parentEntityUrn = 'Front Matter' 
         config.parentEntityUrn = 'Back Matter'
 
-        renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown, propsData)
+        separatorFunctions.renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown, propsData)
     })
     it('Testing renderDropdownButtons function CITATION_GROUP_ELEMENT if condition',() => {
         let elementType = CITATION_GROUP_ELEMENT
@@ -288,7 +285,7 @@ describe('Testing functions', () => {
         config.parentEntityUrn = 'Front Matter' 
         config.parentEntityUrn = 'Back Matter'
 
-        renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown, propsData)
+        separatorFunctions.renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown, propsData)
     })
 
     it('Testing renderDropdownButtons function ELEMENT_ASIDE if-else condition',() => {
@@ -302,10 +299,8 @@ describe('Testing functions', () => {
         config.parentEntityUrn = 'Front Matter' 
         config.parentEntityUrn = 'Back Matter'
 
-        renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown, propsData)
+        separatorFunctions.renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown, propsData)
     })
-
-
 
     it('Testing renderDropdownButtons function ELEMENT_ASIDE if-else condition',() => {
         let elementType = ELEMENT_ASIDE
@@ -313,6 +308,50 @@ describe('Testing functions', () => {
         let closeDropDown = ''
         config.slateType = 'adsdfsdf'
         config.parentEntityUrn = 'urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527' 
-        renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown, propsData)
+        separatorFunctions.renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown, propsData)
+    })
+
+    it('Testing pasteElement function - cut', () => {
+        const separatorProps = {
+            index: 2,
+            firstOne: false,
+            elementSelection: { element: { id: "urn:pearson:work:324234-4252423fds-23423fds3fgr3" } },
+            pasteElement : jest.fn()
+        },
+        togglePaste = jest.fn(),
+        type = 'cut';
+        const spyPasteFn = jest.spyOn(separatorFunctions, "pasteElement")
+        separatorFunctions.pasteElement(separatorProps, togglePaste, type)
+        expect(spyPasteFn).toHaveBeenCalled()
+    })
+
+    it('Testing pasteElement function - aside-copy', () => {
+        const separatorProps = {
+            index: 2,
+            firstOne: false,
+            elementSelection: { element: { id: "urn:pearson:work:324234-4252423fds-23423fds3fgr3", type: "element-aside" } },
+            pasteElement : jest.fn(),
+            cloneContainer: jest.fn()
+        },
+        togglePaste = jest.fn(),
+        type = 'copy';
+        const spyPasteFn = jest.spyOn(separatorFunctions, "pasteElement")
+        separatorFunctions.pasteElement(separatorProps, togglePaste, type)
+        expect(spyPasteFn).toHaveBeenCalled()
+    })
+
+    it('Testing pasteElement function - versioning saving call in progress', () => {
+        config.savingInProgress = true
+        const separatorProps = {
+            index: 2,
+            firstOne: false,
+            elementSelection: { element: { id: "urn:pearson:work:324234-4252423fds-23423fds3fgr3", type: "element-aside" } },
+            pasteElement : jest.fn()
+        },
+        togglePaste = jest.fn(),
+        type = 'copy';
+        const spyPasteFn = jest.spyOn(separatorFunctions, "pasteElement")
+        separatorFunctions.pasteElement(separatorProps, togglePaste, type)
+        expect(spyPasteFn).toHaveReturnedWith(false)
     })
 });

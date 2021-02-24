@@ -13,6 +13,7 @@ import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import '../../styles/ElementSaprator/ElementSaprator.css'
 import ElementContainerType from '../ElementContainerType/ElementContainerType.jsx'
 import { getPasteValidated } from '../../constants/Element_Constants.js';
+import { cloneContainer } from "../SlateWrapper/SlateWrapper_Actions.js";
 
 const { TEXT, 
     IMAGE, 
@@ -201,13 +202,6 @@ ElementSaprator.propTypes = {
 }
 
 /**
- * @description: OnClick handler for add Element button
- */
-export function addMediaClickHandler() {
-    console.log('add media button clicked')
-}
-
-/**
  * @description: Rendering the element picker dropdown based on type of Container Element
  */
 
@@ -377,6 +371,11 @@ export const pasteElement = (separatorProps, togglePaste, type) => {
     const index = separatorProps.index;
     const firstOne = separatorProps.firstOne || false;
     const insertionIndex = firstOne ? index : index + 1
+    const selectedElement = separatorProps.elementSelection.element
+    
+    if (selectedElement.type === ELEMENT_ASIDE && type === 'copy') {
+        return separatorProps.cloneContainer(insertionIndex, selectedElement.id)
+    }
     const pasteFnArgs = {
         index: insertionIndex,
         parentUrn: 'parentUrn' in separatorProps ? separatorProps.parentUrn : null,
@@ -391,4 +390,4 @@ const mapStateToProps = (state) => ({
     elementSelection: state.selectionReducer.selection
 })
 
-export default connect(mapStateToProps, {})(ElementSaprator)
+export default connect(mapStateToProps, { cloneContainer })(ElementSaprator)

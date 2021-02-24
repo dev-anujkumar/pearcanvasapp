@@ -67,9 +67,6 @@ class Interactive extends React.Component {
                 interactiveTitle: this.props.model.figuredata.interactivetitle? this.props.model.figuredata.interactivetitle : "",
             
             })
-            this.props.fetchAssessmentMetadata('interactive', '', 
-                { targetId: this.props.model.figuredata.interactiveid }
-            );
         }
     }
 
@@ -84,24 +81,20 @@ class Interactive extends React.Component {
                 interactiveTitle: nextProps.model.figuredata && nextProps.model.figuredata.interactivetitle? nextProps.model.figuredata.interactivetitle : "",
             };
         }
-
         return null;
     }
 
    componentDidUpdate() { 
-        if ((!config.savingInProgress && !config.isSavingElement) && (this.props.model.figuredata.interactiveformat === ELM_INT)) { 
-            if(this.props?.editInteractiveId === this.props?.model?.figuredata?.interactiveid){
-                const interct = this.props?.assessmentReducer?.item;
-                if( interct?.id && interct.title && interct.interactiveType ) {
-                    this.addElmInteractive(interct, () => {
-                        hideTocBlocker();
-                        disableHeader(false);
-                    });
-                    this.props.setNewItemFromElm({});
-                }
-            }
-        }
+       const { assessmentReducer } = this.props;
+       const { itemID, interactiveTitle } = this.state;
+       if (!config.savingInProgress && !config.isSavingElement && (this.props?.model?.figuredata?.interactiveformat === ELM_INT) && (itemID && assessmentReducer && assessmentReducer[itemID])) {
+           const newPropsTitle = assessmentReducer[itemID].assessmentTitle;
+           if ((assessmentReducer[itemID].showUpdateStatus == false && (interactiveTitle != newPropsTitle))) {
+            this.updateElmOnSaveEvent(this.props);
+           }
+       }
    }
+
      /*** @description This function is to show Approved/Unapproved Status on interative */
     showElmVersionStatus = () => {
         let elmInt =  this.props?.assessmentReducer[this.state.itemID];
@@ -246,7 +239,9 @@ class Interactive extends React.Component {
                             <TinyMceEditor element={this.props.model} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-1`} className={heading4Title + ' figureTitle'} id={this.props.id} placeholder="Enter Title..." tagName={'h4'} model={element.html.subtitle}
                              handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} handleAudioPopupLocation = {this.props.handleAudioPopupLocation} />
                     </header>
-                    <div className={id} onClick={()=> this.handleClickElement()}><strong>{path ? path : 'ITEM ID: '} </strong>{this.state.itemID?this.state.itemID : itemId}</div>
+                    <div className={id +' interactive-id'} onClick={()=> this.handleClickElement()}><strong>{path ? path : 'ITEM ID: '} </strong><span>{this.state.itemID?this.state.itemID : itemId}</span></div>
+                    {element.figuredata.interactiveformat === ELM_INT && <div className={id+' interactive-title elm-int-title'} onClick={(event) => this.handleClickElement(event)}><strong>{path ? path : 'INTERACTIVE TITLE: '} </strong><span>{this.state.interactiveTitle ? this.state.interactiveTitle : ""}</span></div>}
+                    {(element.figuredata.interactiveformat === ELM_INT ) && <div className={id+' interactive-status cls-display-flex eml-int-status-padding'}><strong className="eml-int-status-label-tm">{ 'CURRENT VERSION: '} </strong>{ this.showElmVersionStatus() }</div> }
                     <div className={"pearson-component " + dataType} data-uri={this.state.itemID?this.state.itemID : itemId} data-type={dataType} data-width="600" data-height="399" onClick={(e)=>{this.togglePopup(e,true)}} >
 
                         <img src={this.state.imagePath ? this.state.imagePath : INTERACTIVE_FPO} title="View Image" alt="" className={imageDimension + " lazyload"} />
@@ -272,9 +267,9 @@ class Interactive extends React.Component {
                         <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} index={`${index}-1`} className={heading4Title + ' figureTitle'} id={this.props.id} placeholder="Enter Title..." tagName={'h4'} model={element.html.subtitle}
                             handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} handleAudioPopupLocation = {this.props.handleAudioPopupLocation}/>
                     </header>
-                    <div className={id} onClick={(event) => this.handleClickElement(event)}><strong>{path ? path : 'ITEM ID: '} </strong>{this.state.itemID ? this.state.itemID : itemId}</div>
-                    {element.figuredata.interactiveformat === ELM_INT && <div className={id+' interactive-title'} onClick={(event) => this.handleClickElement(event)}><strong>{path ? path : 'INTERACTIVE TITLE: '} </strong>{this.state.interactiveTitle ? this.state.interactiveTitle : ""}</div>}
-                     {(element.figuredata.interactiveformat === ELM_INT ) && <div className={id+' cls-display-flex eml-int-status-top-padding'}><strong className="eml-int-status-label-tm">{ 'CURRENT VERSION: '} </strong>{ this.showElmVersionStatus() }</div> }
+                    <div className={id+" interactive-id"} onClick={(event) => this.handleClickElement(event)}><strong>{path ? path : 'ITEM ID: '} </strong><span>{this.state.itemID ? this.state.itemID : itemId}</span></div>
+                    {element.figuredata.interactiveformat === ELM_INT && <div className={id+' interactive-title elm-int-title'} onClick={(event) => this.handleClickElement(event)}><strong>{path ? path : 'INTERACTIVE TITLE: '} </strong><span>{this.state.interactiveTitle ? this.state.interactiveTitle : ""}</span></div>}
+                    {(element.figuredata.interactiveformat === ELM_INT ) && this.state?.itemID && <div className={id+' interactive-status cls-display-flex eml-int-status-padding'}><strong className="eml-int-status-label-tm">{ 'CURRENT VERSION: '} </strong>{ this.showElmVersionStatus() }</div> }
                     <div className={"pearson-component " + dataType} data-uri="" data-type={dataType} data-width="600" data-height="399" onClick={(e) => { this.togglePopup(e, true) }} >
                         {
                             imageDimension !== '' ?
@@ -408,17 +403,33 @@ class Interactive extends React.Component {
             interactiveTitle: pufObj.title,
             elementType: pufObj.interactiveType
         }, () => {
-            this.props.fetchAssessmentMetadata("interactive", "",
-                 { targetId: pufObj.id }
-            );
+            this.props.fetchAssessmentMetadata("interactive", "",{ targetId: pufObj.id });
         })
         this.props.updateFigureData(figureData, this.props.index, this.props.elementId, () => {
             this.props.handleFocus("updateFromC2");
             this.props.handleBlur();
         })
+        if(pufObj.callFrom === "fromEventHandling"){
+            hideTocBlocker();
+            disableHeader(false);
+        }
         if (cb) {
             cb();
         }
+    }
+
+    /*** @description - This function is to update ELM Assessment on Save Event from ELM Portal */
+    updateElmOnSaveEvent = (props) => {
+        let pufObj = {
+            id: this.state.itemID,
+            title: props.assessmentReducer[this.state.itemID].assessmentTitle,
+            usagetype: this.state.elementType
+        }
+        this.addElmInteractive(pufObj, () => {
+            hideTocBlocker();
+            disableHeader(false);
+        });
+        this.props.setNewItemFromElm({});
     }
     /**------------------------------------------------------------------------------------------*/
     

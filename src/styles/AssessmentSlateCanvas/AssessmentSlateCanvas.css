@@ -289,6 +289,9 @@ div.elm-update-button b.elm-update-button-text {
 }
 
 
+.elm-int-status-alignment .approved-button {
+  margin-top: 1px !important;
+}
 span.approved-button {
   width: 24px;
   height: 24px;
@@ -328,11 +331,11 @@ span.approved-button.enable svg path#path2 {
   display: flex;
   margin: 30px 0 20px 142px;
 }
-.cls-display-flex{
+.cls-display-flex, .eml-int-status-block{
   display: flex;
 }
 .elm-int-status-alignment {
-  margin: 0px 0px 20px 0px !important;
+  margin: 0px !important;
 }
 .eml-int-status-text-tm {
   margin:7px 5px 0px 5px;
