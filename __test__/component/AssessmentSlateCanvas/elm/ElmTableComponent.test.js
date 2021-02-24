@@ -7,6 +7,8 @@ import configureMockStore from 'redux-mock-store';
 import ElmTableComponent from '../../../../src/component/AssessmentSlateCanvas/elm/Components/ElmTableComponent';
 import { DefaultSlateData, mockELMResponse, mockElmItemResponse,newElmData ,CurrentSlateAncestor } from '../../../../fixtures/AssessmentSlateCanvasTestingData';
 import config from '../../../../src/config/config.js';
+import { ELM_INT, PUF } from '../../../../src/component/AssessmentSlateCanvas/AssessmentSlateConstants';
+//import { searchAndFilterAssessmentData } from '../../../../src/component/AssessmentSlateCanvas/elm/UtilityFunctions/ElmLearnosityUtility';
 
 config.slateManifestURN="urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
 
@@ -44,6 +46,14 @@ let initialState2 = {
         currentSlateAncestorData:CurrentSlateAncestor.currentSlateAncestorData1
     }
 };
+
+const tableInstance = (props) => {
+    const store = mockStore(initialState);
+    const component = mount(<Provider store={store}><ElmTableComponent {...props} /></Provider>);
+    return component.find('ElmTableComponent').instance();
+}
+
+
 describe('ELM Actions test', () => {
     let store = {};
     beforeEach(() => {
@@ -64,7 +74,7 @@ describe('ELM Actions test', () => {
         expect(instance).toBeDefined();
 
     });
-    it('TEST- render table-elm resources', () => {
+    describe('TEST- render table-elm resources', () => {
         let store = mockStore(initialState);
         let props = {
             elmReducer:{
@@ -81,12 +91,118 @@ describe('ELM Actions test', () => {
         }
         const component = mount(<Provider store={store}><ElmTableComponent {...props} /></Provider>);
         const elmTableInstance = component.find('ElmTableComponent').instance();
-        expect(elmTableInstance).toBeDefined();
-        const spy = jest.spyOn(elmTableInstance, 'renderTableData')
-        elmTableInstance.renderTableData(props);
-        elmTableInstance.forceUpdate()
-        expect(spy).toHaveBeenCalled()
-        spy.mockClear()
+            
+        it('TEST - renderTableData - if', () => {
+            expect(elmTableInstance).toBeDefined();
+            const spy = jest.spyOn(elmTableInstance, 'renderTableData')
+            elmTableInstance.renderTableData(props);
+            elmTableInstance.forceUpdate()
+            expect(spy).toHaveBeenCalled()
+            spy.mockClear()
+        });
+        it('TEST - renderTableData - if->if', () => { 
+            props = {
+                errFlag : false,
+	            elmData: mockELMResponse,
+	            elmItemData : null,
+                ...props
+            }
+            config.parentLabel = "frontmatter";
+            const compInstance = tableInstance(props);
+            expect(compInstance).toBeDefined();
+            const spy = jest.spyOn(compInstance, 'renderTableData')
+            compInstance.renderTableData(props);
+            compInstance.forceUpdate()
+            expect(spy).toHaveBeenCalled()
+            spy.mockClear()
+        });
+        it('TEST - renderTableData - if->if->else', () => {
+            const currentProps = {
+                elmReducer: {
+                    errFlag : false,
+                    elmData: mockELMResponse,
+                    elmItemData : null,
+                    elementType: PUF
+                }
+            }
+            config.parentLabel = "";
+            config.parentContainerUrn = "urn:pearson:entity:9d1ff433-5f67-46b9-972d-c0f5b4c239d9";
+            const compInstance = tableInstance(props);
+
+            expect(compInstance).toBeDefined();
+            const spy = jest.spyOn(compInstance, 'renderTableData')
+            compInstance.renderTableData(currentProps);
+            compInstance.forceUpdate()
+            expect(spy).toHaveBeenCalled()
+            spy.mockClear()
+        });
+        it('TEST - renderTableData - if->else', () => {
+            const currentProps = {
+                elmReducer: {
+                    errFlag : true,
+                    elmData: mockELMResponse,
+                    elmItemData : mockElmItemResponse.items,
+                    itemErrorFlag: false, 
+                    elementType: PUF,
+                    elmLoading: false 
+                }
+            }
+            config.parentLabel = "frontmatter";
+            config.parentContainerUrn = "urn:pearson:entity:9d1ff433-5f67-46b9-972d-c0f5b4c239d9";
+            const compInstance = tableInstance(props);
+
+            expect(compInstance).toBeDefined();
+            const spy = jest.spyOn(compInstance, 'renderTableData')
+            compInstance.renderTableData(currentProps);
+            compInstance.forceUpdate()
+            expect(spy).toHaveBeenCalled()
+            spy.mockClear()
+        });
+        it('TEST - renderTableData - if->else->if->else', () => {
+            const currentProps = {
+                elmReducer: {
+                    errFlag : true,
+                    elmData: mockELMResponse,
+                    elmItemData : mockElmItemResponse.items,
+                    itemErrorFlag: false, 
+                    elementType: PUF,
+                    elmLoading: false 
+                }
+            }
+            config.parentLabel = "frontmatter";
+            config.parentContainerUrn = "urn:pearson:entity:9d1ff433-5f67-46b9-972d-c0f5b4c239d9";
+            const compInstance = tableInstance(props);
+
+            expect(compInstance).toBeDefined();
+            const spy = jest.spyOn(compInstance, 'renderTableData')
+            compInstance.renderTableData(currentProps);
+            compInstance.forceUpdate()
+            expect(spy).toHaveBeenCalled()
+            spy.mockClear()
+        });
+        it('TEST - renderTableData - 3rd -> if', () => {
+            const currentProps = {
+                elmReducer: {
+                    errFlag : false,
+                    elmData: mockELMResponse,
+                    //elmItemData : mockElmItemResponse.items,
+                    //itemErrorFlag: false, 
+                    elementType: PUF,
+                    elmLoading: true 
+                }
+            }
+            //config.parentLabel = "frontmatter";
+            //config.parentContainerUrn = "urn:pearson:entity:9d1ff433-5f67-46b9-972d-c0f5b4c239d9";
+            const compInstance = tableInstance(props);
+
+            compInstance.setState({ openedFrom: "slateAssessment" })
+            expect(compInstance).toBeDefined();
+            const spy = jest.spyOn(compInstance, 'renderTableData')
+            compInstance.renderTableData(currentProps);
+            compInstance.forceUpdate()
+            expect(spy).toHaveBeenCalled()
+            spy.mockClear()
+        });
     });
     it('TEST- render table-elm items', () => {
         let store = mockStore(initialState);
@@ -97,7 +213,7 @@ describe('ELM Actions test', () => {
                 elmData: mockELMResponse,
                 itemErrorFlag: false,
                 elmItemData: mockElmItemResponse.items
-                },
+            },
             navigateBack: function () { },
             hidePufPopup: function () { },
             activeUsageType: 'Quiz',
@@ -294,6 +410,24 @@ describe('ELM Actions test', () => {
             expect(spysendPufAssessment).toHaveBeenCalled()
             spysendPufAssessment.mockClear()
         })
+        it('TEST - sendPufAssessment - ELM_INT', () => {
+            props = {
+                activeAssessmentType: ELM_INT,
+                ...props
+            }
+            const compInstance  = tableInstance(props);
+            compInstance.setState({
+                currentAssessmentSelected:{
+                    urn: "urn:pearson:work:133dd9fd-a5be-45e5-8d83-891283abb9a5",
+                    title: "item",
+                    interactiveType: { wipValue: "final" }
+                }
+            })       
+            const spysendPufAssessment = jest.spyOn(compInstance, 'sendPufAssessment')
+            compInstance.sendPufAssessment();
+            expect(spysendPufAssessment).toHaveBeenCalled()
+            spysendPufAssessment.mockClear()
+        })
         it('TEST-addAssessment', () => {
             const spyaddAssessment = jest.spyOn(elmTableInstance, 'addAssessment')
             elmTableInstance.addAssessment(pufObj);
@@ -431,11 +565,43 @@ describe('ELM Actions test', () => {
             expect(spynavigateFromItemsTable).toHaveBeenCalled()
             spynavigateFromItemsTable.mockClear()
         }) 
-        it('TEST-searchAssessmentData', () => {
+        it('TEST-searchAssessmentData if path', () => {
+            //jest.mock('../../../../src/component/AssessmentSlateCanvas/elm/UtilityFunctions/ElmLearnosityUtility', () => ({
+            //    searchAndFilterAssessmentData: () => { return ["a","b"] },
+            //}))
             const spysearchAssessmentData = jest.spyOn(elmTableInstance, 'searchAssessmentData')
             elmTableInstance.searchAssessmentData('learnosity','test data');
             expect(spysearchAssessmentData).toHaveBeenCalled()
             spysearchAssessmentData.mockClear()
+        })
+        it('TEST - searchAssessmentData else path', () => {
+            const spysearchAssessmentData = jest.spyOn(elmTableInstance, 'searchAssessmentData')
+            elmTableInstance.searchAssessmentData('learnosity','test data');
+            expect(spysearchAssessmentData).toHaveBeenCalled()
+            spysearchAssessmentData.mockClear()
+        })
+        it('TEST - componentDidUpdate', () => {
+            let prevProps = {
+                elmReducer: {
+                    elmData: {
+                        numberOfResources: 85,
+                        contentUrn: "urn:pearson:entity:dfeb8286-217e-40a4-8d40-3ced46e469e1",
+                        versionUrn: "urn:pearson:distributable:3e872df6-834c-45f5-b5c7-c7b525fab1ee"
+                    },
+                    elmItemData: {
+                        "versionUrn": "urn:pearson:work:f0360d39-0f02-40c0-8a34-9d59869cbf37",
+                        "entityUrn": "urn:pearson:entity:a263fa6c-747c-4438-a26c-2488797fd113",
+                        "name": "MCQ-5",
+                        "dateModified": "2020-03-12T00:29:19.271Z",
+                        "taxonomicTypes": [],
+                        "modifiedBy": ""
+                    }
+                }         
+            }
+            const spyComponentDidUpdate = jest.spyOn(elmTableInstance, 'componentDidUpdate')
+            elmTableInstance.componentDidUpdate(prevProps);
+            expect(spyComponentDidUpdate).toHaveBeenCalled()
+            spyComponentDidUpdate.mockClear()
         })
     })
 });
