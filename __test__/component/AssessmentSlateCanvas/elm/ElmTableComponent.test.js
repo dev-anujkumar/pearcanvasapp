@@ -51,8 +51,6 @@ const tableInstance = (props, initialSt = initialState) => {
     const component = mount(<Provider store={store}><ElmTableComponent {...props} /></Provider>);
     return component.find('ElmTableComponent').instance();
 }
-
-
 describe('ELM Actions test', () => {
     let store = {};
     beforeEach(() => {
