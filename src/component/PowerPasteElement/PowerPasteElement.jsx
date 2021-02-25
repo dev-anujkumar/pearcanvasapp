@@ -112,12 +112,7 @@ export const createPastedElements = (childElements, elements) => {
     } else if (childElements[i].tagName === 'IMG') {
       const src = childElements[i].getAttribute('src');
       elements.push({html: src, tagName: childElements[i].tagName});
-    } else if (childElements[i].tagName === 'H1' ||
-      childElements[i].tagName === 'H2' ||
-      childElements[i].tagName === 'H3' ||
-      childElements[i].tagName === 'H4' ||
-      childElements[i].tagName === 'H5' ||
-      childElements[i].tagName === 'H6') {
+    } else if (['H1','H2','H3','H4','H5','H6'].includes(childElements[i].tagName)) {
       const node = powerPasteHelpers.addHeadingClass(childElements[i], childElements[i].tagName[1]);
       elements.push({ html: node.outerHTML, tagName: childElements[i].tagName });
     }

@@ -87,10 +87,10 @@ class PopUp extends React.Component {
                 </div>
             )
         }
-        if(props.WordPastePopup) {
+        if (props.WordPastePopup) {
             return (
                 <div className={`dialog-buttons ${props.isElmUpdateClass}`}>
-                    <span className={`save-button ${props.isElmUpdateClass}`} onClick={() => props.handlePowerPaste()}>Proceed</span>
+                    <span className={`save-button ${props.isElmUpdateClass}`} onClick={props.handlePowerPaste}>Proceed</span>
                     <span className={`cancel-button ${props.isElmUpdateClass}`} id='close-container' onClick={() => props.handleCopyPastePopup(false)}>Cancel</span>
                 </div>
             )
@@ -217,13 +217,13 @@ class PopUp extends React.Component {
                 </>
             )
         }
-        else if(props.WordPastePopup){
-          return(
-              <>
-              <h2 className='wordPastePopuptxt'>Paste from Word</h2>
-            <div className={`${props.wordPasteClass}`} >{props.dialogText}</div>            
-          </>
-          )
+        else if (props.WordPastePopup) {
+            return (
+                <>
+                    <h2 className='wordPastePopuptxt'>Paste from Word</h2>
+                    <div className={`${props.wordPasteClass}`}>{props.dialogText}</div>            
+                </>
+            )
         }
         else {
             return (

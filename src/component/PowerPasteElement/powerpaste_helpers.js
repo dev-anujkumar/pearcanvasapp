@@ -27,39 +27,53 @@ export default {
     }
 
     if (node.tagName === "OL") {
-      if (depth === 1 || depth === 4) {
-        node.classList.add("decimal");
-        node.setAttribute("style", "counter-increment: section 0");
-      } else if (depth === 2) {
-        node.classList.add("lower-alpha");
-      } else if (depth === 3) {
-        node.classList.add("lower-roman");
+      switch (depth) {
+        case 1:
+        case 4:
+          node.classList.add("decimal");
+          break;
+        case 2:
+          node.classList.add("lower-alpha");
+          break;
+        case 3:
+          node.classList.add("lower-roman");
+          break;
       }
+
       node.setAttribute("treelevel", depth++);
     } else if (node.tagName === "LI") {
       this.convertTag(node, "b", "strong"); //Transforms <b> to <strong>
       this.convertTag(node, "i", "em");     //Transforms <i> to <em>
-      if (depth - 1 === 1) {
-        node.classList.add("listItemNumeroUnoNumber");
-      } else if (depth - 1 === 2) {
-        if (!node.previousSibling) {
-          node.classList.add("reset", "listItemNumeroUnoLowerAlpha");
-        } else {
-          node.classList.add("listItemNumeroUnoLowerAlpha");
-        }
-      } else if (depth - 1 === 3) {
-        if (!node.previousSibling) {
-          node.classList.add("reset", "listItemNumeroUnoLowerRoman");
-        } else {
-          node.classList.add("listItemNumeroUnoLowerRoman");
-        }
-      } else if (depth - 1 === 4) {
-        if (!node.previousSibling) {
-          node.classList.add("reset", "listItemNumeroUnoNumber");
-        } else {
+
+      const mainDepth = depth - 1
+
+      switch (mainDepth) {
+        case 1:
           node.classList.add("listItemNumeroUnoNumber");
-        }
+          break;
+        case 2:
+          if (!node.previousSibling) {
+            node.classList.add("reset", "listItemNumeroUnoLowerAlpha");
+          } else {
+            node.classList.add("listItemNumeroUnoLowerAlpha");
+          }
+          break;
+        case 3:
+          if (!node.previousSibling) {
+            node.classList.add("reset", "listItemNumeroUnoLowerRoman");
+          } else {
+            node.classList.add("listItemNumeroUnoLowerRoman");
+          }
+          break;
+        case 4:
+          if (!node.previousSibling) {
+            node.classList.add("reset", "listItemNumeroUnoNumber");
+          } else {
+            node.classList.add("listItemNumeroUnoNumber");
+          }
+          break;
       }
+
       node.removeAttribute("style");
       node.removeAttribute("aria-level");
       node.removeAttribute("dir");
@@ -114,7 +128,7 @@ export default {
    */
   addHeadingClass: function (headingNode, headingLevel) {
     headingNode.classList.add(`heading${headingLevel}NummerEins`);
-    this.convertTag(headingNode, "i", "em");     //Transforms <i> to <em>
+    this.convertTag(headingNode, "i", "em");       //Transforms <i> to <em>
     this.convertTag(headingNode, "b", "fragment"); //Transforms <b> to <fragment>
     this.convertTag(headingNode, "u", "fragment"); //Transforms <u> to <fragment>
     this.convertTag(headingNode, "s", "fragment"); //Transforms <s> to <fragment>
