@@ -147,7 +147,8 @@ describe('Testing functions', () => {
         let tempWrapper;
         let props = {
             permissions: ['split_slate'],
-            onClickCapture: jest.fn()
+            onClickCapture: jest.fn(),
+            handleCopyPastePopup: jest.fn()
         }
         
         tempWrapper = mount(<Provider store={store}><ElementSaprator esProps={esProps} {...props}/></Provider>)
@@ -166,12 +167,14 @@ describe('Testing functions', () => {
         let firstOne = false;
         let props = {
             onClickCapture: jest.fn(),
-            openAudio: true
+            openAudio: true,
+            handleCopyPastePopup: jest.fn()
         }
         tempWrapper = mount(<Provider store={store}><ElementSaprator {...props} esProps={esProps} permissions ={permissions} elementType = {elementType} firstOne= {firstOne}/></Provider>)
         tempWrapper.setProps({
             toggleSplitSlatePopup : jest.fn(),
-            showAudioSplitPopup: jest.fn()
+            showAudioSplitPopup: jest.fn(),
+            handleCopyPastePopup: jest.fn()
         })
         tempWrapper.find(Button).at(0).simulate('click');
     })
@@ -182,11 +185,13 @@ describe('Testing functions', () => {
         let firstOne = false;
         let props = {
             onClickCapture: jest.fn(),
+            handleCopyPastePopup: jest.fn()
         }
         tempWrapper = mount(<Provider store={store}><ElementSaprator {...props} esProps={esProps} permissions ={permissions} elementType = {elementType} firstOne= {firstOne}/></Provider>)
         tempWrapper.setProps({
             toggleSplitSlatePopup : jest.fn(),
-            showAudioSplitPopup: jest.fn()
+            showAudioSplitPopup: jest.fn(),
+            handleCopyPastePopup: jest.fn()
         })
         tempWrapper.find(Button).at(0).simulate('click');
     })
@@ -196,7 +201,8 @@ describe('Testing functions', () => {
         let tempWrapper;
         let props = {
             permissions: ['elements_add_remove'],
-            onClickCapture: jest.fn()
+            onClickCapture: jest.fn(),
+            handleCopyPastePopup: jest.fn()
         }
         
         let samplediv = document.createElement('div');
