@@ -144,7 +144,7 @@ export function ElementSaprator(props) {
         return null  
     }
 
-    const renderWordPasteButton = (parentElementType, { firstOne, index }) => {
+    /* const renderWordPasteButton = (parentElementType, { firstOne, index }) => {
         const inContainer = [POETRY, ELEMENT_ASIDE, MULTI_COLUMN, CITATION_GROUP_ELEMENT, SINGLE_COLUMN]
         if(inContainer.includes(parentElementType)){
             return null;
@@ -158,7 +158,7 @@ export function ElementSaprator(props) {
                 </Tooltip>
             </div>
         )
-    }
+    } */
     
     let pasteRender = false;
     let operationType = '';
@@ -176,7 +176,7 @@ export function ElementSaprator(props) {
             <div className='elemDiv-hr'>
                 <hr className='horizontalLine' />
             </div>
-            {renderWordPasteButton(elementType, props)}
+            {/* {renderWordPasteButton(elementType, props)} */}
             {pasteRender ? renderPasteButton(props, operationType) : ''}
             <div className='elemDiv-expand'>
                 <div className="dropdown" ref={buttonRef}>
