@@ -112,9 +112,12 @@ export const checkFullElmAssessment = (element) => {
 * @description - This is the function to check if an embedded assessment is elm assessment
 * @param element - element's details
 */
-export const checkEmbeddedElmAssessment = (element) => {
+export const checkEmbeddedElmAssessment = (element, assessReducer) => {
     if (element && element.type == ELEMENT_FIGURE && element.figuretype == FIGURE_ASSESSMENT && element.figuredata && element.figuredata.elementdata && isElmLearnosityAssessment(element.figuredata.elementdata) && element.figuredata.elementdata.assessmentid) {
-        return true;
+        const id = element.figuredata.elementdata.assessmentid;
+        const status = assessReducer?.hasOwnProperty(id) ?
+                    assessReducer[id].showUpdateStatus : false;    
+        return !status;
     }
     return false;
 }
