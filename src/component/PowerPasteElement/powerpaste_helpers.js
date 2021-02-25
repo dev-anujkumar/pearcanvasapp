@@ -1,5 +1,4 @@
 export default {
-
   /**
    * Converts containing tag
    * @param {HTMLElement} node HTML element node object
@@ -43,9 +42,9 @@ export default {
       node.setAttribute("treelevel", depth++);
     } else if (node.tagName === "LI") {
       this.convertTag(node, "b", "strong"); //Transforms <b> to <strong>
-      this.convertTag(node, "i", "em");     //Transforms <i> to <em>
+      this.convertTag(node, "i", "em"); //Transforms <i> to <em>
 
-      const mainDepth = depth - 1
+      const mainDepth = depth - 1;
 
       switch (mainDepth) {
         case 1:
@@ -98,7 +97,7 @@ export default {
       node.setAttribute("treelevel", depth++);
     } else if (node.tagName === "LI") {
       this.convertTag(node, "b", "strong"); //Transforms <b> to <strong>
-      this.convertTag(node, "i", "em");     //Transforms <i> to <em>
+      this.convertTag(node, "i", "em"); //Transforms <i> to <em>
       node.classList.add(
         "reset",
         "listItemNumeroUnoBullet",
@@ -117,7 +116,7 @@ export default {
   addParagraphClass: function (paragraphNode) {
     paragraphNode.classList.add("paragraphNumeroUno");
     this.convertTag(paragraphNode, "b", "strong"); //Transforms <b> to <strong>
-    this.convertTag(paragraphNode, "i", "em");     //Transforms <i> to <em>
+    this.convertTag(paragraphNode, "i", "em"); //Transforms <i> to <em>
     return paragraphNode;
   },
 
@@ -128,11 +127,16 @@ export default {
    */
   addHeadingClass: function (headingNode, headingLevel) {
     headingNode.classList.add(`heading${headingLevel}NummerEins`);
-    this.convertTag(headingNode, "i", "em");       //Transforms <i> to <em>
-    this.convertTag(headingNode, "b", "fragment"); //Transforms <b> to <fragment>
-    this.convertTag(headingNode, "u", "fragment"); //Transforms <u> to <fragment>
-    this.convertTag(headingNode, "s", "fragment"); //Transforms <s> to <fragment>
-    headingNode.innerHTML = headingNode.innerHTML.replace(/<fragment>/g, "").replace(/<\/fragment>/g, "") //Removing <fragment> tag
+    ["b", "u", "s", "i"].forEach(oldTag => {
+      if (oldTag === "i") {
+        this.convertTag(headingNode, oldTag, "em");
+      } else {
+        this.convertTag(headingNode, oldTag, "fragment");
+      }
+    });
+    headingNode.innerHTML = headingNode.innerHTML
+      .replace(/<fragment>/g, "")
+      .replace(/<\/fragment>/g, ""); //Removing <fragment> tag
     return headingNode;
-  }
+  },
 };

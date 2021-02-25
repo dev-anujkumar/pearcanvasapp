@@ -93,28 +93,38 @@ export const pastePostProcess = (data, props) => {
  */
 export const createPastedElements = (childElements, elements) => {
   for (let i = 0; i < childElements.length; i++) {
-    if (childElements[i].tagName === 'P') {
-      if (childElements[i].children.length && childElements[i].children[0].tagName === 'IMG') {
-        let src = childElements[i].children[0].getAttribute('src');
-        src = src ? src : childElements[i].children[0].getAttribute('data-image-src');
-        elements.push({html: src, tagName: childElements[i].children[0].tagName});
-      } else {
-        const node = powerPasteHelpers.addParagraphClass(childElements[i]);
-        elements.push({ html: node.outerHTML, tagName: childElements[i].tagName });
-      }
-
-    } else if (childElements[i].tagName === 'UL') {
-      powerPasteHelpers.addUListClasses(childElements[i], 1);
-      elements.push({ html: childElements[i].outerHTML, tagName: childElements[i].tagName });
-    } else if (childElements[i].tagName === 'OL') {
-      powerPasteHelpers.addOListClasses(childElements[i], 1);
-      elements.push({ html: childElements[i].outerHTML, tagName: childElements[i].tagName });
-    } else if (childElements[i].tagName === 'IMG') {
-      const src = childElements[i].getAttribute('src');
-      elements.push({html: src, tagName: childElements[i].tagName});
-    } else if (['H1','H2','H3','H4','H5','H6'].includes(childElements[i].tagName)) {
-      const node = powerPasteHelpers.addHeadingClass(childElements[i], childElements[i].tagName[1]);
-      elements.push({ html: node.outerHTML, tagName: childElements[i].tagName });
+    switch (childElements[i].tagName) {
+      case 'P':
+          if (childElements[i].children.length && childElements[i].children[0].tagName === 'IMG') {
+            let imgSrc = childElements[i].children[0].getAttribute('src');
+            imgSrc = imgSrc ? imgSrc : childElements[i].children[0].getAttribute('data-image-src');
+            elements.push({html: imgSrc, tagName: childElements[i].children[0].tagName});
+          } else {
+            const paraNode = powerPasteHelpers.addParagraphClass(childElements[i]);
+            elements.push({ html: paraNode.outerHTML, tagName: childElements[i].tagName });
+          }
+        break;
+        case 'UL':
+          powerPasteHelpers.addUListClasses(childElements[i], 1);
+          elements.push({ html: childElements[i].outerHTML, tagName: childElements[i].tagName });
+          break;
+        case 'OL':
+          powerPasteHelpers.addOListClasses(childElements[i], 1);
+          elements.push({ html: childElements[i].outerHTML, tagName: childElements[i].tagName });
+          break;
+        case 'IMG':
+          const src = childElements[i].getAttribute('src');
+          elements.push({html: src, tagName: childElements[i].tagName});
+          break;
+        case 'H1':
+        case 'H2':
+        case 'H3':
+        case 'H4':
+        case 'H5':
+        case 'H6':
+          const node = powerPasteHelpers.addHeadingClass(childElements[i], childElements[i].tagName[1]);
+          elements.push({ html: node.outerHTML, tagName: childElements[i].tagName });
+          break;
     }
   }
 }
