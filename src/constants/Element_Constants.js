@@ -114,9 +114,9 @@ export const MULTICOLUMN_SOURCE = 'MULTICOLUMN';
 export const TEXT_SOURCE = 'TEXT';
 export const SOURCE_MAP = {
     [CITATION_SOURCE]: { 'support': ['ELEMENT_CITATION'], 'notSupport': [] },
-    [ASIDE_SOURCE]: { 'support': [], 'notSupport': ['POETRY', 'STANZA', 'ASIDE', 'WORKED_EXAMPLE', 'CITATION', 'ELEMENT_CITATION'] },
+    [ASIDE_SOURCE]: { 'support': [], 'notSupport': ['POETRY', 'STANZA', 'ASIDE', 'WORKED_EXAMPLE', 'CITATION', 'ELEMENT_CITATION', 'LEARNING_OBJECTIVE_LIST', 'FEATURE', 'TACTIC_BOX', 'ACTIVITY'] },
     [POETRY_SOURCE]: { 'support': ['STANZA'], 'notSupport': [] },
-    [MULTICOLUMN_SOURCE]: { 'support': [], 'notSupport': ['POETRY', 'STANZA', 'ASIDE', 'WORKED_EXAMPLE', 'CITATION', 'ELEMENT_CITATION'] },
+    [MULTICOLUMN_SOURCE]: { 'support': [], 'notSupport': ['POETRY', 'STANZA', 'ASIDE', 'WORKED_EXAMPLE', 'CITATION', 'ELEMENT_CITATION', 'LEARNING_OBJECTIVE_LIST', 'LEARNING_OBJECTIVE_LIST', 'FEATURE', 'TACTIC_BOX', 'ACTIVITY'] },
     [TEXT_SOURCE]: { 'support': [], 'notSupport': ['STANZA', 'ELEMENT_CITATION'] }
 };
 
