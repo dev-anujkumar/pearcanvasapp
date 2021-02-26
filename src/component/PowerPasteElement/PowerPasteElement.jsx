@@ -29,7 +29,7 @@ const PowerPasteElement = (props) => {
   }, [])
 
   const editorConfig = {
-    height: 400,
+    height: 420,
     plugins: [
       'advlist lists',
      'powerpaste'

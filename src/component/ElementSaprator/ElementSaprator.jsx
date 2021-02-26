@@ -154,7 +154,7 @@ export function ElementSaprator(props) {
         return (
             <div className={`elemDiv-expand paste-button-wrapper}`} >
                 <Tooltip direction='left' tooltipText='Paste from Word'>
-                    <Button type="paste" onClick={() => props.handleCopyPastePopup(true, insertionIndex)} />
+                    <Button type="powerpaste" onClick={() => props.handleCopyPastePopup(true, insertionIndex)} />
                 </Tooltip>
             </div>
         )
