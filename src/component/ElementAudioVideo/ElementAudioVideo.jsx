@@ -203,40 +203,23 @@ class ElementAudioVideo extends Component {
                 this.props.handleFocus("updateFromC2")
                 this.props.handleBlur(true)
             })
-            handleAlfrescoSiteUrl(this.props.elementId,figureData.figureType)
-            this.updateAlfrescoSiteUrl(figureData.figureType)
+            handleAlfrescoSiteUrl(this.props.elementId)
+            this.updateAlfrescoSiteUrl()
         }
     }
 
-    updateAlfrescoSiteUrl = (type) => {
-        if(type ==="audio"){
-            this.setState({
-                alfrescoSite: config.alfrescoMetaData.alfresco.repositoryFolder
-            })
-        }else if(type==="video"){
-            this.setState({
-                videoAlfrescoSite: config.alfrescoMetaData.alfresco.repositoryFolder
-            })
-        }else{
-            this.setState({
-                videoAlfrescoSite:'',
-                alfrescoSite:''
-            })
-        }
-      
+    updateAlfrescoSiteUrl = () => {
+        this.setState({
+            alfrescoSite: config.alfrescoMetaData.alfresco.repositoryFolder
+        })
+        
     }
     
     componentDidMount() {
         getAlfrescositeResponse(this.props.elementId, (response) => {
-            if(response.type === 'audio'){
-                this.setState({
-                    alfrescoSite: response.repositoryFolder,
-                })
-            }else if(response.type === 'video'){
-                this.setState({
-                    videoAlfrescoSite: response.repositoryFolder,
-                })
-            }
+            this.setState({
+                alfrescoSite: response.repositoryFolder,
+            })
         })
     }
     
@@ -456,7 +439,7 @@ class ElementAudioVideo extends Component {
                             <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={`${index}-1`} placeholder="Enter Title..." tagName={'h4'} className="heading4VideoTitle figureTitle" model={model.html.subtitle} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} />
                         </header>
                         <div className="assetDiv"><strong>Asset: </strong>{this.state.assetData?this.state.assetData : (assetPath !== "" ? assetPath : DEFAULT_ASSET)}</div>
-                        <div className="assetDiv"><strong>Alfresco Site: </strong>{ model.figuredata && model.figuredata.posterimage.imageid!=="" ? this.state.videoAlfrescoSite : "" }</div>
+                        <div className="assetDiv"><strong>Alfresco Site: </strong>{ model.figuredata && model.figuredata.posterimage.imageid !== "" ? this.state.alfrescoSite : "" }</div>
                         <div className="pearson-component video" data-type="video" >
                             <video className="video" width="640" height="360" controls="none" preload="none" onClick={this.handleC2MediaClick}
                               poster={this.state.imgSrc?this.state.imgSrc : posterImage}
