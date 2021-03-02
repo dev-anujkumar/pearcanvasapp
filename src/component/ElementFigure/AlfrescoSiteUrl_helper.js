@@ -2,12 +2,13 @@ import config from '../../config/config';
 import cypressConfig from '../../config/cypressConfig';
 import axios from 'axios';
 
-export const handleAlfrescoSiteUrl = (elementId) => {
+export const handleAlfrescoSiteUrl = (elementId,type) => {
     const data = config.alfrescoMetaData && config.alfrescoMetaData.alfresco;
     let url = `${config.STRUCTURE_API_URL}narrative-api/v2/${elementId}/platformMetadata/alfresco`
     let req = {
         ...data,
-        currentAsset:{}
+        currentAsset:{},
+        "type":type
     };
 
     axios.put(url, req, {
