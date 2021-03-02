@@ -90,8 +90,8 @@ class PopUp extends React.Component {
         if (props.WordPastePopup) {
             return (
                 <div className={`dialog-buttons ${props.isElmUpdateClass}`}>
-                    <span className={`save-button ${props.isElmUpdateClass}`} onClick={props.handlePowerPaste}>Proceed</span>
-                    <span className={`cancel-button ${props.isElmUpdateClass}`} id='close-container' onClick={() => props.handleCopyPastePopup(false)}>Cancel</span>
+                    <span className="powerpaste-save-button" onClick={props.handlePowerPaste}>Proceed</span>
+                    <span className="powerpaste-cancel-button"  onClick={() => props.handleCopyPastePopup(false)}>Cancel</span>
                 </div>
             )
         }
@@ -242,7 +242,7 @@ class PopUp extends React.Component {
                             <div className={this.props.isWordPastePopup ? 'wordPasteClass' : `modal-content ${assessmentClass}` } id = {isGlossary ? 'popup': ''}>
                                 {this.renderCloseSymbol(this.props)}
                                 {this.renderDialogText(this.props)}
-                                <div className={`dialog-input ${assessmentClass}`}>
+                                <div className={this.props.isWordPastePopup ? 'dialog-input-poc' : `dialog-input ${assessmentClass}`}>
                                     {this.renderInputBox(this.props)}
                                 </div>
                                 <div className="popup-note-message">{this.props.note ? this.props.note : ''}</div>

@@ -283,27 +283,6 @@ export const createPowerPasteElements = (powerPasteData, index) => async (dispat
     
 }
 
-const createUListData = (htmlElement) => {
-    return {
-        html : {
-            text: htmlElement
-        },
-        "inputType": "LIST",
-        "inputSubType": "DISC",
-        "type": "ELEMENT_LIST"
-    }
-}
-
-const createOListData = (htmlElement) => {
-    return {
-        html : {
-            text: htmlElement
-        },
-        "inputType": "LIST",
-        "inputSubType": "DECIMAL",
-        "type": "ELEMENT_LIST"
-    }
-}
 
 export const swapElement = (dataObj, cb) => (dispatch, getState) => {
     const { oldIndex, newIndex, currentSlateEntityUrn, swappedElementData, containerTypeElem, asideId, poetryId} = dataObj;
