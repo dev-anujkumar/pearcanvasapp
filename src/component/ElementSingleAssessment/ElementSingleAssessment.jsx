@@ -65,9 +65,10 @@ class ElementSingleAssessment extends Component {
         const { assessmentReducer } = this.props;
         const { elementType, assessmentId, assessmentItemId, assessmentTitle } = this.state;
         if (!config.savingInProgress && !config.isSavingElement && (elementType == PUF || elementType == LEARNOSITY) && (assessmentId && assessmentReducer && assessmentReducer[assessmentId] && assessmentReducer[assessmentId].items)) {
-            const latestItem = assessmentReducer[assessmentId].items.find(itemdata => itemdata.oldItemId == assessmentItemId)
-            const latestItemId = latestItem && latestItem.latestItemId
-            if ((assessmentReducer[assessmentId].showUpdateStatus == false && (latestItemId && assessmentItemId != latestItemId)) || (assessmentTitle != assessmentReducer[assessmentId].assessmentTitle)) {
+            const latestItem = assessmentReducer[assessmentId]?.items?.find(itemdata => itemdata.oldItemId == assessmentItemId)
+            const latestItemId = latestItem?.latestItemId;
+            const saveEventUpdate = latestItem?.shouldUpdateOnSaveEvent;
+            if ((assessmentReducer.itemUpdateEvent == true && assessmentReducer[assessmentId].showUpdateStatus == false) && (saveEventUpdate == true && (latestItemId && assessmentItemId != latestItemId) || (assessmentTitle != assessmentReducer[assessmentId].assessmentTitle))) {
                 this.updateElmOnSaveEvent(this.props);
             }
         }
