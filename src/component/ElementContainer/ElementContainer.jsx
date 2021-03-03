@@ -1874,7 +1874,7 @@ const mapStateToProps = (state) => {
         currentSlateAncestorData : state.appStore.currentSlateAncestorData,
         elementSelection: state.selectionReducer.selection,
         slateLevelData: state.appStore.slateLevelData,
-        assessmentReducer: state.assessmentReducer || {}
+        assessmentReducer: state.assessmentReducer
     }
 }
 
