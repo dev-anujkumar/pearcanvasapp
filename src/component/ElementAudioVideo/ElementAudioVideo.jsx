@@ -25,7 +25,8 @@ class ElementAudioVideo extends Component {
             assetData: null,
             elementType: this.props.model.figuretype || "",
             projectMetadata: false,
-            alfrescoSite: ''
+            alfrescoSite: '',
+            alfrescoSiteData:""
         }
     }
     /**
@@ -202,21 +203,32 @@ class ElementAudioVideo extends Component {
                 this.props.handleFocus("updateFromC2")
                 this.props.handleBlur(true)
             })
-            handleAlfrescoSiteUrl(this.props.elementId)
+            
+            let alfrescoSiteLocation = this.state.alfrescoSiteData
+            if((!alfrescoSiteLocation?.nodeRef) || (alfrescoSiteLocation?.nodeRef === '')){
+                handleAlfrescoSiteUrl(this.props.elementId)
+            }
             this.updateAlfrescoSiteUrl()
         }
     }
 
     updateAlfrescoSiteUrl = () => {
-        this.setState({
-            alfrescoSite: config.alfrescoMetaData.alfresco.repositoryFolder
-        }) 
+        if(this.state.alfrescoSiteData.repositoryFolder){
+            this.setState({
+                alfrescoSite: this.state.alfrescoSiteData.repositoryFolder
+            })  
+        }else {
+            this.setState({
+                alfrescoSite: config.alfrescoMetaData.alfresco.repositoryFolder
+            }) 
+        }
     }
     
     componentDidMount() {
         getAlfrescositeResponse(this.props.elementId, (response) => {
             this.setState({
-                alfrescoSite: response.repositoryFolder
+                alfrescoSite: response.repositoryFolder,
+                alfrescoSiteData:response
             })
         })
     }
@@ -226,7 +238,8 @@ class ElementAudioVideo extends Component {
      * @param {*} locationData alfresco locationData
      */
     handleC2ExtendedClick = (locationData) => {
-        let data_1 = locationData;
+        let alfrescoLocationData = this.state.alfrescoSiteData
+        let data_1 = alfrescoLocationData?.nodeRef ? alfrescoLocationData : locationData;
         let that = this;
         !hasReviewerRole() && c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
             c2MediaModule.AddanAssetCallBack(data_2, function (data) {
