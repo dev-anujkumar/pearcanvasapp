@@ -26,7 +26,8 @@ class ElementFigure extends Component {
         this.state = {
             imgSrc: null,
             projectMetadata: false,
-            alfrescoSite: ''
+            alfrescoSite: '',
+            alfrescoSiteData: {}
         }
     }
 
@@ -43,16 +44,24 @@ class ElementFigure extends Component {
         if(figureImageTypes.includes(this.props?.model?.figuretype)){
           getAlfrescositeResponse(this.props.elementId, (response) => {
             this.setState({
-                alfrescoSite: response.repositoryFolder
+                alfrescoSite: response.repositoryFolder,
+                alfrescoSiteData:response
             })
           })
         } 
     }
 
     updateAlfrescoSiteUrl = () => {
-        this.setState({
-            alfrescoSite: config.alfrescoMetaData.alfresco.repositoryFolder
-        })
+        let repositoryData = this.state.alfrescoSiteData
+        if(repositoryData?.repositoryFolder){
+            this.setState({
+                alfrescoSite: repositoryData.repositoryFolder
+            })  
+        }else {
+            this.setState({
+                alfrescoSite: config.alfrescoMetaData.alfresco.repositoryFolder
+            }) 
+        }
     }
 
     /**
@@ -105,7 +114,10 @@ class ElementFigure extends Component {
                 this.props.handleFocus("updateFromC2")
                 this.props.handleBlur()
             })
-            handleAlfrescoSiteUrl(this.props.elementId)
+            let alfrescoSiteLocation = this.state.alfrescoSiteData
+            if((!alfrescoSiteLocation?.nodeRef) || (alfrescoSiteLocation?.nodeRef === '')){
+                handleAlfrescoSiteUrl(this.props.elementId)
+            }
             this.updateAlfrescoSiteUrl()
         }
     }
@@ -114,7 +126,8 @@ class ElementFigure extends Component {
      * @param {*} locationData alfresco locationData
      */
     handleC2ExtendedClick = (locationData) => {
-        let data_1 = locationData;
+        let alfrescoLocationData = this.state.alfrescoSiteData
+        let data_1 = alfrescoLocationData?.nodeRef ? alfrescoLocationData : locationData;
         let that = this;
         !hasReviewerRole() && c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
             c2MediaModule.AddanAssetCallBack(data_2, function (data) {
