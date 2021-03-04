@@ -26,7 +26,7 @@ class ElementAudioVideo extends Component {
             elementType: this.props.model.figuretype || "",
             projectMetadata: false,
             alfrescoSite: '',
-            alfrescoSiteData:""
+            alfrescoSiteData: {}
         }
     }
     /**
@@ -213,9 +213,10 @@ class ElementAudioVideo extends Component {
     }
 
     updateAlfrescoSiteUrl = () => {
-        if(this.state.alfrescoSiteData.repositoryFolder){
+        let repositoryData = this.state.alfrescoSiteData
+        if(repositoryData?.repositoryFolder){
             this.setState({
-                alfrescoSite: this.state.alfrescoSiteData.repositoryFolder
+                alfrescoSite: repositoryData.repositoryFolder
             })  
         }else {
             this.setState({
