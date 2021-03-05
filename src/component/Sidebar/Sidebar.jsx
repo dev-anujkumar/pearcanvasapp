@@ -160,8 +160,9 @@ class Sidebar extends Component {
                 if(this.state.elementDropdown === 'primary') {
                     active = 'active';
                 }
+                const sidebarDisableCondition = ((this.props.showHideObj && this.props.activeElement.elementType) || (this.props.activeElement?.elementType === "element-aside" && this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId && this.props.cutCopySelection?.operationType === "cut"))
                 primaryOptions = <div
-                    className={`element-dropdown ${this.props.showHideObj && this.props.activeElement.elementType? "sidebar-disable": ""}`}>
+                    className={`element-dropdown ${sidebarDisableCondition ? "sidebar-disable": ""}`}>
                     <div className={`element-dropdown-title ${className}`} data-element="primary" onClick={this.toggleElementDropdown}>
                         {primaryOptionObject[this.state.activePrimaryOption].text}
                         {disabledPrimaryOption.indexOf(activePrimaryOption) > -1 ? null : dropdownArrow}
@@ -246,9 +247,9 @@ class Sidebar extends Component {
                 if(this.state.usageType === ""){
                     disabled="disabled";
                 }
-
+                const sidebarDisableCondition = ((this.props.showHideObj && this.props.activeElement.elementType) || (this.props.activeElement?.elementType === "element-aside" && this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId && this.props.cutCopySelection?.operationType === "cut"))
                 secondaryOptions = <div
-                    className={`element-dropdown ${display} ${this.props.showHideObj && this.props.activeElement.elementType? "sidebar-disable": ""} `}>
+                    className={`element-dropdown ${display} ${sidebarDisableCondition ? "sidebar-disable": ""} `}>
                     <div className={`element-dropdown-title ${disabled}`} data-element="secondary" onClick={this.toggleElementDropdown}>
                         {secondaryOptionObject[this.state.activeSecondaryOption].text}
                         {dropdownArrow}
@@ -596,7 +597,8 @@ const mapStateToProps = state => {
         showModule:state.metadataReducer.showModule,
         permissions : state.appStore.permissions,
         showHideObj:state.appStore.showHideObj,
-        slateLevelData: state.appStore.slateLevelData
+        slateLevelData: state.appStore.slateLevelData,
+        cutCopySelection: state.selectionReducer.selection
     };
 };
 

@@ -333,3 +333,6 @@ p code, ul code, ol code{
 .Wirisformula, .temp_Wirisformula{
     color: red !important;
 }
+.wrs_editor .wrs_font_inherit{
+    font-family: 'Conv_stix', Arial, Helvetica, sans-serif !important;
+}

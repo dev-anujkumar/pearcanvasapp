@@ -1471,7 +1471,7 @@ class ElementContainer extends Component {
         let btnClassName = this.state.btnClassName;
         let bceOverlay = "";
         let elementOverlay = '';
-        let showEditButton = checkFullElmAssessment(element) || checkEmbeddedElmAssessment(element) || checkInteractive(element);
+        let showEditButton = checkFullElmAssessment(element) || checkEmbeddedElmAssessment(element, this.props.assessmentReducer) || checkInteractive(element);
         if (!hasReviewerRole() && this.props.permissions && !(this.props.permissions.includes('access_formatting_bar')||this.props.permissions.includes('elements_add_remove')) ) {
             elementOverlay = <div className="element-Overlay disabled" onClick={() => this.handleFocus()}></div>
         }
@@ -1873,7 +1873,8 @@ const mapStateToProps = (state) => {
         commentSearchScrollTop: state.commentSearchReducer.scrollTop,
         currentSlateAncestorData : state.appStore.currentSlateAncestorData,
         elementSelection: state.selectionReducer.selection,
-        slateLevelData: state.appStore.slateLevelData
+        slateLevelData: state.appStore.slateLevelData,
+        assessmentReducer: state.assessmentReducer
     }
 }
 

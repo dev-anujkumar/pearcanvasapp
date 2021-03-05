@@ -245,11 +245,12 @@ const AssessmentAPIHandlers = {
         }
         const { itemUpdateEvent, latestItemAssessment } = store.getState().assessmentReducer
         if (itemUpdateEvent) {
-            dispatch(setItemUpdateEvent(false));
             const updatedItem = {
-                ...latestItemAssessment.updatedItem
+                ...latestItemAssessment.updatedItem,
+                shouldUpdateOnSaveEvent: true
             }
-            AssessmentAPIHandlers.dispatchUpdatedItemId(dataToSend.currentWorkUrn, updatedItem, dispatch)
+            AssessmentAPIHandlers.dispatchUpdatedItemId(dataToSend.currentWorkUrn, updatedItem, dispatch);
+            dispatch(setItemUpdateEvent(false));
         } else if (latestWorkURN == assessmentItemData.itemId) {
             AssessmentAPIHandlers.dispatchUpdatedItemId(dataToSend.currentWorkUrn, dataToSend.updatedItem, dispatch)
         }
