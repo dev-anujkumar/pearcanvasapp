@@ -16,6 +16,16 @@ export default {
   },
 
   /**
+   * Replaces <fragment> content with plain text
+   * @param {*} node 
+   */
+  removeFragment: (node) => {
+    node.innerHTML = node.innerHTML
+      .replace(/<fragment>/g, "")
+      .replace(/<\/fragment>/g, ""); //Removing <fragment> tag
+  },
+  
+  /**
    * Converts generic ordered list to Cypress formatted list
    * @param {HTMLElement} node HTML element node object
    * @param {Number} depth level of nesting
@@ -43,7 +53,9 @@ export default {
     } else if (node.tagName === "LI") {
       this.convertTag(node, "b", "strong"); //Transforms <b> to <strong>
       this.convertTag(node, "i", "em"); //Transforms <i> to <em>
-
+      this.convertTag(node, "a", "fragment"); //Transforms <a> to <fragment>
+      this.removeFragment(node)
+      
       const mainDepth = depth - 1;
 
       switch (mainDepth) {
@@ -98,6 +110,8 @@ export default {
     } else if (node.tagName === "LI") {
       this.convertTag(node, "b", "strong"); //Transforms <b> to <strong>
       this.convertTag(node, "i", "em"); //Transforms <i> to <em>
+      this.convertTag(node, "a", "fragment"); //Transforms <a> to <fragment>
+      this.removeFragment(node)
       node.classList.add(
         "reset",
         "listItemNumeroUnoBullet",
@@ -117,6 +131,8 @@ export default {
     paragraphNode.classList.add("paragraphNumeroUno");
     this.convertTag(paragraphNode, "b", "strong"); //Transforms <b> to <strong>
     this.convertTag(paragraphNode, "i", "em"); //Transforms <i> to <em>
+    this.convertTag(paragraphNode, "a", "fragment"); //Transforms <a> to <fragment>
+    this.removeFragment(paragraphNode)
     return paragraphNode;
   },
 
@@ -127,16 +143,14 @@ export default {
    */
   addHeadingClass: function (headingNode, headingLevel) {
     headingNode.classList.add(`heading${headingLevel}NummerEins`);
-    ["b", "u", "s", "i"].forEach(oldTag => {
+    ["b", "u", "s", "i", "a"].forEach((oldTag) => {
       if (oldTag === "i") {
         this.convertTag(headingNode, oldTag, "em");
       } else {
         this.convertTag(headingNode, oldTag, "fragment");
       }
     });
-    headingNode.innerHTML = headingNode.innerHTML
-      .replace(/<fragment>/g, "")
-      .replace(/<\/fragment>/g, ""); //Removing <fragment> tag
+    this.removeFragment(headingNode)
     return headingNode;
   },
 };

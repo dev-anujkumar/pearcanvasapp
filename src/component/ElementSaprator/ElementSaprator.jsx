@@ -146,7 +146,7 @@ export function ElementSaprator(props) {
 
     const renderWordPasteButton = (parentElementType, { firstOne, index }) => {
         const inContainer = [POETRY, ELEMENT_ASIDE, MULTI_COLUMN, CITATION_GROUP_ELEMENT, SINGLE_COLUMN]
-        if(inContainer.includes(parentElementType)){
+        if(inContainer.includes(parentElementType) || config.isPopupSlate) {
             return null;
         }
 

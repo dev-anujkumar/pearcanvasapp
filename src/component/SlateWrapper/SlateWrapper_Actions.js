@@ -216,12 +216,14 @@ export const createPowerPasteElements = (powerPasteData, index) => async (dispat
     let _requestData = {
         "content":data
     };
+    let indexOfInsertion = index
     powerPasteData.forEach(pastedElement => {
         const newElement = {
             "html" : {
                 text: pastedElement.html
             },
-            ...slateWrapperConstants.elementDataByTag[pastedElement.tagName]  
+            ...slateWrapperConstants.elementDataByTag[pastedElement.tagName],
+            index: indexOfInsertion++
         }
         data.push(newElement)
     });

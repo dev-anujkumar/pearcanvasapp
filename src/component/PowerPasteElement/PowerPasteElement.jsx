@@ -43,6 +43,7 @@ const PowerPasteElement = (props) => {
     powerpaste_html_import: 'clean',
     smart_paste: false,
     auto_focus: `textarea-${props.index}`,
+    paste_preprocess: (plugin, data) => pastePreProcess(data),
     paste_postprocess: (plugin, data) => pastePostProcess(data, props)
   }
 
@@ -61,6 +62,16 @@ const PowerPasteElement = (props) => {
 export default PowerPasteElement
 
 /**
+ * Will be called before Powerpaste filtering is done
+ * @param {*} data Raw Clipboard data
+ */
+export const pastePreProcess = (data) => {
+  if (!["msoffice", "html"].includes(data.source)) {
+    data.content = "" 
+  }
+}
+
+/**
  * Will be called after Powerpaste filtering is done
  * @param {Object} data processed Clipboard data
  * @param {Object} props Powerpaste component props
@@ -69,7 +80,8 @@ export const pastePostProcess = (data, props) => {
   if (data.node) {
     const childNodes = data.node.children;
     const elements = [];
-    if (childNodes.length === 1 && (childNodes[0].tagName === 'STRONG' || childNodes[0].tagName === 'GOOGLE-SHEETS-HTML-ORIGIN')) {
+    createPastedElements(childNodes, elements);
+    /* if (childNodes.length === 1 && (childNodes[0].tagName === 'STRONG' || childNodes[0].tagName === 'GOOGLE-SHEETS-HTML-ORIGIN')) {
       const childElements = childNodes[0].children && childNodes[0].children.length ? childNodes[0].children : [];
       createPastedElements(childElements, elements);
     } else if (childNodes.length >= 1) {
@@ -80,7 +92,7 @@ export const pastePostProcess = (data, props) => {
         childElements = childNodes;
       }
       createPastedElements(childElements, elements);
-    }
+    } */
     const parentIndex = props.index;
     props.onPowerPaste(elements, parentIndex);
   }
