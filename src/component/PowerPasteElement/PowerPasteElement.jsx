@@ -7,7 +7,8 @@ import powerPasteHelpers from "./powerpaste_helpers.js";
 import tinymce from 'tinymce/tinymce';
 import "tinymce/plugins/lists";
 import "tinymce/plugins/advlist";
-import "tinymce/plugins/paste";
+import "tinymce/plugins/powerpaste/plugin.min.js";
+import "tinymce/plugins/powerpaste/js/wordimport.js";
 import './../../styles/ElementAuthoring/ElementAuthoring.css';
 
 const PowerPasteElement = (props) => {
@@ -66,7 +67,7 @@ export default PowerPasteElement
  * @param {*} data Raw Clipboard data
  */
 export const pastePreProcess = (data) => {
-  if (!["msoffice", "html"].includes(data.source)) {
+  if (!["msoffice"].includes(data.source)) {
     data.content = "" 
   }
 }

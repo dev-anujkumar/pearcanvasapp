@@ -144,9 +144,10 @@ export function ElementSaprator(props) {
         return null  
     }
 
-    const renderWordPasteButton = (parentElementType, { firstOne, index }) => {
+    const renderWordPasteButton = (parentElementType, { firstOne, index, userRole }) => {
         const inContainer = [POETRY, ELEMENT_ASIDE, MULTI_COLUMN, CITATION_GROUP_ELEMENT, SINGLE_COLUMN]
-        if(inContainer.includes(parentElementType) || config.isPopupSlate) {
+        const allowedRoles = ["admin", "manager", "edit", "default_user"];
+        if(inContainer.includes(parentElementType) || config.isPopupSlate || !allowedRoles.includes(userRole)) {
             return null;
         }
 
