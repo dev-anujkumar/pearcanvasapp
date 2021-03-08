@@ -45,7 +45,7 @@ class ElementFigure extends Component {
           getAlfrescositeResponse(this.props.elementId, (response) => {
             this.setState({
                 alfrescoSite: response.repositoryFolder,
-                alfrescoSiteData:response
+                alfrescoSiteData:{...response}
             })
           })
         } 
