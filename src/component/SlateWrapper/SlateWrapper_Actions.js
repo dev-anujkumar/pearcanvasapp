@@ -26,7 +26,7 @@ import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 import * as slateWrapperConstants from "./SlateWrapperConstants"
 import { onPasteSuccess, checkElementExistence, prepareDataForTcmCreate } from "./slateWrapperAction_helper"
-
+import { handleAlfrescoSiteUrl } from '../ElementFigure/AlfrescoSiteUrl_helper.js'
 import { SET_SELECTION } from './../../constants/Action_Constants.js';
 import tinymce from 'tinymce'
 import SLATE_CONSTANTS  from '../../component/ElementSaprator/ElementSepratorConstants';
@@ -884,6 +884,13 @@ export const pasteElement = (params) => async (dispatch, getState) => {
             )
             if (createdElemData && createdElemData.status == '200') {
                 let responseData = Object.values(createdElemData.data)
+
+                const figureTypes = ["image", "mathImage", "table", "video", "audio"]
+                if((responseData[0]?.type === "figure") && figureTypes.includes(responseData[0]?.figuretype) ){
+                    const elementId = responseData[0].id
+                    handleAlfrescoSiteUrl(elementId, selection.alfrescoSiteData)   
+                }
+                
                 const pasteSuccessArgs = {
                     responseData: responseData[0],
                     index,
