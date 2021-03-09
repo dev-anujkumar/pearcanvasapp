@@ -1639,7 +1639,7 @@ class ElementContainer extends Component {
             detailsToSet['elmFeedback'] = elmFeedback || [];
         }
         const figureTypes = ["image", "mathImage", "table", "video", "audio"]
-        if((element.type === "figure") && figureTypes.includes(element.figuretype)){
+        if((element?.type === "figure") && figureTypes.includes(element?.figuretype)){
             getAlfrescositeResponse(id, (response) => {
                 detailsToSet['alfrescoSiteData'] = response
             })
