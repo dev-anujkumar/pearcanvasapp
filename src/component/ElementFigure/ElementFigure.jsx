@@ -45,7 +45,7 @@ class ElementFigure extends Component {
           getAlfrescositeResponse(this.props.elementId, (response) => {
             this.setState({
                 alfrescoSite: response.repositoryFolder,
-                alfrescoSiteData:response
+                alfrescoSiteData:{...response}
             })
           })
         } 
@@ -114,9 +114,10 @@ class ElementFigure extends Component {
                 this.props.handleFocus("updateFromC2")
                 this.props.handleBlur()
             })
+            const data = config?.alfrescoMetaData?.alfresco;
             let alfrescoSiteLocation = this.state.alfrescoSiteData
             if((!alfrescoSiteLocation?.nodeRef) || (alfrescoSiteLocation?.nodeRef === '')){
-                handleAlfrescoSiteUrl(this.props.elementId)
+                handleAlfrescoSiteUrl(this.props.elementId, data)
             }
             this.updateAlfrescoSiteUrl()
         }
