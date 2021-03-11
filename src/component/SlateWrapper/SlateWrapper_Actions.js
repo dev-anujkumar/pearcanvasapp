@@ -26,7 +26,7 @@ import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 import * as slateWrapperConstants from "./SlateWrapperConstants"
 import { onPasteSuccess, checkElementExistence, prepareDataForTcmCreate } from "./slateWrapperAction_helper"
-
+import { handleAlfrescoSiteUrl } from '../ElementFigure/AlfrescoSiteUrl_helper.js'
 import { SET_SELECTION } from './../../constants/Action_Constants.js';
 import tinymce from 'tinymce'
 import SLATE_CONSTANTS  from '../../component/ElementSaprator/ElementSepratorConstants';
@@ -240,7 +240,7 @@ export const createPowerPasteElements = (powerPasteData, index) => async (dispat
         /** -------------------------- TCM Snapshot Data handling ------------------------------*/
         let indexOfElement = 0
         while (indexOfElement < response.data.length) {
-            if (slateWrapperConstants.elementType.indexOf("TEXT") !== -1) {
+            if (slateWrapperConstants.elementType.indexOf("TEXT") !== -1){
                 const containerElement = {
                     asideData: null,
                     parentUrn: null,
@@ -832,7 +832,8 @@ export const pasteElement = (params) => async (dispatch, getState) => {
             }
         }
         
-        if(selection.element.type === "element-aside" && selection.element.subtype !== "workedexample") {
+        const acceptedTypes=["element-aside","citations","poetry"]
+        if(acceptedTypes.includes(selection.element.type) && selection.element.subtype !== "workedexample") {
             const payloadParams = {
                 ...params,
                 cutIndex,
@@ -865,6 +866,13 @@ export const pasteElement = (params) => async (dispatch, getState) => {
             )
             if (createdElemData && createdElemData.status == '200') {
                 let responseData = Object.values(createdElemData.data)
+
+                const figureTypes = ["image", "mathImage", "table", "video", "audio"]
+                if((responseData[0]?.type === "figure") && figureTypes.includes(responseData[0]?.figuretype) ){
+                    const elementId = responseData[0].id
+                    handleAlfrescoSiteUrl(elementId, selection.alfrescoSiteData)   
+                }
+                
                 const pasteSuccessArgs = {
                     responseData: responseData[0],
                     index,
