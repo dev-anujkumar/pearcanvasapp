@@ -367,7 +367,7 @@
   cursor: pointer;
   font-weight: 600;
   border: 1px solid #dcdcdc;
-  animation: blink 1.1s infinite;
+  /* animation: blink 1.1s infinite; */
   padding: 8px 20px;
   font-size: 14px;
   line-height: 18.5px;
@@ -378,6 +378,13 @@
 .powerpaste-save-button:hover {
   border: solid 1px #005a70;
   background-color: #def8ff;
+}
+
+.powerpaste-save-button.disabled {
+  background: #b3d8e1;
+  cursor: not-allowed;
+  pointer-events: none;
+  color: white;
 }
 
 .dialog-input-poc {

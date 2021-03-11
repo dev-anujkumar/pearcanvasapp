@@ -94,6 +94,7 @@ export const pastePostProcess = (data, props) => {
       createPastedElements(childElements, elements);
     } */
     const parentIndex = props.index;
+    elements.length && props.toggleWordPasteProceed(true)
     props.onPowerPaste(elements, parentIndex);
   }
 }
