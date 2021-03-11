@@ -238,7 +238,7 @@ export const createPowerPasteElements = (powerPasteData, index) => async (dispat
         /** -------------------------- TCM Snapshot Data handling ------------------------------*/
         let indexOfElement = 0
         while (indexOfElement < response.data.length) {
-            if (slateWrapperConstants.elementType.indexOf("TEXT") !== -1) {
+            if (slateWrapperConstants.elementType.indexOf("TEXT") !== -1){
                 const containerElement = {
                     asideData: null,
                     parentUrn: null,
@@ -851,7 +851,8 @@ export const pasteElement = (params) => async (dispatch, getState) => {
             }
         }
         
-        if(selection.element.type === "element-aside" && selection.element.subtype !== "workedexample") {
+        const acceptedTypes=["element-aside","citations","poetry"]
+        if(acceptedTypes.includes(selection.element.type) && selection.element.subtype !== "workedexample") {
             const payloadParams = {
                 ...params,
                 cutIndex,
