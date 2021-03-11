@@ -238,7 +238,7 @@ export const createPowerPasteElements = (powerPasteData, index) => async (dispat
         /** -------------------------- TCM Snapshot Data handling ------------------------------*/
         let indexOfElement = 0
         while (indexOfElement < response.data.length) {
-            if (slateWrapperConstants.elementType.indexOf("TEXT") !== -1) {
+            if (slateWrapperConstants.elementType.indexOf("TEXT") !== -1){
                 const containerElement = {
                     asideData: null,
                     parentUrn: null,
