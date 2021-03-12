@@ -44,14 +44,16 @@ const PowerPasteElement = (props) => {
     smart_paste: false,
     auto_focus: `textarea-${props.index}`,
     paste_preprocess: (plugin, data) => pastePreProcess(data),
-    paste_postprocess: (plugin, data) => pastePostProcess(data, props)
+    paste_postprocess: (plugin, data) => pastePostProcess(data, props),
+    setup: (editor) => {
+      setupKeydownEvent(editor)
+    }
   }
 
   return (
     <>
       <p 
         ref={editorRef}
-        contentEditable="true"
         id={`textarea-${props.index}`}
         dangerouslySetInnerHTML={{ __html: '' }}
         ></p>
@@ -94,6 +96,7 @@ export const pastePostProcess = (data, props) => {
       createPastedElements(childElements, elements);
     } */
     const parentIndex = props.index;
+    elements.length && props.toggleWordPasteProceed(true)
     props.onPowerPaste(elements, parentIndex);
   }
 }
@@ -139,4 +142,19 @@ export const createPastedElements = (childElements, elements) => {
           break;
     }
   }
+}
+
+/**
+ * TinyMCE keydown event listener
+ * @param {*} editor tinyMCE editor instance 
+ */
+export const setupKeydownEvent = (editor) => {
+  editor.on('keydown', e => {
+    if (!(e.keyCode === 86 && e.ctrlKey)) { //disabling editing and allowing pasting
+      e.preventDefault()
+      e.stopImmediatePropagation()
+      return
+    }
+    editor.undoManager.clear() //disabling undo/redo
+  });
 }
