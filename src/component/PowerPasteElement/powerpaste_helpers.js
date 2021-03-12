@@ -50,10 +50,12 @@ export default {
       }
 
       node.setAttribute("treelevel", depth++);
+      node.innerHTML = node.innerHTML.replace(/\r?\n|\r/g, " ").trim()
     } else if (node.tagName === "LI") {
       this.convertTag(node, "b", "strong"); //Transforms <b> to <strong>
       this.convertTag(node, "i", "em"); //Transforms <i> to <em>
       this.convertTag(node, "a", "fragment"); //Transforms <a> to <fragment>
+      node.innerHTML = node.innerHTML.replace(/\r?\n|\r/g, " ")
       this.removeFragment(node)
       
       const mainDepth = depth - 1;
@@ -107,11 +109,13 @@ export default {
     if (node.tagName === "UL") {
       node.classList.add("disc");
       node.setAttribute("treelevel", depth++);
+      node.innerHTML = node.innerHTML.replace(/\r?\n|\r/g, " ").trim()
     } else if (node.tagName === "LI") {
       this.convertTag(node, "b", "strong"); //Transforms <b> to <strong>
       this.convertTag(node, "i", "em"); //Transforms <i> to <em>
       this.convertTag(node, "a", "fragment"); //Transforms <a> to <fragment>
       this.removeFragment(node)
+      node.innerHTML = node.innerHTML.replace(/\r?\n|\r/g, " ")
       node.classList.add(
         "reset",
         "listItemNumeroUnoBullet",
@@ -133,6 +137,7 @@ export default {
     this.convertTag(paragraphNode, "i", "em"); //Transforms <i> to <em>
     this.convertTag(paragraphNode, "a", "fragment"); //Transforms <a> to <fragment>
     this.removeFragment(paragraphNode)
+    paragraphNode.innerHTML = paragraphNode.innerHTML.replace(/\r?\n|\r/g, " ")
     return paragraphNode;
   },
 
@@ -151,6 +156,7 @@ export default {
       }
     });
     this.removeFragment(headingNode)
+    headingNode.innerHTML = headingNode.innerHTML.replace(/\r?\n|\r/g, " ")
     return headingNode;
   },
 };

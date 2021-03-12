@@ -213,6 +213,7 @@ export const createPowerPasteElements = (powerPasteData, index) => async (dispat
     const parentData = getState().appStore.slateLevelData;
     const newParentData = JSON.parse(JSON.stringify(parentData));
     const currentSlateData = newParentData[config.slateManifestURN]
+    localStorage.setItem('newElement', 1);
     let _requestData = {
         "content":data
     };
