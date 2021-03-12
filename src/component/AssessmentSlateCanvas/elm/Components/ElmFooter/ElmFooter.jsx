@@ -53,27 +53,21 @@ const ElmFooter = (props) => {
               assessmentWUrn = currentAssessmentSelected?.urn
           }
           if (openItemTable && assessmentWUrn) {
-            tempUrl =
-              `${config.ELM_PORTAL_URL}/launch/editor/assessment/${assessmentWUrn}/item/createInPlace`
+            tempUrl = `${config.ELM_PORTAL_URL}/launch/editor/assessment/${assessmentWUrn}/item/createInPlace`
           }
           /* Open Elm portal for Add new Assessment in single assessment */ 
           if (!openItemTable) {
-            tempUrl =
-              `${config.ELM_PORTAL_URL}/launch/editor/assessment/New/item/createInPlace`;
+            tempUrl = `${config.ELM_PORTAL_URL}/launch/editor/assessment/New/item/createInPlace`;
           }
-          /* Open Elm portal for Add new -- interactive -- in single assessment */ 
+          /* Open Elm portal for Add new -- interactive -- in elm-interactive */ 
           if (!openItemTable && activeAssessmentType === ELM_INT) {
-            tempUrl =
-              `${config.ELM_PORTAL_URL}/launch/editor/interactive/createInPlace`;
+            tempUrl = `${config.ELM_PORTAL_URL}/launch/editor/interactive/createInPlace`;
           }
         }
         if (tempUrl) {
-          let url = tempUrl +
-            "?containerUrn=" + containerUrn +
-            "&projectUrn=" + config.projectUrn;
+          let url = tempUrl + "?containerUrn=" + containerUrn + "&projectUrn=" + config.projectUrn;
 
-          /* if NOT Interactive elm than append usageType param */
-          if(activeAssessmentType === PUF){
+          if (activeAssessmentType !== ELM_INT) { /* if NOT Interactive elm then append usageType param */
             const usageType = activeUsageType ? activeUsageType.replace(" ", "").toLowerCase() : "";
             url = `${url}&usageType=${usageType}`;
           }
@@ -90,20 +84,14 @@ const ElmFooter = (props) => {
 
   return (
     <div className="puf-footer">
-      {/* Create new Assessment/Item only for PUF */}
-      {(activeAssessmentType === PUF || activeAssessmentType === ELM_INT) && (
-        <button
-          className="puf-button create-button"
-          onClick={openElmPortal}
-          disabled={activeRadioIndex !== null}
-        >
-          <span className="elm-create-button-icons">
-            {openItemTable ? singleAssessmentItemIcon : 
-              (activeAssessmentType === ELM_INT) ? elmInteractiveIcon : elmAssessmentItem }
-          </span>
-          <span>NEW</span>
-        </button>
-      )}
+      {/* Create new Assessment/Item from Cypress */}
+      <button className="puf-button create-button" onClick={openElmPortal} disabled={activeRadioIndex !== null} >
+        <span className="elm-create-button-icons">
+          {openItemTable ? singleAssessmentItemIcon :
+            (activeAssessmentType === ELM_INT) ? elmInteractiveIcon : elmAssessmentItem}
+        </span>
+        <span>NEW</span>
+      </button>
       {/* hide following when project has no Elm assessments */}
       { !error && (<>
           <button className={`puf-button add-button ${addFlag ? 'add-button-enabled' : ''}`} disabled={!addFlag} onClick={sendPufAssessment} onFocus={handleFocus}>{buttonText}</button>
