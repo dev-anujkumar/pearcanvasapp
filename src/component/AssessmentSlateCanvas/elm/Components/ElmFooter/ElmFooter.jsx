@@ -10,7 +10,7 @@ import {
 } from "../../../../../images/ElementButtons/ElementButtons.jsx";
 import config from "../../../../../config/config";
 import { handlePostMsgOnAddAssess } from '../../../../ElementContainer/AssessmentEventHandling';
-import { PUF, ELM_INT } from '../../../AssessmentSlateConstants.js';
+import { ELM_INT, ASSESSMENT_PICKER_OPENERS } from '../../../AssessmentSlateConstants.js';
 
 const ElmFooter = (props) => {
   const { buttonText, sendPufAssessment, closeElmWindow, openAssessmentSearchBar,
@@ -22,7 +22,7 @@ const ElmFooter = (props) => {
   const { addFlag, hideSearch, openItemTable,
     currentAssessmentSelected,
     openedFrom,
-    error,
+    errorNoElmItem,
     activeRadioIndex = null
   } = props;
 
@@ -40,11 +40,11 @@ const ElmFooter = (props) => {
         let tempUrl = "";
 
         /* Open ELM portal for Add new Assessment in Assessment slate */
-        if (openedFrom === "slateAssessment") {
+        if (openedFrom === ASSESSMENT_PICKER_OPENERS.FULL_ASSESSMENT) {
           tempUrl = `${config.ELM_PORTAL_URL}/launch/editor/assessment/createInPlace`;
         }
         /* Open ELM portal for Add new Item in "Existing Assessment" */
-        if (openedFrom === "singleAssessment") {
+        if (openedFrom === ASSESSMENT_PICKER_OPENERS.SINGLE_ASSESSMENT) {
           let assessmentWUrn = "";
           const type = currentAssessmentSelected?.type;
           if(type === "assessmentItem"){
@@ -65,7 +65,7 @@ const ElmFooter = (props) => {
           }
         }
         if (tempUrl) {
-          let url = tempUrl + "?containerUrn=" + containerUrn + "&projectUrn=" + config.projectUrn;
+          let url = `${tempUrl}?containerUrn=${containerUrn}&projectUrn=${config.projectUrn}`;
 
           if (activeAssessmentType !== ELM_INT) { /* if NOT Interactive elm then append usageType param */
             const usageType = activeUsageType ? activeUsageType.replace(" ", "").toLowerCase() : "";
@@ -84,6 +84,7 @@ const ElmFooter = (props) => {
 
   return (
     <div className="puf-footer">
+      {!errorNoElmItem && <button className={`puf-button search-button ${hideSearch ? "puf-assessment" : ""}`} onClick={openSearchBar}>SEARCH</button>}
       {/* Create new Assessment/Item from Cypress */}
       <button className="puf-button create-button" onClick={openElmPortal} disabled={activeRadioIndex !== null} >
         <span className="elm-create-button-icons">
@@ -92,11 +93,9 @@ const ElmFooter = (props) => {
         </span>
         <span>NEW</span>
       </button>
-      {/* hide following when project has no Elm assessments */}
-      { !error && (<>
+      { !errorNoElmItem && (<>
           <button className={`puf-button add-button ${addFlag ? 'add-button-enabled' : ''}`} disabled={!addFlag} onClick={sendPufAssessment} onFocus={handleFocus}>{buttonText}</button>
           <button className="puf-button cancel" onClick={closeElmWindow} onFocus={handleFocus}>CANCEL</button>
-          <button className={`puf-button search-button ${hideSearch ? "puf-assessment" : ""}`} onClick={openSearchBar}>SEARCH</button>
       </>)}
     </div>
   );

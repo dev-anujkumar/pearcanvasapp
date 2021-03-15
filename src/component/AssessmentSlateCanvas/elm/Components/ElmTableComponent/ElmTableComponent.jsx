@@ -462,8 +462,7 @@ class ElmTableComponent extends Component {
         let showTable = tableValue.length ? true:false
         /** Condition to show loader before Items Table */
         let showItemLoader = showLoader == true && isLoading == true && openSearch == true && openItemTable== true  ? true : false;
-        /** get error when project has no Elm assessments to display create button */
-        const errorNoElmItem = (this.props.activeAssessmentType === PUF || this.props.activeAssessmentType === ELM_INT) && errFlag;
+        
         {
             if (errFlag == true) {
                 /** ELM Picker Error Div */
@@ -478,7 +477,7 @@ class ElmTableComponent extends Component {
                             activeAssessmentType={assessmentFormat}
                         />
                         {/* when project has no Elm assessments, display new button to add */}
-                        { errorNoElmItem &&
+                        {
                             <ElmFooter
                                 elmFooterProps={this.elmFooterProps}
                                 addFlag={addFlag}
@@ -486,7 +485,7 @@ class ElmTableComponent extends Component {
                                 openItemTable={openItemTable}
                                 openedFrom={openedFrom}
                                 currentAssessmentSelected={this.state?.currentAssessmentSelected}
-                                error={errorNoElmItem}
+                                errorNoElmItem={errFlag}
                             />
                         }
                     </div>
