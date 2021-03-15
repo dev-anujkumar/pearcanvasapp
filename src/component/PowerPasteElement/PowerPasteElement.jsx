@@ -5,9 +5,11 @@ import powerPasteHelpers from "./powerpaste_helpers.js";
 
 // Tinymce library and plugins
 import tinymce from 'tinymce/tinymce';
-import "tinymce/plugins/lists";
-import "tinymce/plugins/advlist";
-import "tinymce/plugins/paste";
+import "tinymce/plugins/lists/plugin.min.js";
+import "tinymce/plugins/advlist/plugin.min.js";
+import "tinymce/plugins/powerpaste/plugin.min.js"
+import "tinymce/plugins/powerpaste/js/wordimport.js"
+// import "tinymce/plugins/paste";
 import './../../styles/ElementAuthoring/ElementAuthoring.css';
 
 const PowerPasteElement = (props) => {
