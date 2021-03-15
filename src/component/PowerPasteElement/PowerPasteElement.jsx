@@ -150,7 +150,8 @@ export const createPastedElements = (childElements, elements) => {
  */
 export const setupKeydownEvent = (editor) => {
   editor.on('keydown', e => {
-    if (!(e.keyCode === 86 && e.ctrlKey)) { //disabling editing and allowing pasting
+    const keyCode = e.keyCode || e.which;
+    if (!(keyCode === 86 && (e.ctrlKey || e.metaKey))) { //disabling editing and allowing pasting
       e.preventDefault()
       e.stopImmediatePropagation()
       return
