@@ -15,6 +15,17 @@ export default {
     });
   },
 
+  removeExtraNesting: function (ulNode, listType) {
+    const ulTags = ulNode?.getElementsByTagName?.(listType)
+    if (ulTags?.length) {
+      this.convertTag(ulNode, listType, "fragment")
+      this.removeFragment(ulNode)
+      this.removeExtraNesting(ulNode, listType)
+    }
+    else {
+      return
+    }
+  },
   /**
    * Replaces <fragment> content with plain text
    * @param {*} node 
@@ -36,6 +47,14 @@ export default {
     }
 
     if (node.tagName === "OL") {
+      if (depth === 4) {
+        console.log("node.innerHTML BEFORE:::", node.innerHTML)
+        const domParser = new DOMParser()
+        let ulNode = domParser.parseFromString(node.innerHTML, "text/html").body
+        this.removeExtraNesting(ulNode, "ol")
+        node.innerHTML = ulNode.innerHTML
+        console.log("olNodeolNodeolNode", ulNode.innerHTML)
+      }
       switch (depth) {
         case 1:
         case 4:
@@ -105,9 +124,19 @@ export default {
     if (node === null) {
       return;
     }
-
+    node.removeAttribute("style");
     if (node.tagName === "UL") {
       node.classList.add("disc");
+      console.log("UL DEPTH LEVEL::", depth)
+      console.log("UL innerHTMLL::", node.innerHTML)
+      if (depth === 4) {
+        console.log("node.innerHTML BEFORE:::", node.innerHTML)
+        const domParser = new DOMParser()
+        let ulNode = domParser.parseFromString(node.innerHTML, "text/html").body
+        this.removeExtraNesting(ulNode, "ul")
+        node.innerHTML = ulNode.innerHTML
+        console.log("ulNodeulNodeulNode", ulNode.innerHTML)
+      }
       node.setAttribute("treelevel", depth++);
       node.innerHTML = node.innerHTML.replace(/\r?\n|\r/g, " ").trim()
     } else if (node.tagName === "LI") {
@@ -115,6 +144,8 @@ export default {
       this.convertTag(node, "i", "em"); //Transforms <i> to <em>
       this.convertTag(node, "a", "fragment"); //Transforms <a> to <fragment>
       this.removeFragment(node)
+      console.log("LI DEPTH LEVEL::", depth)
+      console.log("LI innerHTML::", node.innerHTML)
       node.innerHTML = node.innerHTML.replace(/\r?\n|\r/g, " ")
       node.classList.add(
         "reset",
