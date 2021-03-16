@@ -7,16 +7,124 @@ import {
     AddEditLearningObjectiveDropdown,
     ViewLearningObjectiveSlateDropdown,
     UnlinkSlateDropdown,
-    OpenLOPopup, ViewLearningObjectiveSlate, ViewLearningObjectiveAssessment, AddLearningObjectiveSlate, AddLearningObjectiveAssessment, AddEditLearningObjective, UnlinkSlate, AddLearningObjectiveAssessmentDropdown
+    OpenLOPopup, ViewLearningObjectiveSlate, ViewLearningObjectiveAssessment, AddLearningObjectiveSlate, AddLearningObjectiveAssessment, AddEditLearningObjective, UnlinkSlate, AddLearningObjectiveAssessmentDropdown, AlignToCypress, AlignToExternalFramework, AlignToExternalFrameworkSlateDropdown, AlignToCypressSlateDropdown
 }
     from '../../constants/IFrameMessageTypes';
 import { sendDataToIframe , hasReviewerRole, defaultMathImagePath } from '../../constants/utility.js';
 import { connect } from 'react-redux';
 import { ASSESSMENT_ITEM, ASSESSMENT_ITEM_TDX } from '../../constants/Element_Constants';
 import {  FULL_ASSESSMENT_CITE, FULL_ASSESSMENT_TDX, FULL_ASSESSMENT_PUF, LEARNING_APP_TYPE, LEARNOSITY, LEARNING_TEMPLATE, PUF, CITE, TDX } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
+
+// Static data for rendering external alignment pop-up.
+const externalLoData = {
+    "id": "urn:pearson:goalframework:6f5e707c-4d7a-4294-b02c-ad2a4af94d68",
+    "label": {
+      "en": "The Sociology Project 2.5"
+    },
+    "learningObjectives": [
+      {
+        "id": "urn:pearson:educationalgoal:72faba30-da06-4d9e-9499-6d775ead3b9b",
+        "subject": "https://schema.pearson.com/ns/domains/mathematics",
+        "description": {
+          "en": "highereducation"
+        },
+        "label": {
+          "en": "test 1110022 HE25"
+        },
+        "learningObjectives": [
+          {
+            "id": "urn:pearson:educationalgoal:a3eba9d0-3be5-4bbe-b688-47ea32751924",
+            "subject": "https://schema.pearson.com/ns/domains/mathematics",
+            "label": {
+              "en": "LO 2 subtopic5"
+            },
+            "learningObjectives": [
+              {
+                "id": "urn:pearson:educationalgoal:1d186167-674e-4552-aade-d7e415f05ccd",
+                "subject": "https://schema.pearson.com/ns/domains/mathematics",
+                "label": {
+                  "en": "LO 2 LO0"
+                }
+              },
+              {
+                "id": "urn:pearson:educationalgoal:f18416ea-0c3a-4421-bd17-01ce5c90d6b7",
+                "subject": "https://schema.pearson.com/ns/domains/mathematics",
+                "label": {
+                  "en": "LO 2 LO8"
+                }
+              },
+              {
+                "id": "urn:pearson:educationalgoal:27ed15ee-0b0d-46ce-b991-04ff243ed283",
+                "subject": "https://schema.pearson.com/ns/domains/mathematics",
+                "label": {
+                  "en": "LO 2 LO1"
+                }
+              },
+              {
+                "id": "urn:pearson:educationalgoal:c631c46e-8031-4d29-a58a-a11f678016c5",
+                "subject": "https://schema.pearson.com/ns/domains/mathematics",
+                "label": {
+                  "en": "LO 2 LO7"
+                }
+              },
+              {
+                "id": "urn:pearson:educationalgoal:78410e6d-7030-481c-a09a-e5f0f5256392",
+                "subject": "https://schema.pearson.com/ns/domains/mathematics",
+                "label": {
+                  "en": "LO 2 LO4"
+                }
+              },
+              {
+                "id": "urn:pearson:educationalgoal:0910b8a1-747e-4991-9ba9-045e59b91584",
+                "subject": "https://schema.pearson.com/ns/domains/mathematics",
+                "label": {
+                  "en": "LO 2 LO9"
+                }
+              },
+              {
+                "id": "urn:pearson:educationalgoal:7b91a122-b422-47ee-ae28-9073ddf89c7c",
+                "subject": "https://schema.pearson.com/ns/domains/mathematics",
+                "label": {
+                  "en": "LO 2 LO5"
+                }
+              },
+              {
+                "id": "urn:pearson:educationalgoal:f6825f98-4b6f-4ad1-8f92-2dcaed4d10a2",
+                "subject": "https://schema.pearson.com/ns/domains/mathematics",
+                "label": {
+                  "en": "LO 2 LO2"
+                }
+              },
+              {
+                "id": "urn:pearson:educationalgoal:f2477967-bf2d-4484-bba8-6e95f31bc2f2",
+                "subject": "https://schema.pearson.com/ns/domains/mathematics",
+                "label": {
+                  "en": "LO 2 LO3"
+                }
+              },
+              {
+                "id": "urn:pearson:educationalgoal:480860f3-6d4e-4e93-a406-10744a17e955",
+                "subject": "https://schema.pearson.com/ns/domains/mathematics",
+                "label": {
+                  "en": "LO 2 LO6"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+
+    
+
+
 class SlateTagDropdown extends React.Component {
     constructor(props) {
         super(props);
+        this.state ={
+            showLoOptions:false
+        }
     }
    
     componentWillMount() {
@@ -111,13 +219,31 @@ class SlateTagDropdown extends React.Component {
         else if (e.target.innerText == UnlinkSlateDropdown && this.props.permissions.includes('lo_edit_metadata')) {
             sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': UnlinkSlate, 'data': currentSlateLOData, 'currentSlateId': slateManifestURN, 'chapterContainerUrn': '', 'isLOExist': true, 'editAction': '', 'apiConstants': apiKeys_LO } })
         }
+        else if(e.target.innerText == AlignToExternalFrameworkSlateDropdown){
+            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': AlignToExternalFramework, 'data': externalLoData, 'currentSlateId': slateManifestURN, 'chapterContainerUrn': '', 'isLOExist': true, 'editAction': '', 'apiConstants': apiKeys_LO } })
+        }
     }
         this.props.closeLODropdown();
 
     }
+
+    toggleLoOptionsDropdown = () => {
+        this.setState({showLoOptions:!this.state.showLoOptions})
+    }
+   
+
     render = () => {
         return (
-            <div className="learningobjectivedropdown" ref={node => this.node = node}>
+            <div>
+          <div className="learningobjectivedropdown" ref={node => this.node = node}>
+            <ul>
+                <li onClick={this.toggleLoOptionsDropdown}> {AlignToCypressSlateDropdown}</li>
+                <li onClick={this.learningObjectiveDropdown}>{AlignToExternalFrameworkSlateDropdown}</li>
+            </ul>
+            </div>
+            {
+                this.state.showLoOptions &&  
+                <div style={{left:'-10px'}} className="learningobjectivedropdown" ref={node => this.node = node}>
                 <ul>
                     {this.props.permissions.includes('lo_edit_metadata') && config.slateType === 'section' &&
                         <li onClick={this.learningObjectiveDropdown}>{AddLearningObjectiveSlateDropdown}</li>}
@@ -129,7 +255,10 @@ class SlateTagDropdown extends React.Component {
                     {config.slateType === 'section' && !hasReviewerRole() &&
                         <li className={this.props.currentSlateLOData && (this.props.currentSlateLOData.id ? this.props.currentSlateLOData.id : this.props.currentSlateLOData.loUrn) ? '' : 'disabled'} style={{ cursor: 'not-allowed !important' }} onClick={this.learningObjectiveDropdown}>{UnlinkSlateDropdown}</li>}
                 </ul>
-            </div>
+            </div> 
+            }
+           
+        </div>            
         )
     }
 }

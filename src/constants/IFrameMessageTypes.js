@@ -16,6 +16,10 @@ export const AddEditLearningObjective ="CHOOSE FROM EXISTING LEARNING OBJECTIVE"
 export const NoSlateTagIS ="NO SLATE TAG AVAILABLE"
 export const UnlinkSlate ="UNLINK SLATE"
 export const NoSlateTagOnSlate ="SLATE TAG NOT FOUND"
+
+export const AlignToCypress = "ALIGN TO CYPRESS"
+export const AlignToExternalFramework= "ALIGN TO EXTERNAL FRAMEWORK"
+
 export const LaunchTOCForCrossLinking = "launchTOCForCrossLinking"
 //dropdown values of slate tag
 export const AddLearningObjectiveSlateDropdown ="Add a New Learning Objective"
@@ -27,3 +31,8 @@ export const SlateLockStatus = "SlateLockStatus"
 export const TocRefreshVersioning = "tocRefreshVersioning"
 export const SendMessageForVersioning = "sendMessageForVersioning"
 export const projectPendingTcStatus = "projectPendingTcStatus"
+
+export const AlignToCypressSlateDropdown = "Align to Cypress"
+export const AlignToExternalFrameworkSlateDropdown = "Align to External Framework"
+
+
