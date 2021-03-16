@@ -55,6 +55,9 @@ class AssessmentSlateData extends Component {
            this.setCiteTdxFilterData(assessmentFormat,this.props.assessmentSlateObj);
         }
         document.addEventListener("mousedown", this.handleClickOutside);
+        if(config.isLearnosityProject){
+            this.handleAssessmentTypeChange(assessmentFormats['learnosity'])
+        }
     }
 
     componentDidUpdate(prevProps) {
@@ -414,7 +417,11 @@ class AssessmentSlateData extends Component {
         }
         let assessmentTypeValue;
         if (Object.values(assessmentFormats).length > 0) {
-            assessmentTypeValue = Object.values(assessmentFormats).map((type, i) =>
+             let assessmentData = Object.values(assessmentFormats);
+              if(config.isLearnosityProject === false){
+                    assessmentData.splice(4,1)
+                }
+            assessmentTypeValue = assessmentData.map((type, i) =>
                 <li key={i} className="slate_assessment_dropdown_name" onClick={(e) => this.handleAssessmentTypeChange(type, e)}>{type}</li>
             )
         }
@@ -551,9 +558,9 @@ class AssessmentSlateData extends Component {
                 <div className="assessment-label">Select assessment type</div>
                 <div className="slate_assessment_type_dropdown activeDropdown" onClick={this.toggleAssessmentTypeDropdown}>
                     <span className="slate_assessment_dropdown_label" title={assessmentType ? assessmentFormats[assessmentType] : ""}>{assessmentType ? assessmentFormats[assessmentType] : "Select"}</span>
-                    <span className="slate_assessment_dropdown_image"></span>
+                   {config.isLearnosityProject ? "" : <span className="slate_assessment_dropdown_image"></span>}
                     <div className="clr"></div>
-                    {this.state.openAssessmentDropdown &&
+                    {(!config.isLearnosityProject) && this.state.openAssessmentDropdown &&
                         <ul className="slate_assessment_type_dropdown_options" ref={this.dropdownRef}>
                             {this.selectAssessmentType()}
                         </ul>

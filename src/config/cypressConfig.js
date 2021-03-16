@@ -70,7 +70,8 @@ let cypressConfig = {
     isCreateGlossary:false,
     isCreateFootnote:false,
     isSavingElement:false,
-    tcmslatemanifest:""
+    tcmslatemanifest:"",
+    isLearnosityProject:false
 }
 
 
