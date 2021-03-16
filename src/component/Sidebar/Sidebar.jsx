@@ -227,6 +227,11 @@ class Sidebar extends Component {
             if(this.state.activePrimaryOption==="primary-blockcode-equation"&&this.state.activeSecondaryOption!=="secondary-blockcode-language-default"){
                secondaryOptionList.splice(0,1)
             }
+            if(config.isLearnosityProject === false){
+              if(this.state.activePrimaryOption === "primary-single-assessment"){
+                  secondaryOptionList.splice(3,1)
+                }
+            }
             if(secondaryOptionList.length > 1) {
                 secondaryOptions = secondaryOptionList.map(item => {
                     return <li key={item} data-value={item} onClick={this.handleSecondaryOptionChange}>
@@ -243,6 +248,9 @@ class Sidebar extends Component {
                 if(this.state.elementDropdown === 'secondary') {
                     active = 'active';
                 }
+                if(config.isLearnosityProject){
+                    active = ''
+                }
                 let disabled= '';
                 if(this.state.usageType === ""){
                     disabled="disabled";
@@ -252,7 +260,7 @@ class Sidebar extends Component {
                     className={`element-dropdown ${display} ${sidebarDisableCondition ? "sidebar-disable": ""} `}>
                     <div className={`element-dropdown-title ${disabled}`} data-element="secondary" onClick={this.toggleElementDropdown}>
                         {secondaryOptionObject[this.state.activeSecondaryOption].text}
-                        {dropdownArrow}
+                        {config.isLearnosityProject ? "" : <span> {dropdownArrow} </span>}
                     </div>
                     <ul className={`element-dropdown-content secondary-options ${active}`}>
                         {secondaryOptions}

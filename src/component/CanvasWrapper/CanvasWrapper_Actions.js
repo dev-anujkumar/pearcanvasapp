@@ -26,7 +26,7 @@ import figureData from '../ElementFigure/figureTypes.js';
 import { fetchAllSlatesData, setCurrentSlateAncestorData } from '../../js/getAllSlatesData.js';
 import { handleTCMData } from '../TcmSnapshots/TcmSnapshot_Actions.js';
 import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
-import { ELM_INT, FIGURE_ASSESSMENT, ELEMENT_ASSESSMENT } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
+import { ELM_INT, FIGURE_ASSESSMENT, ELEMENT_ASSESSMENT, LEARNOSITY } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 import { fetchAssessmentMetadata , resetAssessmentStore } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import { isElmLearnosityAssessment } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
@@ -152,6 +152,12 @@ export const findElementType = (element, index) => {
                             }
                         }
                         let assessmentFormat = element.figuredata.elementdata.assessmentformat.toLowerCase()
+                        
+                        if(config.isLearnosityProject){
+                            assessmentFormat = LEARNOSITY
+                        }else{
+                            assessmentFormat = element.figuredata.elementdata.assessmentformat.toLowerCase()
+                        }
                         elementType = {
                             elementType: elementDataBank[element.type][element.figuretype]["elementType"],
                             primaryOption: elementDataBank[element.type][element.figuretype]["primaryOption"],
