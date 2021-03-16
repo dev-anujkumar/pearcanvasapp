@@ -477,17 +477,15 @@ class ElmTableComponent extends Component {
                             activeAssessmentType={assessmentFormat}
                         />
                         {/* when project has no Elm assessments, display new button to add */}
-                        {
-                            <ElmFooter
-                                elmFooterProps={this.elmFooterProps}
-                                addFlag={addFlag}
-                                hideSearch={hideSearch}
-                                openItemTable={openItemTable}
-                                openedFrom={openedFrom}
-                                currentAssessmentSelected={this.state?.currentAssessmentSelected}
-                                errorNoElmItem={errFlag}
-                            />
-                        }
+                        <ElmFooter
+                            elmFooterProps={this.elmFooterProps}
+                            addFlag={addFlag}
+                            hideSearch={hideSearch}
+                            openItemTable={openItemTable}
+                            openedFrom={openedFrom}
+                            currentAssessmentSelected={this.state?.currentAssessmentSelected}
+                            errorNoElmItem={errFlag}
+                        />
                     </div>
                 )
             } else {

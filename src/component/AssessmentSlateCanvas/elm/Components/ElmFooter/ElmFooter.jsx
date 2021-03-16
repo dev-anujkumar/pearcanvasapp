@@ -53,7 +53,7 @@ const ElmFooter = (props) => {
               assessmentWUrn = currentAssessmentSelected?.urn
           }
           if (openItemTable && assessmentWUrn) {
-            tempUrl = `${config.ELM_PORTAL_URL}/launch/editor/assessment/${assessmentWUrn}/item/createInPlace`
+            tempUrl = `${config.ELM_PORTAL_URL}/launch/editor/assessment/${assessmentWUrn}/item/createInPlace`;
           }
           /* Open Elm portal for Add new Assessment in single assessment */ 
           if (!openItemTable) {
