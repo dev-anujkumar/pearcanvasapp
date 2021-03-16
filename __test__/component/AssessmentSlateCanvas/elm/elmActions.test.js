@@ -41,9 +41,10 @@ describe('ELM Actions test', () => {
         });
         return store.dispatch(selectActions.insertElmResourceAction('Full Assessment PUF')).then(() => {
             const { type, payload } = store.getActions()[1];
+            expect(store.getActions()[0].type).toBe('SET_ELM_LOADING_TRUE');
+            expect(store.getActions()[0].payload.elmLoading).toBe(true);
             expect(type).toBe('GET_ELM_RESOURCES');
-            expect(payload.errFlag).toBe(false);
-            expect(payload.apiStatus).toBe("200");
+            expect(payload.elmLoading).toBe(false);
         })
     });
     it('testing---insertElmResourceAction -ELM CASE- catch condition', () => {
@@ -73,9 +74,10 @@ describe('ELM Actions test', () => {
         });
         return store.dispatch(selectActions.insertElmResourceAction('Learnosity')).then(() => {
             const { type, payload } = store.getActions()[1];
+            expect(store.getActions()[0].type).toBe('SET_ELM_LOADING_TRUE');
+            expect(store.getActions()[0].payload.elmLoading).toBe(true);
             expect(type).toBe('GET_ELM_RESOURCES');
-            expect(payload.errFlag).toBe(false);
-            expect(payload.apiStatus).toBe("200");
+            expect(payload.elmLoading).toBe(false);
         })
     });
     it('testing---insertElmResourceAction -LEARNOSITY CASE- catch condition', () => {
