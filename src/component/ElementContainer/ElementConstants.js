@@ -51,7 +51,12 @@ export default {
     POETRY_STANZA: "stanza",
 
 /****************Multi Column element************************ */
-    MULTI_COLUMN: "groupedcontent"
+    MULTI_COLUMN: "groupedcontent",
+
+/****************Element Dialogue************************ */  
+    ELEMENT_DIALOGUE: "element-dialogue",
+    DIALOGUE_SD: "stagedirection",
+    DIALOGUE_DE: "lines"
 }
 
 export const LABELS = {
@@ -69,7 +74,10 @@ export const LABELS = {
     "workedexample": "WE",
     "poetry": "PE",
     "mmi":"Quad",
-    "mmi-elm":"ELM"
+    "mmi-elm":"ELM",
+    "element-dialogue": "PS",
+    "stagedirection": "SD",
+    "lines": "DE"
 }
 
 export const elementTypeTCM = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza',  'popup', 'figure','showhide'];

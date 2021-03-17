@@ -26,8 +26,8 @@ export default {
     BLOCK_TEXT: "block-text",
     BLOCK_TEXT_BUTTON: 'block-text-button',
     TABLE_EDITOR: 'table-editor-elem-button',
-    TOC_PARENT_TYPES: ["frontmatter", "backmatter"]
-
+    TOC_PARENT_TYPES: ["frontmatter", "backmatter"],
+    ELEMENT_DIALOGUE : 'element-dialogue',
 }
 
 /** This array contains data for element picker popup with key as button-type */
@@ -47,6 +47,7 @@ export const containerTypeArray = {
     "block-text-button": {
         "Block Math": "figure-mml-elem",
         "Block Code": "blockcode-elem",
-        "Block Poetry": "poetry-elem"
+        "Block Poetry": "poetry-elem",
+        "Playscript": "element-dialogue"
     }
 }
