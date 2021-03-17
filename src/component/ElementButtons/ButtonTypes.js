@@ -35,5 +35,6 @@ export default {
     ELM_INTERACTIVE_ICON:"elmInteractiveIcon",
     EDIT_BUTTON:"edit-button",
     APPROVE_TICK_ICON:"approve-icon",
-    PASTE:"paste"
+    PASTE:"paste",
+    POWERPASTE:"powerpaste"
 }

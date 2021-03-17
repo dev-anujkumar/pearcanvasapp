@@ -213,15 +213,18 @@ export const createPowerPasteElements = (powerPasteData, index) => async (dispat
     const parentData = getState().appStore.slateLevelData;
     const newParentData = JSON.parse(JSON.stringify(parentData));
     const currentSlateData = newParentData[config.slateManifestURN]
+    localStorage.setItem('newElement', 1);
     let _requestData = {
         "content":data
     };
+    let indexOfInsertion = index
     powerPasteData.forEach(pastedElement => {
         const newElement = {
             "html" : {
                 text: pastedElement.html
             },
-            ...slateWrapperConstants.elementDataByTag[pastedElement.tagName]  
+            ...slateWrapperConstants.elementDataByTag[pastedElement.tagName],
+            index: indexOfInsertion++
         }
         data.push(newElement)
     });
@@ -283,27 +286,6 @@ export const createPowerPasteElements = (powerPasteData, index) => async (dispat
     
 }
 
-const createUListData = (htmlElement) => {
-    return {
-        html : {
-            text: htmlElement
-        },
-        "inputType": "LIST",
-        "inputSubType": "DISC",
-        "type": "ELEMENT_LIST"
-    }
-}
-
-const createOListData = (htmlElement) => {
-    return {
-        html : {
-            text: htmlElement
-        },
-        "inputType": "LIST",
-        "inputSubType": "DECIMAL",
-        "type": "ELEMENT_LIST"
-    }
-}
 
 export const swapElement = (dataObj, cb) => (dispatch, getState) => {
     const { oldIndex, newIndex, currentSlateEntityUrn, swappedElementData, containerTypeElem, asideId, poetryId} = dataObj;

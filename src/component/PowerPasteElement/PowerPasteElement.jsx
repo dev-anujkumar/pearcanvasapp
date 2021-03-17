@@ -5,9 +5,11 @@ import powerPasteHelpers from "./powerpaste_helpers.js";
 
 // Tinymce library and plugins
 import tinymce from 'tinymce/tinymce';
-import "tinymce/plugins/lists";
-import "tinymce/plugins/advlist";
-import "tinymce/plugins/paste";
+import "tinymce/plugins/lists/plugin.min.js";
+import "tinymce/plugins/advlist/plugin.min.js";
+import "tinymce/plugins/powerpaste/plugin.min.js"
+import "tinymce/plugins/powerpaste/js/wordimport.js"
+// import "tinymce/plugins/paste";
 import './../../styles/ElementAuthoring/ElementAuthoring.css';
 
 const PowerPasteElement = (props) => {
@@ -29,7 +31,7 @@ const PowerPasteElement = (props) => {
   }, [])
 
   const editorConfig = {
-    height: 400,
+    height: 420,
     plugins: [
       'advlist lists',
      'powerpaste'
@@ -43,14 +45,17 @@ const PowerPasteElement = (props) => {
     powerpaste_html_import: 'clean',
     smart_paste: false,
     auto_focus: `textarea-${props.index}`,
-    paste_postprocess: (plugin, data) => pastePostProcess(data, props)
+    paste_preprocess: (plugin, data) => pastePreProcess(data),
+    paste_postprocess: (plugin, data) => pastePostProcess(data, props),
+    setup: (editor) => {
+      setupKeydownEvent(editor)
+    }
   }
 
   return (
     <>
       <p 
         ref={editorRef}
-        contentEditable="true"
         id={`textarea-${props.index}`}
         dangerouslySetInnerHTML={{ __html: '' }}
         ></p>
@@ -61,6 +66,16 @@ const PowerPasteElement = (props) => {
 export default PowerPasteElement
 
 /**
+ * Will be called before Powerpaste filtering is done
+ * @param {*} data Raw Clipboard data
+ */
+export const pastePreProcess = (data) => {
+  if (!["msoffice"].includes(data.source)) {
+    data.content = "" 
+  }
+}
+
+/**
  * Will be called after Powerpaste filtering is done
  * @param {Object} data processed Clipboard data
  * @param {Object} props Powerpaste component props
@@ -69,7 +84,8 @@ export const pastePostProcess = (data, props) => {
   if (data.node) {
     const childNodes = data.node.children;
     const elements = [];
-    if (childNodes.length === 1 && (childNodes[0].tagName === 'STRONG' || childNodes[0].tagName === 'GOOGLE-SHEETS-HTML-ORIGIN')) {
+    createPastedElements(childNodes, elements);
+    /* if (childNodes.length === 1 && (childNodes[0].tagName === 'STRONG' || childNodes[0].tagName === 'GOOGLE-SHEETS-HTML-ORIGIN')) {
       const childElements = childNodes[0].children && childNodes[0].children.length ? childNodes[0].children : [];
       createPastedElements(childElements, elements);
     } else if (childNodes.length >= 1) {
@@ -80,8 +96,9 @@ export const pastePostProcess = (data, props) => {
         childElements = childNodes;
       }
       createPastedElements(childElements, elements);
-    }
+    } */
     const parentIndex = props.index;
+    elements.length && props.toggleWordPasteProceed(true)
     props.onPowerPaste(elements, parentIndex);
   }
 }
@@ -127,4 +144,20 @@ export const createPastedElements = (childElements, elements) => {
           break;
     }
   }
+}
+
+/**
+ * TinyMCE keydown event listener
+ * @param {*} editor tinyMCE editor instance 
+ */
+export const setupKeydownEvent = (editor) => {
+  editor.on('keydown', e => {
+    const keyCode = e.keyCode || e.which;
+    if (!(keyCode === 86 && (e.ctrlKey || e.metaKey))) { //disabling editing and allowing pasting
+      e.preventDefault()
+      e.stopImmediatePropagation()
+      return
+    }
+    editor.undoManager.clear() //disabling undo/redo
+  });
 }
