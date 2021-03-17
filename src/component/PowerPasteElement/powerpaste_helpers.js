@@ -16,6 +16,24 @@ export default {
   },
 
   /**
+   * Removes nesting beyond 4 levels
+   * @param {*} ulNode UL/OL HTML node
+   * @param {*} listType OL or UL
+   * @returns 
+   */
+  removeExtraNesting: function (ulNode, listType) {
+    const ulTags = ulNode?.getElementsByTagName?.(listType)
+    if (ulTags?.length) {
+      this.convertTag(ulNode, listType, "fragment")
+      this.removeFragment(ulNode)
+      this.removeExtraNesting(ulNode, listType)
+    }
+    else {
+      return
+    }
+  },
+
+  /**
    * Replaces <fragment> content with plain text
    * @param {*} node 
    */
@@ -36,6 +54,12 @@ export default {
     }
 
     if (node.tagName === "OL") {
+      if (depth === 4) {
+        const domParser = new DOMParser()
+        let ulNode = domParser.parseFromString(node.innerHTML, "text/html").body
+        this.removeExtraNesting(ulNode, "ol")
+        node.innerHTML = ulNode.innerHTML
+      }
       switch (depth) {
         case 1:
         case 4:
@@ -105,9 +129,15 @@ export default {
     if (node === null) {
       return;
     }
-
+    node.removeAttribute("style");
     if (node.tagName === "UL") {
       node.classList.add("disc");
+      if (depth === 4) {
+        const domParser = new DOMParser()
+        let ulNode = domParser.parseFromString(node.innerHTML, "text/html").body
+        this.removeExtraNesting(ulNode, "ul")
+        node.innerHTML = ulNode.innerHTML
+      }
       node.setAttribute("treelevel", depth++);
       node.innerHTML = node.innerHTML.replace(/\r?\n|\r/g, " ").trim()
     } else if (node.tagName === "LI") {
