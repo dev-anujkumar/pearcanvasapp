@@ -54,7 +54,7 @@ let cypressConfig = {
     LOCK_API_BASE_URL : process.env.NODE_ENV === 'production' ? `${window.parent.origin}/cypress/dashboard-srvr` : 'https://dev-structuredauthoring.pearson.com/cypress/dashboard-srvr',
     TCM_DASHBOARD_UI_URL: process.env.NODE_ENV === 'production' ? `${window.parent.origin}/cypress/trackchanges/index.html` :"http://localhost:7000/",
     TCM_SNAPSHOT_URL: process.env.NODE_ENV === 'production' ? `/cypress/trackchanges-srvr/tctxsnapshot` :"http://localhost:5000/tctxsnapshot",
-    getENVConfig: process.env.NODE_ENV === "development" ? 'https://10.11.7.24:8081/cypress-api/' : '/cypress/canvas-srvr/cypress-api/',
+    getENVConfig: process.env.NODE_ENV === "development" ? 'https://localhost:8081/cypress-api/' : '/cypress/canvas-srvr/cypress-api/',
     prodUrl : 'https://structuredauthoring.pearson.com',
     sitePointing : 'dev',
     conversionInProcess : false,
@@ -71,7 +71,7 @@ let cypressConfig = {
     isCreateFootnote:false,
     isSavingElement:false,
     tcmslatemanifest:"",
-    isLearnosityProject:false
+    isLearnosityProject:[]
 }
 
 

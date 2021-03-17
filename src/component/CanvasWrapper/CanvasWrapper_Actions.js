@@ -14,7 +14,8 @@ import {
     GET_PAGE_NUMBER,
     SET_SLATE_LENGTH,
     SET_CURRENT_SLATE_DATA,
-    GET_TCM_RESOURCES
+    GET_TCM_RESOURCES,
+    LEARNOSITY_PROJECT_INFO
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
@@ -153,7 +154,7 @@ export const findElementType = (element, index) => {
                         }
                         let assessmentFormat = element.figuredata.elementdata.assessmentformat.toLowerCase()
                         
-                        if(config.isLearnosityProject){
+                        if(config.isLearnosityProject && config.isLearnosityProject[0]?.ItemBankName){
                             assessmentFormat = LEARNOSITY
                         }else{
                             assessmentFormat = element.figuredata.elementdata.assessmentformat.toLowerCase()
@@ -1074,4 +1075,25 @@ export const setSlateLength = (length) => {
         type: SET_SLATE_LENGTH,
         payload: length
     }
+}
+
+
+export const fetchLearnosityContent = () => dispatch => {
+    return axios.get(`${config.STRUCTURE_API_URL}learnositycontentbridge-api/lcb/v1/bank2projapi/${config.projectEntityUrn}?${config.ssoToken}`, {
+        headers: {
+            "Content-Type": "application/json",
+            "PearsonSSOSession": config.ssoToken
+        }
+    }).then((response) => {
+     if(response.status==200){
+         config.isLearnosityProject = response.data
+           dispatch({
+               type: LEARNOSITY_PROJECT_INFO,
+                payload: response.data
+            });
+        }
+    })
+        .catch(err => {
+            console.error('axios Error', err);
+        })
 }

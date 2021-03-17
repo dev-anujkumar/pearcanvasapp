@@ -55,8 +55,9 @@ class AssessmentSlateData extends Component {
            this.setCiteTdxFilterData(assessmentFormat,this.props.assessmentSlateObj);
         }
         document.addEventListener("mousedown", this.handleClickOutside);
-        if(config.isLearnosityProject){
-            this.handleAssessmentTypeChange(assessmentFormats['learnosity'])
+
+        if(this.props.isLearnosityProject && this.props.isLearnosityProject[0]?.ItemBankName){
+            this.handleAssessmentTypeChange(assessmentFormats[LEARNOSITY])
         }
     }
 
@@ -418,7 +419,7 @@ class AssessmentSlateData extends Component {
         let assessmentTypeValue;
         if (Object.values(assessmentFormats).length > 0) {
              let assessmentData = Object.values(assessmentFormats);
-              if(config.isLearnosityProject === false){
+              if(!(this.props.isLearnosityProject && this.props.isLearnosityProject[0]?.ItemBankName)){
                     assessmentData.splice(4,1)
                 }
             assessmentTypeValue = assessmentData.map((type, i) =>
@@ -558,9 +559,9 @@ class AssessmentSlateData extends Component {
                 <div className="assessment-label">Select assessment type</div>
                 <div className="slate_assessment_type_dropdown activeDropdown" onClick={this.toggleAssessmentTypeDropdown}>
                     <span className="slate_assessment_dropdown_label" title={assessmentType ? assessmentFormats[assessmentType] : ""}>{assessmentType ? assessmentFormats[assessmentType] : "Select"}</span>
-                   {config.isLearnosityProject ? "" : <span className="slate_assessment_dropdown_image"></span>}
+                   {this.props.isLearnosityProject && this.props.isLearnosityProject[0]?.ItemBankName ? "" : <span className="slate_assessment_dropdown_image"></span>}
                     <div className="clr"></div>
-                    {(!config.isLearnosityProject) && this.state.openAssessmentDropdown &&
+                    {(!(this.props.isLearnosityProject && this.props.isLearnosityProject[0]?.ItemBankName)) && this.state.openAssessmentDropdown &&
                         <ul className="slate_assessment_type_dropdown_options" ref={this.dropdownRef}>
                             {this.selectAssessmentType()}
                         </ul>
@@ -621,7 +622,8 @@ AssessmentSlateData.displayName = "AssessmentSlateData"
 const mapStateToProps = state => {
     return {
         usageTypeList: state.appStore.usageTypeListData.usageTypeList,
-        assessmentReducer: state.assessmentReducer
+        assessmentReducer: state.assessmentReducer,
+        isLearnosityProject: state.appStore.isLearnosityProjectInfo
     };
 };
 

@@ -16,6 +16,7 @@ import { showBlocker,hideBlocker } from '../../js/toggleLoader';
 import { customEvent } from '../../js/utils.js';
 import { disabledPrimaryOption } from '../../constants/Element_Constants.js';
 import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants';
+import { PRIMARY_SINGLE_ASSESSMENT } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js'
 
 
 class Sidebar extends Component {
@@ -227,8 +228,8 @@ class Sidebar extends Component {
             if(this.state.activePrimaryOption==="primary-blockcode-equation"&&this.state.activeSecondaryOption!=="secondary-blockcode-language-default"){
                secondaryOptionList.splice(0,1)
             }
-            if(config.isLearnosityProject === false){
-              if(this.state.activePrimaryOption === "primary-single-assessment"){
+            if(!(this.props.isLearnosityProject && this.props.isLearnosityProject[0]?.ItemBankName)){
+              if(this.state.activePrimaryOption === PRIMARY_SINGLE_ASSESSMENT){
                   secondaryOptionList.splice(3,1)
                 }
             }
@@ -248,7 +249,7 @@ class Sidebar extends Component {
                 if(this.state.elementDropdown === 'secondary') {
                     active = 'active';
                 }
-                if(config.isLearnosityProject){
+                if(this.props.isLearnosityProject && this.props.isLearnosityProject[0]?.ItemBankName){
                     active = ''
                 }
                 let disabled= '';
@@ -260,7 +261,7 @@ class Sidebar extends Component {
                     className={`element-dropdown ${display} ${sidebarDisableCondition ? "sidebar-disable": ""} `}>
                     <div className={`element-dropdown-title ${disabled}`} data-element="secondary" onClick={this.toggleElementDropdown}>
                         {secondaryOptionObject[this.state.activeSecondaryOption].text}
-                        {config.isLearnosityProject ? "" : <span> {dropdownArrow} </span>}
+                        {(this.props.isLearnosityProject && this.props.isLearnosityProject[0]?.ItemBankName) ? "" : <span> {dropdownArrow} </span>}
                     </div>
                     <ul className={`element-dropdown-content secondary-options ${active}`}>
                         {secondaryOptions}
@@ -606,7 +607,8 @@ const mapStateToProps = state => {
         permissions : state.appStore.permissions,
         showHideObj:state.appStore.showHideObj,
         slateLevelData: state.appStore.slateLevelData,
-        cutCopySelection: state.selectionReducer.selection
+        cutCopySelection: state.selectionReducer.selection,
+        isLearnosityProject: state.appStore.isLearnosityProjectInfo
     };
 };
 
