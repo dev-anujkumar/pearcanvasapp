@@ -15,6 +15,12 @@ export default {
     });
   },
 
+  /**
+   * Removes nesting beyond 4 levels
+   * @param {*} ulNode UL/OL HTML node
+   * @param {*} listType OL or UL
+   * @returns 
+   */
   removeExtraNesting: function (ulNode, listType) {
     const ulTags = ulNode?.getElementsByTagName?.(listType)
     if (ulTags?.length) {
@@ -26,6 +32,7 @@ export default {
       return
     }
   },
+
   /**
    * Replaces <fragment> content with plain text
    * @param {*} node 
@@ -48,12 +55,10 @@ export default {
 
     if (node.tagName === "OL") {
       if (depth === 4) {
-        console.log("node.innerHTML BEFORE:::", node.innerHTML)
         const domParser = new DOMParser()
         let ulNode = domParser.parseFromString(node.innerHTML, "text/html").body
         this.removeExtraNesting(ulNode, "ol")
         node.innerHTML = ulNode.innerHTML
-        console.log("olNodeolNodeolNode", ulNode.innerHTML)
       }
       switch (depth) {
         case 1:
@@ -127,15 +132,11 @@ export default {
     node.removeAttribute("style");
     if (node.tagName === "UL") {
       node.classList.add("disc");
-      console.log("UL DEPTH LEVEL::", depth)
-      console.log("UL innerHTMLL::", node.innerHTML)
       if (depth === 4) {
-        console.log("node.innerHTML BEFORE:::", node.innerHTML)
         const domParser = new DOMParser()
         let ulNode = domParser.parseFromString(node.innerHTML, "text/html").body
         this.removeExtraNesting(ulNode, "ul")
         node.innerHTML = ulNode.innerHTML
-        console.log("ulNodeulNodeulNode", ulNode.innerHTML)
       }
       node.setAttribute("treelevel", depth++);
       node.innerHTML = node.innerHTML.replace(/\r?\n|\r/g, " ").trim()
@@ -144,8 +145,6 @@ export default {
       this.convertTag(node, "i", "em"); //Transforms <i> to <em>
       this.convertTag(node, "a", "fragment"); //Transforms <a> to <fragment>
       this.removeFragment(node)
-      console.log("LI DEPTH LEVEL::", depth)
-      console.log("LI innerHTML::", node.innerHTML)
       node.innerHTML = node.innerHTML.replace(/\r?\n|\r/g, " ")
       node.classList.add(
         "reset",
