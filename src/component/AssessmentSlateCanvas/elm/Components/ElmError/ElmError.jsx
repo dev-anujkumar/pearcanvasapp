@@ -17,6 +17,7 @@ const ElmError = (props) => {
             errorMessage = ERROR_MESSAGE_ELM_RESOURCE;
             classSetFooter = "no-elm-data-error-div";
         } else if (props && (props.activeAssessmentType == LEARNOSITY) && (props.errFlag || (props.filterResults == 'No Results'))) {
+            classSetFooter = "no-elm-data-error-div";
             errorMessage = ERROR_MESSAGE_LEARNOSITY
         } else if (props && (props.itemApiStatus != "200")) {
             errorMessage = ERROR_MESSAGE_ELM_ITEMS
