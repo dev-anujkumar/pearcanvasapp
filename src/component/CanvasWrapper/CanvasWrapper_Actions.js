@@ -1,5 +1,6 @@
 import axios from 'axios';
 import config from '../../config/config';
+import store from '../../appstore/store.js'
 import {
 	FETCH_SLATE_DATA,
 	SET_ACTIVE_ELEMENT,
@@ -153,8 +154,8 @@ export const findElementType = (element, index) => {
                             }
                         }
                         let assessmentFormat = element.figuredata.elementdata.assessmentformat.toLowerCase()
-                        
-                        if(config.isLearnosityProject && config.isLearnosityProject[0]?.ItemBankName){
+                        const isLearnosityProjectInfo = store.getState().appStore.isLearnosityProjectInfo
+                        if(isLearnosityProjectInfo && isLearnosityProjectInfo[0]?.ItemBankName){
                             assessmentFormat = LEARNOSITY
                         }else{
                             assessmentFormat = element.figuredata.elementdata.assessmentformat.toLowerCase()
@@ -1086,7 +1087,6 @@ export const fetchLearnosityContent = () => dispatch => {
         }
     }).then((response) => {
      if(response.status==200){
-         config.isLearnosityProject = response.data
            dispatch({
                type: LEARNOSITY_PROJECT_INFO,
                 payload: response.data
