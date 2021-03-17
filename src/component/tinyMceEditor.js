@@ -3,13 +3,13 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 //IMPORT TINYMCE 
 import tinymce from 'tinymce/tinymce';
-import 'tinymce/themes/silver';
+import 'tinymce/themes/silver/theme.min.js';
 import "tinymce/skins/ui/oxide/skin.min.css";
 import "tinymce/skins/ui/oxide/content.min.css";
 import "tinymce/skins/content/default/content.css";
-import "tinymce/plugins/lists";
-import "tinymce/plugins/advlist";
-import "tinymce/plugins/paste";
+import "tinymce/plugins/lists/plugin.min.js";
+import "tinymce/plugins/advlist/plugin.min.js";
+import "tinymce/plugins/paste/plugin.min.js";
 // IMPORT - Components & Dependencies //
 import { EditorConfig, FormatSelectors, elementTypeOptions, insertMediaSelectors } from '../config/EditorConfig';
 import config from '../config/config';

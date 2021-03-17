@@ -40,6 +40,7 @@ import colorPalette from '../../images/ElementButtons/colorPalette.png'
 import colorText from '../../images/ElementButtons/colorText.svg'
 import closeContainer from '../../images/ElementButtons/container_close.png';
 import pasteIcon from '../../images/ElementButtons/contentPaste.png'
+import powerPasteIcon from '../../images/ElementButtons/powerPaste.png'
 import ButtonTypes from './ButtonTypes.js';
 
 class ElementButton extends Component {
@@ -208,6 +209,9 @@ class ElementButton extends Component {
                 break;
             case ButtonTypes.PASTE:
                 buttonJSX = <span className="btn-element paste-icon" onClick={clickHandlerFn}><img src={pasteIcon} /></span>
+                break;
+            case ButtonTypes.POWERPASTE:
+                buttonJSX = <span className="btn-element power-paste-icon" onClick={clickHandlerFn}><img src={powerPasteIcon} /></span>
                 break;
         }
         return buttonJSX

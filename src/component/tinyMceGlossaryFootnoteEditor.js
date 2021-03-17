@@ -1,6 +1,6 @@
 import React from 'react';
 import tinymce from 'tinymce/tinymce';
-import "tinymce/plugins/paste";
+import "tinymce/plugins/paste/plugin.min.js";
 import { GlossaryFootnoteEditorConfig } from '../config/EditorConfig';
 import {
   tinymceFormulaIcon,tinymceFormulaChemistryIcon,bold,italic,underline,strikethrough,removeformat,subscript,superscript,charmap,code

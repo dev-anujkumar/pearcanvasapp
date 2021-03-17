@@ -144,21 +144,22 @@ export function ElementSaprator(props) {
         return null  
     }
 
-    /* const renderWordPasteButton = (parentElementType, { firstOne, index }) => {
+    const renderWordPasteButton = (parentElementType, { firstOne, index, userRole, onClickCapture }) => {
         const inContainer = [POETRY, ELEMENT_ASIDE, MULTI_COLUMN, CITATION_GROUP_ELEMENT, SINGLE_COLUMN]
-        if(inContainer.includes(parentElementType)){
+        const allowedRoles = ["admin", "manager", "edit", "default_user"];
+        if(inContainer.includes(parentElementType) || config.isPopupSlate || !allowedRoles.includes(userRole)) {
             return null;
         }
 
         const insertionIndex = firstOne ? index : index + 1
         return (
-            <div className={`elemDiv-expand paste-button-wrapper}`} >
+            <div className={`elemDiv-expand paste-button-wrapper}`} onClickCapture={onClickCapture} >
                 <Tooltip direction='left' tooltipText='Paste from Word'>
-                    <Button type="paste" onClick={() => props.handleCopyPastePopup(true, insertionIndex)} />
+                    <Button type="powerpaste" onClick={() => props.handleCopyPastePopup(true, insertionIndex)} />
                 </Tooltip>
             </div>
         )
-    } */
+    }
     
     let pasteRender = false;
     let operationType = '';
@@ -176,7 +177,7 @@ export function ElementSaprator(props) {
             <div className='elemDiv-hr'>
                 <hr className='horizontalLine' />
             </div>
-            {/* {renderWordPasteButton(elementType, props)} */}
+            {renderWordPasteButton(elementType, props)}
             {pasteRender ? renderPasteButton(props, operationType) : ''}
             <div className='elemDiv-expand'>
                 <div className="dropdown" ref={buttonRef}>
@@ -373,7 +374,7 @@ export const pasteElement = (separatorProps, togglePaste, type) => {
     const firstOne = separatorProps.firstOne || false;
     const insertionIndex = firstOne ? index : index + 1
     const selectedElement = separatorProps.elementSelection.element
-    const acceptedTypes=[ELEMENT_ASIDE,CITATION_GROUP_ELEMENT,POETRY]
+    const acceptedTypes=[ELEMENT_ASIDE,CITATION_GROUP_ELEMENT,POETRY,MULTI_COLUMN]
     if ((acceptedTypes.includes(selectedElement.type)) && type === 'copy'){
         return separatorProps.cloneContainer(insertionIndex, selectedElement.id)
     }
