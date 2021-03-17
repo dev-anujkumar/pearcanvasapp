@@ -101,7 +101,7 @@
         "redux-logger": "^3.0.6",
         "redux-thunk": "^2.3.0",
         "sortablejs": "^1.10.0",
-        "tinymce": "git+ssh://git@bitbucket.pearson.com/ccas/cypress-tinymce.git#master",
+        "tinymce": "../cypress-tinymce",
         "utils": "^0.3.1"
     }
 }

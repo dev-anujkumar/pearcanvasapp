@@ -833,7 +833,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
             }
         }
         
-        const acceptedTypes=["element-aside","citations","poetry"]
+        const acceptedTypes=["element-aside","citations","poetry","groupedcontent"]
         if(acceptedTypes.includes(selection.element.type) && selection.element.subtype !== "workedexample") {
             const payloadParams = {
                 ...params,
