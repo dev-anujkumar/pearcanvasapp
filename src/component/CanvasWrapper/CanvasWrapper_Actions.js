@@ -154,7 +154,7 @@ export const findElementType = (element, index) => {
                             }
                         }
                         let assessmentFormat = element.figuredata.elementdata.assessmentformat.toLowerCase()
-                        const isLearnosityProjectInfo = store.getState().appStore.isLearnosityProjectInfo
+                        const isLearnosityProjectInfo = store?.getState()?.appStore?.isLearnosityProjectInfo
                         if(isLearnosityProjectInfo && isLearnosityProjectInfo[0]?.ItemBankName){
                             assessmentFormat = LEARNOSITY
                         }else{
