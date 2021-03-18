@@ -356,7 +356,8 @@ export const setPayloadForContainerCopyPaste = (params) => {
         containerEntityUrn
     } = params
 
-    if (selection.element.type === "element-aside") {
+    const acceptedTypes=["element-aside","citations","poetry","groupedcontent"]
+    if (acceptedTypes.includes(selection.element.type)) {
         if (selection.operationType === "cut") {
             return {
                 "content": [{
