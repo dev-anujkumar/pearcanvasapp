@@ -115,6 +115,7 @@ export class ElementMetaDataAnchor extends Component {
         'manifestApiUrl': config.ASSET_POPOVER_ENDPOINT,
         'assessmentApiUrl': config.ASSESSMENT_ENDPOINT
       };
+      console.log('ADD WARNING POPUP HERE')
       sendDataToIframe({ 'type': 'getLOEditPopup', 'message': { lodata: loData, projectURN: config.projectUrn, slateURN: slateManifestURN, apiKeys_LO, wrapperURL: config.WRAPPER_URL } })
     }
   }
