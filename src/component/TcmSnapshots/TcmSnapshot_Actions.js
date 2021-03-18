@@ -1,6 +1,5 @@
 import axios from 'axios';
 import config from '../../config/config';
-import store from '../../appstore/store.js';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { GET_TCM_RESOURCES, AUTHORING_ELEMENT_UPDATE } from '../../constants/Action_Constants';
 
@@ -65,17 +64,15 @@ export const sendElementTcmSnapshot = async (snapshotData) => {
         timerID = setTimeout(async () => { let snapshots = allSnapshotData; allSnapshotData = []; await callSnapshotAPI(snapshots) }, 500);        
 }
 
-const callSnapshotAPI = async(snapshotData) => {
-    //  let url = 'http://localhost:4000/tctxsnapshot'
-     let url = `/cypress/trackchanges-srvr/tctxsnapshot`;
-        return axios.post(url, snapshotData, {
+const callSnapshotAPI = async (snapshotData) => {
+    return axios.post(config.TCM_SNAPSHOT_URL, snapshotData, {
         headers: {
             PearsonSSOSession: config.ssoToken
         }
     }).then((res) => {
         console.log("Successs !!!")
     }).catch((error) => {
-        console.log("Error in sending TCM Snapshots>>>>",error)
+        console.log("Error in sending TCM Snapshots>>>>", error)
     })
 }
 
@@ -140,7 +137,7 @@ export const fetchPOPupSlateData = (manifestURN, entityURN, page, element , inde
             eleIndex =  index.split("-");
             if (eleIndex.length == 2) {          /** Inside WE-HEAD | Aside */
                 parentData[config.slateManifestURN].contents.bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]] = element
-            } else if (eleIndex.length == 3 && bodymatter[eleIndex[0]].type !== MULTI_COLUMN ) {   /** Inside WE-BODY */
+            } else if (eleIndex.length == 3 && element.popupdata.bodymatter[eleIndex[0]].type !== MULTI_COLUMN ) {   /** Inside WE-BODY */
                 parentData[config.slateManifestURN].contents.bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]].contents.bodymatter[eleIndex[2]]= element
             }
             

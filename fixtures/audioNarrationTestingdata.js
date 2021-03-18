@@ -3,16 +3,42 @@ export const mockData = {
     openAudio: false,
     openAlfresco: false,
     openPopUp: false,
-    openSplitPopUp : false,
+    openSplitPopUp: false,
     openWrongAudioPopup: false,
-    indexSplit:0,
-     audioData :[{
-        "narrativeAudioUrn":"135222a8-0dc2-4375-9488-2790133ce794",
-        "location":"https://cite-media-stg.pearson.com/legacy_paths/135222a8-0dc2-4375-9488-2790133ce794/Automation_Audio_3.mp3",
-        "title":{"en":"Automation_Audio_3.mp3"},
-        "format":"audio/mpeg"
-     }]
-    }
+    indexSplit: 0,
+    isGlossary:false,
+    openAudioGlossaryPopup: false,
+    addAudioGlossaryPopup: false,
+    audioGlossaryData:{},
+    audioData: {
+        "narrativeAudioUrn": "135222a8-0dc2-4375-9488-2790133ce794",
+        "location": "https://cite-media-stg.pearson.com/legacy_paths/135222a8-0dc2-4375-9488-2790133ce794/Automation_Audio_3.mp3",
+        "title": { "en": "Automation_Audio_3.mp3" },
+        "format": "audio/mpeg"
+    },
+
+}
+export const mockGlossaryData ={
+    addAudio: false,
+    openAudio: false,
+    openAlfresco: false,
+    openPopUp: false,
+    openSplitPopUp: false,
+    openWrongAudioPopup: false,
+    indexSplit: 0,
+    openAudioGlossaryPopup: false,
+    addAudioGlossaryPopup: false,
+    audioData:{},
+    isGlossary:false,
+    audioGlossaryData: {
+        "narrativeAudioUrn": "2ddad41f-a05e-4f99-b44c-4a9306bd2a36",
+        "location": "https://cite-media-stg.pearson.com/legacy_paths/2ddad41f-a05e-4f99-b44c-4a9306bd2a36/Progressive%20Audio%20sample%20Midsummer_Sky.mp3",
+        "title": {
+            "en": "Progressive Audio sample Midsummer_Sky.mp3"
+        },
+        "format": "audio/mpeg"
+    },
+}
 
 export const mockDatadelete = {
     "audioData":
@@ -31,6 +57,14 @@ export const mockDatadelete = {
             "title": { "en": "Automation_Audio_3.mp3" }, "format": "audio/mpeg"
         }
         ]
+    },
+    'audioGlossaryData': {
+        "narrativeAudioUrn": "2ddad41f-a05e-4f99-b44c-4a9306bd2a36",
+        "location": "https://cite-media-stg.pearson.com/legacy_paths/2ddad41f-a05e-4f99-b44c-4a9306bd2a36/Progressive%20Audio%20sample%20Midsummer_Sky.mp3",
+        "title": {
+            "en": "Progressive Audio sample Midsummer_Sky.mp3"
+        },
+        "format": "audio/mpeg"
     }
 }
 
@@ -42,7 +76,11 @@ export const mockDatadelete = {
     openPopUp: false,
     openSplitPopUp : false,
     openWrongAudioPopup: false,
-    indexSplit:0
+    indexSplit:0,
+    openAudioGlossaryPopup:false,
+    addAudioGlossaryPopup:false,
+    audioGlossaryData:{},
+    isGlossary:false,
 };
 
 export const WrongAudio_FINAL_STATE = { 
@@ -53,10 +91,15 @@ export const WrongAudio_FINAL_STATE = {
     openPopUp: false,
     openSplitPopUp : false,
     openWrongAudioPopup: true,
-    indexSplit:0
+    indexSplit:0,
+    openAudioGlossaryPopup:false,
+    addAudioGlossaryPopup:false,
+    audioGlossaryData:{},
+    isGlossary:false
 };
 
 export const remove_FINAL_STATE = { 
+    isGlossary:false,
     addAudio: false,
     openAudio: false,
     audioData: {},
@@ -65,10 +108,15 @@ export const remove_FINAL_STATE = {
     openSplitPopUp : false,
     openWrongAudioPopup: false,
     indexSplit:0,
-    openRemovePopUp : true
+    openRemovePopUp : true,
+    openAudioGlossaryPopup:false,
+    addAudioGlossaryPopup:false,
+    audioGlossaryData:{},
+    isGlossary:true
 };
 
 export const split_FINAL_STATE = { 
+    isGlossary:false,
     addAudio: false,
     openAudio: false,
     audioData: {},
@@ -76,10 +124,14 @@ export const split_FINAL_STATE = {
     openPopUp: false,
     openSplitPopUp : true,
     openWrongAudioPopup: false,
-    indexSplit:0
+    indexSplit:0,
+    openAudioGlossaryPopup:false,
+    addAudioGlossaryPopup:false,
+    audioGlossaryData:{}
 };
 
 export const addAudio_FINAL_STATE = { 
+    isGlossary:false,
     addAudio: true,
     openAudio: false,
     audioData: {},
@@ -87,5 +139,42 @@ export const addAudio_FINAL_STATE = {
     openPopUp: false,
     openSplitPopUp : false,
     openWrongAudioPopup: false,
-    indexSplit:0
+    indexSplit:0,
+    openAudioGlossaryPopup:false,
+    addAudioGlossaryPopup:false,
+    audioGlossaryData:{}
 };
+
+export const openGlossaryAudio_FINAL_STATE = { 
+    addAudio: false,
+    openAudio: false,
+    audioData: {},
+    openAlfresco: false,
+    openPopUp: false,
+    openSplitPopUp : false,
+    openWrongAudioPopup: false,
+    indexSplit:0,
+    openAudioGlossaryPopup:true,
+    addAudioGlossaryPopup:false,
+    audioGlossaryData:{},
+    isGlossary:false,
+    positions:{
+        left:'20px',
+        top:'10px'
+    }
+};
+
+export const addGlossaryAudio_FINAL_STATE ={
+    addAudio: false,
+    openAudio: false,
+    audioData: {},
+    openAlfresco: false,
+    openPopUp: false,
+    openSplitPopUp : false,
+    openWrongAudioPopup: false,
+    indexSplit:0,
+    openAudioGlossaryPopup:false,
+    addAudioGlossaryPopup:true,
+    audioGlossaryData:{},
+    isGlossary:false
+}

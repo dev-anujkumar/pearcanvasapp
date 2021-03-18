@@ -162,43 +162,7 @@ describe('Test for UpdateElements Functions', () => {
         updateFunction.createUpdatedData(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement);
         expect(updateFunction.createUpdatedData).toHaveBeenCalledWith(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement)
     })
-    it('Test for ELEMENT-TYPE----->figure---->SingleAssessment', () => {
-        const elementDiv = document.createElement('div');
-        elementDiv.setAttribute('data-id', "urn:pearson:work:7b027839-60ae-4673-a80b-00d5a6567bd9");
-
-        const elementFigure = document.createElement('figure');
-        elementFigure.className = "figureAssessment";
-
-        const elementTitle = document.createElement('div');
-        elementTitle.id = "single_assessment_title";
-        // elementTitle.innerText = "Title"
-        elementTitle.innerHTML = "Title"
-        elementFigure.appendChild(elementTitle);
-
-        const elementIdInfo = document.createElement('div');
-        elementIdInfo.className = "singleAssessmentIdInfo";
-        elementIdInfo.innerHTML = "urn:pearson:work:4da32e71-a6b5-4daa-84ed-fb72d6b0aa74";
-        elementIdInfo.textContent = "urn:pearson:work:4da32e71-a6b5-4daa-84ed-fb72d6b0aa74";
-        // elementIdInfo.innerText = "urn:pearson:work:4da32e71-a6b5-4daa-84ed-fb72d6b0aa74";
-        elementFigure.appendChild(elementIdInfo);
-
-        const elementItemIdInfo = document.createElement('div');
-        elementItemIdInfo.className = "singleAssessmentItemIdInfo";
-        elementItemIdInfo.textContent = "urn:pearson:work:4da32e71-a6b5-4daa-84ed-fb72d6b0aa74";
-        elementItemIdInfo.innerHTML = "urn:pearson:work:4da32e71-a6b5-4daa-84ed-fb72d6b0ba74";
-        // elementItemIdInfo.innerText = "urn:pearson:work:4da32e71-a6b5-4daa-84ed-fb72d6b0ba74";
-        elementFigure.appendChild(elementItemIdInfo);
-
-        const elementUsageType = document.createElement('span');
-        elementUsageType.className = "singleAssessment_Dropdown_currentLabel";
-        // elementUsageType.innerText = "Quiz";
-        elementUsageType.innerHTML = "Quiz";
-        elementUsageType.textContent = "Quiz";
-        elementFigure.appendChild(elementUsageType);
-
-        elementDiv.appendChild(elementFigure)
-        document.body.appendChild(elementDiv);
-
+    it('Test for ELEMENT-TYPE----->figure---->SingleAssessment- if case', () => {
         let type = "figure",
             previousElementData = singleAssessmentData,
             node = {},
@@ -207,14 +171,66 @@ describe('Test for UpdateElements Functions', () => {
             secondaryOption = "secondary-single-assessment-cite",
             activeEditorId = "cypress-7-1",
             index = 7,
-            containerContext = {},
-            parentElement = {
-                type: 'showhide',
-                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y'
-            };
+            containerContext = {}
         jest.spyOn(updateFunction, 'createUpdatedData')
-        updateFunction.createUpdatedData(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement);
-        expect(updateFunction.createUpdatedData).toHaveBeenCalledWith(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement)
+        document.querySelector = () => {
+            // if(nodeSelector == "div[data-id='urn:pearson:work:7b027839-60ae-4673-a80b-00d5a6567bd9'] figure.figureAssessment"){
+                return {
+                    querySelector: (selector) => {
+                        switch (selector) {
+                            case 'span.embedded-id':
+                                return {innerText:'urn:pearson:work:4da32e71-a6b5-4daa-84ed-fb72d6b0aa75'};
+                            case 'span.embedded-title':
+                                return {innerText:'Main Title'};
+                            case 'span.embedded-itemtitle':
+                                return {innerText:'Item-title'};
+                            case 'span.embedded-itemid':
+                                return {innerText:'urn:pearson:work:4da32e71-a6b5-4daa-84ed-fb72d6b0aa74'};
+                        }
+                    }
+                }
+            // }
+        }
+        const result = updateFunction.createUpdatedData(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, undefined);
+        expect(updateFunction.createUpdatedData).toHaveBeenCalledWith(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, undefined)
+        expect(result.figuredata.elementdata.assessmentid).toBe('urn:pearson:work:4da32e71-a6b5-4daa-84ed-fb72d6b0aa75');
+        expect(result.figuredata.elementdata.assessmenttitle).toBe('Main Title');
+        expect(result.figuredata.elementdata.assessmentitemid).toBe('urn:pearson:work:4da32e71-a6b5-4daa-84ed-fb72d6b0aa74');
+        expect(result.figuredata.elementdata.assessmentitemtitle).toBe('Item-title');
+    })
+    it('Test for ELEMENT-TYPE----->figure---->SingleAssessment- else case', () => {
+        let type = "figure",
+            previousElementData = singleAssessmentData,
+            node = {},
+            elementType = "element-assessment",
+            primaryOption = "primary-single-assessment",
+            secondaryOption = "secondary-single-assessment-cite",
+            activeEditorId = "cypress-7-1",
+            index = 7,
+            containerContext = {}
+        jest.spyOn(updateFunction, 'createUpdatedData')
+        document.querySelector = () => {
+            return {
+                querySelector: (selector) => {
+                    switch (selector) {
+                        case 'span.embedded-id':
+                            return 'urn:pearson:work:4da32e71-a6b5-4daa-84ed-fb72d6b0aa75'
+                        case 'span.embedded-title':
+                            return 'Main Title'
+                        case 'span.embedded-itemtitle':
+                            return 'Item-title'
+                        case 'span.embedded-itemid':
+                            return 'urn:pearson:work:4da32e71-a6b5-4daa-84ed-fb72d6b0aa74'
+                    }
+                }
+            }
+        }
+        const result = updateFunction.createUpdatedData(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, undefined);
+        expect(updateFunction.createUpdatedData).toHaveBeenCalledWith(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, undefined)
+        expect(result.figuredata.elementdata.assessmentid).toBe('');
+        expect(result.figuredata.elementdata.assessmenttitle).toBe('');
+        expect(result.figuredata.elementdata.assessmentitemid).toBe('');
+        expect(result.figuredata.elementdata.assessmentitemtitle).toBe('');
     })
     it('Test for ELEMENT-TYPE----->Assessment Slate', () => {
         let type = "element-assessment",

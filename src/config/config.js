@@ -1,6 +1,6 @@
 let config = {
     NODE_ENV : process.env.NODE_ENV || "development",
-    REACT_APP_API_URL :"https://10.11.7.246:8443/cypress-api/",
+    REACT_APP_API_URL :"https://10.11.7.24:8081/cypress-api/",
     STRUCTURE_API_URL :"https://contentapis-staging.pearsoncms.net/",
     LEARNING_OBJECTIVES_ENDPOINT:"https://contentapis-staging.pearsoncms.net/lo-api/",
     ASSET_POPOVER_ENDPOINT: "https://contentapis-staging.pearsoncms.net/manifest-api/",
@@ -18,7 +18,7 @@ let config = {
     API_URL: "./api",
     COREAPI_ENDPOINT: "https://contentapis-staging.pearsoncms.net/core-api",
     CONTENT_SCAPI_ENDPOINT : "https://staging.api.pearson.com/content/scapi",
-    JAVA_API_URL: "https://10.11.7.246:8443/app/toc-javaapp/",
+    JAVA_API_URL: "https://10.11.7.24:8081/app/toc-javaapp/",
     STRUCTURE_APIKEY:'Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld',
     MANIFEST_APIKEY: 'YFeLXDGqbBj2GZf85jpcZOQCEasAK5hc',
     TCM_DASHBOARD_UI_URL: process.env.NODE_ENV === 'production' ? `${window.parent.origin}/cypress/trackchanges/index.html` :"https://test-structuredauthoring.pearson.com/cypress/trackchanges/index.html",

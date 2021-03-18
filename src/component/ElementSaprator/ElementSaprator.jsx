@@ -7,10 +7,12 @@ import PropTypes from 'prop-types'
 import Button from '../ElementButtons'
 import Tooltip from '../Tooltip'
 import config from '../../config/config';
-import { hasReviewerRole } from '../../constants/utility.js';
+import { hasReviewerRole, sendDataToIframe } from '../../constants/utility.js';
 import elementTypeConstant, { containerTypeArray } from './ElementSepratorConstants.js';
+import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import '../../styles/ElementSaprator/ElementSaprator.css'
 import ElementContainerType from '../ElementContainerType/ElementContainerType.jsx'
+import { getPasteValidated } from '../../constants/Element_Constants.js';
 
 const { TEXT, 
     IMAGE, 
@@ -37,12 +39,14 @@ const { TEXT,
     MULTI_COLUMN,
     SINGLE_COLUMN,
     BLOCK_TEXT_BUTTON,
-    TABLE_EDITOR
+    TABLE_EDITOR,
+    TOC_PARENT_TYPES
  } = elementTypeConstant
 
 export function ElementSaprator(props) {
     const [showClass, setShowClass] = useState(false);
     const [data, setData] = useState([]);
+    const [pasteIcon, togglePaste] = useState(true);
     const [showInteractiveOption, setshowInteractiveOption] = useState({status:false,type:""});
     let propsData={data,setData,showInteractiveOption,setshowInteractiveOption,props}
     const { esProps, elementType, sectionBreak, permissions } = props
@@ -61,6 +65,10 @@ export function ElementSaprator(props) {
                 setShowClass(false)
             }
         })
+
+        if(!pasteIcon && props.elementSelection && Object.keys(props.elementSelection).length == 0) {
+            togglePaste(true);
+        }
     });
 
     /**
@@ -118,6 +126,30 @@ export function ElementSaprator(props) {
         }
     }
 
+    const renderPasteButton = (separatorProps, type) => {
+        const allowedRoles = ["admin", "manager", "edit", "default_user"];
+        let sourceComp = 'source' in props ? props.source : '';
+        let inputType = 'inputType' in props.elementSelection ? props.elementSelection.inputType : '';
+        let pasteValidation = getPasteValidated(sourceComp, inputType);
+        if (!config.isPopupSlate && allowedRoles.includes(props.userRole) && pasteValidation) {
+            return (
+                <div className={`elemDiv-expand paste-button-wrapper ${(type == 'cut' && !pasteIcon) ? 'disabled' : ''}`} onClickCapture={(e) => props.onClickCapture(e)}>
+                    <Tooltip direction='left' tooltipText='Paste element'>
+                        <Button type="paste" onClick={() => pasteElement(separatorProps, togglePaste, type)} />
+                    </Tooltip>
+                </div>
+            )
+        }
+        return null  
+    }
+
+    let pasteRender = false;
+    let operationType = '';
+    if(props.elementSelection && Object.keys(props.elementSelection).length > 0) {
+        pasteRender = true;
+        operationType = props.elementSelection.operationType || '';
+    }
+    
     return (
         <div className={showClass ? 'elementSapratorContainer opacityClassOn ignore-for-drag' : 'elementSapratorContainer ignore-for-drag'}>
             <div className='elemDiv-split' onClickCapture={(e) => props.onClickCapture(e)}>
@@ -127,6 +159,7 @@ export function ElementSaprator(props) {
             <div className='elemDiv-hr'>
                 <hr className='horizontalLine' />
             </div>
+            {pasteRender ? renderPasteButton(props, operationType) : ''}
             <div className='elemDiv-expand'>
                 <div className="dropdown" ref={buttonRef}>
                     <Tooltip direction='left' tooltipText='Element Picker'>
@@ -191,7 +224,7 @@ function renderConditionalButtons(esProps,sectionBreak,elementType){
 export function renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown, propsData) {
     let {data,setData,showInteractiveOption,setshowInteractiveOption,props} =propsData
     let updatedEsProps, buttonType;
-    if (config.parentEntityUrn == FRONT_MATTER || config.parentEntityUrn == BACK_MATTER) {
+    if (config.parentEntityUrn == FRONT_MATTER || config.parentEntityUrn == BACK_MATTER || TOC_PARENT_TYPES.includes(config.parentOfParentItem)) {
         if (elementType == ELEMENT_ASIDE || elementType == POETRY || elementType == CITATION_GROUP_ELEMENT || elementType == SINGLE_COLUMN) {
             esProps = renderConditionalButtons(esProps, sectionBreak,elementType);
                 updatedEsProps = esProps.filter((btnObj) => {
@@ -319,8 +352,27 @@ function typeOfContainerElements(elem, props) {
     
 }
 
+export const pasteElement = (separatorProps, togglePaste, type) => {
+    if(config.savingInProgress) return false
+    sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
+    if(type == 'cut') {
+        togglePaste(false);
+    }
+    const index = separatorProps.index;
+    const firstOne = separatorProps.firstOne || false;
+    const insertionIndex = firstOne ? index : index + 1
+    const pasteFnArgs = {
+        index: insertionIndex,
+        parentUrn: 'parentUrn' in separatorProps ? separatorProps.parentUrn : null,
+        asideData: 'asideData' in separatorProps ? separatorProps.asideData : null,
+        poetryData: 'poetryData' in separatorProps ? separatorProps.poetryData : null
+    }
+    separatorProps.pasteElement(pasteFnArgs)
+}
+
 const mapStateToProps = (state) => ({
-    setSlateParent :  state.appStore.setSlateParent
+    setSlateParent :  state.appStore.setSlateParent,
+    elementSelection: state.selectionReducer.selection
 })
 
 export default connect(mapStateToProps, {})(ElementSaprator)

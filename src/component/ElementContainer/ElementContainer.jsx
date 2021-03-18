@@ -21,7 +21,7 @@ import elementTypeConstant from './ElementConstants'
 import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } from './../CanvasWrapper/CanvasWrapper_Actions';
 import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
-import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass } from '../../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
@@ -30,7 +30,7 @@ import PageNumberContext from '../CanvasWrapper/PageNumberContext.js';
 import { authorAssetPopOver } from '../AssetPopover/openApoFunction.js';
 import { LABELS } from './ElementConstants.js';
 import { updateFigureData } from './ElementContainer_Actions.js';
-import { createUpdatedData, createOpenerElementData } from './UpdateElements.js';
+import { createUpdatedData, createOpenerElementData, handleBlankLineDom } from './UpdateElements.js';
 import { loadTrackChanges } from '../CanvasWrapper/TCM_Integration_Actions';
 import ElementPopup from '../ElementPopup'
 import { updatePageNumber, accessDenied } from '../SlateWrapper/SlateWrapper_Actions';
@@ -45,10 +45,17 @@ import ElementPoetryStanza from '../ElementPoetry/ElementPoetryStanza.jsx';
 import MultiColumnContext from "./MultiColumnContext.js"
 import MultiColumnContainer from "../MultiColumnElement"
 import {handleTCMData} from '../TcmSnapshots/TcmSnapshot_Actions.js';
-import CopyUrn from '../CopyUrn';
-import { OnCopyContext } from '../CopyUrn/copyUtil.js'
-import { openElmAssessmentPortal } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
+import CutCopyDialog from '../CutCopyDialog';
+import { OnCopyContext } from '../CutCopyDialog/copyUtil.js'
+import { setSelection } from '../CutCopyDialog/CopyUrn_Action.js';
+import { openElmAssessmentPortal, fetchAssessmentMetadata, resetAssessmentStore, editElmAssessmentId } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import {handleElmPortalEvents} from '../ElementContainer/AssessmentEventHandling.js';
+import { checkFullElmAssessment, checkEmbeddedElmAssessment } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
+import { setScroll } from './../Toolbar/Search/Search_Action.js';
+import { SET_SEARCH_URN, SET_COMMENT_SEARCH_URN } from './../../constants/Search_Constants.js';
+import { ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, SECONDARY_SINGLE_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
+import elementTypes from './../Sidebar/elementTypes.js';
+
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -105,17 +112,55 @@ class ElementContainer extends Component {
             btnClassName: '',
             isOpener: this.props.element.type === elementTypeConstant.OPENER
         })
+        /** Updating Embedded Assessments - Elm(PCAT-8907) & Learnosity(PCAT-9590) */
+        let { element } = this.props
+        let embeddedAssessment = checkEmbeddedElmAssessment(element);
+        if (this.props.element && embeddedAssessment === true) {
+            const assessmentID = element.figuredata.elementdata.assessmentid;
+            const assessmentItemID = element.figuredata.elementdata.assessmentitemid;
+            const itemData = {
+                itemId: assessmentItemID,
+                parentId: assessmentID,
+                targetItemid: assessmentItemID
+            }
+            this.props.fetchAssessmentMetadata('assessment', 'fromElementContainer', { targetId: assessmentID }, itemData);
+        }
         document.addEventListener('click',()=>{
             this.setState({showCopyPopup : false})
         });
     }
 
-    // componentDidUpdate() {
-    //     if(this.props.searchParent !== '' && document.querySelector("div.canvas-blocker")) {
-    //         // sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } });
-    //     }
-    //     // sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } });urn:pearson:manifest:579f5393-883b-4a22-8000-50cc5a802464
-    // }
+    componentDidUpdate() {
+        let divObj = 0;
+        if(this.props.searchParent !== '' && document.querySelector(`div[data-id="${this.props.searchParent}"]`)) {
+            divObj = document.querySelector(`div[data-id="${this.props.searchParent}"]`).offsetTop;
+            if(this.props.searchUrn !== '' && document.querySelector(`div[data-id="${this.props.searchUrn}"]`) && this.props.searchUrn !== this.props.searchParent) {
+                divObj += document.querySelector(`div[data-id="${this.props.searchUrn}"]`).offsetTop;
+            }
+
+            divObj = Math.round(divObj);
+            if(this.props.searchScrollTop !== divObj) {
+                this.props.setScroll({ 'type': SET_SEARCH_URN, scrollTop: divObj });
+                const slatewrapperNode = document.getElementById('slateWrapper')
+                if(slatewrapperNode) {
+                    slatewrapperNode.scrollTop = divObj;
+                }
+            }
+        }
+
+        if(this.props.commentSearchParent !== '' && document.querySelector(`div[data-id="${this.props.commentSearchParent}"]`)) {
+            divObj = document.querySelector(`div[data-id="${this.props.commentSearchParent}"]`).offsetTop;
+            if(this.props.commentSearchUrn !== '' && document.querySelector(`div[data-id="${this.props.commentSearchUrn}"]`) && this.props.commentSearchUrn !== this.props.commentSearchParent) {
+                divObj += document.querySelector(`div[data-id="${this.props.commentSearchUrn}"]`).offsetTop;
+            }
+
+            divObj = Math.round(divObj);
+            if(this.props.commentSearchScrollTop !== divObj) {
+                this.props.setScroll({ 'type': SET_COMMENT_SEARCH_URN, scrollTop: divObj });
+                document.getElementById('slateWrapper').scrollTop = divObj;
+            }
+        }
+    }
 
     componentWillUnmount() {
         if (config.releaseCallCount === 0) {
@@ -241,8 +286,8 @@ class ElementContainer extends Component {
         tinyMCE.$(tempDiv).find('blockquote').removeAttr('data-mce-selected');
         tinyMCE.$(tempDiv).find('code').removeAttr('data-mce-selected');
         tinyMCE.$(tempDiv).find('img').removeAttr('data-mce-selected');
-        tinyMCE.$(tempDiv).find('img').removeAttr('height');
-        tinyMCE.$(tempDiv).find('img').removeAttr('width');
+        tinyMCE.$(tempDiv).find('img.Wirisformula, img.temp_Wirisformula').removeAttr('height');
+        tinyMCE.$(tempDiv).find('img.Wirisformula, img.temp_Wirisformula').removeAttr('width');
         tinyMCE.$(tempDiv).find('.blockquoteMarginalia').removeAttr('contenteditable');
         tinyMCE.$(tempDiv).find('.paragraphNummerEins').removeAttr('contenteditable');
         tinyMCE.$(tempDiv).find('img').removeAttr('draggable');
@@ -251,6 +296,7 @@ class ElementContainer extends Component {
         tinyMCE.$(tempDiv).find('a').removeAttr('data-mce-selected');
         tinyMCE.$(tempDiv).find('a').removeAttr('data-custom-editor');
         tinyMCE.$(tempDiv).find('img.Wirisformula, img.temp_Wirisformula').removeAttr('src');
+        tinyMCE.$(tempDiv).find('img.imageAssetContent').removeAttr('data-mce-src');
         tempDiv.innerHTML = removeBlankTags(tempDiv.innerHTML)
         return encodeHTMLInWiris(tempDiv.innerHTML);
     }
@@ -522,7 +568,7 @@ class ElementContainer extends Component {
                 }
             } 
                 let currentNode = document.getElementById(index)
-                let html = currentNode.innerHTML;
+                let html = currentNode && currentNode.innerHTML;
                 let tempDiv = document.createElement('div');
                 tempDiv.innerHTML = html;
                 //tinyMCE.$(tempDiv).find('.blockquote-hidden').remove();
@@ -554,17 +600,19 @@ class ElementContainer extends Component {
 
                     let imgTaginLabel = titleDOMNode && titleDOMNode.getElementsByTagName("img")
                     let imgTaginTitle = subtitleDOMNode && subtitleDOMNode.getElementsByTagName("img")
+                    let blankLineLabel = titleDOMNode && titleDOMNode.getElementsByClassName("answerLineContent")
+                    let blankLineTitle = subtitleDOMNode && subtitleDOMNode.getElementsByClassName("answerLineContent")
                     if (parentElement.type === "poetry" || parentElement.type === "popup") {
-                        if((titleDOMNode.textContent === '') && !(imgTaginLabel && imgTaginLabel.length)){
+                        if((titleDOMNode.textContent === '') && !(imgTaginLabel && imgTaginLabel.length) && !(blankLineLabel && blankLineLabel.length)){
                             titleHTML = ""
                         }
-                        if ((subtitleDOMNode.textContent === '') && !(imgTaginTitle && imgTaginTitle.length)) {
+                        if ((subtitleDOMNode.textContent === '') && !(imgTaginTitle && imgTaginTitle.length) && !(blankLineTitle && blankLineTitle.length)) {
                             subtitleHTML = ""
                         }
                         tempDiv.innerHTML = createTitleSubtitleModel(titleHTML, subtitleHTML)
                     }
                     else if(parentElement.type === "citations"){
-                        if((titleDOMNode.textContent === '') && !(imgTaginLabel && imgTaginLabel.length)){
+                        if((titleDOMNode.textContent === '') && !(imgTaginLabel && imgTaginLabel.length) && !(blankLineLabel && blankLineLabel.length)){
                             titleHTML = ""
                         }
                         tempDiv.innerHTML = createTitleSubtitleModel("", titleHTML)
@@ -698,6 +746,7 @@ class ElementContainer extends Component {
                     tempDivForCE.innerHTML = ceHtml;
                     ceHtml = tempDivForCE.innerHTML;
                     tempDivForCE.innerHTML = removeBlankTags(tempDivForCE.innerHTML)
+                    tempDivForCE.innerHTML = handleBlankLineDom(tempDivForCE.innerHTML);
                     ceHtml = removeBlankTags(ceHtml)
                     if (ceHtml && previousElementData.html && (this.replaceUnwantedtags(ceHtml) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate) && !config.savingInProgress) {
                         dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDivForCE, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, showHideType, asideData)
@@ -713,13 +762,18 @@ class ElementContainer extends Component {
     /**
      * Will be called on element blur and a saving call will be made
      */
-    handleBlur = (forceupdate, currrentElement, elemIndex, showHideType) => {
+    handleBlur = (forceupdate, currrentElement, elemIndex, showHideType, calledFrom) => {
         const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
         let activeEditorId = elemIndex ? `cypress-${elemIndex}` : (tinyMCE.activeEditor ? tinyMCE.activeEditor.id : '')
         let node = document.getElementById(activeEditorId);
         let element = currrentElement ? currrentElement : this.props.element
         let parentElement = ((currrentElement && currrentElement.type === elementTypeConstant.CITATION_ELEMENT) || (this.props.parentElement && (this.props.parentElement.type === 'poetry' || this.props.parentElement.type === "groupedcontent"))) ? this.props.parentElement : this.props.element
-        this.handleContentChange(node, element, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType)
+        if (calledFrom && calledFrom == 'fromEmbeddedAssessment') {
+            const seconadaryAssessment = SECONDARY_SINGLE_ASSESSMENT + this.props.element.figuredata.elementdata.assessmentformat;
+            this.handleContentChange(node, element, ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, seconadaryAssessment, activeEditorId, forceupdate, parentElement, showHideType);
+        } else {
+            this.handleContentChange(node, element, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType)
+        }
     }
 
     /**
@@ -740,29 +794,12 @@ class ElementContainer extends Component {
             } else {
                 dataToSend.elementdata.assessmenttitle = assessmentData.title;
             }
-            this.handleContentChange('', dataToSend, 'element-assessment', 'primary-assessment-slate', 'secondary-assessment-' + assessmentData.format)
+            this.handleContentChange('', dataToSend, ELEMENT_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT + assessmentData.format)
         } else {
             dataToSend.elementdata.usagetype = assessmentData;
-            this.handleContentChange('', dataToSend, 'element-assessment', 'primary-assessment-slate', 'secondary-assessment-' + this.props.element.elementdata.assessmentformat)
+            this.handleContentChange('', dataToSend, ELEMENT_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT + this.props.element.elementdata.assessmentformat)
         }
 
-    }
-
-    /**
-     * Checks mouse event out side of canvas area and handdling element border state
-     */
-    handleBlurAside = () => {
-        if (this.props.elemBorderToggle) {
-            this.setState({
-                borderToggle: 'showBorder',
-                btnClassName: ''
-            })
-        } else {
-            this.setState({
-                borderToggle: 'hideBorder',
-                btnClassName: ''
-            })
-        }
     }
 
     toggleColorPaletteList = () => {
@@ -1015,6 +1052,44 @@ class ElementContainer extends Component {
         }
         return popupChildUrns
     }
+
+    /**
+     * Gives TCM and feedback status for showhide element
+     * @param {Array} tcmData tcm data for elements on the slate
+     * @param {Object} element active element id
+     * @param {String} defaultWorkUrn work urn test string
+     * @param {String} defaultManifestUrn manifest urn test string
+     */
+    getShowHideTCMStatus = (tcmData, element, defaultWorkUrn, defaultManifestUrn) => {
+        let tcmStatus = {};
+        const showHideChildren = getShowhideChildUrns(element);
+        let showHideTcmCount = 0;
+        let status = {
+            tcm: false,
+            feedback: false
+        };
+        tcmStatus = this.checkTCMStatus(tcmData, element.id, defaultManifestUrn)
+        if (tcmStatus.tcm || tcmStatus.feedback) {
+            return tcmStatus;
+        } else {
+            tcmStatus.tcm = false;
+            tcmStatus.feedback = false;
+            for (const child of showHideChildren) {
+                if (showHideTcmCount < 1) {
+                    status = this.checkTCMStatus(tcmData, child, defaultWorkUrn)
+                    if (status && (status.tcm || status.feedback)) {
+                        showHideTcmCount++;
+                    }
+                } else {
+                    break;
+                }
+            }
+        }
+        tcmStatus.tcm = status.tcm
+        tcmStatus.feedback = status.feedback
+        return tcmStatus
+    }
+
     /**
     * @description - checkTCMStatus is responsible for setting the tcm status for the element
     * @param {*} tcmData tcm data for elements on the slate
@@ -1071,7 +1146,11 @@ class ElementContainer extends Component {
             }
             tcmStatus.tcm = status.tcm
             tcmStatus.feedback = status.feedback
-        } else {
+        }
+        else if (element.type === 'showhide') {
+            tcmStatus = this.getShowHideTCMStatus(tcmData, element, defaultWorkUrn, defaultManifestUrn)
+        } 
+        else {
             tcmStatus = this.checkTCMStatus(tcmData, element.id, defaultWorkUrn)
         }
         return tcmStatus;
@@ -1183,6 +1262,8 @@ class ElementContainer extends Component {
                         glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
                         onListSelect={this.props.onListSelect}
                         splithandlerfunction={splithandlerfunction}
+                        pasteElement={this.props.pasteElement}
+                        userRole={this.props.userRole}
                     />;
                     break;
                 case elementTypeConstant.METADATA_ANCHOR:
@@ -1233,7 +1314,7 @@ class ElementContainer extends Component {
                         openAssetPopoverPopUp: this.openAssetPopoverPopUp,
                         openGlossaryFootnotePopUp: this.openGlossaryFootnotePopUp,
                         getElementStatus: this.props.getElementStatus
-                    }}><ElementShowHide />
+                    }}><ElementShowHide userRole={this.props.userRole} />
                     </ElementContainerContext.Provider >;
                     labelText = 'SH'
                     break;
@@ -1255,7 +1336,7 @@ class ElementContainer extends Component {
                         handleFocus: this.handleFocus,
                         handleBlur: this.handleBlur,
                         deleteElement: this.deleteElement
-                    }}><CitationGroup />
+                    }}><CitationGroup userRole={this.props.userRole} pasteElement={this.props.pasteElement} />
                     </CitationGroupContext.Provider >;
                     labelText = 'CG'
                     break;
@@ -1304,7 +1385,9 @@ class ElementContainer extends Component {
                     onClickCapture={this.props.onClickCapture}
                     onListSelect={this.props.onListSelect} 
                     glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
-                    elementSepratorProps={elementSepratorProps} />
+                    elementSepratorProps={elementSepratorProps}
+                    pasteElement={this.props.pasteElement}
+                    userRole={this.props.userRole} />
                     labelText = 'PE'
                     break;
                 case elementTypeConstant.POETRY_STANZA:
@@ -1352,7 +1435,7 @@ class ElementContainer extends Component {
                         handleBlur: this.handleBlur,
                         deleteElement: this.deleteElement,
                         splithandlerfunction: this.props.splithandlerfunction,
-                    }}><MultiColumnContainer />
+                    }}><MultiColumnContainer userRole={this.props.userRole} pasteElement={this.props.pasteElement} />
                     </MultiColumnContext.Provider>;
                     labelText = '2C'
                     break;
@@ -1365,7 +1448,7 @@ class ElementContainer extends Component {
         let btnClassName = this.state.btnClassName;
         let bceOverlay = "";
         let elementOverlay = '';
-        let showEditButton = element.type == elementTypeConstant.ASSESSMENT_SLATE && element.elementdata && element.elementdata.assessmentformat == 'puf' && element.elementdata.assessmentid ? true : false;
+        let showEditButton = checkFullElmAssessment(element) || checkEmbeddedElmAssessment(element)
         if (!hasReviewerRole() && this.props.permissions && !(this.props.permissions.includes('access_formatting_bar')||this.props.permissions.includes('elements_add_remove')) ) {
             elementOverlay = <div className="element-Overlay disabled" onClick={() => this.handleFocus()}></div>
         }
@@ -1383,9 +1466,27 @@ class ElementContainer extends Component {
             searched = 'searched';
         }
 
+        let selection = '';
+        let selectionOverlay = '';
+        if(this.props.elementSelection && Object.keys(this.props.elementSelection).length > 0 &&
+            'element' in this.props.elementSelection && element.id === this.props.elementSelection.element.id &&
+            'activeAnimation' in this.props.elementSelection && this.props.elementSelection.activeAnimation) {
+            selection = 'copy';
+            if('operationType' in this.props.elementSelection && this.props.elementSelection.operationType === 'cut') {
+                selection = 'cut';
+                selectionOverlay = <div className="element-Overlay disabled"></div>;
+            }
+        }
+
+        let noTCM = ['TE', 'Qu'];
+        if(noTCM.indexOf(labelText) >= 0) {
+            tcm = false;
+        }
+
+        const inContainer = this.props.parentUrn ? true : false
         return (
-            <div className={`editor ${searched}`} data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
-                {this.state.showCopyPopup && <CopyUrn elementId={this.props.element.id} toggleCopyMenu={this.toggleCopyMenu} copyClickedX={this.copyClickedX} copyClickedY={this.copyClickedY} />}
+            <div className={`editor ${searched} ${selection}`} data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
+                {this.renderCopyComponent(this.props, index, inContainer)}
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                     <Button type="element-label" btnClassName={`${btnClassName} ${isQuadInteractive} ${this.state.isOpener ? ' ignore-for-drag' : ''}`} labelText={labelText} copyContext={(e)=>{OnCopyContext(e,this.toggleCopyMenu)}} onClick={(event) => this.labelClickHandler(event)} />
                     {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && config.slateType !== 'assessment' ? (<Button type="delete-element" onClick={(e) => this.showDeleteElemPopup(e,true)} />)
@@ -1395,7 +1496,7 @@ class ElementContainer extends Component {
                 </div>
                     : ''}
                 <div className={`element-container ${labelText.toLowerCase()=="2c"? "multi-column":labelText.toLowerCase()} ${borderToggle}`} data-id={element.id} onFocus={() => this.toolbarHandling('remove')} onBlur={() => this.toolbarHandling('add')} onClick = {(e)=>this.handleFocus("","",e,labelText)}>
-                    {elementOverlay}{bceOverlay}{editor}
+                    {selectionOverlay}{elementOverlay}{bceOverlay}{editor}
                 </div>
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                     {permissions && permissions.includes('notes_adding') && <Button type="add-comment" btnClassName={btnClassName} onClick={(e) => this.handleCommentPopup(true, e)} />}
@@ -1428,6 +1529,96 @@ class ElementContainer extends Component {
         );
     }
 
+    /**
+     * Renders the Cut/Copy Urn/element dialog menu
+     * @param {*} _props 
+     * @param {*} index 
+     * @param {*} inContainer 
+     */
+    renderCopyComponent = (_props, index, inContainer) => {
+        if (this.state.showCopyPopup) {
+            return (
+                <CutCopyDialog 
+                    userRole={_props.userRole}
+                    index={index}
+                    inContainer={inContainer}
+                    setElementDetails={this.setElementDetails}
+                    element={_props.element}
+                    toggleCopyMenu={this.toggleCopyMenu}
+                    copyClickedX={this.copyClickedX} 
+                    copyClickedY={this.copyClickedY} 
+                />
+            )
+        }
+        return null
+    }
+    
+    /**
+     * Sets element details to store
+     * @param {*} elementDetails Element details along with type of operation (Cut/Copy)
+     */
+    setElementDetails = (elementDetails) => {
+        let { parentUrn, asideData, element, poetryData } = this.props;
+        let { id, type, contentUrn } = element;
+        let index = this.props.index;
+        let inputType = '';
+        let inputSubType = '';
+        let cutCopyParentUrn = {};
+        if(!parentUrn) {
+            cutCopyParentUrn = {
+                manifestUrn: config.slateManifestURN,
+                contentUrn: config.slateEntityURN
+            }
+        }
+        cutCopyParentUrn.sourceSlateManifestUrn = config.slateManifestURN
+        cutCopyParentUrn.slateLevelData= this.props.slateLevelData
+        if('activeElement' in this.props && Object.keys(this.props.activeElement).length > 0 && 'elementType' in this.props.activeElement &&
+            'primaryOption' in this.props.activeElement && 'secondaryOption' in this.props.activeElement) {
+            let { elementType, primaryOption, secondaryOption } = this.props.activeElement;
+            inputType = elementTypes[elementType][primaryOption]['enum'] || '';
+            inputSubType = elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'] || '';
+        }
+        
+        if(elementDetails.element && elementDetails.element.type === "element-blockfeature" &&
+            'html' in elementDetails.element && 'text' in elementDetails.element.html) {
+            let attribution = (elementDetails.element.html.text).match(new RegExp(`(<p class="blockquoteTextCredit".*?><\/p>)`, 'gi'));
+            
+            if(!attribution && (elementDetails.element && elementDetails.element.elementdata && elementDetails.element.elementdata.type !== "pullquote")) {
+                inputSubType = "MARGINALIA";
+            }
+        }
+
+        if (elementDetails.element && elementDetails.element.type === "element-list") {
+            elementDetails.element.html.text = elementDetails.element.html.text.replace(/counter-increment:section/g, "counter-increment: section")
+        }
+        const detailsToSet = { 
+            ...elementDetails,
+            sourceSlateManifestUrn: config.slateManifestURN,
+            sourceSlateEntityUrn: config.slateEntityURN,
+            sourceEntityUrn: (parentUrn && 'contentUrn' in parentUrn) ? parentUrn.contentUrn : config.slateEntityURN,
+            deleteElm: { id, type, parentUrn, asideData, contentUrn, index, poetryData, cutCopyParentUrn},
+            inputType,
+            inputSubType
+            //type: enum type to be included
+        }
+
+        if('operationType' in detailsToSet && detailsToSet.operationType === 'cut') {
+            let elmComment = (this.props.allComments).filter(({ commentOnEntity }) => {
+                return commentOnEntity === detailsToSet.element.id;
+            });
+            detailsToSet['elmComment'] = elmComment || [];
+
+            let elmFeedback = (this.props.tcmData).filter(({ elemURN }) => {
+                return elemURN === detailsToSet.element.id
+            });
+            detailsToSet['elmFeedback'] = elmFeedback || [];
+        }
+        console.log("Element Details action to be dispatched from here", detailsToSet)
+
+        /** Dispatch details to the store */
+        this.props.setSelection(detailsToSet);
+    }
+    
     /**
      * @description - This function is for handling the closing and opening of popup.
      * @param {event} popup
@@ -1500,9 +1691,8 @@ class ElementContainer extends Component {
     handleEditButton = (event) => {
         event.stopPropagation();
         let { element } = this.props;
-        let fullAssessment = element.type == elementTypeConstant.ASSESSMENT_SLATE && element.elementdata && element.elementdata.assessmentformat == 'puf' && element.elementdata.assessmentid ? true : false;
-        let embeddedAssessment = element.type == elementTypeConstant.FIGURE_ASSESSMENT && element.figuredata && element.figuredata.elementdata && element.figuredata.elementdata.assessmentformat == 'puf' && element.figuredata.elementdata.assessmentid ? true : false;
-        // let containerURN = config.parentEntityUrn == 'Front Matter' || config.parentEntityUrn == 'Back Matter' ? config.slateManifestURN : this.props.currentSlateAncestorData && this.props.currentSlateAncestorData.ancestor.containerUrn ? this.props.currentSlateAncestorData.ancestor.containerUrn : config.projectUrn
+        let fullAssessment = checkFullElmAssessment(element);
+        let embeddedAssessment = checkEmbeddedElmAssessment(element);
         let dataToSend = {
             assessmentWorkUrn: fullAssessment ? element.elementdata.assessmentid : embeddedAssessment ? element.figuredata.elementdata.assessmentid : "",
             projDURN: config.projectUrn,
@@ -1511,6 +1701,7 @@ class ElementContainer extends Component {
         }
         handleElmPortalEvents();/** Add Elm-Assessment Update eventListener */
         this.props.openElmAssessmentPortal(dataToSend);
+        embeddedAssessment && this.props.editElmAssessmentId(element.figuredata.elementdata.assessmentid, element.figuredata.elementdata.assessmentitemid);
     }
    
     render = () => {
@@ -1610,11 +1801,26 @@ const mapDispatchToProps = (dispatch) => {
         handleTCMData: () => {
             dispatch(handleTCMData())
         },
-        getElementStatus : (elementWorkId, index) => {
+        getElementStatus:(elementWorkId, index) => {
             dispatch(getElementStatus(elementWorkId, index))
         },
-        openElmAssessmentPortal : (dataToSend) => {
+        openElmAssessmentPortal: (dataToSend) => {
             dispatch(openElmAssessmentPortal(dataToSend))
+        },
+        fetchAssessmentMetadata: (type, calledFrom, assessmentData, assessmentItemData) => {
+            dispatch(fetchAssessmentMetadata(type, calledFrom, assessmentData, assessmentItemData))
+        },
+        resetAssessmentStore: () => {
+            dispatch(resetAssessmentStore())
+        },
+        setScroll: (type) => {
+            dispatch(setScroll(type))
+        },
+        setSelection: (params) => {
+            dispatch(setSelection(params))
+        },
+        editElmAssessmentId: (assessmentId, assessmentItemId) => {
+            dispatch(editElmAssessmentId(assessmentId, assessmentItemId))
         }
     }
 }
@@ -1631,7 +1837,16 @@ const mapStateToProps = (state) => {
         showHideId: state.appStore.showHideId,
         tcmData: state.tcmReducer.tcmSnapshot,
         searchUrn: state.searchReducer.searchTerm,
-        currentSlateAncestorData : state.appStore.currentSlateAncestorData
+        searchParent: state.searchReducer.parentId,
+        searchScroll: state.searchReducer.scroll,
+        searchScrollTop: state.searchReducer.scrollTop,
+        commentSearchUrn: state.commentSearchReducer.commentSearchTerm,
+        commentSearchParent: state.commentSearchReducer.parentId,
+        commentSearchScroll: state.commentSearchReducer.scroll,
+        commentSearchScrollTop: state.commentSearchReducer.scrollTop,
+        currentSlateAncestorData : state.appStore.currentSlateAncestorData,
+        elementSelection: state.selectionReducer.selection,
+        slateLevelData: state.appStore.slateLevelData
     }
 }
 

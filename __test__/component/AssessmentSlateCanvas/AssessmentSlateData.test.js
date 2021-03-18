@@ -58,7 +58,6 @@ config.ASSET_POPOVER_ENDPOINT = "https://contentapis-staging.pearsoncms.net/mani
 config.STRUCTURE_APIKEY = 'Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld'
 config.PRODUCTAPI_ENDPOINT = "https://contentapis-staging.pearsoncms.net/product-api/"
 config.projectUrn = "urn:pearson:distributable:3e872df6-834c-45f5-b5c7-c7b525fab1ef"
-// config.parentEntityUrn= "bodyMatter"
 config.slateType = "assessment"
 let permissions = [
     "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
@@ -413,7 +412,8 @@ describe('Testing Assessment Slate Data component', () => {
                     assessmentStatus: 'final',
                     assessmentTitle: 'Quiz: 7.4 Developing Relationships',
                     assessmentEntityUrn: 'urn:pearson:entity:c785c0f6-6fc7-4f51-855c-0677738a9d86',
-                    latestWorkUrn: 'urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec565'
+                    latestWorkUrn: 'urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec565',
+                    "targetId": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464"
                 }
             }
             jest.spyOn(assessmentSlateInstance6, 'updateElmAssessment')
@@ -433,7 +433,8 @@ describe('Testing Assessment Slate Data component', () => {
                     assessmentStatus: 'final',
                     assessmentTitle: 'Quiz: 7.4 Developing Relationships',
                     assessmentEntityUrn: 'urn:pearson:entity:c785c0f6-6fc7-4f51-855c-0677738a9d86',
-                    latestWorkUrn: 'urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec565'
+                    latestWorkUrn: 'urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec565',
+                    "targetId": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464"
                 }
             }
             jest.spyOn(assessmentSlateInstance6, 'showElmVersionStatus')

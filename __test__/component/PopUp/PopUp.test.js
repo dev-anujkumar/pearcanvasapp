@@ -39,16 +39,6 @@ describe('Testing PopUp component', () => {
         const component = mount(<PopUp {...props}/>);
         expect(component.instance().props.isLockReleasePopup).toEqual(true);
     })
-    it('tocDelete', () => {
-        const props = {
-            tocDelete: true
-        }
-        const div = document.createElement('div');
-        ReactDOM.render(<PopUp {...props} />, div);
-        ReactDOM.unmountComponentAtNode(div);
-        const component = mount(<PopUp {...props}/>);
-        expect(component.instance().props.tocDelete).toEqual(true);
-    })
     it('tocdelete if saveButtonText == "Okay"',() => {
         const props = {
             tocDelete: true,

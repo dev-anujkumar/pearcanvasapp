@@ -25,7 +25,9 @@ export default {
     SINGLE_COLUMN: "group",
     BLOCK_TEXT: "block-text",
     BLOCK_TEXT_BUTTON: 'block-text-button',
-    TABLE_EDITOR: 'table-editor-elem-button'
+    TABLE_EDITOR: 'table-editor-elem-button',
+    TOC_PARENT_TYPES: ["frontmatter", "backmatter"]
+
 }
 
 /** This array contains data for element picker popup with key as button-type */

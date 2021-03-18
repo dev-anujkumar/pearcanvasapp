@@ -232,3 +232,220 @@ export const selectedResult ={
 	},
 	"dateModified": "2019-04-04T16:57:44.002Z"
 }
+export const learningSystemList = {
+    "accounting-sims": {
+        learningSystem: "knowdl",
+        appType: "accounting-sims",
+        label: "Accounting Sims"
+    },
+    "criminal-justice-sims": {
+        learningSystem: "knowdl",
+        appType: "criminal-justice-sims",
+        label: "Criminal Justice Sims"
+    },
+    "digital-interactives": {
+        learningSystem: "knowdl",
+        appType: "digital-interactives",
+        label: "Digital Interactives"
+    },
+    "economics-sims": {
+        learningSystem: "knowdl",
+        appType: "economics-sims",
+        label: "Economic Sims"
+    },
+    "helpdesk": {
+        learningSystem: "knowdl",
+        appType: "helpdesk",
+        label: "HelpDesk"
+    },
+    "hospitality-sims": {
+        learningSystem: "knowdl",
+        appType: "hospitality-sims",
+        label: "Hospitality Sims"
+    },
+    "information-technology-sims": {
+        learningSystem: "knowdl",
+        appType: "information-technology-sims",
+        label: "Information Technology Sims"
+    },
+    "personal-finance-experience": {
+        learningSystem: "knowdl",
+        appType: "personal-finance-experience",
+        label: "Personal Finance"
+    },
+    "political-science-sims": {
+        learningSystem: "knowdl",
+        appType: "political-science-sims",
+        label: "Political Science Sims"
+    },
+    "qual-sims": {
+        learningSystem: "knowdl",
+        appType: "qual-sims",
+        label: "Qualitative Business Sims"
+    },
+    "soundbytes": {
+        learningSystem: "knowdl",
+        appType: "soundbytes",
+        label: "Sound Bytes"
+    },
+    "business-media-library": {
+        learningSystem: "knowdl",
+        appType: "business-media-library",
+        label: "Business Media"
+    },
+    "video-library": {
+        learningSystem: "knowdl",
+        appType: "video-library",
+        label: "Video Library"
+    },
+    "myvirtual-child": {
+        learningSystem: "myvirtual-x",
+        appType: "myvirtual-child",
+        label: "MyVirtualChild"
+    },
+    "myvirtual-life": {
+        learningSystem: "myvirtual-x",
+        appType: "myvirtual-life",
+        label: "MyVirtualLife"
+    },
+    "socialexplorer-surveys": {
+        learningSystem: "socialexplorer",
+        appType: "socialexplorer-surveys",
+        label: "Surveys and Inventories"
+    },
+    "socialexplorer-pathways": {
+        learningSystem: "socialexplorer",
+        appType: "socialexplorer-pathways",
+        label: "Adaptive Pathways"
+    },
+    "socialexplorer-explorations": {
+        learningSystem: "socialexplorer",
+        appType: "socialexplorer-explorations",
+        label: "Guided Data Explorations"
+    },
+    "video-submission": {
+        learningSystem: "mediashare",
+        appType: "video-submission",
+        label: "Shared Media"
+    },
+    "video-quiz": {
+        learningSystem: "mediashare",
+        appType: "video-quiz",
+        label: "Media Quiz"
+    },
+    "writingsolutions": {
+        learningSystem: "writingsolutions",
+        appType: "writingsolutions",
+        label: "Writing Solutions"
+    }
+}
+export const apiList = [
+    {
+        type: "accounting-sims",
+        label: "Accounting Sims",
+        system: "knowdl"
+    },
+    {
+        type: "socialexplorer-pathways",
+        label: "Adaptive Pathways",
+        system: "socialexplorer"
+    },
+    {
+        type: "criminal-justice-sims",
+        label: "Criminal Justice Sims",
+        system: "knowdl"
+    },
+    {
+        type: "digital-interactives",
+        label: "Digital Interactives",
+        system: "knowdl"
+    },
+    {
+        type: "economics-sims",
+        label: "Economic Sims",
+        system: "knowdl"
+    },
+    {
+        type: "exploring-solutions",
+        label: "Exploring Solutions",
+        system: "knowdl"
+    },
+    {
+        type: "socialexplorer-explorations",
+        label: "Guided Data Explorations",
+        system: "socialexplorer"
+    },
+    {
+        type: "helpdesk",
+        label: "HelpDesk",
+        system: "knowdl"
+    },
+    {
+        type: "hospitality-sims",
+        label: "Hospitality Sims",
+        system: "knowdl"
+    },
+    {
+        type: "information-technology-sims",
+        label: "Information Technology Sims",
+        system: "knowdl"
+    },
+    {
+        type: "video-quiz",
+        label: "Media Quiz",
+        system: "mediashare"
+    },
+    {
+        type: "myvirtual-child",
+        label: "My Virtual Child",
+        system: "myvirtual-x"
+    },
+    {
+        type: "myvirtual-life",
+        label: "My Virtual Life",
+        system: "myvirtual-x"
+    },
+    {
+        type: "personal-finance-experience",
+        label: "Personal Finance",
+        system: "knowdl"
+    },
+    {
+        type: "political-science-sims",
+        label: "Political Science Sims",
+        system: "knowdl"
+    },
+    {
+        type: "qual-sims",
+        label: "Qualitative Business Sims",
+        system: "knowdl"
+    },
+    {
+        type: "video-submission",
+        label: "Shared Media",
+        system: "mediashare"
+    },
+    {
+        type: "soundbytes",
+        label: "Sound Bytes",
+        system: "knowdl"
+    },
+    {
+        type: "socialexplorer-surveys",
+        label: "Surveys and Inventories",
+        system: "socialexplorer"
+    },
+    {
+        type: "video-library",
+        label: "Video Library",
+        system: "knowdl"
+    },
+    {
+        type: "writingsolutions",
+        label: "Writing Solutions",
+        system: "writingsolutions"
+    }
+]
+export const learningSystemMenu = ["Accounting Sims", "Criminal Justice Sims", "Digital Interactives", "Economic Sims", "HelpDesk", "Hospitality Sims", "Information Technology Sims", "Personal Finance", "Political Science Sims", "Qualitative Business Sims", "Sound Bytes", "Business Media", "Video Library", "MyVirtualChild", "MyVirtualLife", "Surveys and Inventories", "Adaptive Pathways", "Guided Data Explorations", "Shared Media", "Media Quiz", "Writing Solutions"]
+
+export const disciplinesList = ["art", "biologyandmicrobiology", "mathematics", "psychology", "anatomyandphysiology", "anthropology", "business", "businessstatistics", "chemistry", "communication-film-theatre", "communicationsciencesanddisorders", "computerscience", "counseling", "criminaljustice", "culinary-hospitality-travel-and-tourism", "deaf-studies-and-deaf-education", "economics", "education", "ems-and-fire-science-(brady)", "engineering", "english", "environmentalscience", "fashion-and-interior-design", "geographyandatmosphericsciences", "geologyandoceanography", "health-professions", "healthandkinesiology", "history", "informationtechnology", "interdisciplinarystudies", "legal-studies-and-paralegal", "music", "nursing", "nutrition", "philosophy", "physicsandastronomy", "politicalscience", "religion", "socialwork-familytherapy-humanservices", "sociology", "statistics", "student-success-and-career-development", "trades-and-technology", "worldlanguages"]

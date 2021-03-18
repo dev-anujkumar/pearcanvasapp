@@ -35,7 +35,7 @@ export const ERROR_MESSAGE_ELM_INTERACTIVES = "No Results Found"
 /*--------------- Elm Component Constants -------------------*/
 export const FolderLabelList = {
     'C':['chapter'],
-    'M':['module'],
+    'M':['module','appendix'],
     'P':['part'],
     'S':['section'],
     'AS':['assessment'],
@@ -46,3 +46,21 @@ export const ELM_NEW_VERSION_UPDATE = 'The new version has been placed'
 export const ELM_UPDATE_POPUP_HEAD = 'Version Update'
 export const ELM_PORTAL_ERROR_MSG = "Something went wrong. Please try again!"
 export const ELM_UPDATE_MSG = 'Are you sure you want to update to the latest version available? It will not be possible to undo.'
+export const ELM_EMBEDDED_NEW_VERSION_UPDATE = 'The new version has been placed and all other items from this Assessment have been updated.'
+export const AUTO_UPDATE_FAIL_ERROR = 'Unable to Update Other Instances of this Assessment in the Project'
+
+/*--------------- Container Constants -------------------*/
+export const ELEMENT_FIGURE = 'figure'
+export const FIGURE_ASSESSMENT = 'assessment'
+export const ELEMENT_ASSESSMENT = 'element-assessment'
+export const PRIMARY_SINGLE_ASSESSMENT = 'primary-single-assessment'
+export const SECONDARY_SINGLE_ASSESSMENT = 'secondary-single-assessment-'
+export const PRIMARY_SLATE_ASSESSMENT = 'primary-assessment-slate'
+export const SECONDARY_SLATE_ASSESSMENT = 'secondary-assessment-'
+
+export const ASSESSMENT_PICKER_OPENERS = Object.freeze({
+    FULL_ASSESSMENT:'slateAssessment',
+    SINGLE_ASSESSMENT: 'singleAssessment',
+    SINGLE_ASSESSMENT_OUTER:'singleSlateAssessment',
+    SINGLE_ASSESSMENT_INNER:'singleSlateAssessmentInner'
+})

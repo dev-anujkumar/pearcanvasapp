@@ -10,7 +10,10 @@ import ElementContainer from '../ElementContainer';
 import ElementSaprator from '../ElementSaprator';
 import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
 import { SlateFooter } from './SlateFooter.jsx';
-import { createElement, swapElement, setSplittedElementIndex, updatePageNumber, accessDenied } from './SlateWrapper_Actions';
+import OpenAudioBook from '../AudioNarration/OpenAudioBook.jsx';
+
+/** pasteElement function location to be changed */
+import { createElement, swapElement, setSplittedElementIndex, updatePageNumber, accessDenied, pasteElement, wirisAltTextPopup } from './SlateWrapper_Actions';
 import { sendDataToIframe, getSlateType } from '../../constants/utility.js';
 import { ShowLoader, SplitCurrentSlate } from '../../constants/IFrameMessageTypes.js';
 import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
@@ -19,16 +22,15 @@ import config from '../../config/config';
 import { TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER, WORKED_EXAMPLE, SECTION_BREAK, METADATA_ANCHOR, LO_LIST, ELEMENT_ASSESSMENT, OPENER,
     ALREADY_USED_SLATE , REMOVE_LINKED_AUDIO, NOT_AUDIO_ASSET, SPLIT_SLATE_WITH_ADDED_AUDIO , ACCESS_DENIED_CONTACT_ADMIN, IN_USE_BY, LOCK_DURATION, SHOW_HIDE,POP_UP ,
     CITATION, ELEMENT_CITATION,SMARTLINK,POETRY ,STANZA, BLOCKCODE, TABLE_EDITOR, FIGURE_MML, MULTI_COLUMN, MMI_ELM,
-    SINGLE_CONTAINER_DELETE, WITH_PENDING_TRACK, SLATE_UNLINKING, DELETE_DIALOG_TEXT, WITH_PENDING_TRACK_NOTE_MESSAGE, TYPE_SINGLE_CONTAINER_DELETE, TYPE_WITH_PENDING_TRACK, TYPE_UNLINK
 } from './SlateWrapperConstants';
 import PageNumberElement from './PageNumberElement.jsx';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
 import PopUp from '../PopUp';
 import Toast from '../Toast';
-import { hideBlocker, showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';
+import { hideBlocker, showTocBlocker, hideTocBlocker } from '../../js/toggleLoader';
 import { guid } from '../../constants/utility.js';
-import { fetchAudioNarrationForContainer, deleteAudioNarrationForContainer, showAudioRemovePopup, showAudioSplitPopup , showWrongAudioPopup } from '../AudioNarration/AudioNarration_Actions'
+import { fetchAudioNarrationForContainer, deleteAudioNarrationForContainer, showAudioRemovePopup, showAudioSplitPopup , showWrongAudioPopup, audioGlossaryPopup} from '../AudioNarration/AudioNarration_Actions'
 import { setSlateLock, releaseSlateLock, setLockPeriodFlag, getSlateLockStatus } from '../CanvasWrapper/SlateLock_Actions'
 import { setActiveElement,openPopupSlate } from '../CanvasWrapper/CanvasWrapper_Actions';
 // import { OPEN_AM } from '../../js/auth_module';
@@ -42,6 +44,7 @@ import { reloadSlate } from '../../component/ElementContainer/AssessmentEventHan
 import LazyLoad, {forceCheck} from "react-lazyload";
 
 import { getCommentElements } from './../Toolbar/Search/Search_Action.js';
+import { TEXT_SOURCE } from '../../constants/Element_Constants.js';
 
 let random = guid();
 
@@ -76,11 +79,13 @@ class SlateWrapper extends Component {
 
     componentDidUpdate() {
         let divObj = 0;
-        if(this.props.searchParent !== '' && document.querySelector(`div[data-id="${this.props.searchParent}"]`)) {
+        if(this.props.searchParent !== '' && document.querySelector(`div[data-id="${this.props.searchParent}"]`) && !this.props.searchScroll) {
             divObj = document.querySelector(`div[data-id="${this.props.searchParent}"]`).offsetTop;
             if(this.props.searchNode !== '' && document.querySelector(`div[data-id="${this.props.searchNode}"]`) && this.props.searchNode !== this.props.searchParent) {
                 divObj += document.querySelector(`div[data-id="${this.props.searchNode}"]`).offsetTop;
             }
+
+            divObj = Math.round(divObj);
             document.getElementById('slateWrapper').scrollTop = divObj;
         }
 
@@ -89,8 +94,15 @@ class SlateWrapper extends Component {
             if(this.props.commentSearchNode !== '' && document.querySelector(`div[data-id="${this.props.commentSearchNode}"]`) && this.props.commentSearchNode !== this.props.commentSearchParent) {
                 divObj += document.querySelector(`div[data-id="${this.props.commentSearchNode}"]`).offsetTop;
             }
-            document.getElementById('slateWrapper').scrollTop = divObj;
-            this.props.getCommentElements('');
+
+            divObj = Math.round(divObj);
+            if(!this.props.commentSearchScroll) {
+                document.getElementById('slateWrapper').scrollTop = divObj;
+            }
+            
+            if(this.props.commentSearchScrollTop === divObj) {
+                this.props.getCommentElements('');
+            }
         }
     }
 
@@ -451,7 +463,7 @@ class SlateWrapper extends Component {
         }
         else{
             if(config.savingInProgress){
-                window.tinymce.activeEditor.selection.placeCaretAt(0, 0);
+                window.tinymce && window.tinymce.activeEditor && window.tinymce.activeEditor.selection.placeCaretAt(0, 0);
                 this.prohibitPropagation(event)
             }
             this.props.getSlateLockStatus(config.projectUrn, config.slateManifestURN)
@@ -529,6 +541,9 @@ class SlateWrapper extends Component {
         this.prohibitPropagation(event)
     }
 
+    closeAudioBookDialog =()=>{
+        this.props.audioGlossaryPopup(false);
+    }
     /**
      * Toggles popup
      */
@@ -783,95 +798,10 @@ class SlateWrapper extends Component {
     handleSplitSlate = () => {
         this.toggleSplitSlatePopup(false)
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-        sendDataToIframe({ 'type': SplitCurrentSlate, 'message': {} });
+        sendDataToIframe({ 'type': SplitCurrentSlate, 'message': { type:`${ config.slateType }`} });
         this.props.setSplittedElementIndex(this.state.splittedSlateIndex)
     }
 
-    deleteAccepted = () => {
-        if(this.props.tocDeleteMessage.messageType !== 'singleContainerDelete'){
-            sendDataToIframe({ 'type': 'deleteAccepted', 'message': this.props.tocDeleteMessage })
-        }
-        this.deleteRejected()
-    }
-
-    unlinkAccepted = () => {
-        this.props.updatePageLink(this.props.tocDeleteMessage);
-        hideBlocker();
-        hideTocBlocker();
-        disableHeader(true);
-        this.props.modifyState(false)
-    }
-
-    deleteRejected = () => {
-        hideBlocker();
-        hideTocBlocker();
-        disableHeader(true);
-        this.props.modifyState(false)
-        sendDataToIframe({ 'type': 'deleteRejected', 'message': {} });
-    }
-
-    showTocDeletePopup = () => {
-        /**
-         * Need to refactor these all condition and minimize them
-         */        
-        if (this.props.toggleTocDelete) {
-            let containerName = null;
-            if (this.props.tocDeleteMessage && this.props.tocDeleteMessage.changedValue && this.props.tocDeleteMessage.changedValue.labelText) {
-                containerName = this.props.tocDeleteMessage.changedValue.labelText;
-            }
-            if(this.props.tocDeleteMessage&& this.props.tocDeleteMessage.messageType === TYPE_SINGLE_CONTAINER_DELETE){ 
-                return (
-                    <PopUp
-                        togglePopup={this.deleteRejected}
-                        active={true}
-                        saveContent={this.deleteAccepted}
-                        saveButtonText='Okay'
-                        dialogText={SINGLE_CONTAINER_DELETE}
-                        tocDelete={true}
-                        itemName = {containerName}
-                        tocDeleteClass='tocDeleteClass'
-                        deleteContainer = {false}
-                    />                   
-                   
-                )
-            }
-            else if(this.props.tocDeleteMessage && (this.props.tocDeleteMessage.messageType === TYPE_WITH_PENDING_TRACK || this.props.tocDeleteMessage.link === TYPE_UNLINK)){
-                let dialogText = (this.props.tocDeleteMessage.messageType === TYPE_WITH_PENDING_TRACK) ? WITH_PENDING_TRACK : SLATE_UNLINKING
-                let note = (this.props.tocDeleteMessage.messageType === TYPE_WITH_PENDING_TRACK) ? WITH_PENDING_TRACK_NOTE_MESSAGE : ''
-                return (
-                    <PopUp
-                        togglePopup={this.deleteRejected}
-                        active={true}
-                        saveContent={(this.props.tocDeleteMessage.messageType === TYPE_WITH_PENDING_TRACK) ? this.deleteAccepted : this.unlinkAccepted}
-                        saveButtonText='Yes'
-                        dialogText={dialogText}
-                        note={note}
-                        tocDelete={true}
-                        itemName = {containerName}
-                        tocDeleteClass='tocDeleteClass'
-                        deleteContainer = {false}
-                    />
-    
-                )
-            }
-            else{
-                return (
-                    <PopUp
-                        togglePopup={this.deleteRejected}
-                        active={true}
-                        saveContent={this.deleteAccepted}
-                        saveButtonText='Yes'
-                        dialogText={DELETE_DIALOG_TEXT}
-                        tocDelete={true}
-                        itemName = {containerName}
-                        tocDeleteClass='tocDeleteClass'
-                        deleteContainer = {true}
-                    />
-    
-                )
-            }
-        }
-    }
 
     /**
      * @description - hide opener elment and disable MA option once created in IS
@@ -898,6 +828,7 @@ class SlateWrapper extends Component {
         return (
             <>
                 <ElementSaprator
+                    userRole={_props.userRole}
                     firstOne={true}
                     index={0}
                     esProps={this.elementSepratorProps(0, true)}
@@ -907,6 +838,8 @@ class SlateWrapper extends Component {
                     openAudio={_props.openAudio}
                     onClickCapture={this.checkSlateLockStatus}
                     splithandlerfunction={this.splithandlerfunction}
+                    pasteElement={this.props.pasteElement}
+                    source={TEXT_SOURCE}
                 />
             </>
         )
@@ -936,11 +869,12 @@ class SlateWrapper extends Component {
                            <React.Fragment key={element.id}>
                                <LazyLoad 
                                     once={true}
-                                    placeholder={<div data-id={element.id}>Loading...</div>}
+                                    placeholder={<div data-id={element.id}><LargeLoader /></div>}
                                 >
                                     {
                                         index === 0 && _slateType !== 'assessment' && config.isCO === false ?
                                             <ElementSaprator
+                                                userRole={this.props.userRole}
                                                 firstOne={index === 0}
                                                 index={index}
                                                 esProps={this.elementSepratorProps(index, true)}
@@ -950,10 +884,13 @@ class SlateWrapper extends Component {
                                                 openAudio={this.props.openAudio}
                                                 onClickCapture={this.checkSlateLockStatus}
                                                 splithandlerfunction={this.splithandlerfunction}
+                                                pasteElement={this.props.pasteElement}
+                                                source={TEXT_SOURCE}
                                             />
                                             : index === 0 && config.isCO === true ? <div className="noSeparatorContainer"></div> : null
                                     }
                                     <ElementContainer
+                                        userRole={this.props.userRole}
                                         openCustomPopup = {this.openCustomPopup}
                                         slateType={_slateType}
                                         element={element}
@@ -966,6 +903,7 @@ class SlateWrapper extends Component {
                                         onClickCapture={this.checkSlateLockStatus}
                                         isLOExist={this.props.isLOExist}
                                         splithandlerfunction={this.splithandlerfunction}
+                                        pasteElement={this.props.pasteElement}
                                     >
                                         {
                                             (isHovered, isPageNumberEnabled, activeElement, permissions) => (
@@ -981,6 +919,7 @@ class SlateWrapper extends Component {
                                     </ElementContainer>
                                     {_slateType !== 'assessment' ?
                                         <ElementSaprator
+                                            userRole={this.props.userRole}
                                             index={index}
                                             esProps={this.elementSepratorProps(index, false)}
                                             elementType=""
@@ -991,6 +930,8 @@ class SlateWrapper extends Component {
                                             openAudio={this.props.openAudio}
                                             onClickCapture={this.checkSlateLockStatus}
                                             splithandlerfunction={this.splithandlerfunction}
+                                            pasteElement={this.props.pasteElement}
+                                            source={TEXT_SOURCE}
                                         />
                                         : null
                                     }
@@ -1019,7 +960,7 @@ class SlateWrapper extends Component {
         hideTocBlocker()
         if (this.props.openRemovePopUp) {
             this.props.showAudioRemovePopup(false)
-            this.props.deleteAudioNarrationForContainer();
+            this.props.deleteAudioNarrationForContainer(this.props.isGlossary);
         }
         else if (this.props.openSplitPopUp) {
             this.props.showAudioSplitPopup(false)
@@ -1086,7 +1027,6 @@ class SlateWrapper extends Component {
             dialogText = NOT_AUDIO_ASSET
             audioRemoveClass = 'audioRemoveClass'
         }
-
         if (this.props.openRemovePopUp || this.props.openSplitPopUp) {
             this.props.showBlocker(true)
             showTocBlocker()
@@ -1136,6 +1076,7 @@ class SlateWrapper extends Component {
                     showConfirmation={true}
                     assessmentClass="lock-message"
                     togglePopup={this.toggleAssessmentPopup}
+                    hideCanvasBlocker={this.props.showBlocker}
                 />
             )
         }
@@ -1211,6 +1152,30 @@ class SlateWrapper extends Component {
             }
         },0);
     }
+    wirisAltTextPopup = () => {
+        if(this.props.wirisAltText && this.props.wirisAltText.showPopup){
+            this.props.showBlocker(true)
+            showTocBlocker();
+            return (
+                <PopUp dialogText={this.props.wirisAltText.altText}
+                    active={true}
+                    altHeaderText={`Alt Text`}
+                    togglePopup={this.closeWirisAltTextPopup}
+                    altText={true}
+                    isInputDisabled={true}
+                    splitSlateClass="split-slate"
+                />
+            )
+        }
+        else {
+            return null
+        }
+    }
+    closeWirisAltTextPopup = () => {
+        this.props.wirisAltTextPopup({showPopup : false, altText : ''})
+        this.props.showBlocker(false)
+        hideBlocker()
+    }
 
     /**
      * render | renders title and slate wrapper
@@ -1257,14 +1222,15 @@ class SlateWrapper extends Component {
                         )
                     }
                 </ListButtonDropPortal>
+                {this.props.openAudioGlossaryPopup && <OpenAudioBook closeAudioBookDialog={this.closeAudioBookDialog} isGlossary ={true}/>}
                 {this.showLockPopup()}
                 {this.showCustomPopup()}
                 {this.showSplitSlatePopup()}
-                {this.showTocDeletePopup()}
                 {/* ***************Audio Narration remove Popup **************** */}
                 {this.showAudioRemoveConfirmationPopup()}
                 {this.showLockReleasePopup()}
                 {this.showAssessmentConfirmationPopup()}
+                {this.wirisAltTextPopup()}
             </React.Fragment>
         );
     }
@@ -1293,8 +1259,10 @@ const mapStateToProps = state => {
         permissions: state.appStore.permissions,
         currentSlateLOData: state.metadataReducer.currentSlateLOData,
         openRemovePopUp: state.audioReducer.openRemovePopUp,
+        isGlossary: state.audioReducer.isGlossary,
         openSplitPopUp: state.audioReducer.openSplitPopUp,
         openWrongAudioPopup: state.audioReducer.openWrongAudioPopup,
+        openAudioGlossaryPopup:state.audioReducer.openAudioGlossaryPopup,
         withinLockPeriod: state.slateLockReducer.withinLockPeriod,
         openAudio: state.audioReducer.openAudio,
         indexSplit : state.audioReducer.indexSplit,
@@ -1302,10 +1270,15 @@ const mapStateToProps = state => {
         showSlateLockPopupValue: state.metadataReducer.showSlateLockPopup,
         searchParent: state.searchReducer.parentId,
         searchNode: state.searchReducer.searchTerm,
+        searchScroll: state.searchReducer.scroll,
         commentSearchParent: state.commentSearchReducer.parentId,
         commentSearchNode: state.commentSearchReducer.commentSearchTerm,
+        commentSearchScroll: state.commentSearchReducer.scroll,
+        commentSearchScrollTop: state.commentSearchReducer.scrollTop,
         showToast: state.appStore.showToast,
         showConfirmationPopup: state.assessmentReducer.showConfirmationPopup,
+        userRole: state.appStore.roleId,
+        wirisAltText: state.appStore.wirisAltText
     };
 };
 
@@ -1332,7 +1305,10 @@ export default connect(
         showSlateLockPopup,
         handleTCMData,
         fetchSlateData,
-        getCommentElements,
         assessmentConfirmationPopup,
+        getCommentElements,
+        pasteElement,
+        wirisAltTextPopup,
+        audioGlossaryPopup
     }
 )(SlateWrapper);

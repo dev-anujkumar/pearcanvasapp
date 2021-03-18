@@ -89,12 +89,16 @@
     position: absolute;
     z-index: 3;
 }
+.wrs_modal_dialogContainer {
+  z-index: 2 !important;
+}
 .wrs_modal_dialogContainer.wrs_modal_desktop.wrs_maximized{
     width: 580px!important;
     height: 483px!important;
     top: 50%!important;
     left: 50%!important;
     transform: translate(-50%, -50%)!important;
+    z-index: 999999!important;
 }
 .sidebar-panel{
     position : fixed;
@@ -149,7 +153,7 @@
     background-color: #def8ff;
   }
   .navigation-content:active .navigation-button{ 
-    border: solid 1px #005a70;;
+    border: solid 1px #005a70;
   }
   .navigation-button.next{
     padding: 40px 2px 40px 12px;

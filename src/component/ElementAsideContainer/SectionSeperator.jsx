@@ -4,8 +4,8 @@ import Button from '../ElementButtons';
 import config from '../../config/config';
 import './../../styles/ElementAsideContainer/ElementAsideContainer.css';
 import { hasReviewerRole } from '../../constants/utility.js'
-import CopyUrn from '../CopyUrn';
-import { OnCopyContext } from '../CopyUrn/copyUtil.js'
+import CutCopyDialog from '../CutCopyDialog';
+import { OnCopyContext } from '../CutCopyDialog/copyUtil.js'
 
 class SectionSeperator extends Component {
     constructor(props) {
@@ -67,7 +67,7 @@ class SectionSeperator extends Component {
             className={
                 (elemBorderToggle !== 'undefined' && elemBorderToggle) || borderToggle == 'active'? showBorder:""} >
 
-                {this.state.showCopyPopup && <CopyUrn elementId={this.props.element.id || this.props.element.versionUrn} toggleCopyMenu={this.toggleCopyMenu} copyClickedX={this.copyClickedX} copyClickedY={this.copyClickedY} />}
+                {this.state.showCopyPopup && <CutCopyDialog inContainer={true} element={this.props.element} toggleCopyMenu={this.toggleCopyMenu} copyClickedX={this.copyClickedX} copyClickedY={this.copyClickedY} userRole={this.props.userRole} />}
                 {(elemBorderToggle !== 'undefined' && elemBorderToggle) || borderToggle == 'active' ?
                     <div> 
                         <Button copyContext={(e)=>{OnCopyContext(e,this.toggleCopyMenu,true)}} btnClassName={btnClassName} type="element-label" labelText="SB" />

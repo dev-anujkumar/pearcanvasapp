@@ -15,17 +15,21 @@ import {
     FETCH_SLATE_DATA,
     SET_PARENT_NODE,
     ERROR_POPUP,
-    GET_TCM_RESOURCES,
-    PAGE_NUMBER_LOADER
+    PAGE_NUMBER_LOADER,
+    WIRIS_ALT_TEXT_POPUP
 
 } from '../../constants/Action_Constants';
 
-import { sendDataToIframe } from '../../constants/utility.js';
+import { sendDataToIframe, replaceWirisClassAndAttr } from '../../constants/utility.js';
 import { HideLoader, ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 import * as slateWrapperConstants from "./SlateWrapperConstants"
+import { onPasteSuccess, checkElementExistence, prepareDataForTcmCreate } from "./slateWrapperAction_helper"
 
+import { SET_SELECTION } from './../../constants/Action_Constants.js';
+import tinymce from 'tinymce'
+import SLATE_CONSTANTS  from '../../component/ElementSaprator/ElementSepratorConstants';
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
 };
@@ -35,19 +39,20 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
     let  popupSlateData = getState().appStore.popupSlateData
     localStorage.setItem('newElement', 1);
     let slateEntityUrn = parentUrn && parentUrn.contentUrn || popupSlateData && popupSlateData.contentUrn || poetryData && poetryData.contentUrn || config.slateEntityURN
-
     let _requestData = {
         "projectUrn": config.projectUrn,
         "slateEntityUrn":slateEntityUrn,
         "index": outerAsideIndex ? outerAsideIndex : index,
         "type": type
     };
-
     if (type == "LO") {
         _requestData.loref = loref ? loref : ""
     } 
     else if (type == 'ELEMENT_CITATION') {
         _requestData.parentType = "citations"
+    }
+    else if (type && type === "LO_LIST" && config.parentLabel && config.slateType && config.parentLabel === 'part' && config.slateType === SLATE_CONSTANTS.CONTAINER_INTRO) {
+        _requestData.isPart = true
     }
     else if (parentUrn && parentUrn.elementType === 'group') {
         _requestData["parentType"] = "groupedcontent"
@@ -63,9 +68,9 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
             }
         }
     ).then(async createdElemData => {
-        sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         const parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
+        sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         let currentSlateData = newParentData[config.slateManifestURN];
 
         /** [PCAT-8289] ---------------------------- TCM Snapshot Data handling ------------------------------*/
@@ -160,21 +165,15 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 prepareDataForTcmCreate(type, createdElementData, getState, dispatch);
             }
         }
-        
-
+        const activeEditorId = tinymce && tinymce.activeEditor && tinymce.activeEditor.id
+        replaceWirisClassAndAttr(activeEditorId)
         dispatch({
             type: AUTHORING_ELEMENT_CREATED,
             payload: {
                 slateLevelData: newParentData
             }
         })
-        /*if(type === "SHOW_HIDE"){
-            let showHideRevealElement = document.getElementById(`cypress-${index}-2-0`)
-               if(showHideRevealElement){
-                    showHideRevealElement.focus()
-                    showHideRevealElement.blur()
-               } 
-            }*/
+        
         if (cb) {
             cb();
         }   
@@ -198,74 +197,6 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         console.log("create Api fail", error);
         if (cb) {
             cb();
-        }
-    })
-}
-
-export function prepareDataForTcmCreate(type, createdElementData, getState, dispatch) {
-    let elmUrn = [];
-    const tcmData = getState().tcmReducer.tcmSnapshot;
-
-    switch(type){
-        case slateWrapperConstants.WORKED_EXAMPLE:
-        case slateWrapperConstants.CONTAINER:
-            createdElementData.elementdata.bodymatter.map((item) => {
-                if (item.type == "manifest") {
-                    item.contents.bodymatter.map((ele) => {
-                        elmUrn.push(ele.id)
-                    })
-                }
-                else {
-                    elmUrn.push(item.id)
-                }
-    
-            })
-            break;
-        case slateWrapperConstants.SECTION_BREAK:
-        case slateWrapperConstants.CITATION:
-        case slateWrapperConstants.POETRY:
-            createdElementData.contents.bodymatter.map((item) => {
-                elmUrn.push(item.id)
-            })
-            break;
-        case slateWrapperConstants.TEXT:
-        case slateWrapperConstants.ELEMENT_CITATION:
-        case slateWrapperConstants.STANZA:
-        case slateWrapperConstants.IMAGE:
-        case slateWrapperConstants.VIDEO:
-        case slateWrapperConstants.AUDIO:
-            elmUrn.push(createdElementData.id)
-            break;
-        case slateWrapperConstants.MULTI_COLUMN:
-            /** First Column */
-            createdElementData.groupeddata.bodymatter[0].groupdata.bodymatter.map(item => {
-                elmUrn.push(item.id)
-            })
-            /** Second Column */
-            createdElementData.groupeddata.bodymatter[1].groupdata.bodymatter.map(item => {
-                elmUrn.push(item.id)
-            })
-            break;
-        case slateWrapperConstants.POP_UP:
-            elmUrn.push(createdElementData.popupdata.postertextobject[0].id)
-            elmUrn.push(createdElementData.popupdata.bodymatter[0].id)
-            break;
-    }
-
-    elmUrn.map((item) => {
-        return tcmData.push({
-            "txCnt": 1,
-            "isPrevAcceptedTxAvailable": false,
-            "elemURN": item,
-            "feedback": null
-        })
-    })
-    if(tcmData.length > 0 ){
-        sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });}
-    dispatch({
-        type: GET_TCM_RESOURCES,
-        payload: {
-            data: tcmData
         }
     })
 }
@@ -422,7 +353,6 @@ export const handleSplitSlate = (newSlateObj) => (dispatch, getState) => {
     let oldSlateBodymatterLocal = slateLevelData.contents.bodymatter;
     oldSlateBodymatterLocal.splice(splitIndex)
     slateLevelData.contents.bodymatter = oldSlateBodymatterLocal;
-
     return axios.put(
         `${config.REACT_APP_API_URL}v1/slate/split/${config.projectUrn}/${config.slateEntityURN}/${splitIndex}`,
         JSON.stringify({ slateDataList }),
@@ -433,6 +363,40 @@ export const handleSplitSlate = (newSlateObj) => (dispatch, getState) => {
             }
         }
     ).then(res => {
+        // Perform TCM splitSlate
+        axios({
+            method: 'patch',
+            url: '/cypress/trackchanges-srvr/splitslatetcm',
+            timeout: 1000,
+            headers: { "Content-Type": "application/json", "PearsonSSOSession": config.ssoToken },
+            data: {
+                "splitSlateDurn": config.projectUrn, "splitSlateEurn": newSlateObj.entityUrn
+            }
+        })
+        .then(response => {
+            console.log("TCM split slate API success : ", response)
+        })
+        .catch(error => {
+            console.log("TCM split slate API error : ", error)
+        })
+        // Update selection store data after split
+        let selection = getState().selectionReducer.selection || {};
+        if(Object.keys(selection).length > 0 && selection.sourceSlateEntityUrn === config.slateEntityURN && selection.sourceElementIndex >= splitIndex) {
+            selection.sourceSlateEntityUrn = newSlateObj.entityUrn;
+            selection.sourceSlateManifestUrn = newSlateObj.containerUrn;
+            selection.element.slateVersionUrn = newSlateObj.containerUrn;
+
+            if('deleteElm' in selection && Object.keys(selection.deleteElm).length > 0) {
+                selection.deleteElm.cutCopyParentUrn.contentUrn = newSlateObj.entityUrn;
+                selection.deleteElm.cutCopyParentUrn.manifestUrn = newSlateObj.containerUrn;
+                selection.deleteElm.cutCopyParentUrn.slateLevelData = null;
+                selection.deleteElm.index = (selection.sourceElementIndex - splitIndex);
+            }
+
+            selection.sourceElementIndex = (selection.sourceElementIndex - splitIndex);
+            dispatch({ type: SET_SELECTION, payload: selection });
+        }
+
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
         let parentData = getState().appStore.slateLevelData;
         let currentParentData = JSON.parse(JSON.stringify(parentData));
@@ -454,11 +418,6 @@ export const handleSplitSlate = (newSlateObj) => (dispatch, getState) => {
         dispatch({type: ERROR_POPUP, payload:{show: true}})
     })
 }
-
-/**
- * getElementPageNumber | is to get page number on pagenumber option toggle
- */
-export const getElementPageNumber = () => (dispatch) => { }
 
 /**
  * setElementPageNumber | is to set page number relative to element back to store and backend
@@ -619,7 +578,6 @@ export const setSlateEntity = (setSlateEntityParams) => (dispatch, getState) => 
     })
 }
 
-
 export const accessDenied = (value) => (dispatch, getState) => {
     dispatch({
         type: ACCESS_DENIED_POPUP,
@@ -700,4 +658,143 @@ export const pageData = (pageNumberData) => (dispatch, getState) => {
             allElemPageData : getState().appStore.allElemPageData
         }
     });
+}
+
+export const pasteElement = (params) => async (dispatch, getState) => {
+    let selection = getState().selectionReducer.selection || {};
+
+    if(Object.keys(selection).length > 0 && 'element' in selection) {
+        const {
+            index,
+            parentUrn,
+            asideData,
+            poetryData
+        } = params
+        config.currentInsertedIndex = index;
+        localStorage.setItem('newElement', 1);
+
+        let slateEntityUrn = config.slateEntityURN;
+        if(parentUrn && 'contentUrn' in parentUrn) {
+            slateEntityUrn = parentUrn.contentUrn;
+        } else if(poetryData && 'contentUrn' in poetryData) {
+            slateEntityUrn = poetryData.contentUrn;
+        }
+
+        let cutIndex = index;
+        let elmExist = false;
+        if(slateEntityUrn === config.slateEntityURN && selection.sourceSlateEntityUrn === config.slateEntityURN && selection.operationType === 'cut') {
+            elmExist = await checkElementExistence(config.slateEntityURN, selection.element.id);
+            if(cutIndex > selection.sourceElementIndex) {
+                cutIndex -= elmExist ? 1 : 0;
+            }
+        }
+
+        if(slateEntityUrn !== config.slateEntityURN && selection.sourceEntityUrn === slateEntityUrn && selection.operationType === 'cut') {
+            elmExist = await checkElementExistence(config.slateEntityURN, selection.element.id);
+            let elmIndexes = selection.sourceElementIndex.split('-');
+            let sourceElementIndex = elmIndexes[elmIndexes.length -1];
+            if(cutIndex > sourceElementIndex) {
+                cutIndex -= elmExist ? 1 : 0;
+            }
+        }
+        
+        let elmHtml = ('html' in selection.element) ? selection.element.html : {};
+        let elmType = ['figure'];
+        let elmSubtype = ['assessment'];
+        if(elmType.indexOf(selection.element.type) >= 0 && 
+            'figuretype' in selection.element && elmSubtype.indexOf(selection.element.type) >= 0) {
+            if(!('html' in selection.element)) {
+                elmHtml = { "title": selection.element.title.text || "" }
+            }
+        }
+        
+        if(selection.operationType === 'copy' && 'html' in selection.element && 'text' in  selection.element.html) {
+            let htmlText = (selection.element.html.text);
+            htmlText = htmlText.replace(/(\"page-link-[0-9]{1,2}-[0-9]{2,4}\")/gi, () => `"page-link-${Math.floor(Math.random() * 100)}-${Math.floor(Math.random() * 10000)}"`);
+            selection.element.html.text = htmlText;
+        }
+
+        let _requestData = {
+            "content": [{
+                "type": selection.element.type,
+                "index": cutIndex,
+                "inputType": selection.inputType,
+                "inputSubType": selection.inputSubType,
+                "schema": selection.element.schema,
+                "html": elmHtml,
+                "slateVersionUrn": selection.sourceSlateManifestUrn,
+                "id": selection.element.id,
+                "elementParentEntityUrn": selection.sourceEntityUrn,// selection.sourceSlateEntityUrn,
+                "versionUrn": selection.element.versionUrn,
+                "contentUrn": selection.element.contentUrn,
+                "destinationSlateUrn": slateEntityUrn
+            }]
+        };
+
+        if(selection.operationType.toUpperCase() === "COPY") {
+            delete _requestData.content[0].slateVersionUrn;
+            delete _requestData.content[0].id;
+            delete _requestData.content[0].versionUrn;
+            delete _requestData.content[0].contentUrn;
+        }
+
+        if(selection.element.type === "figure") {
+            _requestData = {
+                "content": [{
+                    ..._requestData.content[0],
+                    "figuredata": selection.element.figuredata
+                }]
+            }
+        }
+
+        if('manifestationUrn' in selection.element) {
+            _requestData = {
+                "content": [{
+                    ..._requestData.content[0],
+                    "manifestationUrn": selection.element.manifestationUrn
+                }]
+            }
+        }
+
+        try {
+            let url = `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/slate/${slateEntityUrn}/element/paste?type=${selection.operationType.toUpperCase()}`
+            const createdElemData = await axios.post(
+                url,
+                JSON.stringify(_requestData),
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "PearsonSSOSession": config.ssoToken
+                    }
+                }
+            )
+            if (createdElemData && createdElemData.status == '200') {
+                let responseData = Object.values(createdElemData.data)
+                const pasteSuccessArgs = {
+                    responseData: responseData[0],
+                    index,
+                    cutIndex,
+                    dispatch,
+                    getState,
+                    elmExist,
+                    parentUrn,
+                    asideData,
+                    poetryData,
+                    slateEntityUrn
+                };
+        
+                onPasteSuccess(pasteSuccessArgs)
+            }
+        }
+        catch(error) {
+            sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
+            console.log("Exceptional Error on pasting the element:::", error);
+        }
+    }
+}
+export const wirisAltTextPopup = (data) => (dispatch) => {
+    return dispatch({
+        type: WIRIS_ALT_TEXT_POPUP,
+        payload: data
+    })
 }

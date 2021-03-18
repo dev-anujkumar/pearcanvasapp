@@ -12,7 +12,7 @@ export const loadTrackChanges = (elementId) => {
     const currentSlateUrn = config.tcmslatemanifest ? config.tcmslatemanifest : config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN;
     const currentProjectEntityUrn = config.projectEntityUrn;
     const slateEntityUrn = config.tempSlateEntityURN ? config.tempSlateEntityURN : config.slateEntityURN;
-    const QUERY_URL = `?dURN=${currentProjectUrn}&sURN=${currentSlateUrn}&slateEntityURN=${slateEntityUrn}&slateTitle=${currentSlateTitle}&entityURN=${currentProjectEntityUrn}`;
+    const QUERY_URL = `?dURN=${currentProjectUrn}&sURN=${currentSlateUrn}&slateEntityURN=${slateEntityUrn}&slateTitle=${encodeURIComponent(currentSlateTitle)}&entityURN=${currentProjectEntityUrn}`;
     const CURRENT_ELEMENT_QUERY = elementId ? `&eURN=${elementId}` : "";
     window.open(config.TCM_DASHBOARD_UI_URL + QUERY_URL + CURRENT_ELEMENT_QUERY, 'tcmwin');
   }

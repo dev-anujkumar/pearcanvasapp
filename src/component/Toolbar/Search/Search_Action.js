@@ -59,7 +59,7 @@ export const getContainerData = (searchTerm, deeplink = false) => {
             searchEvent.totalCount = 0;
         }
 
-        dispatch({ type: SET_SEARCH_URN, payload, parent, deeplink });
+        dispatch({ type: SET_SEARCH_URN, payload, parent, deeplink, scroll: false, scrollTop: 0 });
     }
 }
 
@@ -103,6 +103,20 @@ export const getCommentElements = (q) => {
             }
         }
 
-        dispatch({ type: SET_COMMENT_SEARCH_URN, payload, parent });
+        dispatch({ type: SET_COMMENT_SEARCH_URN, payload, parent, scroll: false, scrollTop: 0 });
+    }
+}
+
+export const setScroll = (scrollArgs) => {
+    return (dispatch, getState) => {
+        let { type, scrollTop } = scrollArgs;
+        let searchReducer = '';
+        if(type === SET_SEARCH_URN) {
+            searchReducer = getState().searchReducer;
+            dispatch({ type, payload: searchReducer.searchTerm, parent: searchReducer.parentId, deeplink: searchReducer.deeplink, scroll: true, scrollTop });
+        } else if(type === SET_COMMENT_SEARCH_URN) {
+            searchReducer = getState().commentSearchReducer;
+            dispatch({ type, payload: searchReducer.commentSearchTerm, parent: searchReducer.parentId, scroll: true, scrollTop });
+        }
     }
 }

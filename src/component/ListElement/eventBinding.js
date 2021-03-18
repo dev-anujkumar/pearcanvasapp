@@ -95,7 +95,7 @@ export const bindKeyDownEvent = (editor, e, element,showHideCallback) => {
     /**
      * Case - pressing Enter on blank list item
      */
-    if ((anchorNode.tagName === "LI" && !imgElement.length ) || anchorNode.tagName === "BR" || (nodeNames.includes(anchorNode.tagName))) {
+    if ((anchorNode.tagName === "LI" && !imgElement.length && !anchorNode.textContent) || anchorNode.tagName === "BR" || (nodeNames.includes(anchorNode.tagName))) {
         if ((e.metaKey && e.which === 13) || (e.which === 13)) {
             // if only mathml image is present in editor //
             if ((editor.targetElm.textContent.length === 0) ||
@@ -352,7 +352,7 @@ const reformatting = (editor) => {
     let allLiElement = editor.targetElm.querySelectorAll('li')
     let getSelfInnerText = (elememt) => {
         return [].reduce.call(elememt.childNodes, function (a, b) {
-            return a + (b.nodeType === 3 ? b.textContent : '');
+            return a + (b ? b.textContent : '');
         }, '');
     }
     for (let i = 0; i < allLiElement.length; i++) {
@@ -362,7 +362,7 @@ const reformatting = (editor) => {
             let selfInnerText = getSelfInnerText(currentLi)
             let firstChildTag = currentLi.children[0].tagName
 
-            if (selfInnerText === "" && firstChildTag !== "BR") {
+            if (selfInnerText === "" && firstChildTag !== "BR" && firstChildTag !== "IMG") {
                 let parentOl = currentLi.parentNode
                 let closestLi = parentOl.closest('li')
                 if ((closestLi.findChildren('ol').length > 0) || (closestLi.findChildren('ul').length > 0)) {

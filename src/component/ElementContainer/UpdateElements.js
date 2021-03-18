@@ -4,7 +4,8 @@ import config from '../../config/config';
 import { matchHTMLwithRegex, removeBlankTags } from '../../constants/utility.js'
 import store from '../../appstore/store'
 import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
-
+import { findElementType } from "../CanvasWrapper/CanvasWrapper_Actions";
+import { storeOldAssetForTCM } from './ElementContainer_Actions'
 const indivisualData = {
     schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
     textsemantics: [ ],
@@ -18,7 +19,9 @@ const replaceUnwantedtags = (html,flag) => {
     if(flag){
         tempDiv.innerHTML = tempDiv.innerHTML.replace(/<br>/g, "").replace(/(<sup><\/sup>)/g, "");
     }
-    return removeBlankTags(tempDiv.innerHTML);
+    tempDiv.innerHTML = removeBlankTags(tempDiv.innerHTML)
+    tempDiv.innerHTML = handleBlankLineDom(tempDiv.innerHTML)
+    return tempDiv.innerHTML;
 }
 
 /**
@@ -113,6 +116,7 @@ const podHtmlmatchWithRegex = (html) => {
  * @param {*} secondaryOption 
  */
 export const generateCommonFigureDataInteractive = (index, previousElementData, elementType, primaryOption, secondaryOption) => {
+    const oldFigureData = Object.assign({},previousElementData.figuredata);
     let titleDOM = document.getElementById(`cypress-${index}-0`),
         subtitleDOM = document.getElementById(`cypress-${index}-1`),
         captionDOM = document.getElementById(`cypress-${index}-3`),
@@ -180,6 +184,8 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
 
     if (previousElementData.figuredata.interactivetype === "pdf" || previousElementData.figuredata.interactivetype === "pop-up-web-link" ||
         previousElementData.figuredata.interactivetype === "web-link") {
+        const oldPostertextObj = previousElementData?.figuredata?.postertext ? Object.freeze(previousElementData.figuredata.postertext) : { text: "" };
+        const oldPostertext = previousElementData?.figuredata?.postertext?.text || "";
         let pdfPosterTextDOM = document.getElementById(`cypress-${index}-2`)
         let posterTextHTML = pdfPosterTextDOM ? pdfPosterTextDOM.innerHTML : ""
         let posterText = pdfPosterTextDOM ? pdfPosterTextDOM.innerText : ""
@@ -189,6 +195,9 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
             schema : "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
             text : posterText,
             textsemantics : [ ]
+        }
+        if(posterText != oldPostertext){
+            store.dispatch(storeOldAssetForTCM({ ...oldFigureData, postertext: oldPostertextObj }));
         }
     }
     return data
@@ -380,37 +389,26 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
  */
 export const generateAssessmentData = (index, previousElementData, elementType, primaryOption, secondaryOption) => {
     let assessmentNodeSelector = `div[data-id='${previousElementData.id}'] figure.figureAssessment `;
-    let assessmenttitle = document.querySelector(assessmentNodeSelector + '#single_assessment_title').innerText; //PCAT-6828 fixed
-    let assessmentId = document.querySelector(assessmentNodeSelector + 'div.singleAssessmentIdInfo').innerText;
-    let isPuf = previousElementData && previousElementData.figuredata && previousElementData.figuredata.elementdata && (previousElementData.figuredata.elementdata.assessmentformat === "puf" || previousElementData.figuredata.elementdata.assessmentformat === "learnosity");
-    let getAsid = '';
+    const assessmentNode = document.querySelector(assessmentNodeSelector);
+    const assessmentId = assessmentNode.querySelector('span.embedded-id').innerText;
+    const assessmentTitle = assessmentNode.querySelector('span.embedded-title').innerText;
+    const assessmentItemId = assessmentNode.querySelector('span.embedded-itemid').innerText;
+    const assessmentItemTitle = assessmentNode.querySelector('span.embedded-itemtitle') && assessmentNode.querySelector('span.embedded-itemtitle').innerText;
 
-    if (isPuf) {
-        assessmenttitle = assessmenttitle.split(':')[1];
-    }
-
-    let assessmenttTitleHTML = `<p>${assessmenttitle}</p>`;
     let dataToSend = {
         ...previousElementData,
-        inputType : elementTypes[elementType][primaryOption]['enum'],
+        inputType: elementTypes[elementType][primaryOption]['enum'],
         inputSubType: elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
         html: {
-            title: assessmenttTitleHTML
+            title: `<p>${assessmentTitle}</p>`
         }
     }
 
-    dataToSend.figuredata.elementdata;
-    if (isPuf) {
-        getAsid = assessmentId && assessmentId.split(' ').length && assessmentId.split(' ')[2];
-    } else {
-        getAsid = assessmentId && assessmentId.split(' ').length && assessmentId.split(' ')[1];
-    }
-        let assessmentItemId = document.querySelector(assessmentNodeSelector + 'div.singleAssessmentItemIdInfo').innerText;
-        let getAsItemid = assessmentItemId && assessmentItemId.split(' ')[2];
-        dataToSend.figuredata.elementdata.assessmentitemid = getAsItemid ? getAsItemid : "";
-    
+    dataToSend.figuredata.elementdata.assessmentid = assessmentId ? assessmentId : "";
+    dataToSend.figuredata.elementdata.assessmenttitle = assessmentTitle ? assessmentTitle : "";
+    dataToSend.figuredata.elementdata.assessmentitemid = assessmentItemId ? assessmentItemId : "";
+    dataToSend.figuredata.elementdata.assessmentitemtitle = assessmentItemTitle ? assessmentItemTitle : "";
 
-    dataToSend.figuredata.elementdata.assessmentid = getAsid ? getAsid : "";
     // dataToSend.figuredata.id = getAsid ? getAsid : "";   //PCAT-6792 fixes
     // dataToSend.figuredata.elementdata.posterimage.imageid = getAsid ? getAsid : ""; //PCAT-6792 fixes
 
@@ -419,9 +417,9 @@ export const generateAssessmentData = (index, previousElementData, elementType, 
         delete previousElementData.figuredata.id;
     }
     /** [PCAT-7961] | case(2) - As no image is present for the assessment,the  'posterimage' key is removed */
-    let isPosterImage = previousElementData && previousElementData.figuredata && previousElementData.figuredata.elementdata && previousElementData.figuredata.elementdata.posterimage                          
-    if(isPosterImage){
-         delete previousElementData.figuredata.elementdata.posterimage
+    let isPosterImage = previousElementData && previousElementData.figuredata && previousElementData.figuredata.elementdata && previousElementData.figuredata.elementdata.posterimage
+    if (isPosterImage) {
+        delete previousElementData.figuredata.elementdata.posterimage
     }
 
     let usageType = document.querySelector(assessmentNodeSelector + 'span.singleAssessment_Dropdown_currentLabel').innerText;
@@ -539,6 +537,7 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
         case elementTypeConstant.BLOCKFEATURE:
         case elementTypeConstant.ELEMENT_LIST:
         case elementTypeConstant.POETRY_STANZA:
+            const elementTypeObj = findElementType(previousElementData, index)
             if (type === 'stanza') { /**Resolve PCAT- 9199 */
                 elementType = 'stanza'
             }    
@@ -548,8 +547,8 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
             innerHTML = revealTextData.innerHTML
             innerText = revealTextData.innerText
             let attributionText=tinyMCE.$(node).find('.blockquoteTextCredit').text()
-            let inputElementType=elementTypes[elementType][primaryOption]['enum'];
-            let inputElementSubType=elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'];
+            let inputElementType = elementTypes[elementTypeObj.elementType][elementTypeObj.primaryOption]['enum'];
+            let inputElementSubType = elementTypes[elementTypeObj.elementType][elementTypeObj.primaryOption]['subtype'][elementTypeObj.secondaryOption]['enum'];
             if ((attributionText.length == 0 && inputElementSubType == "MARGINALIA") || (attributionText.length == 0 && inputElementSubType == "BLOCKQUOTE")) {
                 inputElementSubType = "BLOCKQUOTE"
             }
@@ -569,7 +568,7 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                 inputType : parentElement && (parentElement.type === "popup" || parentElement.type === "citations" || parentElement.type === "showhide" && previousElementData.type === "element-authoredtext" || parentElement.type === "poetry" && previousElementData.type === "element-authoredtext") ? "AUTHORED_TEXT" : inputElementType,
                 inputSubType : parentElement && (parentElement.type == "popup" || parentElement.type === "poetry") ? "NA" : inputElementSubType
             }
-
+            
             if(type==="stanza"){
                 dataToReturn.html.text=`<p>${innerHTML}</p>`
                 delete dataToReturn.poetrylines;
@@ -671,4 +670,13 @@ export const createOpenerElementData = (elementData, elementType, primaryOption,
         config.savingInProgress = true
     }
     return dataToReturn;
+}
+export const handleBlankLineDom = (html,replaceText)=>{
+    if(replaceText){
+        html = html.replace(/<span contenteditable="false" id="blankLine" class="answerLineContent"><br><\/span>/g,`<span contenteditable="false" id="blankLine" class="answerLineContent">${replaceText}</span>`)
+        html = html.replace(/<span contenteditable="false" id="blankLine" class="answerLineContent"><\/span>/g,`<span contenteditable="false" id="blankLine" class="answerLineContent">${replaceText}</span>`)
+        return html;
+    } else {
+        return html.replace(/<span contenteditable="false" id="blankLine" class="answerLineContent"><\/span>/g,'<span contenteditable="false" id="blankLine" class="answerLineContent"><br></span>')
+    }
 }

@@ -169,45 +169,6 @@ table p {
     display: block;
     position : absolute;
 }
-/* .cypress-editable:empty::before {
-    content: attr(placeholder);
-    color: #ADADAD; 
-    display: block;
-}
-.cypress-editable p:empty::before {
-    content: " rrr ";
-    color: #ADADAD; 
-    display: block;
-} */
-
-/* .content-editor:before {
-    display: block;
-}
-
-.content-editor.empty:before {
-    display: block;
-    position: absolute;
-    content: attr(placeholder);
-} */
-
-/* .cypress-editable[contenteditable]:focus::before {
-    content: attr(placeholder);
-    color: #ADADAD; 
-    display: block;
-} */
-
-/* [placeholder]:empty:focus::before {
-    content: "";
-} */
-
-/* 
-.cypress-editable[contenteditable]:empty:before {
-    content: attr(placeholder);
-    display: block;
-    font-size: 13px;
-    color: #888888;
-    cursor: text;
-} */
 .fa {
     display: inline-block !important;
     /* font: normal normal normal 14px/1 FontAwesome  !important; */
@@ -337,7 +298,19 @@ abbr[title="Slate Link"] sup::after {
     text-decoration: underline dotted;
     border-bottom: 1.1px dotted #007FA3;
 }
-
+dfn[audio-id]:not(.sup):not(.sub)::after,
+dfn[audio-id] sub::after,
+dfn[audio-id] sup::after {
+    content: url('./../images/GlossaryAudio/audioEnable.svg');
+    top: 3px;
+    right: 0;
+    left: 0;
+    bottom: 1px;
+    margin: 0 auto;
+    padding: 0 2px;
+    position: relative;
+    background: transparent;
+}
 /*  Cross Link dropdown color Design  */
 .tox .tox-collection--list .tox-collection__item--active:not(.tox-collection__item--state-disabled){
     background-color: #efefef !important;
@@ -356,4 +329,7 @@ p code, ul code, ol code{
 }
 .overlay-0-0.overlayLittle-0-1 div[class^="modal-"] {
     margin: auto;
+}
+.Wirisformula, .temp_Wirisformula{
+    color: red !important;
 }

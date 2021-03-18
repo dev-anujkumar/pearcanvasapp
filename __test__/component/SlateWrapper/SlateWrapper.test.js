@@ -249,31 +249,6 @@ describe('Testing <SlateWrapper> Component', () => {
         it('Simulating handleSplitSlate with slate data function', () => {
             slateWrapperInstance.handleSplitSlate()
         })
-        it('Simulating deleteRejected with slate data function', () => {
-            slateWrapperInstance.deleteRejected()
-        })
-        it('Simulating deleteAccepted with slate data function', () => {
-            const localStore = mockStore({
-                slateLockReducer: { 
-                    slateLockInfo: {
-                        isLocked: true,
-                        userId: 'c5Test01'
-                    } 
-                },
-                appStore: { slateTitleUpdated: {}, slateLevelData : {}, activeElement: {} },
-                toolbarReducer: { elemBorderToggle: true },
-                metadataReducer: { currentSlateLOData: {} },
-                audioReducer: {openRemovePopUp: false},
-                searchReducer: {searchTerm: '', parentId: '', deeplink: false},
-                commentSearchReducer: {commentSearchTerm: '', parentId: ''},
-                assessmentReducer:{showConfirmationPopup:false}
-            })
-            const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props } tocDeleteMessage = {{ messageType : 'test' }} /> </Provider>)
-            let slateWrapperInstance = slateWrapper.find("SlateWrapper").instance()
-            const spydeleteAccepted = jest.spyOn(slateWrapperInstance, 'deleteAccepted')
-            slateWrapperInstance.deleteAccepted()
-            expect(spydeleteAccepted).toHaveBeenCalled();
-        })
         it('swap data', () => {
             let event={oldDraggableIndex:"",
             newDraggableIndex:""}

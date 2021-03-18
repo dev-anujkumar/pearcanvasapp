@@ -10,6 +10,7 @@ import config from "../../config/config.js"
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js'
 import MultiColumnContainerContext from '../ElementContainer/MultiColumnContext.js'
 import { checkSlateLock } from '../../js/slateLockUtility.js'
+import { MULTICOLUMN_SOURCE } from '../../constants/Element_Constants.js';
 
 
 /** External Components */
@@ -48,6 +49,9 @@ class MultiColumnContainer extends PureComponent {
                 parentUrn={parentUrn}
                 parentIndex={parentIndex}
                 splithandlerfunction={_context.splithandlerfunction}
+                userRole={this.props.userRole}
+                pasteElement={this.props.pasteElement}
+                source={MULTICOLUMN_SOURCE}
             />
         )
     }
@@ -86,6 +90,9 @@ class MultiColumnContainer extends PureComponent {
                                     parentUrn={parentUrn}
                                     parentIndex={parentIndex}
                                     splithandlerfunction={this.context.splithandlerfunction}
+                                    userRole={this.props.userRole}
+                                    pasteElement={this.props.pasteElement}
+                                    source={MULTICOLUMN_SOURCE}
                                 />
                             }
                             <ElementContainer
@@ -100,6 +107,7 @@ class MultiColumnContainer extends PureComponent {
                                 onClickCapture={this.context.onClickCapture}
                                 parentElement = {this.context.element}
                                 onListSelect={this.context.onListSelect}
+                                userRole={this.props.userRole}
                             />
                             <ElementSaprator
                                 index={index}
@@ -112,6 +120,9 @@ class MultiColumnContainer extends PureComponent {
                                 parentUrn={parentUrn}
                                 parentIndex={parentIndex}
                                 splithandlerfunction={this.context.splithandlerfunction}
+                                userRole={this.props.userRole}
+                                pasteElement={this.props.pasteElement}
+                                source={MULTICOLUMN_SOURCE}
                             />  
                         </React.Fragment>
                     )

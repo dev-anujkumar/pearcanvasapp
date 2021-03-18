@@ -40,7 +40,8 @@ import {
     VERSIONING_SLATEMANIFEST,
     SET_TOAST_MESSAGE,
     SHOW_TOAST_MESSAGE,
-    STORE_OLD_ASSET_FOR_TCM
+    STORE_OLD_ASSET_FOR_TCM,
+    WIRIS_ALT_TEXT_POPUP
 } from '../constants/Action_Constants';
 
 /**
@@ -70,7 +71,9 @@ const INITIAL_STATE = {
     usageTypeListData:{},
     slateLength: "25",
     toastMessage:"",
-    showToast:false
+    showToast:false,
+    oldFiguredata : {},
+    wirisAltText : {}
 };
 
 const INITIAL_ACTION = {
@@ -246,6 +249,11 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
                 ...state,
                 oldFiguredata: action.payload.oldFiguredata
             }
+        case WIRIS_ALT_TEXT_POPUP : 
+        return {
+            ...state,
+            wirisAltText : action.payload
+        }
         default:
             return state;
     }

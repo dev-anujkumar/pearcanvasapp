@@ -68,7 +68,30 @@ let initialState = {
         "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635": "wip"       
     },
     searchReducer: {
-        searchTerm: ""
+        searchTerm: "",
+        parentId: "",
+        deeplink: true,
+        scroll: false,
+        scrollTop: 0
+    },
+    commentSearchReducer: {
+        commentSearchTerm: "",
+        parentId: "",
+        scroll: false,
+        scrollTop: 0
+    },
+    selectionReducer: {
+        selection: {
+            activeAnimation: true,
+            deleteElm: {id: "urn:pearson:work:2b71e769-6e07-4776-ad94-13bedb5fff62", type: "element-authoredtext", parentUrn: undefined, asideData: undefined, contentUrn: "urn:pearson:entity:da9f3f72-2cc7-4567-8fb9-9a887c360979"},
+            element: {id: "urn:pearson:work:2b71e769-6e07-4776-ad94-13bedb5fff62", type: "element-authoredtext", schema: "http://schemas.pearson.com/wip-authoring/element/1"},
+            inputSubType: "NA",
+            inputType: "AUTHORED_TEXT",
+            operationType: "copy",
+            sourceElementIndex: 2,
+            sourceSlateEntityUrn: "urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1fb",
+            sourceSlateManifestUrn: "urn:pearson:manifest:e30674d0-f7b1-4974-833f-5f2e19a9fea6"
+        }
     }
 }
 

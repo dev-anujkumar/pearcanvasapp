@@ -4,18 +4,19 @@ import PropTypes from 'prop-types';
 
 import elementList from './elementTypes.js';
 import { dropdownArrow } from './../../images/ElementButtons/ElementButtons.jsx';
- import { conversionElement } from './Sidebar_Action';
+ import { conversionElement, setBCEMetadata } from './Sidebar_Action';
 import { updateElement } from '../ElementContainer/ElementContainer_Actions';
 import { setCurrentModule } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import './../../styles/Sidebar/Sidebar.css';
-import { hasReviewerRole } from '../../constants/utility.js'
+import { hasReviewerRole, getSlateType } from '../../constants/utility.js'
 import config from '../../../src/config/config.js';
 import PopUp from '../PopUp/index.js';
 import { SYNTAX_HIGHLIGHTING } from '../SlateWrapper/SlateWrapperConstants.js';
 import { showBlocker,hideBlocker } from '../../js/toggleLoader';
 import { customEvent } from '../../js/utils.js';
 import { disabledPrimaryOption } from '../../constants/Element_Constants.js';
-import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
+import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants';
+
 
 class Sidebar extends Component {
     constructor(props) {
@@ -51,16 +52,16 @@ class Sidebar extends Component {
     static getDerivedStateFromProps = (nextProps, prevState) => {
         if(Object.keys(nextProps.activeElement).length > 0) {
             let elementDropdown = prevState.elementDropdown;
-            let numberStartFrom = prevState.bceNumberStartFrom;
-            let bceToggle = prevState.bceToggleValue;
-            let bceSyntaxHighlight = prevState.syntaxHighlightingToggleValue;
+            //let numberStartFrom = prevState.bceNumberStartFrom;
+            //let bceToggle = prevState.bceToggleValue;
+            //let bceSyntaxHighlight = prevState.syntaxHighlightingToggleValue;
             let podValue = prevState.podValue;
             let podOption = prevState.podOption
             if(nextProps.activeElement.elementId !== prevState.activeElementId) {
                 elementDropdown = '';
-                numberStartFrom = nextProps.activeElement.startNumber;
-                bceToggle = nextProps.activeElement.numbered;
-                bceSyntaxHighlight = nextProps.activeElement.syntaxhighlighting ;
+                //numberStartFrom = nextProps.activeElement.startNumber;
+                //bceToggle = nextProps.activeElement.numbered;
+                //bceSyntaxHighlight = nextProps.activeElement.syntaxhighlighting ;
                 podValue = nextProps.activeElement.podwidth;
                 podOption = false
             }
@@ -72,9 +73,9 @@ class Sidebar extends Component {
                 activePrimaryOption: nextProps.activeElement.primaryOption,
                 activeSecondaryOption: nextProps.activeElement.secondaryOption,
                 activeLabelText: nextProps.activeElement.tag,
-                bceNumberStartFrom : numberStartFrom,
-                bceToggleValue : bceToggle,
-                syntaxHighlightingToggleValue : bceSyntaxHighlight,
+                bceNumberStartFrom : nextProps.activeElement.startNumber,
+                bceToggleValue : nextProps.activeElement.numbered,
+                syntaxHighlightingToggleValue : nextProps.activeElement.syntaxhighlighting,
                 podValue : podValue,
                 podOption : podOption,
                 usageType:nextProps.activeElement.usageType
@@ -297,7 +298,7 @@ class Sidebar extends Component {
             }
     
             if(attributionsList.length > 0) {
-                let activeElement = document.querySelector(`[data-id="${this.props.activeElement.elementId}"]`)
+                //let activeElement = document.querySelector(`[data-id="${this.props.activeElement.elementId}"]`)
                 //let attrNode = activeElement ? activeElement.querySelector(".blockquoteTextCredit") : null
                 let attrValue = ""
                 attributions = attributionsList.map(item => {
@@ -365,6 +366,7 @@ class Sidebar extends Component {
     * handleBceToggle function responsible for handling toggle value for BCE element
     */
     handleBceToggle = () => {
+        this.props.setBCEMetadata('numbered',!this.state.bceToggleValue);
         this.setState({
             bceToggleValue : !this.state.bceToggleValue
         }, () => this.handleBceBlur() )
@@ -391,6 +393,7 @@ class Sidebar extends Component {
                 emTags[0].outerHTML = innerHTML;
             }
         })
+        this.props.setBCEMetadata('syntaxhighlighting',!this.state.syntaxHighlightingToggleValue);
         this.setState({
             syntaxHighlightingToggleValue: !this.state.syntaxHighlightingToggleValue
         }, () => {
@@ -419,6 +422,7 @@ class Sidebar extends Component {
             this.handleSyntaxHighlightingPopup(true);
         }
         else {
+            this.props.setBCEMetadata('syntaxhighlighting',currentToggleValue);
             this.setState({
                 syntaxHighlightingToggleValue: currentToggleValue
             }, () => this.handleBceBlur())
@@ -430,14 +434,15 @@ class Sidebar extends Component {
     */
     handleBceNumber = (e) => {
         const regex = /^[0-9]*(?:\.\d{1,2})?$/
-        if(regex.test(e.target.value)){                              // applying regex that will validate the value coming is only number
-            this.setState({ bceNumberStartFrom: e.target.value }, () => {
-            })
+        if(regex.test(e.target.value)){      
+            this.props.setBCEMetadata('startNumber',e.target.value);                        // applying regex that will validate the value coming is only number
+            this.setState({ bceNumberStartFrom: e.target.value })
         }
     }
 
     
     showModuleName = (e) => {
+        const slateType = getSlateType(this.props.slateLevelData[config.slateManifestURN])
        if(this.props.activeElement.elementId){
         this.props.setCurrentModule(e.currentTarget.checked);
         let els = document.getElementsByClassName('moduleContainer');
@@ -464,7 +469,7 @@ class Sidebar extends Component {
         }
         let data = {
             "elementdata": {
-                level: "chapter",
+                level: slateType === "partintro" ? "part" : "chapter",
                 groupby: groupby
             },
             "metaDataAnchorID": [this.props.activeElement.elementId],
@@ -590,7 +595,8 @@ const mapStateToProps = state => {
         activeElement: state.appStore.activeElement,
         showModule:state.metadataReducer.showModule,
         permissions : state.appStore.permissions,
-        showHideObj:state.appStore.showHideObj
+        showHideObj:state.appStore.showHideObj,
+        slateLevelData: state.appStore.slateLevelData
     };
 };
 
@@ -599,6 +605,7 @@ export default connect(
     {
         updateElement,
         setCurrentModule,
-        conversionElement
+        conversionElement,
+        setBCEMetadata
     }
 )(Sidebar);

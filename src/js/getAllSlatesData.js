@@ -1,7 +1,7 @@
 import { sendDataToIframe } from '../constants/utility'
 import config from '../config/config';
 import { GET_ALL_SLATES_DATA, SET_CURRENT_SLATE_DATA } from '../constants/Action_Constants';
-let containerType = ['project', 'part', 'chapter', 'module']
+let containerType = ['project', 'part', 'chapter', 'module','appendix']
 
 /**
  * @function fetchAllSlatesData
@@ -85,31 +85,36 @@ const prepareContents = (data) => {
 export const prepareAllSlateData = (allSlatesData) => dispatch => {
     let parentData = allSlatesData && allSlatesData['parentData'] ? allSlatesData['parentData'] : {},
         childrenData = allSlatesData && allSlatesData['childrenData'] ? allSlatesData['childrenData'] :{};
-    let allProjectData = {},
-        allBodyMatterData = []
+    let allProjectData = {};
 
     if (parentData) {
         for (let matterType in parentData) {
             allProjectData[matterType] = prepareContainerData(parentData[matterType], matterType)
         }
     }
-    allBodyMatterData = allProjectData['bodymatter']
+    allProjectData['bodymatter'] = setAllMatterContent(allProjectData['bodymatter'], childrenData);
+    allProjectData['frontmatter'] = setAllMatterContent(allProjectData['frontmatter'], childrenData);
+    allProjectData['backmatter'] = setAllMatterContent(allProjectData['backmatter'], childrenData);
+    dispatch({
+        type: GET_ALL_SLATES_DATA,
+        payload: { allSlateData: allProjectData }
+    })
 
-    if (allProjectData['bodymatter'] != [] && childrenData !={}) {
+}
 
-        allBodyMatterData.forEach((container) => {
+const setAllMatterContent = (processedData, childrenData) => {
+    if (processedData != [] && childrenData != {}) {
+        processedData.forEach((container) => {
             container = setChildContents(container, childrenData)
         })
-
-        allBodyMatterData.forEach((container) => {
+        processedData.forEach((container) => {
             if (container.contents) {
                 container.contents.forEach((data) => {
                     data = setChildContents(data, childrenData)
                 })
             }
         })
-
-        allBodyMatterData.forEach((container) => {
+        processedData.forEach((container) => {
             if (container.contents) {
                 container.contents.forEach((item) => {
                     if (item.contents) {
@@ -121,13 +126,7 @@ export const prepareAllSlateData = (allSlatesData) => dispatch => {
             }
         })
     }
-
-    allProjectData['bodymatter'] = allBodyMatterData
-    dispatch({
-        type: GET_ALL_SLATES_DATA,
-        payload: { allSlateData: allProjectData }
-    })
-
+    return processedData;
 }
 
 /**
@@ -162,19 +161,24 @@ export const setCurrentSlateAncestorData = (allSlateData) => dispatch => {
         currentSlateData = {},
         matterType = "",
         matterTypeData = [];
-
-    switch (config.parentEntityUrn) {
-        case 'Front Matter':
+    switch (config.parentOfParentItem) {
+        case 'frontmatter':
             matterType = 'FrontMatter';
             matterTypeData = allSlateData && allSlateData.frontmatter ? allSlateData.frontmatter : [];
             break;
-        case 'Back Matter':
+        case 'backmatter':
             matterType = 'BackMatter';
             matterTypeData = allSlateData && allSlateData.backmatter ? allSlateData.backmatter : [];
             break;
         default:
-            matterType = 'BodyMatter';
-            matterTypeData = allSlateData && allSlateData.bodymatter ? allSlateData.bodymatter : [];
+            if (config.parentOfParentItem.trim() == "" && (config.parentLabel && (config.parentLabel == "frontmatter" || config.parentLabel == "backmatter"))) {
+                matterType = config.parentLabel == "frontmatter" ? 'FrontMatter' : 'BackMatter'
+                matterTypeData = allSlateData && allSlateData[config.parentLabel] ? allSlateData[config.parentLabel] : [];
+            } else {
+                matterType = 'BodyMatter';
+                matterTypeData = allSlateData && allSlateData.bodymatter ? allSlateData.bodymatter : [];
+            }
+            break;
     }
 
     currentSlateData = setCurrentSlateAncestorDataDetails(matterTypeData, ancestor, matterType)
@@ -187,6 +191,24 @@ export const setCurrentSlateAncestorData = (allSlateData) => dispatch => {
     })
 }
 
+const checkCurrentSlateUrn = (allSlatesData) => {
+    const slateUrns = [config.slateManifestURN, config.slateEntityURN, config.tempSlateManifestURN, config.tempSlateEntityURN]
+    for (let index in slateUrns) {
+        if (allSlatesData.includes(slateUrns[index])) {
+            return true;
+        }
+    }
+    return false;
+}
+
+const compareCurrentSlateUrn = (containerUrn, entityUrn) => {
+    const slateUrns = [config.slateManifestURN, config.slateEntityURN, config.tempSlateManifestURN, config.tempSlateEntityURN]
+    if (slateUrns.includes(containerUrn) || slateUrns.includes(entityUrn)) {
+        return true;
+    }
+    return false;
+}
+
 /**
  * @function setCurrentSlateAncestorDataDetails
  * @description-This is a recursive function to prepare structured data for the current Slate based and set its ancestors
@@ -196,10 +218,9 @@ export const setCurrentSlateAncestorData = (allSlateData) => dispatch => {
  * @returns {Object}
 */
 const setCurrentSlateAncestorDataDetails = (matterTypeData, ancestor, matterType) => {
-    if (matterTypeData && matterTypeData.length > 0 && (JSON.stringify(matterTypeData).includes(config.slateManifestURN) ||
-        JSON.stringify(matterTypeData).includes(config.slateEntityURN))) {
+    if (matterTypeData && matterTypeData.length > 0 && (checkCurrentSlateUrn(JSON.stringify(matterTypeData)))) {
         for (let key in matterTypeData) {
-            if (matterTypeData[key].containerUrn == config.slateManifestURN || matterTypeData[key].entityUrn == config.slateEntityURN) {
+            if (compareCurrentSlateUrn(matterTypeData[key].containerUrn, matterTypeData[key].entityUrn)) {
                 ancestor = Object.assign({},
                     setItemDetails(matterTypeData[key]),
                     {
@@ -208,8 +229,7 @@ const setCurrentSlateAncestorDataDetails = (matterTypeData, ancestor, matterType
                     })
                 return ancestor;
             }
-            else if (matterTypeData[key].contents && (JSON.stringify(matterTypeData[key].contents).includes(config.slateManifestURN) ||
-                JSON.stringify(matterTypeData[key].contents).includes(config.slateEntityURN))) {
+            else if (matterTypeData[key].contents && (checkCurrentSlateUrn(JSON.stringify(matterTypeData[key].contents)))) {
                 ancestor = Object.assign({},
                     setItemDetails(matterTypeData[key]),
                     {

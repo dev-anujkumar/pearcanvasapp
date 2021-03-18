@@ -90,19 +90,19 @@ export const outdent = (function () {
 /*************Salte Tag Icons*********************** */
 export const slateTagEnable = (function () {
   return (<svg className="learning-objective" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-    <g fill="none" fill-rule="evenodd">
-      <path fill="#EEE" fill-opacity="0" d="M0 0H24V24H0z" />
-      <path fill="#000" fill-opacity=".87" fill-rule="nonzero" d="M12.36 3.25l4.14 3.987V10H15V7.874L11.755 4.75H5.596c-.613 0-1.096.467-1.096 1.028v12.444c0 .561.483 1.028 1.096 1.028H8.75v1.5H5.596c-1.375 0-2.506-1.042-2.59-2.367L3 18.223V5.777C3 4.377 4.166 3.25 5.596 3.25h6.764z" />
-      <path fill="#005A70" fill-rule="nonzero" d="M19.24 12.54c-.227-.328-.606-.54-1.03-.54l-6.947.006c-.695 0-1.263.573-1.263 1.28v6.428c0 .707.568 1.28 1.263 1.28l6.948.006c.423 0 .802-.212 1.029-.54L22 16.5l-2.76-3.96z" />
+    <g fill="none" fillRule="evenodd">
+      <path fill="#EEE" fillOpacity="0" d="M0 0H24V24H0z" />
+      <path fill="#000" fillOpacity=".87" fillRule="nonzero" d="M12.36 3.25l4.14 3.987V10H15V7.874L11.755 4.75H5.596c-.613 0-1.096.467-1.096 1.028v12.444c0 .561.483 1.028 1.096 1.028H8.75v1.5H5.596c-1.375 0-2.506-1.042-2.59-2.367L3 18.223V5.777C3 4.377 4.166 3.25 5.596 3.25h6.764z" />
+      <path fill="#005A70" fillRule="nonzero" d="M19.24 12.54c-.227-.328-.606-.54-1.03-.54l-6.947.006c-.695 0-1.263.573-1.263 1.28v6.428c0 .707.568 1.28 1.263 1.28l6.948.006c.423 0 .802-.212 1.029-.54L22 16.5l-2.76-3.96z" />
     </g>
   </svg>)
 })();
 
 export const slateTagDisable = (function () {
   return (<svg className="learning-objective" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-    <g fill="none" fill-rule="evenodd">
-      <path fill="#EEE" fill-opacity="0" d="M0 0H24V24H0z" />
-      <path fill="#000" fill-opacity=".87" fill-rule="nonzero" d="M12.36 3.25l4.14 3.987V10H15V7.874L11.755 4.75H5.596c-.613 0-1.096.467-1.096 1.028v12.444c0 .561.483 1.028 1.096 1.028H8.75v1.5H5.596c-1.375 0-2.506-1.042-2.59-2.367L3 18.223V5.777C3 4.377 4.166 3.25 5.596 3.25h6.764zm6.88 9.29c-.227-.328-.606-.54-1.03-.54l-6.947.006c-.695 0-1.263.573-1.263 1.28v6.428c0 .707.568 1.28 1.263 1.28l6.948.006c.423 0 .802-.212 1.029-.54L22 16.5l-2.76-3.96zm-1.03 7.174h-6.947v-6.428h6.948l2.242 3.214-2.242 3.214z" />
+    <g fill="none" fillRule="evenodd">
+      <path fill="#EEE" fillOpacity="0" d="M0 0H24V24H0z" />
+      <path fill="#000" fillOpacity=".87" fillRule="nonzero" d="M12.36 3.25l4.14 3.987V10H15V7.874L11.755 4.75H5.596c-.613 0-1.096.467-1.096 1.028v12.444c0 .561.483 1.028 1.096 1.028H8.75v1.5H5.596c-1.375 0-2.506-1.042-2.59-2.367L3 18.223V5.777C3 4.377 4.166 3.25 5.596 3.25h6.764zm6.88 9.29c-.227-.328-.606-.54-1.03-.54l-6.947.006c-.695 0-1.263.573-1.263 1.28v6.428c0 .707.568 1.28 1.263 1.28l6.948.006c.423 0 .802-.212 1.029-.54L22 16.5l-2.76-3.96zm-1.03 7.174h-6.947v-6.428h6.948l2.242 3.214-2.242 3.214z" />
     </g>
   </svg>)
 })();
@@ -110,19 +110,19 @@ export const slateTagDisable = (function () {
 /*************Audio Narrative Icons*********************** */
 export const audioNarration = (function () {
   return (<svg className="audio-narration" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-    <g fill="none" fill-rule="evenodd">
-      <path fill="#EEE" fill-opacity="0" d="M0 0H24V24H0z" />
-      <path fill="#000" fill-opacity=".87" fill-rule="nonzero" d="M18.21 12c.424 0 .803.212 1.03.54L22 16.5l-2.76 3.96c-.227.328-.606.54-1.03.54l-6.947-.006c-.695 0-1.263-.573-1.263-1.28v-6.428c0-.707.568-1.28 1.263-1.28zm0 1.286h-6.947v6.428h6.948l2.242-3.214-2.242-3.214zM9.5 4c3.38 0 6.16 2.634 6.47 6h-1.452c-.305-2.553-2.433-4.526-5.018-4.526-2.723 0-4.94 2.19-5.051 4.94l-.005.218v1.473h2.89V18H5.166c-1.147 0-2.082-.903-2.162-2.052L3 15.789v-5.157C3 6.969 5.91 4 9.5 4zm-3.611 9.579H4.444v2.21c0 .372.274.682.625.73l.098.007h.722V13.58z" />
+    <g fill="none" fillRule="evenodd">
+      <path fill="#EEE" fillOpacity="0" d="M0 0H24V24H0z" />
+      <path fill="#000" fillOpacity=".87" fillRule="nonzero" d="M18.21 12c.424 0 .803.212 1.03.54L22 16.5l-2.76 3.96c-.227.328-.606.54-1.03.54l-6.947-.006c-.695 0-1.263-.573-1.263-1.28v-6.428c0-.707.568-1.28 1.263-1.28zm0 1.286h-6.947v6.428h6.948l2.242-3.214-2.242-3.214zM9.5 4c3.38 0 6.16 2.634 6.47 6h-1.452c-.305-2.553-2.433-4.526-5.018-4.526-2.723 0-4.94 2.19-5.051 4.94l-.005.218v1.473h2.89V18H5.166c-1.147 0-2.082-.903-2.162-2.052L3 15.789v-5.157C3 6.969 5.91 4 9.5 4zm-3.611 9.579H4.444v2.21c0 .372.274.682.625.73l.098.007h.722V13.58z" />
     </g>
   </svg>)
 })();
 
 export const audioNarrationEnable = (function () {
   return (<svg className="audio-narration" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-    <g fill="none" fill-rule="evenodd">
-      <path fill="#EEE" fill-opacity="0" d="M0 0H24V24H0z" />
-      <path fill="#005A70" fill-rule="nonzero" d="M19.24 12.54c-.227-.328-.606-.54-1.03-.54l-6.947.006c-.695 0-1.263.573-1.263 1.28v6.428c0 .707.568 1.28 1.263 1.28l6.948.006c.423 0 .802-.212 1.029-.54L22 16.5l-2.76-3.96z" />
-      <path fill="#000" fill-opacity=".87" fill-rule="nonzero" d="M9.5 4c3.38 0 6.16 2.634 6.47 6h-1.452c-.305-2.553-2.433-4.526-5.018-4.526-2.795 0-5.056 2.306-5.056 5.158v1.473h2.89V18H5.166C3.967 18 3 17.013 3 15.79v-5.158C3 6.969 5.91 4 9.5 4zm-3.611 9.579H4.444v2.21c0 .406.325.737.723.737h.722V13.58z" />
+    <g fill="none" fillRule="evenodd">
+      <path fill="#EEE" fillOpacity="0" d="M0 0H24V24H0z" />
+      <path fill="#005A70" fillRule="nonzero" d="M19.24 12.54c-.227-.328-.606-.54-1.03-.54l-6.947.006c-.695 0-1.263.573-1.263 1.28v6.428c0 .707.568 1.28 1.263 1.28l6.948.006c.423 0 .802-.212 1.029-.54L22 16.5l-2.76-3.96z" />
+      <path fill="#000" fillOpacity=".87" fillRule="nonzero" d="M9.5 4c3.38 0 6.16 2.634 6.47 6h-1.452c-.305-2.553-2.433-4.526-5.018-4.526-2.795 0-5.056 2.306-5.056 5.158v1.473h2.89V18H5.166C3.967 18 3 17.013 3 15.79v-5.158C3 6.969 5.91 4 9.5 4zm-3.611 9.579H4.444v2.21c0 .406.325.737.723.737h.722V13.58z" />
     </g>
   </svg>)
 })();
@@ -133,22 +133,22 @@ export const audioNarrationCloseIcon = (function () {
 
 /*************Collapse/ Expand Header*********************** */
 export const collapseHeader = (function () {
-  return (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" fill-rule="evenodd"><path fill="#EEE" fill-opacity="0" d="M0 0H24V24H0z" /><path fill="#000" fill-opacity=".87" fill-rule="nonzero" d="M7.41 15.41L12 10.83 16.59 15.41 18 14 12 8 6 14z" /></g></svg>)
+  return (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" fillRule="evenodd"><path fill="#EEE" fillOpacity="0" d="M0 0H24V24H0z" /><path fill="#000" fillOpacity=".87" fillRule="nonzero" d="M7.41 15.41L12 10.83 16.59 15.41 18 14 12 8 6 14z" /></g></svg>)
 })();
 
 export const expandHeader = (function () {
-  return (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" fill-rule="evenodd"><path fill="#EEE" fill-opacity="0" d="M0 0H24V24H0z" /><path fill="#000" fill-opacity=".87" fill-rule="nonzero" d="M7.41 8L12 12.59 16.59 8 18 9.42 12 15.42 6 9.42z" /></g></svg>)
+  return (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" fillRule="evenodd"><path fill="#EEE" fillOpacity="0" d="M0 0H24V24H0z" /><path fill="#000" fillOpacity=".87" fillRule="nonzero" d="M7.41 8L12 12.59 16.59 8 18 9.42 12 15.42 6 9.42z" /></g></svg>)
 })();
 
 /****************Search Icon ******************************* */
 export const searchIcon = (function () {
   return (
     <svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg">
-      <g id="PCAT-8949-Search-URN-Work/Manifest" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+      <g id="PCAT-8949-Search-URN-Work/Manifest" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
           <g id="SearchURN_2" transform="translate(-1370.000000, -117.000000)">
               <g id="Group" transform="translate(1366.000000, 113.000000)">
-                  <rect id="Rectangle" fill-opacity="0" fill="#EEEEEE" x="0" y="0" width="24" height="24"></rect>
-                  <path d="M15.4351058,14.0628931 L14.7124071,14.0628931 L14.4562607,13.8158948 C15.352773,12.7730132 15.89251,11.4190966 15.89251,9.946255 C15.89251,6.66209262 13.2304174,4 9.946255,4 C6.66209262,4 4,6.66209262 4,9.946255 C4,13.2304174 6.66209262,15.89251 9.946255,15.89251 C11.4190966,15.89251 12.7730132,15.352773 13.8158948,14.4562607 L14.0628931,14.7124071 L14.0628931,15.4351058 L18.6369354,20 L20,18.6369354 L15.4351058,14.0628931 Z M9.946255,14.0628931 C7.66838193,14.0628931 5.82961692,12.2241281 5.82961692,9.946255 C5.82961692,7.66838193 7.66838193,5.82961692 9.946255,5.82961692 C12.2241281,5.82961692 14.0628931,7.66838193 14.0628931,9.946255 C14.0628931,12.2241281 12.2241281,14.0628931 9.946255,14.0628931 Z" id="Shape" fill="#000000" fill-rule="nonzero"></path>
+                  <rect id="Rectangle" fillOpacity="0" fill="#EEEEEE" x="0" y="0" width="24" height="24"></rect>
+                  <path d="M15.4351058,14.0628931 L14.7124071,14.0628931 L14.4562607,13.8158948 C15.352773,12.7730132 15.89251,11.4190966 15.89251,9.946255 C15.89251,6.66209262 13.2304174,4 9.946255,4 C6.66209262,4 4,6.66209262 4,9.946255 C4,13.2304174 6.66209262,15.89251 9.946255,15.89251 C11.4190966,15.89251 12.7730132,15.352773 13.8158948,14.4562607 L14.0628931,14.7124071 L14.0628931,15.4351058 L18.6369354,20 L20,18.6369354 L15.4351058,14.0628931 Z M9.946255,14.0628931 C7.66838193,14.0628931 5.82961692,12.2241281 5.82961692,9.946255 C5.82961692,7.66838193 7.66838193,5.82961692 9.946255,5.82961692 C12.2241281,5.82961692 14.0628931,7.66838193 14.0628931,9.946255 C14.0628931,12.2241281 12.2241281,14.0628931 9.946255,14.0628931 Z" id="Shape" fill="#000000" fillRule="nonzero"></path>
               </g>
           </g>
       </g>
@@ -159,9 +159,9 @@ export const searchIcon = (function () {
 export const searchClose = (function () {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-      <g fill="none" fill-rule="evenodd">
-        <path fill="#EEE" fill-opacity="0" d="M0 0H24V24H0z" transform="translate(-460 -58) translate(460 58)"/>
-        <path fill="#005A70" fill-rule="nonzero" d="M18 7.209L16.791 6 12 10.791 7.209 6 6 7.209 10.791 12 6 16.791 7.209 18 12 13.209 16.791 18 18 16.791 13.209 12z" transform="translate(-460 -58) translate(460 58)"/>
+      <g fill="none" fillRule="evenodd">
+        <path fill="#EEE" fillOpacity="0" d="M0 0H24V24H0z" transform="translate(-460 -58) translate(460 58)"/>
+        <path fill="#005A70" fillRule="nonzero" d="M18 7.209L16.791 6 12 10.791 7.209 6 6 7.209 10.791 12 6 16.791 7.209 18 12 13.209 16.791 18 18 16.791 13.209 12z" transform="translate(-460 -58) translate(460 58)"/>
       </g>
     </svg>
   )
@@ -170,9 +170,9 @@ export const searchClose = (function () {
 export const searchUp = (function () {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-      <g fill="none" fill-rule="evenodd">
-        <path fill="#EEE" fill-opacity="0" d="M0 0H24V24H0z" transform="translate(-872 -24) translate(872 24)"/>
-        <path fill="#005A70" fill-opacity=".87" fill-rule="nonzero" d="M6.645 16.645L12 11.302 17.355 16.645 19 15 12 8 5 15z" transform="translate(-872 -24) translate(872 24)"/>
+      <g fill="none" fillRule="evenodd">
+        <path fill="#EEE" fillOpacity="0" d="M0 0H24V24H0z" transform="translate(-872 -24) translate(872 24)"/>
+        <path fill="#005A70" fillOpacity=".87" fillRule="nonzero" d="M6.645 16.645L12 11.302 17.355 16.645 19 15 12 8 5 15z" transform="translate(-872 -24) translate(872 24)"/>
       </g>
     </svg>
   )
@@ -181,9 +181,9 @@ export const searchUp = (function () {
 export const searchDown = (function () {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-      <g fill="none" fill-rule="evenodd">
-        <path fill="#EEE" fill-opacity="0" d="M0 0H24V24H0z" transform="translate(-872 -58) translate(872 58)"/>
-        <path fill="#005A70" fill-opacity=".87" fill-rule="nonzero" d="M6.645 8L12 13.355 17.355 8 19 9.657 12 16.657 5 9.657z" transform="translate(-872 -58) translate(872 58)"/>
+      <g fill="none" fillRule="evenodd">
+        <path fill="#EEE" fillOpacity="0" d="M0 0H24V24H0z" transform="translate(-872 -58) translate(872 58)"/>
+        <path fill="#005A70" fillOpacity=".87" fillRule="nonzero" d="M6.645 8L12 13.355 17.355 8 19 9.657 12 16.657 5 9.657z" transform="translate(-872 -58) translate(872 58)"/>
       </g>
     </svg>
   )

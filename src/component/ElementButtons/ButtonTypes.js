@@ -34,5 +34,6 @@ export default {
     MULTI_COLUMN_CONTAINER : "multi-column-group",
     ELM_INTERACTIVE_ICON:"elmInteractiveIcon",
     EDIT_BUTTON:"edit-button",
-    APPROVE_TICK_ICON:"approve-icon"
+    APPROVE_TICK_ICON:"approve-icon",
+    PASTE:"paste"
 }

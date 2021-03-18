@@ -7,6 +7,7 @@ import { mount } from 'enzyme';
 import config from '../../../src/config/config.js';
 import TinyMceEditor from '../../../src/component/tinyMceEditor'
 import elementData from './elementData';
+import {showHide} from '../../../fixtures/ElementSHowHideData.js';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
@@ -22,7 +23,6 @@ if (!global.Element.prototype.hasOwnProperty("innerText")) {
 
 }
 /**************************Mock Helper Functions**************************/
-
 jest.mock('../../../src/js/utils', () => {
     return {
         checkforToolbarClick: () => {
@@ -33,7 +33,9 @@ jest.mock('../../../src/js/utils', () => {
             handleExtraTags: jest.fn(),
             handleBackSpaceAndDeleteKyeDown: jest.fn(),
             handleBackSpaceAndDeleteKyeUp: jest.fn(),
-            handleRemoveFormattingOnSpan: jest.fn(),
+            handleRemoveFormattingOnSpan: jest.fn().mockImplementationOnce(()=>{
+                return true
+            }),
             handleSelectAllRemoveFormatting: jest.fn(),
             splitOnTag: jest.fn(),
             setContentOfSpan: jest.fn(),
@@ -46,7 +48,9 @@ jest.mock('../../../src/js/utils', () => {
             unsubscribe: jest.fn(),
             removeListenr: jest.fn(),
         },
-        removeBOM: () => { }
+        removeBOM: () => { },
+        removeImageCache: jest.fn(),
+        removeMathmlImageCache: jest.fn()
     }
 
 })
@@ -70,6 +74,11 @@ jest.mock('../../../src/js/glossaryFootnote.js', () => {
         getGlossaryFootnoteId: () => {
             return;
         }
+    }
+})
+jest.mock('../../../src/js/TinyMceUtility.js', () => {
+    return {
+        handleC2MediaClick:()=>{}
     }
 })
 jest.mock('../../../src/component/ListElement/eventBinding', () => {
@@ -173,6 +182,55 @@ let props = {
     glossaryFootnoteValue: glossaryFootnoteObject,
     togglePopup: jest.fn()
 }
+let selectionEditor = {
+    bookmarkManager: {
+        moveToBookmark: jest.fn(),
+        getBookmark: jest.fn()
+    },
+    setContent: jest.fn(),
+    setCursorLocation: jest.fn(),
+    getBoundingClientRect: () => {
+        return { left: 0, top: 0 }
+    },
+    placeCaretAt: (a, b) => {
+        return true
+    },
+    getNode: () => {
+        return {
+            tagName: 'span',
+            className: 'poetryLine',
+            closest: () => { },
+            childNodes:[{
+                tagName: 'span',
+                className: 'poetryLine',
+            }]
+        }
+    },
+    getContent: () => {
+        return 'abcde';
+    },
+    getStart: () => {
+        return {
+            innerHTML: '<p class="paragraphNumeroUno place-holder">hello<ol></ol><ul></ul></p>',
+            children: [
+                {
+                    tagName: 'BR'
+                }
+            ],
+            innerText: "hello",
+            querySelectorAll: jest.fn(),
+            classList: {
+                remove: jest.fn()
+            }
+        }
+    },
+    getRng: () => {
+        return {
+            setStart: () => { },
+            setEnd: () => { }
+        }
+    }
+}
 let tinyMceEditor = {
     $: jest.fn(),
     bodyElement: {},
@@ -200,55 +258,7 @@ let tinyMceEditor = {
     plugins: {},
     quirks: { refreshContentEditable: jest.fn(), isHidden: jest.fn() },
     readonly: undefined,
-    selection: {
-        bookmarkManager: {
-            moveToBookmark: jest.fn(),
-            getBookmark: jest.fn()
-        },
-        setContent: jest.fn(),
-        setCursorLocation: jest.fn(),
-        getBoundingClientRect: () => {
-            return { left: 0, top: 0 }
-        },
-        placeCaretAt: (a, b) => {
-            return true
-        },
-        getNode: () => {
-            return {
-                tagName: 'span',
-                className: 'poetryLine',
-                closest: () => { },
-                childNodes:[{
-                    tagName: 'span',
-                    className: 'poetryLine',
-                }]
-            }
-        },
-        getContent: () => {
-            return 'abcde';
-        },
-        getStart: () => {
-            return {
-                innerHTML: '<p class="paragraphNumeroUno place-holder">hello<ol></ol><ul></ul></p>',
-                children: [
-                    {
-                        tagName: 'BR'
-                    }
-                ],
-                innerText: "hello",
-                querySelectorAll: jest.fn(),
-                classList: {
-                    remove: jest.fn()
-                }
-            }
-        },
-        getRng: () => {
-            return {
-                setStart: () => { },
-                setEnd: () => { }
-            }
-        }
-    },
+    selection: selectionEditor,
     shortcuts: {
         add: () => { }
     },
@@ -267,7 +277,7 @@ let tinyMceEditor = {
 
 }
 tinymce.activeEditor = { ...tinyMceEditor }
-describe('------------------------------Test TINY_MCE_EDITOR------------------------------', () => {
+describe('------------------------------Test1 TINY_MCE_EDITOR------------------------------', () => {
 
     let editor = {
         on: (temp, cb) => {
@@ -345,6 +355,48 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
             expect(mySpyFunction).toHaveBeenCalled();
             mySpyFunction.mockClear()
         });
+        it('Test-3.3-Method--1--innerTextWithMathMl--childNodes.length != 0', () => {
+            component.setProps({
+                ...props,
+                permissions: permissions
+            })
+            component.update();
+            let containsSelector = (selector) => {
+                if (selector == 'temp_Wirisformula') {
+                    return true
+                }
+                return false
+            }
+            let node = {
+                childNodes: [{
+                    childNodes: [{
+                        innerHTML: "<div><img className=temp_Wirisformula data-temp-mathml='1234'/></div>",
+                        textContent: "124",
+                        classList: { contains: containsSelector },
+                        childNodes: []
+                    }],
+                    classList: { contains: () => { return true } }
+                }]
+            }
+            let mySpyFunction = jest.spyOn(instance, 'innerTextWithMathMl')
+            let result = component.find('TinyMceEditor').instance().innerTextWithMathMl(node);
+            expect(mySpyFunction).toHaveBeenCalled();
+            mySpyFunction.mockClear()
+        });
+        it('Test-3.4-Method--1--innerTextWithMathMl--childNodes.length = 0', () => {
+            component.setProps({
+                ...props,
+                permissions: permissions
+            })
+            component.update();
+            let node = {
+                childNodes: []
+            }
+            let mySpyFunction = jest.spyOn(instance, 'innerTextWithMathMl')
+            let result = component.find('TinyMceEditor').instance().innerTextWithMathMl(node);
+            expect(mySpyFunction).toHaveBeenCalled();
+            mySpyFunction.mockClear()
+        });
     });
 
     describe('Test-4 List Click',() => {
@@ -382,6 +434,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
             expect(mySpyFunction).toHaveBeenCalledWith(true,'decimal');
             mySpyFunction.mockClear();
         });
+
     })
     describe('Test-5-Method--3--editorExecCommand', () => {
         it('Test-5.1-Method--3--editorExecCommand --CASE_1--indent--', () => {
@@ -397,6 +450,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                 on: (temp, cb) => { cb(event) },
                 selection: editor.selection,
                 setContent: () => { },
+                dom : { getParent(){return }}
             }
             let setContent = jest.spyOn(nextEditor, 'setContent');
             instance.editorExecCommand(nextEditor);
@@ -416,6 +470,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                 on: (temp, cb) => { cb(event) },
                 selection: editor.selection,
                 setContent: () => { },
+                dom : { getParent(){return }}
             }
             let setContent = jest.spyOn(nextEditor, 'setContent');
             instance.editorExecCommand(nextEditor);
@@ -435,6 +490,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                 on: (temp, cb) => { cb(event) },
                 selection: editor.selection,
                 setContent: () => { },
+                dom : { getParent(){return }}
             }
             const moveToBookmark = jest.spyOn(nextEditor.selection.bookmarkManager, 'moveToBookmark');
             instance.editorExecCommand(nextEditor);
@@ -453,6 +509,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                 on: (temp, cb) => { cb(event) },
                 selection: editor.selection,
                 setContent: () => { },
+                dom : { getParent(){return }}
             }
             instance.props = {
                 ...props,
@@ -462,7 +519,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                 element: { type: "stanza" }
             }
             component.update();
-            console.log(instance.props)
+            // console.log(instance.props)
             let mySpyFunction = jest.spyOn(instance, 'editorExecCommand');
             instance.editorExecCommand(nextEditor);
             expect(mySpyFunction).toHaveBeenCalled()
@@ -481,6 +538,37 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                 on: (temp, cb) => { cb(event) },
                 selection: editor.selection,
                 setContent: () => { },
+                dom : { getParent(){return }}
+            }
+            instance.props = {
+                ...props,
+                permissions: ["login", "logout"],
+                tagName: "CODE",
+                elementId: "work:urn",
+                element: { type: "figure", figuretype: "codelisting" }
+            }
+            component.update();
+            let mySpyFunction = jest.spyOn(instance, 'editorExecCommand');
+            instance.editorExecCommand(nextEditor);
+            expect(mySpyFunction).toHaveBeenCalled()
+            expect(instance.props.element.type).toBe('figure')
+            expect(instance.props.element.figuretype).toBe('codelisting')
+        })
+        it('Test-5.6-Method--3--editorExecCommand --For Glossary Italicizing',() => {
+            let event = {
+                target: {
+                    getContent: () => {
+                        return "Test"
+                    }
+                },
+                command: 'mceToggleFormat',
+                value: 'italic'
+            }
+            let nextEditor = {
+                on: (temp, cb) => { cb(event) },
+                selection: editor.selection,
+                setContent: () => { },
+                dom : { getParent(){return }}
             }
             instance.props = {
                 ...props,
@@ -1172,7 +1260,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
             instance.editorBeforeExecCommand(nextEditor);
             expect(getContent).toHaveBeenCalled()
         })
-        it('Test-8.6-Method--6--editorBeforeExecCommand --CASE_6--FormatBlock', () => {
+        it('Test-8.6-Method--6--editorBeforeExecCommand --CASE_6--FormatBlock-IF', () => {
             let event = {
                 target: {
                     getContent: () => {
@@ -1202,7 +1290,76 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
             instance.editorBeforeExecCommand(nextEditor);
             expect(getContent).toHaveBeenCalled()
         })
-        it('Test-8.7-Method--6--editorBeforeExecCommand --CASE_7--redo', () => {
+        it('Test-8.6-Method--6--editorBeforeExecCommand --CASE_6--FormatBlock-ELSE', () => {
+            let event = {
+                target: {
+                    getContent: () => {
+                        return "Test"
+                    }
+                },
+                value: "h1",
+                command: 'FormatBlock',
+                preventDefault: () => { },
+                stopPropagation: () => { }
+            }
+            let nextEditor = {
+                on: (temp, cb) => { cb(event) },
+                targetElm: {
+                    findChildren: () => {
+                        return {
+                            length: 0
+                        };
+                    },
+                    dispatchEvent: () => { }
+                },
+                selection: editor.selection,
+                dom: domObj,
+                setContent: () => { },
+            }
+            const getContent = jest.spyOn(event.target, 'getContent');
+            instance.editorBeforeExecCommand(nextEditor);
+            expect(getContent).toHaveBeenCalled()
+        })
+        it('Test-8.7-Method--6--editorBeforeExecCommand --CASE_7--redo-IF', () => {
+            let event = {
+                target: {
+                    getContent: () => {
+                        return "Test"
+                    }
+                },
+                value: "h5",
+                command: 'redo',
+                preventDefault: () => { },
+                stopPropagation: () => { }
+            }
+            let nextEditor = {
+                on: (temp, cb) => { cb(event) },
+                targetElm: {
+                    findChildren: () => {
+                        return {
+                            length: 0
+                        };
+                    },
+                    childNodes: [{ classList: ["blockquoteMarginalia"] }],
+                    dispatchEvent: () => { return false }
+                },
+                selection: editor.selection,
+                dom: domObj,
+                setContent: () => { },
+            }
+            instance.props = {
+                ...props,
+                permissions: ["login", "logout"],
+                tagName: "LIST",
+                elementId: "work:urn",
+                element: { type: "element-list" }
+            }
+            component.update();
+            const getContent = jest.spyOn(event.target, 'getContent');
+            instance.editorBeforeExecCommand(nextEditor);
+            expect(getContent).toHaveBeenCalled()
+        })
+        it('Test-8.7-Method--6--editorBeforeExecCommand --CASE_7--redo-ELSE', () => {
             let event = {
                 target: {
                     getContent: () => {
@@ -1229,13 +1386,13 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                 dom: domObj,
                 setContent: () => { },
             }
-            component.setProps({
+            instance.props = {
                 ...props,
                 permissions: ["login", "logout"],
-                tagName: "LIST",
+                tagName: "STANZA",
                 elementId: "work:urn",
-                element: { type: "element-list" }
-            })
+                element: { type: "stanza" , subtype:"image"}
+            }
             component.update();
             const getContent = jest.spyOn(event.target, 'getContent');
             instance.editorBeforeExecCommand(nextEditor);
@@ -1270,6 +1427,52 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                         return {
                             innerHTML: '<p class="paragraphNumeroUno place-holder">hello<ol></ol><ul></ul></p>',
                             nodeName: "CODE"
+                        }
+                    }
+                },
+                setContent: () => { },
+            }
+            component.setProps({
+                ...props,
+                permissions: ["login", "logout"],
+                tagName: "LIST",
+                elementId: "work:urn",
+                element: { type: "element-list" }
+            })
+            component.update();
+            const getContent = jest.spyOn(event.target, 'getContent');
+            instance.editorBeforeExecCommand(nextEditor);
+            expect(getContent).toHaveBeenCalled()
+        })
+        it('Test-8.7-Method--6--editorBeforeExecCommand --CASE_7--Redo', () => {
+            let event = {
+                target: {
+                    getContent: () => {
+                        return "Test"
+                    }
+                },
+                value: "h5",
+                command: 'Redo',
+                preventDefault: () => { },
+                stopPropagation: () => { }
+            }
+            let nextEditor = {
+                on: (temp, cb) => { cb(event) },
+                targetElm: {
+                    findChildren: () => {
+                        return {
+                            length: 0
+                        };
+                    },
+                    childNodes: [{ classList: ["blockquoteMarginalia"] }],
+                    dispatchEvent: () => { }
+                },
+                selection: editor.selection,
+                dom: {
+                    getParent: () => {
+                        return {
+                            innerHTML: '<p class="paragraphNumeroUno place-holder">hello<ol></ol><ul></ul></p>',
+                            nodeName: "SUP"
                         }
                     }
                 },
@@ -1338,7 +1541,58 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
             instance.editorBeforeExecCommand(nextEditor);
             expect(getContent).toHaveBeenCalled()
         })
-        it('Test-8.9-Method--6--editorBeforeExecCommand --CASE_8--Underline', () => {
+        it('Test-8.8-Method--6--editorBeforeExecCommand --CASE_8--Strikethrough', () => {
+            let event = {
+                target: {
+                    getContent: () => {
+                        return "Test"
+                    },
+                    targetElm: {
+                        nodeName: "CODE"
+                    }
+                },
+                value: "h5",
+                command: 'Strikethrough',
+                preventDefault: () => { },
+                stopPropagation: () => { }
+            }
+            let nextEditor = {
+                on: (temp, cb) => { cb(event) },
+                targetElm: {
+                    findChildren: () => {
+                        return {
+                            length: 0
+                        };
+                    },
+                    childNodes: [{ classList: ["blockquoteMarginalia"] }],
+                    dispatchEvent: () => { }
+                },
+                selection: editor.selection,
+                dom: {
+                    getParent: () => {
+                        return {
+                            innerHTML: '<p class="paragraphNumeroUno place-holder">hello<ol></ol><ul></ul></p>',
+                            children: [
+                                {
+                                    tagName: 'CODE'
+                                }
+                            ],
+                            nodeName: "CODE",
+                            innerText: "hello",
+                            querySelectorAll: jest.fn(),
+                            classList: {
+                                remove: jest.fn()
+                            }
+                        }
+                    }
+                },
+                setContent: () => { },
+            }
+            const getContent = jest.spyOn(event.target, 'getContent');
+            instance.editorBeforeExecCommand(nextEditor);
+            expect(getContent).toHaveBeenCalled()
+        })
+        xit('Test-8.9-Method--6--editorBeforeExecCommand --CASE_8--Underline', () => {
             let event = {
                 target: {
                     getContent: () => {
@@ -2035,6 +2289,9 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                     match: () => { },
                     formatChanged: () => { return jest.fn() },
                     unbind: () => { }
+                },
+                dom: {
+                    getParent: () => {}
                 }
             }
             const spyaddGlossary = jest.spyOn(instance, 'addGlossary')
@@ -2069,7 +2326,11 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                     getContent: () => {
                         return '<p><span className="poetryLine">Hello</span></p>';
                     },
-                    setContent: () => { }
+                    setContent: () => { },
+                    getStart: () => { }
+                },
+                dom: {
+                    getParent: () => {}
                 }
             }
             const spyaddGlossary = jest.spyOn(instance, 'addGlossary')
@@ -2546,7 +2807,10 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                 preventDefault: jest.fn(),
                 stopPropagation: jest.fn(),
                 target: {
-                    id: ""
+                    id: "",
+                    classList : {
+                        contains : ()=>{ return true; }
+                    }
                 },
                 type: "click",
                 clipboardData: {
@@ -2585,7 +2849,10 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                 preventDefault: jest.fn(),
                 stopPropagation: jest.fn(),
                 target: {
-                    id: ""
+                    id: "",
+                    classList : {
+                        contains : ()=>{ return true; }
+                    }
                 },
                 type: "click",
                 clipboardData: {
@@ -2600,6 +2867,62 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                 setContent: () => { },
                 insertContent: () => {
                     return '<sup><a href="#" id = "${res.data.id}" data-uri="${res.data.id}" data-footnoteelementid="${res.data.id}" class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>'
+                },
+                targetElm: {
+                    classList: {
+                        contains: () => {
+                            return true;
+                        }
+                    }
+                },
+                dom: domObj
+            }
+            instance.assetPopoverButtonState = {
+                setDisabled: () => { }
+            }
+            const spyeditorPaste = jest.spyOn(instance, 'editorClick')
+            const setDisabled = jest.spyOn(instance.assetPopoverButtonState, 'setDisabled');
+            instance.editorClick(nextEditor);
+            expect(spyeditorPaste).toHaveBeenCalled()
+            expect(setDisabled).toHaveBeenCalled();
+        });
+        it('Test-27.2-Method--25--editorClick--Inline image in List double click', () => {
+            instance.props = {
+                ...props,
+                permissions: ["login", "logout"],
+                tagName: "SPAN",
+                elementId: "work:urn",
+                element: { type: "element-list", elementdata : {listtype : 'ordered'} },
+                currentElement: { type: "element-list", elementdata : {listtype : 'ordered'} }
+            }
+            let imgData = `<img src=https://cite-media-stg.pearson.com/legacy_paths/28154019-35d4-4b5b-9da6-fdc6335e1595/1addNew.png data-id="imageAssetContent:28154019-35d4-4b5b-9da6-fdc6335e1595" class="imageAssetContent" width="112" height="150" imageid="urn:pearson:alfresco:28154019-35d4-4b5b-9da6-fdc6335e1595" alt="Alfresco script Scale image update for UDB release" longdescription="Alfresco scale image long desc for UDb chanages."/>`;
+            let event = {
+                detail :2,
+                preventDefault: jest.fn(),
+                stopPropagation: jest.fn(),
+                target: {
+                    id: "",
+                    nodeName: 'IMG',
+                    classList : {
+                        contains : ()=>{ return true; }
+                    },
+                    dataset:{
+                        id:'imageAssetContent:28154019-35d4-4b5b-9da6-fdc6335e1595'
+                    }
+                },
+                type: "click",
+                clipboardData: {
+                    getData: () => { return; }
+                }
+            }
+            let nextEditor = {
+                on: (temp, cb) => { cb(event) },
+                selection: {
+                    getContent: () => { return ""; }
+                },
+                setContent: () => { },
+                insertContent: () => {
+                    return imgData
                 },
                 targetElm: {
                     classList: {
@@ -2636,7 +2959,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                     },
                     dispatchEvent: () => { }
                 },
-                selection: editor.selection,
+                selection: {...editor.selection, getNode : ()=>{ return {...editor.selection.getNode(), className : 'WirisFormula'}}},
                 dom: domObj,
                 children: ['<p class="paragraphNumeroUno">hello</p>'],
                 classList: ["cypress-editable", "mce-content-body", "mce-edit-focus", 'place-holder']
@@ -2960,6 +3283,120 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
             const spyeditorKeyup = jest.spyOn(instance, 'editorKeyup')
             instance.editorKeyup(nextEditor);
             expect(spyeditorKeyup).toHaveBeenCalled()
+        });
+        it('Test-28.3.3-Method--26--editorKeyup-BlankLine Element-KeyCode=37',()=>{
+            let event = {
+                preventDefault: () => { },
+                stopPropagation: () => { },
+                type: 'keyup',
+                which: 37
+            }
+            let nextEditor = {
+                on: (temp, cb) => { cb(event) },
+                targetElm: {
+                    findChildren: () => {
+                        return {
+                            length: 0
+                        };
+                    },
+                    dispatchEvent: () => { }
+                },
+                selection: { getNode : ()=>{ return {closest : ()=>{},tagName : 'span',className:{toLowerCase:() =>{}} }}, getStart : jest.fn(), setCursorLocation: jest.fn() },
+                dom: {
+                    getParent: () => {
+                        return {
+                            innerHTML: '<span class="bce place-holder">SampleCode</span>',
+                            children: [
+                                {
+                                    tagName: 'DIV'
+                                }
+                            ],
+                            innerText: "hello",
+                            querySelectorAll: jest.fn(),
+                            classList: {
+                                remove: jest.fn(),
+                                contains: jest.fn(),
+                            },
+                            nodeName: "DIV"
+
+                        }
+                    }
+                },
+                children: ['<code class="bce place-holder">hello<ol></code>'],
+                classList: ["cypress-editable", "mce-content-body", "mce-edit-focus", 'place-holder']
+            }
+            component.setProps({
+                ...props,
+                permissions: ["login", "logout"],
+                tagName: "SPAN",
+                elementId: "work:urn",
+                element: {
+                    "type": "stanza"
+                },
+                model: {},
+                placeholder: "",
+            })
+            component.update();
+            const spyeditorKeyup = jest.spyOn(instance, 'editorKeyup')
+            instance.editorKeyup(nextEditor);
+            expect(spyeditorKeyup).toHaveBeenCalled();
+        });
+        it('Test-28.3.4-Method--26--editorKeyup-BlankLine Element-KeyCode=39',()=>{
+            let event = {
+                preventDefault: () => { },
+                stopPropagation: () => { },
+                type: 'keyup',
+                which: 39
+            }
+            let nextEditor = {
+                on: (temp, cb) => { cb(event) },
+                targetElm: {
+                    findChildren: () => {
+                        return {
+                            length: 0
+                        };
+                    },
+                    dispatchEvent: () => { }
+                },
+                selection: { getNode : ()=>{ return {closest : ()=>{},tagName : 'span',className:{toLowerCase:() =>{}} }}, getStart : jest.fn(), setCursorLocation: jest.fn() },
+                dom: {
+                    getParent: () => {
+                        return {
+                            innerHTML: '<span class="bce place-holder">SampleCode</span>',
+                            children: [
+                                {
+                                    tagName: 'DIV'
+                                }
+                            ],
+                            innerText: "hello",
+                            querySelectorAll: jest.fn(),
+                            classList: {
+                                remove: jest.fn(),
+                                contains: jest.fn(),
+                            },
+                            nodeName: "DIV"
+
+                        }
+                    }
+                },
+                children: ['<code class="bce place-holder">hello<ol></code>'],
+                classList: ["cypress-editable", "mce-content-body", "mce-edit-focus", 'place-holder']
+            }
+            component.setProps({
+                ...props,
+                permissions: ["login", "logout"],
+                tagName: "SPAN",
+                elementId: "work:urn",
+                element: {
+                    "type": "stanza"
+                },
+                model: {},
+                placeholder: "",
+            })
+            component.update();
+            const spyeditorKeyup = jest.spyOn(instance, 'editorKeyup')
+            instance.editorKeyup(nextEditor);
+            expect(spyeditorKeyup).toHaveBeenCalled();
         });
     });
     describe('Test-29-Method--27--editorKeydown', () => {
@@ -3843,7 +4280,8 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
             element: { type: "citation", status: "wip" },
             model: {},
             placeholder: "",
-            activeElement: false
+            activeElement: false,
+            audioGlossaryPopup:jest.fn()
         })
         component.update();
         it('Test-30.1.1-Method--28--editorOnClick--nodeName:SUP & alreadyExist:FALSE', () => {
@@ -3917,7 +4355,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                     id: "",
                     dataset: { uri: "uri" },
                     nodeName: "DFN",
-                    closest: () => { return false; }
+                    closest: () => { return { hasAttribute:()=>{return false}}; }
                 },
                 type: "click",
                 clipboardData: {
@@ -3937,6 +4375,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
             expect(setDisabled).toHaveBeenCalled()
         });
         it('Test-30.2.2-Method--28--editorOnClick--nodeName:DFN & alreadyExist:TRUE', () => {
+            instance.props.audioGlossaryPopup = jest.fn();
             document.querySelector = () => { return false; }
             let event = {
                 preventDefault: jest.fn(),
@@ -3945,7 +4384,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                     id: "",
                     dataset: { uri: "uri" },
                     nodeName: "DFNN",
-                    closest: () => { return true; }
+                    closest: () => { return { hasAttribute:()=>{return true}, getAttribute:()=>{return true}}; }
                 },
                 type: "click",
                 clipboardData: {
@@ -4168,6 +4607,43 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
             expect(spyhandleBlur).toHaveBeenCalledWith(event);
             spyhandleBlur.mockClear()
         });
+        it('Test-33.2.1-Method--31--handleBlur-citations', () => {
+            let event = {
+                preventDefault: jest.fn(),
+                stopPropagation: jest.fn(),
+                relatedTarget: {
+                    classList: []
+                },
+                type: 'blur'
+            }
+            component.setProps({
+                ...props,
+                permissions: ["login", "logout"],
+                tagName: "blockquote",
+                elementId: "work:urn",
+                element: { type: "citations" },
+                model: {},
+                placeholder: "",
+            })
+            component.update();
+            instance.isctrlPlusV = true;
+            instance.lastContent = "blockquote";
+            document = {
+                createElement: () => {
+                    return { innerHTML: "" }
+                },
+                getElementById: () => {
+                    return {
+                        innerHTML: "<div>blockquote</div>"
+                    }
+                }
+            }
+            instance.fromtinyInitBlur = true;
+            const spyhandleBlur = jest.spyOn(instance, 'handleBlur')
+            instance.handleBlur(event);
+            expect(spyhandleBlur).toHaveBeenCalledWith(event);
+            spyhandleBlur.mockClear()
+        });
         it('Test-33.2.2-Method--31--handleBlur-BLOCKQUOTE MARGINALIA Element-isctrlPlusV:FALSE', () => {
             let event = {
                 preventDefault: jest.fn(),
@@ -4281,14 +4757,18 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                     classList: {
                         contains: () => { },
                         remove: () => { }
-                    }
+                    },
+                    getAttribute: () => "urn:pearson:work:232hk232-213123fsdf"
                 },
                 type: 'click',
                 target: {
                     id: "",
                     parentElement: { nodeName: "SUP", childNodes: [{ nodeName: 'A' }] },
                     dataset: { uri: "uri" },
-                    nodeName: "SUP"
+                    nodeName: "SUP",
+                    classList : {
+                        contains : ()=>{ }
+                    }
                 },
                 clipboardData: {
                     getData: () => { return pasteString }
@@ -4428,14 +4908,18 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                     classList: {
                         contains: () => { },
                         remove: () => { }
-                    }
+                    },
+                    getAttribute: () => "urn:pearson:work:232hk232-213123fsdf"
                 },
                 type: 'click',
                 target: {
                     id: "",
                     parentElement: { nodeName: "SUP", childNodes: [{ nodeName: 'A' }] },
                     dataset: { uri: "uri" },
-                    nodeName: "SUP"
+                    nodeName: "SUP",
+                    classList : {
+                        contains: () => { return true; },
+                    }
                 },
                 clipboardData: {
                     getData: () => { return pasteString }
@@ -4578,14 +5062,19 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                     classList: {
                         contains: () => { },
                         remove: () => { }
-                    }
+                    },
+                    getAttribute: () => "urn:pearson:work:232hk232-213123fsdf"
                 },
                 type: 'click',
                 target: {
                     id: "",
                     parentElement: { nodeName: "SUP", childNodes: [{ nodeName: 'A' }] },
                     dataset: { uri: "uri" },
-                    nodeName: "SUP"
+                    nodeName: "SUP",
+                    classList: {
+                        contains: () => { },
+                        remove: () => { }
+                    }
                 },
                 clipboardData: {
                     getData: () => { return pasteString }
@@ -4730,14 +5219,19 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                     classList: {
                         contains: () => { },
                         remove: () => { }
-                    }
+                    },
+                    getAttribute: () => "urn:pearson:work:232hk232-213123fsdf"
                 },
                 type: 'click',
                 target: {
                     id: "",
                     parentElement: { nodeName: "SUP", childNodes: [{ nodeName: 'A' }] },
                     dataset: { uri: "uri" },
-                    nodeName: "SUP"
+                    nodeName: "SUP",
+                    classList: {
+                        contains: () => { },
+                        remove: () => { }
+                    }
                 },
                 clipboardData: {
                     getData: () => { return pasteString }
@@ -4950,7 +5444,7 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
                     },
                     setAttribute: () => { },
                     getAttribute: () => { },
-
+                    getElementsByTagName: () => { return {length: 2 } }
                 }
             }
             tinymce.$ = () => {
@@ -5537,4 +6031,1427 @@ describe('------------------------------Test TINY_MCE_EDITOR--------------------
             expect(spyhandleCodeClick).toHaveBeenCalled()
         });
     });
+    describe('Test-40-Method--3--editorExecCommand-branch coverage', () => {
+        it('Test-40.1-Method--6--editorBeforeExecCommand --CASE--Underline', () => {
+            let event = {
+                target: {
+                    getContent: () => {
+                        return "Test"
+                    },
+                    targetElm: {
+                        nodeName: "CODE"
+                    }
+                },
+                value: "h5",
+                command: 'Underline',
+                preventDefault: () => { },
+                stopPropagation: () => { }
+            }
+            let nextEditor = {
+                on: (temp, cb) => { cb(event) },
+                targetElm: {
+                    findChildren: () => {
+                        return {
+                            length: 0
+                        };
+                    },
+                    childNodes: [{ classList: ["blockquoteMarginalia"] }],
+                    dispatchEvent: () => { }
+                },
+                selection: editor.selection,
+                dom: {
+                    getParent: () => {
+                        return {
+                            innerHTML: '<p class="paragraphNumeroUno place-holder">hello<ol></ol><ul></ul></p>',
+                            children: [
+                                {
+                                    tagName: 'CODE'
+                                }
+                            ],
+                            nodeName: "CODE",
+                            innerText: "hello",
+                            querySelectorAll: jest.fn(),
+                            classList: {
+                                remove: jest.fn()
+                            }
+                        }
+                    }
+                },
+                setContent: () => { },
+            }
+            let spyFunction = jest.spyOn(instance, 'getElementTypeForToolbar');
+            spyFunction.mockImplementationOnce(()=>{
+                return 'code'
+            })
+            document.querySelector = (selector) =>{
+                if(selector== '.panel_syntax_highlighting .switch input'){
+                    return {
+                        checked:true
+                    }
+                }
+            }
+            const getContent = jest.spyOn(event.target, 'getContent');
+            instance.editorBeforeExecCommand(nextEditor);
+            expect(getContent).toHaveBeenCalled()
+        })
+        it('Test-40.2-Method--6--editorBeforeExecCommand --CASE---Italic---case1', () => {
+            let event = {
+                target: {
+                    getContent: () => {
+                        return "Test"
+                    },
+                    targetElm: {
+                        nodeName: "CODE"
+                    }
+                },
+                value: "h5",
+                command: 'Italic',
+                preventDefault: () => { },
+                stopPropagation: () => { }
+            }
+            let nextEditor = {
+                on: (temp, cb) => { cb(event) },
+                targetElm: {
+                    findChildren: () => {
+                        return {
+                            length: 0
+                        };
+                    },
+                    childNodes: [{ classList: ["blockquoteMarginalia"] }],
+                    dispatchEvent: () => { }
+                },
+                selection: editor.selection,
+                dom: {
+                    getParent: () => {
+                        return {
+                            innerHTML: '<p class="paragraphNumeroUno place-holder">hello<ol></ol><ul></ul></p>',
+                            children: [
+                                {
+                                    tagName: 'CODE'
+                                }
+                            ],
+                            nodeName: "CODE",
+                            innerText: "hello",
+                            querySelectorAll: jest.fn(),
+                            classList: {
+                                remove: jest.fn()
+                            }
+                        }
+                    }
+                },
+                setContent: () => { },
+            }
+            let spyFunction = jest.spyOn(instance, 'getElementTypeForToolbar');
+            spyFunction.mockImplementationOnce(()=>{
+                return 'code'
+            })
+            document.querySelector = (selector) =>{
+                if(selector== '.panel_syntax_highlighting .switch input'){
+                    return {
+                        checked:true
+                    }
+                }
+            }
+            const getContent = jest.spyOn(event.target, 'getContent');
+            instance.editorBeforeExecCommand(nextEditor);
+            expect(getContent).toHaveBeenCalled()
+        })
+        it('Test-40.2-Method--6--editorBeforeExecCommand --CASE---Italic---case2', () => {
+            let event = {
+                target: {
+                    getContent: () => {
+                        return "Test"
+                    },
+                    targetElm: {
+                        nodeName: "CODE"
+                    }
+                },
+                value: "h5",
+                command: 'Italic',
+                preventDefault: () => { },
+                stopPropagation: () => { }
+            }
+            let nextEditor = {
+                on: (temp, cb) => { cb(event) },
+                targetElm: {
+                    findChildren: () => {
+                        return {
+                            length: 0
+                        };
+                    },
+                    childNodes: [{ classList: ["blockquoteMarginalia"] }],
+                    dispatchEvent: () => { }
+                },
+                selection: editor.selection,
+                dom: {
+                    getParent: () => {
+                        return {
+                            innerHTML: '<p class="paragraphNumeroUno place-holder">hello<ol></ol><ul></ul></p>',
+                            children: [
+                                {
+                                    tagName: 'CODE'
+                                }
+                            ],
+                            nodeName: "LIST",
+                            innerText: "hello",
+                            querySelectorAll: jest.fn(),
+                            classList: {
+                                remove: jest.fn()
+                            }
+                        }
+                    }
+                },
+                setContent: () => { },
+            }
+            let spyFunction = jest.spyOn(instance, 'getElementTypeForToolbar');
+            spyFunction.mockImplementationOnce(()=>{
+                return 'Learning Objective Item'
+            })
+            document.querySelector = (selector) =>{
+                if(selector== '.panel_syntax_highlighting .switch input'){
+                    return {
+                        checked:true
+                    }
+                }
+            }
+            const getContent = jest.spyOn(event.target, 'getContent');
+            instance.editorBeforeExecCommand(nextEditor);
+            expect(getContent).toHaveBeenCalled()
+        })
+        it('Test-40.2-Method--6--editorBeforeExecCommand --CASE---Italic---case3', () => {
+            let event = {
+                target: {
+                    getContent: () => {
+                        return "Test"
+                    },
+                    targetElm: {
+                        nodeName: "CODE"
+                    }
+                },
+                value: "h5",
+                command: 'Italic',
+                preventDefault: () => { },
+                stopPropagation: () => { }
+            }
+            let nextEditor = {
+                on: (temp, cb) => { cb(event) },
+                targetElm: {
+                    findChildren: () => {
+                        return {
+                            length: 0
+                        };
+                    },
+                    childNodes: [{ classList: ["blockquoteMarginalia"] }],
+                    dispatchEvent: () => { }
+                },
+                selection: {...editor.selection,
+                    getNode: () =>{ 
+                        return {
+                            className : 'blockquoteTextCredit'
+                        }
+                    } 
+                },
+                dom: {
+                    getParent: () => {
+                        return {
+                            innerHTML: '<p class="paragraphNumeroUno place-holder">hello<ol></ol><ul></ul></p>',
+                            children: [
+                                {
+                                    tagName: 'CODE'
+                                }
+                            ],
+                            nodeName: "LIST",
+                            innerText: "hello",
+                            querySelectorAll: jest.fn(),
+                            classList: {
+                                remove: jest.fn()
+                            }
+                        }
+                    }
+                },
+                setContent: () => { },
+            }
+            let spyFunction = jest.spyOn(instance, 'getElementTypeForToolbar');
+            spyFunction.mockImplementationOnce(()=>{
+                return 'Blockquote'
+            })
+            document.querySelector = (selector) =>{
+                if(selector== '.panel_syntax_highlighting .switch input'){
+                    return {
+                        checked:true
+                    }
+                }
+            }
+            const getContent = jest.spyOn(event.target, 'getContent');
+            instance.editorBeforeExecCommand(nextEditor);
+            expect(getContent).toHaveBeenCalled()
+        })
+        it('Test-40.2-Method--6--editorBeforeExecCommand --CASE---Italic---case4', () => {
+            let event = {
+                target: {
+                    getContent: () => {
+                        return "Test"
+                    },
+                    targetElm: {
+                        nodeName: "CODE"
+                    }
+                },
+                value: "h5",
+                command: 'Italic',
+                preventDefault: () => { },
+                stopPropagation: () => { }
+            }
+            let nextEditor = {
+                on: (temp, cb) => { cb(event) },
+                targetElm: {
+                    findChildren: () => {
+                        return {
+                            length: 0
+                        };
+                    },
+                    childNodes: [{ classList: ["blockquoteMarginalia"] }],
+                    dispatchEvent: () => { }
+                },
+                selection: {...editor.selection,
+                    getNode: () =>{ 
+                        return {
+                            className : 'blockquoteTextCredit'
+                        }
+                    } 
+                },
+                dom: {
+                    getParent: () => {
+                        return {
+                            innerHTML: '<p class="paragraphNumeroUno place-holder">hello<ol></ol><ul></ul></p>',
+                            children: [
+                                {
+                                    tagName: 'CODE'
+                                }
+                            ],
+                            nodeName: "LIST",
+                            innerText: "hello",
+                            querySelectorAll: jest.fn(),
+                            classList: {
+                                remove: jest.fn()
+                            }
+                        }
+                    }
+                },
+                setContent: () => { },
+            }
+            let spyFunction = jest.spyOn(instance, 'getElementTypeForToolbar');
+            spyFunction.mockImplementationOnce(()=>{
+                return 'Blockquote'
+            })
+            document.querySelector = (selector) =>{
+                if(selector== '.panel_syntax_highlighting .switch input'){
+                    return {
+                        checked:true
+                    }
+                }
+            }
+            const getContent = jest.spyOn(event.target, 'getContent');
+            instance.editorBeforeExecCommand(nextEditor);
+            expect(getContent).toHaveBeenCalled()
+        })
+        it('Test-40.3-Method--6--editorBeforeExecCommand --CASE_1--indent--Element-BCE', () => {
+            let event = {
+                target: {
+                    getContent: () => {
+                        return "Test"
+                    }
+                },
+                command: 'indent',
+                preventDefault: () => { }
+            }
+            let nextEditor = {
+                on: (temp, cb) => { cb(event) },
+                targetElm: {
+                    findChildren: () => {
+                        return {
+                            length: 0
+                        };
+                    },
+                    dispatchEvent: () => { }
+                },
+                selection: {
+                    bookmarkManager: {
+                        moveToBookmark: jest.fn(),
+                        getBookmark: jest.fn()
+                    },
+                    setContent: jest.fn(),
+                    setCursorLocation: jest.fn(),
+                    getBoundingClientRect: () => {
+                        return { left: 0, top: 0 }
+                    },
+                    placeCaretAt: (a, b) => {
+                        return true
+                    },
+                    getNode: () => {
+                        return {
+                            tagName: 'span',
+                            className: 'poetryLine',
+                            closest: () => { },
+                            childNodes:[{
+                                tagName: 'span',
+                                className: 'poetryLine',
+                            }]
+                        }
+                    },
+                    getContent: () => {
+                        return 'abcde';
+                    },
+                    getStart: () => {
+                        return {
+                            innerHTML: '<p class="paragraphNumeroUno place-holder">hello<ol></ol><ul></ul></p>',
+                            children: [
+                                {
+                                    tagName: 'BR'
+                                }
+                            ],
+                            innerText: "hello",
+                            querySelectorAll: jest.fn(),
+                            classList: {
+                                remove: jest.fn()
+                            }
+                        }
+                    },
+                    getRng: () => {
+                        return {
+                            setStart: () => { },
+                            setEnd: () => { }
+                        }
+                    }
+                },
+                dom: domObj,
+                setContent: () => { },
+            }
+            const getContent = jest.spyOn(event.target, 'getContent');
+            instance.editorBeforeExecCommand(nextEditor);
+            expect(getContent).toHaveBeenCalled()
+        })
+        it('Test-40.3-Method--6--editorBeforeExecCommand --CASE_2--outdent--Element-BQ', () => {
+            let event = {
+                target: {
+                    getContent: () => {
+                        return "Test"
+                    }
+                },
+                command: 'outdent',
+                preventDefault: () => { }
+            }
+            let nextEditor = {
+                on: (temp, cb) => { cb(event) },
+                targetElm: {
+                    findChildren: (elem) => {
+                        if (elem == 'ul') {
+                            return {
+                                length: 1
+                            };
+                        } else {
+                            return {
+                                length: 0
+                            };
+                        }
+                    },
+                    dispatchEvent: () => { }
+                },
+                selection: {...editor.selection,
+                    getNode: () =>{ 
+                        return {
+                            className : 'blockquoteText'
+                        }
+                    } 
+                },
+                dom: domObj,
+                setContent: () => { },
+            }
+            let spyFunction = jest.spyOn(instance, 'getElementTypeForToolbar');
+            spyFunction.mockImplementationOnce(()=>{
+                return 'Blockquote'
+            })
+            const getContent = jest.spyOn(event.target, 'getContent');
+            instance.editorBeforeExecCommand(nextEditor);
+            expect(getContent).toHaveBeenCalled()
+        })
+        it('Test-40.3-Method--6--editorBeforeExecCommand --CASE_2--outdent--Element-BCE', () => {
+            let event = {
+                target: {
+                    getContent: () => {
+                        return "Test"
+                    }
+                },
+                command: 'outdent',
+                preventDefault: () => { }
+            }
+            let nextEditor = {
+                on: (temp, cb) => { cb(event) },
+                targetElm: {
+                    findChildren: (elem) => {
+                        if (elem == 'ul') {
+                            return {
+                                length: 1
+                            };
+                        } else {
+                            return {
+                                length: 0
+                            };
+                        }
+                    },
+                    dispatchEvent: () => { }
+                },
+                selection: {...editor.selection,
+                    getNode: () =>{ 
+                        return {
+                            className : 'blockquoteText'
+                        }
+                    } 
+                },
+                dom: domObj,
+                setContent: () => { },
+            }
+            instance.props = {
+                ...props,
+                permissions: ["login", "logout"],
+                tagName: "LIST",
+                elementId: "work:urn",
+                element: elementData.paragraph
+            }
+            component.update();
+            instance.forceUpdate();
+            let spyFunction = jest.spyOn(instance, 'getElementTypeForToolbar');
+            spyFunction.mockImplementationOnce(()=>{
+                return 'Blockquote'
+            })
+            const getContent = jest.spyOn(event.target, 'getContent');
+            instance.editorBeforeExecCommand(nextEditor);
+            expect(getContent).toHaveBeenCalled()
+        })
+    
+    });
+
+});
+describe('------------------------------Test2 TINY_MCE_EDITOR------------------------------', () => {
+    let selectEditor={
+        bookmarkManager: {
+            moveToBookmark: jest.fn(),
+            getBookmark: jest.fn()
+        },
+        setContent: jest.fn(),
+        setCursorLocation: jest.fn(),
+        getBoundingClientRect: () => {
+            return { left: 0, top: 0 }
+        },
+        placeCaretAt: (a, b) => {
+            return true
+        },
+        getNode: () => {
+            return {
+                tagName: 'code',
+                className: 'poetryLine',
+                closest: () => { },
+                childNodes:[{
+                    tagName: 'code',
+                    className: 'poetryLine',
+                }]
+            }
+        },
+        getContent: () => {
+            return 'abcde';
+        },
+        getStart: () => {
+            return {
+                innerHTML: '<p class="paragraphNumeroUno place-holder">hello<ol></ol><ul></ul></p>',
+                children: [
+                    {
+                        tagName: 'BR'
+                    }
+                ],
+                innerText: "hello",
+                querySelectorAll: jest.fn(),
+                classList: {
+                    remove: jest.fn()
+                }
+            }
+        },
+        getRng: () => {
+            return {
+                setStart: () => { },
+                setEnd: () => { }
+            }
+        }
+    }
+    let editor = {
+        on: (temp, cb) => {
+            cb(event)
+        },
+        setContent: () => { },
+        children: ['<p class="paragraphNumeroUno">hello</p>'],
+        classList: ["cypress-editable", "mce-content-body", "mce-edit-focus", 'place-holder'],
+        getContentAreaContainer: () => {
+            return true;
+        },
+        ...tinymce.activeEditor
+    }
+    const mockStore = configureMockStore(middlewares);
+    const store = mockStore({ });
+    let newProps = {
+        ...props,
+        permissions: ["login", "logout"],
+        tagName: "CODE",
+        elementId: "work:urn",
+        element: elementData.blockCode
+    }
+    const component2 = mount(<Provider store={store}> < TinyMceEditor {...newProps} element={elementData.blockCode}/> </Provider>)
+    let instance2 = component2.find('TinyMceEditor').instance();
+    let tinymceDiv = document.createElement('div');
+    tinymceDiv.id = editor.id;
+    let tinymceDiv2 = document.createElement('p');
+    tinymceDiv2.id = `cypress-${props.id}`
+    tinymceDiv2.innerHTML = '<p><img align="middle" class="temp_Wirisformula" src="data:image/png;base64,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" data-temp-mathml="«math xmlns=¨http://www.w3.org/1998/Math/MathML¨ class=¨¨»«mi»m«/mi»«mi»a«/mi»«mi»t«/mi»«mi»h«/mi»«mi»M«/mi»«mi»L«/mi»«mo»&amp;nbsp;«/mo»«mi»t«/mi»«mi»e«/mi»«mi»x«/mi»«mi»t«/mi»«mo»-«/mo»«mi mathvariant=¨normal¨»π«/mi»«mo»∞«/mo»«mo»∅«/mo»«mo»∆«/mo»«mo»∂«/mo»«/math»" alt="m a t h M L space t e x t minus straight pi infinity empty set increment partial differential" role="math"></p>'
+    tinymceDiv.appendChild(tinymceDiv2)
+    document.body.appendChild(tinymceDiv)
+    it('Test-B-Method--6--editorBeforeExecCommand --CASE_2--outdent--Element-BCE', () => {
+        let event = {
+            target: {
+                getContent: () => {
+                    return "Test"
+                }
+            },
+            command: 'outdent',
+            preventDefault: () => { }
+        }
+        let newEditor = {
+            on: (temp, cb) => { cb(event) },
+            targetElm: {
+                findChildren: (elem) => {
+                        return {
+                            length: 0
+                        };
+                },
+                dispatchEvent: () => { }
+            },
+            selection: selectEditor,
+            dom: domObj,
+            setContent: () => { },
+        }
+        let spyFunction = jest.spyOn(instance2, 'getElementTypeForToolbar');
+        spyFunction.mockImplementationOnce(()=>{
+            return 'Blockquote'
+        })
+        instance2.props = {
+            ...props,
+            permissions: ["login", "logout"],
+            tagName: "CODE",
+            elementId: "work:urn",
+            element: elementData.blockCode
+        }
+        component2.update();
+        const getContent = jest.spyOn(event.target, 'getContent');
+        instance2.editorBeforeExecCommand(newEditor);
+        expect(getContent).toHaveBeenCalled()
+    })
+    it('Test-B-Method--2--onListButtonClick-with currentElement', () => {
+        instance2.props = {
+            ...newProps,
+            element: showHide,
+            currentElement: {
+                type: "element-list", elementdata: { listtype: 'ordered', subtype: 'decimal' }
+            }
+        }
+        component2.update();
+        let mySpyFunction = jest.spyOn(instance2, 'onListButtonClick')
+        instance2.onListButtonClick('ordered','decimal');
+        expect(mySpyFunction).toHaveBeenCalledWith('ordered','decimal');
+        expect(typeof instance2.props.onListSelect).toBe('function');
+        mySpyFunction.mockClear()
+    });
+    it('Test-5.6-Method--3--editorExecCommand --For Glossary Italicizing-else',() => {
+        let newSelection = {
+            ...selectEditor,
+            getNode: () => {
+                return {
+                    tagName: 'code',
+                    className: 'poetryLine',
+                    getAttribute: ()=>{
+                        return 'glossaryId'
+                    },
+                    closest: () => { },
+                    childNodes:[{
+                        tagName: 'code',
+                        className: 'poetryLine',
+                        getAttribute: ()=>{
+                            return 'glossaryId'
+                        }
+                    }]
+                }
+            }
+        }
+        let event = {
+            target: {
+                getContent: () => {
+                    return "Test"
+                }
+            },
+            command: 'mceToggleFormat',
+            value: 'italic'
+        }
+        let nextEditor = {
+            on: (temp, cb) => { cb(event) },
+            selection: newSelection,
+            setContent: () => { },
+            dom: {
+                getParent() {
+                    return {
+                        querySelector: (sel) => {
+                            if (sel=='dfn[data-uri="glossaryId"]') {
+                                return {
+                                    innerHTML: 'innerData',
+                                    closest: ()=>{
+                                        return {
+                                            textContent :"la la la" ,
+                                            innerHTML:"<em>la la la</em>",
+                                            outerHTML :"<dfn></dfn>",
+                                            parentNode:""
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        instance2.props = {
+            ...props,
+            permissions: ["login", "logout"],
+            tagName: "CODE",
+            elementId: "work:urn",
+            element: { type: "figure", figuretype: "codelisting" }
+        }
+        tinymce.$ = (selector) =>{
+            if(selector=='code[id="cypress-1"]'){
+                return {
+                    children:()=>{}
+                }
+            }
+        }
+        component2.update();
+        let mySpyFunction = jest.spyOn(instance2, 'editorExecCommand');
+        instance2.editorExecCommand(nextEditor);
+        expect(mySpyFunction).toHaveBeenCalled()
+        expect(instance2.props.element.type).toBe('figure')
+        expect(instance2.props.element.figuretype).toBe('codelisting')
+    })
+    it('Test-5.6-Method--3--editorExecCommand --For Glossary Italicizing-handleGlossaryForItalic else',() => {
+        let newSelection = {
+            ...selectEditor,
+            getNode: () => {
+                return {
+                    tagName: 'DFN',
+                    className: 'poetryLine',
+                    getAttribute: ()=>{
+                        return 'glossaryId'
+                    },
+                    closest: () => { },
+                    childNodes:[{
+                        tagName: 'DFN',
+                        className: 'poetryLine',
+                        getAttribute: ()=>{
+                            return 'glossaryId'
+                        }
+                    }]
+                }
+            }
+        }
+        let event = {
+            target: {
+                getContent: () => {
+                    return "Test"
+                }
+            },
+            command: 'mceToggleFormat',
+            value: 'italic'
+        }
+        let nextEditor = {
+            on: (temp, cb) => { cb(event) },
+            selection: newSelection,
+            setContent: () => { },
+            dom: {
+                getParent() {
+                    return {
+                        querySelector: (sel) => {
+                            if (sel=='dfn[data-uri="glossaryId"]') {
+                                return {
+                                    innerHTML: 'innerData',
+                                    closest: ()=>{
+                                        return {
+                                            textContent :"la la la" ,
+                                            innerHTML:"<em>la la la</em>",
+                                            outerHTML :"<dfn></dfn>",
+                                            parentNode:""
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        instance2.props = {
+            ...props,
+            permissions: ["login", "logout"],
+            tagName: "CODE",
+            elementId: "work:urn",
+            element: { type: "figure", figuretype: "codelisting" }
+        }
+        tinymce.$ = (selector) =>{
+            if(selector=='code[id="cypress-1"]'){
+                return {
+                    children:()=>{}
+                }
+            }
+        }
+        component2.update();
+        let mySpyFunction = jest.spyOn(instance2, 'editorExecCommand');
+        instance2.editorExecCommand(nextEditor);
+        expect(mySpyFunction).toHaveBeenCalled()
+        expect(instance2.props.element.type).toBe('figure')
+        expect(instance2.props.element.figuretype).toBe('codelisting')
+    })
+    it('Test-5.6-Method--3--editorExecCommand --For Glossary Italicizing-handleGlossaryForItalic if',() => {
+        let newSelection = {
+            ...selectEditor,
+            getNode: () => {
+                return {
+                    tagName: 'DFN',
+                    className: 'poetryLine',
+                    getAttribute: ()=>{
+                        return 'glossaryId'
+                    },
+                    closest: () => { },
+                    childNodes:[{
+                        tagName: 'DFN',
+                        className: 'poetryLine',
+                        getAttribute: ()=>{
+                            return 'glossaryId'
+                        }
+                    }]
+                }
+            }
+        }
+        let event = {
+            target: {
+                getContent: () => {
+                    return "Test"
+                }
+            },
+            command: 'mceToggleFormat',
+            value: 'italic'
+        }
+        let nextEditor = {
+            on: (temp, cb) => { cb(event) },
+            selection: newSelection,
+            setContent: () => { },
+            dom: {
+                getParent() {
+                    return {
+                        querySelector: (sel) => {
+                            if (sel=='dfn[data-uri="glossaryId"]') {
+                                return {
+                                    innerHTML: 'innerData',
+                                    textContent :"la la la",
+                                    closest: ()=>{
+                                        return {
+                                            textContent :"la la la",
+                                            innerHTML:"<em>la la la</em>",
+                                            outerHTML :"<dfn></dfn>",
+                                            parentNode:""
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        instance2.props = {
+            ...props,
+            permissions: ["login", "logout"],
+            tagName: "CODE",
+            elementId: "work:urn",
+            element: { type: "figure", figuretype: "codelisting" }
+        }
+        tinymce.$ = (selector) =>{
+            if(selector=='code[id="cypress-1"]'){
+                return {
+                    children:()=>{}
+                }
+            }
+        }
+        component2.update();
+        let mySpyFunction = jest.spyOn(instance2, 'editorExecCommand');
+        instance2.editorExecCommand(nextEditor);
+        expect(mySpyFunction).toHaveBeenCalled()
+        expect(instance2.props.element.type).toBe('figure')
+        expect(instance2.props.element.figuretype).toBe('codelisting')
+    })
+    it('Test-5.6-Method--3--editorExecCommand --For Glossary Italicizing-handleGlossaryForItalic no tag',() => {
+        let newSelection = {
+            ...selectEditor,
+            getNode: () => {
+                return {
+                    tagName: 'DFN',
+                    className: 'poetryLine',
+                    getAttribute: ()=>{
+                        return 'glossaryId'
+                    },
+                    closest: () => { },
+                    childNodes:[{
+                        tagName: 'DFN',
+                        className: 'poetryLine',
+                        getAttribute: ()=>{
+                            return 'glossaryId'
+                        }
+                    }]
+                }
+            }
+        }
+        let event = {
+            target: {
+                getContent: () => {
+                    return "Test"
+                }
+            },
+            command: 'mceToggleFormat',
+            value: 'italic'
+        }
+        let nextEditor = {
+            on: (temp, cb) => { cb(event) },
+            selection: newSelection,
+            setContent: () => { },
+            dom: {
+                getParent() {
+                    return {
+                        querySelector: (sel) => {
+                            if (sel=='dfn[data-uri="glossaryId"]') {
+                                return {
+                                    innerHTML: 'innerData',
+                                    textContent :"la la la",
+                                    closest: ()=>{
+                                        return false
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        instance2.props = {
+            ...props,
+            permissions: ["login", "logout"],
+            tagName: "CODE",
+            elementId: "work:urn",
+            element: { type: "figure", figuretype: "codelisting" }
+        }
+        tinymce.$ = (selector) =>{
+            if(selector=='code[id="cypress-1"]'){
+                return {
+                    children:()=>{}
+                }
+            }
+        }
+        component2.update();
+        let mySpyFunction = jest.spyOn(instance2, 'editorExecCommand');
+        instance2.editorExecCommand(nextEditor);
+        expect(mySpyFunction).toHaveBeenCalled()
+        expect(instance2.props.element.type).toBe('figure')
+        expect(instance2.props.element.figuretype).toBe('codelisting')
+    })
+    it('Test-5.6-Method--3--editorExecCommand --For Glossary Italicizing-Blcokquote-true',() => {
+        let newSelection = {
+            ...selectEditor,
+            getNode: () => {
+                return {
+                    tagName: 'code',
+                    className: 'blockquoteTextCredit',
+                    getAttribute: ()=>{
+                        return 'glossaryId'
+                    },
+                    closest: () => { },
+                    childNodes:[{
+                        tagName: 'code',
+                        className: 'blockquoteTextCredit',
+                        getAttribute: ()=>{
+                            return 'glossaryId'
+                        }
+                    }]
+                }
+            }
+        }
+        let event = {
+            target: {
+                getContent: () => {
+                    return "Test"
+                }
+            },
+            command: 'mceToggleFormat',
+            value: 'italic'
+        }
+        let nextEditor = {
+            on: (temp, cb) => { cb(event) },
+            selection: newSelection,
+            setContent: () => { },
+            dom: {
+                getParent() {
+                    return {
+                        querySelector: (sel) => {
+                            if (sel=='dfn[data-uri="glossaryId"]') {
+                                return {
+                                    innerHTML: 'innerData',
+                                    closest: ()=>{
+                                        return {
+                                            textContent :"la la la" ,
+                                            innerHTML:"<em>la la la</em>",
+                                            outerHTML :"<dfn></dfn>",
+                                            parentNode:""
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        instance2.props = {
+            ...props,
+            permissions: ["login", "logout"],
+            tagName: "CODE",
+            elementId: "work:urn",
+            element: { type: "element-blockfeature", subtype: "pullquote" }
+        }
+        tinymce.$ = (selector) =>{
+            if(selector=='code[id="cypress-1"]'){
+                return {
+                    children:()=>{}
+                }
+            }
+        }
+        component2.update();
+        let mySpyFunction = jest.spyOn(instance2, 'editorExecCommand');
+        instance2.editorExecCommand(nextEditor);
+        expect(mySpyFunction).toHaveBeenCalled()
+        expect(instance2.props.element.type).toBe('element-blockfeature')
+    })
+    it('Test-5.6-Method--3--editorExecCommand --For Glossary Italicizing-Blcokquote-false',() => {
+        let newSelection = {
+            ...selectEditor,
+            getNode: () => {
+                return {
+                    tagName: 'code',
+                    className: 'blockquoteMargAttr',
+                    getAttribute: ()=>{
+                        return 'glossaryId'
+                    },
+                    closest: () => { },
+                    childNodes:[{
+                        tagName: 'code',
+                        className: 'blockquoteMargAttr',
+                        getAttribute: ()=>{
+                            return 'glossaryId'
+                        }
+                    }]
+                }
+            }
+        }
+        let event = {
+            target: {
+                getContent: () => {
+                    return "Test"
+                }
+            },
+            command: 'mceToggleFormat',
+            value: 'italic'
+        }
+        let nextEditor = {
+            on: (temp, cb) => { cb(event) },
+            selection: newSelection,
+            setContent: () => { },
+            dom: {
+                getParent() {
+                    return {
+                        querySelector: (sel) => {
+                            if (sel=='dfn[data-uri="glossaryId"]') {
+                                return {
+                                    innerHTML: 'innerData',
+                                    closest: ()=>{
+                                        return {
+                                            textContent :"la la la" ,
+                                            innerHTML:"<em>la la la</em>",
+                                            outerHTML :"<dfn></dfn>",
+                                            parentNode:""
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        instance2.props = {
+            ...props,
+            permissions: ["login", "logout"],
+            tagName: "CODE",
+            elementId: "work:urn",
+            element: { type: "element-blockfeature", subtype: "pullquote" }
+        }
+        tinymce.$ = (selector) =>{
+            if(selector=='code[id="cypress-1"]'){
+                return {
+                    children:()=>{}
+                }
+            }
+        }
+        component2.update();
+        let mySpyFunction = jest.spyOn(instance2, 'editorExecCommand');
+        instance2.editorExecCommand(nextEditor);
+        expect(mySpyFunction).toHaveBeenCalled()
+        expect(instance2.props.element.type).toBe('element-blockfeature')
+    })
+});
+describe('------------------------------Test3 TINY_MCE_EDITOR blockquote if------------------------------', () => {
+    let selectEditor={
+        bookmarkManager: {
+            moveToBookmark: jest.fn(),
+            getBookmark: jest.fn()
+        },
+        setContent: jest.fn(),
+        setCursorLocation: jest.fn(),
+        getBoundingClientRect: () => {
+            return { left: 0, top: 0 }
+        },
+        placeCaretAt: (a, b) => {
+            return true
+        },
+        getNode: () => {
+            return {
+                tagName: 'code',
+                className: 'poetryLine',
+                closest: () => { },
+                childNodes:[{
+                    tagName: 'code',
+                    className: 'poetryLine',
+                }]
+            }
+        },
+        getContent: () => {
+            return 'abcde';
+        },
+        getStart: () => {
+            return {
+                innerHTML: '<p class="paragraphNumeroUno place-holder">hello<ol></ol><ul></ul></p>',
+                children: [
+                    {
+                        tagName: 'BR'
+                    }
+                ],
+                innerText: "hello",
+                querySelectorAll: jest.fn(),
+                classList: {
+                    remove: jest.fn()
+                }
+            }
+        },
+        getRng: () => {
+            return {
+                setStart: () => { },
+                setEnd: () => { }
+            }
+        }
+    }
+    let editor = {
+        on: (temp, cb) => {
+            cb(event)
+        },
+        setContent: () => { },
+        children: ['<p class="paragraphNumeroUno">hello</p>'],
+        classList: ["cypress-editable", "mce-content-body", "mce-edit-focus", 'place-holder'],
+        getContentAreaContainer: () => {
+            return true;
+        },
+        ...tinymce.activeEditor
+    }
+    const mockStore = configureMockStore(middlewares);
+    const store = mockStore({ });
+    let newProps = {
+        ...props,
+        permissions: ["login", "logout"],
+        tagName: "blockquote",
+        elementId: "work:urn",
+        element: {elementdata:{type:"blockquote"}},
+        model:{
+            text: '<blockquote class="blockquoteMarginalia" contenteditable="false"><p class="paragraphNummerEins" contenteditable="true"></p><p class="blockquote-hidden" contenteditable="false" style="visibility: hidden; height: 20px;">hidden</p><p class="blockquoteTextCredit" contenteditable="true" data-placeholder="Attribution Text"></p></blockquote>'
+        }
+    }
+    const component2 = mount(<Provider store={store}> < TinyMceEditor {...newProps} /> </Provider>)
+    let instance2 = component2.find('TinyMceEditor').instance();
+    let tinymceDiv = document.createElement('div');
+    tinymceDiv.id = editor.id;
+    let tinymceDiv2 = document.createElement('p');
+    tinymceDiv2.id = `cypress-${props.id}`
+    tinymceDiv2.innerHTML = '<p>test Data</p>'
+    tinymceDiv.appendChild(tinymceDiv2)
+    document.body.appendChild(tinymceDiv)
+});
+describe('------------------------------Test3 TINY_MCE_EDITOR blockquote else------------------------------', () => {
+    let selectEditor={
+        bookmarkManager: {
+            moveToBookmark: jest.fn(),
+            getBookmark: jest.fn()
+        },
+        setContent: jest.fn(),
+        setCursorLocation: jest.fn(),
+        getBoundingClientRect: () => {
+            return { left: 0, top: 0 }
+        },
+        placeCaretAt: (a, b) => {
+            return true
+        },
+        getNode: () => {
+            return {
+                tagName: 'code',
+                className: 'poetryLine',
+                closest: () => { },
+                childNodes:[{
+                    tagName: 'code',
+                    className: 'poetryLine',
+                }]
+            }
+        },
+        getContent: () => {
+            return 'abcde';
+        },
+        getStart: () => {
+            return {
+                innerHTML: '<p class="paragraphNumeroUno place-holder">hello<ol></ol><ul></ul></p>',
+                children: [
+                    {
+                        tagName: 'BR'
+                    }
+                ],
+                innerText: "hello",
+                querySelectorAll: jest.fn(),
+                classList: {
+                    remove: jest.fn()
+                }
+            }
+        },
+        getRng: () => {
+            return {
+                setStart: () => { },
+                setEnd: () => { }
+            }
+        }
+    }
+    let editor = {
+        on: (temp, cb) => {
+            cb(event)
+        },
+        setContent: () => { },
+        children: ['<p class="paragraphNumeroUno">hello</p>'],
+        classList: ["cypress-editable", "mce-content-body", "mce-edit-focus", 'place-holder'],
+        getContentAreaContainer: () => {
+            return true;
+        },
+        ...tinymce.activeEditor
+    }
+    const mockStore = configureMockStore(middlewares);
+    const store = mockStore({ });
+    let newProps = {
+        ...props,
+        permissions: ["login", "logout"],
+        tagName: "blockquote",
+        elementId: "work:urn",
+        element: {elementdata:{type:"blockquote"}}
+    }
+    const component2 = mount(<Provider store={store}> < TinyMceEditor {...newProps} /> </Provider>)
+    let instance2 = component2.find('TinyMceEditor').instance();
+    let tinymceDiv = document.createElement('div');
+    tinymceDiv.id = editor.id;
+    let tinymceDiv2 = document.createElement('p');
+    tinymceDiv2.id = `cypress-${props.id}`
+    tinymceDiv2.innerHTML = '<p>test data</p>'
+    tinymceDiv.appendChild(tinymceDiv2)
+    document.body.appendChild(tinymceDiv)
+});
+describe('------------------------------Test4 TINY_MCE_EDITOR------------------------------', () => {
+    let selectEditor={
+        bookmarkManager: {
+            moveToBookmark: jest.fn(),
+            getBookmark: jest.fn()
+        },
+        setContent: jest.fn(),
+        setCursorLocation: jest.fn(),
+        getBoundingClientRect: () => {
+            return { left: 0, top: 0 }
+        },
+        placeCaretAt: (a, b) => {
+            return true
+        },
+        getNode: () => {
+            return {
+                tagName: 'code',
+                className: 'poetryLine',
+                closest: () => { },
+                childNodes:[{
+                    tagName: 'code',
+                    className: 'poetryLine',
+                }]
+            }
+        },
+        getContent: () => {
+            return 'abcde';
+        },
+        getStart: () => {
+            return {
+                innerHTML: '<p class="paragraphNumeroUno place-holder">hello<ol></ol><ul></ul></p>',
+                children: [
+                    {
+                        tagName: 'BR'
+                    }
+                ],
+                innerText: "hello",
+                querySelectorAll: jest.fn(),
+                classList: {
+                    remove: jest.fn()
+                }
+            }
+        },
+        getRng: () => {
+            return {
+                setStart: () => { },
+                setEnd: () => { }
+            }
+        }
+    }
+    let editor = {
+        on: (temp, cb) => {
+            cb(event)
+        },
+        setContent: () => { },
+        children: ['<p class="paragraphNumeroUno">hello</p>'],
+        classList: ["cypress-editable", "mce-content-body", "mce-edit-focus", 'place-holder'],
+        getContentAreaContainer: () => {
+            return true;
+        },
+        ...tinymce.activeEditor
+    }
+    const mockStore = configureMockStore(middlewares);
+    const store = mockStore({ });
+    let newProps = {
+        ...props,
+        permissions: ["login", "logout"],
+        tagName: "code",
+        elementId: "work:urn",
+        element: {elementdata:{type:"code"}}
+    }
+    const component2 = mount(<Provider store={store}> < TinyMceEditor {...newProps} /> </Provider>)
+    let instance2 = component2.find('TinyMceEditor').instance();
+    let tinymceDiv = document.createElement('div');
+    tinymceDiv.id = editor.id;
+    let tinymceDiv2 = document.createElement('p');
+    tinymceDiv2.id = `cypress-${props.id}`
+    tinymceDiv2.innerHTML = '<p>test data</p>'
+    tinymceDiv.appendChild(tinymceDiv2)
+    document.body.appendChild(tinymceDiv)
+});
+describe('------------------------------Test4 TINY_MCE_EDITOR------------------------------', () => {
+    let selectEditor={
+        bookmarkManager: {
+            moveToBookmark: jest.fn(),
+            getBookmark: jest.fn()
+        },
+        setContent: jest.fn(),
+        setCursorLocation: jest.fn(),
+        getBoundingClientRect: () => {
+            return { left: 0, top: 0 }
+        },
+        placeCaretAt: (a, b) => {
+            return true
+        },
+        getNode: () => {
+            return {
+                tagName: 'code',
+                className: 'poetryLine',
+                closest: () => { },
+                childNodes:[{
+                    tagName: 'code',
+                    className: 'poetryLine',
+                }]
+            }
+        },
+        getContent: () => {
+            return 'abcde';
+        },
+        getStart: () => {
+            return {
+                innerHTML: '<p class="paragraphNumeroUno place-holder">hello<ol></ol><ul></ul></p>',
+                children: [
+                    {
+                        tagName: 'BR'
+                    }
+                ],
+                innerText: "hello",
+                querySelectorAll: jest.fn(),
+                classList: {
+                    remove: jest.fn()
+                }
+            }
+        },
+        getRng: () => {
+            return {
+                setStart: () => { },
+                setEnd: () => { }
+            }
+        }
+    }
+    let editor = {
+        on: (temp, cb) => {
+            cb(event)
+        },
+        setContent: () => { },
+        children: ['<p class="paragraphNumeroUno">hello</p>'],
+        classList: ["cypress-editable", "mce-content-body", "mce-edit-focus", 'place-holder'],
+        getContentAreaContainer: () => {
+            return true;
+        },
+        ...tinymce.activeEditor
+    }
+    const mockStore = configureMockStore(middlewares);
+    const store = mockStore({ });
+    let newProps = {
+        ...props,
+        permissions: ["login", "logout"],
+        tagName: "h4",
+        elementId: "work:urn",
+        poetryField:"formatted-title",
+        element:{
+            type:"popup"
+        },
+        model:"<p class='paragraphNumeroUno'>test</p>"
+    }
+    const component2 = mount(<Provider store={store}> < TinyMceEditor {...newProps} /> </Provider>)
+    let instance2 = component2.find('TinyMceEditor').instance();
+    let tinymceDiv = document.createElement('div');
+    tinymceDiv.id = editor.id;
+    let tinymceDiv2 = document.createElement('p');
+    tinymceDiv2.id = `cypress-${props.id}`
+    tinymceDiv2.innerHTML = '<p><img align="middle" class="temp_Wirisformula" src="data:image/png;base64,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" data-temp-mathml="«math xmlns=¨http://www.w3.org/1998/Math/MathML¨ class=¨¨»«mi»m«/mi»«mi»a«/mi»«mi»t«/mi»«mi»h«/mi»«mi»M«/mi»«mi»L«/mi»«mo»&amp;nbsp;«/mo»«mi»t«/mi»«mi»e«/mi»«mi»x«/mi»«mi»t«/mi»«mo»-«/mo»«mi mathvariant=¨normal¨»π«/mi»«mo»∞«/mo»«mo»∅«/mo»«mo»∆«/mo»«mo»∂«/mo»«/math»" alt="m a t h M L space t e x t minus straight pi infinity empty set increment partial differential" role="math"></p>'
+    tinymceDiv.appendChild(tinymceDiv2)
+    document.body.appendChild(tinymceDiv)
 });

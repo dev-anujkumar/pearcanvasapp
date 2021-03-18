@@ -7,6 +7,7 @@
 import config from '../config/config';
 import cypressConfig from '../config/cypressConfig';
 import store from '../appstore/store'
+import { handleBlankLineDom } from '../component/ElementContainer/UpdateElements';
 
 // DECLARATION - const or variables 
 const WRAPPER_URL = config.WRAPPER_URL; // TO BE IMPORTED
@@ -178,6 +179,9 @@ export const getTitleSubtitleModel = (model, modelType) => {
 export const createTitleSubtitleModel = (titleHTML, subtitleHTML) => {
     let labelHTML = titleHTML.replace(/<br>/g, ""),
         titleModel = subtitleHTML.replace(/<br>/g, "")
+
+    labelHTML = handleBlankLineDom(labelHTML);
+    titleModel = handleBlankLineDom(titleModel);
 
     if(labelHTML === ""){
         return `<p>${titleModel}</p>`
@@ -401,7 +405,7 @@ const htmlEntityList = {
  */
 export const removeBlankTags = htmlString => {
     let domParsed = new DOMParser().parseFromString(htmlString, "text/html")
-    let emptyNodes = domParsed.childNodes[0].lastChild.querySelectorAll("*:not(img):not(head):not(br):not(p):not(li):empty")
+    let emptyNodes = domParsed.childNodes[0].lastChild.querySelectorAll("*:not(img):not(head):not(br):not(p):not(li):not(#blankLine):empty")
     if(emptyNodes && emptyNodes.length) {
         emptyNodes.forEach(x => x.remove())
         return removeBlankTags(domParsed.childNodes[0].lastChild.innerHTML)
@@ -437,4 +441,47 @@ export const removeUnoClass = (htmlString) => {
  */
 export const getSlateType = (slateObj) => {
     return slateObj && slateObj.type ? slateObj.type : null
+}
+
+/**
+ * Replaces a class and attribute in wiris img tag to prevent conversion to XML
+ * @param {*} currentTargetId current editor ID
+ */
+export const replaceWirisClassAndAttr = (currentTargetId) => {
+    const currentTarget = document.getElementById(currentTargetId)
+    let tempFirstContainerHtml = currentTarget && currentTarget.innerHTML
+    if (typeof tempFirstContainerHtml === "string") {
+        tempFirstContainerHtml = tempFirstContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
+        try {
+            currentTarget.innerHTML = tempFirstContainerHtml
+        }
+        catch {
+            currentTarget.innerHTML = tempFirstContainerHtml
+            console.log("error in setting HTML")
+        }
+    }
+}
+
+export const defaultMathImagePath = "https://cite-media-stg.pearson.com/legacy_paths/wiris-dev-mathtype-cache-use/cache/";
+
+/**
+ * Returns all id of elements present inside the showhide container
+ * @param {Object} element Showhide element data
+ */
+export const getShowhideChildUrns = (element) => {
+    
+    try {
+        const extractIdCallback = ({ id }) => id
+        const interactivedataObj = element.interactivedata
+        if (interactivedataObj) {
+            return [
+                ...interactivedataObj.show?.map?.(extractIdCallback) || [],
+                ...interactivedataObj.hide?.map?.(extractIdCallback) || [],
+                ...interactivedataObj.postertextobject?.map?.(extractIdCallback) || []
+            ]
+        }
+    } catch (error) {
+        console.error("Error in getting getShowhideChildUrns- returning fallback value", error)
+        return []
+    }
 }

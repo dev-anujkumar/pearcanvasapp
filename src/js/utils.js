@@ -441,8 +441,10 @@ export const spanHandlers = {
                 elementSearch.nextSibling.remove();
                 let innerSpans = elementSearch.getElementsByTagName('span');
                 for (let index = 0; index < innerSpans.length; index++) {
-                    let innerHtml = innerSpans[index].innerHTML;
-                    innerSpans[index].outerHTML = innerHtml;
+                    if(!innerSpans[index].classList.contains('answerLineContent')){
+                        let innerHtml = innerSpans[index].innerHTML;
+                        innerSpans[index].outerHTML = innerHtml;
+                    }
                 }
                 if (elementSearch.textContent.trim() == '') {
                     if (elementSearch.innerHTML == '') {
@@ -468,13 +470,17 @@ export const spanHandlers = {
                 }
                 innerSpans = elementSearch.getElementsByTagName('span');
                 for (let index = 0; index < innerSpans.length; index++) {
-                    let innerHtml = innerSpans[index].innerHTML;
-                    innerSpans[index].outerHTML = innerHtml;
+                    if(!innerSpans[index].classList.contains('answerLineContent')){
+                        let innerHtml = innerSpans[index].innerHTML;
+                        innerSpans[index].outerHTML = innerHtml;
+                    }
                 }
                 let innerSpansSibling = elementSearch.nextSibling.getElementsByTagName('span');
                 for (let index = 0; index < innerSpansSibling.length; index++) {
-                    let innerHtml = innerSpansSibling[index].innerHTML;
-                    innerSpansSibling[index].outerHTML = innerHtml;
+                    if(!innerSpansSibling[index].classList.contains('answerLineContent')){
+                        let innerHtml = innerSpansSibling[index].innerHTML;
+                        innerSpansSibling[index].outerHTML = innerHtml;
+                    }
                 }
                 if (elementSearch.nextSibling.textContent.trim() == '') {
                     if (elementSearch.nextSibling.innerHTML == '') {
@@ -499,8 +505,10 @@ export const spanHandlers = {
                 }
                 innerSpansSibling = elementSearch.nextSibling.getElementsByTagName('span');
                 for (let index = 0; index < innerSpansSibling.length; index++) {
-                    let innerHtml = innerSpansSibling[index].innerHTML;
-                    innerSpansSibling[index].outerHTML = innerHtml;
+                    if(!innerSpansSibling[index].classList.contains('answerLineContent')){
+                        let innerHtml = innerSpansSibling[index].innerHTML;
+                        innerSpansSibling[index].outerHTML = innerHtml;
+                    }
                 }
                 elementSearch.nextSibling.removeAttribute("data-id");
                 elementSearch.nextSibling.className = childClass;
@@ -519,11 +527,42 @@ export const spanHandlers = {
         }
     }
 }
+/**
+ * Returns the alt text of wiris image
+ * @param {Object} targetWirisImage 
+ */
+export const getWirisAltText = ({target}) =>{
+    const WIRIS_ALT_TEXT = target.getAttribute('alt');
+    return WIRIS_ALT_TEXT || 'ALT TEXT NOT FOUND';
+}
 
 /**
  * Removes Byte Order Markup (BOM text) i.e &#65279
  * @param {String} nodeHTML model HTML
  */
-export const removeBOM = (nodeHTML) => nodeHTML.replace(/﻿/g, "");
-export const removeImageCache = (nodeHTML) => nodeHTML.replace(/(?:\.png).*?[\"]/g,'.png?'+(new Date()).getTime()+'"');
+export const removeBOM = (nodeHTML) => nodeHTML && nodeHTML.replace(/﻿/g, "");
+export const removeImageCache = (nodeHTML) => nodeHTML && nodeHTML.replace(/(?:\.png).*?[\"]/g,'.png?'+(new Date()).getTime()+'"');
 
+export const showCustomAlert = (msg) => alert(msg);
+
+/**
+ * This function handles the img-src for Wiris content
+ * @param {*} dataHTML html content
+ */
+export const removeMathmlImageCache = (dataHTML) => {
+    let hiddenDiv = document.createElement('div');
+    hiddenDiv.innerHTML = dataHTML;
+    hiddenDiv.style.visibility = 'hidden';
+    document.body.appendChild(hiddenDiv);
+    let mathMlImages = hiddenDiv.getElementsByClassName('Wirisformula');
+    for (let index = 0; index < mathMlImages.length; index++) {
+        let imgSrc = mathMlImages[index].getAttribute('src');
+        if (imgSrc) {
+            imgSrc = imgSrc.replace(/(?:\.png).*?[\"]/g, '.png?' + (new Date()).getTime() + '"');
+            mathMlImages[index].setAttribute('src', imgSrc);
+        }
+    }
+    let finalDataHTML = hiddenDiv.innerHTML;
+    document.body.removeChild(hiddenDiv);
+    return finalDataHTML;
+}
