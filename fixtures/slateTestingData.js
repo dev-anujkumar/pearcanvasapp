@@ -2226,7 +2226,6 @@ export const figureDataTCM = {
         "type": "image"
         }
 }
-
 export const  learnosityData = [{
     'EntityURN': "urn:pearson:entity:69748294-909e-42e9-9e85-dc9c0b77bea1",
     'ItemBankId': "urn:pearson:itembank:a2399b07-ae2d-49db-90e5-a584a9498040",
