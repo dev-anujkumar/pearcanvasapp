@@ -991,12 +991,11 @@ class ElementContainer extends Component {
     }
 
     toolbarHandling = (action = "") => {
-        if (document.querySelector('div#tinymceToolbar .tox-toolbar')) {
-            if (action === "add") {
-                document.querySelector('div#tinymceToolbar .tox-toolbar').classList.add("disable");
-            } else if (action === "remove") {
-                document.querySelector('div#tinymceToolbar .tox-toolbar').classList.remove("disable");
-            }
+        let toolbar = document.querySelector('div#tinymceToolbar .tox-toolbar__primary')
+        if (action === "add") {
+            toolbar?.classList?.add("disable");
+        } else if (action === "remove") {
+            toolbar?.classList?.remove("disable");
         }
     }
 

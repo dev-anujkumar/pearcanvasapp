@@ -44,7 +44,7 @@ class GlossaryFootnotePopup extends Component {
             setFormattingToolbar('disableTinymceToolbar')
             setFormattingToolbar('disableGlossaryFootnoteToolbar')
         }
-        if (document.querySelector('div#toolbarGlossaryFootnote .tox-toolbar')) {
+        if (document.querySelector('div#toolbarGlossaryFootnote .tox-toolbar__primary')) {
             if (action === "add") {
                 setFormattingToolbar('disableGlossaryFootnoteToolbar')
             } else if (action === "remove") {

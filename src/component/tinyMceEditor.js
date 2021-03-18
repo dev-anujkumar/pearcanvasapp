@@ -10,6 +10,7 @@ import "tinymce/skins/content/default/content.css";
 import "tinymce/plugins/lists/plugin.min.js";
 import "tinymce/plugins/advlist/plugin.min.js";
 import "tinymce/plugins/paste/plugin.min.js";
+import "tinymce/icons/default/icons.min.js";
 // IMPORT - Components & Dependencies //
 import { EditorConfig, FormatSelectors, elementTypeOptions, insertMediaSelectors } from '../config/EditorConfig';
 import config from '../config/config';
@@ -2686,7 +2687,7 @@ export class TinyMceEditor extends Component {
     componentDidUpdate(prevProps) {
         let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");
         if (isBlockQuote) {
-            this.lastContent = document.getElementById('cypress-' + this.props.index).innerHTML;
+            this.lastContent = document.getElementById('cypress-' + this.props.index)?.innerHTML;
         }
         if (this.elementConverted || prevProps.element.subtype !== this.props.element.subtype) {
             let elementTypeNode = document.querySelector('button[aria-label="formatSelector"] .tox-tbtn__select-label');
@@ -3011,8 +3012,9 @@ export class TinyMceEditor extends Component {
                     this.removeBogusTagsFromDom();
                     this.removeAttributionBr();
                 }
+                this.setToolbarByElementType();
             });
-            this.setToolbarByElementType();
+            
         }
         /**
          * case - continuing with toggling glossary & footnote popup
@@ -3269,7 +3271,7 @@ export class TinyMceEditor extends Component {
     render() {
         const { slateLockInfo: { isLocked, userId } } = this.props;
         let lockCondition = isLocked && config.userId !== userId.replace(/.*\(|\)/gi, '');
-        this.handlePlaceholder();
+        // this.handlePlaceholder();  //Removed due to init delay with tinymce premium
 
         let classes = this.props.className ? this.props.className + " cypress-editable" : '' + "cypress-editable";
         let id = 'cypress-' + this.props.index;

@@ -488,6 +488,16 @@ describe('Testing Assessment Slate Data component', () => {
             assessmentSlateInstance8.mainAddAssessment(event, 'cite');
             expect(assessmentSlateInstance8.state.showCiteTdxComponent).toBe(true)
         })
+        it('Test 8.4-mainAddAssessment-TDX', () => {
+            jest.spyOn(assessmentSlateInstance8, 'mainAddAssessment')
+            assessmentSlateInstance8.mainAddAssessment(event, 'tdx');
+            expect(assessmentSlateInstance8.state.showCiteTdxComponent).toBe(true)
+        })
+        it('Test 8.5-mainAddAssessment-PUF', () => {
+            jest.spyOn(assessmentSlateInstance8, 'mainAddAssessment')
+            assessmentSlateInstance8.mainAddAssessment(event, 'puf');
+            expect(assessmentSlateInstance8.state.showElmComponent).toBe(true)
+        })
     })
     describe('Test 10- Other Functions', () => {
         const component9 = mount(<Provider store={store}><AssessmentSlateData
