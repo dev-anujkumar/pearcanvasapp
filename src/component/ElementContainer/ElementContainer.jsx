@@ -56,6 +56,7 @@ import { SET_SEARCH_URN, SET_COMMENT_SEARCH_URN } from './../../constants/Search
 import { ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, SECONDARY_SINGLE_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import elementTypes from './../Sidebar/elementTypes.js';
 import OpenAudioBook from '../AudioNarration/OpenAudioBook.jsx';
+import { getAlfrescositeResponse } from '../ElementFigure/AlfrescoSiteUrl_helper.js'
 
 class ElementContainer extends Component {
     constructor(props) {
@@ -990,12 +991,11 @@ class ElementContainer extends Component {
     }
 
     toolbarHandling = (action = "") => {
-        if (document.querySelector('div#tinymceToolbar .tox-toolbar')) {
-            if (action === "add") {
-                document.querySelector('div#tinymceToolbar .tox-toolbar').classList.add("disable");
-            } else if (action === "remove") {
-                document.querySelector('div#tinymceToolbar .tox-toolbar').classList.remove("disable");
-            }
+        let toolbar = document.querySelector('div#tinymceToolbar .tox-toolbar__primary')
+        if (action === "add") {
+            toolbar?.classList?.add("disable");
+        } else if (action === "remove") {
+            toolbar?.classList?.remove("disable");
         }
     }
 
@@ -1637,6 +1637,13 @@ class ElementContainer extends Component {
             });
             detailsToSet['elmFeedback'] = elmFeedback || [];
         }
+        const figureTypes = ["image", "mathImage", "table", "video", "audio"]
+        if((element?.type === "figure") && figureTypes.includes(element?.figuretype)){
+            getAlfrescositeResponse(id, (response) => {
+                detailsToSet['alfrescoSiteData'] = response
+            })
+        }
+
         console.log("Element Details action to be dispatched from here", detailsToSet)
 
         /** Dispatch details to the store */

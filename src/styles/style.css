@@ -108,8 +108,8 @@ table p {
 }
 
 .cypress-editable.place-holder::before{
-    content: attr(placeholder);
-    color: #ADADAD; 
+    content: attr(placeholder) !important;
+    color: #ADADAD !important; 
     display: block;
     position : absolute;
     margin-top : 7px;
@@ -209,22 +209,22 @@ i.fa.fa-asterisk,.fa .fa-bookmark {
     opacity: 0.34
 }
 
-#tinymceToolbar .tox-toolbar.disable {
+#tinymceToolbar .tox-toolbar__primary.disable {
     opacity: 0.4;
     cursor: not-allowed !important;
 }
 
-#tinymceToolbar .tox-toolbar.disable button.tox-tbtn {
+#tinymceToolbar .tox-toolbar__primary.disable button.tox-tbtn {
     /* cursor: not-allowed !important; */
     pointer-events: none !important;
 }
 
-#toolbarGlossaryFootnote .tox-toolbar.disable {
+#toolbarGlossaryFootnote .tox-toolbar__primary.disable {
     opacity: 0.4;
     cursor: not-allowed !important;
 }
 
-#toolbarGlossaryFootnote .tox-toolbar.disable button.tox-tbtn {
+#toolbarGlossaryFootnote .tox-toolbar__primary.disable button.tox-tbtn {
     pointer-events: none !important;
 }
 
@@ -335,4 +335,27 @@ p code, ul code, ol code{
 }
 .wrs_editor .wrs_font_inherit{
     font-family: 'Conv_stix', Arial, Helvetica, sans-serif !important;
+}
+
+.mce-content-body:not([dir=rtl])[data-mce-placeholder]:not(.mce-visualblocks)::before{
+    left: inherit !important;
+}
+
+.mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before {
+    color: #ADADAD !important;
+}
+
+.tox .tox-toolbar, .tox .tox-toolbar__overflow, .tox .tox-toolbar__primary {
+    border: none !important;
+}
+.tox-editor-container>:first-child {
+    border-left: none;
+}
+
+table:not([cellpadding]) td, table:not([cellpadding]) th {
+    padding: 0 !important;
+}
+
+.tox.tox-tinymce--toolbar-bottom .tox-editor-header, .tox.tox-tinymce-inline .tox-editor-header {
+    border: none !important;
 }
