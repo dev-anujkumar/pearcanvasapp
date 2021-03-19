@@ -5,11 +5,46 @@ import { sendDataToIframe, defaultMathImagePath } from '../../constants/utility.
 import config from '../../config/config';
 import { connect } from 'react-redux';
 import './../../styles/ElementMetaDataAnchor/ElementMetaDataAnchor.css';
-import { removeImageCache } from '../../js/utils';
+import loPopup from '../SlateWrapper/SlateWrapper_Actions.js';
+import { removeImageCache, } from '../../js/utils';
+import {showTocBlocker} from '../../js/toggleLoader';
+import PopUp from '../PopUp/PopUp';
+
 export class ElementMetaDataAnchor extends Component {
   constructor(props) {
     super(props);
+    this.state={
+      isLOPopup: false
+    }
   }
+
+
+  handleLOPopup = (loPopup)=>{
+    this.setState({
+      isLOPopup: loPopup
+    })
+}
+
+  loPopup = () => {
+  // if (this.state.isLOPopup) {
+      const dialogText = `Performing this action will remove  the current alignment of learning objectives to external framework.
+                            Do you want to continue?`;
+     showTocBlocker();
+      return (
+          <PopUp dialogText={dialogText}
+              active={true}
+              LOPopup={true}
+              handleLOPopup={this.handleLOPopup}
+               loPopupClass="lo-popup"
+              // splitSlateClass = "split-slate"
+              isInputDisabled={true}
+              isLOPopup = {this.state.isLOPopup}
+          />
+      )
+  // }
+
+  return null 
+}
   render() {
     let wipmodel = {
       "text": `<p>Metadata Anchor</p>`
@@ -50,6 +85,7 @@ export class ElementMetaDataAnchor extends Component {
             </div>
           </div>
         </div>
+        {this.state.isLOPopup?this.loPopup():null}
       </div>
 
     )
@@ -96,6 +132,9 @@ export class ElementMetaDataAnchor extends Component {
  */
   onLOClickHandle = (loData, e) => {
     e.stopPropagation();
+    this.props.showBlocker(true);
+    this.handleLOPopup(true);
+    /*
     this.props.handleFocus();
     if (config.editorRefID == e.target.id) {
       config.editorRefID = "";
@@ -105,8 +144,9 @@ export class ElementMetaDataAnchor extends Component {
       if (loData && loData.label && loData.label.en) {
         loData.label.en = this.props.currentSlateLODataMath;
       }
-      this.props.showBlocker(true);
-      let slateManifestURN= config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
+
+    
+       let slateManifestURN= config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
       let apiKeys_LO = {
         'loApiUrl': config.LEARNING_OBJECTIVES_ENDPOINT,
         'strApiKey': config.STRUCTURE_APIKEY,
@@ -115,8 +155,9 @@ export class ElementMetaDataAnchor extends Component {
         'manifestApiUrl': config.ASSET_POPOVER_ENDPOINT,
         'assessmentApiUrl': config.ASSESSMENT_ENDPOINT
       };
-      sendDataToIframe({ 'type': 'getLOEditPopup', 'message': { lodata: loData, projectURN: config.projectUrn, slateURN: slateManifestURN, apiKeys_LO, wrapperURL: config.WRAPPER_URL } })
-    }
+       sendDataToIframe({ 'type': 'getLOEditPopup', 'message': { lodata: loData, projectURN: config.projectUrn, slateURN: slateManifestURN, apiKeys_LO, wrapperURL: config.WRAPPER_URL } })
+       */
+      // }
   }
 
 }
@@ -146,4 +187,4 @@ const mapStateToProps = (state) => {
 
   }
 }
-export default connect(mapStateToProps)(ElementMetaDataAnchor);
+export default connect(mapStateToProps,{loPopup})(ElementMetaDataAnchor);

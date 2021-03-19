@@ -16,7 +16,8 @@ import {
     SET_PARENT_NODE,
     ERROR_POPUP,
     PAGE_NUMBER_LOADER,
-    WIRIS_ALT_TEXT_POPUP
+    WIRIS_ALT_TEXT_POPUP,
+    LO_POPUP
 
 } from '../../constants/Action_Constants';
 
@@ -910,6 +911,11 @@ export const wirisAltTextPopup = (data) => (dispatch) => {
     })
 }
 
+export const loPopup=()=>(dispatch)=>{
+    return dispatch({
+        type:LO_POPUP
+    })
+}
 /**
  * Calls the clone API to get the request ID
  * @param {*} insertionIndex index of insertion

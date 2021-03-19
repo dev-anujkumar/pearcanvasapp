@@ -16,7 +16,8 @@ class PopUp extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            wordPasteProceed: false
+            wordPasteProceed: false,
+            loProceed:false
         }
         this.modelRef = React.createRef();
     }
@@ -105,6 +106,14 @@ class PopUp extends React.Component {
                 <div className={`dialog-buttons ${props.isElmUpdateClass}`}>
                     <span className={`powerpaste-save-button ${this.state.wordPasteProceed ? '' : "disabled"}`} onClick={props.handlePowerPaste}>Proceed</span>
                     <span className="powerpaste-cancel-button"  onClick={() => props.handleCopyPastePopup(false)}>Cancel</span>
+                </div>
+            )
+        }
+        if (props.LOPopup) {
+            return (
+                <div className={`dialog-buttons ${props.assesmentClass}`}>
+                    <span className={`save-button ${this.state.loProceed ? '' : "disabled"}`} onClick={props.handleLOPopup(false)}>OK</span>
+                    <span className="cancel-button"  onClick={() => props.handleLOPopup(false)}>Cancel</span>
                 </div>
             )
         }
@@ -236,6 +245,13 @@ class PopUp extends React.Component {
                 <>
                     <h2 className='wordPastePopuptxt'>Paste from Word</h2>
                     <div className={`${props.wordPasteClass}`}>{props.dialogText}</div>            
+                </>
+            )
+        }else if (props.LOPopup) {
+            return (
+                <>
+                    <h2 className='loPopuptxt'>Warning</h2>
+                    <div className={`${props.loPopupClass}`}>{props.dialogText}</div>            
                 </>
             )
         }
