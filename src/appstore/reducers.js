@@ -42,7 +42,8 @@ import {
     SHOW_TOAST_MESSAGE,
     STORE_OLD_ASSET_FOR_TCM,
     WIRIS_ALT_TEXT_POPUP,
-    LEARNOSITY_PROJECT_INFO
+    LEARNOSITY_PROJECT_INFO,
+    PROJECT_LEARNING_FRAMEWORKS
 } from '../constants/Action_Constants';
 
 /**
@@ -75,7 +76,11 @@ const INITIAL_STATE = {
     showToast:false,
     oldFiguredata : {},
     wirisAltText : {},
-    isLearnosityProjectInfo:{}
+    isLearnosityProjectInfo:{},
+    cypressLF:{},
+    externalLF:{},
+    projectLearningFrameworks:{}
+
 };
 
 const INITIAL_ACTION = {
@@ -262,7 +267,13 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
             ...state,
             isLearnosityProjectInfo : action.payload
         }
-
+        case PROJECT_LEARNING_FRAMEWORKS : 
+        return {
+            ...state,
+            cypressLF: action.payload.cypressLF,
+            externalLF: action.payload.externalLF,
+            projectLearningFrameworks : action.payload.learningFrameworks
+        }
         default:
             return state;
     }

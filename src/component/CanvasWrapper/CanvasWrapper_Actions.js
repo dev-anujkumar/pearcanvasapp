@@ -16,7 +16,8 @@ import {
     SET_SLATE_LENGTH,
     SET_CURRENT_SLATE_DATA,
     GET_TCM_RESOURCES,
-    LEARNOSITY_PROJECT_INFO
+    LEARNOSITY_PROJECT_INFO,
+    PROJECT_LEARNING_FRAMEWORKS
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
@@ -1109,19 +1110,20 @@ export const fetchLearnosityContent = () => dispatch => {
 export const fetchProjectLFs = () => dispatch => {
     axios.get(`${config.ASSET_POPOVER_ENDPOINT}v2/${config.projectUrn}/learningframeworks`, {
         headers: {
-            "ApiKey": strApiKey,
+            "ApiKey": config.STRUCTURE_APIKEY,
             "Content-Type": "application/json",
-            "PearsonSSOSession": ssoToken,
+            "PearsonSSOSession": config.ssoToken,
             "x-Roles": "ContentPlanningAdmin"
         }
     }).then(response => {
         if (response.status === 200 && response?.data?.learningFrameworks?.length > 0) {
             const learningFrameworks = response.data.learningFrameworks;
-            const isCypressLF = learningFrameworks.find(learningFramework => config.projectTitle.includes(learningFramework?.label?.en));
+            const cypressLF = learningFrameworks.find(learningFramework => config.book_title.includes(learningFramework?.label?.en));
+            const externalLF = learningFrameworks.filter(learningFramework => !config.book_title.includes(learningFramework?.label?.en))
             dispatch({
-                type: 'PROJECT_LEARNING_FRAMEWORKS',
-                payload: {}
-            })
+                type: PROJECT_LEARNING_FRAMEWORKS,
+                payload: {learningFrameworks,cypressLF,externalLF}
+            });
         }
     }).catch(error => {
         console.log('Error in fetching Learning Framework linked to the project>>>> ', error)
