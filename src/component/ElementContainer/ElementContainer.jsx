@@ -991,7 +991,7 @@ class ElementContainer extends Component {
     }
 
     toolbarHandling = (action = "") => {
-        let toolbar = document.querySelector('div#tinymceToolbar .tox-toolbar__primary')
+        let toolbar = document.querySelector('div#tinymceToolbar .tox-toolbar')
         if (action === "add") {
             toolbar?.classList?.add("disable");
         } else if (action === "remove") {
