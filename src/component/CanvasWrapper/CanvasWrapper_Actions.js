@@ -1080,7 +1080,7 @@ export const setSlateLength = (length) => {
 
 
 export const fetchLearnosityContent = () => dispatch => {
-    return axios.get(`${config.STRUCTURE_API_URL}learnositycontentbridge-api/lcb/v1/bank2projapi/${config.projectEntityUrn}?${config.ssoToken}`, {
+    return axios.get(`${config.STRUCTURE_API_URL}learnositycontentbridge-api/lcb/v1/bank2projapi/${config.projectEntityUrn}?PearsonSSOSession=${config.ssoToken}`, {
         headers: {
             "Content-Type": "application/json",
             "PearsonSSOSession": config.ssoToken
@@ -1097,3 +1097,34 @@ export const fetchLearnosityContent = () => dispatch => {
             console.error('axios Error', err);
         })
 }
+/**
+ * This API fetches the Learning Framework(s) linked to the project
+ * @param {*} projectUrn project Durn 
+ * @param {*} ssoToken   pearson ssoToken
+ * @param {*} slateId    current slate id
+ * @param {*} projectTitle project Name
+ * @param {*} inputData LF label
+ * @param {*} apiConstants API constants object
+ */
+export const fetchProjectLFs = () => dispatch => {
+    axios.get(`${config.ASSET_POPOVER_ENDPOINT}v2/${config.projectUrn}/learningframeworks`, {
+        headers: {
+            "ApiKey": strApiKey,
+            "Content-Type": "application/json",
+            "PearsonSSOSession": ssoToken,
+            "x-Roles": "ContentPlanningAdmin"
+        }
+    }).then(response => {
+        if (response.status === 200 && response?.data?.learningFrameworks?.length > 0) {
+            const learningFrameworks = response.data.learningFrameworks;
+            const isCypressLF = learningFrameworks.find(learningFramework => config.projectTitle.includes(learningFramework?.label?.en));
+            dispatch({
+                type: 'PROJECT_LEARNING_FRAMEWORKS',
+                payload: {}
+            })
+        }
+    }).catch(error => {
+        console.log('Error in fetching Learning Framework linked to the project>>>> ', error)
+    })
+
+};
