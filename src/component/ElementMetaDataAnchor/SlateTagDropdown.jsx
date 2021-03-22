@@ -258,7 +258,7 @@ class SlateTagDropdown extends React.Component {
           <div className="learningobjectivedropdown" ref={node => this.node = node}>
             <ul>
                 <li onClick={this.toggleLoOptionsDropdown}> {AlignToCypressSlateDropdown}</li>
-                <li onClick={this.learningObjectiveDropdown} className={enableExtLO?'disable-buttton':''}>{AlignToExternalFrameworkSlateDropdown}</li>
+                <li onClick={this.learningObjectiveDropdown} className={enableExtLO ? '' : 'disable-buttton'}>{AlignToExternalFrameworkSlateDropdown}</li>
             </ul>
             </div>
             {
