@@ -911,9 +911,10 @@ export const wirisAltTextPopup = (data) => (dispatch) => {
     })
 }
 
-export const loPopup=()=>(dispatch)=>{
+export const lOWarningPopup=(toggleLOWarning,dialogTxt)=>(dispatch)=>{
     return dispatch({
-        type:LO_POPUP
+        type:LO_WARNING_POPUP,
+        payload:{toggleLOWarning,dialogTxt}
     })
 }
 /**

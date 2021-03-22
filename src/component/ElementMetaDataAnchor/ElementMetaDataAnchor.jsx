@@ -5,17 +5,13 @@ import { sendDataToIframe, defaultMathImagePath } from '../../constants/utility.
 import config from '../../config/config';
 import { connect } from 'react-redux';
 import './../../styles/ElementMetaDataAnchor/ElementMetaDataAnchor.css';
-import loPopup from '../SlateWrapper/SlateWrapper_Actions.js';
+import { lOWarningPopup } from '../SlateWrapper/SlateWrapper_Actions';
 import { removeImageCache, } from '../../js/utils';
-import {showTocBlocker} from '../../js/toggleLoader';
-import PopUp from '../PopUp/PopUp';
 
 export class ElementMetaDataAnchor extends Component {
   constructor(props) {
     super(props);
-    this.state={
-      isLOPopup: false
-    }
+
   }
 
 
@@ -25,26 +21,26 @@ export class ElementMetaDataAnchor extends Component {
     })
 }
 
-  loPopup = () => {
-  // if (this.state.isLOPopup) {
-      const dialogText = `Performing this action will remove  the current alignment of learning objectives to external framework.
-                            Do you want to continue?`;
-     showTocBlocker();
-      return (
-          <PopUp dialogText={dialogText}
-              active={true}
-              LOPopup={true}
-              handleLOPopup={this.handleLOPopup}
-               loPopupClass="lo-popup"
-              // splitSlateClass = "split-slate"
-              isInputDisabled={true}
-              isLOPopup = {this.state.isLOPopup}
-          />
-      )
-  // }
+//   loPopup = () => {
+//   // if (this.state.isLOPopup) {
+//      const dialogText = `Performing this action will remove  the current alignment of learning objectives to external framework.
+//                             Do you want to continue?`;
+//      showTocBlocker();
+//       return (
+//           <PopUp dialogText={dialogText}
+//               active={true}
+//               LOPopup={true}
+//               handleLOPopup={this.handleLOPopup}
+//                loPopupClass="lo-popup"
+//               // splitSlateClass = "split-slate"
+//               isInputDisabled={true}
+//               isLOPopup = {this.state.isLOPopup}
+//           />
+//       )
+//   // }
 
-  return null 
-}
+//   return null 
+// }
   render() {
     let wipmodel = {
       "text": `<p>Metadata Anchor</p>`
@@ -85,7 +81,6 @@ export class ElementMetaDataAnchor extends Component {
             </div>
           </div>
         </div>
-        {this.state.isLOPopup?this.loPopup():null}
       </div>
 
     )
@@ -130,11 +125,14 @@ export class ElementMetaDataAnchor extends Component {
     * @description - show popup on click on element that no data is present and also edit the data
     * @param {object} loldata
  */
-  onLOClickHandle = (loData, e) => {
-    e.stopPropagation();
-    this.props.showBlocker(true);
-    this.handleLOPopup(true);
+  onLOClickHandle = (e) => {
+  //  e.stopPropagation();
+    lOWarningPopup(true,'Abcd');
+    // this.handleLOPopup(true);
+  }
     /*
+    onLOClickHandle = (loData, e) => {
+    e.stopPropagation();
     this.props.handleFocus();
     if (config.editorRefID == e.target.id) {
       config.editorRefID = "";
@@ -160,7 +158,6 @@ export class ElementMetaDataAnchor extends Component {
       // }
   }
 
-}
 ElementMetaDataAnchor.defaultProps = {
   type: "element-learningobjectivemapping"
 }
@@ -187,4 +184,4 @@ const mapStateToProps = (state) => {
 
   }
 }
-export default connect(mapStateToProps,{loPopup})(ElementMetaDataAnchor);
+export default connect(mapStateToProps)(ElementMetaDataAnchor);

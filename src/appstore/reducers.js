@@ -5,6 +5,7 @@
  */
 
 // IMPORT - Action constants //
+import { act } from 'react-test-renderer';
 import {
     FETCH_SLATE_DATA,
     SET_ACTIVE_ELEMENT,
@@ -41,7 +42,8 @@ import {
     SET_TOAST_MESSAGE,
     SHOW_TOAST_MESSAGE,
     STORE_OLD_ASSET_FOR_TCM,
-    WIRIS_ALT_TEXT_POPUP
+    WIRIS_ALT_TEXT_POPUP,
+    LO_WARNING_POPUP
 } from '../constants/Action_Constants';
 
 /**
@@ -73,7 +75,8 @@ const INITIAL_STATE = {
     toastMessage:"",
     showToast:false,
     oldFiguredata : {},
-    wirisAltText : {}
+    wirisAltText : {},
+    lOWarningDialog :{}
 };
 
 const INITIAL_ACTION = {
@@ -254,6 +257,12 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
             ...state,
             wirisAltText : action.payload
         }
+        case LO_WARNING_POPUP:
+            return{
+                ...state,
+                lOWarningDialog: action.payload.dailogTxt,
+                // LO_WARNING_TOGGLE_POPUP: action.payload.toggleLOWarning
+            }
         default:
             return state;
     }

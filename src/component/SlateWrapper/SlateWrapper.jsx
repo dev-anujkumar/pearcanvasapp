@@ -12,7 +12,7 @@ import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
 import { SlateFooter } from './SlateFooter.jsx';
 
 /** pasteElement function location to be changed */
-import { createElement, swapElement, setSplittedElementIndex, updatePageNumber, accessDenied, pasteElement, wirisAltTextPopup } from './SlateWrapper_Actions';
+import { createElement, swapElement, setSplittedElementIndex, updatePageNumber, accessDenied, pasteElement, wirisAltTextPopup,lOWarningPopup} from './SlateWrapper_Actions';
 import { sendDataToIframe, getSlateType } from '../../constants/utility.js';
 import { ShowLoader, SplitCurrentSlate } from '../../constants/IFrameMessageTypes.js';
 import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
@@ -1229,6 +1229,31 @@ class SlateWrapper extends Component {
             return null
         }
     }
+
+    lOWarningPopup = () => {
+        console.log("in LO WAriningPOpup");
+        if(this.props.lOWarningDialog){
+            this.props.showBlocker(true)
+            showTocBlocker();
+            return (
+                <PopUp dialogText={this.props.lOWarningDialog}
+                    active={true}
+                    togglePopup={this.closeWarningLOPopup}
+                    altText={true}
+                    isInputDisabled={true}
+                    splitSlateClass="split-slate"
+                />
+            )
+        }
+            return null
+    }
+
+    closeWarningLOPopup = () => {
+        this.props.lOWarningPopup(false, '');
+        this.props.showBlocker(false)
+        hideBlocker()
+    }
+
     closeWirisAltTextPopup = () => {
         this.props.wirisAltTextPopup({showPopup : false, altText : ''})
         this.props.showBlocker(false)
@@ -1288,6 +1313,7 @@ class SlateWrapper extends Component {
                 {this.showLockReleasePopup()}
                 {this.showAssessmentConfirmationPopup()}
                 {this.wirisAltTextPopup()}
+                {this.lOWarningPopup()}
                 {/* **************** Word Paste Popup ************ */}
                 {this.showWordPastePopup()}
             </React.Fragment>
@@ -1367,6 +1393,7 @@ export default connect(
         getCommentElements,
         pasteElement,
         wirisAltTextPopup,
+        lOWarningPopup,
         audioGlossaryPopup,
         createPowerPasteElements
     }

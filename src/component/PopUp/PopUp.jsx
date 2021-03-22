@@ -111,9 +111,9 @@ class PopUp extends React.Component {
         }
         if (props.LOPopup) {
             return (
-                <div className={`dialog-buttons ${props.assesmentClass}`}>
-                    <span className={`save-button ${this.state.loProceed ? '' : "disabled"}`} onClick={props.handleLOPopup(false)}>OK</span>
-                    <span className="cancel-button"  onClick={() => props.handleLOPopup(false)}>Cancel</span>
+                <div className={`dialog-buttons ${props.splitSlateClass}`}>
+                    <span className={`save-button ${this.state.loProceed ? '' : "disabled"}`} onClick={(e)=>props.togglePopup(e)}>OK</span>
+                    <span className="cancel-button"  onClick={(e) => props.togglePopup(e)}>Cancel</span>
                 </div>
             )
         }
@@ -251,7 +251,7 @@ class PopUp extends React.Component {
             return (
                 <>
                     <h2 className='loPopuptxt'>Warning</h2>
-                    <div className={`${props.loPopupClass}`}>{props.dialogText}</div>            
+                    <div className={`${props.splitSlateClass}`}>{props.lOWarningDialog}</div>            
                 </>
             )
         }

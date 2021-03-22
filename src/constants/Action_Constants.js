@@ -148,4 +148,4 @@ export const WIRIS_ALT_TEXT_POPUP = 'WIRIS_ALT_TEXT_POPUP';
 export const VERSIONING_SLATEMANIFEST = "VERSIONING_SLATEMANIFEST"
 
 /*--------------------- LO Popup------------------------------*/
-export const LO_POPUP="LO_POPUP"
+export const LO_WARNING_POPUP="LO_WARNING_POPUP"
