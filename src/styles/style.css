@@ -267,6 +267,12 @@ P.paragraphNumeroUnoIndentLevel1, P.paragraphNumeroUnoIndentLevel2, P.paragraphN
     font-family: 'Open Sans',sans-serif;
     cursor: pointer;
 }
+.learningobjectivedropdown li.disable-buttton {
+    pointer-events: none;
+    opacity: 0.6;
+    cursor: not-allowed;
+    color: gray;
+}
 /* .mce-content-body .Wirisformula[data-custom-editor="chemistry"]{
     vertical-align: -1px!important;
 } */

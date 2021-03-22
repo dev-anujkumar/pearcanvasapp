@@ -13,7 +13,7 @@ import {
 import { sendDataToIframe , hasReviewerRole, defaultMathImagePath } from '../../constants/utility.js';
 import { connect } from 'react-redux';
 import { ASSESSMENT_ITEM, ASSESSMENT_ITEM_TDX } from '../../constants/Element_Constants';
-import {  FULL_ASSESSMENT_CITE, FULL_ASSESSMENT_TDX, FULL_ASSESSMENT_PUF, LEARNING_APP_TYPE, LEARNOSITY, LEARNING_TEMPLATE, PUF, CITE, TDX } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
+import { LEARNOSITY, LEARNING_TEMPLATE, PUF, CITE, TDX } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 
 // Static data for rendering external alignment pop-up.
 const externalLoData = {
@@ -164,17 +164,12 @@ class SlateTagDropdown extends React.Component {
         assessmentType = document.getElementsByClassName("slate_assessment_data_format_lo")[0].innerText;
         }
         switch (assessmentType) {
-
             case TDX:
-            case FULL_ASSESSMENT_TDX:
                 assessmentTypeLO = ASSESSMENT_ITEM_TDX
                 break;
-            case FULL_ASSESSMENT_CITE:
             case CITE:
             case LEARNING_TEMPLATE:
-            case LEARNING_APP_TYPE:
             case PUF:
-            case FULL_ASSESSMENT_PUF:
             case LEARNOSITY:
             default: 
                 assessmentTypeLO = ASSESSMENT_ITEM
@@ -230,15 +225,40 @@ class SlateTagDropdown extends React.Component {
     toggleLoOptionsDropdown = () => {
         this.setState({showLoOptions:!this.state.showLoOptions})
     }
-   
+  
+
+  launchExternalFrameworkPopup = (e) => {
+    let apiKeys_LO = {
+      'loApiUrl': config.LEARNING_OBJECTIVES_ENDPOINT,
+      'strApiKey': config.STRUCTURE_APIKEY,
+      'mathmlImagePath': config.S3MathImagePath ? config.S3MathImagePath : defaultMathImagePath,
+      'productApiUrl': config.PRODUCTAPI_ENDPOINT,
+      'manifestApiUrl': config.ASSET_POPOVER_ENDPOINT,
+      'assessmentApiUrl': config.ASSESSMENT_ENDPOINT
+    };
+    // launch CE SPA 
+    if (e.target.innerText == AlignToExternalFrameworkSlateDropdown) {
+      sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': AlignToExternalFramework, 'data': externalLoData, 'currentSlateId': slateManifestURN, 'chapterContainerUrn': '', 'isLOExist': true, 'editAction': '', 'apiConstants': apiKeys_LO } })
+    }
+    this.props.closeLODropdown();
+  } 
+  /** To enable/disable the External Framework option in dropdown */
+  checkExternalFramework = () => {
+    let enableExtLF = false;
+    if (this?.props?.projectLearningFrameworks?.externalLF?.length) {
+      enableExtLF = true;
+    }
+    return enableExtLF;
+  }
 
     render = () => {
+      const enableExtLO =this.checkExternalFramework()
         return (
             <div>
           <div className="learningobjectivedropdown" ref={node => this.node = node}>
             <ul>
                 <li onClick={this.toggleLoOptionsDropdown}> {AlignToCypressSlateDropdown}</li>
-                <li onClick={this.learningObjectiveDropdown}>{AlignToExternalFrameworkSlateDropdown}</li>
+                <li onClick={this.learningObjectiveDropdown} className={enableExtLO?'disable-buttton':''}>{AlignToExternalFrameworkSlateDropdown}</li>
             </ul>
             </div>
             {
@@ -265,7 +285,8 @@ class SlateTagDropdown extends React.Component {
 const mapStateToProps = (state) => {
     return {
         isLOExist: state.metadataReducer.slateTagEnable,
-        slateLockInfo: state.slateLockReducer.slateLockInfo
+        slateLockInfo: state.slateLockReducer.slateLockInfo,
+        projectLearningFrameworks: state.metadataReducer.projectLearningFrameworks
     }
 }
 const mapActionToProps = {

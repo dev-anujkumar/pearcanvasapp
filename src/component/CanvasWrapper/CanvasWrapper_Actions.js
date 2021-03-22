@@ -1100,12 +1100,6 @@ export const fetchLearnosityContent = () => dispatch => {
 }
 /**
  * This API fetches the Learning Framework(s) linked to the project
- * @param {*} projectUrn project Durn 
- * @param {*} ssoToken   pearson ssoToken
- * @param {*} slateId    current slate id
- * @param {*} projectTitle project Name
- * @param {*} inputData LF label
- * @param {*} apiConstants API constants object
  */
 export const fetchProjectLFs = () => dispatch => {
     axios.get(`${config.ASSET_POPOVER_ENDPOINT}v2/${config.projectUrn}/learningframeworks`, {
@@ -1122,11 +1116,18 @@ export const fetchProjectLFs = () => dispatch => {
             const externalLF = learningFrameworks.filter(learningFramework => !config.book_title.includes(learningFramework?.label?.en))
             dispatch({
                 type: PROJECT_LEARNING_FRAMEWORKS,
-                payload: {learningFrameworks,cypressLF,externalLF}
+                payload: {
+                    cypressLF: cypressLF ?? {},
+                    externalLF: externalLF ?? []
+                }
             });
         }
     }).catch(error => {
         console.log('Error in fetching Learning Framework linked to the project>>>> ', error)
+        dispatch({
+            type: PROJECT_LEARNING_FRAMEWORKS,
+            payload: {}
+        });
     })
 
 };

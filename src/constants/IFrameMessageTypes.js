@@ -32,7 +32,7 @@ export const TocRefreshVersioning = "tocRefreshVersioning"
 export const SendMessageForVersioning = "sendMessageForVersioning"
 export const projectPendingTcStatus = "projectPendingTcStatus"
 
-export const AlignToCypressSlateDropdown = "Align to Cypress"
+export const AlignToCypressSlateDropdown = "Align to Cypress Framework"
 export const AlignToExternalFrameworkSlateDropdown = "Align to External Framework"
 
 
