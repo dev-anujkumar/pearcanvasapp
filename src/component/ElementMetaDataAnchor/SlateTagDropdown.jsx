@@ -14,7 +14,7 @@ import { sendDataToIframe , hasReviewerRole, defaultMathImagePath } from '../../
 import { connect } from 'react-redux';
 import { ASSESSMENT_ITEM, ASSESSMENT_ITEM_TDX } from '../../constants/Element_Constants';
 import { LEARNOSITY, LEARNING_TEMPLATE, PUF, CITE, TDX } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
-
+import PopUp from '../PopUp/PopUp.jsx';
 // Static data for rendering external alignment pop-up.
 const externalLoData = {
     "id": "urn:pearson:goalframework:6f5e707c-4d7a-4294-b02c-ad2a4af94d68",
@@ -123,7 +123,8 @@ class SlateTagDropdown extends React.Component {
     constructor(props) {
         super(props);
         this.state ={
-            showLoOptions:false
+            showLoOptions:false,
+            showWarningPopup:false
         }
     }
    
@@ -237,10 +238,14 @@ class SlateTagDropdown extends React.Component {
       'assessmentApiUrl': config.ASSESSMENT_ENDPOINT
     };
     // launch CE SPA 
-    if (e.target.innerText == AlignToExternalFrameworkSlateDropdown) {
-      sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': AlignToExternalFramework, 'data': externalLoData, 'currentSlateId': slateManifestURN, 'chapterContainerUrn': '', 'isLOExist': true, 'editAction': '', 'apiConstants': apiKeys_LO } })
-    }
-    this.props.closeLODropdown();
+    // if (e.target.innerText == AlignToExternalFrameworkSlateDropdown) {
+    //   sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': AlignToExternalFramework, 'data': externalLoData, 'currentSlateId': slateManifestURN, 'chapterContainerUrn': '', 'isLOExist': true, 'editAction': '', 'apiConstants': apiKeys_LO } })
+    // }
+    /**
+     * toggle functio for popup to be called based on LF type
+     */
+    this.toggleWarningPopup(true,e);
+    // this.props.closeLODropdown();
   } 
   /** To enable/disable the External Framework option in dropdown */
   checkExternalFramework = () => {
@@ -250,7 +255,46 @@ class SlateTagDropdown extends React.Component {
     }
     return enableExtLF;
   }
+  showLOWarningPopup = () => {
+    /**
+     * declare warningText from store value based on LF type 
+     */
+    if (this.state.showWarningPopup) {
+      // this.props.showBlocker(true)
+      // showTocBlocker();
+      //props..curentLF == 'cypress' ? 'text with same value'
+      return (
+        <PopUp dialogText={'Text'}//warningText | send dialog value here
+          active={true}
+          warningHeaderText={`Warning`}
+          togglePopup={this.toggleWarningPopup}
+          isInputDisabled={true}
+          lOPopupClass="split-slate"
+          LOPopup={true}
+          yesButtonHandler={this.unlinkSlateLOs}
+        />
+      )
+    } else {
+      return null
+    }
+  }
+  unlinkSlateLOs = (e) => {
+    /**
+     * add handler here
+     */
+    alert('unlink data')
+    this.toggleWarningPopup(false,e);
+  }
 
+  toggleWarningPopup = (toggleValue, event) => {
+    if (event) {
+      event.preventDefault();
+    }
+    this.setState({
+      showWarningPopup: toggleValue
+    })
+    // this.showCanvasBlocker(toggleValue);
+  }
     render = () => {
       const enableExtLO =this.checkExternalFramework()
         return (
@@ -258,7 +302,7 @@ class SlateTagDropdown extends React.Component {
           <div className="learningobjectivedropdown" ref={node => this.node = node}>
             <ul>
                 <li onClick={this.toggleLoOptionsDropdown}> {AlignToCypressSlateDropdown}</li>
-                <li onClick={this.learningObjectiveDropdown} className={enableExtLO ? '' : 'disable-buttton'}>{AlignToExternalFrameworkSlateDropdown}</li>
+                <li onClick={this.launchExternalFrameworkPopup} className={enableExtLO ? '' : 'disable-buttton'}>{AlignToExternalFrameworkSlateDropdown}</li>
             </ul>
             </div>
             {
@@ -277,7 +321,7 @@ class SlateTagDropdown extends React.Component {
                 </ul>
             </div> 
             }
-           
+           {this.showLOWarningPopup()}
         </div>            
         )
     }

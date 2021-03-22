@@ -108,6 +108,14 @@ class PopUp extends React.Component {
                 </div>
             )
         }
+        if (props.LOPopup) {
+            return (
+                <div className={`dialog-buttons ${props.lOPopupClass}`}>
+                    <span className={`save-button ${props.lOPopupClass}`} onClick={(e)=>props.yesButtonHandler(e)}>Yes</span>
+                    <span className="cancel-button"  onClick={(e) => props.togglePopup(false,e)}>Cancel</span>
+                </div>
+            )
+        }
         else {
             return (
                 <div className={`dialog-buttons ${props.assessmentClass}`}>
@@ -123,7 +131,7 @@ class PopUp extends React.Component {
     * @param {event} 
     */
     renderInputBox = (props) => {
-        if (props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.removeConfirmation || props.wrongAudio || props.lockForTOC || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText) {
+        if (props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.removeConfirmation || props.wrongAudio || props.lockForTOC || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.LOPopup) {
             return null
         }
         else if (props.isLockPopup && props.withInputBox && !props.lockForTOC) {
@@ -158,7 +166,7 @@ class PopUp extends React.Component {
     }
 
     renderCloseSymbol = (props) => {
-        if (props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup) {
+        if (props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup || props.LOPopup) {
             return null
         }
         else {
@@ -236,6 +244,13 @@ class PopUp extends React.Component {
                 <>
                     <h2 className='wordPastePopuptxt'>Paste from Word</h2>
                     <div className={`${props.wordPasteClass}`}>{props.dialogText}</div>            
+                </>
+            )
+        }else if (props.LOPopup) {
+            return (
+                <>
+                    <h2 className='loPopuptxt'>{`${props.warningHeaderText}`}</h2>
+                    <div className={`${props.lOPopupClass}`}>{props.dialogText}</div>
                 </>
             )
         }
