@@ -1,3 +1,6 @@
+import { 
+    CURRENT_SLATE_LF
+} from '../../constants/Action_Constants.js';
 export const currentSlateLO = (currentSlateLOData) =>  (dispatch, getState) => {
     return dispatch({
         type: 'CURRENT_SLATE_LO_DATA',
@@ -65,5 +68,21 @@ export const reRenderLO = (isRenderLO) => (dispatch, getState) => {
     dispatch({
         type: 'RE_RENDER_META_LO',
         payload: isRenderLO
+    })
+}
+
+export const currentSlateLOType = (currentSlateLOData) => (dispatch) => {
+    let learningFrameWork = '';
+    if (currentSlateLOData?.description?.en === 'highereducation') {
+        learningFrameWork = 'cypressLF'
+    }
+    else if (currentSlateLOData?.description) {
+        learningFrameWork = 'externalLF'
+    }
+    return dispatch({
+        type: CURRENT_SLATE_LF,
+        payload: {
+            currentSlateLF: learningFrameWork,
+        }
     })
 }

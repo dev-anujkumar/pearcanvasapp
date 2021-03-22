@@ -142,6 +142,7 @@ function CommunicationChannel(WrappedComponent) {
                     }
                     this.props.currentSlateLO(message);
                     this.props.isLOExist(message);
+                    this.props.currentSlateLOType(message);
                     break;
                 case 'loEditResponse':
                     this.setState({

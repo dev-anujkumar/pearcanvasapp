@@ -1,6 +1,6 @@
 import {
     CURRENT_SLATE_LO_DATA, SLATE_TAG_ENABLE, SHOW_MODULE_NAME, CURRENT_SLATE_LO_DATA_MATH, SHOW_SLATE_LOCK_POPUP,RE_RENDER_META_LO,
-    PROJECT_LEARNING_FRAMEWORKS
+    PROJECT_LEARNING_FRAMEWORKS, CURRENT_SLATE_LF
 } from '../constants/Action_Constants';
 
 const INIT_STATE = {
@@ -13,7 +13,8 @@ const INIT_STATE = {
     projectLearningFrameworks:{
         cypressLF:{},
         externalLF:[]
-    }
+    },
+    currentSlateLF:""
 }
 
 const INITIAL_ACTION = {
@@ -66,6 +67,11 @@ export default function (state = INIT_STATE, action = INITIAL_ACTION) {
                     cypressLF: cypressLF ?? state.projectLearningFrameworks.cypressLF,
                     externalLF: externalLF ?? state.projectLearningFrameworks.externalLF
                 }
+            }
+        case CURRENT_SLATE_LF:
+            return {
+                ...state,
+                currentSlateLF: action.payload.currentSlateLF
             }
         default:
             return state;
