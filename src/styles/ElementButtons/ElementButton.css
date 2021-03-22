@@ -50,8 +50,24 @@
 .btn-element.paste-icon,
 .btn-element.forward-nav-active,
 .btn-element.backward-nav-active,
+.btn-element.power-paste-icon,
 .btn-element.color-palette {
     background-color: transparent;
+}
+
+.btn-element.power-paste-icon > img {
+    width:23px;
+}
+
+.power-paste-icon{
+    width: 30px;
+    height: 30px;
+    left: -2px;
+    z-index: 10;
+    cursor: pointer;
+    margin-bottom: -6px;
+    padding-top: 3px;
+    margin-left: -10px;
 }
 
 .btn-element.color-text {

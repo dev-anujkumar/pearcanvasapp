@@ -1,5 +1,6 @@
 import axios from 'axios';
 import config from '../../config/config';
+import store from '../../appstore/store.js'
 import {
     FETCH_SLATE_DATA,
     SET_ACTIVE_ELEMENT,
@@ -14,7 +15,8 @@ import {
     GET_PAGE_NUMBER,
     SET_SLATE_LENGTH,
     SET_CURRENT_SLATE_DATA,
-    GET_TCM_RESOURCES
+    GET_TCM_RESOURCES,
+    LEARNOSITY_PROJECT_INFO
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
@@ -26,7 +28,7 @@ import figureData from '../ElementFigure/figureTypes.js';
 import { fetchAllSlatesData, setCurrentSlateAncestorData } from '../../js/getAllSlatesData.js';
 import { handleTCMData } from '../TcmSnapshots/TcmSnapshot_Actions.js';
 import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
-import { ELM_INT, FIGURE_ASSESSMENT, ELEMENT_ASSESSMENT } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
+import { ELM_INT, FIGURE_ASSESSMENT, ELEMENT_ASSESSMENT, LEARNOSITY } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 import { fetchAssessmentMetadata, resetAssessmentStore } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import { isElmLearnosityAssessment } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
@@ -152,6 +154,12 @@ export const findElementType = (element, index) => {
                             }
                         }
                         let assessmentFormat = element.figuredata.elementdata.assessmentformat.toLowerCase()
+                        const isLearnosityProjectInfo = store?.getState()?.appStore?.isLearnosityProjectInfo
+                        if(isLearnosityProjectInfo && isLearnosityProjectInfo[0]?.ItemBankName){
+                            assessmentFormat = LEARNOSITY
+                        }else{
+                            assessmentFormat = element.figuredata.elementdata.assessmentformat.toLowerCase()
+                        }
                         elementType = {
                             elementType: elementDataBank[element.type][element.figuretype]["elementType"],
                             primaryOption: elementDataBank[element.type][element.figuretype]["primaryOption"],
@@ -1078,4 +1086,24 @@ export const setSlateLength = (length) => {
         type: SET_SLATE_LENGTH,
         payload: length
     }
+}
+
+
+export const fetchLearnosityContent = () => dispatch => {
+    return axios.get(`${config.STRUCTURE_API_URL}learnositycontentbridge-api/lcb/v1/bank2projapi/${config.projectEntityUrn}?${config.ssoToken}`, {
+        headers: {
+            "Content-Type": "application/json",
+            "PearsonSSOSession": config.ssoToken
+        }
+    }).then((response) => {
+     if(response.status==200){
+           dispatch({
+               type: LEARNOSITY_PROJECT_INFO,
+                payload: response.data
+            });
+        }
+    })
+        .catch(err => {
+            console.error('axios Error', err);
+        })
 }

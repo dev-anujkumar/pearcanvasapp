@@ -857,7 +857,7 @@ class SlateWrapper extends Component {
      */
     showWordPastePopup = () => {
         if (this.state.isWordPastePopup) {
-            const dialogText = `Press Ctrl/Cmd + V/v in the text below to paste your copied content.`
+            const dialogText = `Press Ctrl/Cmd + V/v in the textbox below to paste your copied content.`
             return (
                 <PopUp dialogText={dialogText}
                     active={true}

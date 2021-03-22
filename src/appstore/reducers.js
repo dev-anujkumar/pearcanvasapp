@@ -41,7 +41,8 @@ import {
     SET_TOAST_MESSAGE,
     SHOW_TOAST_MESSAGE,
     STORE_OLD_ASSET_FOR_TCM,
-    WIRIS_ALT_TEXT_POPUP
+    WIRIS_ALT_TEXT_POPUP,
+    LEARNOSITY_PROJECT_INFO
 } from '../constants/Action_Constants';
 
 /**
@@ -73,7 +74,8 @@ const INITIAL_STATE = {
     toastMessage:"",
     showToast:false,
     oldFiguredata : {},
-    wirisAltText : {}
+    wirisAltText : {},
+    isLearnosityProjectInfo:{}
 };
 
 const INITIAL_ACTION = {
@@ -254,6 +256,13 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
             ...state,
             wirisAltText : action.payload
         }
+
+        case LEARNOSITY_PROJECT_INFO : 
+        return {
+            ...state,
+            isLearnosityProjectInfo : action.payload
+        }
+
         default:
             return state;
     }

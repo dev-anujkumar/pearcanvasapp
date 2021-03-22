@@ -123,7 +123,8 @@ function CommunicationChannel(WrappedComponent) {
                     config.projectEntityUrn = message.entityUrn;
                     config.alfrescoMetaData = message;
                     config.book_title = message.name;
-                    this.props.fetchAuthUser()
+                    this.props.fetchAuthUser(),
+                    this.props.fetchLearnosityContent(),
                     this.props.tcmCosConversionSnapshot()       // for creation of pre-snapshots for cos converted projects
                     break;
                 case 'permissionsDetails':

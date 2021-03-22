@@ -1,5 +1,5 @@
 import { CONTENT_STYLE } from './TinymceDefaultCss';
-import 'tinymce/plugins/charmap';
+import 'tinymce/plugins/charmap/plugin';
 import { handleC2MediaClick } from '../js/TinyMceUtility.js';
 import ElementConstants from '../component/ElementContainer/ElementConstants.js';
 export const EditorConfig = {
