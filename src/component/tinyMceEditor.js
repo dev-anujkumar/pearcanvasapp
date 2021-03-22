@@ -10,7 +10,6 @@ import "tinymce/skins/content/default/content.css";
 import "tinymce/plugins/lists/plugin.min.js";
 import "tinymce/plugins/advlist/plugin.min.js";
 import "tinymce/plugins/paste/plugin.min.js";
-import "tinymce/icons/default/icons.min.js";
 // IMPORT - Components & Dependencies //
 import { EditorConfig, FormatSelectors, elementTypeOptions, insertMediaSelectors } from '../config/EditorConfig';
 import config from '../config/config';
@@ -3012,9 +3011,8 @@ export class TinyMceEditor extends Component {
                     this.removeBogusTagsFromDom();
                     this.removeAttributionBr();
                 }
-                this.setToolbarByElementType();
             });
-            
+            this.setToolbarByElementType(); 
         }
         /**
          * case - continuing with toggling glossary & footnote popup
@@ -3271,7 +3269,7 @@ export class TinyMceEditor extends Component {
     render() {
         const { slateLockInfo: { isLocked, userId } } = this.props;
         let lockCondition = isLocked && config.userId !== userId.replace(/.*\(|\)/gi, '');
-        // this.handlePlaceholder();  //Removed due to init delay with tinymce premium
+        this.handlePlaceholder();
 
         let classes = this.props.className ? this.props.className + " cypress-editable" : '' + "cypress-editable";
         let id = 'cypress-' + this.props.index;

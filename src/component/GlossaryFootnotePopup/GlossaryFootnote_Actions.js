@@ -611,8 +611,8 @@ function prepareDataForUpdateTcm(updatedDataID,versionedData, resData) {
  * @param {*} action, type of action to be performed
  */
 export const setFormattingToolbar = (action) => {
-    let tinymceToolbar = document.querySelector('div#tinymceToolbar .tox-toolbar__primary') ? document.querySelector('div#tinymceToolbar .tox-toolbar__primary') : ""
-    let glossaryFootnoteToolbar = document.querySelector('div#toolbarGlossaryFootnote .tox-toolbar__primary') ? document.querySelector('div#toolbarGlossaryFootnote .tox-toolbar__primary') : ""
+    let tinymceToolbar = document.querySelector('div#tinymceToolbar .tox-toolbar') ? document.querySelector('div#tinymceToolbar .tox-toolbar') : ""
+    let glossaryFootnoteToolbar = document.querySelector('div#toolbarGlossaryFootnote .tox-toolbar') ? document.querySelector('div#toolbarGlossaryFootnote .tox-toolbar') : ""
     switch (action) {
         case 'enableTinymceToolbar':
             tinymceToolbar && tinymceToolbar.classList.remove("toolbar-disabled");
@@ -628,13 +628,13 @@ export const setFormattingToolbar = (action) => {
             glossaryFootnoteToolbar && glossaryFootnoteToolbar.classList.add("disable");
             break;
         case 'removeTinymceSuperscript':
-            let tinymceSuperscript = document.querySelector('div#tinymceToolbar .tox-toolbar__primary button[title="Superscript"]') ? document.querySelector('div#tinymceToolbar .tox-toolbar__primary button[title="Superscript"]') : ""
+            let tinymceSuperscript = document.querySelector('div#tinymceToolbar .tox-toolbar button[title="Superscript"]') ? document.querySelector('div#tinymceToolbar .tox-toolbar button[title="Superscript"]') : ""
             tinymceSuperscript && tinymceSuperscript.removeAttribute('aria-pressed')
             tinymceSuperscript && tinymceSuperscript.classList.remove('tox-tbtn--enabled')
             tinymceSuperscript && tinymceSuperscript.classList.add('tox-tbtn--select')
             break;
         case 'removeGlossaryFootnoteSuperscript':
-            let isSuperscriptButton = document.querySelector('div#toolbarGlossaryFootnote .tox-toolbar__primary button[title="Superscript"]') ? document.querySelector('div#toolbarGlossaryFootnote .tox-toolbar__primary button[title="Superscript"]') : ""
+            let isSuperscriptButton = document.querySelector('div#toolbarGlossaryFootnote .tox-toolbar button[title="Superscript"]') ? document.querySelector('div#toolbarGlossaryFootnote .tox-toolbar button[title="Superscript"]') : ""
             isSuperscriptButton && isSuperscriptButton.removeAttribute('aria-pressed')
             isSuperscriptButton && isSuperscriptButton.classList.remove('tox-tbtn--enabled')
             isSuperscriptButton && isSuperscriptButton.classList.add('tox-tbtn--select')
