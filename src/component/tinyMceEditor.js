@@ -10,6 +10,7 @@ import "tinymce/skins/content/default/content.css";
 import "tinymce/plugins/lists/plugin.min.js";
 import "tinymce/plugins/advlist/plugin.min.js";
 import "tinymce/plugins/paste/plugin.min.js";
+// import "tinymce/icons/default/icons.min.js";
 // IMPORT - Components & Dependencies //
 import { EditorConfig, FormatSelectors, elementTypeOptions, insertMediaSelectors } from '../config/EditorConfig';
 import config from '../config/config';

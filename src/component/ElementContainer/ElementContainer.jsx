@@ -1465,33 +1465,25 @@ class ElementContainer extends Component {
                     break;
                 case elementTypeConstant.ELEMENT_DIALOGUE:
                     editor = <ElementDialogue
-                        handleCommentspanel={handleCommentspanel}
                         permissions={permissions}
-                        showDeleteElemPopup={this.showDeleteElemPopup}
-                        showBlocker={this.props.showBlocker}
-                        setActiveElement={this.props.setActiveElement}
-                        handleBlur={this.handleBlur}
-                        handleFocus={this.handleFocus}
                         btnClassName={this.state.btnClassName}
                         borderToggle={this.state.borderToggle}
                         elemBorderToggle={this.props.elemBorderToggle}
                         elementSepratorProps={elementSepratorProps}
-                        deleteElement={this.deleteElement}
                         index={index}
                         element={element}
                         elementId={element.id}
-                        type={element.type}
                         slateLockInfo={slateLockInfo}
-                        updatePageNumber={this.props.updatePageNumber}
-                        isBlockerActive={this.props.isBlockerActive}
-                        onClickCapture={this.props.onClickCapture}
-                        glossaryFootnoteValue={this.props.glossaryFootnoteValue}
-                        glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
-                        onListSelect={this.props.onListSelect}
-                        splithandlerfunction={splithandlerfunction}
-                        pasteElement={this.props.pasteElement}
+                        // splithandlerfunction={splithandlerfunction}
                         userRole={this.props.userRole}
-                        handleAudioPopupLocation={this.handleAudioPopupLocation}
+                        activeElement={this.props.activeElement}
+                        onClickCapture={this.props.onClickCapture}
+                        showBlocker={this.props.showBlocker}
+                        setActiveElement={this.props.setActiveElement}
+                        showDeleteElemPopup={this.showDeleteElemPopup}
+                        handleBlur={this.handleBlur}
+                        handleFocus={this.handleFocus}
+                        deleteElement={this.deleteElement}
                     />;
                     labelText = 'PS'
                     break;

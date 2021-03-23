@@ -1,10 +1,13 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import Button from './../ElementButtons';
 import TinyMceEditor from "../tinyMceEditor";
 import DialogueContent from './DialogueContent.jsx';
 import DialogueSeprator from './DialogueSeprator.jsx';
 
 export default function ElementDialogue(props) {
+    const [selectedInnerElementIndex, setInnerElementIndex] = useState(null)
+
+    // if (props.activeElement !== props.elementId) setInnerElementIndex(null)
     /**
         @renderDialogueContent | This function used to render Dialogue Content
         @param _props | This contains the props object 
@@ -12,8 +15,9 @@ export default function ElementDialogue(props) {
     const renderDialogueContent = (_props) => {
         let dialogueContent = _props.element.html.dialogueContent;
         if (dialogueContent !== null && dialogueContent !== undefined) {
+            const buttonClass = _props.btnClassName.replace("activeTagBgColor", "")
             return dialogueContent.map((element, index) => {
-                let labelText = (element.type == 'lines') ? 'DE' : 'SD';
+                let labelText = (element.type === 'lines') ? 'DE' : 'SD';
                 return (
                     <Fragment key={element.id}>
                         {index === 0 && <DialogueSeprator
@@ -25,7 +29,6 @@ export default function ElementDialogue(props) {
                             permissions={_props.permissions}
                             onClickCapture={_props.onClickCapture}
                             userRole={_props.userRole}
-                            pasteElement={_props.pasteElement}
                         />}
                         <div className={"editor"}
                             data-id={element.id}
@@ -33,30 +36,11 @@ export default function ElementDialogue(props) {
                             onMouseOut={_props.handleOnMouseOut}
                             onClickCapture={(e) => _props.onClickCapture(e)}
                         >
-                            {((_props.elemBorderToggle !== undefined && _props.elemBorderToggle) || _props.borderToggle == 'active') ?
-                                <div>
-                                    <Button
-                                        type="element-label"
-                                        btnClassName={_props.btnClassName}
-                                        labelText={labelText}
-                                        // copyContext={(e) => { OnCopyContext(e, toggleCopyMenu) }}
-                                        // onClick={(event) => labelClickHandler(event)}
-                                    />
-                                    {
-                                        _props.permissions && _props.permissions.includes('elements_add_remove') ?
-                                            (<Button
-                                                type="delete-element"
-                                                // onClick={(e) => showDeleteElemPopup(e, true)}
-                                            />)
-                                            : null
-                                    }
-                                </div>
-                                : ''
-                            }
+                            {renderButtons(index, buttonClass, labelText)}
                             <div
-                                className={`element-container ${_props.borderToggle}`}
+                                className={`element-container ${setBorderToggle(_props.borderToggle, index, selectedInnerElementIndex)}`}
                                 data-id={_props.elementId}
-                                onClick={(e) => handleFocus(e, labelText)}
+                                // onClick={handleInnerFocus}
                             >
                                 <DialogueContent
                                     index={index}
@@ -67,7 +51,7 @@ export default function ElementDialogue(props) {
                                     type={_props.type}
                                     permissions={_props.permissions}
                                     handleBlur={_props.handleBlur}
-                                    handleFocus={_props.handleFocus}
+                                    handleFocus={(...args) => handleInnerFocus(...args,index)}
                                     btnClassName={_props.btnClassName}
                                     borderToggle={_props.borderToggle}
                                     elemBorderToggle={_props.elemBorderToggle}
@@ -87,7 +71,6 @@ export default function ElementDialogue(props) {
                             permissions={_props.permissions}
                             onClickCapture={_props.onClickCapture}
                             userRole={_props.userRole}
-                            pasteElement={_props.pasteElement}
                         />
                     </Fragment>
                 )
@@ -95,6 +78,79 @@ export default function ElementDialogue(props) {
         }
     }
 
+    /**
+     * Handling border style and properties
+     * @param {*} elemBorderToggleFromProp Slate level border based on toggle
+     * @param {*} borderToggleFromState Element level border based on focus
+     */
+     const setBorderToggle = (elemBorderToggleFromProp, index ,selectedInnerIndex) => {
+         console.log("elemBorderToggleFromProp:>>",elemBorderToggleFromProp)
+        const borderToggleFromState = index  === selectedInnerIndex && props.activeElement.elementId === props.elementId ? "active" : ""
+        if (elemBorderToggleFromProp !== 'undefined' && elemBorderToggleFromProp) {
+            if (borderToggleFromState === 'active' && elemBorderToggleFromProp !== "showBorder") {
+                return borderToggleFromState
+            }
+            else if (borderToggleFromState !== 'active' && elemBorderToggleFromProp === "hideBorder") {
+                return 'hideBorder'
+            } else {
+                return 'showBorder'
+            }
+        }
+        else {
+            if (borderToggleFromState === 'active') {
+                return borderToggleFromState
+            }
+            else {
+                return 'hideBorder'
+            }
+        }
+    }
+
+    const renderButtons = (index, buttonClass, labelText) => {
+        if((props.elemBorderToggle !== undefined && props.elemBorderToggle) || props.borderToggle == 'active'){
+            return (
+                <div>
+                    <Button
+                        type="element-label"
+                        btnClassName={`${buttonClass} ${index === selectedInnerElementIndex && props.borderToggle !== "showBorder" ? "activeTagBgColor" : ""}`}
+                        labelText={labelText}
+                    />
+                    {
+                        props.permissions && props.permissions.includes('elements_add_remove') ?
+                            (<Button
+                                type="delete-element"
+                                onClick={(e) => props.showDeleteElemPopup(e, true)}
+                            />)
+                            : null
+                    }
+                </div>
+            )
+        }
+        return null
+    }
+    
+    
+    const handleInnerFocus = (c2Flag, showHideObj, event, index) => {
+        event.stopPropagation()
+        console.log("Inner Element Index", index)
+        console.log("Inner Element Focus  event.target::c>>", event.target)
+        setInnerElementIndex(index)
+        props.handleFocus(c2Flag, showHideObj, event)
+    }
+
+    const handleOuterFocus = (c2Flag, showHideObj, event) => {
+        setInnerElementIndex(null)
+        props.handleFocus(c2Flag, showHideObj, event)
+    }
+    
+    const copmpProps = {
+        permissions: props.permissions,
+        element: props.element,
+        slateLockInfo: props.slateLockInfo,
+        elementId: props.elementId,
+        handleBlur: props.handleBlur,
+        handleEditorFocus: handleOuterFocus
+    }
     return (
         (props !== null && props !== undefined) ?
             <div className="figureElement">
@@ -103,36 +159,22 @@ export default function ElementDialogue(props) {
                         <p id="startLineSetting" style={{ margin: '10px', color: '#ddd' }}></p>
                         <header className="figure-header">
                             <TinyMceEditor
-                                permissions={props.permissions}
-                                openGlossaryFootnotePopUp={props.openGlossaryFootnotePopUp}
-                                element={props.element}
-                                handleEditorFocus={props.handleFocus}
-                                handleBlur={props.handleBlur}
+                                {...copmpProps}
                                 index={`${props.index}-0`}
                                 placeholder="Enter Act Title..."
                                 tagName={'h4'}
                                 className={" figureLabel "}
                                 model={props.element.html.actTitle}
-                                slateLockInfo={props.slateLockInfo}
-                                glossaryFootnoteValue={props.glossaryFootnoteValue}
-                                glossaaryFootnotePopup={props.glossaaryFootnotePopup}
-                                elementId={props.elementId}
+                                
+                                
                             />
                             <TinyMceEditor
-                                permissions={props.permissions}
-                                openGlossaryFootnotePopUp={props.openGlossaryFootnotePopUp}
-                                element={props.element}
-                                handleEditorFocus={props.handleFocus}
-                                handleBlur={props.handleBlur}
+                                {...copmpProps}
                                 index={`${props.index}-1`}
                                 placeholder="Enter Scene Title..."
                                 tagName={'h4'}
                                 className={" figureTitle "}
                                 model={props.element.html.sceneTitle}
-                                slateLockInfo={props.slateLockInfo}
-                                glossaryFootnoteValue={props.glossaryFootnoteValue}
-                                glossaaryFootnotePopup={props.glossaaryFootnotePopup}
-                                elementId={props.elementId}
                             />
                         </header>
                         <div>
@@ -141,20 +183,12 @@ export default function ElementDialogue(props) {
                     </figure>
                     <div>
                         <TinyMceEditor
-                            permissions={props.permissions}
-                            openGlossaryFootnotePopUp={props.openGlossaryFootnotePopUp}
-                            element={props.element}
-                            handleEditorFocus={props.handleFocus}
-                            handleBlur={props.handleBlur}
+                            {...copmpProps}
                             index={`${props.index}-4`}
                             placeholder="Enter Credit..."
                             tagName={'p'}
                             className={" figureCredit "}
                             model={props.element.html.credits}
-                            slateLockInfo={props.slateLockInfo}
-                            glossaryFootnoteValue={props.glossaryFootnoteValue}
-                            glossaaryFootnotePopup={props.glossaaryFootnotePopup}
-                            elementId={props.elementId}
                         />
                     </div>
                 </div>
