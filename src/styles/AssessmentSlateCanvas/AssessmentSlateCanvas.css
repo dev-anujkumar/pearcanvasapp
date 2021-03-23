@@ -380,9 +380,7 @@ span.approved-button.enable svg path#path2 {
 }
 .slate_assessment_dropdown_name.disabled{
   pointer-events: none;
-    opacity: .7;
-    cursor: not-allowed !important;
-    color: grey;
-    cursor: none;
-    background-color: #fff;
+  cursor: not-allowed !important;
+  color: darkgray;
+  background-color: #fff;
 }
