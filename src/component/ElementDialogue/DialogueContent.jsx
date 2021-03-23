@@ -1,11 +1,10 @@
 import React, { Fragment } from 'react';
 import TinyMceEditor from "../tinyMceEditor";
-import './DialogueStyles.css';
 
 function DialogueContent(props) {
     
     let editor = '';
-    let placeholder = (props.labelText === 'DE') ? 'Enter Stage Directions...' : 'Enter Dialogue...';
+    let placeholder = (props.labelText === 'DE') ? 'Enter Dialogue...' : 'Enter Stage Directions...';
     
     if (props.labelText === 'DE') {
         editor = <Fragment>

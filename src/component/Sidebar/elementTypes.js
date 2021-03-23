@@ -854,7 +854,7 @@ export default {
         "primary-element-dialogue": {
             text: 'Block Element Dialogue',
             enum: 'ELEMENT_DIALOGUE',
-            toolbar: ['insertMedia', 'glossary','footnote'],
+            toolbar: ['insertMedia','formatSelector','crossLinkingIcon','assetpopover','glossary','decreaseindent'],
             dropdownDisabled: true,
             subtype: {
                 'secondary-element-dialogue': {

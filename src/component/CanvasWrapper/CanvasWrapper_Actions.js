@@ -246,7 +246,6 @@ export const findElementType = (element, index) => {
                     secondaryOption: elementDataBank[dialogueType]["secondaryOption"],
                     numbered: element.elementdata.numberedlines,
                     startNumber: element.elementdata.startNumber,
-                    // syntaxhighlighting: element.elementdata.syntaxhighlighting
                 }
                 break;
             }

@@ -3,6 +3,7 @@ import Button from './../ElementButtons';
 import TinyMceEditor from "../tinyMceEditor";
 import DialogueContent from './DialogueContent.jsx';
 import DialogueSeprator from './DialogueSeprator.jsx';
+import "../../styles/ElementDialogue/DialogueStyles.css"
 
 export default function ElementDialogue(props) {
     const [selectedInnerElementIndex, setInnerElementIndex] = useState(null)
@@ -84,7 +85,6 @@ export default function ElementDialogue(props) {
      * @param {*} borderToggleFromState Element level border based on focus
      */
      const setBorderToggle = (elemBorderToggleFromProp, index ,selectedInnerIndex) => {
-         console.log("elemBorderToggleFromProp:>>",elemBorderToggleFromProp)
         const borderToggleFromState = index  === selectedInnerIndex && props.activeElement.elementId === props.elementId ? "active" : ""
         if (elemBorderToggleFromProp !== 'undefined' && elemBorderToggleFromProp) {
             if (borderToggleFromState === 'active' && elemBorderToggleFromProp !== "showBorder") {
@@ -129,15 +129,25 @@ export default function ElementDialogue(props) {
         return null
     }
     
-    
+    /**
+     * Handles focus for inner elements (SD and DE)
+     * @param {} c2Flag 
+     * @param {*} showHideObj 
+     * @param {*} event Event object
+     * @param {*} index 
+     */
     const handleInnerFocus = (c2Flag, showHideObj, event, index) => {
         event.stopPropagation()
-        console.log("Inner Element Index", index)
-        console.log("Inner Element Focus  event.target::c>>", event.target)
         setInnerElementIndex(index)
         props.handleFocus(c2Flag, showHideObj, event)
     }
 
+    /**
+     * Handles focus for outer parts (rest area except SD and DE)
+     * @param {*} c2Flag 
+     * @param {*} showHideObj 
+     * @param {*} event Event object
+     */
     const handleOuterFocus = (c2Flag, showHideObj, event) => {
         setInnerElementIndex(null)
         props.handleFocus(c2Flag, showHideObj, event)
@@ -156,7 +166,7 @@ export default function ElementDialogue(props) {
             <div className="figureElement">
                 <div className="divImageTextWidth">
                     <figure className="figureImageTextWidth" resource="">
-                        <p id="startLineSetting" style={{ margin: '10px', color: '#ddd' }}></p>
+                        <p id="startLineSetting">Start Line number-{props.element.elementdata.startNumber}</p>
                         <header className="figure-header">
                             <TinyMceEditor
                                 {...copmpProps}

@@ -2742,12 +2742,18 @@ export class TinyMceEditor extends Component {
         if (this.props.element.type === 'popup' && this.props.placeholder === 'Enter call to action...') {
             toolbar = config.popupCallToActionToolbar
         }
-        else if (this.props.placeholder === "Enter Label..." || this.props.placeholder === 'Enter call to action...' || (this.props.element && this.props.element.subtype == 'mathml' && this.props.placeholder === "Type something...")) {
+        else if (["Enter Label...", "Enter call to action...", "Enter Act Title...", "Enter Scene Title...", "Enter Dialogue..."].includes(this.props.placeholder) || (this.props.element && this.props.element.subtype == 'mathml' && this.props.placeholder === "Type something...")) {
             toolbar = (this.props.element && (this.props.element.type === 'poetry' || this.props.element.type === 'popup' || this.props.placeholder === 'Enter call to action...')) ? config.poetryLabelToolbar : config.labelToolbar;
         }
         else if (this.props.placeholder === "Enter Caption..." || this.props.placeholder === "Enter Credit...") {
-            toolbar = (this.props.element && this.props.element.type === 'poetry') ? config.poetryCaptionToolbar : config.captionToolbar;
-
+            if (this.props.element.type === "element-dialogue") {
+                const creditToolbar = [...config.poetryCaptionToolbar]
+                creditToolbar.push("footnote")
+                toolbar = creditToolbar
+            }
+            else {
+                toolbar = (this.props.element && this.props.element.type === 'poetry') ? config.poetryCaptionToolbar : config.captionToolbar;
+            }
         } else if (this.props.placeholder === "Enter block code...") {
             let syntaxEnabled = document.querySelector('.panel_syntax_highlighting .switch input');
             if (syntaxEnabled && syntaxEnabled.checked) {
@@ -2762,7 +2768,15 @@ export class TinyMceEditor extends Component {
             toolbar = config.revelToolbar
         } else if (this.props.placeholder == "Type Something..." && this.props.element && this.props.element.type == 'stanza') {
             toolbar = config.poetryStanzaToolbar;
-        } else {
+        } /* else if (this.props.placeholder === "Enter Dialogue...") {
+            toolbar = config.deToolbar
+        } */ else if (this.props.placeholder === "Enter Stage Directions...") {
+            toolbar = config.sdToolbar
+        }
+        else if (this.props.placeholder === "Enter Character Name...") {
+            toolbar = config.deCharacterToolbar
+        }
+        else {
             toolbar = config.elementToolbar;
         }
         return toolbar;

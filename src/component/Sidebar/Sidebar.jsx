@@ -281,7 +281,26 @@ class Sidebar extends Component {
             attrInput: event.target.value
         })
     }
-    
+
+    handleDialogueToggle = () => {
+        this.props.setBCEMetadata('numbered', !this.state.bceToggleValue);
+        this.setState({
+            bceToggleValue: !this.state.bceToggleValue
+        }, () => this.handleBceBlur())
+        let data = !this.state.bceToggleValue ? "block" : "none";
+        document.getElementById('startLineSetting').style.display = data;
+    }
+
+    handleDialogueNumber = (e) => {
+        const regex = /^[0-9]*(?:\.\d{1,2})?$/
+        if (regex.test(e.target.value)) {
+            // applying regex that will validate the value coming is only number
+            this.props.setBCEMetadata('startNumber', e.target.value);  
+            this.setState({ bceNumberStartFrom: e.target.value })
+            document.getElementById('startLineSetting').innerHTML = 'Start Line number-'+ e.target.value;
+        }
+    }
+
     attributions = () => {
         let attributions = '';
         let attributionsObject = {};
