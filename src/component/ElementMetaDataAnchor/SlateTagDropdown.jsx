@@ -227,25 +227,68 @@ class SlateTagDropdown extends React.Component {
         this.setState({showLoOptions:!this.state.showLoOptions})
     }
   
-
-  launchExternalFrameworkPopup = (e) => {
+  prepareExtFrameworkData = () => {
+    let slateManifestURN = config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
+    let currentSlateLOData = this.props.currentSlateLOData;
     let apiKeys_LO = {
       'loApiUrl': config.LEARNING_OBJECTIVES_ENDPOINT,
       'strApiKey': config.STRUCTURE_APIKEY,
-      'mathmlImagePath': config.S3MathImagePath ? config.S3MathImagePath : defaultMathImagePath,
       'productApiUrl': config.PRODUCTAPI_ENDPOINT,
       'manifestApiUrl': config.ASSET_POPOVER_ENDPOINT,
       'assessmentApiUrl': config.ASSESSMENT_ENDPOINT
     };
-    // launch CE SPA 
-    // if (e.target.innerText == AlignToExternalFrameworkSlateDropdown) {
-    //   sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': AlignToExternalFramework, 'data': externalLoData, 'currentSlateId': slateManifestURN, 'chapterContainerUrn': '', 'isLOExist': true, 'editAction': '', 'apiConstants': apiKeys_LO } })
+    const selectedLOs = [
+      {
+        "id": "urn:pearson:educationalgoal:f2477967-bf2d-4484-bba8-6e95f31bc2f2",
+        "subject": "https://schema.pearson.com/ns/domains/mathematics",
+        "label": {
+          "en": "LO 2 LO3"
+        }
+      },
+      {
+        "id": "urn:pearson:educationalgoal:1d186167-674e-4552-aade-d7e415f05ccd",
+        "subject": "https://schema.pearson.com/ns/domains/mathematics",
+        "label": {
+          "en": "LO 2 LO0"
+        }
+      }
+    ]
+    let externalLFUrn = '';
+    if (this?.props?.projectLearningFrameworks?.externalLF?.length) {
+      externalLFUrn = this.props.projectLearningFrameworks.externalLF[0].urn;
+    }
+    return {
+      slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs
+    }
+  }
+
+  launchExternalFrameworkPopup = (e) => {
+    const {
+      slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs
+    } = this.prepareExtFrameworkData();
+    let openSPA = true;
+
+    // if (openSPA) { /** Launch CE SPA for External Framework */
+    // this.toggleWarningPopup(true, e);
+    // } else {
+    if (e?.target?.innerText == AlignToExternalFrameworkSlateDropdown) {
+      sendDataToIframe({
+        'type': OpenLOPopup,
+        'message': {
+          'text': AlignToExternalFramework,
+          'data': currentSlateLOData,
+          'isLOExist': true,
+          'editAction': '',
+          'selectedLOs': selectedLOs,
+          'apiConstants': apiKeys_LO,
+          'externalLFUrn': externalLFUrn,
+          'currentSlateId': slateManifestURN,
+          'chapterContainerUrn': ''
+        }
+      })
+    }
     // }
-    /**
-     * toggle functio for popup to be called based on LF type
-     */
-    this.toggleWarningPopup(true,e);
-    // this.props.closeLODropdown();
+    this.props.closeLODropdown();
   } 
   /** To enable/disable the External Framework option in dropdown */
   checkExternalFramework = () => {
