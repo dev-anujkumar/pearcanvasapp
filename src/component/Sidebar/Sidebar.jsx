@@ -16,7 +16,7 @@ import { showBlocker,hideBlocker } from '../../js/toggleLoader';
 import { customEvent } from '../../js/utils.js';
 import { disabledPrimaryOption } from '../../constants/Element_Constants.js';
 import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants';
-import { PRIMARY_SINGLE_ASSESSMENT } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js'
+import { SECONDARY_SINGLE_ASSESSMENT_LEARNOSITY } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js'
 
 
 class Sidebar extends Component {
@@ -228,14 +228,13 @@ class Sidebar extends Component {
             if(this.state.activePrimaryOption==="primary-blockcode-equation"&&this.state.activeSecondaryOption!=="secondary-blockcode-language-default"){
                secondaryOptionList.splice(0,1)
             }
-            if(!(this.props.isLearnosityProject && this.props.isLearnosityProject[0]?.ItemBankName)){
-              if(this.state.activePrimaryOption === PRIMARY_SINGLE_ASSESSMENT){
-                  secondaryOptionList.splice(3,1)
-                }
-            }
             if(secondaryOptionList.length > 1) {
                 secondaryOptions = secondaryOptionList.map(item => {
-                    return <li key={item} data-value={item} onClick={this.handleSecondaryOptionChange}>
+                    let addClass = '';
+                    if(item === SECONDARY_SINGLE_ASSESSMENT_LEARNOSITY){
+                        addClass = 'learnosity-disabled'
+                    }
+                    return <li key={item} data-value={item} className={`${addClass}`} onClick={this.handleSecondaryOptionChange}>
                         {secondaryOptionObject[item].text}
                     </li>;
                 });
