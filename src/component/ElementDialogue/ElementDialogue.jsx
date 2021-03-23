@@ -6,7 +6,7 @@ import DialogueSeprator from './DialogueSeprator.jsx';
 
 export default function ElementDialogue(props) {
     /**
-        renderDialogueContent | This function used to render Dialogue Content
+        @renderDialogueContent | This function used to render Dialogue Content
         @param _props | This contains the props object 
     **/
     const renderDialogueContent = (_props) => {
@@ -39,14 +39,14 @@ export default function ElementDialogue(props) {
                                         type="element-label"
                                         btnClassName={_props.btnClassName}
                                         labelText={labelText}
-                                        copyContext={(e) => { OnCopyContext(e, this.toggleCopyMenu) }}
-                                        onClick={(event) => this.labelClickHandler(event)}
+                                        // copyContext={(e) => { OnCopyContext(e, toggleCopyMenu) }}
+                                        // onClick={(event) => labelClickHandler(event)}
                                     />
                                     {
                                         _props.permissions && _props.permissions.includes('elements_add_remove') ?
                                             (<Button
                                                 type="delete-element"
-                                                onClick={(e) => this.showDeleteElemPopup(e, true)}
+                                                // onClick={(e) => showDeleteElemPopup(e, true)}
                                             />)
                                             : null
                                     }
@@ -56,7 +56,7 @@ export default function ElementDialogue(props) {
                             <div
                                 className={`element-container ${_props.borderToggle}`}
                                 data-id={_props.elementId}
-                                onClick={(e) => this.handleFocus("", "", e, labelText)}
+                                onClick={(e) => handleFocus(e, labelText)}
                             >
                                 <DialogueContent
                                     index={index}
@@ -100,6 +100,7 @@ export default function ElementDialogue(props) {
             <div className="figureElement">
                 <div className="divImageTextWidth">
                     <figure className="figureImageTextWidth" resource="">
+                        <p id="startLineSetting" style={{ margin: '10px', color: '#ddd' }}></p>
                         <header className="figure-header">
                             <TinyMceEditor
                                 permissions={props.permissions}

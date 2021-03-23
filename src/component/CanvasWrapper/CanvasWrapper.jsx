@@ -176,7 +176,6 @@ export class CanvasWrapper extends Component {
         
         return (
             <div className='content-composer'>
-                <div></div>
                 {this.props.showBlocker ? <div className="canvas-blocker" ></div> : '' }
                 {/** Custom Error Popup on Canvas wrapper in API Failure */}
                 {this.props.ErrorPopup && this.props.ErrorPopup.show &&
