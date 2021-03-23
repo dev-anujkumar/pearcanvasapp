@@ -225,6 +225,8 @@ class Sidebar extends Component {
             let primaryOptionObject = elementList[this.state.activeElementType];
             let secondaryOptionObject = primaryOptionObject[this.state.activePrimaryOption].subtype;
             let secondaryOptionList = Object.keys(secondaryOptionObject);
+            let isLearnosityProject = this.props.isLearnosityProject && this.props.isLearnosityProject[0]?.ItemBankName ? true : false;
+            let showLearnosityDropdown = false;
             if(this.state.activePrimaryOption==="primary-blockcode-equation"&&this.state.activeSecondaryOption!=="secondary-blockcode-language-default"){
                secondaryOptionList.splice(0,1)
             }
@@ -232,7 +234,8 @@ class Sidebar extends Component {
                 secondaryOptions = secondaryOptionList.map(item => {
                     let addClass = '';
                     if(item === SECONDARY_SINGLE_ASSESSMENT_LEARNOSITY){
-                        addClass = 'learnosity-disabled'
+                        addClass = 'learnosity-disabled';
+                        showLearnosityDropdown = true;
                     }
                     return <li key={item} data-value={item} className={`${addClass}`} onClick={this.handleSecondaryOptionChange}>
                         {secondaryOptionObject[item].text}
@@ -248,7 +251,7 @@ class Sidebar extends Component {
                 if(this.state.elementDropdown === 'secondary') {
                     active = 'active';
                 }
-                if(this.props.isLearnosityProject && this.props.isLearnosityProject[0]?.ItemBankName){
+                if(isLearnosityProject && showLearnosityDropdown){
                     active = ''
                 }
                 let disabled= '';
@@ -260,7 +263,7 @@ class Sidebar extends Component {
                     className={`element-dropdown ${display} ${sidebarDisableCondition ? "sidebar-disable": ""} `}>
                     <div className={`element-dropdown-title ${disabled}`} data-element="secondary" onClick={this.toggleElementDropdown}>
                         {secondaryOptionObject[this.state.activeSecondaryOption].text}
-                        {(this.props.isLearnosityProject && this.props.isLearnosityProject[0]?.ItemBankName) ? "" : <span> {dropdownArrow} </span>}
+                        {(isLearnosityProject && showLearnosityDropdown) ? "" : <span> {dropdownArrow} </span>}
                     </div>
                     <ul className={`element-dropdown-content secondary-options ${active}`}>
                         {secondaryOptions}
