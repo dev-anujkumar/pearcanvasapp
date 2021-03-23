@@ -71,7 +71,8 @@ export default function (state = INIT_STATE, action = INITIAL_ACTION) {
         case CURRENT_SLATE_LF:
             return {
                 ...state,
-                currentSlateLF: action.payload.currentSlateLF
+
+                currentSlateLF: 'externalLF'// action.payload.currentSlateLF
             }
         default:
             return state;

@@ -2,6 +2,7 @@ import React from 'react';
 import config from '../../config/config';
 import { checkSlateLock } from '../../js/slateLockUtility.js';
 import { showSlateLockPopup } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
+import { showBlocker, showTocBlocker, hideBlocker } from '../../js/toggleLoader';
 import {
     AddLearningObjectiveSlateDropdown,
     AddEditLearningObjectiveDropdown,
@@ -15,6 +16,7 @@ import { connect } from 'react-redux';
 import { ASSESSMENT_ITEM, ASSESSMENT_ITEM_TDX } from '../../constants/Element_Constants';
 import { LEARNOSITY, LEARNING_TEMPLATE, PUF, CITE, TDX } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import PopUp from '../PopUp/PopUp.jsx';
+import { CURRENT_SLATE_LF } from '../../constants/Action_Constants';
 // Static data for rendering external alignment pop-up.
 const externalLoData = {
     "id": "urn:pearson:goalframework:6f5e707c-4d7a-4294-b02c-ad2a4af94d68",
@@ -128,6 +130,7 @@ class SlateTagDropdown extends React.Component {
         }
     }
    
+    
     componentWillMount() {
         document.addEventListener('mousedown', this.handleClick, false)
     }
@@ -153,7 +156,6 @@ class SlateTagDropdown extends React.Component {
     componentWillUnmount() {
         document.removeEventListener('mousedown', this.handleClick, false)
     }
-    
     learningObjectiveDropdown = (e) => {
         let slateManifestURN= config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
         let currentSlateLOData = this.props.currentSlateLOData;
@@ -183,6 +185,7 @@ class SlateTagDropdown extends React.Component {
             assessmentType: assessmentTypeLO
         }
         let isLOExist= this.props.isLOExist;
+        const currentSlateLF=this.props.currentSlateLF;
         let apiKeys_LO = {
             'loApiUrl': config.LEARNING_OBJECTIVES_ENDPOINT,
             'strApiKey': config.STRUCTURE_APIKEY,
@@ -202,12 +205,15 @@ class SlateTagDropdown extends React.Component {
         }
         else{
         if (e.target.innerText == AddLearningObjectiveSlateDropdown && this.props.permissions.includes('lo_edit_metadata')) {
-            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': AddLearningObjectiveSlate, 'data': '', 'currentSlateId': slateManifestURN, 'chapterContainerUrn': '', 'projectTitle': document.cookie.split(',')[3].split(':')[1], 'isLOExist': isLOExist, 'editAction': '', 'apiConstants': apiKeys_LO } })
-        }
+         { currentSlateLF==='externalLF' ? this.toggleWarningPopup(true,e) 
+         : sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': AddLearningObjectiveSlate, 'data': '', 'currentSlateId': slateManifestURN, 'chapterContainerUrn': '', 'projectTitle': document.cookie.split(',')[3].split(':')[1], 'isLOExist': isLOExist, 'editAction': '', 'apiConstants': apiKeys_LO } })
+       
+         } }
 
         else if (e.target.innerText == AddEditLearningObjectiveDropdown && this.props.permissions.includes('lo_edit_metadata')) {
-            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': AddEditLearningObjective, 'data': currentSlateLOData, 'currentSlateId': slateManifestURN, 'chapterContainerUrn': config.parentContainerUrn, 'projectTitle': document.cookie.split(',')[3].split(':')[1], 'isLOExist': isLOExist, 'editAction': true, 'apiConstants': apiKeys_LO } })
-        }
+          { currentSlateLF==='externalLF' ? this.toggleWarningPopup(true,e):
+          sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': AddEditLearningObjective, 'data': currentSlateLOData, 'currentSlateId': slateManifestURN, 'chapterContainerUrn': config.parentContainerUrn, 'projectTitle': document.cookie.split(',')[3].split(':')[1], 'isLOExist': isLOExist, 'editAction': true, 'apiConstants': apiKeys_LO } })
+        }}
 
         else if (e.target.innerText == AddLearningObjectiveAssessmentDropdown && this.props.permissions.includes('lo_edit_metadata')) {
             sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': AddLearningObjectiveAssessment, 'data': currentSlateLOData, 'currentSlateId': config.slateManifestURN, 'chapterContainerUrn': config.parentContainerUrn, 'projectTitle': document.cookie.split(',')[3].split(':')[1], 'isLOExist': true, 'editAction': true, 'apiConstants': apiKeys_LO,'assessmentUrn':assessmentuRN, 'previewData': previewData } })
@@ -224,6 +230,7 @@ class SlateTagDropdown extends React.Component {
     }
 
     toggleLoOptionsDropdown = () => {
+      // this.toggleWarningPopup(true,e);
         this.setState({showLoOptions:!this.state.showLoOptions})
     }
   
@@ -244,27 +251,41 @@ class SlateTagDropdown extends React.Component {
     /**
      * toggle functio for popup to be called based on LF type
      */
-    this.toggleWarningPopup(true,e);
+    const currentSlateLF=this.props.currentSlateLF;
+   if(currentSlateLF==='cypressLF')
+      this.toggleWarningPopup(true,e);
     // this.props.closeLODropdown();
   } 
   /** To enable/disable the External Framework option in dropdown */
   checkExternalFramework = () => {
-    let enableExtLF = false;
-    if (this?.props?.projectLearningFrameworks?.externalLF?.length) {
-      enableExtLF = true;
-    }
+    let enableExtLF = true;
+    // if (this?.props?.projectLearningFrameworks?.externalLF?.length) {
+    //   enableExtLF = true;
+    // }
     return enableExtLF;
   }
   showLOWarningPopup = () => {
     /**
      * declare warningText from store value based on LF type 
      */
+    // const loWarningDialogTxt
+    // if(currentSlateLF==='cypressLF'){
+    //   loWarningDialogTxt='Performing this action will remove the current alignment of projects LOs to external framework. Do you wish to continue?'
+    // }else if(curretnSlateLF='externalLF'){
+    //   loWarningDialogTxt='Performing this action will remove the current alignment of projects LOs to cypress framework. Do you wish to continue?'
+    // }
+    const currentSlateLF=this.props.currentSlateLF;
+ const loWarningDialogTxt=(currentSlateLF==='cypressLF')?'Performing this action will remove the current alignment of projects LOs to external framework. Do you wish to continue?':'Performing this action will remove the current alignment of projects LOs to cypress framework. Do you wish to continue?'
+    console.log('in show warning popup');
+     console.log(loWarningDialogTxt);
     if (this.state.showWarningPopup) {
-      // this.props.showBlocker(true)
-      // showTocBlocker();
+      showBlocker(true)
+      // this.props.closeLODropdown()
+      showTocBlocker();
+      
       //props..curentLF == 'cypress' ? 'text with same value'
       return (
-        <PopUp dialogText={'Text'}//warningText | send dialog value here
+        <PopUp dialogText={loWarningDialogTxt}//warningText | send dialog value here
           active={true}
           warningHeaderText={`Warning`}
           togglePopup={this.toggleWarningPopup}
@@ -286,17 +307,29 @@ class SlateTagDropdown extends React.Component {
     this.toggleWarningPopup(false,e);
   }
 
+   handleWarningPopup=(e)=>{
+     console.log('asaajfasyhasgiksh');
+    this.toggleWarningPopup(true,e )
+  }
   toggleWarningPopup = (toggleValue, event) => {
+    console.log('In toggle warining for cypress selection')
+    const currentSlateLF=this.props.currentSlateLF;
+    console.log(currentSlateLF);
     if (event) {
       event.preventDefault();
     }
     this.setState({
       showWarningPopup: toggleValue
     })
-    // this.showCanvasBlocker(toggleValue);
+    // this.props.closeLODropdown()
+     showBlocker(toggleValue);
+     hideBlocker();
   }
     render = () => {
       const enableExtLO =this.checkExternalFramework()
+      const currentSlateLF=this.props.currentSlateLF;
+      console.log(currentSlateLF);
+      console.log(enableExtLO); //false
         return (
             <div>
           <div className="learningobjectivedropdown" ref={node => this.node = node}>
@@ -310,9 +343,9 @@ class SlateTagDropdown extends React.Component {
                 <div style={{left:'-10px'}} className="learningobjectivedropdown" ref={node => this.node = node}>
                 <ul>
                     {this.props.permissions.includes('lo_edit_metadata') && config.slateType === 'section' &&
-                        <li onClick={this.learningObjectiveDropdown}>{AddLearningObjectiveSlateDropdown}</li>}
+                        <li onClick={(this.props.currentSlateLF === "externalLF") ? this.handleWarningPopup :this.learningObjectiveDropdown}> {AddLearningObjectiveSlateDropdown}</li>}
                     {this.props.permissions.includes('lo_edit_metadata') && config.slateType === 'section' &&
-                        <li onClick={this.learningObjectiveDropdown}>{AddEditLearningObjectiveDropdown}</li>}
+                        <li onClick={(this.props.currentSlateLF === "externalLF") ? this.handleWarningPopup :this.learningObjectiveDropdown}>{AddEditLearningObjectiveDropdown}</li>}
                     {this.props.permissions.includes('lo_edit_metadata') && config.slateType === 'assessment' &&
                         <li onClick={this.learningObjectiveDropdown}>{AddLearningObjectiveAssessmentDropdown}</li>}
                     <li className={this.props.currentSlateLOData && (this.props.currentSlateLOData.assessmentResponseMsg || this.props.currentSlateLOData.statusForSave)? '' :this.props.currentSlateLOData && (this.props.currentSlateLOData.id ? this.props.currentSlateLOData.id : this.props.currentSlateLOData.loUrn) ? '' : 'disabled'} style={{ cursor: 'not-allowed !important' }} onClick={this.learningObjectiveDropdown}>{ViewLearningObjectiveSlateDropdown}</li>
@@ -329,6 +362,7 @@ class SlateTagDropdown extends React.Component {
 const mapStateToProps = (state) => {
     return {
         isLOExist: state.metadataReducer.slateTagEnable,
+        currentSlateLF:state.metadataReducer.currentSlateLF,
         slateLockInfo: state.slateLockReducer.slateLockInfo,
         projectLearningFrameworks: state.metadataReducer.projectLearningFrameworks
     }
