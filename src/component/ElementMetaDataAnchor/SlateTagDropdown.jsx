@@ -205,16 +205,11 @@ class SlateTagDropdown extends React.Component {
         }
         else{
         if (e.target.innerText == AddLearningObjectiveSlateDropdown && this.props.permissions.includes('lo_edit_metadata')) {
-         { currentSlateLF==='externalLF' ? this.toggleWarningPopup(true,e) 
-         : sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': AddLearningObjectiveSlate, 'data': '', 'currentSlateId': slateManifestURN, 'chapterContainerUrn': '', 'projectTitle': document.cookie.split(',')[3].split(':')[1], 'isLOExist': isLOExist, 'editAction': '', 'apiConstants': apiKeys_LO } })
-       
-         } }
-
+            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': AddLearningObjectiveSlate, 'data': '', 'currentSlateId': slateManifestURN, 'chapterContainerUrn': '', 'projectTitle': document.cookie.split(',')[3].split(':')[1], 'isLOExist': isLOExist, 'editAction': '', 'apiConstants': apiKeys_LO } })
+          }
         else if (e.target.innerText == AddEditLearningObjectiveDropdown && this.props.permissions.includes('lo_edit_metadata')) {
-          { currentSlateLF==='externalLF' ? this.toggleWarningPopup(true,e):
-          sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': AddEditLearningObjective, 'data': currentSlateLOData, 'currentSlateId': slateManifestURN, 'chapterContainerUrn': config.parentContainerUrn, 'projectTitle': document.cookie.split(',')[3].split(':')[1], 'isLOExist': isLOExist, 'editAction': true, 'apiConstants': apiKeys_LO } })
-        }}
-
+            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': AddEditLearningObjective, 'data': currentSlateLOData, 'currentSlateId': slateManifestURN, 'chapterContainerUrn': config.parentContainerUrn, 'projectTitle': document.cookie.split(',')[3].split(':')[1], 'isLOExist': isLOExist, 'editAction': true, 'apiConstants': apiKeys_LO } })
+        }
         else if (e.target.innerText == AddLearningObjectiveAssessmentDropdown && this.props.permissions.includes('lo_edit_metadata')) {
             sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': AddLearningObjectiveAssessment, 'data': currentSlateLOData, 'currentSlateId': config.slateManifestURN, 'chapterContainerUrn': config.parentContainerUrn, 'projectTitle': document.cookie.split(',')[3].split(':')[1], 'isLOExist': true, 'editAction': true, 'apiConstants': apiKeys_LO,'assessmentUrn':assessmentuRN, 'previewData': previewData } })
         }
@@ -275,34 +270,31 @@ class SlateTagDropdown extends React.Component {
     } = this.prepareExtFrameworkData();
     let openSPA = true;
 
-    // if (openSPA) { /** Launch CE SPA for External Framework */
-    // this.toggleWarningPopup(true, e);
-    // } else {
-    if (e?.target?.innerText == AlignToExternalFrameworkSlateDropdown) {
-      sendDataToIframe({
-        'type': OpenLOPopup,
-        'message': {
-          'text': AlignToExternalFramework,
-          'data': currentSlateLOData,
-          'isLOExist': true,
-          'editAction': '',
-          'selectedLOs': selectedLOs,
-          'apiConstants': apiKeys_LO,
-          'externalLFUrn': externalLFUrn,
-          'currentSlateId': slateManifestURN,
-          'chapterContainerUrn': ''
-        }
-      })
-    }
+    // if (e?.target?.innerText == AlignToExternalFrameworkSlateDropdown) {
+    //   sendDataToIframe({
+    //     'type': OpenLOPopup,
+    //     'message': {
+    //       'text': AlignToExternalFramework,
+    //       'data': currentSlateLOData,
+    //       'isLOExist': true,
+    //       'editAction': '',
+    //       'selectedLOs': selectedLOs,
+    //       'apiConstants': apiKeys_LO,
+    //       'externalLFUrn': externalLFUrn,
+    //       'currentSlateId': slateManifestURN,
+    //       'chapterContainerUrn': ''
+    //     }
+    //   })
     // }
+
+    const currentSlateLF=this.props.currentSlateLF;
     /**
      * toggle functio for popup to be called based on LF type
      */
-    const currentSlateLF=this.props.currentSlateLF;
-   if(currentSlateLF==='cypressLF')
+   if(currentSlateLF==='cypressLF'){
       this.toggleWarningPopup(true,e);
-    // this.props.closeLODropdown();
-    this.props.closeLODropdown();
+      console.log('in external ')
+   }
   } 
   /** To enable/disable the External Framework option in dropdown */
   checkExternalFramework = () => {
@@ -316,24 +308,15 @@ class SlateTagDropdown extends React.Component {
     /**
      * declare warningText from store value based on LF type 
      */
-    // const loWarningDialogTxt
-    // if(currentSlateLF==='cypressLF'){
-    //   loWarningDialogTxt='Performing this action will remove the current alignment of projects LOs to external framework. Do you wish to continue?'
-    // }else if(curretnSlateLF='externalLF'){
-    //   loWarningDialogTxt='Performing this action will remove the current alignment of projects LOs to cypress framework. Do you wish to continue?'
-    // }
     const currentSlateLF=this.props.currentSlateLF;
- const loWarningDialogTxt=(currentSlateLF==='cypressLF')?'Performing this action will remove the current alignment of projects LOs to external framework. Do you wish to continue?':'Performing this action will remove the current alignment of projects LOs to cypress framework. Do you wish to continue?'
-    console.log('in show warning popup');
-     console.log(loWarningDialogTxt);
+    const loWarningDialogTxt=(currentSlateLF==='cypressLF')?'Performing this action will remove the current alignment of projects LOs to cypress framework. Do you wish to continue?':'Performing this action will remove the current alignment of projects LOs to external framework. Do you wish to continue?'
+    console.log(loWarningDialogTxt);
     if (this.state.showWarningPopup) {
       showBlocker(true)
       // this.props.closeLODropdown()
       showTocBlocker();
-      
-      //props..curentLF == 'cypress' ? 'text with same value'
       return (
-        <PopUp dialogText={loWarningDialogTxt}//warningText | send dialog value here
+        <PopUp dialogText={loWarningDialogTxt}
           active={true}
           warningHeaderText={`Warning`}
           togglePopup={this.toggleWarningPopup}
