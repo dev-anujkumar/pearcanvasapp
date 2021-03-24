@@ -19,7 +19,7 @@ const defaultDialougeElement = {
 
 const DialogueSeprator = (props) => {
 
-    const [showDetails, setDetails] = useState(true);
+    const [showDetails, setDetails] = useState(false);
     const { index, elementIndex } = props;
     return (
         <div
@@ -46,6 +46,7 @@ const DialogueSeprator = (props) => {
                                     // add dialouge element
                                     console.log("i will add dialouge element here " + index + " , " + elementIndex)
                                     props.addScriptElement(elementIndex, index, defaultDialougeElement);
+                                    setDetails(false);
                                 }}
                                 className="dropbtn"
                                 type="expand"
@@ -57,6 +58,7 @@ const DialogueSeprator = (props) => {
                                     // add stage direction
                                     console.log("i will add stage direction here" + index + " , " + elementIndex)
                                     props.addScriptElement(elementIndex, index, defaultSDElement);
+                                    setDetails(false);
                                 }}
                                 className="dropbtn"
                                 type="expand"

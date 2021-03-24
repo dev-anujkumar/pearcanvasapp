@@ -1,21 +1,25 @@
 import React, { Fragment } from 'react';
 import TinyMceEditor from "../tinyMceEditor";
+import tinymce from 'tinymce/tinymce';
 
 function DialogueContent(props) {
-    
+
     let editor = '';
     let placeholder = (props.labelText === 'DE') ? 'Enter Dialogue...' : 'Enter Stage Directions...';
-    
+
     if (props.labelText === 'DE') {
         editor = <Fragment>
             <TinyMceEditor
+
                 index={`${props.index}-0`}
                 permissions={props.permissions}
                 openGlossaryFootnotePopUp={props.openGlossaryFootnotePopUp}
                 element={props.element}
                 elementId={props.elementId}
                 handleEditorFocus={props.handleFocus}
-                handleBlur={props.handleBlur}
+                handleBlur={() => {
+                    console.log("the tiny active editor is", tinymce.activeEditor)
+                }}
                 placeholder="Enter Character Name..."
                 tagName={'h4'}
                 className={props.className}

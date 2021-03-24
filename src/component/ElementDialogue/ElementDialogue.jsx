@@ -4,12 +4,16 @@ import TinyMceEditor from "../tinyMceEditor";
 import DialogueContent from './DialogueContent.jsx';
 import DialogueSeprator from './DialogueSeprator.jsx';
 import "../../styles/ElementDialogue/DialogueStyles.css"
+import { connect } from 'react-redux';
+import { deleteScriptElement } from './DialougeActions';
 
-export default function ElementDialogue(props) {
+const ElementDialogue = (props) => {
+
     const [selectedInnerElementIndex, setInnerElementIndex] = useState(null)
     const elementIndex = props.index;
     // if (props.activeElement !== props.elementId) setInnerElementIndex(null)
     /**
+     * 
         @renderDialogueContent | This function used to render Dialogue Content
         @param _props | This contains the props object 
     **/
@@ -38,14 +42,14 @@ export default function ElementDialogue(props) {
                             onMouseOut={_props.handleOnMouseOut}
                             onClickCapture={(e) => _props.onClickCapture(e)}
                         >
-                            {renderButtons(index, buttonClass, labelText)}
+                            {renderButtons(index, buttonClass, labelText, _props.deleteScriptElement)}
                             <div
                                 className={`element-container ${setBorderToggle(_props.borderToggle, index, selectedInnerElementIndex)}`}
                                 data-id={_props.elementId}
                             // onClick={handleInnerFocus}
                             >
                                 <DialogueContent
-                                    index={index+1}
+                                    index={index + 1}
                                     elementIndex={elementIndex}
                                     labelText={labelText}
                                     element={_props.element}
@@ -66,8 +70,8 @@ export default function ElementDialogue(props) {
                                 />
                             </div>
                         </div>
-                        <DialogueSeprator   index={index}
-                                    elementIndex={elementIndex}
+                        <DialogueSeprator index={index}
+                            elementIndex={elementIndex}
                             // esProps={_props.elementSepratorProps(index, false, parentUrn, "", _props.index, null)}
                             elementType="element-dialogue"
                             sectionBreak={false}
@@ -108,7 +112,7 @@ export default function ElementDialogue(props) {
         }
     }
 
-    const renderButtons = (index, buttonClass, labelText) => {
+    const renderButtons = (index, buttonClass, labelText, deleteElement) => {
         if ((props.elemBorderToggle !== undefined && props.elemBorderToggle) || props.borderToggle == 'active') {
             return (
                 <div>
@@ -121,7 +125,12 @@ export default function ElementDialogue(props) {
                         props.permissions && props.permissions.includes('elements_add_remove') ?
                             (<Button
                                 type="delete-element"
-                                onClick={(e) => props.showDeleteElemPopup(e, true)}
+                                onClick={(e) => {
+                                
+                                    deleteElement(index, elementIndex);
+                                    // show delete element popup
+                                    // props.showDeleteElemPopup(e, true)
+                                }}
                             />)
                             : null
                     }
@@ -208,3 +217,10 @@ export default function ElementDialogue(props) {
             : ''
     )
 }
+
+const dispatchActions = {
+
+    deleteScriptElement
+}
+
+export default connect(null, dispatchActions)(ElementDialogue);
