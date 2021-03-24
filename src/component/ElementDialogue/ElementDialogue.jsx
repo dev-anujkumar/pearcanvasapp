@@ -5,7 +5,12 @@ import DialogueContent from './DialogueContent.jsx';
 import DialogueSeprator from './DialogueSeprator.jsx';
 import "../../styles/ElementDialogue/DialogueStyles.css"
 import { connect } from 'react-redux';
-import { deleteScriptElement } from './DialougeActions';
+import { deleteScriptElement, updatePSElementinStore } from './DialougeActions';
+import { updateElement } from '../ElementContainer/ElementContainer_Actions.js';
+import config from "../../config/config.js";
+import { sendDataToIframe, removeBlankTags } from '../../constants/utility.js';
+
+// import tinymce from 'tinymce/tinymce';
 
 const ElementDialogue = (props) => {
 
@@ -149,8 +154,11 @@ const ElementDialogue = (props) => {
      */
     const handleInnerFocus = (c2Flag, showHideObj, event, index) => {
         event.stopPropagation()
+        // props.element
         setInnerElementIndex(index)
         props.handleFocus(c2Flag, showHideObj, event)
+        // props.setLastSavedPSData(props.element)
+
     }
 
     /**
@@ -162,14 +170,30 @@ const ElementDialogue = (props) => {
     const handleOuterFocus = (c2Flag, showHideObj, event) => {
         setInnerElementIndex(null)
         props.handleFocus(c2Flag, showHideObj, event)
+        // props.setLastSavedPSData(props.element)
+
     }
 
+    const handleOuterBlur = (field, eventTarget) => {
+        const newPSData = JSON.parse(JSON.stringify(props.element))
+        newPSData.html[field] = `<p>${removeBlankTags(eventTarget.innerHTML)}</p>`
+        if (props.element.html?.[field].replace(/<br data-mce-bogus="1">/g, "") !== newPSData.html[field].replace(/<br data-mce-bogus="1">/g, "")) {
+            //call update API
+            props.updatePSElementinStore(props.index, newPSData)
+            // props.setLastSavedPSData(newPSData)
+            console.log("CONTENT DIFFERENT: CALL UPDATE API")
+            sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+            // config.isSavingElement = true
+            // props.updateElement()
+        }
+    }
+    
     const copmpProps = {
         permissions: props.permissions,
         element: props.element,
         slateLockInfo: props.slateLockInfo,
         elementId: props.elementId,
-        handleBlur: props.handleBlur,
+        // handleBlur: props.handleBlur,
         handleEditorFocus: handleOuterFocus
     }
     return (
@@ -177,7 +201,7 @@ const ElementDialogue = (props) => {
             <div className="figureElement">
                 <div className="divImageTextWidth">
                     <figure className="figureImageTextWidth" resource="">
-                        <p id="startLineSetting">Start Line number-{props.element.elementdata.startNumber}</p>
+                        <p id="startLineSetting">Start Line number-{props.element?.elementdata?.startNumber || 1}</p>
                         <header className="figure-header">
                             <TinyMceEditor
                                 {...copmpProps}
@@ -186,7 +210,7 @@ const ElementDialogue = (props) => {
                                 tagName={'h4'}
                                 className={" figureLabel "}
                                 model={props.element.html.actTitle}
-
+                                handleBlur={(forceupdate, currentElement, eIndex, showHideType, eventTarget) => handleOuterBlur("actTitle", eventTarget)}
 
                             />
                             <TinyMceEditor
@@ -196,6 +220,7 @@ const ElementDialogue = (props) => {
                                 tagName={'h4'}
                                 className={" figureTitle "}
                                 model={props.element.html.sceneTitle}
+                                handleBlur={(forceupdate, currentElement, eIndex, showHideType, eventTarget) => handleOuterBlur("sceneTitle", eventTarget)}
                             />
                         </header>
                         <div>
@@ -210,6 +235,7 @@ const ElementDialogue = (props) => {
                             tagName={'p'}
                             className={" figureCredit "}
                             model={props.element.html.credits}
+                            handleBlur={(forceupdate, currentElement, eIndex, showHideType, eventTarget) => handleOuterBlur("credits", eventTarget)}
                         />
                     </div>
                 </div>
@@ -220,7 +246,10 @@ const ElementDialogue = (props) => {
 
 const dispatchActions = {
 
-    deleteScriptElement
+    deleteScriptElement,
+    updatePSElementinStore,
+    updateElement
 }
 
+ElementDialogue.displayName = "ElementDialogue"
 export default connect(null, dispatchActions)(ElementDialogue);

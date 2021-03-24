@@ -39,6 +39,8 @@ let cypressConfig = {
     popupCallToActionToolbar: ['insertMedia','formatSelector','strikethrough','footnote','decreaseindent','glossary','crossLinkingIcon','assetpopover','orderedlist','unorderedlist','increaseindent','decreaseindent','mathml','chemml','superscript','subscript','specialcharactor','undo','redo','crossLinkingIcon','assetpopover','slatetag'],
     poetryCaptionToolbar:['insertMedia','formatSelector','decreaseindent','glossary','crossLinkingIcon','assetpopover','orderedlist','unorderedlist'],
     poetryStanzaToolbar:['insertMedia','formatSelector','increaseindent','decreaseindent','orderedlist','unorderedlist'],
+    sdToolbar: ['insertMedia','formatSelector','crossLinkingIcon', 'italic', 'assetpopover', 'footnote', 'glossary','decreaseindent'],
+    deCharacterToolbar: ['insertMedia', 'formatSelector', 'crossLinkingIcon', 'bold', 'assetpopover', 'footnote', 'glossary', 'decreaseindent'],
     APO_API_KEY : '7ij8zrLkCNR9DtAXx3KJ6yutoYnk4SAx',
     editorRefID:"",
     releaseCallCount: 0,

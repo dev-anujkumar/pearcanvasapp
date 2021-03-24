@@ -1,6 +1,5 @@
 import React, { Fragment } from 'react';
 import TinyMceEditor from "../tinyMceEditor";
-import tinymce from 'tinymce/tinymce';
 
 function DialogueContent(props) {
 
@@ -17,9 +16,7 @@ function DialogueContent(props) {
                 element={props.element}
                 elementId={props.elementId}
                 handleEditorFocus={props.handleFocus}
-                handleBlur={() => {
-                    console.log("the tiny active editor is", tinymce.activeEditor)
-                }}
+                handleBlur={props.handleBlur}
                 placeholder="Enter Character Name..."
                 tagName={'h4'}
                 className={props.className}

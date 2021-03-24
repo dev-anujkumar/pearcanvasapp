@@ -3096,6 +3096,7 @@ export class TinyMceEditor extends Component {
      * @param {*} e  event object
      */
     handleBlur = (e, forceupdate) => {
+        const eventTarget = e.target
         let checkCanvasBlocker = document.querySelector("div.canvas-blocker");
         let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");
         if (isBlockQuote && this.isctrlPlusV) {
@@ -3223,7 +3224,7 @@ export class TinyMceEditor extends Component {
                 this.props.createPoetryElements(this.props.poetryField, true, this.props.index, this.props.element)
             } else {
                 setTimeout(() => {
-                    this.props.handleBlur(forceupdate, this.props.currentElement, this.props.index, showHideType)
+                    this.props.handleBlur(forceupdate, this.props.currentElement, this.props.index, showHideType, eventTarget)
                 }, 0)
             }
         }

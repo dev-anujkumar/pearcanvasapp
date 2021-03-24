@@ -1480,6 +1480,7 @@ class ElementContainer extends Component {
                         onClickCapture={this.props.onClickCapture}
                         showBlocker={this.props.showBlocker}
                         setActiveElement={this.props.setActiveElement}
+                        parentElement={this.props.parentElement}
                         showDeleteElemPopup={this.showDeleteElemPopup}
                         handleBlur={this.handleBlur}
                         handleFocus={this.handleFocus}
