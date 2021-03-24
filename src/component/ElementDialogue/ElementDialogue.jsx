@@ -7,7 +7,7 @@ import "../../styles/ElementDialogue/DialogueStyles.css"
 
 export default function ElementDialogue(props) {
     const [selectedInnerElementIndex, setInnerElementIndex] = useState(null)
-
+    const elementIndex = props.index;
     // if (props.activeElement !== props.elementId) setInnerElementIndex(null)
     /**
         @renderDialogueContent | This function used to render Dialogue Content
@@ -23,6 +23,7 @@ export default function ElementDialogue(props) {
                     <Fragment key={element.id}>
                         {index === 0 && <DialogueSeprator
                             index={index}
+                            elementIndex={elementIndex}
                             firstOne={index === 0}
                             // esProps={_props.elementSepratorProps(0, true, parentUrn, "", _props.index, null)}
                             elementType="element-dialogue"
@@ -41,10 +42,11 @@ export default function ElementDialogue(props) {
                             <div
                                 className={`element-container ${setBorderToggle(_props.borderToggle, index, selectedInnerElementIndex)}`}
                                 data-id={_props.elementId}
-                                // onClick={handleInnerFocus}
+                            // onClick={handleInnerFocus}
                             >
                                 <DialogueContent
-                                    index={index}
+                                    index={index+1}
+                                    elementIndex={elementIndex}
                                     labelText={labelText}
                                     element={_props.element}
                                     elementId={_props.element.id}
@@ -52,7 +54,7 @@ export default function ElementDialogue(props) {
                                     type={_props.type}
                                     permissions={_props.permissions}
                                     handleBlur={_props.handleBlur}
-                                    handleFocus={(...args) => handleInnerFocus(...args,index)}
+                                    handleFocus={(...args) => handleInnerFocus(...args, index)}
                                     btnClassName={_props.btnClassName}
                                     borderToggle={_props.borderToggle}
                                     elemBorderToggle={_props.elemBorderToggle}
@@ -64,8 +66,8 @@ export default function ElementDialogue(props) {
                                 />
                             </div>
                         </div>
-                        <DialogueSeprator
-                            index={index}
+                        <DialogueSeprator   index={index}
+                                    elementIndex={elementIndex}
                             // esProps={_props.elementSepratorProps(index, false, parentUrn, "", _props.index, null)}
                             elementType="element-dialogue"
                             sectionBreak={false}
@@ -84,8 +86,8 @@ export default function ElementDialogue(props) {
      * @param {*} elemBorderToggleFromProp Slate level border based on toggle
      * @param {*} borderToggleFromState Element level border based on focus
      */
-     const setBorderToggle = (elemBorderToggleFromProp, index ,selectedInnerIndex) => {
-        const borderToggleFromState = index  === selectedInnerIndex && props.activeElement.elementId === props.elementId ? "active" : ""
+    const setBorderToggle = (elemBorderToggleFromProp, index, selectedInnerIndex) => {
+        const borderToggleFromState = index === selectedInnerIndex && props.activeElement.elementId === props.elementId ? "active" : ""
         if (elemBorderToggleFromProp !== 'undefined' && elemBorderToggleFromProp) {
             if (borderToggleFromState === 'active' && elemBorderToggleFromProp !== "showBorder") {
                 return borderToggleFromState
@@ -107,7 +109,7 @@ export default function ElementDialogue(props) {
     }
 
     const renderButtons = (index, buttonClass, labelText) => {
-        if((props.elemBorderToggle !== undefined && props.elemBorderToggle) || props.borderToggle == 'active'){
+        if ((props.elemBorderToggle !== undefined && props.elemBorderToggle) || props.borderToggle == 'active') {
             return (
                 <div>
                     <Button
@@ -128,7 +130,7 @@ export default function ElementDialogue(props) {
         }
         return null
     }
-    
+
     /**
      * Handles focus for inner elements (SD and DE)
      * @param {} c2Flag 
@@ -152,7 +154,7 @@ export default function ElementDialogue(props) {
         setInnerElementIndex(null)
         props.handleFocus(c2Flag, showHideObj, event)
     }
-    
+
     const copmpProps = {
         permissions: props.permissions,
         element: props.element,
@@ -175,8 +177,8 @@ export default function ElementDialogue(props) {
                                 tagName={'h4'}
                                 className={" figureLabel "}
                                 model={props.element.html.actTitle}
-                                
-                                
+
+
                             />
                             <TinyMceEditor
                                 {...copmpProps}

@@ -1,14 +1,30 @@
 import React, { useState } from 'react'
 import Button from './../ElementButtons';
 import Tooltip from '../Tooltip';
+import { connect } from 'react-redux';
+import { addScriptElement } from './DialougeActions';
 
-export default function DialogueSeprator(props) {
 
-    const [showDetails, setDetails] = useState(false);
+const defaultSDElement = {
+    "type": "stagedirection",
+    "text": "<p></p>"
+}
 
+const defaultDialougeElement = {
+    "type": "lines",
+    "characterName": "",
+    "text": "<p></p>"
+}
+
+
+const DialogueSeprator = (props) => {
+
+    const [showDetails, setDetails] = useState(true);
+    const { index, elementIndex } = props;
     return (
-
-        <div style={{ display: 'flex', flexDirection: 'row' }}>
+        <div
+            className="elementSapratorContainer"
+            style={{ display: 'flex', flexDirection: 'row' }}>
             <div className='elemDiv-hr'>
                 <hr className='horizontalLine' />
             </div>
@@ -23,11 +39,13 @@ export default function DialogueSeprator(props) {
                     />
                 </Tooltip>
                 {
-                    showDetails && <div style={{ position: 'absolute', zIndex:1 }}>
+                    showDetails && <div style={{ position: 'absolute', zIndex: 1 }}>
                         <Tooltip tooltipText="Dailouge Element">
                             <Button
                                 onClick={(event) => {
-                                    setDetails(!showDetails)
+                                    // add dialouge element
+                                    console.log("i will add dialouge element here " + index + " , " + elementIndex)
+                                    props.addScriptElement(elementIndex, index, defaultDialougeElement);
                                 }}
                                 className="dropbtn"
                                 type="expand"
@@ -36,7 +54,9 @@ export default function DialogueSeprator(props) {
                         <Tooltip tooltipText="Stage Direction">
                             <Button
                                 onClick={(event) => {
-                                    setDetails(!showDetails)
+                                    // add stage direction
+                                    console.log("i will add stage direction here" + index + " , " + elementIndex)
+                                    props.addScriptElement(elementIndex, index, defaultSDElement);
                                 }}
                                 className="dropbtn"
                                 type="expand"
@@ -49,3 +69,8 @@ export default function DialogueSeprator(props) {
         </div>
     )
 }
+
+const dispatchProps = {
+    addScriptElement
+}
+export default connect(null, dispatchProps)(DialogueSeprator)
