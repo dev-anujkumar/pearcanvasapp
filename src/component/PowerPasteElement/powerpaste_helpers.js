@@ -42,7 +42,7 @@ export default {
       .replace(/<fragment>/g, "")
       .replace(/<\/fragment>/g, ""); //Removing <fragment> tag
   },
-  
+
   /**
    * Converts generic ordered list to Cypress formatted list
    * @param {HTMLElement} node HTML element node object
@@ -81,7 +81,7 @@ export default {
       this.convertTag(node, "a", "fragment"); //Transforms <a> to <fragment>
       node.innerHTML = node.innerHTML.replace(/\r?\n|\r/g, " ")
       this.removeFragment(node)
-      
+
       const mainDepth = depth - 1;
 
       switch (mainDepth) {
@@ -118,6 +118,145 @@ export default {
 
     this.addOListClasses(node.firstElementChild, depth);
     this.addOListClasses(node.nextElementSibling, depth);
+  },
+
+
+  /**
+   * Converts generic ordered list to Cypress formatted list
+   * @param {HTMLElement} node HTML element node object
+   * @param {Number} depth level of nesting
+   */
+  addSpecificOListClasses: function (firstNode, node, depth) {
+    if (node === null) {
+      return;
+    }
+
+    if (node.tagName === "OL") {
+      if (depth === 4) {
+        const domParser = new DOMParser()
+        let ulNode = domParser.parseFromString(node.innerHTML, "text/html").body
+        this.removeExtraNesting(ulNode, "ol")
+        node.innerHTML = ulNode.innerHTML
+      }
+
+      let firstfourthDepthOuterNodeClass = "";
+      let secondDepthOuterNodeClass = "";
+      let thirdDepthOuterNodeClass = "";
+      let secondDepthLiNodesClass = "";
+      let thirdDepthLiNodesClass = "";
+      let firstfourthDepthLiNodesClass = "";
+
+
+      const firstNodeStyleType = firstNode.getAttribute("style");
+      switch (firstNodeStyleType) {
+        case "list-style-type:lower-alpha;":
+          firstfourthDepthOuterNodeClass = "lower-alpha";
+          firstfourthDepthLiNodesClass = "listItemNumeroUnoLowerAlpha";
+
+          secondDepthOuterNodeClass = "lower-roman";
+          secondDepthLiNodesClass = "listItemNumeroUnoLowerRoman";
+
+          thirdDepthOuterNodeClass = "decimal";
+          thirdDepthLiNodesClass = "listItemNumeroUnoNumber";
+          break;
+        case "list-style-type:upper-alpha;":
+          firstfourthDepthOuterNodeClass = "upper-alpha";
+          firstfourthDepthLiNodesClass = "listItemNumeroUnoUpperAlpha";
+
+          secondDepthOuterNodeClass = "upper-roman";
+          secondDepthLiNodesClass = "listItemNumeroUnoUpperRoman";
+
+          thirdDepthOuterNodeClass = "decimal";
+          thirdDepthLiNodesClass = "listItemNumeroUnoNumber";
+
+          break;
+        case "list-style-type:lower-roman;":
+          firstfourthDepthOuterNodeClass = "lower-roman";
+          firstfourthDepthLiNodesClass = "listItemNumeroUnoLowerRoman";
+
+          secondDepthOuterNodeClass = "decimal";
+          secondDepthLiNodesClass = "listItemNumeroUnoNumber";
+
+          thirdDepthOuterNodeClass = "lower-alpha";
+          thirdDepthLiNodesClass = "listItemNumeroUnoLowerAlpha";
+          break;
+        case "list-style-type:upper-roman;":
+          firstfourthDepthOuterNodeClass = "upper-roman";
+          firstfourthDepthLiNodesClass = "listItemNumeroUnoUpperRoman";
+
+          secondDepthOuterNodeClass = "decimal";
+          secondDepthLiNodesClass = "listItemNumeroUnoNumber";
+
+          thirdDepthOuterNodeClass = "upper-alpha";
+          thirdDepthLiNodesClass = "listItemNumeroUnoUpperAlpha";
+          break;
+        default :
+          firstfourthDepthOuterNodeClass = "decimal";
+          firstfourthDepthLiNodesClass = "listItemNumeroUnoNumber";
+
+          secondDepthOuterNodeClass = "lower-alpha";
+          secondDepthLiNodesClass = "listItemNumeroUnoLowerAlpha";
+
+          thirdDepthOuterNodeClass = "lower-roman";
+          thirdDepthLiNodesClass = "listItemNumeroUnoLowerRoman";
+      }
+
+
+      switch (depth) {
+        case 1:
+        case 4:
+          node.classList.add(firstfourthDepthOuterNodeClass);
+          this.addSpecificClassToChildNodes(node, firstfourthDepthLiNodesClass, depth);
+          break;
+        case 2:
+          node.classList.add(secondDepthOuterNodeClass);
+          this.addSpecificClassToChildNodes(node, secondDepthLiNodesClass, depth);
+          break;
+        case 3:
+          node.classList.add(thirdDepthOuterNodeClass);
+          this.addSpecificClassToChildNodes(node, thirdDepthLiNodesClass, depth);
+          break;
+      }
+
+      node.setAttribute("treelevel", depth++);
+      node.innerHTML = node.innerHTML.replace(/\r?\n|\r/g, " ").trim();
+      if ((depth - 1) !== 1) {
+        node.removeAttribute("style");
+      }
+    }
+
+    this.addSpecificOListClasses(firstNode, node.firstElementChild, depth);
+    if (node.nextElementSibling !== null && node.nextElementSibling?.tagName === "OL") {
+      depth = 1;
+      this.addSpecificOListClasses(node.nextElementSibling, node.nextElementSibling, depth);
+    } else {
+      this.addSpecificOListClasses(firstNode, node.nextElementSibling, depth);
+    }
+
+  },
+
+
+  addSpecificClassToChildNodes: function (node, childNodeClass, depth) {
+    Array.from(node.children).forEach((childNode) => {
+      if (depth == 1) {
+        childNode.classList.add(childNodeClass);
+      } else {
+        if (!childNode.previousElementSibling) {
+          childNode.classList.add("reset", childNodeClass);
+        } else {
+          childNode.classList.add(childNodeClass);
+        }
+      }
+
+      this.convertTag(childNode, "b", "strong"); //Transforms <b> to <strong>
+      this.convertTag(childNode, "i", "em"); //Transforms <i> to <em>
+      this.convertTag(childNode, "a", "fragment"); //Transforms <a> to <fragment>
+      childNode.innerHTML = childNode.innerHTML.replace(/\r?\n|\r/g, " ")
+      this.removeFragment(childNode);
+      childNode.removeAttribute("style");
+      childNode.removeAttribute("aria-level");
+      childNode.removeAttribute("dir");
+    });
   },
 
   /**
