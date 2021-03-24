@@ -128,6 +128,7 @@ class ElementFigure extends Component {
      */
     handleC2ExtendedClick = (locationData) => {
         let alfrescoLocationData = this.state.alfrescoSiteData
+        alfrescoLocationData.currentAsset = locationData.currentAsset;
         let data_1 = alfrescoLocationData?.nodeRef ? alfrescoLocationData : locationData;
         let that = this;
         !hasReviewerRole() && c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
