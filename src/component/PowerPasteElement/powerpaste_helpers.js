@@ -139,74 +139,90 @@ export default {
         node.innerHTML = ulNode.innerHTML
       }
 
-      let firstfourthDepthOuterNodeClass = "";
+      let firstDepthOuterNodeClass = "";
       let secondDepthOuterNodeClass = "";
       let thirdDepthOuterNodeClass = "";
+      let fourthDepthOuterNodeClass = "";
+      let firstDepthLiNodesClass = "";
       let secondDepthLiNodesClass = "";
       let thirdDepthLiNodesClass = "";
-      let firstfourthDepthLiNodesClass = "";
+      let fourthDepthLiNodesClass = "";
 
 
       const firstNodeStyleType = firstNode.getAttribute("style");
       switch (firstNodeStyleType) {
         case "list-style-type:lower-alpha;":
-          firstfourthDepthOuterNodeClass = "lower-alpha";
-          firstfourthDepthLiNodesClass = "listItemNumeroUnoLowerAlpha";
+          firstDepthOuterNodeClass = "lower-alpha";
+          firstDepthLiNodesClass = "listItemNumeroUnoLowerAlpha";
 
           secondDepthOuterNodeClass = "lower-roman";
           secondDepthLiNodesClass = "listItemNumeroUnoLowerRoman";
 
           thirdDepthOuterNodeClass = "decimal";
           thirdDepthLiNodesClass = "listItemNumeroUnoNumber";
+
+          fourthDepthOuterNodeClass = "lower-alpha";
+          fourthDepthLiNodesClass = "listItemNumeroUnoLowerAlpha";
           break;
         case "list-style-type:upper-alpha;":
-          firstfourthDepthOuterNodeClass = "upper-alpha";
-          firstfourthDepthLiNodesClass = "listItemNumeroUnoUpperAlpha";
-
-          secondDepthOuterNodeClass = "upper-roman";
-          secondDepthLiNodesClass = "listItemNumeroUnoUpperRoman";
-
-          thirdDepthOuterNodeClass = "decimal";
-          thirdDepthLiNodesClass = "listItemNumeroUnoNumber";
-
-          break;
-        case "list-style-type:lower-roman;":
-          firstfourthDepthOuterNodeClass = "lower-roman";
-          firstfourthDepthLiNodesClass = "listItemNumeroUnoLowerRoman";
-
-          secondDepthOuterNodeClass = "decimal";
-          secondDepthLiNodesClass = "listItemNumeroUnoNumber";
-
-          thirdDepthOuterNodeClass = "lower-alpha";
-          thirdDepthLiNodesClass = "listItemNumeroUnoLowerAlpha";
-          break;
-        case "list-style-type:upper-roman;":
-          firstfourthDepthOuterNodeClass = "upper-roman";
-          firstfourthDepthLiNodesClass = "listItemNumeroUnoUpperRoman";
-
-          secondDepthOuterNodeClass = "decimal";
-          secondDepthLiNodesClass = "listItemNumeroUnoNumber";
-
-          thirdDepthOuterNodeClass = "upper-alpha";
-          thirdDepthLiNodesClass = "listItemNumeroUnoUpperAlpha";
-          break;
-        default :
-          firstfourthDepthOuterNodeClass = "decimal";
-          firstfourthDepthLiNodesClass = "listItemNumeroUnoNumber";
+          firstDepthOuterNodeClass = "upper-alpha";
+          firstDepthLiNodesClass = "listItemNumeroUnoUpperAlpha";
 
           secondDepthOuterNodeClass = "lower-alpha";
           secondDepthLiNodesClass = "listItemNumeroUnoLowerAlpha";
 
           thirdDepthOuterNodeClass = "lower-roman";
           thirdDepthLiNodesClass = "listItemNumeroUnoLowerRoman";
+
+          fourthDepthOuterNodeClass = "decimal";
+          fourthDepthLiNodesClass = "listItemNumeroUnoNumber";
+          break;
+        case "list-style-type:lower-roman;":
+          firstDepthOuterNodeClass = "lower-roman";
+          firstDepthLiNodesClass = "listItemNumeroUnoLowerRoman";
+
+          secondDepthOuterNodeClass = "lower-alpha";
+          secondDepthLiNodesClass = "listItemNumeroUnoLowerAlpha";
+
+          thirdDepthOuterNodeClass = "decimal";
+          thirdDepthLiNodesClass = "listItemNumeroUnoNumber";
+
+          fourthDepthOuterNodeClass = "lower-roman";
+          fourthDepthLiNodesClass = "listItemNumeroUnoLowerRoman";
+          break;
+        case "list-style-type:upper-roman;":
+          firstDepthOuterNodeClass = "upper-roman";
+          firstDepthLiNodesClass = "listItemNumeroUnoUpperRoman";
+
+          secondDepthOuterNodeClass = "upper-alpha";
+          secondDepthLiNodesClass = "listItemNumeroUnoUpperAlpha";
+
+          thirdDepthOuterNodeClass = "decimal";
+          thirdDepthLiNodesClass = "listItemNumeroUnoNumber";
+
+          fourthDepthOuterNodeClass = "lower-alpha";
+          fourthDepthLiNodesClass = "listItemNumeroUnoLowerAlpha";
+          break;
+        default :
+          firstDepthOuterNodeClass = "decimal";
+          firstDepthLiNodesClass = "listItemNumeroUnoNumber";
+
+          secondDepthOuterNodeClass = "lower-alpha";
+          secondDepthLiNodesClass = "listItemNumeroUnoLowerAlpha";
+
+          thirdDepthOuterNodeClass = "lower-roman";
+          thirdDepthLiNodesClass = "listItemNumeroUnoLowerRoman";
+
+          fourthDepthOuterNodeClass = "decimal";
+          fourthDepthLiNodesClass = "listItemNumeroUnoNumber";
+          break;
       }
 
 
       switch (depth) {
         case 1:
-        case 4:
-          node.classList.add(firstfourthDepthOuterNodeClass);
-          this.addSpecificClassToChildNodes(node, firstfourthDepthLiNodesClass, depth);
+          node.classList.add(firstDepthOuterNodeClass);
+          this.addSpecificClassToChildNodes(node, firstDepthLiNodesClass, depth);
           break;
         case 2:
           node.classList.add(secondDepthOuterNodeClass);
@@ -215,6 +231,10 @@ export default {
         case 3:
           node.classList.add(thirdDepthOuterNodeClass);
           this.addSpecificClassToChildNodes(node, thirdDepthLiNodesClass, depth);
+          break;
+        case 4:
+          node.classList.add(fourthDepthOuterNodeClass);
+          this.addSpecificClassToChildNodes(node, fourthDepthLiNodesClass, depth);
           break;
       }
 
