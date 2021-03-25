@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import { deleteScriptElement, updatePSElementinStore } from './DialougeActions';
 import { updateElement } from '../ElementContainer/ElementContainer_Actions.js';
 import config from "../../config/config.js";
-import { sendDataToIframe, removeBlankTags } from '../../constants/utility.js';
+import { sendDataToIframe, removeBlankTags, removeClassesFromHtml } from '../../constants/utility.js';
 
 // import tinymce from 'tinymce/tinymce';
 
@@ -175,16 +175,15 @@ const ElementDialogue = (props) => {
     }
 
     const handleOuterBlur = (field, eventTarget) => {
-        const newPSData = JSON.parse(JSON.stringify(props.element))
+        let newPSData = JSON.parse(JSON.stringify(props.element))
         newPSData.html[field] = `<p>${removeBlankTags(eventTarget.innerHTML)}</p>`
-        if (props.element.html?.[field].replace(/<br data-mce-bogus="1">/g, "") !== newPSData.html[field].replace(/<br data-mce-bogus="1">/g, "")) {
-            //call update API
-            props.updatePSElementinStore(props.index, newPSData)
-            // props.setLastSavedPSData(newPSData)
-            console.log("CONTENT DIFFERENT: CALL UPDATE API")
+        
+        if (removeClassesFromHtml(props.element.html?.[field]) !== removeClassesFromHtml(newPSData.html[field]) && !config.savingInProgress) {
+            // create data and call update API
+            const dataToSend = createPSDataForUpdateAPI(props, newPSData)
             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-            // config.isSavingElement = true
-            // props.updateElement()
+            config.isSavingElement = true
+            props.updateElement(dataToSend, props.index, props.parentUrn, props.asideData, null, props.parentElement, null)
         }
     }
     
@@ -251,5 +250,27 @@ const dispatchActions = {
     updateElement
 }
 
+const mapStateToProps = ({ appStore }) => {
+    return {
+        asideData: appStore.asideData,
+        parentUrn: appStore.parentUrn
+    }
+}
+
 ElementDialogue.displayName = "ElementDialogue"
-export default connect(null, dispatchActions)(ElementDialogue);
+export default connect(mapStateToProps, dispatchActions)(ElementDialogue);
+
+export const createPSDataForUpdateAPI = (_props, newPSData) => {
+    if (config.elementStatus?.[newPSData.id] === "approved") {
+        config.savingInProgress = true
+    }
+    const slateEntityUrn = _props.parentUrn?.contentUrn || _props.asideData?.contentUrn || config.slateEntityURN
+    return {
+        ...newPSData,
+        slateVersionUrn: config.slateManifestURN,
+        elementParentEntityUrn: slateEntityUrn,
+        inputType : "ELEMENT_DIALOGUE",
+        inputSubType : "NA",
+        index: _props.index.toString().split('-')[_props.index.toString().split('-').length - 1]
+    }
+}
