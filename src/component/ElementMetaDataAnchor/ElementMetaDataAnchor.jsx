@@ -41,7 +41,7 @@ export class ElementMetaDataAnchor extends Component {
                 element={this.props.element}
                 placeholder="Please add learning objective by tagging a slate"
                 className="learningObjectiveinnerText"
-                model={this.prepareLOData(this.props.currentSlateLOData)}
+                model={this.prepareLOData(this.props.currentSlateLOData[0])}
                 slateLockInfo={slateLockInfo}
                 handleEditorFocus={this.props.handleFocus}
                 handleBlur = {this.props.handleBlur}
@@ -94,13 +94,15 @@ export class ElementMetaDataAnchor extends Component {
     * @description - show popup on click on element that no data is present and also edit the data
     * @param {object} loldata
  */
-  onLOClickHandle = (loData, e) => {
+  onLOClickHandle = (slateLoData, e) => {
     e.stopPropagation();
     this.props.handleFocus();
     if (config.editorRefID == e.target.id) {
       config.editorRefID = "";
       return false;
     }
+    let loData = Array.isArray(slateLoData) ? slateLoData[0] : slateLoData;
+
     if (this.props.permissions.includes('lo_edit_metadata')) {
       if (loData && loData.label && loData.label.en) {
         loData.label.en = this.props.currentSlateLODataMath;

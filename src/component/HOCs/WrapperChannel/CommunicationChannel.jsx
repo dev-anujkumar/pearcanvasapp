@@ -135,14 +135,18 @@ function CommunicationChannel(WrappedComponent) {
                     this.handleLOData(message);
                     break;
                 case 'getSlateLOResponse':
-                    message ? this.props.currentSlateLOMath(message.label.en) : this.props.currentSlateLOMath("");
-                    if (message) {
-                        const regex = /<math.*?data-src=\'(.*?)\'.*?<\/math>/g;
-                        message.label.en = message.label.en.replace(regex, "<img src='$1'></img>")
-                    }
-                    this.props.currentSlateLO(message);
+                    //TO BE CATERED LATER FOR CYPRESS LO
+                    // if((typeof message.LOList !== 'Array')){
+                        // message ? this.props.currentSlateLOMath(message.label.en) : this.props.currentSlateLOMath("");
+                        // if (message) {
+                        //   const regex = /<math.*?data-src=\'(.*?)\'.*?<\/math>/g;
+                            // message.label.en = message.label.en.replace(regex, "<img src='$1'></img>")
+                        // }
+                    // }
+                    //console.log('getSlateLOResponse',message);
+                    this.props.currentSlateLO(message.LOList);
                     this.props.isLOExist(message);
-                    this.props.currentSlateLOType(message);
+                    this.props.currentSlateLOType(message.currentSlateLF);
                     break;
                 case 'loEditResponse':
                     this.setState({

@@ -2,6 +2,7 @@ import {
     CURRENT_SLATE_LF
 } from '../../constants/Action_Constants.js';
 export const currentSlateLO = (currentSlateLOData) =>  (dispatch, getState) => {
+    console.log('CURRENT_SLATE_LO_DATA',currentSlateLOData)
     return dispatch({
         type: 'CURRENT_SLATE_LO_DATA',
         payload: {
@@ -20,8 +21,11 @@ export const currentSlateLOMath = (currentSlateLODataMath) =>  (dispatch, getSta
 }
 
 export const isLOExist = (message) =>  (dispatch, getState) => {
-    if(message && (((message.loObj && (message.loObj.id|| message.loObj.loUrn))|| message.loUrn) ||
-        (message.toastData === "Learning Objectives has been aligned "))) {
+    const cypressLOLinked = (message && (((message.loObj && (message.loObj.id|| message.loObj.loUrn))|| message.loUrn) ||
+    (message.toastData === "Learning Objectives has been aligned ")));
+    const externalLOLinked = (message && (message.LOList && message.LOList.length > 0 ));
+
+    if(cypressLOLinked || externalLOLinked) {
         return dispatch({
             type: 'SLATE_TAG_ENABLE',
             payload: true
@@ -71,14 +75,7 @@ export const reRenderLO = (isRenderLO) => (dispatch, getState) => {
     })
 }
 
-export const currentSlateLOType = (currentSlateLOData) => (dispatch) => {
-    let learningFrameWork = '';
-    if (currentSlateLOData?.description?.en === 'highereducation') {
-        learningFrameWork = 'cypressLF'
-    }
-    else if (currentSlateLOData?.description) {
-        learningFrameWork = 'externalLF'
-    }
+export const currentSlateLOType = (learningFrameWork) => (dispatch) => {
     return dispatch({
         type: CURRENT_SLATE_LF,
         payload: {
