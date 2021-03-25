@@ -361,3 +361,29 @@ export const approvedIcon = (() => {
     )
 })();
 
+
+export const learnosityIcon = (() => {
+    return (
+        <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+            <title>Icon / Learnosity</title>
+            <defs>
+                <polygon id="path-1" points="0.1471 0.1948 3.943 0.1948 3.943 14.0078 0.1471 14.0078"></polygon>
+            </defs>
+            <g id="Icon-/-Learnosity" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
+                <g id="Group-10" transform="translate(2.000000, 2.000000)">
+                    <path d="M9.9713,2.9963 L9.9713,16.8003 L4.8653,19.7033 C4.3893,19.9683 3.7953,19.6363 3.7953,19.1053 L3.7953,0.6913 C3.7953,0.1603 4.3893,-0.1717 4.8653,0.0933 L9.9713,2.9963 Z" id="Fill-1" fill="#F03232"></path>
+                    <path d="M9.9713,2.9963 L9.9713,16.8003 L15.0783,19.7033 C15.5533,19.9683 16.1473,19.6363 16.1473,19.1053 L16.1473,0.6913 C16.1473,0.1603 15.5533,-0.1717 15.0783,0.0933 L9.9713,2.9963 Z" id="Fill-3" fill="#FFCD19"></path>
+                    <g id="Group-7" transform="translate(16.000000, 2.796600)">
+                        <mask id="mask-2" fill="white">
+                            <use xlinkHref="#path-1"></use>
+                        </mask>
+                        <g id="Clip-6"></g>
+                        <path d="M0.1471,14.0078 L0.1471,0.1948 L3.2391,0.1948 C3.6271,0.1948 3.9431,0.5078 3.9431,0.8938 L3.9431,13.3098 C3.9431,13.6958 3.6271,14.0078 3.2391,14.0078 L0.1471,14.0078 Z" id="Fill-5" fill="#3287FA" mask="url(#mask-2)"></path>
+                    </g>
+                    <path d="M3.796,16.8044 L3.796,2.9914 L0.704,2.9914 C0.316,2.9914 0,3.3044 0,3.6904 L0,16.1064 C0,16.4924 0.316,16.8044 0.704,16.8044 L3.796,16.8044 Z" id="Fill-8" fill="#D70000"></path>
+                </g>
+            </g>
+        </svg >
+    )
+})();
+
