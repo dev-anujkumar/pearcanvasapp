@@ -142,6 +142,7 @@ export class TinyMceEditor extends Component {
                     /*
                         if content is caused by wiris then call blur
                     */
+                   const eventTarget = e.target.targetElm
                     if (e.originalEvent && e.originalEvent.command === "mceInsertContent") {
                         let specialCharSpan = document.getElementById('specialChar');
                         if (specialCharSpan) {
@@ -182,7 +183,7 @@ export class TinyMceEditor extends Component {
                             } else {
                                 let showHideType = this.props.showHideType || null
                                 showHideType = showHideType === "revel" ? "postertextobject" : showHideType
-                                this.props.handleBlur(null, this.props.currentElement, this.props.index, showHideType)
+                                this.props.handleBlur(null, this.props.currentElement, this.props.index, showHideType, eventTarget)
                             
                             }
                         }
