@@ -158,7 +158,7 @@ class SlateTagDropdown extends React.Component {
     }
     learningObjectiveDropdown = (e) => {
         let slateManifestURN= config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
-        let currentSlateLOData = this.props.currentSlateLOData;
+        let currentSlateLOData = this.props.currentSlateLOData[0];
         let assessmentuRN="";
         let assessmentType="";
         let assessmentTypeLO="";
@@ -239,22 +239,7 @@ class SlateTagDropdown extends React.Component {
       'manifestApiUrl': config.ASSET_POPOVER_ENDPOINT,
       'assessmentApiUrl': config.ASSESSMENT_ENDPOINT
     };
-    const selectedLOs = [
-      {
-        "id": "urn:pearson:educationalgoal:f2477967-bf2d-4484-bba8-6e95f31bc2f2",
-        "subject": "https://schema.pearson.com/ns/domains/mathematics",
-        "label": {
-          "en": "LO 2 LO3"
-        }
-      },
-      {
-        "id": "urn:pearson:educationalgoal:1d186167-674e-4552-aade-d7e415f05ccd",
-        "subject": "https://schema.pearson.com/ns/domains/mathematics",
-        "label": {
-          "en": "LO 2 LO0"
-        }
-      }
-    ]
+    const selectedLOs = this.props.currentSlateLOData;
     let externalLFUrn = '';
     if (this?.props?.projectLearningFrameworks?.externalLF?.length) {
       externalLFUrn = this.props.projectLearningFrameworks.externalLF[0].urn;
@@ -268,33 +253,28 @@ class SlateTagDropdown extends React.Component {
     const {
       slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs
     } = this.prepareExtFrameworkData();
-    let openSPA = true;
-
-    // if (e?.target?.innerText == AlignToExternalFrameworkSlateDropdown) {
-    //   sendDataToIframe({
-    //     'type': OpenLOPopup,
-    //     'message': {
-    //       'text': AlignToExternalFramework,
-    //       'data': currentSlateLOData,
-    //       'isLOExist': true,
-    //       'editAction': '',
-    //       'selectedLOs': selectedLOs,
-    //       'apiConstants': apiKeys_LO,
-    //       'externalLFUrn': externalLFUrn,
-    //       'currentSlateId': slateManifestURN,
-    //       'chapterContainerUrn': ''
-    //     }
-    //   })
-    // }
 
     const currentSlateLF=this.props.currentSlateLF;
-    /**
-     * toggle functio for popup to be called based on LF type
-     */
+
    if(currentSlateLF==='cypressLF'){
       this.toggleWarningPopup(true,e);
-      console.log('in external ')
-   }
+   } else if (e?.target?.innerText == AlignToExternalFrameworkSlateDropdown) {
+      sendDataToIframe({
+        'type': OpenLOPopup,
+        'message': {
+          'text': AlignToExternalFramework,
+          'data': currentSlateLOData,
+          'isLOExist': true,
+          'editAction': '',
+          'selectedLOs': selectedLOs,
+          'apiConstants': apiKeys_LO,
+          'externalLFUrn': externalLFUrn,
+          'currentSlateId': slateManifestURN,
+          'chapterContainerUrn': ''
+        }
+      })
+    }
+    this.props.closeLODropdown();
   } 
   /** To enable/disable the External Framework option in dropdown */
   checkExternalFramework = () => {

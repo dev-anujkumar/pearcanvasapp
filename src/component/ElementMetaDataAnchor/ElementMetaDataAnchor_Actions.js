@@ -2,7 +2,6 @@ import {
     CURRENT_SLATE_LF
 } from '../../constants/Action_Constants.js';
 export const currentSlateLO = (currentSlateLOData) =>  (dispatch, getState) => {
-    console.log('CURRENT_SLATE_LO_DATA',currentSlateLOData)
     return dispatch({
         type: 'CURRENT_SLATE_LO_DATA',
         payload: {
