@@ -299,12 +299,12 @@ export default {
       }
       node.setAttribute("treelevel", depth++);
       node.innerHTML = node.innerHTML.replace(/\r?\n|\r/g, " ").trim()
-    } else if (node.tagName === "LI") {
+    } else if (node.tagName === "LI" && node.parentElement.tagName !== "OL") {
       this.convertTag(node, "b", "strong"); //Transforms <b> to <strong>
       this.convertTag(node, "i", "em"); //Transforms <i> to <em>
       this.convertTag(node, "a", "fragment"); //Transforms <a> to <fragment>
       this.removeFragment(node)
-      node.innerHTML = node.innerHTML.replace(/\r?\n|\r/g, " ")
+      node.innerHTML = node.innerHTML.replace(/\r?\n|\r/g, " ");
       node.classList.add(
         "reset",
         "listItemNumeroUnoBullet",
