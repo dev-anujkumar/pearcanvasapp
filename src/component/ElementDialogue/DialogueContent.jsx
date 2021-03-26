@@ -16,11 +16,11 @@ function DialogueContent(props) {
                 element={props.element}
                 elementId={props.elementId}
                 handleEditorFocus={props.handleFocus}
-                handleBlur={props.handleBlur}
+                handleBlur={(forceupdate, currentElement, eIndex, showHideType, eventTarget) => props.handleBlur("characterName", eventTarget, `${props.index}-0`)}
                 placeholder="Enter Character Name..."
                 tagName={'h4'}
                 className={props.className}
-                model={props.model.characterName}
+                model={props.model[1]?.characterName}
                 slateLockInfo={props.slateLockInfo}
                 glossaryFootnoteValue={props.glossaryFootnoteValue}
                 glossaaryFootnotePopup={props.glossaaryFootnotePopup}
@@ -32,11 +32,11 @@ function DialogueContent(props) {
                 element={props.element}
                 elementId={props.elementId}
                 handleEditorFocus={props.handleFocus}
-                handleBlur={props.handleBlur}
+                handleBlur={(forceupdate, currentElement, eIndex, showHideType, eventTarget) => props.handleBlur("dialogTxt", eventTarget, props.index)}
                 placeholder={placeholder}
                 tagName={'div'}
                 className={props.className}
-                model={props.model.text}
+                model={props.model[1]?.text}
                 slateLockInfo={props.slateLockInfo}
                 glossaryFootnoteValue={props.glossaryFootnoteValue}
                 glossaaryFootnotePopup={props.glossaaryFootnotePopup}
@@ -50,11 +50,11 @@ function DialogueContent(props) {
             element={props.element}
             elementId={props.elementId}
             handleEditorFocus={props.handleFocus}
-            handleBlur={props.handleBlur}
+            handleBlur={(forceupdate, currentElement, eIndex, showHideType, eventTarget) => props.handleBlur("stagedirection", eventTarget, props.index)}
             placeholder={placeholder}
             tagName={'div'}
             className={`stageDirectionItalicFont ${props.className}`}
-            model={props.model.text}
+            model={props.model[0]?.text}
             slateLockInfo={props.slateLockInfo}
             glossaryFootnoteValue={props.glossaryFootnoteValue}
             glossaaryFootnotePopup={props.glossaaryFootnotePopup}

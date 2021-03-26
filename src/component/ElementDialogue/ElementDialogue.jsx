@@ -54,15 +54,15 @@ const ElementDialogue = (props) => {
                             // onClick={handleInnerFocus}
                             >
                                 <DialogueContent
-                                    index={index + 1}
+                                    index={index}
                                     elementIndex={elementIndex}
                                     labelText={labelText}
                                     element={_props.element}
                                     elementId={_props.element.id}
-                                    model={element}
+                                    model={_props?.element?.html?.dialogueContent}
                                     type={_props.type}
                                     permissions={_props.permissions}
-                                    handleBlur={_props.handleBlur}
+                                    handleBlur={handleOuterBlur}
                                     handleFocus={(...args) => handleInnerFocus(...args, index)}
                                     btnClassName={_props.btnClassName}
                                     borderToggle={_props.borderToggle}
@@ -174,9 +174,14 @@ const ElementDialogue = (props) => {
 
     }
 
-    const handleOuterBlur = (field, eventTarget) => {
+    const handleOuterBlur = (field, eventTarget, index) => {
         let newPSData = JSON.parse(JSON.stringify(props.element))
-        newPSData.html[field] = `<p>${removeBlankTags(eventTarget.innerHTML)}</p>`
+
+        //if (field === "stagedirection") {
+        //    newPSData.html.dialogueContent[index]["text"] = `<p>${removeBlankTags(eventTarget?.innerHTML)}</p>`
+        //} else {
+            newPSData.html[field] = `<p>${removeBlankTags(eventTarget?.innerHTML)}</p>`
+        //}
         
         if (removeClassesFromHtml(props.element.html?.[field]) !== removeClassesFromHtml(newPSData.html[field]) && !config.savingInProgress) {
             // create data and call update API
