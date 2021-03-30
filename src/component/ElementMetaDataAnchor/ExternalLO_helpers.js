@@ -1,8 +1,42 @@
 /**
  * This module consists of Helper Functions for External Framework Learning Objectives
  */
-
+import config from '../../config/config';
 import elementConstants from '../../component/ElementContainer/ElementConstants.js';
+import { PROJECT_LEARNING_FRAMEWORKS } from '../../constants/Action_Constants';
+/**
+ * This API fetches the Learning Framework(s) linked to the project
+ */
+export const fetchProjectLFs = () => dispatch => {
+    axios.get(`${config.ASSET_POPOVER_ENDPOINT}v2/${config.projectUrn}/learningframeworks`, {
+        headers: {
+            "ApiKey": config.STRUCTURE_APIKEY,
+            "Content-Type": "application/json",
+            "PearsonSSOSession": config.ssoToken,
+            "x-Roles": "ContentPlanningAdmin"
+        }
+    }).then(response => {
+        if (response.status === 200 && response?.data?.learningFrameworks?.length > 0) {
+            const learningFrameworks = response.data.learningFrameworks;
+            const cypressLF = learningFrameworks.find(learningFramework => config.book_title.includes(learningFramework?.label?.en));
+            const externalLF = learningFrameworks.filter(learningFramework => !config.book_title.includes(learningFramework?.label?.en))
+            dispatch({
+                type: PROJECT_LEARNING_FRAMEWORKS,
+                payload: {
+                    cypressLF: cypressLF ?? {},
+                    externalLF: externalLF ?? []
+                }
+            });
+        }
+    }).catch(error => {
+        console.log('Error in fetching Learning Framework linked to the project>>>> ', error)
+        dispatch({
+            type: PROJECT_LEARNING_FRAMEWORKS,
+            payload: {}
+        });
+    })
+
+};
 
 /**
  * This methoda is used to get a unique LO URN to create a new Metadata Anchor on slate
