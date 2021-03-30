@@ -35,4 +35,4 @@ export const projectPendingTcStatus = "projectPendingTcStatus"
 export const AlignToCypressSlateDropdown = "Align to Cypress Framework"
 export const AlignToExternalFrameworkSlateDropdown = "Align to External Framework"
 
-
+export const WarningPopupAction = "WarningPopupAction"
