@@ -62,7 +62,7 @@ const ElementDialogue = (props) => {
                                     model={_props?.element?.html?.dialogueContent}
                                     type={_props.type}
                                     permissions={_props.permissions}
-                                    handleBlur={handleOuterBlur}
+                                    handleBlur={updateSD_DE}
                                     handleFocus={(...args) => handleInnerFocus(...args, index)}
                                     btnClassName={_props.btnClassName}
                                     borderToggle={_props.borderToggle}
@@ -174,22 +174,36 @@ const ElementDialogue = (props) => {
 
     }
 
-    const handleOuterBlur = (field, eventTarget, index) => {
+    const handleOuterBlur = (field, eventTarget) => {
         let newPSData = JSON.parse(JSON.stringify(props.element))
 
-        //if (field === "stagedirection") {
-        //    newPSData.html.dialogueContent[index]["text"] = `<p>${removeBlankTags(eventTarget?.innerHTML)}</p>`
-        //} else {
-            newPSData.html[field] = `<p>${removeBlankTags(eventTarget?.innerHTML)}</p>`
-        //}
+        newPSData.html[field] = `<p>${removeBlankTags(eventTarget?.innerHTML)}</p>`
         
         if (removeClassesFromHtml(props.element.html?.[field]) !== removeClassesFromHtml(newPSData.html[field]) && !config.savingInProgress) {
             // create data and call update API
-            const dataToSend = createPSDataForUpdateAPI(props, newPSData)
-            sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-            config.isSavingElement = true
-            props.updateElement(dataToSend, props.index, props.parentUrn, props.asideData, null, props.parentElement, null)
+           callUpdateApi(newPSData);
         }
+    }
+    /* @@updateSD_DE - To update the data of SD and DE Element Data */
+    const updateSD_DE = (field, data, index) => {
+        let newPSData = JSON.parse(JSON.stringify(props.element));
+        newPSData.html.dialogueContent[index] = data;
+        
+        if (removeClassesFromHtml(props.element?.html?.dialogueContent[index][field]) !== 
+                removeClassesFromHtml(newPSData.html?.dialogueContent[index][field]) && 
+                    !config.savingInProgress) {
+            // create data and call update API
+            callUpdateApi(newPSData);
+        }
+    }
+
+    /* Update the data to server */
+    const callUpdateApi = (newPSData) => {
+        /* @@createPSDataForUpdateAPI - Prepare the data to send to server */
+        const dataToSend = createPSDataForUpdateAPI(props, newPSData)
+        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+        config.isSavingElement = true
+        props.updateElement(dataToSend, props.index, props.parentUrn, props.asideData, null, props.parentElement, null)
     }
     
     const copmpProps = {

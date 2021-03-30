@@ -16,11 +16,17 @@ function DialogueContent(props) {
                 element={props.element}
                 elementId={props.elementId}
                 handleEditorFocus={props.handleFocus}
-                handleBlur={(forceupdate, currentElement, eIndex, showHideType, eventTarget) => props.handleBlur("characterName", eventTarget, `${props.index}-0`)}
+                handleBlur={(forceupdate, currentElement, eIndex, showHideType, eventTarget) => {
+                    const obj = { 
+                         ...props.model[props.index],
+                        characterName: eventTarget?.innerHTML,
+                    }
+                    props.handleBlur("characterName", obj, props.index)
+                }}
                 placeholder="Enter Character Name..."
                 tagName={'h4'}
                 className={props.className}
-                model={props.model[1]?.characterName}
+                model={props.model[props.index]?.characterName}
                 slateLockInfo={props.slateLockInfo}
                 glossaryFootnoteValue={props.glossaryFootnoteValue}
                 glossaaryFootnotePopup={props.glossaaryFootnotePopup}
@@ -32,11 +38,17 @@ function DialogueContent(props) {
                 element={props.element}
                 elementId={props.elementId}
                 handleEditorFocus={props.handleFocus}
-                handleBlur={(forceupdate, currentElement, eIndex, showHideType, eventTarget) => props.handleBlur("dialogTxt", eventTarget, props.index)}
+                handleBlur={(forceupdate, currentElement, eIndex, showHideType, eventTarget) => {
+                    const obj = { 
+                         ...props.model[props.index],
+                        text: eventTarget?.innerHTML
+                    }
+                    props.handleBlur("text", obj, props.index)
+            }}
                 placeholder={placeholder}
                 tagName={'div'}
                 className={props.className}
-                model={props.model[1]?.text}
+                model={props.model[props.index]?.text}
                 slateLockInfo={props.slateLockInfo}
                 glossaryFootnoteValue={props.glossaryFootnoteValue}
                 glossaaryFootnotePopup={props.glossaaryFootnotePopup}
@@ -50,11 +62,17 @@ function DialogueContent(props) {
             element={props.element}
             elementId={props.elementId}
             handleEditorFocus={props.handleFocus}
-            handleBlur={(forceupdate, currentElement, eIndex, showHideType, eventTarget) => props.handleBlur("stagedirection", eventTarget, props.index)}
+            handleBlur={(forceupdate, currentElement, eIndex, showHideType, eventTarget) => {
+                    const obj = { 
+                         ...props.model[props.index],
+                        text: eventTarget?.innerHTML,
+                    }
+                    props.handleBlur("text", obj, props.index)
+            }}
             placeholder={placeholder}
             tagName={'div'}
             className={`stageDirectionItalicFont ${props.className}`}
-            model={props.model[0]?.text}
+            model={props.model[props.index]?.text}
             slateLockInfo={props.slateLockInfo}
             glossaryFootnoteValue={props.glossaryFootnoteValue}
             glossaaryFootnotePopup={props.glossaaryFootnotePopup}
