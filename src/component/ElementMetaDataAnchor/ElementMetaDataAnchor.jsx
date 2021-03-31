@@ -60,7 +60,7 @@ export class ElementMetaDataAnchor extends Component {
      * @param {object} lodata | object of lo data 
   */
   prepareLOData = () => {
-    let loData = this.props?.currentSlateLOData.find( learningObj => learningObj.loUrn == this.props?.element?.elementdata?.loref)
+    let loData = this.props?.currentSlateLOData?.find( learningObj => (learningObj?.loUrn == this.props?.element?.elementdata?.loref || learningObj?.id == this.props?.element?.elementdata?.loref))
     if (document.getElementsByClassName('learningObjectiveinnerText').length > 0) {
       let element = document.getElementsByClassName('learningObjectiveinnerText');
       element = Array.from(element);

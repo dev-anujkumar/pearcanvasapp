@@ -374,17 +374,14 @@ function CommunicationChannel(WrappedComponent) {
          * @param {*} message Event Message on Saving Ext LF LO data for Slate
          */
         handleExtLOData = message => {
-            console.log('handleExtLOData>>message', message)
             if (message.statusForExtLOSave) {
                 if (message?.loLinked?.length) {
                     const regex = /<math.*?data-src=\'(.*?)\'.*?<\/math>/g;
                     message.loLinked.map(loData => {
-                        loData.label.en = loData?.label?.en.replace(regex, "<img src='$1'></img>");
+                        loData.label.en = loData?.label?.en.replace(regex, "<img src='$1'></img>") ?? loData.label.en;
                     });
                 }
-                const updatedSlateLOs = setCurrentSlateLOs(this.props.currentSlateLOData, message.loUnlinked, message.loLinked);
-                this.props.currentSlateLOMath(updatedSlateLOs);
-                this.props.currentSlateLO(updatedSlateLOs);
+                const newLOsLinked = [...message.loLinked];
                 this.props.isLOExist(message);
                 let slateData = this.props.slateLevelData;
                 const newSlateData = JSON.parse(JSON.stringify(slateData));
@@ -393,11 +390,13 @@ function CommunicationChannel(WrappedComponent) {
                 /** Update Existing Metadata Anchors on the Slate */
                 if (loDataToUpdate?.length) {
                     loDataToUpdate.forEach(loUpdate => {
-                        /** This console will be Removed Later */
-                        console.log('LO updated in MA>>>', loUpdate)
                         this.props.updateElement(loUpdate)
                     });
                 }
+                const updatedSlateLOs = setCurrentSlateLOs(this.props.currentSlateLOData, message.loUnlinked, newLOsLinked);
+                this.props.currentSlateLO(updatedSlateLOs);
+                this.props.currentSlateLOMath(updatedSlateLOs);
+                this.props.currentSlateLOType(updatedSlateLOs.length ? updatedSlateLOs : "");
             }
         }
         handleLOData = (message) => {

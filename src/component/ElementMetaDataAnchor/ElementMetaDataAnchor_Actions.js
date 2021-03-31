@@ -23,8 +23,8 @@ export const isLOExist = (message) =>  (dispatch, getState) => {
     const cypressLOLinked = (message && (((message.loObj && (message.loObj.id|| message.loObj.loUrn))|| message.loUrn) ||
     (message.toastData === "Learning Objectives has been aligned ")));
     const externalLOLinked = (message && (message.LOList && message.LOList.length > 0 ));
-
-    if(cypressLOLinked || externalLOLinked) {
+    const externalLoUpdated = (message && message.statusForExtLOSave && message.LO_Link_Status);
+    if(cypressLOLinked || externalLOLinked || externalLoUpdated) {
         return dispatch({
             type: 'SLATE_TAG_ENABLE',
             payload: true

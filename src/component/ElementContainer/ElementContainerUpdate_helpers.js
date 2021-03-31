@@ -105,7 +105,13 @@ export const updateElementInStore = (paramsObj) => {
             },
             tcm: _slateObject.tcm ? true : false
         }
-    } else {
+    } 
+    else if (updatedData.elementVersionType === "element-learningobjectivemapping") {
+        for (let i = 0; i < updatedData.metaDataAnchorID.length; i++) {
+            _slateBodyMatter = updateLOInCanvasStore({ updatedData, _slateBodyMatter, activeIndex: i });
+        }
+    }
+    else {
         _slateBodyMatter = _slateBodyMatter.map(element => {
             if (element.id === elementId) {
 
@@ -620,4 +626,38 @@ export const prepareDataForUpdateTcm = ({ updatedDataID, getState, dispatch, ver
             data: tcmData
         }
     })
+}
+
+/**
+ * This function updated the LO in Metadata Anchor elements on slate
+ * @returns updated Slate Bodymatter
+ */
+export const updateLOInCanvasStore = ({ updatedData, _slateBodyMatter, activeIndex }) => {
+    const indexes = updatedData.loIndex[activeIndex].toString().split("-");
+    let bodyMatterContent = [..._slateBodyMatter];
+    switch (indexes.length) {
+        case 1: /** Metadata Anchor on Slate */
+            bodyMatterContent[indexes[0]] = {
+                ...bodyMatterContent[indexes[0]],
+                elementdata: updatedData.elementdata
+            }
+            break;
+        case 2: /** Metadata Anchor in Aside | WE:HEAD */
+            let element = bodyMatterContent[indexes[0]].elementdata.bodymatter[indexes[1]]
+            bodyMatterContent[indexes[0]].elementdata.bodymatter[indexes[1]] = {
+                ...element,
+                elementdata: updatedData.elementdata
+            }
+            break;
+        case 3: /** Metadata Anchor in WE:BODY */
+            let weElement = bodyMatterContent[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
+            bodyMatterContent[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]] = {
+                ...weElement,
+                elementdata: updatedData.elementdata
+            }
+            break;
+        default:
+            break;
+    }
+    return bodyMatterContent;
 }

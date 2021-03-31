@@ -43,7 +43,12 @@ export const fetchProjectLFs = () => dispatch => {
  * This methoda is used to get a unique LO URN to create a new Metadata Anchor on slate
  */
 export const getMetadataAnchorLORef = () => (dispatch, getState) => {
-    const currentSlateLOs = getState().metadataReducer.currentSlateLOData;
+    let currentSlateLOs = getState().metadataReducer.currentSlateLOData;
+    currentSlateLOs && currentSlateLOs.length && currentSlateLOs.map(slateLO => {
+        if (!slateLO.hasOwnProperty("loUrn")) {
+            slateLO["loUrn"] = slateLO["id"]
+        }
+    })
     const currentSlateLOUrns = currentSlateLOs.map(slateLO => slateLO.loUrn);
     const parentData = getState().appStore.slateLevelData;
     const newParentData = JSON.parse(JSON.stringify(parentData));
@@ -195,16 +200,21 @@ export const anyMatchInArray = (array1, key1, array2, key2, finalArray = []) => 
     return finalArray;
 };
 
-export const setCurrentSlateLOs = (existingSlateLOs, unlinkedLOs = [], linkedLOs = []) => {
+/**
+ * This function returns the updated list of LOs linked to Slate
+ * @param {Array} existingSlateLOs LOs previously linked to Slate
+ * @param {Array} unlinkedLOs LOs unlinked
+ * @param {Array} linkedLOs new LOs linked
+ */
+export const setCurrentSlateLOs = (existingSlateLOs, unlinkedLOs, linkedLOs) => {
     let updatedSlateLOs = [];
     const slateLO_Unlinked = unlinkedLOs?.length ? unlinkedLOs.map(unlinkedLO => unlinkedLO.id) : [];
-    const slateLO_Linked = linkedLOs?.length ? linkedLOs.map(linkedLO => linkedLO.id) : [];
     existingSlateLOs && existingSlateLOs.length && existingSlateLOs.map(slateLO => {
         if (!slateLO.hasOwnProperty("id")) {
             slateLO["id"] = slateLO["loUrn"]
         }
     })
     updatedSlateLOs = existingSlateLOs.filter(existingLO => slateLO_Unlinked.indexOf(existingLO.id) < 0);
-    updatedSlateLOs = updatedSlateLOs.concat(slateLO_Linked);
+    updatedSlateLOs = updatedSlateLOs.concat(linkedLOs ?? []);
     return updatedSlateLOs;
 }
