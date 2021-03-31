@@ -171,7 +171,6 @@ class SlateTagDropdown extends React.Component {
     }
     this.props.closeLODropdown();
   } 
-  /** To enable/disable the External Framework option in dropdown */
   checkExternalFramework = () => {
     let enableExtLF = false;
     if (config.slateType !== 'assessment' && this?.props?.projectLearningFrameworks?.externalLF?.length) {
