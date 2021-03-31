@@ -456,7 +456,7 @@ export const handleSplitSlate = (newSlateObj) => (dispatch, getState) => {
             timeout: 1000,
             headers: { "Content-Type": "application/json", "PearsonSSOSession": config.ssoToken },
             data: {
-                "splitSlateDurn": config.projectUrn, "splitSlateEurn": newSlateObj.entityUrn
+                "splitSlateDurn": config.projectUrn, "splitSlateEurn": newSlateObj.entityUrn, "oldSlateUrn": config.slateManifestURN
             }
         })
         .then(response => {
