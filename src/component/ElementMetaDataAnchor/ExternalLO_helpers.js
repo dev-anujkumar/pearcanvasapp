@@ -1,6 +1,7 @@
 /**
  * This module consists of Helper Functions for External Framework Learning Objectives
  */
+import axios from 'axios';
 import config from '../../config/config';
 import elementConstants from '../../component/ElementContainer/ElementConstants.js';
 import { PROJECT_LEARNING_FRAMEWORKS } from '../../constants/Action_Constants';
@@ -84,19 +85,19 @@ export const getSlateMetadataAnchorElem = (slateElements = [], existingSlateMeta
             let metadataAnchorElement = {};
             switch (element.type) {
                 case elementConstants.METADATA_ANCHOR: /** MA on Slate */
-                    metadataAnchorElement = { id: element.id, loUrn: element?.elementdata?.loref, index: index };
+                    metadataAnchorElement = { id: element.id, loUrn: element?.elementdata?.loref ?? "", index: index };
                     break;
                 case elementConstants.ELEMENT_ASIDE:
                     element.elementdata.bodymatter.map((nestedElem, nestedIndex) => {
                         /** MA inside Aside/WE:HEAD */
                         if (nestedElem.type == elementConstants.METADATA_ANCHOR) {
-                            metadataAnchorElement = { id: nestedElem.id, loUrn: nestedElem?.elementdata?.loref, index: `${index}-${nestedIndex}` };
+                            metadataAnchorElement = { id: nestedElem.id, loUrn: nestedElem?.elementdata?.loref ?? "", index: `${index}-${nestedIndex}` };
                         }
                         /** MA inside Aside/WE:BODY */
                         else if (nestedElem.type == elementConstants.ELEM_SECTION_BREAK) {
                             nestedElem.contents.bodymatter.map((weBodyElem, weIndex) => {
                                 if (weBodyElem.type == elementConstants.METADATA_ANCHOR) {
-                                    metadataAnchorElement = { id: weBodyElem.id, loUrn: weBodyElem?.elementdata?.loref, index: `${index}-${nestedIndex}-${weIndex}` };
+                                    metadataAnchorElement = { id: weBodyElem.id, loUrn: weBodyElem?.elementdata?.loref ?? "", index: `${index}-${nestedIndex}-${weIndex}` };
                                 }
                             })
                         }
@@ -123,26 +124,36 @@ export const prepareLODataForUpdate = (slateBodymatter, message) => {
     let loDataToUpdate = [];
     let linkLOs = message?.loLinked ?? [];
     let metadataElemToUpdate = [];
+    /** Handle M.A. elements with LO unlinked and update with new LO link if there any */
     message?.loUnlinked?.forEach(loItem => {
         let metadataElems = slateLOElems.filter(metadataElem => metadataElem.loUrn === loItem.id);
         if (metadataElems.length) {
-            let LOWipData = prepareLO_WIP_Data("", metadataElems, config.slateManifestURN);
+            let LOWipData = prepareLO_WIP_Data("unlink", "", metadataElems, config.slateManifestURN);
             if (linkLOs?.length) {
-                LOWipData.elementdata.loref = linkLOs[0];
+                LOWipData.elementdata.loref = linkLOs[0].id;
                 linkLOs.splice(0, 1);
                 metadataElemToUpdate = metadataElemToUpdate.concat(metadataElems);
             }
             loDataToUpdate.push(LOWipData)
         }
     });
+    /** Handle M.A. elements with no LO and update with new LO link if there any */
     const remaningMAElems = anyMatchInArray(slateLOElems, 'id', metadataElemToUpdate, 'id', []);
-    remaningMAElems?.forEach(loItem => {
-        let metadataElems = slateLOElems.filter(metadataElem => metadataElem.loUrn === "");
-        if (metadataElems.length) {
-            let LOWipData = prepareLO_WIP_Data(loItem.id, metadataElems, config.slateManifestURN);
-            loDataToUpdate.push(LOWipData)
-        }
-    });
+    let metadataElemsEmpty = slateLOElems.filter(metadataElem => metadataElem.loUrn === "");
+    if (linkLOs?.length && remaningMAElems?.length) {
+        remaningMAElems?.forEach(loItem => {
+            if (metadataElemsEmpty.length) {
+                let LOWipData = prepareLO_WIP_Data("link", "", metadataElemsEmpty[0], config.slateManifestURN);
+                if (linkLOs?.length) {
+                    LOWipData.elementdata.loref = linkLOs[0].id;
+                    loDataToUpdate.push(LOWipData);
+                    linkLOs.splice(0, 1);
+                    metadataElemsEmpty.splice(0, 1);
+                }
+            }
+        });
+    }
+
     return loDataToUpdate;
 }
 
@@ -153,14 +164,17 @@ export const prepareLODataForUpdate = (slateBodymatter, message) => {
  * @param {*} slateManifestURN slate id
  * @returns {Object} LO WIP Data - Request payload to update Metadata Anchor Element
  */
-const prepareLO_WIP_Data = (loUrn, metadataElems, slateManifestURN) => {
+const prepareLO_WIP_Data = (type, loUrn, metadataElems, slateManifestURN) => {
+
+    const metadataIDs = type === "unlink" ? (metadataElems?.map(metadataElem => metadataElem.id) ?? []) : [metadataElems.id];
+    const metadataIndexes = type === "unlink" ? (metadataElems?.map(metadataElem => metadataElem.index) ?? []) : [metadataElems.index];
     return {
         "elementdata": {
             "loref": loUrn
         },
-        "metaDataAnchorID": metadataElems?.map(metadataElem => metadataElem.id) ?? [],
+        "metaDataAnchorID": metadataIDs,
         "elementVersionType": elementConstants.METADATA_ANCHOR,
-        "loIndex": metadataElems?.map(metadataElem => metadataElem.index) ?? [],
+        "loIndex": metadataIndexes,
         "slateVersionUrn": slateManifestURN
     }
 }
@@ -180,3 +194,17 @@ export const anyMatchInArray = (array1, key1, array2, key2, finalArray = []) => 
     })
     return finalArray;
 };
+
+export const setCurrentSlateLOs = (existingSlateLOs, unlinkedLOs = [], linkedLOs = []) => {
+    let updatedSlateLOs = [];
+    const slateLO_Unlinked = unlinkedLOs?.length ? unlinkedLOs.map(unlinkedLO => unlinkedLO.id) : [];
+    const slateLO_Linked = linkedLOs?.length ? linkedLOs.map(linkedLO => linkedLO.id) : [];
+    existingSlateLOs && existingSlateLOs.length && existingSlateLOs.map(slateLO => {
+        if (!slateLO.hasOwnProperty("id")) {
+            slateLO["id"] = slateLO["loUrn"]
+        }
+    })
+    updatedSlateLOs = existingSlateLOs.filter(existingLO => slateLO_Unlinked.indexOf(existingLO.id) < 0);
+    updatedSlateLOs = updatedSlateLOs.concat(slateLO_Linked);
+    return updatedSlateLOs;
+}

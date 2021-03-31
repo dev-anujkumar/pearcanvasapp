@@ -255,10 +255,10 @@ class SlateTagDropdown extends React.Component {
     } = this.prepareExtFrameworkData();
 
     const currentSlateLF=this.props.currentSlateLF;
-   if(currentSlateLF==='cypressLF'){
+   if(currentSlateLF==='cypressLF' && this.props.permissions.includes('lo_edit_metadata')){
       this.warningActionIntiator = e.target.innerText;
       this.toggleWarningPopup(true,e);
-    } else if (e?.target?.innerText == AlignToExternalFrameworkSlateDropdown) {
+    } else if (e?.target?.innerText == AlignToExternalFrameworkSlateDropdown && this.props.permissions.includes('lo_edit_metadata')) {
       sendDataToIframe({
         'type': OpenLOPopup,
         'message': {

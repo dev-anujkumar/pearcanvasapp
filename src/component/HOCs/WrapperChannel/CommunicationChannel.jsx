@@ -14,7 +14,7 @@ import { releaseSlateLockWithCallback, getSlateLockStatusWithCallback } from '..
 import PopUp from '../../PopUp';
 import { loadTrackChanges } from '../../CanvasWrapper/TCM_Integration_Actions';
 import { ALREADY_USED_SLATE_TOC } from '../../SlateWrapper/SlateWrapperConstants'
-import { prepareLODataForUpdate } from '../../ElementMetaDataAnchor/ExternalLO_helpers.js';
+import { prepareLODataForUpdate, setCurrentSlateLOs } from '../../ElementMetaDataAnchor/ExternalLO_helpers.js';
 function CommunicationChannel(WrappedComponent) {
     class CommunicationWrapper extends Component {
         constructor(props) {
@@ -381,11 +381,10 @@ function CommunicationChannel(WrappedComponent) {
                     message.loLinked.map(loData => {
                         loData.label.en = loData?.label?.en.replace(regex, "<img src='$1'></img>");
                     });
-                    this.props.currentSlateLOMath(message.loLinked);
-                } else {
-                    this.props.currentSlateLOMath("");
                 }
-                this.props.currentSlateLO(message.loLinked);
+                const updatedSlateLOs = setCurrentSlateLOs(this.props.currentSlateLOData, message.loUnlinked, message.loLinked);
+                this.props.currentSlateLOMath(updatedSlateLOs);
+                this.props.currentSlateLO(updatedSlateLOs);
                 this.props.isLOExist(message);
                 let slateData = this.props.slateLevelData;
                 const newSlateData = JSON.parse(JSON.stringify(slateData));
@@ -394,7 +393,8 @@ function CommunicationChannel(WrappedComponent) {
                 /** Update Existing Metadata Anchors on the Slate */
                 if (loDataToUpdate?.length) {
                     loDataToUpdate.forEach(loUpdate => {
-                        console.log('loUpdate>>>', loUpdate)
+                        /** This console will be Removed Later */
+                        console.log('LO updated in MA>>>', loUpdate)
                         this.props.updateElement(loUpdate)
                     });
                 }
