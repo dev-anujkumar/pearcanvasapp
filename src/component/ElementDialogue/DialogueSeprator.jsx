@@ -20,7 +20,7 @@ const defaultDialougeElement = {
 const DialogueSeprator = (props) => {
 
     const [showDetails, setDetails] = useState(false);
-    const { index, elementIndex, firstOne } = props;
+    const { index, elementIndex, firstOne, element: psElement } = props;
     const updatedIndex = firstOne ?  index : index+1;
     return (
         <div
@@ -45,7 +45,8 @@ const DialogueSeprator = (props) => {
                             <Button
                                 onClick={(event) => {
                                     // add dialouge element
-                                    props.addScriptElement(elementIndex, updatedIndex, defaultDialougeElement);
+
+                                    props.addScriptElement(elementIndex, updatedIndex, defaultDialougeElement, psElement);
                                     setDetails(false);
                                 }}
                                 className="dropbtn"
@@ -57,7 +58,7 @@ const DialogueSeprator = (props) => {
                                 onClick={(event) => {
                                     // add stage direction
                                    
-                                    props.addScriptElement(elementIndex, updatedIndex, defaultSDElement);
+                                    props.addScriptElement(elementIndex, updatedIndex, defaultSDElement, psElement);
                                     setDetails(false);
                                 }}
                                 className="dropbtn"
