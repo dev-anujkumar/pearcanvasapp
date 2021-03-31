@@ -20,7 +20,8 @@ const defaultDialougeElement = {
 const DialogueSeprator = (props) => {
 
     const [showDetails, setDetails] = useState(false);
-    const { index, elementIndex } = props;
+    const { index, elementIndex, firstOne } = props;
+    const updatedIndex = firstOne ?  index : index+1;
     return (
         <div
             className="elementSapratorContainer"
@@ -44,8 +45,7 @@ const DialogueSeprator = (props) => {
                             <Button
                                 onClick={(event) => {
                                     // add dialouge element
-                                    console.log("i will add dialouge element here " + index + " , " + elementIndex)
-                                    props.addScriptElement(elementIndex, index, defaultDialougeElement);
+                                    props.addScriptElement(elementIndex, updatedIndex, defaultDialougeElement);
                                     setDetails(false);
                                 }}
                                 className="dropbtn"
@@ -56,8 +56,8 @@ const DialogueSeprator = (props) => {
                             <Button
                                 onClick={(event) => {
                                     // add stage direction
-                                    console.log("i will add stage direction here" + index + " , " + elementIndex)
-                                    props.addScriptElement(elementIndex, index, defaultSDElement);
+                                   
+                                    props.addScriptElement(elementIndex, updatedIndex, defaultSDElement);
                                     setDetails(false);
                                 }}
                                 className="dropbtn"
