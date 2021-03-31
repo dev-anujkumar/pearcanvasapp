@@ -108,8 +108,8 @@ table p {
 }
 
 .cypress-editable.place-holder::before{
-    content: attr(placeholder) !important;
-    color: #ADADAD !important; 
+    content: attr(placeholder);
+    color: #ADADAD; 
     display: block;
     position : absolute;
     margin-top : 7px;
@@ -209,22 +209,22 @@ i.fa.fa-asterisk,.fa .fa-bookmark {
     opacity: 0.34
 }
 
-#tinymceToolbar .tox-toolbar__primary.disable {
+#tinymceToolbar .tox-toolbar.disable {
     opacity: 0.4;
     cursor: not-allowed !important;
 }
 
-#tinymceToolbar .tox-toolbar__primary.disable button.tox-tbtn {
+#tinymceToolbar .tox-toolbar.disable button.tox-tbtn {
     /* cursor: not-allowed !important; */
     pointer-events: none !important;
 }
 
-#toolbarGlossaryFootnote .tox-toolbar__primary.disable {
+#toolbarGlossaryFootnote .tox-toolbar.disable {
     opacity: 0.4;
     cursor: not-allowed !important;
 }
 
-#toolbarGlossaryFootnote .tox-toolbar__primary.disable button.tox-tbtn {
+#toolbarGlossaryFootnote .tox-toolbar.disable button.tox-tbtn {
     pointer-events: none !important;
 }
 

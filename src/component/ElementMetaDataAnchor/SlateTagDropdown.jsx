@@ -8,7 +8,8 @@ import {
     AddEditLearningObjectiveDropdown,
     ViewLearningObjectiveSlateDropdown,
     UnlinkSlateDropdown,
-    OpenLOPopup, ViewLearningObjectiveSlate, ViewLearningObjectiveAssessment, AddLearningObjectiveSlate, AddLearningObjectiveAssessment, AddEditLearningObjective, UnlinkSlate, AddLearningObjectiveAssessmentDropdown, AlignToCypress, AlignToExternalFramework, AlignToExternalFrameworkSlateDropdown, AlignToCypressSlateDropdown
+    OpenLOPopup, ViewLearningObjectiveSlate, ViewLearningObjectiveAssessment, AddLearningObjectiveSlate, AddLearningObjectiveAssessment, AddEditLearningObjective, UnlinkSlate, AddLearningObjectiveAssessmentDropdown, AlignToCypress, AlignToExternalFramework, AlignToExternalFrameworkSlateDropdown, AlignToCypressSlateDropdown,
+    WarningPopupAction,
 }
     from '../../constants/IFrameMessageTypes';
 import { sendDataToIframe , hasReviewerRole, defaultMathImagePath } from '../../constants/utility.js';
@@ -128,6 +129,7 @@ class SlateTagDropdown extends React.Component {
             showLoOptions:false,
             showWarningPopup:false
         }
+        this.warningActionIntiator=''
     }
    
     
@@ -158,7 +160,7 @@ class SlateTagDropdown extends React.Component {
     }
     learningObjectiveDropdown = (e) => {
         let slateManifestURN= config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
-        let currentSlateLOData = this.props.currentSlateLOData;
+        let currentSlateLOData = this.props.currentSlateLOData[0];
         let assessmentuRN="";
         let assessmentType="";
         let assessmentTypeLO="";
@@ -194,6 +196,7 @@ class SlateTagDropdown extends React.Component {
             'manifestApiUrl': config.ASSET_POPOVER_ENDPOINT,
             'assessmentApiUrl': config.ASSESSMENT_ENDPOINT
         };
+        this.warningActionIntiator = e.target.innerText;
         if (e.target.innerText == ViewLearningObjectiveSlateDropdown && config.slateType !== 'assessment') {
             sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': ViewLearningObjectiveSlate, 'data': currentSlateLOData, 'chapterContainerUrn': config.parentContainerUrn, 'isLOExist': isLOExist, 'editAction': '' } });
         }
@@ -216,9 +219,6 @@ class SlateTagDropdown extends React.Component {
         else if (e.target.innerText == UnlinkSlateDropdown && this.props.permissions.includes('lo_edit_metadata')) {
             sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': UnlinkSlate, 'data': currentSlateLOData, 'currentSlateId': slateManifestURN, 'chapterContainerUrn': '', 'isLOExist': true, 'editAction': '', 'apiConstants': apiKeys_LO } })
         }
-        else if(e.target.innerText == AlignToExternalFrameworkSlateDropdown){
-            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': AlignToExternalFramework, 'data': externalLoData, 'currentSlateId': slateManifestURN, 'chapterContainerUrn': '', 'isLOExist': true, 'editAction': '', 'apiConstants': apiKeys_LO } })
-        }
     }
         this.props.closeLODropdown();
 
@@ -239,22 +239,7 @@ class SlateTagDropdown extends React.Component {
       'manifestApiUrl': config.ASSET_POPOVER_ENDPOINT,
       'assessmentApiUrl': config.ASSESSMENT_ENDPOINT
     };
-    const selectedLOs = [
-      {
-        "id": "urn:pearson:educationalgoal:f2477967-bf2d-4484-bba8-6e95f31bc2f2",
-        "subject": "https://schema.pearson.com/ns/domains/mathematics",
-        "label": {
-          "en": "LO 2 LO3"
-        }
-      },
-      {
-        "id": "urn:pearson:educationalgoal:1d186167-674e-4552-aade-d7e415f05ccd",
-        "subject": "https://schema.pearson.com/ns/domains/mathematics",
-        "label": {
-          "en": "LO 2 LO0"
-        }
-      }
-    ]
+    const selectedLOs = this.props.currentSlateLOData;
     let externalLFUrn = '';
     if (this?.props?.projectLearningFrameworks?.externalLF?.length) {
       externalLFUrn = this.props.projectLearningFrameworks.externalLF[0].urn;
@@ -268,40 +253,36 @@ class SlateTagDropdown extends React.Component {
     const {
       slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs
     } = this.prepareExtFrameworkData();
-    let openSPA = true;
-
-    // if (e?.target?.innerText == AlignToExternalFrameworkSlateDropdown) {
-    //   sendDataToIframe({
-    //     'type': OpenLOPopup,
-    //     'message': {
-    //       'text': AlignToExternalFramework,
-    //       'data': currentSlateLOData,
-    //       'isLOExist': true,
-    //       'editAction': '',
-    //       'selectedLOs': selectedLOs,
-    //       'apiConstants': apiKeys_LO,
-    //       'externalLFUrn': externalLFUrn,
-    //       'currentSlateId': slateManifestURN,
-    //       'chapterContainerUrn': ''
-    //     }
-    //   })
-    // }
 
     const currentSlateLF=this.props.currentSlateLF;
-    /**
-     * toggle functio for popup to be called based on LF type
-     */
-   if(currentSlateLF==='cypressLF'){
+   if(currentSlateLF==='cypressLF' && this.props.permissions.includes('lo_edit_metadata')){
+      this.warningActionIntiator = e.target.innerText;
       this.toggleWarningPopup(true,e);
-      console.log('in external ')
-   }
+    } else if (e?.target?.innerText == AlignToExternalFrameworkSlateDropdown && this.props.permissions.includes('lo_edit_metadata')) {
+      sendDataToIframe({
+        'type': OpenLOPopup,
+        'message': {
+          'text': AlignToExternalFramework,
+          'data': currentSlateLOData,
+          'isLOExist': true,
+          'editAction': '',
+          'selectedLOs': selectedLOs,
+          'apiConstants': apiKeys_LO,
+          'externalLFUrn': externalLFUrn,
+          'currentSlateId': slateManifestURN,
+          'chapterContainerUrn': '',
+          'currentSlateLF': currentSlateLF
+        }
+      })
+    }
+    this.props.closeLODropdown();
   } 
   /** To enable/disable the External Framework option in dropdown */
   checkExternalFramework = () => {
-    let enableExtLF = true;
-    // if (this?.props?.projectLearningFrameworks?.externalLF?.length) {
-    //   enableExtLF = true;
-    // }
+    let enableExtLF = false;
+    if (config.slateType !== 'assessment' && this?.props?.projectLearningFrameworks?.externalLF?.length) {
+      enableExtLF = true;
+    }
     return enableExtLF;
   }
   showLOWarningPopup = () => {
@@ -331,15 +312,24 @@ class SlateTagDropdown extends React.Component {
     }
   }
   unlinkSlateLOs = (e) => {
-    /**
-     * add handler here
-     */
-    alert('unlink data')
+    const slateManifestURN = config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN;
+    const currentSlateLOData = this.props.currentSlateLOData;
+    const apiKeys_LO = {
+      'loApiUrl': config.LEARNING_OBJECTIVES_ENDPOINT,
+      'strApiKey': config.STRUCTURE_APIKEY,
+      'mathmlImagePath': config.S3MathImagePath ? config.S3MathImagePath : defaultMathImagePath,
+      'productApiUrl': config.PRODUCTAPI_ENDPOINT,
+      'manifestApiUrl': config.ASSET_POPOVER_ENDPOINT,
+      'assessmentApiUrl': config.ASSESSMENT_ENDPOINT
+    };
+    const warningActionIntiator = this.warningActionIntiator;
+    sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': WarningPopupAction, 'data': currentSlateLOData, 'currentSlateId': slateManifestURN, 'chapterContainerUrn': '', 'isLOExist': true, 'editAction': '', 'apiConstants': apiKeys_LO, 'warningActionIntiator': warningActionIntiator} });
     this.toggleWarningPopup(false,e);
+    this.warningActionIntiator = '';
   }
 
    handleWarningPopup=(e)=>{
-     console.log('asaajfasyhasgiksh');
+    this.warningActionIntiator = e.target.innerText;
     this.toggleWarningPopup(true,e )
   }
   toggleWarningPopup = (toggleValue, event) => {

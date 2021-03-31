@@ -14,6 +14,7 @@ import { releaseSlateLockWithCallback, getSlateLockStatusWithCallback } from '..
 import PopUp from '../../PopUp';
 import { loadTrackChanges } from '../../CanvasWrapper/TCM_Integration_Actions';
 import { ALREADY_USED_SLATE_TOC } from '../../SlateWrapper/SlateWrapperConstants'
+import { prepareLODataForUpdate, setCurrentSlateLOs } from '../../ElementMetaDataAnchor/ExternalLO_helpers.js';
 function CommunicationChannel(WrappedComponent) {
     class CommunicationWrapper extends Component {
         constructor(props) {
@@ -135,14 +136,24 @@ function CommunicationChannel(WrappedComponent) {
                     this.handleLOData(message);
                     break;
                 case 'getSlateLOResponse':
-                    message ? this.props.currentSlateLOMath(message.label.en) : this.props.currentSlateLOMath("");
+                    /** message ? this.props.currentSlateLOMath(message.label.en) : this.props.currentSlateLOMath("");
                     if (message) {
                         const regex = /<math.*?data-src=\'(.*?)\'.*?<\/math>/g;
                         message.label.en = message.label.en.replace(regex, "<img src='$1'></img>")
                     }
-                    this.props.currentSlateLO(message);
+                    this.props.currentSlateLO(message); */
+                    if (message?.LOList?.length) {
+                        const regex = /<math.*?data-src=\'(.*?)\'.*?<\/math>/g;
+                        message.LOList.map(loData => {                            
+                            loData.label.en = loData.label.en.replace(regex, "<img src='$1'></img>");
+                        });
+                        this.props.currentSlateLOMath(message.LOList);
+                    } else {
+                        this.props.currentSlateLOMath("");
+                    }
+                    this.props.currentSlateLO(message.LOList);
                     this.props.isLOExist(message);
-                    this.props.currentSlateLOType(message);
+                    this.props.currentSlateLOType(message.currentSlateLF);
                     break;
                 case 'loEditResponse':
                     this.setState({
@@ -161,12 +172,20 @@ function CommunicationChannel(WrappedComponent) {
                     this.handleRefreshSlate();
                     break;
                 case 'cancelCEPopup':
-                    if (this.props.currentSlateLOData && this.props.currentSlateLOData.label && this.props.currentSlateLOData.label.en) {
+                    /**  if (this.props.currentSlateLOData && this.props.currentSlateLOData.label && this.props.currentSlateLOData.label.en) {
                         const regex = /<math.*?data-src=\'(.*?)\'.*?<\/math>/g;
                         this.props.currentSlateLOData.label.en = this.props.currentSlateLOData.label.en.replace(regex, "<img src='$1'></img>")
                         this.props.currentSlateLO(this.props.currentSlateLOData);
+                    } */
+                    if (this.props.currentSlateLOData?.length > 0) {
+                        const regex = /<math.*?data-src=\'(.*?)\'.*?<\/math>/g;
+                        this.props.currentSlateLOData.map(loData => {
+                            if (loData?.label?.en) {
+                                loData.label.en = loData.label.en.replace(regex, "<img src='$1'></img>")
+                            }
+                        })
+                        this.props.currentSlateLO(this.props.currentSlateLOData);
                     }
-
                     this.setState({
                         showBlocker: false
                     });
@@ -229,6 +248,9 @@ function CommunicationChannel(WrappedComponent) {
                     break;
                 case 'GetActiveSlate':
                     sendDataToIframe({ 'type': 'GetActiveSlate', 'message': { slateEntityURN: config.slateEntityURN } });
+                    break;
+                case 'statusForExtLOSave':
+                    this.handleExtLOData(message);
                     break;
             }
         }
@@ -346,6 +368,38 @@ function CommunicationChannel(WrappedComponent) {
             })
         }
 
+        /**
+         * This function is responsible for handling the updated LOs w.r.t. Slate 
+         * and updating the Metadata Anchor Elements on Slate
+         * @param {*} message Event Message on Saving Ext LF LO data for Slate
+         */
+        handleExtLOData = message => {
+            console.log('handleExtLOData>>message', message)
+            if (message.statusForExtLOSave) {
+                if (message?.loLinked?.length) {
+                    const regex = /<math.*?data-src=\'(.*?)\'.*?<\/math>/g;
+                    message.loLinked.map(loData => {
+                        loData.label.en = loData?.label?.en.replace(regex, "<img src='$1'></img>");
+                    });
+                }
+                const updatedSlateLOs = setCurrentSlateLOs(this.props.currentSlateLOData, message.loUnlinked, message.loLinked);
+                this.props.currentSlateLOMath(updatedSlateLOs);
+                this.props.currentSlateLO(updatedSlateLOs);
+                this.props.isLOExist(message);
+                let slateData = this.props.slateLevelData;
+                const newSlateData = JSON.parse(JSON.stringify(slateData));
+                let bodymatter = newSlateData[config.slateManifestURN].contents.bodymatter;
+                let loDataToUpdate = prepareLODataForUpdate(bodymatter, message);
+                /** Update Existing Metadata Anchors on the Slate */
+                if (loDataToUpdate?.length) {
+                    loDataToUpdate.forEach(loUpdate => {
+                        /** This console will be Removed Later */
+                        console.log('LO updated in MA>>>', loUpdate)
+                        this.props.updateElement(loUpdate)
+                    });
+                }
+            }
+        }
         handleLOData = (message) => {
             if (message.statusForSave) {
                 message.loObj ? this.props.currentSlateLOMath(message.loObj.label.en) : this.props.currentSlateLOMath("");

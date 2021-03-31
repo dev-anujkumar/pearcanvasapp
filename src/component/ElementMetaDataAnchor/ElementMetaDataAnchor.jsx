@@ -41,7 +41,7 @@ export class ElementMetaDataAnchor extends Component {
                 element={this.props.element}
                 placeholder="Please add learning objective by tagging a slate"
                 className="learningObjectiveinnerText"
-                model={this.prepareLOData(this.props.currentSlateLOData)}
+                model={this.prepareLOData()}
                 slateLockInfo={slateLockInfo}
                 handleEditorFocus={this.props.handleFocus}
                 handleBlur = {this.props.handleBlur}
@@ -59,19 +59,18 @@ export class ElementMetaDataAnchor extends Component {
      * @description - Prepare HTML for LO item on slate
      * @param {object} lodata | object of lo data 
   */
-  prepareLOData = (loData) => {
+  prepareLOData = () => {
+    let loData = this.props?.currentSlateLOData.find( learningObj => learningObj.loUrn == this.props?.element?.elementdata?.loref)
     if (document.getElementsByClassName('learningObjectiveinnerText').length > 0) {
       let element = document.getElementsByClassName('learningObjectiveinnerText');
       element = Array.from(element);
       element.forEach((item) => {
         item.classList.add("place-holder");
       })
-
-
     }
     let jsx;
     if (loData && loData != "" && loData.label && loData.label.en) {
-      jsx = loData.label.en;
+      jsx = this.props.currentSlateLF == 'externalLF' ?  `<div>${loData.label.en}</div>` : loData.label.en;
       const regex = /<math.*?data-src=\'(.*?)\'.*?<\/math>/g;
       jsx = jsx.replace(regex, "<img src='$1'></img>")
       jsx=jsx.replace(/'/g, '"');
@@ -94,13 +93,15 @@ export class ElementMetaDataAnchor extends Component {
     * @description - show popup on click on element that no data is present and also edit the data
     * @param {object} loldata
  */
-  onLOClickHandle = (loData, e) => {
+  onLOClickHandle = (slateLoData, e) => {
     e.stopPropagation();
     this.props.handleFocus();
     if (config.editorRefID == e.target.id) {
       config.editorRefID = "";
       return false;
     }
+    let loData = Array.isArray(slateLoData) ? slateLoData[0] : slateLoData;
+
     if (this.props.permissions.includes('lo_edit_metadata')) {
       if (loData && loData.label && loData.label.en) {
         loData.label.en = this.props.currentSlateLODataMath;
@@ -115,7 +116,6 @@ export class ElementMetaDataAnchor extends Component {
         'manifestApiUrl': config.ASSET_POPOVER_ENDPOINT,
         'assessmentApiUrl': config.ASSESSMENT_ENDPOINT
       };
-      console.log('ADD WARNING POPUP HERE')
       sendDataToIframe({ 'type': 'getLOEditPopup', 'message': { lodata: loData, projectURN: config.projectUrn, slateURN: slateManifestURN, apiKeys_LO, wrapperURL: config.WRAPPER_URL } })
     }
   }
@@ -142,9 +142,9 @@ ElementMetaDataAnchor.propTypes = {
 ElementMetaDataAnchor.displayName = "ElementMetaDataAnchor"
 const mapStateToProps = (state) => {
   return {
+    currentSlateLF: state.metadataReducer.currentSlateLF,
     currentSlateLOData: state.metadataReducer.currentSlateLOData,
-    currentSlateLODataMath: state.metadataReducer.currentSlateLODataMath,
-
+    currentSlateLODataMath: state.metadataReducer.currentSlateLODataMath
   }
 }
 export default connect(mapStateToProps)(ElementMetaDataAnchor);

@@ -262,6 +262,7 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
             ...state,
             isLearnosityProjectInfo : action.payload
         }
+
         default:
             return state;
     }
