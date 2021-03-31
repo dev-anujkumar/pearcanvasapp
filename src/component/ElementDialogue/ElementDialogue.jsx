@@ -23,7 +23,7 @@ const ElementDialogue = (props) => {
         @param _props | This contains the props object 
     **/
     const renderDialogueContent = (_props) => {
-        let dialogueContent = _props.element.html.dialogueContent;
+        let dialogueContent = _props.element?.html?.dialogueContent;
         if (dialogueContent !== null && dialogueContent !== undefined) {
             const buttonClass = _props.btnClassName.replace("activeTagBgColor", "")
             return dialogueContent.map((element, index) => {
@@ -165,19 +165,19 @@ const ElementDialogue = (props) => {
     }
 
     const handleOuterBlur = (field, eventTarget) => {
-        let newPSData = JSON.parse(JSON.stringify(props.element))
-
-        newPSData.html[field] = `<p>${removeBlankTags(eventTarget?.innerHTML)}</p>`
-
-        if (removeClassesFromHtml(props.element.html?.[field]) !== removeClassesFromHtml(newPSData.html[field]) && !config.savingInProgress) {
-            // create data and call update API
-            callUpdateApi(newPSData);
+        let newPSData = JSON.parse(JSON.stringify(props.element)) || {};
+        if(newPSData?.html?.hasOwnProperty(field)){
+            newPSData.html[field] = `<p>${removeBlankTags(eventTarget?.innerHTML)}</p>`  
+            if (removeClassesFromHtml(props.element.html?.[field]) !== removeClassesFromHtml(newPSData.html[field]) && !config.savingInProgress) {
+                // create data and call update API
+                callUpdateApi(newPSData);
+            }
         }
     }
 
     /* @@updateSD_DE - To update the data of SD and DE Element Data */
     const updateSD_DE = (field, data, index) => {
-        let newPSData = JSON.parse(JSON.stringify(props.element));
+        let newPSData = JSON.parse(JSON.stringify(props.element)) || {};
         newPSData.html.dialogueContent[index] = data;
 
         if (removeClassesFromHtml(props.element?.html?.dialogueContent[index][field]) !==
@@ -218,7 +218,7 @@ const ElementDialogue = (props) => {
                                 placeholder="Enter Act Title..."
                                 tagName={'h4'}
                                 className={" figureLabel "}
-                                model={props.element.html.actTitle}
+                                model={props.element?.html?.actTitle}
                                 handleBlur={(forceupdate, currentElement, eIndex, showHideType, eventTarget) => handleOuterBlur("actTitle", eventTarget)}
 
                             />
@@ -228,7 +228,7 @@ const ElementDialogue = (props) => {
                                 placeholder="Enter Scene Title..."
                                 tagName={'h4'}
                                 className={" figureTitle "}
-                                model={props.element.html.sceneTitle}
+                                model={props.element?.html?.sceneTitle}
                                 handleBlur={(forceupdate, currentElement, eIndex, showHideType, eventTarget) => handleOuterBlur("sceneTitle", eventTarget)}
                             />
                         </header>
@@ -256,7 +256,7 @@ const ElementDialogue = (props) => {
                             placeholder="Enter Credit..."
                             tagName={'p'}
                             className={" figureCredit "}
-                            model={props.element.html.credits}
+                            model={props.element?.html?.credits}
                             handleBlur={(forceupdate, currentElement, eIndex, showHideType, eventTarget) => handleOuterBlur("credits", eventTarget)}
                         />
                     </div>
