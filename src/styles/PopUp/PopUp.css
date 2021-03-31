@@ -403,3 +403,9 @@
   border-top:0 !important;
 }
 
+.lo-warning-txt {
+    padding-top: 20px;
+  }
+  .loPopupHeader {
+    color: #007fa3;
+  }

@@ -563,3 +563,9 @@ margin-left:6px;
 .glossary-audiodropdown audio{
   width:100% !important
 }
+
+@media only screen and (max-width: 1500px) {
+    .learningobjectivedropdown2 {
+      left: -10px;
+    }
+  }

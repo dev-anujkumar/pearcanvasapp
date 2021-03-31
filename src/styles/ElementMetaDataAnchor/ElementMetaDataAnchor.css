@@ -91,3 +91,7 @@ div.learningObjectiveContainer .Container {
     font-size: 14px;
     font-family: Palatino, Palatino Linotype, Palatino LT STD, Georgia, serif;
 }
+
+.lo-navigation-icon {
+    margin-left: 3px;
+  }

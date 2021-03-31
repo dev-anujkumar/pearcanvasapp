@@ -72,7 +72,7 @@ export default function (state = INIT_STATE, action = INITIAL_ACTION) {
             return {
                 ...state,
 
-                currentSlateLF: action.payload.currentSlateLF
+                currentSlateLF: 'extenalLF'//action.payload.currentSlateLF
             }
         default:
             return state;

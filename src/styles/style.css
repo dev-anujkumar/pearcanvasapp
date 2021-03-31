@@ -365,3 +365,17 @@ table:not([cellpadding]) td, table:not([cellpadding]) th {
 .tox.tox-tinymce--toolbar-bottom .tox-editor-header, .tox.tox-tinymce-inline .tox-editor-header {
     border: none !important;
 }
+
+/* sub dropdown for lo*/
+.learningobjectivedropdown2 li:hover {
+  background-color: #efefef;
+  font-family: "Open Sans", sans-serif;
+  cursor: pointer;
+}
+.learningobjectivedropdown2 li.disable-buttton {
+  pointer-events: none;
+  left: -10px;
+  opacity: 0.6;
+  cursor: not-allowed;
+  color: gray;
+}
