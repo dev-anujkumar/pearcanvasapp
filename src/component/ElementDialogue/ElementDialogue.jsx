@@ -5,7 +5,6 @@ import DialogueContent from './DialogueContent.jsx';
 import DialogueSeprator from './DialogueSeprator.jsx';
 import "../../styles/ElementDialogue/DialogueStyles.css"
 import { connect } from 'react-redux';
-import { deleteScriptElement, updatePSElementinStore } from './DialougeActions';
 import { updateElement } from '../ElementContainer/ElementContainer_Actions.js';
 import config from "../../config/config.js";
 import { sendDataToIframe, removeBlankTags, removeClassesFromHtml } from '../../constants/utility.js';
@@ -22,6 +21,36 @@ const ElementDialogue = (props) => {
         @renderDialogueContent | This function used to render Dialogue Content
         @param _props | This contains the props object 
     **/
+
+
+    const addElement = (psIndex, psElementIndex, data, oldPSData) => {
+        const dialogueContent = oldPSData.html.dialogueContent;
+        dialogueContent.splice(psElementIndex, 0, data);
+        const newPsElement = {
+            ...oldPSData,
+            html: {
+                ...oldPSData.html,
+                dialogueContent
+            }
+        }
+        callUpdateApi(newPsElement);
+
+    }
+
+    const deleteElement = (psIndex, psElementIndex, oldPSData) => {
+        const dialogueContent = oldPSData.html.dialogueContent;
+        dialogueContent.splice(psElementIndex, 1);
+        const newPsElement = {
+            ...oldPSData,
+            html: {
+                ...oldPSData.html,
+                dialogueContent
+            }
+        }
+        callUpdateApi(newPsElement);
+
+    }
+
     const renderDialogueContent = (_props) => {
         let dialogueContent = _props.element?.html?.dialogueContent;
         if (dialogueContent !== null && dialogueContent !== undefined) {
@@ -36,7 +65,7 @@ const ElementDialogue = (props) => {
                             onMouseOut={_props.handleOnMouseOut}
                             onClickCapture={(e) => _props.onClickCapture(e)}
                         >
-                            {renderButtons(index, buttonClass, labelText, _props.deleteScriptElement, _props.element)}
+                            {renderButtons(index, buttonClass, labelText, _props.element)}
                             <div
                                 className={`element-container ${setBorderToggle(_props.borderToggle, index, selectedInnerElementIndex)}`}
                                 data-id={_props.elementId}
@@ -67,6 +96,7 @@ const ElementDialogue = (props) => {
                         <DialogueSeprator index={index}
                             elementIndex={elementIndex}
                             element={_props.element}
+                            addElement={addElement}
                             // esProps={_props.elementSepratorProps(index, false, parentUrn, "", _props.index, null)}
                             elementType="element-dialogue"
                             sectionBreak={false}
@@ -107,7 +137,7 @@ const ElementDialogue = (props) => {
         }
     }
 
-    const renderButtons = (index, buttonClass, labelText, deleteElement, element) => {
+    const renderButtons = (index, buttonClass, labelText, element) => {
         if ((props.elemBorderToggle !== undefined && props.elemBorderToggle) || props.borderToggle == 'active') {
             return (
                 <div>
@@ -123,6 +153,7 @@ const ElementDialogue = (props) => {
                                 onClick={(e) => {
                                     console.log("i will delete", index);
                                     deleteElement(elementIndex, index, element);
+                                    // deleteElement(elementIndex, index, element);
                                     // show delete element popup
                                     // props.showDeleteElemPopup(e, true)
                                 }}
@@ -174,6 +205,7 @@ const ElementDialogue = (props) => {
             }
         }
     }
+
 
     /* @@updateSD_DE - To update the data of SD and DE Element Data */
     const updateSD_DE = (field, data, index) => {
@@ -235,6 +267,7 @@ const ElementDialogue = (props) => {
                         <div>
                             {<DialogueSeprator
                                 index={0}
+                                addElement={addElement}
                                 element={props.element}
                                 elementIndex={elementIndex}
                                 firstOne={true}
@@ -267,9 +300,6 @@ const ElementDialogue = (props) => {
 }
 
 const dispatchActions = {
-
-    deleteScriptElement,
-    updatePSElementinStore,
     updateElement
 }
 

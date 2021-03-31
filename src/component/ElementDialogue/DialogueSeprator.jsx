@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import Button from './../ElementButtons';
 import Tooltip from '../Tooltip';
 import { connect } from 'react-redux';
-import { addScriptElement } from './DialougeActions';
 
 
 const defaultSDElement = {
@@ -46,7 +45,7 @@ const DialogueSeprator = (props) => {
                                 onClick={(event) => {
                                     // add dialouge element
 
-                                    props.addScriptElement(elementIndex, updatedIndex, defaultDialougeElement, psElement);
+                                    props.addElement(elementIndex, updatedIndex, defaultDialougeElement, psElement);
                                     setDetails(false);
                                 }}
                                 className="dropbtn"
@@ -58,7 +57,7 @@ const DialogueSeprator = (props) => {
                                 onClick={(event) => {
                                     // add stage direction
                                    
-                                    props.addScriptElement(elementIndex, updatedIndex, defaultSDElement, psElement);
+                                    props.addElement(elementIndex, updatedIndex, defaultSDElement, psElement);
                                     setDetails(false);
                                 }}
                                 className="dropbtn"
@@ -74,6 +73,5 @@ const DialogueSeprator = (props) => {
 }
 
 const dispatchProps = {
-    addScriptElement
 }
 export default connect(null, dispatchProps)(DialogueSeprator)
