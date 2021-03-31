@@ -17,111 +17,7 @@ import { connect } from 'react-redux';
 import { ASSESSMENT_ITEM, ASSESSMENT_ITEM_TDX } from '../../constants/Element_Constants';
 import { LEARNOSITY, LEARNING_TEMPLATE, PUF, CITE, TDX } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import PopUp from '../PopUp/PopUp.jsx';
-import { CURRENT_SLATE_LF } from '../../constants/Action_Constants';
-// Static data for rendering external alignment pop-up.
-const externalLoData = {
-    "id": "urn:pearson:goalframework:6f5e707c-4d7a-4294-b02c-ad2a4af94d68",
-    "label": {
-      "en": "The Sociology Project 2.5"
-    },
-    "learningObjectives": [
-      {
-        "id": "urn:pearson:educationalgoal:72faba30-da06-4d9e-9499-6d775ead3b9b",
-        "subject": "https://schema.pearson.com/ns/domains/mathematics",
-        "description": {
-          "en": "highereducation"
-        },
-        "label": {
-          "en": "test 1110022 HE25"
-        },
-        "learningObjectives": [
-          {
-            "id": "urn:pearson:educationalgoal:a3eba9d0-3be5-4bbe-b688-47ea32751924",
-            "subject": "https://schema.pearson.com/ns/domains/mathematics",
-            "label": {
-              "en": "LO 2 subtopic5"
-            },
-            "learningObjectives": [
-              {
-                "id": "urn:pearson:educationalgoal:1d186167-674e-4552-aade-d7e415f05ccd",
-                "subject": "https://schema.pearson.com/ns/domains/mathematics",
-                "label": {
-                  "en": "LO 2 LO0"
-                }
-              },
-              {
-                "id": "urn:pearson:educationalgoal:f18416ea-0c3a-4421-bd17-01ce5c90d6b7",
-                "subject": "https://schema.pearson.com/ns/domains/mathematics",
-                "label": {
-                  "en": "LO 2 LO8"
-                }
-              },
-              {
-                "id": "urn:pearson:educationalgoal:27ed15ee-0b0d-46ce-b991-04ff243ed283",
-                "subject": "https://schema.pearson.com/ns/domains/mathematics",
-                "label": {
-                  "en": "LO 2 LO1"
-                }
-              },
-              {
-                "id": "urn:pearson:educationalgoal:c631c46e-8031-4d29-a58a-a11f678016c5",
-                "subject": "https://schema.pearson.com/ns/domains/mathematics",
-                "label": {
-                  "en": "LO 2 LO7"
-                }
-              },
-              {
-                "id": "urn:pearson:educationalgoal:78410e6d-7030-481c-a09a-e5f0f5256392",
-                "subject": "https://schema.pearson.com/ns/domains/mathematics",
-                "label": {
-                  "en": "LO 2 LO4"
-                }
-              },
-              {
-                "id": "urn:pearson:educationalgoal:0910b8a1-747e-4991-9ba9-045e59b91584",
-                "subject": "https://schema.pearson.com/ns/domains/mathematics",
-                "label": {
-                  "en": "LO 2 LO9"
-                }
-              },
-              {
-                "id": "urn:pearson:educationalgoal:7b91a122-b422-47ee-ae28-9073ddf89c7c",
-                "subject": "https://schema.pearson.com/ns/domains/mathematics",
-                "label": {
-                  "en": "LO 2 LO5"
-                }
-              },
-              {
-                "id": "urn:pearson:educationalgoal:f6825f98-4b6f-4ad1-8f92-2dcaed4d10a2",
-                "subject": "https://schema.pearson.com/ns/domains/mathematics",
-                "label": {
-                  "en": "LO 2 LO2"
-                }
-              },
-              {
-                "id": "urn:pearson:educationalgoal:f2477967-bf2d-4484-bba8-6e95f31bc2f2",
-                "subject": "https://schema.pearson.com/ns/domains/mathematics",
-                "label": {
-                  "en": "LO 2 LO3"
-                }
-              },
-              {
-                "id": "urn:pearson:educationalgoal:480860f3-6d4e-4e93-a406-10744a17e955",
-                "subject": "https://schema.pearson.com/ns/domains/mathematics",
-                "label": {
-                  "en": "LO 2 LO6"
-                }
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  }
-
-    
-
-
+import { loNextIcon } from './../../images/ElementButtons/ElementButtons.jsx';
 class SlateTagDropdown extends React.Component {
     constructor(props) {
         super(props);
@@ -187,7 +83,6 @@ class SlateTagDropdown extends React.Component {
             assessmentType: assessmentTypeLO
         }
         let isLOExist= this.props.isLOExist;
-        const currentSlateLF=this.props.currentSlateLF;
         let apiKeys_LO = {
             'loApiUrl': config.LEARNING_OBJECTIVES_ENDPOINT,
             'strApiKey': config.STRUCTURE_APIKEY,
@@ -225,7 +120,6 @@ class SlateTagDropdown extends React.Component {
     }
 
     toggleLoOptionsDropdown = () => {
-      // this.toggleWarningPopup(true,e);
         this.setState({showLoOptions:!this.state.showLoOptions})
     }
   
@@ -286,12 +180,9 @@ class SlateTagDropdown extends React.Component {
     return enableExtLF;
   }
   showLOWarningPopup = () => {
-    /**
-     * declare warningText from store value based on LF type 
-     */
     const currentSlateLF=this.props.currentSlateLF;
     const loWarningDialogTxt=(currentSlateLF==='cypressLF')?'Performing this action will remove the current alignment of projects LOs to cypress framework. Do you wish to continue?':'Performing this action will remove the current alignment of projects LOs to external framework. Do you wish to continue?'
-    console.log(loWarningDialogTxt);
+
     if (this.state.showWarningPopup) {
       showBlocker(true)
       // this.props.closeLODropdown()
@@ -302,7 +193,7 @@ class SlateTagDropdown extends React.Component {
           warningHeaderText={`Warning`}
           togglePopup={this.toggleWarningPopup}
           isInputDisabled={true}
-          lOPopupClass="split-slate"
+          lOPopupClass="lo-warning-txt"
           LOPopup={true}
           yesButtonHandler={this.unlinkSlateLOs}
         />
@@ -333,9 +224,6 @@ class SlateTagDropdown extends React.Component {
     this.toggleWarningPopup(true,e )
   }
   toggleWarningPopup = (toggleValue, event) => {
-    console.log('In toggle warining for cypress selection')
-    const currentSlateLF=this.props.currentSlateLF;
-    console.log(currentSlateLF);
     if (event) {
       event.preventDefault();
     }
@@ -347,21 +235,18 @@ class SlateTagDropdown extends React.Component {
      hideBlocker();
   }
     render = () => {
-      const enableExtLO =this.checkExternalFramework()
-      const currentSlateLF=this.props.currentSlateLF;
-      console.log(currentSlateLF);
-      console.log(enableExtLO); //false
+      const enableExtLO =this.checkExternalFramework();
         return (
             <div>
           <div className="learningobjectivedropdown" ref={node => this.node = node}>
-            <ul>
-                <li onClick={this.toggleLoOptionsDropdown}> {AlignToCypressSlateDropdown}</li>
+              <ul>
+                <li onClick={this.toggleLoOptionsDropdown}>{AlignToCypressSlateDropdown}<span className='lo-navigation-icon'>{loNextIcon}</span></li>
                 <li onClick={this.launchExternalFrameworkPopup} className={enableExtLO ? '' : 'disable-buttton'}>{AlignToExternalFrameworkSlateDropdown}</li>
-            </ul>
+              </ul>
             </div>
             {
                 this.state.showLoOptions &&  
-                <div style={{left:'-10px'}} className="learningobjectivedropdown" ref={node => this.node = node}>
+                <div  className="learningobjectivedropdown2" ref={node => this.node = node}>
                 <ul>
                     {this.props.permissions.includes('lo_edit_metadata') && config.slateType === 'section' &&
                         <li onClick={(this.props.currentSlateLF === "externalLF") ? this.handleWarningPopup :this.learningObjectiveDropdown}> {AddLearningObjectiveSlateDropdown}</li>}
