@@ -49,7 +49,7 @@ const DialogueSeprator = (props) => {
                                     setDetails(false);
                                 }}
                                 className="dropbtn"
-                                type="expand"
+                                type="dialogue-element"
                             />
                         </Tooltip>
                         <Tooltip tooltipText="Stage Direction">
@@ -61,7 +61,7 @@ const DialogueSeprator = (props) => {
                                     setDetails(false);
                                 }}
                                 className="dropbtn"
-                                type="expand"
+                                type="stage-direction"
                             />
                         </Tooltip>
                     </div>
