@@ -63,7 +63,8 @@ let config = {
         CITE_NODE_REF: "ebaaf975-a68b-4ca6-9604-3d37111b847a",
         CITE_REPO_INSTANCC:"https://staging.api.pearson.com/content/cmis/uswip-aws",
         CITE_REPO_NAME:"AWS US"
-    }
+    },
+    VCS_API_ENDPOINT: 'https://contentapis-staging.pearsoncms.net/vcs-api/v1/content/'
 };
 
 if (process.env.NODE_ENV === "development") {
