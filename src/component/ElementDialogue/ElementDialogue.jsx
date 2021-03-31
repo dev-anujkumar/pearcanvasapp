@@ -30,24 +30,13 @@ const ElementDialogue = (props) => {
                 let labelText = (element.type === 'lines') ? 'DE' : 'SD';
                 return (
                     <Fragment key={element.id}>
-                        {index === 0 && <DialogueSeprator
-                            index={index}
-                            elementIndex={elementIndex}
-                            firstOne={index === 0}
-                            // esProps={_props.elementSepratorProps(0, true, parentUrn, "", _props.index, null)}
-                            elementType="element-dialogue"
-                            sectionBreak={false}
-                            permissions={_props.permissions}
-                            onClickCapture={_props.onClickCapture}
-                            userRole={_props.userRole}
-                        />}
                         <div className={"editor"}
                             data-id={element.id}
                             onMouseOver={_props.handleOnMouseOver}
                             onMouseOut={_props.handleOnMouseOut}
                             onClickCapture={(e) => _props.onClickCapture(e)}
                         >
-                            {renderButtons(index, buttonClass, labelText, _props.deleteScriptElement)}
+                            {renderButtons(index, buttonClass, labelText, _props.deleteScriptElement, _props.element)}
                             <div
                                 className={`element-container ${setBorderToggle(_props.borderToggle, index, selectedInnerElementIndex)}`}
                                 data-id={_props.elementId}
@@ -77,6 +66,7 @@ const ElementDialogue = (props) => {
                         </div>
                         <DialogueSeprator index={index}
                             elementIndex={elementIndex}
+                            element={_props.element}
                             // esProps={_props.elementSepratorProps(index, false, parentUrn, "", _props.index, null)}
                             elementType="element-dialogue"
                             sectionBreak={false}
@@ -117,7 +107,7 @@ const ElementDialogue = (props) => {
         }
     }
 
-    const renderButtons = (index, buttonClass, labelText, deleteElement) => {
+    const renderButtons = (index, buttonClass, labelText, deleteElement, element) => {
         if ((props.elemBorderToggle !== undefined && props.elemBorderToggle) || props.borderToggle == 'active') {
             return (
                 <div>
@@ -131,8 +121,8 @@ const ElementDialogue = (props) => {
                             (<Button
                                 type="delete-element"
                                 onClick={(e) => {
-                                
-                                    deleteElement(index, elementIndex);
+                                    console.log("i will delete", index);
+                                    deleteElement(elementIndex, index, element);
                                     // show delete element popup
                                     // props.showDeleteElemPopup(e, true)
                                 }}
@@ -178,20 +168,21 @@ const ElementDialogue = (props) => {
         let newPSData = JSON.parse(JSON.stringify(props.element))
 
         newPSData.html[field] = `<p>${removeBlankTags(eventTarget?.innerHTML)}</p>`
-        
+
         if (removeClassesFromHtml(props.element.html?.[field]) !== removeClassesFromHtml(newPSData.html[field]) && !config.savingInProgress) {
             // create data and call update API
-           callUpdateApi(newPSData);
+            callUpdateApi(newPSData);
         }
     }
+
     /* @@updateSD_DE - To update the data of SD and DE Element Data */
     const updateSD_DE = (field, data, index) => {
         let newPSData = JSON.parse(JSON.stringify(props.element));
         newPSData.html.dialogueContent[index] = data;
-        
-        if (removeClassesFromHtml(props.element?.html?.dialogueContent[index][field]) !== 
-                removeClassesFromHtml(newPSData.html?.dialogueContent[index][field]) && 
-                    !config.savingInProgress) {
+
+        if (removeClassesFromHtml(props.element?.html?.dialogueContent[index][field]) !==
+            removeClassesFromHtml(newPSData.html?.dialogueContent[index][field]) &&
+            !config.savingInProgress) {
             // create data and call update API
             callUpdateApi(newPSData);
         }
@@ -205,7 +196,7 @@ const ElementDialogue = (props) => {
         config.isSavingElement = true
         props.updateElement(dataToSend, props.index, props.parentUrn, props.asideData, null, props.parentElement, null)
     }
-    
+
     const copmpProps = {
         permissions: props.permissions,
         element: props.element,
@@ -242,6 +233,19 @@ const ElementDialogue = (props) => {
                             />
                         </header>
                         <div>
+                            {<DialogueSeprator
+                                index={0}
+                                element={props.element}
+                                elementIndex={elementIndex}
+                                firstOne={true}
+                                // esProps={_props.elementSepratorProps(0, true, parentUrn, "", _props.index, null)}
+                                elementType="element-dialogue"
+                                sectionBreak={false}
+                                permissions={props.permissions}
+                                onClickCapture={props.onClickCapture}
+                                userRole={props.userRole}
+                            />
+                            }
                             {renderDialogueContent(props)}
                         </div>
                     </figure>
@@ -288,8 +292,8 @@ export const createPSDataForUpdateAPI = (_props, newPSData) => {
         ...newPSData,
         slateVersionUrn: config.slateManifestURN,
         elementParentEntityUrn: slateEntityUrn,
-        inputType : "ELEMENT_DIALOGUE",
-        inputSubType : "NA",
+        inputType: "ELEMENT_DIALOGUE",
+        inputSubType: "NA",
         index: _props.index.toString().split('-')[_props.index.toString().split('-').length - 1]
     }
 }
