@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react';
+import { removeBlankTags } from '../../constants/utility';
 import TinyMceEditor from "../tinyMceEditor";
 
 function DialogueContent(props) {
@@ -19,7 +20,7 @@ function DialogueContent(props) {
                 handleBlur={(forceupdate, currentElement, eIndex, showHideType, eventTarget) => {
                     const obj = { 
                          ...props.model[props.index],
-                        characterName: eventTarget?.innerHTML,
+                        characterName: `<p>${removeBlankTags(eventTarget?.innerHTML)}</p>`,
                     }
                     props.handleBlur("characterName", obj, props.index)
                 }}
