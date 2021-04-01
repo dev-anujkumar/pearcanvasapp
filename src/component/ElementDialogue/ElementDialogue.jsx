@@ -8,8 +8,7 @@ import { connect } from 'react-redux';
 import { updateElement } from '../ElementContainer/ElementContainer_Actions.js';
 import config from "../../config/config.js";
 import { sendDataToIframe, removeBlankTags, removeClassesFromHtml } from '../../constants/utility.js';
-
-// import tinymce from 'tinymce/tinymce';
+import { createPSDataForUpdateAPI } from './DialogueElementUtils';
 
 const ElementDialogue = (props) => {
 
@@ -313,17 +312,3 @@ const mapStateToProps = ({ appStore }) => {
 ElementDialogue.displayName = "ElementDialogue"
 export default connect(mapStateToProps, dispatchActions)(ElementDialogue);
 
-export const createPSDataForUpdateAPI = (_props, newPSData) => {
-    if (config.elementStatus?.[newPSData.id] === "approved") {
-        config.savingInProgress = true
-    }
-    const slateEntityUrn = _props.parentUrn?.contentUrn || _props.asideData?.contentUrn || config.slateEntityURN
-    return {
-        ...newPSData,
-        slateVersionUrn: config.slateManifestURN,
-        elementParentEntityUrn: slateEntityUrn,
-        inputType: "ELEMENT_DIALOGUE",
-        inputSubType: "NA",
-        index: _props.index.toString().split('-')[_props.index.toString().split('-').length - 1]
-    }
-}

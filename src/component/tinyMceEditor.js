@@ -2770,14 +2770,7 @@ export class TinyMceEditor extends Component {
             toolbar = config.revelToolbar
         } else if (this.props.placeholder == "Type Something..." && this.props.element && this.props.element.type == 'stanza') {
             toolbar = config.poetryStanzaToolbar;
-        } /* else if (this.props.placeholder === "Enter Dialogue...") {
-            toolbar = config.deToolbar
-        }  else if (this.props.placeholder === "Enter Stage Directions...") {
-            toolbar = config.sdToolbar
         }
-        else if (this.props.placeholder === "Enter Character Name...") {
-            toolbar = config.deCharacterToolbar
-        }*/
         else {
             toolbar = config.elementToolbar;
         }
