@@ -168,8 +168,9 @@ class SlateTagDropdown extends React.Component {
           'currentSlateLF': currentSlateLF
         }
       })
+      this.props.closeLODropdown();
     }
-    this.props.closeLODropdown();
+
   } 
   checkExternalFramework = () => {
     let enableExtLF = false;
@@ -203,7 +204,7 @@ class SlateTagDropdown extends React.Component {
   }
   unlinkSlateLOs = (e) => {
     const slateManifestURN = config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN;
-    const currentSlateLOData = this.props.currentSlateLOData;
+    const { currentSlateLOData } = this.props;
     const apiKeys_LO = {
       'loApiUrl': config.LEARNING_OBJECTIVES_ENDPOINT,
       'strApiKey': config.STRUCTURE_APIKEY,
@@ -212,8 +213,23 @@ class SlateTagDropdown extends React.Component {
       'manifestApiUrl': config.ASSET_POPOVER_ENDPOINT,
       'assessmentApiUrl': config.ASSESSMENT_ENDPOINT
     };
+    let externalLFUrn = '';
+    if (this?.props?.projectLearningFrameworks?.externalLF?.length) {
+      externalLFUrn = this.props.projectLearningFrameworks.externalLF[0].urn;
+    }
     const warningActionIntiator = this.warningActionIntiator;
-    sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': WarningPopupAction, 'data': currentSlateLOData, 'currentSlateId': slateManifestURN, 'chapterContainerUrn': '', 'isLOExist': true, 'editAction': '', 'apiConstants': apiKeys_LO, 'warningActionIntiator': warningActionIntiator} });
+    sendDataToIframe({ 'type': OpenLOPopup, 'message': { 
+      'text': WarningPopupAction, 
+      'data': currentSlateLOData, 
+      'currentSlateId': slateManifestURN, 
+      'chapterContainerUrn': '', 
+      'isLOExist': true, 
+      'editAction': '', 
+      'apiConstants': apiKeys_LO, 
+      'warningActionIntiator': warningActionIntiator,
+      'externalLFUrn': externalLFUrn,
+      'currentSlateLF': this.props.currentSlateLF
+    } });
     this.toggleWarningPopup(false,e);
     this.warningActionIntiator = '';
   }

@@ -136,12 +136,6 @@ function CommunicationChannel(WrappedComponent) {
                     this.handleLOData(message);
                     break;
                 case 'getSlateLOResponse':
-                    /** message ? this.props.currentSlateLOMath(message.label.en) : this.props.currentSlateLOMath("");
-                    if (message) {
-                        const regex = /<math.*?data-src=\'(.*?)\'.*?<\/math>/g;
-                        message.label.en = message.label.en.replace(regex, "<img src='$1'></img>")
-                    }
-                    this.props.currentSlateLO(message); */
                     if (message?.LOList?.length) {
                         const regex = /<math.*?data-src=\'(.*?)\'.*?<\/math>/g;
                         message.LOList.map(loData => {                            
@@ -172,11 +166,6 @@ function CommunicationChannel(WrappedComponent) {
                     this.handleRefreshSlate();
                     break;
                 case 'cancelCEPopup':
-                    /**  if (this.props.currentSlateLOData && this.props.currentSlateLOData.label && this.props.currentSlateLOData.label.en) {
-                        const regex = /<math.*?data-src=\'(.*?)\'.*?<\/math>/g;
-                        this.props.currentSlateLOData.label.en = this.props.currentSlateLOData.label.en.replace(regex, "<img src='$1'></img>")
-                        this.props.currentSlateLO(this.props.currentSlateLOData);
-                    } */
                     if (this.props.currentSlateLOData?.length > 0) {
                         const regex = /<math.*?data-src=\'(.*?)\'.*?<\/math>/g;
                         this.props.currentSlateLOData.map(loData => {
@@ -396,7 +385,7 @@ function CommunicationChannel(WrappedComponent) {
                 const updatedSlateLOs = setCurrentSlateLOs(this.props.currentSlateLOData, message.loUnlinked, newLOsLinked);
                 this.props.currentSlateLO(updatedSlateLOs);
                 this.props.currentSlateLOMath(updatedSlateLOs);
-                this.props.currentSlateLOType(updatedSlateLOs.length ? updatedSlateLOs : "");
+                this.props.currentSlateLOType(updatedSlateLOs.length ? "externalLF" : "");
             }
         }
         handleLOData = (message) => {
@@ -407,6 +396,7 @@ function CommunicationChannel(WrappedComponent) {
                     message.loObj.label.en = message.loObj.label.en.replace(regex, "<img src='$1'></img>");
                 }
                 message.loObj ? this.props.currentSlateLO(message.loObj) : this.props.currentSlateLO(message);
+                this.props.currentSlateLOType(message.loObj ? "cypressLF" : "");
                 this.props.isLOExist(message);
                 let slateData = this.props.slateLevelData;
                 const newSlateData = JSON.parse(JSON.stringify(slateData));
