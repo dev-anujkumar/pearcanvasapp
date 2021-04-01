@@ -1251,4 +1251,25 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
         let result = canvasActions.setSlateLength(25)
         expect(result).toEqual(expectedResult);
     })
+    describe('Test-9- fetchLearnosityContent', () => {
+        it('Test-9.1-fetchLearnosityContent', () => {
+            let dispatch = jest.fn();
+            let responseData = { data: slateTestData.learnosityData }
+            const spyFunction = jest.spyOn(canvasActions, 'fetchLearnosityContent')
+            axios.get = jest.fn(() => Promise.resolve(responseData))
+            canvasActions.fetchLearnosityContent()(dispatch);
+            expect(spyFunction).toHaveBeenCalled();
+            expect(dispatch).not.toHaveBeenCalled();
+            spyFunction.mockClear();
+        });
+        it('Test-9.2-fetchLearnosityContent - Catch Block', () => {
+            let dispatch = jest.fn();
+            const spyFunction = jest.spyOn(canvasActions, 'fetchLearnosityContent')
+            axios.get = jest.fn(() => Promise.reject({}))
+            canvasActions.fetchLearnosityContent()(dispatch);
+            expect(spyFunction).toHaveBeenCalled();
+            expect(dispatch).not.toHaveBeenCalled();
+            spyFunction.mockClear();
+        });
+    });
 });

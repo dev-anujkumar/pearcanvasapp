@@ -1211,5 +1211,13 @@ export const slateTestData = {
         status: "wip",
         type: "popup",
         versionUrn: "urn:pearson:manifest:a6ac890d-8c38-47d7-b37c-c0c41243ec4a",
-    }
+    },
+    learnosityData:[{
+        'EntityURN': "urn:pearson:entity:69748294-909e-42e9-9e85-dc9c0b77bea1",
+        'ItemBankId': "urn:pearson:itembank:a2399b07-ae2d-49db-90e5-a584a9498040",
+        'ItemBankName': "CP/I-Elm Dev Sandbox",
+        'LearnosityItemBankId': "641",
+        'ProjectdURN': "urn:pearson:distributable:d4a7778a-2b38-4368-adb8-b342beb180d8",
+        'Standalone': false
+    }]
 }

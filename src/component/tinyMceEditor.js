@@ -2686,7 +2686,7 @@ export class TinyMceEditor extends Component {
     componentDidUpdate(prevProps) {
         let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");
         if (isBlockQuote) {
-            this.lastContent = document.getElementById('cypress-' + this.props.index).innerHTML;
+            this.lastContent = document.getElementById('cypress-' + this.props.index)?.innerHTML;
         }
         if (this.elementConverted || prevProps.element.subtype !== this.props.element.subtype) {
             let elementTypeNode = document.querySelector('button[aria-label="formatSelector"] .tox-tbtn__select-label');
@@ -3012,7 +3012,7 @@ export class TinyMceEditor extends Component {
                     this.removeAttributionBr();
                 }
             });
-            this.setToolbarByElementType();
+            this.setToolbarByElementType(); 
         }
         /**
          * case - continuing with toggling glossary & footnote popup

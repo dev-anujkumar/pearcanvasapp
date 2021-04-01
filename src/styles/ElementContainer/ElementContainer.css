@@ -92,7 +92,7 @@
 
 .copy-menu-container {
     position: absolute;
-    z-index: 2;
+    z-index: 3;
     box-shadow: 1px 1px 6px 0px grey;
 }
 

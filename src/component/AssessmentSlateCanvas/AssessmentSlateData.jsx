@@ -13,7 +13,7 @@ import config from '../../config/config';
 import './../../styles/AssessmentSlateCanvas/AssessmentSlateCanvas.css';
 import { sendDataToIframe, hasReviewerRole, defaultMathImagePath } from '../../constants/utility.js';
 import { TAXONOMIC_ID_DISCIPLINES } from './learningTool/learningToolUtility.js';
-import { assessmentFormats, CITE, TDX, PUF, LEARNING_TEMPLATE, LEARNOSITY, ELM_UPDATE_MSG, ELM_UPDATE_POPUP_HEAD, ELM_UPDATE_BUTTON } from './AssessmentSlateConstants.js';
+import { assessmentFormats, CITE, TDX, PUF, LEARNING_TEMPLATE, LEARNOSITY, ELM_UPDATE_MSG, ELM_UPDATE_POPUP_HEAD, ELM_UPDATE_BUTTON, FULL_ASSESSMENT_LEARNOSITY } from './AssessmentSlateConstants.js';
 /** ----- Import - Action Creators ----- */
 import { setCurrentCiteTdx, assessmentSorting, setAssessmentFilterParams } from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
 import { closeLtAction, openLtAction, openLTFunction, fetchLearningTemplates } from './learningTool/learningToolActions';
@@ -55,6 +55,10 @@ class AssessmentSlateData extends Component {
            this.setCiteTdxFilterData(assessmentFormat,this.props.assessmentSlateObj);
         }
         document.addEventListener("mousedown", this.handleClickOutside);
+
+        if(this.props.isLearnosityProject && this.props.isLearnosityProject[0]?.ItemBankName){
+            this.handleAssessmentTypeChange(assessmentFormats[LEARNOSITY])
+        }
     }
 
     componentDidUpdate(prevProps) {
@@ -414,9 +418,14 @@ class AssessmentSlateData extends Component {
         }
         let assessmentTypeValue;
         if (Object.values(assessmentFormats).length > 0) {
-            assessmentTypeValue = Object.values(assessmentFormats).map((type, i) =>
-                <li key={i} className="slate_assessment_dropdown_name" onClick={(e) => this.handleAssessmentTypeChange(type, e)}>{type}</li>
-            )
+             let assessmentData = Object.values(assessmentFormats);
+            assessmentTypeValue = assessmentData.map((type, i) =>{
+            let addClass = '';
+            if(type === FULL_ASSESSMENT_LEARNOSITY){
+                addClass='disabled'
+            }
+               return <li key={i} className= {`slate_assessment_dropdown_name ${addClass}`} onClick={(e) => this.handleAssessmentTypeChange(type, e)}>{type}</li>
+            })
         }
         return assessmentTypeValue
     }
@@ -551,9 +560,9 @@ class AssessmentSlateData extends Component {
                 <div className="assessment-label">Select assessment type</div>
                 <div className="slate_assessment_type_dropdown activeDropdown" onClick={this.toggleAssessmentTypeDropdown}>
                     <span className="slate_assessment_dropdown_label" title={assessmentType ? assessmentFormats[assessmentType] : ""}>{assessmentType ? assessmentFormats[assessmentType] : "Select"}</span>
-                    <span className="slate_assessment_dropdown_image"></span>
+                   {this.props.isLearnosityProject && this.props.isLearnosityProject[0]?.ItemBankName ? "" : <span className="slate_assessment_dropdown_image"></span>}
                     <div className="clr"></div>
-                    {this.state.openAssessmentDropdown &&
+                    {(!(this.props.isLearnosityProject && this.props.isLearnosityProject[0]?.ItemBankName)) && this.state.openAssessmentDropdown &&
                         <ul className="slate_assessment_type_dropdown_options" ref={this.dropdownRef}>
                             {this.selectAssessmentType()}
                         </ul>
@@ -614,7 +623,8 @@ AssessmentSlateData.displayName = "AssessmentSlateData"
 const mapStateToProps = state => {
     return {
         usageTypeList: state.appStore.usageTypeListData.usageTypeList,
-        assessmentReducer: state.assessmentReducer
+        assessmentReducer: state.assessmentReducer,
+        isLearnosityProject: state.appStore.isLearnosityProjectInfo
     };
 };
 

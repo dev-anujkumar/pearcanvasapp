@@ -21,11 +21,12 @@ import {
     UPDATE_PAGENUMBER,
     UPDATE_PAGENUMBER_FAIL,
     ACCESS_DENIED_POPUP,
-    STORE_OLD_ASSET_FOR_TCM
+    STORE_OLD_ASSET_FOR_TCM,
+    LEARNOSITY_PROJECT_INFO
 
 } from '../../src/constants/Action_Constants';
 import mockData from '../../src/appstore/mockdata';
-import { createstoreWithFigure, newslateData, figureDataTCM } from '../../fixtures/slateTestingData';
+import { createstoreWithFigure, newslateData, figureDataTCM, learnosityData } from '../../fixtures/slateTestingData';
 
 const initialState = {
     slateLevelData: {},
@@ -361,6 +362,16 @@ describe('testing SLATE LEVEL REDUCER cases -->', () => {
             type: STORE_OLD_ASSET_FOR_TCM,
             payload: {
                 oldFiguredata : figureDataTCM}
+        })).toEqual(output)
+    });
+    it('case 23- LEARNOSITY_PROJECT_INFO', () => {
+        let output = {
+            ...initialState,
+            isLearnosityProjectInfo: learnosityData
+        };
+        expect(reducer(initialState, {
+            type: LEARNOSITY_PROJECT_INFO,
+            payload: learnosityData
         })).toEqual(output)
     });
 });
