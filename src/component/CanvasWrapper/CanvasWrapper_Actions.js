@@ -2,10 +2,10 @@ import axios from 'axios';
 import config from '../../config/config';
 import store from '../../appstore/store.js'
 import {
-    FETCH_SLATE_DATA,
-    SET_ACTIVE_ELEMENT,
-    OPEN_POPUP_SLATE,
-    CLOSE_POPUP_SLATE,
+	FETCH_SLATE_DATA,
+	SET_ACTIVE_ELEMENT,
+	OPEN_POPUP_SLATE,
+	CLOSE_POPUP_SLATE,
     SET_OLD_IMAGE_PATH,
     AUTHORING_ELEMENT_UPDATE,
     SET_PARENT_ASIDE_DATA,
@@ -30,7 +30,7 @@ import { handleTCMData } from '../TcmSnapshots/TcmSnapshot_Actions.js';
 import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
 import { ELM_INT, FIGURE_ASSESSMENT, ELEMENT_ASSESSMENT, LEARNOSITY } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
-import { fetchAssessmentMetadata, resetAssessmentStore } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
+import { fetchAssessmentMetadata , resetAssessmentStore } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import { isElmLearnosityAssessment } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 import { getContainerData } from './../Toolbar/Search/Search_Action.js';
 
@@ -76,8 +76,8 @@ export const findElementType = (element, index) => {
                             let figureAlignment = figureType[element['alignment']]
                             subType = figureAlignment['imageDimension']
                         }
-                        if (element.figuretype === "image" || element.figuretype === "table" || element.figuretype === "mathImage") {
-                            if (element.figuredata && !element.figuredata.podwidth) {
+                        if(element.figuretype === "image" || element.figuretype === "table" || element.figuretype === "mathImage"){
+                            if(element.figuredata && !element.figuredata.podwidth){
                                 element.figuredata.podwidth = POD_DEFAULT_VALUE
                             }
                         }
@@ -102,8 +102,8 @@ export const findElementType = (element, index) => {
                         }
                         break;
                     case "codelisting":
-                        if (element.subtype == "" || element.subtype == undefined) {
-                            // element.subtype = "codelisting"    // As per requirement removing Subtype key from codelisting
+                        if(element.subtype == "" || element.subtype == undefined) {
+                           // element.subtype = "codelisting"    // As per requirement removing Subtype key from codelisting
                         }
                         elementType = {
                             elementType: elementDataBank[element.type][element.figuretype]["elementType"],
@@ -112,7 +112,7 @@ export const findElementType = (element, index) => {
                             startNumber: element.figuredata.startNumber,
                             syntaxhighlighting: element.figuredata.syntaxhighlighting
                         }
-                        if (element.figuredata && !element.figuredata.programlanguage) {
+                        if(element.figuredata && !element.figuredata.programlanguage) {
                             element.figuredata.programlanguage = 'Select';
                         }
                         let languageBCE = element.figuredata.programlanguage.toLowerCase()
@@ -124,8 +124,8 @@ export const findElementType = (element, index) => {
                         break;
                     case "video":
                     case "audio":
-                        if (element.figuredata.srctype && element.figuredata.srctype === 'internal') {
-                            element.figuredata.srctype = 'externallink'
+                        if(element.figuredata.srctype && element.figuredata.srctype==='internal'){
+                            element.figuredata.srctype='externallink'
                         }
                         elementType = {
                             elementType: elementDataBank[element.type][element.figuretype]["elementType"],
@@ -147,10 +147,10 @@ export const findElementType = (element, index) => {
                         }
                         break;
                     case "assessment":
-                        if (!element.html) {
-                            let assessmentTitle = element.figuredata.elementdata.assessmenttitle ? element.figuredata.elementdata.assessmenttitle : ""
-                            element.html = {
-                                "title": `<p>${assessmentTitle}</p>`
+                        if(!element.html){
+                            let assessmentTitle=element.figuredata.elementdata.assessmenttitle?element.figuredata.elementdata.assessmenttitle:""
+                            element.html={
+                                "title":`<p>${assessmentTitle}</p>`
                             }
                         }
                         let assessmentFormat = element.figuredata.elementdata.assessmentformat.toLowerCase()
@@ -165,13 +165,13 @@ export const findElementType = (element, index) => {
                             primaryOption: elementDataBank[element.type][element.figuretype]["primaryOption"],
                             ...elementDataBank[element.type][element.figuretype][assessmentFormat]
                         }
-                        element.figuredata.elementdata.assessmentformat = assessmentFormat
-                        elementType["usageType"] = element.figuredata.elementdata.usagetype ? element.figuredata.elementdata.usagetype : ""
+                        element.figuredata.elementdata.assessmentformat = assessmentFormat 
+                        elementType["usageType"]= element.figuredata.elementdata.usagetype ? element.figuredata.elementdata.usagetype : ""
                         break;
                 }
                 break;
             case 'element-aside':
-                if (element.subtype == "" || element.subtype == undefined) {
+             	if(element.subtype =="" || element.subtype == undefined){
                     element.subtype = "sidebar";
                     element.designtype = "asideLearningObjective";
                 }
@@ -181,7 +181,7 @@ export const findElementType = (element, index) => {
                 else if (element.subtype !== "workedexample" && (element.designtype == "" || element.designtype == undefined)) {
                     element.designtype = "asideLearningObjective";
                 }
-
+                
                 elementType = {
                     elementType: elementDataBank[element.type][element.subtype]["elementType"],
                     ...elementDataBank[element.type][element.subtype][element.designtype]
@@ -213,7 +213,7 @@ export const findElementType = (element, index) => {
             case "showhide":
             case "citations":
             case "element-citation":
-            case 'poetry':
+            case  'poetry':
                 elementType = {
                     elementType: elementDataBank[element.type]["elementType"],
                     primaryOption: elementDataBank[element.type]["primaryOption"],
@@ -226,29 +226,30 @@ export const findElementType = (element, index) => {
                 }
                 elementType = { ...elementDataBank["element-authoredtext"] }
                 break;
-            case 'groupedcontent':
+            case  'groupedcontent':
                 elementType = {
                     elementType: elementDataBank[element.type]["elementType"],
-                    primaryOption: elementDataBank[element.type]["primaryOption"]
+                    primaryOption: elementDataBank[element.type]["primaryOption"]  
                 }
                 if (element.width && element.groupproportions) {
                     elementType["secondaryOption"] = elementDataBank[element.type][`${element.width}-${element.groupproportions}`]["secondaryOption"]
                 }
                 else {
-                    elementType["secondaryOption"] = elementDataBank[element.type]["wider-50-50"]["secondaryOption"]
+                    elementType["secondaryOption"] = elementDataBank[element.type]["wider-50-50"]["secondaryOption"] 
                 }
                 break;
+
             case "element-dialogue": {
-                let dialogueType = element.type;
-                elementType = {
-                    elementType: elementDataBank[dialogueType]["elementType"],
-                    primaryOption: elementDataBank[dialogueType]["primaryOption"],
-                    secondaryOption: elementDataBank[dialogueType]["secondaryOption"],
-                    numbered: element.elementdata.numberedlines,
-                    startNumber: element.elementdata.startNumber,
+                    let dialogueType = element.type;
+                    elementType = {
+                        elementType: elementDataBank[dialogueType]["elementType"],
+                        primaryOption: elementDataBank[dialogueType]["primaryOption"],
+                        secondaryOption: elementDataBank[dialogueType]["secondaryOption"],
+                        numbered: element.elementdata.numberedlines,
+                        startNumber: element.elementdata.startNumber,
+                    }
+                    break;
                 }
-                break;
-            }
             default:
                 elementType = { ...elementDataBank["element-authoredtext"] }
         }
@@ -257,7 +258,7 @@ export const findElementType = (element, index) => {
             elementType: ''
         }
     }
-
+    
     elementType['elementId'] = element.id;
     elementType['index'] = index;
     elementType['elementWipType'] = element.type;
@@ -296,17 +297,17 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             allElemPageData: []
         }
     });
-
-    let isPopupSlate = config.cachedActiveElement && config.cachedActiveElement.element && config.cachedActiveElement.element.type == "popup" ? true : false;
+   
+    let isPopupSlate = config.cachedActiveElement && config.cachedActiveElement.element && config.cachedActiveElement.element.type == "popup" ? true :false;
 
     if (config.cachedActiveElement && config.cachedActiveElement.element && config.cachedActiveElement.element.type == "popup") {
         config.popupParentElement = {
             ...config.popupParentElement,
             parentElement: config.cachedActiveElement.element
         }
-        if (calledFrom !== "containerVersioning") {
-            config.popupParentElement.popupAsideData = getState().appStore.asideData;
-            config.popupParentElement.popupParentUrn = getState().appStore.parentUrn
+        if(calledFrom!== "containerVersioning"){
+            config.popupParentElement.popupAsideData= getState().appStore.asideData;
+            config.popupParentElement.popupParentUrn= getState().appStore.parentUrn
         }
     }
     /** Project level and element level TCM status */
@@ -335,19 +336,19 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
     let apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}&elementCount=${elementCount}`
     if (versionPopupReload) {
         apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}&metadata=true&elementCount=${elementCount}`
-    }
+    } 
     return axios.get(apiUrl, {
         headers: {
             "Content-Type": "application/json",
             "PearsonSSOSession": config.ssoToken
         }
-    }).then(slateData => {
-        /* Slate tag issue */
-        if (document.getElementsByClassName("slate-tag-icon").length) {
+    }).then(slateData => {  
+         /* Slate tag issue */
+         if (document.getElementsByClassName("slate-tag-icon").length) {
             document.getElementsByClassName("slate-tag-icon")[0].classList.remove("disable");
-        }
-        let newVersionManifestId = Object.values(slateData.data)[0].id
-        if (config.slateManifestURN !== newVersionManifestId && (slateData.data[newVersionManifestId].type === 'manifest' || slateData.data[newVersionManifestId].type === "chapterintro" || slateData.data[newVersionManifestId].type === "titlepage")) {
+         }     
+        let newVersionManifestId=Object.values(slateData.data)[0].id
+        if(config.slateManifestURN !== newVersionManifestId && (slateData.data[newVersionManifestId].type === 'manifest' || slateData.data[newVersionManifestId].type === "chapterintro" || slateData.data[newVersionManifestId].type === "titlepage")){
             config.slateManifestURN = newVersionManifestId
             manifestURN = newVersionManifestId
         }
@@ -359,7 +360,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                 dispatch(fetchAssessmentMetadata(FIGURE_ASSESSMENT, 'fromFetchSlate', assessmentData, {}));
             }
         }
-        if (slateData.data && slateData.data[newVersionManifestId] && slateData.data[newVersionManifestId].type === "popup") {
+		if(slateData.data && slateData.data[newVersionManifestId] && slateData.data[newVersionManifestId].type === "popup"){
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
             config.isPopupSlate = true;
             config.savingInProgress = false;
@@ -375,25 +376,25 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                     }
                 })
             }
-            else if (versioning && versioning.type === "popup") {
+            else if(versioning && versioning.type==="popup"){
                 let parentData = getState().appStore.slateLevelData;
                 let newslateData = JSON.parse(JSON.stringify(parentData));
-                delete Object.assign(newslateData, { [Object.values(slateData.data)[0].id]: newslateData[config.slateManifestURN] })[config.slateManifestURN];
-                config.slateManifestURN = Object.values(slateData.data)[0].id
+                delete Object.assign(newslateData, {[Object.values(slateData.data)[0].id]: newslateData[config.slateManifestURN] })[config.slateManifestURN];     
+                config.slateManifestURN= Object.values(slateData.data)[0].id
                 newslateData[config.slateManifestURN] = Object.values(slateData.data)[0];
                 return dispatch({
                     type: AUTHORING_ELEMENT_UPDATE,
                     payload: {
                         slateLevelData: newslateData
                     }
-                })
+                })       
             }
-            else {
-                config.slateManifestURN = Object.values(slateData.data)[0].id
-                manifestURN = Object.values(slateData.data)[0].id
+			else {
+                config.slateManifestURN= Object.values(slateData.data)[0].id
+                manifestURN= Object.values(slateData.data)[0].id
                 if (config.slateManifestURN === Object.values(slateData.data)[0].id) {
-                    config.totalPageCount = slateData.data[newVersionManifestId].pageCount ? slateData.data[newVersionManifestId].pageCount : 0;
-                    config.pageLimit = slateData.data[newVersionManifestId].pageLimit ? slateData.data[newVersionManifestId].pageLimit : 0;
+                    config.totalPageCount = slateData.data[newVersionManifestId].pageCount? slateData.data[newVersionManifestId].pageCount: 0;
+                    config.pageLimit = slateData.data[newVersionManifestId].pageLimit ? slateData.data[newVersionManifestId].pageLimit :0;
                     let parentData = getState().appStore.slateLevelData;
                     let currentParentData;
                     if ((slateData.data[newVersionManifestId]) && (!config.fromTOC) && slateData.data[newVersionManifestId].pageNo > 0) {
@@ -419,14 +420,14 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                     });
                 }
             }
-
-        }
-        else {
-            if (Object.values(slateData.data).length > 0) {
-                if (versioning && (versioning.type === 'element-aside' || versioning.type === 'showhide')) {
+            
+		}
+		else{
+			if (Object.values(slateData.data).length > 0) {
+                if(versioning && (versioning.type === 'element-aside' || versioning.type === 'showhide')){
                     let parentData = getState().appStore.slateLevelData;
                     let newslateData = JSON.parse(JSON.stringify(parentData));
-                    let index = versioning.type === 'showhide' ? versioning.indexes : versioning.indexes[0];
+                    let index =versioning.type === 'showhide'? versioning.indexes:versioning.indexes[0];
                     newslateData[config.slateManifestURN].contents.bodymatter[index] = Object.values(slateData.data)[0];
                     return dispatch({
                         type: AUTHORING_ELEMENT_UPDATE,
@@ -438,10 +439,10 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                     let parentData = getState().appStore.slateLevelData;
                     let newslateData = JSON.parse(JSON.stringify(parentData));
                     let index
-                    if (typeof versioning.index === "number") {
+                    if(typeof versioning.index === "number"){
                         index = versioning.index;
                     }
-                    else if (typeof versioning.index === "string") {
+                    else if(typeof versioning.index === "string"){
                         index = versioning.index.split("-")[0];
                     }
                     newslateData[config.slateManifestURN].contents.bodymatter[index] = Object.values(slateData.data)[0];
@@ -456,12 +457,12 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                     sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
                     let contentUrn = slateData.data[manifestURN].contentUrn;
                     let title = slateData.data[manifestURN].contents.title ? slateData.data[manifestURN].contents.title.text : '';
-                    /**
-                    * [BG-1522]- On clicking the Notes icon, only the comments of last active element should be 
-                    * displayed in the Comments Panel, when user navigates back to the slate or refreshes the slate 
-                    */
+                     /**
+                     * [BG-1522]- On clicking the Notes icon, only the comments of last active element should be 
+                     * displayed in the Comments Panel, when user navigates back to the slate or refreshes the slate 
+                     */
                     // let appData =  appData1 && appData1.id? appData1.id : appData1;
-                    let appData = config.lastActiveElementId;
+                    let appData =  config.lastActiveElementId;
                     if (page === 0) {
                         if (appData) {
                             dispatch(fetchComments(contentUrn, title))
@@ -470,7 +471,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                         else {
                             dispatch(fetchComments(contentUrn, title))
                         }
-                    }
+                    }                   
                     config.totalPageCount = slateData.data[manifestURN].pageCount;
                     config.pageLimit = slateData.data[manifestURN].pageLimit;
                     let parentData = getState().appStore.slateLevelData;
@@ -509,7 +510,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                     }
                     //}
                     // config.isFetchSlateInProgress = false;
-                } else {
+                }else{
                     console.log("incorrect data comming...")
                 }
             }
@@ -517,9 +518,9 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
         /** [TK-3289]- To get Current Slate details */
         dispatch(setCurrentSlateAncestorData(getState().appStore.allSlateData))
         if (slateData.data[newVersionManifestId].type !== "popup") {
-            if (slateData.data && Object.values(slateData.data).length > 0) {
+            if(slateData.data && Object.values(slateData.data).length > 0) {
                 let slateTitle = SLATE_TITLE;
-                if ('title' in slateData.data[newVersionManifestId].contents && 'text' in slateData.data[newVersionManifestId].contents.title) {
+                if('title' in slateData.data[newVersionManifestId].contents && 'text' in slateData.data[newVersionManifestId].contents.title) {
                     slateTitle = slateData.data[newVersionManifestId].contents.title.text || SLATE_TITLE;
                 }
                 sendDataToIframe({
@@ -531,7 +532,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             dispatch(fetchSlateAncestorData());
         }
         const elapsedTime = performance.now() - startTime;
-
+        
         sendToDataLayer('slate-load', {
             elapsedTime,
             manifestURN,
@@ -541,7 +542,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
 
         // Read element URN to search from project URL
         let queryStrings = new URLSearchParams(window.location.search);
-        if (queryStrings.get('searchElement') && getState().searchReducer.deeplink) {
+        if(queryStrings.get('searchElement') && getState().searchReducer.deeplink) {
             let searchTerm = queryStrings.get('searchElement') || '';
             dispatch(getContainerData(searchTerm));
         }
@@ -553,10 +554,10 @@ export const fetchSlateAncestorData = (tocNode = {}) => (dispatch, getState) => 
     let changeFlag = false;
     let currentSlateData = getState().appStore.currentSlateAncestorData;
     let newSlateData = currentSlateData;
-    if (Object.keys(currentSlateData).length > 0) {
-        while ('ancestor' in currentSlateData && currentSlateData.ancestor.label !== 'project') {
+    if(Object.keys(currentSlateData).length > 0) {
+        while('ancestor' in currentSlateData && currentSlateData.ancestor.label !== 'project') {
             let ancestorTitle = currentSlateData.ancestor.title || 'Untitled';
-            if (Object.keys(tocNode).length > 0 && tocNode.entityUrn === currentSlateData.ancestor.entityUrn &&
+            if(Object.keys(tocNode).length > 0 && tocNode.entityUrn === currentSlateData.ancestor.entityUrn &&
                 ancestorTitle !== tocNode.title) {
                 ancestorTitle = tocNode.title;
                 changeFlag = true;
@@ -568,7 +569,7 @@ export const fetchSlateAncestorData = (tocNode = {}) => (dispatch, getState) => 
         }
     }
 
-    if (changeFlag) {
+    if(changeFlag) {
         dispatch({
             type: SET_CURRENT_SLATE_DATA,
             payload: {
@@ -576,7 +577,7 @@ export const fetchSlateAncestorData = (tocNode = {}) => (dispatch, getState) => 
             }
         });
     }
-
+    
     sendDataToIframe({ 'type': 'projectStructure', 'message': { structure } })
 }
 
@@ -653,7 +654,7 @@ const setOldAudioVideoPath = (getState, activeElement, elementIndex, type) => {
                 } else if (indexesLen == 3) {
                     condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
                     if (condition.versionUrn == activeElement.id) {
-                        oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata.audioid
+                        oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata.audioid 
                         // && bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata.audio.path
                     }
                 }
@@ -724,7 +725,7 @@ const setOldinteractiveIdPath = (getState, activeElement, elementIndex) => {
     }
     return oldPath || ""
 }
-export const setActiveElement = (activeElement = {}, index = 0, parentUrn = {}, asideData = {}, updateFromC2Flag = false, showHideObj = undefined) => (dispatch, getState) => {
+export const setActiveElement = (activeElement = {}, index = 0,parentUrn = {},asideData={} , updateFromC2Flag = false, showHideObj = undefined) => (dispatch, getState) => {
     dispatch({
         type: SET_ACTIVE_ELEMENT,
         payload: findElementType(activeElement, index)
@@ -732,14 +733,14 @@ export const setActiveElement = (activeElement = {}, index = 0, parentUrn = {}, 
     dispatch({
         type: SET_PARENT_ASIDE_DATA,
         payload: {
-            parentUrn: parentUrn,
-            asideData: asideData
+            parentUrn : parentUrn,
+            asideData:asideData
         }
     })
     dispatch({
         type: SET_PARENT_SHOW_DATA,
         payload: {
-            showHideObj: showHideObj,
+            showHideObj : showHideObj,
         }
     })
     switch (activeElement.figuretype) {
@@ -791,9 +792,9 @@ export const fetchAuthUser = () => dispatch => {
         }
     }).then((response) => {
         let userInfo = response.data;
-        config.userEmail = userInfo.email;
-        document.cookie = (userInfo.firstName) ? `FIRST_NAME=${userInfo.firstName};path=/;` : `FIRST_NAME=;path=/;`;
-        document.cookie = (userInfo.lastName) ? `LAST_NAME=${userInfo.lastName};path=/;` : `LAST_NAME=;path=/;`;
+		config.userEmail = userInfo.email;
+		document.cookie = (userInfo.firstName)?`FIRST_NAME=${userInfo.firstName};path=/;`:`FIRST_NAME=;path=/;`;
+		document.cookie = (userInfo.lastName)?`LAST_NAME=${userInfo.lastName};path=/;`:`LAST_NAME=;path=/;`;
     })
         .catch(err => {
             console.error('axios Error', err);
@@ -802,22 +803,22 @@ export const fetchAuthUser = () => dispatch => {
 }
 
 export const openPopupSlate = (element, popupId) => dispatch => {
-    if (element) {
-        /* dispatch({
-            type: OPEN_POPUP_SLATE,
-            payload: {
-                [element.id]: popupData[element.id],
-            }
-        }); */
-    }
-    else {
-        dispatch({
-            type: CLOSE_POPUP_SLATE,
-            payload: {
-                popupId
-            }
-        });
-    }
+	if(element){
+		/* dispatch({
+			type: OPEN_POPUP_SLATE,
+			payload: {
+				[element.id]: popupData[element.id],
+			}
+		}); */
+	}
+	else{
+		dispatch({
+			type: CLOSE_POPUP_SLATE,
+			payload: {
+				popupId
+			}
+		});
+	}
 }
 
 /**
@@ -864,18 +865,18 @@ const appendCreatedElement = async (paramObj, responseData) => {
     let newslateData = JSON.parse(JSON.stringify(parentData))
     let _slateObject = newslateData[slateManifestURN]
 
-    if (parentElement.type === "popup") {
-        let targetPopupElement = _slateObject.contents.bodymatter[popupElementIndex[0]];
-        if (popupElementIndex.length === 3) {
+    if(parentElement.type === "popup"){
+        let targetPopupElement=_slateObject.contents.bodymatter[popupElementIndex[0]];
+        if(popupElementIndex.length === 3){
             targetPopupElement = targetPopupElement.elementdata.bodymatter[popupElementIndex[1]]
         }
-        else if (popupElementIndex.length === 4) {
+        else if(popupElementIndex.length === 4){
             targetPopupElement = targetPopupElement.elementdata.bodymatter[popupElementIndex[1]].contents.bodymatter[popupElementIndex[2]]
         }
         if (targetPopupElement) {
             targetPopupElement.popupdata["formatted-title"] = responseData
             if (popupField === "formatted-title") {
-
+                
                 targetPopupElement.popupdata["formatted-title"].html.text = createTitleSubtitleModel(elemNode.innerHTML, "")
             }
             else {
@@ -892,11 +893,11 @@ const appendCreatedElement = async (paramObj, responseData) => {
             }
         }
     }
-    else if (parentElement.type === "citations") {
+    else if(parentElement.type === "citations"){
         let targetCG = _slateObject.contents.bodymatter[popupElementIndex[0]]
-        if (targetCG) {
+        if(targetCG){
             targetCG.contents["formatted-title"] = responseData
-            targetCG.contents["formatted-title"].html.text = createTitleSubtitleModel("", elemNode.innerHTML)
+            targetCG.contents["formatted-title"].html.text = createTitleSubtitleModel("",elemNode.innerHTML)
             targetCG.contents["formatted-title"].elementdata.text = elemNode.innerText
             _slateObject.contents.bodymatter[popupElementIndex[0]] = targetCG
         }
@@ -907,7 +908,7 @@ const appendCreatedElement = async (paramObj, responseData) => {
             slateLevelData: newslateData
         }
     })
-    if (cb && !createdFromFootnote) {
+    if(cb && !createdFromFootnote){
         await cb(responseData)
     }
 }
@@ -920,11 +921,11 @@ const appendCreatedElement = async (paramObj, responseData) => {
  * @param {*} getState store
  * @param {*} dispatch dispatch fn
  */
-function prepareDataForTcmCreate(parentElement, popupField, responseData, getState, dispatch) {
+function prepareDataForTcmCreate(parentElement, popupField , responseData, getState, dispatch) {
     let elmUrn = [];
     const tcmData = getState().tcmReducer.tcmSnapshot;
-    let formattedTitleField = ['formattedTitle', 'formattedTitleOnly', 'formattedSubtitle'];
-    if (parentElement && parentElement.type == 'popup' && formattedTitleField.indexOf(popupField) !== -1) {
+    let formattedTitleField = ['formattedTitle','formattedTitleOnly','formattedSubtitle' ];
+    if (parentElement && parentElement.type =='popup' && formattedTitleField.indexOf(popupField) !==-1 ) {
         elmUrn.push(responseData.id)
     }
     elmUrn.map((item) => {
@@ -935,9 +936,8 @@ function prepareDataForTcmCreate(parentElement, popupField, responseData, getSta
             "feedback": null
         })
     })
-    if (tcmData.length > 0) {
-        sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });
-    }
+    if(tcmData.length > 0 ){
+        sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });}
     dispatch({
         type: GET_TCM_RESOURCES,
         payload: {
@@ -953,20 +953,20 @@ function prepareDataForTcmCreate(parentElement, popupField, responseData, getSta
  */
 const getRequestData = (parentElement) => {
     let dataToSend = {}
-    let metaDataField = "formattedTitle"
+    let metaDataField = "formattedTitle" 
     dataToSend = {
         "projectUrn": config.projectUrn,
         "slateEntityUrn": parentElement.contentUrn,
         "slateUrn": parentElement.id,
         "type": "TEXT",
-        "metaDataField": metaDataField
+        "metaDataField" : metaDataField
     }
     return dataToSend
 }
 export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex, slateManifestURN, createdFromFootnote) => (dispatch, getState) => {
-    let _requestData = getRequestData(parentElement)
+    let _requestData =  getRequestData(parentElement)
     let url = `${config.REACT_APP_API_URL}v1/slate/element`
-    return axios.post(url,
+    return axios.post(url, 
         JSON.stringify(_requestData),
         {
             headers: {
@@ -974,49 +974,49 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
                 "PearsonSSOSession": config.ssoToken
             }
         })
-        .then((response) => {
-            let argObj = {
-                popupElementIndex,
-                getState,
-                slateManifestURN,
-                parentElement,
-                dispatch,
-                cb,
-                popupField,
-                createdFromFootnote
+    .then((response) => {
+        let argObj = {
+            popupElementIndex,
+            getState,
+            slateManifestURN,
+            parentElement,
+            dispatch,
+            cb,
+            popupField,
+            createdFromFootnote
+        }
+        if (parentElement && parentElement.type == 'popup') {
+            const parentData = getState().appStore.slateLevelData;
+            const newParentData = JSON.parse(JSON.stringify(parentData));
+            let currentSlateData = newParentData[config.slateManifestURN];
+            let containerElement = {
+                parentElement: parentElement,
+                asideData: getState().appStore.asideData,
+                parentUrn: getState().appStore.parentUrn,
+                metaDataField: _requestData.metaDataField,
+                isMetaFieldExist: true
+            };
+            let slateData = {
+                currentParentData:newParentData,
+                bodymatter: currentSlateData.contents.bodymatter,
+                response: response.data
+            };
+            if(config.tcmStatus){
+                prepareDataForTcmCreate(parentElement, _requestData.metaDataField, response.data, getState, dispatch)
             }
-            if (parentElement && parentElement.type == 'popup') {
-                const parentData = getState().appStore.slateLevelData;
-                const newParentData = JSON.parse(JSON.stringify(parentData));
-                let currentSlateData = newParentData[config.slateManifestURN];
-                let containerElement = {
-                    parentElement: parentElement,
-                    asideData: getState().appStore.asideData,
-                    parentUrn: getState().appStore.parentUrn,
-                    metaDataField: _requestData.metaDataField,
-                    isMetaFieldExist: true
-                };
-                let slateData = {
-                    currentParentData: newParentData,
-                    bodymatter: currentSlateData.contents.bodymatter,
-                    response: response.data
-                };
-                if (config.tcmStatus) {
-                    prepareDataForTcmCreate(parentElement, _requestData.metaDataField, response.data, getState, dispatch)
-                }
-                tcmSnapshotsForCreate(slateData, _requestData.metaDataField, containerElement, dispatch);
-            }
-            appendCreatedElement(argObj, response.data)
+            tcmSnapshotsForCreate(slateData, _requestData.metaDataField, containerElement, dispatch);
+        }
+        appendCreatedElement(argObj, response.data)
 
-        })
-        .catch((error) => {
-            console.log("%c ERROR RESPONSE", "font: 30px; color: red; background: black", error)
-            dispatch({ type: ERROR_POPUP, payload: { show: true } })
-            config.savingInProgress = false
-        })
+    })
+    .catch((error) => {
+        console.log("%c ERROR RESPONSE", "font: 30px; color: red; background: black", error)
+        dispatch({type: ERROR_POPUP, payload:{show: true}})
+        config.savingInProgress = false
+    })
 }
 
-export const createPoetryUnit = (poetryField, parentElement, cb, ElementIndex, slateManifestURN) => (dispatch, getState) => {
+export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, slateManifestURN) => (dispatch, getState) => {
     let _requestData = {
         "projectUrn": config.projectUrn,
         "slateEntityUrn": parentElement.contentUrn,
@@ -1027,9 +1027,9 @@ export const createPoetryUnit = (poetryField, parentElement, cb, ElementIndex, s
     } else {
         _requestData.metaDataField = "formattedTitle";
     }
-
+    
     let url = `${config.REACT_APP_API_URL}v1/slate/element`
-    return axios.post(url,
+    return axios.post(url, 
         JSON.stringify(_requestData),
         {
             headers: {
@@ -1037,50 +1037,50 @@ export const createPoetryUnit = (poetryField, parentElement, cb, ElementIndex, s
                 "PearsonSSOSession": config.ssoToken
             }
         })
-        .then((response) => {
+    .then((response) => {
 
-            let elemIndex = `cypress-${ElementIndex}`
-            let elemNode = document.getElementById(elemIndex)
-            ElementIndex = Number(ElementIndex.split("-")[0])
-            const parentData = getState().appStore.slateLevelData
-            let newslateData = JSON.parse(JSON.stringify(parentData))
-            let _slateObject = newslateData[slateManifestURN]
-            let targetPoetryElement = _slateObject.contents.bodymatter[ElementIndex]
+        let elemIndex = `cypress-${ElementIndex}`
+        let elemNode = document.getElementById(elemIndex)
+        ElementIndex = Number(ElementIndex.split("-")[0])
+        const parentData = getState().appStore.slateLevelData
+        let newslateData = JSON.parse(JSON.stringify(parentData))
+        let _slateObject = newslateData[slateManifestURN]
+        let targetPoetryElement = _slateObject.contents.bodymatter[ElementIndex]
 
-            if (targetPoetryElement) {
-                if (poetryField === "creditsarray") {
-                    if (!targetPoetryElement.contents[poetryField]) {
-                        targetPoetryElement.contents[poetryField] = [];
-                    }
-                    targetPoetryElement.contents[poetryField][0] = response.data
-                    targetPoetryElement.contents[poetryField][0].html.text = elemNode.innerHTML
-                    targetPoetryElement.contents[poetryField][0].elementdata.text = elemNode.innerText
+        if(targetPoetryElement){
+            if(poetryField==="creditsarray"){
+                if(!targetPoetryElement.contents[poetryField]){
+                    targetPoetryElement.contents[poetryField] = [];
                 }
-                else if (poetryField === "formatted-title") {
-                    targetPoetryElement.contents[poetryField] = response.data
-                    targetPoetryElement.contents[poetryField].html.text = createTitleSubtitleModel(elemNode.innerHTML, "")
-                    targetPoetryElement.contents[poetryField].elementdata.text = elemNode.innerText
-                }
-                else if (poetryField === "formatted-subtitle") {
-                    targetPoetryElement.contents["formatted-title"] = response.data
-                    targetPoetryElement.contents["formatted-title"].html.text = createTitleSubtitleModel("", elemNode.innerHTML)
-                }
-                _slateObject.contents.bodymatter[ElementIndex] = targetPoetryElement
+                targetPoetryElement.contents[poetryField][0] = response.data
+                targetPoetryElement.contents[poetryField][0].html.text  = elemNode.innerHTML
+                targetPoetryElement.contents[poetryField][0].elementdata.text = elemNode.innerText
             }
-            dispatch({
-                type: AUTHORING_ELEMENT_UPDATE,
-                payload: {
-                    slateLevelData: newslateData
-                }
-            })
-            config.poetryElementCreationInProgress = false
-            if (cb) cb(response.data)
+            else if(poetryField==="formatted-title"){
+                targetPoetryElement.contents[poetryField] = response.data
+                targetPoetryElement.contents[poetryField].html.text = createTitleSubtitleModel(elemNode.innerHTML, "")
+                targetPoetryElement.contents[poetryField].elementdata.text = elemNode.innerText
+            }
+            else if(poetryField==="formatted-subtitle"){
+                targetPoetryElement.contents["formatted-title"] = response.data
+                targetPoetryElement.contents["formatted-title"].html.text = createTitleSubtitleModel("", elemNode.innerHTML)
+            }
+            _slateObject.contents.bodymatter[ElementIndex] = targetPoetryElement
+        }
+        dispatch({
+            type: AUTHORING_ELEMENT_UPDATE,
+            payload: {
+                slateLevelData: newslateData
+            }
         })
-        .catch((error) => {
-            console.log("%c ERROR RESPONSE", "font: 30px; color: red; background: black", error)
-            // dispatch({type: ERROR_POPUP, payload:{show: true}})
-            config.savingInProgress = false
-        })
+        config.poetryElementCreationInProgress = false
+        if(cb) cb(response.data)
+    })
+    .catch((error) => {
+        console.log("%c ERROR RESPONSE", "font: 30px; color: red; background: black", error)
+       // dispatch({type: ERROR_POPUP, payload:{show: true}})
+        config.savingInProgress = false
+    })
 }
 
 export const setSlateLength = (length) => {
