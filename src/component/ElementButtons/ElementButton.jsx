@@ -6,6 +6,8 @@ import '../../styles/ElementButtons/ElementButton.css'
 import buttonTypes from './ButtonTypes.js'
 
 import { 
+    stageDirectionIcon,
+    dialougeElementIcon,
     workedExampleIcon,
     sectionBreakElement, 
     assessmentIcon, 
