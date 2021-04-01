@@ -26,12 +26,10 @@ import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 import * as slateWrapperConstants from "./SlateWrapperConstants"
 import { onPasteSuccess, checkElementExistence, prepareDataForTcmCreate } from "./slateWrapperAction_helper"
-import { handleAlfrescoSiteUrl } from '../ElementFigure/AlfrescoSiteUrl_helper.js'
+
 import { SET_SELECTION } from './../../constants/Action_Constants.js';
 import tinymce from 'tinymce'
 import SLATE_CONSTANTS  from '../../component/ElementSaprator/ElementSepratorConstants';
-// import { PLAYSCRIPT_API } from '../ElementDialogue/playscript_API';
-
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
 };
@@ -181,19 +179,6 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         }   
     }).catch(error => {
         // Opener Element mock creation
-        // if (type == "ELEMENT_DIALOGUE") { 
-        //     sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
-        //     const parentData = getState().appStore.slateLevelData;
-        //     const newParentData = JSON.parse(JSON.stringify(parentData));
-        //     const createdElementData = PLAYSCRIPT_API;
-        //     newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
-        //     dispatch({
-        //         type: AUTHORING_ELEMENT_CREATED,
-        //         payload: {
-        //             slateLevelData: newParentData
-        //         }
-        //     })
-        // }
         if (type == "OPENER") {
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
             const parentData = getState().appStore.slateLevelData;
@@ -215,92 +200,6 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         }
     })
 }
-
-/**
- * Calls Powerpaste API and appends elements to the slate
- * @param {Array} powerPasteData Elements to be pasted
- * @param {Number} index index of insertion
- */
-export const createPowerPasteElements = (powerPasteData, index) => async (dispatch, getState) => {
-    let data = []
-    let slateEntityUrn = config.slateEntityURN
-    sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-    const parentData = getState().appStore.slateLevelData;
-    const newParentData = JSON.parse(JSON.stringify(parentData));
-    const currentSlateData = newParentData[config.slateManifestURN]
-    localStorage.setItem('newElement', 1);
-    let _requestData = {
-        "content":data
-    };
-    let indexOfInsertion = index
-    powerPasteData.forEach(pastedElement => {
-        const newElement = {
-            "html" : {
-                text: pastedElement.html
-            },
-            ...slateWrapperConstants.elementDataByTag[pastedElement.tagName],
-            index: indexOfInsertion++
-        }
-        data.push(newElement)
-    });
-
-    try {
-        const url = `${config.REACT_APP_API_URL}v1/content/project/${config.projectUrn}/container/${slateEntityUrn}/powerpaste?index=${index}`
-        const response = await axios.post(url, JSON.stringify(_requestData), {
-            headers: {
-                "Content-Type": "application/json",
-                "PearsonSSOSession": config.ssoToken
-            }
-        })
-
-        /** -------------------------- TCM Snapshot Data handling ------------------------------*/
-        let indexOfElement = 0
-        while (indexOfElement < response.data.length) {
-            if (slateWrapperConstants.elementType.indexOf("TEXT") !== -1){
-                const containerElement = {
-                    asideData: null,
-                    parentUrn: null,
-                    poetryData: null
-                };
-                const slateData = {
-                    currentParentData: newParentData,
-                    bodymatter: currentSlateData.contents.bodymatter,
-                    response: response.data[indexOfElement]
-                };
-                if (currentSlateData.status === 'approved') {
-                    await tcmSnapshotsForCreate(slateData, "TEXT", containerElement, dispatch);
-                }
-                else {
-                    tcmSnapshotsForCreate(slateData, "TEXT", containerElement, dispatch);
-                }
-
-                config.tcmStatus && prepareDataForTcmCreate("TEXT", response.data[indexOfElement], getState, dispatch);
-            }
-            indexOfElement++
-        }
-
-        if (currentSlateData.status === 'approved') {
-            sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
-            sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
-            return false;
-        }
-
-        newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, ...response.data); 
-        
-        dispatch({
-            type: AUTHORING_ELEMENT_CREATED,
-            payload: {
-                slateLevelData: newParentData
-            }
-        });
-        sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
-    } catch (error) {
-        console.error("Error in Powerpaste", error)
-        sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
-    }
-    
-}
-
 
 export const swapElement = (dataObj, cb) => (dispatch, getState) => {
     const { oldIndex, newIndex, currentSlateEntityUrn, swappedElementData, containerTypeElem, asideId, poetryId} = dataObj;
@@ -465,14 +364,13 @@ export const handleSplitSlate = (newSlateObj) => (dispatch, getState) => {
         }
     ).then(res => {
         // Perform TCM splitSlate
-        /**
         axios({
             method: 'patch',
             url: '/cypress/trackchanges-srvr/splitslatetcm',
             timeout: 1000,
             headers: { "Content-Type": "application/json", "PearsonSSOSession": config.ssoToken },
             data: {
-                "splitSlateDurn": config.projectUrn, "splitSlateEurn": newSlateObj.entityUrn, "oldSlateUrn": config.slateManifestURN
+                "splitSlateDurn": config.projectUrn, "splitSlateEurn": newSlateObj.entityUrn
             }
         })
         .then(response => {
@@ -481,7 +379,6 @@ export const handleSplitSlate = (newSlateObj) => (dispatch, getState) => {
         .catch(error => {
             console.log("TCM split slate API error : ", error)
         })
-        */
         // Update selection store data after split
         let selection = getState().selectionReducer.selection || {};
         if(Object.keys(selection).length > 0 && selection.sourceSlateEntityUrn === config.slateEntityURN && selection.sourceElementIndex >= splitIndex) {
@@ -849,17 +746,6 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                 }]
             }
         }
-        
-        const acceptedTypes=["element-aside","citations","poetry","groupedcontent"]
-        if(acceptedTypes.includes(selection.element.type) && selection.element.subtype !== "workedexample") {
-            const payloadParams = {
-                ...params,
-                cutIndex,
-                selection
-            }
-            const { setPayloadForContainerCopyPaste } = (await import("./slateWrapperAction_helper.js"))
-            _requestData = setPayloadForContainerCopyPaste(payloadParams)
-        }
 
         if('manifestationUrn' in selection.element) {
             _requestData = {
@@ -871,7 +757,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
         }
 
         try {
-            let url = `${config.REACT_APP_API_URL}v1/projects/${config.projectUrn}/containers/${slateEntityUrn}/element/paste?type=${selection.operationType.toUpperCase()}`
+            let url = `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/slate/${slateEntityUrn}/element/paste?type=${selection.operationType.toUpperCase()}`
             const createdElemData = await axios.post(
                 url,
                 JSON.stringify(_requestData),
@@ -884,13 +770,6 @@ export const pasteElement = (params) => async (dispatch, getState) => {
             )
             if (createdElemData && createdElemData.status == '200') {
                 let responseData = Object.values(createdElemData.data)
-
-                const figureTypes = ["image", "mathImage", "table", "video", "audio"]
-                if((responseData[0]?.type === "figure") && figureTypes.includes(responseData[0]?.figuretype) ){
-                    const elementId = responseData[0].id
-                    handleAlfrescoSiteUrl(elementId, selection.alfrescoSiteData)   
-                }
-                
                 const pasteSuccessArgs = {
                     responseData: responseData[0],
                     index,
@@ -904,19 +783,12 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                     slateEntityUrn
                 };
         
-                await onPasteSuccess(pasteSuccessArgs)
-                if (responseData[0].elementdata?.type === "blockquote") {  
-                    setTimeout(() => {
-                        const node1 = document.querySelector(`[data-id="${responseData[0].id}"]`)
-                        const node2 = node1?.querySelector(`.paragraphNummerEins`)
-                        node2?.focus()
-                    }, 200)
-                }
+                onPasteSuccess(pasteSuccessArgs)
             }
         }
         catch(error) {
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
-            console.error("Exceptional Error on pasting the element:::", error);
+            console.log("Exceptional Error on pasting the element:::", error);
         }
     }
 }
@@ -925,43 +797,4 @@ export const wirisAltTextPopup = (data) => (dispatch) => {
         type: WIRIS_ALT_TEXT_POPUP,
         payload: data
     })
-}
-
-/**
- * Calls the clone API to get the request ID
- * @param {*} insertionIndex index of insertion
- * @param {*} manifestUrn container urn
- */
-export const cloneContainer = (insertionIndex, manifestUrn) => async (dispatch) => {
-
-    try {
-        //Clone container
-        const cloneApiUrl = `${config.AUDIO_NARRATION_URL}container/${manifestUrn}/clone`
-        const cloneResponse = await axios.post(
-            cloneApiUrl,
-            null,
-            {
-                headers: {
-                    "ApiKey": config.STRUCTURE_APIKEY,
-                    "Accept": "application/json",
-                    "Content-Type": "application/json",
-                    "PearsonSSOSession": config.ssoToken
-                }
-            }
-        )
-        const requestId = cloneResponse.data.message.split(",")[1].replace(" request id:","")
-
-        //Fetch Status
-        const fetchAndPasteArgs = {
-            insertionIndex,
-            requestId,
-            dispatch,
-            pasteElement
-        }
-        await (await import("./slateWrapperAction_helper.js")).fetchStatusAndPaste(fetchAndPasteArgs)  
-    }
-    catch(error) {
-        sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
-        console.error("Error in cloning the container:::", error);
-    }
 }
