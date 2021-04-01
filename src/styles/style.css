@@ -267,7 +267,7 @@ P.paragraphNumeroUnoIndentLevel1, P.paragraphNumeroUnoIndentLevel2, P.paragraphN
     font-family: 'Open Sans',sans-serif;
     cursor: pointer;
 }
-.learningobjectivedropdown li.disable-buttton {
+.learningobjectivedropdown li.disable-buttton .learningobjectivedropdown2{
     pointer-events: none;
     opacity: 0.6;
     cursor: not-allowed;

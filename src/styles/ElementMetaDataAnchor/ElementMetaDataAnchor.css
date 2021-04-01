@@ -93,5 +93,9 @@ div.learningObjectiveContainer .Container {
 }
 
 .lo-navigation-icon {
-    margin-left: 3px;
-  }
+    margin: 0px 2px 0px 6px;
+}
+
+svg#lo-next-icon :hover{
+    background-color: 'transparent' !important;
+}
