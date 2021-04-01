@@ -71,6 +71,10 @@ export const checkTCM = element => {
 
         case "element-aside": return CONTAINER;
 
+        case "poetry": return POETRY;
+        case "citations": return CITATION;
+        case "groupedcontent": return MULTI_COLUMN;
+        case "group": return MULTI_COLUMN_GROUP;
         default: return TEXT;
     }
 }

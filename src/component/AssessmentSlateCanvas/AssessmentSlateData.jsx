@@ -13,7 +13,7 @@ import config from '../../config/config';
 import './../../styles/AssessmentSlateCanvas/AssessmentSlateCanvas.css';
 import { sendDataToIframe, hasReviewerRole, defaultMathImagePath } from '../../constants/utility.js';
 import { TAXONOMIC_ID_DISCIPLINES } from './learningTool/learningToolUtility.js';
-import { assessmentFormats, CITE, TDX, PUF, LEARNING_TEMPLATE, LEARNOSITY, ELM_UPDATE_MSG, ELM_UPDATE_POPUP_HEAD, ELM_UPDATE_BUTTON } from './AssessmentSlateConstants.js';
+import { assessmentFormats, CITE, TDX, PUF, LEARNING_TEMPLATE, LEARNOSITY, ELM_UPDATE_MSG, ELM_UPDATE_POPUP_HEAD, ELM_UPDATE_BUTTON, FULL_ASSESSMENT_LEARNOSITY } from './AssessmentSlateConstants.js';
 /** ----- Import - Action Creators ----- */
 import { setCurrentCiteTdx, assessmentSorting, setAssessmentFilterParams } from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
 import { closeLtAction, openLtAction, openLTFunction, fetchLearningTemplates } from './learningTool/learningToolActions';
@@ -419,12 +419,13 @@ class AssessmentSlateData extends Component {
         let assessmentTypeValue;
         if (Object.values(assessmentFormats).length > 0) {
              let assessmentData = Object.values(assessmentFormats);
-              if(!(this.props.isLearnosityProject && this.props.isLearnosityProject[0]?.ItemBankName)){
-                    assessmentData.splice(4,1)
-                }
-            assessmentTypeValue = assessmentData.map((type, i) =>
-                <li key={i} className="slate_assessment_dropdown_name" onClick={(e) => this.handleAssessmentTypeChange(type, e)}>{type}</li>
-            )
+            assessmentTypeValue = assessmentData.map((type, i) =>{
+            let addClass = '';
+            if(type === FULL_ASSESSMENT_LEARNOSITY){
+                addClass='disabled'
+            }
+               return <li key={i} className= {`slate_assessment_dropdown_name ${addClass}`} onClick={(e) => this.handleAssessmentTypeChange(type, e)}>{type}</li>
+            })
         }
         return assessmentTypeValue
     }
