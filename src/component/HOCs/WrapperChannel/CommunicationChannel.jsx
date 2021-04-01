@@ -14,7 +14,7 @@ import { releaseSlateLockWithCallback, getSlateLockStatusWithCallback } from '..
 import PopUp from '../../PopUp';
 import { loadTrackChanges } from '../../CanvasWrapper/TCM_Integration_Actions';
 import { ALREADY_USED_SLATE_TOC } from '../../SlateWrapper/SlateWrapperConstants'
-import { prepareLODataForUpdate, setCurrentSlateLOs } from '../../ElementMetaDataAnchor/ExternalLO_helpers.js';
+import { prepareLODataForUpdate, setCurrentSlateLOs, getSlateMetadataAnchorElem, prepareLO_WIP_Data } from '../../ElementMetaDataAnchor/ExternalLO_helpers.js';
 function CommunicationChannel(WrappedComponent) {
     class CommunicationWrapper extends Component {
         constructor(props) {
@@ -241,6 +241,12 @@ function CommunicationChannel(WrappedComponent) {
                 case 'statusForExtLOSave':
                     this.handleExtLOData(message);
                     break;
+                case 'currentSlateLOAfterWarningPopup':
+                    this.handleLOAfterWarningPopup(message)
+                    break;
+                case 'unlinkLOFailForWarningPopup':
+                    this.handleUnlinkedLOData(message)
+                    break;
             }
         }
 
@@ -357,6 +363,77 @@ function CommunicationChannel(WrappedComponent) {
             })
         }
 
+        handleLOAfterWarningPopup = (message) => {
+            /** Cancel button Click Unlink All LOs from MA Elements */
+            if (message.unlinkStatus == true) {
+                this.handleUnlinkedLOData(message)
+            }
+            /** Save button Click */
+            else if (message.currentSlateLF == 'externalLF') { /** Add new Ext LOs */
+                this.handleExtLOData(message)
+            }
+            else {                                            /** Add new Cypress LOs */
+                this.handleUnlinkedLODataCypress(message)
+            }
+        }
+
+        handleUnlinkedLODataCypress = (message) => {
+            if (message.statusForSave) {
+                let slateData = this.props.slateLevelData;
+                const newSlateData = JSON.parse(JSON.stringify(slateData));
+                const bodymatter = newSlateData[config.slateManifestURN].contents.bodymatter;
+                let slateLOElems = getSlateMetadataAnchorElem(bodymatter);
+                message?.unlinkedLOs.forEach((loItem, index) => {
+                    let metadataElems = slateLOElems.filter(metadataElem => metadataElem.loUrn === loItem);
+                    if (metadataElems.length) {
+                        let LOWipData = prepareLO_WIP_Data("unlink", "", metadataElems, config.slateManifestURN);
+                        if (index == 0) {
+                            LOWipData.elementdata.loref = message.loObj ? message.loObj.id ? message.loObj.id : message.loObj.loUrn : "";
+                        }
+                        this.props.updateElement(LOWipData);
+                    }
+                })
+                this.props.isLOExist(message);
+                this.props.currentSlateLOType("cypressLF");
+                this.props.currentSlateLO([message.loObj ?? {}]);
+                this.props.currentSlateLOMath([message.loObj ?? {}]);
+            }
+        }
+        /**
+         * This function is responsible for handling the unlinked LOs w.r.t. Slate 
+         * and updating the Metadata Anchor Elements on Slate after warning Popup Action
+         * @param {*} message Event Message on Saving Ext LF LO data for Slate
+         */
+        handleUnlinkedLOData = (message) => {
+            let slateData = this.props.slateLevelData;
+            const newSlateData = JSON.parse(JSON.stringify(slateData));
+            const bodymatter = newSlateData[config.slateManifestURN].contents.bodymatter;
+            let slateLOElems = getSlateMetadataAnchorElem(bodymatter);
+            let loDataToUpdate = [];
+            /** Update All Metadata Anchor Elements for LOs Unlinked */
+            message?.loUnlinked.forEach(loItem => {
+                let metadataElems = slateLOElems.filter(metadataElem => metadataElem.loUrn === loItem);
+                if (metadataElems.length) {
+                    let LOWipData = prepareLO_WIP_Data("unlink", "", metadataElems, config.slateManifestURN);
+                    loDataToUpdate = loDataToUpdate.concat(metadataElems)
+                    this.props.updateElement(LOWipData);
+                }
+            })
+            /** When All Slate LOs unlinked but no new LO linked */
+            if (message && message.unlinkStatus === true && message.currentSlateLF === "") {
+                this.props.currentSlateLO([]);
+                this.props.currentSlateLOMath([]);
+                this.props.currentSlateLOType("");
+            }
+            /** When All Slate LOs not unlinked */
+            else if (message && message.unlinkStatus === false) {
+                this.props.currentSlateLOType(message.currentSlateLF);
+                const existingSlateLOs = this.props.currentSlateLOData
+                const updatedSlateLOs = existingSlateLOs.filter(existingLO => message?.unlinkedLOs?.indexOf(existingLO.id) < 0);
+                this.props.currentSlateLO(updatedSlateLOs);
+                this.props.currentSlateLOMath(updatedSlateLOs);
+            }
+        }
         /**
          * This function is responsible for handling the updated LOs w.r.t. Slate 
          * and updating the Metadata Anchor Elements on Slate
@@ -382,7 +459,13 @@ function CommunicationChannel(WrappedComponent) {
                         this.props.updateElement(loUpdate)
                     });
                 }
-                const updatedSlateLOs = setCurrentSlateLOs(this.props.currentSlateLOData, message.loUnlinked, newLOsLinked);
+                let updatedSlateLOs = []
+                if (message?.loUnlinked?.length && typeof message.loUnlinked[0] === 'string') {
+                    const existingSlateLOs = this.props.currentSlateLOData
+                    updatedSlateLOs = existingSlateLOs.filter(existingLO => message?.loUnlinked?.indexOf(existingLO.id) < 0);
+                } else {
+                    updatedSlateLOs = setCurrentSlateLOs(this.props.currentSlateLOData, message.loUnlinked, newLOsLinked);
+                }
                 this.props.currentSlateLO(updatedSlateLOs);
                 this.props.currentSlateLOMath(updatedSlateLOs);
                 this.props.currentSlateLOType(updatedSlateLOs.length ? "externalLF" : "");
@@ -390,12 +473,12 @@ function CommunicationChannel(WrappedComponent) {
         }
         handleLOData = (message) => {
             if (message.statusForSave) {
-                message.loObj ? this.props.currentSlateLOMath(message.loObj.label.en) : this.props.currentSlateLOMath("");
+                message.loObj ? this.props.currentSlateLOMath([message.loObj.label.en]) : this.props.currentSlateLOMath("");
                 if (message.loObj && message.loObj.label && message.loObj.label.en) {
                     const regex = /<math.*?data-src=\'(.*?)\'.*?<\/math>/g
                     message.loObj.label.en = message.loObj.label.en.replace(regex, "<img src='$1'></img>");
                 }
-                message.loObj ? this.props.currentSlateLO(message.loObj) : this.props.currentSlateLO(message);
+                message.loObj ? this.props.currentSlateLO([message.loObj]) : this.props.currentSlateLO([message]);
                 this.props.currentSlateLOType(message.loObj ? "cypressLF" : "");
                 this.props.isLOExist(message);
                 let slateData = this.props.slateLevelData;
@@ -419,7 +502,8 @@ function CommunicationChannel(WrappedComponent) {
                         })
                     }
                 });
-                let loUrn = this.props.currentSlateLOData.id ? this.props.currentSlateLOData.id : this.props.currentSlateLOData.loUrn;
+                let currentSlateLOs = Array.isArray(this.props.currentSlateLOData) ? this.props.currentSlateLOData[0] : this.props.currentSlateLOData;
+                let loUrn = currentSlateLOs.id ? currentSlateLOs.id : currentSlateLOs.loUrn;
                 let LOWipData = {
                     "elementdata": {
                         "loref": loUrn

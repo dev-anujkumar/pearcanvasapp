@@ -63,6 +63,8 @@ export class ElementMetaDataAnchor extends Component {
     let loData = ""
     if (this.props?.currentSlateLOData && Array.isArray(this.props.currentSlateLOData)) {
       loData = this.props?.currentSlateLOData?.find(learningObj => (learningObj?.loUrn == this.props?.element?.elementdata?.loref || learningObj?.id == this.props?.element?.elementdata?.loref))
+    } else if (this.props?.currentSlateLOData) {
+      loData = this.props.currentSlateLOData
     }
     if (document.getElementsByClassName('learningObjectiveinnerText').length > 0) {
       let element = document.getElementsByClassName('learningObjectiveinnerText');
