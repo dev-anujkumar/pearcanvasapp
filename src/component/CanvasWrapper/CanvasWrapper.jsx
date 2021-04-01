@@ -272,7 +272,8 @@ const mapStateToProps = state => {
         withinLockPeriod: state.slateLockReducer.withinLockPeriod,
         ErrorPopup: state.errorPopup,
         pageNumberToggle: state.toolbarReducer.pageNumberToggle,
-        audioGlossaryData:state.audioReducer.audioGlossaryData
+        audioGlossaryData:state.audioReducer.audioGlossaryData,
+        currentSlateLF: state.metadataReducer.currentSlateLF
     };
 };
 

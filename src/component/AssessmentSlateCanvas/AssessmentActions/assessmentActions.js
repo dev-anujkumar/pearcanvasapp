@@ -165,7 +165,7 @@ export const openElmAssessmentPortal = (assessmentData) => (dispatch) => {
  * @param updatedWorkUrn latest workURN of the assessment
  */
 export const updateAssessmentVersion = (oldWorkUrn, updatedWorkUrn) => dispatch => {
-    let url = `${config.STRUCTURE_API_URL}vcs-api/v1/content/${config.projectUrn}/updateAssessments/${oldWorkUrn}/${updatedWorkUrn}`;
+    let url = `${config.VCS_API_ENDPOINT}${config.projectUrn}/updateAssessments/${oldWorkUrn}/${updatedWorkUrn}`;
     dispatch(saveAutoUpdateData("",""));
     return axios.post(url, {}, {
         headers: {

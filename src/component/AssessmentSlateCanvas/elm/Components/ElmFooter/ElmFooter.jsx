@@ -6,11 +6,12 @@ import '../../../../../styles/AssessmentSlateCanvas/elm/ElmTable.css';
 import {
   elmAssessmentItem,
   singleAssessmentItemIcon,
-  elmInteractiveIcon
+  elmInteractiveIcon,
+  learnosityIcon
 } from "../../../../../images/ElementButtons/ElementButtons.jsx";
 import config from "../../../../../config/config";
 import { handlePostMsgOnAddAssess } from '../../../../ElementContainer/AssessmentEventHandling';
-import { ELM_INT, ASSESSMENT_PICKER_OPENERS } from '../../../AssessmentSlateConstants.js';
+import { ELM_INT, LEARNOSITY, ASSESSMENT_PICKER_OPENERS } from '../../../AssessmentSlateConstants.js';
 
 const ElmFooter = (props) => {
   const { buttonText, sendPufAssessment, closeElmWindow, openAssessmentSearchBar,
@@ -82,16 +83,27 @@ const ElmFooter = (props) => {
       }
   }
 
+  const setCreateButtonIcon = () => {
+    let newIcon,
+    createButtonClass='';
+    if (openItemTable) {     
+      createButtonClass = activeAssessmentType === LEARNOSITY ? "learnosity-assessment" : "puf-assessment"
+      newIcon = activeAssessmentType === LEARNOSITY ? learnosityIcon : singleAssessmentItemIcon;
+    } else {
+      createButtonClass = hideSearch ? "puf-assessment" : "";
+      newIcon = activeAssessmentType === ELM_INT ? elmInteractiveIcon : elmAssessmentItem;
+    }    
+    return {newIcon,createButtonClass};
+  }
   return (
     <div className="puf-footer">
       {!errorNoElmItem && <button className={`puf-button search-button ${hideSearch ? "puf-assessment" : ""}`} onClick={openSearchBar}>SEARCH</button>}
       {/* Create new Assessment/Item from Cypress */}
-      <button className="puf-button create-button" onClick={openElmPortal} disabled={activeRadioIndex !== null} >
+      <button className={`puf-button create-button ${setCreateButtonIcon().createButtonClass}`} onClick={openElmPortal} disabled={activeRadioIndex !== null} >
         <span className="elm-create-button-icons">
-          {openItemTable ? singleAssessmentItemIcon :
-            (activeAssessmentType === ELM_INT) ? elmInteractiveIcon : elmAssessmentItem}
+          {setCreateButtonIcon().newIcon}
         </span>
-        <span>NEW</span>
+        <span className={`${setCreateButtonIcon().createButtonClass}`}>NEW</span>
       </button>
       { !errorNoElmItem && (<>
           <button className={`puf-button add-button ${addFlag ? 'add-button-enabled' : ''}`} disabled={!addFlag} onClick={sendPufAssessment} onFocus={handleFocus}>{buttonText}</button>
