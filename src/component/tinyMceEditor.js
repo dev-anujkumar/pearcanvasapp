@@ -2744,18 +2744,10 @@ export class TinyMceEditor extends Component {
             toolbar = config.popupCallToActionToolbar
         }
         else if (["Enter Label...", "Enter call to action..."].includes(this.props.placeholder) || (this.props.element && this.props.element.subtype == 'mathml' && this.props.placeholder === "Type something...")) {
-            //, "Enter Act Title...", "Enter Scene Title...", "Enter Dialogue..."
             toolbar = (this.props.element && (this.props.element.type === 'poetry' || this.props.element.type === 'popup' || this.props.placeholder === 'Enter call to action...')) ? config.poetryLabelToolbar : config.labelToolbar;
         }
         else if (this.props.placeholder === "Enter Caption..." || this.props.placeholder === "Enter Credit...") {
-            //if (this.props.element.type === "element-dialogue") {
-            //    const creditToolbar = [...config.poetryCaptionToolbar]
-            //    creditToolbar.push("footnote")
-            //    toolbar = creditToolbar
-            //}
-            //else {
                 toolbar = (this.props.element && this.props.element.type === 'poetry') ? config.poetryCaptionToolbar : config.captionToolbar;
-            //}
         } else if (this.props.placeholder === "Enter block code...") {
             let syntaxEnabled = document.querySelector('.panel_syntax_highlighting .switch input');
             if (syntaxEnabled && syntaxEnabled.checked) {

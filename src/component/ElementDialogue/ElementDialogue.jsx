@@ -10,22 +10,13 @@ import config from "../../config/config.js";
 import { sendDataToIframe, removeBlankTags, removeClassesFromHtml } from '../../constants/utility.js';
 import { createPSDataForUpdateAPI } from './DialogueElementUtils';
 
-class ElementDialogue extends React.Component {
+class ElementDialogue extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
             selectedInnerElementIndex: null
         }
     }
-    //const [selectedInnerElementIndex, setInnerElementIndex] = useState(null)
-    //const elementIndex = this.props.index;
-    // if (props.activeElement !== props.elementId) setInnerElementIndex(null)
-    /**
-     * 
-        @renderDialogueContent | This function used to render Dialogue Content
-        @param _props | This contains the props object 
-    **/
-
 
     addElement = (psIndex, psElementIndex, data, oldPSData) => {
         const dialogueContent = oldPSData.html.dialogueContent;
@@ -38,7 +29,6 @@ class ElementDialogue extends React.Component {
             }
         }
         this.callUpdateApi(newPsElement);
-
     }
 
     deleteElement = (psIndex, psElementIndex, oldPSData) => {
@@ -52,9 +42,12 @@ class ElementDialogue extends React.Component {
             }
         }
         this.callUpdateApi(newPsElement);
-
     }
-
+    /**
+     * 
+        @renderDialogueContent | This function used to render Dialogue Content
+        @param _props | This contains the props object 
+    **/
     renderDialogueContent = (_props) => {
         let dialogueContent = _props.element?.html?.dialogueContent;
         if (dialogueContent !== null && dialogueContent !== undefined) {
@@ -73,7 +66,6 @@ class ElementDialogue extends React.Component {
                             <div
                                 className={`element-container ${this.setBorderToggle(_props.borderToggle, index, this.state.selectedInnerElementIndex)}`}
                                 data-id={_props.elementId}
-                            // onClick={handleInnerFocus}
                             >
                                 <DialogueContent
                                     index={index}
@@ -101,7 +93,6 @@ class ElementDialogue extends React.Component {
                             elementIndex={this.props.index}
                             element={_props.element}
                             addElement={this.addElement}
-                            // esProps={_props.elementSepratorProps(index, false, parentUrn, "", _props.index, null)}
                             elementType="element-dialogue"
                             sectionBreak={false}
                             permissions={_props.permissions}
@@ -155,7 +146,6 @@ class ElementDialogue extends React.Component {
                             (<Button
                                 type="delete-element"
                                 onClick={(e) => {
-                                    //console.log("i will delete", index);
                                     this.deleteElement(this.props.index, index, element);
                                     // deleteElement(elementIndex, index, element);
                                     // show delete element popup
@@ -179,11 +169,8 @@ class ElementDialogue extends React.Component {
      */
     handleInnerFocus = (c2Flag, showHideObj, event, index) => {
         event.stopPropagation()
-        // props.element
         this.setState({ selectedInnerElementIndex: index })
         this.props.handleFocus(c2Flag, showHideObj, event)
-        // props.setLastSavedPSData(props.element)
-
     }
 
     /**
@@ -195,8 +182,6 @@ class ElementDialogue extends React.Component {
     handleOuterFocus = (c2Flag, showHideObj, event) => {
        this.setState({ selectedInnerElementIndex: null })
         this.props.handleFocus(c2Flag, showHideObj, event)
-        // props.setLastSavedPSData(props.element)
-
     }
 
     handleOuterBlur = (field, eventTarget) => {
@@ -242,7 +227,6 @@ class ElementDialogue extends React.Component {
             element: this.props.element,
             slateLockInfo: this.props.slateLockInfo,
             elementId: this.props.elementId,
-            // handleBlur: props.handleBlur,
             handleEditorFocus: this.handleOuterFocus
         }
         return (
@@ -254,7 +238,7 @@ class ElementDialogue extends React.Component {
                             <header className="figure-header">
                                 <TinyMceEditor
                                     {...copmpProps}
-                                    index={`${this.props.index}-0`}
+                                    index={`${this.props.index}-Act-Title`}
                                     placeholder="Enter Act Title..."
                                     tagName={'h4'}
                                     className={" figureLabel "}
@@ -264,7 +248,7 @@ class ElementDialogue extends React.Component {
                                 />
                                 <TinyMceEditor
                                     {...copmpProps}
-                                    index={`${this.props.index}-1`}
+                                    index={`${this.props.index}-Scene-Title`}
                                     placeholder="Enter Scene Title..."
                                     tagName={'h4'}
                                     className={" figureTitle "}
@@ -279,7 +263,6 @@ class ElementDialogue extends React.Component {
                                     element={this.props.element}
                                     elementIndex={this.props.index}
                                     firstOne={true}
-                                    // esProps={_props.elementSepratorProps(0, true, parentUrn, "", _props.index, null)}
                                     elementType="element-dialogue"
                                     sectionBreak={false}
                                     permissions={this.props.permissions}
@@ -293,7 +276,7 @@ class ElementDialogue extends React.Component {
                         <div>
                             <TinyMceEditor
                                 {...copmpProps}
-                                index={`${this.props.index}-4`}
+                                index={`${this.props.index}-Credit`}
                                 placeholder="Enter Credit..."
                                 tagName={'p'}
                                 className={" figureCredit "}
