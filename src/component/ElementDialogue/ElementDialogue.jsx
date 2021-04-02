@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment } from 'react';
 import Button from './../ElementButtons';
 import TinyMceEditor from "../tinyMceEditor";
 import DialogueContent from './DialogueContent.jsx';
@@ -10,10 +10,15 @@ import config from "../../config/config.js";
 import { sendDataToIframe, removeBlankTags, removeClassesFromHtml } from '../../constants/utility.js';
 import { createPSDataForUpdateAPI } from './DialogueElementUtils';
 
-const ElementDialogue = (props) => {
-
-    const [selectedInnerElementIndex, setInnerElementIndex] = useState(null)
-    const elementIndex = props.index;
+class ElementDialogue extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            selectedInnerElementIndex: null
+        }
+    }
+    //const [selectedInnerElementIndex, setInnerElementIndex] = useState(null)
+    //const elementIndex = this.props.index;
     // if (props.activeElement !== props.elementId) setInnerElementIndex(null)
     /**
      * 
@@ -22,7 +27,7 @@ const ElementDialogue = (props) => {
     **/
 
 
-    const addElement = (psIndex, psElementIndex, data, oldPSData) => {
+    addElement = (psIndex, psElementIndex, data, oldPSData) => {
         const dialogueContent = oldPSData.html.dialogueContent;
         dialogueContent.splice(psElementIndex, 0, data);
         const newPsElement = {
@@ -32,11 +37,11 @@ const ElementDialogue = (props) => {
                 dialogueContent
             }
         }
-        callUpdateApi(newPsElement);
+        this.callUpdateApi(newPsElement);
 
     }
 
-    const deleteElement = (psIndex, psElementIndex, oldPSData) => {
+    deleteElement = (psIndex, psElementIndex, oldPSData) => {
         const dialogueContent = oldPSData.html.dialogueContent;
         dialogueContent.splice(psElementIndex, 1);
         const newPsElement = {
@@ -46,11 +51,11 @@ const ElementDialogue = (props) => {
                 dialogueContent
             }
         }
-        callUpdateApi(newPsElement);
+        this.callUpdateApi(newPsElement);
 
     }
 
-    const renderDialogueContent = (_props) => {
+    renderDialogueContent = (_props) => {
         let dialogueContent = _props.element?.html?.dialogueContent;
         if (dialogueContent !== null && dialogueContent !== undefined) {
             const buttonClass = _props.btnClassName.replace("activeTagBgColor", "")
@@ -64,23 +69,23 @@ const ElementDialogue = (props) => {
                             onMouseOut={_props.handleOnMouseOut}
                             onClickCapture={(e) => _props.onClickCapture(e)}
                         >
-                            {renderButtons(index, buttonClass, labelText, _props.element)}
+                            {this.renderButtons(index, buttonClass, labelText, _props.element)}
                             <div
-                                className={`element-container ${setBorderToggle(_props.borderToggle, index, selectedInnerElementIndex)}`}
+                                className={`element-container ${this.setBorderToggle(_props.borderToggle, index, this.state.selectedInnerElementIndex)}`}
                                 data-id={_props.elementId}
                             // onClick={handleInnerFocus}
                             >
                                 <DialogueContent
                                     index={index}
-                                    elementIndex={elementIndex}
+                                    elementIndex={this.props.index}
                                     labelText={labelText}
                                     element={_props.element}
                                     elementId={_props.element.id}
                                     model={_props?.element?.html?.dialogueContent}
                                     type={_props.type}
                                     permissions={_props.permissions}
-                                    handleBlur={updateSD_DE}
-                                    handleFocus={(...args) => handleInnerFocus(...args, index)}
+                                    handleBlur={this.updateSD_DE}
+                                    handleFocus={(...args) => this.handleInnerFocus(...args, index)}
                                     btnClassName={_props.btnClassName}
                                     borderToggle={_props.borderToggle}
                                     elemBorderToggle={_props.elemBorderToggle}
@@ -93,9 +98,9 @@ const ElementDialogue = (props) => {
                             </div>
                         </div>
                         <DialogueSeprator index={index}
-                            elementIndex={elementIndex}
+                            elementIndex={this.props.index}
                             element={_props.element}
-                            addElement={addElement}
+                            addElement={this.addElement}
                             // esProps={_props.elementSepratorProps(index, false, parentUrn, "", _props.index, null)}
                             elementType="element-dialogue"
                             sectionBreak={false}
@@ -114,8 +119,8 @@ const ElementDialogue = (props) => {
      * @param {*} elemBorderToggleFromProp Slate level border based on toggle
      * @param {*} borderToggleFromState Element level border based on focus
      */
-    const setBorderToggle = (elemBorderToggleFromProp, index, selectedInnerIndex) => {
-        const borderToggleFromState = index === selectedInnerIndex && props.activeElement.elementId === props.elementId ? "active" : ""
+    setBorderToggle = (elemBorderToggleFromProp, index, selectedInnerIndex) => {
+        const borderToggleFromState = index === selectedInnerIndex && this.props.activeElement.elementId === this.props.elementId ? "active" : ""
         if (elemBorderToggleFromProp !== 'undefined' && elemBorderToggleFromProp) {
             if (borderToggleFromState === 'active' && elemBorderToggleFromProp !== "showBorder") {
                 return borderToggleFromState
@@ -136,22 +141,22 @@ const ElementDialogue = (props) => {
         }
     }
 
-    const renderButtons = (index, buttonClass, labelText, element) => {
-        if ((props.elemBorderToggle !== undefined && props.elemBorderToggle) || props.borderToggle == 'active') {
+    renderButtons = (index, buttonClass, labelText, element) => {
+        if ((this.props.elemBorderToggle !== undefined && this.props.elemBorderToggle) || this.props.borderToggle == 'active') {
             return (
                 <div>
                     <Button
                         type="element-label"
-                        btnClassName={`${buttonClass} ${index === selectedInnerElementIndex && props.borderToggle !== "showBorder" ? "activeTagBgColor" : ""}`}
+                        btnClassName={`${buttonClass} ${index === this.state.selectedInnerElementIndex && this.props.borderToggle !== "showBorder" ? "activeTagBgColor" : ""}`}
                         labelText={labelText}
                     />
                     {
-                        props.permissions && props.permissions.includes('elements_add_remove') ?
+                        this.props.permissions && this.props.permissions.includes('elements_add_remove') ?
                             (<Button
                                 type="delete-element"
                                 onClick={(e) => {
-                                    console.log("i will delete", index);
-                                    deleteElement(elementIndex, index, element);
+                                    //console.log("i will delete", index);
+                                    this.deleteElement(this.props.index, index, element);
                                     // deleteElement(elementIndex, index, element);
                                     // show delete element popup
                                     // props.showDeleteElemPopup(e, true)
@@ -172,11 +177,11 @@ const ElementDialogue = (props) => {
      * @param {*} event Event object
      * @param {*} index 
      */
-    const handleInnerFocus = (c2Flag, showHideObj, event, index) => {
+    handleInnerFocus = (c2Flag, showHideObj, event, index) => {
         event.stopPropagation()
         // props.element
-        setInnerElementIndex(index)
-        props.handleFocus(c2Flag, showHideObj, event)
+        this.setState({ selectedInnerElementIndex: index })
+        this.props.handleFocus(c2Flag, showHideObj, event)
         // props.setLastSavedPSData(props.element)
 
     }
@@ -187,115 +192,120 @@ const ElementDialogue = (props) => {
      * @param {*} showHideObj 
      * @param {*} event Event object
      */
-    const handleOuterFocus = (c2Flag, showHideObj, event) => {
-        setInnerElementIndex(null)
-        props.handleFocus(c2Flag, showHideObj, event)
+    handleOuterFocus = (c2Flag, showHideObj, event) => {
+       this.setState({ selectedInnerElementIndex: null })
+        this.props.handleFocus(c2Flag, showHideObj, event)
         // props.setLastSavedPSData(props.element)
 
     }
 
-    const handleOuterBlur = (field, eventTarget) => {
-        let newPSData = JSON.parse(JSON.stringify(props.element)) || {};
+    handleOuterBlur = (field, eventTarget) => {
+        let newPSData = JSON.parse(JSON.stringify(this.props.element)) || {};
         if(newPSData?.html?.hasOwnProperty(field)){
             newPSData.html[field] = `<p>${removeBlankTags(eventTarget?.innerHTML)}</p>`  
-            if (removeClassesFromHtml(props.element.html?.[field]) !== removeClassesFromHtml(newPSData.html[field]) && !config.savingInProgress) {
+            if (removeClassesFromHtml(this.props.element.html?.[field]) !== removeClassesFromHtml(newPSData.html[field]) && !config.savingInProgress) {
                 // create data and call update API
-                callUpdateApi(newPSData);
+                this.callUpdateApi(newPSData);
             }
         }
     }
 
 
     /* @@updateSD_DE - To update the data of SD and DE Element Data */
-    const updateSD_DE = (field, data, index) => {
-        let newPSData = JSON.parse(JSON.stringify(props.element)) || {};
-        newPSData.html.dialogueContent[index] = data;
-
-        if (removeClassesFromHtml(props.element?.html?.dialogueContent[index][field]) !==
-            removeClassesFromHtml(newPSData.html?.dialogueContent[index][field]) &&
-            !config.savingInProgress) {
-            // create data and call update API
-            callUpdateApi(newPSData);
+    updateSD_DE = (field, data, index) => {
+        let newPSData = JSON.parse(JSON.stringify(this.props.element)) || {};
+        if(newPSData?.html?.hasOwnProperty("dialogueContent")){
+            newPSData.html.dialogueContent[index] = data;
+            if (removeClassesFromHtml(this.props.element?.html?.dialogueContent[index][field]) !==
+                removeClassesFromHtml(newPSData.html?.dialogueContent[index][field]) &&
+                !config.savingInProgress) {
+                // create data and call update API
+                this.callUpdateApi(newPSData);
+            }
         }
     }
 
     /* Update the data to server */
-    const callUpdateApi = (newPSData) => {
+    callUpdateApi = (newPSData) => {
         /* @@createPSDataForUpdateAPI - Prepare the data to send to server */
-        const dataToSend = createPSDataForUpdateAPI(props, newPSData)
+        const { index, parentUrn, asideData, parentElement } = this.props;
+        const dataToSend = createPSDataForUpdateAPI(this.props, newPSData)
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
         config.isSavingElement = true
-        props.updateElement(dataToSend, props.index, props.parentUrn, props.asideData, null, props.parentElement, null)
+        this.props.updateElement(dataToSend, index, parentUrn, asideData, null, parentElement, null)
     }
 
-    const copmpProps = {
-        permissions: props.permissions,
-        element: props.element,
-        slateLockInfo: props.slateLockInfo,
-        elementId: props.elementId,
-        // handleBlur: props.handleBlur,
-        handleEditorFocus: handleOuterFocus
-    }
-    return (
-        (props !== null && props !== undefined) ?
-            <div className="figureElement">
-                <div className="divImageTextWidth">
-                    <figure className="figureImageTextWidth" resource="">
-                        <p id="startLineSetting">Start Line number-{props.element?.elementdata?.startNumber || 1}</p>
-                        <header className="figure-header">
-                            <TinyMceEditor
-                                {...copmpProps}
-                                index={`${props.index}-0`}
-                                placeholder="Enter Act Title..."
-                                tagName={'h4'}
-                                className={" figureLabel "}
-                                model={props.element?.html?.actTitle}
-                                handleBlur={(forceupdate, currentElement, eIndex, showHideType, eventTarget) => handleOuterBlur("actTitle", eventTarget)}
+  
+    render(){
+        const copmpProps = {
+            permissions: this.props.permissions,
+            element: this.props.element,
+            slateLockInfo: this.props.slateLockInfo,
+            elementId: this.props.elementId,
+            // handleBlur: props.handleBlur,
+            handleEditorFocus: this.handleOuterFocus
+        }
+        return (
+            (this.props !== null && this.props !== undefined) ?
+                <div className="figureElement">
+                    <div className="divImageTextWidth">
+                        <figure className="figureImageTextWidth" resource="">
+                            <p id="startLineSetting">Start Line number-{this.props.element?.elementdata?.startNumber || 1}</p>
+                            <header className="figure-header">
+                                <TinyMceEditor
+                                    {...copmpProps}
+                                    index={`${this.props.index}-0`}
+                                    placeholder="Enter Act Title..."
+                                    tagName={'h4'}
+                                    className={" figureLabel "}
+                                    model={this.props.element?.html?.actTitle}
+                                    handleBlur={(forceupdate, currentElement, eIndex, showHideType, eventTarget) => this.handleOuterBlur("actTitle", eventTarget)}
 
-                            />
-                            <TinyMceEditor
-                                {...copmpProps}
-                                index={`${props.index}-1`}
-                                placeholder="Enter Scene Title..."
-                                tagName={'h4'}
-                                className={" figureTitle "}
-                                model={props.element?.html?.sceneTitle}
-                                handleBlur={(forceupdate, currentElement, eIndex, showHideType, eventTarget) => handleOuterBlur("sceneTitle", eventTarget)}
-                            />
-                        </header>
+                                />
+                                <TinyMceEditor
+                                    {...copmpProps}
+                                    index={`${this.props.index}-1`}
+                                    placeholder="Enter Scene Title..."
+                                    tagName={'h4'}
+                                    className={" figureTitle "}
+                                    model={this.props.element?.html?.sceneTitle}
+                                    handleBlur={(forceupdate, currentElement, eIndex, showHideType, eventTarget) => this.handleOuterBlur("sceneTitle", eventTarget)}
+                                />
+                            </header>
+                            <div>
+                                {<DialogueSeprator
+                                    index={0}
+                                    addElement={this.addElement}
+                                    element={this.props.element}
+                                    elementIndex={this.props.index}
+                                    firstOne={true}
+                                    // esProps={_props.elementSepratorProps(0, true, parentUrn, "", _props.index, null)}
+                                    elementType="element-dialogue"
+                                    sectionBreak={false}
+                                    permissions={this.props.permissions}
+                                    onClickCapture={this.props.onClickCapture}
+                                    userRole={this.props.userRole}
+                                />
+                                }
+                                {this.renderDialogueContent(this.props)}
+                            </div>
+                        </figure>
                         <div>
-                            {<DialogueSeprator
-                                index={0}
-                                addElement={addElement}
-                                element={props.element}
-                                elementIndex={elementIndex}
-                                firstOne={true}
-                                // esProps={_props.elementSepratorProps(0, true, parentUrn, "", _props.index, null)}
-                                elementType="element-dialogue"
-                                sectionBreak={false}
-                                permissions={props.permissions}
-                                onClickCapture={props.onClickCapture}
-                                userRole={props.userRole}
+                            <TinyMceEditor
+                                {...copmpProps}
+                                index={`${this.props.index}-4`}
+                                placeholder="Enter Credit..."
+                                tagName={'p'}
+                                className={" figureCredit "}
+                                model={this.props.element?.html?.credits}
+                                handleBlur={(forceupdate, currentElement, eIndex, showHideType, eventTarget) => this.handleOuterBlur("credits", eventTarget)}
                             />
-                            }
-                            {renderDialogueContent(props)}
                         </div>
-                    </figure>
-                    <div>
-                        <TinyMceEditor
-                            {...copmpProps}
-                            index={`${props.index}-4`}
-                            placeholder="Enter Credit..."
-                            tagName={'p'}
-                            className={" figureCredit "}
-                            model={props.element?.html?.credits}
-                            handleBlur={(forceupdate, currentElement, eIndex, showHideType, eventTarget) => handleOuterBlur("credits", eventTarget)}
-                        />
                     </div>
                 </div>
-            </div>
-            : ''
-    )
+                : ''
+        )
+    }
 }
 
 const dispatchActions = {
