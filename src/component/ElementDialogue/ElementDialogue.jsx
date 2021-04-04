@@ -238,7 +238,7 @@ class ElementDialogue extends React.PureComponent {
                             <header className="figure-header">
                                 <TinyMceEditor
                                     {...copmpProps}
-                                    index={`${this.props.index}-Act-Title`}
+                                    index={`${copmpProps.elementId}-${this.props.index}-Act-Title`}
                                     placeholder="Enter Act Title..."
                                     tagName={'h4'}
                                     className={" figureLabel "}
@@ -248,7 +248,7 @@ class ElementDialogue extends React.PureComponent {
                                 />
                                 <TinyMceEditor
                                     {...copmpProps}
-                                    index={`${this.props.index}-Scene-Title`}
+                                    index={`${copmpProps.elementId}-${this.props.index}-Scene-Title`}
                                     placeholder="Enter Scene Title..."
                                     tagName={'h4'}
                                     className={" figureTitle "}
@@ -276,7 +276,7 @@ class ElementDialogue extends React.PureComponent {
                         <div>
                             <TinyMceEditor
                                 {...copmpProps}
-                                index={`${this.props.index}-Credit`}
+                                index={`${copmpProps.elementId}-${this.props.index}-Credit`}
                                 placeholder="Enter Credit..."
                                 tagName={'p'}
                                 className={" figureCredit "}
