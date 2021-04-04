@@ -6,6 +6,7 @@ import config from '../../config/config';
 import { connect } from 'react-redux';
 import './../../styles/ElementMetaDataAnchor/ElementMetaDataAnchor.css';
 import { removeImageCache } from '../../js/utils';
+import { AlignToExternalFramework, OpenLOPopup } from '../../constants/IFrameMessageTypes';
 export class ElementMetaDataAnchor extends Component {
   constructor(props) {
     super(props);
@@ -60,10 +61,7 @@ export class ElementMetaDataAnchor extends Component {
      * @param {object} lodata | object of lo data 
   */
   prepareLOData = () => {
-    let loData = ""
-    if (this.props?.currentSlateLOData && Array.isArray(this.props.currentSlateLOData)) {
-      loData = this.props?.currentSlateLOData?.find(learningObj => (learningObj?.loUrn == this.props?.element?.elementdata?.loref || learningObj?.id == this.props?.element?.elementdata?.loref))
-    }
+    let loData = this.props?.currentSlateLOData?.find( learningObj => (learningObj?.loUrn == this.props?.element?.elementdata?.loref || learningObj?.id == this.props?.element?.elementdata?.loref))
     if (document.getElementsByClassName('learningObjectiveinnerText').length > 0) {
       let element = document.getElementsByClassName('learningObjectiveinnerText');
       element = Array.from(element);
@@ -106,22 +104,69 @@ export class ElementMetaDataAnchor extends Component {
     let loData = Array.isArray(slateLoData) ? slateLoData[0] : slateLoData;
 
     if (this.props.permissions.includes('lo_edit_metadata')) {
-      if (loData && loData.label && loData.label.en) {
-        loData.label.en = this.props.currentSlateLODataMath;
+      if(this.props.currentSlateLF == 'externalLF' ){
+        this.launchExternalFrameworkPopup()
       }
-      this.props.showBlocker(true);
-      let slateManifestURN= config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
-      let apiKeys_LO = {
-        'loApiUrl': config.LEARNING_OBJECTIVES_ENDPOINT,
-        'strApiKey': config.STRUCTURE_APIKEY,
-        'mathmlImagePath': config.S3MathImagePath ? config.S3MathImagePath : defaultMathImagePath,
-        'productApiUrl': config.PRODUCTAPI_ENDPOINT,
-        'manifestApiUrl': config.ASSET_POPOVER_ENDPOINT,
-        'assessmentApiUrl': config.ASSESSMENT_ENDPOINT
-      };
-      sendDataToIframe({ 'type': 'getLOEditPopup', 'message': { lodata: loData, projectURN: config.projectUrn, slateURN: slateManifestURN, apiKeys_LO, wrapperURL: config.WRAPPER_URL } })
+    else{
+        if (loData && loData.label && loData.label.en) {
+          loData.label.en = this.props.currentSlateLODataMath;
+        }
+        this.props.showBlocker(true);
+        let slateManifestURN= config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
+        let apiKeys_LO = {
+          'loApiUrl': config.LEARNING_OBJECTIVES_ENDPOINT,
+          'strApiKey': config.STRUCTURE_APIKEY,
+          'mathmlImagePath': config.S3MathImagePath ? config.S3MathImagePath : defaultMathImagePath,
+          'productApiUrl': config.PRODUCTAPI_ENDPOINT,
+          'manifestApiUrl': config.ASSET_POPOVER_ENDPOINT,
+          'assessmentApiUrl': config.ASSESSMENT_ENDPOINT
+        };
+        sendDataToIframe({ 'type': 'getLOEditPopup', 'message': { lodata: loData, projectURN: config.projectUrn, slateURN: slateManifestURN, apiKeys_LO, wrapperURL: config.WRAPPER_URL } }) 
+      }
     }
   }
+
+  prepareExtFrameworkData = () => {
+    let slateManifestURN = config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
+    let currentSlateLOData = this.props.currentSlateLOData;
+    let apiKeys_LO = {
+      'loApiUrl': config.LEARNING_OBJECTIVES_ENDPOINT,
+      'strApiKey': config.STRUCTURE_APIKEY,
+      'productApiUrl': config.PRODUCTAPI_ENDPOINT,
+      'manifestApiUrl': config.ASSET_POPOVER_ENDPOINT,
+      'assessmentApiUrl': config.ASSESSMENT_ENDPOINT
+    };
+    const selectedLOs = this.props.currentSlateLOData;
+    let externalLFUrn = '';
+    if (this?.props?.projectLearningFrameworks?.externalLF?.length) {
+      externalLFUrn = this.props.projectLearningFrameworks.externalLF[0].urn;
+    }
+    return {
+      slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs
+    }
+  }
+
+  launchExternalFrameworkPopup = () => {
+    const {
+      slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs
+    } = this.prepareExtFrameworkData();
+    const currentSlateLF=this.props.currentSlateLF;
+      sendDataToIframe({
+        'type': OpenLOPopup,
+        'message': {
+          'text': AlignToExternalFramework,
+          'data': currentSlateLOData,
+          'isLOExist': true,
+          'editAction': '',
+          'selectedLOs': selectedLOs,
+          'apiConstants': apiKeys_LO,
+          'externalLFUrn': externalLFUrn,
+          'currentSlateId': slateManifestURN,
+          'chapterContainerUrn': '',
+          'currentSlateLF': currentSlateLF
+        }
+      })
+  } 
 
 }
 ElementMetaDataAnchor.defaultProps = {
@@ -147,7 +192,8 @@ const mapStateToProps = (state) => {
   return {
     currentSlateLF: state.metadataReducer.currentSlateLF,
     currentSlateLOData: state.metadataReducer.currentSlateLOData,
-    currentSlateLODataMath: state.metadataReducer.currentSlateLODataMath
+    currentSlateLODataMath: state.metadataReducer.currentSlateLODataMath,
+    projectLearningFrameworks: state.metadataReducer.projectLearningFrameworks
   }
 }
 export default connect(mapStateToProps)(ElementMetaDataAnchor);
