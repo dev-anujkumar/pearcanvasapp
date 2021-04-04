@@ -131,7 +131,8 @@ export const prepareLODataForUpdate = (slateBodymatter, message) => {
     let metadataElemToUpdate = [];
     /** Handle M.A. elements with LO unlinked and update with new LO link if there any */
     message?.loUnlinked?.forEach(loItem => {
-        let metadataElems = slateLOElems.filter(metadataElem => metadataElem.loUrn === loItem.id);
+        let unlinkUrn = (typeof (loItem) === 'string') ? loItem : loItem.id ? loItem.id : loItem.loUrn ?? "";
+        let metadataElems = slateLOElems.filter(metadataElem => metadataElem.loUrn === unlinkUrn);
         if (metadataElems.length) {
             let LOWipData = prepareLO_WIP_Data("unlink", "", metadataElems, config.slateManifestURN);
             if (linkLOs?.length) {

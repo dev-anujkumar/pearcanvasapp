@@ -136,3 +136,6 @@ export const getPasteValidated = (sourceType, selectionType) => {
         return validation;
     }
 }
+
+export const cypressLOWarningtxt = `Performing this action will remove the current alignment of projects LOs to cypress framework. Do you wish to continue?`
+export const externalLOWarningtxt = `Performing this action will remove the current alignment of projects LOs to external framework. Do you wish to continue?`

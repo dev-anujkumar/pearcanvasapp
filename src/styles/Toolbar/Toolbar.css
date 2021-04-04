@@ -124,7 +124,7 @@
     background-color: #ffffff;
 }
 
-.learningobjectivedropdown li ,.learningobjectivedropdown2 {    
+.learningobjectivedropdown li ,.learningobjectivedropdown2 li{    
   padding: 0 0 0 10px;
   cursor: pointer;
   margin:0;
@@ -133,7 +133,7 @@
   line-height: 2.5;
   letter-spacing: normal;
 }
-.learningobjectivedropdown li.disabled .learningobjectivedropdown2 {
+.learningobjectivedropdown li.disabled, .learningobjectivedropdown2 li.disabled {
   pointer-events: none;
   opacity: 0.6;
   cursor: not-allowed;
@@ -143,7 +143,7 @@
   cursor: pointer;
   padding: 0 10px 0 0;
 }
-.learningobjectivedropdown ul ,.learningobjectivedropdown2{
+.learningobjectivedropdown ul ,.learningobjectivedropdown2 ul{
   padding:0;
 }
 .slate-tag-icon, .audio{
@@ -448,7 +448,7 @@ margin-left:6px;
   height:24px;
   position: relative;
 }
-@media only screen and (max-width: 1500px) {  
+@media only screen and (max-width: 3000px) {  
   .audiodropdown, .learningobjectivedropdown{
     right:0;
   }

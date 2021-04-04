@@ -18,6 +18,7 @@ import { ASSESSMENT_ITEM, ASSESSMENT_ITEM_TDX } from '../../constants/Element_Co
 import { LEARNOSITY, LEARNING_TEMPLATE, PUF, CITE, TDX } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import PopUp from '../PopUp/PopUp.jsx';
 import { loNextIcon } from './../../images/ElementButtons/ElementButtons.jsx';
+import { cypressLOWarningtxt, externalLOWarningtxt } from '../../constants/Element_Constants';
 class SlateTagDropdown extends React.Component {
     constructor(props) {
         super(props);
@@ -181,11 +182,10 @@ class SlateTagDropdown extends React.Component {
   }
   showLOWarningPopup = () => {
     const currentSlateLF=this.props.currentSlateLF;
-    const loWarningDialogTxt=(currentSlateLF==='cypressLF')?'Performing this action will remove the current alignment of projects LOs to cypress framework. Do you wish to continue?':'Performing this action will remove the current alignment of projects LOs to external framework. Do you wish to continue?'
+    const loWarningDialogTxt = (currentSlateLF === 'cypressLF') ? cypressLOWarningtxt : externalLOWarningtxt;
 
     if (this.state.showWarningPopup) {
       showBlocker(true)
-      // this.props.closeLODropdown()
       showTocBlocker();
       return (
         <PopUp dialogText={loWarningDialogTxt}
