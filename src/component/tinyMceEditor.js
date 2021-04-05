@@ -977,6 +977,14 @@ export class TinyMceEditor extends Component {
                         spanHandlers.handleBackSpaceAndDeleteKyeUp(editor, key, 'poetryLine');
                     }
                 }
+                else if (activeElement.nodeName == "DIV" && this.props.element.type === 'element-dialogue') {
+                    let key = e.keyCode || e.which;
+                    if (key != undefined && key === 13) {
+                        spanHandlers.addAndSplitSpan(editor, this.props.elementId, 'div', 'dialogueLine');
+                    } else if (key != undefined && (key === 8 || key === 46)) {
+                        spanHandlers.handleBackSpaceAndDeleteKyeUp(editor, key, 'dialogueLine');
+                    }
+                }
                 let elem = editor.selection.getNode();
                 let olList = elem.closest(`ol`);
                 let ulList = elem.closest(`ul`);
