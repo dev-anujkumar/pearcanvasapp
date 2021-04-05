@@ -18,7 +18,7 @@ import { ASSESSMENT_ITEM, ASSESSMENT_ITEM_TDX } from '../../constants/Element_Co
 import { LEARNOSITY, LEARNING_TEMPLATE, PUF, CITE, TDX } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import PopUp from '../PopUp/PopUp.jsx';
 import { loNextIcon } from './../../images/ElementButtons/ElementButtons.jsx';
-import { cypressLOWarningtxt, externalLOWarningtxt } from '../../constants/Element_Constants';
+import { cypressLOWarningtxt, externalLOWarningtxt, CYPRESS_LF, EXTERNAL_LF } from '../../constants/Element_Constants';
 class SlateTagDropdown extends React.Component {
     constructor(props) {
         super(props);
@@ -57,7 +57,7 @@ class SlateTagDropdown extends React.Component {
     }
     learningObjectiveDropdown = (e) => {
         let slateManifestURN= config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
-        let currentSlateLOData = this.props.currentSlateLOData[0];
+        let currentSlateLOData = this.props?.currentSlateLOData?.length ? this.props.currentSlateLOData[0] : "";
         let assessmentuRN="";
         let assessmentType="";
         let assessmentTypeLO="";
@@ -150,7 +150,7 @@ class SlateTagDropdown extends React.Component {
     } = this.prepareExtFrameworkData();
 
     const currentSlateLF=this.props.currentSlateLF;
-   if(currentSlateLF==='cypressLF' && this.props.permissions.includes('lo_edit_metadata')){
+   if(currentSlateLF=== CYPRESS_LF && this.props.permissions.includes('lo_edit_metadata')){
       this.warningActionIntiator = e.target.innerText;
       this.toggleWarningPopup(true,e);
     } else if (e?.target?.innerText == AlignToExternalFrameworkSlateDropdown && this.props.permissions.includes('lo_edit_metadata')) {
@@ -182,7 +182,7 @@ class SlateTagDropdown extends React.Component {
   }
   showLOWarningPopup = () => {
     const currentSlateLF=this.props.currentSlateLF;
-    const loWarningDialogTxt = (currentSlateLF === 'cypressLF') ? cypressLOWarningtxt : externalLOWarningtxt;
+    const loWarningDialogTxt = (currentSlateLF === CYPRESS_LF) ? cypressLOWarningtxt : externalLOWarningtxt;
 
     if (this.state.showWarningPopup) {
       showBlocker(true)
@@ -249,14 +249,25 @@ class SlateTagDropdown extends React.Component {
      showBlocker(toggleValue);
      hideBlocker();
   }
+
+  handleCypressLODropdownOptions = () => {
+    const { currentSlateLOData, currentSlateLF } = this.props
+    const currentSlateLO = currentSlateLOData ? Array.isArray(currentSlateLOData) ? currentSlateLOData[0] : currentSlateLOData : {}
+    let enableStatus = {
+      viewLOStatus: currentSlateLF == CYPRESS_LF ? currentSlateLOData && (currentSlateLOData.assessmentResponseMsg || currentSlateLOData.statusForSave) ? '' : currentSlateLO && (currentSlateLO.id ?? currentSlateLO.loUrn) : false,
+      unlinkLOStatus: currentSlateLF == CYPRESS_LF ? currentSlateLO && (currentSlateLO.id ?? currentSlateLO.loUrn) : false
+    };
+    return enableStatus;
+  }
     render = () => {
       const enableExtLO =this.checkExternalFramework();
+      const liOptionStatus = this.handleCypressLODropdownOptions()
         return (
             <div>
           <div className="learningobjectivedropdown" ref={node => this.node = node}>
               <ul>
                 <li onClick={this.toggleLoOptionsDropdown}>{AlignToCypressSlateDropdown}<span className='lo-navigation-icon'>{loNextIcon}</span></li>
-                <li onClick={this.launchExternalFrameworkPopup} className={enableExtLO ? '' : 'disable-buttton'}>{AlignToExternalFrameworkSlateDropdown}</li>
+                <li onClick={this.launchExternalFrameworkPopup} className={enableExtLO === true ? '' : 'disable-buttton'}>{AlignToExternalFrameworkSlateDropdown}</li>
               </ul>
             </div>
             {
@@ -264,14 +275,14 @@ class SlateTagDropdown extends React.Component {
                 <div  className="learningobjectivedropdown2" ref={node => this.node = node}>
                 <ul>
                     {this.props.permissions.includes('lo_edit_metadata') && config.slateType === 'section' &&
-                        <li onClick={(this.props.currentSlateLF === "externalLF") ? this.handleWarningPopup :this.learningObjectiveDropdown}> {AddLearningObjectiveSlateDropdown}</li>}
+                        <li onClick={(this.props.currentSlateLF === EXTERNAL_LF) ? this.handleWarningPopup :this.learningObjectiveDropdown}> {AddLearningObjectiveSlateDropdown}</li>}
                     {this.props.permissions.includes('lo_edit_metadata') && config.slateType === 'section' &&
-                        <li onClick={(this.props.currentSlateLF === "externalLF") ? this.handleWarningPopup :this.learningObjectiveDropdown}>{AddEditLearningObjectiveDropdown}</li>}
+                        <li onClick={(this.props.currentSlateLF === EXTERNAL_LF) ? this.handleWarningPopup :this.learningObjectiveDropdown}>{AddEditLearningObjectiveDropdown}</li>}
                     {this.props.permissions.includes('lo_edit_metadata') && config.slateType === 'assessment' &&
                         <li onClick={this.learningObjectiveDropdown}>{AddLearningObjectiveAssessmentDropdown}</li>}
-                    <li className={this.props.currentSlateLOData && (this.props.currentSlateLOData.assessmentResponseMsg || this.props.currentSlateLOData.statusForSave)? '' :this.props.currentSlateLOData && (this.props.currentSlateLOData.id ? this.props.currentSlateLOData.id : this.props.currentSlateLOData.loUrn) ? '' : 'disabled'} style={{ cursor: 'not-allowed !important' }} onClick={this.learningObjectiveDropdown}>{ViewLearningObjectiveSlateDropdown}</li>
+                    <li className={liOptionStatus.viewLOStatus ? '' : 'disabled'} style={{ cursor: 'not-allowed !important' }} onClick={this.learningObjectiveDropdown}>{ViewLearningObjectiveSlateDropdown}</li>
                     {config.slateType === 'section' && !hasReviewerRole() &&
-                        <li className={this.props.currentSlateLOData && (this.props.currentSlateLOData.id ? this.props.currentSlateLOData.id : this.props.currentSlateLOData.loUrn) ? '' : 'disabled'} style={{ cursor: 'not-allowed !important' }} onClick={this.learningObjectiveDropdown}>{UnlinkSlateDropdown}</li>}
+                        <li className={liOptionStatus.unlinkLOStatus ? '' : 'disabled'} style={{ cursor: 'not-allowed !important' }} onClick={this.learningObjectiveDropdown}>{UnlinkSlateDropdown}</li>}
                 </ul>
             </div> 
             }

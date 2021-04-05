@@ -137,5 +137,8 @@ export const getPasteValidated = (sourceType, selectionType) => {
     }
 }
 
+/** Metadata Anchor Element constants */
 export const cypressLOWarningtxt = `Performing this action will remove the current alignment of projects LOs to cypress framework. Do you wish to continue?`
 export const externalLOWarningtxt = `Performing this action will remove the current alignment of projects LOs to external framework. Do you wish to continue?`
+export const CYPRESS_LF = "cypressLF";
+export const EXTERNAL_LF =  "externalLF";

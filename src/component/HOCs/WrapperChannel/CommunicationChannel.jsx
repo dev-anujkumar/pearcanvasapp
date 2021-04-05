@@ -15,6 +15,7 @@ import PopUp from '../../PopUp';
 import { loadTrackChanges } from '../../CanvasWrapper/TCM_Integration_Actions';
 import { ALREADY_USED_SLATE_TOC } from '../../SlateWrapper/SlateWrapperConstants'
 import { prepareLODataForUpdate, setCurrentSlateLOs, getSlateMetadataAnchorElem, prepareLO_WIP_Data } from '../../ElementMetaDataAnchor/ExternalLO_helpers.js';
+import { CYPRESS_LF, EXTERNAL_LF } from '../../../constants/Element_Constants.js';
 function CommunicationChannel(WrappedComponent) {
     class CommunicationWrapper extends Component {
         constructor(props) {
@@ -364,16 +365,19 @@ function CommunicationChannel(WrappedComponent) {
         }
 
         handleLOAfterWarningPopup = (message) => {
-            /** Cancel button Click Unlink All LOs from MA Elements */
             if (message.unlinkStatus == true) {
-                this.handleUnlinkedLOData(message)
-            }
-            /** Save button Click */
-            else if (message.currentSlateLF == 'externalLF') { /** Add new Ext LOs */
-                this.handleExtLOData(message)
-            }
-            else {                                            /** Add new Cypress LOs */
-                this.handleUnlinkedLODataCypress(message)
+                /** Save button Click - Add new Ext LOs*/
+                if (message.currentSlateLF == EXTERNAL_LF && message?.statusForExtLOSave === true) {
+                    this.handleExtLOData(message);
+                } 
+                /** Save button Click - Add new Cypress LOs */
+                else if (message.currentSlateLF == CYPRESS_LF && message?.statusForSave === true) {
+                    this.handleUnlinkedLODataCypress(message); 
+                }
+                /** Cancel button Click Unlink All LOs from MA Elements */ 
+                else { 
+                    this.handleUnlinkedLOData(message); 
+                }
             }
         }
 
@@ -394,7 +398,7 @@ function CommunicationChannel(WrappedComponent) {
                     }
                 })
                 this.props.isLOExist(message);
-                this.props.currentSlateLOType("cypressLF");
+                this.props.currentSlateLOType(CYPRESS_LF);
                 this.props.currentSlateLO([message.loObj ?? {}]);
                 this.props.currentSlateLOMath([message.loObj ?? {}]);
             }
@@ -433,6 +437,9 @@ function CommunicationChannel(WrappedComponent) {
                 this.props.currentSlateLO(updatedSlateLOs);
                 this.props.currentSlateLOMath(updatedSlateLOs);
             }
+            this.setState({
+                showBlocker: false
+            });
         }
         /**
          * This function is responsible for handling the updated LOs w.r.t. Slate 
@@ -448,7 +455,6 @@ function CommunicationChannel(WrappedComponent) {
                     });
                 }
                 const newLOsLinked = [...message.loLinked];
-                this.props.isLOExist(message);
                 let slateData = this.props.slateLevelData;
                 const newSlateData = JSON.parse(JSON.stringify(slateData));
                 let bodymatter = newSlateData[config.slateManifestURN].contents.bodymatter;
@@ -461,14 +467,17 @@ function CommunicationChannel(WrappedComponent) {
                 }
                 let updatedSlateLOs = []
                 if (message?.loUnlinked?.length && typeof message.loUnlinked[0] === 'string') {
-                    const existingSlateLOs = this.props.currentSlateLOData
-                    updatedSlateLOs = existingSlateLOs.filter(existingLO => message?.loUnlinked?.indexOf(existingLO.id) < 0);
+                    const existingSlateLOs = this.props.currentSlateLOData;
+                    updatedSlateLOs = existingSlateLOs.filter(existingLO => message?.loUnlinked?.indexOf(existingLO.id ?? existingLO.loUrn) < 0);
+                    updatedSlateLOs = updatedSlateLOs.concat(newLOsLinked ?? []);
                 } else {
                     updatedSlateLOs = setCurrentSlateLOs(this.props.currentSlateLOData, message.loUnlinked, newLOsLinked);
                 }
+                const externalLOStatusMessage = Object.assign(message, {loListLength : updatedSlateLOs.length} )
+                this.props.isLOExist(externalLOStatusMessage);
                 this.props.currentSlateLO(updatedSlateLOs);
                 this.props.currentSlateLOMath(updatedSlateLOs);
-                this.props.currentSlateLOType(updatedSlateLOs.length ? "externalLF" : "");
+                this.props.currentSlateLOType(updatedSlateLOs.length ? EXTERNAL_LF : "");
             }
         }
         handleLOData = (message) => {
@@ -479,7 +488,7 @@ function CommunicationChannel(WrappedComponent) {
                     message.loObj.label.en = message.loObj.label.en.replace(regex, "<img src='$1'></img>");
                 }
                 message.loObj ? this.props.currentSlateLO([message.loObj]) : this.props.currentSlateLO([message]);
-                this.props.currentSlateLOType(message.loObj ? "cypressLF" : "");
+                this.props.currentSlateLOType(message.loObj?.loUrn || message.loObj?.id ? CYPRESS_LF : "");
                 this.props.isLOExist(message);
                 let slateData = this.props.slateLevelData;
                 const newSlateData = JSON.parse(JSON.stringify(slateData));

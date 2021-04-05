@@ -564,8 +564,12 @@ margin-left:6px;
   width:100% !important
 }
 
-@media only screen and (max-width: 1500px) {
+.learningobjectivedropdown2{
+  left: 10px
+}
+
+@media only screen and (max-width: 1400px) {
     .learningobjectivedropdown2 {
-      left: -10px;
+      left: -515px;
     }
   }

@@ -6,6 +6,7 @@ import config from '../../config/config';
 import { connect } from 'react-redux';
 import './../../styles/ElementMetaDataAnchor/ElementMetaDataAnchor.css';
 import { removeImageCache } from '../../js/utils';
+import { EXTERNAL_LF } from '../../constants/Element_Constants.js';
 export class ElementMetaDataAnchor extends Component {
   constructor(props) {
     super(props);
@@ -75,16 +76,20 @@ export class ElementMetaDataAnchor extends Component {
     }
     let jsx;
     if (loData && loData != "" && loData.label && loData.label.en) {
-      jsx = this.props.currentSlateLF == 'externalLF' ?  `<div>${loData.label.en}</div>` : loData.label.en;
+      jsx = this.props.currentSlateLF == EXTERNAL_LF ?  `<div>${loData.label.en}</div>` : loData.label.en;
       const regex = /<math.*?data-src=\'(.*?)\'.*?<\/math>/g;
-      jsx = jsx.replace(regex, "<img src='$1'></img>")
-      jsx=jsx.replace(/'/g, '"');
-      jsx = removeImageCache(jsx)
+      jsx = jsx && typeof jsx === 'string' ? jsx.replace(regex, "<img src='$1'></img>") : jsx
+      jsx= jsx && typeof jsx === 'string' ? jsx.replace(/'/g, '"') : jsx;
+      jsx = jsx && typeof jsx === 'string' ? removeImageCache(jsx) : jsx
       if (document.getElementsByClassName('learningObjectiveinnerText').length > 0 && (loData.id != "" || loData.loUrn != "")) {
         let element = document.getElementsByClassName('learningObjectiveinnerText');
         element = Array.from(element);
-        element.forEach((item) => {
-          item.classList.remove("place-holder");
+        setTimeout(() => {
+          element.forEach((item) => {
+            if (item?.innerText !== "") {
+              item.classList.remove("place-holder");
+            }
+          }, 100)
         })
       }
     }
@@ -108,9 +113,6 @@ export class ElementMetaDataAnchor extends Component {
     let loData = Array.isArray(slateLoData) ? slateLoData[0] : slateLoData;
 
     if (this.props.permissions.includes('lo_edit_metadata')) {
-      if (loData && loData.label && loData.label.en) {
-        loData.label.en = this.props.currentSlateLODataMath;
-      }
       this.props.showBlocker(true);
       let slateManifestURN= config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
       let apiKeys_LO = {
