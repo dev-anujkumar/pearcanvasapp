@@ -114,8 +114,12 @@ export const updateElementInStore = (paramsObj) => {
     else {
         _slateBodyMatter = _slateBodyMatter.map(element => {
             if (element.id === elementId) {
-
-                if (element.type !== "openerelement") {
+                if (element.type === "element-dialogue") {
+                    element = {
+                        ...element,
+                        ...updatedData,
+                    }
+                } else if (element.type !== "openerelement") {
                     element = {
                         ...element,
                         ...updatedData,
