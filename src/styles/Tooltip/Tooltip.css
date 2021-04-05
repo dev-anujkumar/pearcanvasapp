@@ -195,8 +195,9 @@
     position: absolute;
     transition: opacity 1s;
 }
-
-.tooltip .tooltip-paste::after {
+.tooltip .tooltip-paste::after,
+.tooltip .tooltip-poc::after
+ {
     content: " ";
     position: absolute;
     bottom: 100%;
@@ -223,13 +224,4 @@
     position: absolute;
     transition: opacity 1s;
 }
-.tooltip .tooltip-poc::after {
-    content: " ";
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    margin-left: -5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: transparent transparent black transparent;
-}
+
