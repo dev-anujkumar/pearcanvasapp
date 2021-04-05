@@ -10,6 +10,7 @@ import "tinymce/skins/content/default/content.css";
 import "tinymce/plugins/lists/plugin.min.js";
 import "tinymce/plugins/advlist/plugin.min.js";
 import "tinymce/plugins/paste/plugin.min.js";
+// import "tinymce/icons/default/icons.min.js";
 // IMPORT - Components & Dependencies //
 import { EditorConfig, FormatSelectors, elementTypeOptions, insertMediaSelectors } from '../config/EditorConfig';
 import config from '../config/config';
@@ -141,6 +142,7 @@ export class TinyMceEditor extends Component {
                     /*
                         if content is caused by wiris then call blur
                     */
+                   const eventTarget = e.target.targetElm
                     if (e.originalEvent && e.originalEvent.command === "mceInsertContent") {
                         let specialCharSpan = document.getElementById('specialChar');
                         if (specialCharSpan) {
@@ -181,7 +183,7 @@ export class TinyMceEditor extends Component {
                             } else {
                                 let showHideType = this.props.showHideType || null
                                 showHideType = showHideType === "revel" ? "postertextobject" : showHideType
-                                this.props.handleBlur(null, this.props.currentElement, this.props.index, showHideType)
+                                this.props.handleBlur(null, this.props.currentElement, this.props.index, showHideType, eventTarget)
                             
                             }
                         }
@@ -2741,12 +2743,11 @@ export class TinyMceEditor extends Component {
         if (this.props.element.type === 'popup' && this.props.placeholder === 'Enter call to action...') {
             toolbar = config.popupCallToActionToolbar
         }
-        else if (this.props.placeholder === "Enter Label..." || this.props.placeholder === 'Enter call to action...' || (this.props.element && this.props.element.subtype == 'mathml' && this.props.placeholder === "Type something...")) {
+        else if (["Enter Label...", "Enter call to action..."].includes(this.props.placeholder) || (this.props.element && this.props.element.subtype == 'mathml' && this.props.placeholder === "Type something...")) {
             toolbar = (this.props.element && (this.props.element.type === 'poetry' || this.props.element.type === 'popup' || this.props.placeholder === 'Enter call to action...')) ? config.poetryLabelToolbar : config.labelToolbar;
         }
         else if (this.props.placeholder === "Enter Caption..." || this.props.placeholder === "Enter Credit...") {
-            toolbar = (this.props.element && this.props.element.type === 'poetry') ? config.poetryCaptionToolbar : config.captionToolbar;
-
+                toolbar = (this.props.element && this.props.element.type === 'poetry') ? config.poetryCaptionToolbar : config.captionToolbar;
         } else if (this.props.placeholder === "Enter block code...") {
             let syntaxEnabled = document.querySelector('.panel_syntax_highlighting .switch input');
             if (syntaxEnabled && syntaxEnabled.checked) {
@@ -2761,9 +2762,31 @@ export class TinyMceEditor extends Component {
             toolbar = config.revelToolbar
         } else if (this.props.placeholder == "Type Something..." && this.props.element && this.props.element.type == 'stanza') {
             toolbar = config.poetryStanzaToolbar;
-        } else {
+        }
+        else {
             toolbar = config.elementToolbar;
         }
+        if (this.props.element.type === "element-dialogue") {
+            switch(this.props.placeholder){
+                case "Enter Act Title...": 
+                case "Enter Scene Title...":
+                case "Enter Dialogue...": 
+                case "Enter Credit...": { 
+                    toolbar = [...config.playScriptToolbar];
+                    break;
+                }
+                case "Enter Stage Directions...": {
+                    toolbar = [...config.playScriptToolbar, 'italic'];
+                    break;
+                }
+                case "Enter Character Name...": {
+                        toolbar = [...config.playScriptToolbar, 'bold'];
+                    break;
+                }
+                default: break;
+            }
+        }
+
         return toolbar;
     }
 
@@ -3081,6 +3104,7 @@ export class TinyMceEditor extends Component {
      * @param {*} e  event object
      */
     handleBlur = (e, forceupdate) => {
+        const eventTarget = e.target
         let checkCanvasBlocker = document.querySelector("div.canvas-blocker");
         let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");
         if (isBlockQuote && this.isctrlPlusV) {
@@ -3208,7 +3232,7 @@ export class TinyMceEditor extends Component {
                 this.props.createPoetryElements(this.props.poetryField, true, this.props.index, this.props.element)
             } else {
                 setTimeout(() => {
-                    this.props.handleBlur(forceupdate, this.props.currentElement, this.props.index, showHideType)
+                    this.props.handleBlur(forceupdate, this.props.currentElement, this.props.index, showHideType, eventTarget)
                 }, 0)
             }
         }

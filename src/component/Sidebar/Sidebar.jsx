@@ -281,7 +281,33 @@ class Sidebar extends Component {
             attrInput: event.target.value
         })
     }
-    
+
+    handleDialogueToggle = () => {
+
+        this.props.setBCEMetadata('numbered', !this.state.bceToggleValue);
+        this.setState({
+            bceToggleValue: !this.state.bceToggleValue
+        }, () => this.handleDialogueBlur())
+
+        // update field in redux
+        // call api
+
+        
+
+        // let data = !this.state.bceToggleValue ? "block" : "none";
+        // document.getElementById('startLineSetting').style.display = data;
+    }
+
+    handleDialogueNumber = (e) => {
+        const regex = /^[0-9]*(?:\.\d{1,2})?$/
+        if (regex.test(e.target.value)) {
+            // applying regex that will validate the value coming is only number
+            this.props.setBCEMetadata('startNumber', e.target.value);  
+            this.setState({ bceNumberStartFrom: e.target.value })
+            // document.getElementById('startLineSetting').innerHTML = 'Start Line number-'+ e.target.value;
+        }
+    }
+
     attributions = () => {
         let attributions = '';
         let attributionsObject = {};
@@ -350,6 +376,22 @@ class Sidebar extends Component {
                     return attributions;
             }
 
+            if (this.state.activePrimaryOption && this.state.activePrimaryOption === "primary-element-dialogue" && this.props.activeElement.elementId) {
+                attributions = <div>
+                    <div className="panel_show_module">
+                        <div className="toggle-value-bce">Use Line Numbers</div>
+                        <label className="switch"><input type="checkbox" checked={(this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true} onClick={!hasReviewerRole() && !config.savingInProgress && this.handleDialogueToggle} />
+                            <span className="slider round"></span></label>
+                    </div>
+                    <div className="alt-Text-LineNumber" >
+                        <div className="toggle-value-bce">Start numbering from</div>
+                        <input type="number" id="line-number" className="line-number" min="1" onChange={!config.savingInProgress && this.handleDialogueNumber} value={this.state.bceNumberStartFrom}
+                            disabled={!((this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true) || hasReviewerRole()} onBlur={this.handleDialogueBlur} />
+                    </div>
+                </div>
+                return attributions;
+            }
+
             attributions = <div className="attributions">
                 {attributions}
             </div>;
@@ -364,6 +406,16 @@ class Sidebar extends Component {
             activeBCEElementNode.focus()
             activeBCEElementNode.blur()
         }
+    }
+
+    handleDialogueBlur = () => {
+
+        let activeBCEElementNode = document.getElementById(`cypress-${this.props.activeElement.index}-1`)
+        // if (activeBCEElementNode) {
+        //     activeBCEElementNode.focus()
+        //     activeBCEElementNode.blur()
+        // }
+
     }
 
     handleBQAttributionBlur = () => {

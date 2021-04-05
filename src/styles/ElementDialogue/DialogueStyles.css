@@ -1,0 +1,8 @@
+.stageDirectionItalicFont {
+    font-style: italic!important;
+}
+
+#startLineSetting {
+    margin: 10px;
+    color: #ddd
+}

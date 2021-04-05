@@ -351,6 +351,11 @@ const elementDataBank = {
         "text-width-50-50" : {
             "secondaryOption" : "secondary-multicolumn-half-text"
         }
+    },
+    "element-dialogue" : {
+        "elementType" : "element-dialogue",
+        "primaryOption" : "primary-element-dialogue",
+        "secondaryOption" : "secondary-element-dialogue"
     }
 }
 

@@ -6,6 +6,8 @@ import '../../styles/ElementButtons/ElementButton.css'
 import buttonTypes from './ButtonTypes.js'
 
 import { 
+    stageDirectionIcon,
+    dialougeElementIcon,
     workedExampleIcon,
     sectionBreakElement, 
     assessmentIcon, 
@@ -213,6 +215,16 @@ class ElementButton extends Component {
             case ButtonTypes.POWERPASTE:
                 buttonJSX = <span className="btn-element power-paste-icon" onClick={clickHandlerFn}><img src={powerPasteIcon} /></span>
                 break;
+
+            case ButtonTypes.STAGE_DIRECTION:
+                    buttonJSX = <span className={`btn-element text-elem`} onClick={clickHandlerFn}>
+                        {stageDirectionIcon}
+                    </span>
+                    break;
+            case ButtonTypes.DIALOGUE_ELEMENT:
+                    buttonJSX = <span className={`btn-element text-elem`} onClick={clickHandlerFn}>
+                        {dialougeElementIcon}
+                    </span>
         }
         return buttonJSX
     }

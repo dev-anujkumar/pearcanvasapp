@@ -849,5 +849,20 @@ export default {
             }		
         },
         enumType: 'multicolumn'		
+    },
+    "element-dialogue" : {
+        "primary-element-dialogue": {
+            text: 'Block Element Dialogue',
+            enum: 'ELEMENT_DIALOGUE',
+            toolbar: ['insertMedia','formatSelector','crossLinkingIcon','assetpopover','glossary','decreaseindent'],
+            dropdownDisabled: true,
+            subtype: {
+                'secondary-element-dialogue': {
+                    text: 'Element Dialogue Editor',
+                    labelText: 'PS',
+                    enum: 'NA',
+                }
+            }
+        } 
     }
 };
