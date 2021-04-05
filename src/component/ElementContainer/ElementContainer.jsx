@@ -1599,6 +1599,7 @@ class ElementContainer extends Component {
                     toggleCopyMenu={this.toggleCopyMenu}
                     copyClickedX={this.copyClickedX} 
                     copyClickedY={this.copyClickedY} 
+                    permissions={_props.permissions}
                 />
             )
         }
