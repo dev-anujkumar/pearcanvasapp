@@ -11,6 +11,7 @@ import "tinymce/plugins/powerpaste/plugin.min.js"
 import "tinymce/plugins/powerpaste/js/wordimport.js"
 // import "tinymce/plugins/paste";
 import './../../styles/ElementAuthoring/ElementAuthoring.css';
+import { powerpaste_list_content_style } from '../../config/PowerPasteListElementCss';
 
 const PowerPasteElement = (props) => {
 
@@ -31,6 +32,7 @@ const PowerPasteElement = (props) => {
   }, [])
 
   const editorConfig = {
+    content_style: powerpaste_list_content_style,
     height: 420,
     plugins: [
       'advlist lists',
@@ -126,7 +128,11 @@ export const createPastedElements = (childElements, elements) => {
           elements.push({ html: childElements[i].outerHTML, tagName: childElements[i].tagName });
           break;
         case 'OL':
-          powerPasteHelpers.addOListClasses(childElements[i], 1);
+          // if the list starts other than numeric format then calls addSpecificOListClasses method 
+          // otherwise calls addOListClasses method for adding list classes to html and if the list 
+          // does not start with digits and has style attribute then remove it
+          childElements[i].hasAttribute('style') ? powerPasteHelpers.addSpecificOListClasses(childElements[i], childElements[i], 1) : powerPasteHelpers.addOListClasses(childElements[i], 1);
+          childElements[i].hasAttribute('style') ? childElements[i].removeAttribute('style') : childElements[i];
           elements.push({ html: childElements[i].outerHTML, tagName: childElements[i].tagName });
           break;
         case 'IMG':

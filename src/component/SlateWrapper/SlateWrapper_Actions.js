@@ -450,6 +450,7 @@ export const handleSplitSlate = (newSlateObj) => (dispatch, getState) => {
         }
     ).then(res => {
         // Perform TCM splitSlate
+        /**
         axios({
             method: 'patch',
             url: '/cypress/trackchanges-srvr/splitslatetcm',
@@ -465,6 +466,7 @@ export const handleSplitSlate = (newSlateObj) => (dispatch, getState) => {
         .catch(error => {
             console.log("TCM split slate API error : ", error)
         })
+        */
         // Update selection store data after split
         let selection = getState().selectionReducer.selection || {};
         if(Object.keys(selection).length > 0 && selection.sourceSlateEntityUrn === config.slateEntityURN && selection.sourceElementIndex >= splitIndex) {
