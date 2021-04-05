@@ -10,7 +10,6 @@ import config from "../../config/config.js";
 import { sendDataToIframe, removeBlankTags, removeClassesFromHtml } from '../../constants/utility.js';
 import { createPSDataForUpdateAPI } from './DialogueElementUtils';
 import { setBCEMetadata } from '../Sidebar/Sidebar_Action';
-import { element } from 'prop-types';
 class ElementDialogue extends React.PureComponent {
     constructor(props) {
         super(props);
