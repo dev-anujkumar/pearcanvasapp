@@ -49,7 +49,6 @@ function DialogueContent(props) {
                 placeholder={placeholder}
                 tagName={'div'}
                 className={props.className}
-                model={props.model[props.index]?.text}
                 model={dialogueModel ? dialogueModel : '<span class="dialogueLine"><br></span>'}
                 slateLockInfo={props.slateLockInfo}
                 glossaryFootnoteValue={props.glossaryFootnoteValue}

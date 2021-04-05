@@ -528,7 +528,7 @@ export const replaceUnwantedtags = (html) => {
     return encodeHTMLInWiris(tempDiv.innerHTML);
 }
 export const prepareDialogueDom = (model) => {
-    let ConvertedModel = model && model.html && model.html.text.replace(/<p>/g, "")
+    let ConvertedModel = model?.replace(/<p>/g, "")
     ConvertedModel = ConvertedModel && ConvertedModel.replace(/<\/p>/g, "")
     let lineModel = ConvertedModel ? ConvertedModel : '<span class="dialogueLine"><br /></span>'
     return lineModel;
