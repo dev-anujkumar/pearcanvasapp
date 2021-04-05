@@ -9,11 +9,10 @@ import {
     OPEN_GLOSSARY_FOOTNOTE,
     GET_TCM_RESOURCES, 
 } from "../../constants/Action_Constants";
-import { 
+import ElementConstants, { 
     elementTypeTCM,
     allowedFigureTypesForTCM,
-    allowedParentType,
-    METADATA_ANCHOR
+    allowedParentType
 } from "./ElementConstants";
 
 import config from '../../config/config';
@@ -107,7 +106,7 @@ export const updateElementInStore = (paramsObj) => {
             tcm: _slateObject.tcm ? true : false
         }
     } 
-    else if (updatedData.elementVersionType === METADATA_ANCHOR) {
+    else if (updatedData.elementVersionType === ElementConstants.METADATA_ANCHOR) {
         for (let i = 0; i < updatedData.metaDataAnchorID.length; i++) {
             _slateBodyMatter = updateLOInCanvasStore({ updatedData, _slateBodyMatter, activeIndex: i });
         }
