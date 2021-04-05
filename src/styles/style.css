@@ -267,6 +267,12 @@ P.paragraphNumeroUnoIndentLevel1, P.paragraphNumeroUnoIndentLevel2, P.paragraphN
     font-family: 'Open Sans',sans-serif;
     cursor: pointer;
 }
+.learningobjectivedropdown li.disable-buttton .learningobjectivedropdown2{
+    pointer-events: none;
+    opacity: 0.6;
+    cursor: not-allowed;
+    color: gray;
+}
 /* .mce-content-body .Wirisformula[data-custom-editor="chemistry"]{
     vertical-align: -1px!important;
 } */
@@ -335,4 +341,47 @@ p code, ul code, ol code{
 }
 .wrs_editor .wrs_font_inherit{
     font-family: 'Conv_stix', Arial, Helvetica, sans-serif !important;
+}
+
+.mce-content-body:not([dir=rtl])[data-mce-placeholder]:not(.mce-visualblocks)::before{
+    left: inherit !important;
+}
+
+.mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before {
+    color: #ADADAD !important;
+}
+
+.tox .tox-toolbar, .tox .tox-toolbar__overflow, .tox .tox-toolbar__primary {
+    border: none !important;
+}
+.tox-editor-container>:first-child {
+    border-left: none;
+}
+
+table:not([cellpadding]) td, table:not([cellpadding]) th {
+    padding: 0 !important;
+}
+
+.tox.tox-tinymce--toolbar-bottom .tox-editor-header, .tox.tox-tinymce-inline .tox-editor-header {
+    border: none !important;
+}
+
+/* sub dropdown for lo*/
+.learningobjectivedropdown2 li:hover {
+  background-color: #efefef;
+  font-family: "Open Sans", sans-serif;
+  cursor: pointer;
+}
+.learningobjectivedropdown2 li.disable-buttton {
+  pointer-events: none;
+  left: -10px;
+  opacity: 0.6;
+  cursor: not-allowed;
+  color: gray;
+}
+.learningobjectivedropdown li.disable-buttton {
+    pointer-events: none;
+    opacity: 0.6;
+    cursor: not-allowed;
+    color: gray;
 }

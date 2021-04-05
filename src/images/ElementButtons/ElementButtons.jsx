@@ -343,6 +343,14 @@ export const nextIcon = (() => {
     )
 })();
 
+export const loNextIcon = (() => {
+    return (
+        <svg id="right-dropdown-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="24" viewBox="0 0 24 24">
+            <path fill="#000" d="M1.944 20c.536 0 1.073-.133 1.475-.532l8.045-7.973c.402-.399.536-.93.536-1.462 0-.531-.268-1.063-.536-1.462L3.419.598c-.804-.797-2.011-.797-2.816 0-.804.797-.804 1.993 0 2.79l6.704 6.645-6.704 6.645c-.804.797-.804 1.993 0 2.79.269.4.805.532 1.341.532z" />
+        </svg>
+    )
+})();
+
 export const editIcon = (() => {
     return (
         <svg xmlns="http://www.w3.org/2000/svg" height="10" viewBox="2 2 20 20" width="10" fill="white">

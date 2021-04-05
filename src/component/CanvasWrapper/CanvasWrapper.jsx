@@ -18,11 +18,11 @@ import { getSlateLockStatus, releaseSlateLock } from './SlateLock_Actions'
 import GlossaryFootnoteMenu from '../GlossaryFootnotePopup/GlossaryFootnoteMenu.jsx';
 import {updateElement, getTableEditorData, clearElementStatus}from '../../component/ElementContainer/ElementContainer_Actions'
 // IMPORT - Actions //
-import { fetchSlateData, fetchSlateAncestorData, fetchAuthUser, openPopupSlate, setSlateLength, tcmCosConversionSnapshot, fetchLearnosityContent } from './CanvasWrapper_Actions';
+import { fetchSlateData, fetchSlateAncestorData, fetchAuthUser, openPopupSlate, setSlateLength, tcmCosConversionSnapshot, fetchLearnosityContent, fetchProjectLFs } from './CanvasWrapper_Actions';
 import {toggleCommentsPanel,fetchComments,fetchCommentByElement} from '../CommentsPanel/CommentsPanel_Action'
 import { convertToListElement } from '../ListElement/ListElement_Action.js';
 import { handleSplitSlate,setUpdatedSlateTitle, setSlateType, setSlateEntity, setSlateParent } from '../SlateWrapper/SlateWrapper_Actions'
-import { currentSlateLO,isLOExist, currentSlateLOMath } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
+import { currentSlateLO,isLOExist, currentSlateLOMath, currentSlateLOType } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import { handleUserRole } from './UserRole_Actions'
 import { handleSlateRefresh } from '../CanvasWrapper/SlateRefresh_Actions'
 import { fetchAudioNarrationForContainer ,audioGlossaryPopup} from '../AudioNarration/AudioNarration_Actions'
@@ -36,7 +36,6 @@ import { fetchUsageTypeData } from '../AssessmentSlateCanvas/AssessmentActions/a
 import { toggleElemBordersAction, togglePageNumberAction } from '../Toolbar/Toolbar_Actions.js';
 import { prevIcon, nextIcon } from '../../../src/images/ElementButtons/ElementButtons.jsx';
 import { assetIdForSnapshot } from '../../component/AssetPopover/AssetPopover_Actions.js';
-
 export class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
@@ -190,7 +189,7 @@ export class CanvasWrapper extends Component {
                 {/** Ends of custom error popup */}
                 <div id="editor-toolbar" className={`editor-toolbar ${popupFilter}`}>
                     {/* editor tool goes here */}
-                    <Toolbar />
+                    <Toolbar showCanvasBlocker= {this.props.showCanvasBlocker}/>
                     {/* custom list editor component */}
                 </div>
 
@@ -272,7 +271,8 @@ const mapStateToProps = state => {
         withinLockPeriod: state.slateLockReducer.withinLockPeriod,
         ErrorPopup: state.errorPopup,
         pageNumberToggle: state.toolbarReducer.pageNumberToggle,
-        audioGlossaryData:state.audioReducer.audioGlossaryData
+        audioGlossaryData:state.audioReducer.audioGlossaryData,
+        currentSlateLF: state.metadataReducer.currentSlateLF
     };
 };
 
@@ -315,6 +315,8 @@ export default connect(
         tcmCosConversionSnapshot,
         assetIdForSnapshot,
         audioGlossaryPopup,
-        fetchLearnosityContent
+        fetchLearnosityContent,
+        fetchProjectLFs,
+        currentSlateLOType
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

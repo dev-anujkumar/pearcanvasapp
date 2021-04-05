@@ -16,7 +16,8 @@ import {
     SET_SLATE_LENGTH,
     SET_CURRENT_SLATE_DATA,
     GET_TCM_RESOURCES,
-    LEARNOSITY_PROJECT_INFO
+    LEARNOSITY_PROJECT_INFO,
+    PROJECT_LEARNING_FRAMEWORKS
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
@@ -1092,7 +1093,7 @@ export const setSlateLength = (length) => {
 
 
 export const fetchLearnosityContent = () => dispatch => {
-    return axios.get(`${config.STRUCTURE_API_URL}learnositycontentbridge-api/lcb/v1/bank2projapi/${config.projectEntityUrn}?${config.ssoToken}`, {
+    return axios.get(`${config.STRUCTURE_API_URL}learnositycontentbridge-api/lcb/v1/bank2projapi/${config.projectEntityUrn}?PearsonSSOSession=${config.ssoToken}`, {
         headers: {
             "Content-Type": "application/json",
             "PearsonSSOSession": config.ssoToken
@@ -1109,3 +1110,38 @@ export const fetchLearnosityContent = () => dispatch => {
             console.error('axios Error', err);
         })
 }
+
+
+/**
+ * This API fetches the Learning Framework(s) linked to the project
+ */
+export const fetchProjectLFs = () => dispatch => {
+    axios.get(`${config.ASSET_POPOVER_ENDPOINT}v2/${config.projectUrn}/learningframeworks`, {
+        headers: {
+            "ApiKey": config.STRUCTURE_APIKEY,
+            "Content-Type": "application/json",
+            "PearsonSSOSession": config.ssoToken,
+            "x-Roles": "ContentPlanningAdmin"
+        }
+    }).then(response => {
+        if (response.status === 200 && response?.data?.learningFrameworks?.length > 0) {
+            const learningFrameworks = response.data.learningFrameworks;
+            const cypressLF = learningFrameworks.find(learningFramework => config.book_title.includes(learningFramework?.label?.en));
+            const externalLF = learningFrameworks.filter(learningFramework => !config.book_title.includes(learningFramework?.label?.en))
+            dispatch({
+                type: PROJECT_LEARNING_FRAMEWORKS,
+                payload: {
+                    cypressLF: cypressLF ?? {},
+                    externalLF: externalLF ?? []
+                }
+            });
+        }
+    }).catch(error => {
+        console.log('Error in fetching Learning Framework linked to the project>>>> ', error)
+        dispatch({
+            type: PROJECT_LEARNING_FRAMEWORKS,
+            payload: {}
+        });
+    })
+
+};
