@@ -196,8 +196,7 @@
     transition: opacity 1s;
 }
 .tooltip .tooltip-paste::after,
-.tooltip .tooltip-poc::after
- {
+.tooltip .tooltip-poc::after {
     content: " ";
     position: absolute;
     bottom: 100%;
@@ -224,4 +223,5 @@
     position: absolute;
     transition: opacity 1s;
 }
+
 
