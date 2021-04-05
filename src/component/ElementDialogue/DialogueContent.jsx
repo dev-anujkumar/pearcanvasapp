@@ -11,7 +11,7 @@ function DialogueContent(props) {
         editor = <Fragment>
             <TinyMceEditor
 
-                index={`${props.elementIndex}-0`}
+                index={`${props.elementIndex}-${props.index}-0`}
                 permissions={props.permissions}
                 openGlossaryFootnotePopUp={props.openGlossaryFootnotePopUp}
                 element={props.element}
@@ -33,7 +33,7 @@ function DialogueContent(props) {
                 glossaaryFootnotePopup={props.glossaaryFootnotePopup}
             />
             <TinyMceEditor
-                index={`${props.elementIndex}-1`}
+                index={`${props.elementIndex}-${props.index}-1`}
                 permissions={props.permissions}
                 openGlossaryFootnotePopUp={props.openGlossaryFootnotePopUp}
                 element={props.element}
@@ -57,7 +57,7 @@ function DialogueContent(props) {
         </Fragment>
     } else {
         editor = <TinyMceEditor
-            index={props.elementIndex}
+            index={`${props.elementIndex}-${props.index}`}
             permissions={props.permissions}
             openGlossaryFootnotePopUp={props.openGlossaryFootnotePopUp}
             element={props.element}

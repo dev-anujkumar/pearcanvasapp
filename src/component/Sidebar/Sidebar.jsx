@@ -17,6 +17,7 @@ import { customEvent } from '../../js/utils.js';
 import { disabledPrimaryOption } from '../../constants/Element_Constants.js';
 import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants';
 import { SECONDARY_SINGLE_ASSESSMENT_LEARNOSITY } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js'
+import { createPSDataForUpdateAPI } from '../ElementDialogue/DialogueElementUtils.js';
 
 
 class Sidebar extends Component {
@@ -282,30 +283,40 @@ class Sidebar extends Component {
         })
     }
 
+    handleDialogueBlur = () => {
+        // dialouge blur and again display element so taht api is called
+        let activeBCEElementNode = document.getElementById(`cypress-${this.props.activeElement.index}-Act-Title`)
+        if (activeBCEElementNode) {
+            activeBCEElementNode.focus()
+            activeBCEElementNode.blur()
+        }
+        
+    }
+
     handleDialogueToggle = () => {
 
         this.props.setBCEMetadata('numbered', !this.state.bceToggleValue);
-        this.setState({
-            bceToggleValue: !this.state.bceToggleValue
-        }, () => this.handleDialogueBlur())
-
-        // update field in redux
-        // call api
-
-        
-
-        // let data = !this.state.bceToggleValue ? "block" : "none";
-        // document.getElementById('startLineSetting').style.display = data;
+        this.setState({bceToggleValue: !this.state.bceToggleValue});
+        this.handleDialogueBlur();
     }
 
     handleDialogueNumber = (e) => {
         const regex = /^[0-9]*(?:\.\d{1,2})?$/
         if (regex.test(e.target.value)) {
-            // applying regex that will validate the value coming is only number
             this.props.setBCEMetadata('startNumber', e.target.value);  
-            this.setState({ bceNumberStartFrom: e.target.value })
-            // document.getElementById('startLineSetting').innerHTML = 'Start Line number-'+ e.target.value;
+            this.setState({ bceNumberStartFrom: e.target.value });
+            // this.handleDialogueBlur();
         }
+    }
+
+
+    callUpdateApi = (newPSData) => {
+        /* @@createPSDataForUpdateAPI - Prepare the data to send to server */
+        const { index, parentUrn, asideData, parentElement } = this.props;
+        const dataToSend = createPSDataForUpdateAPI(this.props, newPSData)
+        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+        config.isSavingElement = true
+        this.props.updateElement(dataToSend, index, parentUrn, asideData, null, parentElement, null);
     }
 
     attributions = () => {
@@ -408,15 +419,9 @@ class Sidebar extends Component {
         }
     }
 
-    handleDialogueBlur = () => {
+   
 
-        let activeBCEElementNode = document.getElementById(`cypress-${this.props.activeElement.index}-1`)
-        // if (activeBCEElementNode) {
-        //     activeBCEElementNode.focus()
-        //     activeBCEElementNode.blur()
-        // }
 
-    }
 
     handleBQAttributionBlur = () => {
         let activeBQNode = document.querySelector(`#cypress-${this.props.activeElement.index} p`)

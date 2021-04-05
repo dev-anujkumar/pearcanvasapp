@@ -9,7 +9,8 @@ import { updateElement } from '../ElementContainer/ElementContainer_Actions.js';
 import config from "../../config/config.js";
 import { sendDataToIframe, removeBlankTags, removeClassesFromHtml } from '../../constants/utility.js';
 import { createPSDataForUpdateAPI } from './DialogueElementUtils';
-
+import { setBCEMetadata } from '../Sidebar/Sidebar_Action';
+import { element } from 'prop-types';
 class ElementDialogue extends React.PureComponent {
     constructor(props) {
         super(props);
@@ -17,6 +18,16 @@ class ElementDialogue extends React.PureComponent {
             selectedInnerElementIndex: null
         }
     }
+
+    componentDidMount() {
+        if(this.props.element) {
+            const elementdata = this.props.element.elementdata;
+            this.props.setBCEMetadata(elementdata.numberedlines);
+            this.props.setBCEMetadata(elementdata.startNumber);
+        }
+    }
+
+    
 
     addElement = (psIndex, psElementIndex, data, oldPSData) => {
         const dialogueContent = oldPSData.html.dialogueContent;
@@ -180,18 +191,39 @@ class ElementDialogue extends React.PureComponent {
      * @param {*} event Event object
      */
     handleOuterFocus = (c2Flag, showHideObj, event) => {
-       this.setState({ selectedInnerElementIndex: null })
-        this.props.handleFocus(c2Flag, showHideObj, event)
+        this.setState({ selectedInnerElementIndex: null })
+        this.props.handleFocus(c2Flag, showHideObj, event);
+        // this.setActiveElement(this.props.element);
     }
 
     handleOuterBlur = (field, eventTarget) => {
+        let callUpdate = false;
         let newPSData = JSON.parse(JSON.stringify(this.props.element)) || {};
-        if(newPSData?.html?.hasOwnProperty(field)){
-            newPSData.html[field] = `<p>${removeBlankTags(eventTarget?.innerHTML)}</p>`  
+        if (newPSData?.html?.hasOwnProperty(field)) {
             if (removeClassesFromHtml(this.props.element.html?.[field]) !== removeClassesFromHtml(newPSData.html[field]) && !config.savingInProgress) {
                 // create data and call update API
-                this.callUpdateApi(newPSData);
+                callUpdate = true;
             }
+        }
+        const { activeElement, element } = this.props;
+        const elementdata = element.elementdata;
+        if (activeElement.elementId === element.id) {
+              
+            if (activeElement.numbered !== elementdata.numberedlines || activeElement.startNumber !== elementdata.startNumber) {
+                newPSData = {
+                   ...newPSData,
+                   elementdata: {
+                       ...newPSData.elementdata,
+                       numberedlines: activeElement.numbered,
+                       startNumber: activeElement.startNumber
+                   }
+               } 
+             
+                callUpdate = true;
+            }
+        }
+        if (callUpdate) {
+            this.callUpdateApi(newPSData)
         }
     }
 
@@ -199,7 +231,7 @@ class ElementDialogue extends React.PureComponent {
     /* @@updateSD_DE - To update the data of SD and DE Element Data */
     updateSD_DE = (field, data, index) => {
         let newPSData = JSON.parse(JSON.stringify(this.props.element)) || {};
-        if(newPSData?.html?.hasOwnProperty("dialogueContent")){
+        if (newPSData?.html?.hasOwnProperty("dialogueContent")) {
             newPSData.html.dialogueContent[index] = data;
             if (removeClassesFromHtml(this.props.element?.html?.dialogueContent[index][field]) !==
                 removeClassesFromHtml(newPSData.html?.dialogueContent[index][field]) &&
@@ -220,8 +252,8 @@ class ElementDialogue extends React.PureComponent {
         this.props.updateElement(dataToSend, index, parentUrn, asideData, null, parentElement, null)
     }
 
-  
-    render(){
+
+    render() {
         const copmpProps = {
             permissions: this.props.permissions,
             element: this.props.element,
@@ -234,14 +266,14 @@ class ElementDialogue extends React.PureComponent {
                 <div className="figureElement">
                     <div className="divImageTextWidth">
                         <figure className="figureImageTextWidth" resource="">
-                            <p id="startLineSetting">Start Line number-{this.props.element?.elementdata?.startNumber || 1}</p>
+                           {this.props.element?.elementdata?.numberedlines === true && <p id="startLineSetting">Start Line number-{this.props.element?.elementdata?.startNumber || 1}</p> }
                             <header className="figure-header">
                                 <TinyMceEditor
                                     {...copmpProps}
                                     index={`${this.props.index}-Act-Title`}
                                     placeholder="Enter Act Title..."
                                     tagName={'h4'}
-                                    className={" figureLabel "}
+                                    className={"figureLabel "}
                                     model={this.props.element?.html?.actTitle}
                                     handleBlur={(forceupdate, currentElement, eIndex, showHideType, eventTarget) => this.handleOuterBlur("actTitle", eventTarget)}
 
@@ -292,7 +324,8 @@ class ElementDialogue extends React.PureComponent {
 }
 
 const dispatchActions = {
-    updateElement
+    updateElement,
+    setBCEMetadata
 }
 
 const mapStateToProps = ({ appStore }) => {
