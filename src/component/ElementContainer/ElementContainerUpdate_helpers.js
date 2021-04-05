@@ -12,7 +12,8 @@ import {
 import { 
     elementTypeTCM,
     allowedFigureTypesForTCM,
-    allowedParentType
+    allowedParentType,
+    METADATA_ANCHOR
 } from "./ElementConstants";
 
 import config from '../../config/config';
@@ -106,7 +107,7 @@ export const updateElementInStore = (paramsObj) => {
             tcm: _slateObject.tcm ? true : false
         }
     } 
-    else if (updatedData.elementVersionType === "element-learningobjectivemapping") {
+    else if (updatedData.elementVersionType === METADATA_ANCHOR) {
         for (let i = 0; i < updatedData.metaDataAnchorID.length; i++) {
             _slateBodyMatter = updateLOInCanvasStore({ updatedData, _slateBodyMatter, activeIndex: i });
         }
