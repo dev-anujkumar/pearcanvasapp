@@ -263,7 +263,7 @@ class SlateTagDropdown extends React.Component {
       const enableExtLO =this.checkExternalFramework();
       const liOptionStatus = this.handleCypressLODropdownOptions()
         return (
-            <div>
+        <div>
           <div className="learningobjectivedropdown" ref={node => this.node = node}>
               <ul>
                 <li onClick={this.toggleLoOptionsDropdown}>{AlignToCypressSlateDropdown}<span className='lo-navigation-icon'>{loNextIcon}</span></li>
