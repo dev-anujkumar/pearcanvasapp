@@ -1,5 +1,6 @@
 import { 
-    CURRENT_SLATE_LF
+    CURRENT_SLATE_LF,
+    TOGGLE_LO_WARNING_POPUP
 } from '../../constants/Action_Constants.js';
 export const currentSlateLO = (currentSlateLOData) =>  (dispatch, getState) => {
     return dispatch({
@@ -74,11 +75,26 @@ export const reRenderLO = (isRenderLO) => (dispatch, getState) => {
     })
 }
 
+/**
+ * This actions sets the LF for the current slate
+ */
 export const currentSlateLOType = (learningFrameWork) => (dispatch) => {
     return dispatch({
         type: CURRENT_SLATE_LF,
         payload: {
             currentSlateLF: learningFrameWork,
+        }
+    })
+}
+
+/**
+ * This actions toggles the LO Warning Popup
+ */
+export const toggleLOWarningPopup = (toggleValue, warningActionIntiator) => (dispatch) => {
+    return dispatch({
+        type: TOGGLE_LO_WARNING_POPUP,
+        payload: {
+            toggleValue, warningActionIntiator
         }
     })
 }

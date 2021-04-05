@@ -1,24 +1,22 @@
 import React from 'react';
 import config from '../../config/config';
 import { checkSlateLock } from '../../js/slateLockUtility.js';
-import { showSlateLockPopup } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
+import { showSlateLockPopup, toggleLOWarningPopup } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import { showBlocker, showTocBlocker, hideBlocker } from '../../js/toggleLoader';
 import {
     AddLearningObjectiveSlateDropdown,
     AddEditLearningObjectiveDropdown,
     ViewLearningObjectiveSlateDropdown,
     UnlinkSlateDropdown,
-    OpenLOPopup, ViewLearningObjectiveSlate, ViewLearningObjectiveAssessment, AddLearningObjectiveSlate, AddLearningObjectiveAssessment, AddEditLearningObjective, UnlinkSlate, AddLearningObjectiveAssessmentDropdown, AlignToCypress, AlignToExternalFramework, AlignToExternalFrameworkSlateDropdown, AlignToCypressSlateDropdown,
-    WarningPopupAction,
+    OpenLOPopup, ViewLearningObjectiveSlate, ViewLearningObjectiveAssessment, AddLearningObjectiveSlate, AddLearningObjectiveAssessment, AddEditLearningObjective, UnlinkSlate, AddLearningObjectiveAssessmentDropdown, AlignToCypress, AlignToExternalFramework, AlignToExternalFrameworkSlateDropdown, AlignToCypressSlateDropdown
 }
     from '../../constants/IFrameMessageTypes';
 import { sendDataToIframe , hasReviewerRole, defaultMathImagePath } from '../../constants/utility.js';
 import { connect } from 'react-redux';
 import { ASSESSMENT_ITEM, ASSESSMENT_ITEM_TDX } from '../../constants/Element_Constants';
 import { LEARNOSITY, LEARNING_TEMPLATE, PUF, CITE, TDX } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
-import PopUp from '../PopUp/PopUp.jsx';
 import { loNextIcon } from './../../images/ElementButtons/ElementButtons.jsx';
-import { cypressLOWarningtxt, externalLOWarningtxt, CYPRESS_LF, EXTERNAL_LF } from '../../constants/Element_Constants';
+import { CYPRESS_LF, EXTERNAL_LF } from '../../constants/Element_Constants';
 class SlateTagDropdown extends React.Component {
     constructor(props) {
         super(props);
@@ -123,7 +121,8 @@ class SlateTagDropdown extends React.Component {
     toggleLoOptionsDropdown = () => {
         this.setState({showLoOptions:!this.state.showLoOptions})
     }
-  
+
+  /** Prepare data for Post-message in case of External LO*/
   prepareExtFrameworkData = () => {
     let slateManifestURN = config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
     let currentSlateLOData = this.props.currentSlateLOData;
@@ -144,6 +143,7 @@ class SlateTagDropdown extends React.Component {
     }
   }
 
+  /** Launch External LO Popup from Canvas*/
   launchExternalFrameworkPopup = (e) => {
     const {
       slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs
@@ -151,8 +151,7 @@ class SlateTagDropdown extends React.Component {
 
     const currentSlateLF=this.props.currentSlateLF;
    if(currentSlateLF=== CYPRESS_LF && this.props.permissions.includes('lo_edit_metadata')){
-      this.warningActionIntiator = e.target.innerText;
-      this.toggleWarningPopup(true,e);
+      this.props.toggleLOWarningPopup(true,e.target.innerText);
     } else if (e?.target?.innerText == AlignToExternalFrameworkSlateDropdown && this.props.permissions.includes('lo_edit_metadata')) {
       sendDataToIframe({
         'type': OpenLOPopup,
@@ -173,6 +172,8 @@ class SlateTagDropdown extends React.Component {
     }
 
   } 
+
+  /** Enable/Disable External LOs Link Option based on External LF linked to Project*/
   checkExternalFramework = () => {
     let enableExtLF = false;
     if (config.slateType !== 'assessment' && this?.props?.projectLearningFrameworks?.externalLF?.length) {
@@ -180,76 +181,19 @@ class SlateTagDropdown extends React.Component {
     }
     return enableExtLF;
   }
-  showLOWarningPopup = () => {
-    const currentSlateLF=this.props.currentSlateLF;
-    const loWarningDialogTxt = (currentSlateLF === CYPRESS_LF) ? cypressLOWarningtxt : externalLOWarningtxt;
-
-    if (this.state.showWarningPopup) {
-      showBlocker(true)
-      showTocBlocker();
-      return (
-        <PopUp dialogText={loWarningDialogTxt}
-          active={true}
-          warningHeaderText={`Warning`}
-          togglePopup={this.toggleWarningPopup}
-          isInputDisabled={true}
-          lOPopupClass="lo-warning-txt"
-          LOPopup={true}
-          yesButtonHandler={this.unlinkSlateLOs}
-        />
-      )
-    } else {
-      return null
-    }
-  }
-  unlinkSlateLOs = (e) => {
-    const slateManifestURN = config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN;
-    const { currentSlateLOData } = this.props;
-    const apiKeys_LO = {
-      'loApiUrl': config.LEARNING_OBJECTIVES_ENDPOINT,
-      'strApiKey': config.STRUCTURE_APIKEY,
-      'mathmlImagePath': config.S3MathImagePath ? config.S3MathImagePath : defaultMathImagePath,
-      'productApiUrl': config.PRODUCTAPI_ENDPOINT,
-      'manifestApiUrl': config.ASSET_POPOVER_ENDPOINT,
-      'assessmentApiUrl': config.ASSESSMENT_ENDPOINT
-    };
-    let externalLFUrn = '';
-    if (this?.props?.projectLearningFrameworks?.externalLF?.length) {
-      externalLFUrn = this.props.projectLearningFrameworks.externalLF[0].urn;
-    }
-    const warningActionIntiator = this.warningActionIntiator;
-    sendDataToIframe({ 'type': OpenLOPopup, 'message': { 
-      'text': WarningPopupAction, 
-      'data': currentSlateLOData, 
-      'currentSlateId': slateManifestURN, 
-      'chapterContainerUrn': '', 
-      'isLOExist': true, 
-      'editAction': '', 
-      'apiConstants': apiKeys_LO, 
-      'warningActionIntiator': warningActionIntiator,
-      'externalLFUrn': externalLFUrn,
-      'currentSlateLF': this.props.currentSlateLF
-    } });
-    this.toggleWarningPopup(false,e);
-    this.warningActionIntiator = '';
-  }
-
-   handleWarningPopup=(e)=>{
+    
+  /** Launch Warning Popup for Cypress LO options */
+  handleWarningPopup = (e) => {
     this.warningActionIntiator = e.target.innerText;
-    this.toggleWarningPopup(true,e )
-  }
-  toggleWarningPopup = (toggleValue, event) => {
-    if (event) {
-      event.preventDefault();
+    if (e) {
+      e.preventDefault();
     }
-    this.setState({
-      showWarningPopup: toggleValue
-    })
-    // this.props.closeLODropdown()
-     showBlocker(toggleValue);
-     hideBlocker();
+    this.props.toggleLOWarningPopup(true, this.warningActionIntiator);
+    showBlocker(true);
+    hideBlocker();
   }
 
+  /** Handle Button Status for Cypress LO Options */
   handleCypressLODropdownOptions = () => {
     const { currentSlateLOData, currentSlateLF } = this.props
     const currentSlateLO = currentSlateLOData ? Array.isArray(currentSlateLOData) ? currentSlateLOData[0] : currentSlateLOData : {}
@@ -259,6 +203,7 @@ class SlateTagDropdown extends React.Component {
     };
     return enableStatus;
   }
+
     render = () => {
       const enableExtLO =this.checkExternalFramework();
       const liOptionStatus = this.handleCypressLODropdownOptions()
@@ -286,7 +231,6 @@ class SlateTagDropdown extends React.Component {
                 </ul>
             </div> 
             }
-           {this.showLOWarningPopup()}
         </div>            
         )
     }
@@ -301,7 +245,8 @@ const mapStateToProps = (state) => {
 }
 const mapActionToProps = {
     checkSlateLock,
-    showSlateLockPopup
+    showSlateLockPopup,
+    toggleLOWarningPopup
 }
 
 export default connect(mapStateToProps, mapActionToProps)(SlateTagDropdown);

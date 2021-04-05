@@ -67,6 +67,7 @@ export const SHOW_SLATE_LOCK_POPUP = 'SHOW_SLATE_LOCK_POPUP'
 export const RE_RENDER_META_LO = 'RE_RENDER_META_LO'
 export const PROJECT_LEARNING_FRAMEWORKS = 'PROJECT_LEARNING_FRAMEWORKS'
 export const CURRENT_SLATE_LF = 'CURRENT_SLATE_LF'
+export const TOGGLE_LO_WARNING_POPUP = 'TOGGLE_LO_WARNING_POPUP';
 /*--------------- Asset Popover -------------------*/
 export const APO_SEARCH_SAVE = 'APO_SEARCH_SAVE'
 export const APO_BUTTON = 'APO_BUTTON'
