@@ -1,13 +1,13 @@
 import React, { Fragment } from 'react';
-import { removeBlankTags } from '../../constants/utility';
+import { removeBlankTags, prepareDialogueDom } from '../../constants/utility';
 import TinyMceEditor from "../tinyMceEditor";
 
 function DialogueContent(props) {
 
     let editor = '';
     let placeholder = (props.labelText === 'DE') ? 'Enter Dialogue...' : 'Enter Stage Directions...';
-
     if (props.labelText === 'DE') {
+        let dialogueModel= prepareDialogueDom(props.model[props.index]?.text)
         editor = <Fragment>
             <TinyMceEditor
 
@@ -42,14 +42,14 @@ function DialogueContent(props) {
                 handleBlur={(forceupdate, currentElement, eIndex, showHideType, eventTarget) => {
                     const obj = { 
                          ...props.model[props.index],
-                        text: eventTarget?.innerHTML
+                        text:`<p>${eventTarget?.innerHTML}</p>`
                     }
                     props.handleBlur("text", obj, props.index)
             }}
                 placeholder={placeholder}
                 tagName={'div'}
                 className={props.className}
-                model={props.model[props.index]?.text}
+                model={dialogueModel ? dialogueModel : '<span class="dialogueLine"><br></span>'}
                 slateLockInfo={props.slateLockInfo}
                 glossaryFootnoteValue={props.glossaryFootnoteValue}
                 glossaaryFootnotePopup={props.glossaaryFootnotePopup}

@@ -977,6 +977,14 @@ export class TinyMceEditor extends Component {
                         spanHandlers.handleBackSpaceAndDeleteKyeUp(editor, key, 'poetryLine');
                     }
                 }
+                else if (activeElement.nodeName == "DIV" && this.props.element.type === 'element-dialogue') {
+                    let key = e.keyCode || e.which;
+                    if (key != undefined && key === 13) {
+                        spanHandlers.addAndSplitSpan(editor, this.props.elementId, 'div', 'dialogueLine');
+                    } else if (key != undefined && (key === 8 || key === 46)) {
+                        spanHandlers.handleBackSpaceAndDeleteKyeUp(editor, key, 'dialogueLine');
+                    }
+                }
                 let elem = editor.selection.getNode();
                 let olList = elem.closest(`ol`);
                 let ulList = elem.closest(`ul`);
@@ -1131,7 +1139,7 @@ export class TinyMceEditor extends Component {
                 isContainsMath = activeElement.innerHTML.match(/<img/) ? (activeElement.innerHTML.match(/<img/).input.includes('class="Wirisformula') || activeElement.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula')) : false;
                 isContainsBlankLine = activeElement.innerHTML.match(/<span/) ? activeElement.innerHTML.match(/<span/).input.includes('class="answerLineContent') : false;
             }
-            if (key === 13 && this.props.element.type !== 'element-list' && activeElement.nodeName !== "CODE" && this.props.element.type !== 'showhide' && this.props.element.type !== "stanza") {
+            if (key === 13 && this.props.element.type !== 'element-list' && activeElement.nodeName !== "CODE" && this.props.element.type !== 'showhide' && this.props.element.type !== "stanza" && this.props.element.type !== "element-dialogue") {
                 let activeEditor = document.getElementById(tinymce.activeEditor.id);
                 if ('element' in this.props && 'status' in this.props.element && this.props.element.status == "wip") {
                     activeEditor.blur();
@@ -1144,7 +1152,7 @@ export class TinyMceEditor extends Component {
                 } else {
                     textPicker = nextSaparator.querySelector('#myDropdown li > .text-elem');
                 }
-                textPicker.click();
+                textPicker?.click();
             } else if (key === 13 && this.props.element.type === 'showhide' && this.props.showHideType != 'revel' && this.props.currentElement.type !== 'element-list') {
                 this.props.createShowHideElement(this.props.showHideType, this.props.index, this.props.id);
             }
