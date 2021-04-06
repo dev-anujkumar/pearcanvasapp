@@ -107,7 +107,7 @@
     border:none;
     margin-top:10px;
 }
-   .cancel-button{
+   .cancel-button,.lo-save-button{
     border-radius: 2px;
     float: right;
     margin: 0 0 0 .5em;
@@ -122,6 +122,10 @@
     line-height: 18.5px;
     letter-spacing: normal;
     text-align: center;
+  }
+
+  .cancel-button:hover,.lo-save-button:hover{
+    background-color: #def8ff
   }
 
 .save-button{
@@ -403,3 +407,12 @@
   border-top:0 !important;
 }
 
+.lo-warning-txt {
+    padding-top: 20px;
+  }
+  .loPopupHeader {
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 6px;
+    color: #007fa3;
+  }

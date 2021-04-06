@@ -57,6 +57,7 @@ import { ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, SECONDARY_SINGLE_ASSESSM
 import elementTypes from './../Sidebar/elementTypes.js';
 import OpenAudioBook from '../AudioNarration/OpenAudioBook.jsx';
 import { getAlfrescositeResponse } from '../ElementFigure/AlfrescoSiteUrl_helper.js'
+import ElementDialogue from '../ElementDialogue';
 
 class ElementContainer extends Component {
     constructor(props) {
@@ -1462,6 +1463,33 @@ class ElementContainer extends Component {
                     </MultiColumnContext.Provider>;
                     labelText = '2C'
                     break;
+
+                    case elementTypeConstant.ELEMENT_DIALOGUE:
+                        editor = <ElementDialogue
+                            permissions={permissions}
+                            btnClassName={this.state.btnClassName}
+                            borderToggle={this.state.borderToggle}
+                            elemBorderToggle={this.props.elemBorderToggle}
+                            elementSepratorProps={elementSepratorProps}
+                            index={index}
+                            element={element}
+                            elementId={element.id}
+                            slateLockInfo={slateLockInfo}
+                            // splithandlerfunction={splithandlerfunction}
+                            userRole={this.props.userRole}
+                            activeElement={this.props.activeElement}
+                            onClickCapture={this.props.onClickCapture}
+                            showBlocker={this.props.showBlocker}
+                            setActiveElement={this.props.setActiveElement}
+                            parentElement={this.props.parentElement}
+                            showDeleteElemPopup={this.showDeleteElemPopup}
+                            handleBlur={this.handleBlur}
+                            handleFocus={this.handleFocus}
+                            deleteElement={this.deleteElement}
+                        />;
+                        labelText = 'PS'
+                        break;
+
             }
         } else {
             editor = <p className="incorrect-data">Incorrect Data - {element.id}</p>;
@@ -1571,6 +1599,7 @@ class ElementContainer extends Component {
                     toggleCopyMenu={this.toggleCopyMenu}
                     copyClickedX={this.copyClickedX} 
                     copyClickedY={this.copyClickedY} 
+                    permissions={_props.permissions}
                 />
             )
         }

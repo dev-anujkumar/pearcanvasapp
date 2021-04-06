@@ -14,6 +14,8 @@ import { releaseSlateLockWithCallback, getSlateLockStatusWithCallback } from '..
 import PopUp from '../../PopUp';
 import { loadTrackChanges } from '../../CanvasWrapper/TCM_Integration_Actions';
 import { ALREADY_USED_SLATE_TOC } from '../../SlateWrapper/SlateWrapperConstants'
+import { prepareLODataForUpdate, setCurrentSlateLOs, getSlateMetadataAnchorElem, prepareLO_WIP_Data } from '../../ElementMetaDataAnchor/ExternalLO_helpers.js';
+import { CYPRESS_LF, EXTERNAL_LF } from '../../../constants/Element_Constants.js';
 function CommunicationChannel(WrappedComponent) {
     class CommunicationWrapper extends Component {
         constructor(props) {
@@ -123,8 +125,9 @@ function CommunicationChannel(WrappedComponent) {
                     config.projectEntityUrn = message.entityUrn;
                     config.alfrescoMetaData = message;
                     config.book_title = message.name;
-                    this.props.fetchAuthUser(),
-                    this.props.fetchLearnosityContent(),
+                    this.props.fetchAuthUser()
+                    this.props.fetchLearnosityContent()
+                    this.props.fetchProjectLFs()
                     this.props.tcmCosConversionSnapshot()       // for creation of pre-snapshots for cos converted projects
                     break;
                 case 'permissionsDetails':
@@ -134,13 +137,18 @@ function CommunicationChannel(WrappedComponent) {
                     this.handleLOData(message);
                     break;
                 case 'getSlateLOResponse':
-                    message ? this.props.currentSlateLOMath(message.label.en) : this.props.currentSlateLOMath("");
-                    if (message) {
+                    if (message?.LOList?.length) {
                         const regex = /<math.*?data-src=\'(.*?)\'.*?<\/math>/g;
-                        message.label.en = message.label.en.replace(regex, "<img src='$1'></img>")
+                        message.LOList.map(loData => {                            
+                            loData.label.en = loData.label.en.replace(regex, "<img src='$1'></img>");
+                        });
+                        this.props.currentSlateLOMath(message.LOList);
+                    } else {
+                        this.props.currentSlateLOMath("");
                     }
-                    this.props.currentSlateLO(message);
+                    this.props.currentSlateLO(message.LOList);
                     this.props.isLOExist(message);
+                    this.props.currentSlateLOType(message.currentSlateLF);
                     break;
                 case 'loEditResponse':
                     this.setState({
@@ -159,12 +167,15 @@ function CommunicationChannel(WrappedComponent) {
                     this.handleRefreshSlate();
                     break;
                 case 'cancelCEPopup':
-                    if (this.props.currentSlateLOData && this.props.currentSlateLOData.label && this.props.currentSlateLOData.label.en) {
+                    if (this.props.currentSlateLOData?.length > 0) {
                         const regex = /<math.*?data-src=\'(.*?)\'.*?<\/math>/g;
-                        this.props.currentSlateLOData.label.en = this.props.currentSlateLOData.label.en.replace(regex, "<img src='$1'></img>")
+                        this.props.currentSlateLOData.map(loData => {
+                            if (loData?.label?.en) {
+                                loData.label.en = loData.label.en.replace(regex, "<img src='$1'></img>")
+                            }
+                        })
                         this.props.currentSlateLO(this.props.currentSlateLOData);
                     }
-
                     this.setState({
                         showBlocker: false
                     });
@@ -227,6 +238,15 @@ function CommunicationChannel(WrappedComponent) {
                     break;
                 case 'GetActiveSlate':
                     sendDataToIframe({ 'type': 'GetActiveSlate', 'message': { slateEntityURN: config.slateEntityURN } });
+                    break;
+                case 'statusForExtLOSave':
+                    this.handleExtLOData(message);
+                    break;
+                case 'currentSlateLOAfterWarningPopup':
+                    this.handleLOAfterWarningPopup(message)
+                    break;
+                case 'unlinkLOFailForWarningPopup':
+                    this.handleUnlinkedLOData(message)
                     break;
             }
         }
@@ -344,14 +364,132 @@ function CommunicationChannel(WrappedComponent) {
             })
         }
 
+        handleLOAfterWarningPopup = (message) => {
+            if (message.unlinkStatus == true) {
+                /** Save button Click - Add new Ext LOs*/
+                if (message.currentSlateLF == EXTERNAL_LF && message?.statusForExtLOSave === true) {
+                    this.handleExtLOData(message);
+                } 
+                /** Save button Click - Add new Cypress LOs */
+                else if (message.currentSlateLF == CYPRESS_LF && message?.statusForSave === true) {
+                    this.handleUnlinkedLODataCypress(message); 
+                }
+                /** Cancel button Click Unlink All LOs from MA Elements */ 
+                else { 
+                    this.handleUnlinkedLOData(message); 
+                }
+            }
+        }
+
+        handleUnlinkedLODataCypress = (message) => {
+            if (message.statusForSave) {
+                let slateData = this.props.slateLevelData;
+                const newSlateData = JSON.parse(JSON.stringify(slateData));
+                const bodymatter = newSlateData[config.slateManifestURN].contents.bodymatter;
+                let slateLOElems = getSlateMetadataAnchorElem(bodymatter);
+                message?.unlinkedLOs.forEach((loItem, index) => {
+                    let metadataElems = slateLOElems.filter(metadataElem => metadataElem.loUrn === loItem);
+                    if (metadataElems.length) {
+                        let LOWipData = prepareLO_WIP_Data("unlink", "", metadataElems, config.slateManifestURN);
+                        if (index == 0) {
+                            LOWipData.elementdata.loref = message.loObj ? message.loObj.id ? message.loObj.id : message.loObj.loUrn : "";
+                        }
+                        this.props.updateElement(LOWipData);
+                    }
+                })
+                this.props.isLOExist(message);
+                this.props.currentSlateLOType(CYPRESS_LF);
+                this.props.currentSlateLO([message.loObj ?? {}]);
+                this.props.currentSlateLOMath([message.loObj ?? {}]);
+            }
+        }
+        /**
+         * This function is responsible for handling the unlinked LOs w.r.t. Slate 
+         * and updating the Metadata Anchor Elements on Slate after warning Popup Action
+         * @param {*} message Event Message on Saving Ext LF LO data for Slate
+         */
+        handleUnlinkedLOData = (message) => {
+            let slateData = this.props.slateLevelData;
+            const newSlateData = JSON.parse(JSON.stringify(slateData));
+            const bodymatter = newSlateData[config.slateManifestURN].contents.bodymatter;
+            let slateLOElems = getSlateMetadataAnchorElem(bodymatter);
+            let loDataToUpdate = [];
+            /** Update All Metadata Anchor Elements for LOs Unlinked */
+            message?.unlinkedLOs?.forEach(loItem => {
+                let metadataElems = slateLOElems.filter(metadataElem => metadataElem.loUrn === loItem);
+                if (metadataElems.length) {
+                    let LOWipData = prepareLO_WIP_Data("unlink", "", metadataElems, config.slateManifestURN);
+                    loDataToUpdate = loDataToUpdate.concat(metadataElems)
+                    this.props.updateElement(LOWipData);
+                }
+            })
+            /** When All Slate LOs unlinked but no new LO linked */
+            if (message && message.unlinkStatus === true && message.currentSlateLF === "") {
+                this.props.isLOExist(message);
+                this.props.currentSlateLO([]);
+                this.props.currentSlateLOMath([]);
+                this.props.currentSlateLOType("");
+            }
+            /** When All Slate LOs not unlinked */
+            else if (message && message.unlinkStatus === false) {
+                this.props.currentSlateLOType(message.currentSlateLF);
+                const existingSlateLOs = this.props.currentSlateLOData
+                const updatedSlateLOs = existingSlateLOs.filter(existingLO => message?.unlinkedLOs?.indexOf(existingLO.id) < 0);
+                this.props.currentSlateLO(updatedSlateLOs);
+                this.props.currentSlateLOMath(updatedSlateLOs);
+            }
+            this.setState({
+                showBlocker: false
+            });
+        }
+        /**
+         * This function is responsible for handling the updated LOs w.r.t. Slate 
+         * and updating the Metadata Anchor Elements on Slate
+         * @param {*} message Event Message on Saving Ext LF LO data for Slate
+         */
+        handleExtLOData = message => {
+            if (message.statusForExtLOSave) {
+                if (message?.loLinked?.length) {
+                    const regex = /<math.*?data-src=\'(.*?)\'.*?<\/math>/g;
+                    message.loLinked.map(loData => {
+                        loData.label.en = loData?.label?.en.replace(regex, "<img src='$1'></img>") ?? loData.label.en;
+                    });
+                }
+                const newLOsLinked = [...message.loLinked];
+                let slateData = this.props.slateLevelData;
+                const newSlateData = JSON.parse(JSON.stringify(slateData));
+                let bodymatter = newSlateData[config.slateManifestURN].contents.bodymatter;
+                let loDataToUpdate = prepareLODataForUpdate(bodymatter, message);
+                /** Update Existing Metadata Anchors on the Slate */
+                if (loDataToUpdate?.length) {
+                    loDataToUpdate.forEach(loUpdate => {
+                        this.props.updateElement(loUpdate)
+                    });
+                }
+                let updatedSlateLOs = []
+                if (message?.loUnlinked?.length && typeof message.loUnlinked[0] === 'string') {
+                    const existingSlateLOs = this.props.currentSlateLOData;
+                    updatedSlateLOs = existingSlateLOs.filter(existingLO => message?.loUnlinked?.indexOf(existingLO.id ?? existingLO.loUrn) < 0);
+                    updatedSlateLOs = updatedSlateLOs.concat(newLOsLinked ?? []);
+                } else {
+                    updatedSlateLOs = setCurrentSlateLOs(this.props.currentSlateLOData, message.loUnlinked, newLOsLinked);
+                }
+                const externalLOStatusMessage = Object.assign(message, {loListLength : updatedSlateLOs.length} )
+                this.props.isLOExist(externalLOStatusMessage);
+                this.props.currentSlateLO(updatedSlateLOs);
+                this.props.currentSlateLOMath(updatedSlateLOs);
+                this.props.currentSlateLOType(updatedSlateLOs.length ? EXTERNAL_LF : "");
+            }
+        }
         handleLOData = (message) => {
             if (message.statusForSave) {
-                message.loObj ? this.props.currentSlateLOMath(message.loObj.label.en) : this.props.currentSlateLOMath("");
+                message.loObj ? this.props.currentSlateLOMath([message.loObj.label.en]) : this.props.currentSlateLOMath("");
                 if (message.loObj && message.loObj.label && message.loObj.label.en) {
                     const regex = /<math.*?data-src=\'(.*?)\'.*?<\/math>/g
                     message.loObj.label.en = message.loObj.label.en.replace(regex, "<img src='$1'></img>");
                 }
-                message.loObj ? this.props.currentSlateLO(message.loObj) : this.props.currentSlateLO(message);
+                message.loObj ? this.props.currentSlateLO([message.loObj]) : this.props.currentSlateLO([message]);
+                this.props.currentSlateLOType(message.loObj?.loUrn || message.loObj?.id ? CYPRESS_LF : "");
                 this.props.isLOExist(message);
                 let slateData = this.props.slateLevelData;
                 const newSlateData = JSON.parse(JSON.stringify(slateData));
@@ -374,7 +512,8 @@ function CommunicationChannel(WrappedComponent) {
                         })
                     }
                 });
-                let loUrn = this.props.currentSlateLOData.id ? this.props.currentSlateLOData.id : this.props.currentSlateLOData.loUrn;
+                let currentSlateLOs = Array.isArray(this.props.currentSlateLOData) ? this.props.currentSlateLOData[0] : this.props.currentSlateLOData;
+                let loUrn = currentSlateLOs.id ? currentSlateLOs.id : currentSlateLOs.loUrn;
                 let LOWipData = {
                     "elementdata": {
                         "loref": loUrn

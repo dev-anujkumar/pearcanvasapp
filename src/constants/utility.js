@@ -8,7 +8,6 @@ import config from '../config/config';
 import cypressConfig from '../config/cypressConfig';
 import store from '../appstore/store'
 import { handleBlankLineDom } from '../component/ElementContainer/UpdateElements';
-
 // DECLARATION - const or variables 
 const WRAPPER_URL = config.WRAPPER_URL; // TO BE IMPORTED
 
@@ -485,3 +484,53 @@ export const getShowhideChildUrns = (element) => {
         return []
     }
 }
+
+export const removeClassesFromHtml = (html) => {
+    let tempDiv = document.createElement('div');
+    tempDiv.innerHTML = html;
+    tinyMCE.$(tempDiv).find('p').removeAttr('class')
+    return replaceUnwantedtags(tempDiv.innerHTML);
+}
+
+export const replaceUnwantedtags = (html) => {
+    if (!html) {
+        return;
+    }
+    let tempDiv = document.createElement('div');
+    html = html.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula').replace(/\uFEFF/g, "").replace(/>\s+</g, '><').replace(/data-mce-href="#"/g, '').replace(/ reset/g, '');
+    html = html.trim();
+    tempDiv.innerHTML = html;
+    tinyMCE.$(tempDiv).find('br').remove();
+    tinyMCE.$(tempDiv).find('.blockquote-hidden').remove();
+    tinyMCE.$(tempDiv).find('span#_mce_caret').remove();
+    tinyMCE.$(tempDiv).find('img').removeAttr('data-mce-style');
+    tinyMCE.$(tempDiv).find('img').removeAttr('data-custom-editor');
+    tinyMCE.$(tempDiv).find('ol').removeAttr('data-mce-style');
+    tinyMCE.$(tempDiv).find('ol').removeAttr('style');
+    tinyMCE.$(tempDiv).find('img').removeAttr('style');
+    tinyMCE.$(tempDiv).find('p').removeAttr('contenteditable');
+    tinyMCE.$(tempDiv).find('blockquote').removeAttr('contenteditable');
+    tinyMCE.$(tempDiv).find('blockquote').removeAttr('data-mce-selected');
+    tinyMCE.$(tempDiv).find('code').removeAttr('data-mce-selected');
+    tinyMCE.$(tempDiv).find('img').removeAttr('data-mce-selected');
+    tinyMCE.$(tempDiv).find('img.Wirisformula, img.temp_Wirisformula').removeAttr('height');
+    tinyMCE.$(tempDiv).find('img.Wirisformula, img.temp_Wirisformula').removeAttr('width');
+    tinyMCE.$(tempDiv).find('.blockquoteMarginalia').removeAttr('contenteditable');
+    tinyMCE.$(tempDiv).find('.paragraphNummerEins').removeAttr('contenteditable');
+    tinyMCE.$(tempDiv).find('img').removeAttr('draggable');
+    tinyMCE.$(tempDiv).find('img.temp_Wirisformula').removeClass('fr-draggable');
+    tinyMCE.$(tempDiv).find('a').removeAttr('data-mce-href');
+    tinyMCE.$(tempDiv).find('a').removeAttr('data-mce-selected');
+    tinyMCE.$(tempDiv).find('a').removeAttr('data-custom-editor');
+    tinyMCE.$(tempDiv).find('img.Wirisformula, img.temp_Wirisformula').removeAttr('src');
+    tinyMCE.$(tempDiv).find('img.imageAssetContent').removeAttr('data-mce-src');
+    tempDiv.innerHTML = removeBlankTags(tempDiv.innerHTML)
+    return encodeHTMLInWiris(tempDiv.innerHTML);
+}
+export const prepareDialogueDom = (model) => {
+    let ConvertedModel = model?.replace(/<p>/g, "")
+    ConvertedModel = ConvertedModel && ConvertedModel.replace(/<\/p>/g, "")
+    let lineModel = ConvertedModel ? ConvertedModel : '<span class="dialogueLine"><br /></span>'
+    return lineModel;
+}
+

@@ -1,3 +1,7 @@
+import { 
+    CURRENT_SLATE_LF,
+    TOGGLE_LO_WARNING_POPUP
+} from '../../constants/Action_Constants.js';
 export const currentSlateLO = (currentSlateLOData) =>  (dispatch, getState) => {
     return dispatch({
         type: 'CURRENT_SLATE_LO_DATA',
@@ -17,8 +21,11 @@ export const currentSlateLOMath = (currentSlateLODataMath) =>  (dispatch, getSta
 }
 
 export const isLOExist = (message) =>  (dispatch, getState) => {
-    if(message && (((message.loObj && (message.loObj.id|| message.loObj.loUrn))|| message.loUrn) ||
-        (message.toastData === "Learning Objectives has been aligned "))) {
+    const cypressLOLinked = (message && (((message.loObj && (message.loObj.id|| message.loObj.loUrn))|| message.loUrn) ||
+    (message.toastData === "Learning Objectives has been aligned ")));
+    const externalLOLinked = (message && (message.LOList && message.LOList.length > 0 ));
+    const externalLoUpdated = (message && message.statusForExtLOSave && (message.LO_Link_Status || (message?.loListLength > 0)));
+    if(cypressLOLinked || externalLOLinked || externalLoUpdated ) {
         return dispatch({
             type: 'SLATE_TAG_ENABLE',
             payload: true
@@ -65,5 +72,29 @@ export const reRenderLO = (isRenderLO) => (dispatch, getState) => {
     dispatch({
         type: 'RE_RENDER_META_LO',
         payload: isRenderLO
+    })
+}
+
+/**
+ * This actions sets the LF for the current slate
+ */
+export const currentSlateLOType = (learningFrameWork) => (dispatch) => {
+    return dispatch({
+        type: CURRENT_SLATE_LF,
+        payload: {
+            currentSlateLF: learningFrameWork,
+        }
+    })
+}
+
+/**
+ * This actions toggles the LO Warning Popup
+ */
+export const toggleLOWarningPopup = (toggleValue, warningActionIntiator) => (dispatch) => {
+    return dispatch({
+        type: TOGGLE_LO_WARNING_POPUP,
+        payload: {
+            toggleValue, warningActionIntiator
+        }
     })
 }

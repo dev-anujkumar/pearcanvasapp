@@ -343,6 +343,14 @@ export const nextIcon = (() => {
     )
 })();
 
+export const loNextIcon = (() => {
+    return (
+        <svg id="right-dropdown-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="24" viewBox="0 0 24 24">
+            <path fill="#000" d="M1.944 20c.536 0 1.073-.133 1.475-.532l8.045-7.973c.402-.399.536-.93.536-1.462 0-.531-.268-1.063-.536-1.462L3.419.598c-.804-.797-2.011-.797-2.816 0-.804.797-.804 1.993 0 2.79l6.704 6.645-6.704 6.645c-.804.797-.804 1.993 0 2.79.269.4.805.532 1.341.532z" />
+        </svg>
+    )
+})();
+
 export const editIcon = (() => {
     return (
         <svg xmlns="http://www.w3.org/2000/svg" height="10" viewBox="2 2 20 20" width="10" fill="white">
@@ -361,6 +369,29 @@ export const approvedIcon = (() => {
     )
 })();
 
+export const stageDirectionIcon = (() => {
+    return (
+        <svg width="24" height="24" viewBox="0 0 24 24">
+            <g fill="none" fill-rule="evenodd">
+                <path fill="#EEE" fill-opacity="0" d="M0 0H24V24H0z" transform="translate(-1036 -501) translate(391 432) translate(645 69)" />
+                <path fill="gray" d="M16.958 4.452c-.053-.165-.17-.302-.324-.38-.154-.08-.333-.094-.497-.04l-2.728.889c-.343.111-.53.48-.419.823l.137.421-6.94 5.11-2.736.892c-.165.054-.301.17-.38.325-.078.154-.093.334-.04.499l1.664 5.13c.09.277.345.452.62.452.067 0 .135-.01.202-.032l2.736-.891 1.407.007C9.942 18.994 11.128 20 12.544 20c1.405 0 2.583-.991 2.877-2.313l1.442.008.137.42c.053.166.17.303.324.381.092.048.194.072.296.072.068 0 .136-.011.201-.032l2.728-.889c.343-.112.53-.48.419-.824l-4.01-12.371zM5.734 17.096l-1.26-3.888 1.596-.52 1.26 3.888-1.596.52zm6.81 1.597c-.688 0-1.278-.426-1.523-1.029l3.04.016c-.25.594-.835 1.013-1.517 1.013zm-3.918-2.349l-.686-2.116-.685-2.116 6.296-4.637 1.93 5.958.958 2.952-7.813-.041zm9.412.746l-.08-.247v-.001l-1.723-5.316-1.803-5.564 1.488-.485 3.606 11.128-1.488.485z" transform="translate(-1036 -501) translate(391 432) translate(645 69)" />
+            </g>
+
+        </svg>
+    )
+})();
+
+export const dialougeElementIcon = (() => {
+    return (
+        <svg width="24" height="24" viewBox="0 0 24 24">
+            <g fill="none" fill-rule="evenodd">
+                <path fill="#EEE" fill-opacity="0" d="M0 0H24V24H0z" transform="translate(-1036 -465) translate(391 432) translate(645 33)" />
+                <path fill="#000" fill-rule="nonzero" d="M19.2 7.2h-1.6v7.2H7.2V16c0 .44.36.8.8.8h8.8L20 20V8c0-.44-.36-.8-.8-.8zM16 12V4.8c0-.44-.36-.8-.8-.8H4.8c-.44 0-.8.36-.8.8V16l3.2-3.2h8c.44 0 .8-.36.8-.8z" transform="translate(-1036 -465) translate(391 432) translate(645 33)" />
+            </g>
+        </svg>
+
+    )
+})();
 
 export const learnosityIcon = (() => {
     return (

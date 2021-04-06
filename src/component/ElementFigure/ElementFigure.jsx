@@ -345,7 +345,7 @@ class ElementFigure extends Component {
             figCaptionClass = figureAlignment['figCaptionClass'],
             figCreditClass = figureAlignment['figCreditClass'];
         var figureJsx;
-
+        
         if (model && model.figuretype === 'authoredtext') {
             let posterText = model.html.text
             if (posterText === "" || posterText === '<p></p>') {

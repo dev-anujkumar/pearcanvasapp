@@ -13,14 +13,14 @@ import { SlateFooter } from './SlateFooter.jsx';
 
 /** pasteElement function location to be changed */
 import { createElement, swapElement, setSplittedElementIndex, updatePageNumber, accessDenied, pasteElement, wirisAltTextPopup } from './SlateWrapper_Actions';
-import { sendDataToIframe, getSlateType } from '../../constants/utility.js';
-import { ShowLoader, SplitCurrentSlate } from '../../constants/IFrameMessageTypes.js';
+import { sendDataToIframe, getSlateType, defaultMathImagePath } from '../../constants/utility.js';
+import { ShowLoader, SplitCurrentSlate, OpenLOPopup, WarningPopupAction } from '../../constants/IFrameMessageTypes.js';
 import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
 import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
 import config from '../../config/config';
 import { TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER, WORKED_EXAMPLE, SECTION_BREAK, METADATA_ANCHOR, LO_LIST, ELEMENT_ASSESSMENT, OPENER,
     ALREADY_USED_SLATE , REMOVE_LINKED_AUDIO, NOT_AUDIO_ASSET, SPLIT_SLATE_WITH_ADDED_AUDIO , ACCESS_DENIED_CONTACT_ADMIN, IN_USE_BY, LOCK_DURATION, SHOW_HIDE,POP_UP ,
-    CITATION, ELEMENT_CITATION,SMARTLINK,POETRY ,STANZA, BLOCKCODE, TABLE_EDITOR, FIGURE_MML, MULTI_COLUMN, MMI_ELM,
+    CITATION, ELEMENT_CITATION,SMARTLINK,POETRY ,STANZA, BLOCKCODE, TABLE_EDITOR, FIGURE_MML, MULTI_COLUMN, MMI_ELM, ELEMENT_DIALOGUE,
 } from './SlateWrapperConstants';
 import PageNumberElement from './PageNumberElement.jsx';
 // IMPORT - Assets //
@@ -33,7 +33,8 @@ import { fetchAudioNarrationForContainer, deleteAudioNarrationForContainer, show
 import { setSlateLock, releaseSlateLock, setLockPeriodFlag, getSlateLockStatus } from '../CanvasWrapper/SlateLock_Actions'
 import { setActiveElement,openPopupSlate } from '../CanvasWrapper/CanvasWrapper_Actions';
 // import { OPEN_AM } from '../../js/auth_module';
-import { showSlateLockPopup } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
+import { showSlateLockPopup, toggleLOWarningPopup } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
+import { getMetadataAnchorLORef } from '../ElementMetaDataAnchor/ExternalLO_helpers.js';
 import { handleTCMData } from '../TcmSnapshots/TcmSnapshot_Actions.js'
 import {
     fetchSlateData
@@ -44,7 +45,7 @@ import LazyLoad, {forceCheck} from "react-lazyload";
 import { createPowerPasteElements } from './SlateWrapper_Actions.js';
 
 import { getCommentElements } from './../Toolbar/Search/Search_Action.js';
-import { TEXT_SOURCE } from '../../constants/Element_Constants.js';
+import { TEXT_SOURCE, CYPRESS_LF, cypressLOWarningtxt, externalLOWarningtxt } from '../../constants/Element_Constants.js';
 
 let random = guid();
 
@@ -628,7 +629,7 @@ class SlateWrapper extends Component {
 
                 }
                 else {
-                    let LOUrn = this.props.currentSlateLOData.id ? this.props.currentSlateLOData.id : this.props.currentSlateLOData.loUrn;
+                    let LOUrn = this.props.getMetadataAnchorLORef();
                     this.props.createElement(METADATA_ANCHOR, indexToinsert, parentUrn, asideData, null, LOUrn, null)
                 }
 
@@ -669,6 +670,10 @@ class SlateWrapper extends Component {
             case 'elm-interactive-elem':
                 this.props.createElement(MMI_ELM, indexToinsert, parentUrn, asideData, null, null, null);
                 break;
+            case 'element-dialogue':
+                this.props.createElement(ELEMENT_DIALOGUE, indexToinsert, parentUrn, asideData, null, null, null, null);
+                break;
+
             case 'text-elem':
             default:
                 this.props.createElement(TEXT, indexToinsert, parentUrn, asideData, null, null, null);
@@ -1236,6 +1241,80 @@ class SlateWrapper extends Component {
     }
 
     /**
+     * This method renders LO Warning Popup based on Selection 
+     */
+    showLOWarningPopup = () => {
+        const currentSlateLF = this.props.currentSlateLF;
+        const loWarningDialogTxt = (currentSlateLF === CYPRESS_LF) ? cypressLOWarningtxt : externalLOWarningtxt;
+        if (this.props?.loWarningPopupData?.toggleValue) {
+            this.props.showBlocker(true);
+            showTocBlocker();
+            return (
+                <PopUp dialogText={loWarningDialogTxt}
+                    active={true}
+                    warningHeaderText={`Warning`}
+                    togglePopup={this.toggleWarningPopup}
+                    isInputDisabled={true}
+                    lOPopupClass="lo-warning-txt"
+                    LOPopup={true}
+                    yesButtonHandler={this.unlinkSlateLOs}
+                />
+            )
+        } else {
+            return null
+        }
+    }
+
+    /**
+     * LO Warning Popup
+     * This method is called on click of Cancel Button 
+     */
+    toggleWarningPopup = (toggleValue, event) => {
+        this.props.toggleLOWarningPopup(toggleValue, "");
+        this.props.showBlocker(false);
+        hideBlocker();
+        this.prohibitPropagation(event)
+    }
+
+    /**
+     * LO Warning Popup
+     * This method is called on click of Yes Button 
+     * It unlinks the current slate LOs and then launches new popup
+     */
+    unlinkSlateLOs = (e) => {
+        const slateManifestURN = config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN;
+        const { currentSlateLOData } = this.props;
+        const apiKeys_LO = {
+            'loApiUrl': config.LEARNING_OBJECTIVES_ENDPOINT,
+            'strApiKey': config.STRUCTURE_APIKEY,
+            'mathmlImagePath': config.S3MathImagePath ?? defaultMathImagePath,
+            'productApiUrl': config.PRODUCTAPI_ENDPOINT,
+            'manifestApiUrl': config.ASSET_POPOVER_ENDPOINT,
+            'assessmentApiUrl': config.ASSESSMENT_ENDPOINT
+        };
+        let externalLFUrn = '';
+        if (this?.props?.projectLearningFrameworks?.externalLF?.length) {
+            externalLFUrn = this.props.projectLearningFrameworks.externalLF[0].urn;
+        }
+        const warningActionIntiator = this.props?.loWarningPopupData?.warningActionIntiator ?? "";
+        sendDataToIframe({
+            'type': OpenLOPopup, 'message': {
+                'text': WarningPopupAction,
+                'data': currentSlateLOData,
+                'currentSlateId': slateManifestURN,
+                'chapterContainerUrn': '',
+                'isLOExist': true,
+                'editAction': '',
+                'apiConstants': apiKeys_LO,
+                'warningActionIntiator': warningActionIntiator,
+                'externalLFUrn': externalLFUrn,
+                'currentSlateLF': this.props.currentSlateLF
+            }
+        });
+        this.props.toggleLOWarningPopup(false, "");
+    }
+
+    /**
      * render | renders title and slate wrapper
      */
     render() {
@@ -1290,6 +1369,7 @@ class SlateWrapper extends Component {
                 {this.wirisAltTextPopup()}
                 {/* **************** Word Paste Popup ************ */}
                 {this.showWordPastePopup()}
+                {this.showLOWarningPopup()}{/* **************** LO Warning Popup ************ */}
             </React.Fragment>
         );
     }
@@ -1336,7 +1416,10 @@ const mapStateToProps = state => {
         showToast: state.appStore.showToast,
         showConfirmationPopup: state.assessmentReducer.showConfirmationPopup,
         userRole: state.appStore.roleId,
-        wirisAltText: state.appStore.wirisAltText
+        wirisAltText: state.appStore.wirisAltText,
+        currentSlateLF: state.metadataReducer.currentSlateLF,
+        loWarningPopupData: state.metadataReducer.loWarningPopupData,
+        projectLearningFrameworks: state.metadataReducer.projectLearningFrameworks
     };
 };
 
@@ -1368,6 +1451,8 @@ export default connect(
         pasteElement,
         wirisAltTextPopup,
         audioGlossaryPopup,
-        createPowerPasteElements
+        createPowerPasteElements,
+        getMetadataAnchorLORef,
+        toggleLOWarningPopup
     }
 )(SlateWrapper);

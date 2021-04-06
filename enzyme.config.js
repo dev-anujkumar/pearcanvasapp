@@ -70,3 +70,8 @@ global.window.crypto={
 global.window.origin= "https://localhost:"
 global.window.parent.postMessage = jest.fn();
 global.window.parent.origin= "https://localhost:"
+global.window.matchMedia = () => {
+    return {
+        matches: []
+    }
+}

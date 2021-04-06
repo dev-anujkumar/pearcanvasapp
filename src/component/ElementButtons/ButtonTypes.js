@@ -6,6 +6,8 @@ export default {
     DELETE_ELEMENT : "delete-element",
     TCM : "tcm",
     EXPAND : "expand",
+    STAGE_DIRECTION: 'stage-direction',
+    DIALOGUE_ELEMENT: 'dialogue-element',
     SPLIT_SLATE : "split",
     COLOR_PALETTE : "color-palette",
     COLOR_TEXT : "color-text",

@@ -17,6 +17,7 @@ import { customEvent } from '../../js/utils.js';
 import { disabledPrimaryOption } from '../../constants/Element_Constants.js';
 import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants';
 import { SECONDARY_SINGLE_ASSESSMENT_LEARNOSITY } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js'
+import { createPSDataForUpdateAPI } from '../ElementDialogue/DialogueElementUtils.js';
 
 
 class Sidebar extends Component {
@@ -281,7 +282,43 @@ class Sidebar extends Component {
             attrInput: event.target.value
         })
     }
-    
+
+    handleDialogueBlur = () => {
+        // dialouge blur and again display element so taht api is called
+        let activeBCEElementNode = document.getElementById(`cypress-${this.props.activeElement.index}-Act-Title`)
+        if (activeBCEElementNode) {
+            activeBCEElementNode.focus()
+            activeBCEElementNode.blur()
+        }
+        
+    }
+
+    handleDialogueToggle = () => {
+
+        this.props.setBCEMetadata('numbered', !this.state.bceToggleValue);
+        this.setState({bceToggleValue: !this.state.bceToggleValue});
+        this.handleDialogueBlur();
+    }
+
+    handleDialogueNumber = (e) => {
+        const regex = /^[0-9]*(?:\.\d{1,2})?$/
+        if (regex.test(e.target.value)) {
+            this.props.setBCEMetadata('startNumber', e.target.value);  
+            this.setState({ bceNumberStartFrom: e.target.value });
+            // this.handleDialogueBlur();
+        }
+    }
+
+
+    callUpdateApi = (newPSData) => {
+        /* @@createPSDataForUpdateAPI - Prepare the data to send to server */
+        const { index, parentUrn, asideData, parentElement } = this.props;
+        const dataToSend = createPSDataForUpdateAPI(this.props, newPSData)
+        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+        config.isSavingElement = true
+        this.props.updateElement(dataToSend, index, parentUrn, asideData, null, parentElement, null);
+    }
+
     attributions = () => {
         let attributions = '';
         let attributionsObject = {};
@@ -350,6 +387,22 @@ class Sidebar extends Component {
                     return attributions;
             }
 
+            if (this.state.activePrimaryOption && this.state.activePrimaryOption === "primary-element-dialogue" && this.props.activeElement.elementId) {
+                attributions = <div>
+                    <div className="panel_show_module">
+                        <div className="toggle-value-bce">Use Line Numbers</div>
+                        <label className="switch"><input type="checkbox" checked={(this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true} onClick={!hasReviewerRole() && !config.savingInProgress && this.handleDialogueToggle} />
+                            <span className="slider round"></span></label>
+                    </div>
+                    <div className="alt-Text-LineNumber" >
+                        <div className="toggle-value-bce">Start numbering from</div>
+                        <input type="number" id="line-number" className="line-number" min="1" onChange={!config.savingInProgress && this.handleDialogueNumber} value={this.state.bceNumberStartFrom}
+                            disabled={!((this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true) || hasReviewerRole()} onBlur={this.handleDialogueBlur} />
+                    </div>
+                </div>
+                return attributions;
+            }
+
             attributions = <div className="attributions">
                 {attributions}
             </div>;
@@ -365,6 +418,10 @@ class Sidebar extends Component {
             activeBCEElementNode.blur()
         }
     }
+
+   
+
+
 
     handleBQAttributionBlur = () => {
         let activeBQNode = document.querySelector(`#cypress-${this.props.activeElement.index} p`)
