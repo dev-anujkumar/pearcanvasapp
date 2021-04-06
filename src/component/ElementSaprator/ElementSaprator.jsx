@@ -135,7 +135,7 @@ export function ElementSaprator(props) {
         if (!config.isPopupSlate && (allowedRoles.includes(props.userRole) || permissions.includes('cut/copy')) && pasteValidation) {
             return (
                 <div className={`elemDiv-expand paste-button-wrapper ${(type == 'cut' && !pasteIcon) ? 'disabled' : ''}`} onClickCapture={(e) => props.onClickCapture(e)}>
-                    <Tooltip direction='left' tooltipText='Paste element'>
+                    <Tooltip direction='paste' tooltipText='Paste element'>
                         <Button type="paste" onClick={() => pasteElement(separatorProps, togglePaste, type)} />
                     </Tooltip>
                 </div>
@@ -154,7 +154,7 @@ export function ElementSaprator(props) {
         const insertionIndex = firstOne ? index : index + 1
         return (
             <div className={`elemDiv-expand paste-button-wrapper}`} onClickCapture={onClickCapture} >
-                <Tooltip direction='left' tooltipText='Paste from Word'>
+                <Tooltip direction='poc' tooltipText='Paste from Word'>
                     <Button type="powerpaste" onClick={() => props.handleCopyPastePopup(true, insertionIndex)} />
                 </Tooltip>
             </div>
@@ -181,7 +181,7 @@ export function ElementSaprator(props) {
             {pasteRender ? renderPasteButton(props, operationType) : ''}
             <div className='elemDiv-expand'>
                 <div className="dropdown" ref={buttonRef}>
-                    <Tooltip direction='left' tooltipText='Element Picker'>
+                    <Tooltip direction='picker' tooltipText='Add Element'>
                         {permissions.includes('elements_add_remove') && !hasReviewerRole() && <Button onClick={(event) => toggleElementList(event)} className="dropbtn" type="expand" />}
                     </Tooltip>
                     <div id="myDropdown" className={showClass ? 'dropdown-content show' : 'dropdown-content'}>

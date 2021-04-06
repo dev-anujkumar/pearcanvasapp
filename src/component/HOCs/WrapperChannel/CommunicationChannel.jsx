@@ -415,7 +415,7 @@ function CommunicationChannel(WrappedComponent) {
             let slateLOElems = getSlateMetadataAnchorElem(bodymatter);
             let loDataToUpdate = [];
             /** Update All Metadata Anchor Elements for LOs Unlinked */
-            message?.loUnlinked.forEach(loItem => {
+            message?.unlinkedLOs?.forEach(loItem => {
                 let metadataElems = slateLOElems.filter(metadataElem => metadataElem.loUrn === loItem);
                 if (metadataElems.length) {
                     let LOWipData = prepareLO_WIP_Data("unlink", "", metadataElems, config.slateManifestURN);
@@ -425,6 +425,7 @@ function CommunicationChannel(WrappedComponent) {
             })
             /** When All Slate LOs unlinked but no new LO linked */
             if (message && message.unlinkStatus === true && message.currentSlateLF === "") {
+                this.props.isLOExist(message);
                 this.props.currentSlateLO([]);
                 this.props.currentSlateLOMath([]);
                 this.props.currentSlateLOType("");
