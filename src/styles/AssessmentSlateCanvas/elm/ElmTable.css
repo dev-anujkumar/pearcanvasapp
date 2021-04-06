@@ -385,3 +385,7 @@ width: 50%;
   background-image: none !important;
   color: -internal-light-dark-color(black, white) !important;
 }
+
+.learnosity-button{
+  margin-left:39px;
+}
