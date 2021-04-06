@@ -64,7 +64,7 @@ export const getSlateMetadataAnchorElem = (slateElements = [], existingSlateMeta
                             metadataAnchorElement = { id: nestedElem.id, loUrn: nestedElem?.elementdata?.loref ?? "", index: `${index}-${nestedIndex}` };
                         }
                         /** MA inside Aside/WE:BODY */
-                        else if (nestedElem.type == elementConstants.ELEM_SECTION_BREAK) {
+                        else if (nestedElem.type == elementConstants.ELEMENT_SECTION_BREAK) {
                             nestedElem.contents.bodymatter.map((weBodyElem, weIndex) => {
                                 if (weBodyElem.type == elementConstants.METADATA_ANCHOR) {
                                     metadataAnchorElement = { id: weBodyElem.id, loUrn: weBodyElem?.elementdata?.loref ?? "", index: `${index}-${nestedIndex}-${weIndex}` };
@@ -135,7 +135,7 @@ export const prepareLODataForUpdate = (slateBodymatter, message) => {
  * @param {*} slateManifestURN slate id
  * @returns {Object} LO WIP Data - Request payload to update Metadata Anchor Element
  */
-const prepareLO_WIP_Data = (type, loUrn, metadataElems, slateManifestURN) => {
+export const prepareLO_WIP_Data = (type, loUrn, metadataElems, slateManifestURN) => {
 
     const metadataIDs = type === "unlink" ? (metadataElems?.map(metadataElem => metadataElem.id) ?? []) : [metadataElems.id];
     const metadataIndexes = type === "unlink" ? (metadataElems?.map(metadataElem => metadataElem.index) ?? []) : [metadataElems.index];

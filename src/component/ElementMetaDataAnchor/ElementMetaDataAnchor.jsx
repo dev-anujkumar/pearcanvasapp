@@ -118,9 +118,6 @@ export class ElementMetaDataAnchor extends Component {
         this.launchExternalFrameworkPopup()
       }
     else{
-        if (loData && loData.label && loData.label.en) {
-          loData.label.en = this.props.currentSlateLODataMath;
-        }
         this.props.showBlocker(true);
         let slateManifestURN= config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
         let apiKeys_LO = {
