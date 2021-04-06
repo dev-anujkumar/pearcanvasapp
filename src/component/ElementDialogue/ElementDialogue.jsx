@@ -199,6 +199,7 @@ class ElementDialogue extends React.PureComponent {
         let callUpdate = false;
         let newPSData = JSON.parse(JSON.stringify(this.props.element)) || {};
         if (newPSData?.html?.hasOwnProperty(field)) {
+             newPSData.html[field] = `<p>${removeBlankTags(eventTarget?.innerHTML)}</p>` 
             if (removeClassesFromHtml(this.props.element.html?.[field]) !== removeClassesFromHtml(newPSData.html[field]) && !config.savingInProgress) {
                 // create data and call update API
                 callUpdate = true;
