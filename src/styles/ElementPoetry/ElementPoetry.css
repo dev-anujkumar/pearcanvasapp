@@ -1,7 +1,7 @@
 .poetryLine:nth-of-type(even){
      background-color:#fff;
 } 
-.poetryLine{
+.poetryLine, .dialogueLine{
     display: block;
     min-height: 22px;
     color: #000;
