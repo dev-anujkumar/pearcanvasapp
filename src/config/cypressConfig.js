@@ -41,7 +41,7 @@ let cypressConfig = {
     poetryStanzaToolbar:['insertMedia','formatSelector','increaseindent','decreaseindent','orderedlist','unorderedlist'],
     sdToolbar: ['insertMedia','formatSelector','crossLinkingIcon', 'italic', 'assetpopover', 'footnote', 'glossary','decreaseindent'],
     deCharacterToolbar: ['insertMedia', 'formatSelector', 'crossLinkingIcon', 'bold', 'assetpopover', 'footnote', 'glossary', 'decreaseindent'],
-    playScriptToolbar:['insertMedia','formatSelector','decreaseindent','glossary','crossLinkingIcon', 'footnote', 'assetpopover','orderedlist','unorderedlist','inlinecode'],
+    playScriptToolbar:['insertMedia','formatSelector','decreaseindent','glossary','crossLinkingIcon', 'footnote', 'assetpopover','orderedlist','unorderedlist'],
     APO_API_KEY : '7ij8zrLkCNR9DtAXx3KJ6yutoYnk4SAx',
     editorRefID:"",
     releaseCallCount: 0,

@@ -2783,15 +2783,15 @@ export class TinyMceEditor extends Component {
                     break;
                 }
                 case "Enter Dialogue...": {
-                    toolbar = [...config.playScriptToolbar, 'mathml', 'chemml'];
+                    toolbar = [...config.playScriptToolbar, 'mathml', 'chemml', 'inlinecode'];
                     break;
                 }
                 case "Enter Stage Directions...": {
-                    toolbar = [...config.playScriptToolbar, 'italic', 'mathml', 'chemml'];
+                    toolbar = [...config.playScriptToolbar, 'italic', 'mathml', 'chemml', 'inlinecode'];
                     break;
                 }
                 case "Enter Character Name...": {
-                        toolbar = [...config.playScriptToolbar, 'bold', 'mathml', 'chemml'];
+                        toolbar = [...config.playScriptToolbar, 'bold', 'mathml', 'chemml', 'inlinecode'];
                     break;
                 }
                 default: break;
