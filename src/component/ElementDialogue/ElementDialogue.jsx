@@ -10,11 +10,16 @@ import config from "../../config/config.js";
 import { sendDataToIframe, removeBlankTags, removeClassesFromHtml } from '../../constants/utility.js';
 import { createPSDataForUpdateAPI } from './DialogueElementUtils';
 import { setBCEMetadata } from '../Sidebar/Sidebar_Action';
+import PopUp from '../PopUp';
+
 class ElementDialogue extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
-            selectedInnerElementIndex: null
+            selectedInnerElementIndex: null,
+            popup: false,
+            psElementIndex: null,
+            oldPSData: {}
         }
     }
 
@@ -41,7 +46,8 @@ class ElementDialogue extends React.PureComponent {
         this.callUpdateApi(newPsElement);
     }
 
-    deleteElement = (psIndex, psElementIndex, oldPSData) => {
+    deleteElement = () => {
+        const { psElementIndex, oldPSData } = this.state;
         const dialogueContent = oldPSData.html.dialogueContent;
         dialogueContent.splice(psElementIndex, 1);
         const newPsElement = {
@@ -52,6 +58,7 @@ class ElementDialogue extends React.PureComponent {
             }
         }
         this.callUpdateApi(newPsElement);
+        this.setState({ popup: false });
     }
     /**
      * 
@@ -156,10 +163,13 @@ class ElementDialogue extends React.PureComponent {
                             (<Button
                                 type="delete-element"
                                 onClick={(e) => {
-                                    this.deleteElement(this.props.index, index, element);
+                                    //this.deleteElement(this.props.index, index, element);
                                     // deleteElement(elementIndex, index, element);
                                     // show delete element popup
-                                    // props.showDeleteElemPopup(e, true)
+                                     //props.showDeleteElemPopup(e, true)
+                                    this.setState({ 
+                                        popup: true, psElementIndex: index, oldPSData: element
+                                     });
                                 }}
                             />)
                             : null
@@ -317,6 +327,11 @@ class ElementDialogue extends React.PureComponent {
                             />
                         </div>
                     </div>
+                     { this.state.popup && <PopUp
+                        active={this.state.popup}
+                        showDeleteElemPopup={true}
+                        deleteElement={this.deleteElement}
+                />}
                 </div>
                 : ''
         )

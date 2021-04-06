@@ -2777,18 +2777,21 @@ export class TinyMceEditor extends Component {
         if (this.props.element.type === "element-dialogue") {
             switch(this.props.placeholder){
                 case "Enter Act Title...": 
-                case "Enter Scene Title...":
-                case "Enter Dialogue...": 
+                case "Enter Scene Title...": 
                 case "Enter Credit...": { 
                     toolbar = [...config.playScriptToolbar];
                     break;
                 }
+                case "Enter Dialogue...": {
+                    toolbar = [...config.playScriptToolbar, 'mathml', 'chemml', 'inlinecode'];
+                    break;
+                }
                 case "Enter Stage Directions...": {
-                    toolbar = [...config.playScriptToolbar, 'italic'];
+                    toolbar = [...config.playScriptToolbar, 'italic', 'mathml', 'chemml', 'inlinecode'];
                     break;
                 }
                 case "Enter Character Name...": {
-                        toolbar = [...config.playScriptToolbar, 'bold'];
+                        toolbar = [...config.playScriptToolbar, 'bold', 'mathml', 'chemml', 'inlinecode'];
                     break;
                 }
                 default: break;
