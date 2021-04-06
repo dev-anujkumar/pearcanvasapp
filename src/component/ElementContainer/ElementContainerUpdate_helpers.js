@@ -101,6 +101,8 @@ export const updateElementInStore = (paramsObj) => {
             ...updatedData,
             elementdata: {
                 ...element.elementdata,
+                startNumber: updatedData.elementdata ? updatedData.elementdata.startNumber : null,
+                numberedlines: updatedData.elementdata ? updatedData.elementdata.numberedlines : null,
                 text: updatedData.elementdata ? updatedData.elementdata.text : null
             },
             tcm: _slateObject.tcm ? true : false
