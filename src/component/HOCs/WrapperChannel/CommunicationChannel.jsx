@@ -162,6 +162,7 @@ function CommunicationChannel(WrappedComponent) {
                     let newMessage = { assessmentResponseMsg: message.assessmentResponseMsg };
                     this.props.isLOExist(newMessage);
                     this.props.currentSlateLO(newMessage);
+                    this.props.currentSlateLOType(CYPRESS_LF);
                     break;
                 case 'refreshSlate':
                     this.handleRefreshSlate();
