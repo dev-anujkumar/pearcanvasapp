@@ -14,7 +14,7 @@ import { SlateFooter } from './SlateFooter.jsx';
 /** pasteElement function location to be changed */
 import { createElement, swapElement, setSplittedElementIndex, updatePageNumber, accessDenied, pasteElement, wirisAltTextPopup } from './SlateWrapper_Actions';
 import { sendDataToIframe, getSlateType, defaultMathImagePath } from '../../constants/utility.js';
-import { ShowLoader, SplitCurrentSlate, OpenLOPopup, WarningPopupAction } from '../../constants/IFrameMessageTypes.js';
+import { ShowLoader, SplitCurrentSlate, OpenLOPopup, WarningPopupAction, AddEditLearningObjectiveDropdown } from '../../constants/IFrameMessageTypes.js';
 import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
 import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
 import config from '../../config/config';
@@ -1297,6 +1297,7 @@ class SlateWrapper extends Component {
             externalLFUrn = this.props.projectLearningFrameworks.externalLF[0].urn;
         }
         const warningActionIntiator = this.props?.loWarningPopupData?.warningActionIntiator ?? "";
+        const editActionStatus = warningActionIntiator == AddEditLearningObjectiveDropdown ? true : "";
         sendDataToIframe({
             'type': OpenLOPopup, 'message': {
                 'text': WarningPopupAction,
@@ -1304,7 +1305,7 @@ class SlateWrapper extends Component {
                 'currentSlateId': slateManifestURN,
                 'chapterContainerUrn': '',
                 'isLOExist': true,
-                'editAction': '',
+                'editAction': editActionStatus,
                 'apiConstants': apiKeys_LO,
                 'warningActionIntiator': warningActionIntiator,
                 'externalLFUrn': externalLFUrn,
