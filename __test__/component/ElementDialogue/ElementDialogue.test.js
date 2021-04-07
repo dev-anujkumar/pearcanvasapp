@@ -63,17 +63,21 @@ const oldPSData = {
 	};
 
 jest.mock('../../../src/component/tinyMceEditor.js', () => {
-    return function (callBlur) {
-        //return (<div>null</div>)
-		return <input type="text" onBlur={callBlur}/>
+    return function () {
+        return (<div>null</div>)
     }
 })
-
+jest.mock('../../../src/component/PopUp', () => {
+    return function () {
+        return (<div>null</div>)
+    }
+})
 const mockStore = configureMockStore(middlewares);
 let initialState = {
 	appStore: {
 		asideData: {},
-		parentUrn: {}
+		parentUrn: {},
+		activeElement: {}
 	}
 };
 
@@ -101,7 +105,11 @@ describe('1. Dialogue element test cases', () => {
 			},
 			handleOnMouseOver: jest.fn(),
 			onMouseOut: jest.fn(),
-			onClickCapture: jest.fn()
+			onClickCapture: jest.fn(),
+			elementdata: { 
+				startNumber: 2,
+				numberedlines : false
+			}
 		},
 		deleteScriptElement: jest.fn(),
 		elemBorderToggle: true,
@@ -110,7 +118,9 @@ describe('1. Dialogue element test cases', () => {
 		activeElement: {
 			elementId: "urn:pearson:work:c771a9fa-ef29-497c-bb6d-8dcfbb083181"
 		},
-		elementId: "urn:pearson:work:c771a9fa-ef29-497c-bb6d-8dcfbb083181"
+		elementId: "urn:pearson:work:c771a9fa-ef29-497c-bb6d-8dcfbb083181",
+		//
+		setBCEMetadata: jest.fn(), 
 	};
     it('1.1 Dialogue element render successfully', () => {
 		const store = mockStore(initialState);
@@ -129,7 +139,7 @@ describe('1. Dialogue element test cases', () => {
     });
 	describe('1.4 Test setBorderToggle Function', () => {
 		
-		it('1.4 Test handleOuterBlur Function 1st & 2nd If conditions', () => {
+		it('1.4 Test setBorderToggle Function 1st & 2nd If conditions', () => {
 			const compInstance = dialogueInstance(props);
 			expect(compInstance).toBeDefined();
 			const spy = jest.spyOn(compInstance, 'setBorderToggle')
@@ -137,7 +147,7 @@ describe('1. Dialogue element test cases', () => {
 			expect(spy).toHaveBeenCalled()
 			spy.mockClear()
 		});
-		it('1.5 Test handleOuterBlur Function 1st else-If condition', () => {
+		it('1.5 Test setBorderToggle Function 1st else-If condition', () => {
 			const compInstance = dialogueInstance(props);
 			expect(compInstance).toBeDefined();
 			const spy = jest.spyOn(compInstance, 'setBorderToggle')
@@ -145,7 +155,7 @@ describe('1. Dialogue element test cases', () => {
 			expect(spy).toHaveBeenCalled()
 			spy.mockClear()
 		});
-		it('1.6 Test handleOuterBlur Function 2nd else condition', () => {
+		it('1.6 Test setBorderToggle Function 2nd else condition', () => {
 			const compInstance = dialogueInstance(props);
 			expect(compInstance).toBeDefined();
 			const spy = jest.spyOn(compInstance, 'setBorderToggle')
@@ -153,7 +163,7 @@ describe('1. Dialogue element test cases', () => {
 			expect(spy).toHaveBeenCalled()
 			spy.mockClear()
 		});
-		it('1.7 Test handleOuterBlur Function 3rd else-if condition', () => {
+		it('1.7 Test setBorderToggle Function 3rd else-if condition', () => {
 			props.borderToggle = undefined;
 			const compInstance = dialogueInstance(props);
 			expect(compInstance).toBeDefined();
@@ -162,7 +172,7 @@ describe('1. Dialogue element test cases', () => {
 			expect(spy).toHaveBeenCalled()
 			spy.mockClear()
 		});
-		it('1.8 Test handleOuterBlur Function last else condition', () => {
+		it('1.8 Test setBorderToggle Function last else condition', () => {
 			props.borderToggle = undefined;
 			const compInstance = dialogueInstance(props);
 			expect(compInstance).toBeDefined();
@@ -174,6 +184,7 @@ describe('1. Dialogue element test cases', () => {
  	});
 	it('1.5 Test handleOuterBlur Function', () => {
 		let prop = {
+			...props,
 			borderToggle: "showBorder",
 			btnClassName: "",
 			deleteElement: jest.fn(),
@@ -193,6 +204,9 @@ describe('1. Dialogue element test cases', () => {
 			type: undefined,
 			updatePageNumber: undefined,
 			userRole: "admin",
+			activeElement: {
+			 	elementId: "urn:pearson:work:c771a9fa-ef29-497c-bb6d-8dcfbb083180"
+			}
 		}
 		const compInstance = dialogueInstance(prop);
         expect(compInstance).toBeDefined();
@@ -222,9 +236,12 @@ describe('1. Dialogue element test cases', () => {
     });
 	it('1.8 Test deleteElement   Function', () => {
 		const compInstance = dialogueInstance(props);
+		compInstance.setState({
+			psElementIndex: 0, oldPSData: oldPSData
+		});
         expect(compInstance).toBeDefined();
 		const spy = jest.spyOn(compInstance, 'deleteElement')
-		compInstance.deleteElement(0, 0, oldPSData);
+		compInstance.deleteElement();
 		expect(spy).toHaveBeenCalled()
 		spy.mockClear()
     });
