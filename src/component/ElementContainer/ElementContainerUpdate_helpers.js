@@ -30,7 +30,7 @@ export const updateNewVersionElementInStore = (paramObj) => {
         slateManifestURN
     } = paramObj
 
-    const parentVersionUrn = versionedData.newParentVersion ? versionedData.newParentVersion : parentElement.id,
+    const parentVersionUrn = versionedData.newParentVersion ? versionedData.newParentVersion : parentElement?.id,
         CONTAINER_VERSIONING = "containerVersioning",
         PARENTELEMENT_TYPES = ["poetry", "showhide", "citations", "groupedcontent"]
 
