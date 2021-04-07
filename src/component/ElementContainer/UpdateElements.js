@@ -12,7 +12,7 @@ const indivisualData = {
     mathml: [ ]
 }
 
-const replaceUnwantedtags = (html,flag) => {
+export const replaceUnwantedtags = (html,flag) => {
     let tempDiv = document.createElement('div'); 
     tempDiv.innerHTML = html;
     tinyMCE.$(tempDiv).find('br').remove();

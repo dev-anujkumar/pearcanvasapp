@@ -7,11 +7,12 @@ import "../../styles/ElementDialogue/DialogueStyles.css"
 import { connect } from 'react-redux';
 import { updateElement } from '../ElementContainer/ElementContainer_Actions.js';
 import config from "../../config/config.js";
-import { sendDataToIframe, removeBlankTags, removeClassesFromHtml } from '../../constants/utility.js';
+import { sendDataToIframe, removeClassesFromHtml, matchHTMLwithRegex } from '../../constants/utility.js';
 import { createPSDataForUpdateAPI } from './DialogueElementUtils';
 import { setBCEMetadata } from '../Sidebar/Sidebar_Action';
 import PopUp from '../PopUp';
 import { hideBlocker, showTocBlocker } from '../../js/toggleLoader';
+import { replaceUnwantedtags } from '../ElementContainer/UpdateElements';
 class ElementDialogue extends React.PureComponent {
     constructor(props) {
         super(props);
@@ -218,9 +219,9 @@ class ElementDialogue extends React.PureComponent {
         let callUpdate = false;
         let newPSData = JSON.parse(JSON.stringify(this.props.element)) || {};
         if (newPSData?.html?.hasOwnProperty(field)) {
-            newPSData.html[field] = (field === "credits") ? 
-                `<p>${removeBlankTags(eventTarget?.innerText)}</p>` :
-                `<p>${removeBlankTags(eventTarget?.innerHTML)}</p>`;
+            const creditsHTML = replaceUnwantedtags(eventTarget?.innerHTML, true);
+            const tempCredit = matchHTMLwithRegex(creditsHTML) ? creditsHTML : `<p>${creditsHTML}</p>`
+            newPSData.html[field] = tempCredit;
             if (removeClassesFromHtml(this.props.element.html?.[field]) !== removeClassesFromHtml(newPSData.html[field]) && !config.savingInProgress) {
                 // create data and call update API
                 callUpdate = true;
@@ -333,7 +334,7 @@ class ElementDialogue extends React.PureComponent {
                                 {...copmpProps}
                                 index={`${this.props.index}-Credit`}
                                 placeholder="Enter Credit..."
-                                tagName={'p'}
+                                tagName={'div'}
                                 className={" figureCredit "}
                                 model={this.props.element?.html?.credits}
                                 handleBlur={(forceupdate, currentElement, eIndex, showHideType, eventTarget) => this.handleOuterBlur("credits", eventTarget)}
