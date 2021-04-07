@@ -77,6 +77,7 @@ export const LIST_TYPE_MAPPINGS = {
 
 
 /****************SlateTagDropdown************************ */ 
+export const SLATE_ASSESSMENT = 'assessment';
 export const ASSESSMENT_ITEM = 'assessmentItem';
 export const ASSESSMENT_ITEM_TDX = 'tdxAssessmentItem';
 
