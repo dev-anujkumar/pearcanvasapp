@@ -11,7 +11,7 @@ import { sendDataToIframe, removeBlankTags, removeClassesFromHtml } from '../../
 import { createPSDataForUpdateAPI } from './DialogueElementUtils';
 import { setBCEMetadata } from '../Sidebar/Sidebar_Action';
 import PopUp from '../PopUp';
-
+import { hideBlocker, showTocBlocker } from '../../js/toggleLoader';
 class ElementDialogue extends React.PureComponent {
     constructor(props) {
         super(props);
@@ -58,10 +58,18 @@ class ElementDialogue extends React.PureComponent {
             }
         }
         this.callUpdateApi(newPsElement);
-        this.setState({ popup: false });
+        this.closePopup();
     }
     closePopup = () => {
         this.setState({ popup: false });
+        this.props.showBlocker(false)
+        hideBlocker();
+    }
+    /*** @description - This function is to disable all components 
+                        when update Popups are open in window */
+    showCanvasBlocker = () => {
+        this.props.showBlocker(true);
+        showTocBlocker();
     }
     /**
      * 
@@ -166,6 +174,8 @@ class ElementDialogue extends React.PureComponent {
                             (<Button
                                 type="delete-element"
                                 onClick={(e) => {
+                                    e.stopPropagation();
+                                    this.showCanvasBlocker();
                                     this.setState({ 
                                         popup: true, psElementIndex: index, oldPSData: element
                                      });
