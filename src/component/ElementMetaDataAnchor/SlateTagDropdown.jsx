@@ -195,10 +195,10 @@ class SlateTagDropdown extends React.Component {
 
   /** Handle Button Status for Cypress LO Options */
   handleCypressLODropdownOptions = () => {
-    const { currentSlateLOData, currentSlateLF } = this.props
+    const { currentSlateLOData, currentSlateLF, isLOExist } = this.props
     const currentSlateLO = currentSlateLOData ? Array.isArray(currentSlateLOData) ? currentSlateLOData[0] : currentSlateLOData : {}
     let enableStatus = {
-      viewLOStatus: currentSlateLF == CYPRESS_LF ? currentSlateLOData && (currentSlateLOData.assessmentResponseMsg || currentSlateLOData.statusForSave) ? '' : currentSlateLO && (currentSlateLO.id ?? currentSlateLO.loUrn) : false,
+      viewLOStatus: currentSlateLF == CYPRESS_LF ? currentSlateLOData && isLOExist && (currentSlateLOData.assessmentResponseMsg || currentSlateLOData.statusForSave) ? true : currentSlateLO && (currentSlateLO.id ?? currentSlateLO.loUrn) : false,
       unlinkLOStatus: currentSlateLF == CYPRESS_LF ? currentSlateLO && (currentSlateLO.id ?? currentSlateLO.loUrn) : false
     };
     return enableStatus;

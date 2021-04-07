@@ -14,7 +14,7 @@ export const getMetadataAnchorLORef = () => (dispatch, getState) => {
             slateLO["loUrn"] = slateLO["id"]
         }
     })
-    const currentSlateLOUrns = currentSlateLOs.map(slateLO => slateLO.loUrn);
+    const currentSlateLOUrns = currentSlateLOs?.map(slateLO => slateLO.loUrn);
     const parentData = getState().appStore.slateLevelData;
     const newParentData = JSON.parse(JSON.stringify(parentData));
     const currentSlateData = newParentData[config.slateManifestURN];
