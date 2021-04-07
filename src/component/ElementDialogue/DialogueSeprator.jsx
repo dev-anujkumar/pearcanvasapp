@@ -5,14 +5,14 @@ import { connect } from 'react-redux';
 
 
 const defaultSDElement = {
-    "type": "stagedirection",
-    "text": "<p></p>"
+    type: "stagedirection",
+    text: "<p></p>"
 }
 
 const defaultDialougeElement = {
-    "type": "lines",
-    "characterName": "",
-    "text": "<p></p>"
+    type: "lines",
+    characterName: '<p></p>',
+    text: '<p><span class="dialogueLine"><br></span></p>'
 }
 
 

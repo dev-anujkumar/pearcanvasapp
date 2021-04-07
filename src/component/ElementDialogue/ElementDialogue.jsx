@@ -10,11 +10,16 @@ import config from "../../config/config.js";
 import { sendDataToIframe, removeBlankTags, removeClassesFromHtml } from '../../constants/utility.js';
 import { createPSDataForUpdateAPI } from './DialogueElementUtils';
 import { setBCEMetadata } from '../Sidebar/Sidebar_Action';
+import PopUp from '../PopUp';
+
 class ElementDialogue extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
-            selectedInnerElementIndex: null
+            selectedInnerElementIndex: null,
+            popup: false,
+            psElementIndex: null,
+            oldPSData: {}
         }
     }
 
@@ -41,7 +46,8 @@ class ElementDialogue extends React.PureComponent {
         this.callUpdateApi(newPsElement);
     }
 
-    deleteElement = (psIndex, psElementIndex, oldPSData) => {
+    deleteElement = () => {
+        const { psElementIndex, oldPSData } = this.state;
         const dialogueContent = oldPSData.html.dialogueContent;
         dialogueContent.splice(psElementIndex, 1);
         const newPsElement = {
@@ -52,6 +58,10 @@ class ElementDialogue extends React.PureComponent {
             }
         }
         this.callUpdateApi(newPsElement);
+        this.setState({ popup: false });
+    }
+    closePopup = () => {
+        this.setState({ popup: false });
     }
     /**
      * 
@@ -75,14 +85,14 @@ class ElementDialogue extends React.PureComponent {
                             {this.renderButtons(index, buttonClass, labelText, _props.element)}
                             <div
                                 className={`element-container ${this.setBorderToggle(_props.borderToggle, index, this.state.selectedInnerElementIndex)}`}
-                                data-id={_props.elementId}
+                                data-id={_props.elementId+'-'+index}
                             >
                                 <DialogueContent
                                     index={index}
                                     elementIndex={this.props.index}
                                     labelText={labelText}
                                     element={_props.element}
-                                    elementId={_props.element.id}
+                                    elementId={_props.element.id+'-'+index}
                                     model={_props?.element?.html?.dialogueContent}
                                     type={_props.type}
                                     permissions={_props.permissions}
@@ -156,10 +166,9 @@ class ElementDialogue extends React.PureComponent {
                             (<Button
                                 type="delete-element"
                                 onClick={(e) => {
-                                    this.deleteElement(this.props.index, index, element);
-                                    // deleteElement(elementIndex, index, element);
-                                    // show delete element popup
-                                    // props.showDeleteElemPopup(e, true)
+                                    this.setState({ 
+                                        popup: true, psElementIndex: index, oldPSData: element
+                                     });
                                 }}
                             />)
                             : null
@@ -317,6 +326,12 @@ class ElementDialogue extends React.PureComponent {
                             />
                         </div>
                     </div>
+                     { this.state.popup && <PopUp
+                        active={this.state.popup}
+                        showDeleteElemPopup={true}
+                        deleteElement={this.deleteElement}
+                        togglePopup={this.closePopup}
+                />}
                 </div>
                 : ''
         )

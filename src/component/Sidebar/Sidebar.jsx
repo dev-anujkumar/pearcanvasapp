@@ -146,7 +146,7 @@ class Sidebar extends Component {
                 if(this.state.activeElementType === 'element-assessment'){
                     delete primaryOptionList[1];
                 }
-                let disabledPrimaryOptions=["primary-mathml-equation", "primary-blockcode-equation", "primary-editor-table-equation", "primary-elm-interactive", "primary-mmi", "primary-smartlink", "primary-showhide", "primary-popup"];
+                let disabledPrimaryOptions=["primary-mathml-equation", "primary-blockcode-equation", "primary-editor-table-equation", "primary-elm-interactive", "primary-mmi", "primary-smartlink", "primary-showhide", "primary-popup", "primary-element-dialogue"];
                  if( disabledPrimaryOptions.indexOf(activePrimaryOption) > -1 ){
                     className="disabled"
                  }
