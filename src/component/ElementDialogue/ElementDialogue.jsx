@@ -60,6 +60,9 @@ class ElementDialogue extends React.PureComponent {
         this.callUpdateApi(newPsElement);
         this.setState({ popup: false });
     }
+    closePopup = () => {
+        this.setState({ popup: false });
+    }
     /**
      * 
         @renderDialogueContent | This function used to render Dialogue Content
@@ -163,10 +166,6 @@ class ElementDialogue extends React.PureComponent {
                             (<Button
                                 type="delete-element"
                                 onClick={(e) => {
-                                    //this.deleteElement(this.props.index, index, element);
-                                    // deleteElement(elementIndex, index, element);
-                                    // show delete element popup
-                                     //props.showDeleteElemPopup(e, true)
                                     this.setState({ 
                                         popup: true, psElementIndex: index, oldPSData: element
                                      });
@@ -331,6 +330,7 @@ class ElementDialogue extends React.PureComponent {
                         active={this.state.popup}
                         showDeleteElemPopup={true}
                         deleteElement={this.deleteElement}
+                        togglePopup={this.closePopup}
                 />}
                 </div>
                 : ''
