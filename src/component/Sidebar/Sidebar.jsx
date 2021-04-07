@@ -146,7 +146,7 @@ class Sidebar extends Component {
                 if(this.state.activeElementType === 'element-assessment'){
                     delete primaryOptionList[1];
                 }
-                let disabledPrimaryOptions=["primary-mathml-equation", "primary-blockcode-equation", "primary-editor-table-equation", "primary-elm-interactive", "primary-mmi", "primary-smartlink", "primary-showhide", "primary-popup", "primary-element-dialogue"];
+                let disabledPrimaryOptions=["primary-mathml-equation", "primary-blockcode-equation", "primary-editor-table-equation", "primary-elm-interactive", "primary-mmi", "primary-smartlink", "primary-showhide", "primary-popup"];
                  if( disabledPrimaryOptions.indexOf(activePrimaryOption) > -1 ){
                     className="disabled"
                  }
@@ -163,16 +163,16 @@ class Sidebar extends Component {
                     active = 'active';
                 }
                 const sidebarDisableCondition = ((this.props.showHideObj && this.props.activeElement.elementType) || (this.props.activeElement?.elementType === "element-aside" && this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId && this.props.cutCopySelection?.operationType === "cut"))
-                primaryOptions = <div
+                primaryOptions = (this.props.activeElement.elementType !== "element-dialogue") ? <div
                     className={`element-dropdown ${sidebarDisableCondition ? "sidebar-disable": ""}`}>
                     <div className={`element-dropdown-title ${className}`} data-element="primary" onClick={this.toggleElementDropdown}>
                         {primaryOptionObject[this.state.activePrimaryOption].text}
                         {disabledPrimaryOption.indexOf(activePrimaryOption) > -1 ? null : dropdownArrow}
                     </div>
-                    <ul className={`element-dropdown-content primary-options ${active}`}>
+                   <ul className={`element-dropdown-content primary-options ${active}`}>
                         {primaryOptions}
                     </ul>
-                </div>;
+                </div> : null;
             }
     
             return primaryOptions;
