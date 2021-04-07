@@ -232,7 +232,9 @@ class ElementDialogue extends React.PureComponent {
             }
         }
         if (callUpdate) {
-            this.callUpdateApi(newPSData)
+            if(!config.savingInProgress) {
+                this.callUpdateApi(newPSData);
+            }
         }
     }
 
