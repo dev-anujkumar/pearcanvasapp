@@ -64,7 +64,8 @@ let config = {
         CITE_REPO_INSTANCC:"https://staging.api.pearson.com/content/cmis/uswip-aws",
         CITE_REPO_NAME:"AWS US"
     },
-    VCS_API_ENDPOINT: 'https://contentapis-staging.pearsoncms.net/vcs-api/v1/content/'
+    VCS_API_ENDPOINT: 'https://contentapis-staging.pearsoncms.net/vcs-api/v1/content/',
+    LEARNOSITY_CONTENT_BRIDGE_API: 'https://contentapis-staging.pearsoncms.net/learnositycontentbridge-api/lcb/v1/bank2projapi/'
 };
 
 if (process.env.NODE_ENV === "development") {

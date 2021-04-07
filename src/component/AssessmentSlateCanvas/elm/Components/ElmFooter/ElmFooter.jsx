@@ -97,15 +97,15 @@ const ElmFooter = (props) => {
   }
   return (
     <div className="puf-footer">
-      {!errorNoElmItem && <button className={`puf-button search-button ${hideSearch ? "puf-assessment" : ""}`} onClick={openSearchBar}>SEARCH</button>}
+      {!errorNoElmItem && (props?.tableValue?.length > 0) && <button className={`puf-button search-button ${hideSearch ? "puf-assessment" : ""}`} onClick={openSearchBar}>SEARCH</button>}
       {/* Create new Assessment/Item from Cypress */}
-      <button className={`puf-button create-button ${errorNoElmItem ? 'learnosity-button':''} ${setCreateButtonIcon().createButtonClass}`} onClick={openElmPortal} disabled={activeRadioIndex !== null} >
+      <button className={`puf-button create-button ${errorNoElmItem || (props?.tableValue?.length <= 0) ? 'learnosity-button':''} ${setCreateButtonIcon().createButtonClass}`} onClick={openElmPortal} disabled={activeRadioIndex !== null} >
         <span className="elm-create-button-icons">
           {setCreateButtonIcon().newIcon}
         </span>
         <span className={`${setCreateButtonIcon().createButtonClass}`}>NEW</span>
       </button>
-      { !errorNoElmItem && (<>
+      { !errorNoElmItem && (props?.tableValue?.length > 0) && (<>
           <button className={`puf-button add-button ${addFlag ? 'add-button-enabled' : ''}`} disabled={!addFlag} onClick={sendPufAssessment} onFocus={handleFocus}>{buttonText}</button>
           <button className="puf-button cancel" onClick={closeElmWindow} onFocus={handleFocus}>CANCEL</button>
       </>)}
