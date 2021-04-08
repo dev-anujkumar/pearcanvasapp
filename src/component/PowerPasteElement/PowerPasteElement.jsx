@@ -102,6 +102,7 @@ export const pastePostProcess = (data, props) => {
     const parentIndex = props.index;
     elements.length && props.toggleWordPasteProceed(true)
     props.onPowerPaste(elements, parentIndex);
+    tinymce.activeEditor.getBody().setAttribute('contenteditable', false);
   }
 }
 
