@@ -15,7 +15,7 @@ import PopUp from '../../PopUp';
 import { loadTrackChanges } from '../../CanvasWrapper/TCM_Integration_Actions';
 import { ALREADY_USED_SLATE_TOC } from '../../SlateWrapper/SlateWrapperConstants'
 import { prepareLODataForUpdate, setCurrentSlateLOs, getSlateMetadataAnchorElem, prepareLO_WIP_Data } from '../../ElementMetaDataAnchor/ExternalLO_helpers.js';
-import { CYPRESS_LF, EXTERNAL_LF } from '../../../constants/Element_Constants.js';
+import { CYPRESS_LF, EXTERNAL_LF, SLATE_ASSESSMENT } from '../../../constants/Element_Constants.js';
 function CommunicationChannel(WrappedComponent) {
     class CommunicationWrapper extends Component {
         constructor(props) {
@@ -162,6 +162,7 @@ function CommunicationChannel(WrappedComponent) {
                     let newMessage = { assessmentResponseMsg: message.assessmentResponseMsg };
                     this.props.isLOExist(newMessage);
                     this.props.currentSlateLO(newMessage);
+                    this.props.currentSlateLOType(CYPRESS_LF);
                     break;
                 case 'refreshSlate':
                     this.handleRefreshSlate();
@@ -488,8 +489,9 @@ function CommunicationChannel(WrappedComponent) {
                     const regex = /<math.*?data-src=\'(.*?)\'.*?<\/math>/g
                     message.loObj.label.en = message.loObj.label.en.replace(regex, "<img src='$1'></img>");
                 }
-                message.loObj ? this.props.currentSlateLO([message.loObj]) : this.props.currentSlateLO([message]);
-                this.props.currentSlateLOType(message.loObj?.loUrn || message.loObj?.id ? CYPRESS_LF : "");
+                const loDataToSave = config.slateType == SLATE_ASSESSMENT ? message : message.loObj ? [message.loObj] : [message]
+                this.props.currentSlateLO(loDataToSave);
+                this.props.currentSlateLOType(message.loObj?.loUrn || message.loObj?.id || config.slateType == SLATE_ASSESSMENT ? CYPRESS_LF : "");
                 this.props.isLOExist(message);
                 let slateData = this.props.slateLevelData;
                 const newSlateData = JSON.parse(JSON.stringify(slateData));

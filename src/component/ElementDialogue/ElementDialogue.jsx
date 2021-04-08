@@ -7,11 +7,12 @@ import "../../styles/ElementDialogue/DialogueStyles.css"
 import { connect } from 'react-redux';
 import { updateElement } from '../ElementContainer/ElementContainer_Actions.js';
 import config from "../../config/config.js";
-import { sendDataToIframe, removeBlankTags, removeClassesFromHtml } from '../../constants/utility.js';
+import { sendDataToIframe, removeClassesFromHtml, matchHTMLwithRegex } from '../../constants/utility.js';
 import { createPSDataForUpdateAPI } from './DialogueElementUtils';
 import { setBCEMetadata } from '../Sidebar/Sidebar_Action';
 import PopUp from '../PopUp';
-
+import { hideBlocker, showTocBlocker } from '../../js/toggleLoader';
+import { replaceUnwantedtags } from '../ElementContainer/UpdateElements';
 class ElementDialogue extends React.PureComponent {
     constructor(props) {
         super(props);
@@ -58,7 +59,18 @@ class ElementDialogue extends React.PureComponent {
             }
         }
         this.callUpdateApi(newPsElement);
+        this.closePopup();
+    }
+    closePopup = () => {
         this.setState({ popup: false });
+        this.props.showBlocker(false)
+        hideBlocker();
+    }
+    /*** @description - This function is to disable all components 
+                        when update Popups are open in window */
+    showCanvasBlocker = () => {
+        this.props.showBlocker(true);
+        showTocBlocker();
     }
     /**
      * 
@@ -163,10 +175,8 @@ class ElementDialogue extends React.PureComponent {
                             (<Button
                                 type="delete-element"
                                 onClick={(e) => {
-                                    //this.deleteElement(this.props.index, index, element);
-                                    // deleteElement(elementIndex, index, element);
-                                    // show delete element popup
-                                     //props.showDeleteElemPopup(e, true)
+                                    e.stopPropagation();
+                                    this.showCanvasBlocker();
                                     this.setState({ 
                                         popup: true, psElementIndex: index, oldPSData: element
                                      });
@@ -209,7 +219,9 @@ class ElementDialogue extends React.PureComponent {
         let callUpdate = false;
         let newPSData = JSON.parse(JSON.stringify(this.props.element)) || {};
         if (newPSData?.html?.hasOwnProperty(field)) {
-             newPSData.html[field] = `<p>${removeBlankTags(eventTarget?.innerHTML)}</p>` 
+            const creditsHTML = replaceUnwantedtags(eventTarget?.innerHTML, true);
+            const tempCredit = matchHTMLwithRegex(creditsHTML) ? creditsHTML : `<p>${creditsHTML}</p>`
+            newPSData.html[field] = tempCredit;
             if (removeClassesFromHtml(this.props.element.html?.[field]) !== removeClassesFromHtml(newPSData.html[field]) && !config.savingInProgress) {
                 // create data and call update API
                 callUpdate = true;
@@ -233,7 +245,9 @@ class ElementDialogue extends React.PureComponent {
             }
         }
         if (callUpdate) {
-            this.callUpdateApi(newPSData)
+            if(!config.savingInProgress) {
+                this.callUpdateApi(newPSData);
+            }
         }
     }
 
@@ -320,7 +334,7 @@ class ElementDialogue extends React.PureComponent {
                                 {...copmpProps}
                                 index={`${this.props.index}-Credit`}
                                 placeholder="Enter Credit..."
-                                tagName={'p'}
+                                tagName={'div'}
                                 className={" figureCredit "}
                                 model={this.props.element?.html?.credits}
                                 handleBlur={(forceupdate, currentElement, eIndex, showHideType, eventTarget) => this.handleOuterBlur("credits", eventTarget)}
@@ -331,6 +345,7 @@ class ElementDialogue extends React.PureComponent {
                         active={this.state.popup}
                         showDeleteElemPopup={true}
                         deleteElement={this.deleteElement}
+                        togglePopup={this.closePopup}
                 />}
                 </div>
                 : ''

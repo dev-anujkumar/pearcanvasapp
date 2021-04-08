@@ -485,6 +485,7 @@ class ElmTableComponent extends Component {
                             openedFrom={openedFrom}
                             currentAssessmentSelected={this.state?.currentAssessmentSelected}
                             errorNoElmItem={errFlag}
+                            tableValue={tableValue}
                         />
                     </div>
                 )
@@ -541,6 +542,8 @@ class ElmTableComponent extends Component {
                             openedFrom={openedFrom}
                             currentAssessmentSelected={this.state?.currentAssessmentSelected}
                             activeRadioIndex={this.state?.isActive}
+                            errorNoElmItem={errFlag}
+                            tableValue={tableValue}
                         />
                     </>
                 );
