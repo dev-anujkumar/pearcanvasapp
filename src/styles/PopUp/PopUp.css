@@ -121,6 +121,7 @@
     letter-spacing: normal;
     text-align: center;
     font-weight: 500;
+    border: solid 1px #dcdcdc;
   }
 
   .cancel-button:hover,.lo-save-button:hover{
