@@ -21,7 +21,7 @@ export const renderCutCopyOption = (componentProps) => {
     const { userRole,permissions, element: { type,subtype } } = componentProps
     const acceptedTypes = ["element-authoredtext", "element-blockfeature", "element-learningobjectives", "element-list", "figure", "stanza", "element-citation","citations","poetry","groupedcontent"],
             allowedRoles = ["admin", "manager", "edit", "default_user"];
-    if ((acceptedTypes.includes(type) || (subtype && subtype !== "workedexample"))  && (allowedRoles.includes(userRole) ||  permissions.includes('cut/copy')) ) {
+    if ((acceptedTypes.includes(type) || (subtype))  && (allowedRoles.includes(userRole) ||  permissions.includes('cut/copy')) ) {
         return (
             <>
                 <div className="copyUrn" onClick={(e) => performCutCopy(e, componentProps, "copy")}>
