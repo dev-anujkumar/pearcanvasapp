@@ -40,7 +40,7 @@ const DialogueSeprator = (props) => {
                 </Tooltip>
                 {
                     showDetails && <div style={{ position: 'absolute', zIndex: 1 }}>
-                        <Tooltip tooltipText="Dailouge Element">
+                        <Tooltip tooltipText="Dialogue Element">
                             <Button
                                 onClick={(event) => {
                                     // add dialouge element

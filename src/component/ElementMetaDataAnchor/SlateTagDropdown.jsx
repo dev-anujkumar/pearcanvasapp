@@ -119,6 +119,8 @@ class SlateTagDropdown extends React.Component {
     }
 
     toggleLoOptionsDropdown = () => {
+      sendDataToIframe({ 'type': 'tocToggle', 'message': { open: false } })
+      sendDataToIframe({ 'type': 'canvasBlocker', 'message': { open: true } }); 
         this.setState({showLoOptions:!this.state.showLoOptions})
     }
 
@@ -153,6 +155,8 @@ class SlateTagDropdown extends React.Component {
    if(currentSlateLF=== CYPRESS_LF && this.props.permissions.includes('lo_edit_metadata')){
       this.props.toggleLOWarningPopup(true,e.target.innerText);
     } else if (e?.target?.innerText == AlignToExternalFrameworkSlateDropdown && this.props.permissions.includes('lo_edit_metadata')) {
+      sendDataToIframe({ 'type': 'tocToggle', 'message': { open: false } })
+      sendDataToIframe({ 'type': 'canvasBlocker', 'message': { open: true } }); 
       sendDataToIframe({
         'type': OpenLOPopup,
         'message': {

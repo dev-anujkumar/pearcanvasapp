@@ -17,12 +17,17 @@ export const getMetadataAnchorLORef = () => (dispatch, getState) => {
     const currentSlateLOUrns = currentSlateLOs?.map(slateLO => slateLO.loUrn);
     const parentData = getState().appStore.slateLevelData;
     const newParentData = JSON.parse(JSON.stringify(parentData));
-    const currentSlateData = newParentData[config.slateManifestURN];
+    let parentSlateId = config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
+    const currentSlateData = newParentData[parentSlateId];
     const slateElements = currentSlateData?.contents?.bodymatter;
-    let existingSlateMetadataAnchors = [];
+    const popupSlateData = config.isPopupSlate ? newParentData[config.slateManifestURN] : {}
+    const popupSlateElements = popupSlateData?.contents?.bodymatter ?? []
+    let existingSlateMetadataAnchors = [], existingSlateMAonPopupSlate=[];
     if (slateElements?.length) {
         existingSlateMetadataAnchors = getSlateMetadataAnchorElem(slateElements);
+        existingSlateMAonPopupSlate = popupSlateElements?.length ? getSlateMetadataAnchorElem(popupSlateElements) : [];
     }
+    existingSlateMetadataAnchors = existingSlateMetadataAnchors.concat(existingSlateMAonPopupSlate)
     const existingLOUrns = existingSlateMetadataAnchors.map(element => element.loUrn);
     let uniqueSlateMetadataAnchors = [...new Set(existingLOUrns)];
     let existingLOsinMA = findLOsToLink(currentSlateLOUrns, uniqueSlateMetadataAnchors, []);
@@ -77,7 +82,7 @@ export const getSlateMetadataAnchorElem = (slateElements = [], existingSlateMeta
                     metadataAnchorElement = {};
                     break;
             }
-            existingSlateMetadataAnchors.push(metadataAnchorElement);
+            metadataAnchorElement && existingSlateMetadataAnchors.push(metadataAnchorElement);
         })
     }
     return existingSlateMetadataAnchors;
