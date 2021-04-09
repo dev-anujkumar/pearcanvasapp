@@ -1,4 +1,5 @@
-export const powerpaste_list_content_style = 'ol, ul { margin-left: 2em !important; margin-bottom: 1em !important; padding-left: 1em !important; }' +
+export const powerpaste_list_content_style = '.mce-content-body {-moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;-o-user-select:none; unselectable="on" onselectstart="return false;" onmousedown="return false; }' +
+             'ol, ul { margin-left: 2em !important; margin-bottom: 1em !important; padding-left: 1em !important; }' +
              'ol li, ul li {list-style-type: none !important; font-family: Georgia, serif, Palatino, Palatino Linotype, Palatino LT STD !important; font-weight: normal; line-height: 1.90em; letter-spacing: 0.01em; margin-left: 0em !important; margin-bottom: .65em !important; color: black !important; font-size: 1em !important; } ' +
              'ol, li ol, ul, li ul {counter-reset: section !important; }' +
              'ol li.listItemNumeroUnoUpperAlpha::before {counter-increment: section; content: counter(section, upper-alpha)". "; } ' +
