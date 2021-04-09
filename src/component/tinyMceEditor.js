@@ -2255,7 +2255,7 @@ export class TinyMceEditor extends Component {
         getGlossaryFootnoteId(this.props.elementId, "GLOSSARY", res => {
             let insertionText = ""
             if (res.data && res.data.id) {
-                insertionText = `<dfn data-uri= ${res.data.id} class="Pearson-Component GlossaryTerm">${selectedText}</dfn>`
+                insertionText = `<dfn data-uri= ${res.data.id} class="Pearson-Component GlossaryTerm">${selectedText}</dfn> `
             }
             editor.selection.setContent(insertionText);
             this.handleGlossaryForItalic(activeElement, res.data.id);
@@ -3023,6 +3023,14 @@ export class TinyMceEditor extends Component {
                     termText = termText.replace(/data-temp-mathml/g, 'data-mathml').replace(/temp_Wirisformula/g, 'Wirisformula');
                     document.getElementById(currentTarget.id).innerHTML = termText
                 }
+                //---------------------------------------------------------------------------------//
+                // if editor contains footnode in the text anywhere then check the condition and if 
+                // footnode lies in the end then remove the superscript mode from the end of text.
+                if (tinymce.activeEditor.getContent().indexOf("<sup>") > -1) {
+                    this.removeSupFormat(clickedX, clickedY, "handleclick");
+                }
+
+                //---------------------------------------------------------------------------------//
                 if (clickedX !== 0 && clickedY !== 0) {     //User generated click event
                     tinymce.activeEditor.selection.placeCaretAt(clickedX, clickedY) //Placing exact cursor position on clicking.
                 }
@@ -3087,6 +3095,17 @@ export class TinyMceEditor extends Component {
                 else {
                     removeListHighliting();
                 }
+
+                //---------------------------------------------------------------------------------//
+                // if editor contains footnode in the text anywhere then check the condition and if 
+                // footnode lies in the end then remove the superscript mode from the end of text.
+                if (tinymce.activeEditor.getContent().indexOf("<sup>") > -1) {
+                    this.removeSupFormat(clickedX, clickedY);
+                }
+
+                //---------------------------------------------------------------------------------//
+
+
                 if (this.props.element && this.props.element.type === "element-blockfeature") {
                     this.removeBogusTagsFromDom();
                     this.removeAttributionBr();
@@ -3108,6 +3127,60 @@ export class TinyMceEditor extends Component {
             this.editorOnClick(event);
         }
         tinyMCE.$('.cypress-editable').css('caret-color', 'black')
+    }
+
+    /**
+     * removeSupFormat | gets triggered when any editor element contains footnode
+     * @param {*} clickedX  x cords of mouse clicking
+     * @param {*} clickedY  y cords of mouse clicking
+     */
+    removeSupFormat = (clickedX, clickedY) => {
+        let selectedElement;
+        // We are checking event in below condition because on handle click event when tiny mce editor 
+        // init then it selects div element of editor, so we need to find its child anchor or sup element.
+        if (tinymce.activeEditor.selection.getNode().tagName.toLowerCase() === "div") {
+            let editorParaChildrenElems = tinymce.activeEditor.selection.getNode().children[0].children;
+            for (let i = editorParaChildrenElems.length - 1; i>=0; i--) {
+                const allowedTagArr = ["sup", "span", "a"];
+                if (allowedTagArr.includes(editorParaChildrenElems[i].tagName.toLowerCase())) {
+                    selectedElement = editorParaChildrenElems[i];
+                    break;
+                }
+            }
+        } else {
+            selectedElement = tinymce.activeEditor.selection.getNode();
+            // Below if condition works only when editor has no text and contains only footnote star
+            if (selectedElement.tagName.toLowerCase() === "p") {
+                selectedElement = selectedElement.firstChild;    
+            }
+        }
+        let parentNode = selectedElement.parentNode;
+        let endPosition = true;
+        if (selectedElement.tagName.toLowerCase() === 'a') {
+            let bomPosition = selectedElement.innerHTML.lastIndexOf("﻿");
+            if (bomPosition === 0) {
+                endPosition = false;
+            }
+            selectedElement = selectedElement.parentNode;
+            parentNode = selectedElement.parentNode;
+        } else {
+            let childNodes = selectedElement.childNodes;
+            if (childNodes.length && childNodes[0].nodeType === Node.TEXT_NODE) {
+                endPosition = false;
+            }
+        }
+        parentNode.innerHTML = removeBOM(parentNode.innerHTML);
+        let existingInnerHTML = '<sup>' + removeBOM(selectedElement.innerHTML) + '</sup>';
+        let innerHtml = existingInnerHTML + "<span id='_mce_caret' data-mce-bogus='1' data-mce-type='format-caret'>&#8203;&#65279;</span>";
+        if (!endPosition) {
+            innerHtml = "<span id='_mce_caret' data-mce-bogus='1' data-mce-type='format-caret'>&#8203;&#65279;</span>" + existingInnerHTML;
+        }
+        let parentInnerHtml = removeBOM(parentNode.innerHTML);
+        let newParentInnerHtml = parentInnerHtml.replace(existingInnerHTML, innerHtml);
+        parentNode.innerHTML = newParentInnerHtml;
+        if (clickedX !== 0 && clickedY !== 0) {     //User generated click event
+            tinymce.activeEditor.selection.placeCaretAt(clickedX, clickedY) //Placing exact cursor position on clicking.
+        }
     }
     
     /**
