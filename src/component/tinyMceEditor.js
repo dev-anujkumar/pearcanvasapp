@@ -3141,7 +3141,8 @@ export class TinyMceEditor extends Component {
         if (tinymce.activeEditor.selection.getNode().tagName.toLowerCase() === "div") {
             let editorParaChildrenElems = tinymce.activeEditor.selection.getNode().children[0].children;
             for (let i = editorParaChildrenElems.length - 1; i>=0; i--) {
-                if (editorParaChildrenElems[i].tagName.toLowerCase() === 'sup' || editorParaChildrenElems[i].tagName.toLowerCase() === 'span' || editorParaChildrenElems[i].tagName.toLowerCase() === 'a') {
+                const allowedTagArr = ["sup", "span", "a"];
+                if (allowedTagArr.includes(editorParaChildrenElems[i].tagName.toLowerCase())) {
                     selectedElement = editorParaChildrenElems[i];
                     break;
                 }
@@ -3163,11 +3164,9 @@ export class TinyMceEditor extends Component {
             selectedElement = selectedElement.parentNode;
             parentNode = selectedElement.parentNode;
         } else {
-            let chindNodes = selectedElement.childNodes;
-            if (chindNodes.length) {
-                if (chindNodes[0].nodeType === Node.TEXT_NODE) {
-                    endPosition = false;
-                }
+            let childNodes = selectedElement.childNodes;
+            if (childNodes.length && childNodes[0].nodeType === Node.TEXT_NODE) {
+                endPosition = false;
             }
         }
         parentNode.innerHTML = removeBOM(parentNode.innerHTML);
