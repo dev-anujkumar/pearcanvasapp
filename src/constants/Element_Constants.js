@@ -77,6 +77,7 @@ export const LIST_TYPE_MAPPINGS = {
 
 
 /****************SlateTagDropdown************************ */ 
+export const SLATE_ASSESSMENT = 'assessment';
 export const ASSESSMENT_ITEM = 'assessmentItem';
 export const ASSESSMENT_ITEM_TDX = 'tdxAssessmentItem';
 
@@ -138,7 +139,7 @@ export const getPasteValidated = (sourceType, selectionType) => {
 }
 
 /** Metadata Anchor Element constants */
-export const cypressLOWarningtxt = `Performing this action will remove the current alignment of projects LOs to cypress framework. Do you wish to continue?`
-export const externalLOWarningtxt = `Performing this action will remove the current alignment of projects LOs to external framework. Do you wish to continue?`
+export const cypressLOWarningtxt = `Performing this action will remove the current alignment of project's LOs to cypress framework. Do you wish to continue?`
+export const externalLOWarningtxt = `Performing this action will remove the current alignment of project's LOs to external framework. Do you wish to continue?`
 export const CYPRESS_LF = "cypressLF";
 export const EXTERNAL_LF =  "externalLF";

@@ -115,6 +115,7 @@ export class ElementMetaDataAnchor extends Component {
 
     if (this.props.permissions.includes('lo_edit_metadata')) {
       if(this.props.currentSlateLF == 'externalLF' ){
+        this.props.showBlocker(true);
         this.launchExternalFrameworkPopup()
       }
     else{

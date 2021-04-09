@@ -977,7 +977,7 @@ export class TinyMceEditor extends Component {
                         spanHandlers.handleBackSpaceAndDeleteKyeUp(editor, key, 'poetryLine');
                     }
                 }
-                else if (activeElement.nodeName == "DIV" && this.props.element.type === 'element-dialogue') {
+                else if (activeElement.nodeName == "DIV" && this.props.element.type === 'element-dialogue' && this.props.placeholder === "Enter Dialogue...") {
                     let key = e.keyCode || e.which;
                     if (key != undefined && key === 13) {
                         spanHandlers.addAndSplitSpan(editor, this.props.elementId, 'div', 'dialogueLine');

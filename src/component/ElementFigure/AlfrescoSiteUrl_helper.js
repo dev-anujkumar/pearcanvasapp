@@ -1,9 +1,8 @@
 import config from '../../config/config';
-import cypressConfig from '../../config/cypressConfig';
 import axios from 'axios';
 
 export const handleAlfrescoSiteUrl = (elementId, data) => {
-    let url = `${config.STRUCTURE_API_URL}narrative-api/v2/${elementId}/platformMetadata/alfresco`
+    let url = `${config.NARRATIVE_API_ENDPOINT}v2/${elementId}/platformMetadata/alfresco`
     let req = {
         ...data,
         currentAsset:{}
@@ -21,7 +20,7 @@ export const handleAlfrescoSiteUrl = (elementId, data) => {
 }
 
 export const getAlfrescositeResponse = (elementId, callback) => {
-    let url = `${config.STRUCTURE_API_URL}narrative-api/v2/${elementId}/platformMetadata/alfresco`
+    let url = `${config.NARRATIVE_API_ENDPOINT}v2/${elementId}/platformMetadata/alfresco`
     fetch(url, {
         method: 'GET',
         headers: {

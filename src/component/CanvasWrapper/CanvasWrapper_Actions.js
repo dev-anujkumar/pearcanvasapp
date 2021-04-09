@@ -1093,7 +1093,7 @@ export const setSlateLength = (length) => {
 
 
 export const fetchLearnosityContent = () => dispatch => {
-    return axios.get(`${config.STRUCTURE_API_URL}learnositycontentbridge-api/lcb/v1/bank2projapi/${config.projectEntityUrn}?PearsonSSOSession=${config.ssoToken}`, {
+    return axios.get(`${config.LEARNOSITY_CONTENT_BRIDGE_API}${config.projectEntityUrn}?PearsonSSOSession=${config.ssoToken}`, {
         headers: {
             "Content-Type": "application/json",
             "PearsonSSOSession": config.ssoToken
