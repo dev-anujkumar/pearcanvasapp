@@ -2255,7 +2255,7 @@ export class TinyMceEditor extends Component {
         getGlossaryFootnoteId(this.props.elementId, "GLOSSARY", res => {
             let insertionText = ""
             if (res.data && res.data.id) {
-                insertionText = `<dfn data-uri= ${res.data.id} class="Pearson-Component GlossaryTerm">${selectedText}</dfn> `
+                insertionText = `<dfn data-uri= ${res.data.id} class="Pearson-Component GlossaryTerm">${selectedText}</dfn>&nbsp;`
             }
             editor.selection.setContent(insertionText);
             this.handleGlossaryForItalic(activeElement, res.data.id);
@@ -3027,7 +3027,7 @@ export class TinyMceEditor extends Component {
                 // if editor contains footnode in the text anywhere then check the condition and if 
                 // footnode lies in the end then remove the superscript mode from the end of text.
                 if (tinymce.activeEditor.getContent().indexOf("<sup>") > -1) {
-                    this.removeSupFormat(clickedX, clickedY, "handleclick");
+                    this.removeSupFormat(clickedX, clickedY);
                 }
 
                 //---------------------------------------------------------------------------------//
