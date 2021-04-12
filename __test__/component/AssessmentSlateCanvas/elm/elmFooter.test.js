@@ -109,8 +109,15 @@ describe('Testing ELM Footer component', () => {
                 closeElmWindow: jest.fn(),
                 sendPufAssessment: jest.fn(),
                 openAssessmentSearchBar:jest.fn(),
-                buttonText: "OK"
-            }
+                buttonText: "OK",
+                currentAssessmentSelected:{},
+            },
+            addFlag:true,
+            hideSearch:false,
+            openItemTable:false,
+            openedFrom:'singleAssessment',
+            errorNoElmItem:false,
+            tableValue:[{id:'test'}]
         }
         const component = mount(<ElmFooter {...props} />)
         expect(component).toHaveLength(1);
@@ -131,16 +138,22 @@ describe('Testing ELM Footer component', () => {
 
     })
     it('Test- Learnosity type assessment', () => {
-        let props = {
+        let props2 = {
             elmFooterProps: {
                 closeElmWindow: jest.fn(),
                 sendPufAssessment: jest.fn(),
                 openAssessmentSearchBar:jest.fn(),
-                buttonText: "OK"
+                buttonText: "OK",
+                openedFrom:'singleAssessment',
+                currentAssessmentSelected:{},
             },
+            addFlag:true,
+            openItemTable:false,
+            errorNoElmItem:false,
+            tableValue:[{id:'test'}],
             hideSearch:false
         }
-        const component = mount(<ElmFooter {...props} />)
-        component.find('.puf-button.search-button').simulate('click');
+        const component1 = mount(<ElmFooter {...props2} />)
+        component1.find('div.puf-footer button.puf-button.search-button').simulate('click');
     })
 });

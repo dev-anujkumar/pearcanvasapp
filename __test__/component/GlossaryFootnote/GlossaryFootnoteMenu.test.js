@@ -22,7 +22,7 @@ jest.mock('../../../src/component/AudioTinyMceGlossary', () => {
     }
 })
 describe('Testing GlossaryFootnote menu component with props', () => {
-    let wrapper = mount(<GlossaryFootnoteMenu {...props} />)
+    let wrapper = mount(<Provider store={store}><GlossaryFootnoteMenu {...props} /></Provider>)
     const instance = wrapper.find('GlossaryFootnoteMenu').instance();
     it('componentWillMount Event', () => {
         instance.componentWillMount()
