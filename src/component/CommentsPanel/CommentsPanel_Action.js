@@ -114,7 +114,7 @@ export const replyComment = (commentUrn, reply, elementId) => dispatch => {
         comment: reply.commentString,
         commentCreator: reply.commentCreator
     };
-    let url = `${config.STRUCTURE_API_URL}narrative-api/v2/${elementId}/comment/${commentUrn}/reply/`
+    let url = `${config.NARRATIVE_API_ENDPOINT}v2/${elementId}/comment/${commentUrn}/reply/`
     return axios.post(url, replyDataToSend,
         {
             headers: {
@@ -152,7 +152,7 @@ export const resolveComment = (commentUrn, resolveOrOpen, elementId) => dispatch
     let request = {
         status: resolveOrOpen
     };
-    let url = `${config.STRUCTURE_API_URL}narrative-api/v2/${elementId}/comment/${commentUrn}/Status/`
+    let url = `${config.NARRATIVE_API_ENDPOINT}v2/${elementId}/comment/${commentUrn}/Status/`
     return axios.put(url, request,
         {
             headers: {
@@ -185,7 +185,7 @@ export const resolveComment = (commentUrn, resolveOrOpen, elementId) => dispatch
 export const updateComment = (commentUrn, updateCommentParams, elementId) => dispatch => {
 
     let request = updateCommentParams
-    let url = `${config.STRUCTURE_API_URL}narrative-api/v2/${elementId}/comment/${commentUrn}/Status/`
+    let url = `${config.NARRATIVE_API_ENDPOINT}v2/${elementId}/comment/${commentUrn}/Status/`
     return axios.put(url, request,
         {
             headers: {
@@ -239,7 +239,7 @@ export const getProjectUsers = () => dispatch => {
 */
 
 export const updateAssignee = (commentUrn, newAssignee, elementId) => dispatch => {
-    let url = `${config.STRUCTURE_API_URL}narrative-api/v2/${elementId}/comment/${commentUrn}/Assignee/`
+    let url = `${config.NARRATIVE_API_ENDPOINT}v2/${elementId}/comment/${commentUrn}/Assignee/`
     let req = {
         assignee: newAssignee
     };
