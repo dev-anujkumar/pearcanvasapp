@@ -3138,11 +3138,11 @@ export class TinyMceEditor extends Component {
         let selectedElement;
         // We are checking event in below condition because on handle click event when tiny mce editor 
         // init then it selects div element of editor, so we need to find its child anchor or sup element.
-        if (tinymce.activeEditor.selection.getNode().tagName.toLowerCase() === "div") {
+        if (tinymce.activeEditor.selection.getNode().tagName?.toLowerCase() === "div") {
             let editorParaChildrenElems = tinymce.activeEditor.selection.getNode().children[0].children;
             for (let i = editorParaChildrenElems.length - 1; i>=0; i--) {
                 const allowedTagArr = ["sup", "span", "a"];
-                if (allowedTagArr.includes(editorParaChildrenElems[i].tagName.toLowerCase())) {
+                if (allowedTagArr.includes(editorParaChildrenElems[i].tagName?.toLowerCase())) {
                     selectedElement = editorParaChildrenElems[i];
                     break;
                 }
@@ -3150,13 +3150,13 @@ export class TinyMceEditor extends Component {
         } else {
             selectedElement = tinymce.activeEditor.selection.getNode();
             // Below if condition works only when editor has no text and contains only footnote star
-            if (selectedElement.tagName.toLowerCase() === "p") {
+            if (selectedElement?.tagName?.toLowerCase() === "p") {
                 selectedElement = selectedElement.firstChild;    
             }
         }
         let parentNode = selectedElement.parentNode;
         let endPosition = true;
-        if (selectedElement.tagName.toLowerCase() === 'a') {
+        if (selectedElement?.tagName?.toLowerCase() === 'a') {
             let bomPosition = selectedElement.innerHTML.lastIndexOf("﻿");
             if (bomPosition === 0) {
                 endPosition = false;
