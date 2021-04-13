@@ -178,6 +178,12 @@
     border-color: transparent transparent black transparent;
 }
 
+.tooltip .tooltip-picker:hover,
+.tooltip .tooltip-paste:hover,
+.tooltip .tooltip-poc:hover {
+    display: none;
+}
+
 .tooltip .tooltip-paste {
     width: 88px;
     top: 135%;
