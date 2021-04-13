@@ -1489,6 +1489,30 @@ class ElementContainer extends Component {
                         />;
                         labelText = 'PS'
                         break;
+                    case elementTypeConstant.PDF_SLATE:
+                        editor = <PdfSlateComonent
+                            permissions={permissions}
+                            btnClassName={this.state.btnClassName}
+                            borderToggle={this.state.borderToggle}
+                            elemBorderToggle={this.props.elemBorderToggle}
+                            elementSepratorProps={elementSepratorProps}
+                            index={index}
+                            element={element}
+                            elementId={element.id}
+                            slateLockInfo={slateLockInfo}
+                            userRole={this.props.userRole}
+                            activeElement={this.props.activeElement}
+                            onClickCapture={this.props.onClickCapture}
+                            showBlocker={this.props.showBlocker}
+                            setActiveElement={this.props.setActiveElement}
+                            parentElement={this.props.parentElement}
+                            showDeleteElemPopup={this.showDeleteElemPopup}
+                            handleBlur={this.handleBlur}
+                            handleFocus={this.handleFocus}
+                            deleteElement={this.deleteElement}
+                        />;
+                        labelText = 'PDF'
+                        break;
 
             }
         } else {
