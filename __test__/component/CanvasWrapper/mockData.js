@@ -1219,5 +1219,41 @@ export const slateTestData = {
         'LearnosityItemBankId': "641",
         'ProjectdURN': "urn:pearson:distributable:d4a7778a-2b38-4368-adb8-b342beb180d8",
         'Standalone': false
-    }]
+    }],
+    learningFrameworksApiResponse : {
+        "versionUrn": "urn:pearson:distributable:f847f78e-08ca-4ccd-94fb-a86b5dc221f4",
+        "learningFrameworks": [{
+            "urn": "urn:pearson:goalframework:73e75aaa-1d1d-4414-a042-9a45213a98ef",
+            "label": {
+                "en": "The Sociology Project 2.5"
+            },
+            "lineOfBusiness": "https://schema.pearson.com/ns/lineofbusiness/ukschools"
+        }, {
+            "urn": "urn:pearson:goalframework:9bc2ab38-3147-492a-9e93-3ec735e54a9d",
+            "label": {
+                "en": "ev_LF_Ext_0"
+            },
+            "lineOfBusiness": "https://schema.pearson.com/ns/lineofbusiness/higher-education"
+        }]
+    },
+    learningFrameworksApiResponse_CyLF : {
+        "versionUrn": "urn:pearson:distributable:f847f78e-08ca-4ccd-94fb-a86b5dc221f4",
+        "learningFrameworks": [{
+            "urn": "urn:pearson:goalframework:9bc2ab38-3147-492a-9e93-3ec735e54a9d",
+            "label": {
+                "en": "ev_LF_Ext_0"
+            },
+            "lineOfBusiness": "https://schema.pearson.com/ns/lineofbusiness/higher-education"
+        }]
+    },
+    learningFrameworksApiResponse_ExtLF : {
+        "versionUrn": "urn:pearson:distributable:f847f78e-08ca-4ccd-94fb-a86b5dc221f4",
+        "learningFrameworks": [{
+            "urn": "urn:pearson:goalframework:73e75aaa-1d1d-4414-a042-9a45213a98ef",
+            "label": {
+                "en": "The Sociology Project 2.5"
+            },
+            "lineOfBusiness": "https://schema.pearson.com/ns/lineofbusiness/ukschools"
+        }]
+    }
 }
