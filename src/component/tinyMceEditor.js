@@ -3142,7 +3142,7 @@ export class TinyMceEditor extends Component {
             let editorParaChildrenElems = tinymce.activeEditor.selection.getNode().children[0].children;
             for (let i = editorParaChildrenElems.length - 1; i>=0; i--) {
                 const allowedTagArr = ["sup", "span", "a"];
-                if (allowedTagArr.includes(editorParaChildrenElems[i].tagName.toLowerCase())) {
+                if (allowedTagArr.includes(editorParaChildrenElems[i].tagName?.toLowerCase())) {
                     selectedElement = editorParaChildrenElems[i];
                     break;
                 }
