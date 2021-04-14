@@ -33,7 +33,8 @@ class SlateTagDropdown extends React.Component {
     }
     componentDidMount(){
       if(this.props.isLOExist){
-        this.node1.style.width='300px'
+        this.node1.style.width='310px';
+        this.node1.style.height='84px';
       }
     }
     handleClick = (e) => {
@@ -127,7 +128,7 @@ class SlateTagDropdown extends React.Component {
       sendDataToIframe({ 'type': 'tocToggle', 'message': { open: false } })
       sendDataToIframe({ 'type': 'canvasBlocker', 'message': { open: true } }); 
         this.setState({showLoOptions:!this.state.showLoOptions});
-        this.setDropdownPosition();
+        //this.setDropdownPosition();
     }
 
     setDropdownPosition(){
