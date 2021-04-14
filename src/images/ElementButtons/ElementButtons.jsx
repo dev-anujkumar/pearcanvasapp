@@ -418,3 +418,19 @@ export const learnosityIcon = (() => {
     )
 })();
 
+export const tickIcon = (() => {
+    return (
+        <svg id="tick-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <g fill="none" fill-rule="evenodd">
+               <g>
+                  <g>
+                     <g>
+                        <path fill="#EEE" fill-opacity="0" d="M0 0H24V24H0z" transform="translate(-921 -146) translate(911 138) translate(10 8)"/>
+                        <path fill="#000" fill-rule="nonzero" d="M21 7L9 19 3.5 13.5 4.91 12.09 9 16.17 19.59 5.59z" transform="translate(-921 -146) translate(911 138) translate(10 8)"/>
+                     </g>
+                  </g>
+               </g>
+            </g>
+        </svg>
+    )
+})();
