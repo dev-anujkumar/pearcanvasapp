@@ -134,7 +134,6 @@ class SlateTagDropdown extends React.Component {
       else{
         this.node2.style.display='block'
       }
-        // this.setState({showLoOptions:!this.state.showLoOptions});
     }
 
     setDropdownPosition(){
@@ -248,8 +247,6 @@ class SlateTagDropdown extends React.Component {
                 </div>
               </ul>
             </div>
-            {/* {
-                this.state.showLoOptions &&   */}
                 <div className="learningobjectivedropdown2" ref={node2 => this.node2 = node2}>
                 <ul>
                     {this.props.permissions.includes('lo_edit_metadata') && config.slateType === 'section' &&
@@ -263,7 +260,6 @@ class SlateTagDropdown extends React.Component {
                         <li className={liOptionStatus.unlinkLOStatus ? '' : 'disabled'} style={{ cursor: 'not-allowed !important' }} onClick={this.learningObjectiveDropdown}>{UnlinkSlateDropdown}</li>}
                 </ul>
             </div> 
-            {/* } */}
         </div>            
         )
     }
