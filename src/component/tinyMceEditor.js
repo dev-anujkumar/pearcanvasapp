@@ -3161,8 +3161,8 @@ export class TinyMceEditor extends Component {
             if (bomPosition === 0) {
                 endPosition = false;
             }
-            selectedElement = selectedElement.parentNode;
-            parentNode = selectedElement.parentNode;
+            selectedElement = selectedElement?.parentNode;
+            parentNode = selectedElement?.parentNode;
         } else {
             let childNodes = selectedElement.childNodes;
             if (childNodes.length && childNodes[0].nodeType === Node.TEXT_NODE) {
@@ -3179,7 +3179,7 @@ export class TinyMceEditor extends Component {
         let newParentInnerHtml = parentInnerHtml.replace(existingInnerHTML, innerHtml);
         parentNode.innerHTML = newParentInnerHtml;
         if (clickedX !== 0 && clickedY !== 0) {     //User generated click event
-            tinymce.activeEditor.selection.placeCaretAt(clickedX, clickedY) //Placing exact cursor position on clicking.
+            tinymce.activeEditor.selection.placeCaretAt(Math.round(clickedX), Math.round(clickedY)) //Placing exact cursor position on clicking.
         }
     }
     
