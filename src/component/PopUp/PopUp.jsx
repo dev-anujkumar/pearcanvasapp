@@ -250,8 +250,7 @@ class PopUp extends React.Component {
             return (
                 <>
                     <div className='loPopupHeader'>{`${props.warningHeaderText}`}</div>
-                    <div className={`${props.lOPopupClass}`}>{props.dialogText}</div>
-                </>
+                    <div className={`${props.lOPopupClass}`}>{props.dialogText}<br/>{'Do you wish to continue?'}</div>                </>
             )
         }
         else {
