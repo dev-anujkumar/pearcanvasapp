@@ -181,7 +181,7 @@ export function ElementSaprator(props) {
             {pasteRender ? renderPasteButton(props, operationType) : ''}
             <div className='elemDiv-expand'>
                 <div className="dropdown" ref={buttonRef}>
-                    <Tooltip direction='picker' tooltipText='Element Picker'>
+                    <Tooltip direction='picker' tooltipText='Element Picker' showClass={showClass}>
                         {permissions.includes('elements_add_remove') && !hasReviewerRole() && <Button onClick={(event) => toggleElementList(event)} className="dropbtn" type="expand" />}
                     </Tooltip>
                     <div id="myDropdown" className={showClass ? 'dropdown-content show' : 'dropdown-content'}>
