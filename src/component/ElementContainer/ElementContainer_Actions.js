@@ -139,8 +139,11 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
         return ;
     }
-    const { showHideObj } = getState().appStore
+    const { showHideObj } = getState().appStore;
     updatedData.projectUrn = config.projectUrn;
+    if (updatedData.loData) {
+        updatedData.slateVersionUrn = config.slateManifestURN;
+    }
     updatedData = (updatedData.type == "element-blockfeature") ? contentEditableFalse(updatedData): updatedData;
     /** updateBodymatter | Used for TCM Snapshots */
     let updateBodymatter = getState().appStore.slateLevelData[config.slateManifestURN].contents.bodymatter;
