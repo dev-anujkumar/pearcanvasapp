@@ -251,15 +251,6 @@ export const findElementType = (element, index) => {
                     }
                     break;
                 }
-            case "element-pdf":  {
-                //const pdfType = element.type;
-                elementType = {
-                        elementType: element.type,
-                        //primaryOption: elementDataBank[pdfType]["primaryOption"],
-                        //secondaryOption: elementDataBank[pdfType]["secondaryOption"],
-                }
-                break;
-            }
             default:
                 elementType = { ...elementDataBank["element-authoredtext"] }
         }
@@ -281,7 +272,6 @@ export const findElementType = (element, index) => {
 }
 export const fetchElementTag = (element, index = 0) => {
     if (Object.keys(element).length > 0) {
-        console.log("findElementType(element, index) = ",findElementType(element, index));
         return findElementType(element, index).tag || "";
     }
 }
